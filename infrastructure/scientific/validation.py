@@ -27,7 +27,7 @@ class _ValidationResults(TypedDict):
     accuracy_score: float
     details: list[dict[str, Any]]
 
-def validate_scientific_implementation(func: Callable[..., Any], test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
+def validate_scientific_implementation(func: Callable[..., Any], test_cases: list[tuple[Any, Any]]) -> _ValidationResults:
     """Validate scientific implementation against known test cases."""
     validation_results: _ValidationResults = {
         "total_tests": len(test_cases),

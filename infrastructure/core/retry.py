@@ -129,7 +129,7 @@ class RetryableOperation:
         self.max_delay = max_delay
         self.exponential_base = exponential_base
         self.attempt = 0
-        self.result = None
+        self.result: Any = None
         self.succeeded = False
         self._done = False
 

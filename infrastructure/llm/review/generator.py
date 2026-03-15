@@ -459,7 +459,7 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
         if first_token_time is not None:
             # first_token_time is when the first token arrived; generation_time excludes TTFT
             generation_time = elapsed - (first_token_time - start_time)
-            output_tokens = len(response.split()) * 1.3
+            output_tokens = int(len(response.split()) * 1.3)
             tokens_per_sec = output_tokens / generation_time if generation_time > 0 else 0
         else:
             # No tokens received — streaming produced no output

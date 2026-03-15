@@ -15,7 +15,7 @@ import json
 import time as time_module
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Iterator, TypeVar, cast
+from typing import Any, Callable, Iterator, TypeVar
 
 _T = TypeVar("_T")
 
@@ -432,16 +432,22 @@ class LLMClient:
         self.context.add_message("assistant", response_text)
 
         # Parse and validate JSON response
+        def _parse_dict(text: str) -> dict[str, Any]:
+            """Parse text as JSON dict, raising ValueError if result is not a dict."""
+            value = json.loads(text)
+            if not isinstance(value, dict):
+                raise ValueError(f"Expected JSON object, got {type(value).__name__}")
+            return value
+
         try:
-            parsed = cast(dict[str, Any], json.loads(response_text))
-            return parsed
-        except json.JSONDecodeError as e:
-            # Try to extract JSON if wrapped
+            return _parse_dict(response_text)
+        except (json.JSONDecodeError, ValueError) as e:
+            # Try to extract JSON if wrapped in surrounding text
             if "{" in response_text and "}" in response_text:
                 start = response_text.index("{")
                 end = response_text.rindex("}") + 1
                 try:
-                    parsed = cast(dict[str, Any], json.loads(response_text[start:end]))
+                    parsed = _parse_dict(response_text[start:end])
                     logger.warning(
                         "Structured response required JSON extraction (wrapped in text)",
                         extra={
@@ -451,7 +457,7 @@ class LLMClient:
                         },
                     )
                     return parsed
-                except json.JSONDecodeError as e:
+                except (json.JSONDecodeError, ValueError) as e:
                     logger.error(
                         "Failed to parse structured response as JSON",
                         extra={
