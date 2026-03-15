@@ -15,7 +15,7 @@ import os
 import re
 import subprocess
 import time
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any, Callable, Literal, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from infrastructure.llm.templates.base import ResearchTemplate
@@ -118,10 +118,18 @@ def _is_small_model(model_name: str) -> bool:
     return any(s in lower for s in _SMALL_MODEL_SUFFIXES)
 
 
+ReviewType = Literal[
+    "executive_summary",
+    "quality_review",
+    "methodology_review",
+    "improvement_suggestions",
+    "translation",
+]
+
 
 def validate_review_quality(
     response: str,
-    review_type: str,
+    review_type: ReviewType,
     min_words: int | None = None,
     model_name: str = "",
 ) -> tuple[bool, list[str], dict[str, Any]]:
@@ -604,7 +612,7 @@ def _stream_with_heartbeat(
 def generate_review_with_metrics(
     client: LLMClient,
     text: str,
-    review_type: str,
+    review_type: ReviewType,
     review_name: str,
     template_class: type[ResearchTemplate],
     model_name: str = "",

@@ -174,8 +174,12 @@ class LLMClient:
 
             return response_text
 
-        except LLMConnectionError:
-            # Try fallback models
+        except LLMConnectionError as primary_err:
+            # Try fallback models. Log the primary failure so it is not silently discarded.
+            logger.warning(
+                "Primary model failed; attempting fallback",
+                extra={"original_model": model_name, "error": str(primary_err)},
+            )
             for fallback in self.config.fallback_models:
                 try:
                     fallback_start = time_module.time()

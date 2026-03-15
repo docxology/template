@@ -11,7 +11,6 @@ This is part of the infrastructure layer (generic, reusable validation).
 
 from __future__ import annotations
 
-import os
 import re
 from pathlib import Path
 
@@ -56,7 +55,7 @@ def find_markdown_files(markdown_dir: str | Path) -> list[str]:
             context={"path": str(markdown_dir)},
         )
 
-    return [str(markdown_dir / f) for f in sorted(os.listdir(markdown_dir)) if f.endswith(".md")]
+    return [str(p) for p in sorted(markdown_dir.glob("*.md"))]
 
 
 def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:
@@ -98,51 +97,52 @@ def validate_images(
     Returns:
         List of validation problem descriptions
     """
-    repo_root = str(repo_root)
+    repo_root_path = Path(repo_root)
     problems: list[str] = []
 
     # Build search directories from the markdown directory's project context.
     # Manuscript dirs follow the pattern: projects/<name>/manuscript/
     # So the project root is two levels up from the manuscript dir.
-    search_dirs: list[str] = []
+    search_dirs: list[Path] = []
     if extra_search_dirs:
-        search_dirs.extend(str(d) for d in extra_search_dirs)
+        search_dirs.extend(Path(d) for d in extra_search_dirs)
 
     if md_paths:
-        md_dir = os.path.dirname(md_paths[0])
+        md_dir = Path(md_paths[0]).parent
         # Auto-discover sibling output/figures/ and figures/ dirs
-        project_root = os.path.dirname(md_dir)  # parent of manuscript/
+        project_root = md_dir.parent  # parent of manuscript/
         for candidate in [
-            os.path.join(project_root, "output", "figures"),
-            os.path.join(project_root, "figures"),
+            project_root / "output" / "figures",
+            project_root / "figures",
         ]:
-            if os.path.isdir(candidate) and candidate not in search_dirs:
+            if candidate.is_dir() and candidate not in search_dirs:
                 search_dirs.append(candidate)
 
     for path in md_paths:
-        with open(path, "r", encoding="utf-8") as fh:
-            text = fh.read()
+        path_obj = Path(path)
+        text = path_obj.read_text(encoding="utf-8")
         for img in IMG_PATTERN.findall(text):
             # Strip optional attributes after ) are not included by regex
             img_clean = img.split()[0]
             # Normalize relative paths (most are ../output/...  or figures/)
-            abs_path = os.path.normpath(os.path.join(os.path.dirname(path), img_clean))
-            if not os.path.isabs(abs_path):
-                abs_path = os.path.join(repo_root, abs_path)
-            if os.path.exists(abs_path):
+            abs_path = (path_obj.parent / img_clean).resolve()
+            if abs_path.exists():
                 continue
 
             # Try each search directory as a fallback
-            img_basename = os.path.basename(img_clean)
+            img_basename = Path(img_clean).name
             found = False
             for search_dir in search_dirs:
-                candidate = os.path.join(search_dir, img_basename)
-                if os.path.exists(candidate):
+                if (search_dir / img_basename).exists():
                     found = True
                     break
             if not found:
+                try:
+                    display_path = Path(path).relative_to(repo_root_path)
+                except ValueError:
+                    display_path = path  # type: ignore[assignment]
                 problems.append(
-                    f"Missing image: {img_clean} referenced from {os.path.relpath(path, repo_root)}"
+                    f"Missing image: {img_clean} referenced from {display_path}"
                 )
     return problems
 
@@ -161,20 +161,23 @@ def validate_refs(
     Returns:
         List of validation problem descriptions
     """
-    repo_root = str(repo_root)
+    repo_root_path = Path(repo_root)
     problems: list[str] = []
     for path in md_paths:
-        with open(path, "r", encoding="utf-8") as fh:
-            text = fh.read()
+        text = Path(path).read_text(encoding="utf-8")
+        try:
+            rel: str | Path = Path(path).relative_to(repo_root_path)
+        except ValueError:
+            rel = path
         for ref in EQ_REF_PATTERN.findall(text):
             if ref not in labels:
                 problems.append(
-                    f"Missing equation label for \\eqref{{{ref}}} in {os.path.relpath(path, repo_root)}"  # noqa: E501
+                    f"Missing equation label for \\eqref{{{ref}}} in {rel}"  # noqa: E501
                 )
         for link in INTERNAL_LINK_PATTERN.findall(text):
             if link not in anchors and link not in labels:
                 problems.append(
-                    f"Missing anchor/label for link (#{link}) in {os.path.relpath(path, repo_root)}"
+                    f"Missing anchor/label for link (#{link}) in {rel}"
                 )
         # Flag bare URLs not inside Markdown links.
         # Strip fenced code blocks first to avoid false positives on Turtle/SPARQL/RDF URIs
@@ -183,7 +186,7 @@ def validate_refs(
         text_no_code = re.sub(r"`[^`]+`", "", text_no_code)  # also strip inline code
         for m in BARE_URL_PATTERN.finditer(text_no_code):
             problems.append(
-                f"Bare URL found (use informative Markdown link text): '{m.group(0)}' in {os.path.relpath(path, repo_root)}"  # noqa: E501
+                f"Bare URL found (use informative Markdown link text): '{m.group(0)}' in {rel}"  # noqa: E501
             )
         # Flag non-informative link text (label equals URL)
         for m in LINK_PATTERN.finditer(text):
@@ -191,7 +194,7 @@ def validate_refs(
             url = m.group(2).strip()
             if label == url or label.lower().startswith("http") or "/" in label:
                 problems.append(
-                    f"Non-informative link text for {url} in {os.path.relpath(path, repo_root)}; replace with descriptive text"  # noqa: E501
+                    f"Non-informative link text for {url} in {rel}; replace with descriptive text"  # noqa: E501
                 )
     return problems
 
@@ -206,36 +209,33 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
     Returns:
         List of validation problem descriptions
     """
-    repo_root = str(repo_root)
+    repo_root_path = Path(repo_root)
     problems: list[str] = []
     eq_block = re.compile(r"\\begin\{equation\}([\s\S]*?)\\end\{equation\}", re.MULTILINE)
     label_pattern = re.compile(r"\\label\{([^}]+)\}")
     seen_labels: set[str] = set()
     for path in md_paths:
-        with open(path, "r", encoding="utf-8") as fh:
-            text = fh.read()
+        text = Path(path).read_text(encoding="utf-8")
+        try:
+            rel: str | Path = Path(path).relative_to(repo_root_path)
+        except ValueError:
+            rel = path
         # Disallow $$ and \[ \] display math in sources
         if "$$" in text:
-            problems.append(
-                f"Use equation environment instead of $$ in {os.path.relpath(path, repo_root)}"
-            )
+            problems.append(f"Use equation environment instead of $$ in {rel}")
         if "\\[" in text or "\\]" in text:
-            problems.append(
-                f"Use equation environment instead of \\[ \\] in {os.path.relpath(path, repo_root)}"
-            )
+            problems.append(f"Use equation environment instead of \\[ \\] in {rel}")
         # Ensure each equation block carries a label and detect duplicates
         for m in eq_block.finditer(text):
             block = m.group(1)
             labels_in_block = label_pattern.findall(block)
             if not labels_in_block:
-                problems.append(
-                    f"Equation missing \\label{{...}} in {os.path.relpath(path, repo_root)}"
-                )
+                problems.append(f"Equation missing \\label{{...}} in {rel}")
             else:
                 for lab in labels_in_block:
                     if lab in seen_labels:
                         problems.append(
-                            f"Duplicate equation label '{{{lab}}}' found in {os.path.relpath(path, repo_root)}"  # noqa: E501
+                            f"Duplicate equation label '{{{lab}}}' found in {rel}"
                         )
                     seen_labels.add(lab)
     return problems

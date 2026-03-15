@@ -41,7 +41,7 @@ class ConversationContext:
         self._clear_count = 0
 
     def add_message(self, role: str, content: str) -> None:
-        """Append a message; prunes oldest history when token budget is exceeded.
+        """Append a message; prunes oldest history when token budget is exceeded."""
         # Simple estimation: 1 token ~= 4 chars
         tokens = len(content) // 4
 
