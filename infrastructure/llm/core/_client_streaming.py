@@ -32,12 +32,12 @@ def _try_save_partial(
     chunk_count: int,
     start_time: float,
     context: str,
-    guard_not_saved: bool = True,
+    skip_if_already_saved: bool = True,
 ) -> bool:
     """Try to save a partial streaming response; returns new partial_saved state."""
     if not (full_response and save_response):
         return partial_saved
-    if guard_not_saved and partial_saved:
+    if skip_if_already_saved and partial_saved:
         return partial_saved
     if save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
         logger.info(f"Saved partial response ({chunk_count} chunks) {context}")
@@ -255,7 +255,7 @@ def stream_query_impl(
                 partial_saved = _try_save_partial(
                     full_response, save_response, partial_saved, save_streaming_state_fn,
                     save_path, model_name, prompt, chunk_count, start_time, "after timeout",
-                    guard_not_saved=False,
+                    skip_if_already_saved=False,
                 )
                 raise LLMConnectionError(
                     f"Streaming timeout ({model_name}): {last_error}",
@@ -289,7 +289,7 @@ def stream_query_impl(
                 partial_saved = _try_save_partial(
                     full_response, save_response, partial_saved, save_streaming_state_fn,
                     save_path, model_name, prompt, chunk_count, start_time, "after connection error",
-                    guard_not_saved=False,
+                    skip_if_already_saved=False,
                 )
                 raise LLMConnectionError(
                     f"Streaming connection failed ({model_name}): {last_error}",

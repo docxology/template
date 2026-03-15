@@ -129,7 +129,7 @@ def run_comprehensive_audit(
 
     # Phase 4: Calculate statistics
     scan_results.scan_duration = time.time() - start_time
-    _calculate_statistics(scan_results)
+    _populate_statistics(scan_results)
 
     logger.info(f"✅ Audit completed in {scan_results.scan_duration:.2f}s")
     logger.info(
@@ -221,7 +221,7 @@ def _validate_single_file(
     return results
 
 
-def _calculate_statistics(scan_results: ScanResults) -> None:
+def _populate_statistics(scan_results: ScanResults) -> None:
     """Calculate statistics for the scan results."""
     scan_results.scanned_files = len(scan_results.documentation_files)
 

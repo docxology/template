@@ -439,7 +439,7 @@ def validate_build_artifacts(
 
 
 def check_file_permissions(output_dir: Path) -> PermissionCheck:
-    """Check file permissions and accessibility."""
+    """Check directory permissions by probing with a temporary write-read-delete cycle."""
     permissions: PermissionCheck = {
         "readable": True,
         "writable": True,

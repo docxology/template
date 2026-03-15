@@ -1019,7 +1019,7 @@ class TestLLMReviewIntegration:
         """Test generating a review with real LLM."""
         from infrastructure.llm.core.client import LLMClient
         from infrastructure.llm.core.config import LLMConfig
-        from infrastructure.llm.review.generator import generate_executive_summary
+        from infrastructure.llm.review.generator import generate_llm_executive_summary as generate_executive_summary
         from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
 
         if not is_ollama_running():
