@@ -13,6 +13,7 @@ from __future__ import annotations
 import ast
 import re
 import subprocess
+from datetime import datetime
 import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -505,7 +506,7 @@ class RepositoryScanner:
         lines = [
             "# Repository Accuracy and Completeness Scan Report",
             "",
-            f"**Scan Date**: {self._get_timestamp()}",
+            f"**Scan Date**: {datetime.now().isoformat()}",
             "",
             "## Executive Summary",
             "",
@@ -564,12 +565,6 @@ class RepositoryScanner:
         )
 
         return "\n".join(lines)
-
-    def _get_timestamp(self) -> str:
-        """Get current timestamp."""
-        from datetime import datetime
-
-        return datetime.now().isoformat()
 
 
 def main() -> int:

@@ -409,15 +409,11 @@ class PipelineExecutor:
         logger.info("Running output copying...")
 
         # Flush log handlers before copying to ensure log file is written
-        self._flush_log_handlers()
+        flush_file_handlers()
         if not self._verify_log_file():
             logger.warning("Log file not verified before copy - may be missing or empty")
 
         return self._run_script("05_copy_outputs.py", "--project", self.config.project_name)
-
-    def _flush_log_handlers(self) -> None:
-        """Flush all log handlers to disk."""
-        flush_file_handlers()
 
     def _verify_log_file(self) -> bool:
         """Check that the log file exists and has content.
