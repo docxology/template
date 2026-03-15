@@ -225,7 +225,7 @@ class ConversationContext:
         try:
             _tmp.write_text(json.dumps(export_data, indent=2), encoding="utf-8")
             _tmp.replace(path)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 

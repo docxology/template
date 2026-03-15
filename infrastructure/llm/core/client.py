@@ -718,6 +718,40 @@ class LLMClient:
             retries=retries,
         )
 
+    def _stream_with_instruction(
+        self,
+        instruction: str,
+        prompt: str,
+        model: str | None,
+        options: GenerationOptions | None,
+        max_tokens: int,
+        save_response: bool,
+        save_path: Path | None,
+        log_progress: bool,
+        retries: int,
+    ) -> Iterator[str]:
+        """Prepend instruction to prompt and stream with custom token limit."""
+        from infrastructure.llm.core._client_streaming import stream_query_impl
+        from infrastructure.llm.core.sanitization import sanitize_llm_input
+
+        scoped_options = GenerationOptions(
+            max_tokens=max_tokens,
+            temperature=options.temperature if options else None,
+            seed=options.seed if options else None,
+        )
+        yield from stream_query_impl(
+            self.config,
+            self.context,
+            self._save_streaming_state,
+            instruction + sanitize_llm_input(prompt),
+            model,
+            options=scoped_options,
+            save_response=save_response,
+            save_path=save_path,
+            log_progress=log_progress,
+            retries=retries,
+        )
+
     def stream_short(
         self,
         prompt: str,
@@ -729,29 +763,11 @@ class LLMClient:
         retries: int = 1,
     ) -> Iterator[str]:
         """Stream a concise response (≤150 words) with a brevity instruction prepended."""
-        from infrastructure.llm.core._client_streaming import stream_query_impl
-        from infrastructure.llm.core.sanitization import sanitize_llm_input
-
-        short_options = GenerationOptions(
-            max_tokens=self.config.short_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-        )
-        instruction = (
+        yield from self._stream_with_instruction(
             "Provide a concise, brief response (less than 150 words). "
-            "Be direct and to the point.\n\n"
-        )
-        yield from stream_query_impl(
-            self.config,
-            self.context,
-            self._save_streaming_state,
-            instruction + sanitize_llm_input(prompt),
-            model,
-            options=short_options,
-            save_response=save_response,
-            save_path=save_path,
-            log_progress=log_progress,
-            retries=retries,
+            "Be direct and to the point.\n\n",
+            prompt, model, options, self.config.short_max_tokens,
+            save_response, save_path, log_progress, retries,
         )
 
     def stream_long(
@@ -765,29 +781,11 @@ class LLMClient:
         retries: int = 1,
     ) -> Iterator[str]:
         """Stream a comprehensive long response with a thoroughness instruction prepended."""
-        from infrastructure.llm.core._client_streaming import stream_query_impl
-        from infrastructure.llm.core.sanitization import sanitize_llm_input
-
-        long_options = GenerationOptions(
-            max_tokens=self.config.long_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-        )
-        instruction = (
+        yield from self._stream_with_instruction(
             "Provide a comprehensive, detailed response with examples and "
-            "thorough explanation. Use multiple paragraphs if needed.\n\n"
-        )
-        yield from stream_query_impl(
-            self.config,
-            self.context,
-            self._save_streaming_state,
-            instruction + sanitize_llm_input(prompt),
-            model,
-            options=long_options,
-            save_response=save_response,
-            save_path=save_path,
-            log_progress=log_progress,
-            retries=retries,
+            "thorough explanation. Use multiple paragraphs if needed.\n\n",
+            prompt, model, options, self.config.long_max_tokens,
+            save_response, save_path, log_progress, retries,
         )
 
     def get_available_models(self) -> list[str]:

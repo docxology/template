@@ -80,7 +80,7 @@ class ImageManager:
         try:
             _tmp.write_text(content, encoding="utf-8")
             _tmp.replace(markdown_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
@@ -178,7 +178,7 @@ class ImageManager:
         try:
             _tmp.write_text(content, encoding="utf-8")
             _tmp.replace(markdown_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 

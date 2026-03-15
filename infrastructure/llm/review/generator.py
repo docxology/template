@@ -103,7 +103,7 @@ def get_manuscript_review_system_prompt() -> str:
             loader = get_default_loader()
             return loader.get_system_prompt("manuscript_review")
         except (ImportError, AttributeError, OSError, FileNotFoundError, KeyError) as e:  # noqa: BLE001 — fall back to built-in default prompt
-            logger.debug(f"Could not load system prompt from prompt system: {e}")
+            logger.warning(f"Could not load system prompt from prompt system, using built-in default: {e}")
 
     return _DEFAULT_REVIEW_SYSTEM_PROMPT
 

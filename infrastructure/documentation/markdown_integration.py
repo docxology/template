@@ -130,7 +130,7 @@ class MarkdownIntegration:
         try:
             _tmp.write_text(markdown_content, encoding="utf-8")
             _tmp.replace(output_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
@@ -179,7 +179,7 @@ class MarkdownIntegration:
         try:
             _tmp.write_text(content, encoding="utf-8")
             _tmp.replace(markdown_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
