@@ -675,6 +675,11 @@ def generate_review_with_metrics(
                 break
             elif attempt == max_retries:
                 response = best_response or response
+                logger.warning(
+                    f"All {max_retries + 1} attempts failed validation for {review_name}; "
+                    f"using longest response ({len(response.split())} words) despite quality issues: "
+                    f"{', '.join(issues[:3])}"
+                )
 
         except Exception as e:  # noqa: BLE001 — intentional: retry loop must continue on any LLM client failure
             if attempt < max_retries:
