@@ -46,8 +46,6 @@ from infrastructure.llm.utils.ollama import (
 from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
 from infrastructure.llm.templates.manuscript import (
     ManuscriptExecutiveSummary,
-    ManuscriptQualityReview,
-    ManuscriptMethodologyReview,
     ManuscriptImprovementSuggestions,
     ManuscriptTranslationAbstract,
     REVIEW_MIN_WORDS,
