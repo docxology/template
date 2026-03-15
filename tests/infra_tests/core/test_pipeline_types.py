@@ -6,8 +6,6 @@ data (No Mocks Policy).
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from infrastructure.core.pipeline_types import (
     PipelineConfig,
     PipelineStageResult,

@@ -6,8 +6,6 @@ and real temp directories (No Mocks Policy).
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from infrastructure.rendering._pdf_tex_transforms import (
     fix_figure_paths,
     fix_math_delimiters,

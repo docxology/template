@@ -32,7 +32,7 @@ class SecurityValidator:
     # Dangerous patterns to block — class-level constant, built once at class definition.
     # \b anchors prevent substring false-positives (e.g. "hexec" won't match "exec").
     # \s* between identifier and ( catches evasion via whitespace (e.g. "exec (").
-    _DANGEROUS_PATTERNS: list[str] = [
+    _DANGEROUS_PATTERNS: tuple[str, ...] = (
         # System prompt injection — exact injected phrases
         r"(?i)system\s*prompt\s*[:=]",
         r"(?i)\bignore\s+previous\s+instructions\b",
@@ -57,7 +57,7 @@ class SecurityValidator:
         # LaTeX injection — commands that read/write files or include external content
         r"\\input\s*\{|\\include\s*\{|\\usepackage\s*[\[{]|\\newcommand\s*\{",
         r"\\write\s*\d|\\read\s*\d|\\openout\s*\d|\\openin\s*\d",
-    ]
+    )
 
     def __init__(self) -> None:
         # Maximum sizes for different input types
