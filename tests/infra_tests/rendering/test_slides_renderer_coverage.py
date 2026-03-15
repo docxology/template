@@ -36,7 +36,7 @@ class TestSlidesRendererClass:
 
         # Use real execution - may fail if pandoc not available
         try:
-            result = renderer.render(source, format="revealjs")
+            result = renderer.render(source, output_format="revealjs")
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
         except (RenderingError, OSError, subprocess.SubprocessError):
@@ -54,7 +54,7 @@ class TestSlidesRendererClass:
 
         # Use real execution - may fail if LaTeX not available
         try:
-            result = renderer.render(source, format="beamer")
+            result = renderer.render(source, output_format="beamer")
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
         except (RenderingError, OSError, subprocess.SubprocessError):

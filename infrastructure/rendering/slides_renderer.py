@@ -24,7 +24,7 @@ class SlidesRenderer:
     def render(
         self,
         source_file: Path,
-        format: str = "beamer",
+        output_format: str = "beamer",
         manuscript_dir: Path | None = None,
         figures_dir: Path | None = None,
     ) -> Path:
@@ -32,7 +32,7 @@ class SlidesRenderer:
 
         Args:
             source_file: Path to markdown file
-            format: Output format ("beamer" for PDF, "revealjs" for HTML)
+            output_format: Output format ("beamer" for PDF, "revealjs" for HTML)
             manuscript_dir: Directory containing manuscript (for resource paths)
             figures_dir: Directory containing figures (for resource paths)
 
@@ -45,11 +45,11 @@ class SlidesRenderer:
         output_dir = Path(self.config.slides_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        output_ext = "pdf" if format == "beamer" else "html"
+        output_ext = "pdf" if output_format == "beamer" else "html"
         output_file = output_dir / f"{source_file.stem}_slides.{output_ext}"
 
         # For beamer, we need to handle figure paths specially
-        if format == "beamer":
+        if output_format == "beamer":
             return self._render_beamer_with_paths(
                 source_file, output_file, manuscript_dir, figures_dir
             )

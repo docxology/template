@@ -53,7 +53,7 @@ More content.
     )
 
     try:
-        result = renderer.render(test_md, format="beamer")
+        result = renderer.render(test_md, output_format="beamer")
         assert result.exists()
         assert result.suffix == ".pdf"
     except Exception as e:

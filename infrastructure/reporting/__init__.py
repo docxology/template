@@ -6,8 +6,6 @@ metrics, and error summaries from pipeline execution.
 
 from __future__ import annotations
 
-from pathlib import Path  # noqa: F401
-
 # Pipeline stage reporters (used during pipeline execution)
 from .error_aggregator import (
     ErrorAggregator,

@@ -14,6 +14,7 @@ import ast
 import re
 import subprocess
 import sys
+import warnings
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -24,7 +25,16 @@ import yaml
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.doc_models import CompletenessGap, ScanAccuracyIssue
 
-AccuracyIssue = ScanAccuracyIssue  # backward-compat alias
+class AccuracyIssue(ScanAccuracyIssue):
+    """Deprecated alias for ScanAccuracyIssue. Use ScanAccuracyIssue directly."""
+
+    def __init__(self, *args: object, **kwargs: object) -> None:
+        warnings.warn(
+            "AccuracyIssue is deprecated; use ScanAccuracyIssue instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)  # type: ignore[arg-type]
 
 logger = get_logger(__name__)
 

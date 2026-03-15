@@ -375,7 +375,7 @@ class OllamaClientConfig:
         return GenerationOptions(**options_dict)
 
 # Module-level accessors so callers don't need to instantiate OllamaClientConfig.
-# All three read from a single from_env() call to avoid redundant env lookups.
+# All three read from a single cached from_env() call to avoid redundant env lookups.
 
 def _get_env_config() -> "OllamaClientConfig":
     """Return a config instance populated from the current environment."""

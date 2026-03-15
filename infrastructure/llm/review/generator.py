@@ -525,6 +525,8 @@ def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, Manuscrip
         return text, metrics
     except PDFValidationError:
         raise
+    except OSError as e:
+        raise PDFValidationError(f"Failed to read PDF file {pdf_path}: {e}") from e
 
 
 def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
@@ -609,7 +611,7 @@ def generate_review_with_metrics(
     temperature: float = 0.3,
     max_tokens: int | None = None,
     max_retries: int = 1,
-) -> tuple[str, ReviewMetrics]:
+) -> tuple[str | None, ReviewMetrics]:
     """Generate a review using a specified template and record execution metrics."""
     log_substep(f"Generating {review_name}...")
 
@@ -665,10 +667,8 @@ def generate_review_with_metrics(
                 logger.debug(f"Attempt {attempt + 1} failed for {review_name}: {e}")
             else:
                 metrics.generation_time_seconds = time.time() - start_time
-                error_response = f"*Error generating {review_name}: {e}*"
-                metrics.output_chars = len(error_response)
-                metrics.output_words = len(error_response.split())
-                return error_response, metrics
+                logger.error(f"Error generating {review_name}: {e}")
+                return None, metrics
 
     original_length = len(response)
     has_rep, _, unique_ratio = detect_repetition(response, similarity_threshold=0.8)
@@ -698,7 +698,7 @@ def generate_review_with_metrics(
 
 def generate_llm_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
-) -> tuple[str, ReviewMetrics]:
+) -> tuple[str | None, ReviewMetrics]:
     """Named public API entry point for executive summary reviews.
 
     Binds review_type='executive_summary' and ManuscriptExecutiveSummary template.
@@ -719,7 +719,7 @@ def generate_llm_executive_summary(
 
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
-) -> tuple[str, ReviewMetrics]:
+) -> tuple[str | None, ReviewMetrics]:
     """Quality review using ManuscriptQualityReview template, temperature=0.3."""
     return generate_review_with_metrics(
         client=client,
@@ -735,7 +735,7 @@ def generate_quality_review(
 
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
-) -> tuple[str, ReviewMetrics]:
+) -> tuple[str | None, ReviewMetrics]:
     """Methodology review using ManuscriptMethodologyReview template, temperature=0.3."""
     return generate_review_with_metrics(
         client=client,
@@ -751,7 +751,7 @@ def generate_methodology_review(
 
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
-) -> tuple[str, ReviewMetrics]:
+) -> tuple[str | None, ReviewMetrics]:
     """Named public API entry point for improvement suggestions (ManuscriptImprovementSuggestions template).
 
     Uses temperature=0.4 (vs 0.3 for other reviews) because generative ideation

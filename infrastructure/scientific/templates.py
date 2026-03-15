@@ -131,8 +131,8 @@ class TestNumericalStability:
                 try:
                     result = check_numerical_stability(func, test_inputs)
                     assert result.stability_score > 0.8, f"{{func_name}} has poor numerical stability"
-                except Exception as e:  # noqa: BLE001
-                    # Skip functions that can't be tested this way
+                except (TypeError, ValueError):
+                    # Skip functions that don't accept numeric inputs
                     continue
 
 class TestPerformance:
@@ -148,7 +148,7 @@ class TestPerformance:
                 try:
                     result = benchmark_function(func, test_inputs)
                     assert result.execution_time < 1.0, f"{{func_name}} is too slow"
-                except Exception as e:  # noqa: BLE001
+                except (TypeError, ValueError):
                     continue
 
 class TestCorrectness:

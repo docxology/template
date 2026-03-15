@@ -76,7 +76,8 @@ class SecurityValidator:
         and adds LLM-specific whitespace and length handling. Retained here for test compatibility.
 
         Sunset plan: remove after tests/infra_tests/core/test_security.py migrates its
-        ``validate_llm_input`` assertions to ``sanitize_llm_input``. Target: next major cleanup session.
+        ``validate_llm_input`` assertions to ``sanitize_llm_input``.
+        TODO: remove by 2026-06-01 or next major version bump (whichever comes first).
 
         Raises:
             SecurityViolation: If input contains dangerous content

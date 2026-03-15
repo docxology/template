@@ -67,7 +67,8 @@ def _find_combined_pdf(output_dir: Path, project_name: str) -> tuple[Path, float
     # 3. Source project directory (for Stage 6 validation before copy)
     path_parts = output_dir.parts
     if "output" in path_parts:
-        output_idx = path_parts.index("output")
+        # Use rindex (last occurrence) so a parent dir named 'output' doesn't corrupt the path.
+        output_idx = len(path_parts) - 1 - path_parts[::-1].index("output")
         repo_root = Path(*path_parts[:output_idx])
         qualified_path = "/".join(path_parts[output_idx + 1:])
         source_pdf_dir = repo_root / "projects" / qualified_path / "output" / "pdf"
