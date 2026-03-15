@@ -717,38 +717,6 @@ def generate_llm_executive_summary(
     )
 
 
-def generate_quality_review(
-    client: LLMClient, text: str, model_name: str = ""
-) -> tuple[str | None, ReviewMetrics]:
-    """Assess manuscript writing quality: clarity, structure, argumentation, and flow."""
-    return generate_review_with_metrics(
-        client=client,
-        text=text,
-        review_type="quality_review",
-        review_name="quality review",
-        template_class=ManuscriptQualityReview,
-        model_name=model_name,
-        temperature=0.3,
-        max_tokens=None,
-    )
-
-
-def generate_methodology_review(
-    client: LLMClient, text: str, model_name: str = ""
-) -> tuple[str | None, ReviewMetrics]:
-    """Evaluate scientific methodology: experimental design, statistical rigor, and validity."""
-    return generate_review_with_metrics(
-        client=client,
-        text=text,
-        review_type="methodology_review",
-        review_name="methodology review",
-        template_class=ManuscriptMethodologyReview,
-        model_name=model_name,
-        temperature=0.3,
-        max_tokens=None,
-    )
-
-
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str | None, ReviewMetrics]:

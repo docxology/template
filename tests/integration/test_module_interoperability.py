@@ -9,7 +9,7 @@ import pytest
 
 from infrastructure import publishing
 from infrastructure.core.health_check import SystemHealthChecker
-from infrastructure.llm import LLMClient
+from infrastructure.llm.core.client import LLMClient
 
 
 class TestResearchWorkflow:

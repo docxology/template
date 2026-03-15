@@ -26,7 +26,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "scripts"))
 
 # Import validation functions from infrastructure (now moved there)
-from infrastructure.llm import is_off_topic
+from infrastructure.llm.validation import is_off_topic
 from infrastructure.llm.core.config import get_max_input_length
 
 DEFAULT_MAX_INPUT_LENGTH: int = 500000

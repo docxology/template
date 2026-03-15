@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import time
+from functools import partial
 from pathlib import Path
 
 from infrastructure.core.exceptions import PDFValidationError
@@ -13,7 +14,7 @@ from infrastructure.core.logging_utils import (
     log_progress,
 )
 from infrastructure.core.config_queries import get_translation_languages, get_review_types
-from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES
+from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES, ManuscriptQualityReview, ManuscriptMethodologyReview
 from infrastructure.llm.review.io import (
     save_review_outputs,
     save_single_review,
@@ -27,8 +28,7 @@ from infrastructure.llm.review.generator import (
     extract_manuscript_text,
     generate_llm_executive_summary,
     generate_improvement_suggestions,
-    generate_methodology_review,
-    generate_quality_review,
+    generate_review_with_metrics,
     generate_translation,
     warmup_model,
 )
@@ -37,8 +37,22 @@ logger = get_logger(__name__)
 
 REVIEW_GENERATORS = {
     "executive_summary": generate_llm_executive_summary,
-    "quality_review": generate_quality_review,
-    "methodology_review": generate_methodology_review,
+    "quality_review": partial(
+        generate_review_with_metrics,
+        review_type="quality_review",
+        review_name="quality review",
+        template_class=ManuscriptQualityReview,
+        temperature=0.3,
+        max_tokens=None,
+    ),
+    "methodology_review": partial(
+        generate_review_with_metrics,
+        review_type="methodology_review",
+        review_name="methodology review",
+        template_class=ManuscriptMethodologyReview,
+        temperature=0.3,
+        max_tokens=None,
+    ),
     "improvement_suggestions": generate_improvement_suggestions,
 }
 

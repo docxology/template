@@ -13,13 +13,12 @@ from infrastructure.llm.review.generator import (
     extract_manuscript_text,
     generate_improvement_suggestions,
     generate_llm_executive_summary as generate_executive_summary,
-    generate_methodology_review,
-    generate_quality_review,
     generate_review_with_metrics,
     generate_translation,
     validate_review_quality,
     warmup_model,
 )
+from infrastructure.llm.templates.manuscript import ManuscriptMethodologyReview, ManuscriptQualityReview
 
 
 class TestExtractManuscriptText:
@@ -184,22 +183,38 @@ class TestTemplateBasedGenerators:
 
     @pytest.mark.slow
     def test_generate_quality_review_calls_llm(self, ollama_test_server):
-        """Test generate_quality_review actually queries LLM."""
+        """Test generate_review_with_metrics with quality template queries LLM."""
         manuscript_text = "Test manuscript."
         client = LLMClient()
 
-        result, metrics = generate_quality_review(client, manuscript_text)
+        result, metrics = generate_review_with_metrics(
+            client=client,
+            text=manuscript_text,
+            review_type="quality_review",
+            review_name="quality review",
+            template_class=ManuscriptQualityReview,
+            temperature=0.3,
+            max_tokens=None,
+        )
 
         assert isinstance(result, str)
         assert len(result) > 0
 
     @pytest.mark.slow
     def test_generate_methodology_review_calls_llm(self, ollama_test_server):
-        """Test generate_methodology_review actually queries LLM."""
+        """Test generate_review_with_metrics with methodology template queries LLM."""
         manuscript_text = "Test manuscript."
         client = LLMClient()
 
-        result, metrics = generate_methodology_review(client, manuscript_text)
+        result, metrics = generate_review_with_metrics(
+            client=client,
+            text=manuscript_text,
+            review_type="methodology_review",
+            review_name="methodology review",
+            template_class=ManuscriptMethodologyReview,
+            temperature=0.3,
+            max_tokens=None,
+        )
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -420,7 +435,7 @@ class TestReviewGeneratorsIntegration:
 
     def test_generate_executive_summary_real_ollama(self):
         """Test generate_executive_summary with real Ollama."""
-        from infrastructure.llm import LLMClient
+        from infrastructure.llm.core.client import LLMClient
 
         client = LLMClient()
         if not client.check_connection():
@@ -434,7 +449,7 @@ class TestReviewGeneratorsIntegration:
 
     def test_generate_review_with_metrics_real_ollama(self):
         """Test generate_review_with_metrics with real Ollama."""
-        from infrastructure.llm import LLMClient
+        from infrastructure.llm.core.client import LLMClient
 
         client = LLMClient()
         if not client.check_connection():
