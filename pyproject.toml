@@ -40,6 +40,9 @@ dependencies = [
   "numpy>=1.22",
   "pyyaml>=6.0",
   "matplotlib>=3.7",
+  # requests is required: infrastructure/llm/core/__init__.py unconditionally re-exports
+  # LLMClient which calls the Ollama REST API; any import of infrastructure.llm crashes without it
+  "requests>=2.31.0",
 ]
 
 [project.scripts]
@@ -62,10 +65,8 @@ scientific = [
   "wordcloud>=1.9.0",
   "scikit-learn>=1.3.0",
 ]
-# Optional LLM integration (requires running Ollama server; calls Ollama REST API via requests)
-llm = [
-  "requests>=2.31.0",
-]
+# Optional LLM integration (requires running Ollama server; requests is in core deps)
+llm = []
 # Optional rendering enhancements (lazily imported in manuscript_overview.py and pdf_validator.py)
 rendering = [
   "reportlab>=4.0.0",

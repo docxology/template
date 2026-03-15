@@ -546,6 +546,16 @@ class LLMClient:
                 # Strip thinking tags if present (e.g., from Qwen models)
                 content = strip_thinking_tags(content)
 
+                if not content:
+                    logger.warning(
+                        "strip_thinking_tags reduced response to empty string; "
+                        "model may have returned only <think> content"
+                    )
+                    raise LLMConnectionError(
+                        "Model response was empty after stripping thinking tags",
+                        context={"model": model, "url": url},
+                    )
+
                 if attempt > 0:
                     logger.info(f"Request succeeded on retry {attempt + 1}")
 

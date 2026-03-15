@@ -354,22 +354,35 @@ class SecurityMonitor:
 
 
 
-@functools.lru_cache(maxsize=1)
+# Module-level singletons — initialized on first access to avoid import-time side effects
+# (SecurityMonitor starts background threads; RateLimiter holds mutable rate-window state).
+_security_validator: SecurityValidator | None = None
+_rate_limiter: RateLimiter | None = None
+_security_monitor: SecurityMonitor | None = None
+
+
 def get_security_validator() -> SecurityValidator:
-    """Get the global security validator instance (lazily initialized)."""
-    return SecurityValidator()
+    """Return the process-wide SecurityValidator singleton."""
+    global _security_validator
+    if _security_validator is None:
+        _security_validator = SecurityValidator()
+    return _security_validator
 
 
-@functools.lru_cache(maxsize=1)
 def get_rate_limiter() -> RateLimiter:
-    """Get the global rate limiter instance (lazily initialized)."""
-    return RateLimiter()
+    """Return the process-wide RateLimiter singleton."""
+    global _rate_limiter
+    if _rate_limiter is None:
+        _rate_limiter = RateLimiter()
+    return _rate_limiter
 
 
-@functools.lru_cache(maxsize=1)
 def get_security_monitor() -> SecurityMonitor:
-    """Get the global security monitor instance (lazily initialized)."""
-    return SecurityMonitor()
+    """Return the process-wide SecurityMonitor singleton."""
+    global _security_monitor
+    if _security_monitor is None:
+        _security_monitor = SecurityMonitor()
+    return _security_monitor
 
 
 def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..., Any]:

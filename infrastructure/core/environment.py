@@ -12,6 +12,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from infrastructure.core.env_deps import check_dependencies  # noqa: F401 — re-exported for backwards compat
 from infrastructure.core.logging_utils import get_logger, log_success
 
 logger = get_logger(__name__)
@@ -27,30 +28,6 @@ def check_python_version() -> bool:
 
     log_success(f"Python {version_str} available", logger)
     return True
-
-
-def check_dependencies(
-    packages: list[str] | None = None,
-) -> tuple[bool, list[str]]:
-    """Check that required Python packages are importable.
-
-    Args:
-        packages: Package names to check. Defaults to ["pytest", "uv", "reportlab"].
-
-    Returns:
-        Tuple of (all_present, missing_packages).
-    """
-    if packages is None:
-        packages = ["pytest", "uv", "reportlab"]
-
-    missing: list[str] = []
-    for pkg in packages:
-        try:
-            __import__(pkg)
-        except ImportError:
-            missing.append(pkg)
-
-    return len(missing) == 0, missing
 
 
 def _project_output_dirs(project_name: str) -> list[str]:

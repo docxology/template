@@ -701,7 +701,12 @@ def generate_llm_executive_summary(
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for quality reviews (ManuscriptQualityReview template)."""
+    """Named public API entry point for quality reviews.
+
+    Binds review_type='quality_review' and ManuscriptQualityReview template.
+    Callers use the named function rather than the generic generate_review_with_metrics
+    to avoid having to know the template class and review_type string.
+    """
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -716,7 +721,12 @@ def generate_quality_review(
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for methodology reviews (ManuscriptMethodologyReview template)."""
+    """Named public API entry point for methodology reviews.
+
+    Binds review_type='methodology_review' and ManuscriptMethodologyReview template.
+    Callers use the named function rather than the generic generate_review_with_metrics
+    to avoid having to know the template class and review_type string.
+    """
     return generate_review_with_metrics(
         client=client,
         text=text,

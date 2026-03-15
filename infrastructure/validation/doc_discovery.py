@@ -39,7 +39,6 @@ def discover_markdown_files(repo_root: Path) -> list[Path]:
             md_files.append(md_file)
     return sorted(md_files)
 
-find_markdown_files = discover_markdown_files
 
 
 def catalog_agents_readme(md_files: list[Path], repo_root: Path) -> list[str]:
@@ -225,7 +224,7 @@ def run_discovery_phase(repo_root: Path) -> dict[str, Any]:
     logger.info("Phase 1: Discovery and Inventory...")
 
     # Find all markdown files
-    md_files = find_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root)
     logger.info(f"Found {len(md_files)} markdown files")
 
     # Catalog AGENTS.md and README.md files
@@ -282,7 +281,7 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
         Dictionary mapping project names to their documentation metadata
     """
     projects = discover_projects(repo_root)
-    md_files = find_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root)
 
     project_docs = {}
 
@@ -406,7 +405,7 @@ def get_audit_context(repo_root: Path) -> dict[str, Any]:
         Dictionary with audit context including projects, configs, and hierarchy
     """
     projects = discover_projects(repo_root)
-    md_files = find_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root)
     config_files = find_config_files(repo_root)
     hierarchy = create_hierarchy(md_files, repo_root)
     categories = categorize_documentation(md_files, repo_root)
