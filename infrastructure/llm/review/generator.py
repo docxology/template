@@ -627,11 +627,11 @@ def generate_review_with_metrics(
 
     start_time = time.time()
     best_response = ""
-    response = ""  # Initialize before loop — assigned in each iteration's try block
     had_off_topic = False
     config = OllamaClientConfig.from_env()
 
     for attempt in range(max_retries + 1):
+        response = ""  # reset each attempt; overwritten on success
         try:
             current_prompt = prompt
             if attempt > 0:

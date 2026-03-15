@@ -6,6 +6,19 @@ Split from logging_progress.py to keep each module under 300 LOC.
 
 from __future__ import annotations
 
+from typing import NamedTuple
+
+
+class ETAEstimate(NamedTuple):
+    """Three-point ETA estimate with optimistic, realistic, and pessimistic values.
+
+    All values are in seconds, or None when indeterminate.
+    """
+
+    optimistic: float | None
+    realistic: float | None
+    pessimistic: float | None
+
 
 def calculate_eta(elapsed_time: float, completed_items: int, total_items: int) -> float | None:
     """Calculate estimated time remaining using linear extrapolation; returns None if indeterminate."""
@@ -55,13 +68,13 @@ def calculate_eta_with_confidence(
     completed_items: int,
     total_items: int,
     item_durations: list[float | None] = None,
-) -> tuple[float | None, float | None, float | None]:
-    """Return (optimistic, realistic, pessimistic) ETA tuple based on min/avg/max item duration."""
+) -> ETAEstimate:
+    """Return ETAEstimate(optimistic, realistic, pessimistic) based on min/avg/max item duration."""
     if completed_items <= 0 or total_items <= 0:
-        return (None, None, None)
+        return ETAEstimate(None, None, None)
 
     if completed_items >= total_items:
-        return (0.0, 0.0, 0.0)
+        return ETAEstimate(0.0, 0.0, 0.0)
 
     remaining_items = total_items - completed_items
 
@@ -81,4 +94,4 @@ def calculate_eta_with_confidence(
         realistic = avg_time_per_item * remaining_items
         pessimistic = avg_time_per_item * 1.2 * remaining_items  # 20% slower
 
-    return (optimistic, realistic, pessimistic)
+    return ETAEstimate(optimistic, realistic, pessimistic)

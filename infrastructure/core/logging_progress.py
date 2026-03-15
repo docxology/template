@@ -10,6 +10,7 @@ from contextlib import contextmanager
 from typing import Any, Iterator
 
 from infrastructure.core.eta import (
+    ETAEstimate,
     calculate_eta,
     calculate_eta_ema,
     calculate_eta_with_confidence,
@@ -18,6 +19,7 @@ from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled
 from infrastructure.core.logging_helpers import format_duration
 
 __all__ = [
+    "ETAEstimate",
     "calculate_eta",
     "calculate_eta_ema",
     "calculate_eta_with_confidence",

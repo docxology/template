@@ -51,10 +51,10 @@ def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
         "pytest.mark",
     ]
 
-    all_output: list[str] = []
+    violations: list[str] = []
 
     if not tests_dir.exists():
-        return all_output
+        return violations
 
     for py_file in tests_dir.rglob("*.py"):
         try:
@@ -69,8 +69,8 @@ def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
                         continue
 
                     relative_path = py_file.relative_to(repo_root)
-                    all_output.append(f"{relative_path}:{line_num}: {line_str}")
+                    violations.append(f"{relative_path}:{line_num}: {line_str}")
         except Exception as e:  # noqa: BLE001
             logger.warning(f"Error reading {py_file}: {e}")
 
-    return all_output
+    return violations

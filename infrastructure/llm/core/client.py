@@ -818,10 +818,9 @@ class LLMClient:
             if response.status_code == 200:
                 logger.debug(f"Ollama connection check successful at {self.config.base_url}")
                 return (True, None)
-            else:
-                error_msg = f"HTTP {response.status_code}"
-                logger.warning(f"Ollama connection check failed: {error_msg}")
-                return (False, error_msg)
+            error_msg = f"HTTP {response.status_code}"
+            logger.warning(f"Ollama connection check failed: {error_msg}")
+            return (False, error_msg)
         except requests.exceptions.Timeout:
             error_msg = f"Timeout after {timeout}s"
             logger.debug(f"Ollama connection check timeout: {error_msg}")

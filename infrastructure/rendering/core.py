@@ -58,7 +58,7 @@ class RenderManager:
         if not source_file.exists():
             raise TemplateError(f"Source file does not exist: {source_file}")
 
-        outputs = []
+        rendered_paths = []
         format_errors: list[tuple[str, Exception]] = []
 
         # Validate file format
@@ -73,7 +73,7 @@ class RenderManager:
             if source_file.suffix == ".tex":
                 # LaTeX usually means PDF or Poster
                 logger.info(f"Rendering LaTeX file: {source_file.name}")
-                outputs.append(self.pdf_renderer.render(source_file))
+                rendered_paths.append(self.pdf_renderer.render(source_file))
 
             elif source_file.suffix == ".md":
                 # Markdown supports slides and web formats
@@ -82,7 +82,7 @@ class RenderManager:
                 # 1. Beamer slides for presentation
                 try:
                     logger.debug("Rendering Beamer slides...")
-                    outputs.append(self.render_slides(source_file, output_format="beamer"))
+                    rendered_paths.append(self.render_slides(source_file, output_format="beamer"))
                     logger.debug("Beamer slides rendered successfully")
                 except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
                     format_errors.append(("beamer", e))
@@ -119,17 +119,17 @@ class RenderManager:
                 # 2. HTML web version
                 try:
                     logger.debug("Rendering HTML web version...")
-                    outputs.append(self.web_renderer.render(source_file))
+                    rendered_paths.append(self.web_renderer.render(source_file))
                     logger.debug("HTML web version rendered successfully")
                 except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
                     format_errors.append(("html", e))
                     logger.warning(f"Failed to render HTML: {e}")
                     # Continue - some formats may still succeed
 
-            if not outputs:
+            if not rendered_paths:
                 failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)
                 raise TemplateError(
-                    f"No outputs generated for {source_file.name}. "
+                    f"No rendered_paths generated for {source_file.name}. "
                     f"All formats failed: {failed_formats}"
                 )
 
@@ -137,12 +137,12 @@ class RenderManager:
                 failed_names = ", ".join(fmt for fmt, _ in format_errors)
                 logger.warning(
                     f"Partial success for {source_file.name}: "
-                    f"{len(outputs)} format(s) succeeded, "
+                    f"{len(rendered_paths)} format(s) succeeded, "
                     f"{len(format_errors)} failed ({failed_names})"
                 )
 
-            logger.info(f"Successfully rendered {len(outputs)} format(s) for {source_file.name}")
-            return outputs
+            logger.info(f"Successfully rendered {len(rendered_paths)} format(s) for {source_file.name}")
+            return rendered_paths
 
         except TemplateError:
             # Re-raise TemplateError as-is

@@ -13,6 +13,7 @@ import time
 
 from infrastructure.core.logging_helpers import format_duration
 from infrastructure.core.eta import (
+    ETAEstimate,
     calculate_eta,
     calculate_eta_ema,
     calculate_eta_with_confidence,
@@ -326,11 +327,11 @@ class SubStageProgress:
 
     def get_eta_with_confidence(
         self,
-    ) -> tuple[float | None, float | None, float | None]:
+    ) -> ETAEstimate:
         """Get ETA with confidence intervals.
 
         Returns:
-            Tuple of (realistic_eta, optimistic_eta, pessimistic_eta)
+            ETAEstimate(optimistic, realistic, pessimistic) in seconds.
         """
         if self.current <= 0:
             return None, None, None
