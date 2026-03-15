@@ -1,51 +1,79 @@
-# Pull Request
+# 🔀 Pull Request: [Title]
 
-## Description
+## 📝 Description
 
-<!-- Brief summary of what this PR does and why. -->
+<!-- 
+Provide a clear, concise summary of the changes. 
+Link to any relevant issues using 'Closes #123' syntax.
+-->
 
-Closes #<!-- issue number(s) -->
+**Impact Area:** [e.g., Core Infrastructure, Project X, CI/CD]
+**Issue(s):** Closes #
 
-## Type of Change
+---
 
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Documentation update
-- [ ] Performance improvement
-- [ ] Security enhancement
-- [ ] Refactor / cleanup
-- [ ] CI/CD update
+## 🚀 Technical Requirements
 
-## Pipeline Stage Affected
+### 💎 Quality Standards
+- [ ] **Zero-Mock Policy**: Confirmed no use of `MagicMock`, `mocker.patch`, or `unittest.mock`. All tests use real data/computation.
+- [ ] **Thin Orchestrator Pattern**: All business/scientific logic resides in `src/`. Scripts remain thin coordinators.
+- [ ] **Architecture Alignment**: Changes respect the Layer 1 (Infra) vs Layer 2 (Project) separation.
 
-<!-- Which pipeline script(s) / stage(s) are touched? -->
-- [ ] `00_setup_environment` — environment setup
-- [ ] `01_run_tests` — test execution
-- [ ] `02_run_analysis` — project analysis
-- [ ] `03_render_pdf` — PDF rendering
-- [ ] `04_validate_output` — output validation
-- [ ] `05_copy_outputs` — copy final deliverables
-- [ ] `06_llm_review` — LLM review (optional)
-- [ ] `07_generate_executive_report` — cross-project reporting
-- [ ] `infrastructure/` — core library
-- [ ] `.github/` — CI/CD only
-- [ ] None / documentation only
+### 🧪 Testing & Coverage
+- [ ] **Infrastructure Coverage**: ≥ 60% (as reported by CI)
+- [ ] **Project Coverage**: ≥ 90% (as reported by CI)
+- [ ] **Pipeline Validation**: Full `./run.sh --pipeline` (or specific stages) passed locally.
 
-## Testing
+---
 
-- [ ] All existing tests pass (`uv run pytest`)
-- [ ] New tests added for any new functionality
-- [ ] Coverage requirements met (infra ≥ 60%, projects ≥ 90%)
-- [ ] Tested locally with `./run.sh --pipeline` or relevant stage
+## 📊 Impact Analysis
 
-## No-Mocks Confirmation
+- **[ ] Breaking Change**: Does this change break backward compatibility? (If so, detail migration path below)
+- **[ ] Performance**: Any significant impact on import times or execution speed? (Threshold: ≤ 5s imports)
+- **[ ] Dependencies**: Have any new dependencies been added to `pyproject.toml`?
 
-- [ ] This PR contains **no** use of `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework in tests
+---
 
-## Checklist
+## 🛠️ Pipeline Stages Affected
 
-- [ ] Code follows the Thin Orchestrator pattern (business logic in `src/`, not scripts)
-- [ ] AGENTS.md / README.md updated where relevant
-- [ ] Breaking changes documented in PR description or linked issue
-- [ ] Security considerations addressed (no hard-coded credentials, no new untrusted inputs)
-- [ ] Added to `CHANGELOG.md` or commit message is self-documenting
+Select all stages modified or requiring verification:
+
+| Stage | Path | Role |
+| :--- | :--- | :--- |
+| [ ] **01_clean** | `infrastructure/core/file_cleanup.py` | Directory cleanup |
+| [ ] **02_setup** | `scripts/00_setup_environment.py` | Env verification |
+| [ ] **03_infra_test** | `tests/infra_tests/` | Shared capabilities |
+| [ ] **04_project_test** | `projects/*/tests/` | Domain logic |
+| [ ] **05_analysis** | `projects/*/scripts/` | Scientific workflows |
+| [ ] **06_render** | `projects/*/manuscript/` | PDF generation |
+| [ ] **07_validate** | `infrastructure/validation/` | QA gates |
+| [ ] **08_llm** | `scripts/06_llm_review.py` | AI evaluation |
+| [ ] **09_report** | `scripts/07_generate_executive_report.py` | Multi-project reporting |
+| [ ] **10_copy** | `scripts/05_copy_outputs.py` | Delivery |
+
+---
+
+## 📸 Testing Evidence
+
+<!-- 
+Please provide screenshots, command outputs, or logs confirming local success.
+Example: uv run pytest output summary.
+-->
+
+<details>
+<summary><b>View Testing Logs</b></summary>
+
+```text
+# Paste command output here
+```
+</details>
+
+---
+
+## ✅ Checklist
+
+- [ ] `AGENTS.md` and `README.md` updated in the affected directories.
+- [ ] All code is PEP8 compliant (Ruff check/format passed).
+- [ ] Mypy type checking passes with zero errors.
+- [ ] Security scan (`uv run bandit`) reveals no new issues.
+- [ ] Commits follow project conventions (e.g., 'feat:', 'fix:', 'docs:').

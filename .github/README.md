@@ -173,15 +173,9 @@ stateDiagram-v2
     Active --> Archive: Completion / Retirement
     Archive --> Active: Reactivation
     
-    state InProgress {
-        direction LR
-        Drafting --> Validation
-    }
-    
-    state Active {
-        direction LR
-        Execute --> Validate --> Build
-    }
+    InProgress : Staging Area
+    Active : Production Pipeline
+    Archive : Historical Reference
 ```
 
 ## 📦 Dependency Management
@@ -248,7 +242,7 @@ Require PR review before merging: 1 approver
 ### Secrets Needed
 
 | Secret | Required for |
-|---|---|
+| --- | --- |
 | `CODECOV_TOKEN` | Coverage upload to Codecov (optional but recommended) |
 
 ---
