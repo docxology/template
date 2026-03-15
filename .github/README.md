@@ -39,31 +39,39 @@ uv sync
 
 ## 📐 Architecture
 
+The repository follows a **Two-Layer Architecture** designed for modularity and project isolation.
+
+```mermaid
+graph TD
+    Root["/ (Root)"] --> Infra["infrastructure/ (Layer 1: Generic Core)"]
+    Root --> Scripts["scripts/ (Generic Entry Points)"]
+    Root --> Projects["projects/ (Layer 2: Active Projects)"]
+    Root --> ProjectsIP["projects_in_progress/ (Back-burner)"]
+    Root --> ProjectsArch["projects_archive/ (Historic)"]
+    Root --> Output["output/ (Final Deliverables)"]
+
+    subgraph "Layer 1: Shared Capabilities"
+        Infra --> Core["core/ (Pipeline, logging)"]
+        Infra --> Render["rendering/ (PDF, LaTeX)"]
+        Infra --> Valid["validation/ (QA docs)"]
+    end
+
+    subgraph "Layer 2: Research Domains"
+        Projects --> P1["projects/code_project"]
+        Projects --> P2["projects/medical_ai"]
+    end
 ```
-template/
-├── infrastructure/          ← Generic reusable library (Layer 1)
-│   ├── core/                   logging, pipeline, checkpointing
-│   ├── rendering/              PDF + LaTeX generation
-│   ├── validation/             markdown + PDF QA
-│   ├── scientific/             benchmarking, numerical stability
-│   ├── reporting/              executive reports, dashboards
-│   └── steganography/          cryptographic watermarking
-│
-├── projects/{name}/         ← Your active research projects, these will be rendered (Layer 2)
-│   ├── src/                    domain-specific algorithms
-│   ├── tests/                  project test suite (≥90% coverage)
-│   ├── scripts/                thin orchestrators → import from src/
-│   ├── manuscript/             markdown → PDF pipeline
-│   │   └── config.yaml         paper metadata, LLM/translation opts
-│   └── output/                 generated artefacts (disposable)
-│
-├── projects_archive/        ← Archived/historical projects (preserved)
-├── projects_in_progress/    ← Staging area for projects which may be on back burner
-├── scripts/                 ← Generic pipeline entry points (00–07)
-├── output/{name}/           ← Final deliverables (PDF, web, data)
-├── run.sh                   ← Main interactive + pipeline entry point
-└── secure_run.sh            ← Pipeline + steganographic PDF hardening
-```
+
+### Directory Roles
+
+| Path | Persistence | Purpose |
+| --- | --- | --- |
+| `infrastructure/` | Permanent | Reusable core logic (Layer 1) |
+| `projects/` | Permanent | **Active** research projects; rendered by pipeline |
+| `projects_in_progress/` | Transient | Staging area for drafting new projects |
+| `projects_archive/` | Permanent | Preserved historical work (not executed) |
+| `scripts/` | Permanent | Generic orchestrators for the pipeline |
+| `output/` | Disposable | Final artifacts (PDFs, dashboards) |
 
 **Key pattern:** business logic lives in `projects/{name}/src/` — scripts are **thin orchestrators** that import and call it. Violating this breaks the architecture.
 
@@ -81,21 +89,26 @@ template/
 
 ### CI Job Flow
 
-```
-lint ──────────────────────────────────────────────────────┐
- └─► verify-no-mocks                                        │
-      ├─► test-infra  [ubuntu+mac × 3.10/3.11/3.12]  ≥60% │
-      ├─► test-project [ubuntu+mac × 3.10/3.11/3.12]  ≥90% │
-      ├─► validate    [manuscript markdown + imports]        │
-      └─► security    [pip-audit + bandit MEDIUM+]           │
-test-infra + test-project                                   │
- └─► performance     [import time ≤ 5 s]                   ◄┘
+The GitHub Actions workflow implements a strictly-gated 7-job pipeline.
+
+```mermaid
+graph TD
+    L[Job 1: Lint & Type Check] --> VNM[Job 2: Verify No Mocks]
+    VNM --> TI[Job 3: Infra Tests]
+    VNM --> TP[Job 4: Project Tests]
+    L --> VM[Job 5: Validate Manuscript]
+    L --> SS[Job 6: Security Scan]
+    TI --> PC[Job 7: Performance Check]
+    TP --> PC
+    
+    style L fill:#f9f,stroke:#333,stroke-width:2px
+    style PC fill:#bbf,stroke:#333,stroke-width:2px
 ```
 
 ### Quality Gates
 
 | Gate | Tool | Threshold |
-|---|---|---|
+| --- | --- | --- |
 | Code style | Ruff | zero violations |
 | Formatting | Ruff | zero diffs |
 | Type safety | mypy | no errors |
@@ -111,7 +124,7 @@ test-infra + test-project                                   │
 # Lint
 uv run ruff check infrastructure/ projects/*/src/ && uv run ruff format --check infrastructure/ projects/*/src/
 
-# Tests with coverage isolation
+# Run tests locally (mirror CI)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 uv run pytest projects/*/tests/ --cov-fail-under=90 -m "not requires_ollama"
 
@@ -121,12 +134,62 @@ uv run pip-audit && uv run bandit -r -ll infrastructure/ scripts/ projects/ --ex
 
 ---
 
+## 🚀 Pipeline Lifecycle
+
+The master orchestration script (`run.sh`) executes a 10-stage pipeline to ensure research integrity from environment setup to final delivery.
+
+```mermaid
+flowchart LR
+    Start([run.sh]) --> S1[01 Clean]
+    S1 --> S2[02 Setup]
+    S2 --> S3[03 Infra Test]
+    S3 --> S4[04 Project Test]
+    S4 --> S5[05 Analysis]
+    S5 --> S6[06 Rendering]
+    S6 --> S7[07 Validate]
+    S7 --> S8[08 LLM Review]
+    S8 --> S9[09 Translation]
+    S9 --> S10[10 Copy]
+    S10 --> End([Deliverables])
+
+    subgraph "Core Execution"
+        S3
+        S4
+        S5
+        S6
+    end
+```
+
+---
+
+## 📂 Project Lifecycle
+
+Projects transition through three distinct directory states to maintain focus and historical auditability.
+
+```mermaid
+stateDiagram-v2
+    [*] --> InProgress: Draft Scaffolding
+    InProgress --> Active: Promotion (src/ + tests/)
+    Active --> Archive: Completion / Retirement
+    Archive --> Active: Reactivation
+    
+    state InProgress {
+        direction LR
+        Drafting --> Validation
+    }
+    
+    state Active {
+        direction LR
+        Execute --> Validate --> Build
+    }
+```
+
 ## 📦 Dependency Management
 
 [`dependabot.yml`](dependabot.yml) — weekly automated PRs for both ecosystems:
 
 | Ecosystem | Group | Max open PRs |
-|---|---|---|
+| --- | --- | --- |
 | GitHub Actions | all minor/patch batched | 5 |
 | Python (pip/uv) | `dev-tools` (pytest, mypy, ruff…) | 5 |
 | Python (pip/uv) | `scientific-core` (numpy, scipy…) | 5 |
@@ -140,7 +203,7 @@ Labels added automatically: `dependencies` · `automated` · ecosystem tag.
 ### Issues → [New Issue](https://github.com/docxology/template/issues/new/choose)
 
 | Template | Labels | Best for |
-|---|---|---|
+| --- | --- | --- |
 | [🐛 Bug Report](ISSUE_TEMPLATE/bug_report.md) | `bug` · `needs-triage` | Reproducible errors with log output and pipeline stage |
 | [✨ Feature Request](ISSUE_TEMPLATE/feature_request.md) | `enhancement` · `needs-triage` | New capabilities with priority and alternatives |
 | [📝 Documentation](ISSUE_TEMPLATE/documentation.md) | `documentation` · `needs-triage` | Incorrect, missing, or outdated docs with file paths |
