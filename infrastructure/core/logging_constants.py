@@ -7,7 +7,6 @@ and circular import issues.
 
 from __future__ import annotations
 
-import functools
 import os
 import sys
 
