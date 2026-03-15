@@ -207,7 +207,7 @@ flowchart TD
 | **logging_utils.py** | Unified logging system with environment config | `get_logger()`, `setup_logger()`, `log_operation()`, `log_timing()`, `log_function_call()` |
 | **config_loader.py** | YAML config loading with environment overrides | `load_config()`, `get_config_as_dict()`, `get_config_as_env_vars()`, `find_config_file()` |
 | **health_check.py** | System health monitoring and component status | `SystemHealthChecker`, `get_health_api()`, `quick_health_check()`, `get_health_status()` |
-| **security.py** | Input validation and security monitoring | `SecurityValidator`, `SecurityHeaders`, `RateLimiter`, `validate_llm_input()` |
+| **security.py** | Input validation and security monitoring | `SecurityValidator`, `get_security_headers()`, `RateLimiter`, `validate_llm_input()` |
 | **progress.py** | Progress tracking with visual indicators | `ProgressBar`, `LLMProgressTracker`, `SubStageProgress` |
 | **checkpoint.py** | Pipeline state management for resume capability | `CheckpointManager`, `PipelineCheckpoint`, `StageResult` |
 | **retry.py** | Exponential backoff retry logic | `retry_with_backoff()`, `RetryableOperation` |
@@ -300,7 +300,7 @@ graph TD
 
 ### Security & Health Monitoring
 - **`SecurityValidator`** - Input sanitization and threat detection
-- **`SecurityHeaders`** - HTTP security header generation
+- **`get_security_headers()`** - HTTP security header generation (module-level function)
 - **`RateLimiter`** - Configurable request rate limiting
 - **`SecurityMonitor`** - Security event tracking and alerting
 - **`SystemHealthChecker`** - Component-level health monitoring

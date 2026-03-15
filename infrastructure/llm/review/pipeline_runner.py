@@ -82,10 +82,7 @@ def run_llm_review_pipeline(
     pdf_dir = project_output / "pdf"
     project_specific_pdf = pdf_dir / f"{project_basename}_combined.pdf"
 
-    if project_specific_pdf.exists():
-        pdf_path = project_specific_pdf
-    else:
-        pdf_path = project_specific_pdf  # Use expected filename in error message
+    pdf_path = project_specific_pdf  # Always use expected filename; extract_manuscript_text handles missing-file case
 
     output_dir = project_output / "llm"
 

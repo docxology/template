@@ -620,7 +620,7 @@ def generate_review_with_metrics(
     log_substep(f"Generating {review_name}...")
 
     if max_tokens is None:
-        max_tokens = OllamaClientConfig.from_env().long_max_tokens
+        max_tokens = client.config.long_max_tokens
 
     metrics = ReviewMetrics(
         input_chars=len(text),

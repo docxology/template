@@ -25,13 +25,19 @@ EMOJIS = {
     "chart": "📊",
 }
 
-@functools.lru_cache(maxsize=None)
 def get_emoji_enabled() -> bool:
-    """Return True if emoji output is enabled (NO_EMOJI unset and stdout is a TTY)."""
+    """Return True if emoji output is enabled (NO_EMOJI unset and stdout is a TTY).
+
+    Not cached: sys.stdout.isatty() and os.getenv("NO_EMOJI") are both legitimately
+    changed between tests (stdout capture, env patching), so caching would cause
+    test-order-dependent failures.
+    """
     return not os.getenv("NO_EMOJI") and sys.stdout.isatty()
 
 
-@functools.lru_cache(maxsize=None)
 def get_structured_logging_enabled() -> bool:
-    """Return True if structured (JSON) logging is enabled via STRUCTURED_LOGGING env var."""
+    """Return True if structured (JSON) logging is enabled via STRUCTURED_LOGGING env var.
+
+    Not cached: os.getenv() can be legitimately patched between tests.
+    """
     return os.getenv("STRUCTURED_LOGGING", "false").lower() == "true"
