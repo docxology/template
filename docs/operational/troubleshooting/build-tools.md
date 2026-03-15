@@ -99,20 +99,20 @@ tail -20 output/pdf/_combined_manuscript.tex
 
 ```bash
 # Verify figures exist
-ls -la project/output/figures/
+ls -la projects/{name}/output/figures/
 
 # Check figure references
-grep "includegraphics" project/output/pdf/_combined_manuscript.tex | head -5
+grep "includegraphics" projects/{name}/output/pdf/_combined_manuscript.tex | head -5
 
 # Check LaTeX log for graphics errors
-tail -150 project/output/pdf/_combined_manuscript.log | grep -A2 -B2 "graphics\|Error"
+tail -150 projects/{name}/output/pdf/_combined_manuscript.log | grep -A2 -B2 "graphics\|Error"
 ```
 
 **Solutions:**
 
 1. Generate missing figures: `uv run python scripts/02_run_analysis.py`
-2. Verify graphicx package: `grep "usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex`
-3. Fix figure paths: `sed -i 's|{figures/|{../output/figures/|g' project/manuscript/*.md`
+2. Verify graphicx package: `grep "usepackage{graphicx}" projects/{name}/output/pdf/_combined_manuscript.tex`
+3. Fix figure paths: `sed -i 's|{figures/|{../output/figures/|g' projects/{name}/manuscript/*.md`
 4. Run full rebuild: `uv run python scripts/execute_pipeline.py --core-only --clean`
 
 ---
@@ -137,7 +137,7 @@ grep "Emergency stop" output/pdf/_combined_manuscript.log
 
 **Symptom:** PDF renders but title page missing
 
-**Solution:** Create/verify `project/manuscript/config.yaml`:
+**Solution:** Create/verify `projects/{name}/manuscript/config.yaml`:
 
 ```yaml
 paper:

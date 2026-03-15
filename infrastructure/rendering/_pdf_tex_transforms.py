@@ -176,6 +176,18 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
         fixed_count += bare_figure_count
         logger.info(f"Fixed {bare_figure_count} bare figure path(s) via second fallback")
 
+    # Third fallback: Handle "output/figures/" paths (no ../ prefix)
+    # These come from markdown ![...](output/figures/xxx.png) references that Pandoc
+    # converts to \includegraphics{output/figures/xxx.png}. The primary regex may
+    # miss these when the \includegraphics options contain nested braces (e.g.,
+    # alt={...} with LaTeX math), breaking the [^\]]*] pattern. Since LaTeX compiles
+    # from output/pdf/, "output/figures/" is incorrect — it needs "../figures/".
+    remaining_output_figures = tex_content.count("]{output/figures/")
+    if remaining_output_figures > 0:
+        tex_content = tex_content.replace("]{output/figures/", "]{../figures/")
+        fixed_count += remaining_output_figures
+        logger.info(f"Fixed {remaining_output_figures} output/figures/ path(s) via third fallback")
+
     if fixed_count > 0:
         logger.info(f"Fixed {fixed_count} figure path(s)")
         for path_info in paths_fixed[:10]:  # Show first 10

@@ -1,1 +1,0 @@
-\beamer@sectionintoc {1}{Categorical Compositional Distributional Semantics (DisCoCat)}{2}{0}{1}

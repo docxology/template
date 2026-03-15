@@ -179,8 +179,8 @@ cat document.log | grep Error
 ### Figure not found
 
 ```bash
-ls project/output/figures/
-grep "includegraphics" project/output/pdf/_combined_manuscript.tex
+ls projects/{name}/output/figures/
+grep "includegraphics" projects/{name}/output/pdf/_combined_manuscript.tex
 uv run python scripts/02_run_analysis.py   # Regenerate figures
 ```
 
@@ -203,15 +203,15 @@ uv run python scripts/02_run_analysis.py   # Regenerate figures
 **Diagnosis:**
 
 ```bash
-ls -la project/output/.checkpoints/pipeline_checkpoint.json
-cat project/output/.checkpoints/pipeline_checkpoint.json | uv run python -m json.tool
+ls -la projects/{name}/output/.checkpoints/pipeline_checkpoint.json
+cat projects/{name}/output/.checkpoints/pipeline_checkpoint.json | uv run python -m json.tool
 ```
 
 **Solutions:**
 
 1. Verify checkpoint is valid JSON
 2. Ensure `PIPELINE_RESUME=1` is set
-3. Clear invalid checkpoint: `rm project/output/.checkpoints/pipeline_checkpoint.json`
+3. Clear invalid checkpoint: `rm projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
 
 ---
 

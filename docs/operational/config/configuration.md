@@ -11,7 +11,7 @@ This guide documents all configuration options available in the Research Project
 The template supports three configuration methods (in priority order):
 
 1. **Environment Variables** (highest priority - override all)
-2. **Configuration File** (`project/manuscript/config.yaml`)
+2. **Configuration File** (`projects/{name}/manuscript/config.yaml`)
 3. **Default Values** (lowest priority)
 
 ## Core Configuration
@@ -51,8 +51,8 @@ export NO_EMOJI=1   # Disable emojis
 
 ### Location
 
-**Location**: `project/manuscript/config.yaml`  
-**Template**: `project/manuscript/config.yaml.example`
+**Location**: `projects/{name}/manuscript/config.yaml`  
+**Template**: `projects/{name}/manuscript/config.yaml.example`
 
 ### Structure
 
@@ -105,7 +105,7 @@ metadata:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CHECKPOINT_DIR` | `project/output/.checkpoints` | Checkpoint directory |
+| `CHECKPOINT_DIR` | `projects/{name}/output/.checkpoints` | Checkpoint directory |
 | `CHECKPOINT_ENABLED` | `true` | Enable checkpoint saving |
 
 **Usage:**

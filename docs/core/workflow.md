@@ -19,7 +19,7 @@ The generic project template implements a **unified test-driven development para
 
 - **Source code** implements mathematical functionality
 - **Tests** validate all functionality with coverage (60% infra, 90% project minimum)
-- **Scripts** are **thin orchestrators** that import and use `src/` methods
+- **Scripts** are **thin orchestrators** that import and use `projects/{name}/src/` methods
 - **Documentation** references code and displays generated outputs
 - **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
 
@@ -28,16 +28,16 @@ The generic project template implements a **unified test-driven development para
 ```mermaid
 graph TB
     subgraph "Development Components"
-        SRC[Source Code<br/>src/]
-        TESTS[Tests<br/>tests/]
-        SCRIPTS[Scripts<br/>scripts/]
-        MANUSCRIPT[Manuscript<br/>manuscript/]
+        SRC[Source Code<br/>projects/{name}/src/]
+        TESTS[Tests<br/>projects/{name}/tests/]
+        SCRIPTS[Scripts<br/>projects/{name}/scripts/]
+        MANUSCRIPT[Manuscript<br/>projects/{name}/manuscript/]
     end
 
     subgraph "Validation & Generation"
         VALIDATION[Test Validation<br/>100% Coverage]
-        FIGURES[Figure Generation<br/>Using src/ methods]
-        DATA[Data Generation<br/>Using src/ methods]
+        FIGURES[Figure Generation<br/>Using project src/ methods]
+        DATA[Data Generation<br/>Using project src/ methods]
         MARKDOWN_VAL[Markdown Validation<br/>Images & References]
     end
 
@@ -80,8 +80,8 @@ The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) execut
 
 ### 1. Code Validation Phase
 
-- **Runs all generation scripts** - This validates that `src/` code works correctly
-- **Scripts import from src/** - Ensures no code duplication and validates imports
+- **Runs all generation scripts** - This validates that `projects/{name}/src/` code works correctly
+- **Scripts import from project src/** - Ensures no code duplication and validates imports
 - **Generates figures and data** - Creates outputs that markdown will reference
 
 ### 2. Markdown Validation Phase
@@ -108,7 +108,7 @@ The test suite ensures coverage of all modules and validates the entire pipeline
 ### What Tests Validate
 
 - **Mathematical correctness** - All functions produce expected results
-- **Import compatibility** - Scripts can successfully import from `src/` modules
+- **Import compatibility** - Scripts can successfully import from `projects/{name}/src/` modules
 - **Output generation** - Figure and data generation works correctly
 - **Deterministic execution** - All outputs are reproducible with fixed seeds
 - **Path management** - Outputs go to correct directories
@@ -147,12 +147,12 @@ flowchart TD
 
 ```bash
 # Always start with tests
-uv run pytest tests/ --cov=src --cov-report=term-missing
+uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing
 
 # Check coverage (must be 100%)
 coverage report
 
-# Make code changes in src/
+# Make code changes in projects/code_projects/{name}/src/
 # Update corresponding tests
 # Update documentation if needed
 ```
@@ -164,11 +164,11 @@ coverage report
 uv run pytest
 
 # Generate figures and data
-uv run python project/scripts/example_figure.py
-uv run python scripts/generate_research_figures.py
+uv run python projects/code_project/scripts/example_figure.py
+uv run python scripts/02_run_analysis.py --project code_project
 
 # Validate markdown integrity
-uv run python -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 ```
 
 ### 3. Integration Phase
@@ -184,7 +184,7 @@ uv run python scripts/execute_pipeline.py --core-only
 The pipeline orchestrator executes 8 stages:
 
 - **Stage 00**: Environment setup & validation
-- **Stage 01**: Run tests with coverage (validates src/ code works)
+- **Stage 01**: Run tests with coverage (validates `projects/{name}/src/` code works)
 - **Stage 02**: Execute analysis scripts (generates figures and data)
 - **Stage 03**: Render PDFs from markdown (validates references, builds PDFs)
 - **Stage 04**: Validate outputs (checks PDF quality and integrity)
@@ -194,26 +194,25 @@ The pipeline orchestrator executes 8 stages:
 
 ## Key Components
 
-### Source Code (`src/`)
+### Source Code (`projects/{name}/src/`)
 
 - **`example.py`**: Basic mathematical functions (add, multiply, average, etc.)
-- **`glossary_gen.py`**: API documentation generation utilities
 - Additional modules can be added for specific project needs
 
-**Critical Principle**: ALL business logic and algorithms must live in `src/` modules.
+**Critical Principle**: ALL business logic and algorithms must live in `projects/{name}/src/` modules.
 
-### Tests (`tests/`)
+### Tests (`projects/{name}/tests/`)
 
-- **90% minimum coverage** for project/src/ (currently achieving 100% - coverage!)
+- **90% minimum coverage** for projects/{name}/src/ (currently achieving 100% - coverage!)
 - **60% minimum coverage** for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
 - **Real numerical examples** (no mocks)
 - **Deterministic RNG seeds** for reproducibility
 - **Fast and hermetic** execution
 
-### Generation Scripts (`scripts/`)
+### Generation Scripts (`projects/{name}/scripts/`)
 
-- **Import from src/** modules (no code duplication)
-- **Use src/ methods for all computation** (never implement algorithms)
+- **Import from project src/** modules (no code duplication)
+- **Use project src/ methods for all computation** (never implement algorithms)
 - **Generate figures and data** deterministically
 - **Print output paths** to stdout for manifest collection
 - **Use headless plotting** (MPLBACKEND=Agg)
@@ -265,14 +264,14 @@ output/
 uv sync
 
 # Run tests with coverage
-uv run pytest tests/ --cov=src --cov-report=term-missing
+uv run pytest projects/code_project/tests/ --cov=projects.code_project.src --cov-report=term-missing
 
 # Generate figures
-uv run python project/scripts/example_figure.py
-uv run python scripts/generate_research_figures.py
+uv run python projects/code_project/scripts/example_figure.py
+uv run python scripts/02_run_analysis.py --project code_project
 
 # Validate markdown
-uv run python -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Build PDF pipeline
 uv run python scripts/execute_pipeline.py --core-only
@@ -321,8 +320,8 @@ All directories under `output/` are disposable and can be safely cleaned.
 3. **Reproducibility**: Deterministic generation of all artifacts
 4. **Maintainability**: Clear separation of concerns with unified workflow
 5. **Quality**: test coverage enforced automatically
-6. **Documentation**: Auto-generated API references and validation
-7. **Thin Orchestrator Pattern**: Scripts use tested src/ methods, not duplicate logic
+6. **Documentation**: Validation of references and outputs
+7. **Thin Orchestrator Pattern**: Scripts use tested `projects/{name}/src/` methods, not duplicate logic
 
 ## Troubleshooting
 
@@ -337,10 +336,10 @@ All directories under `output/` are disposable and can be safely cleaned.
 
 ```bash
 # Check what's failing
-uv run python -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Regenerate specific figures
-uv run python project/scripts/example_figure.py
+uv run python projects/code_project/scripts/example_figure.py
 
 # Check test coverage gaps
 coverage report -m
@@ -348,28 +347,28 @@ coverage report -m
 
 ## Key Connections to Remember
 
-1. **src/ modules → tests/ validation → scripts/ generation → manuscript/ documentation**
+1. **`projects/{name}/src/` modules → `projects/{name}/tests/` validation → `projects/{name}/scripts/` generation → `projects/{name}/manuscript/` documentation**
 2. **The pipeline orchestrator ensures all connections are valid before building outputs**
 3. **Changes in any component must be reflected in all connected components**
 4. **The test suite validates the entire pipeline, not just individual modules**
-5. **Documentation is auto-generated where possible to maintain code-doc sync**
-6. **Scripts are THIN ORCHESTRATORS that import and use src/ methods**
-7. **Business logic lives ONLY in src/ - scripts handle orchestration and I/O**
+5. **Documentation is validated against outputs to maintain coherence**
+6. **Scripts are THIN ORCHESTRATORS that import and use `projects/{name}/src/` methods**
+7. **Business logic lives ONLY in `projects/{name}/src/` - scripts handle orchestration and I/O**
 
 ## Thin Orchestrator Pattern
 
 The workflow enforces a **thin orchestrator pattern** where:
 
-- **`src/`** contains ALL business logic, algorithms, and mathematical implementations
-- **`scripts/`** are lightweight wrappers that import and use `src/` methods
-- **`tests/`** ensures coverage of all functionality
-- **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
+- **`projects/{name}/src/`** contains ALL business logic, algorithms, and mathematical implementations
+- **`projects/{name}/scripts/`** are lightweight wrappers that import and use `projects/{name}/src/` methods
+- **`projects/{name}/tests/`** ensures coverage of all functionality
+- **`scripts/execute_pipeline.py`** orchestrates the entire pipeline
 
 This ensures:
 
 - **Maintainability**: Single source of truth for business logic
 - **Testability**: tested core functionality
-- **Reusability**: Scripts can use any `src/` method
+- **Reusability**: Scripts can use any `projects/{name}/src/` method
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
 

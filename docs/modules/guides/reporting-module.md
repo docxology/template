@@ -107,7 +107,7 @@ The reporting module is automatically integrated into:
 - `scripts/01_run_tests.py` - Generates structured test reports
 - `scripts/04_validate_output.py` - Generates validation reports
 
-Reports are saved to `project/output/reports/` by default.
+Reports are saved to `projects/{name}/output/reports/` by default.
 
 ---
 

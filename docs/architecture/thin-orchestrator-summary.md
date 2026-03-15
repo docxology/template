@@ -17,7 +17,7 @@ This document summarizes the implementation of the **thin orchestrator pattern**
 **Layer 2: Project (Project-Specific - Customizable)**
 
 - `projects/{name}/src/` - Research algorithms and analysis (domain-specific)
-- `project/scripts/` - Project analysis scripts (thin orchestrators)
+- `projects/{name}/scripts/` - Project analysis scripts (thin orchestrators)
 - `projects/{name}/tests/` - Project test suite
 
 ### Root Scripts (scripts/)
@@ -31,9 +31,9 @@ Root-level scripts in `scripts/` are **maximally thin orchestrators** that:
 
 **Example**: `scripts/01_run_tests.py` imports `parse_pytest_output()` and `generate_test_report()` from `infrastructure.reporting.test_reporter`, not implementing them locally.
 
-### Project Scripts (project/scripts/)
+### Project Scripts (projects/{name}/scripts/)
 
-Project-specific scripts in `project/scripts/` are thin orchestrators that:
+Project-specific scripts in `projects/{name}/scripts/` are thin orchestrators that:
 
 - Import computation from `projects/{name}/src/` modules
 - Import utilities from `infrastructure/` modules
@@ -68,7 +68,7 @@ Project-specific scripts in `project/scripts/` are thin orchestrators that:
 - **MUST NOT**: Implement business logic (parsing, validation, discovery, etc.)
 - **MUST NOT**: Import from `projects/{name}/src/` (root scripts are generic)
 
-**Project Scripts (project/scripts/):**
+**Project Scripts (projects/{name}/scripts/):**
 
 - **MUST**: Import computation from `projects/{name}/src/` modules
 - **MUST**: Import utilities from `infrastructure/` modules
@@ -100,16 +100,16 @@ report = generate_test_report(infra_results, project_results, repo_root)
 save_test_report(report, output_dir)
 ```
 
-### 2. **Project Script Import Pattern (project/scripts/)**
+### 2. **Project Script Import Pattern (projects/{name}/scripts/)**
 
 ```python
 # projects/{name}/scripts/example_figure.py - Project orchestrator
-from example import add_numbers, calculate_average  # From projects/{name}/src/
+from projects.code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
 from infrastructure.documentation.figure_manager import FigureManager  # From infrastructure/
 
 # Use projects/{name}/src/ methods for computation
 data = [1, 2, 3, 4, 5]
-avg = calculate_average(data)  # From projects/{name}/src/example.py
+avg = calculate_average(data)  # From projects.code_project.src.example
 
 # Script handles visualization and output
 fig, ax = plt.subplots()
@@ -175,7 +175,7 @@ test_results = parse_pytest_output(stdout, stderr, exit_code)
 
 ```python
 # projects/{name}/scripts/example_figure.py - Project orchestrator
-from example import add_numbers, calculate_average  # From projects/{name}/src/
+from projects.code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
 
 # Use projects/{name}/src/ methods for computation
 result = add_numbers(5, 3)
@@ -228,9 +228,9 @@ from infrastructure.reporting.test_reporter import parse_pytest_output
 4. Handle only I/O, visualization, and orchestration
 5. Include proper error handling and documentation
 
-### Extending src/ Modules
+### Extending projects/{name}/src/ Modules
 
-1. Add new mathematical functions to src/
+1. Add new mathematical functions to projects/{name}/src/
 2. Ensure test coverage
 3. Update scripts to use new functionality
 4. Validate integration through build system
@@ -259,7 +259,7 @@ This architecture ensures:
 
 - **Maintainability**: Single source of truth for business logic (infrastructure/ for generic, projects/{name}/src/ for project-specific)
 - **Testability**: tested core functionality in both layers
-- **Reusability**: Infrastructure modules work with any project; project scripts can use any project/src/ method
+- **Reusability**: Infrastructure modules work with any project; project scripts can use any projects/{name}/src/ method
 - **Clarity**: Clear separation of concerns between generic infrastructure and project-specific code
 - **Quality**: Automated validation of the entire system
 

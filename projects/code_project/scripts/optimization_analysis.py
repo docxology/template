@@ -1057,21 +1057,24 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
     """Generate comprehensive analysis dashboard."""
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    if not INFRASTRUCTURE_AVAILABLE:
-        if logger:
-            logger.warning(
-                "Skipping dashboard generation - infrastructure not available"
-            )
-        return None
-
     if logger:
         logger.info("Generating analysis dashboard...")
 
     try:
-        # Collect output summary
-        output_statistics = collect_output_statistics(
-            project_root, project_name="code_project"
-        )
+        # Ensure output directory structure exists
+        output_dir = project_root / "output" / "reports"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Collect output summary (may fail if output dirs are empty/missing
+        # or if infrastructure is not available and collect_output_statistics is undefined)
+        try:
+            output_statistics = collect_output_statistics(
+                project_root, project_name="code_project"
+            )
+        except (OSError, ValueError, TypeError, KeyError, NameError) as stats_err:
+            if logger:
+                logger.debug(f"Output statistics collection failed (non-fatal): {stats_err}")
+            output_statistics = {}
 
         # Create dashboard HTML
         html_content = f"""
@@ -1157,11 +1160,11 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
             logger.info(f"Saved analysis dashboard to: {dashboard_path}")
         return dashboard_path
 
-    except (ValidationError, BuildError) as e:
+    except (OSError, ValueError, TypeError, NameError) as e:
         if logger:
             logger.warning(f"Failed to generate dashboard: {e}")
         return None
-    except (OSError, ValueError, TypeError) as e:
+    except Exception as e:  # noqa: BLE001 — catch infrastructure-specific exceptions
         if logger:
             logger.warning(f"Unexpected error generating dashboard: {e}")
         return None
@@ -1424,12 +1427,14 @@ def main():
                 if validation_report:
                     validation_report_path = save_validation_report(validation_report)
 
-            # Generate publishing materials
+            # Generate publishing materials (requires infrastructure for citations)
             log_info("Generating publishing materials...")
             publishing_metadata = extract_optimization_metadata(results)
-            if publishing_metadata:
+            if publishing_metadata and INFRASTRUCTURE_AVAILABLE:
                 citations = generate_citations_from_metadata(publishing_metadata)
                 save_publishing_materials(publishing_metadata, citations)
+            elif publishing_metadata:
+                log_info("Skipping citation generation (infrastructure not available)")
 
             # HTML dashboard is already created and saved above
 
@@ -1597,7 +1602,7 @@ def generate_citations_from_metadata(
 
         return citations
 
-    except (KeyError, ValueError, TypeError, ImportError) as e:
+    except (KeyError, ValueError, TypeError, ImportError, NameError) as e:
         if INFRASTRUCTURE_AVAILABLE:
             logger = get_logger(__name__)
             logger.warning(f"Failed to generate citations: {e}")

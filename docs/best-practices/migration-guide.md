@@ -91,23 +91,23 @@ Migration involves adapting your existing project structure to match the templat
 1. **Create template structure:**
 
    ```bash
-   mkdir -p src tests scripts manuscript docs
+   mkdir -p projects/my_project/src projects/my_project/tests projects/my_project/scripts projects/my_project/manuscript docs
    ```
 
 2. **Move code to src/:**
 
    ```bash
    # Move modules
-   mv *.py src/
-   # Keep only orchestration scripts in root
+   mv *.py projects/my_project/src/
+   # Keep only root orchestrator scripts at workspace level
    ```
 
 3. **Create tests:**
 
    ```bash
    # Create test files
-   for module in src/*.py; do
-     test_file="tests/test_$(basename $module)"
+   for module in projects/my_project/src/*.py; do
+     test_file="projects/my_project/tests/test_$(basename $module)"
      # Create test template
    done
    ```
@@ -138,18 +138,18 @@ Migration involves adapting your existing project structure to match the templat
 
    ```bash
    # Convert LaTeX to Markdown
-   pandoc document.tex -o manuscript/01_introduction.md
+   pandoc document.tex -o projects/my_project/manuscript/01_introduction.md
    
    # Or convert Word
-   pandoc document.docx -o manuscript/01_introduction.md
+   pandoc document.docx -o projects/my_project/manuscript/01_introduction.md
    ```
 
 2. **Organize sections:**
 
    ```bash
    # Create numbered sections
-   mv introduction.md manuscript/02_introduction.md
-   mv methods.md manuscript/03_methodology.md
+   mv introduction.md projects/my_project/manuscript/02_introduction.md
+   mv methods.md projects/my_project/manuscript/03_methodology.md
    ```
 
 3. **Add cross-references:**
@@ -289,7 +289,7 @@ uv add package1 package2 package3
 
 ```bash
 # Move modules
-mv existing_modules/*.py src/
+mv existing_modules/*.py projects/my_project/src/
 
 # Update imports in moved files
 # Fix relative imports
@@ -299,9 +299,9 @@ mv existing_modules/*.py src/
 
 ```bash
 # Create test files
-for module in src/*.py; do
+for module in projects/my_project/src/*.py; do
     module_name=$(basename $module .py)
-    cat > tests/test_${module_name}.py << EOF
+    cat > projects/my_project/tests/test_${module_name}.py << EOF
 """Tests for ${module_name} module."""
 import sys
 from pathlib import Path
@@ -342,11 +342,11 @@ def process_data(data):
 
 ```bash
 # Move documents
-mv papers/*.md manuscript/
+mv papers/*.md projects/my_project/manuscript/
 
 # Rename to numbered format
-mv introduction.md manuscript/02_introduction.md
-mv methods.md manuscript/03_methodology.md
+mv introduction.md projects/my_project/manuscript/02_introduction.md
+mv methods.md projects/my_project/manuscript/03_methodology.md
 ```
 
 **Update cross-references:**
@@ -393,7 +393,7 @@ authors = [{name = "Your Name", email = "your.email@example.com"}]
 uv sync
 
 # Run tests
-uv run pytest tests/ --cov=src
+uv run pytest projects/my_project/tests/ --cov=projects/my_project/src
 
 # Fix any import errors
 # Add missing tests
@@ -427,7 +427,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Or use absolute imports
-from src.module import function
+from projects.my_project.src.module import function
 ```
 
 ### Challenge 2: Test Coverage Gaps
@@ -438,7 +438,7 @@ from src.module import function
 
 ```bash
 # Identify missing coverage
-uv run pytest tests/ --cov=src --cov-report=term-missing
+uv run pytest projects/my_project/tests/ --cov=projects/my_project/src --cov-report=term-missing
 
 # Add tests for uncovered code
 # Look for lines marked ">>>>>"

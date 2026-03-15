@@ -21,13 +21,13 @@ uv run python scripts/execute_pipeline.py --core-only
 ### Daily Workflow Commands
 ```bash
 # Run tests only
-pytest tests/ --cov=src --cov-report=html
+pytest projects/code_project/tests/ --cov=projects.code_project.src --cov-report=html
 
 # Generate figures only
-uv run python scripts/02_run_analysis.py
+uv run python scripts/02_run_analysis.py --project code_project
 
 # Validate markdown
-uv run python -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Open manuscript
 open output/project_combined.pdf  # Top-level output
@@ -39,11 +39,11 @@ open output/project_combined.pdf  # Top-level output
 uv run python scripts/execute_pipeline.py --core-only
 
 # With specific stage
-uv run python scripts/00_setup_environment.py      # Setup
-uv run python scripts/01_run_tests.py              # Test
-uv run python scripts/02_run_analysis.py           # Analysis
-uv run python scripts/03_render_pdf.py             # PDF
-uv run python scripts/04_validate_output.py        # Validate
+uv run python scripts/00_setup_environment.py --project code_project
+uv run python scripts/01_run_tests.py --project code_project
+uv run python scripts/02_run_analysis.py --project code_project
+uv run python scripts/03_render_pdf.py --project code_project
+uv run python scripts/04_validate_output.py --project code_project
 
 # Validate PDFs
 uv run python -m infrastructure.validation.cli pdf output/pdf/
@@ -53,14 +53,16 @@ uv run python -m infrastructure.validation.cli pdf output/pdf/
 
 ```
 template/
-├── src/              # Core business logic (comprehensively tested)
-├── tests/            # Test suite (90% project, 60% infra minimum)
-├── scripts/          # Entry point orchestrators (generic)
-├── project/          # Project-specific code
-├── infrastructure/   # Reusable infrastructure modules
-├── manuscript/       # Research sections (generate PDFs)
-├── docs/             # Documentation (50+ guides)
-└── output/           # Generated files (disposable)
+├── infrastructure/   # Reusable infrastructure (Layer 1)
+├── scripts/          # Root pipeline orchestrators
+├── tests/            # Infrastructure test suite
+├── projects/         # Multiple independent research projects
+│   └── code_project/
+│       ├── src/      # Core business logic (Layer 2)
+│       ├── tests/    # Project-specific test suite
+│       ├── manuscript/ # Research sections & config.yaml
+│       └── scripts/  # Thin orchestrators for data/figures
+└── output/           # Final generated deliverables
 ```
 
 ## 🔧 Common Workflows
@@ -68,10 +70,10 @@ template/
 ### Create a New Document Section
 ```bash
 # 1. Create markdown file
-vim project/manuscript/07_new_section.md
+vim projects/code_project/manuscript/07_new_section.md
 
 # 2. Add content with section label
-echo "# New Section {#sec:new_section}" > project/manuscript/07_new_section.md
+echo "# New Section {#sec:new_section}" > projects/code_project/manuscript/07_new_section.md
 
 # 3. Rebuild
 uv run python scripts/execute_pipeline.py --core-only
@@ -79,11 +81,11 @@ uv run python scripts/execute_pipeline.py --core-only
 
 ### Add a New Figure
 ```bash
-# 1. Create script in scripts/
-vim scripts/my_figure.py
+# 1. Create script in project's scripts/ directory
+vim projects/code_project/scripts/my_figure.py
 
 # 2. Import from src/ (thin orchestrator pattern)
-# from example import calculate_average
+# from projects.code_project.src.example import calculate_average
 
 # 3. Generate and save to output/figures/
 # 4. Reference in manuscript:
@@ -93,22 +95,22 @@ vim scripts/my_figure.py
 ### Add New Source Code
 ```bash
 # 1. Create module
-vim src/my_module.py
+vim projects/code_project/src/my_module.py
 
 # 2. Create tests (90% minimum coverage required)
-vim tests/test_my_module.py
+vim projects/code_project/tests/test_my_module.py
 
 # 3. Run tests
-pytest tests/test_my_module.py --cov=src.my_module
+pytest projects/code_project/tests/test_my_module.py --cov=projects.code_project.src.my_module
 
 # 4. Use in scripts (thin orchestrator pattern)
-# from my_module import my_function
+# from projects.code_project.src.my_module import my_function
 ```
 
 ### Fix Test Coverage
 ```bash
 # 1. Check coverage
-pytest tests/ --cov=src --cov-report=term-missing
+pytest projects/code_project/tests/ --cov=projects.code_project.src --cov-report=term-missing
 
 # 2. Find missing lines (marked with ">>>>>")
 # 3. Add tests for uncovered code
@@ -154,11 +156,11 @@ Reference it: \ref{fig:my_figure}
 
 | Problem | Quick Fix |
 |---------|-----------|
-| **Tests fail** | `pytest tests/ -v` to see details |
-| **Coverage < 100%** | `pytest --cov=src --cov-report=term-missing` |
+| **Tests fail** | `pytest projects/code_project/tests/ -v` to see details |
+| **Coverage < 100%** | `pytest --cov=projects.code_project.src --cov-report=term-missing` |
 | **Import errors** | Check `PYTHONPATH` or use `uv run` |
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
-| **Figures missing** | Run `uv run python scripts/*.py` first |
+| **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project code_project` first |
 | **References show ??** | Check label spelling and existence |
 
 ## 📊 Key Metrics
@@ -193,13 +195,13 @@ Reference it: \ref{fig:my_figure}
 
 ## 💡 Pro Tips
 
-1. **Always run tests first**: `pytest tests/` before building
-2. **Use thin orchestrator pattern**: Scripts import from `src/`
+1. **Always run tests first**: `pytest projects/code_project/tests/` before building
+2. **Use thin orchestrator pattern**: Scripts import from `projects/{name}/src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
 4. **Run pipeline**: `uv run python scripts/execute_pipeline.py --core-only` executes all stages
 5. **Pipeline stages**: 8 stages (00-05) from setup to final deliverables
-6. **Read build logs**: Check `project/output/pdf/*_compile.log` for errors
-7. **Individual stages**: Run `uv run python scripts/XX_stage_name.py` for specific stages
+6. **Read build logs**: Check `projects/{name}/output/logs/pipeline.log` for errors
+7. **Individual stages**: Run `uv run python scripts/0X_stage_name.py --project {name}` for specific stages
 8. **CI/CD friendly**: Pipeline scripts support automated builds
 
 ---

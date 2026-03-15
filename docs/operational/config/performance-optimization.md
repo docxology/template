@@ -158,7 +158,7 @@ Monitor file operations:
 iostat -x 1
 
 # Monitor specific directory
-watch -n 1 'du -sh project/output/*'
+watch -n 1 'du -sh projects/{name}/output/*'
 ```
 
 ## Performance Benchmarks
@@ -224,14 +224,14 @@ pytest tests/  # Uses cache for faster runs
 ### Build Artifact Caching
 
 - LaTeX intermediate files (`.aux`, `.bbl`) are cached
-- Figure generation results cached in `project/output/figures/`
+- Figure generation results cached in `projects/{name}/output/figures/`
 - Re-run only if source files changed
 
 ### LLM Response Caching
 
-- Review results saved to `project/output/llm/`
+- Review results saved to `projects/{name}/output/llm/`
 - Re-use previous reviews if manuscript unchanged
-- Clear cache: `rm -rf project/output/llm/*`
+- Clear cache: `rm -rf projects/{name}/output/llm/*`
 
 ## Parallel Execution
 
@@ -269,7 +269,7 @@ watch -n 1 'ps aux | grep -E "(python|pytest|xelatex)"'
 
 ```bash
 # Analyze pipeline logs for timing
-grep "Completed in" project/output/*.log | awk '{print $NF}'
+grep "Completed in" projects/{name}/output/*.log | awk '{print $NF}'
 ```
 
 ## Best Practices

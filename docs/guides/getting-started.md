@@ -105,7 +105,7 @@ xdg-open output/project_combined.pdf  # Linux
 The template provides pre-structured manuscript files in the `manuscript/` directory:
 
 ```
-manuscript/
+projects/code_project/manuscript/
 ├── preamble.md              # LaTeX styling (don't edit yet)
 ├── 01_abstract.md           # Research overview
 ├── 02_introduction.md       # Project introduction
@@ -121,7 +121,7 @@ manuscript/
 1. **Open the abstract file**
 
    ```bash
-   vim manuscript/01_abstract.md
+   vim projects/code_project/manuscript/01_abstract.md
    # Or use your preferred text editor
    ```
 
@@ -150,7 +150,7 @@ manuscript/
 1. **Open the introduction**
 
    ```bash
-   vim manuscript/02_introduction.md
+   vim projects/code_project/manuscript/02_introduction.md
    ```
 
 2. **Add your content**:
@@ -191,7 +191,7 @@ manuscript/
 2. **View the result**
 
    ```bash
-   open output/project_combined.pdf  # Top-level output (after stage 5)
+   open output/code_project/pdf/code_project_combined.pdf  # Top-level output (after stage 5)
    ```
 
 **What You Get**:
@@ -424,7 +424,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 1. **Open preamble**
 
    ```bash
-   vim manuscript/preamble.md
+   vim projects/code_project/manuscript/preamble.md
    ```
 
 2. **Find color definitions** (around line 97-103):
@@ -459,7 +459,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 1. **Edit references.bib**
 
    ```bash
-   vim manuscript/references.bib
+   vim projects/code_project/manuscript/references.bib
    ```
 
 2. **Add entries**:
@@ -582,7 +582,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Solutions**:
 
 1. Check relative path: `../output/figures/name.png`
-2. Verify file exists: `ls project/output/figures/`
+2. Verify file exists: `ls projects/{name}/output/figures/`
 3. Run pipeline (includes script execution): `uv run python scripts/execute_pipeline.py --core-only`
 
 ---

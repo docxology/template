@@ -148,18 +148,18 @@ Scripts in the `scripts/` directory are **thin orchestrators** that:
 - **Use** tested methods for all computation (never implement algorithms)
 - **Handle** visualization, I/O, and orchestration
 - **Generate** figures and data outputs
-- **Validate** that `project/src/` integration works correctly
+- **Validate** that `projects/{name}/src/` integration works correctly
 
 **Example integration:**
 
 ```python
-# Import project/src/ methods for computation
+# Import projects/{name}/src/ methods for computation
 from project.src.example import add_numbers, calculate_average
 
 def generate_figure():
-    # Use project/src/ methods for all computation
+    # Use projects/{name}/src/ methods for all computation
     data = [1, 2, 3, 4, 5]
-    avg = calculate_average(data)  # From project/src/example.py
+    avg = calculate_average(data)  # From projects/{name}/src/example.py
     
     # Script handles visualization and output
     fig, ax = plt.subplots()
@@ -195,7 +195,7 @@ Figures are referenced in markdown using relative paths:
 Markdown validation is performed via the infrastructure validation module:
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 ```
 
 This checks:
@@ -260,7 +260,7 @@ Generated outputs include:
 
 ### Creating Figures
 
-1. **Generate with scripts**: Use scripts in `project/scripts/` directory
+1. **Generate with scripts**: Use scripts in `projects/{name}/scripts/` directory
 2. **Use projects/{name}/src/ methods**: Import and use tested methods from `projects/{name}/src/` modules
 3. **Save to output**: Place in `output/figures/`
 4. **Reference properly**: Use `\ref{fig:name}` in markdown
@@ -336,7 +336,7 @@ This template enforces the **thin orchestrator pattern** where:
 
 ### Script Requirements
 
-Scripts in `project/scripts/` MUST:
+Scripts in `projects/{name}/scripts/` MUST:
 
 - Import methods from `projects/{name}/src/` modules
 - Use `projects/{name}/src/` methods for all computation

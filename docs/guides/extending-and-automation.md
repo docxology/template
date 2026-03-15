@@ -89,14 +89,14 @@ echo "ML build!"
 **Example: External simulation tool**:
 
 ```python
-# scripts/external_simulation.py
+# custom_projects/machine_learning/scripts/external_simulation.py
 #!/usr/bin/env python3
 """Integrate external simulation tool."""
 import subprocess
 import json
 import os
 
-from analysis import process_simulation_results  # From src/
+from custom_projects.machine_learning.src.analysis import process_simulation_results  # From custom_projects/machine_learning/src/
 
 def run_external_tool(config_file):
     """Run external simulation tool."""
@@ -181,7 +181,7 @@ jobs:
     
     - name: Run tests
       run: |
-        uv run pytest tests/ --cov=src --cov-report=xml
+        uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=xml
     
     - name: Upload coverage
       uses: codecov/codecov-action@v3
@@ -219,7 +219,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: pdfs
-        path: output/pdf/*.pdf
+        path: output/*/pdf/*.pdf
 ```
 
 ### Automated Documentation
@@ -290,8 +290,8 @@ def generate_markdown_docs(module_name, info):
     return md
 
 def main():
-    """Generate documentation for all src/ modules."""
-    src_dir = 'src'
+    """Generate documentation for all projects/{name}/src/ modules."""
+    src_dir = 'projects/code_project/src'
     output_dir = 'output/api_docs'
     os.makedirs(output_dir, exist_ok=True)
     
@@ -323,14 +323,14 @@ if __name__ == '__main__':
 ### Literature Review Integration
 
 ```python
-# scripts/literature_analysis.py
+# projects/code_project/scripts/literature_analysis.py
 #!/usr/bin/env python3
 """Analyze research trends from literature."""
 import requests
 from collections import Counter
 
-# Import from src/ (implement these as needed)
-from text_analysis import extract_keywords, analyze_trends
+# Import from projects/{name}/src/ (implement these as needed)
+from projects.code_project.src.text_analysis import extract_keywords, analyze_trends
 
 def fetch_papers(query, max_results=100):
     """Fetch papers from API (e.g., arXiv, PubMed)."""
@@ -346,7 +346,7 @@ def analyze_research_trends(query):
     # Extract abstracts
     abstracts = [p['abstract'] for p in papers]
     
-    # Use src/ methods for analysis
+    # Use projects/{name}/src/ methods for analysis
     all_keywords = []
     for abstract in abstracts:
         keywords = extract_keywords(abstract)
@@ -374,14 +374,14 @@ def generate_trend_report(trends):
 git checkout -b feature/new-algorithm
 
 # Make changes
-vim src/new_algorithm.py
-vim tests/test_new_algorithm.py
+vim projects/code_project/src/new_algorithm.py
+vim projects/code_project/tests/test_new_algorithm.py
 
 # Ensure coverage requirements met
-pytest tests/ --cov=src --cov-report=term-missing
+pytest projects/code_project/tests/ --cov=projects.code_project.src --cov-report=term-missing
 
 # Commit with conventional commit messages
-git add src/new_algorithm.py tests/test_new_algorithm.py
+git add projects/code_project/src/new_algorithm.py projects/code_project/tests/test_new_algorithm.py
 git commit -m "feat: add new optimization algorithm
 
 - Implements gradient-free optimization

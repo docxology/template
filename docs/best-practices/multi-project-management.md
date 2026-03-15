@@ -208,7 +208,7 @@ done
 
 ```bash
 # Update only build scripts
-cp -r template/scripts/* project/scripts/
+cp -r template/scripts/* projects/{name}/scripts/
 
 # Update only documentation structure
 cp -r template/docs/* project/docs/
@@ -435,8 +435,8 @@ git clone template-repo "$PROJECT_NAME"
 cd "$PROJECT_NAME"
 
 # Customize (edit config.yaml or set environment variables)
-cp project/manuscript/config.yaml.example project/manuscript/config.yaml
-vim project/manuscript/config.yaml
+cp projects/{name}/manuscript/config.yaml.example projects/{name}/manuscript/config.yaml
+vim projects/{name}/manuscript/config.yaml
 
 # Initialize
 uv sync

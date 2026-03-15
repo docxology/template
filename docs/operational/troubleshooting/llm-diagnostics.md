@@ -77,13 +77,13 @@ print('Available:', client.check_connection())
 
 ```bash
 # Check PDF exists
-ls -la project/output/pdf/project_combined.pdf
+ls -la projects/{name}/output/pdf/project_combined.pdf
 
 # Test PDF text extraction
 uv run python -c "
 from pathlib import Path
 import PyPDF2
-pdf_path = Path('project/output/pdf/project_combined.pdf')
+pdf_path = Path('projects/{name}/output/pdf/project_combined.pdf')
 if pdf_path.exists():
     with open(pdf_path, 'rb') as f:
         reader = PyPDF2.PdfReader(f)
@@ -98,14 +98,14 @@ else:
 
 ```bash
 # Check review outputs
-ls -la project/output/llm/
+ls -la projects/{name}/output/llm/
 
 # Review metadata
-cat project/output/llm/review_metadata.json
+cat projects/{name}/output/llm/review_metadata.json
 
 # Check individual reviews
-cat project/output/llm/executive_summary.md
-cat project/output/llm/quality_review.md
+cat projects/{name}/output/llm/executive_summary.md
+cat projects/{name}/output/llm/quality_review.md
 ```
 
 ### Check Logs

@@ -13,7 +13,7 @@ The checkpoint system automatically saves pipeline state after each successful s
 Checkpoints are automatically saved after each successful stage:
 
 1. **Stage Completion**: After a stage completes successfully (exit code 0)
-2. **State Saving**: Pipeline state is saved to `project/output/.checkpoints/pipeline_checkpoint.json`
+2. **State Saving**: Pipeline state is saved to `projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
 3. **State Includes**:
    - Pipeline start time
    - Last completed stage number
@@ -81,7 +81,7 @@ If checkpoint validation fails, the pipeline will:
 
 ```bash
 # Clear corrupted checkpoint manually
-rm -f project/output/.checkpoints/pipeline_checkpoint.json
+rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json
 ```
 
 ## Checkpoint Lifecycle
@@ -89,7 +89,7 @@ rm -f project/output/.checkpoints/pipeline_checkpoint.json
 ### Creation
 
 - Checkpoints are created after each successful stage
-- Saved to: `project/output/.checkpoints/pipeline_checkpoint.json`
+- Saved to: `projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
 - Overwrites previous checkpoint (only latest state kept)
 
 ### Loading
@@ -101,7 +101,7 @@ rm -f project/output/.checkpoints/pipeline_checkpoint.json
 ### Cleanup
 
 - Checkpoint is automatically cleared on successful pipeline completion
-- Manual cleanup: `rm -f project/output/.checkpoints/pipeline_checkpoint.json`
+- Manual cleanup: `rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
 
 ## Resume Behavior
 
@@ -174,7 +174,7 @@ exists = manager.checkpoint_exists()
 **Symptom**: Resume fails with "checkpoint not found"
 
 **Solutions**:
-- Check if checkpoint file exists: `ls project/output/.checkpoints/`
+- Check if checkpoint file exists: `ls projects/{name}/output/.checkpoints/`
 - Verify checkpoint directory was created
 - Start fresh pipeline if checkpoint intentionally cleared
 
@@ -185,7 +185,7 @@ exists = manager.checkpoint_exists()
 **Solutions**:
 ```bash
 # Clear corrupted checkpoint
-rm -f project/output/.checkpoints/pipeline_checkpoint.json
+rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json
 
 # Restart pipeline
 uv run python scripts/execute_pipeline.py --core-only
@@ -205,7 +205,7 @@ uv run python scripts/execute_pipeline.py --core-only
 **Symptom**: Pipeline resumes from incorrect stage
 
 **Solutions**:
-- Check checkpoint contents: `cat project/output/.checkpoints/pipeline_checkpoint.json`
+- Check checkpoint contents: `cat projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
 - Verify `last_stage_completed` value
 - Clear checkpoint if incorrect
 
@@ -233,7 +233,7 @@ uv run python scripts/execute_pipeline.py --core-only
 
 ### Checkpoint Location
 
-- **Default**: `project/output/.checkpoints/pipeline_checkpoint.json`
+- **Default**: `projects/{name}/output/.checkpoints/pipeline_checkpoint.json`
 - **Custom**: Can specify custom directory in `CheckpointManager(checkpoint_dir=...)`
 
 ### Checkpoint Format

@@ -8,7 +8,7 @@ This file shows examples of how to customize the template into specific research
 
 ## Example 1: Machine Learning Research Project
 
-**Configuration in `project/manuscript/config.yaml` (or environment variables):**
+**Configuration in `projects/{name}/manuscript/config.yaml` (or environment variables):**
 
 ```bash
 # Project Identity
@@ -36,7 +36,7 @@ LICENSE="MIT"
 
 ## Example 2: Data Science Package
 
-**Configuration in `project/manuscript/config.yaml` (or environment variables):**
+**Configuration in `projects/{name}/manuscript/config.yaml` (or environment variables):**
 
 ```bash
 # Project Identity
@@ -57,7 +57,7 @@ LICENSE="Apache-2.0"
 
 ## Example 3: Academic Paper
 
-**Configuration in `project/manuscript/config.yaml` (or environment variables):**
+**Configuration in `projects/{name}/manuscript/config.yaml` (or environment variables):**
 
 ```bash
 # Project Identity
@@ -120,7 +120,7 @@ graph TB
 
 ### 1. Edit Configuration
 
-Edit `project/manuscript/config.yaml` or set environment variables:
+Edit `projects/{name}/manuscript/config.yaml` or set environment variables:
 
 ```bash
 # Project Identity
@@ -145,10 +145,10 @@ LICENSE="MIT"
 
 ```bash
 # Copy the example config
-cp project/manuscript/config.yaml.example project/manuscript/config.yaml
+cp projects/{name}/manuscript/config.yaml.example projects/{name}/manuscript/config.yaml
 
 # Edit with your information
-vim project/manuscript/config.yaml
+vim projects/{name}/manuscript/config.yaml
 ```
 
 **Option B: Use Environment Variables**
@@ -201,7 +201,7 @@ After configuring your project, you'll have:
 
 ```mermaid
 graph LR
-    subgraph "src/ Modules"
+    subgraph "projects/{name}/src/ Modules"
         EXISTING[example.py<br/>Basic functions]
         NEW1[ml_optimizer.py<br/>ML algorithms]
         NEW2[data_processor.py<br/>Data utilities]
@@ -210,7 +210,7 @@ graph LR
     
     subgraph "Scripts Integration"
         SCRIPT[ml_training.py]
-        IMPORT[Import from src/]
+        IMPORT[Import from projects/{name}/src/]
         USE[Use ml_optimizer]
         USE2[Use data_processor]
         USE3[Use visualization]
@@ -237,7 +237,7 @@ graph LR
 
 ### Example: Adding ML Optimization Module
 
-1. **Create `src/ml_optimizer.py`:**
+1. **Create `projects/code_project/src/ml_optimizer.py`:**
 
 ```python
 """Machine learning optimization algorithms."""
@@ -253,7 +253,7 @@ def adam_optimizer(loss_fn, initial_params, learning_rate=0.001):
     pass
 ```
 
-1. **Create `tests/test_ml_optimizer.py`:**
+1. **Create `projects/code_project/tests/test_ml_optimizer.py`:**
 
 ```python
 """Tests for ML optimizer module."""
@@ -267,7 +267,7 @@ def test_adam_optimizer():
     pass
 ```
 
-1. **Create `scripts/ml_training.py`:**
+1. **Create `projects/code_project/scripts/ml_training.py`:**
 
 ```python
 #!/usr/bin/env python3
@@ -277,11 +277,11 @@ from ml_optimizer import gradient_descent, adam_optimizer
 from data_processor import load_data, preprocess_data
 
 def main():
-    # Use src/ methods for computation
+    # Use projects/{name}/src/ methods for computation
     data = load_data("dataset.csv")
     processed_data = preprocess_data(data)
     
-    # Train using src/ optimization methods
+    # Train using projects/{name}/src/ optimization methods
     params = gradient_descent(loss_fn, initial_params)
     
     # Generate and save results
@@ -338,7 +338,7 @@ After renaming, ensure:
 
 The `rename_project.sh` script transforms the generic template into a project-specific structure while maintaining:
 
-- **Thin orchestrator pattern** - Scripts use src/ methods
+- **Thin orchestrator pattern** - Scripts use projects/{name}/src/ methods
 - **test coverage** - All functionality validated
 - **Automated build pipeline** - PDF generation
 - **Generic utilities** - Reusable across projects

@@ -13,12 +13,12 @@
 ```mermaid
 graph TB
     subgraph "Research Project Template"
-        SRC[📁 src/<br/>Core business logic<br/>Tested]
-        TESTS[🧪 tests/<br/>Test suite<br/>coverage]
-        SCRIPTS[📜 scripts/<br/>Thin orchestrators<br/>Use src/ methods]
-        MANUSCRIPT[📚 manuscript/<br/>Research manuscript<br/>Cross-referenced]
+        SRC[📁 projects/{name}/src/<br/>Core business logic<br/>Tested]
+        TESTS[🧪 projects/{name}/tests/<br/>Test suite<br/>coverage]
+        SCRIPTS[📜 projects/{name}/scripts/<br/>Thin orchestrators<br/>Use src/ methods]
+        MANUSCRIPT[📚 projects/{name}/manuscript/<br/>Research manuscript<br/>Cross-referenced]
         PIPELINE[📊 scripts/\n<br/>Build pipeline<br/>Stage scripts]
-        OUTPUT[📤 output/<br/>Generated files<br/>PDFs, figures, data]
+        OUTPUT[📤 projects/{name}/output/<br/>Generated files<br/>PDFs, figures, data]
     end
     
     subgraph "Thin Orchestrator Pattern"
@@ -73,7 +73,7 @@ flowchart TD
 ```mermaid
 graph LR
     subgraph "Input Sources"
-        SRC[📁 src/ modules]
+        SRC[📁 projects/{name}/src/ modules]
         MD[📚 Markdown files]
         PREAMBLE[📝 LaTeX preamble]
     end

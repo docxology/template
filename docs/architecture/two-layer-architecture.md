@@ -12,7 +12,7 @@ This research template implements a clear two-layer architecture separating gene
 | **Purpose** | Generic, reusable build tools | Domain-specific research code |
 | **Scope** | Works with any project | Specific to this research |
 | **Test Coverage** | 60% minimum (currently 83.33% - exceeds stretch goal!) | 90% minimum (currently 100% - coverage!) |
-| **Scripts** | `scripts/` (root, generic orchestrators) | `project/scripts/` (project orchestrators) |
+| **Scripts** | `scripts/` (root, generic orchestrators) | `projects/{name}/scripts/` (project orchestrators) |
 | **Tests** | `tests/infrastructure/` (root level) | `projects/{name}/tests/` (project-specific) |
 | **Imports** | `from infrastructure.module import` | `from project.src.module import` |
 | **Dependencies** | No project dependencies | Can import from infrastructure |
@@ -111,7 +111,7 @@ projects/{name}/src/
 **Scripts (thin orchestrators):**
 
 ```
-project/scripts/
+projects/{name}/scripts/
 ├── example_figure.py              # Basic figure generation
 ├── generate_research_figures.py   # Complex figures
 ├── analysis_pipeline.py           # Analysis workflow
@@ -173,7 +173,7 @@ graph TB
             SRC_MODS[simulation, statistics,<br/>data_processing, metrics,<br/>parameters, performance,<br/>plots, reporting, validation,<br/>visualization, data_generator,<br/>example]
         end
         
-        subgraph PROJ_SCRIPTS["project/scripts/<br/>(thin orchestrators)"]
+        subgraph PROJ_SCRIPTS["projects/{name}/scripts/<br/>(thin orchestrators)"]
             PROJ_SCRIPT_LIST[example_figure.py<br/>generate_research_figures.py<br/>analysis_pipeline.py<br/>scientific_simulation.py<br/>generate_scientific_figures.py]
         end
     end
@@ -341,7 +341,7 @@ flowchart TD
     
     STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infrastructure/*.py<br/>- Run projects/{name}/tests/*.py<br/>- Run tests/integration/*.py<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
     
-    PHASE1 --> PHASE2[PHASE 2: LAYER 2<br/>Project Execution<br/>- Run project/scripts/*.py<br/>- Generate figures<br/>- Process data<br/>- Create outputs<br/>Report: [LAYER-2-PROJECT] Running]
+    PHASE1 --> PHASE2[PHASE 2: LAYER 2<br/>Project Execution<br/>- Run projects/{name}/scripts/*.py<br/>- Generate figures<br/>- Process data<br/>- Create outputs<br/>Report: [LAYER-2-PROJECT] Running]
     
     PHASE2 --> PHASE2_5[PHASE 2.5: LAYER 1<br/>Utilities<br/>- Generate API glossary<br/>- Validate markdown<br/>- Check cross-references<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
     

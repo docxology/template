@@ -23,11 +23,13 @@ from infrastructure.core.logging_utils import get_logger, log_success, log_heade
 from infrastructure.core.environment import (
     check_python_version,
     check_dependencies,
-    install_missing_packages,
-    check_build_tools,
     setup_directories,
     verify_source_structure,
     set_environment_variables,
+)
+from infrastructure.core.env_deps import (
+    install_missing_packages,
+    check_build_tools,
 )
 from infrastructure.core.file_cleanup import clean_coverage_files
 
