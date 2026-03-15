@@ -41,7 +41,7 @@ import sys
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Callable, Iterator, TypeVar
+from typing import Any, Callable, Iterator, ParamSpec, TypeVar
 
 # Import from split modules
 from infrastructure.core.logging_formatters import JSONFormatter, TemplateFormatter
@@ -52,6 +52,7 @@ from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled, get
 
 # Type variable for generic context manager
 T = TypeVar("T")
+P = ParamSpec("P")
 
 def _is_test_environment() -> bool:
     """Return True if running inside pytest.
@@ -245,10 +246,10 @@ def log_timing(label: str, logger: logging.Logger | None = None) -> Iterator[Non
         logger.info(f"{label}: {duration:.1f}s")
 
 
-def log_function_call(logger: logging.Logger | None = None) -> Callable:
+def log_function_call(logger: logging.Logger | None = None) -> Callable[[Callable[P, T]], Callable[P, T]]:
     """Decorator that logs function calls at DEBUG level with elapsed time and error reporting."""
 
-    def decorator(func: Callable[..., T]) -> Callable[..., T]:
+    def decorator(func: Callable[P, T]) -> Callable[P, T]:
         """Wrap the target function to log its execution."""
         func_logger = logger or get_logger(func.__module__)
 

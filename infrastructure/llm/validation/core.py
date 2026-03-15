@@ -207,7 +207,11 @@ def validate_complete(
         data = validate_json(content)
         return validate_structure(data, schema)
 
-    # RAW and standard modes: validate formatting (non-empty already checked above)
+    elif mode in (ResponseMode.RAW, "raw"):
+        # Raw mode is unvalidated — return True without applying formatting checks
+        return True
+
+    # Standard mode: validate formatting (non-empty already checked above)
     return formatting_ok
 
 

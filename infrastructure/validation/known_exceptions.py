@@ -9,12 +9,10 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Set
-
 # Valid directory references (these are directories, not files)
 # Note: Only generic directory patterns are listed here.
 # Project-specific directories are validated dynamically.
-VALID_DIRECTORY_REFERENCES: Set[str] = {
+VALID_DIRECTORY_REFERENCES: set[str] = {
     "infrastructure/",
     "scripts/",
     "docs/",

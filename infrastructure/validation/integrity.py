@@ -597,7 +597,7 @@ def save_integrity_manifest(manifest: dict[str, Any], output_path: Path) -> None
         with open(_tmp, "w") as f:
             json.dump(manifest, f, indent=2)
         _tmp.replace(output_path)
-    except Exception as e:
+    except OSError as e:
         logger.debug("Failed to write integrity manifest to %s: %s", _tmp, e)
         _tmp.unlink(missing_ok=True)
         raise

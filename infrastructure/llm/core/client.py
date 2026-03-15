@@ -57,6 +57,11 @@ class LLMClient:
     both blocking and streaming query variants. All inputs are sanitized
     before sending; structured queries parse JSON responses automatically.
 
+    Parameter asymmetry by design: blocking variants (query, query_structured)
+    and streaming variants (stream_query) expose different optional parameters
+    because streaming requires chunk-level callbacks and retry semantics that
+    are not applicable to blocking calls.
+
     Example:
         >>> client = LLMClient()
         >>>

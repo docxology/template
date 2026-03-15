@@ -145,10 +145,11 @@ class FigureManager:
                 logger.error(f"Failed to backup corrupted registry: {backup_error}")
 
     def _save_registry(self) -> None:
-        """Save figure registry to file."""
+        """Save figure registry to file (atomic write to prevent corruption)."""
         data = {fig_id: fig.to_dict() for fig_id, fig in self.figures.items()}
-        with open(self.registry_file, "w") as f:
-            json.dump(data, f, indent=2, default=str)
+        tmp = self.registry_file.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
+        tmp.replace(self.registry_file)
 
     def register_figure(
         self,

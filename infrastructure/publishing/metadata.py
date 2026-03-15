@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -322,8 +323,6 @@ def create_repository_metadata(metadata: PublicationMetadata) -> str:
     Returns:
         JSON formatted repository metadata
     """
-    import json
-
     # Convert authors array to expected format with 'author' key
     author_list = [{"name": author} for author in metadata.authors]
 

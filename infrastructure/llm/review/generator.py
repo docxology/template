@@ -122,15 +122,6 @@ def _is_small_model(model_name: str) -> bool:
     return any(s in lower for s in _SMALL_MODEL_SUFFIXES)
 
 
-def log_timeout_info(timeout: float, operation: str) -> None:
-    """Log information about timeout settings."""
-    logger.info(f"    Timeout: {timeout:.0f}s per {operation}")
-    if timeout < 60:
-        logger.warning(f"    ⚠️  Low timeout ({timeout:.0f}s) - may cause failures for slow models")
-        logger.info(
-            "    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability"
-        )
-
 
 def validate_review_quality(
     response: str,
@@ -790,7 +781,12 @@ def generate_translation(
     _cfg = OllamaClientConfig.from_env()
     max_tokens = _cfg.long_max_tokens
     timeout = _cfg.review_timeout
-    log_timeout_info(timeout, f"translation ({target_language})")
+    logger.info(f"    Timeout: {timeout:.0f}s per translation ({target_language})")
+    if timeout < 60:
+        logger.warning(f"    ⚠️  Low timeout ({timeout:.0f}s) - may cause failures for slow models")
+        logger.info(
+            "    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability"
+        )
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
     temperature = 0.4 if _is_small_model(model_name) else 0.3

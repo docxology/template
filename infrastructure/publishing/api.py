@@ -40,6 +40,8 @@ class ZenodoClient:
 
     def __init__(self, config: ZenodoConfig):
         """Initialize Zenodo client with configuration."""
+        if requests is None:
+            raise ImportError("ZenodoClient requires the 'requests' package: pip install requests")
         self.config = config
         self.headers = {"Authorization": f"Bearer {config.access_token}"}
 

@@ -20,6 +20,30 @@ from infrastructure.llm.core.context import ConversationContext
 
 logger = get_logger(__name__)
 
+
+def _try_save_partial(
+    full_response: list[str],
+    save_response: bool,
+    partial_saved: bool,
+    save_streaming_state_fn: Callable[..., bool],
+    save_path: Path | None,
+    model_name: str,
+    prompt: str,
+    chunk_count: int,
+    start_time: float,
+    context: str,
+    guard_not_saved: bool = True,
+) -> bool:
+    """Try to save a partial streaming response; returns new partial_saved state."""
+    if not (full_response and save_response):
+        return partial_saved
+    if guard_not_saved and partial_saved:
+        return partial_saved
+    if save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
+        logger.info(f"Saved partial response ({chunk_count} chunks) {context}")
+        return True
+    return partial_saved
+
 # Lazy import to match client.py pattern
 try:
     import requests
@@ -95,6 +119,7 @@ def stream_query_impl(
     error_count = 0
     partial_saved = False
     _timeout_warned = False
+    last_error = ""
 
     # Initialize metrics (imported locally to avoid circular import with review.metrics)
     from infrastructure.llm.review.metrics import StreamingMetrics  # noqa: PLC0415
@@ -149,7 +174,7 @@ def stream_query_impl(
                                     > config.stall_threshold
                                 ):
                                     time_since_last_chunk = current_time - prev_chunk_time
-                                    logger.error(
+                                    logger.warning(
                                         f"Streaming stalled: no tokens received for {time_since_last_chunk:.1f}s",  # noqa: E501
                                         extra={
                                             "model": model_name,
@@ -219,18 +244,19 @@ def stream_query_impl(
                     f"Streaming timeout (attempt {attempt + 1}/{retries + 1}), will retry..."
                 )
                 # Save partial response before retry
-                if full_response and save_response and not partial_saved:
-                    if save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
-                        partial_saved = True
-                        logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
+                partial_saved = _try_save_partial(
+                    full_response, save_response, partial_saved, save_streaming_state_fn,
+                    save_path, model_name, prompt, chunk_count, start_time, "before retry",
+                )
                 continue
             else:
                 logger.error(f"Streaming timeout after {retries + 1} attempts: {last_error}")
                 # Save partial response on final failure
-                if full_response and save_response:
-                    if save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
-                        partial_saved = True
-                        logger.info(f"Saved partial response ({chunk_count} chunks) after timeout")
+                partial_saved = _try_save_partial(
+                    full_response, save_response, partial_saved, save_streaming_state_fn,
+                    save_path, model_name, prompt, chunk_count, start_time, "after timeout",
+                    guard_not_saved=False,
+                )
                 raise LLMConnectionError(
                     f"Streaming timeout ({model_name}): {last_error}",
                     context={
@@ -250,20 +276,21 @@ def stream_query_impl(
                     f"Streaming connection error (attempt {attempt + 1}/{retries + 1}), will retry..."  # noqa: E501
                 )
                 # Save partial response before retry
-                if full_response and save_response and not partial_saved:
-                    if save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
-                        partial_saved = True
-                        logger.info(f"Saved partial response ({chunk_count} chunks) before retry")
+                partial_saved = _try_save_partial(
+                    full_response, save_response, partial_saved, save_streaming_state_fn,
+                    save_path, model_name, prompt, chunk_count, start_time, "before retry",
+                )
                 continue
             else:
                 logger.error(
                     f"Streaming connection error after {retries + 1} attempts: {last_error}"
                 )
                 # Save partial response on final failure
-                if full_response and save_response:
-                    if save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
-                        partial_saved = True
-                        logger.info(f"Saved partial response ({chunk_count} chunks) after connection error")
+                partial_saved = _try_save_partial(
+                    full_response, save_response, partial_saved, save_streaming_state_fn,
+                    save_path, model_name, prompt, chunk_count, start_time, "after connection error",
+                    guard_not_saved=False,
+                )
                 raise LLMConnectionError(
                     f"Streaming connection failed ({model_name}): {last_error}",
                     context={

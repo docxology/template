@@ -164,13 +164,11 @@ class SecurityValidator:
         return content
 
     def _sanitize_html(self, text: str) -> str:
-        """Sanitize HTML entities."""
         import html
 
         return html.escape(text, quote=True)
 
     def _normalize_whitespace(self, text: str) -> str:
-        """Normalize excessive whitespace."""
         text = re.sub(r" +", " ", text)
         text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
         return text.strip()

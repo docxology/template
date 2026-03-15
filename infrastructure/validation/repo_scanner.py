@@ -30,7 +30,7 @@ logger = get_logger(__name__)
 
 
 @dataclass
-class ScanResults:
+class RepoScanResults:
     """Container for scan results."""
 
     accuracy_issues: list[AccuracyIssue] = field(default_factory=list)
@@ -44,13 +44,13 @@ class RepositoryScanner:
     def __init__(self, repo_root: Path):
         """Initialize repository scanner with root path."""
         self.repo_root = repo_root.resolve()
-        self.results = ScanResults()
+        self.results = RepoScanResults()
         self.src_modules: set[str] = set()
         self.script_files: list[Path] = []
         self.test_files: list[Path] = []
         self.documented_modules: set[str] = set()
 
-    def scan_all(self) -> ScanResults:
+    def scan_all(self) -> RepoScanResults:
         """Execute all 6 phases of the repository scan.
 
         Performs comprehensive repository analysis in sequential phases:
@@ -62,7 +62,7 @@ class RepositoryScanner:
         6. Thin orchestrator pattern compliance
 
         Returns:
-            ScanResults: Container with accuracy_issues list, completeness_gaps
+            RepoScanResults: Container with accuracy_issues list, completeness_gaps
                 list, and statistics dictionary containing scan metrics.
         """
         logger.info("REPOSITORY-WIDE ACCURACY AND COMPLETENESS SCAN")
@@ -600,7 +600,7 @@ def main() -> int:
     try:
         _tmp.write_text(report, encoding="utf-8")
         _tmp.replace(report_path)
-    except Exception:
+    except OSError:
         _tmp.unlink(missing_ok=True)
         raise
 
