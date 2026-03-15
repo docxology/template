@@ -628,7 +628,7 @@ def generate_review_with_metrics(
     start_time = time.time()
     best_response = ""
     had_off_topic = False
-    config = OllamaClientConfig.from_env()
+    config = client.config
 
     for attempt in range(max_retries + 1):
         response = ""  # reset each attempt; overwritten on success

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Any
+from typing import TypedDict
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.check_links import (
@@ -20,6 +20,7 @@ from infrastructure.validation.check_links import (
 from infrastructure.validation.doc_accuracy import check_links, extract_headings
 from infrastructure.validation.doc_discovery import categorize_documentation, discover_markdown_files
 from infrastructure.validation.doc_models import (
+    AccuracyIssue,
     DocumentationFile,
     LinkIssue,
     QualityIssue,
@@ -32,6 +33,12 @@ from infrastructure.validation.issue_categorizer import (
 )
 
 logger = get_logger(__name__)
+
+
+class _FileValidationResult(TypedDict):
+    link_issues: list[LinkIssue]
+    accuracy_issues: list[AccuracyIssue]
+    quality_issues: list[QualityIssue]
 
 
 def run_comprehensive_audit(
@@ -54,11 +61,13 @@ def run_comprehensive_audit(
     # Get project categorization
     doc_categories = categorize_documentation(md_files, repo_root)
 
-    # Phase 2: Collect headings for anchor validation
-    all_headings = {}
+    # Phase 2: Collect headings and cache file contents to avoid re-reading in Phase 3
+    all_headings: dict[str, list[str]] = {}
+    file_contents: dict[Path, str] = {}
     for md_file in md_files:
         try:
             content = md_file.read_text(encoding="utf-8")
+            file_contents[md_file] = content
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
         except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Error reading {md_file}: {e}")
@@ -71,8 +80,11 @@ def run_comprehensive_audit(
         if verbose and (i + 1) % 10 == 0:
             logger.info(f"🔄 Processed {i + 1}/{len(md_files)} files...")
 
+        content = file_contents.get(md_file)
+        if content is None:
+            continue  # read error already logged in Phase 2
+
         try:
-            content = md_file.read_text(encoding="utf-8")
             file_results = _validate_single_file(
                 md_file,
                 content,
@@ -136,11 +148,11 @@ def _validate_single_file(
     include_directory: bool,
     include_imports: bool,
     include_placeholders: bool,
-) -> dict[str, list[Any]]:
+) -> _FileValidationResult:
     """Validate a single markdown file using all available validation modules."""
 
     file_key = str(md_file.relative_to(repo_root))
-    results = {"link_issues": [], "accuracy_issues": [], "quality_issues": []}
+    results: _FileValidationResult = {"link_issues": [], "accuracy_issues": [], "quality_issues": []}
 
     # Link validation using doc_accuracy
     try:

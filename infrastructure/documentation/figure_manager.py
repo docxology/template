@@ -108,13 +108,18 @@ class FigureManager:
                         fig_id: FigureMetadata.from_dict(fig_data)
                         for fig_id, fig_data in data.items()
                     }
-                    # Update counter
+                    # Update counter from max numeric suffix; default=0 guards against
+                    # non-standard IDs that lack a numeric suffix
                     if self.figures:
                         self.counter = (
                             max(
-                                int(fig.figure_id.split("_")[-1])
-                                for fig in self.figures.values()
-                                if "_" in fig.figure_id and fig.figure_id.split("_")[-1].isdigit()
+                                (
+                                    int(fig.figure_id.split("_")[-1])
+                                    for fig in self.figures.values()
+                                    if "_" in fig.figure_id
+                                    and fig.figure_id.split("_")[-1].isdigit()
+                                ),
+                                default=0,
                             )
                             + 1
                         )

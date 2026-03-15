@@ -120,24 +120,23 @@ def validation_hints(
     format_checks: list[str] | None = None,
 ) -> str:
     """Generate validation hints that inform the model what will be checked."""
-    lines = ["VALIDATION HINTS (what will be checked):"]
-    n = 0
+    sections: list[list[str]] = []
 
     if word_count_range:
         min_words, max_words = word_count_range
-        n += 1
-        lines.append(f"{n}. Word count: Must be between {min_words} and {max_words} words")
+        sections.append([f"Word count: Must be between {min_words} and {max_words} words"])
 
     if required_elements:
-        n += 1
-        lines.append(f"{n}. Required elements:")
-        for element in required_elements:
-            lines.append(f"   - {element}")
+        sections.append(["Required elements:"] + [f"   - {e}" for e in required_elements])
 
     if format_checks:
-        n += 1
-        lines.append(f"{n}. Format compliance checks:")
-        for check in format_checks:
-            lines.append(f"   - {check}")
+        sections.append(
+            ["Format compliance checks:"] + [f"   - {c}" for c in format_checks]
+        )
+
+    lines = ["VALIDATION HINTS (what will be checked):"]
+    for n, section in enumerate(sections, 1):
+        lines.append(f"{n}. {section[0]}")
+        lines.extend(section[1:])
 
     return "\n".join(lines)
