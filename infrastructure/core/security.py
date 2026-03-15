@@ -12,11 +12,10 @@ API style note:
 
 from __future__ import annotations
 
-import functools
 import re
 import threading
 import time
-from functools import wraps
+from functools import lru_cache, wraps
 from pathlib import Path
 from typing import Any, Callable, Union
 
@@ -353,19 +352,19 @@ class SecurityMonitor:
 
 
 
-@functools.lru_cache(maxsize=1)
+@lru_cache(maxsize=1)
 def get_security_validator() -> SecurityValidator:
     """Get the global security validator instance (lazily initialized)."""
     return SecurityValidator()
 
 
-@functools.lru_cache(maxsize=1)
+@lru_cache(maxsize=1)
 def get_rate_limiter() -> RateLimiter:
     """Get the global rate limiter instance (lazily initialized)."""
     return RateLimiter()
 
 
-@functools.lru_cache(maxsize=1)
+@lru_cache(maxsize=1)
 def get_security_monitor() -> SecurityMonitor:
     """Get the global security monitor instance (lazily initialized)."""
     return SecurityMonitor()
