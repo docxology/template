@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Output Organizer - Unified File Organization System
 

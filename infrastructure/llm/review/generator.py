@@ -770,7 +770,13 @@ def generate_improvement_suggestions(
 def generate_translation(
     client: LLMClient, text: str, model_name: str = "", language_code: str = ""
 ) -> tuple[str | None, ReviewMetrics]:
-    """Generate a translated abstract for the manuscript."""
+    """Generate a translated abstract for the manuscript.
+
+    Returns (str, metrics) on success or (None, metrics) on failure.
+    Unlike the review functions, translation errors are non-fatal: callers
+    must check for None and skip the translation rather than treating it as
+    a pipeline failure.
+    """
     target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
     log_substep(f"Generating translation ({target_language})...")
 

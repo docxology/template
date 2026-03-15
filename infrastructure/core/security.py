@@ -15,6 +15,7 @@ from __future__ import annotations
 import re
 import threading
 import time
+import warnings
 from functools import lru_cache, wraps
 from pathlib import Path
 from typing import Any, Callable
@@ -80,6 +81,12 @@ class SecurityValidator:
         Raises:
             SecurityViolation: If input contains dangerous content
         """
+        warnings.warn(
+            "SecurityValidator.validate_llm_input is deprecated; use "
+            "infrastructure.llm.core.sanitization.sanitize_llm_input instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if not isinstance(prompt, str):
             raise SecurityViolation("Input must be a string")
 

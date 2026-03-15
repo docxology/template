@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Known exception patterns for audit tool false positive filtering.
 
 This module defines patterns that are known to be valid exceptions and should

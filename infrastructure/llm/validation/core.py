@@ -88,7 +88,10 @@ def validate_long_response(content: str, min_tokens: int = 500) -> bool:
 
 
 def validate_structure(content: dict[str, Any], schema: dict[str, Any]) -> bool:
-    """Validate structured response against schema."""
+    """Validate structured response against schema.
+
+    Returns True on success. Raises ValidationError on failure (never returns False).
+    """
     required_keys = schema.get("required", [])
     properties = schema.get("properties", {})
 

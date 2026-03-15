@@ -390,7 +390,7 @@ def _format_console_summary(report_data: dict[str, Any]) -> str:
 
 def run_test_summary_generation() -> int:
     """Main entry point for generating test summary reports."""
-    print("Generating comprehensive test summary reports...")
+    logger.info("Generating comprehensive test summary reports...")
 
     # Generate the summary data
     report_data = generate_summary_report()
@@ -400,7 +400,7 @@ def run_test_summary_generation() -> int:
     try:
         with open(json_file, "w") as f:
             json.dump(report_data, f, indent=2)
-        print(f"✅ JSON report saved: {json_file}")
+        logger.info(f"JSON report saved: {json_file}")
     except OSError as e:
         logger.error(f"Failed to write JSON report to {json_file}: {e}")
         raise
@@ -411,11 +411,11 @@ def run_test_summary_generation() -> int:
     try:
         with open(md_file, "w") as f:
             f.write(markdown_content)
-        print(f"✅ Markdown report saved: {md_file}")
+        logger.info(f"Markdown report saved: {md_file}")
     except OSError as e:
         logger.error(f"Failed to write markdown report to {md_file}: {e}")
         raise
 
-    print(_format_console_summary(report_data))
+    logger.info(_format_console_summary(report_data))
 
     return 0
