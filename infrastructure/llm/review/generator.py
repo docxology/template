@@ -489,8 +489,16 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
         return False, 0.0
 
 
-def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, ManuscriptInputMetrics]:
+def extract_manuscript_text(
+    pdf_path: Path | str,
+    max_input_length: int | None = None,
+) -> tuple[str | None, ManuscriptInputMetrics]:
     """Extract text from a manuscript PDF for LLM review.
+
+    Args:
+        pdf_path: Path to the PDF file.
+        max_input_length: Maximum characters to return; 0 or None means unlimited.
+            Pass ``client.config.max_input_length`` to avoid a redundant env re-read.
 
     Returns:
         (text, metrics) where text is None if the PDF file does not exist.
@@ -516,7 +524,7 @@ def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, Manuscrip
         logger.info(
             f"  Extracted: {metrics.total_chars:,} chars ({metrics.total_words:,} words, ~{metrics.total_tokens_est:,} tokens)"  # noqa: E501
         )
-        max_length = OllamaClientConfig.from_env().max_input_length
+        max_length = max_input_length if max_input_length is not None else OllamaClientConfig.from_env().max_input_length
 
         if max_length > 0 and len(text) > max_length:
             metrics.truncated = True

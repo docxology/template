@@ -101,7 +101,8 @@ def run_llm_review_pipeline(
     output_dir = project_output / "llm"
 
     # Initialize session metrics
-    session_metrics = SessionMetrics(max_input_length=get_max_input_length())
+    max_input_length = get_max_input_length()
+    session_metrics = SessionMetrics(max_input_length=max_input_length)
 
     try:
         # Step 1: Check Ollama availability
@@ -115,7 +116,7 @@ def run_llm_review_pipeline(
 
         # Step 2: Extract manuscript text
         try:
-            text, manuscript_metrics = extract_manuscript_text(pdf_path)
+            text, manuscript_metrics = extract_manuscript_text(pdf_path, max_input_length=max_input_length)
         except PDFValidationError as e:
             logger.error(f"Cannot generate reviews: manuscript PDF is invalid — {e}")
             return 2
