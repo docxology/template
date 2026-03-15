@@ -17,7 +17,7 @@ import threading
 import time
 from functools import lru_cache, wraps
 from pathlib import Path
-from typing import Any, Callable, Union
+from typing import Any, Callable
 
 from infrastructure.core.exceptions import SecurityViolation
 from infrastructure.core.logging_utils import get_logger
@@ -98,7 +98,7 @@ class SecurityValidator:
 
         return prompt
 
-    def validate_file_path(self, path: Union[str, Path]) -> Path:
+    def validate_file_path(self, path: str | Path) -> Path:
         """Validate file path for security.
 
         Raises:
