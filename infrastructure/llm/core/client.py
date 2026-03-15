@@ -425,14 +425,15 @@ class LLMClient:
         )
 
         # Use raw generation for structured to bypass context issues with JSON
-        messages = self.context.get_messages() + [{"role": "user", "content": instruction + prompt}]
+        full_prompt = instruction + prompt
+        messages = self.context.get_messages() + [{"role": "user", "content": full_prompt}]
 
         response_text, generation_time = self._time_call(
             lambda: self._generate_response_direct(model_name, messages, options=struct_options)
         )
 
         # Add to context
-        self.context.add_message("user", instruction + prompt)
+        self.context.add_message("user", full_prompt)
         self.context.add_message("assistant", response_text)
 
         # Parse and validate JSON response

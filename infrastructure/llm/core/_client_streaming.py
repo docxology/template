@@ -17,6 +17,9 @@ from infrastructure.llm.core._text_utils import strip_thinking_tags
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
 
+# Issue a one-time warning when elapsed time crosses this fraction of the configured timeout.
+# Gives callers early notice that a slow model may hit the timeout.
+_TIMEOUT_WARNING_FRACTION = 0.3
 
 logger = get_logger(__name__)
 
@@ -196,7 +199,7 @@ def stream_query_impl(
                                 elapsed = current_time - start_time
                                 if (
                                     not _timeout_warned
-                                    and elapsed > config.timeout * 0.3
+                                    and elapsed > config.timeout * _TIMEOUT_WARNING_FRACTION
                                 ):
                                     remaining = config.timeout - elapsed
                                     if remaining > 0:

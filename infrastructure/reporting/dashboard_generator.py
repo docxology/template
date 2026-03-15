@@ -22,13 +22,6 @@ try:
 except ImportError:
     MATPLOTLIB_AVAILABLE = False
 
-try:
-    import plotly  # noqa: F401 — sentinel import only
-
-    PLOTLY_AVAILABLE = True
-except ImportError:
-    PLOTLY_AVAILABLE = False
-
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.reporting.executive_reporter import ExecutiveSummary, ProjectMetrics
 from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews

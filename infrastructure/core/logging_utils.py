@@ -180,16 +180,17 @@ def get_logger(name: str) -> logging.Logger:
     """Return a logger configured with standard handlers for the given name."""
     logger = logging.getLogger(name)
 
-    is_test_env = _is_test_environment()
-
+    # New or unconfigured logger: let setup_logger handle _is_test_environment internally.
     if not logger.handlers:
         return setup_logger(name)
 
+    # Already-configured logger: check environment once for the two remaining branches.
+    is_test_env = _is_test_environment()
+
     # If in test environment and logger hasn't been configured for propagation,
-    # force reconfiguration to enable propagation
+    # force reconfiguration to enable propagation.
     if is_test_env:
         if not logger.propagate:
-            # Force reconfiguration by clearing handlers and calling setup_logger
             logger.handlers.clear()
             return setup_logger(name)
     else:
