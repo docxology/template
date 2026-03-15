@@ -1,29 +1,2325 @@
 {
-  "command": "status",
-  "overall_score": 66.1,
-  "objective_score": 64.3,
-  "strict_score": 65.6,
-  "verified_strict_score": 62.9,
+  "command": "scan",
+  "overall_score": 72.9,
+  "objective_score": 81.2,
+  "strict_score": 65.5,
+  "verified_strict_score": 62.7,
+  "prev_overall_score": 73.0,
+  "prev_objective_score": 81.5,
+  "prev_strict_score": 65.6,
+  "prev_verified_strict_score": 62.9,
+  "profile": "full",
+  "noise_budget": 10,
+  "noise_global_budget": 0,
+  "hidden_by_detector": {
+    "security": 16523,
+    "structural": 43,
+    "dict_keys": 11,
+    "orphaned": 7,
+    "responsibility_cohesion": 4,
+    "facade": 2
+  },
+  "hidden_total": 16590,
+  "diff": {
+    "new": 215,
+    "auto_resolved": 37,
+    "reopened": 6,
+    "total_current": 16765,
+    "suspect_detectors": [
+      "review"
+    ],
+    "chronic_reopeners": [
+      {
+        "id": "structural::infrastructure/reporting/error_aggregator.py",
+        "detector": "structural",
+        "file": "infrastructure/reporting/error_aggregator.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (327 LOC)",
+        "detail": {
+          "loc": 327
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:40+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 134,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T03:05:17+00:00",
+          "scan_count": 134,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 317
+          }
+        }
+      },
+      {
+        "id": "structural::infrastructure/validation/markdown_validator.py",
+        "detector": "structural",
+        "file": "infrastructure/validation/markdown_validator.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (310 LOC)",
+        "detail": {
+          "loc": 310
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:40+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 150,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:15:43+00:00",
+          "scan_count": 150,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 303
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/core/environment.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/core/environment.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 12 top-level funcs across 9 disconnected clusters (3, 2, 1, 1, 1, +4 more)",
+        "detail": {
+          "loc": 296,
+          "function_count": 12,
+          "component_count": 9,
+          "component_sizes": [
+            3,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "family_count": 7,
+          "import_cluster_count": 8,
+          "families": [
+            "",
+            "check",
+            "get",
+            "set",
+            "setup",
+            "validate",
+            "verify"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:14+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 294,
+            "function_count": 12,
+            "component_count": 9,
+            "component_sizes": [
+              3,
+              2,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "family_count": 7,
+            "import_cluster_count": 8,
+            "families": [
+              "",
+              "check",
+              "get",
+              "set",
+              "setup",
+              "validate",
+              "verify"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/reporting/dashboard_generator.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/reporting/dashboard_generator.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 24 top-level funcs across 9 disconnected clusters (16, 1, 1, 1, 1, +4 more)",
+        "detail": {
+          "loc": 3479,
+          "function_count": 24,
+          "component_count": 9,
+          "component_sizes": [
+            16,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "family_count": 2,
+          "import_cluster_count": 6,
+          "families": [
+            "create",
+            "generate"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:30+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 3460,
+            "function_count": 24,
+            "component_count": 9,
+            "component_sizes": [
+              16,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "family_count": 2,
+            "import_cluster_count": 6,
+            "families": [
+              "create",
+              "generate"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/validation/integrity.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/validation/integrity.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 13 top-level funcs across 9 disconnected clusters (5, 1, 1, 1, 1, +4 more)",
+        "detail": {
+          "loc": 654,
+          "function_count": 13,
+          "component_count": 9,
+          "component_sizes": [
+            5,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "family_count": 7,
+          "import_cluster_count": 8,
+          "families": [
+            "check",
+            "create",
+            "generate",
+            "load",
+            "save",
+            "validate",
+            "verify"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:34+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 645,
+            "function_count": 13,
+            "component_count": 9,
+            "component_sizes": [
+              5,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "family_count": 7,
+            "import_cluster_count": 8,
+            "families": [
+              "check",
+              "create",
+              "generate",
+              "load",
+              "save",
+              "validate",
+              "verify"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/validation/known_exceptions.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/validation/known_exceptions.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 8 top-level funcs across 8 disconnected clusters (1, 1, 1, 1, 1, +3 more)",
+        "detail": {
+          "loc": 265,
+          "function_count": 8,
+          "component_count": 8,
+          "component_sizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "family_count": 1,
+          "import_cluster_count": 2,
+          "families": [
+            "is"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:36+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 257,
+            "function_count": 8,
+            "component_count": 8,
+            "component_sizes": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "family_count": 1,
+            "import_cluster_count": 2,
+            "families": [
+              "is"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/reporting/pipeline_reporter.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/reporting/pipeline_reporter.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 12 top-level funcs across 2 disconnected clusters (11, 1)",
+        "detail": {
+          "loc": 578,
+          "function_count": 12,
+          "component_count": 2,
+          "component_sizes": [
+            11,
+            1
+          ],
+          "family_count": 3,
+          "import_cluster_count": 7,
+          "families": [
+            "",
+            "generate",
+            "save"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:32+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 561,
+            "function_count": 12,
+            "component_count": 2,
+            "component_sizes": [
+              11,
+              1
+            ],
+            "family_count": 3,
+            "import_cluster_count": 7,
+            "families": [
+              "",
+              "generate",
+              "save"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/core/logging_utils.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/core/logging_utils.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 17 top-level funcs across 4 disconnected clusters (14, 1, 1, 1)",
+        "detail": {
+          "loc": 418,
+          "function_count": 17,
+          "component_count": 4,
+          "component_sizes": [
+            14,
+            1,
+            1,
+            1
+          ],
+          "family_count": 6,
+          "import_cluster_count": 9,
+          "families": [
+            "",
+            "flush",
+            "get",
+            "log",
+            "set",
+            "setup"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:15+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 399,
+            "function_count": 17,
+            "component_count": 4,
+            "component_sizes": [
+              14,
+              1,
+              1,
+              1
+            ],
+            "family_count": 6,
+            "import_cluster_count": 9,
+            "families": [
+              "",
+              "flush",
+              "get",
+              "log",
+              "set",
+              "setup"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/validation/doc_discovery.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/validation/doc_discovery.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 14 top-level funcs across 2 disconnected clusters (13, 1)",
+        "detail": {
+          "loc": 438,
+          "function_count": 14,
+          "component_count": 2,
+          "component_sizes": [
+            13,
+            1
+          ],
+          "family_count": 11,
+          "import_cluster_count": 9,
+          "families": [
+            "",
+            "analyze",
+            "catalog",
+            "categorize",
+            "create",
+            "discover",
+            "find",
+            "get"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:33+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 427,
+            "function_count": 14,
+            "component_count": 3,
+            "component_sizes": [
+              12,
+              1,
+              1
+            ],
+            "family_count": 11,
+            "import_cluster_count": 9,
+            "families": [
+              "",
+              "analyze",
+              "catalog",
+              "categorize",
+              "create",
+              "discover",
+              "find",
+              "get"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/validation/issue_categorizer.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/validation/issue_categorizer.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 14 top-level funcs across 2 disconnected clusters (13, 1)",
+        "detail": {
+          "loc": 453,
+          "function_count": 14,
+          "component_count": 2,
+          "component_sizes": [
+            13,
+            1
+          ],
+          "family_count": 10,
+          "import_cluster_count": 3,
+          "families": [
+            "",
+            "assign",
+            "categorize",
+            "filter",
+            "generate",
+            "get",
+            "group",
+            "is"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:35+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 440,
+            "function_count": 14,
+            "component_count": 2,
+            "component_sizes": [
+              13,
+              1
+            ],
+            "family_count": 10,
+            "import_cluster_count": 3,
+            "families": [
+              "",
+              "assign",
+              "categorize",
+              "filter",
+              "generate",
+              "get",
+              "group",
+              "is"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/llm/utils/ollama.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/llm/utils/ollama.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 10 top-level funcs across 2 disconnected clusters (8, 2)",
+        "detail": {
+          "loc": 521,
+          "function_count": 10,
+          "component_count": 2,
+          "component_sizes": [
+            8,
+            2
+          ],
+          "family_count": 7,
+          "import_cluster_count": 4,
+          "families": [
+            "check",
+            "ensure",
+            "get",
+            "is",
+            "preload",
+            "select",
+            "start"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:17+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 511,
+            "function_count": 10,
+            "component_count": 2,
+            "component_sizes": [
+              8,
+              2
+            ],
+            "family_count": 7,
+            "import_cluster_count": 4,
+            "families": [
+              "check",
+              "ensure",
+              "get",
+              "is",
+              "preload",
+              "select",
+              "start"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/reporting/executive_reporter.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/reporting/executive_reporter.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 14 top-level funcs across 2 disconnected clusters (11, 3)",
+        "detail": {
+          "loc": 1439,
+          "function_count": 14,
+          "component_count": 2,
+          "component_sizes": [
+            11,
+            3
+          ],
+          "family_count": 5,
+          "import_cluster_count": 6,
+          "families": [
+            "",
+            "calculate",
+            "collect",
+            "generate",
+            "save"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:05:41+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:31+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 1418,
+            "function_count": 14,
+            "component_count": 2,
+            "component_sizes": [
+              11,
+              3
+            ],
+            "family_count": 5,
+            "import_cluster_count": 6,
+            "families": [
+              "",
+              "calculate",
+              "collect",
+              "generate",
+              "save"
+            ]
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/core/environment.py::phantom_read::env::VIRTUAL_ENV",
+        "detector": "dict_keys",
+        "file": "infrastructure/core/environment.py",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Dict key \"VIRTUAL_ENV\" read at line 187 but never written to `env`",
+        "detail": {
+          "kind": "phantom_read",
+          "key": "VIRTUAL_ENV",
+          "line": 187,
+          "info": "Created at line 185 in get_subprocess_env() \u2014 will raise KeyError or return None via .get()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d73) \u2014 reappeared in scan (was fixed)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 3,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null
+      },
+      {
+        "id": "dict_keys::infrastructure/documentation/figure_manager.py::phantom_read::data::label",
+        "detector": "dict_keys",
+        "file": "infrastructure/documentation/figure_manager.py",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Dict key \"label\" read at line 56 but never written to `data`",
+        "detail": {
+          "kind": "phantom_read",
+          "key": "label",
+          "line": 56,
+          "info": "Created at line 45 in from_dict() \u2014 will raise KeyError or return None via .get()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d73) \u2014 reappeared in scan (was fixed)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 3,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null
+      },
+      {
+        "id": "dict_keys::infrastructure/documentation/figure_manager.py::phantom_read::data::parameters",
+        "detector": "dict_keys",
+        "file": "infrastructure/documentation/figure_manager.py",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Dict key \"parameters\" read at line 48 but never written to `data`",
+        "detail": {
+          "kind": "phantom_read",
+          "key": "parameters",
+          "line": 48,
+          "info": "Created at line 45 in from_dict() \u2014 will raise KeyError or return None via .get()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d73) \u2014 reappeared in scan (was fixed)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 3,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null
+      },
+      {
+        "id": "dict_keys::infrastructure/reporting/executive_reporter.py::overwritten_key::factors::test_coverage",
+        "detector": "dict_keys",
+        "file": "infrastructure/reporting/executive_reporter.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"test_coverage\" overwritten on `factors` at line 570 (previously set at line 563, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "test_coverage",
+          "line": 570,
+          "info": "in calculate_project_health_score()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:35+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "test_coverage",
+            "line": 555,
+            "info": "in calculate_project_health_score()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/reporting/executive_reporter.py::overwritten_key::factors::test_failures",
+        "detector": "dict_keys",
+        "file": "infrastructure/reporting/executive_reporter.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"test_failures\" overwritten on `factors` at line 608 (previously set at line 602, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "test_failures",
+          "line": 608,
+          "info": "in calculate_project_health_score()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:35+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "test_failures",
+            "line": 593,
+            "info": "in calculate_project_health_score()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/reporting/executive_reporter.py::overwritten_key::factors::manuscript_size",
+        "detector": "dict_keys",
+        "file": "infrastructure/reporting/executive_reporter.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"manuscript_size\" overwritten on `factors` at line 638 (previously set at line 631, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "manuscript_size",
+          "line": 638,
+          "info": "in calculate_project_health_score()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:35+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "manuscript_size",
+            "line": 623,
+            "info": "in calculate_project_health_score()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/reporting/executive_reporter.py::overwritten_key::factors::outputs",
+        "detector": "dict_keys",
+        "file": "infrastructure/reporting/executive_reporter.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"outputs\" overwritten on `factors` at line 674 (previously set at line 667, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "outputs",
+          "line": 674,
+          "info": "in calculate_project_health_score()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:35+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "outputs",
+            "line": 659,
+            "info": "in calculate_project_health_score()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/reporting/output_organizer.py::overwritten_key::summary::combined_pdfs",
+        "detector": "dict_keys",
+        "file": "infrastructure/reporting/output_organizer.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"combined_pdfs\" overwritten on `summary` at line 288 (previously set at line 286, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "combined_pdfs",
+          "line": 288,
+          "info": "in get_organized_structure_summary()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:35+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "combined_pdfs",
+            "line": 285,
+            "info": "in get_organized_structure_summary()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/scientific/validation.py::overwritten_key::compliance::has_docstring",
+        "detector": "dict_keys",
+        "file": "infrastructure/scientific/validation.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"has_docstring\" overwritten on `compliance` at line 186 (previously set at line 173, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "has_docstring",
+          "line": 186,
+          "info": "in check_research_compliance()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:35+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "has_docstring",
+            "line": 184,
+            "info": "in check_research_compliance()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/scientific/validation.py::overwritten_key::compliance::has_type_hints",
+        "detector": "dict_keys",
+        "file": "infrastructure/scientific/validation.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"has_type_hints\" overwritten on `compliance` at line 198 (previously set at line 173, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "has_type_hints",
+          "line": 198,
+          "info": "in check_research_compliance()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:36+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "has_type_hints",
+            "line": 196,
+            "info": "in check_research_compliance()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/scientific/validation.py::overwritten_key::compliance::has_examples",
+        "detector": "dict_keys",
+        "file": "infrastructure/scientific/validation.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"has_examples\" overwritten on `compliance` at line 189 (previously set at line 173, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "has_examples",
+          "line": 189,
+          "info": "in check_research_compliance()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:36+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "has_examples",
+            "line": 187,
+            "info": "in check_research_compliance()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/scientific/validation.py::overwritten_key::compliance::has_error_handling",
+        "detector": "dict_keys",
+        "file": "infrastructure/scientific/validation.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"has_error_handling\" overwritten on `compliance` at line 216 (previously set at line 173, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "has_error_handling",
+          "line": 216,
+          "info": "in check_research_compliance()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:36+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "has_error_handling",
+            "line": 214,
+            "info": "in check_research_compliance()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/scientific/validation.py::overwritten_key::compliance::has_input_validation",
+        "detector": "dict_keys",
+        "file": "infrastructure/scientific/validation.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"has_input_validation\" overwritten on `compliance` at line 211 (previously set at line 173, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "has_input_validation",
+          "line": 211,
+          "info": "in check_research_compliance()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:36+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "has_input_validation",
+            "line": 209,
+            "info": "in check_research_compliance()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/scientific/validation.py::overwritten_key::compliance::follows_naming_conventions",
+        "detector": "dict_keys",
+        "file": "infrastructure/scientific/validation.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"follows_naming_conventions\" overwritten on `compliance` at line 201 (previously set at line 173, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "follows_naming_conventions",
+          "line": 201,
+          "info": "in check_research_compliance()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:36+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "follows_naming_conventions",
+            "line": 199,
+            "info": "in check_research_compliance()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/scientific/validation.py::overwritten_key::compliance::compliance_score",
+        "detector": "dict_keys",
+        "file": "infrastructure/scientific/validation.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"compliance_score\" overwritten on `compliance` at line 235 (previously set at line 173, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "compliance_score",
+          "line": 235,
+          "info": "in check_research_compliance()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:36+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "compliance_score",
+            "line": 233,
+            "info": "in check_research_compliance()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/validation/integrity.py::overwritten_key::consistency::file_readable",
+        "detector": "dict_keys",
+        "file": "infrastructure/validation/integrity.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"file_readable\" overwritten on `consistency` at line 162 (previously set at line 153, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "file_readable",
+          "line": 162,
+          "info": "in verify_data_consistency()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:36+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "file_readable",
+            "line": 158,
+            "info": "in verify_data_consistency()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/validation/integrity.py::overwritten_key::consistency::data_integrity",
+        "detector": "dict_keys",
+        "file": "infrastructure/validation/integrity.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"data_integrity\" overwritten on `consistency` at line 195 (previously set at line 187, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "data_integrity",
+          "line": 195,
+          "info": "in verify_data_consistency()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:37+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "data_integrity",
+            "line": 191,
+            "info": "in verify_data_consistency()"
+          }
+        }
+      },
+      {
+        "id": "dict_keys::infrastructure/validation/output_validator.py::overwritten_key::result::valid",
+        "detector": "dict_keys",
+        "file": "infrastructure/validation/output_validator.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Dict key \"valid\" overwritten on `result` at line 513 (previously set at line 433, never read between)",
+        "detail": {
+          "kind": "overwritten_key",
+          "key": "valid",
+          "line": 513,
+          "info": "in validate_output_structure()"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T02:09:58+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:46:37+00:00",
+          "scan_count": 152,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "kind": "overwritten_key",
+            "key": "valid",
+            "line": 510,
+            "info": "in validate_output_structure()"
+          }
+        }
+      },
+      {
+        "id": "security::infrastructure/publishing/cli.py::security::log_sensitive::infrastructure/publishing/cli.py::125",
+        "detector": "security",
+        "file": "infrastructure/publishing/cli.py",
+        "tier": 2,
+        "confidence": "medium",
+        "summary": "Sensitive data may be logged",
+        "detail": {
+          "kind": "log_sensitive",
+          "severity": "medium",
+          "line": 125,
+          "content": "        logger.error(\"ZENODO_TOKEN environment variable not set\")",
+          "remediation": "Remove sensitive data from log statements"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d73) \u2014 reappeared in scan (was fixed)",
+        "first_seen": "2026-03-06T18:46:46+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 3,
+        "zone": "production",
+        "lang": "python",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 151,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:29:44+00:00",
+          "scan_count": 151,
+          "tier": 2,
+          "confidence": "medium",
+          "detail": {
+            "kind": "log_sensitive",
+            "severity": "medium",
+            "line": 125,
+            "content": "        logger.error(\"ZENODO_TOKEN environment variable not set\")",
+            "remediation": "Remove sensitive data from log statements"
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/steganography/barcodes.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/steganography/barcodes.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 11 top-level funcs across 3 disconnected clusters (8, 2, 1)",
+        "detail": {
+          "loc": 416,
+          "function_count": 11,
+          "component_count": 3,
+          "component_sizes": [
+            8,
+            2,
+            1
+          ],
+          "family_count": 4,
+          "import_cluster_count": 3,
+          "families": [
+            "",
+            "build",
+            "create",
+            "generate"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-06T19:24:28+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:32+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 389,
+            "function_count": 11,
+            "component_count": 3,
+            "component_sizes": [
+              8,
+              2,
+              1
+            ],
+            "family_count": 4,
+            "import_cluster_count": 3,
+            "families": [
+              "",
+              "build",
+              "create",
+              "generate"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/llm/review/generator.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/llm/review/generator.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 21 top-level funcs across 10 disconnected clusters (11, 2, 1, 1, 1, +5 more)",
+        "detail": {
+          "loc": 818,
+          "function_count": 21,
+          "component_count": 10,
+          "component_sizes": [
+            11,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "family_count": 9,
+          "import_cluster_count": 8,
+          "families": [
+            "",
+            "create",
+            "extract",
+            "generate",
+            "get",
+            "log",
+            "select",
+            "validate"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-07T02:54:25+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:16+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 764,
+            "function_count": 21,
+            "component_count": 10,
+            "component_sizes": [
+              11,
+              2,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "family_count": 9,
+            "import_cluster_count": 8,
+            "families": [
+              "",
+              "create",
+              "extract",
+              "generate",
+              "get",
+              "log",
+              "select",
+              "validate"
+            ]
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/reporting/coverage_parser.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/reporting/coverage_parser.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 12 top-level funcs across 10 disconnected clusters (3, 1, 1, 1, 1, +5 more)",
+        "detail": {
+          "loc": 297,
+          "function_count": 12,
+          "component_count": 10,
+          "component_sizes": [
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "family_count": 3,
+          "import_cluster_count": 6,
+          "families": [
+            "",
+            "check",
+            "extract"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-07T03:55:22+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:29+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 264,
+            "function_count": 12,
+            "component_count": 10,
+            "component_sizes": [
+              3,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "family_count": 3,
+            "import_cluster_count": 6,
+            "families": [
+              "",
+              "check",
+              "extract"
+            ]
+          }
+        }
+      },
+      {
+        "id": "stale_wontfix::infrastructure/core/file_inventory.py::smells::infrastructure/core/file_inventory.py::swallowed_error",
+        "detector": "stale_wontfix",
+        "file": "infrastructure/core/file_inventory.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Stale wontfix (scan_decay): re-triage `smells::infrastructure/core/file_inventory.py::swallowed_error` (last reviewed 145 scans ago)",
+        "detail": {
+          "subtype": "stale_wontfix",
+          "original_issue_id": "smells::infrastructure/core/file_inventory.py::swallowed_error",
+          "original_detector": "smells",
+          "reasons": [
+            "scan_decay"
+          ],
+          "scans_since_wontfix": 145,
+          "drift": {}
+        },
+        "status": "open",
+        "note": "Reopened (\u00d74) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-07T09:29:23+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 4,
+        "lang": "python",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 151,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:40:03+00:00",
+          "scan_count": 151,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "subtype": "stale_wontfix",
+            "original_issue_id": "smells::infrastructure/core/file_inventory.py::swallowed_error",
+            "original_detector": "smells",
+            "reasons": [
+              "scan_decay"
+            ],
+            "scans_since_wontfix": 135,
+            "drift": {}
+          }
+        }
+      },
+      {
+        "id": "stale_wontfix::infrastructure/core/file_operations.py::smells::infrastructure/core/file_operations.py::swallowed_error",
+        "detector": "stale_wontfix",
+        "file": "infrastructure/core/file_operations.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Stale wontfix (scan_decay): re-triage `smells::infrastructure/core/file_operations.py::swallowed_error` (last reviewed 145 scans ago)",
+        "detail": {
+          "subtype": "stale_wontfix",
+          "original_issue_id": "smells::infrastructure/core/file_operations.py::swallowed_error",
+          "original_detector": "smells",
+          "reasons": [
+            "scan_decay"
+          ],
+          "scans_since_wontfix": 145,
+          "drift": {}
+        },
+        "status": "open",
+        "note": "Reopened (\u00d74) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-07T09:29:23+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 4,
+        "lang": "python",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 151,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:40:03+00:00",
+          "scan_count": 151,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "subtype": "stale_wontfix",
+            "original_issue_id": "smells::infrastructure/core/file_operations.py::swallowed_error",
+            "original_detector": "smells",
+            "reasons": [
+              "scan_decay"
+            ],
+            "scans_since_wontfix": 135,
+            "drift": {}
+          }
+        }
+      },
+      {
+        "id": "security::infrastructure/core/credentials.py::security::hardcoded_secret_name::infrastructure/core/credentials.py::116",
+        "detector": "security",
+        "file": "infrastructure/core/credentials.py",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Hardcoded secret in variable 'token_env_var'",
+        "detail": {
+          "kind": "hardcoded_secret_name",
+          "severity": "high",
+          "line": 116,
+          "content": "        token_env_var = \"ZENODO_SANDBOX_TOKEN\" if use_sandbox else \"ZENODO_PROD_TOKEN\"",
+          "remediation": "Move secret to environment variable or secrets manager"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was fixed)",
+        "first_seen": "2026-03-07T14:21:50+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "zone": "production",
+        "lang": "python",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null
+      },
+      {
+        "id": "flat_dirs::infrastructure",
+        "detector": "flat_dirs",
+        "file": "infrastructure",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 1 files, 10 child dirs (combined 31) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 1,
+          "child_dir_count": 10,
+          "combined_score": 31,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-10T14:05:30+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 151,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:39:46+00:00",
+          "scan_count": 151,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "file_count": 1,
+            "child_dir_count": 10,
+            "combined_score": 31,
+            "kind": "overload",
+            "parent_sibling_count": 0,
+            "wrapper_item_count": 0,
+            "sparse_child_count": 0,
+            "sparse_child_ratio": 0.0,
+            "sparse_child_file_threshold": 0
+          }
+        }
+      },
+      {
+        "id": "signature::infrastructure/llm/templates/base.py::signature_variance::render",
+        "detector": "signature",
+        "file": "infrastructure/llm/templates/base.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'render' has 7 different signatures across 6 files",
+        "detail": {},
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-10T14:06:22+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:22:04+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {}
+        }
+      },
+      {
+        "id": "signature::infrastructure/core/function_profiler.py::signature_variance::generate_performance_report",
+        "detector": "signature",
+        "file": "infrastructure/core/function_profiler.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "'generate_performance_report' has 3 different signatures across 3 files",
+        "detail": {},
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-10T14:06:22+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:22:03+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {}
+        }
+      },
+      {
+        "id": "structural::infrastructure/llm/core/_client_streaming.py",
+        "detector": "structural",
+        "file": "infrastructure/llm/core/_client_streaming.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (318 LOC) / complexity score 32",
+        "detail": {
+          "loc": 318,
+          "complexity_score": 32,
+          "complexity_signals": [
+            "function with 11 params",
+            "nesting depth 12"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-14T03:09:54+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 150,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:15:41+00:00",
+          "scan_count": 150,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 308,
+            "complexity_score": 32,
+            "complexity_signals": [
+              "function with 11 params",
+              "nesting depth 12"
+            ]
+          }
+        }
+      },
+      {
+        "id": "structural::infrastructure/core/file_cleanup.py",
+        "detector": "structural",
+        "file": "infrastructure/core/file_cleanup.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (311 LOC)",
+        "detail": {
+          "loc": 311
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-14T03:09:54+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 150,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:15:41+00:00",
+          "scan_count": 150,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 311
+          }
+        }
+      },
+      {
+        "id": "responsibility_cohesion::infrastructure/llm/validation/core.py",
+        "detector": "responsibility_cohesion",
+        "file": "infrastructure/llm/validation/core.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Mixed responsibilities: 12 top-level funcs across 5 disconnected clusters (8, 1, 1, 1, 1)",
+        "detail": {
+          "loc": 265,
+          "function_count": 12,
+          "component_count": 5,
+          "component_sizes": [
+            8,
+            1,
+            1,
+            1,
+            1
+          ],
+          "family_count": 4,
+          "import_cluster_count": 5,
+          "families": [
+            "",
+            "clean",
+            "estimate",
+            "validate"
+          ]
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-14T03:09:54+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 155,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T23:21:17+00:00",
+          "scan_count": 155,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 265,
+            "function_count": 12,
+            "component_count": 5,
+            "component_sizes": [
+              8,
+              1,
+              1,
+              1,
+              1
+            ],
+            "family_count": 4,
+            "import_cluster_count": 5,
+            "families": [
+              "",
+              "clean",
+              "estimate",
+              "validate"
+            ]
+          }
+        }
+      },
+      {
+        "id": "security::infrastructure/core/environment.py::security::B607::infrastructure/core/environment.py::120",
+        "detector": "security",
+        "file": "infrastructure/core/environment.py",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "[B607] Starting a process with a partial executable path",
+        "detail": {
+          "kind": "B607",
+          "severity": "low",
+          "line": 120,
+          "content": "119     try:\n120         result = subprocess.run(\n121             [\"uv\", \"--version\"], capture_output=True, text=True, check=False, timeout=10\n122         )\n123         return result.returncode == 0\n",
+          "remediation": "https://bandit.readthedocs.io/en/1.9.3/plugins/b607_start_process_with_partial_path.html",
+          "test_name": "start_process_with_partial_path",
+          "source": "bandit"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-14T03:11:08+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "zone": "production",
+        "lang": "python",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 151,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:29:48+00:00",
+          "scan_count": 151,
+          "tier": 3,
+          "confidence": "low",
+          "detail": {
+            "kind": "B607",
+            "severity": "low",
+            "line": 120,
+            "content": "119     try:\n120         result = subprocess.run(\n121             [\"uv\", \"--version\"], capture_output=True, text=True, check=False, timeout=10\n122         )\n123         return result.returncode == 0\n",
+            "remediation": "https://bandit.readthedocs.io/en/1.9.3/plugins/b607_start_process_with_partial_path.html",
+            "test_name": "start_process_with_partial_path",
+            "source": "bandit"
+          }
+        }
+      },
+      {
+        "id": "security::infrastructure/core/environment.py::security::B603::infrastructure/core/environment.py::120",
+        "detector": "security",
+        "file": "infrastructure/core/environment.py",
+        "tier": 3,
+        "confidence": "low",
+        "summary": "[B603] subprocess call - check for execution of untrusted input.",
+        "detail": {
+          "kind": "B603",
+          "severity": "low",
+          "line": 120,
+          "content": "119     try:\n120         result = subprocess.run(\n121             [\"uv\", \"--version\"], capture_output=True, text=True, check=False, timeout=10\n122         )\n123         return result.returncode == 0\n",
+          "remediation": "https://bandit.readthedocs.io/en/1.9.3/plugins/b603_subprocess_without_shell_equals_true.html",
+          "test_name": "subprocess_without_shell_equals_true",
+          "source": "bandit"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-14T03:11:08+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "zone": "production",
+        "lang": "python",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 151,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:29:48+00:00",
+          "scan_count": 151,
+          "tier": 3,
+          "confidence": "low",
+          "detail": {
+            "kind": "B603",
+            "severity": "low",
+            "line": 120,
+            "content": "119     try:\n120         result = subprocess.run(\n121             [\"uv\", \"--version\"], capture_output=True, text=True, check=False, timeout=10\n122         )\n123         return result.returncode == 0\n",
+            "remediation": "https://bandit.readthedocs.io/en/1.9.3/plugins/b603_subprocess_without_shell_equals_true.html",
+            "test_name": "subprocess_without_shell_equals_true",
+            "source": "bandit"
+          }
+        }
+      },
+      {
+        "id": "orphaned::infrastructure/core/env_deps.py",
+        "detector": "orphaned",
+        "file": "infrastructure/core/env_deps.py",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (161 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 161
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was auto_resolved)",
+        "first_seen": "2026-03-14T05:29:31+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "lang": "python",
+        "zone": "production",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 151,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:40:00+00:00",
+          "scan_count": 151,
+          "tier": 3,
+          "confidence": "medium",
+          "detail": {
+            "loc": 161
+          }
+        }
+      },
+      {
+        "id": "security::infrastructure/llm/validation/core.py::security::log_sensitive::infrastructure/llm/validation/core.py::76",
+        "detector": "security",
+        "file": "infrastructure/llm/validation/core.py",
+        "tier": 2,
+        "confidence": "medium",
+        "summary": "Sensitive data may be logged",
+        "detail": {
+          "kind": "log_sensitive",
+          "severity": "medium",
+          "line": 76,
+          "content": "        logger.warning(f\"Short response exceeds limit: {tokens} > {max_tokens} tokens\")",
+          "remediation": "Remove sensitive data from log statements"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was fixed)",
+        "first_seen": "2026-03-14T22:42:45+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "zone": "production",
+        "lang": "python",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:45:26+00:00",
+          "scan_count": 152,
+          "tier": 2,
+          "confidence": "medium",
+          "detail": {
+            "kind": "log_sensitive",
+            "severity": "medium",
+            "line": 76,
+            "content": "        logger.warning(f\"Short response exceeds limit: {tokens} > {max_tokens} tokens\")",
+            "remediation": "Remove sensitive data from log statements"
+          }
+        }
+      },
+      {
+        "id": "security::infrastructure/llm/validation/core.py::security::log_sensitive::infrastructure/llm/validation/core.py::85",
+        "detector": "security",
+        "file": "infrastructure/llm/validation/core.py",
+        "tier": 2,
+        "confidence": "medium",
+        "summary": "Sensitive data may be logged",
+        "detail": {
+          "kind": "log_sensitive",
+          "severity": "medium",
+          "line": 85,
+          "content": "        logger.warning(f\"Long response below minimum: {tokens} < {min_tokens} tokens\")",
+          "remediation": "Remove sensitive data from log statements"
+        },
+        "status": "open",
+        "note": "Reopened (\u00d72) \u2014 reappeared in scan (was fixed)",
+        "first_seen": "2026-03-14T22:42:45+00:00",
+        "last_seen": "2026-03-15T00:56:12+00:00",
+        "resolved_at": null,
+        "reopen_count": 2,
+        "zone": "production",
+        "lang": "python",
+        "suppressed": false,
+        "suppressed_at": null,
+        "suppression_pattern": null,
+        "wontfix_scan_count": 152,
+        "wontfix_snapshot": {
+          "captured_at": "2026-03-14T22:45:33+00:00",
+          "scan_count": 152,
+          "tier": 2,
+          "confidence": "medium",
+          "detail": {
+            "kind": "log_sensitive",
+            "severity": "medium",
+            "line": 85,
+            "content": "        logger.warning(f\"Long response below minimum: {tokens} < {min_tokens} tokens\")",
+            "remediation": "Remove sensitive data from log statements"
+          }
+        }
+      }
+    ],
+    "skipped_other_lang": 0,
+    "resolved_out_of_scope": 0,
+    "ignored": 1,
+    "ignore_patterns": 1,
+    "raw_issues": 16778,
+    "suppressed_pct": 0.0
+  },
+  "stats": {
+    "total": 19337,
+    "auto_resolved": 2032,
+    "false_positive": 6,
+    "fixed": 180,
+    "open": 16665,
+    "wontfix": 454,
+    "by_tier": {
+      "1": {
+        "auto_resolved": 97,
+        "false_positive": 0,
+        "fixed": 133,
+        "open": 1,
+        "wontfix": 63
+      },
+      "2": {
+        "auto_resolved": 211,
+        "false_positive": 6,
+        "fixed": 33,
+        "open": 30,
+        "wontfix": 111
+      },
+      "3": {
+        "auto_resolved": 1571,
+        "false_positive": 0,
+        "fixed": 14,
+        "open": 16631,
+        "wontfix": 280
+      },
+      "4": {
+        "auto_resolved": 153,
+        "false_positive": 0,
+        "fixed": 0,
+        "open": 3,
+        "wontfix": 0
+      }
+    }
+  },
+  "open_scope": {
+    "in_scope": 16665,
+    "out_of_scope": 0,
+    "global": 16665
+  },
+  "warnings": [
+    "6 issues reopened \u2014 was a previous fix reverted?",
+    "\u27f3 48 chronic reopeners \u2014 run `desloppify show --chronic` to see them."
+  ],
   "dimension_scores": {
     "Code quality": {
-      "score": 96.1,
-      "strict": 89.3,
-      "verified_strict_score": 89.1,
+      "score": 95.8,
+      "strict": 89.0,
+      "verified_strict_score": 88.8,
       "checks": 1122,
-      "failing": 67,
+      "failing": 72,
       "tier": 3,
       "detectors": {
         "unused": {
           "potential": 149,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0
+          "pass_rate": 0.9932885906040269,
+          "failing": 1,
+          "weighted_failures": 1.0
         },
         "smells": {
           "potential": 149,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0
+          "pass_rate": 0.9812080536912751,
+          "failing": 4,
+          "weighted_failures": 2.8
         },
         "orphaned": {
           "potential": 149,
@@ -79,8 +2375,8 @@
       "score": 38.4,
       "strict": 38.4,
       "verified_strict_score": 38.4,
-      "checks": 1132,
-      "failing": 16352,
+      "checks": 1133,
+      "failing": 16533,
       "tier": 4,
       "detectors": {
         "cycles": {
@@ -90,26 +2386,26 @@
           "weighted_failures": 0.0
         },
         "security": {
-          "potential": 983,
-          "pass_rate": 0.29013224821973554,
-          "failing": 16352,
+          "potential": 984,
+          "pass_rate": 0.2908536585365854,
+          "failing": 16533,
           "weighted_failures": 697.8
         }
       }
     },
     "File health": {
-      "score": 75.1,
-      "strict": 74.6,
-      "verified_strict_score": 74.6,
+      "score": 75.6,
+      "strict": 74.2,
+      "verified_strict_score": 74.2,
       "checks": 149,
-      "failing": 53,
+      "failing": 52,
       "tier": 3,
       "detectors": {
         "structural": {
           "potential": 149,
-          "pass_rate": 0.751006711409396,
-          "failing": 53,
-          "weighted_failures": 37.1
+          "pass_rate": 0.7557046979865771,
+          "failing": 52,
+          "weighted_failures": 36.4
         }
       }
     },
@@ -130,18 +2426,18 @@
       }
     },
     "Test health": {
-      "score": 6.6,
-      "strict": 6.6,
-      "verified_strict_score": 6.6,
-      "checks": 2216,
-      "failing": 127,
+      "score": 99.2,
+      "strict": 6.5,
+      "verified_strict_score": 6.5,
+      "checks": 2236,
+      "failing": 1,
       "tier": 4,
       "detectors": {
         "test_coverage": {
-          "potential": 2070,
-          "pass_rate": 6.479268658971846e-05,
-          "failing": 127,
-          "weighted_failures": 2069.8658791387593
+          "potential": 2090,
+          "pass_rate": 0.9911128346310972,
+          "failing": 1,
+          "weighted_failures": 18.57417562100671
         },
         "subjective_review": {
           "potential": 146,
@@ -156,13 +2452,13 @@
       "strict": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "failing": 3,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "failing": 3,
+          "failing": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
@@ -177,13 +2473,13 @@
       "strict": 74.0,
       "verified_strict_score": 74.0,
       "checks": 10,
-      "failing": 3,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.74,
-          "failing": 3,
+          "failing": 0,
           "weighted_failures": 2.6,
           "assessment_score": 74.0,
           "placeholder": false,
@@ -198,13 +2494,13 @@
       "strict": 62.0,
       "verified_strict_score": 62.0,
       "checks": 10,
-      "failing": 3,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.62,
-          "failing": 3,
+          "failing": 0,
           "weighted_failures": 3.8,
           "assessment_score": 62.0,
           "placeholder": false,
@@ -219,13 +2515,13 @@
       "strict": 70.0,
       "verified_strict_score": 70.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.7,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 3.0,
           "assessment_score": 70.0,
           "placeholder": false,
@@ -240,13 +2536,13 @@
       "strict": 68.0,
       "verified_strict_score": 68.0,
       "checks": 10,
-      "failing": 3,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.68,
-          "failing": 3,
+          "failing": 0,
           "weighted_failures": 3.2,
           "assessment_score": 68.0,
           "placeholder": false,
@@ -261,13 +2557,13 @@
       "strict": 62.0,
       "verified_strict_score": 62.0,
       "checks": 10,
-      "failing": 3,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.62,
-          "failing": 3,
+          "failing": 0,
           "weighted_failures": 3.8,
           "assessment_score": 62.0,
           "placeholder": false,
@@ -282,13 +2578,13 @@
       "strict": 58.0,
       "verified_strict_score": 58.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.58,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 4.2,
           "assessment_score": 58.0,
           "placeholder": false,
@@ -303,13 +2599,13 @@
       "strict": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
@@ -324,13 +2620,13 @@
       "strict": 65.0,
       "verified_strict_score": 65.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.65,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 3.5,
           "assessment_score": 65.0,
           "placeholder": false,
@@ -345,13 +2641,13 @@
       "strict": 68.0,
       "verified_strict_score": 68.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.68,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 3.2,
           "assessment_score": 68.0,
           "placeholder": false,
@@ -366,13 +2662,13 @@
       "strict": 62.0,
       "verified_strict_score": 62.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.62,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 3.8,
           "assessment_score": 62.0,
           "placeholder": false,
@@ -387,13 +2683,13 @@
       "strict": 55.0,
       "verified_strict_score": 55.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.55,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 4.5,
           "assessment_score": 55.0,
           "placeholder": false,
@@ -408,13 +2704,13 @@
       "strict": 68.0,
       "verified_strict_score": 68.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.68,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 3.2,
           "assessment_score": 68.0,
           "placeholder": false,
@@ -429,13 +2725,13 @@
       "strict": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
@@ -450,13 +2746,13 @@
       "strict": 70.0,
       "verified_strict_score": 70.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.7,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 3.0,
           "assessment_score": 70.0,
           "placeholder": false,
@@ -471,13 +2767,13 @@
       "strict": 62.0,
       "verified_strict_score": 62.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.62,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 3.8,
           "assessment_score": 62.0,
           "placeholder": false,
@@ -492,13 +2788,13 @@
       "strict": 71.0,
       "verified_strict_score": 71.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.71,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 2.9,
           "assessment_score": 71.0,
           "placeholder": false,
@@ -513,13 +2809,13 @@
       "strict": 58.0,
       "verified_strict_score": 58.0,
       "checks": 10,
-      "failing": 3,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.58,
-          "failing": 3,
+          "failing": 0,
           "weighted_failures": 4.2,
           "assessment_score": 58.0,
           "placeholder": false,
@@ -534,13 +2830,13 @@
       "strict": 72.0,
       "verified_strict_score": 72.0,
       "checks": 10,
-      "failing": 3,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.72,
-          "failing": 3,
+          "failing": 0,
           "weighted_failures": 2.8,
           "assessment_score": 72.0,
           "placeholder": false,
@@ -555,13 +2851,13 @@
       "strict": 65.0,
       "verified_strict_score": 65.0,
       "checks": 10,
-      "failing": 2,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.65,
-          "failing": 2,
+          "failing": 0,
           "weighted_failures": 3.5,
           "assessment_score": 65.0,
           "placeholder": false,
@@ -572,595 +2868,31 @@
       }
     }
   },
-  "scorecard_dimensions": [
-    {
-      "name": "File health",
-      "score": 75.1,
-      "strict": 74.6,
-      "checks": 149,
-      "failing": 53,
-      "tier": 3,
-      "subjective": false
-    },
-    {
-      "name": "AI generated debt",
-      "score": 58.0,
-      "strict": 58.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "ai_generated_debt"
-      ]
-    },
-    {
-      "name": "API coherence",
-      "score": 62.0,
-      "strict": 62.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "api_surface_coherence"
-      ]
-    },
-    {
-      "name": "Abstraction fit",
-      "score": 62.0,
-      "strict": 62.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "abstraction_fitness"
-      ]
-    },
-    {
-      "name": "Code quality",
-      "score": 96.1,
-      "strict": 89.3,
-      "checks": 1122,
-      "failing": 67,
-      "tier": 3,
-      "subjective": false
-    },
-    {
-      "name": "Contracts",
-      "score": 70.0,
-      "strict": 70.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "contract_coherence"
-      ]
-    },
-    {
-      "name": "Convention drift",
-      "score": 68.0,
-      "strict": 68.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "convention_outlier"
-      ]
-    },
-    {
-      "name": "Cross-module arch",
-      "score": 62.0,
-      "strict": 62.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "cross_module_architecture"
-      ]
-    },
-    {
-      "name": "Dep health",
-      "score": 72.0,
-      "strict": 72.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "dependency_health"
-      ]
-    },
-    {
-      "name": "Design coherence",
-      "score": 65.0,
-      "strict": 65.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "design_coherence"
-      ]
-    },
-    {
-      "name": "Duplication",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 812,
-      "failing": 1,
-      "tier": 3,
-      "subjective": false
-    },
-    {
-      "name": "Elegance",
-      "score": 68.3,
-      "strict": 68.3,
-      "checks": 30,
-      "failing": 6,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "high_level_elegance",
-        "mid_level_elegance",
-        "low_level_elegance"
-      ]
-    },
-    {
-      "name": "Error consistency",
-      "score": 68.0,
-      "strict": 68.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "error_consistency"
-      ]
-    },
-    {
-      "name": "Init coupling",
-      "score": 55.0,
-      "strict": 55.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "initialization_coupling"
-      ]
-    },
-    {
-      "name": "Security",
-      "score": 38.4,
-      "strict": 38.4,
-      "checks": 1132,
-      "failing": 16352,
-      "tier": 4,
-      "subjective": false
-    },
-    {
-      "name": "Stale migration",
-      "score": 58.0,
-      "strict": 58.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "incomplete_migration"
-      ]
-    },
-    {
-      "name": "Structure nav",
-      "score": 72.0,
-      "strict": 72.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "package_organization"
-      ]
-    },
-    {
-      "name": "Test health",
-      "score": 6.6,
-      "strict": 6.6,
-      "checks": 2216,
-      "failing": 127,
-      "tier": 4,
-      "subjective": false
-    },
-    {
-      "name": "Test strategy",
-      "score": 70.0,
-      "strict": 70.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "test_strategy"
-      ]
-    },
-    {
-      "name": "Type safety",
-      "score": 62.0,
-      "strict": 62.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "type_safety"
-      ]
-    }
-  ],
-  "subjective_measures": [
-    {
-      "name": "AI generated debt",
-      "score": 58.0,
-      "strict": 58.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "ai_generated_debt"
-      ]
-    },
-    {
-      "name": "API coherence",
-      "score": 62.0,
-      "strict": 62.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "api_surface_coherence"
-      ]
-    },
-    {
-      "name": "Abstraction fit",
-      "score": 62.0,
-      "strict": 62.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "abstraction_fitness"
-      ]
-    },
-    {
-      "name": "Contracts",
-      "score": 70.0,
-      "strict": 70.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "contract_coherence"
-      ]
-    },
-    {
-      "name": "Convention drift",
-      "score": 68.0,
-      "strict": 68.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "convention_outlier"
-      ]
-    },
-    {
-      "name": "Cross-module arch",
-      "score": 62.0,
-      "strict": 62.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "cross_module_architecture"
-      ]
-    },
-    {
-      "name": "Dep health",
-      "score": 72.0,
-      "strict": 72.0,
-      "checks": 10,
-      "failing": 1,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "dependency_health"
-      ]
-    },
-    {
-      "name": "Design coherence",
-      "score": 65.0,
-      "strict": 65.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "design_coherence"
-      ]
-    },
-    {
-      "name": "Elegance",
-      "score": 68.3,
-      "strict": 68.3,
-      "checks": 30,
-      "failing": 6,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "high_level_elegance",
-        "mid_level_elegance",
-        "low_level_elegance"
-      ]
-    },
-    {
-      "name": "Error consistency",
-      "score": 68.0,
-      "strict": 68.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "error_consistency"
-      ]
-    },
-    {
-      "name": "Init coupling",
-      "score": 55.0,
-      "strict": 55.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "initialization_coupling"
-      ]
-    },
-    {
-      "name": "Stale migration",
-      "score": 58.0,
-      "strict": 58.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "incomplete_migration"
-      ]
-    },
-    {
-      "name": "Structure nav",
-      "score": 72.0,
-      "strict": 72.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "package_organization"
-      ]
-    },
-    {
-      "name": "Test strategy",
-      "score": 70.0,
-      "strict": 70.0,
-      "checks": 10,
-      "failing": 2,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "test_strategy"
-      ]
-    },
-    {
-      "name": "Type safety",
-      "score": 62.0,
-      "strict": 62.0,
-      "checks": 10,
-      "failing": 3,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "type_safety"
-      ]
-    }
-  ],
-  "stats": {
-    "total": 19119,
-    "auto_resolved": 2002,
-    "false_positive": 6,
-    "fixed": 165,
-    "open": 16647,
-    "wontfix": 299,
-    "by_tier": {
-      "1": {
-        "auto_resolved": 96,
-        "false_positive": 0,
-        "fixed": 118,
-        "open": 21,
-        "wontfix": 57
-      },
-      "2": {
-        "auto_resolved": 206,
-        "false_positive": 6,
-        "fixed": 33,
-        "open": 69,
-        "wontfix": 68
-      },
-      "3": {
-        "auto_resolved": 1547,
-        "false_positive": 0,
-        "fixed": 14,
-        "open": 16556,
-        "wontfix": 174
-      },
-      "4": {
-        "auto_resolved": 153,
-        "false_positive": 0,
-        "fixed": 0,
-        "open": 1,
-        "wontfix": 0
-      }
-    }
-  },
-  "scan_count": 159,
-  "last_scan": "2026-03-15T00:03:45+00:00",
-  "by_tier": {
-    "1": {
-      "auto_resolved": 96,
-      "false_positive": 0,
-      "fixed": 118,
-      "open": 21,
-      "wontfix": 57
-    },
-    "2": {
-      "auto_resolved": 206,
-      "false_positive": 6,
-      "fixed": 33,
-      "open": 69,
-      "wontfix": 68
-    },
-    "3": {
-      "auto_resolved": 1547,
-      "false_positive": 0,
-      "fixed": 14,
-      "open": 16556,
-      "wontfix": 174
-    },
-    "4": {
-      "auto_resolved": 153,
-      "false_positive": 0,
-      "fixed": 0,
-      "open": 1,
-      "wontfix": 0
-    }
-  },
-  "ignores": [
-    "smells::infrastructure/llm/utils/ollama.py::subprocess_no_timeout"
-  ],
-  "suppression": {
-    "last_ignored": 1,
-    "last_raw_issues": 16786,
-    "last_suppressed_pct": 0.0,
-    "last_ignore_patterns": 1,
-    "recent_scans": 5,
-    "recent_ignored": 4,
-    "recent_raw_issues": 67193,
-    "recent_suppressed_pct": 0.0
-  },
-  "potentials": {
-    "python": {
-      "unused": 149,
-      "structural": 149,
-      "flat_dirs": 22,
-      "props": 0,
-      "responsibility_cohesion": 15,
-      "single_use": 42,
-      "cycles": 149,
-      "orphaned": 149,
-      "facade": 149,
-      "coupling": 0,
-      "uncalled_functions": 69,
-      "test_coverage": 2070,
-      "signature": 2,
-      "smells": 149,
-      "global_mutable_config": 149,
-      "security": 983,
-      "private_imports": 149,
-      "dict_keys": 149,
-      "unused_enums": 149,
-      "subjective_review": 146,
-      "dupes": 812,
-      "stale_wontfix": 163
-    }
-  },
-  "codebase_metrics": {
-    "python": {
-      "total_files": 153,
-      "total_loc": 41796,
-      "total_directories": 20
-    }
-  },
-  "open_scope": {
-    "in_scope": 16647,
-    "out_of_scope": 0,
-    "global": 16647
-  },
   "score_breakdown": {
-    "overall_score": 66.1,
+    "overall_score": 72.9,
     "mechanical_fraction": 0.4,
     "subjective_fraction": 0.6,
-    "mechanical_avg": 64.29854280510018,
+    "mechanical_avg": 81.24663023679416,
     "subjective_avg": 67.3821138211382,
     "entries": [
       {
         "name": "Code quality",
         "pool": "mechanical",
-        "score": 96.1,
+        "score": 95.8,
         "checks": 1122.0,
         "sample_factor": 1.0,
         "configured_weight": 1.0,
         "effective_weight": 1.0,
         "pool_share": 0.18214936247723132,
         "overall_per_point": 0.07285974499089252,
-        "overall_contribution": 7.001821493624771,
-        "overall_drag": 0.28415300546448125
+        "overall_contribution": 6.979963570127504,
+        "overall_drag": 0.3060109289617488
       },
       {
         "name": "Security",
         "pool": "mechanical",
         "score": 38.4,
-        "checks": 1132.0,
+        "checks": 1133.0,
         "sample_factor": 1.0,
         "configured_weight": 1.0,
         "effective_weight": 1.0,
@@ -1172,15 +2904,15 @@
       {
         "name": "File health",
         "pool": "mechanical",
-        "score": 75.1,
+        "score": 75.6,
         "checks": 149.0,
         "sample_factor": 0.745,
         "configured_weight": 2.0,
         "effective_weight": 1.49,
         "pool_share": 0.27140255009107467,
         "overall_per_point": 0.10856102003642987,
-        "overall_contribution": 8.152932604735883,
-        "overall_drag": 2.703169398907104
+        "overall_contribution": 8.207213114754097,
+        "overall_drag": 2.6488888888888895
       },
       {
         "name": "Duplication",
@@ -1198,15 +2930,15 @@
       {
         "name": "Test health",
         "pool": "mechanical",
-        "score": 6.6,
-        "checks": 2216.0,
+        "score": 99.2,
+        "checks": 2236.0,
         "sample_factor": 1.0,
         "configured_weight": 1.0,
         "effective_weight": 1.0,
         "pool_share": 0.18214936247723132,
         "overall_per_point": 0.07285974499089252,
-        "overall_contribution": 0.48087431693989063,
-        "overall_drag": 6.805100182149363
+        "overall_contribution": 7.227686703096539,
+        "overall_drag": 0.05828779599271381
       },
       {
         "name": "Naming quality",
@@ -1470,28 +3202,91 @@
       }
     ]
   },
-  "next_command": "desloppify show orphaned --status open",
+  "subjective_integrity": {
+    "status": "pass",
+    "target_score": 95.0,
+    "matched_count": 0,
+    "matched_dimensions": [],
+    "reset_dimensions": []
+  },
+  "score_confidence": {
+    "status": "full",
+    "confidence": 1.0,
+    "detectors": [],
+    "dimensions": []
+  },
+  "potentials": {
+    "python": {
+      "unused": 149,
+      "structural": 149,
+      "flat_dirs": 22,
+      "props": 0,
+      "responsibility_cohesion": 15,
+      "single_use": 42,
+      "cycles": 149,
+      "orphaned": 149,
+      "facade": 149,
+      "coupling": 0,
+      "uncalled_functions": 69,
+      "test_coverage": 2090,
+      "signature": 2,
+      "smells": 149,
+      "global_mutable_config": 149,
+      "security": 984,
+      "private_imports": 149,
+      "dict_keys": 149,
+      "unused_enums": 149,
+      "subjective_review": 146,
+      "dupes": 812,
+      "stale_wontfix": 291
+    }
+  },
+  "scan_coverage": {
+    "python": {
+      "status": "full",
+      "confidence": 1.0,
+      "detectors": {
+        "security": {
+          "detector": "security",
+          "status": "full",
+          "confidence": 1.0,
+          "summary": "Security coverage complete for enabled detectors.",
+          "impact": "",
+          "remediation": "",
+          "tool": "",
+          "reason": ""
+        }
+      },
+      "warnings": [],
+      "updated_at": "2026-03-15T00:56:12+00:00"
+    }
+  },
+  "zone_distribution": {
+    "production": 149,
+    "test": 1,
+    "config": 3
+  },
   "narrative": {
     "phase": "stagnation",
-    "headline": "\u26a0 16352 security issues \u2014 review before other cleanup. Score plateaued at 65.6 for 5 scans. Test health (6.6%) is where the breakthrough is. 299 wontfix items may also be worth revisiting. (42 review issues \u2014 run `desloppify show review --status open`)",
+    "headline": "\u26a0 16533 security issues \u2014 review before other cleanup. Score plateaued at 65.5 for 5 scans. Test health (6.5%) is where the breakthrough is. 454 wontfix items may also be worth revisiting.",
     "dimensions": {
       "lowest_dimensions": [
         {
           "name": "Test health",
-          "strict": 6.6,
-          "failing": 127,
+          "strict": 6.5,
+          "failing": 1,
           "impact": 0.0
         },
         {
           "name": "Security",
           "strict": 38.4,
-          "failing": 16352,
+          "failing": 16533,
           "impact": 0.0
         },
         {
           "name": "Init coupling",
           "strict": 55.0,
-          "failing": 2,
+          "failing": 0,
           "impact": 0.0,
           "subjective": true,
           "impact_description": "re-review to improve"
@@ -1499,11 +3294,25 @@
       ],
       "biggest_gap_dimensions": [
         {
+          "name": "Test health",
+          "lenient": 99.2,
+          "strict": 6.5,
+          "gap": 92.7,
+          "wontfix_count": 126
+        },
+        {
           "name": "Code quality",
-          "lenient": 96.1,
-          "strict": 89.3,
+          "lenient": 95.8,
+          "strict": 89.0,
           "gap": 6.8,
           "wontfix_count": 162
+        },
+        {
+          "name": "File health",
+          "lenient": 75.6,
+          "strict": 74.2,
+          "gap": 1.4,
+          "wontfix_count": 3
         }
       ],
       "stagnant_dimensions": [
@@ -1514,7 +3323,7 @@
         },
         {
           "name": "File health",
-          "strict": 74.6,
+          "strict": 74.2,
           "stuck_scans": 5
         },
         {
@@ -1524,7 +3333,7 @@
         },
         {
           "name": "Test health",
-          "strict": 6.6,
+          "strict": 6.5,
           "stuck_scans": 5
         },
         {
@@ -1533,8 +3342,48 @@
           "stuck_scans": 5
         },
         {
+          "name": "Logic clarity",
+          "strict": 74.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Type safety",
+          "strict": 62.0,
+          "stuck_scans": 5
+        },
+        {
           "name": "Contracts",
           "strict": 70.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Error consistency",
+          "strict": 68.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Abstraction fit",
+          "strict": 62.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "AI generated debt",
+          "strict": 58.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "High elegance",
+          "strict": 72.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Mid elegance",
+          "strict": 65.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Low elegance",
+          "strict": 68.0,
           "stuck_scans": 5
         },
         {
@@ -1543,8 +3392,48 @@
           "stuck_scans": 5
         },
         {
+          "name": "Init coupling",
+          "strict": 55.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Convention drift",
+          "strict": 68.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Dep health",
+          "strict": 72.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Test strategy",
+          "strict": 70.0,
+          "stuck_scans": 5
+        },
+        {
           "name": "API coherence",
           "strict": 62.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Auth consistency",
+          "strict": 71.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Stale migration",
+          "strict": 58.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Structure nav",
+          "strict": 72.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Design coherence",
+          "strict": 65.0,
           "stuck_scans": 5
         }
       ]
@@ -1554,44 +3443,60 @@
         "type": "reorganize",
         "detector": "orphaned",
         "count": 17,
-        "description": "17 orphaned issues \u2014 delete dead files or relocate with `desloppify move`",
-        "command": "desloppify show orphaned --status open",
+        "description": "17 orphaned issues in 1 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
         "impact": 0.0,
         "dimension": "Code quality",
         "priority": 1,
+        "clusters": [
+          "auto/orphaned"
+        ],
+        "cluster_count": 1,
         "lane": "restructure"
       },
       {
         "type": "reorganize",
         "detector": "flat_dirs",
         "count": 3,
-        "description": "3 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
-        "command": "desloppify show flat_dirs --status open",
+        "description": "3 flat_dirs issues in 1 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
         "impact": 0.0,
         "dimension": "Code quality",
         "priority": 2,
+        "clusters": [
+          "auto/flat_dirs-overload"
+        ],
+        "cluster_count": 1,
         "lane": "restructure"
       },
       {
         "type": "reorganize",
         "detector": "facade",
         "count": 12,
-        "description": "12 facade issues \u2014 flatten re-export facades or consolidate barrel files",
-        "command": "desloppify show facade --status open",
+        "description": "12 facade issues in 1 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
         "impact": 0.0,
         "dimension": "Code quality",
         "priority": 3,
+        "clusters": [
+          "auto/facade-file"
+        ],
+        "cluster_count": 1,
         "lane": "restructure"
       },
       {
         "type": "refactor",
         "detector": "structural",
-        "count": 54,
-        "description": "54 structural issues \u2014 review large files \u2014 split only when responsibilities are clearly separable",
-        "command": "desloppify show structural --status open",
+        "count": 53,
+        "description": "53 structural issues in 1 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
         "impact": 0.0,
         "dimension": "File health",
         "priority": 4,
+        "clusters": [
+          "auto/structural-core.py"
+        ],
+        "cluster_count": 1,
         "lane": "refactor_0"
       },
       {
@@ -1609,18 +3514,23 @@
         "type": "refactor",
         "detector": "dict_keys",
         "count": 21,
-        "description": "21 dict_keys issues \u2014 fix dict key mismatches \u2014 dead writes are likely dead code, schema drift suggests a typo or missed rename",
-        "command": "desloppify show dict_keys --status open",
+        "description": "21 dict_keys issues in 2 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
         "impact": 0.0,
         "dimension": "Code quality",
         "priority": 6,
+        "clusters": [
+          "auto/dict_keys-phantom_read",
+          "auto/dict_keys-overwritten_key"
+        ],
+        "cluster_count": 2,
         "lane": "refactor_0"
       },
       {
         "type": "refactor",
         "detector": "test_coverage",
-        "count": 127,
-        "description": "127 test_coverage issues \u2014 add tests for untested production modules \u2014 prioritize by import count",
+        "count": 1,
+        "description": "1 test_coverage issues \u2014 add tests for untested production modules \u2014 prioritize by import count",
         "command": "desloppify show test_coverage --status open",
         "impact": 0.0,
         "dimension": "Test health",
@@ -1636,7 +3546,7 @@
         "impact": 0.0,
         "dimension": "Unknown",
         "priority": 8,
-        "lane": "refactor_1"
+        "lane": "refactor_0"
       },
       {
         "type": "refactor",
@@ -1650,43 +3560,75 @@
         "lane": "refactor_0"
       },
       {
-        "type": "refactor",
-        "detector": "review",
-        "count": 42,
-        "description": "42 review issues need investigation \u2014 run `desloppify show review --status open` to see them",
-        "command": "desloppify show review --status open",
+        "type": "manual_fix",
+        "detector": "unused",
+        "count": 1,
+        "description": "1 unused issues \u2014 inspect with `desloppify next` and fix manually",
+        "command": "desloppify show unused --status open",
         "impact": 0.0,
-        "dimension": "Unknown",
+        "dimension": "Code quality",
         "priority": 10,
-        "lane": "refactor_2"
+        "lane": "refactor_1"
+      },
+      {
+        "type": "manual_fix",
+        "detector": "smells",
+        "count": 4,
+        "description": "4 smells issues in 1 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
+        "impact": 0.0,
+        "dimension": "Code quality",
+        "priority": 11,
+        "clusters": [
+          "auto/smells-swallowed_error"
+        ],
+        "cluster_count": 1,
+        "lane": "refactor_0"
       },
       {
         "type": "manual_fix",
         "detector": "stale_wontfix",
-        "count": 2,
-        "description": "2 stale_wontfix issues \u2014 re-evaluate old wontfix decisions \u2014 fix, document, or escalate",
-        "command": "desloppify show stale_wontfix --status open",
+        "count": 3,
+        "description": "3 stale_wontfix issues in 1 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
         "impact": 0.0,
         "dimension": "Unknown",
-        "priority": 11,
+        "priority": 12,
+        "clusters": [
+          "auto/stale_wontfix"
+        ],
+        "cluster_count": 1,
         "lane": "refactor_0"
       },
       {
         "type": "manual_fix",
         "detector": "security",
-        "count": 16352,
-        "description": "16352 security issues \u2014 review and fix security issues \u2014 prioritize by severity",
-        "command": "desloppify show security --status open",
+        "count": 16533,
+        "description": "16533 security issues in 1 cluster(s) \u2014 run `desloppify next`",
+        "command": "desloppify next",
         "impact": 0.0,
         "dimension": "Security",
-        "priority": 12,
+        "priority": 13,
+        "clusters": [
+          "auto/security"
+        ],
+        "cluster_count": 1,
         "lane": "refactor_0"
+      },
+      {
+        "type": "debt_review",
+        "detector": null,
+        "description": "4.0 pts of wontfix debt \u2014 review stale decisions",
+        "command": "desloppify show --status wontfix",
+        "gap": 4.0,
+        "priority": 14,
+        "lane": "debt_review"
       }
     ],
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 16731,
+        "total_count": 16665,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -1708,25 +3650,18 @@
             4,
             5,
             6,
+            8,
             9,
             11,
-            12
+            12,
+            13
           ],
-          "file_count": 431,
+          "file_count": 434,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
         },
         "refactor_1": {
-          "actions": [
-            8
-          ],
-          "file_count": 2,
-          "total_impact": 0.0,
-          "automation": "manual",
-          "run_first": false
-        },
-        "refactor_2": {
           "actions": [
             10
           ],
@@ -1739,14 +3674,23 @@
           "actions": [
             7
           ],
-          "file_count": 127,
+          "file_count": 1,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        },
+        "debt_review": {
+          "actions": [
+            14
+          ],
+          "file_count": 0,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
         }
       },
       "can_parallelize": true,
-      "hint": "5 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 42 issue(s) \u2014 `desloppify show review --status open`."
+      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify."
     },
     "tools": {
       "fixers": [],
@@ -1768,18 +3712,18 @@
       }
     },
     "debt": {
-      "overall_gap": 0.2,
-      "wontfix_count": 299,
-      "worst_dimension": "Code quality",
-      "worst_gap": 6.8,
-      "trend": "stable"
+      "overall_gap": 4.0,
+      "wontfix_count": 454,
+      "worst_dimension": "Test health",
+      "worst_gap": 92.7,
+      "trend": "growing"
     },
     "milestone": null,
     "primary_action": {
-      "command": "desloppify show orphaned --status open",
-      "description": "17 orphaned issues \u2014 delete dead files or relocate with `desloppify move`"
+      "command": "desloppify next",
+      "description": "17 orphaned issues in 1 cluster(s) \u2014 run `desloppify next`"
     },
-    "why_now": "5 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 42 issue(s) \u2014 `desloppify show review --status open`.",
+    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify.",
     "verification_step": {
       "command": "desloppify scan",
       "reason": "revalidate after changes"
@@ -1788,20 +3732,29 @@
       {
         "type": "wontfix_gap",
         "severity": "high",
-        "message": "Strict/lenient gap is 0.2 pts with 299 wontfix issues"
+        "message": "Strict/lenient gap is 4.0 pts with 454 wontfix issues"
       }
     ],
     "strict_target": {
       "target": 95.0,
-      "current": 65.6,
-      "gap": 29.4,
+      "current": 65.5,
+      "gap": 29.5,
       "state": "below",
       "warning": null
     },
-    "reminders": [],
+    "reminders": [
+      {
+        "type": "report_scores",
+        "message": "ALWAYS share ALL scores with the user: overall, objective, and strict, plus every dimension score (lenient + strict), including subjective dimensions. The goal is to maximize strict scores.",
+        "command": null,
+        "no_decay": true,
+        "priority": 3,
+        "severity": "low"
+      }
+    ],
     "reminder_history": {
       "zone_classification": 3,
-      "report_scores": 101,
+      "report_scores": 103,
       "review_findings_pending": 3,
       "feedback_nudge": 3,
       "stagnant_nudge": 4,
@@ -1842,5 +3795,12 @@
     "commit_pr": 0,
     "commit_default_branch": "",
     "commit_message_template": "desloppify: {status} {count} issue(s) \u2014 {summary}"
+  },
+  "plan": {
+    "active": true,
+    "focus": null,
+    "total_ordered": 22,
+    "total_skipped": 0,
+    "plan_overrides_narrative": true
   }
 }
