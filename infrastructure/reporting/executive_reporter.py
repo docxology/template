@@ -1000,7 +1000,7 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[
         with open(_tmp, "w") as f:
             json.dump(asdict(summary), f, indent=2, default=str)
         _tmp.replace(json_path)
-    except Exception:
+    except OSError:
         _tmp.unlink(missing_ok=True)
         raise
     saved_files["json"] = json_path
@@ -1013,7 +1013,7 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[
     try:
         _tmp.write_text(md_content)
         _tmp.replace(md_path)
-    except Exception:
+    except OSError:
         _tmp.unlink(missing_ok=True)
         raise
     saved_files["markdown"] = md_path
@@ -1026,7 +1026,7 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[
     try:
         _tmp.write_text(html_content)
         _tmp.replace(html_path)
-    except Exception:
+    except OSError:
         _tmp.unlink(missing_ok=True)
         raise
     saved_files["html"] = html_path

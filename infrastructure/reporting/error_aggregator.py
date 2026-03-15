@@ -234,7 +234,7 @@ class ErrorAggregator:
             with open(_tmp, "w") as f:
                 json.dump(summary, f, indent=2)
             _tmp.replace(json_path)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
@@ -245,7 +245,7 @@ class ErrorAggregator:
         try:
             _tmp.write_text(md_content)
             _tmp.replace(md_path)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
