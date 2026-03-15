@@ -19,7 +19,6 @@ import pytest
 
 from infrastructure.core.security import (
     RateLimiter,
-    SecurityHeaders,
     SecurityMonitor,
     SecurityValidator,
     SecurityViolation,
@@ -222,12 +221,12 @@ class TestSecurityHeaders:
 
     def test_get_security_headers_returns_dict(self):
         """Test that security headers returns a dictionary."""
-        headers = SecurityHeaders.get_security_headers()
+        headers = get_security_headers()
         assert isinstance(headers, dict)
 
     def test_get_security_headers_contains_required_headers(self):
         """Test that all required security headers are present."""
-        headers = SecurityHeaders.get_security_headers()
+        headers = get_security_headers()
         assert "X-Frame-Options" in headers
         assert "Content-Security-Policy" in headers
         assert "X-Content-Type-Options" in headers
@@ -239,7 +238,7 @@ class TestSecurityHeaders:
 
     def test_get_security_headers_values(self):
         """Test that security header values are correct."""
-        headers = SecurityHeaders.get_security_headers()
+        headers = get_security_headers()
         assert headers["X-Frame-Options"] == "DENY"
         assert headers["X-Content-Type-Options"] == "nosniff"
         assert headers["X-XSS-Protection"] == "1; mode=block"
@@ -247,20 +246,20 @@ class TestSecurityHeaders:
 
     def test_get_cors_headers_without_origin(self):
         """Test CORS headers when no origin specified."""
-        headers = SecurityHeaders.get_cors_headers()
+        headers = get_cors_headers()
         assert headers["Access-Control-Allow-Origin"] == "null"
         assert "Access-Control-Allow-Methods" in headers
         assert "Access-Control-Allow-Headers" in headers
 
     def test_get_cors_headers_with_origin(self):
         """Test CORS headers when origin is specified."""
-        headers = SecurityHeaders.get_cors_headers("https://example.com")
+        headers = get_cors_headers("https://example.com")
         assert headers["Access-Control-Allow-Origin"] == "https://example.com"
         assert headers["Access-Control-Allow-Credentials"] == "true"
 
     def test_get_cors_headers_max_age(self):
         """Test CORS max-age header."""
-        headers = SecurityHeaders.get_cors_headers()
+        headers = get_cors_headers()
         assert headers["Access-Control-Max-Age"] == "86400"
 
 
