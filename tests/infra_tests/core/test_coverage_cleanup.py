@@ -4,8 +4,6 @@ Tests coverage file cleanup utilities using real files.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
-
 from infrastructure.core.coverage_cleanup import clean_coverage_files
 
 
