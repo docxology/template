@@ -12,25 +12,36 @@ from __future__ import annotations
 
 import dataclasses
 import json
-import re
 import time as time_module
 from datetime import datetime
-from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Iterator, TypeVar
+from typing import Any, Callable, Iterator, TypeVar, cast
 
 _T = TypeVar("_T")
 
 try:
     import requests
-except ImportError:
-    requests = None  # type: ignore[assignment]
+except ImportError as _requests_import_error:
+    raise ImportError(
+        "The 'requests' package is required for LLM connectivity. "
+        "Install it with: pip install requests"
+    ) from _requests_import_error
 
+<<<<<<< HEAD
 from infrastructure.core.exceptions import LLMConnectionError, LLMError  # noqa: E402
 from infrastructure.core.logging_utils import get_logger  # noqa: E402
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig  # noqa: E402
 from infrastructure.llm.core.context import ConversationContext  # noqa: E402
 from infrastructure.llm.templates import get_template  # noqa: E402
+=======
+from infrastructure.core.exceptions import LLMConnectionError, LLMError
+from infrastructure.core.logging_utils import get_logger
+from infrastructure.llm.core._text_utils import strip_thinking_tags
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig, ResponseMode
+from infrastructure.llm.core.context import ConversationContext
+from infrastructure.llm.core.sanitization import sanitize_llm_input
+from infrastructure.llm.templates import get_template
+>>>>>>> desloppify/code-health
 
 logger = get_logger(__name__)
 
@@ -42,6 +53,7 @@ try:
 except ImportError:
     PROMPT_LOADER_AVAILABLE = False
 
+<<<<<<< HEAD
 
 def strip_thinking_tags(text: str) -> str:
     """Remove thinking tags from LLM responses.
@@ -79,18 +91,19 @@ class ResponseMode(str, Enum):
     LONG = "long"  # Comprehensive answers (> 500 tokens)
     STRUCTURED = "structured"  # JSON-formatted structured response
     RAW = "raw"  # Raw prompt without modification
+=======
+# ResponseMode is defined in config.py (alongside GenerationOptions) to avoid
+# a validation→client import cycle. Re-exported here for backwards compatibility.
+__all__ = ["LLMClient", "ResponseMode"]
+>>>>>>> desloppify/code-health
 
 
 class LLMClient:
     """Client for interacting with LLM providers (Ollama).
 
-    Provides multiple query methods for different use cases:
-    - query(): Standard conversational query
-    - query_raw(): Send prompt without modification
-    - query_short(): Brief responses (< 150 tokens)
-    - query_long(): Comprehensive responses (> 500 tokens)
-    - query_structured(): JSON-formatted responses
-    - stream_*(): Streaming variants of above
+    Manages conversation context, system prompt injection, and provides
+    both blocking and streaming query variants. All inputs are sanitized
+    before sending; structured queries parse JSON responses automatically.
 
     Example:
         >>> client = LLMClient()
@@ -109,13 +122,13 @@ class LLMClient:
         ... )
     """
 
-    def __init__(self, config: LLMConfig | None = None):
+    def __init__(self, config: OllamaClientConfig | None = None):
         """Initialize LLM client.
 
         Args:
-            config: LLMConfig instance. If None, loads from environment.
+            config: OllamaClientConfig instance. If None, loads from environment.
         """
-        self.config = config or LLMConfig.from_env()
+        self.config = config or OllamaClientConfig.from_env()
         self.context = ConversationContext(max_tokens=self.config.context_window)
         self._system_prompt_injected = False
 
@@ -138,7 +151,7 @@ class LLMClient:
                 loader = get_default_loader()
                 # Try to get manuscript review system prompt
                 self.config.system_prompt = loader.get_system_prompt("manuscript_review")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001  # loader failure is expected; fall through to no system prompt
                 logger.debug(f"Could not load system prompt from prompt system: {e}")
 
         # Inject system prompt if configured
@@ -187,32 +200,17 @@ class LLMClient:
         model_name = model or self.config.default_model
 
         if reset_context:
-            logger.info(
-                "Resetting context",
-                extra={
-                    "model": model_name,
-                    "reason": "reset_context=True",
-                    "context_messages_before": len(self.context.messages),
-                },
-            )
             self.context.clear()
             self._system_prompt_injected = False
             if self.config.auto_inject_system_prompt:
                 self._inject_system_prompt()
-                logger.debug(
-                    "System prompt re-injected after context reset",
-                    extra={
-                        "system_prompt_length": (
-                            len(self.config.system_prompt) if self.config.system_prompt else 0
-                        )
-                    },
-                )
 
+        prompt = sanitize_llm_input(prompt)
         self.context.add_message("user", prompt)
 
         try:
-            response_text, generation_time = self._time_call(
-                lambda: self._generate_response(model_name, options=options)
+            response_text, _ = self._time_call(
+                lambda: self._generate_response_direct(model_name, self.context.get_messages(), options=options)
             )
 
             self.context.add_message("assistant", response_text)
@@ -232,7 +230,7 @@ class LLMClient:
                             "attempt": self.config.fallback_models.index(fallback) + 1,
                         },
                     )
-                    response_text = self._generate_response(fallback, options=options)
+                    response_text = self._generate_response_direct(fallback, self.context.get_messages(), options=options)
                     generation_time = time_module.time() - fallback_start
 
                     logger.info(
@@ -263,7 +261,11 @@ class LLMClient:
     ) -> str:
         """Send a raw prompt without system prompt or instructions.
 
-        Bypasses context and system prompt injection for direct LLM interaction.
+        Bypasses context, system prompt injection, AND input sanitization
+        (``sanitize_llm_input`` is intentionally not called here). Use only
+        when the caller has already validated the prompt or when sanitization
+        would interfere with the intended low-level interaction (e.g. testing
+        raw model behaviour). Prefer ``query()`` for user-facing prompts.
 
         Args:
             prompt: Raw prompt to send
@@ -321,7 +323,9 @@ class LLMClient:
     ) -> str:
         """Generate a short response (< 150 tokens).
 
-        Configures generation for concise, direct answers.
+        Blocking variant. The streaming counterpart stream_short() accepts
+        additional params (save_response, save_path, retries) that are not
+        available here — use stream_short() when response persistence is needed.
 
         Args:
             prompt: User prompt
@@ -418,6 +422,9 @@ class LLMClient:
         Returns:
             Parsed JSON response as dictionary
 
+        Raises:
+            LLMError: If response cannot be parsed as JSON or is flagged as off-topic.
+
         Example:
             >>> schema = {
             ...     "type": "object",
@@ -431,20 +438,7 @@ class LLMClient:
         """
         model_name = model or self.config.default_model
 
-        logger.info(
-            "Starting structured query (JSON)",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "has_schema": schema is not None,
-                "use_native_json": use_native_json,
-                "schema_keys": (
-                    list(schema.keys())
-                    if schema and isinstance(schema, dict) and "properties" in schema
-                    else None
-                ),
-            },
-        )
+        logger.debug("Starting structured query (JSON) model=%s", model_name)
 
         # Configure for JSON output
         struct_options = options or GenerationOptions()
@@ -475,39 +469,21 @@ class LLMClient:
             lambda: self._generate_response_direct(model_name, messages, options=struct_options)
         )
 
-        logger.debug(
-            "Structured response received",
-            extra={
-                "model": model_name,
-                "response_length": len(response_text),
-                "generation_time_seconds": generation_time,
-                "response_preview": response_text[:200],
-            },
-        )
-
         # Add to context
         self.context.add_message("user", instruction + prompt)
         self.context.add_message("assistant", response_text)
 
         # Parse and validate JSON response
         try:
-            parsed = json.loads(response_text)
-            logger.info(
-                "Structured query completed (JSON parsed successfully)",
-                extra={
-                    "model": model_name,
-                    "response_keys": (list(parsed.keys()) if isinstance(parsed, dict) else None),
-                    "generation_time_seconds": generation_time,
-                },
-            )
-            return parsed  # type: ignore
-        except json.JSONDecodeError:
+            parsed = cast(dict[str, Any], json.loads(response_text))
+            return parsed
+        except json.JSONDecodeError as e:
             # Try to extract JSON if wrapped
             if "{" in response_text and "}" in response_text:
                 start = response_text.index("{")
                 end = response_text.rindex("}") + 1
                 try:
-                    parsed = json.loads(response_text[start:end])
+                    parsed = cast(dict[str, Any], json.loads(response_text[start:end]))
                     logger.warning(
                         "Structured response required JSON extraction (wrapped in text)",
                         extra={
@@ -516,7 +492,7 @@ class LLMClient:
                             "original_length": len(response_text),
                         },
                     )
-                    return parsed  # type: ignore
+                    return parsed
                 except json.JSONDecodeError as e:
                     logger.error(
                         "Failed to parse structured response as JSON",
@@ -529,7 +505,7 @@ class LLMClient:
                     raise LLMError(
                         "Failed to parse structured response as JSON",
                         context={"error": str(e), "response": response_text[:200]},
-                    )
+                    ) from e
             logger.error(
                 "Structured response is not valid JSON",
                 extra={
@@ -540,21 +516,9 @@ class LLMClient:
             raise LLMError(
                 "Structured response must be valid JSON",
                 context={"response": response_text[:200]},
-            )
+            ) from e
 
-    def _generate_response(self, model: str, options: GenerationOptions | None = None) -> str:
-        """Generate response from Ollama API using context.
-
-        Args:
-            model: Model name
-            options: Generation options
-
-        Returns:
-            Generated text
-        """
-        return self._generate_response_direct(model, self.context.get_messages(), options=options)
-
-    def _generate_response_direct(  # type: ignore
+    def _generate_response_direct(
         self,
         model: str,
         messages: list[dict[str, Any]],
@@ -636,7 +600,7 @@ class LLMClient:
 
                 return content
 
-            except requests.exceptions.Timeout:
+            except requests.exceptions.Timeout as e:
                 last_error = f"Timeout after {self.config.timeout}s"
                 if attempt < retries:
                     logger.debug(
@@ -652,7 +616,7 @@ class LLMClient:
                             "model": model,
                             "timeout": self.config.timeout,
                         },
-                    )
+                    ) from e
 
             except requests.exceptions.ConnectionError as e:
                 last_error = f"Connection error: {e}"
@@ -666,20 +630,21 @@ class LLMClient:
                     raise LLMConnectionError(
                         f"Failed to connect to Ollama ({model}): {last_error}",
                         context={"url": url, "model": model},
-                    )
+                    ) from e
 
             except requests.exceptions.HTTPError as e:
-                # Don't retry HTTP errors (4xx, 5xx) - they're not transient
-                error_msg = f"HTTP {response.status_code}: {response.text[:200] if 'response' in locals() else str(e)}"  # noqa: E501
+                # Don't retry HTTP errors (4xx, 5xx) - they're not transient.
+                # response is always defined here: raise_for_status() requires a response object.
+                error_msg = f"HTTP {response.status_code}: {response.text[:200]}"
                 logger.error(f"HTTP error from Ollama ({model}): {error_msg}")
                 raise LLMConnectionError(
                     f"Ollama HTTP error ({model}): {error_msg}",
                     context={
                         "url": url,
                         "model": model,
-                        "status_code": (response.status_code if "response" in locals() else None),
+                        "status_code": response.status_code,
                     },
-                )
+                ) from e
 
             except requests.exceptions.RequestException as e:
                 last_error = f"Request error: {e}"
@@ -687,7 +652,10 @@ class LLMClient:
                 raise LLMConnectionError(
                     f"Failed to connect to Ollama ({model}): {last_error}",
                     context={"url": url, "model": model},
-                )
+                ) from e
+
+        # Unreachable: all loop paths either return or raise. Here for type-checker completeness.
+        raise RuntimeError(f"Retry loop exited unexpectedly for model {model!r}")
 
     def _save_streaming_state(
         self,
@@ -730,7 +698,7 @@ class LLMClient:
                 }
             save_streaming_response(text, save_path, metadata)
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             logger.warning(f"Failed to save streaming response: {e}")
             return False
 
@@ -747,6 +715,7 @@ class LLMClient:
         """Stream response from LLM with comprehensive logging and error recovery.
 
         Yields response chunks as they arrive for real-time display.
+        Delegates to :func:`infrastructure.llm.core._client_streaming.stream_query_impl`.
 
         Args:
             prompt: User prompt
@@ -764,23 +733,23 @@ class LLMClient:
             >>> for chunk in client.stream_query("Explain AI", log_progress=True):
             ...     print(chunk, end="")
         """
+        from infrastructure.llm.core._client_streaming import stream_query_impl
 
-        start_time = time_module.time()
-        model_name = model or self.config.default_model
-        prompt_preview = prompt[:100] + "..." if len(prompt) > 100 else prompt
-
-        # Log streaming start
-        logger.info(
-            "Starting streaming query",
-            extra={
-                "model": model_name,
-                "prompt_length": len(prompt),
-                "prompt_preview": prompt_preview,
-                "max_tokens": options.max_tokens if options else None,
-                "temperature": options.temperature if options else None,
-            },
+        prompt = sanitize_llm_input(prompt)
+        yield from stream_query_impl(
+            config=self.config,
+            context=self.context,
+            save_streaming_state_fn=self._save_streaming_state,
+            prompt=prompt,
+            model=model,
+            options=options,
+            save_response=save_response,
+            save_path=save_path,
+            log_progress=log_progress,
+            retries=retries,
         )
 
+<<<<<<< HEAD
         self.context.add_message("user", prompt)
         url = f"{self.config.base_url}/api/chat"
 
@@ -1085,6 +1054,8 @@ class LLMClient:
             ):
                 logger.info("Saved final streaming response")
 
+=======
+>>>>>>> desloppify/code-health
     def stream_short(
         self,
         prompt: str,
@@ -1096,6 +1067,8 @@ class LLMClient:
         retries: int = 1,
     ) -> Iterator[str]:
         """Stream a short response with comprehensive logging.
+
+        Delegates to :func:`infrastructure.llm.core._client_streaming.stream_short_impl`.
 
         Args:
             prompt: User prompt
@@ -1109,19 +1082,15 @@ class LLMClient:
         Yields:
             Response chunks
         """
-        short_options = GenerationOptions(
-            max_tokens=self.config.short_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-        )
-        instruction = (
-            "Provide a concise, brief response (less than 150 words). "
-            "Be direct and to the point.\n\n"
-        )
-        yield from self.stream_query(
-            instruction + prompt,
-            model,
-            options=short_options,
+        from infrastructure.llm.core._streaming_shortcuts import stream_short_impl
+
+        yield from stream_short_impl(
+            config=self.config,
+            context=self.context,
+            save_streaming_state_fn=self._save_streaming_state,
+            prompt=prompt,
+            model=model,
+            options=options,
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
@@ -1138,7 +1107,9 @@ class LLMClient:
         log_progress: bool = True,
         retries: int = 1,
     ) -> Iterator[str]:
-        """Stream a comprehensive response with comprehensive logging.
+        """Stream a comprehensive response with detailed logging.
+
+        Delegates to :func:`infrastructure.llm.core._client_streaming.stream_long_impl`.
 
         Args:
             prompt: User prompt
@@ -1152,19 +1123,15 @@ class LLMClient:
         Yields:
             Response chunks
         """
-        long_options = GenerationOptions(
-            max_tokens=self.config.long_max_tokens,
-            temperature=options.temperature if options else None,
-            seed=options.seed if options else None,
-        )
-        instruction = (
-            "Provide a comprehensive, detailed response with examples and "
-            "thorough explanation. Use multiple paragraphs if needed.\n\n"
-        )
-        yield from self.stream_query(
-            instruction + prompt,
-            model,
-            options=long_options,
+        from infrastructure.llm.core._streaming_shortcuts import stream_long_impl
+
+        yield from stream_long_impl(
+            config=self.config,
+            context=self.context,
+            save_streaming_state_fn=self._save_streaming_state,
+            prompt=prompt,
+            model=model,
+            options=options,
             save_response=save_response,
             save_path=save_path,
             log_progress=log_progress,
@@ -1189,37 +1156,12 @@ class LLMClient:
             return self.config.fallback_models
 
     def check_connection(self, timeout: float = 2.0) -> bool:
-        """Check if Ollama server is available.
-
-        Args:
-            timeout: Connection timeout in seconds
-
-        Returns:
-            True if Ollama is accessible, False otherwise
-
-        Example:
-            >>> if client.check_connection():
-            ...     print("Ollama is ready")
-        """
+        """Return True if the Ollama server is reachable."""
         is_available, _ = self.check_connection_detailed(timeout=timeout)
         return is_available
 
     def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
-        """Check if Ollama server is available with detailed status.
-
-        Args:
-            timeout: Connection timeout in seconds
-
-        Returns:
-            Tuple of (is_available: bool, error_message: str | None)
-            - is_available: True if Ollama is accessible
-            - error_message: Error description if unavailable, None if available
-
-        Example:
-            >>> is_available, error = client.check_connection_detailed()
-            >>> if not is_available:
-            ...     print(f"Ollama unavailable: {error}")
-        """
+        """Return (is_available, error_message) for the Ollama server."""
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)
             if response.status_code == 200:

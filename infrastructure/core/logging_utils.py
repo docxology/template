@@ -8,6 +8,29 @@ scripts in the template. It integrates with the bash logging.sh format and provi
 - Integration with environment-based configuration
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
+
+## Logging module map (all six modules are intentional — each has a distinct role):
+
+| Module              | Import pattern                    | Purpose                                    |
+|---------------------|-----------------------------------|--------------------------------------------|
+| logging_utils.py    | get_logger, log_substep, etc.     | **Primary entry point** — use this module  |
+| logging_constants.py| USE_EMOJIS, LOG_LEVEL, etc.       | Runtime env-var constants (internal use)   |
+| logging_helpers.py  | format_error_with_suggestions, …  | Formatting helpers used by logging_utils   |
+| logging_config.py   | setup_logger, configure_logging   | Handler/formatter setup (called once)      |
+| logging_filters.py  | SensitiveDataFilter, etc.         | Log record filters for sensitive data      |
+| logging_progress.py | Spinner, StreamingProgress, etc.  | Progress display (animated output)         |
+
+Callers should import from `logging_utils` for all everyday logging needs.
+Direct imports from the other five modules are for specialised use only.
+
+## Stability contract
+
+The public API of this module (get_logger, log_substep, log_success, etc.) is frozen.
+Adding or renaming public functions requires updating all callers — treat this as a
+codebase-wide breaking change. Prefer adding optional kwargs over new functions.
+
+Module-level `logger = get_logger(__name__)` is the approved pattern — get_logger()
+initialises lazily and is safe to call at import time.
 """
 
 from __future__ import annotations
@@ -23,19 +46,26 @@ from typing import Any, Callable, Iterator, TypeVar
 # Import from split modules
 from infrastructure.core.logging_formatters import JSONFormatter, TemplateFormatter
 from infrastructure.core.logging_helpers import format_duration, format_error_with_suggestions
-from infrastructure.core.logging_progress import calculate_eta
+from infrastructure.core.eta import calculate_eta
 from infrastructure.core._optional_deps import psutil
-from infrastructure.core.logging_constants import EMOJIS, USE_EMOJIS, USE_STRUCTURED_LOGGING
+from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled, get_structured_logging_enabled
 
 # Type variable for generic context manager
 T = TypeVar("T")
 
+<<<<<<< HEAD
 _IN_TEST_ENV: bool = bool(os.getenv("PYTEST_CURRENT_TEST") or "pytest" in sys.modules)
 
 
+=======
+>>>>>>> desloppify/code-health
 def _is_test_environment() -> bool:
-    """Return True if running inside pytest."""
-    return _IN_TEST_ENV
+    """Return True if running inside pytest.
+
+    Evaluated on every call (not cached) so that late pytest imports and
+    PYTEST_CURRENT_TEST set after module import are correctly detected.
+    """
+    return bool(os.getenv("PYTEST_CURRENT_TEST") or "pytest" in sys.modules)
 
 
 # Map environment LOG_LEVEL (0-3) to Python logging levels
@@ -59,45 +89,36 @@ def setup_logger(
     """Configure and return a logger with console handler and optional file handler."""
     logger = logging.getLogger(name)
 
-    # Set level from environment or parameter
     if level is None:
         level = get_log_level_from_env()
     logger.setLevel(level)
 
-    # Remove existing handlers to avoid duplicates
     logger.handlers.clear()
 
-    # Check if we're in test environment (pytest)
     is_test_env = _is_test_environment()
 
     console_handler = logging.StreamHandler(sys.stdout)
-    if USE_STRUCTURED_LOGGING:
+    if get_structured_logging_enabled():
         console_handler.setFormatter(JSONFormatter())
     else:
         console_handler.setFormatter(TemplateFormatter())
     logger.addHandler(console_handler)
 
-    # File handler (optional, works in both environments)
     if log_file:
         log_path = Path(log_file)
         log_path.parent.mkdir(parents=True, exist_ok=True)
         file_handler = logging.FileHandler(log_path)
-        # File logs without emojis
         file_formatter = logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s")
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
 
-    # Set propagation based on environment (caplog requires propagation)
     logger.propagate = is_test_env
 
-    # In test environment, ensure root logger is configured to receive propagated logs
+    # caplog requires propagation: clean root logger handlers that would double-emit
     if is_test_env:
         root_logger = logging.getLogger()
-        # Ensure root logger level allows the logs through
         if root_logger.level > logger.level:
             root_logger.setLevel(logger.level)
-        # Remove any stdout/stderr handlers from root logger that might interfere with caplog
-        # (pytest's caplog will add its own handler)
         root_handlers_to_remove = [
             h
             for h in root_logger.handlers
@@ -106,7 +127,6 @@ def setup_logger(
         ]
         for h in root_handlers_to_remove:
             root_logger.removeHandler(h)
-        # Ensure root logger has at least WARNING level to not filter out our logs
         if root_logger.level == logging.NOTSET:
             root_logger.setLevel(logging.WARNING)
 
@@ -177,8 +197,6 @@ def get_logger(name: str) -> logging.Logger:
             # Force reconfiguration by clearing handlers and calling setup_logger
             logger.handlers.clear()
             return setup_logger(name)
-        # Ensure propagation is enabled even if handlers exist
-        logger.propagate = True
     else:
         # Non-test environment: always ensure propagate=False.
         # Python's default is propagate=True, which means messages fire once via
@@ -265,8 +283,10 @@ def log_success(message: str, logger: logging.Logger | None = None) -> None:
     """Log message at INFO level prefixed with the success emoji."""
     logger = logger or get_logger(__name__)
 
-    emoji = EMOJIS["success"] if USE_EMOJIS else "[SUCCESS]"
-    logger.info(f"{emoji} {message}" if USE_EMOJIS else message)
+    if get_emoji_enabled():
+        logger.info(f"{EMOJIS['success']} {message}")
+    else:
+        logger.info(message)
 
 
 _HEADER_SEPARATOR_WIDTH = 50
@@ -277,7 +297,7 @@ def log_header(message: str, logger: logging.Logger | None = None) -> None:
     """Log a section header with visual emphasis (separator + message + separator)."""
     logger = logger or get_logger(__name__)
 
-    prefix = EMOJIS["rocket"] + " " if USE_EMOJIS else ""
+    prefix = EMOJIS["rocket"] + " " if get_emoji_enabled() else ""
     separator = "=" * _HEADER_SEPARATOR_WIDTH
 
     logger.info("")

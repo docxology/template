@@ -40,11 +40,7 @@ else:
 
 # Helper function for tests
 def _repo_root() -> str:
-    """Get repository root path (for testing).
-
-    Returns:
-        str: Path to repository root
-    """
+    """Get repository root path (for testing)."""
     return str(repo_root)
 
 
@@ -96,7 +92,7 @@ def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
     except FileNotFoundError as e:
         logger.error(f"❌ Error: {e}")
         return 1
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"❌ Unexpected error: {e}")
         return 1
 

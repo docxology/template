@@ -27,9 +27,9 @@
 ### **Q: What's the difference between `src/` and `scripts/`?**
 
 **A:**
-
-- **`src/`** contains all business logic, algorithms, and mathematical implementations with test coverage
-- **`scripts/`** are lightweight wrappers that import and use `src/` methods to generate figures, data, and outputs
+- **`projects/{name}/src/`** (Layer 2) contains business logic, algorithms, and mathematical implementations with robust test coverage.
+- **`projects/{name}/scripts/`** are thin orchestrators that import use Layer 2 methods to generate specific figures, data, and outputs.
+- **`scripts/`** (Layer 1 Root) are generic pipeline entry points that discover and execute the project-specific `scripts/`.
 
 ### **Q: What are the test coverage requirements?**
 
@@ -61,7 +61,7 @@
 
 ### **Q: How do I add tests?**
 
-**A:** Create test files in the `tests/` directory that follow the naming convention `test_*.py`. Use pytest fixtures and ensure your tests cover all code paths in your `src/` modules.
+**A:** Create test files in the `projects/{name}/tests/` directory that follow the naming convention `test_*.py`. Use pytest fixtures and ensure your tests cover all code paths in your `projects/{name}/src/` modules.
 
 ### **Q: Can I use different testing frameworks?**
 
@@ -71,7 +71,7 @@
 
 ### **Q: How do I rename the project?**
 
-**A:** Customize your project by editing `project/manuscript/config.yaml` or setting environment variables (`AUTHOR_NAME`, `PROJECT_TITLE`, etc.). See [Configuration Guide](../operational/config/configuration.md) for details.
+**A:** Customize your project by editing `projects/{name}/manuscript/config.yaml` or setting environment variables (`AUTHOR_NAME`, `PROJECT_TITLE`, etc.). See [Configuration Guide](../operational/config/configuration.md) for details.
 
 ### **Q: Can I add new output formats?**
 
@@ -105,9 +105,9 @@
 
 **A:**
 
-1. Run tests with verbose output: `pytest -v`
+1. Run tests with verbose output: `pytest projects/{name}/tests/ -v`
 2. Use pytest's debugging features: `pytest --pdb`
-3. Check coverage reports: `pytest --cov=src --cov-report=html`
+3. Check coverage reports: `pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html`
 4. Review the test output for specific error messages
 
 ## 🌟 **Advanced Usage**

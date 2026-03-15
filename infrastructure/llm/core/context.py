@@ -221,7 +221,13 @@ class ConversationContext:
             "usage_stats": self.get_usage_stats(),
         }
 
-        path.write_text(json.dumps(export_data, indent=2), encoding="utf-8")
+        _tmp = path.with_suffix(path.suffix + ".tmp")
+        try:
+            _tmp.write_text(json.dumps(export_data, indent=2), encoding="utf-8")
+            _tmp.replace(path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         logger.info(
             "Context exported",

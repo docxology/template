@@ -4,7 +4,7 @@
 
 **Quick Reference:** [Markdown Template Guide](markdown-template-guide.md) | [Image Management](image-management.md) | [Visualization Guide](visualization-guide.md)
 
-This guide provides clear, example-driven formatting patterns for writing research content in `project/manuscript/`. For exhaustive rules, see [`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md).
+This guide provides clear, example-driven formatting patterns for writing research content in `projects/{name}/manuscript/`. For exhaustive rules, see [`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md).
 
 ## 📖 Table of Contents
 
@@ -147,14 +147,14 @@ with rate $\rho \approx 0.85$ across all benchmark datasets.}
 
 ### Figure Paths
 
-All paths are **relative to `project/manuscript/`**:
+All paths are **relative to `projects/{name}/manuscript/`**:
 
 ```markdown
 % ✅ Correct — relative path from manuscript/
 \includegraphics{../output/figures/my_figure.png}
 
 % ❌ Wrong — absolute path
-\includegraphics{/Users/me/project/output/figures/my_figure.png}
+\includegraphics{/Users/me/projects/{name}/output/figures/my_figure.png}
 
 % ❌ Wrong — relative but missing ../
 \includegraphics{output/figures/my_figure.png}

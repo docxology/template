@@ -3,21 +3,52 @@
 This module contains utilities for validating documents, PDFs, markdown files,
 and ensuring data integrity across the research project.
 
-Modules:
+## Module groups (22 files — logical namespaces within the flat package)
+
+**Content validators** (validate specific file types):
     pdf_validator: PDF rendering validation
     markdown_validator: Markdown file validation
+    figure_validator: Figure registry validation
+
+**Integrity & links**:
     integrity: File integrity and cross-reference validation
-    check_links: Documentation link verification
-    audit_orchestrator: Comprehensive audit coordination
-    issue_categorizer: Issue categorization and filtering
+    link_validator: Markdown link resolution and checking
+    check_links: Documentation link verification CLI
+
+**Documentation scanning**:
     doc_scanner: Comprehensive documentation scanning
-    repo_scanner: Repository-wide accuracy and completeness scanning
+    doc_discovery: Documentation file discovery utilities
+    doc_models: Data models for documentation scanning
+
+**Repository-wide scanning**:
+    repo_scanner: Repository accuracy and completeness scanning
+    audit_orchestrator: Comprehensive multi-module audit coordination
+    issue_categorizer: Issue categorization and filtering
+
+**CLI entry points**:
+    cli: Unified validation CLI interface
+    validate_markdown_cli: Standalone markdown validation script
+    validate_pdf_cli: Standalone PDF validation script
+
+**Output validation**:
+    output_validator: Pipeline output validation
+    output_statistics: Output statistics collection
 """
 
 from __future__ import annotations
 
-from .audit_orchestrator import generate_audit_report, run_comprehensive_audit
+# Content validators
 from .figure_validator import validate_figure_registry
+from .markdown_validator import (
+    find_markdown_files,
+    validate_images,
+    validate_markdown,
+    validate_math,
+    validate_refs,
+)
+from .pdf_validator import extract_text_from_pdf, scan_for_issues, validate_pdf_rendering
+
+# Integrity & links
 from .integrity import (
     generate_integrity_report,
     verify_academic_standards,
@@ -26,6 +57,10 @@ from .integrity import (
     verify_file_integrity,
     verify_output_integrity,
 )
+from .link_validator import LinkValidator
+
+# Repository-wide scanning
+from .audit_orchestrator import generate_audit_report, run_comprehensive_audit
 from .issue_categorizer import (
     assign_severity,
     categorize_by_type,
@@ -35,18 +70,12 @@ from .issue_categorizer import (
     is_false_positive,
     prioritize_issues,
 )
-from .link_validator import LinkValidator
-from .markdown_validator import (
-    find_markdown_files,
-    validate_images,
-    validate_markdown,
-    validate_math,
-    validate_refs,
-)
+
+# Output validation
 from .output_validator import validate_copied_outputs, validate_output_structure
-from .pdf_validator import extract_text_from_pdf, scan_for_issues, validate_pdf_rendering
 
 __all__ = [
+    # Content validators
     "validate_pdf_rendering",
     "extract_text_from_pdf",
     "scan_for_issues",
@@ -55,20 +84,18 @@ __all__ = [
     "validate_images",
     "validate_refs",
     "validate_math",
+    "validate_figure_registry",
+    # Integrity & links
     "verify_file_integrity",
     "verify_cross_references",
     "verify_data_consistency",
     "verify_academic_standards",
     "verify_output_integrity",
     "generate_integrity_report",
-    "validate_figure_registry",
-    "validate_copied_outputs",
-    "validate_output_structure",
     "LinkValidator",
-    # Audit orchestrator functions
+    # Repository-wide scanning
     "run_comprehensive_audit",
     "generate_audit_report",
-    # Issue categorization functions
     "categorize_by_type",
     "assign_severity",
     "is_false_positive",
@@ -76,4 +103,7 @@ __all__ = [
     "group_related_issues",
     "prioritize_issues",
     "generate_issue_summary",
+    # Output validation
+    "validate_copied_outputs",
+    "validate_output_structure",
 ]

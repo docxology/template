@@ -146,7 +146,7 @@ def compile_latex(
 
         return pdf_file
 
-    except subprocess.TimeoutExpired:
-        raise CompilationError("Compilation timed out", context={"timeout": timeout})
+    except subprocess.TimeoutExpired as e:
+        raise CompilationError("Compilation timed out", context={"timeout": timeout}) from e
     except OSError as e:
-        raise CompilationError(f"Execution failed: {e}", context={"command": compiler})
+        raise CompilationError(f"Execution failed: {e}", context={"command": compiler}) from e

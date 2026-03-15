@@ -6,6 +6,7 @@ with caching and validation support.
 
 from __future__ import annotations
 
+import functools
 import json
 from pathlib import Path
 from typing import Any
@@ -72,7 +73,7 @@ class PromptFragmentLoader:
 
         # Check cache
         if filepath_str in self._fragment_cache:
-            return self._fragment_cache[filepath_str]  # type: ignore
+            return self._fragment_cache[filepath_str]
 
         if not filepath.exists():
             raise LLMTemplateError(
@@ -86,18 +87,18 @@ class PromptFragmentLoader:
 
             # Cache the loaded data
             self._fragment_cache[filepath_str] = data
-            return data  # type: ignore
+            return data
 
         except json.JSONDecodeError as e:
             raise LLMTemplateError(
                 f"Invalid JSON in prompt file: {filepath}",
                 context={"error": str(e), "filepath": str(filepath)},
-            )
+            ) from e
         except Exception as e:
             raise LLMTemplateError(
                 f"Failed to load prompt file: {filepath}",
                 context={"error": str(e), "filepath": str(filepath)},
-            )
+            ) from e
 
     def _resolve_reference(self, reference: str, subdirectory: str = "fragments") -> Any:
         """Resolve a fragment reference like "file.json#key".
@@ -166,7 +167,7 @@ class PromptFragmentLoader:
             >>> loader = PromptFragmentLoader()
             >>> template = loader.load_template("manuscript_reviews.json#manuscript_executive_summary")
         """
-        return self._resolve_reference(reference, subdirectory="templates")  # type: ignore
+        return self._resolve_reference(reference, subdirectory="templates")
 
     def load_composition(self, reference: str) -> Any:
         """Load a composition rule.
@@ -196,7 +197,7 @@ class PromptFragmentLoader:
 
         # Handle both direct string and dict with "content" key
         if isinstance(fragment, dict):
-            return fragment.get("content", str(fragment))  # type: ignore
+            return fragment.get("content", str(fragment))
         return str(fragment)
 
     def clear_cache(self) -> None:
@@ -204,18 +205,15 @@ class PromptFragmentLoader:
         self._fragment_cache.clear()
         self._template_cache.clear()
 
+<<<<<<< HEAD
 
 # Global loader instance for convenience
 _default_loader: PromptFragmentLoader | None = None
 
 
+=======
+@functools.lru_cache(maxsize=1)
+>>>>>>> desloppify/code-health
 def get_default_loader() -> PromptFragmentLoader:
-    """Get the default global fragment loader instance.
-
-    Returns:
-        PromptFragmentLoader instance
-    """
-    global _default_loader
-    if _default_loader is None:
-        _default_loader = PromptFragmentLoader()
-    return _default_loader
+    """Get the default global fragment loader instance (lazily initialized)."""
+    return PromptFragmentLoader()

@@ -188,7 +188,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**Location**: [`code_project/manuscript/preamble.md`](../../projects/code_project/manuscript/preamble.md)
+**Location**: [`code_projects/{name}/manuscript/preamble.md`](../../projects/code_projects/{name}/manuscript/preamble.md)
 
 ## M
 
@@ -210,7 +210,7 @@ Research document composed of numbered sections in `manuscript/` directory. Conv
 
 Automated checking of markdown files for broken references, missing images, invalid links, and syntax errors.
 
-**Command**: `uv run python -m infrastructure.validation.cli markdown project/manuscript/`
+**Command**: `uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/`
 
 **See**: [markdown-template-guide.md](../usage/markdown-template-guide.md)
 

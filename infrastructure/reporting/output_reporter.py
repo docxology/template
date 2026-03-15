@@ -91,13 +91,12 @@ def collect_output_statistics(
         project_dir if project_dir is not None else repo_root / "projects" / project_name
     ) / "output"
 
-    stats = {
+    stats: dict[str, Any] = {
         "directories": {},
         "total_files": 0,
         "total_size_mb": 0.0,
         "largest_files": [],
         "missing_expected_files": [],
-        "file_counts_by_type": {},
         "sizes_by_category": {},
     }
 
@@ -138,12 +137,12 @@ def collect_output_statistics(
             ]
 
             # Count files by extension
-            extensions = {}  # type: ignore
+            extensions = {}
             for f in files:
                 ext = f.suffix.lower() or "no_extension"
                 extensions[ext] = extensions.get(ext, 0) + 1
 
-            stats["directories"][dir_name] = {  # type: ignore
+            stats["directories"][dir_name] = {
                 "exists": True,
                 "file_count": len(files),
                 "size_mb": f"{size_mb:.2f}",
@@ -152,13 +151,13 @@ def collect_output_statistics(
                 "extensions": extensions,
             }
 
-            stats["total_files"] += len(files)  # type: ignore
-            stats["total_size_mb"] += size_mb  # type: ignore
-            stats["sizes_by_category"][dir_name] = size_mb  # type: ignore
+            stats["total_files"] += len(files)
+            stats["total_size_mb"] += size_mb
+            stats["sizes_by_category"][dir_name] = size_mb
 
             # Track all largest files across directories
             for size, f in largest_in_dir:
-                stats["largest_files"].append(  # type: ignore
+                stats["largest_files"].append(
                     {
                         "name": f.name,
                         "size_mb": f"{size / (1024 * 1024):.2f}",
@@ -167,16 +166,16 @@ def collect_output_statistics(
                     }
                 )
         else:
-            stats["directories"][dir_name] = {  # type: ignore
+            stats["directories"][dir_name] = {
                 "exists": False,
                 "file_count": 0,
                 "size_mb": "0.00",
                 "total_size_bytes": 0,
             }
-            stats["missing_expected_files"].append(f"{dir_name}/ directory")  # type: ignore
+            stats["missing_expected_files"].append(f"{dir_name}/ directory")
 
     # Sort largest files by size
-    stats["largest_files"] = sorted(  # type: ignore
+    stats["largest_files"] = sorted(
         stats["largest_files"], key=lambda x: float(x["size_mb"]), reverse=True
     )[:10]  # Keep top 10
 
@@ -191,22 +190,22 @@ def collect_output_statistics(
             break
 
     if not combined_pdf_found:
-        stats["missing_expected_files"].append(  # type: ignore
+        stats["missing_expected_files"].append(
             f"{project_basename}_combined.pdf or project_combined.pdf"
         )
 
     # Add file type counts
-    all_extensions = {}  # type: ignore
-    for dir_info in stats["directories"].values():  # type: ignore
+    all_extensions = {}
+    for dir_info in stats["directories"].values():
         if dir_info["exists"]:
             for ext, count in dir_info.get("extensions", {}).items():
                 all_extensions[ext] = all_extensions.get(ext, 0) + count
     stats["file_counts_by_type"] = all_extensions
 
     # Add simplified keys for backward compatibility with tests
-    stats["pdf_files"] = stats["directories"].get("pdf", {}).get("file_count", 0)  # type: ignore
-    stats["figures"] = stats["directories"].get("figures", {}).get("file_count", 0)  # type: ignore
-    stats["data_files"] = stats["directories"].get("data", {}).get("file_count", 0)  # type: ignore
+    stats["pdf_files"] = stats["directories"].get("pdf", {}).get("file_count", 0)
+    stats["figures"] = stats["directories"].get("figures", {}).get("file_count", 0)
+    stats["data_files"] = stats["directories"].get("data", {}).get("file_count", 0)
 
     return stats
 

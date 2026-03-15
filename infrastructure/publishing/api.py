@@ -29,24 +29,7 @@ class ZenodoConfig:
 
     @property
     def api_base_url(self) -> str:
-        """Get the Zenodo API base URL.
-
-        Returns the configured base URL if explicitly set, otherwise returns
-        the appropriate Zenodo API endpoint based on the sandbox setting.
-
-        Returns:
-            str: The base URL for API requests. Either the custom base_url if
-                configured, or 'https://sandbox.zenodo.org/api' for sandbox mode,
-                or 'https://zenodo.org/api' for production mode.
-
-        Example:
-            >>> config = ZenodoConfig(access_token="token", sandbox=True)
-            >>> config.api_base_url
-            'https://sandbox.zenodo.org/api'
-            >>> config = ZenodoConfig(access_token="token", sandbox=False)
-            >>> config.api_base_url
-            'https://zenodo.org/api'
-        """
+        """Return base_url if set, else sandbox or production Zenodo API endpoint."""
         if self.base_url:
             return self.base_url
         return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"
@@ -66,7 +49,7 @@ class ZenodoClient:
         Returns:
             Deposition ID
         """
-        url = f"{self.config.api_base_url}/api/deposit/depositions"
+        url = f"{self.config.api_base_url}/deposit/depositions"
         payload = {"metadata": metadata}
 
         try:
@@ -76,21 +59,21 @@ class ZenodoClient:
             response.raise_for_status()
             return str(response.json()["id"])
         except requests.exceptions.RequestException as e:
-            raise PublishingError(f"Failed to create deposition: {e}")
+            raise PublishingError(f"Failed to create deposition: {e}") from e
 
     def upload_file(self, bucket: str, file_path: str) -> None:
         """Upload file to bucket."""
         filename = Path(file_path).name
-        url = f"{self.config.api_base_url}/api/files/{bucket}/{filename}"
+        url = f"{self.config.api_base_url}/files/{bucket}/{filename}"
 
         try:
             with open(file_path, "rb") as f:
                 response = requests.put(url, data=f, headers=self.headers, timeout=REQUEST_TIMEOUT)
                 response.raise_for_status()
         except OSError as e:
-            raise UploadError(f"File access failed: {e}")
+            raise UploadError(f"File access failed: {e}") from e
         except requests.exceptions.RequestException as e:
-            raise UploadError(f"Upload failed: {e}")
+            raise UploadError(f"Upload failed: {e}") from e
 
     def publish(self, deposition_id: str) -> str:
         """Publish deposition.
@@ -98,11 +81,11 @@ class ZenodoClient:
         Returns:
             DOI
         """
-        url = f"{self.config.api_base_url}/api/deposit/depositions/{deposition_id}/actions/publish"
+        url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}/actions/publish"
 
         try:
             response = requests.post(url, headers=self.headers, timeout=REQUEST_TIMEOUT)
             response.raise_for_status()
-            return response.json()["doi"]  # type: ignore
+            return response.json()["doi"]
         except requests.exceptions.RequestException as e:
-            raise PublishingError(f"Publication failed: {e}")
+            raise PublishingError(f"Publication failed: {e}") from e

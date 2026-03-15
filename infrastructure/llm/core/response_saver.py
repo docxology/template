@@ -125,7 +125,13 @@ Response:
 {response}
 """
 
-    output_path.write_text(content, encoding="utf-8")
+    _tmp = output_path.with_suffix(output_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(content, encoding="utf-8")
+        _tmp.replace(output_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     logger.info(
         f"Saved response to {output_path} "
         f"({metadata.response_length:,} chars, {metadata.response_tokens_est:,} tokens est.)"

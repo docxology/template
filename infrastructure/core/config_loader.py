@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TypedDict
 
+from infrastructure.core.exceptions import InvalidConfigurationError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -46,9 +47,14 @@ class ReviewsConfig(TypedDict, total=False):
     enabled: bool
     types: list[str]
 
+<<<<<<< HEAD
 
 class LLMConfig(TypedDict, total=False):
     """Configuration for LLM integrations."""
+=======
+class LLMYAMLConfig(TypedDict, total=False):
+    """YAML config schema for the ``llm:`` section of config.yaml."""
+>>>>>>> desloppify/code-health
     translations: TranslationsConfig
     reviews: ReviewsConfig
 
@@ -92,7 +98,7 @@ class ManuscriptConfig(TypedDict, total=False):
     paper: PaperConfig
     authors: list[AuthorConfig]
     publication: PublicationConfig
-    llm: LLMConfig
+    llm: LLMYAMLConfig
     testing: TestingConfig
     steganography: SteganographyConfigYAML
     keywords: list[str]
@@ -149,7 +155,10 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
         config_path: Path to config.yaml file
 
     Returns:
-        ManuscriptConfig dictionary, or None if file doesn't exist or can't be loaded
+        ManuscriptConfig dictionary, or None if file doesn't exist
+
+    Raises:
+        InvalidConfigurationError: If the file exists but contains invalid YAML
     """
     if not YAML_AVAILABLE:
         return None
@@ -170,8 +179,9 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
         logger.warning(f"Permission denied reading config {config_path}: {e}")
         return None
     except yaml.YAMLError as e:
-        logger.warning(f"YAML parse error in config {config_path}: {e}")
-        return None
+        raise InvalidConfigurationError(
+            f"YAML parse error in config {config_path}: {e}"
+        ) from e
 
 
 def format_author_details(authors: list[AuthorConfig], doi: str = "") -> str:
@@ -302,6 +312,7 @@ def find_config_file(
 
     return None
 
+<<<<<<< HEAD
 
 def get_translation_languages(repo_root: Path | str, project_name: str = "project") -> list[str]:
     """Get list of enabled translation languages from config.
@@ -482,3 +493,5 @@ def get_testing_config(repo_root: Path | str) -> ResolvedTestingConfig:
             defaults.project_coverage_threshold,
         ),
     )
+=======
+>>>>>>> desloppify/code-health

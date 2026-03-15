@@ -87,13 +87,13 @@ def test_llm_query(ollama_test_server):
 
 The test orchestrator (`scripts/01_run_tests.py`) generates structured reports:
 
-- **JSON Report**: `project/output/reports/test_results.json`
+- **JSON Report**: `projects/{name}/output/reports/test_results.json`
   - Test counts (passed/failed/skipped)
   - Coverage metrics per module
   - Execution time per test file
   - Failure details with stack traces
 
-- **Markdown Report**: `project/output/reports/test_results.md`
+- **Markdown Report**: `projects/{name}/output/reports/test_results.md`
   - Human-readable summary
   - Test statistics
   - Coverage summary
@@ -168,7 +168,7 @@ def test_with_fixture(temp_data_file):
 
 ## Coverage Requirements
 
-- **90% minimum** for project/src/ (currently achieving 100% - coverage!)
+- **90% minimum** for projects/{name}/src/ (currently achieving 100% - coverage!)
 - **60% minimum** for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
 - **ABSOLUTE PROHIBITION**: Never use mock methods - use data only
 - Test all error paths

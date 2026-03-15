@@ -137,7 +137,7 @@ class PromptComposer:
                     "${section_structure}", fragment_values["section_structure"]
                 )
 
-            return result  # type: ignore
+            return result
 
         except Exception as e:
             if isinstance(e, LLMTemplateError):
@@ -145,7 +145,7 @@ class PromptComposer:
             raise LLMTemplateError(
                 f"Failed to compose template {template_ref}",
                 context={"error": str(e), "template_ref": template_ref},
-            )
+            ) from e
 
     def add_retry_prompt(self, base_prompt: str, retry_type: str = "off_topic") -> str:
         """Add a retry prompt to reinforce requirements.
@@ -205,7 +205,7 @@ class PromptComposer:
         else:
             result = result.replace("${section_requirements_block}", "")
 
-        return result  # type: ignore
+        return result
 
     def _build_content_requirements(self) -> str:
         """Build content requirements fragment.
@@ -228,7 +228,7 @@ class PromptComposer:
         result = base_template.replace("${no_hallucination_block}", no_hallucination)
         result = result.replace("${cite_sources_block}", cite_sources)
 
-        return result  # type: ignore
+        return result
 
     def _build_section_structure(self, structure_key: str) -> str:
         """Build section structure fragment.
@@ -272,7 +272,7 @@ class PromptComposer:
             raise LLMTemplateError(
                 f"Failed to build section structure for '{structure_key}'",
                 context={"error": str(e)},
-            )
+            ) from e
 
     def _build_token_budget_awareness(
         self, total_tokens: int, section_budgets: dict[str, int]
@@ -312,7 +312,7 @@ class PromptComposer:
         result = base_template.replace("${total_tokens_block}", total_block)
         result = result.replace("${section_budgets_block}", section_block)
 
-        return result  # type: ignore
+        return result
 
     def _build_validation_hints(
         self, word_count_range: tuple[int, int], required_elements: list[str]
@@ -353,4 +353,4 @@ class PromptComposer:
         result = base_template.replace("${word_count_block}", word_block)
         result = result.replace("${required_elements_block}", elements_block)
 
-        return result  # type: ignore
+        return result

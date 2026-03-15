@@ -10,7 +10,7 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from infrastructure.core.checkpoint import StageResult
 from infrastructure.core.logging_helpers import format_duration
@@ -19,6 +19,15 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
+<<<<<<< HEAD
+=======
+class _StageResultDict(TypedDict, total=False):
+    name: str
+    exit_code: int
+    duration: float
+
+
+>>>>>>> desloppify/code-health
 @dataclass
 class PipelineReport:
     """Complete pipeline execution report."""
@@ -34,7 +43,7 @@ class PipelineReport:
 
 
 def generate_pipeline_report(
-    stage_results: list[dict[str, Any]],
+    stage_results: list[_StageResultDict],
     total_duration: float,
     repo_root: Path,
     *,
@@ -136,7 +145,7 @@ def save_pipeline_report(
 
     for fmt, path, content in formats_to_write:
         try:
-            path.write_text(content)
+            _atomic_write_text(path, content)
             saved_files[fmt] = path
             logger.info(f"Pipeline report ({fmt.upper()}) saved: {path}")
         except OSError as e:
@@ -407,13 +416,37 @@ def generate_html_report(report: PipelineReport) -> str:
 
     return html
 
+<<<<<<< HEAD
+=======
+def _atomic_write_json(path: Path, data: dict[str, Any], **dump_kwargs: Any) -> None:
+    """Write *data* as JSON to *path* atomically via a .tmp intermediate file."""
+    _tmp = path.with_suffix(path.suffix + ".tmp")
+    try:
+        with open(_tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, **dump_kwargs)
+        _tmp.replace(path)
+    except (OSError, ValueError):
+        _tmp.unlink(missing_ok=True)
+        raise
+
+
+def _atomic_write_text(path: Path, content: str) -> None:
+    """Write *content* as text to *path* atomically via a .tmp intermediate file."""
+    _tmp = path.with_suffix(path.suffix + ".tmp")
+    try:
+        _tmp.write_text(content)
+        _tmp.replace(path)
+    except OSError:
+        _tmp.unlink(missing_ok=True)
+        raise
+
+>>>>>>> desloppify/code-health
 
 def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
     """Write test_results dict to test_results.json and return the path."""
     output_dir.mkdir(parents=True, exist_ok=True)
     report_path = output_dir / "test_results.json"
-    with open(report_path, "w", encoding="utf-8") as f:
-        json.dump(test_results, f, indent=2, default=str)
+    _atomic_write_json(report_path, test_results, default=str)
     return report_path
 
 
@@ -426,8 +459,7 @@ def generate_validation_report(
 
     json_path = output_dir / "validation_report.json"
     try:
-        with open(json_path, "w") as f:
-            json.dump(validation_results, f, indent=2)
+        _atomic_write_json(json_path, validation_results)
         saved_files["json"] = json_path
     except OSError as e:
         logger.error(f"Failed to write validation JSON {json_path}: {e}")
@@ -435,8 +467,7 @@ def generate_validation_report(
 
     md_path = output_dir / "validation_report.md"
     try:
-        md_content = generate_validation_markdown(validation_results)
-        md_path.write_text(md_content)
+        _atomic_write_text(md_path, generate_validation_markdown(validation_results))
         saved_files["markdown"] = md_path
     except OSError as e:
         logger.error(f"Failed to write validation Markdown {md_path}: {e}")
@@ -472,8 +503,7 @@ def generate_performance_report(performance_metrics: dict[str, Any], output_dir:
 
     json_path = output_dir / "performance_report.json"
     try:
-        with open(json_path, "w") as f:
-            json.dump(performance_metrics, f, indent=2)
+        _atomic_write_json(json_path, performance_metrics)
     except OSError as e:
         logger.error(f"Failed to write performance report {json_path}: {e}")
         raise
@@ -485,7 +515,6 @@ def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[s
     """Aggregate errors, write JSON and Markdown reports, and return the summary dict."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Categorize errors
     by_type: dict[str, list[dict[str, Any]]] = {}
     for error in errors:
         error_type = error.get("type", "unknown")
@@ -501,16 +530,14 @@ def save_error_summary(errors: list[dict[str, Any]], output_dir: Path) -> dict[s
 
     json_path = output_dir / "error_summary.json"
     try:
-        with open(json_path, "w") as f:
-            json.dump(summary, f, indent=2)
+        _atomic_write_json(json_path, summary)
     except OSError as e:
         logger.error(f"Failed to write error summary JSON {json_path}: {e}")
         raise
 
     md_path = output_dir / "error_summary.md"
     try:
-        md_content = generate_error_markdown(summary)
-        md_path.write_text(md_content)
+        _atomic_write_text(md_path, generate_error_markdown(summary))
     except OSError as e:
         logger.error(f"Failed to write error summary Markdown {md_path}: {e}")
         raise

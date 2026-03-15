@@ -9,7 +9,7 @@ flowchart TD
     START([New code to write?]) --> Q1{Is it about building/<br/>validating/managing documents?}
     Q1 -->|YES| L1[LAYER 1: INFRASTRUCTURE<br/>Add to infrastructure/]
     Q1 -->|NO| Q2{Does it implement research<br/>algorithms/analysis?}
-    Q2 -->|YES| L2[LAYER 2: PROJECT<br/>Add to project/src/]
+    Q2 -->|YES| L2[LAYER 2: PROJECT<br/>Add to projects/{name}/src/]
     Q2 -->|NO| RECONSIDER[Reconsider scope<br/>or ask team]
     
     classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
@@ -137,7 +137,7 @@ def verify_output_integrity(
 
 ## Layer 2: Scientific Examples
 
-### ✅ Belongs in project/src/
+### ✅ Belongs in projects/{name}/src/
 
 **Algorithms and Computation:**
 
@@ -150,7 +150,7 @@ def verify_output_integrity(
 **Example: Simulation**
 
 ```python
-# project/src/simulation.py
+# projects/{name}/src/simulation.py
 
 class MySimulation(SimulationBase):
     """Specific simulation for our research.
@@ -180,7 +180,7 @@ class MySimulation(SimulationBase):
 **Example: Analysis**
 
 ```python
-# project/src/analysis.py
+# projects/{name}/src/analysis.py
 
 def analyze_convergence(
     results: np.ndarray,
@@ -203,7 +203,7 @@ def analyze_convergence(
 **Example: Plotting**
 
 ```python
-# project/src/plots.py
+# projects/{name}/src/plots.py
 
 def plot_experimental_results(
     data: Dict[str, np.ndarray]
@@ -273,7 +273,7 @@ def plot_experimental_results(
 ```
 1. Analyze the feature
    ├─ Generic part: "convergence analysis" → infrastructure/scientific/performance.py
-   ├─ Specific part: "our stopping criterion" → project/src/analysis.py
+   ├─ Specific part: "our stopping criterion" → projects/{name}/src/analysis.py
    └─ Decision: Split into two files
 
 2. Create infrastructure first
@@ -283,21 +283,21 @@ def plot_experimental_results(
       └─ 100% tested
 
 3. Use infrastructure in project code
-   └─ project/src/analysis.py
+   └─ projects/{name}/src/analysis.py
       ├─ Import from infrastructure
       ├─ Add domain-specific logic
       └─ 100% tested
 
 4. Use project code in scripts
-   └─ project/scripts/analyze_results.py
+   └─ projects/{name}/scripts/analyze_results.py
       ├─ Import from project.src
       ├─ Orchestrate execution
       └─ Generate outputs
 
 5. Document everywhere
    ├─ infrastructure/scientific/AGENTS.md
-   ├─ project/src/AGENTS.md
-   └─ project/scripts/AGENTS.md
+   ├─ projects/{name}/src/AGENTS.md
+   └─ projects/{name}/scripts/AGENTS.md
 ```
 
 ### Adding a New Data Processing Step
@@ -306,7 +306,7 @@ def plot_experimental_results(
 Question: Where does this belong?
 
 If answer is "for our specific problem":
-└─ Project layer (project/src/data_processing.py)
+└─ Project layer (projects/{name}/src/data_processing.py)
    def process_our_specific_data(raw_data):
        pass
 
@@ -355,7 +355,7 @@ def custom_algorithm(data):
 
 **Problem:** Violates thin orchestrator pattern
 
-**Fix:** Move to project/src/, import in script
+**Fix:** Move to projects/{name}/src/, import in script
 
 ### ❌ Wrong: Duplicate Code Across Layers
 
@@ -364,7 +364,7 @@ def custom_algorithm(data):
 def plot_convergence(data):
     pass
 
-# BAD: project/src/plots.py
+# BAD: projects/{name}/src/plots.py
 def plot_convergence(data):  # ❌ Duplicate!
     pass
 ```
@@ -376,14 +376,14 @@ def plot_convergence(data):  # ❌ Duplicate!
 ### ❌ Wrong: Too Much in One Module
 
 ```python
-# BAD: project/src/everything.py - 2000+ lines
+# BAD: projects/{name}/src/everything.py - 2000+ lines
 # Simulation, statistics, plotting, data processing...all mixed
 
 # Better: Separate modules
-# project/src/simulation.py
-# project/src/statistics.py
-# project/src/plots.py
-# project/src/data_processing.py
+# projects/{name}/src/simulation.py
+# projects/{name}/src/statistics.py
+# projects/{name}/src/plots.py
+# projects/{name}/src/data_processing.py
 ```
 
 **Problem:** Hard to test, understand, and maintain
@@ -412,15 +412,15 @@ Scripts should be thin orchestrators that import from src/.
 
 ### "Should scientific code be in src/ or scripts/?"
 
-- **project/src/** - Business logic, algorithms, computations (tested)
-- **project/scripts/** - Orchestration and I/O (thin orchestrators, calls project/src/)
+- **projects/{name}/src/** - Business logic, algorithms, computations (tested)
+- **projects/{name}/scripts/** - Orchestration and I/O (thin orchestrators, calls projects/{name}/src/)
 
 Rule: If it can be tested independently, it goes in src/.
 
 ### "How do I use infrastructure code in scientific code?"
 
 ```python
-# project/src/my_analysis.py
+# projects/{name}/src/my_analysis.py
 from infrastructure.documentation import FigureManager, MarkdownIntegration
 
 def analyze_and_report(data):
@@ -486,7 +486,7 @@ def test_script_execution():
 
 | Aspect | Infrastructure | Scientific |
 |--------|---|---|
-| **Location** | `infrastructure/` | `project/src/` |
+| **Location** | `infrastructure/` | `projects/{name}/src/` |
 | **Purpose** | Build & validation tools | Algorithms & analysis |
 | **Reusable** | Across all projects | Project-specific |
 | **Examples** | PDF generation, figure mgmt | Simulation, statistics |
@@ -511,7 +511,7 @@ Add to infrastructure/
 **For Project:**
 
 ```
-Add to project/src/
+Add to projects/{name}/src/
 ├─ If it implements our algorithms
 ├─ If it analyzes our data
 ├─ If it visualizes our results

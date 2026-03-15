@@ -10,18 +10,13 @@ logger = get_logger(__name__)
 def format_requirements(
     required_headers: list[str],
     markdown_format: bool = True,
+<<<<<<< HEAD
     section_requirements: dict[str, str] | None = None,
+=======
+    section_requirements: dict[str, str | None] | None = None,
+>>>>>>> desloppify/code-health
 ) -> str:
-    """Generate format requirements section for prompts.
-
-    Args:
-        required_headers: List of required markdown section headers (e.g., ["## Overview", "## Results"])
-        markdown_format: Whether to use markdown formatting
-        section_requirements: Optional dict mapping section names to specific requirements
-
-    Returns:
-        Formatted requirements string
-    """
+    """Generate format requirements section for prompts."""
     lines = ["FORMAT REQUIREMENTS:"]
 
     if markdown_format:
@@ -41,18 +36,13 @@ def format_requirements(
 def token_budget_awareness(
     total_tokens: int | None = None,
     section_budgets: dict[str, int] | None = None,
+<<<<<<< HEAD
     word_targets: dict[str, tuple] | None = None,
+=======
+    word_targets: dict[str, tuple[int, int]] | None = None,
+>>>>>>> desloppify/code-health
 ) -> str:
-    """Generate token budget awareness hints for prompts.
-
-    Args:
-        total_tokens: Total token budget available
-        section_budgets: Optional dict mapping section names to approximate token budgets
-        word_targets: Optional dict mapping section names to (min, max) word counts
-
-    Returns:
-        Formatted token budget awareness string
-    """
+    """Generate token budget awareness hints for prompts."""
     lines = ["TOKEN BUDGET AWARENESS:"]
 
     if total_tokens:
@@ -78,17 +68,7 @@ def content_requirements(
     evidence_based: bool = True,
     no_meta_commentary: bool = True,
 ) -> str:
-    """Generate content quality requirements section.
-
-    Args:
-        no_hallucination: Require no invented details
-        cite_sources: Require citation of sources
-        evidence_based: Require evidence-based claims
-        no_meta_commentary: Prohibit meta-commentary about being AI
-
-    Returns:
-        Formatted content requirements string
-    """
+    """Generate content quality requirements section."""
     lines = ["CONTENT QUALITY REQUIREMENTS:"]
 
     if no_hallucination:
@@ -122,19 +102,14 @@ def content_requirements(
 
 def section_structure(
     sections: list[str],
+<<<<<<< HEAD
     section_descriptions: dict[str, str] | None = None,
+=======
+    section_descriptions: dict[str, str | None] | None = None,
+>>>>>>> desloppify/code-health
     required_order: bool = True,
 ) -> str:
-    """Generate section structure requirements.
-
-    Args:
-        sections: List of required section names/headers
-        section_descriptions: Optional dict mapping section names to descriptions
-        required_order: Whether sections must appear in the specified order
-
-    Returns:
-        Formatted section structure string
-    """
+    """Generate section structure requirements."""
     lines = ["SECTION STRUCTURE:"]
 
     if required_order:
@@ -152,33 +127,32 @@ def section_structure(
 
 
 def validation_hints(
+<<<<<<< HEAD
     word_count_range: tuple | None = None,
+=======
+    word_count_range: tuple[int, int] | None = None,
+>>>>>>> desloppify/code-health
     required_elements: list[str] | None = None,
     format_checks: list[str] | None = None,
 ) -> str:
-    """Generate validation hints that inform the model what will be checked.
-
-    Args:
-        word_count_range: Optional (min, max) word count tuple
-        required_elements: Optional list of required elements (e.g., ["scores", "headers"])
-        format_checks: Optional list of format checks that will be performed
-
-    Returns:
-        Formatted validation hints string
-    """
+    """Generate validation hints that inform the model what will be checked."""
     lines = ["VALIDATION HINTS (what will be checked):"]
+    n = 0
 
     if word_count_range:
         min_words, max_words = word_count_range
-        lines.append(f"1. Word count: Must be between {min_words} and {max_words} words")
+        n += 1
+        lines.append(f"{n}. Word count: Must be between {min_words} and {max_words} words")
 
     if required_elements:
-        lines.append("2. Required elements:")
+        n += 1
+        lines.append(f"{n}. Required elements:")
         for element in required_elements:
             lines.append(f"   - {element}")
 
     if format_checks:
-        lines.append("3. Format compliance checks:")
+        n += 1
+        lines.append(f"{n}. Format compliance checks:")
         for check in format_checks:
             lines.append(f"   - {check}")
 

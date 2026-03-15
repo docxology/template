@@ -6,7 +6,6 @@ Thin orchestrator wrapping infrastructure.validation module functionality.
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger
@@ -25,7 +24,7 @@ def validate_pdf_command(args: argparse.Namespace) -> None:
 
     if not pdf_path.exists():
         logger.error(f"PDF not found: {pdf_path}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Validating PDF: {pdf_path}")
     report = validate_pdf_rendering(pdf_path, n_words=args.preview_words)
@@ -49,7 +48,7 @@ def validate_pdf_command(args: argparse.Namespace) -> None:
         if words_preview:
             logger.info(f"\nFirst words:\n{words_preview}")
 
-    sys.exit(0 if not report["summary"]["has_issues"] else 1)
+    raise SystemExit(0 if not report["summary"]["has_issues"] else 1)
 
 
 def validate_markdown_command(args: argparse.Namespace) -> None:
@@ -59,7 +58,7 @@ def validate_markdown_command(args: argparse.Namespace) -> None:
 
     if not md_dir.exists():
         logger.error(f"Directory not found: {md_dir}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Validating Markdown in: {md_dir}")
     problems, exit_code = validate_markdown(str(md_dir), str(repo_root))
@@ -70,7 +69,7 @@ def validate_markdown_command(args: argparse.Namespace) -> None:
     else:
         logger.info("  No issues found!")
 
-    sys.exit(exit_code)
+    raise SystemExit(exit_code)
 
 
 def verify_integrity_command(args: argparse.Namespace) -> None:
@@ -79,7 +78,7 @@ def verify_integrity_command(args: argparse.Namespace) -> None:
 
     if not output_dir.exists():
         logger.error(f"Directory not found: {output_dir}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Verifying integrity of: {output_dir}")
     report = verify_output_integrity(output_dir)
@@ -103,7 +102,7 @@ def verify_integrity_command(args: argparse.Namespace) -> None:
         for warning in report.warnings[:10]:
             logger.info(f"  - {warning}")
 
-    sys.exit(0 if report.overall_integrity else 1)
+    raise SystemExit(0 if report.overall_integrity else 1)
 
 
 def validate_links_command(args: argparse.Namespace) -> None:
@@ -112,7 +111,7 @@ def validate_links_command(args: argparse.Namespace) -> None:
 
     if not repo_root.exists():
         logger.error(f"Repository root not found: {repo_root}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Validating links in repository: {repo_root}")
 
@@ -125,17 +124,23 @@ def validate_links_command(args: argparse.Namespace) -> None:
 
     if args.output:
         output_path = Path(args.output)
-        output_path.write_text(report, encoding="utf-8")
+        _tmp = output_path.with_suffix(output_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(report, encoding="utf-8")
+            _tmp.replace(output_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.info(f"Report saved to: {output_path}")
     else:
         logger.info(report)
 
     if total_broken > 0:
         logger.info(f"\n❌ Found {total_broken} broken link(s)")
-        sys.exit(1)
+        raise SystemExit(1)
     else:
         logger.info("\n✅ All links valid!")
-        sys.exit(0)
+        raise SystemExit(0)
 
 
 def main() -> None:
@@ -178,13 +183,13 @@ def main() -> None:
 
     if not hasattr(args, "func"):
         parser.print_help()
-        sys.exit(1)
+        raise SystemExit(1)
 
     try:
         args.func(args)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"{e}")
-        sys.exit(1)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":

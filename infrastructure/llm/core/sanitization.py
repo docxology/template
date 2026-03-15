@@ -7,13 +7,18 @@ LLMClient before each outbound request.
 
 from __future__ import annotations
 
+import functools
 import html
 import re
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.exceptions import LLMError
+# SecurityError is a subclass of SecurityViolation (see infrastructure/core/exceptions.py).
+# Both names are valid here; SecurityError is used for backwards compatibility with
+# call sites that catch SecurityError specifically.
+from infrastructure.core.exceptions import SecurityError
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.security import get_security_validator
 
 logger = get_logger(__name__)
 
@@ -21,6 +26,7 @@ logger = get_logger(__name__)
 class InputSanitizer:
     """Comprehensive input sanitization for LLM operations."""
 
+<<<<<<< HEAD
     def __init__(self):
         """Initialize the input sanitizer and load target patterns."""
         # Dangerous patterns to filter
@@ -50,6 +56,10 @@ class InputSanitizer:
             r"<script|<iframe|<object|<embed",
             r"on\w+\s*=|javascript:|vbscript:",
         ]
+=======
+    def __init__(self) -> None:
+        self.dangerous_patterns = get_security_validator().dangerous_patterns
+>>>>>>> desloppify/code-health
 
     def sanitize_prompt(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Sanitize LLM prompt for security.
@@ -67,19 +77,10 @@ class InputSanitizer:
         if not isinstance(prompt, str):
             raise SecurityError("Prompt must be a string")
 
-        # Remove null bytes and other control characters
         prompt = self._remove_control_characters(prompt)
-
-        # Check for dangerous patterns
         self._check_dangerous_patterns(prompt)
-
-        # Sanitize HTML entities
         prompt = self._escape_html_entities(prompt)
-
-        # Remove excessive whitespace
         prompt = self._normalize_whitespace(prompt)
-
-        # Limit prompt length
         prompt = self._limit_length(prompt)
 
         logger.debug(f"Sanitized prompt: {len(prompt)} characters")
@@ -87,28 +88,33 @@ class InputSanitizer:
 
     def validate_file_input(
         self, file_path: Path, allowed_extensions: list[str] | None = None
+<<<<<<< HEAD
     ) -> bool:
+=======
+    ) -> None:
+>>>>>>> desloppify/code-health
         """Validate file input for security.
 
         Args:
             file_path: Path to file
             allowed_extensions: List of allowed file extensions
 
-        Returns:
-            True if file is safe to process
-
         Raises:
             SecurityError: If file input is unsafe
         """
-        # Check if path is absolute (potential directory traversal)
+        # LLM-provided paths must be relative: absolute paths from untrusted input
+        # risk referencing arbitrary system locations (e.g. /etc/passwd).
+        # Note: SecurityValidator.validate_file_path() allows absolute paths because
+        # it validates infrastructure-owned paths (output dirs, config files) which
+        # are trusted and always absolute. These are different threat models.
         if file_path.is_absolute():
-            raise SecurityError("Absolute paths not allowed")
+            raise SecurityError("Absolute paths not allowed in LLM input")
 
         # Resolve path to prevent traversal attacks
         try:
             resolved = file_path.resolve()
-        except (OSError, RuntimeError):
-            raise SecurityError("Invalid file path")
+        except (OSError, RuntimeError) as e:
+            raise SecurityError("Invalid file path") from e
 
         # Check for directory traversal attempts
         if ".." in str(file_path) or not resolved.exists():
@@ -121,10 +127,10 @@ class InputSanitizer:
 
         # Check file size (prevent DoS)
         max_size = 50 * 1024 * 1024  # 50MB limit
-        if resolved.stat().st_size > max_size:
-            raise SecurityError(f"File too large: {resolved.stat().st_size} bytes")
+        file_stat = resolved.stat()
+        if file_stat.st_size > max_size:
+            raise SecurityError(f"File too large: {file_stat.st_size} bytes")
 
-        return True
 
     def sanitize_filename(self, filename: str) -> str:
         """Sanitize filename for safe file operations.
@@ -138,46 +144,39 @@ class InputSanitizer:
         if not filename or not isinstance(filename, str):
             raise SecurityError("Invalid filename")
 
-        # Remove path separators
         filename = re.sub(r"[\/\\]", "_", filename)
-
-        # Remove dangerous characters
         filename = re.sub(r'[<>:"|?*]', "_", filename)
-
-        # Remove control characters
         filename = re.sub(r"[\x00-\x1f\x7f-\x9f]", "", filename)
-
-        # Limit length
         filename = filename[:255]
 
-        # Ensure not empty after sanitization
         if not filename.strip():
             filename = "unnamed_file"
 
         return filename
 
     def _remove_control_characters(self, text: str) -> str:
-        """Remove control characters from text."""
-        # Remove null bytes and other dangerous control characters
-        # Keep newlines, tabs, and spaces
+        """Remove control characters from text, preserving newlines, tabs, and spaces."""
         return re.sub(r"[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f-\x9f]", "", text)
 
     def _check_dangerous_patterns(self, text: str) -> None:
         """Check for dangerous patterns in text."""
         for pattern in self.dangerous_patterns:
-            if re.search(pattern, text, re.IGNORECASE):
+            if re.search(pattern, text):  # patterns use inline (?i) flags; re.IGNORECASE is redundant
                 logger.warning(f"Dangerous pattern detected: {pattern}")
                 raise SecurityError("Dangerous content detected in input")
 
     def _escape_html_entities(self, text: str) -> str:
-        """Escape HTML entities for safety."""
+        """Escape HTML entities in LLM-bound prompts.
+
+        Intentional security measure: escaping angle brackets and quotes prevents
+        prompt injection via HTML/XML fragments in research text. LLM backends
+        receive the escaped form; callers should not unescape the result.
+        """
         return html.escape(text, quote=True)
 
     def _normalize_whitespace(self, text: str) -> str:
         """Normalize excessive whitespace."""
-        # Replace multiple spaces with single space
         text = re.sub(r" +", " ", text)
-        # Replace multiple newlines with double newline
         text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
         return text.strip()
 
@@ -188,6 +187,7 @@ class InputSanitizer:
             return text[:max_length] + "...[truncated]"
         return text
 
+<<<<<<< HEAD
 
 class SecurityError(LLMError):
     """Exception raised for security violations in LLM operations."""
@@ -199,12 +199,12 @@ class SecurityError(LLMError):
 _input_sanitizer: InputSanitizer | None = None
 
 
+=======
+@functools.lru_cache(maxsize=1)
+>>>>>>> desloppify/code-health
 def get_input_sanitizer() -> InputSanitizer:
-    """Get the global input sanitizer instance."""
-    global _input_sanitizer
-    if _input_sanitizer is None:
-        _input_sanitizer = InputSanitizer()
-    return _input_sanitizer
+    """Get the global input sanitizer instance (lazily initialized)."""
+    return InputSanitizer()
 
 
 def sanitize_llm_input(prompt: str) -> str:

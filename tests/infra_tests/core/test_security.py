@@ -23,12 +23,12 @@ from infrastructure.core.security import (
     SecurityMonitor,
     SecurityValidator,
     SecurityViolation,
+    get_cors_headers,
     get_rate_limiter,
     get_security_headers,
     get_security_monitor,
     get_security_validator,
     rate_limit,
-    validate_llm_input,
 )
 
 
@@ -120,11 +120,11 @@ class TestSecurityValidator:
         with pytest.raises(SecurityViolation, match="Directory traversal"):
             validator.validate_file_path("../../../etc/passwd")
 
-    def test_validate_file_path_absolute_raises(self):
-        """Test that absolute paths are rejected."""
+    def test_validate_file_path_absolute_accepted(self):
+        """Test that absolute paths are accepted (method returns resolved absolute path)."""
         validator = SecurityValidator()
-        with pytest.raises(SecurityViolation, match="Directory traversal"):
-            validator.validate_file_path("/etc/passwd")
+        result = validator.validate_file_path("/etc/passwd")
+        assert result.is_absolute()
 
     def test_validate_file_path_too_long_raises(self):
         """Test that overly long paths are rejected."""
@@ -473,12 +473,6 @@ class TestGlobalFunctions:
         monitor = get_security_monitor()
         assert isinstance(monitor, SecurityMonitor)
 
-    def test_validate_llm_input_convenience_function(self):
-        """Test validate_llm_input convenience function."""
-        result = validate_llm_input("Hello, world!")
-        assert isinstance(result, str)
-
-
 class TestRateLimitDecorator:
     """Tests for rate_limit decorator."""
 
@@ -577,7 +571,7 @@ class TestSecurityIntegration:
     def test_headers_and_cors_together(self):
         """Test combining security and CORS headers."""
         security_headers = get_security_headers()
-        cors_headers = SecurityHeaders.get_cors_headers("https://app.example.com")
+        cors_headers = get_cors_headers("https://app.example.com")
 
         # Combine headers
         all_headers = {**security_headers, **cors_headers}

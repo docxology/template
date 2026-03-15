@@ -109,7 +109,7 @@ Begin your executive summary now:"""
                     max_tokens=max_tokens,
                     **kwargs,
                 )
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 — prompt composer fallback; any failure falls through to built-in impl
                 logger.debug(f"Failed to use prompt composer, falling back: {e}")
 
         # Fallback implementation
@@ -591,6 +591,9 @@ Begin with the English abstract, then provide the translation:"""
         **kwargs: Any,
     ) -> str:
         """Render template with enhanced constraints.
+
+        Note: This signature has 4 positional params (vs. 3 in sibling classes) because
+        translation requires a target_language that other review templates do not need.
 
         Args:
             text: Manuscript text (required)

@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, TypedDict
 
-from infrastructure.core.config_loader import get_testing_config
+from infrastructure.core.config_queries import get_testing_config
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.project.discovery import discover_projects
 
@@ -57,9 +57,9 @@ def load_test_results(
                 data = json.load(f)
                 # Extract project results from the nested structure
                 if "project" in data:
-                    return data["project"]  # type: ignore
+                    return data["project"]
                 else:
-                    return data  # type: ignore
+                    return data
         except (OSError, json.JSONDecodeError, KeyError) as e:
             logger.warning(f"Could not load results from {results_file}: {e}")
             return {}
@@ -130,8 +130,12 @@ def load_infrastructure_results(repo_root: Path | None = None) -> InfraResults:
     logger.warning("No infrastructure test results found")
     return base
 
+<<<<<<< HEAD
 
 def discover_active_projects(repo_root: Path | None = None) -> list:
+=======
+def discover_active_projects(repo_root: Path | None = None) -> list[str]:
+>>>>>>> desloppify/code-health
     """Discover active projects from the projects/ directory."""
     root = repo_root or Path.cwd()
     return sorted(p.name for p in discover_projects(root))

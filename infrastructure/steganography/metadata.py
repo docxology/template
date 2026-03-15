@@ -40,12 +40,16 @@ def inject_pdf_metadata(
         Path to the output PDF.
     """
     try:
+<<<<<<< HEAD
         from pypdf import PdfReader, PdfWriter
+=======
+        from pypdf import PdfReader, PdfWriter  # type: ignore[import-untyped]
+>>>>>>> desloppify/code-health
     except ImportError:
         raise ImportError(
             "The 'pypdf' package is required for PDF metadata injection. "
             "Install it with: pip install pypdf"
-        )
+        ) from None
 
     reader = PdfReader(str(input_pdf))
     writer = PdfWriter()
@@ -70,7 +74,7 @@ def inject_pdf_metadata(
             xmp_bytes = xmp_string.encode("utf-8")
             writer.xmp_metadata = xmp_bytes
             logger.debug(f"XMP metadata stream embedded ({len(xmp_bytes)} bytes)")
-        except Exception as xmp_err:
+        except Exception as xmp_err:  # noqa: BLE001 — pypdf exceptions vary by PDF structure
             logger.warning(f"XMP embedding failed (non-fatal): {xmp_err}")
 
     # Embed file attachments if provided
@@ -79,7 +83,7 @@ def inject_pdf_metadata(
             try:
                 writer.add_attachment(filename, content)
                 logger.debug(f"Attachment embedded: {filename} ({len(content)} bytes)")
-            except Exception as att_err:
+            except Exception as att_err:  # noqa: BLE001 — pypdf exceptions vary by PDF structure
                 logger.warning(f"Attachment '{filename}' failed (non-fatal): {att_err}")
 
     with open(output_pdf, "wb") as fh:

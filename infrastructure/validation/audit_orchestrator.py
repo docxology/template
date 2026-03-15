@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Audit orchestrator that coordinates all validation modules for filepath and reference auditing.
 
 This module provides a unified interface for running audits across all validation modules,
@@ -13,17 +12,21 @@ from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.check_links import (
-    extract_headings,
     validate_directory_structures,
     validate_file_paths_in_code,
     validate_placeholder_consistency,
     validate_python_imports,
 )
+<<<<<<< HEAD
 from infrastructure.validation.doc_accuracy import check_links
 from infrastructure.validation.doc_discovery import (
     categorize_documentation,
     discover_markdown_files,
 )
+=======
+from infrastructure.validation.doc_accuracy import check_links, extract_headings
+from infrastructure.validation.doc_discovery import categorize_documentation, discover_markdown_files
+>>>>>>> desloppify/code-health
 from infrastructure.validation.doc_models import (
     DocumentationFile,
     LinkIssue,
@@ -65,7 +68,7 @@ def run_comprehensive_audit(
         try:
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Error reading {md_file}: {e}")
 
     # Phase 3: Run all validations
@@ -100,7 +103,7 @@ def run_comprehensive_audit(
                 relative_path=str(md_file.relative_to(repo_root)),
                 directory=str(md_file.parent.relative_to(repo_root)),
                 name=md_file.name,
-                category=doc_categories.get(str(md_file.relative_to(repo_root)), ""),  # type: ignore
+                category=doc_categories.get(str(md_file.relative_to(repo_root)), ""),
                 word_count=len(content.split()),
                 line_count=len(content.splitlines()),
                 has_links="[" in content and "]" in content,
@@ -108,7 +111,7 @@ def run_comprehensive_audit(
             )
             scan_results.documentation_files.append(doc_file)
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError, ValueError) as e:
             logger.error(f"Error processing {md_file}: {e}")
             scan_results.quality_issues.append(
                 QualityIssue(
@@ -121,10 +124,10 @@ def run_comprehensive_audit(
             )
 
     # Phase 4: Calculate statistics
-    scan_results.scan_duration = time.time() - start_time  # type: ignore
+    scan_results.scan_duration = time.time() - start_time
     _calculate_statistics(scan_results)
 
-    logger.info(f"✅ Audit completed in {scan_results.scan_duration:.2f}s")  # type: ignore
+    logger.info(f"✅ Audit completed in {scan_results.scan_duration:.2f}s")
     logger.info(
         f"📊 Found {len(scan_results.link_issues) + len(scan_results.accuracy_issues) + len(scan_results.quality_issues)} total issues"  # noqa: E501
     )
@@ -145,7 +148,7 @@ def _validate_single_file(
     """Validate a single markdown file using all available validation modules."""
 
     file_key = str(md_file.relative_to(repo_root))
-    results = {"link_issues": [], "accuracy_issues": [], "quality_issues": []}  # type: ignore
+    results = {"link_issues": [], "accuracy_issues": [], "quality_issues": []}
 
     # Link validation using doc_accuracy
     try:
@@ -162,7 +165,7 @@ def _validate_single_file(
                     severity=issue.severity,
                 )
             )
-    except Exception as e:
+    except (OSError, UnicodeDecodeError, ValueError) as e:
         logger.warning(f"Link validation failed for {md_file}: {e}")
 
     quality_validators = [
@@ -198,17 +201,17 @@ def _validate_single_file(
     for flag, validator_fn, issue_type, severity, default_msg in quality_validators:
         if flag:
             try:
-                for issue in validator_fn(content, md_file, repo_root):  # type: ignore
+                for issue in validator_fn(content, md_file, repo_root):
                     results["quality_issues"].append(
                         QualityIssue(
                             file=file_key,
-                            line=issue.get("line", 0),  # type: ignore
+                            line=issue.get("line", 0),
                             issue_type=issue_type,
-                            issue_message=issue.get("issue", default_msg),  # type: ignore
+                            issue_message=issue.get("issue", default_msg),
                             severity=severity,
                         )
                     )
-            except Exception as e:
+            except (OSError, UnicodeDecodeError, ValueError) as e:
                 logger.warning(f"{issue_type} validation failed for {md_file}: {e}")
 
     return results
@@ -216,7 +219,7 @@ def _validate_single_file(
 
 def _calculate_statistics(scan_results: ScanResults) -> None:
     """Calculate statistics for the scan results."""
-    scan_results.scanned_files = len(scan_results.documentation_files)  # type: ignore
+    scan_results.scanned_files = len(scan_results.documentation_files)
 
     # Calculate statistics by issue type
     stats = {
@@ -238,9 +241,9 @@ def generate_audit_report(
     # Collect all issues
     all_issues = []
     all_issues.extend(scan_results.link_issues)
-    all_issues.extend(scan_results.accuracy_issues)  # type: ignore
-    all_issues.extend(scan_results.quality_issues)  # type: ignore
-    all_issues.extend(scan_results.completeness_gaps)  # type: ignore
+    all_issues.extend(scan_results.accuracy_issues)
+    all_issues.extend(scan_results.quality_issues)
+    all_issues.extend(scan_results.completeness_gaps)
 
     # Filter false positives and categorize by severity flag
     red_flags = []
@@ -257,7 +260,7 @@ def generate_audit_report(
             green_flags.append(issue)
 
     # Generate summary statistics
-    summary = generate_issue_summary(all_issues)  # type: ignore
+    summary = generate_issue_summary(all_issues)
 
     if output_format == "json":
         import json
@@ -265,8 +268,8 @@ def generate_audit_report(
         return json.dumps(
             {
                 "scan_date": scan_results.scan_date,
-                "total_files": scan_results.scanned_files,  # type: ignore
-                "scan_duration": scan_results.scan_duration,  # type: ignore
+                "total_files": scan_results.scanned_files,
+                "scan_duration": scan_results.scan_duration,
                 "statistics": scan_results.statistics,
                 "severity_flags": {
                     "red": len(red_flags),
@@ -287,8 +290,8 @@ def generate_audit_report(
         "# 📊 Comprehensive Filepath and Reference Audit Report",
         "",
         f"**Generated:** {scan_results.scan_date}",
-        f"**Files Scanned:** {scan_results.scanned_files}",  # type: ignore
-        f"**Scan Duration:** {scan_results.scan_duration:.2f} seconds",  # type: ignore
+        f"**Files Scanned:** {scan_results.scanned_files}",
+        f"**Scan Duration:** {scan_results.scan_duration:.2f} seconds",
         "",
         "## 📈 Executive Summary",
         "",
@@ -339,7 +342,7 @@ def generate_audit_report(
 
     # Show red flags first (critical issues)
     if red_flags:
-        prioritized_red = prioritize_issues(red_flags)  # type: ignore
+        prioritized_red = prioritize_issues(red_flags)
         report_lines.extend(
             [
                 "## 🔴 Red Flags (Critical Issues)",
@@ -348,7 +351,7 @@ def generate_audit_report(
                 "",
             ]
         )
-        for issue in prioritized_red[:20]:  # type: ignore[assignment]
+        for issue in prioritized_red[:20]:
             issue_type = getattr(issue, "issue_type", "unknown")
             target = getattr(issue, "target", "N/A")
             report_lines.extend(
@@ -366,7 +369,7 @@ def generate_audit_report(
 
     # Show yellow flags second (warnings)
     if yellow_flags:
-        prioritized_yellow = prioritize_issues(yellow_flags)  # type: ignore
+        prioritized_yellow = prioritize_issues(yellow_flags)
         report_lines.extend(
             [
                 "## 🟡 Yellow Flags (Warnings)",
@@ -374,7 +377,7 @@ def generate_audit_report(
                 f"**{len(yellow_flags)} warnings** that should be reviewed:",
             ]
         )
-        for issue in prioritized_yellow[:15]:  # type: ignore[assignment]
+        for issue in prioritized_yellow[:15]:
             issue_type = getattr(issue, "issue_type", "unknown")
             target = getattr(issue, "target", "N/A")
             report_lines.extend(

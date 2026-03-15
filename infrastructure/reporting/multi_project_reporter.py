@@ -159,7 +159,13 @@ def generate_multi_project_summary_report(
 
     json_file = output_dir / "multi_project_summary.json"
     try:
-        json_file.write_text(json.dumps(summary, indent=2))
+        _tmp = json_file.with_suffix(json_file.suffix + ".tmp")
+        try:
+            _tmp.write_text(json.dumps(summary, indent=2))
+            _tmp.replace(json_file)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         saved_files["json"] = json_file
         logger.info(f"Multi-project summary saved: {json_file}")
     except OSError as e:
@@ -168,7 +174,13 @@ def generate_multi_project_summary_report(
 
     md_file = output_dir / "multi_project_summary.md"
     try:
-        md_file.write_text(_format_multi_project_summary_markdown(summary))
+        _tmp = md_file.with_suffix(md_file.suffix + ".tmp")
+        try:
+            _tmp.write_text(_format_multi_project_summary_markdown(summary))
+            _tmp.replace(md_file)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
         saved_files["markdown"] = md_file
         logger.info(f"Multi-project summary saved: {md_file}")
     except OSError as e:

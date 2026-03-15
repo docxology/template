@@ -12,9 +12,7 @@ import logging
 import os
 import subprocess
 import time
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Callable, NamedTuple
+from typing import Callable
 
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.environment import get_python_command, get_subprocess_env
@@ -31,10 +29,16 @@ from infrastructure.core.errors import (
     STAGE_EXCEPTION,
     STAGE_FAILED,
 )
-from infrastructure.core.file_operations import clean_output_directories
+from infrastructure.core.file_cleanup import clean_output_directories
+from infrastructure.core.pipeline_types import (
+    PipelineConfig,
+    PipelineStageResult,
+    StageSpec,
+)
 
 logger = get_logger(__name__)
 
+<<<<<<< HEAD
 
 @dataclass
 class PipelineConfig:
@@ -104,6 +108,8 @@ class StageSpec(NamedTuple):
 
     name: str
     func: Callable[[], bool]
+=======
+>>>>>>> desloppify/code-health
 
 
 class PipelineExecutor:
@@ -146,7 +152,7 @@ class PipelineExecutor:
         if self._log_handler is not None:
             try:
                 self._log_handler.close()
-            except Exception as e:
+            except OSError as e:
                 logger.debug(f"Failed to close log handler: {e}")
 
         self._log_handler = setup_root_log_file_handler(self.log_file)
@@ -160,7 +166,7 @@ class PipelineExecutor:
         stages.append(StageSpec("Environment Setup", self._run_setup_environment))
         if not self.config.skip_infra:
             stages.append(StageSpec("Infrastructure Tests", self.run_infrastructure_tests))
-        stages.append(StageSpec("Project Tests", self._run_project_tests))
+        stages.append(StageSpec("Project Tests", self.run_project_tests))
         stages.append(StageSpec("Project Analysis", self._run_analysis))
         stages.append(StageSpec("PDF Rendering", self._run_pdf_rendering))
         stages.append(StageSpec("Output Validation", self._run_validation))
@@ -335,7 +341,9 @@ class PipelineExecutor:
                 )
             )
 
-        # Identify remaining stages by matching stage names against checkpoint stage_results in-order  # noqa: E501
+        # Identify remaining stages by matching stage names against checkpoint stage_results in-order.
+        # Sequential pointer (not set) because order must be preserved: a stage is only "done" if
+        # it was the NEXT expected stage in sequence, preventing false-matches on duplicate names.
         completed_names = [sr.name for sr in checkpoint.stage_results]
         completed_idx = 0
         remaining: list[StageSpec] = []
@@ -419,32 +427,27 @@ class PipelineExecutor:
         return True
 
     def _run_setup_environment(self) -> bool:
-        """Run environment setup."""
         return self._run_script("00_setup_environment.py", "--project", self.config.project_name)
 
     def run_infrastructure_tests(self) -> bool:
-        """Run infrastructure tests (public API used by multi-project orchestrator)."""
+        """Public API used by multi-project orchestrator."""
         # Provide a project name for report output location; infra tests themselves should not depend on project src.  # noqa: E501
         return self._run_script(
             "01_run_tests.py", "--infra-only", "--verbose", "--project", self.config.project_name
         )
 
-    def _run_project_tests(self) -> bool:
-        """Run project tests."""
+    def run_project_tests(self) -> bool:
         return self._run_script(
             "01_run_tests.py", "--project-only", "--verbose", "--project", self.config.project_name
         )
 
     def _run_analysis(self) -> bool:
-        """Run project analysis."""
         return self._run_script("02_run_analysis.py", "--project", self.config.project_name)
 
     def _run_pdf_rendering(self) -> bool:
-        """Run PDF rendering."""
         return self._run_script("03_render_pdf.py", "--project", self.config.project_name)
 
     def _run_validation(self) -> bool:
-        """Run output validation."""
         return self._run_script("04_validate_output.py", "--project", self.config.project_name)
 
     def _run_llm_review(self) -> bool:

@@ -53,7 +53,7 @@ By the end of this guide, you'll be able to:
          │ import
          ↓
 ┌─────────────────┐
-│  project/scripts/│  ← Thin orchestrators
+│  projects/{name}/scripts/│  ← Thin orchestrators
 │  my_figure.py   │  ← Visualization only
 └─────────────────┘
          │ generate
@@ -80,10 +80,10 @@ The template includes example scripts:
 
 ```bash
 # Generate basic example figure
-uv run python project/scripts/example_figure.py
+uv run python projects/code_project/scripts/example_figure.py
 
 # Generate research-quality figures
-uv run python scripts/generate_research_figures.py
+uv run python scripts/02_run_analysis.py --project code_project
 ```
 
 **What they demonstrate**:
@@ -105,16 +105,16 @@ matplotlib.use('Agg')  # Headless backend
 import matplotlib.pyplot as plt
 
 # IMPORT from projects/{name}/src/ - never implement algorithms here
-from example import calculate_average, find_maximum, find_minimum
+from projects.code_project.src.example import calculate_average, find_maximum, find_minimum
 
 def main():
     # Sample data
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
     
     # USE projects/{name}/src/ methods for computation - NEVER implement here
-    avg = calculate_average(data)  # From projects/{name}/src/example.py
-    max_val = find_maximum(data)   # From project/src/example.py
-    min_val = find_minimum(data)   # From project/src/example.py
+    avg = calculate_average(data)  # From projects/code_projects/{name}/src/example.py
+    max_val = find_maximum(data)   # From projects/code_projects/{name}/src/example.py
+    min_val = find_minimum(data)   # From projects/code_projects/{name}/src/example.py
     
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -128,7 +128,7 @@ def main():
     ax.set_ylabel('Value')
     
     # Save output
-    output_dir = 'output/figures'
+    output_dir = 'projects/code_project/output/figures'
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, 'my_analysis.png')
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
@@ -143,7 +143,7 @@ if __name__ == '__main__':
 
 **Key Points**:
 
-1. ✅ **Import** from `project/src/` - line 8
+1. ✅ **Import** from `projects/{name}/src/` - line 8
 2. ✅ **Use** tested methods - lines 14-16
 3. ✅ **Handle** visualization only - lines 18-28
 4. ✅ **Save** to output directory - lines 30-34
@@ -157,12 +157,12 @@ if __name__ == '__main__':
 - What computations are needed?
 - What type of plot (line, scatter, bar, etc.)?
 
-**Step 2: Ensure business logic exists in `project/src/`**
+**Step 2: Ensure business logic exists in `projects/{name}/src/`**
 
-If computation logic doesn't exist, add it to `project/src/` first:
+If computation logic doesn't exist, add it to `projects/{name}/src/` first:
 
 ```python
-# project/src/statistics.py
+# projects/code_projects/{name}/src/statistics.py
 def calculate_variance(values):
     """Calculate sample variance."""
     mean = sum(values) / len(values)
@@ -176,8 +176,8 @@ def calculate_std_dev(values):
 **Step 3: Create tests (coverage required)**
 
 ```python
-# tests/test_statistics.py
-from statistics import calculate_variance, calculate_std_dev
+# projects/code_project/tests/test_statistics.py
+from projects.code_project.src.statistics import calculate_variance, calculate_std_dev
 
 def test_calculate_variance():
     values = [1, 2, 3, 4, 5]
@@ -193,13 +193,13 @@ def test_calculate_std_dev():
 **Step 4: Run tests**
 
 ```bash
-pytest tests/test_statistics.py --cov=src.statistics --cov-report=term-missing
+uv run pytest projects/code_project/tests/test_statistics.py --cov=projects.code_project.src.statistics --cov-report=term-missing
 ```
 
 **Step 5: Create thin orchestrator script**
 
 ```python
-# scripts/statistics_figure.py
+# projects/code_project/scripts/statistics_figure.py
 #!/usr/bin/env python3
 import os
 import matplotlib
@@ -207,7 +207,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from statistics import calculate_std_dev  # Import from src/
+from projects.code_project.src.statistics import calculate_std_dev  # Import from src/
 
 def main():
     # Generate sample data
@@ -226,7 +226,7 @@ def main():
     ax.set_title('Distribution with Standard Deviation')
     
     # Save
-    output_path = 'output/figures/statistics_figure.png'
+    output_path = 'projects/code_project/output/figures/statistics_figure.png'
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
@@ -241,7 +241,7 @@ if __name__ == '__main__':
 **Step 6: Run script**
 
 ```bash
-uv run python scripts/statistics_figure.py
+uv run python projects/code_project/scripts/statistics_figure.py
 ```
 
 **Step 7: Add to manuscript**
@@ -305,7 +305,7 @@ When adding new analysis capabilities:
 
 1. **Design the API** - What functions do you need?
 2. **Write tests first** (TDD) - Define expected behavior
-3. **Implement in `project/src/`** - Write the business logic
+3. **Implement in `projects/{name}/src/`** - Write the business logic
 4. **Achieve required coverage** - Test all critical code paths (90% project, 60% infra)
 5. **Use in scripts** - Create thin orchestrators
 
@@ -323,9 +323,9 @@ When adding new analysis capabilities:
 **Step 2: Write tests first**
 
 ```python
-# tests/test_correlation.py
+# projects/code_project/tests/test_correlation.py
 import pytest
-from correlation import calculate_correlation, calculate_r_squared, linear_regression
+from projects.code_project.src.correlation import calculate_correlation, calculate_r_squared, linear_regression
 
 def test_calculate_correlation_perfect():
     """Test positive correlation."""
@@ -357,10 +357,10 @@ def test_linear_regression():
     assert abs(intercept - 0.0) < 1e-10
 ```
 
-**Step 3: Implement in `project/src/`**
+**Step 3: Implement in `projects/{name}/src/`**
 
 ```python
-# project/src/correlation.py
+# projects/code_projects/{name}/src/correlation.py
 """Correlation and regression analysis functions."""
 
 def calculate_correlation(x: list[float], y: list[float]) -> float:
@@ -422,7 +422,7 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float]:
 **Step 4: Run tests**
 
 ```bash
-pytest tests/test_correlation.py --cov=src.correlation --cov-report=term-missing
+uv run pytest projects/code_project/tests/test_correlation.py --cov=projects.code_project.src.correlation --cov-report=term-missing
 ```
 
 Ensure coverage requirements are met before proceeding.
@@ -430,7 +430,7 @@ Ensure coverage requirements are met before proceeding.
 **Step 5: Use in scripts**
 
 ```python
-# scripts/correlation_analysis.py
+# projects/code_project/scripts/correlation_analysis.py
 #!/usr/bin/env python3
 import os
 import matplotlib
@@ -438,7 +438,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from correlation import calculate_correlation, linear_regression  # From project/src/
+from projects.code_project.src.correlation import calculate_correlation, linear_regression  # From projects/{name}/src/
 
 def main():
     # Generate sample data
@@ -446,7 +446,7 @@ def main():
     x = np.linspace(0, 10, 50)
     y = 2 * x + 1 + np.random.normal(0, 1, 50)
     
-    # Use project/src/ methods for computation
+    # Use projects/{name}/src/ methods for computation
     corr = calculate_correlation(x.tolist(), y.tolist())
     slope, intercept = linear_regression(x.tolist(), y.tolist())
     
@@ -461,7 +461,7 @@ def main():
     ax.grid(True, alpha=0.3)
     
     # Save
-    output_path = 'output/figures/correlation_analysis.png'
+    output_path = 'projects/code_project/output/figures/correlation_analysis.png'
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
@@ -482,18 +482,18 @@ import numpy as np
 import csv
 
 # Save as NPZ (NumPy compressed)
-np.savez('output/data/analysis_data.npz', 
+np.savez('projects/code_project/output/data/analysis_data.npz', 
          x=x, y=y, correlation=corr)
 
 # Save as CSV (portable)
-with open('output/data/analysis_data.csv', 'w', newline='') as f:
+with open('projects/code_project/output/data/analysis_data.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(['x', 'y'])
     writer.writerows(zip(x, y))
 
 # Print both paths
-print('output/data/analysis_data.npz')
-print('output/data/analysis_data.csv')
+print('projects/code_project/output/data/analysis_data.npz')
+print('projects/code_project/output/data/analysis_data.csv')
 ```
 
 ---
@@ -542,7 +542,7 @@ output/
 │   ├── 01_abstract.pdf
 │   ├── 02_introduction.pdf
 │   ├── ...
-│   └── project_combined.pdf
+│   └── code_project_combined.pdf
 │
 └── tex/              # LaTeX source files
     ├── 01_abstract.tex
@@ -557,22 +557,22 @@ output/
 
 ```bash
 # 1. Edit source code
-vim project/src/my_module.py
+vim projects/code_projects/{name}/src/my_module.py
 
 # 2. Write tests
-vim projects/{name}/tests/test_my_module.py
+vim projects/code_project/tests/test_my_module.py
 
 # 3. Run tests
-pytest tests/test_my_module.py --cov=src.my_module
+uv run pytest projects/code_project/tests/test_my_module.py --cov=projects.code_project.src.my_module
 
 # 4. Create/update script
-vim scripts/my_figure.py
+vim projects/code_project/scripts/my_figure.py
 
 # 5. Run build
 uv run python scripts/execute_pipeline.py --core-only
 
 # 6. View result (top-level output after stage 5)
-open output/project_combined.pdf
+open output/code_project/pdf/code_project_combined.pdf
 ```
 
 **Advanced workflow with validation**:
@@ -604,12 +604,12 @@ echo "Running custom build pipeline..."
 
 # 1. Run specific tests
 echo "Testing analysis module..."
-pytest tests/test_correlation.py --cov=src.correlation
+uv run pytest projects/code_project/tests/test_correlation.py --cov=projects.code_project.src.correlation
 
 # 2. Generate specific figures
 echo "Generating figures..."
-uv run python scripts/correlation_analysis.py
-uv run python scripts/statistics_figure.py
+uv run python projects/code_project/scripts/correlation_analysis.py
+uv run python projects/code_project/scripts/statistics_figure.py
 
 # 3. Build specific sections
 echo "Building results section..."
@@ -697,7 +697,7 @@ with Pool() as pool:
 
 | Mistake | Problem | Solution |
 |---------|---------|----------|
-| **Implementing logic in scripts** | Not testable, duplicated code | Move to `project/src/`, test thoroughly |
+| **Implementing logic in scripts** | Not testable, duplicated code | Move to `projects/{name}/src/`, test thoroughly |
 | **Not testing edge cases** | Fails on data | Test empty lists, single values, etc. |
 | **Hardcoded paths** | Breaks on other systems | Use `os.path.join()`, relative paths |
 | **Not using seeds** | Non-reproducible results | Set `np.random.seed(42)` |
@@ -705,8 +705,8 @@ with Pool() as pool:
 
 ### Best Practices
 
-1. ✅ **Always import from `project/src/`** - Never implement algorithms in scripts
-2. ✅ **Test before scripting** - Ensure `project/src/` code works first
+1. ✅ **Always import from `projects/{name}/src/`** - Never implement algorithms in scripts
+2. ✅ **Test before scripting** - Ensure `projects/{name}/src/` code works first
 3. ✅ **Use descriptive names** - `calculate_correlation` not `calc_corr`
 4. ✅ **Add docstrings** - Document parameters and return values
 5. ✅ **Set random seeds** - Make results reproducible
@@ -749,7 +749,7 @@ with Pool() as pool:
 After completing this guide, you should be able to:
 
 - [x] Generate custom figures using thin orchestrator pattern
-- [x] Add new analysis modules to `project/src/` with tests
+- [x] Add new analysis modules to `projects/{name}/src/` with tests
 - [x] Achieve required test coverage for new code
 - [x] Save both figures and data files
 - [x] Run automated build pipelines

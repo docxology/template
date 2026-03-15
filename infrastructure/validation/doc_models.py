@@ -5,11 +5,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+<<<<<<< HEAD
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
 
+=======
+>>>>>>> desloppify/code-health
 @dataclass
 class DocumentationFile:
     """Represents a documentation file with metadata."""
@@ -51,6 +54,17 @@ class AccuracyIssue:
 
 
 @dataclass
+class ScanAccuracyIssue:
+    """Accuracy issue found during repository-wide scanning (repo_scanner)."""
+
+    category: str
+    severity: str
+    file: str
+    line: int = 0
+    message: str = ""
+    details: str = ""
+
+@dataclass
 class CompletenessGap:
     """Represents a documentation completeness gap."""
 
@@ -84,3 +98,5 @@ class ScanResults:
     quality_issues: list[QualityIssue] = field(default_factory=list)
     improvements_made: list[dict[str, Any]] = field(default_factory=list)
     statistics: dict[str, Any] = field(default_factory=dict)
+    scanned_files: int = 0
+    scan_duration: float = 0.0

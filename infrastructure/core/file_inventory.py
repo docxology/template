@@ -76,18 +76,17 @@ class FileInventoryManager:
             if category_dir.exists() and category_dir.is_dir():
                 entries.extend(self._collect_files_in_directory(category_dir, category))
 
-        # Also check for root-level files (like project_combined.pdf)
-        root_files = ["project_combined.pdf"]
-        for filename in root_files:
-            file_path = output_dir / filename
-            if file_path.exists() and file_path.is_file():
+        # Also check for root-level combined PDFs (project-specific naming like
+        # code_project_combined.pdf or the legacy project_combined.pdf)
+        for file_path in output_dir.glob("*combined*.pdf"):
+            if file_path.is_file():
                 try:
                     stat = file_path.stat()
                     entries.append(
                         FileInventoryEntry(
                             path=file_path,
                             size=stat.st_size,
-                            category=self._guess_category_from_filename(filename),
+                            category=self._guess_category_from_filename(file_path.name),
                             modified=stat.st_mtime,
                         )
                     )

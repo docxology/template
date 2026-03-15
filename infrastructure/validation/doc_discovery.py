@@ -40,8 +40,11 @@ def discover_markdown_files(repo_root: Path) -> list[Path]:
             md_files.append(md_file)
     return sorted(md_files)
 
+<<<<<<< HEAD
 
 # Alias for backward compatibility with tests and other consumers
+=======
+>>>>>>> desloppify/code-health
 find_markdown_files = discover_markdown_files
 
 
@@ -109,7 +112,7 @@ def identify_cross_references(md_files: list[Path]) -> Set[str]:
                 target = match.group(2)
                 if not target.startswith("http") and not target.startswith("#"):
                     cross_refs.add(target)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.debug(f"Failed to scan cross-refs in {md_file}: {e}")
 
     return cross_refs
@@ -156,18 +159,18 @@ def categorize_documentation(md_files: list[Path], repo_root: Path) -> dict[str,
 def _get_project_category(rel_path: str, project_names: set[str]) -> str | None:
     """Determine if a file belongs to a specific project and return category."""
     # Check if path contains projects/{name}/
-    if rel_path.startswith("projects/"):
-        parts = rel_path.split("/")
-        if len(parts) >= 2 and parts[1] in project_names:
-            project_name = parts[1]
+    path_parts = Path(rel_path).parts
+    if path_parts and path_parts[0] == "projects":
+        if len(path_parts) >= 2 and path_parts[1] in project_names:
+            project_name = path_parts[1]
             # Determine sub-category within project
-            if "manuscript/" in rel_path:
+            if "manuscript" in path_parts:
                 return f"project_manuscript_{project_name}"
-            elif "scripts/" in rel_path:
+            elif "scripts" in path_parts:
                 return f"project_scripts_{project_name}"
-            elif "tests/" in rel_path:
+            elif "tests" in path_parts:
                 return f"project_tests_{project_name}"
-            elif "src/" in rel_path:
+            elif "src" in path_parts:
                 return f"project_src_{project_name}"
             else:
                 return f"project_{project_name}"
@@ -214,7 +217,7 @@ def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationF
             has_code_blocks=has_code_blocks,
             last_modified=mtime,
         )
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Error analyzing {md_file}: {e}")
         return DocumentationFile(
             path=str(md_file),
@@ -323,15 +326,15 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
             rel_path = str(md_file.relative_to(repo_root))
             if rel_path.startswith(project_prefix):
                 doc_info = analyze_documentation_file(md_file, repo_root)
-                project_docs[project.name]["documentation_files"].append(doc_info)  # type: ignore
+                project_docs[project.name]["documentation_files"].append(doc_info)
 
                 # Categorize within project
                 if "manuscript/" in rel_path:
-                    project_docs[project.name]["manuscript_files"].append(doc_info)  # type: ignore
+                    project_docs[project.name]["manuscript_files"].append(doc_info)
                 elif "scripts/" in rel_path:
-                    project_docs[project.name]["script_docs"].append(doc_info)  # type: ignore
+                    project_docs[project.name]["script_docs"].append(doc_info)
                 elif "tests/" in rel_path:
-                    project_docs[project.name]["test_docs"].append(doc_info)  # type: ignore
+                    project_docs[project.name]["test_docs"].append(doc_info)
 
         # Calculate statistics
         project_docs[project.name]["statistics"] = _calculate_project_stats(

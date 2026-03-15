@@ -2,10 +2,17 @@
 
 This module provides comprehensive security measures including input validation,
 security headers, rate limiting, and security monitoring.
+
+API style note:
+- SecurityValidator, RateLimiter, SecurityMonitor are stateful classes (hold config/state).
+- get_security_headers(), get_cors_headers() are module-level convenience functions
+  for stateless one-off checks. validate_llm_input() is deprecated; use
+  infrastructure.llm.core.sanitization.sanitize_llm_input() instead.
 """
 
 from __future__ import annotations
 
+import functools
 import re
 import threading
 import time
@@ -22,8 +29,12 @@ logger = get_logger(__name__)
 class SecurityValidator:
     """Comprehensive input validation and security checks."""
 
+<<<<<<< HEAD
     def __init__(self):
         """Initialize security validator with limits and dangerous patterns."""
+=======
+    def __init__(self) -> None:
+>>>>>>> desloppify/code-health
         # Maximum sizes for different input types
         self.limits = {
             "prompt_length": 100000,  # Max LLM prompt length
@@ -40,16 +51,20 @@ class SecurityValidator:
             r"(?i)system\s*prompt\s*[:=]",
             r"(?i)\bignore\s+previous\s+instructions\b",
             r"(?i)\boverride\s+system\s+prompt\b",
+            r"(?i)change\s+your\s+persona",
             # Python code execution — built-ins and subprocess (\b anchors to identifier boundary)
             r"(?i)\bexec\s*\(|\beval\s*\(|\bsubprocess\.\w|\bos\.system\s*\(",
             r"(?i)\bimport\s+os\b|\bimport\s+subprocess\b",
+            r"(?i)shell\s*[:=]|bash\s*[:=]|cmd\s*[:=]",
             # File system access — open/file builtins and path libraries
             r"(?i)\bopen\s*\(|\bfile\s*\(|\bpathlib\.\w|\bos\.path\.\w",
             r"(?i)\bread\s+file\b|\bwrite\s+file\b|\bdelete\s+file\b",
             # Network access — library prefixes (\b prevents partial matches like "urllib2")
             r"(?i)\brequests\.\w|\burllib\.\w|\bsocket\.\w|\bhttps?://",
+            r"(?i)connect\s+to|download\s+from|upload\s+to",
             # SQL injection — DML/DDL keywords (\b on both sides reduces false positives)
             r"(?i)\b(select|insert|update|delete|drop|create)\b\s+.*\bfrom\b",
+            r"(?i)union\s+select|information_schema",
             # XSS — HTML injection tags ([\s>/] prevents matching "<scripted" etc.)
             r"(?i)<script[\s>/]|<iframe[\s>/]|<object[\s>/]|<embed[\s>/]",
             r"(?i)\bon\w+\s*=|javascript:|vbscript:",
@@ -61,12 +76,9 @@ class SecurityValidator:
     def validate_llm_input(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Validate and sanitize LLM input.
 
-        Args:
-            prompt: Input prompt to validate
-            context: Additional validation context
-
-        Returns:
-            Sanitized prompt
+        Deprecated: use ``infrastructure.llm.core.sanitization.sanitize_llm_input`` instead.
+        That function calls ``InputSanitizer`` which delegates pattern detection to this class
+        and adds LLM-specific whitespace and length handling. Retained here for test compatibility.
 
         Raises:
             SecurityViolation: If input contains dangerous content
@@ -79,16 +91,12 @@ class SecurityValidator:
                 f"Prompt too long: {len(prompt)} > {self.limits['prompt_length']}"
             )
 
-        # Check for dangerous patterns
         for pattern in self.dangerous_patterns:
             if re.search(pattern, prompt, re.IGNORECASE):
                 logger.warning(f"Security pattern detected: {pattern}")
                 raise SecurityViolation("Input contains potentially dangerous content")
 
-        # Sanitize HTML entities
         prompt = self._sanitize_html(prompt)
-
-        # Normalize whitespace
         prompt = self._normalize_whitespace(prompt)
 
         return prompt
@@ -96,28 +104,19 @@ class SecurityValidator:
     def validate_file_path(self, path: Union[str, Path]) -> Path:
         """Validate file path for security.
 
-        Args:
-            path: File path to validate
-
-        Returns:
-            Validated Path object
-
         Raises:
             SecurityViolation: If path is unsafe
         """
         path_obj = Path(path)
 
-        # Check for directory traversal
-        if ".." in str(path) or path_obj.is_absolute():
+        if ".." in str(path):
             raise SecurityViolation("Directory traversal detected")
 
-        # Resolve path to check for symlinks
         try:
             resolved = path_obj.resolve()
-        except (OSError, RuntimeError):
-            raise SecurityViolation("Invalid path")
+        except (OSError, RuntimeError) as e:
+            raise SecurityViolation("Invalid path") from e
 
-        # Check path length
         if len(str(path)) > self.limits["path_length"]:
             raise SecurityViolation("Path too long")
 
@@ -141,13 +140,9 @@ class SecurityValidator:
         if len(filename) > self.limits["filename_length"]:
             raise SecurityViolation("Filename too long")
 
-        # Remove dangerous characters
         sanitized = re.sub(r'[<>:"|?*\x00-\x1f\x7f-\x9f]', "_", filename)
-
-        # Remove path separators
         sanitized = re.sub(r"[\/\\]", "_", sanitized)
 
-        # Ensure not empty after sanitization
         if not sanitized.strip():
             sanitized = "unnamed_file"
 
@@ -179,64 +174,54 @@ class SecurityValidator:
 
     def _normalize_whitespace(self, text: str) -> str:
         """Normalize excessive whitespace."""
-        # Replace multiple spaces with single space
         text = re.sub(r" +", " ", text)
-        # Replace multiple newlines with double newline
         text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
         return text.strip()
 
 
-class SecurityHeaders:
-    """Security headers for HTTP responses and requests."""
+def get_security_headers() -> dict[str, str]:
+    """Return comprehensive HTTP security headers."""
+    return {
+        # Prevent clickjacking
+        "X-Frame-Options": "DENY",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",  # noqa: E501
+        # Prevent MIME sniffing
+        "X-Content-Type-Options": "nosniff",
+        # Enable XSS protection
+        "X-XSS-Protection": "1; mode=block",
+        # Prevent referrer leakage
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        # HSTS (if HTTPS is enabled)
+        # 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        # Prevent caching of sensitive content
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+    }
 
-    @staticmethod
-    def get_security_headers() -> dict[str, str]:
-        """Get comprehensive security headers.
 
-        Returns:
-            Dictionary of security headers
-        """
-        return {
-            # Prevent clickjacking
-            "X-Frame-Options": "DENY",
-            "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'",  # noqa: E501
-            # Prevent MIME sniffing
-            "X-Content-Type-Options": "nosniff",
-            # Enable XSS protection
-            "X-XSS-Protection": "1; mode=block",
-            # Prevent referrer leakage
-            "Referrer-Policy": "strict-origin-when-cross-origin",
-            # HSTS (if HTTPS is enabled)
-            # 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-            # Prevent caching of sensitive content
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache",
-            "Expires": "0",
-        }
+def get_cors_headers(origin: str | None = None) -> dict[str, str]:
+    """Get CORS headers for cross-origin requests.
 
-    @staticmethod
-    def get_cors_headers(origin: str | None = None) -> dict[str, str]:
-        """Get CORS headers for cross-origin requests.
+    Args:
+        origin: Allowed origin (None for deny all)
 
-        Args:
-            origin: Allowed origin (None for deny all)
+    Returns:
+        Dictionary of CORS headers
+    """
+    headers = {
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Max-Age": "86400",  # 24 hours
+    }
 
-        Returns:
-            Dictionary of CORS headers
-        """
-        headers = {
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            "Access-Control-Max-Age": "86400",  # 24 hours
-        }
+    if origin:
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
+    else:
+        headers["Access-Control-Allow-Origin"] = "null"
 
-        if origin:
-            headers["Access-Control-Allow-Origin"] = origin
-            headers["Access-Control-Allow-Credentials"] = "true"
-        else:
-            headers["Access-Control-Allow-Origin"] = "null"
-
-        return headers
+    return headers
 
 
 class RateLimiter:
@@ -245,8 +230,12 @@ class RateLimiter:
     Thread-safe: all mutations to the requests dict are guarded by a Lock.
     """
 
+<<<<<<< HEAD
     def __init__(self, max_requests: int = 100, window_seconds: int = 60):
         """Initialize rate limiter."""
+=======
+    def __init__(self, max_requests: int = 100, window_seconds: int = 60) -> None:
+>>>>>>> desloppify/code-health
         self.max_requests = max_requests
         self.window_seconds = window_seconds
         self.requests: dict[str, list[float]] = {}
@@ -274,6 +263,7 @@ class RateLimiter:
                 self.requests[key].append(now)
                 return True
 
+        # Intentionally outside the lock — reached only when request count is at the limit
         return False
 
     def get_remaining_requests(self, key: str) -> int:
@@ -299,8 +289,12 @@ class RateLimiter:
 class SecurityMonitor:
     """Monitor security events and anomalies."""
 
+<<<<<<< HEAD
     def __init__(self):
         """Initialize security monitor."""
+=======
+    def __init__(self) -> None:
+>>>>>>> desloppify/code-health
         self.events: list[dict[str, Any]] = []
         self.max_events = 1000
 
@@ -338,25 +332,11 @@ class SecurityMonitor:
             logger.info(f"Security event: {event_type} - {details}")
 
     def get_recent_events(self, limit: int = 100) -> list[dict[str, Any]]:
-        """Get recent security events.
-
-        Args:
-            limit: Maximum number of events to return
-
-        Returns:
-            List of recent security events
-        """
+        """Get recent security events."""
         return self.events[-limit:]
 
     def get_events_by_type(self, event_type: str) -> list[dict[str, Any]]:
-        """Get events by type.
-
-        Args:
-            event_type: Type of events to retrieve
-
-        Returns:
-            List of events of specified type
-        """
+        """Get events by type."""
         return [event for event in self.events if event["type"] == event_type]
 
     def get_security_summary(self) -> dict[str, Any]:
@@ -384,6 +364,7 @@ class SecurityMonitor:
         }
 
 
+<<<<<<< HEAD
 # Global instances (lazy initialization — avoids import-time side effects)
 _security_validator: SecurityValidator | None = None
 _security_headers: SecurityHeaders | None = None
@@ -391,44 +372,28 @@ _rate_limiter: RateLimiter | None = None
 _security_monitor: SecurityMonitor | None = None
 
 
+=======
+
+@functools.lru_cache(maxsize=1)
+>>>>>>> desloppify/code-health
 def get_security_validator() -> SecurityValidator:
-    """Get the global security validator instance."""
-    global _security_validator
-    if _security_validator is None:
-        _security_validator = SecurityValidator()
-    return _security_validator
+    """Get the global security validator instance (lazily initialized)."""
+    return SecurityValidator()
 
 
-def get_security_headers() -> dict[str, str]:
-    """Get security headers."""
-    global _security_headers
-    if _security_headers is None:
-        _security_headers = SecurityHeaders()
-    return _security_headers.get_security_headers()
-
-
+@functools.lru_cache(maxsize=1)
 def get_rate_limiter() -> RateLimiter:
-    """Get the global rate limiter instance."""
-    global _rate_limiter
-    if _rate_limiter is None:
-        _rate_limiter = RateLimiter()
-    return _rate_limiter
+    """Get the global rate limiter instance (lazily initialized)."""
+    return RateLimiter()
 
 
+@functools.lru_cache(maxsize=1)
 def get_security_monitor() -> SecurityMonitor:
-    """Get the global security monitor instance."""
-    global _security_monitor
-    if _security_monitor is None:
-        _security_monitor = SecurityMonitor()
-    return _security_monitor
+    """Get the global security monitor instance (lazily initialized)."""
+    return SecurityMonitor()
 
 
-def validate_llm_input(prompt: str) -> str:
-    """Convenience function for LLM input validation."""
-    return get_security_validator().validate_llm_input(prompt)
-
-
-def rate_limit(max_requests: int = 100, window_seconds: int = 60):
+def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..., Any]:
     """Decorator for rate limiting functions.
 
     Args:
@@ -436,35 +401,11 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
         window_seconds: Time window in seconds
     """
 
-    def decorator(func: Callable) -> Callable:
-        """Wrap the target function with rate limiting.
-
-        Args:
-            func: The function to be decorated with rate limiting.
-
-        Returns:
-            Callable: Wrapped function that enforces rate limits.
-        """
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         limiter = RateLimiter(max_requests, window_seconds)
 
         @wraps(func)
-        def wrapper(*args, **kwargs):
-            """Execute the wrapped function with rate limit enforcement.
-
-            Checks if the function call is within rate limits before
-            execution. Logs security events when limits are exceeded.
-
-            Args:
-                *args: Positional arguments passed to the wrapped function.
-                **kwargs: Keyword arguments passed to the wrapped function.
-
-            Returns:
-                The return value from the wrapped function.
-
-            Raises:
-                SecurityViolation: If the rate limit has been exceeded
-                    for this function.
-            """
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             # Use function name as rate limit key (could be enhanced with user ID/IP)
             key = f"{func.__module__}.{func.__name__}"
 

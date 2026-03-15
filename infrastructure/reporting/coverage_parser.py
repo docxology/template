@@ -16,7 +16,7 @@ from pathlib import Path
 
 from infrastructure.core.environment import get_python_command
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.config_loader import get_testing_config
+from infrastructure.core.config_queries import get_testing_config
 
 logger = get_logger(__name__)
 
@@ -264,9 +264,9 @@ def _parse_coverage_json(path: Path) -> float | None:
         if pct > 0:
             return float(pct)
         logger.debug(f"Coverage file {path}: percent_covered is 0")
-    except json.JSONDecodeError as e:
+    except json.JSONDecodeError as e:  # noqa: BLE001 — return None so caller falls back to stdout parsing
         logger.warning(f"Corrupt coverage JSON at {path}: {e} (falling back to stdout parsing)")
-    except OSError as e:
+    except OSError as e:  # noqa: BLE001 — return None so caller falls back to stdout parsing
         logger.warning(f"Could not read coverage from {path}: {e}")
     return None
 

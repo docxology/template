@@ -60,7 +60,7 @@ uv run python -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 uv run python -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf --verbose
 
 # Validate markdown files
-uv run python -m infrastructure.validation.cli markdown project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 ```
 
 #### Automated Validation

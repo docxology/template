@@ -25,7 +25,7 @@ class TestIntegrityEdgeCases:
         expected_hashes = {str(test_file): original_hash}
         integrity_status = integrity.verify_file_integrity([test_file], expected_hashes)
 
-        assert integrity_status[str(test_file)] == False
+        assert integrity_status[str(test_file)] is False
 
     def test_verify_cross_references_missing_figure_labels(self, tmp_path):
         """Test cross-reference verification with missing figure labels."""
@@ -40,7 +40,7 @@ class TestIntegrityEdgeCases:
 
         integrity_status = integrity.verify_cross_references([md_file])
 
-        assert integrity_status["figures"] == False
+        assert integrity_status["figures"] is False
 
     def test_check_file_permissions_nonexistent(self, tmp_path):
         """Test permission check for nonexistent path."""
@@ -48,7 +48,7 @@ class TestIntegrityEdgeCases:
 
         permissions = integrity.check_file_permissions(nonexistent)
 
-        assert permissions["readable"] == False
+        assert permissions["readable"] is False
         # Nonexistent paths may be writable (parent directory permission)
         assert len(permissions["issues"]) > 0
 
@@ -62,5 +62,5 @@ class TestIntegrityEdgeCases:
 
         validation = integrity.validate_build_artifacts(tmp_path, expected_files)
 
-        assert validation["validation_passed"] == False
+        assert validation["validation_passed"] is False
         assert len(validation["missing_files"]) > 0

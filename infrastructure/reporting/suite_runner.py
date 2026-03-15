@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.file_operations import clean_coverage_files
+from infrastructure.core.file_cleanup import clean_coverage_files
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.logging_progress import log_with_spinner
 from infrastructure.reporting.coverage_parser import (
@@ -146,14 +146,11 @@ def run_pytest_stream(
             sys.stdout.write(current_line)
             sys.stdout.flush()
 
-    for line in list(recent_lines)[-3:]:
-        if ("passed" in line or "failed" in line or "skipped" in line) and not any(
-            k in line for k in _SUMMARY_KEYWORDS
-        ):
-            sys.stdout.write(line)
-            sys.stdout.flush()
-
-    process.wait()
+    try:
+        process.wait(timeout=600)  # 10-minute hard ceiling for any test suite
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
     return process.returncode, "".join(stdout_buf), ""
 
 

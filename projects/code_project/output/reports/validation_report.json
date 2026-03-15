@@ -177,11 +177,19 @@
     },
     "pdf": {
       "files": 10,
+<<<<<<< HEAD
       "size_mb": 1.8213443756103516
     },
     "figures": {
       "files": 7,
       "size_mb": 1.5164175033569336
+=======
+      "size_mb": 1.8226652145385742
+    },
+    "figures": {
+      "files": 7,
+      "size_mb": 1.5369415283203125
+>>>>>>> desloppify/code-health
     },
     "data": {
       "files": 3,

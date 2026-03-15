@@ -7,6 +7,7 @@ and circular import issues.
 
 from __future__ import annotations
 
+import functools
 import os
 import sys
 
@@ -24,8 +25,13 @@ EMOJIS = {
     "chart": "📊",
 }
 
-# Check if emojis should be used (NO_EMOJI env var or not a TTY)
-USE_EMOJIS = not os.getenv("NO_EMOJI") and sys.stdout.isatty()
+@functools.lru_cache(maxsize=None)
+def get_emoji_enabled() -> bool:
+    """Return True if emoji output is enabled (NO_EMOJI unset and stdout is a TTY)."""
+    return not os.getenv("NO_EMOJI") and sys.stdout.isatty()
 
-# Check if structured logging (JSON) should be used
-USE_STRUCTURED_LOGGING = os.getenv("STRUCTURED_LOGGING", "false").lower() == "true"
+
+@functools.lru_cache(maxsize=None)
+def get_structured_logging_enabled() -> bool:
+    """Return True if structured (JSON) logging is enabled via STRUCTURED_LOGGING env var."""
+    return os.getenv("STRUCTURED_LOGGING", "false").lower() == "true"

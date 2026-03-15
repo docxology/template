@@ -31,8 +31,7 @@ from optimizer import (OptimizationResult, compute_gradient, gradient_descent,
 try:
     from infrastructure.core import (CheckpointManager, ProgressBar,
                                      SystemHealthChecker, get_logger,
-                                     log_success,
-                                     monitor_performance)
+                                     log_success)
     from infrastructure.core.exceptions import (BuildError,
                                                 ScriptExecutionError,
                                                 TemplateError, ValidationError)
@@ -1106,21 +1105,24 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
     """Generate comprehensive analysis dashboard."""
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    if not INFRASTRUCTURE_AVAILABLE:
-        if logger:
-            logger.warning(
-                "Skipping dashboard generation - infrastructure not available"
-            )
-        return None
-
     if logger:
         logger.info("Generating analysis dashboard...")
 
     try:
-        # Collect output summary
-        output_statistics = collect_output_statistics(
-            project_root, project_name="code_project"
-        )
+        # Ensure output directory structure exists
+        output_dir = project_root / "output" / "reports"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Collect output summary (may fail if output dirs are empty/missing
+        # or if infrastructure is not available and collect_output_statistics is undefined)
+        try:
+            output_statistics = collect_output_statistics(
+                project_root, project_name="code_project"
+            )
+        except (OSError, ValueError, TypeError, KeyError, NameError) as stats_err:
+            if logger:
+                logger.debug(f"Output statistics collection failed (non-fatal): {stats_err}")
+            output_statistics = {}
 
         # Create dashboard HTML
         html_content = f"""
@@ -1206,11 +1208,11 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
             logger.info(f"Saved analysis dashboard to: {dashboard_path}")
         return dashboard_path
 
-    except (ValidationError, BuildError) as e:
+    except (OSError, ValueError, TypeError, NameError) as e:
         if logger:
             logger.warning(f"Failed to generate dashboard: {e}")
         return None
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — catch infrastructure-specific exceptions
         if logger:
             logger.warning(f"Unexpected error generating dashboard: {e}")
         return None
@@ -1255,7 +1257,7 @@ def validate_generated_outputs():
         if logger:
             logger.warning(f"Output validation failed: {e}")
         return None
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         if logger:
             logger.warning(f"Unexpected error during output validation: {e}")
         return None
@@ -1282,7 +1284,7 @@ def save_validation_report(validation_report):
             logger.info(f"Saved validation report to: {report_path}")
         return report_path
 
-    except Exception as e:
+    except (OSError, json.JSONDecodeError, ValueError, TypeError) as e:
         if logger:
             logger.warning(f"Failed to save validation report: {e}")
         return None
@@ -1357,7 +1359,7 @@ def register_figure():
     except ImportError as e:
         if logger:
             logger.warning(f"Figure manager not available: {e}")
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         if logger:
             logger.warning(f"Failed to register figures: {e}")
 
@@ -1473,12 +1475,14 @@ def main():
                 if validation_report:
                     validation_report_path = save_validation_report(validation_report)
 
-            # Generate publishing materials
+            # Generate publishing materials (requires infrastructure for citations)
             log_info("Generating publishing materials...")
             publishing_metadata = extract_optimization_metadata(results)
-            if publishing_metadata:
+            if publishing_metadata and INFRASTRUCTURE_AVAILABLE:
                 citations = generate_citations_from_metadata(publishing_metadata)
                 save_publishing_materials(publishing_metadata, citations)
+            elif publishing_metadata:
+                log_info("Skipping citation generation (infrastructure not available)")
 
             # HTML dashboard is already created and saved above
 
@@ -1493,7 +1497,7 @@ def main():
                             "Publishing interfaces available: Zenodo, arXiv, GitHub releases"
                         )
                         log_info("Publication metadata extracted and formatted")
-                except Exception as e:
+                except (OSError, ImportError, ValueError) as e:
                     log_warning(f"Publishing demonstration failed: {e}")
 
         # Performance metrics not available (monitor_performance is a decorator)
@@ -1537,7 +1541,7 @@ def main():
         print("  • Check that source code exists in src/ directory")
         raise
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - top-level main handler with isinstance dispatching
         # Handle infrastructure-specific errors if available
         if INFRASTRUCTURE_AVAILABLE:
             if isinstance(e, ScriptExecutionError):
@@ -1606,7 +1610,7 @@ def extract_optimization_metadata(
 
         return metadata
 
-    except Exception as e:
+    except (KeyError, ValueError, TypeError, AttributeError) as e:
         if INFRASTRUCTURE_AVAILABLE:
             logger = get_logger(__name__)
             logger.warning(f"Failed to extract optimization metadata: {e}")
@@ -1646,7 +1650,7 @@ def generate_citations_from_metadata(
 
         return citations
 
-    except Exception as e:
+    except (KeyError, ValueError, TypeError, ImportError, NameError) as e:
         if INFRASTRUCTURE_AVAILABLE:
             logger = get_logger(__name__)
             logger.warning(f"Failed to generate citations: {e}")
@@ -1701,7 +1705,7 @@ def save_publishing_materials(
             logger = get_logger(__name__)
             logger.info(f"Publishing materials saved to: {output_dir}")
 
-    except Exception as e:
+    except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
         if INFRASTRUCTURE_AVAILABLE:
             logger = get_logger(__name__)
             logger.warning(f"Failed to save publishing materials: {e}")

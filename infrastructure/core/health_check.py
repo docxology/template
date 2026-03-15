@@ -97,7 +97,7 @@ class SystemHealthChecker:
             with tempfile.NamedTemporaryFile(mode="w", delete=True) as f:
                 f.write("health_check_test")
             results["write_permissions"] = True
-        except (OSError, IOError):
+        except OSError:
             results["write_permissions"] = False
 
         # Check critical directories (discover project dirs dynamically)
@@ -226,7 +226,7 @@ class SystemHealthChecker:
 
     def is_healthy(self) -> bool:
         """Return True if all health checks pass."""
-        return bool(self.get_health_status()["overall_status"] == "healthy")
+        return self.get_health_status()["overall_status"] == "healthy"
 
     def get_metrics(self) -> dict[str, Any]:
         """Return health metrics in a format suitable for monitoring systems."""

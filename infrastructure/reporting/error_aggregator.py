@@ -6,6 +6,7 @@ encountered during pipeline execution.
 
 from __future__ import annotations
 
+import functools
 import json
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -228,13 +229,25 @@ class ErrorAggregator:
         summary["actionable_fixes"] = self.get_actionable_fixes()
 
         json_path = output_dir / "error_summary.json"
-        with open(json_path, "w") as f:
-            json.dump(summary, f, indent=2)
+        _tmp = json_path.with_suffix(json_path.suffix + ".tmp")
+        try:
+            with open(_tmp, "w") as f:
+                json.dump(summary, f, indent=2)
+            _tmp.replace(json_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         # Generate markdown report
         md_path = output_dir / "error_summary.md"
         md_content = self._generate_markdown_report(summary)
-        md_path.write_text(md_content)
+        _tmp = md_path.with_suffix(md_path.suffix + ".tmp")
+        try:
+            _tmp.write_text(md_content)
+            _tmp.replace(md_path)
+        except Exception:
+            _tmp.unlink(missing_ok=True)
+            raise
 
         return json_path
 
@@ -303,24 +316,20 @@ class ErrorAggregator:
 
         return "\n".join(lines)
 
+<<<<<<< HEAD
 
 # Global error aggregator instance
 _global_aggregator: ErrorAggregator | None = None
 
 
+=======
+@functools.lru_cache(maxsize=1)
+>>>>>>> desloppify/code-health
 def get_error_aggregator() -> ErrorAggregator:
-    """Get global error aggregator instance.
-
-    Returns:
-        ErrorAggregator instance
-    """
-    global _global_aggregator
-    if _global_aggregator is None:
-        _global_aggregator = ErrorAggregator()
-    return _global_aggregator
+    """Get global error aggregator instance (lazily initialized)."""
+    return ErrorAggregator()
 
 
 def reset_error_aggregator() -> None:
     """Reset global error aggregator (for testing)."""
-    global _global_aggregator
-    _global_aggregator = None
+    get_error_aggregator.cache_clear()

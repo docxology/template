@@ -132,7 +132,6 @@ class CheckpointManager:
         )
 
         try:
-            # Ensure checkpoint directory exists
             self._ensure_checkpoint_dir()
             with open(self.checkpoint_file, "w") as f:
                 json.dump(checkpoint.to_dict(), f, indent=2)
@@ -188,7 +187,8 @@ class CheckpointManager:
         try:
             checkpoint = self.load_checkpoint()
             return checkpoint is not None
-        except Exception:
+        except Exception as e:  # noqa: BLE001 — intentional: corrupt/missing checkpoint must return False
+            logger.debug(f"checkpoint_exists check failed (treating as no checkpoint): {type(e).__name__}: {e}")
             return False
 
     def validate_checkpoint(self) -> tuple[bool, str | None]:
@@ -246,7 +246,7 @@ class CheckpointManager:
 
             return True, None
 
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, ValueError, KeyError) as e:
             return (
                 False,
                 f"Checkpoint validation failed: {e} - checkpoint file may be corrupted, starting fresh pipeline run",  # noqa: E501

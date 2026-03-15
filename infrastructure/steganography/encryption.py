@@ -24,7 +24,11 @@ logger = get_logger(__name__)
 # ── Lazy dependency flags ────────────────────────────────────────────────
 
 try:
+<<<<<<< HEAD
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+=======
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM  # type: ignore[import-untyped]
+>>>>>>> desloppify/code-health
 
     _CRYPTOGRAPHY_AVAILABLE = True
 except ImportError:
@@ -156,12 +160,16 @@ def apply_pdf_password(
         Path to the encrypted PDF.
     """
     try:
+<<<<<<< HEAD
         from pypdf import PdfReader, PdfWriter
+=======
+        from pypdf import PdfReader, PdfWriter  # type: ignore[import-untyped]
+>>>>>>> desloppify/code-health
     except ImportError:
         raise ImportError(
             "The 'pypdf' package is required for PDF password protection. "
             "Install it with: pip install pypdf"
-        )
+        ) from None
 
     if owner_password is None:
         owner_password = user_password

@@ -26,8 +26,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep, log_live_resource_usage
-from infrastructure.core.config_loader import get_testing_config
-from infrastructure.core.file_operations import clean_coverage_files
+from infrastructure.core.config_queries import get_testing_config
+from infrastructure.core.file_cleanup import clean_coverage_files
 from infrastructure.reporting.coverage_reporter import (
     generate_test_report,
     save_test_report as save_test_report_to_files,

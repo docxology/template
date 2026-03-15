@@ -7,10 +7,34 @@ output directory structure.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from infrastructure.core.logging_utils import get_logger, log_success
+
+
 from infrastructure.project.discovery import discover_projects
+
+
+class _DirectoryDetail(TypedDict, total=False):
+    exists: bool
+    file_count: int
+    size_mb: str
+    largest_file: str | None
+
+
+class _IssuesBySeverity(TypedDict):
+    critical: list[str]
+    warning: list[str]
+    info: list[str]
+
+
+class ValidationResultDict(TypedDict):
+    structure: dict[str, Any]
+    directories: dict[str, _DirectoryDetail]
+    file_counts: dict[str, int]
+    total_size_mb: float
+    issues_by_severity: _IssuesBySeverity
+    recommendations: list[Any]
 
 logger = get_logger(__name__)
 
@@ -74,7 +98,6 @@ def validate_copied_outputs(output_dir: Path) -> bool:
                 log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
                 combined_pdf_found = True
 
-        # Legacy filename support removed
         if not combined_pdf_found:
             logger.debug(f"Project-specific PDF not found in {pdf_dir}")
 
@@ -106,7 +129,6 @@ def validate_copied_outputs(output_dir: Path) -> bool:
                 )
                 combined_pdf_found = True
 
-            # Legacy filename support removed
             if not combined_pdf_found:
                 logger.debug(f"Project-specific PDF not found in source {source_pdf_dir}")
 
@@ -260,8 +282,12 @@ def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
 
     return report
 
+<<<<<<< HEAD
 
 def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
+=======
+def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDict:
+>>>>>>> desloppify/code-health
     """Collect detailed validation results for reporting.
 
     Provides comprehensive validation data including file counts, sizes,
@@ -279,7 +305,7 @@ def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
         - issues_by_severity: Categorized issues
         - recommendations: Actionable recommendations
     """
-    validation_results = {
+    validation_results: ValidationResultDict = {
         "structure": validate_output_structure(output_dir),
         "directories": {},
         "file_counts": {},
@@ -306,7 +332,7 @@ def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
             files = [f for f in files if f.is_file()]
             size_mb = sum(f.stat().st_size for f in files) / (1024 * 1024)
 
-            validation_results["directories"][subdir_name] = {  # type: ignore
+            validation_results["directories"][subdir_name] = {
                 "exists": True,
                 "file_count": len(files),
                 "size_mb": f"{size_mb:.2f}",
@@ -314,46 +340,46 @@ def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
                     max((f.stat().st_size, f.name) for f in files)[1] if files else None
                 ),
             }
-            validation_results["file_counts"][subdir_name] = len(files)  # type: ignore
-            validation_results["total_size_mb"] += size_mb  # type: ignore
+            validation_results["file_counts"][subdir_name] = len(files)
+            validation_results["total_size_mb"] += size_mb
         else:
-            validation_results["directories"][subdir_name] = {  # type: ignore
+            validation_results["directories"][subdir_name] = {
                 "exists": False,
                 "file_count": 0,
                 "size_mb": "0.00",
             }
-            validation_results["issues_by_severity"]["warning"].append(  # type: ignore
+            validation_results["issues_by_severity"]["warning"].append(
                 f"Directory '{subdir_name}/' missing or empty"
             )
 
     # Add issues from structure validation
-    if not validation_results["structure"]["valid"]:  # type: ignore
-        for issue in validation_results["structure"]["issues"]:  # type: ignore
-            validation_results["issues_by_severity"]["critical"].append(issue)  # type: ignore
+    if not validation_results["structure"]["valid"]:
+        for issue in validation_results["structure"]["issues"]:
+            validation_results["issues_by_severity"]["critical"].append(issue)
 
     # Add missing file issues
-    for missing_file in validation_results["structure"].get("missing_files", []):  # type: ignore
+    for missing_file in validation_results["structure"].get("missing_files", []):
         if missing_file == "project_combined.pdf":
-            validation_results["issues_by_severity"]["critical"].append(  # type: ignore
-                f"Missing expected file: {missing_file} (legacy filename - consider using project-specific naming)"  # noqa: E501
+            validation_results["issues_by_severity"]["critical"].append(
+                f"Missing expected file: {missing_file}"
             )
         elif "_combined.pdf" in missing_file:
             project_name = missing_file.replace("_combined.pdf", "")
-            validation_results["issues_by_severity"]["critical"].append(  # type: ignore
+            validation_results["issues_by_severity"]["critical"].append(
                 f"Missing expected file: {missing_file} (project-specific combined PDF for {project_name})"  # noqa: E501
             )
         else:
-            validation_results["issues_by_severity"]["critical"].append(  # type: ignore
+            validation_results["issues_by_severity"]["critical"].append(
                 f"Missing expected file: {missing_file}"
             )
 
     # Add suspicious size issues
-    for size_issue in validation_results["structure"].get("suspicious_sizes", []):  # type: ignore
-        validation_results["issues_by_severity"]["warning"].append(size_issue)  # type: ignore
+    for size_issue in validation_results["structure"].get("suspicious_sizes", []):
+        validation_results["issues_by_severity"]["warning"].append(size_issue)
 
     # Generate recommendations based on issues
-    if validation_results["issues_by_severity"]["critical"]:  # type: ignore
-        validation_results["recommendations"].append(  # type: ignore
+    if validation_results["issues_by_severity"]["critical"]:
+        validation_results["recommendations"].append(
             {
                 "priority": "high",
                 "action": "Review critical issues in output generation",
@@ -361,8 +387,8 @@ def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
             }
         )
 
-    if not validation_results["directories"]["figures"]["exists"]:  # type: ignore
-        validation_results["recommendations"].append(  # type: ignore
+    if not validation_results["directories"]["figures"]["exists"]:
+        validation_results["recommendations"].append(
             {
                 "priority": "medium",
                 "action": "Ensure analysis scripts generate figures",
@@ -370,8 +396,8 @@ def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
             }
         )
 
-    if not validation_results["directories"]["reports"]["exists"]:  # type: ignore
-        validation_results["recommendations"].append(  # type: ignore
+    if not validation_results["directories"]["reports"]["exists"]:
+        validation_results["recommendations"].append(
             {
                 "priority": "low",
                 "action": "Generate analysis reports",
@@ -410,7 +436,7 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
     # Check output directory exists
     if not output_dir.exists():
         result["valid"] = False
-        result["issues"].append("Output directory does not exist")  # type: ignore
+        result["issues"].append("Output directory does not exist")
         return result
 
     # Check combined PDF - try project-specific first, then fallback to generic
@@ -436,7 +462,7 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
 
             # PDF should typically be > 100KB
             if size_bytes < 100 * 1024:
-                result["suspicious_sizes"].append(  # type: ignore
+                result["suspicious_sizes"].append(
                     f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
                 )
         else:
@@ -460,7 +486,7 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
 
                     # PDF should typically be > 100KB
                     if size_bytes < 100 * 1024:
-                        result["suspicious_sizes"].append(  # type: ignore
+                        result["suspicious_sizes"].append(
                             f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
                         )
 
@@ -468,32 +494,29 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
                         f"Combined PDF found in source directory ({pdf_size_mb:.2f} MB) - validation before copy stage"  # noqa: E501
                     )
 
-                # Legacy filename support removed
                 if not combined_pdf_found:
                     logger.debug(f"Project-specific PDF not found in source {source_pdf_dir}")
 
             if not combined_pdf_found:
-                result["missing_files"].append(f"{project_name}_combined.pdf")  # type: ignore
+                result["missing_files"].append(f"{project_name}_combined.pdf")
     else:
         # No project name detected, cannot validate specific PDF
         logger.debug(
             "No project name detected in directory structure, skipping specific PDF validation"
         )
 
-    # Legacy filename check removed - modern projects use project-specific naming
-    # All projects should use {project_name}_combined.pdf format
 
     # Populate directory structure metadata
     pdf_key = "project_combined_pdf"  # Default key for backward compatibility
     if combined_pdf_found and pdf_file:
-        result["directory_structure"][pdf_key] = {  # type: ignore
+        result["directory_structure"][pdf_key] = {
             "exists": True,
             "size_mb": round(pdf_size_mb, 2),
             "readable": pdf_file.is_file(),
         }
     else:
         result["valid"] = False
-        result["directory_structure"][pdf_key] = {  # type: ignore
+        result["directory_structure"][pdf_key] = {
             "exists": False,
             "size_mb": 0.0,
             "readable": False,
@@ -526,7 +549,7 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
             file_count = len([f for f in files if f.is_file()])
             total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (1024 * 1024)
 
-            result["directory_structure"][subdir_name] = {  # type: ignore
+            result["directory_structure"][subdir_name] = {
                 "exists": True,
                 "files": file_count,
                 "size_mb": round(total_size_mb, 2),
@@ -536,9 +559,9 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
 
             # Only flag empty directories as suspicious if not optional
             if file_count == 0 and subdir_name not in optional_dirs:
-                result["suspicious_sizes"].append(f"{subdir_name}/ directory is empty")  # type: ignore
+                result["suspicious_sizes"].append(f"{subdir_name}/ directory is empty")
         else:
-            result["directory_structure"][subdir_name] = {  # type: ignore
+            result["directory_structure"][subdir_name] = {
                 "exists": False,
                 "files": 0,
                 "size_mb": 0.0,
@@ -546,6 +569,6 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
             }
             # Only add issue for required directories
             if subdir_name not in optional_dirs:
-                result["issues"].append(f"Missing directory: {subdir_name}/")  # type: ignore
+                result["issues"].append(f"Missing directory: {subdir_name}/")
 
     return result

@@ -74,7 +74,7 @@ pdf_path = manager.render_combined_pdf(
     markdown_files,
     manuscript_dir=Path("manuscript/")
 )
-# Title page automatically generated from project/manuscript/config.yaml
+# Title page automatically generated from projects/{name}/manuscript/config.yaml
 ```
 
 ---

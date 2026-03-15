@@ -22,11 +22,15 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.validation.doc_models import CompletenessGap, ScanAccuracyIssue
+
+AccuracyIssue = ScanAccuracyIssue  # backward-compat alias
 
 logger = get_logger(__name__)
 
 
 @dataclass
+<<<<<<< HEAD
 class AccuracyIssue:
     """Represents an accuracy issue."""
 
@@ -49,6 +53,8 @@ class CompletenessGap:
 
 
 @dataclass
+=======
+>>>>>>> desloppify/code-health
 class ScanResults:
     """Container for scan results."""
 
@@ -158,7 +164,7 @@ class RepositoryScanner:
                     for module in self.src_modules:
                         if module in content:
                             self.documented_modules.add(module)
-                except Exception as e:
+                except (OSError, UnicodeDecodeError) as e:
                     logger.debug(f"Failed to scan {md_file} for module references: {e}")
 
     def _check_code_accuracy(self) -> None:
@@ -185,7 +191,7 @@ class RepositoryScanner:
                                         details=f"Functions/classes: {imports[imp]}",
                                     )
                                 )
-            except Exception as e:
+            except (OSError, UnicodeDecodeError, SyntaxError) as e:
                 issues.append(
                     AccuracyIssue(
                         category="import",
@@ -218,7 +224,7 @@ class RepositoryScanner:
                         if module not in imports:
                             imports[module] = []
                         imports[module].append(alias.name)
-        except Exception as e:
+        except (OSError, UnicodeDecodeError, SyntaxError) as e:
             logger.debug(f"Failed to parse imports from script: {e}")
 
         return imports
@@ -245,7 +251,7 @@ class RepositoryScanner:
                 if item not in defined:
                     return False
             return True
-        except Exception as e:
+        except (OSError, UnicodeDecodeError, SyntaxError) as e:
             logger.debug(f"Failed to verify imports in module {module_name}: {e}")
             return False
 
@@ -309,7 +315,7 @@ class RepositoryScanner:
                                         message=f"Documented script does not exist: {script_ref}",
                                     )
                                 )
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:
                 logger.debug(f"Failed to check code accuracy in {md_file}: {e}")
 
         self.results.accuracy_issues.extend(issues)
@@ -365,7 +371,7 @@ class RepositoryScanner:
                     for script in self.script_files:
                         if script.name in content:
                             documented_scripts.add(script.name)
-                except Exception as e:
+                except (OSError, UnicodeDecodeError) as e:
                     logger.debug(f"Failed to check script documentation in {md_file}: {e}")
 
         for script in self.script_files:
@@ -416,7 +422,7 @@ class RepositoryScanner:
             logger.warning("Test suite timed out")
         except FileNotFoundError:
             logger.warning("pytest not found (may need to install dependencies)")
-        except Exception as e:
+        except (subprocess.SubprocessError, OSError) as e:
             logger.warning(f"Could not run tests: {e}")
 
     def _check_configuration(self) -> None:
@@ -444,7 +450,7 @@ class RepositoryScanner:
                             message="Config structure may not match example",
                         )
                     )
-            except Exception as e:
+            except (OSError, yaml.YAMLError, ValueError) as e:
                 issues.append(
                     AccuracyIssue(
                         category="configuration",
@@ -508,7 +514,7 @@ class RepositoryScanner:
                             message="Script may not follow thin orchestrator pattern (no src/ imports)",  # noqa: E501
                         )
                     )
-            except Exception as e:
+            except (OSError, UnicodeDecodeError, SyntaxError) as e:
                 issues.append(
                     AccuracyIssue(
                         category="architecture",
@@ -562,12 +568,12 @@ class RepositoryScanner:
         # Group by category
         by_category = defaultdict(list)
         for gap in self.results.completeness_gaps:
-            by_category[gap.category].append(gap)  # type: ignore
+            by_category[gap.category].append(gap)
 
         for category, gaps in sorted(by_category.items()):
             lines.append(f"### {category.title()} Gaps ({len(gaps)})")
             lines.append("")
-            for gap in gaps:  # type: ignore
+            for gap in gaps:
                 lines.append(f"- **{gap.severity.upper()}**: {gap.item}")
                 lines.append(f"  - {gap.description}")
             lines.append("")
@@ -615,7 +621,13 @@ def main() -> int:
     # Generate report
     report = scanner.generate_report()
     report_path = repo_root / "docs" / "REPO_ACCURACY_COMPLETENESS_REPORT.md"
-    report_path.write_text(report, encoding="utf-8")
+    _tmp = report_path.with_suffix(report_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(report, encoding="utf-8")
+        _tmp.replace(report_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
 
     logger.info("\n" + "=" * 70)
     logger.info("SCAN COMPLETE")

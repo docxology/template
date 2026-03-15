@@ -10,7 +10,7 @@
 
 ```bash
 # Run single test
-uv run pytest tests/test_example.py::test_add_numbers -v
+uv run pytest projects/code_project/tests/test_example.py::test_add_numbers -v
 
 # Check imports
 python -c "from example import add_numbers; print('OK')"
@@ -53,10 +53,10 @@ python -c "import sys; print(sys.path)"
 
 ```bash
 # Run test with verbose output
-uv run pytest tests/test_file.py -vv
+uv run pytest projects/code_project/tests/test_file.py -vv
 
 # Run specific test
-uv run pytest tests/test_file.py::test_function -v
+uv run pytest projects/code_project/tests/test_file.py::test_function -v
 
 # Check test data
 cat tests/test_data.json
@@ -155,7 +155,7 @@ pytest tests/ -m integration
 **Diagnostic:**
 
 ```bash
-uv run pytest tests/test_example.py::test_add_numbers -v
+uv run pytest projects/code_project/tests/test_example.py::test_add_numbers -v
 python -c "from example import add_numbers; print('OK')"
 ls -la tests/test_data/
 ```
@@ -166,13 +166,13 @@ ls -la tests/test_data/
 
 ```bash
 # Run with debugger
-uv run pytest tests/test_file.py::test_function --pdb
+uv run pytest projects/code_project/tests/test_file.py::test_function --pdb
 
 # Run with verbose output
-uv run pytest tests/test_file.py::test_function -vv -s
+uv run pytest projects/code_project/tests/test_file.py::test_function -vv -s
 
 # Check specific module coverage
-uv run pytest tests/test_file.py --cov=src.module_name --cov-report=term-missing
+uv run pytest projects/code_project/tests/test_file.py --cov=projects.code_project.src.module_name --cov-report=term-missing
 
 # Parallel execution
 uv run pytest tests/ -n auto

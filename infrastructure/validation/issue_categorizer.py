@@ -44,7 +44,7 @@ def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
     Returns:
         Dictionary mapping category names to lists of issues
     """
-    categories = {  # type: ignore
+    categories: dict[str, list[Issue]] = {
         "critical": [],
         "error": [],
         "warning": [],
@@ -254,26 +254,26 @@ def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
         return []
 
     # Group by file first
-    file_groups: dict[str, list[str]] = {}
+    file_groups: dict[str, list[Issue]] = {}
     for issue in issues:
         file_key = _get_issue_file(issue)
         if file_key not in file_groups:
             file_groups[file_key] = []
-        file_groups[file_key].append(issue)  # type: ignore
+        file_groups[file_key].append(issue)
 
     # Within each file, group by issue type
-    groups: list[dict[str, str]] = []
+    groups: list[list[Issue]] = []
     for file_issues in file_groups.values():
-        type_groups: dict[str, list[str]] = {}
-        for issue in file_issues:  # type: ignore
+        type_groups: dict[str, list[Issue]] = {}
+        for issue in file_issues:
             issue_type = _get_issue_type(issue)
             if issue_type not in type_groups:
                 type_groups[issue_type] = []
-            type_groups[issue_type].append(issue)  # type: ignore
+            type_groups[issue_type].append(issue)
 
-        groups.extend(type_groups.values())  # type: ignore
+        groups.extend(type_groups.values())
 
-    return groups  # type: ignore
+    return groups
 
 
 def prioritize_issues(issues: list[Issue]) -> list[Issue]:
@@ -287,20 +287,7 @@ def prioritize_issues(issues: list[Issue]) -> list[Issue]:
     """
 
     def sort_key(issue: Issue) -> tuple[int, str, str]:
-        """Generate a sort key tuple for prioritizing issues.
-
-        Creates a tuple for sorting issues by severity (critical first),
-        then by issue type, then by file path for consistent ordering.
-
-        Args:
-            issue: The issue to generate a sort key for. Can be any issue
-                type (LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue).
-
-        Returns:
-            tuple: A 3-element tuple of (severity_order, issue_type, file_path)
-                where severity_order is an integer (0=critical, 1=error,
-                2=warning, 3=info, 4=unknown).
-        """
+        """Sort by severity (critical first), then type, then file path."""
         severity = assign_severity(issue)
         severity_order = {"critical": 0, "error": 1, "warning": 2, "info": 3}
         issue_type = _get_issue_type(issue)
@@ -309,8 +296,12 @@ def prioritize_issues(issues: list[Issue]) -> list[Issue]:
 
     return sorted(issues, key=sort_key)
 
+<<<<<<< HEAD
 
 def generate_issue_summary(issues: list[Issue]) -> dict[str, int]:
+=======
+def generate_issue_summary(issues: list[Issue]) -> dict[str, Any]:
+>>>>>>> desloppify/code-health
     """Generate a summary of issues by category and severity.
 
     Args:

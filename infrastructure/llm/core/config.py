@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
@@ -10,12 +11,24 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
+<<<<<<< HEAD
+=======
+class ResponseMode(str, Enum):
+    """Response generation modes for different use cases."""
+
+    SHORT = "short"  # Brief answers (< 150 tokens)
+    LONG = "long"  # Comprehensive answers (> 500 tokens)
+    STRUCTURED = "structured"  # JSON-formatted structured response
+    RAW = "raw"  # Raw prompt without modification
+
+
+>>>>>>> desloppify/code-health
 @dataclass
 class GenerationOptions:
     """Per-query generation options for LLM requests.
 
     Allows fine-grained control over generation parameters on a per-query basis.
-    Values default to None and will fall back to LLMConfig defaults when converted
+    Values default to None and will fall back to OllamaClientConfig defaults when converted
     to Ollama API format.
     """
 
@@ -29,14 +42,14 @@ class GenerationOptions:
     repeat_penalty: float | None = None
     num_ctx: int | None = None
 
-    def to_ollama_options(self, config: "LLMConfig") -> dict[str, Any]:
+    def to_ollama_options(self, config: "OllamaClientConfig") -> dict[str, Any]:
         """Convert to Ollama API options format.
 
         Uses values from this GenerationOptions instance if provided,
-        otherwise falls back to LLMConfig defaults.
+        otherwise falls back to OllamaClientConfig defaults.
 
         Args:
-            config: LLMConfig instance to use for fallback values
+            config: OllamaClientConfig instance to use for fallback values
 
         Returns:
             Dictionary compatible with Ollama API options parameter
@@ -82,7 +95,7 @@ class GenerationOptions:
 
 
 @dataclass
-class LLMConfig:
+class OllamaClientConfig:
     """Configuration for LLM interaction.
 
     Model Selection:
@@ -94,7 +107,7 @@ class LLMConfig:
             export OLLAMA_MODEL="smollm2"       # Fast testing (if installed)
 
         Or override programmatically:
-            config = LLMConfig(default_model="llama3-gradient")
+            config = OllamaClientConfig(default_model="llama3-gradient")
 
     Speed vs Quality Trade-offs:
         - smollm2 (135M): ~100+ tok/s, basic quality, great for testing
@@ -143,7 +156,7 @@ class LLMConfig:
     review_timeout: float = 300.0  # Timeout for review operations (LLM_REVIEW_TIMEOUT)
     max_input_length: int = 500000  # Max input character length (LLM_MAX_INPUT_LENGTH)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs: Any):
         """Initialize config, supporting num_ctx as alias for context_window."""
         # Handle num_ctx -> context_window mapping
         if "num_ctx" in kwargs and "context_window" not in kwargs:
@@ -152,23 +165,28 @@ class LLMConfig:
         # Manually initialize all dataclass fields
         from dataclasses import MISSING, fields
 
+        valid_field_names = {f.name for f in fields(self)}
+
+        # Reject unknown kwargs so typos surface immediately
+        unknown = set(kwargs) - valid_field_names
+        if unknown:
+            raise ValueError(f"OllamaClientConfig received unknown keyword arguments: {sorted(unknown)}")
+
         # Set all fields with defaults first
         for f in fields(self):
             if f.name not in kwargs:
                 if f.default != MISSING:
-                    object.__setattr__(self, f.name, f.default)
+                    setattr(self, f.name, f.default)
                 elif f.default_factory != MISSING:
                     factory = f.default_factory
-                    object.__setattr__(self, f.name, factory())
+                    setattr(self, f.name, factory())
 
         # Override with provided kwargs
-        valid_field_names = {f.name for f in fields(self)}
         for key, value in kwargs.items():
-            if key in valid_field_names:
-                object.__setattr__(self, key, value)
+            setattr(self, key, value)
 
     @classmethod
-    def from_env(cls) -> LLMConfig:
+    def from_env(cls) -> OllamaClientConfig:
         """Create configuration from environment variables."""
         import os
 
@@ -289,17 +307,17 @@ class LLMConfig:
 
         return cls(**config_kwargs)
 
-    def with_overrides(self, **kwargs: Any) -> LLMConfig:
+    def with_overrides(self, **kwargs: Any) -> OllamaClientConfig:
         """Create a new config instance with overridden values.
 
         Args:
             **kwargs: Configuration values to override
 
         Returns:
-            New LLMConfig instance with overridden values
+            New OllamaClientConfig instance with overridden values
 
         Example:
-            >>> config = LLMConfig()
+            >>> config = OllamaClientConfig()
             >>> custom = config.with_overrides(default_model="mistral", temperature=0.3)
         """
         # Get current values as dict
@@ -318,6 +336,9 @@ class LLMConfig:
             "long_min_tokens": self.long_min_tokens,
             "system_prompt": self.system_prompt,
             "auto_inject_system_prompt": self.auto_inject_system_prompt,
+            "heartbeat_interval": self.heartbeat_interval,
+            "stall_threshold": self.stall_threshold,
+            "early_warning_threshold": self.early_warning_threshold,
             "review_timeout": self.review_timeout,
             "max_input_length": self.max_input_length,
         }
@@ -325,12 +346,12 @@ class LLMConfig:
         # Apply overrides
         current_values.update(kwargs)
 
-        return LLMConfig(**current_values)
+        return OllamaClientConfig(**current_values)
 
     def create_options(self, **kwargs: Any) -> GenerationOptions:
         """Create GenerationOptions from config with optional overrides.
 
-        Uses LLMConfig values as defaults, allowing kwargs to override
+        Uses OllamaClientConfig values as defaults, allowing kwargs to override
         specific options.
 
         Args:
@@ -340,7 +361,7 @@ class LLMConfig:
             GenerationOptions instance with config defaults and overrides
 
         Example:
-            >>> config = LLMConfig()
+            >>> config = OllamaClientConfig()
             >>> opts = config.create_options(temperature=0.0, seed=42)
         """
         # Start with config defaults
@@ -356,21 +377,38 @@ class LLMConfig:
 
         return GenerationOptions(**options_dict)
 
+<<<<<<< HEAD
 
 # Module-level accessors so callers don't need to instantiate LLMConfig.
+=======
+# Module-level accessors so callers don't need to instantiate OllamaClientConfig.
+# All three read from a single from_env() call to avoid redundant env lookups.
+
+def _get_env_config() -> "OllamaClientConfig":
+    """Return a config instance populated from the current environment."""
+    return OllamaClientConfig.from_env()
+
+>>>>>>> desloppify/code-health
 
 
 def get_review_timeout() -> float:
     """Return the review timeout in seconds (from env or default)."""
-    return LLMConfig.from_env().review_timeout
+    return _get_env_config().review_timeout
+
 
 
 def get_max_input_length() -> int:
     """Return the maximum input character length (from env or default)."""
-    return LLMConfig.from_env().max_input_length
+    return _get_env_config().max_input_length
+
 
 
 def get_review_max_tokens() -> tuple[int, str]:
     """Return (max_tokens, source_label) for review generation."""
-    cfg = LLMConfig.from_env()
+    cfg = _get_env_config()
     return cfg.long_max_tokens, "long_max_tokens"
+
+# Backward-compatibility alias — remove once all call sites use OllamaClientConfig.
+# Remaining call sites as of 2026-03-14: infrastructure/llm/__init__.py re-export.
+# Do not add new usages.
+LLMConfig = OllamaClientConfig

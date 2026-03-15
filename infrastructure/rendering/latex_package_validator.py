@@ -82,7 +82,7 @@ def find_kpsewhich() -> Path | None:
         )
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
-    except Exception as e:
+    except (OSError, subprocess.TimeoutExpired) as e:  # noqa: BLE001 — kpsewhich lookup is optional; return None
         logger.debug(f"Failed to locate kpsewhich: {e}")
 
     return None
@@ -127,7 +127,7 @@ def check_latex_package(package_name: str, kpsewhich_path: Path | None = None) -
     except subprocess.TimeoutExpired:
         logger.warning(f"Timeout checking package {package_name}")
         return PackageStatus(name=package_name, installed=False, path=None)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Error checking package {package_name}: {e}")
         return PackageStatus(name=package_name, installed=False, path=None)
 
@@ -253,8 +253,6 @@ def validate_preamble_packages(strict: bool = False) -> ValidationReport:
 
 def main() -> None:
     """CLI entry point for package validation."""
-    import sys
-
     print("LaTeX Package Validator")
     print("=" * 60)
 
@@ -265,7 +263,7 @@ def main() -> None:
     else:
         print("❌ kpsewhich not found - cannot validate packages")
         print("   Please install BasicTeX or MacTeX")
-        sys.exit(1)
+        raise SystemExit(1)
 
     print()
 
@@ -275,9 +273,9 @@ def main() -> None:
 
     # Exit with error if required packages are missing
     if not report.all_required_available:
-        sys.exit(1)
+        raise SystemExit(1)
 
-    sys.exit(0)
+    raise SystemExit(0)
 
 
 if __name__ == "__main__":

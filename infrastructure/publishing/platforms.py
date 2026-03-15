@@ -13,16 +13,20 @@ except ImportError:
     requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import PublishingError
+from infrastructure.publishing.api import REQUEST_TIMEOUT
 from infrastructure.publishing.models import PublicationMetadata
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
+<<<<<<< HEAD
 #: Default timeout for HTTP requests (seconds)
 REQUEST_TIMEOUT = 30
 
 
+=======
+>>>>>>> desloppify/code-health
 def publish_to_zenodo(
     metadata: PublicationMetadata,
     file_paths: list[Path],
@@ -191,7 +195,7 @@ def create_github_release(
                     timeout=REQUEST_TIMEOUT,
                 )  # noqa: E501
 
-        return html_url  # type: ignore
+        return html_url
 
     except requests.exceptions.RequestException as e:
-        raise PublishingError(f"GitHub release failed: {e}")
+        raise PublishingError(f"GitHub release failed: {e}") from e

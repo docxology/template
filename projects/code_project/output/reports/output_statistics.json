@@ -4,7 +4,11 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.82",
+<<<<<<< HEAD
       "total_size_bytes": 1909818,
+=======
+      "total_size_bytes": 1911203,
+>>>>>>> desloppify/code-health
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
@@ -63,9 +67,15 @@
     },
     "slides": {
       "exists": true,
+<<<<<<< HEAD
       "file_count": 64,
       "size_mb": "2.39",
       "total_size_bytes": 2502156,
+=======
+      "file_count": 48,
+      "size_mb": "2.21",
+      "total_size_bytes": 2314698,
+>>>>>>> desloppify/code-health
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
@@ -97,8 +107,13 @@
     "figures": {
       "exists": true,
       "file_count": 7,
+<<<<<<< HEAD
       "size_mb": "1.52",
       "total_size_bytes": 1590079,
+=======
+      "size_mb": "1.54",
+      "total_size_bytes": 1611600,
+>>>>>>> desloppify/code-health
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -150,9 +165,13 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 8,
+      "file_count": 7,
       "size_mb": "0.01",
+<<<<<<< HEAD
       "total_size_bytes": 8436,
+=======
+      "total_size_bytes": 8320,
+>>>>>>> desloppify/code-health
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -171,7 +190,7 @@
         }
       ],
       "extensions": {
-        ".json": 5,
+        ".json": 4,
         ".html": 1,
         ".md": 2
       }
@@ -209,8 +228,13 @@
       }
     }
   },
+<<<<<<< HEAD
   "total_files": 103,
   "total_size_mb": 5.939711570739746,
+=======
+  "total_files": 82,
+  "total_size_mb": 5.743043899536133,
+>>>>>>> desloppify/code-health
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
@@ -274,6 +298,17 @@
     }
   ],
   "missing_expected_files": [],
+  "sizes_by_category": {
+    "pdf": 1.8226652145385742,
+    "web": 0.16527557373046875,
+    "slides": 2.207468032836914,
+    "figures": 1.5369415283203125,
+    "data": 0.0002269744873046875,
+    "reports": 0.0079345703125,
+    "simulations": 0.0,
+    "llm": 0.0,
+    "logs": 0.0025320053100585938
+  },
   "file_counts_by_type": {
     ".md": 4,
     ".log": 11,
@@ -289,6 +324,7 @@
     ".vrb": 8,
     ".nav": 8,
     ".png": 6,
+<<<<<<< HEAD
     ".json": 8,
     ".csv": 1
   },
@@ -303,6 +339,11 @@
     "llm": 0.0,
     "logs": 0.0025320053100585938
   },
+=======
+    ".json": 5,
+    ".csv": 1
+  },
+>>>>>>> desloppify/code-health
   "pdf_files": 10,
   "figures": 7,
   "data_files": 3

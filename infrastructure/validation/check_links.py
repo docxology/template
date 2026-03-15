@@ -25,10 +25,15 @@ from infrastructure.validation.doc_accuracy import extract_headings
 
 logger = get_logger(__name__)
 
+<<<<<<< HEAD
 
 class LinkIssue(TypedDict):
     """Represents an issue found during validation."""
 
+=======
+class LinkCheckResult(TypedDict):
+    """Represents a single link check result from the link checker."""
+>>>>>>> desloppify/code-health
     file: str
     line: int
     target: str
@@ -365,44 +370,55 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
             return None
         else:
             return repo_root / path_ref
-    except Exception:
+    except OSError:
         return None
 
+<<<<<<< HEAD
 
 def validate_directory_structures(
     content: str, file_path: Path, repo_root: Path
 ) -> list[dict[str, Any]]:
     """Validate directory structure examples against actual filesystem."""
     issues: list[dict[str, str]] = []
+=======
+def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
+    """Validate directory structure examples in markdown against actual filesystem.
 
-    # Look for directory tree patterns in code blocks and regular text
+    Scans code blocks for tree diagrams (├── / └── patterns) and checks that
+    referenced files and directories actually exist relative to repo_root.
+    """
+    issues: list[dict[str, Any]] = []
+>>>>>>> desloppify/code-health
+
     tree_patterns = [
-        r"```\n([^`]*?)```",  # Code blocks
-        r"```\w+\n([^`]*?)```",  # Code blocks with language
+        r"```\n([^`]*?)```",
+        r"```\w+\n([^`]*?)```",
     ]
 
     for pattern in tree_patterns:
         for match in re.finditer(pattern, content, re.DOTALL):
             tree_content = match.group(1)
-            lines = tree_content.split("\n")
-
-            for line_no, line in enumerate(lines):
-                # Look for directory/file patterns like "├── file.py" or "└── dir/"
-                dir_pattern = re.search(r"[├└]──\s*([^\s]+)", line.strip())
-                if dir_pattern:
-                    item_name = dir_pattern.group(1)
-                    # Skip if it's a comment or not a real path
-                    if not _is_real_path_item(item_name):
-                        continue
-
-                    # Try to resolve relative to current file's directory
-                    if file_path.parent.name in ["docs", "infrastructure", "scripts"]:
-                        # Documentation files might reference various paths
-                        continue
-
-                    # For now, just flag obvious issues
-                    if "nonexistent" in item_name or "example" in item_name.lower():
-                        continue
+            for line in tree_content.split("\n"):
+                dir_match = re.search(r"[├└]──\s*([^\s]+)", line.strip())
+                if not dir_match:
+                    continue
+                item_name = dir_match.group(1)
+                if not _is_real_path_item(item_name):
+                    continue
+                # Documentation files reference illustrative paths — skip
+                if file_path.parent.name in ("docs", "infrastructure", "scripts"):
+                    continue
+                # Check existence relative to repo root
+                candidate = repo_root / item_name.rstrip("/")
+                if not candidate.exists():
+                    line_num = content[: match.start()].count("\n") + 1
+                    issues.append({
+                        "file": str(file_path),
+                        "line": line_num,
+                        "target": item_name,
+                        "issue": f"Directory tree references '{item_name}' which does not exist",
+                        "type": "missing_tree_item",
+                    })
 
     return issues
 
@@ -539,7 +555,7 @@ def validate_placeholder_consistency(
     content: str, file_path: Path, repo_root: Path
 ) -> list[dict[str, Any]]:
     """Validate consistency of {name} placeholders vs actual project names."""
-    issues: list[dict[str, str]] = []
+    issues: list[dict[str, Any]] = []
 
     # Find all placeholder usage
     placeholder_pattern = re.compile(r"\{([^}]+)\}")
@@ -606,7 +622,7 @@ def validate_placeholder_consistency(
                 issues.append(
                     {
                         "file": str(file_path),
-                        "line": content[: match.start()].count("\n") + 1,  # type: ignore[dict-item]
+                        "line": content[: match.start()].count("\n") + 1,
                         "target": match.group(0),
                         "issue": f"Using placeholder {{name}} when specific project names exist: {project_names}",  # noqa: E501
                         "type": "placeholder_inconsistency",
@@ -675,7 +691,7 @@ def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tup
             if md_path.exists() and md_path.is_file():
                 return True, str(md_path.relative_to(repo_root_resolved))
             return False, f"File or directory does not exist: {target_path}"
-    except Exception as e:
+    except OSError as e:
         return False, f"Error resolving path: {e}"
 
 
@@ -689,7 +705,7 @@ def main() -> int:
     logger.info("Running comprehensive filepath and reference audit")
 
     all_headings: dict[str, Set[str]] = {}
-    issues: dict[str, list[LinkIssue]] = {
+    issues: dict[str, list[LinkCheckResult]] = {
         "broken_anchor_links": [],
         "broken_file_refs": [],
         "code_block_paths": [],
@@ -703,7 +719,7 @@ def main() -> int:
         try:
             content = md_file.read_text(encoding="utf-8")
             all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.error(f"Error reading {md_file}: {e}")
 
     # Second pass: comprehensive validation
@@ -791,14 +807,18 @@ def main() -> int:
             placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
             issues["placeholder_consistency"].extend(placeholder_issues)  # type: ignore[arg-type]
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.error(f"Error processing {md_file}: {e}")
 
     # Generate comprehensive report
     return generate_comprehensive_report(issues, len(md_files))
 
+<<<<<<< HEAD
 
 def generate_comprehensive_report(issues: dict[str, list[LinkIssue]], total_files: int) -> int:
+=======
+def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], total_files: int) -> int:
+>>>>>>> desloppify/code-health
     """Generate a comprehensive validation report."""
     total_issues = sum(len(issue_list) for issue_list in issues.values())
 

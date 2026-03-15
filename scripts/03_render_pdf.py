@@ -13,6 +13,7 @@ Stage 3 of the pipeline orchestration.
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -67,7 +68,6 @@ def run_render_pipeline(project_name: str = "project") -> int:
         logger.info("Transferring control to project-specific renderer...")
 
         from infrastructure.core.environment import get_python_command
-        import subprocess
 
         cmd = get_python_command() + [str(override_script)]
         try:
@@ -78,7 +78,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
             else:
                 logger.error(f"Custom PDF rendering failed (exit code {result.returncode})")
                 return result.returncode
-        except Exception as e:
+        except (subprocess.SubprocessError, OSError) as e:
             logger.error(f"Failed to execute custom renderer: {e}")
             return 1
 
@@ -113,7 +113,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
         for suggestion in e.suggestions:
             logger.error(f"   {suggestion}")
         return 1
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError) as e:
         logger.warning(f"⚠️  Could not validate LaTeX packages: {e}")
         logger.warning("   Proceeding anyway - compilation may fail if packages are missing")
 
@@ -173,7 +173,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
         figures_dir = project_root / "output" / "figures"
         manager = RenderManager(config, manuscript_dir=manuscript_dir, figures_dir=figures_dir)
         log_success("Initialized RenderManager from infrastructure.rendering", logger)
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         logger.error(f"Failed to initialize RenderManager: {e}")
         return 1
 
@@ -207,7 +207,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
                 if re.context:
                     logger.debug(f"    Context: {re.context}")
                 failed_files.append(source_file.name)
-            except Exception as e:
+            except (OSError, subprocess.SubprocessError, ValueError) as e:
                 logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")
                 failed_files.append(source_file.name)
 
@@ -291,8 +291,8 @@ def run_render_pipeline(project_name: str = "project") -> int:
                 logger.info(
                     f"ℹ️  Note: {rendered_count} individual PDF file(s) were generated successfully despite combined PDF failure."  # noqa: E501
                 )
-        except Exception as e:
-            # Catch truly unexpected exceptions (not RenderingError)
+        except (OSError, subprocess.SubprocessError, ValueError, TypeError) as e:
+            # Catch non-RenderingError exceptions from PDF generation
             logger.error(f"❌ Unexpected error generating combined PDF: {e}")
             import traceback
 
@@ -316,8 +316,8 @@ def run_render_pipeline(project_name: str = "project") -> int:
                     logger.error(
                         f"  Combined markdown file size: {combined_md_path.stat().st_size} bytes"
                     )
-            except Exception:
-                pass
+            except OSError as stat_err:
+                logger.debug(f"  Could not stat combined markdown file: {stat_err}")
 
             logger.warning("  This is an unexpected error - please report this issue")
             # Don't fail the entire pipeline for combined PDF generation
@@ -334,7 +334,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
             if re.context:
                 logger.debug(f"  Context: {re.context}")
             # Non-fatal - don't fail pipeline for HTML generation
-        except Exception as e:
+        except (OSError, subprocess.SubprocessError, ValueError) as e:
             logger.warning(f"⚠️  Unexpected error generating combined HTML: {e}")
             # Non-fatal - don't fail pipeline for HTML generation
 
@@ -502,7 +502,7 @@ def _check_citations_used(manuscript_dir: Path) -> bool:
             for pattern in citation_patterns:
                 if re.search(pattern, content):
                     return True
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.debug(f"Could not read {md_file}: {e}")
             continue
 
@@ -663,7 +663,7 @@ def main() -> int:
 
         return exit_code
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - top-level pipeline handler must catch all
         logger.error(f"Render pipeline error: {e}", exc_info=True)
         log_live_resource_usage("PDF rendering stage end (error)", logger)
         return 1

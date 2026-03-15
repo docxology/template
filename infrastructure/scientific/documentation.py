@@ -17,7 +17,7 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
-def generate_scientific_documentation(func: Callable) -> str:
+def generate_scientific_documentation(func: Callable[..., Any]) -> str:
     """Generate scientific documentation for a function.
 
     Args:

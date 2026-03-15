@@ -1,4 +1,13 @@
-"""Review generation utilities for manuscript review operations."""
+"""Review generation utilities for manuscript review operations.
+
+Error contract design:
+- Text extraction helpers (extract_manuscript_text) return (None, metrics) on failure
+  so the pipeline can report a graceful skip rather than aborting on missing files.
+- LLM response validation (llm/validation/core.py) raises ValidationError immediately —
+  an invalid response from the LLM is a programmer error or model failure that cannot
+  be meaningfully recovered from in-line.
+- These are intentionally different contracts for different failure domains.
+"""
 
 from __future__ import annotations
 
@@ -6,14 +15,16 @@ import os
 import re
 import subprocess
 import time
-from typing import Any
+from typing import Any, Callable, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from infrastructure.llm.templates.base import ResearchTemplate
 from pathlib import Path
 
 from infrastructure.core.logging_utils import (
     get_logger,
     log_substep,
     log_success,
-    format_error_with_suggestions,
 )
 from infrastructure.core.logging_progress import (
     log_with_spinner,
@@ -22,7 +33,7 @@ from infrastructure.core.logging_progress import (
 )
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 
 from infrastructure.llm.utils.ollama import (
     is_ollama_running,
@@ -52,6 +63,10 @@ from infrastructure.llm.validation.format import (
 )
 
 from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptInputMetrics, estimate_tokens
+# Cross-subsystem import: llm/review depends on validation/pdf_validator for text extraction.
+# This is an intentional seam — PDF text extraction lives in validation because it is also
+# used by the output validator. If this becomes a problem, move extract_text_from_pdf to
+# infrastructure/core/pdf_utils.py so both subsystems can import without circular deps.
 from infrastructure.validation.pdf_validator import extract_text_from_pdf
 from infrastructure.core.exceptions import PDFValidationError
 
@@ -93,11 +108,22 @@ def get_manuscript_review_system_prompt() -> str:
         try:
             loader = get_default_loader()
             return loader.get_system_prompt("manuscript_review")
-        except (ImportError, AttributeError, OSError, FileNotFoundError, KeyError) as e:
+        except (ImportError, AttributeError, OSError, FileNotFoundError, KeyError) as e:  # noqa: BLE001 — fall back to built-in default prompt
             logger.debug(f"Could not load system prompt from prompt system: {e}")
 
     return _DEFAULT_REVIEW_SYSTEM_PROMPT
 
+<<<<<<< HEAD
+=======
+_SMALL_MODEL_SUFFIXES = frozenset(["3b", "4b", "7b", "8b"])
+
+
+def _is_small_model(model_name: str) -> bool:
+    """Return True if model_name indicates a small parameter-count model."""
+    lower = model_name.lower()
+    return any(s in lower for s in _SMALL_MODEL_SUFFIXES)
+
+>>>>>>> desloppify/code-health
 
 def log_timeout_info(timeout: float, operation: str) -> None:
     """Log information about timeout settings."""
@@ -151,9 +177,8 @@ def validate_review_quality(
     if not is_format_compliant:
         details["format_warnings"] = format_issues
 
-    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
     default_min = REVIEW_MIN_WORDS.get(review_type, 200)
-    if is_small_model:
+    if _is_small_model(model_name):
         default_min = int(default_min * 0.8)
     min_word_count = min_words or default_min
 
@@ -296,7 +321,8 @@ def _validate_translation_section(
 
 
 # Module-level dispatch table — built once after all validators are defined.
-_REVIEW_TYPE_VALIDATORS: dict[str, Any] = {
+_ValidatorFn = Callable[[str, dict[str, Any], list[str]], None]
+_REVIEW_TYPE_VALIDATORS: dict[str, _ValidatorFn] = {
     "executive_summary": _validate_executive_summary_section,
     "quality_review": _validate_quality_review_section,
     "methodology_review": _validate_methodology_review_section,
@@ -306,12 +332,22 @@ _REVIEW_TYPE_VALIDATORS: dict[str, Any] = {
 
 
 def create_review_client(model_name: str) -> LLMClient:
+<<<<<<< HEAD
     """Create an LLM client specialized for reviews."""
     config = LLMConfig.from_env()
     config.default_model = model_name
     config.timeout = config.review_timeout
     config.system_prompt = get_manuscript_review_system_prompt()
     config.auto_inject_system_prompt = True
+=======
+    base = OllamaClientConfig.from_env()
+    config = base.with_overrides(
+        default_model=model_name,
+        timeout=base.review_timeout,
+        system_prompt=get_manuscript_review_system_prompt(),
+        auto_inject_system_prompt=True,
+    )
+>>>>>>> desloppify/code-health
 
     source = (
         f"environment variable LLM_LONG_MAX_TOKENS={config.long_max_tokens}"
@@ -321,9 +357,23 @@ def create_review_client(model_name: str) -> LLMClient:
     logger.debug(f"Review max_tokens configuration: {source}")
     return LLMClient(config)
 
+<<<<<<< HEAD
 
 def check_ollama_availability() -> tuple[bool, str | None]:
     """Check if Ollama server and models are available."""
+=======
+def select_and_start_ollama_model() -> tuple[bool, str | None]:
+    """Ensure Ollama is running and select the best available model.
+
+    Verifies the Ollama binary is installed, starts the server if it is not
+    already running (up to 3 attempts with exponential backoff), then queries
+    the available model list and selects the best candidate for manuscript review.
+
+    Returns:
+        (True, model_name) on success, (False, None) if Ollama is unavailable
+        or no suitable model is found.
+    """
+>>>>>>> desloppify/code-health
     log_substep("Checking Ollama availability...")
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
@@ -332,17 +382,14 @@ def check_ollama_availability() -> tuple[bool, str | None]:
         if result.returncode != 0:
             logger.error("❌ Ollama command not found. Install Ollama: https://ollama.ai")
             return False, None
-    except (subprocess.SubprocessError, FileNotFoundError):
+    except (subprocess.SubprocessError, FileNotFoundError):  # noqa: BLE001 — failure propagated as (False, None) return value
         logger.error("❌ Unable to check if Ollama is installed")
         return False, None
-
-    logger.debug("    Checking Ollama server status...")
 
     max_retries = 3
     for attempt in range(max_retries):
         if attempt > 0:
             wait_time = min(2**attempt, 10)
-            logger.debug(f"    Retry {attempt}/{max_retries - 1} in {wait_time}s...")
             time.sleep(wait_time)
 
         if not is_ollama_running():
@@ -350,23 +397,20 @@ def check_ollama_availability() -> tuple[bool, str | None]:
                 logger.info("    Ollama not running, attempting to start automatically...")
                 if ensure_ollama_ready(auto_start=True):
                     log_success("Ollama server started and ready", logger)
-                    break
+                    break  # auto-start succeeded — server is ready
                 else:
                     if attempt == max_retries - 1:
                         logger.warning(
                             "❌ Failed to start Ollama server automatically after retries"
                         )
                         return False, None
-                    else:
-                        continue
             else:
                 logger.warning("❌ Ollama server is not running")
                 return False, None
         else:
             log_success("Ollama server is running", logger)
-            break
+            break  # server already running — no start needed
 
-    logger.debug("    Discovering available models...")
     available_models = get_available_models()
     if not available_models:
         logger.warning("❌ No Ollama models available")
@@ -374,8 +418,6 @@ def check_ollama_availability() -> tuple[bool, str | None]:
 
     model_names = [m.get("name", "unknown") for m in available_models]
     logger.debug(f"    Found {len(model_names)} model(s): {', '.join(model_names[:5])}")
-
-    logger.debug("    Selecting best model for manuscript review...")
     model = select_best_model()
     if not model:
         logger.warning("❌ Could not select a suitable model")
@@ -441,11 +483,13 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
         elapsed = time.time() - start_time
         response = "".join(response_chunks)
 
-        if first_token_time:
+        if first_token_time is not None:
+            # first_token_time is when the first token arrived; generation_time excludes TTFT
             generation_time = elapsed - (first_token_time - start_time)
             output_tokens = len(response.split()) * 1.3
             tokens_per_sec = output_tokens / generation_time if generation_time > 0 else 0
         else:
+            # No tokens received — streaming produced no output
             tokens_per_sec = 0
 
         log_success(f"Warmup complete ({elapsed:.1f}s)", logger)
@@ -465,7 +509,18 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
 
 
 def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, ManuscriptInputMetrics]:
+<<<<<<< HEAD
     """Extract and validate text from a manuscript PDF."""
+=======
+    """Extract text from a manuscript PDF for LLM review.
+
+    Returns:
+        (text, metrics) where text is None if the PDF file does not exist.
+
+    Raises:
+        PDFValidationError: If the file exists but cannot be read or is invalid.
+    """
+>>>>>>> desloppify/code-health
     log_substep(f"Extracting text from manuscript: {Path(pdf_path).name}")
     metrics = ManuscriptInputMetrics()
 
@@ -484,7 +539,7 @@ def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, Manuscrip
         logger.info(
             f"  Extracted: {metrics.total_chars:,} chars ({metrics.total_words:,} words, ~{metrics.total_tokens_est:,} tokens)"  # noqa: E501
         )
-        max_length = LLMConfig.from_env().max_input_length
+        max_length = OllamaClientConfig.from_env().max_input_length
 
         if max_length > 0 and len(text) > max_length:
             metrics.truncated = True
@@ -499,9 +554,8 @@ def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, Manuscrip
             logger.info("  Sending full manuscript to LLM (no truncation)")
 
         return text, metrics
-    except PDFValidationError as e:
-        logger.error(format_error_with_suggestions(e))
-        return None, metrics
+    except PDFValidationError:
+        raise
 
 
 def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
@@ -524,7 +578,7 @@ def _stream_with_heartbeat(
     options: GenerationOptions,
     review_name: str,
     estimated_total_tokens: int,
-    config: LLMConfig,
+    config: OllamaClientConfig,
 ) -> str:
     """Stream a query with heartbeat monitoring and progress display.
 
@@ -578,7 +632,7 @@ def generate_review_with_metrics(
     text: str,
     review_type: str,
     review_name: str,
-    template_class: type,
+    template_class: type[ResearchTemplate],
     model_name: str = "",
     temperature: float = 0.3,
     max_tokens: int | None = None,
@@ -588,7 +642,7 @@ def generate_review_with_metrics(
     log_substep(f"Generating {review_name}...")
 
     if max_tokens is None:
-        max_tokens = LLMConfig.from_env().long_max_tokens
+        max_tokens = OllamaClientConfig.from_env().long_max_tokens
 
     metrics = ReviewMetrics(
         input_chars=len(text),
@@ -599,13 +653,14 @@ def generate_review_with_metrics(
     client.reset()
     template = template_class()
     prompt = template.render(text=text, max_tokens=max_tokens)
-    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
-    adjusted_temp = temperature + 0.1 if is_small_model else temperature
+    adjusted_temp = temperature + 0.1 if _is_small_model(model_name) else temperature
     options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
 
     start_time = time.time()
     best_response = ""
+    response = ""  # Initialize before loop — assigned in each iteration's try block
     had_off_topic = False
+    config = OllamaClientConfig.from_env()
 
     for attempt in range(max_retries + 1):
         try:
@@ -616,7 +671,6 @@ def generate_review_with_metrics(
                 options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
                 current_prompt = _build_retry_prompt(prompt, had_off_topic)
 
-            config = LLMConfig.from_env()
             response = _stream_with_heartbeat(
                 client, current_prompt, options, review_name, max_tokens, config
             )
@@ -631,15 +685,12 @@ def generate_review_with_metrics(
 
             if is_valid:
                 break
-            elif attempt < max_retries:
-                continue
-            else:
-                response = best_response
+            elif attempt == max_retries:
+                response = best_response or response
 
         except Exception as e:  # noqa: BLE001 — intentional: retry loop must continue on any LLM client failure
             if attempt < max_retries:
                 logger.debug(f"Attempt {attempt + 1} failed for {review_name}: {e}")
-                continue
             else:
                 metrics.generation_time_seconds = time.time() - start_time
                 error_response = f"*Error generating {review_name}: {e}*"
@@ -676,7 +727,16 @@ def generate_review_with_metrics(
 def generate_llm_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+<<<<<<< HEAD
     """Generate an executive summary of the manuscript using an LLM."""
+=======
+    """Named public API entry point for executive summary reviews.
+
+    Binds review_type='executive_summary' and ManuscriptExecutiveSummary template.
+    Callers use the named function rather than the generic generate_review_with_metrics
+    to avoid having to know the template class and review_type string.
+    """
+>>>>>>> desloppify/code-health
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -692,7 +752,11 @@ def generate_llm_executive_summary(
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+<<<<<<< HEAD
     """Generate a quality review of the manuscript using an LLM."""
+=======
+    """Named public API entry point for quality reviews (ManuscriptQualityReview template)."""
+>>>>>>> desloppify/code-health
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -708,7 +772,11 @@ def generate_quality_review(
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+<<<<<<< HEAD
     """Generate a methodology review of the manuscript using an LLM."""
+=======
+    """Named public API entry point for methodology reviews (ManuscriptMethodologyReview template)."""
+>>>>>>> desloppify/code-health
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -724,7 +792,16 @@ def generate_methodology_review(
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
+<<<<<<< HEAD
     """Generate improvement suggestions for the manuscript using an LLM."""
+=======
+    """Named public API entry point for improvement suggestions (ManuscriptImprovementSuggestions template).
+
+    Uses temperature=0.4 (vs 0.3 for other reviews) because generative ideation
+    benefits from higher diversity — the task is proposing novel directions, not
+    accurate analysis.
+    """
+>>>>>>> desloppify/code-health
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -738,7 +815,7 @@ def generate_improvement_suggestions(
 
 
 def generate_translation(
-    client: LLMClient, text: str, language_code: str, model_name: str = ""
+    client: LLMClient, text: str, model_name: str = "", language_code: str = ""
 ) -> tuple[str | None, ReviewMetrics]:
     """Generate a translated abstract for the manuscript."""
     target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
@@ -748,14 +825,13 @@ def generate_translation(
         input_chars=len(text), input_words=len(text.split()), input_tokens_est=estimate_tokens(text)
     )
     client.reset()
-    _cfg = LLMConfig.from_env()
+    _cfg = OllamaClientConfig.from_env()
     max_tokens = _cfg.long_max_tokens
     timeout = _cfg.review_timeout
     log_timeout_info(timeout, f"translation ({target_language})")
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
-    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
-    temperature = 0.4 if is_small_model else 0.3
+    temperature = 0.4 if _is_small_model(model_name) else 0.3
     options = GenerationOptions(temperature=temperature, max_tokens=max_tokens)
 
     start_time = time.time()

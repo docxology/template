@@ -12,7 +12,7 @@ import sys
 import time
 
 from infrastructure.core.logging_helpers import format_duration
-from infrastructure.core.logging_progress import (
+from infrastructure.core.eta import (
     calculate_eta,
     calculate_eta_ema,
     calculate_eta_with_confidence,

@@ -49,7 +49,7 @@ uv sync
 uv run pytest tests/
 
 # Regenerate only figures
-uv run python project/scripts/example_figure.py
+uv run python projects/code_project/scripts/example_figure.py
 
 # Rebuild PDFs (run stage 3 only)
 uv run python scripts/03_render_pdf.py
@@ -62,7 +62,7 @@ uv run python scripts/03_render_pdf.py
 **Clear corrupted checkpoint:**
 
 ```bash
-rm -f project/output/.checkpoints/pipeline_checkpoint.json
+rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json
 uv run python scripts/execute_pipeline.py --core-only
 ```
 

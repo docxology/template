@@ -10,10 +10,10 @@ from __future__ import annotations
 
 import random
 import time
+import types
 from functools import wraps
-from typing import Any, Callable, Type, TypeVar
+from typing import Any, Callable, TypeVar
 
-from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -23,6 +23,7 @@ T = TypeVar("T")
 # Standard exceptions that indicate transient infrastructure failures.
 # Pass to retry_with_backoff(exceptions=TRANSIENT_EXCEPTIONS) or use
 # retry_on_transient_failure() for a pre-configured shorthand.
+<<<<<<< HEAD
 TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (
     IOError,
     ConnectionError,
@@ -30,6 +31,9 @@ TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (
     OSError,
 )
 
+=======
+TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (ConnectionError, TimeoutError, OSError)
+>>>>>>> desloppify/code-health
 
 def retry_with_backoff(
     max_attempts: int = 3,
@@ -37,8 +41,13 @@ def retry_with_backoff(
     max_delay: float = 60.0,
     exponential_base: float = 2.0,
     jitter: bool = True,
+<<<<<<< HEAD
     exceptions: tuple[Type[Exception], ...] = (Exception,),
     on_retry: Callable[[int, Exception], None] | None = None,
+=======
+    exceptions: tuple[type[Exception], ...] = (Exception,),
+    on_retry: Callable[[int, Exception | None], None] | None = None,
+>>>>>>> desloppify/code-health
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator to retry a function with exponential backoff.
 
@@ -56,67 +65,27 @@ def retry_with_backoff(
 
     Returns:
         Decorator function
-
-    Example:
-        >>> @retry_with_backoff(max_attempts=3, initial_delay=1.0)
-        ... def fetch_data():
-        ...     # May raise ConnectionError
-        ...     return requests.get("https://api.example.com")
-        >>>
-        >>> # Will retry up to 3 times with exponential backoff
-        >>> data = fetch_data()
     """
 
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
-        """Wrap the target function with retry logic.
-
-        Args:
-            func: The function to be decorated with retry behavior.
-
-        Returns:
-            Callable[..., T]: Wrapped function that retries on failure.
-        """
-
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
-            """Execute the wrapped function with exponential backoff retry.
-
-            Attempts to execute the function up to max_attempts times,
-            with exponential backoff delays between retries.
-
-            Args:
-                *args: Positional arguments passed to the wrapped function.
-                **kwargs: Keyword arguments passed to the wrapped function.
-
-            Returns:
-                T: The return value from the wrapped function on success.
-
-            Raises:
-                Exception: The last exception encountered after all retry
-                    attempts have been exhausted.
-            """
-            last_exception = None
-
             for attempt in range(1, max_attempts + 1):
                 try:
                     return func(*args, **kwargs)
                 except exceptions as e:
-                    last_exception = e
-
                     if attempt >= max_attempts:
                         # Final attempt failed, log and re-raise
                         logger.error(f"{func.__name__} failed after {max_attempts} attempts: {e}")
                         raise
 
-                    # Calculate delay with exponential backoff
                     delay = min(initial_delay * (exponential_base ** (attempt - 1)), max_delay)
 
-                    # Add jitter to prevent synchronized retries
+                    # Add jitter to prevent synchronized retries (thundering herd)
                     if jitter:
                         jitter_amount = delay * 0.1 * random.random()
                         delay += jitter_amount
 
-                    # Call retry callback if provided
                     if on_retry:
                         on_retry(attempt, e)
                     else:
@@ -127,10 +96,9 @@ def retry_with_backoff(
 
                     time.sleep(delay)
 
-            # Should never reach here, but handle it just in case
-            if last_exception:
-                raise last_exception
-            raise PipelineError(f"{func.__name__} failed after {max_attempts} attempts")
+            # This branch is unreachable: the loop always either returns or raises.
+            # The explicit raise satisfies the type checker (return type T, not T | None).
+            raise RuntimeError(f"{func.__name__} retry loop exhausted without returning or raising")
 
         return wrapper
 
@@ -144,21 +112,6 @@ def retry_on_transient_failure(
 
     Convenience wrapper around retry_with_backoff that catches common
     transient failure exceptions (IOError, ConnectionError, TimeoutError).
-
-    Args:
-        max_attempts: Maximum number of attempts (default: 3)
-        initial_delay: Initial delay in seconds (default: 1.0)
-
-    Returns:
-        Decorator function
-
-    Example:
-        >>> @retry_on_transient_failure()
-        ... def read_file(path):
-        ...     return open(path).read()
-        >>>
-        >>> # Will retry on IOError (file locks, network issues, etc.)
-        >>> content = read_file("data.txt")
     """
     return retry_with_backoff(
         max_attempts=max_attempts,
@@ -169,19 +122,7 @@ def retry_on_transient_failure(
 
 
 class RetryableOperation:
-    """Context manager for retryable operations with manual control.
-
-    Useful when you need more control over retry logic than a decorator provides.
-
-    Example:
-        >>> with RetryableOperation(max_attempts=3) as op:
-        ...     for attempt in op:
-        ...         try:
-        ...             result = risky_operation()
-        ...             op.succeed(result)
-        ...         except TransientError as e:
-        ...             op.retry(e)
-    """
+    """Context manager for retryable operations with manual retry control."""
 
     def __init__(
         self,
@@ -213,9 +154,9 @@ class RetryableOperation:
 
     def __exit__(
         self,
-        exc_type: Type[Exception | None],
-        exc_val: Exception | None,
-        exc_tb: Any,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: types.TracebackType | None,
     ) -> None:
         """Exit context manager."""
         return None  # Don't suppress exceptions
@@ -256,7 +197,6 @@ class RetryableOperation:
             logger.error(f"Operation failed after {self.max_attempts} attempts: {exception}")
             raise exception
 
-        # Calculate delay
         delay = min(
             self.initial_delay * (self.exponential_base ** (self.attempt - 1)),
             self.max_delay,

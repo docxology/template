@@ -5,13 +5,14 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
+from infrastructure.core.exceptions import PDFValidationError
 from infrastructure.core.logging_utils import (
     get_logger,
     log_substep,
     log_success,
     log_progress,
 )
-from infrastructure.core.config_loader import get_translation_languages, get_review_types
+from infrastructure.core.config_queries import get_translation_languages, get_review_types
 from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES
 from infrastructure.llm.review.io import (
     save_review_outputs,
@@ -21,7 +22,7 @@ from infrastructure.llm.review.io import (
 from infrastructure.llm.review.metrics import SessionMetrics
 from infrastructure.llm.core.config import get_max_input_length
 from infrastructure.llm.review.generator import (
-    check_ollama_availability,
+    select_and_start_ollama_model,
     create_review_client,
     extract_manuscript_text,
     generate_llm_executive_summary,
@@ -80,15 +81,9 @@ def run_llm_review_pipeline(
     project_basename = Path(project_name).name
     pdf_dir = project_output / "pdf"
     project_specific_pdf = pdf_dir / f"{project_basename}_combined.pdf"
-    generic_pdf = pdf_dir / "project_combined.pdf"
 
     if project_specific_pdf.exists():
         pdf_path = project_specific_pdf
-    elif generic_pdf.exists():
-        pdf_path = generic_pdf
-        logger.warning(
-            f"Using legacy PDF filename: {generic_pdf.name}. Consider upgrading to project-specific naming."  # noqa: E501
-        )
     else:
         pdf_path = project_specific_pdf  # Use expected filename in error message
 
@@ -99,16 +94,20 @@ def run_llm_review_pipeline(
 
     try:
         # Step 1: Check Ollama availability
-        available, model_name = check_ollama_availability()
+        available, model_name = select_and_start_ollama_model()
 
         if not available:
             logger.warning("\n⚠️  Skipping LLM review - Ollama not available")
             return 2
 
-        session_metrics.model_name = model_name  # type: ignore
+        session_metrics.model_name = model_name
 
         # Step 2: Extract manuscript text
-        text, manuscript_metrics = extract_manuscript_text(pdf_path)
+        try:
+            text, manuscript_metrics = extract_manuscript_text(pdf_path)
+        except PDFValidationError as e:
+            logger.error(f"Cannot generate reviews: manuscript PDF is invalid — {e}")
+            return 2
         session_metrics.manuscript = manuscript_metrics
 
         if not text:
@@ -117,7 +116,7 @@ def run_llm_review_pipeline(
 
         # Step 3: Initialize LLM client
         log_substep("Initializing LLM client...")
-        client = create_review_client(model_name)  # type: ignore
+        client = create_review_client(model_name)
 
         if not client.check_connection():
             logger.error("Failed to connect to Ollama")
@@ -126,7 +125,7 @@ def run_llm_review_pipeline(
         log_success("LLM client initialized", logger)
 
         # Step 3.5: Warmup model
-        warmup_success, tokens_per_sec = warmup_model(client, text[:1000], model_name)  # type: ignore
+        warmup_success, tokens_per_sec = warmup_model(client, text[:1000], model_name)
         if not warmup_success:
             logger.error("Model warmup failed - cannot proceed with reviews")
             return 1
@@ -150,11 +149,11 @@ def run_llm_review_pipeline(
                 if generator is None:
                     logger.warning(f"  Skipping unknown review type: {review_type}")
                     continue
-                response, metrics = generator(client, text, model_name)  # type: ignore
+                response, metrics = generator(client, text, model_name)
 
                 reviews[review_type] = response
                 session_metrics.reviews[review_type] = metrics
-                save_single_review(review_type, response, output_dir, model_name, metrics)  # type: ignore
+                save_single_review(review_type, response, output_dir, model_name, metrics)
 
         # Translations
         if mode != ReviewMode.REVIEWS_ONLY:
@@ -167,12 +166,16 @@ def run_llm_review_pipeline(
                 for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
                     log_progress(i, len(translation_languages), f"Translation: {lang_name}", logger)
+<<<<<<< HEAD
                     response, metrics = generate_translation(client, text, lang_code, model_name)  # type: ignore[assignment,arg-type]
+=======
+                    response, metrics = generate_translation(client, text, model_name, language_code=lang_code)
+>>>>>>> desloppify/code-health
                     review_name = f"translation_{lang_code}"
                     session_metrics.reviews[review_name] = metrics
                     if response is not None:
                         reviews[review_name] = response
-                        save_single_review(review_name, response, output_dir, model_name, metrics)  # type: ignore
+                        save_single_review(review_name, response, output_dir, model_name, metrics)
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
                 return 2
@@ -184,7 +187,7 @@ def run_llm_review_pipeline(
         session_metrics.total_generation_time = time.time() - total_start
 
         # Step 5: Save outputs
-        if not save_review_outputs(reviews, output_dir, model_name, pdf_path, session_metrics):  # type: ignore
+        if not save_review_outputs(reviews, output_dir, model_name, pdf_path, session_metrics):
             logger.error("Failed to save some review outputs")
             return 1
 

@@ -37,16 +37,22 @@ class FooterConfig:
 def _get_reportlab():
     """Lazily import reportlab components."""
     try:
+<<<<<<< HEAD
         from reportlab.lib.pagesizes import letter
         from reportlab.lib.units import inch
         from reportlab.pdfgen import canvas as rl_canvas
 
+=======
+        from reportlab.lib.pagesizes import letter  # type: ignore[import-untyped]
+        from reportlab.lib.units import inch  # type: ignore[import-untyped]
+        from reportlab.pdfgen import canvas as rl_canvas  # type: ignore[import-untyped]
+>>>>>>> desloppify/code-health
         return rl_canvas, letter, inch
     except ImportError:
         raise ImportError(
             "The 'reportlab' package is required for overlay generation. "
             "Install it with: pip install reportlab"
-        )
+        ) from None
 
 
 # ── Public API ───────────────────────────────────────────────────────────
@@ -131,7 +137,11 @@ def create_qr_overlay(
     """
     rl_canvas_mod, _letter, _inch = _get_reportlab()
     try:
+<<<<<<< HEAD
         from reportlab.lib.utils import ImageReader
+=======
+        from reportlab.lib.utils import ImageReader  # type: ignore[import-untyped]
+>>>>>>> desloppify/code-health
         from infrastructure.steganography.barcodes import generate_qr_code
     except ImportError as exc:
         raise ImportError(

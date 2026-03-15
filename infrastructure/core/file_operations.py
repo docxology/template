@@ -1,99 +1,47 @@
-"""File and directory operation utilities.
+"""File copy and inventory operation utilities.
 
-This module provides functions for cleaning, copying, and managing
-output directories and files.
+This module provides functions for copying and inventorying
+output files. Cleanup functions live in file_cleanup.py.
 """
 
 from __future__ import annotations
 
 import hashlib
 import shutil
-from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.logging_utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
+class CopyStats(TypedDict):
+    """Typed structure for copy_final_deliverables return value."""
 
-def clean_output_directory(output_dir: Path) -> bool:
-    """Clean top-level output directory before copying.
-
-    Args:
-        output_dir: Path to top-level output directory
-
-    Returns:
-        True on success.
-
-    Raises:
-        FileOperationError: If the directory cannot be created or cleaned.
-    """
-    logger.info("Cleaning output directory...")
-
-    if not output_dir.exists():
-        logger.info(f"Output directory does not exist, creating: {output_dir}")
-        try:
-            output_dir.mkdir(parents=True, exist_ok=True)
-            log_success("Created output directory", logger)
-            return True
-        except OSError as e:
-            raise FileOperationError(f"Failed to create output directory {output_dir}: {e}") from e
-
-    # Remove existing contents
-    try:
-        for item in output_dir.iterdir():
-            if item.is_dir():
-                shutil.rmtree(item)
-                logger.debug(f"  Removed directory: {item.name}")
-            else:
-                item.unlink()
-                logger.debug(f"  Removed file: {item.name}")
-
-        log_success("Output directory cleaned", logger)
-        return True
-    except OSError as e:
-        raise FileOperationError(f"Failed to clean output directory {output_dir}: {e}") from e
+    pdf_files: int
+    web_files: int
+    slides_files: int
+    figures_files: int
+    data_files: int
+    reports_files: int
+    simulations_files: int
+    llm_files: int
+    logs_files: int
+    combined_pdf: int
+    total_files: int
+    errors: list[str]
 
 
-def _clean_dir_preserving(
-    dir_path: Path,
-    output_dir: Path,
-    preserved_relative_paths: set[Path],
-    log: Any,
-) -> None:
-    """Remove all files inside *dir_path* except those in *preserved_relative_paths*.
-
-    Paths in *preserved_relative_paths* are relative to *output_dir*.
-    After removing files, any empty directories are cleaned up bottom-up.
-    """
-    preserved_count = 0
-    removed_count = 0
-
-    for file_path in list(dir_path.rglob("*")):
-        if not file_path.is_file():
-            continue
-        rel = file_path.relative_to(output_dir)
-        if rel in preserved_relative_paths:
-            log.info(f"  Preserving file for incremental processing: {rel}")
-            preserved_count += 1
-        else:
-            file_path.unlink()
-            removed_count += 1
-
-    # Clean up empty directories bottom-up
-    for sub in sorted(dir_path.rglob("*"), key=lambda p: len(p.parts), reverse=True):
-        if sub.is_dir() and not any(sub.iterdir()):
-            sub.rmdir()
-
-    if preserved_count:
-        log.info(
-            f"  Selectively cleaned {dir_path.name}/: "
-            f"removed {removed_count} files, preserved {preserved_count}"
-        )
+# Output subdirectory name → stats dict key mapping (module-level constant).
+_SUBDIR_STATS_KEYS: dict[str, str] = {
+    "pdf": "pdf_files", "web": "web_files", "slides": "slides_files",
+    "figures": "figures_files", "data": "data_files", "reports": "reports_files",
+    "simulations": "simulations_files", "llm": "llm_files", "logs": "logs_files",
+}
 
 
+<<<<<<< HEAD
 def clean_output_directories(
     repo_root: Path, project_name: str = "project", subdirs: list[str] | None = None
 ) -> None:
@@ -396,6 +344,11 @@ def _process_subdirectories(
     }
 
     for subdir_name, stats_key in subdirs.items():
+=======
+def _collect_subdirectory_stats(output_dir: Path, stats: CopyStats, files_list: list[dict[str, Any]]) -> None:
+    """Process output subdirectories, verifying contents and updating stats."""
+    for subdir_name, stats_key in _SUBDIR_STATS_KEYS.items():
+>>>>>>> desloppify/code-health
         subdir = output_dir / subdir_name
         if subdir.exists():
             all_items = list(subdir.glob("**/*"))
@@ -441,10 +394,14 @@ def _process_subdirectories(
 
             logger.info(f"  {subdir_name}/: {file_count} file(s)")
 
+<<<<<<< HEAD
 
 def _copy_combined_pdf(
     output_dir: Path, project_basename: str, stats: dict[str, Any], files_list: list[dict[str, Any]]
 ) -> None:
+=======
+def _copy_combined_pdf(output_dir: Path, project_basename: str, stats: CopyStats, files_list: list[dict[str, Any]]) -> None:
+>>>>>>> desloppify/code-health
     """Copy combined PDF to root of output directory for convenient access."""
     combined_pdf_src = output_dir / "pdf" / f"{project_basename}_combined.pdf"
     combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"
@@ -477,7 +434,7 @@ def _copy_combined_pdf(
 
 def copy_final_deliverables(
     project_root: Path, output_dir: Path, project_name: str = "project"
-) -> dict[str, Any]:
+) -> CopyStats:
     """Copy all project outputs to top-level output directory.
 
     Recursively copies entire projects/{project_name}/output/ directory structure, preserving:
@@ -505,6 +462,7 @@ def copy_final_deliverables(
 
     project_output = project_root / "projects" / project_name / "output"
 
+<<<<<<< HEAD
     stats: dict[str, Any] = {
         "pdf_files": 0,
         "web_files": 0,
@@ -518,6 +476,12 @@ def copy_final_deliverables(
         "combined_pdf": 0,
         "total_files": 0,
         "errors": [],
+=======
+    stats: CopyStats = {
+        "pdf_files": 0, "web_files": 0, "slides_files": 0, "figures_files": 0,
+        "data_files": 0, "reports_files": 0, "simulations_files": 0, "llm_files": 0,
+        "logs_files": 0, "combined_pdf": 0, "total_files": 0, "errors": [],
+>>>>>>> desloppify/code-health
     }
 
     files_list: list[dict[str, Any]] = []
@@ -540,7 +504,7 @@ def copy_final_deliverables(
         return stats
 
     # Process subdirectories for verifying contents and updating stats
-    _process_subdirectories(output_dir, stats, files_list)
+    _collect_subdirectory_stats(output_dir, stats, files_list)
 
     # Copy combined PDF to root for convenient access
     _copy_combined_pdf(output_dir, Path(project_name).name, stats, files_list)
@@ -556,7 +520,10 @@ def calculate_file_hash(file_path: Path, algorithm: str = "sha256") -> str | Non
         algorithm: Hash algorithm to use
 
     Returns:
-        Hash string or None if calculation fails
+        Hash string, or None if file does not exist or cannot be read
+
+    Raises:
+        FileOperationError: If the algorithm is unsupported
     """
     if not file_path.exists():
         return None

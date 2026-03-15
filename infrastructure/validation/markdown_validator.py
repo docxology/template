@@ -256,7 +256,7 @@ def validate_markdown(
     Returns:
         Tuple of (problems list, exit_code)
         - problems: List of validation problem descriptions
-        - exit_code: 0 for success, 1 for issues found (in strict mode or always)
+        - exit_code: 0 for success or when strict=False; 1 only when strict=True and issues found
 
     Raises:
         FileNotFoundError: If markdown_dir doesn't exist

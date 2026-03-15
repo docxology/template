@@ -47,8 +47,8 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
 
     try:
         from pypdf import PdfReader
-    except ImportError:
-        raise ImportError("pypdf library required for PDF processing")
+    except ImportError as e:
+        raise ImportError("pypdf library required for PDF processing") from e
 
     # Read PDF
     try:
@@ -59,7 +59,7 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
         logger.info(f"Extracting {len(reader.pages)} pages from {pdf_path.name}")
     except PDFValidationError:
         raise
-    except Exception as e:
+    except (OSError, ValueError) as e:
         raise PDFValidationError(f"Failed to read PDF {pdf_path}: {e}") from e
 
     images = []
@@ -67,11 +67,11 @@ def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Ima
     # Try advanced rendering first (reportlab)
     try:
         images = _render_pages_with_reportlab(reader, dpi)
-    except Exception as e:
+    except (ImportError, OSError, ValueError) as e:  # noqa: BLE001 — fall back to simple rendering path
         logger.warning(f"Advanced rendering failed, falling back to simple rendering: {e}")
         try:
             images = _render_pages_simple(reader, dpi)
-        except Exception as e2:
+        except (OSError, ValueError, RuntimeError, ImportError) as e2:
             logger.error(f"Simple rendering also failed: {e2}")
             raise PDFValidationError(f"Failed to render PDF pages: {e2}") from e2
 
@@ -88,8 +88,8 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Ima
         from reportlab.lib.pagesizes import letter
         from reportlab.lib.utils import ImageReader  # noqa: F401
         from reportlab.pdfgen import canvas
-    except ImportError:
-        raise ImportError("reportlab and PIL required for advanced rendering")
+    except ImportError as e:
+        raise ImportError("reportlab and PIL required for advanced rendering") from e
 
     images = []
 
@@ -141,9 +141,9 @@ def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Ima
                 draw = ImageDraw.Draw(img)
                 try:
                     font = ImageFont.truetype("Helvetica", 12)
-                except (OSError, IOError) as e:
+                except OSError as e:
                     logger.debug(f"Could not load Helvetica font: {e}")
-                    font = ImageFont.load_default()  # type: ignore
+                    font = ImageFont.load_default()
 
                 y_pos = 50
                 for line in lines[:30]:
@@ -170,8 +170,8 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image
     """Render PDF pages using simple text extraction and PIL drawing."""
     try:
         from PIL import Image, ImageDraw, ImageFont
-    except ImportError:
-        raise ImportError("PIL required for PDF rendering")
+    except ImportError as e:
+        raise ImportError("PIL required for PDF rendering") from e
 
     images = []
 
@@ -185,9 +185,9 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image
         # Try to load a font
         try:
             font = ImageFont.truetype("Helvetica", 12)
-        except (OSError, IOError) as e:
+        except OSError as e:
             logger.debug(f"Could not load Helvetica font: {e}")
-            font = ImageFont.load_default()  # type: ignore
+            font = ImageFont.load_default()
 
         # Extract and render text
         try:
@@ -204,7 +204,7 @@ def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image
                     if y_position > height - 100:
                         break
 
-        except Exception as e:
+        except (OSError, ValueError, KeyError) as e:
             logger.warning(f"Failed to extract text from page {i + 1}: {e}")
 
         # Add page number
@@ -237,8 +237,8 @@ def create_page_grid(
 
     try:
         from PIL import Image, ImageDraw, ImageFont
-    except ImportError:
-        raise ImportError("PIL required for image processing")
+    except ImportError as e:
+        raise ImportError("PIL required for image processing") from e
 
     # Calculate grid dimensions
     num_images = len(images)
@@ -281,9 +281,9 @@ def create_page_grid(
     # Try to load font for page numbers
     try:
         font = ImageFont.truetype("Helvetica", 10)
-    except (OSError, IOError) as e:
+    except OSError as e:
         logger.debug(f"Could not load Helvetica font: {e}")
-        font = ImageFont.load_default()  # type: ignore
+        font = ImageFont.load_default()
 
     # Place images in grid
     for i, img in enumerate(resized_images):
@@ -310,9 +310,9 @@ def create_page_grid(
     title = f"Manuscript Overview - {num_images} Pages"
     try:
         title_font = ImageFont.truetype("Helvetica-Bold", 16)
-    except (OSError, IOError) as e:
+    except OSError as e:
         logger.debug(f"Could not load Helvetica-Bold font: {e}")
-        title_font = ImageFont.load_default()  # type: ignore
+        title_font = ImageFont.load_default()
 
     draw.text((padding, padding // 2), title, fill="black", font=title_font)
 
@@ -375,10 +375,10 @@ def generate_manuscript_overview(
         # Convert PIL image to PDF using reportlab
         _save_image_as_pdf(grid_image, pdf_output_path, project_name)
         logger.info(f"Saved PDF overview: {pdf_output_path}")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — PDF output is optional; PNG is the primary deliverable
         logger.warning(f"Failed to save PDF overview: {e}")
         # Don't fail the whole operation if PDF save fails
-        pdf_output_path = None  # type: ignore
+        pdf_output_path = None
 
     result = {png_path.name: png_path}
     if pdf_output_path and pdf_output_path.exists():
@@ -393,8 +393,8 @@ def _save_image_as_pdf(image: "PIL.Image.Image", pdf_path: Path, title: str) -> 
         from reportlab.lib.pagesizes import letter
         from reportlab.lib.utils import ImageReader
         from reportlab.pdfgen import canvas
-    except ImportError:
-        raise ImportError("reportlab required for PDF output")
+    except ImportError as e:
+        raise ImportError("reportlab required for PDF output") from e
 
     # Create PDF with the image
     c = canvas.Canvas(str(pdf_path), pagesize=letter)
@@ -478,7 +478,7 @@ def generate_all_manuscript_overviews(
             logger.info(
                 f"Generated overview files for {project_name}: {list(overview_files.keys())}"
             )
-        except Exception as e:
+        except (OSError, ImportError, ValueError, PDFValidationError) as e:
             logger.warning(f"Failed to generate manuscript overview for {project_name}: {e}")
             continue
 

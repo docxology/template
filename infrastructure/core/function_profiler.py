@@ -15,7 +15,7 @@ import time
 import tracemalloc
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any, Callable, Iterator
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -64,7 +64,7 @@ class CodeProfiler:
         self.metrics_history: list[ProfilingMetrics] = []
 
     @contextmanager
-    def monitor(self, operation_name: str, track_memory: bool = True):
+    def monitor(self, operation_name: str, track_memory: bool = True) -> Iterator[None]:
         """Context manager for monitoring operation performance."""
         start_time = time.time()
         cpu_start = time.process_time()
@@ -100,7 +100,7 @@ class CodeProfiler:
                 f"(CPU: {cpu_time:.3f}s, Peak memory: {metrics.memory_peak or 'N/A'}MB)"
             )
 
-    def profile_function(self, func: Callable, *args, **kwargs) -> Any:
+    def profile_function(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
         """Profile a function execution with detailed cProfile statistics."""
         profiler = cProfile.Profile()
         profiler.enable()
@@ -117,11 +117,11 @@ class CodeProfiler:
 
     def benchmark_function(
         self,
-        func: Callable,
-        *args,
+        func: Callable[..., Any],
+        *args: Any,
         iterations: int = 5,
         warmup_iterations: int = 2,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict[str, float | list[float]]:
         """Benchmark function performance over multiple iterations."""
         for _ in range(warmup_iterations):
@@ -201,19 +201,24 @@ class CodeProfiler:
 
         return "\n".join(report_lines)
 
+<<<<<<< HEAD
 
 _global_monitor: CodeProfiler | None = None
 
 
+=======
+@functools.lru_cache(maxsize=1)
+>>>>>>> desloppify/code-health
 def get_performance_monitor() -> CodeProfiler:
-    """Return the global CodeProfiler instance, creating it on first call."""
-    global _global_monitor
-    if _global_monitor is None:
-        _global_monitor = CodeProfiler()
-    return _global_monitor
+    """Return the global CodeProfiler instance (lazily initialized)."""
+    return CodeProfiler()
 
+<<<<<<< HEAD
 
 def monitor_performance(operation_name: str, track_memory: bool = True):
+=======
+def monitor_performance(operation_name: str, track_memory: bool = True) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+>>>>>>> desloppify/code-health
     """Decorator for monitoring function performance via the global CodeProfiler."""
 
     def decorator(func):
@@ -230,8 +235,12 @@ def monitor_performance(operation_name: str, track_memory: bool = True):
 
     return decorator
 
+<<<<<<< HEAD
 
 def profile_memory_usage(func: Callable, *args, **kwargs) -> dict[str, Any]:
+=======
+def profile_memory_usage(func: Callable[..., Any], *args: Any, **kwargs: Any) -> dict[str, Any]:
+>>>>>>> desloppify/code-health
     """Profile memory usage of a function via CodeProfiler."""
     monitor = get_performance_monitor()
     result = None

@@ -152,7 +152,7 @@ def collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics:
             citations = re.findall(r"@\w+|\\cite\{.*?\}", content)
             metrics.references += len(citations)
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — best-effort; skip unreadable files
             logger.warning(f"Error processing {md_file.name}: {e}")
 
     return metrics
@@ -197,7 +197,7 @@ def collect_codebase_metrics(src_dir: Path, scripts_dir: Path | None = None) -> 
                 except SyntaxError as e:
                     logger.debug(f"Syntax error parsing {py_file.name} for metrics: {e}")
 
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — skip unreadable files in loop
                 logger.warning(f"Error processing {py_file.name}: {e}")
 
     # Process script files
@@ -211,7 +211,7 @@ def collect_codebase_metrics(src_dir: Path, scripts_dir: Path | None = None) -> 
                 lines = [l.strip() for l in content.splitlines()]
                 code_lines = [l for l in lines if l and not l.startswith("#")]
                 metrics.script_lines += len(code_lines)
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — skip unreadable files in loop
                 logger.warning(f"Error processing {script_file.name}: {e}")
 
     return metrics
@@ -277,7 +277,7 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
             f"Successfully extracted test metrics: {metrics.total_tests} tests, {metrics.coverage_percent:.1f}% coverage"  # noqa: E501
         )
 
-    except Exception as e:
+    except (OSError, json.JSONDecodeError, KeyError, ValueError) as e:  # noqa: BLE001 — return empty metrics if report absent
         logger.warning(f"Error loading test report: {e}")
         logger.debug("Exception details", exc_info=True)
 
@@ -379,7 +379,7 @@ def collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics:
                     metrics.bottleneck_duration / metrics.total_duration * 100
                 )
 
-    except Exception as e:
+    except (OSError, json.JSONDecodeError, KeyError, ValueError) as e:  # noqa: BLE001 — return empty metrics if report absent
         logger.warning(f"Error loading pipeline report: {e}")
 
     return metrics
@@ -474,7 +474,7 @@ def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]
             "total_equations": sum(p.manuscript.equations for p in projects),
             "total_figures": sum(p.manuscript.figures for p in projects),
             "total_references": sum(p.manuscript.references for p in projects),
-            "words_stats": calculate_stats(manuscript_words),  # type: ignore
+            "words_stats": calculate_stats(manuscript_words),
         },
         "codebase": {
             "total_source_lines": sum(p.codebase.source_lines for p in projects),
@@ -954,7 +954,7 @@ def generate_executive_summary(repo_root: Path, project_names: list[str]) -> Exe
         try:
             metrics = collect_project_metrics(repo_root, project_name)
             project_metrics.append(metrics)
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, KeyError, ValueError, UnicodeDecodeError) as e:  # noqa: BLE001 — skip failed projects; collect remaining
             logger.error(f"Error collecting metrics for {project_name}: {e}")
 
     # Generate aggregates, comparisons, recommendations
@@ -994,23 +994,41 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[
     saved_files = {}
 
     # Save JSON (machine-readable)
-    json_path = organizer.get_output_path("consolidated_report.json", output_dir, FileType.JSON)  # type: ignore
-    with open(json_path, "w") as f:
-        json.dump(asdict(summary), f, indent=2, default=str)
+    json_path = organizer.get_output_path("consolidated_report.json", output_dir, FileType.JSON)
+    _tmp = json_path.with_suffix(json_path.suffix + ".tmp")
+    try:
+        with open(_tmp, "w") as f:
+            json.dump(asdict(summary), f, indent=2, default=str)
+        _tmp.replace(json_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     saved_files["json"] = json_path
     logger.info(f"Saved JSON report: {json_path}")
 
     # Save Markdown (human-readable)
-    md_path = organizer.get_output_path("consolidated_report.md", output_dir, FileType.MARKDOWN)  # type: ignore
+    md_path = organizer.get_output_path("consolidated_report.md", output_dir, FileType.MARKDOWN)
     md_content = _generate_markdown_report(summary)
-    md_path.write_text(md_content)
+    _tmp = md_path.with_suffix(md_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(md_content)
+        _tmp.replace(md_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     saved_files["markdown"] = md_path
     logger.info(f"Saved Markdown report: {md_path}")
 
     # Save HTML (styled)
-    html_path = organizer.get_output_path("consolidated_report.html", output_dir, FileType.HTML)  # type: ignore
+    html_path = organizer.get_output_path("consolidated_report.html", output_dir, FileType.HTML)
     html_content = _generate_html_report(summary)
-    html_path.write_text(html_content)
+    _tmp = html_path.with_suffix(html_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(html_content)
+        _tmp.replace(html_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     saved_files["html"] = html_path
     logger.info(f"Saved HTML report: {html_path}")
 

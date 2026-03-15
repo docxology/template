@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
-from infrastructure.rendering.poster_renderer import PosterRenderer
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 from infrastructure.rendering.web_renderer import WebRenderer
 
@@ -34,7 +34,6 @@ class RenderManager:
         self.pdf_renderer = PDFRenderer(self.config)
         self.slides_renderer = SlidesRenderer(self.config)
         self.web_renderer = WebRenderer(self.config)
-        self.poster_renderer = PosterRenderer(self.config)
 
     def render_all(self, source_file: Path) -> list[Path]:
         """Render all supported formats for a source file.
@@ -50,7 +49,9 @@ class RenderManager:
             List of paths to generated output files
 
         Raises:
-            TemplateError: If rendering fails or source file doesn't exist
+            TemplateError: If source file doesn't exist, if the file format
+                is not supported (.tex or .md), or if all output formats fail
+                to render.
         """
         from infrastructure.core.exceptions import TemplateError
 
@@ -58,6 +59,7 @@ class RenderManager:
             raise TemplateError(f"Source file does not exist: {source_file}")
 
         outputs = []
+        format_errors: list[tuple[str, Exception]] = []
 
         # Validate file format
         supported_formats = [".tex", ".md"]
@@ -80,15 +82,19 @@ class RenderManager:
                 # 1. Beamer slides for presentation
                 try:
                     logger.debug("Rendering Beamer slides...")
-                    outputs.append(self.render_slides(source_file, format="beamer"))
+                    outputs.append(self.render_slides(source_file, output_format="beamer"))
                     logger.debug("Beamer slides rendered successfully")
-                except Exception as e:
+                except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
+                    format_errors.append(("beamer", e))
                     # Enhanced error reporting for Beamer slide failures
                     error_msg = f"Failed to render Beamer slides: {str(e)}"
 
                     # Check if PDF was created but is empty (0.0 KB)
+                    # Derive expected path from config — do NOT re-invoke the renderer
                     try:
-                        beamer_pdf = self.slides_renderer.render(source_file, format="beamer")
+                        beamer_pdf = (
+                            Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
+                        )
                         if beamer_pdf.exists():
                             size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
                             if size_mb < _MIN_VALID_PDF_MB:
@@ -96,7 +102,7 @@ class RenderManager:
                                 error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
                             else:
                                 error_msg += f" (PDF created: {size_mb:.2f} MB)"
-                    except Exception as pdf_check_err:
+                    except (OSError, AttributeError) as pdf_check_err:
                         logger.debug(f"Failed to check PDF status: {pdf_check_err}")
 
                     logger.warning(error_msg)
@@ -115,12 +121,25 @@ class RenderManager:
                     logger.debug("Rendering HTML web version...")
                     outputs.append(self.web_renderer.render(source_file))
                     logger.debug("HTML web version rendered successfully")
-                except Exception as e:
+                except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
+                    format_errors.append(("html", e))
                     logger.warning(f"Failed to render HTML: {e}")
                     # Continue - some formats may still succeed
 
             if not outputs:
-                raise TemplateError(f"No outputs generated for {source_file.name}")
+                failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)
+                raise TemplateError(
+                    f"No outputs generated for {source_file.name}. "
+                    f"All formats failed: {failed_formats}"
+                )
+
+            if format_errors:
+                failed_names = ", ".join(fmt for fmt, _ in format_errors)
+                logger.warning(
+                    f"Partial success for {source_file.name}: "
+                    f"{len(outputs)} format(s) succeeded, "
+                    f"{len(format_errors)} failed ({failed_names})"
+                )
 
             logger.info(f"Successfully rendered {len(outputs)} format(s) for {source_file.name}")
             return outputs
@@ -128,7 +147,7 @@ class RenderManager:
         except TemplateError:
             # Re-raise TemplateError as-is
             raise
-        except Exception as e:
+        except (OSError, subprocess.SubprocessError, ValueError) as e:
             logger.error(f"Unexpected error during rendering of {source_file.name}: {e}")
             raise TemplateError(f"Rendering failed: {e}") from e
 
@@ -153,11 +172,11 @@ class RenderManager:
         """
         return self.pdf_renderer.render(source_file)
 
-    def render_slides(self, source_file: Path, format: str = "beamer") -> Path:
+    def render_slides(self, source_file: Path, output_format: str = "beamer") -> Path:
         """Render slides with figure path resolution."""
         return self.slides_renderer.render(
             source_file,
-            format=format,
+            format=output_format,
             manuscript_dir=self.manuscript_dir,
             figures_dir=self.figures_dir,
         )

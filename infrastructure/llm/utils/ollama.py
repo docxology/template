@@ -183,7 +183,7 @@ def get_available_models(
             else:
                 logger.warning("Ollama returned empty model list")
 
-            return models  # type: ignore
+            return models
 
         except Timeout:
             last_error = f"Timeout after {timeout}s"

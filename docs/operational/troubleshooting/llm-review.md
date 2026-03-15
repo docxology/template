@@ -206,14 +206,14 @@ time ollama run llama3-gradient "Generate a short test response"
 
 **Symptoms:**
 ```
-✗ Manuscript PDF not found: project/output/pdf/project_combined.pdf
+✗ Manuscript PDF not found: projects/{name}/output/pdf/project_combined.pdf
 ✗ LLM review skipped (no manuscript PDF)
 ```
 
 **Diagnosis:**
 ```bash
 # Check if PDF exists
-ls -la project/output/pdf/project_combined.pdf
+ls -la projects/{name}/output/pdf/project_combined.pdf
 
 # Check PDF generation
 uv run python scripts/03_render_pdf.py
@@ -233,16 +233,16 @@ uv run python scripts/03_render_pdf.py
 2. **Verify PDF location:**
    ```bash
    # Check expected location
-   ls -la project/output/pdf/
+   ls -la projects/{name}/output/pdf/
    
    # Check for alternative names
-   ls -la project/output/pdf/*.pdf
+   ls -la projects/{name}/output/pdf/*.pdf
    ```
 
 3. **Check PDF generation logs:**
    ```bash
    # Review PDF generation output
-   tail -50 project/output/pdf/*_compile.log
+   tail -50 projects/{name}/output/pdf/*_compile.log
    ```
 
 **Prevention:**
@@ -264,7 +264,7 @@ uv run python scripts/03_render_pdf.py
 uv run python -c "
 from pathlib import Path
 import PyPDF2
-with open('project/output/pdf/project_combined.pdf', 'rb') as f:
+with open('projects/{name}/output/pdf/project_combined.pdf', 'rb') as f:
     reader = PyPDF2.PdfReader(f)
     print(f'Pages: {len(reader.pages)}')
     print(f'Text from first page: {reader.pages[0].extract_text()[:100]}')
@@ -276,14 +276,14 @@ with open('project/output/pdf/project_combined.pdf', 'rb') as f:
 1. **Check PDF is not corrupted:**
    ```bash
    # Try opening PDF manually
-   open project/output/pdf/project_combined.pdf  # macOS
-   xdg-open project/output/pdf/project_combined.pdf  # Linux
+   open projects/{name}/output/pdf/project_combined.pdf  # macOS
+   xdg-open projects/{name}/output/pdf/project_combined.pdf  # Linux
    ```
 
 2. **Regenerate PDF:**
    ```bash
    # Clean and regenerate
-   rm -rf project/output/pdf/*
+   rm -rf projects/{name}/output/pdf/*
    uv run python scripts/03_render_pdf.py
    ```
 
@@ -364,7 +364,7 @@ ollama ps
 **Diagnosis:**
 ```bash
 # Check translation configuration
-cat project/manuscript/config.yaml | grep -A 10 "llm:"
+cat projects/{name}/manuscript/config.yaml | grep -A 10 "llm:"
 
 # Check environment variables
 env | grep TRANSLATION
@@ -374,7 +374,7 @@ env | grep TRANSLATION
 
 1. **Configure translations in config.yaml:**
    ```yaml
-   # project/manuscript/config.yaml
+   # projects/{name}/manuscript/config.yaml
    llm:
      translations:
        enabled: true
@@ -386,7 +386,7 @@ env | grep TRANSLATION
 
 2. **Or disable translations:**
    ```yaml
-   # project/manuscript/config.yaml
+   # projects/{name}/manuscript/config.yaml
    llm:
      translations:
        enabled: false
@@ -410,7 +410,7 @@ Want to generate only specific review types
 
 1. **Configure review types in config.yaml:**
    ```yaml
-   # project/manuscript/config.yaml
+   # projects/{name}/manuscript/config.yaml
    llm:
      reviews:
        enabled: true
@@ -424,7 +424,7 @@ Want to generate only specific review types
 
 2. **Disable reviews entirely:**
    ```yaml
-   # project/manuscript/config.yaml
+   # projects/{name}/manuscript/config.yaml
    llm:
      reviews:
        enabled: false
@@ -432,7 +432,7 @@ Want to generate only specific review types
 
 3. **Generate multiple review types:**
    ```yaml
-   # project/manuscript/config.yaml
+   # projects/{name}/manuscript/config.yaml
    llm:
      reviews:
        enabled: true
@@ -462,7 +462,7 @@ Want to generate only specific review types
 **Diagnosis:**
 ```bash
 # Check review output
-cat project/output/llm/quality_review.md
+cat projects/{name}/output/llm/quality_review.md
 
 # Check validation logs
 export LOG_LEVEL=0
@@ -484,8 +484,8 @@ uv run python scripts/06_llm_review.py --reviews-only
 3. **Manual review:**
    ```bash
    # Review generated content
-   cat project/output/llm/executive_summary.md
-   cat project/output/llm/quality_review.md
+   cat projects/{name}/output/llm/executive_summary.md
+   cat projects/{name}/output/llm/quality_review.md
    ```
 
 **Prevention:**
@@ -504,7 +504,7 @@ uv run python scripts/06_llm_review.py --reviews-only
 **Diagnosis:**
 ```bash
 # Check manuscript size
-wc -c project/output/pdf/project_combined.pdf
+wc -c projects/{name}/output/pdf/project_combined.pdf
 
 # Check input length limit
 env | grep LLM_MAX_INPUT_LENGTH
@@ -632,13 +632,13 @@ print('Available:', client.check_connection())
 
 ```bash
 # Check PDF exists
-ls -la project/output/pdf/project_combined.pdf
+ls -la projects/{name}/output/pdf/project_combined.pdf
 
 # Test PDF text extraction
 uv run python -c "
 from pathlib import Path
 import PyPDF2
-pdf_path = Path('project/output/pdf/project_combined.pdf')
+pdf_path = Path('projects/{name}/output/pdf/project_combined.pdf')
 if pdf_path.exists():
     with open(pdf_path, 'rb') as f:
         reader = PyPDF2.PdfReader(f)
@@ -700,14 +700,14 @@ cat llm_review.log | grep -i error
 
 ```bash
 # Check review outputs
-ls -la project/output/llm/
+ls -la projects/{name}/output/llm/
 
 # Review metadata
-cat project/output/llm/review_metadata.json
+cat projects/{name}/output/llm/review_metadata.json
 
 # Check individual reviews
-cat project/output/llm/executive_summary.md
-cat project/output/llm/quality_review.md
+cat projects/{name}/output/llm/executive_summary.md
+cat projects/{name}/output/llm/quality_review.md
 ```
 
 ### Common Error Patterns

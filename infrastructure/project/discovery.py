@@ -9,7 +9,12 @@ from __future__ import annotations
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Union
+from typing import Any, Union
+
+try:
+    import yaml as _yaml
+except ImportError:
+    _yaml = None  # type: ignore[assignment]
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -252,8 +257,12 @@ def validate_project_structure(project_dir: Path) -> tuple[bool, str]:
 
     return True, "Valid project structure"
 
+<<<<<<< HEAD
 
 def get_project_metadata(project_dir: Path) -> dict:
+=======
+def get_project_metadata(project_dir: Path) -> dict[str, Any]:
+>>>>>>> desloppify/code-health
     """Extract metadata from project configuration files.
 
     Checks the following sources in priority order:
@@ -306,28 +315,32 @@ def get_project_metadata(project_dir: Path) -> dict:
     # Try manuscript/config.yaml for additional metadata
     config_path = project_dir / "manuscript" / "config.yaml"
     if config_path.exists():
-        try:
-            import yaml
-
-            with open(config_path) as f:
-                config_data = yaml.safe_load(f)
-
-            if config_data and "paper" in config_data:
-                paper_config = config_data["paper"]
-                if "title" in paper_config:
-                    metadata["title"] = paper_config["title"]
-
-            if config_data and "authors" in config_data:
-                # Manuscript authors override pyproject authors
-                metadata["authors"] = [
-                    author.get("name", "Unknown") for author in config_data["authors"]
-                ]
-        except ImportError:
+        if _yaml is None:
             logger.debug("PyYAML not available, skipping config.yaml")
+<<<<<<< HEAD
         except (OSError, ValueError, AttributeError) as e:
             logger.warning(f"Failed to parse {config_path}: {e}")
         except Exception as e:
             logger.warning(f"Failed to parse {config_path}: {e}")
+=======
+        else:
+            try:
+                with open(config_path) as f:
+                    config_data = _yaml.safe_load(f)
+
+                if config_data and "paper" in config_data:
+                    paper_config = config_data["paper"]
+                    if "title" in paper_config:
+                        metadata["title"] = paper_config["title"]
+
+                if config_data and "authors" in config_data:
+                    # Manuscript authors override pyproject authors
+                    metadata["authors"] = [
+                        author.get("name", "Unknown") for author in config_data["authors"]
+                    ]
+            except (OSError, ValueError, AttributeError) as e:
+                logger.warning(f"Failed to parse {config_path}: {e}")
+>>>>>>> desloppify/code-health
 
     return metadata
 

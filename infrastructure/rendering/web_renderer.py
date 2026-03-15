@@ -47,7 +47,7 @@ class WebRenderer:
             raise RenderingError(
                 f"Failed to render HTML: {e.stderr}",
                 context={"source": str(source_file)},
-            )
+            ) from e
 
     def render_combined(
         self,
@@ -96,7 +96,13 @@ class WebRenderer:
         # Combine markdown files
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = self._combine_markdown_files(source_files)
-        combined_md.write_text(combined_content, encoding="utf-8")
+        _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
+        try:
+            _tmp.write_text(combined_content, encoding="utf-8")
+            _tmp.replace(combined_md)
+        except OSError:
+            _tmp.unlink(missing_ok=True)
+            raise
         logger.debug(
             f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
         )
@@ -154,7 +160,7 @@ class WebRenderer:
                     "Check for special characters or encoding issues",
                     f"Review Pandoc command: {' '.join(cmd)}",
                 ],
-            )
+            ) from e
 
         # Embed CSS styling in the generated HTML
         if output_file.exists():
@@ -213,8 +219,8 @@ class WebRenderer:
                         "Ensure file is UTF-8 encoded",
                         "Remove any non-UTF-8 characters from the file",
                     ],
-                )
-            except Exception as e:
+                ) from e
+            except OSError as e:
                 raise RenderingError(
                     f"Failed to read markdown file: {md_file.name}",
                     context={
@@ -228,7 +234,7 @@ class WebRenderer:
                         "Check file permissions",
                         "Ensure file is valid markdown",
                     ],
-                )
+                ) from e
 
         # Join with newlines, ensuring proper spacing
         combined = "\n\n".join(combined_parts)
@@ -292,9 +298,15 @@ class WebRenderer:
                     return
 
             # Write modified HTML back
-            html_file.write_text(html_content, encoding="utf-8")
+            _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
+            try:
+                _tmp.write_text(html_content, encoding="utf-8")
+                _tmp.replace(html_file)
+            except OSError:
+                _tmp.unlink(missing_ok=True)
+                raise
             logger.debug(f"Embedded CSS from {css_file.name} into {html_file.name}")
 
-        except Exception as e:
+        except OSError as e:
             logger.warning(f"Failed to embed CSS: {e}")
             # Don't fail the entire process if CSS embedding fails

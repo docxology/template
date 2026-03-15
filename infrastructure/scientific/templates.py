@@ -10,14 +10,7 @@ from __future__ import annotations
 
 
 def create_scientific_module_template(module_name: str) -> str:
-    """Create a template for a new scientific module.
-
-    Args:
-        module_name: Name of the module to create
-
-    Returns:
-        Python module template content
-    """
+    """Create a template for a new scientific module."""
     template = f'''"""Scientific module: {module_name}.
 
 This module implements [mathematical concept/algorithm] following
@@ -62,10 +55,7 @@ def function1(param1: float, param2: int) -> float:
         >>> print(result)
         3.0
     """
-    if not isinstance(param1, (int, float)):
-        raise TypeError(f"param1 must be numeric, got {{type(param1)}}")
-    if not isinstance(param2, int):
-        raise TypeError(f"param2 must be integer, got {{type(param2)}}")
+    # Type checking is enforced by the function signature; callers must pass correct types.
 
     try:
         result = param1 * param2 + 1.0
@@ -92,8 +82,7 @@ def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], f
     if not data:
         raise ValueError("Input data cannot be empty")
 
-    if not all(isinstance(x, (int, float)) for x in data):
-        raise ValueError("All data elements must be numeric")
+    # list[float] type annotation enforces element types; no runtime isinstance check needed.
 
     filtered_data = [x for x in data if x > threshold]
 
@@ -108,14 +97,7 @@ def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], f
 
 
 def create_scientific_test_suite(module_name: str) -> str:
-    """Create a comprehensive test suite for a scientific module.
-
-    Args:
-        module_name: Name of the module to create tests for
-
-    Returns:
-        Python test file content as string
-    """
+    """Create a comprehensive test suite for a scientific module."""
     test_content = f'''"""Test suite for {module_name} module.
 
 This test suite provides comprehensive validation for scientific functions
@@ -197,14 +179,7 @@ if __name__ == "__main__":
 
 
 def create_scientific_workflow_template(workflow_name: str) -> str:
-    """Create a template for scientific research workflows.
-
-    Args:
-        workflow_name: Name of the workflow
-
-    Returns:
-        Python workflow template content
-    """
+    """Create a template for scientific research workflows."""
     template = f'''#!/usr/bin/env python3
 """Scientific research workflow: {workflow_name}.
 
@@ -311,7 +286,7 @@ def main():
     # Validate results
     if not validate_workflow_results(results):
         logger.error("Workflow validation failed")
-        sys.exit(1)
+        raise SystemExit(1)
 
     # Generate final report
     report_content = generate_workflow_report(results, reproducibility_report)

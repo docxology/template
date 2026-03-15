@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "timestamp": "2026-03-12T13:55:18.614291",
+=======
+  "timestamp": "2026-03-14T16:51:09.849679",
+>>>>>>> desloppify/code-health
   "infrastructure": {},
   "project": {
     "passed": 39,
@@ -11,9 +15,15 @@
     "discovery_count": 39,
     "collection_errors": 0,
     "execution_phases": {
+<<<<<<< HEAD
       "setup": 2.04,
       "collection": 2.04,
       "execution": 2.04
+=======
+      "setup": 3.34,
+      "collection": 3.34,
+      "execution": 3.34
+>>>>>>> desloppify/code-health
     },
     "test_categories": {},
     "coverage_percent": 96.63865546218487,

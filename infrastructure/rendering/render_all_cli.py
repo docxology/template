@@ -24,7 +24,7 @@ def main() -> None:
     manuscript_dir = Path("manuscript")
     if not manuscript_dir.exists():
         logger.error("No manuscript directory found.")
-        sys.exit(1)
+        raise SystemExit(1)
 
     for source in manuscript_dir.glob("*.tex"):
         logger.info(f"Rendering {source}...")

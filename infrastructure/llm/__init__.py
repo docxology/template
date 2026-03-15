@@ -19,9 +19,9 @@ CLI Usage:
 
 Direct imports (recommended):
     from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import LLMConfig, GenerationOptions
+    from infrastructure.llm.core.config import OllamaClientConfig, GenerationOptions
     from infrastructure.llm.templates import get_template
-    from infrastructure.llm.validation import OutputValidator
+    from infrastructure.llm.validation import validate_complete
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ from infrastructure.llm.core import (
     ConversationContext,
     GenerationOptions,
     LLMClient,
-    LLMConfig,
+    OllamaClientConfig,
     Message,
     ResponseMode,
     save_response,
@@ -72,17 +72,27 @@ from infrastructure.llm.validation import (
     OFF_TOPIC_PATTERNS_ANYWHERE,
     OFF_TOPIC_PATTERNS_START,
     ON_TOPIC_SIGNALS,
-    OutputValidator,
     calculate_unique_content_ratio,
     check_format_compliance,
+    clean_repetitive_output,
     deduplicate_sections,
     detect_conversational_phrases,
     detect_repetition,
+    estimate_tokens,
     extract_structured_sections,
     has_on_topic_signals,
     is_off_topic,
+    validate_citations,
+    validate_complete,
+    validate_formatting,
+    validate_json,
+    validate_length,
+    validate_long_response,
+    validate_no_repetition,
     validate_response_structure,
     validate_section_completeness,
+    validate_short_response,
+    validate_structure,
 )
 
 # Optional prompt system imports
@@ -90,8 +100,8 @@ try:
     from infrastructure.llm.prompts import PromptComposer, PromptFragmentLoader
 except ImportError:
     # Prompt system not available - set to None for optional usage
-    PromptFragmentLoader = None  # type: ignore
-    PromptComposer = None  # type: ignore
+    PromptFragmentLoader = None  # type: ignore[assignment]
+    PromptComposer = None  # type: ignore[assignment]
 
 # Review generation modules
 from infrastructure.llm.review import (
@@ -101,9 +111,8 @@ from infrastructure.llm.review import (
     StreamingMetrics,
     calculate_format_compliance_summary,
     calculate_quality_summary,
-    check_ollama_availability,
+    select_and_start_ollama_model,
     create_review_client,
-    estimate_tokens,
     extract_action_items,
     extract_manuscript_text,
     generate_improvement_suggestions,
@@ -126,7 +135,7 @@ __all__ = [
     "ResponseMode",
     "strip_thinking_tags",
     # Configuration
-    "LLMConfig",
+    "OllamaClientConfig",
     "GenerationOptions",
     # Context management
     "ConversationContext",
@@ -144,7 +153,17 @@ __all__ = [
     "REVIEW_MIN_WORDS",
     "TRANSLATION_LANGUAGES",
     # Validation
-    "OutputValidator",
+    "validate_json",
+    "validate_length",
+    "estimate_tokens",
+    "validate_short_response",
+    "validate_long_response",
+    "validate_structure",
+    "validate_citations",
+    "validate_formatting",
+    "validate_complete",
+    "validate_no_repetition",
+    "clean_repetitive_output",
     "detect_repetition",
     "calculate_unique_content_ratio",
     "deduplicate_sections",
@@ -180,15 +199,14 @@ __all__ = [
     "ManuscriptInputMetrics",
     "SessionMetrics",
     "StreamingMetrics",
-    "estimate_tokens",
-    # Review generation
+    # Review generation  (estimate_tokens already listed above under validation)
     "get_manuscript_review_system_prompt",
     "get_max_input_length",
     "get_review_timeout",
     "get_review_max_tokens",
     "validate_review_quality",
     "create_review_client",
-    "check_ollama_availability",
+    "select_and_start_ollama_model",
     "warmup_model",
     "extract_manuscript_text",
     "generate_review_with_metrics",

@@ -61,7 +61,6 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
     extraction_methods = [
         ("pypdf", _extract_with_pypdf),
         ("pdfplumber", _extract_with_pdfplumber),
-        ("PyPDF2", _extract_with_pypdf2),
     ]
 
     last_error = None
@@ -78,7 +77,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
         except ImportError:
             logger.debug(f"{method_name} library not available, skipping")
             continue
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — PDF library exceptions vary by backend
             error_msg = f"{method_name} extraction failed: {e}"
             logger.debug(error_msg)
             last_error = e
@@ -97,11 +96,11 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
                 error_details.append("File does not have valid PDF header")
             else:
                 error_details.append(f"PDF header detected: {header[:8].decode(errors='replace')}")
-    except Exception as diag_error:
+    except Exception as diag_error:  # noqa: BLE001 — diagnostic read, any OS error is acceptable
         error_details.append(f"Could not read PDF header: {diag_error}")
 
     error_details.append(f"File size: {file_size} bytes")
-    error_details.append("Tried extraction methods: pypdf, pdfplumber, PyPDF2")
+    error_details.append("Tried extraction methods: pypdf, pdfplumber")
 
     raise PDFValidationError(
         f"Failed to extract text from PDF after trying all available methods. "
@@ -141,6 +140,7 @@ def _extract_with_pdfplumber(pdf_path: Path) -> str:
 
     return "\n\n".join(text_parts)
 
+<<<<<<< HEAD
 
 def _extract_with_pypdf2(pdf_path: Path) -> str:
     """Extract text using PyPDF2 library."""
@@ -157,6 +157,8 @@ def _extract_with_pypdf2(pdf_path: Path) -> str:
     return "\n\n".join(text_parts)
 
 
+=======
+>>>>>>> desloppify/code-health
 def scan_for_issues(text: str) -> dict[str, int]:
     """
     Scan extracted text for common rendering issues.
@@ -180,26 +182,20 @@ def scan_for_issues(text: str) -> dict[str, int]:
             'total_issues': int
         }
     """
-    issues = {
-        "unresolved_references": 0,
-        "warnings": 0,
-        "errors": 0,
-        "missing_citations": 0,
-    }
-
-    # Count unresolved references (??)
-    issues["unresolved_references"] = len(re.findall(r"\?\?", text))
-
-    # Count warnings (case-insensitive)
-    issues["warnings"] = len(re.findall(r"\[WARNING\]|Warning:", text, re.IGNORECASE))
-
-    # Count errors (case-insensitive, but exclude common false positives)
-    # Match [ERROR] or "Error:" only when it appears to be a system message
+    # Count each issue type directly — no default-then-overwrite
+    unresolved_references = len(re.findall(r"\?\?", text))
+    warnings = len(re.findall(r"\[WARNING\]|Warning:", text, re.IGNORECASE))
+    # Match [ERROR] or "Error:" only when it appears to be a system message.
     # Exclude scientific terms like "standard error:", "final error:", "measurement error:"
-    issues["errors"] = len(re.findall(r"\[ERROR\]|^\s*Error:\s|Error:\s+[A-Z]", text, re.MULTILINE))
+    errors = len(re.findall(r"\[ERROR\]|^\s*Error:\s|Error:\s+[A-Z]", text, re.MULTILINE))
+    missing_citations = len(re.findall(r"\[\?\]", text))
 
-    # Count missing citations [?]
-    issues["missing_citations"] = len(re.findall(r"\[\?\]", text))
+    issues = {
+        "unresolved_references": unresolved_references,
+        "warnings": warnings,
+        "errors": errors,
+        "missing_citations": missing_citations,
+    }
 
     # Total issues
     issues["total_issues"] = sum(issues.values())

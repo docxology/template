@@ -197,7 +197,7 @@ ${reference_info}
 
 Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, extract SPECIFIC claims with CONCRETE details, include TECHNICAL DEPTH (equations, algorithms, experimental details), and accurately report the number of references. Aim for 600-1000 words of comprehensive technical content:"""  # noqa: E501
 
-    def render(  # type: ignore
+    def render(  # type: ignore[override]
         self,
         title: str,
         authors: str,

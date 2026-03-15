@@ -79,7 +79,13 @@ def write_hash_manifest(
     if extra:
         manifest.update(extra)
 
-    output_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    _tmp = output_path.with_suffix(output_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        _tmp.replace(output_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     logger.info(f"Hash manifest written → {output_path}")
     return output_path
 

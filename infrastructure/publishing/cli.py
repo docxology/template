@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import argparse
 import os
-import sys
 from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger
@@ -40,14 +39,14 @@ def extract_metadata_command(args: argparse.Namespace) -> None:
 
     if not manuscript_dir.exists():
         logger.error(f"Directory not found: {manuscript_dir}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Extracting metadata from: {manuscript_dir}")
     md_files = list(manuscript_dir.glob("*.md"))
 
     if not md_files:
         logger.error("No markdown files found")
-        sys.exit(1)
+        raise SystemExit(1)
 
     metadata = extract_publication_metadata(md_files)
 
@@ -81,12 +80,12 @@ def generate_citation_command(args: argparse.Namespace) -> None:
 
     if not manuscript_dir.exists():
         logger.error(f"Directory not found: {manuscript_dir}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     md_files = list(manuscript_dir.glob("*.md"))
     if not md_files:
         logger.error("No markdown files found")
-        sys.exit(1)
+        raise SystemExit(1)
 
     metadata = extract_publication_metadata(md_files)
 
@@ -94,7 +93,7 @@ def generate_citation_command(args: argparse.Namespace) -> None:
         citation = generate_citation_bibtex(metadata)
     else:
         logger.error(f"Unsupported format: {args.format}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     print(citation)
 
@@ -124,18 +123,18 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
     token = args.token or os.getenv("ZENODO_TOKEN")
     if not token:
         logger.error("ZENODO_TOKEN environment variable not set")
-        sys.exit(1)
+        raise SystemExit(1)
 
     output_dir = Path(args.output_dir)
     if not output_dir.exists():
         logger.error(f"Directory not found: {output_dir}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     # Find PDFs
     pdfs = list(output_dir.glob("**/*.pdf"))
     if not pdfs:
         logger.error("No PDF files found")
-        sys.exit(1)
+        raise SystemExit(1)
 
     logger.info(f"Publishing {len(pdfs)} files to Zenodo")
     config = ZenodoConfig(access_token=token, sandbox=True)
@@ -163,7 +162,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         print(f"Published successfully! DOI: {doi}")
     except Exception as e:
         logger.error(f"Zenodo upload failed: {e}")
-        sys.exit(1)
+        raise SystemExit(1) from e
 
 
 def main() -> None:
@@ -213,13 +212,13 @@ def main() -> None:
 
     if not hasattr(args, "func"):
         parser.print_help()
-        sys.exit(1)
+        raise SystemExit(1)
 
     try:
         args.func(args)
     except Exception as e:
         logger.error(f"Command failed: {e}")
-        sys.exit(1)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":

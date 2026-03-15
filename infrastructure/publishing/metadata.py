@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.publishing.citations import generate_citation_apa
 from infrastructure.publishing.models import PublicationMetadata
 
 logger = get_logger(__name__)
@@ -40,7 +41,7 @@ def extract_publication_metadata(markdown_files: list[Path]) -> PublicationMetad
             # Only use this content if it contains actual research content (not template content)
             if "Research Project Template" not in content and ("#" in content or "**" in content):
                 combined_content = content
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Could not read metadata from {markdown_files[0]}: {e}")
             combined_content = ""
 
@@ -151,8 +152,6 @@ def generate_publication_summary(metadata: PublicationMetadata) -> str:
     Returns:
         Markdown formatted publication summary
     """
-    from infrastructure.publishing.citations import generate_citation_apa
-
     summary = f"""## 📚 Publication Information
 
 **Title**: {metadata.title}
@@ -202,7 +201,7 @@ def create_academic_profile_data(metadata: PublicationMetadata) -> dict[str, Any
 
     if metadata.doi:
         profile_data["identifiers"] = [
-            {  # type: ignore
+            {
                 "type": "doi",
                 "value": metadata.doi,
                 "url": f"https://doi.org/{metadata.doi}",
@@ -221,8 +220,6 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any
     Returns:
         Dictionary with publication metrics
     """
-    from infrastructure.publishing.metadata import calculate_complexity_score
-
     # Calculate various metrics
     title_length = len(metadata.title)
     abstract_length = len(metadata.abstract)
@@ -243,13 +240,17 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any
         "license_type": metadata.license,
         "has_doi": bool(metadata.doi),
         "publication_type": ("software" if "template" in metadata.title.lower() else "article"),
-        "complexity_score": calculate_complexity_score(metadata),
+        "complexity_score": calculate_metadata_complexity_score(metadata),
     }
 
     return metrics
 
+<<<<<<< HEAD
 
 def calculate_complexity_score(metadata: PublicationMetadata) -> int:
+=======
+def calculate_metadata_complexity_score(metadata: PublicationMetadata) -> int:
+>>>>>>> desloppify/code-health
     """Calculate a complexity score for the publication.
 
     Args:

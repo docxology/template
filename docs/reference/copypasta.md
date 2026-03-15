@@ -70,8 +70,8 @@ pytest tests/ --cov=src --cov-report=term-missing
 
 ```bash
 # Option 1: Edit config.yaml (recommended)
-cp project/manuscript/config.yaml.example project/manuscript/config.yaml
-vim project/manuscript/config.yaml
+cp projects/{name}/manuscript/config.yaml.example projects/{name}/manuscript/config.yaml
+vim projects/{name}/manuscript/config.yaml
 
 # Option 2: Use environment variables
 export AUTHOR_NAME="Your Name"
@@ -99,8 +99,8 @@ uv run python scripts/execute_pipeline.py --core-only
 uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # 3. Generate figures and validate
-uv run python project/scripts/example_figure.py
-uv run python -m infrastructure.validation.cli markdown project/manuscript/
+uv run python projects/code_project/scripts/example_figure.py
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # 4. Build pipeline
 uv run python scripts/execute_pipeline.py --core-only

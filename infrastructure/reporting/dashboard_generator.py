@@ -936,20 +936,20 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
 
         # Save as PNG (high resolution)
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("dashboard.png", output_dir, FileType.PNG)  # type: ignore
+        png_path = organizer.get_output_path("dashboard.png", output_dir, FileType.PNG)
         plt.savefig(png_path, dpi=300, bbox_inches="tight", facecolor="white")
         saved_files["png"] = png_path
         logger.info(f"Saved PNG dashboard: {png_path}")
 
         # Save as PDF (vector graphics)
-        pdf_path = organizer.get_output_path("dashboard.pdf", output_dir, FileType.PDF)  # type: ignore
+        pdf_path = organizer.get_output_path("dashboard.pdf", output_dir, FileType.PDF)
         plt.savefig(pdf_path, format="pdf", bbox_inches="tight", facecolor="white")
         saved_files["pdf"] = pdf_path
         logger.info(f"Saved PDF dashboard: {pdf_path}")
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Error generating matplotlib dashboard: {e}")
         plt.close("all")
 
@@ -1166,7 +1166,13 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
         "<head>",
         "<head>\n<title>Executive Dashboard - Research Template</title>",
     )
-    html_path.write_text(html_content)
+    _tmp = html_path.with_suffix(html_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(html_content)
+        _tmp.replace(html_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
 
     logger.info(f"Saved interactive HTML dashboard: {html_path}")
 
@@ -1187,7 +1193,7 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         # Prepare data for radar chart
@@ -1270,20 +1276,20 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("health_scores_radar.png", output_dir, FileType.PNG)  # type: ignore
+        png_path = organizer.get_output_path("health_scores_radar.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Health radar chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path("health_scores_radar.pdf", output_dir, FileType.PDF)  # type: ignore
+        pdf_path = organizer.get_output_path("health_scores_radar.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Health radar chart (PDF) saved: {pdf_path}")
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate health radar chart: {e}", exc_info=True)
 
     return saved_files
@@ -1305,7 +1311,7 @@ def generate_health_comparison_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         projects = summary.project_metrics
@@ -1315,7 +1321,7 @@ def generate_health_comparison_chart(
         # Extract health scores
         project_names = []
         overall_scores = []
-        factor_scores = {  # type: ignore
+        factor_scores: dict[str, float] = {
             "coverage": [],
             "integrity": [],
             "manuscript": [],
@@ -1430,7 +1436,7 @@ def generate_health_comparison_chart(
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate health comparison chart: {e}", exc_info=True)
 
     return saved_files
@@ -1450,7 +1456,7 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         projects = summary.project_metrics
@@ -1645,21 +1651,21 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
             organizer = OutputOrganizer()
             safe_name = project.name.replace("_", "").replace("-", "").lower()
             png_filename = f"project_dashboard_{safe_name}.png"
-            png_path = organizer.get_output_path(png_filename, output_dir, FileType.PNG)  # type: ignore
+            png_path = organizer.get_output_path(png_filename, output_dir, FileType.PNG)
             fig.savefig(png_path, dpi=300, bbox_inches="tight")
             saved_files[f"{safe_name}_png"] = png_path
             logger.info(f"Project dashboard ({project.name} PNG) saved: {png_path}")
 
             # Save PDF
             pdf_filename = f"project_dashboard_{safe_name}.pdf"
-            pdf_path = organizer.get_output_path(pdf_filename, output_dir, FileType.PDF)  # type: ignore
+            pdf_path = organizer.get_output_path(pdf_filename, output_dir, FileType.PDF)
             fig.savefig(pdf_path, bbox_inches="tight")
             saved_files[f"{safe_name}_pdf"] = pdf_path
             logger.info(f"Project dashboard ({project.name} PDF) saved: {pdf_path}")
 
             plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate project breakdowns: {e}", exc_info=True)
 
     return saved_files
@@ -1681,7 +1687,7 @@ def generate_pipeline_efficiency_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         projects = summary.project_metrics
@@ -1715,7 +1721,7 @@ def generate_pipeline_efficiency_chart(
             )
 
         # Chart 2: Bottleneck analysis
-        bottlenecks = {}  # type: ignore
+        bottlenecks: dict[str, Any] = {}
         for project in projects:
             stage = project.pipeline.bottleneck_stage or "Unknown"
             if stage not in bottlenecks:
@@ -1799,20 +1805,20 @@ def generate_pipeline_efficiency_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("pipeline_efficiency.png", output_dir, FileType.PNG)  # type: ignore
+        png_path = organizer.get_output_path("pipeline_efficiency.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Pipeline efficiency chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path("pipeline_efficiency.pdf", output_dir, FileType.PDF)  # type: ignore
+        pdf_path = organizer.get_output_path("pipeline_efficiency.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Pipeline efficiency chart (PDF) saved: {pdf_path}")
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate pipeline efficiency chart: {e}", exc_info=True)
 
     return saved_files
@@ -1834,7 +1840,7 @@ def generate_pipeline_bottlenecks_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         projects = summary.project_metrics
@@ -1842,7 +1848,7 @@ def generate_pipeline_bottlenecks_chart(
             return saved_files
 
         # Collect bottleneck data
-        bottleneck_data = {}  # type: ignore
+        bottleneck_data: dict[str, Any] = {}
         for project in projects:
             stage = project.pipeline.bottleneck_stage or "Unknown"
             duration = project.pipeline.bottleneck_duration
@@ -1912,20 +1918,20 @@ def generate_pipeline_bottlenecks_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("pipeline_bottlenecks.png", output_dir, FileType.PNG)  # type: ignore
+        png_path = organizer.get_output_path("pipeline_bottlenecks.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Pipeline bottlenecks chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path("pipeline_bottlenecks.pdf", output_dir, FileType.PDF)  # type: ignore
+        pdf_path = organizer.get_output_path("pipeline_bottlenecks.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Pipeline bottlenecks chart (PDF) saved: {pdf_path}")
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate pipeline bottlenecks chart: {e}", exc_info=True)
 
     return saved_files
@@ -1947,7 +1953,7 @@ def generate_output_distribution_charts(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         projects = summary.project_metrics
@@ -2105,20 +2111,20 @@ def generate_output_distribution_charts(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("output_distribution.png", output_dir, FileType.PNG)  # type: ignore
+        png_path = organizer.get_output_path("output_distribution.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Output distribution chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path("output_distribution.pdf", output_dir, FileType.PDF)  # type: ignore
+        pdf_path = organizer.get_output_path("output_distribution.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Output distribution chart (PDF) saved: {pdf_path}")
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate output distribution charts: {e}", exc_info=True)
 
     return saved_files
@@ -2140,7 +2146,7 @@ def generate_output_comparison_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         projects = summary.project_metrics
@@ -2204,20 +2210,20 @@ def generate_output_comparison_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("output_comparison.png", output_dir, FileType.PNG)  # type: ignore
+        png_path = organizer.get_output_path("output_comparison.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Output comparison chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path("output_comparison.pdf", output_dir, FileType.PDF)  # type: ignore
+        pdf_path = organizer.get_output_path("output_comparison.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Output comparison chart (PDF) saved: {pdf_path}")
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate output comparison chart: {e}", exc_info=True)
 
     return saved_files
@@ -2239,7 +2245,7 @@ def generate_codebase_complexity_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         projects = summary.project_metrics
@@ -2377,20 +2383,20 @@ def generate_codebase_complexity_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("codebase_complexity.png", output_dir, FileType.PNG)  # type: ignore
+        png_path = organizer.get_output_path("codebase_complexity.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Codebase complexity chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path("codebase_complexity.pdf", output_dir, FileType.PDF)  # type: ignore
+        pdf_path = organizer.get_output_path("codebase_complexity.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Codebase complexity chart (PDF) saved: {pdf_path}")
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate codebase complexity chart: {e}", exc_info=True)
 
     return saved_files
@@ -2412,7 +2418,7 @@ def generate_codebase_comparison_chart(
 
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    saved_files = {}  # type: ignore
+    saved_files: dict[str, Path] = {}
 
     try:
         projects = summary.project_metrics
@@ -2482,20 +2488,20 @@ def generate_codebase_comparison_chart(
 
         # Save PNG
         organizer = OutputOrganizer()
-        png_path = organizer.get_output_path("codebase_comparison.png", output_dir, FileType.PNG)  # type: ignore
+        png_path = organizer.get_output_path("codebase_comparison.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches="tight")
         saved_files["png"] = png_path
         logger.info(f"Codebase comparison chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = organizer.get_output_path("codebase_comparison.pdf", output_dir, FileType.PDF)  # type: ignore
+        pdf_path = organizer.get_output_path("codebase_comparison.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches="tight")
         saved_files["pdf"] = pdf_path
         logger.info(f"Codebase comparison chart (PDF) saved: {pdf_path}")
 
         plt.close(fig)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — matplotlib may raise any exception type
         logger.error(f"Failed to generate codebase comparison chart: {e}", exc_info=True)
 
     return saved_files
@@ -2505,7 +2511,7 @@ def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_di
     """Generate detailed project breakdown CSV with all metrics and explanations."""
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    csv_path = organizer.get_output_path("detailed_project_breakdown.csv", output_dir, FileType.CSV)  # type: ignore
+    csv_path = organizer.get_output_path("detailed_project_breakdown.csv", output_dir, FileType.CSV)
 
     with open(csv_path, "w", newline="") as f:
         writer = csv.writer(f)
@@ -2819,7 +2825,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
     """Generate comparative analysis CSV with rankings and percentiles."""
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
-    csv_path = organizer.get_output_path("comparative_analysis.csv", output_dir, FileType.CSV)  # type: ignore
+    csv_path = organizer.get_output_path("comparative_analysis.csv", output_dir, FileType.CSV)
 
     with open(csv_path, "w", newline="") as f:
         writer = csv.writer(f)
@@ -2852,7 +2858,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
             "output_total": [p.outputs.total_outputs for p in projects],
         }
 
-        def calculate_percentile_and_rank(value, values_list, higher_is_better=True):
+        def calculate_percentile_and_rank(value: float, values_list: list[float], higher_is_better: bool = True) -> tuple[float, int]:
             """Calculate percentile rank for a value in a list."""
             if not values_list:
                 return (
@@ -2879,7 +2885,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
 
             return percentile, rank
 
-        def get_performance_rating(percentile, higher_is_better=True):
+        def get_performance_rating(percentile: float, higher_is_better: bool = True) -> str:
             """Convert percentile to performance rating."""
             if higher_is_better:
                 if percentile >= 80:
@@ -2913,7 +2919,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
                 metrics_data["manuscript_words"],
                 higher_is_better=True,
             )
-            avg = sum(metrics_data["manuscript_words"]) / len(metrics_data["manuscript_words"])  # type: ignore
+            avg = sum(metrics_data["manuscript_words"]) / len(metrics_data["manuscript_words"])
             vs_avg = ((project.manuscript.total_words - avg) / avg * 100) if avg > 0 else 0
 
             writer.writerow(
@@ -2935,8 +2941,8 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
                 metrics_data["manuscript_sections"],
                 higher_is_better=True,
             )
-            avg = sum(metrics_data["manuscript_sections"]) / len(  # type: ignore
-                metrics_data["manuscript_sections"]  # type: ignore
+            avg = sum(metrics_data["manuscript_sections"]) / len(
+                metrics_data["manuscript_sections"]
             )
             vs_avg = ((project.manuscript.sections - avg) / avg * 100) if avg > 0 else 0
 
@@ -2960,7 +2966,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
                 metrics_data["codebase_lines"],
                 higher_is_better=True,
             )
-            avg = sum(metrics_data["codebase_lines"]) / len(metrics_data["codebase_lines"])  # type: ignore
+            avg = sum(metrics_data["codebase_lines"]) / len(metrics_data["codebase_lines"])
             vs_avg = ((project.codebase.source_lines - avg) / avg * 100) if avg > 0 else 0
 
             writer.writerow(
@@ -2983,7 +2989,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
                 metrics_data["pipeline_duration"],
                 higher_is_better=False,
             )
-            avg = sum(metrics_data["pipeline_duration"]) / len(metrics_data["pipeline_duration"])  # type: ignore
+            avg = sum(metrics_data["pipeline_duration"]) / len(metrics_data["pipeline_duration"])
             vs_avg = ((project.pipeline.total_duration - avg) / avg * 100) if avg > 0 else 0
 
             writer.writerow(
@@ -3006,7 +3012,7 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
                 metrics_data["output_total"],
                 higher_is_better=True,
             )
-            avg = sum(metrics_data["output_total"]) / len(metrics_data["output_total"])  # type: ignore
+            avg = sum(metrics_data["output_total"]) / len(metrics_data["output_total"])
             vs_avg = ((project.outputs.total_outputs - avg) / avg * 100) if avg > 0 else 0
 
             writer.writerow(
@@ -3122,7 +3128,7 @@ def generate_prioritized_recommendations_csv(summary: ExecutiveSummary, output_d
             )
 
         # Sort by priority score (highest first)
-        recommendations_data.sort(key=lambda x: x["priority_score"], reverse=True)  # type: ignore
+        recommendations_data.sort(key=lambda x: x["priority_score"], reverse=True)
 
         # Write sorted recommendations
         for item in recommendations_data:
@@ -3165,7 +3171,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> dic
 
     # Project metrics CSV
     organizer = OutputOrganizer()
-    metrics_csv = organizer.get_output_path("project_metrics.csv", output_dir, FileType.CSV)  # type: ignore
+    metrics_csv = organizer.get_output_path("project_metrics.csv", output_dir, FileType.CSV)
     with open(metrics_csv, "w", newline="") as f:
         writer = csv.writer(f)
 
@@ -3231,7 +3237,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> dic
     logger.info(f"Generated CSV metrics table: {metrics_csv}")
 
     # Aggregate metrics CSV
-    aggregate_csv = organizer.get_output_path("aggregate_metrics.csv", output_dir, FileType.CSV)  # type: ignore
+    aggregate_csv = organizer.get_output_path("aggregate_metrics.csv", output_dir, FileType.CSV)
     with open(aggregate_csv, "w", newline="") as f:
         writer = csv.writer(f)
 
@@ -3332,7 +3338,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> dic
     logger.info(f"Generated CSV aggregates table: {aggregate_csv}")
 
     # Health scores CSV
-    health_csv = organizer.get_output_path("health_scores.csv", output_dir, FileType.CSV)  # type: ignore
+    health_csv = organizer.get_output_path("health_scores.csv", output_dir, FileType.CSV)
     with open(health_csv, "w", newline="") as f:
         writer = csv.writer(f)
 
@@ -3403,7 +3409,7 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> dict
                 all_files.update(result)
             elif result is not None:
                 all_files[generator_name] = result
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 — generator dispatch may raise any exception type
             logger.warning(f"Could not generate {generator_name}: {e}")
             failures.append(f"{generator_name}: {e}")
 

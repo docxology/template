@@ -207,7 +207,7 @@ def extract_citations_from_markdown(markdown_files: list[Path]) -> list[str]:
                 matches = re.findall(pattern, content)
                 citations.update(matches)
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError, re.error) as e:
             logger.debug(f"Cannot extract citations from {md_file}: {e}")
             continue
 

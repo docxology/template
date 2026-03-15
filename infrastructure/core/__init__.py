@@ -17,14 +17,14 @@ from their submodules:
 from __future__ import annotations
 
 # Checkpoint (used by orchestrator scripts)
-from .checkpoint import CheckpointManager
+from infrastructure.core.checkpoint import CheckpointManager
 
 # Health (used by analysis scripts)
-from .health_check import SystemHealthChecker
+from infrastructure.core.health_check import SystemHealthChecker
 
 # Logging (primary cross-cutting concern — all callers need these)
-from .logging_helpers import format_duration
-from .logging_utils import (
+from infrastructure.core.logging_helpers import format_duration
+from infrastructure.core.logging_utils import (
     get_logger,
     log_operation,
     log_stage,
@@ -32,10 +32,10 @@ from .logging_utils import (
 )
 
 # Performance (decorator used by analysis scripts)
-from .function_profiler import monitor_performance
+from infrastructure.core.function_profiler import monitor_performance
 
 # Progress (used by long-running scripts)
-from .progress import ProgressBar
+from infrastructure.core.progress import ProgressBar
 
 __all__ = [
     # Checkpoint

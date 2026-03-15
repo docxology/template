@@ -212,7 +212,7 @@ class DocumentationScanner:
                 "output": result.stdout,
                 "errors": result.stderr,
             }
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Link checker subprocess failed: {e}")
             return {"success": False, "error": str(e)}
 
@@ -367,7 +367,13 @@ def main() -> int:
     # Save report
     report_path = repo_root / "docs" / "DOCUMENTATION_SCAN_REPORT.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(report, encoding="utf-8")
+    _tmp = report_path.with_suffix(report_path.suffix + ".tmp")
+    try:
+        _tmp.write_text(report, encoding="utf-8")
+        _tmp.replace(report_path)
+    except Exception:
+        _tmp.unlink(missing_ok=True)
+        raise
     log_success(f"Report saved to: {report_path}", logger)
 
     # Print summary

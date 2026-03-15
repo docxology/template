@@ -187,7 +187,7 @@ def run_quality_phase(
             formatting_issues = check_formatting(content, md_file, lines, repo_root)
             quality_issues.extend(formatting_issues)
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"Error assessing {md_file}: {e}")
 
     quality_report = {

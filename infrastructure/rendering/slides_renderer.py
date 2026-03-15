@@ -81,7 +81,7 @@ class SlidesRenderer:
             raise RenderingError(
                 f"Failed to render slides: {e.stderr}",
                 context={"source": str(source_file), "format": "revealjs"},
-            )
+            ) from e
 
     def _render_beamer_with_paths(
         self,
@@ -133,7 +133,13 @@ class SlidesRenderer:
                 tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
 
             # Write fixed LaTeX back
-            temp_tex.write_text(tex_content)
+            _tmp = temp_tex.with_suffix(temp_tex.suffix + ".tmp")
+            try:
+                _tmp.write_text(tex_content)
+                _tmp.replace(temp_tex)
+            except OSError:
+                _tmp.unlink(missing_ok=True)
+                raise
 
             # Compile LaTeX to PDF
             compile_latex(temp_tex, output_dir, compiler=self.config.latex_compiler)
@@ -187,7 +193,7 @@ class SlidesRenderer:
 
                     error_msg += f"\n\nSuggestions:\n- Check LaTeX log file: {log_file}\n- Verify LaTeX syntax in generated .tex file: {temp_tex}\n- Ensure all referenced figures exist\n- Check for missing LaTeX packages"  # noqa: E501
 
-                except Exception as log_error:
+                except Exception as log_error:  # noqa: BLE001
                     error_msg += f"\n\nCould not read LaTeX log file: {log_error}"
 
             raise RenderingError(
@@ -197,7 +203,7 @@ class SlidesRenderer:
                     "format": "beamer",
                     "log_file": str(log_file) if log_file.exists() else None,
                 },
-            )
+            ) from e
 
     def _fix_figure_paths(self, tex_content: str, output_dir: Path, figures_dir: Path) -> str:
         """Fix figure paths in LaTeX content for proper compilation.

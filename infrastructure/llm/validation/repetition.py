@@ -5,12 +5,23 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
+from typing import NamedTuple
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
 
+<<<<<<< HEAD
+=======
+class RepetitionResult(NamedTuple):
+    """Result of detect_repetition. Positional unpacking (bool, list, float) still works."""
+
+    found: bool
+    examples: list[str]
+    unique_ratio: float
+
+>>>>>>> desloppify/code-health
 def _normalize_for_comparison(text: str) -> str:
     """Normalize text for comparison by removing whitespace variations.
 
@@ -42,9 +53,14 @@ def _jaccard_similarity(text1: str, text2: str) -> float:
 
     return len(intersection) / len(union) if union else 0.0
 
+<<<<<<< HEAD
 
 def _tfidf_cosine_similarity(text1: str, text2: str) -> float:
     """Calculate TF-IDF cosine similarity for semantic matching."""
+=======
+def _tf_cosine_similarity(text1: str, text2: str) -> float:
+    """Calculate TF cosine similarity for semantic matching."""
+>>>>>>> desloppify/code-health
     # Tokenize and count
     words1 = Counter(text1.split())
     words2 = Counter(text2.split())
@@ -114,10 +130,10 @@ def _calculate_similarity(text1: str, text2: str, method: str = "hybrid") -> flo
     if method == "jaccard":
         return _jaccard_similarity(norm1, norm2)
     elif method == "tfidf":
-        return _tfidf_cosine_similarity(norm1, norm2)
+        return _tf_cosine_similarity(norm1, norm2)
     else:  # hybrid
         jaccard_sim = _jaccard_similarity(norm1, norm2)
-        tfidf_sim = _tfidf_cosine_similarity(norm1, norm2)
+        tfidf_sim = _tf_cosine_similarity(norm1, norm2)
         sequence_sim = _sequence_similarity(norm1, norm2)
 
         # Weighted combination: favor TF-IDF and sequence similarity
@@ -168,7 +184,7 @@ def detect_repetition(
     min_chunk_size: int = 100,
     similarity_threshold: float = 0.8,
     similarity_method: str = "hybrid",
-) -> tuple[bool, list[str], float]:
+) -> RepetitionResult:
     """Detect repetitive content in LLM output with improved semantic detection.
 
     Uses hybrid similarity methods to better identify true repetition vs.
@@ -181,10 +197,11 @@ def detect_repetition(
         similarity_method: Similarity method ("jaccard", "tfidf", "hybrid")
 
     Returns:
-        Tuple of (has_repetition, list of repeated chunks, unique content ratio)
+        RepetitionResult with fields: found, examples, unique_ratio.
+        Supports positional unpacking: found, examples, ratio = detect_repetition(text)
     """
     if not text or len(text) < min_chunk_size * 2:
-        return False, [], 1.0
+        return RepetitionResult(False, [], 1.0)
 
     # Split by common section markers with better pattern matching
     section_patterns = [
@@ -195,7 +212,7 @@ def detect_repetition(
     ]
 
     # Try each pattern to find the best split
-    chunks = []  # type: ignore
+    chunks = []
     for pattern in section_patterns:
         parts = re.split(pattern, text)
         valid_parts = [p.strip() for p in parts if len(p.strip()) >= min_chunk_size]
@@ -207,7 +224,7 @@ def detect_repetition(
         chunks = [p.strip() for p in text.split("\n\n") if len(p.strip()) >= min_chunk_size]
 
     if len(chunks) < 2:
-        return False, [], 1.0
+        return RepetitionResult(False, [], 1.0)
 
     # Normalize chunks for comparison
     normalized_chunks = [_normalize_for_comparison(c) for c in chunks]
@@ -218,7 +235,7 @@ def detect_repetition(
     unique_count = 0
 
     # Use larger comparison window (400 chars instead of 200)
-    for i, (chunk, normalized) in enumerate(zip(chunks, normalized_chunks)):
+    for _, (chunk, normalized) in enumerate(zip(chunks, normalized_chunks)):
         chunk_hash = hash(normalized[:400])
 
         if chunk_hash in seen_hashes:
@@ -246,7 +263,7 @@ def detect_repetition(
 
     has_repetition = len(duplicates) > 0 or unique_ratio < 0.7
 
-    return has_repetition, duplicates, unique_ratio
+    return RepetitionResult(has_repetition, duplicates, unique_ratio)
 
 
 def _deduplicate_paragraphs(
@@ -323,9 +340,14 @@ def deduplicate_sections(
 
     Args:
         text: The text to deduplicate
-        max_repetitions: Maximum times a section can appear
-        mode: Deduplication mode ("conservative", "balanced", "aggressive")
-        similarity_threshold: Similarity threshold above which content is considered duplicate
+        max_repetitions: Maximum times a section can appear. Overridden by mode when
+            mode is "conservative" (floor 3) or "aggressive" (ceiling 1).
+        mode: Deduplication mode ("conservative", "balanced", "aggressive"). When not
+            "balanced", mode overrides the caller-supplied similarity_threshold and
+            max_repetitions to enforce preset bounds.
+        similarity_threshold: Similarity threshold above which content is considered
+            duplicate. Overridden by mode when mode is "conservative" (floor 0.9) or
+            "aggressive" (ceiling 0.7). Pass mode="balanced" to use this value as-is.
         min_content_preservation: Minimum fraction of original content to preserve
 
     Returns:

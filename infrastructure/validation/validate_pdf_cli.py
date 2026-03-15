@@ -35,7 +35,7 @@ except ImportError as e:
     logger.error(
         "   Ensure infrastructure/validation/pdf_validator.py exists and is properly formatted"
     )
-    sys.exit(1)
+    raise SystemExit(1) from e
 
 
 def print_validation_report(report: dict[str, Any], verbose: bool = False) -> None:
@@ -93,16 +93,17 @@ def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False
     Main validation orchestration.
 
     Args:
-        pdf_path: Path to PDF file (defaults to project_combined.pdf)
+        pdf_path: Path to PDF file (defaults to first *combined*.pdf found in output/pdf/)
         n_words: Number of words to extract for preview
         verbose: Enable verbose output
 
     Returns:
         Exit code: 0 for success, 1 for issues found, 2 for errors
     """
-    # Default to project combined PDF if not specified
+    # Default to first project combined PDF found (project-specific naming like code_project_combined.pdf)
     if pdf_path is None:
-        pdf_path = repo_root / "output" / "pdf" / "project_combined.pdf"
+        candidates = sorted((repo_root / "output" / "pdf").glob("*combined*.pdf"))
+        pdf_path = candidates[0] if candidates else repo_root / "output" / "pdf" / "project_combined.pdf"
 
     # Validate PDF exists
     if not pdf_path.exists():
@@ -127,12 +128,8 @@ def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False
     except PDFValidationError as e:
         logger.error(f"Validation Error: {e}")
         return 2
-    except Exception as e:
-        logger.error(f"Unexpected Error: {e}")
-        if verbose:
-            import traceback
-
-            traceback.print_exc()
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Unexpected Error: {e}", exc_info=verbose)
         return 2
 
 
