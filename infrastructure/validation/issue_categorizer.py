@@ -296,12 +296,7 @@ def prioritize_issues(issues: list[Issue]) -> list[Issue]:
 
     return sorted(issues, key=sort_key)
 
-<<<<<<< HEAD
-
-def generate_issue_summary(issues: list[Issue]) -> dict[str, int]:
-=======
 def generate_issue_summary(issues: list[Issue]) -> dict[str, Any]:
->>>>>>> desloppify/code-health
     """Generate a summary of issues by category and severity.
 
     Args:

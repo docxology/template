@@ -25,15 +25,8 @@ from infrastructure.validation.doc_accuracy import extract_headings
 
 logger = get_logger(__name__)
 
-<<<<<<< HEAD
-
-class LinkIssue(TypedDict):
-    """Represents an issue found during validation."""
-
-=======
 class LinkCheckResult(TypedDict):
     """Represents a single link check result from the link checker."""
->>>>>>> desloppify/code-health
     file: str
     line: int
     target: str
@@ -373,14 +366,6 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
     except OSError:
         return None
 
-<<<<<<< HEAD
-
-def validate_directory_structures(
-    content: str, file_path: Path, repo_root: Path
-) -> list[dict[str, Any]]:
-    """Validate directory structure examples against actual filesystem."""
-    issues: list[dict[str, str]] = []
-=======
 def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
     """Validate directory structure examples in markdown against actual filesystem.
 
@@ -388,7 +373,6 @@ def validate_directory_structures(content: str, file_path: Path, repo_root: Path
     referenced files and directories actually exist relative to repo_root.
     """
     issues: list[dict[str, Any]] = []
->>>>>>> desloppify/code-health
 
     tree_patterns = [
         r"```\n([^`]*?)```",
@@ -813,12 +797,7 @@ def main() -> int:
     # Generate comprehensive report
     return generate_comprehensive_report(issues, len(md_files))
 
-<<<<<<< HEAD
-
-def generate_comprehensive_report(issues: dict[str, list[LinkIssue]], total_files: int) -> int:
-=======
 def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], total_files: int) -> int:
->>>>>>> desloppify/code-health
     """Generate a comprehensive validation report."""
     total_issues = sum(len(issue_list) for issue_list in issues.values())
 

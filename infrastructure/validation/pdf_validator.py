@@ -140,25 +140,6 @@ def _extract_with_pdfplumber(pdf_path: Path) -> str:
 
     return "\n\n".join(text_parts)
 
-<<<<<<< HEAD
-
-def _extract_with_pypdf2(pdf_path: Path) -> str:
-    """Extract text using PyPDF2 library."""
-    import PyPDF2
-
-    text_parts = []
-    with open(pdf_path, "rb") as file:
-        pdf_reader = PyPDF2.PdfReader(file)
-        for page in pdf_reader.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text_parts.append(page_text)
-
-    return "\n\n".join(text_parts)
-
-
-=======
->>>>>>> desloppify/code-health
 def scan_for_issues(text: str) -> dict[str, int]:
     """
     Scan extracted text for common rendering issues.

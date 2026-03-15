@@ -29,12 +29,7 @@ logger = get_logger(__name__)
 class SecurityValidator:
     """Comprehensive input validation and security checks."""
 
-<<<<<<< HEAD
-    def __init__(self):
-        """Initialize security validator with limits and dangerous patterns."""
-=======
     def __init__(self) -> None:
->>>>>>> desloppify/code-health
         # Maximum sizes for different input types
         self.limits = {
             "prompt_length": 100000,  # Max LLM prompt length
@@ -230,12 +225,7 @@ class RateLimiter:
     Thread-safe: all mutations to the requests dict are guarded by a Lock.
     """
 
-<<<<<<< HEAD
-    def __init__(self, max_requests: int = 100, window_seconds: int = 60):
-        """Initialize rate limiter."""
-=======
     def __init__(self, max_requests: int = 100, window_seconds: int = 60) -> None:
->>>>>>> desloppify/code-health
         self.max_requests = max_requests
         self.window_seconds = window_seconds
         self.requests: dict[str, list[float]] = {}
@@ -289,12 +279,7 @@ class RateLimiter:
 class SecurityMonitor:
     """Monitor security events and anomalies."""
 
-<<<<<<< HEAD
-    def __init__(self):
-        """Initialize security monitor."""
-=======
     def __init__(self) -> None:
->>>>>>> desloppify/code-health
         self.events: list[dict[str, Any]] = []
         self.max_events = 1000
 
@@ -364,18 +349,8 @@ class SecurityMonitor:
         }
 
 
-<<<<<<< HEAD
-# Global instances (lazy initialization — avoids import-time side effects)
-_security_validator: SecurityValidator | None = None
-_security_headers: SecurityHeaders | None = None
-_rate_limiter: RateLimiter | None = None
-_security_monitor: SecurityMonitor | None = None
-
-
-=======
 
 @functools.lru_cache(maxsize=1)
->>>>>>> desloppify/code-health
 def get_security_validator() -> SecurityValidator:
     """Get the global security validator instance (lazily initialized)."""
     return SecurityValidator()

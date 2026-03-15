@@ -27,15 +27,9 @@ class BarcodeBuildContext:
     """Metadata fields passed to the barcode strip overlay builder."""
 
     title: str = ""
-<<<<<<< HEAD
-    authors: list[str] | None = field(default_factory=list)
-    keywords: list[str] | None = field(default_factory=list)
-    author_emails: list[str] | None = field(default_factory=list)
-=======
     authors: list[str] = field(default_factory=list)
     keywords: list[str] = field(default_factory=list)
     author_emails: list[str] = field(default_factory=list)
->>>>>>> desloppify/code-health
     document_id: str = ""
     hashes: dict[str, str] = field(default_factory=dict)
     source_filename: str = ""
@@ -123,15 +117,8 @@ class SteganographyProcessor:
                     author_emails=author_emails or [],
                     document_id=self._document_id,
                     hashes=self._hashes,
-<<<<<<< HEAD
-                    source_filename=input_pdf.name if input_pdf else "",
-                    source_file_size=input_pdf.stat().st_size
-                    if input_pdf and input_pdf.exists()
-                    else 0,
-=======
                     source_filename=input_pdf.name,
                     source_file_size=input_pdf.stat().st_size,
->>>>>>> desloppify/code-health
                 )
                 working_pdf = self._step_overlays_and_barcodes(working_pdf, bc_ctx)
 
@@ -191,17 +178,11 @@ class SteganographyProcessor:
     ) -> Path:
         """Merge overlay and barcode pages onto every page of the PDF."""
         try:
-<<<<<<< HEAD
-            from pypdf import PdfReader, PdfWriter
-        except ImportError:
-            raise ImportError("The 'pypdf' package is required. Install with: pip install pypdf")
-=======
             from pypdf import PdfReader, PdfWriter  # type: ignore[import-untyped]
         except ImportError:
             raise ImportError(
                 "The 'pypdf' package is required. Install with: pip install pypdf"
             ) from None
->>>>>>> desloppify/code-health
 
         reader = PdfReader(str(working_pdf))
         writer = PdfWriter()

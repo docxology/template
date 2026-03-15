@@ -16,11 +16,8 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-<<<<<<< HEAD
-=======
 # Minimum coverage fraction considered acceptable for docstrings and type hints
 _COVERAGE_THRESHOLD = 0.8
->>>>>>> desloppify/code-health
 
 class _ValidationResults(TypedDict):
     """TypedDict for holding the results of scientific validation."""
@@ -30,24 +27,8 @@ class _ValidationResults(TypedDict):
     accuracy_score: float
     details: list[dict[str, Any]]
 
-<<<<<<< HEAD
-
-def validate_scientific_implementation(
-    func: Callable, test_cases: list[tuple[Any, Any]]
-) -> _ValidationResults:
-    """Validate scientific implementation against known test cases.
-
-    Args:
-        func: Function to validate
-        test_cases: List of (input, expected_output) tuples
-
-    Returns:
-        Dictionary with validation results
-    """
-=======
 def validate_scientific_implementation(func: Callable[..., Any], test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
     """Validate scientific implementation against known test cases."""
->>>>>>> desloppify/code-health
     validation_results: _ValidationResults = {
         "total_tests": len(test_cases),
         "passed_tests": 0,
@@ -181,12 +162,7 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
         validation["recommendations"].append("Add input validation to prevent invalid arguments")
     return validation
 
-<<<<<<< HEAD
-
-def check_research_compliance(func: Callable) -> dict[str, Any]:
-=======
 def check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]:
->>>>>>> desloppify/code-health
     """Check function compliance with research software standards.
 
     Uses ``inspect.getsource`` to analyse source text. If the source is

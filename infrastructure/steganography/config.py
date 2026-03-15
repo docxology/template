@@ -28,10 +28,6 @@ class DocumentMetadata:
     document_id: str = ""
     keywords: list[str] | None = None
     extra: dict[str, str] | None = None
-<<<<<<< HEAD
-
-=======
->>>>>>> desloppify/code-health
 
 @dataclass
 class SteganographyConfig:

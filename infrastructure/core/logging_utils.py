@@ -53,12 +53,6 @@ from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled, get
 # Type variable for generic context manager
 T = TypeVar("T")
 
-<<<<<<< HEAD
-_IN_TEST_ENV: bool = bool(os.getenv("PYTEST_CURRENT_TEST") or "pytest" in sys.modules)
-
-
-=======
->>>>>>> desloppify/code-health
 def _is_test_environment() -> bool:
     """Return True if running inside pytest.
 

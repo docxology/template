@@ -19,15 +19,12 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
-<<<<<<< HEAD
-=======
 class _StageResultDict(TypedDict, total=False):
     name: str
     exit_code: int
     duration: float
 
 
->>>>>>> desloppify/code-health
 @dataclass
 class PipelineReport:
     """Complete pipeline execution report."""
@@ -416,8 +413,6 @@ def generate_html_report(report: PipelineReport) -> str:
 
     return html
 
-<<<<<<< HEAD
-=======
 def _atomic_write_json(path: Path, data: dict[str, Any], **dump_kwargs: Any) -> None:
     """Write *data* as JSON to *path* atomically via a .tmp intermediate file."""
     _tmp = path.with_suffix(path.suffix + ".tmp")
@@ -440,7 +435,6 @@ def _atomic_write_text(path: Path, content: str) -> None:
         _tmp.unlink(missing_ok=True)
         raise
 
->>>>>>> desloppify/code-health
 
 def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
     """Write test_results dict to test_results.json and return the path."""

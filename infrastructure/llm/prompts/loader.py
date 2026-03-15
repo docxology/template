@@ -205,15 +205,7 @@ class PromptFragmentLoader:
         self._fragment_cache.clear()
         self._template_cache.clear()
 
-<<<<<<< HEAD
-
-# Global loader instance for convenience
-_default_loader: PromptFragmentLoader | None = None
-
-
-=======
 @functools.lru_cache(maxsize=1)
->>>>>>> desloppify/code-health
 def get_default_loader() -> PromptFragmentLoader:
     """Get the default global fragment loader instance (lazily initialized)."""
     return PromptFragmentLoader()

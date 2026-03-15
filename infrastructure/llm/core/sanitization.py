@@ -26,40 +26,8 @@ logger = get_logger(__name__)
 class InputSanitizer:
     """Comprehensive input sanitization for LLM operations."""
 
-<<<<<<< HEAD
-    def __init__(self):
-        """Initialize the input sanitizer and load target patterns."""
-        # Dangerous patterns to filter
-        self.dangerous_patterns = [
-            # System prompt injection attempts
-            r"(?i)system\s*prompt\s*[:=]",
-            r"(?i)ignore\s+previous\s+instructions",
-            r"(?i)override\s+system\s+prompt",
-            r"(?i)change\s+your\s+persona",
-            # Code execution attempts
-            r"(?i)exec\(|eval\(|subprocess\.|os\.system",
-            r"(?i)import\s+os|import\s+subprocess",
-            r"(?i)shell\s*[:=]|bash\s*[:=]|cmd\s*[:=]",
-            # File system access
-            r"(?i)open\(|file\(|pathlib\.|os\.path",
-            r"(?i)read\s+file|write\s+file|delete\s+file",
-            # Network access
-            r"(?i)requests\.|urllib\.|socket\.|http",
-            r"(?i)connect\s+to|download\s+from|upload\s+to",
-            # Dangerous LaTeX commands
-            r"\\input|\\include|\\usepackage|\\newcommand",
-            r"\\write|\\read|\\openout|\\openin",
-            # SQL injection patterns
-            r"(?i)(select|insert|update|delete|drop|create)\s+.*from",
-            r"(?i)union\s+select|information_schema",
-            # XSS attempts
-            r"<script|<iframe|<object|<embed",
-            r"on\w+\s*=|javascript:|vbscript:",
-        ]
-=======
     def __init__(self) -> None:
         self.dangerous_patterns = get_security_validator().dangerous_patterns
->>>>>>> desloppify/code-health
 
     def sanitize_prompt(self, prompt: str, context: dict[str, Any] | None = None) -> str:
         """Sanitize LLM prompt for security.
@@ -88,11 +56,7 @@ class InputSanitizer:
 
     def validate_file_input(
         self, file_path: Path, allowed_extensions: list[str] | None = None
-<<<<<<< HEAD
-    ) -> bool:
-=======
     ) -> None:
->>>>>>> desloppify/code-health
         """Validate file input for security.
 
         Args:
@@ -187,21 +151,7 @@ class InputSanitizer:
             return text[:max_length] + "...[truncated]"
         return text
 
-<<<<<<< HEAD
-
-class SecurityError(LLMError):
-    """Exception raised for security violations in LLM operations."""
-
-    pass
-
-
-# Global instance (lazy initialization — avoids import-time side effects)
-_input_sanitizer: InputSanitizer | None = None
-
-
-=======
 @functools.lru_cache(maxsize=1)
->>>>>>> desloppify/code-health
 def get_input_sanitizer() -> InputSanitizer:
     """Get the global input sanitizer instance (lazily initialized)."""
     return InputSanitizer()

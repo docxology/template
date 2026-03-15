@@ -86,13 +86,6 @@ class OutputOrganizer:
     ensuring consistent directory structure across all reporting modules.
     """
 
-<<<<<<< HEAD
-    def __init__(self):
-        """Initialize the output organizer."""
-        self.logger = logger
-
-=======
->>>>>>> desloppify/code-health
     def detect_file_type(self, file_path: Path) -> FileType | None:
         """
         Detect file type from file extension.

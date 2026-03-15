@@ -31,12 +31,6 @@ from infrastructure.llm.validation.repetition import deduplicate_sections, detec
 
 logger = get_logger(__name__)
 
-<<<<<<< HEAD
-
-class OutputValidator:
-    """Validates LLM outputs for quality and correctness."""
-=======
->>>>>>> desloppify/code-health
 
 def validate_json(content: str) -> Any:
     """Validate and parse JSON output."""
@@ -174,17 +168,7 @@ def validate_formatting(content: str) -> bool:
         logger.warning(f"Formatting issues: {', '.join(issues)}")
         return False
 
-<<<<<<< HEAD
-    @staticmethod
-    def validate_complete(
-        content: str, mode: str = "standard", schema: dict[str, Any] | None = None
-    ) -> bool:
-        """Comprehensive validation based on mode."""
-        if not content or not content.strip():
-            raise ValidationError("Empty response")
-=======
     return True
->>>>>>> desloppify/code-health
 
 
 def validate_complete(
@@ -251,10 +235,6 @@ def validate_no_repetition(
             f"(max allowed: {max_allowed_ratio:.1%})"
         )
 
-<<<<<<< HEAD
-
-# Note: Functions are imported at module level above for use in OutputValidator methods
-=======
     return is_valid, details
 
 
@@ -270,7 +250,6 @@ def clean_repetitive_output(
     )
 
 
->>>>>>> desloppify/code-health
 __all__ = [
     "validate_json",
     "validate_length",

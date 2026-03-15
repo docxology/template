@@ -30,31 +30,6 @@ logger = get_logger(__name__)
 
 
 @dataclass
-<<<<<<< HEAD
-class AccuracyIssue:
-    """Represents an accuracy issue."""
-
-    category: str
-    severity: str
-    file: str
-    line: int = 0
-    message: str = ""
-    details: str = ""
-
-
-@dataclass
-class CompletenessGap:
-    """Represents a completeness gap."""
-
-    category: str
-    item: str
-    description: str
-    severity: str = "warning"
-
-
-@dataclass
-=======
->>>>>>> desloppify/code-health
 class ScanResults:
     """Container for scan results."""
 

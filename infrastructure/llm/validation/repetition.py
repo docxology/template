@@ -12,8 +12,6 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
-<<<<<<< HEAD
-=======
 class RepetitionResult(NamedTuple):
     """Result of detect_repetition. Positional unpacking (bool, list, float) still works."""
 
@@ -21,7 +19,6 @@ class RepetitionResult(NamedTuple):
     examples: list[str]
     unique_ratio: float
 
->>>>>>> desloppify/code-health
 def _normalize_for_comparison(text: str) -> str:
     """Normalize text for comparison by removing whitespace variations.
 
@@ -53,14 +50,8 @@ def _jaccard_similarity(text1: str, text2: str) -> float:
 
     return len(intersection) / len(union) if union else 0.0
 
-<<<<<<< HEAD
-
-def _tfidf_cosine_similarity(text1: str, text2: str) -> float:
-    """Calculate TF-IDF cosine similarity for semantic matching."""
-=======
 def _tf_cosine_similarity(text1: str, text2: str) -> float:
     """Calculate TF cosine similarity for semantic matching."""
->>>>>>> desloppify/code-health
     # Tokenize and count
     words1 = Counter(text1.split())
     words2 = Counter(text2.split())

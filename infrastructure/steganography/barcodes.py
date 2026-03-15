@@ -21,12 +21,7 @@ logger = get_logger(__name__)
 
 def _get_qrcode():
     try:
-<<<<<<< HEAD
-        import qrcode
-
-=======
         import qrcode  # type: ignore[import-untyped]
->>>>>>> desloppify/code-health
         return qrcode
     except ImportError as e:
         raise ImportError(
@@ -37,12 +32,7 @@ def _get_qrcode():
 
 def _get_barcode():
     try:
-<<<<<<< HEAD
-        import barcode
-
-=======
         import barcode  # type: ignore[import-untyped]
->>>>>>> desloppify/code-health
         return barcode
     except ImportError as e:
         raise ImportError(
@@ -53,16 +43,9 @@ def _get_barcode():
 
 def _get_reportlab():
     try:
-<<<<<<< HEAD
-        from reportlab.lib.units import inch, mm
-        from reportlab.pdfgen import canvas as rl_canvas
-        from reportlab.lib.utils import ImageReader
-
-=======
         from reportlab.lib.units import inch, mm  # type: ignore[import-untyped]
         from reportlab.pdfgen import canvas as rl_canvas  # type: ignore[import-untyped]
         from reportlab.lib.utils import ImageReader  # type: ignore[import-untyped]
->>>>>>> desloppify/code-health
         return rl_canvas, inch, mm, ImageReader
     except ImportError as e:
         raise ImportError(
@@ -129,11 +112,7 @@ def generate_code128(
         SVG image bytes.
     """
     barcode_mod = _get_barcode()
-<<<<<<< HEAD
-    from barcode.writer import SVGWriter
-=======
     from barcode.writer import SVGWriter  # type: ignore[import-untyped]
->>>>>>> desloppify/code-health
 
     code128 = barcode_mod.get_barcode_class("code128")
     bc = code128(data, writer=SVGWriter())
@@ -236,11 +215,7 @@ def build_citation_qr_text(
 def build_mailto_qr_text(
     title: str = "",
     authors: list[str] | None = None,
-<<<<<<< HEAD
-    author_emails: list[str] | None = None,
-=======
     author_emails: list[str | None] = None,
->>>>>>> desloppify/code-health
     **_kwargs,
 ) -> str:
     """Build a proper mailto: URI that opens an email draft.
@@ -289,13 +264,8 @@ def create_barcode_strip_overlay(
     strip_height: float = 68.0,
     title: str = "",
     authors: list[str] | None = None,
-<<<<<<< HEAD
-    keywords: list[str] | None = None,
-    author_emails: list[str] | None = None,
-=======
     keywords: list[str | None] = None,
     author_emails: list[str | None] = None,
->>>>>>> desloppify/code-health
     document_id: str = "",
     hashes: dict[str, str] | None = None,
     source_filename: str = "",

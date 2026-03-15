@@ -10,11 +10,7 @@ logger = get_logger(__name__)
 def format_requirements(
     required_headers: list[str],
     markdown_format: bool = True,
-<<<<<<< HEAD
-    section_requirements: dict[str, str] | None = None,
-=======
     section_requirements: dict[str, str | None] | None = None,
->>>>>>> desloppify/code-health
 ) -> str:
     """Generate format requirements section for prompts."""
     lines = ["FORMAT REQUIREMENTS:"]
@@ -36,11 +32,7 @@ def format_requirements(
 def token_budget_awareness(
     total_tokens: int | None = None,
     section_budgets: dict[str, int] | None = None,
-<<<<<<< HEAD
-    word_targets: dict[str, tuple] | None = None,
-=======
     word_targets: dict[str, tuple[int, int]] | None = None,
->>>>>>> desloppify/code-health
 ) -> str:
     """Generate token budget awareness hints for prompts."""
     lines = ["TOKEN BUDGET AWARENESS:"]
@@ -102,11 +94,7 @@ def content_requirements(
 
 def section_structure(
     sections: list[str],
-<<<<<<< HEAD
-    section_descriptions: dict[str, str] | None = None,
-=======
     section_descriptions: dict[str, str | None] | None = None,
->>>>>>> desloppify/code-health
     required_order: bool = True,
 ) -> str:
     """Generate section structure requirements."""
@@ -127,11 +115,7 @@ def section_structure(
 
 
 def validation_hints(
-<<<<<<< HEAD
-    word_count_range: tuple | None = None,
-=======
     word_count_range: tuple[int, int] | None = None,
->>>>>>> desloppify/code-health
     required_elements: list[str] | None = None,
     format_checks: list[str] | None = None,
 ) -> str:

@@ -245,12 +245,7 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any
 
     return metrics
 
-<<<<<<< HEAD
-
-def calculate_complexity_score(metadata: PublicationMetadata) -> int:
-=======
 def calculate_metadata_complexity_score(metadata: PublicationMetadata) -> int:
->>>>>>> desloppify/code-health
     """Calculate a complexity score for the publication.
 
     Args:

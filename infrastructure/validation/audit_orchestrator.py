@@ -17,16 +17,8 @@ from infrastructure.validation.check_links import (
     validate_placeholder_consistency,
     validate_python_imports,
 )
-<<<<<<< HEAD
-from infrastructure.validation.doc_accuracy import check_links
-from infrastructure.validation.doc_discovery import (
-    categorize_documentation,
-    discover_markdown_files,
-)
-=======
 from infrastructure.validation.doc_accuracy import check_links, extract_headings
 from infrastructure.validation.doc_discovery import categorize_documentation, discover_markdown_files
->>>>>>> desloppify/code-health
 from infrastructure.validation.doc_models import (
     DocumentationFile,
     LinkIssue,

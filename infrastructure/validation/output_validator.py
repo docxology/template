@@ -282,12 +282,7 @@ def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
 
     return report
 
-<<<<<<< HEAD
-
-def collect_detailed_validation_results(output_dir: Path) -> dict[str, Any]:
-=======
 def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDict:
->>>>>>> desloppify/code-health
     """Collect detailed validation results for reporting.
 
     Provides comprehensive validation data including file counts, sizes,

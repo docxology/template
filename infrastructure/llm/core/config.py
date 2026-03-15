@@ -11,8 +11,6 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 
-<<<<<<< HEAD
-=======
 class ResponseMode(str, Enum):
     """Response generation modes for different use cases."""
 
@@ -22,7 +20,6 @@ class ResponseMode(str, Enum):
     RAW = "raw"  # Raw prompt without modification
 
 
->>>>>>> desloppify/code-health
 @dataclass
 class GenerationOptions:
     """Per-query generation options for LLM requests.
@@ -377,10 +374,6 @@ class OllamaClientConfig:
 
         return GenerationOptions(**options_dict)
 
-<<<<<<< HEAD
-
-# Module-level accessors so callers don't need to instantiate LLMConfig.
-=======
 # Module-level accessors so callers don't need to instantiate OllamaClientConfig.
 # All three read from a single from_env() call to avoid redundant env lookups.
 
@@ -388,7 +381,6 @@ def _get_env_config() -> "OllamaClientConfig":
     """Return a config instance populated from the current environment."""
     return OllamaClientConfig.from_env()
 
->>>>>>> desloppify/code-health
 
 
 def get_review_timeout() -> float:

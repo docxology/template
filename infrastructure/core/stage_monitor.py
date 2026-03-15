@@ -223,12 +223,7 @@ class StagePerformanceTracker:
         high_memory_mb: float = _HIGH_MEMORY_MB,
         high_cpu_percent: float = _HIGH_CPU_PERCENT,
     ):
-<<<<<<< HEAD
-        """Initialize stage performance tracker."""
-        self.stages: list[dict[str, Any]] = []
-=======
         self.stages: list[StageMetricsDict] = []
->>>>>>> desloppify/code-health
         self.start_time: float | None = None
         self.start_memory: float = 0.0
         self.start_io: Any | None = None

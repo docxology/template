@@ -30,12 +30,6 @@ from .output_reporter import (
     generate_output_summary,
 )
 from .output_organizer import FileType, OutputOrganizer
-<<<<<<< HEAD
-from .multi_project_reporter import (
-    generate_multi_project_report,
-    generate_multi_project_summary_report,
-)
-=======
 
 # Executive & multi-project reporters (cross-project summaries)
 from .executive_reporter import (
@@ -48,7 +42,6 @@ from .executive_reporter import (
 from .multi_project_reporter import generate_multi_project_report, generate_multi_project_summary_report
 
 # Test suite summary generator
->>>>>>> desloppify/code-health
 from .suite_summary_generator import (
     generate_markdown_report,
     generate_summary_report,

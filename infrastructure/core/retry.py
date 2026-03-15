@@ -23,17 +23,7 @@ T = TypeVar("T")
 # Standard exceptions that indicate transient infrastructure failures.
 # Pass to retry_with_backoff(exceptions=TRANSIENT_EXCEPTIONS) or use
 # retry_on_transient_failure() for a pre-configured shorthand.
-<<<<<<< HEAD
-TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (
-    IOError,
-    ConnectionError,
-    TimeoutError,
-    OSError,
-)
-
-=======
 TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (ConnectionError, TimeoutError, OSError)
->>>>>>> desloppify/code-health
 
 def retry_with_backoff(
     max_attempts: int = 3,
@@ -41,13 +31,8 @@ def retry_with_backoff(
     max_delay: float = 60.0,
     exponential_base: float = 2.0,
     jitter: bool = True,
-<<<<<<< HEAD
-    exceptions: tuple[Type[Exception], ...] = (Exception,),
-    on_retry: Callable[[int, Exception], None] | None = None,
-=======
     exceptions: tuple[type[Exception], ...] = (Exception,),
     on_retry: Callable[[int, Exception | None], None] | None = None,
->>>>>>> desloppify/code-health
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator to retry a function with exponential backoff.
 

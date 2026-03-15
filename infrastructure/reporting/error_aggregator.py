@@ -316,15 +316,7 @@ class ErrorAggregator:
 
         return "\n".join(lines)
 
-<<<<<<< HEAD
-
-# Global error aggregator instance
-_global_aggregator: ErrorAggregator | None = None
-
-
-=======
 @functools.lru_cache(maxsize=1)
->>>>>>> desloppify/code-health
 def get_error_aggregator() -> ErrorAggregator:
     """Get global error aggregator instance (lazily initialized)."""
     return ErrorAggregator()

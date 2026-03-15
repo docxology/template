@@ -47,15 +47,10 @@ class TemplateError(Exception):
 
         super().__init__(full_message)
 
-<<<<<<< HEAD
-
-# =============================================================================
 # CONFIGURATION ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class ConfigurationError(TemplateError):
     """Raised when configuration is invalid or missing."""
 
@@ -73,15 +68,10 @@ class InvalidConfigurationError(ConfigurationError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # VALIDATION ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class ValidationError(TemplateError):
     """Raised when validation fails."""
 
@@ -105,15 +95,10 @@ class DataValidationError(ValidationError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # BUILD ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class BuildError(TemplateError):
     """Raised when build process fails."""
 
@@ -137,15 +122,10 @@ class PipelineError(BuildError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # FILE/IO ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class FileOperationError(TemplateError):
     """Raised when file operations fail."""
 
@@ -197,15 +177,10 @@ class InvalidFileFormatError(FileOperationError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # DEPENDENCY ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class DependencyError(TemplateError):
     """Raised when dependencies are missing or invalid."""
 
@@ -237,13 +212,6 @@ class MissingDependencyError(DependencyError):
 
         # Auto-generate installation commands based on common package managers
         if recovery_commands is None and dependency:
-<<<<<<< HEAD
-            from infrastructure.core.environment import (
-                build_install_commands,
-            )  # deferred: circular import guard
-
-=======
->>>>>>> desloppify/code-health
             recovery_commands = build_install_commands(dependency)
 
         super().__init__(message, context, suggestions, recovery_commands)
@@ -254,15 +222,10 @@ class VersionMismatchError(DependencyError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # TEST ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class TestError(TemplateError):
     """Raised when test execution or validation fails."""
 
@@ -274,29 +237,19 @@ class InsufficientCoverageError(TestError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # INTEGRATION ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class IntegrationError(TemplateError):
     """Raised when component integration fails."""
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # LITERATURE SEARCH ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class LiteratureSearchError(TemplateError):
     """Raised when literature search operations fail."""
 
@@ -314,15 +267,10 @@ class InvalidQueryError(LiteratureSearchError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # LLM ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class LLMError(TemplateError):
     """Base exception for LLM operations."""
 
@@ -346,26 +294,17 @@ class ContextLimitError(LLMError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # SECURITY ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class SecurityViolation(TemplateError):
     """Raised when a security constraint is violated."""
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # RENDERING ERRORS
 # =============================================================================
-=======
 class SecurityError(SecurityViolation):
     """Security violation in LLM input sanitization.
 
@@ -375,7 +314,6 @@ class SecurityError(SecurityViolation):
     """
 
     pass
->>>>>>> desloppify/code-health
 
 
 class RenderingError(TemplateError):
@@ -395,15 +333,10 @@ class TemplateRenderingError(RenderingError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # PUBLISHING ERRORS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 class PublishingError(TemplateError):
     """Base exception for publishing operations."""
 
@@ -421,15 +354,10 @@ class MetadataError(PublishingError):
 
     pass
 
-<<<<<<< HEAD
-
-# =============================================================================
 # UTILITY FUNCTIONS
 # =============================================================================
 
 
-=======
->>>>>>> desloppify/code-health
 def raise_with_context(exception_class: type[TemplateError], message: str, **context: Any) -> None:
     """Raise exception_class(message) with the given keyword arguments as context."""
     raise exception_class(message, context=context)

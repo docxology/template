@@ -5,14 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-<<<<<<< HEAD
-from infrastructure.core.logging_utils import get_logger
-
-logger = get_logger(__name__)
-
-
-=======
->>>>>>> desloppify/code-health
 @dataclass
 class DocumentationFile:
     """Represents a documentation file with metadata."""

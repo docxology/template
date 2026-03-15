@@ -113,8 +113,6 @@ def get_manuscript_review_system_prompt() -> str:
 
     return _DEFAULT_REVIEW_SYSTEM_PROMPT
 
-<<<<<<< HEAD
-=======
 _SMALL_MODEL_SUFFIXES = frozenset(["3b", "4b", "7b", "8b"])
 
 
@@ -123,7 +121,6 @@ def _is_small_model(model_name: str) -> bool:
     lower = model_name.lower()
     return any(s in lower for s in _SMALL_MODEL_SUFFIXES)
 
->>>>>>> desloppify/code-health
 
 def log_timeout_info(timeout: float, operation: str) -> None:
     """Log information about timeout settings."""
@@ -332,14 +329,6 @@ _REVIEW_TYPE_VALIDATORS: dict[str, _ValidatorFn] = {
 
 
 def create_review_client(model_name: str) -> LLMClient:
-<<<<<<< HEAD
-    """Create an LLM client specialized for reviews."""
-    config = LLMConfig.from_env()
-    config.default_model = model_name
-    config.timeout = config.review_timeout
-    config.system_prompt = get_manuscript_review_system_prompt()
-    config.auto_inject_system_prompt = True
-=======
     base = OllamaClientConfig.from_env()
     config = base.with_overrides(
         default_model=model_name,
@@ -347,7 +336,6 @@ def create_review_client(model_name: str) -> LLMClient:
         system_prompt=get_manuscript_review_system_prompt(),
         auto_inject_system_prompt=True,
     )
->>>>>>> desloppify/code-health
 
     source = (
         f"environment variable LLM_LONG_MAX_TOKENS={config.long_max_tokens}"
@@ -357,11 +345,6 @@ def create_review_client(model_name: str) -> LLMClient:
     logger.debug(f"Review max_tokens configuration: {source}")
     return LLMClient(config)
 
-<<<<<<< HEAD
-
-def check_ollama_availability() -> tuple[bool, str | None]:
-    """Check if Ollama server and models are available."""
-=======
 def select_and_start_ollama_model() -> tuple[bool, str | None]:
     """Ensure Ollama is running and select the best available model.
 
@@ -373,7 +356,6 @@ def select_and_start_ollama_model() -> tuple[bool, str | None]:
         (True, model_name) on success, (False, None) if Ollama is unavailable
         or no suitable model is found.
     """
->>>>>>> desloppify/code-health
     log_substep("Checking Ollama availability...")
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
@@ -509,9 +491,6 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
 
 
 def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, ManuscriptInputMetrics]:
-<<<<<<< HEAD
-    """Extract and validate text from a manuscript PDF."""
-=======
     """Extract text from a manuscript PDF for LLM review.
 
     Returns:
@@ -520,7 +499,6 @@ def extract_manuscript_text(pdf_path: Path | str) -> tuple[str | None, Manuscrip
     Raises:
         PDFValidationError: If the file exists but cannot be read or is invalid.
     """
->>>>>>> desloppify/code-health
     log_substep(f"Extracting text from manuscript: {Path(pdf_path).name}")
     metrics = ManuscriptInputMetrics()
 
@@ -727,16 +705,12 @@ def generate_review_with_metrics(
 def generate_llm_executive_summary(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-<<<<<<< HEAD
-    """Generate an executive summary of the manuscript using an LLM."""
-=======
     """Named public API entry point for executive summary reviews.
 
     Binds review_type='executive_summary' and ManuscriptExecutiveSummary template.
     Callers use the named function rather than the generic generate_review_with_metrics
     to avoid having to know the template class and review_type string.
     """
->>>>>>> desloppify/code-health
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -752,11 +726,7 @@ def generate_llm_executive_summary(
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-<<<<<<< HEAD
-    """Generate a quality review of the manuscript using an LLM."""
-=======
     """Named public API entry point for quality reviews (ManuscriptQualityReview template)."""
->>>>>>> desloppify/code-health
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -772,11 +742,7 @@ def generate_quality_review(
 def generate_methodology_review(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-<<<<<<< HEAD
-    """Generate a methodology review of the manuscript using an LLM."""
-=======
     """Named public API entry point for methodology reviews (ManuscriptMethodologyReview template)."""
->>>>>>> desloppify/code-health
     return generate_review_with_metrics(
         client=client,
         text=text,
@@ -792,16 +758,12 @@ def generate_methodology_review(
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = ""
 ) -> tuple[str, ReviewMetrics]:
-<<<<<<< HEAD
-    """Generate improvement suggestions for the manuscript using an LLM."""
-=======
     """Named public API entry point for improvement suggestions (ManuscriptImprovementSuggestions template).
 
     Uses temperature=0.4 (vs 0.3 for other reviews) because generative ideation
     benefits from higher diversity — the task is proposing novel directions, not
     accurate analysis.
     """
->>>>>>> desloppify/code-health
     return generate_review_with_metrics(
         client=client,
         text=text,

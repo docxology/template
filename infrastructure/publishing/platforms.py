@@ -20,13 +20,6 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-<<<<<<< HEAD
-#: Default timeout for HTTP requests (seconds)
-REQUEST_TIMEOUT = 30
-
-
-=======
->>>>>>> desloppify/code-health
 def publish_to_zenodo(
     metadata: PublicationMetadata,
     file_paths: list[Path],

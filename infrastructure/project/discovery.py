@@ -257,12 +257,7 @@ def validate_project_structure(project_dir: Path) -> tuple[bool, str]:
 
     return True, "Valid project structure"
 
-<<<<<<< HEAD
-
-def get_project_metadata(project_dir: Path) -> dict:
-=======
 def get_project_metadata(project_dir: Path) -> dict[str, Any]:
->>>>>>> desloppify/code-health
     """Extract metadata from project configuration files.
 
     Checks the following sources in priority order:
@@ -317,12 +312,6 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
     if config_path.exists():
         if _yaml is None:
             logger.debug("PyYAML not available, skipping config.yaml")
-<<<<<<< HEAD
-        except (OSError, ValueError, AttributeError) as e:
-            logger.warning(f"Failed to parse {config_path}: {e}")
-        except Exception as e:
-            logger.warning(f"Failed to parse {config_path}: {e}")
-=======
         else:
             try:
                 with open(config_path) as f:
@@ -340,7 +329,6 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
                     ]
             except (OSError, ValueError, AttributeError) as e:
                 logger.warning(f"Failed to parse {config_path}: {e}")
->>>>>>> desloppify/code-health
 
     return metadata
 

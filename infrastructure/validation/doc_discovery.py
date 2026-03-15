@@ -40,11 +40,6 @@ def discover_markdown_files(repo_root: Path) -> list[Path]:
             md_files.append(md_file)
     return sorted(md_files)
 
-<<<<<<< HEAD
-
-# Alias for backward compatibility with tests and other consumers
-=======
->>>>>>> desloppify/code-health
 find_markdown_files = discover_markdown_files
 
 

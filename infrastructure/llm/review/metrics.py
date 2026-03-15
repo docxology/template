@@ -62,19 +62,5 @@ class StreamingMetrics:
     first_chunk_time: float = 0.0  # Time to first chunk
     last_chunk_time: float = 0.0  # Time of last chunk
 
-<<<<<<< HEAD
-
-def estimate_tokens(text: str) -> int:
-    """Estimate token count from text (approximately 4 characters per token).
-
-    Args:
-        text: Input text
-
-    Returns:
-        Estimated token count
-    """
-    return len(text) // 4
-=======
 # estimate_tokens imported from infrastructure.llm.validation.core
 __all__ = ["ReviewMetrics", "StreamingMetrics", "estimate_tokens"]
->>>>>>> desloppify/code-health
