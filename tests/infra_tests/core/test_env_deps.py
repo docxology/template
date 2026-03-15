@@ -56,7 +56,6 @@ class TestCheckBuildTools:
     def test_custom_tool_dict(self):
         """Test with custom tool dict including a known-available tool."""
         # python is always available, so use that as a known tool
-        import shutil
         result = check_build_tools({"python3": "Python interpreter"})
         # python3 may or may not be available (uv manages it), but result must be bool
         assert isinstance(result, bool)

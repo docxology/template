@@ -4,8 +4,6 @@ Tests glossary CLI generation utilities using real files.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from pathlib import Path
-
 from infrastructure.documentation.generate_glossary_cli import _ensure_glossary_file
 
 
