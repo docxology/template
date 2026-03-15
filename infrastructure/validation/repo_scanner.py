@@ -14,7 +14,6 @@ import ast
 import re
 import subprocess
 import sys
-import warnings
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -25,17 +24,6 @@ import yaml
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.doc_models import CompletenessGap, ScanAccuracyIssue
 
-class AccuracyIssue(ScanAccuracyIssue):
-    """Deprecated alias for ScanAccuracyIssue. Use ScanAccuracyIssue directly."""
-
-    def __init__(self, *args: object, **kwargs: object) -> None:
-        warnings.warn(
-            "AccuracyIssue is deprecated; use ScanAccuracyIssue instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        super().__init__(*args, **kwargs)  # type: ignore[arg-type]
-
 logger = get_logger(__name__)
 
 
@@ -43,7 +31,7 @@ logger = get_logger(__name__)
 class RepoScanResults:
     """Container for scan results."""
 
-    accuracy_issues: list[AccuracyIssue] = field(default_factory=list)
+    accuracy_issues: list[ScanAccuracyIssue] = field(default_factory=list)
     completeness_gaps: list[CompletenessGap] = field(default_factory=list)
     statistics: dict[str, Any] = field(default_factory=dict)
 
@@ -168,7 +156,7 @@ class RepositoryScanner:
                             # Check if function/class exists
                             if not self._verify_import(script, module_name, imports[imp]):
                                 issues.append(
-                                    AccuracyIssue(
+                                    ScanAccuracyIssue(
                                         category="import",
                                         severity="error",
                                         file=str(script.relative_to(self.repo_root)),
@@ -178,7 +166,7 @@ class RepositoryScanner:
                                 )
             except (OSError, UnicodeDecodeError, SyntaxError) as e:
                 issues.append(
-                    AccuracyIssue(
+                    ScanAccuracyIssue(
                         category="import",
                         severity="warning",
                         file=str(script.relative_to(self.repo_root)),
@@ -292,7 +280,7 @@ class RepositoryScanner:
                             ):
                                 line_num = content[: match.start()].count("\n") + 1
                                 issues.append(
-                                    AccuracyIssue(
+                                    ScanAccuracyIssue(
                                         category="command",
                                         severity="error",
                                         file=str(md_file.relative_to(self.repo_root)),
@@ -390,7 +378,7 @@ class RepositoryScanner:
                 # Only report if there are actual test failures (not just missing deps)
                 if "FAILED" in result.stdout or "ERROR" in result.stdout:
                     self.results.accuracy_issues.append(
-                        AccuracyIssue(
+                        ScanAccuracyIssue(
                             category="testing",
                             severity="error",
                             file="tests/",
@@ -428,7 +416,7 @@ class RepositoryScanner:
                 # Check structure matches
                 if not self._configs_match(config, example):
                     issues.append(
-                        AccuracyIssue(
+                        ScanAccuracyIssue(
                             category="configuration",
                             severity="warning",
                             file="project/manuscript/config.yaml",
@@ -437,7 +425,7 @@ class RepositoryScanner:
                     )
             except (OSError, yaml.YAMLError, ValueError) as e:
                 issues.append(
-                    AccuracyIssue(
+                    ScanAccuracyIssue(
                         category="configuration",
                         severity="warning",
                         file="project/manuscript/config.yaml",
@@ -492,7 +480,7 @@ class RepositoryScanner:
                 # Scripts should import from src, not implement business logic
                 if not has_src_import and script.parent.name == "scripts":
                     issues.append(
-                        AccuracyIssue(
+                        ScanAccuracyIssue(
                             category="architecture",
                             severity="warning",
                             file=str(script.relative_to(self.repo_root)),
@@ -501,7 +489,7 @@ class RepositoryScanner:
                     )
             except (OSError, UnicodeDecodeError, SyntaxError) as e:
                 issues.append(
-                    AccuracyIssue(
+                    ScanAccuracyIssue(
                         category="architecture",
                         severity="info",
                         file=str(script.relative_to(self.repo_root)),

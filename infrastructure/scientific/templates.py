@@ -56,12 +56,8 @@ def function1(param1: float, param2: int) -> float:
         3.0
     """
     # Type checking is enforced by the function signature; callers must pass correct types.
-
-    try:
-        result = param1 * param2 + 1.0
-        return result
-    except OverflowError:
-        raise ValueError("Computation resulted in overflow")
+    result = param1 * param2 + 1.0
+    return result
 
 def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], float]:
     """[Brief description of function2].

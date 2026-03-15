@@ -31,7 +31,7 @@ from infrastructure.core.env_deps import (
     install_missing_packages,
     check_build_tools,
 )
-from infrastructure.core.file_cleanup import clean_coverage_files
+from infrastructure.core.coverage_cleanup import clean_coverage_files
 
 # Set up logger for this module
 logger = get_logger(__name__)

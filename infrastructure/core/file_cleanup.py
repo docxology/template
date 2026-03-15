@@ -3,8 +3,7 @@
 This module provides functions for cleaning output directories.
 Extracted from file_operations.py for file-size health.
 
-Coverage file cleanup is in coverage_cleanup.py (re-exported here for
-backward compatibility).
+Coverage file cleanup is in coverage_cleanup.py.
 """
 
 from __future__ import annotations
@@ -16,9 +15,6 @@ from typing import Any
 
 from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.logging_utils import get_logger, log_success
-
-# Re-export for backward compatibility — implementation moved to coverage_cleanup.py
-from infrastructure.core.coverage_cleanup import clean_coverage_files as clean_coverage_files
 
 logger = get_logger(__name__)
 

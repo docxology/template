@@ -771,7 +771,7 @@ def generate_improvement_suggestions(
 
 
 def generate_translation(
-    client: LLMClient, text: str, model_name: str = "", language_code: str = ""
+    client: LLMClient, text: str, language_code: str = "", model_name: str = ""
 ) -> tuple[str | None, ReviewMetrics]:
     """Generate a translated abstract for the manuscript.
 

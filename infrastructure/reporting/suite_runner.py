@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.file_cleanup import clean_coverage_files
+from infrastructure.core.coverage_cleanup import clean_coverage_files
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.logging_progress import log_with_spinner
 from infrastructure.reporting.coverage_parser import (
