@@ -609,7 +609,7 @@ Root entry points work with **ANY** project following this structure.
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md) - documentation
-- [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Unified runner guide
+- [`../docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) - Unified runner guide
 - [`projects/code_project/scripts/`](../projects/code_project/scripts/) - Project scripts
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

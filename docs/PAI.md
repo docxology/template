@@ -5,7 +5,7 @@
 - **System**: Research Project Template
 - **Role**: Standardized Research Execution Environment
 - **Type**: Core Infrastructure / Skill
-- **Version**: Pipeline v2.1 (10-stage extended, 7-stage core)
+- **Version**: Pipeline v2.1 (10-stage extended, 8-stage core)
 - **Signposting**: Linked to [PAI Core](../../.gemini/antigravity/knowledge/personal_ai_infrastructure_pai_system/artifacts/overview.md)
 
 ---
@@ -45,12 +45,12 @@ template/
 │   └── execute_multi_project.py # Multi-project orchestrator
 ├── projects/              # Active research projects (Layer 2)
 │   ├── code_project/      # Optimization research exemplar
-│   └── medical_ai/        # Medical AI clinical pipeline
+│   └── cognitive_case_diagrams/  # Cognitive case system diagrams
 ├── projects_archive/      # Archived projects (not executed)
 ├── tests/                 # Infrastructure tests
 ├── CLOUD_DEPLOY.md        # ☁️ Headless cloud server guide
-├── Dockerfile             # Container specification
-└── docker-compose.yml     # Multi-service orchestration
+├── infrastructure/docker/Dockerfile             # Container specification
+└── infrastructure/docker/docker-compose.yml     # Multi-service orchestration
 ```
 
 ---
@@ -74,7 +74,7 @@ projects = discover_projects(repo_root)
 uv run scripts/execute_pipeline.py --project code_project --core-only
 
 # Specific project
-./run.sh --project medical_ai --pipeline
+./run.sh --project cognitive_case_diagrams --pipeline
 
 # All projects
 ./run.sh --all-projects --pipeline
@@ -139,4 +139,5 @@ uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscri
 - [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) — Headless cloud deployment guide ☁️
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Pipeline orchestration reference
 - [`docs/documentation-index.md`](docs/documentation-index.md) — Full docs hub
-- [`Dockerfile`](Dockerfile) — Container specification
+- [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
+- [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration

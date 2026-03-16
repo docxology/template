@@ -9,10 +9,10 @@ import pytest
 
 from infrastructure.validation import repo_scanner
 from infrastructure.validation.repo_scanner import (
-    AccuracyIssue,
     CompletenessGap,
     RepositoryScanner,
-    ScanResults,
+    RepoScanResults,
+    ScanAccuracyIssue,
 )
 
 
@@ -47,8 +47,8 @@ class TestDataClasses:
         assert gap.severity == "warning"
 
     def test_scan_results_creation(self):
-        """Test ScanResults dataclass."""
-        results = ScanResults()
+        """Test RepoScanResults dataclass."""
+        results = RepoScanResults()
 
         assert results.accuracy_issues == []
         assert results.completeness_gaps == []
@@ -266,7 +266,7 @@ class TestScanAll:
         with caplog.at_level(logging.INFO):
             results = scanner.scan_all()
 
-        assert isinstance(results, ScanResults)
+        assert isinstance(results, RepoScanResults)
 
         # Check that it logged progress
         assert "REPOSITORY-WIDE ACCURACY AND COMPLETENESS SCAN" in caplog.text

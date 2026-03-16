@@ -8,7 +8,7 @@ Create technical documentation (AGENTS.md) and quick reference guides (README.md
 
 This prompt leverages the documentation standards to create professional documentation:
 
-- [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
+- [`../rules/documentation_standards.md`](../rules/documentation_standards.md) - Documentation writing standards
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
 - [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
 
@@ -267,17 +267,17 @@ See [`../module/AGENTS.md`](../modules/AGENTS.md) for module details.
 See [`../../docs/core/architecture.md`](../../docs/core/architecture.md) for architecture information.
 
 # Link to standards
-See [`../../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) for testing requirements.
+See [`../../rules/testing_standards.md`](../rules/testing_standards.md) for testing requirements.
 ```
 
 ### Standards References
 
 ```markdown
 # Reference development standards
-See [`.cursorrules/code_style.md`](../../.cursorrules/code_style.md) for code formatting standards.
+See [`../rules/code_style.md`](../rules/code_style.md) for code formatting standards.
 
 # Reference documentation standards
-See [`.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) for documentation guidelines.
+See [`../rules/documentation_standards.md`](../rules/documentation_standards.md) for documentation guidelines.
 ```
 
 ## 4. Content Quality Standards
@@ -342,7 +342,7 @@ See [`.cursorrules/documentation_standards.md`](../../.cursorrules/documentation
 
 ## Standards Compliance Checklist
 
-### Documentation Standards ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
+### Documentation Standards ([`../rules/documentation_standards.md`](../rules/documentation_standards.md))
 
 - [ ] AGENTS.md structure with all required sections
 - [ ] README.md with Mermaid navigation diagrams
@@ -384,7 +384,7 @@ TARGET PATH: infrastructure/data_quality/
 
 ## Related Documentation
 
-- [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
+- [`../rules/documentation_standards.md`](../rules/documentation_standards.md) - Documentation writing standards
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
 - [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
 - [`../../README.md`](../../README.md) - README.md standards example

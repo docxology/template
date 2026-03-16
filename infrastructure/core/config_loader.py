@@ -98,6 +98,7 @@ class ManuscriptConfig(TypedDict, total=False):
     keywords: list[str]
     metadata: dict[str, str]
     project_config: dict[str, Any]  # passthrough for project-specific config sections
+    experiment: dict[str, Any]      # passthrough for project experimental parameters
 
 
 try:

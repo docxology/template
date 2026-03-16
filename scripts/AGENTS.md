@@ -102,7 +102,7 @@ projects/{name}/output/pdf/
 - Invisible text layers and document ID fingerprinting
 - Optional AES-256 PDF password protection
 
-**Configuration** (`secure_config.yaml` at repo root):
+**Configuration** (`secure_config.yaml` at `infrastructure/config/`):
 
 The repo-level `secure_config.yaml` provides default steganography settings. Any
 `steganography:` section in a project's `manuscript/config.yaml` overrides these defaults.
@@ -127,8 +127,8 @@ steganography:
 **Key references:**
 
 - [`infrastructure/steganography/`](../infrastructure/steganography/AGENTS.md) — Module implementation
-- [`secure_config.yaml`](../secure_config.yaml) — Top-level steganography configuration
-- [`CLOUD_DEPLOY.md`](../CLOUD_DEPLOY.md) — Headless deployment guide
+- [`secure_config.yaml`](../infrastructure/config/secure_config.yaml) — Top-level steganography configuration
+- [`CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) — Headless deployment guide
 - Sourced by `run.sh`
 
 ### Python Scripts
@@ -604,8 +604,8 @@ Root entry points work with **ANY** project that follows this structure.
 ## See Also
 
 - [`../README.md`](../README.md) - Quick reference
-- [`../CLOUD_DEPLOY.md`](../CLOUD_DEPLOY.md) - **Headless / cloud server deployment guide** ☁️
-- [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Full pipeline orchestration reference
+- [`../docs/CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) - **Headless / cloud server deployment guide** ☁️
+- [`../docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) - Full pipeline orchestration reference
 - [`../projects/code_project/scripts/`](../projects/code_project/scripts/) - Project scripts example
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

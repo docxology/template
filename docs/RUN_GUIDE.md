@@ -125,6 +125,7 @@ The template now supports **multiple research projects** in a single repository.
 The template includes the following active projects:
 
 - **`code_project`** - Optimization research exemplar
+- **`cognitive_case_diagrams`** - Cognitive case system diagrams (categorical linguistics)
 
 **Note:** Additional projects can be created following the template structure. Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -152,26 +153,37 @@ uv run scripts/execute_multi_project.py
 ./run.sh
 ```
 
-### Manuscript Menu (Options 0-8)
+### Manuscript Menu
 
-```
+```text
 ============================================================
   Manuscript Pipeline - Main Menu
 ============================================================
 
-Core Pipeline Scripts (aligned with script numbering):
-  0. Setup Environment (00_setup_environment.py)
-  1. Run Tests (01_run_tests.py - infrastructure + project)
-  2. Run Analysis (02_run_analysis.py)
-  3. Render PDF (03_render_pdf.py)
-  4. Validate Output (04_validate_output.py)
-  5. LLM Review (requires Ollama) (06_llm_review.py --reviews-only)
-  6. LLM Translations (requires Ollama) (06_llm_review.py --translations-only)
+⚙️  CORE STAGES
+    0  Setup Environment
+    1  Run Tests (infra + project)
+    2  Run Analysis Scripts
+    3  Render PDF
+    4  Validate Output
+    5  LLM Scientific Review
+    6  LLM Translations
 
-Orchestration:
-  7. Run Core Pipeline (stages 0-7: no LLM)
-  8. Run Full Pipeline (10 stages: [1/10] to [10/10])
-  9. Run Full Pipeline (skip infrastructure tests)
+🚀 ORCHESTRATION
+    7  Core Pipeline              [+infra] [-LLM] Stages 1-7
+    8  Full Pipeline              [+infra] [+LLM] All 10 stages
+    9  Full Pipeline (fast)       [-infra] [+LLM] Skip infra tests
+
+📚 MULTI-PROJECT
+    a  All projects full          [+infra] [+LLM] [+report]
+    b  All projects full (fast)   [-infra] [+LLM] [+report]
+    c  All projects core          [+infra] [-LLM] [+report]
+    d  All projects core (fast)   [-infra] [-LLM] [+report]
+
+🔧 PROJECT MANAGEMENT
+    p  Change Active Project      [Current: <project_name>]
+    i  Show Project Info
+    q  Quit
 ============================================================
 ```
 

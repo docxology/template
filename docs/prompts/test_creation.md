@@ -8,7 +8,7 @@ Create test suites that validate code functionality using data only, ensuring fu
 
 This prompt enforces the strict no-mocks testing policy and leverages testing standards:
 
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards and no-mocks policy
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Testing standards and no-mocks policy
 - [`../development/testing/testing-guide.md`](../development/testing/testing-guide.md) - Testing guide and expansion strategy
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow integration
 
@@ -378,7 +378,7 @@ def test_unhandled_edge_case():
 
 ## Standards Compliance Checklist
 
-### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+### Testing Standards ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 - [ ] No mocks policy strictly enforced
 - [ ] Coverage requirements achieved (90% project, 60% infrastructure)
 - [ ] Test organization with clear structure
@@ -411,6 +411,6 @@ LAYER: project
 ## Related Documentation
 
 - [`../development/testing/testing-guide.md`](../development/testing/testing-guide.md) - Testing guide and expansion strategy
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Testing standards
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow integration
 ```

@@ -21,7 +21,7 @@ The `secure_run.sh` script discovers all active projects and processes each one 
 
 If you run `./secure_run.sh` with no arguments, you enter an interactive UI (similar to `./run.sh`).
 
-The UI immediately details your active `secure_config.yaml` parameters and allows you to select which permutation to run (Fast, Core, Full, etc) with Steganography automatically affixed at the end.
+The UI immediately details your active `infrastructure/config/secure_config.yaml` parameters and allows you to select which permutation to run (Fast, Core, Full, etc) with Steganography automatically affixed at the end.
 
 ### Project Selection
 

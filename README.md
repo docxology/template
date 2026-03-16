@@ -338,7 +338,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 3. **Install dependencies**: `uv sync`
 4. **Generate your first document**: `uv run scripts/03_render_pdf.py`
 
-> 🖥️ **Running on a headless cloud server?** See **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** — uv is
+> 🖥️ **Running on a headless cloud server?** See **[docs/CLOUD_DEPLOY.md](docs/CLOUD_DEPLOY.md)** — uv is
 > installed automatically when you run `./run.sh --pipeline`.
 
 **📖 Need help?** See **[Getting Started Guide](docs/guides/getting-started.md)** for beginners, **[Quick Start Cheatsheet](docs/reference/quick-start-cheatsheet.md)** for quick reference, or **[How To Use Guide](docs/core/how-to-use.md)** for guidance from basic usage to advanced workflows.
@@ -1096,7 +1096,7 @@ graph TD
 
 ## 🔍 How It Works
 
-**[Workflow](docs/core/workflow.md)** | **[Architecture](docs/core/architecture.md)** | **[Build System](docs/operational/build-system.md)** | **[Run Guide](RUN_GUIDE.md)**
+**[Workflow](docs/core/workflow.md)** | **[Architecture](docs/core/architecture.md)** | **[Build System](docs/operational/build-system.md)** | **[Run Guide](docs/RUN_GUIDE.md)**
 
 The template provides **two main entry points** for pipeline operations:
 
@@ -1167,7 +1167,7 @@ flowchart TD
 - `./run.sh`: 10 stages displayed as [1/10] to [10/10] in logs (Clean Output Directories through Copy Outputs)
 - `execute_pipeline.py --core-only`: Core pipeline stages (no LLM stages)
 
-**See [RUN_GUIDE.md](RUN_GUIDE.md) for pipeline documentation.**
+**See [docs/RUN_GUIDE.md](docs/RUN_GUIDE.md) for pipeline documentation.**
 
 ## 📚 Documentation Index
 
@@ -1198,7 +1198,7 @@ flowchart TD
 
 - **[docs/architecture/thin-orchestrator-summary.md](docs/architecture/thin-orchestrator-summary.md)** - Thin orchestrator pattern implementation
 - **[docs/usage/markdown-template-guide.md](docs/usage/markdown-template-guide.md)** - Markdown writing and cross-referencing guide
-- **[.cursorrules/manuscript_style.md](.cursorrules/manuscript_style.md)** - Manuscript formatting standards and best practices
+- **[docs/rules/manuscript_style.md](docs/rules/manuscript_style.md)** - Manuscript formatting standards and best practices
 - **[docs/usage/manuscript-numbering-system.md](docs/usage/manuscript-numbering-system.md)** - Section organization system
 
 ### Community & Contribution
@@ -1378,7 +1378,7 @@ graph TB
     TASK -->|Fix issues| FIX[docs/operational/troubleshooting-guide.md\ndocs/reference/faq.md]
     TASK -->|Understand architecture| ARCH[docs/core/architecture.md\ndocs/architecture/two-layer-architecture.md]
     TASK -->|Configure system| CONFIG[docs/operational/configuration.md\nAGENTS.md#configuration-system]
-    TASK -->|Run pipeline| PIPELINE[RUN_GUIDE.md\ndocs/operational/build-system.md]
+    TASK -->|Run pipeline| PIPELINE[docs/RUN_GUIDE.md\ndocs/operational/build-system.md]
     TASK -->|Contribute code| CONTRIB[docs/development/contributing.md\n.cursorrules/AGENTS.md]
     TASK -->|Find all docs| INDEX[docs/documentation-index.md\ndocs/AGENTS.md]
 

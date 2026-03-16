@@ -11,6 +11,7 @@ This is a research project template with a test-driven development workflow, aut
 | Task | Command |
 |------|---------|
 | Interactive menu | `./run.sh` |
+| Interactive secure menu | `./secure_run.sh` |
 | Full pipeline | `./run.sh --pipeline` |
 | Core pipeline (no LLM) | `python3 scripts/execute_pipeline.py --project {name} --core-only` |
 | All tests | `python3 scripts/01_run_tests.py --project {name}` |
@@ -25,6 +26,9 @@ This is a research project template with a test-driven development workflow, aut
 # Interactive menu (recommended)
 ./run.sh
 
+# Interactive secure menu (pipeline + steganography)
+./secure_run.sh
+
 # Full pipeline (10 stages: clean, setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
 
@@ -33,6 +37,10 @@ python3 scripts/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
 ./run.sh --pipeline --resume
+
+# Steganography operations
+./secure_run.sh --project {project_name}
+./secure_run.sh --steganography-only --project {project_name}
 ```
 
 ### Testing

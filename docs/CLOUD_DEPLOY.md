@@ -125,7 +125,7 @@ falling back to the root `.venv`, then to system `python3`.
 
 ## 6. Running the Pipeline (Non-Interactive)
 
-### Full pipeline (all 9 stages including optional LLM review)
+### Full pipeline (all 10 stages including optional LLM review)
 
 ```bash
 ./run.sh --pipeline
@@ -235,7 +235,7 @@ The `Dockerfile`:
 - Sets `MPLBACKEND=Agg` and `UV_FROZEN=true`
 - Creates a non-root `research` user
 
-See [`Dockerfile`](Dockerfile) and [`docker-compose.yml`](docker-compose.yml) for configuration
+See [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) and [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) for configuration
 options.
 
 ---
@@ -321,8 +321,8 @@ uv run scripts/00_setup_environment.py
 ## See Also
 
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Full pipeline orchestration reference
-- [`Dockerfile`](Dockerfile) — Container specification
-- [`docker-compose.yml`](docker-compose.yml) — Multi-service orchestration
+- [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
+- [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration
 - [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — CI reference
 - [`AGENTS.md`](AGENTS.md) — Complete system reference
 - [`docs/operational/troubleshooting/`](docs/operational/troubleshooting/) — Detailed troubleshooting

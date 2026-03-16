@@ -2,7 +2,7 @@
 
 > **Add figures and automation** to your research project
 
-**Previous**: [Getting Started](../guides/getting-started.md) (Levels 1-3) | **Next**: [Testing and Reproducibility](../guides/testing-and-reproducibility.md) (Levels 7-9)
+**Previous**: [Getting Started](getting-started.md) (Levels 1-3) | **Next**: [Testing and Reproducibility](testing-and-reproducibility.md) (Levels 7-9)
 
 This guide covers **Levels 4-6** of the Research Project Template. for users ready to add custom figures, data analysis, and automated workflows.
 
@@ -20,7 +20,7 @@ By the end of this guide, you'll be able to:
 
 ## 🎯 Prerequisites
 
-- Completed [Getting Started Guide](../guides/getting-started.md)
+- Completed [Getting Started Guide](getting-started.md)
 - Basic Python programming knowledge
 - Understanding of matplotlib or similar visualization library
 - Text editor configured for Python
@@ -112,9 +112,9 @@ def main():
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
     
     # USE projects/{name}/src/ methods for computation - NEVER implement here
-    avg = calculate_average(data)  # From projects/code_projects/{name}/src/example.py
-    max_val = find_maximum(data)   # From projects/code_projects/{name}/src/example.py
-    min_val = find_minimum(data)   # From projects/code_projects/{name}/src/example.py
+    avg = calculate_average(data)  # From projects/code_project/src/example.py
+    max_val = find_maximum(data)   # From projects/code_project/src/example.py
+    min_val = find_minimum(data)   # From projects/code_project/src/example.py
     
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -162,7 +162,7 @@ if __name__ == '__main__':
 If computation logic doesn't exist, add it to `projects/{name}/src/` first:
 
 ```python
-# projects/code_projects/{name}/src/statistics.py
+# projects/code_project/src/statistics.py
 def calculate_variance(values):
     """Calculate sample variance."""
     mean = sum(values) / len(values)
@@ -360,7 +360,7 @@ def test_linear_regression():
 **Step 3: Implement in `projects/{name}/src/`**
 
 ```python
-# projects/code_projects/{name}/src/correlation.py
+# projects/code_project/src/correlation.py
 """Correlation and regression analysis functions."""
 
 def calculate_correlation(x: list[float], y: list[float]) -> float:
@@ -438,7 +438,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.code_project.src.correlation import calculate_correlation, linear_regression  # From projects/{name}/src/
+from projects.code_project.src.correlation import calculate_correlation, linear_regression  # From projects/code_project/src/
 
 def main():
     # Generate sample data

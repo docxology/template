@@ -272,17 +272,17 @@ display_menu() {
 
     # Orchestration
     echo -e "${BOLD}🚀 ORCHESTRATION${NC}"
-    echo -e "    ${GREEN}7${NC}  Core Pipeline              ${CYAN}Stages 1-7 (no LLM)${NC}"
-    echo -e "    ${GREEN}8${NC}  Full Pipeline              ${CYAN}All 9 stages${NC}"
-    echo -e "    ${GREEN}9${NC}  Full Pipeline (fast)       ${CYAN}Skip infra tests${NC}"
+    echo -e "    ${GREEN}7${NC}  Core Pipeline              ${CYAN}[+infra] [-LLM] Stages 1-7${NC}"
+    echo -e "    ${GREEN}8${NC}  Full Pipeline              ${CYAN}[+infra] [+LLM] All 10 stages${NC}"
+    echo -e "    ${GREEN}9${NC}  Full Pipeline (fast)       ${CYAN}[-infra] [+LLM] Skip infra tests${NC}"
     echo
 
     # Multi-Project Operations
     echo -e "${BOLD}📚 MULTI-PROJECT${NC}"
-    echo -e "    ${GREEN}a${NC}  All projects full          ${CYAN}+infra +LLM +report${NC}"
-    echo -e "    ${GREEN}b${NC}  All projects full (fast)   ${CYAN}-infra +LLM +report${NC}"
-    echo -e "    ${GREEN}c${NC}  All projects core          ${CYAN}+infra -LLM +report${NC}"
-    echo -e "    ${GREEN}d${NC}  All projects core (fast)   ${CYAN}-infra -LLM +report${NC}"
+    echo -e "    ${GREEN}a${NC}  All projects full          ${CYAN}[+infra] [+LLM] [+report]${NC}"
+    echo -e "    ${GREEN}b${NC}  All projects full (fast)   ${CYAN}[-infra] [+LLM] [+report]${NC}"
+    echo -e "    ${GREEN}c${NC}  All projects core          ${CYAN}[+infra] [-LLM] [+report]${NC}"
+    echo -e "    ${GREEN}d${NC}  All projects core (fast)   ${CYAN}[-infra] [-LLM] [+report]${NC}"
     echo
 
     # Project Management

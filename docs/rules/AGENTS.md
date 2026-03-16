@@ -67,14 +67,14 @@ The template provides **two pipeline orchestrators** with different scope:
 **Interactive Menu (`./run.sh`)**
 
 - **Use for**: Full pipeline with optional LLM stages
-- **Stages**: 0-9 (stage 0 cleanup, stages 1-9 displayed as [1/10] to [10/10])
+- **Stages**: 1-10 (displayed as [1/10] to [10/10])
 - **Features**: Interactive menu, research templates, LLM reviews, translations
-- **When to use**: builds, LLM features needed
+- **When to use**: Full builds, LLM features needed
 
-**Python Orchestrator (`python3 scripts/run_all.py`)**
+**Python Orchestrator (`python3 scripts/execute_pipeline.py`)**
 
 - **Use for**: Core pipeline only, programmatic execution
-- **Stages**: 00-07 (zero-padded Python convention)
+- **Stages**: 00-05 (zero-padded Python convention)
 - **Features**: Minimal dependencies, fast execution
 - **When to use**: Automated environments, no LLM requirements
 
@@ -121,7 +121,8 @@ The template provides **two pipeline orchestrators** with different scope:
 1. ✅ Test coverage requirements met (60% infra, 90% project)
 2. ✅ All tests pass
 3. ✅ No linter errors
-4. ✅ Documentation 5. ✅ AGENTS.md and README.md updated
+4. ✅ Documentation updated
+5. ✅ AGENTS.md and README.md updated
 
 ## Standards by Topic
 
@@ -266,7 +267,7 @@ tests/
 
 Every directory must have:
 
-1. **AGENTS.md** - documentation
+1. **AGENTS.md** - Technical documentation
     - Purpose and architecture
     - Usage examples
     - Configuration options

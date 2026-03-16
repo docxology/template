@@ -22,7 +22,7 @@ The processor bypasses the visual later completely to rewrite the PDF metadata d
 
 ## Configuration
 
-Steganography is controlled by a root-level `secure_config.yaml`.
+Steganography is controlled by `infrastructure/config/secure_config.yaml`.
 If you delete this file, the pipeline will fallback to conservative hard-coded defaults (Text overlay: CONFIDENTIAL, Opacity: 8%, Hash and Metadata enabled, QR barcodes enabled).
 
 ```yaml

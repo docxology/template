@@ -10,7 +10,7 @@ This prompt ensures features integrate properly with the existing system:
 
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow
 - [`../core/architecture.md`](../core/architecture.md) - Architecture principles
-- [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
+- [`../rules/`](../rules/) directory - All development standards
 
 ## Prompt Template
 
@@ -518,8 +518,8 @@ FeatureError (base exception)
 
 - [`README.md`](README.md) - Quick reference and usage examples
 - [`../../core/architecture.md`](../core/architecture.md) - Architecture integration details
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing requirements
-- [`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md) - API design standards
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Testing requirements
+- [`../rules/api_design.md`](../rules/api_design.md) - API design standards
 
 ```
 
@@ -613,7 +613,7 @@ def benchmark_feature():
 - [ ] Correct layer placement (infrastructure vs project)
 - [ ] Module organization and structure
 
-### Code Quality Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+### Code Quality Standards ([`../rules/code_style.md`](../rules/code_style.md))
 
 - [ ] Type hints on all public APIs
 - [ ] Black formatting and isort compliance
@@ -621,14 +621,14 @@ def benchmark_feature():
 - [ ] Error handling with custom exceptions
 - [ ] Unified logging system integration
 
-### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+### Testing Standards ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 
 - [ ] No mocks policy (data only)
 - [ ] Coverage requirements achieved
 - [ ] Test organization and structure
 - [ ] Integration and performance testing
 
-### Documentation Standards ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
+### Documentation Standards ([`../rules/documentation_standards.md`](../rules/documentation_standards.md))
 
 - [ ] AGENTS.md with technical documentation
 - [ ] README.md with Mermaid diagrams
@@ -658,6 +658,6 @@ LAYER: infrastructure
 
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow
 - [`../core/architecture.md`](../core/architecture.md) - Architecture principles
-- [`../../.cursorrules/`](../../.cursorrules/) - All development standards
+- [`../rules/`](../rules/) - All development standards
 
 ```

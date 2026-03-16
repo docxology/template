@@ -8,8 +8,8 @@ Create a, compliant research manuscript from scratch based on a research descrip
 
 This prompt leverages extensive project documentation to create manuscripts that follow professional academic standards:
 
-- [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) - Section numbering, cross-references, equations, figures
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
+- [`../rules/manuscript_style.md`](../rules/manuscript_style.md) - Section numbering, cross-references, equations, figures
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Standards compliance
 - [`../core/workflow.md`](../core/workflow.md) - Research workflow integration
 - [`../usage/markdown-template-guide.md`](../usage/markdown-template-guide.md) - Markdown authoring guide
 
@@ -219,7 +219,7 @@ Ensure all output meets standards:
 
 ## Standards Compliance Checklist
 
-### Manuscript Standards ([`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md))
+### Manuscript Standards ([`../rules/manuscript_style.md`](../rules/manuscript_style.md))
 - [ ] Section numbering (01-09, S01-S0N, 98-99)
 - [ ] Cross-references with proper labels
 - [ ] Equation environments with labels
@@ -227,20 +227,20 @@ Ensure all output meets standards:
 - [ ] Citation format before punctuation
 - [ ] Consistent terminology and notation
 
-### Code Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+### Code Standards ([`../rules/code_style.md`](../rules/code_style.md))
 - [ ] Type hints on all public APIs
 - [ ] Black formatting and isort imports
 - [ ] Google-style docstrings
 - [ ] Error handling with custom exceptions
 - [ ] Unified logging system
 
-### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+### Testing Standards ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 - [ ] No mocks policy (data only)
 - [ ] 90% minimum coverage
 - [ ] Test-driven development approach
 - [ ] Integration testing for workflows
 
-### Documentation Standards ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
+### Documentation Standards ([`../rules/documentation_standards.md`](../rules/documentation_standards.md))
 - [ ] AGENTS.md with technical documentation
 - [ ] README.md with Mermaid diagrams
 - [ ] Cross-references between documents

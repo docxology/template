@@ -83,9 +83,9 @@ uv sync                              # Re-sync
 
 ---
 
-### ⚠️ Project packages missing from root venv — silent Stage 4 failure
+### ⚠️ Project packages missing from root venv — silent Stage 5 failure
 
-**Symptom:** `❌ act_inf_metaanalysis: 4 stages, 7.7s` — Stage 4 fails in under 1 second with no visible import error in console.
+**Symptom:** `❌ act_inf_metaanalysis: 5 stages, 7.7s` — Stage 5 fails in under 1 second with no visible import error in console.
 
 **Root Cause:** Each project sub-directory may have its own `pyproject.toml` declaring extra dependencies (`scipy`, `pandas`, `wordcloud`, `rdflib`, `scikit-learn`, `networkx`, `requests`, etc.). When `02_run_analysis.py` runs analysis scripts, it uses the **root venv** unless the project has a local `.venv` directory. If these packages are only in the project's `pyproject.toml` and not in the root `pyproject.toml`, analysis scripts crash on import immediately — but the error is captured by subprocess and only logged as a stage failure.
 
@@ -261,7 +261,7 @@ cat projects/{name}/output/.checkpoints/pipeline_checkpoint.json | uv run python
 
 ## Pipeline Stage Errors
 
-### Stage 01: `ModuleNotFoundError` for project packages
+### Stage 04: `ModuleNotFoundError` for project packages
 
 **Symptom:** `ModuleNotFoundError: No module named '<package>'` during test collection
 
@@ -280,7 +280,7 @@ if SRC not in sys.path:
 
 ---
 
-### Stage 02: `ImportError` in analysis scripts
+### Stage 05: `ImportError` in analysis scripts
 
 **Symptom:** `ImportError: cannot import name 'X' from 'infrastructure.core.Y'`
 

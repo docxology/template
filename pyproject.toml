@@ -40,6 +40,9 @@ dependencies = [
   "numpy>=1.22",
   "pyyaml>=6.0",
   "matplotlib>=3.7",
+  # networkx is required by cognitive_case_diagrams visualization layer (category_diagrams.py,
+  # functor_diagrams.py) and tested via the root pipeline venv — must be in core deps
+  "networkx>=3.0",
 ]
 
 [project.scripts]
@@ -129,7 +132,7 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-pythonpath = [".", "infrastructure", "projects/code_project/src"]
+pythonpath = [".", "infrastructure", "projects/code_project/src", "projects/cognitive_case_diagrams/src"]
 testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

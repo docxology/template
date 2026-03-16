@@ -852,18 +852,22 @@ class PDFRenderer:
         # documents (>80 KB). When \bibliography{references} is at the end of the document,
         # its \bibdata entry may be lost in the truncated tail. Writing it at document
         # start guarantees bibtex can always find the bibliography database.
-        if bib_exists:
-            bibdata_hook = (
-                "\\makeatletter\n"
-                "\\AtBeginDocument{\\immediate\\write\\@auxout{\\string\\bibdata{references}}}\n"
-                "\\makeatother\n"
-            )
-            begin_doc_idx = tex_content.find("\\begin{document}")
-            if begin_doc_idx > 0:
-                tex_content = (
-                    tex_content[:begin_doc_idx] + bibdata_hook + tex_content[begin_doc_idx:]
-                )
-                logger.info("✓ Inserted early \\bibdata hook for .aux buffer safety")
+        # NOTE: We use \AtBeginDocument to insert it early, but we only do this if it's
+        # not already handled by a clear \bibliography command that BibTeX can find.
+        # To avoid "Illegal, another \bibdata command" errors in BibTeX, we comment this
+        # out if we believe the standard \bibliography command is sufficient.
+        # if bib_exists:
+        #     bibdata_hook = (
+        #         "\\makeatletter\n"
+        #         "\\AtBeginDocument{\\immediate\\write\\@auxout{\\string\\bibdata{references}}}\n"
+        #         "\\makeatother\n"
+        #     )
+        #     begin_doc_idx = tex_content.find("\\begin{document}")
+        #     if begin_doc_idx > 0:
+        #         tex_content = (
+        #             tex_content[:begin_doc_idx] + bibdata_hook + tex_content[begin_doc_idx:]
+        #         )
+        #         logger.info("✓ Inserted early \\bibdata hook for .aux buffer safety")
 
         _tmp = combined_tex.with_suffix(combined_tex.suffix + ".tmp")
         try:

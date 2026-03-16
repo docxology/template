@@ -118,31 +118,31 @@ ictionary-english.trsl)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg)
 (./_combined_manuscript.toc [1] [2]) [3]
-Underfull \hbox (badness 1024) in paragraph at lines 171--186
+Underfull \hbox (badness 1024) in paragraph at lines 168--183
 \TU/lmr/m/n/10 This paper presents a comprehensive analysis of gradient descent
  optimization algorithms,
 [4]
-Underfull \hbox (badness 1521) in paragraph at lines 240--246
+Underfull \hbox (badness 1521) in paragraph at lines 237--243
 \TU/lmtt/m/n/10 validation\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 scientific\TU/lmr/m/
 n/10 , \TU/lmtt/m/n/10 rendering\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 reporting\TU/l
 mr/m/n/10 , \TU/lmtt/m/n/10 documentation\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 llm\T
 U/lmr/m/n/10 , \TU/lmtt/m/n/10 publishing\TU/lmr/m/n/10 ,
 
-Overfull \hbox (133.30373pt too wide) in paragraph at lines 283--288
+Overfull \hbox (133.30373pt too wide) in paragraph at lines 280--285
 []\TU/lmr/bx/n/10 Scientific Utilities\TU/lmr/m/n/10 : Utilizing \TU/lmtt/m/n/1
 0 infrastructure.scientific.stability \TU/lmr/m/n/10 and \TU/lmtt/m/n/10 infras
 tructure.scientific.benchmarking
 
-Overfull \hbox (35.49373pt too wide) in paragraph at lines 288--293
+Overfull \hbox (35.49373pt too wide) in paragraph at lines 285--290
 []\TU/lmr/bx/n/10 Hermetic Validation\TU/lmr/m/n/10 : Deploying \TU/lmtt/m/n/10
  infrastructure.validation \TU/lmr/m/n/10 components (\TU/lmtt/m/n/10 markdown_
 validator\TU/lmr/m/n/10 ,
 [5] [6]
-Underfull \hbox (badness 1365) in paragraph at lines 352--359
+Underfull \hbox (badness 1365) in paragraph at lines 349--356
 \TU/lmr/m/n/10 cially, the implementation is designed to be highly observable, 
 delegating all logging to
 
-Underfull \hbox (badness 5862) in paragraph at lines 352--359
+Underfull \hbox (badness 5862) in paragraph at lines 349--356
 \TU/lmtt/m/n/10 infrastructure.core.logging_utils.ProjectLogger \TU/lmr/m/n/10 
 and executing under the hermetic
 
@@ -152,15 +152,15 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.366 \(
+l.363 \(
         \epsilon\), max iterations \(N_{\max}\)
 
-Overfull \hbox (165.52737pt too wide) in paragraph at lines 403--411
+Overfull \hbox (165.52737pt too wide) in paragraph at lines 400--408
 \TU/lmr/m/n/10 Rather than writing ad-hoc validation code, the project imports 
 \TU/lmtt/m/n/10 infrastructure.scientific.stability.check_numerical_stability\T
 U/lmr/m/n/10 .
 
-Overfull \hbox (216.88739pt too wide) in paragraph at lines 414--420
+Overfull \hbox (216.88739pt too wide) in paragraph at lines 411--417
 \TU/lmr/m/n/10 Computational complexity is evaluated not just theoretically, bu
 t empirically via [][]\TU/lmtt/m/n/10 infrastructure.scientific.benchmarking.be
 nchmark_function[][]\TU/lmr/m/n/10 .
@@ -168,7 +168,7 @@ nchmark_function[][]\TU/lmr/m/n/10 .
 Missing character: There is no ≥ (U+2265) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
-Underfull \hbox (badness 1297) in paragraph at lines 491--498
+Underfull \hbox (badness 1297) in paragraph at lines 488--495
 []\TU/lmr/m/n/10 The research template supports advanced LaTeX customization th
 rough the \TU/lmtt/m/n/10 preamble.md
 [8]
@@ -182,50 +182,50 @@ ex-text;!
 Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
-Underfull \hbox (badness 5161) in paragraph at lines 834--834
+Underfull \hbox (badness 5161) in paragraph at lines 831--831
 []\TU/lmr/m/n/10 Figure 5: []Dimensional scaling benchmark. Left: mean executio
 n time ($[]$s) per
 
-Overfull \hbox (3.39876pt too wide) in paragraph at lines 896--901
+Overfull \hbox (3.39876pt too wide) in paragraph at lines 893--898
 []\TU/lmr/bx/n/10 Infrastructure tests \TU/lmr/m/n/10 covering all underlying m
 echanisms across \TU/lmtt/m/n/10 infrastructure.reporting\TU/lmr/m/n/10 ,
 [14] [15] [16]
-Underfull \hbox (badness 1028) in paragraph at lines 928--929
+Underfull \hbox (badness 1028) in paragraph at lines 925--926
 \TU/lmr/m/it/10 including all dynamic references (e.g., Figure [][]6[][]), conf
 irms the absolute reliability of the
 [17]
 Missing character: There is no ≥ (U+2265) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
-Underfull \hbox (badness 10000) in paragraph at lines 994--999
+Underfull \hbox (badness 10000) in paragraph at lines 991--996
 []\TU/lmr/bx/n/10 Reporting & Integrity\TU/lmr/m/n/10 : \TU/lmtt/m/n/10 infrast
 ructure.reporting.pipeline_reporter \TU/lmr/m/n/10 and
 
-Underfull \hbox (badness 10000) in paragraph at lines 994--999
+Underfull \hbox (badness 10000) in paragraph at lines 991--996
 \TU/lmtt/m/n/10 infrastructure.validation.output_validator \TU/lmr/m/n/10 assur
 ing CSV/JSON configurations
 
-Overfull \hbox (88.36372pt too wide) in paragraph at lines 999--1004
+Overfull \hbox (88.36372pt too wide) in paragraph at lines 996--1001
 []\TU/lmr/bx/n/10 Visual Cryptography\TU/lmr/m/n/10 : Publication-ready graphic
 s compiled by \TU/lmtt/m/n/10 infrastructure.rendering.pdf_renderer.py
 [18]
-Overfull \hbox (32.11711pt too wide) in paragraph at lines 1061--1064
+Overfull \hbox (32.11711pt too wide) in paragraph at lines 1058--1061
 []\TU/lmr/bx/n/10 Agentic Generation Systems\TU/lmr/m/n/10 : Extending validati
 on tools built over \TU/lmtt/m/n/10 infrastructure.validation
 
-Underfull \hbox (badness 4713) in paragraph at lines 1075--1084
+Underfull \hbox (badness 4713) in paragraph at lines 1072--1081
 \TU/lmr/m/n/10 (\TU/lmtt/m/n/10 projects/code_project/manuscript/04_conclusion.
 md\TU/lmr/m/n/10 ) alongside \TU/lmtt/m/n/10 config.yaml \TU/lmr/m/n/10 flawles
 sly
 [19] [20] [21]
-Overfull \hbox (100.8874pt too wide) in paragraph at lines 1202--1204
+Overfull \hbox (100.8874pt too wide) in paragraph at lines 1199--1201
 \TU/lmr/m/n/10 The analysis pipeline produced the following artifacts, each val
 idated by \TU/lmtt/m/n/10 infrastructure.validation.output_validator\TU/lmr/m/n
 /10 : 
 [22] [23] [24]
 
 LaTeX Font Warning: Font shape `TU/lmtt/bx/it' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 1368.
+(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 1365.
 
 
 [25] (./_combined_manuscript.bbl) [26] (./_combined_manuscript.aux) )

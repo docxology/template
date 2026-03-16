@@ -17,11 +17,10 @@ from infrastructure.core.config_loader import (
     format_author_details,
     format_author_name,
     get_config_as_dict,
-    get_testing_config,
-    get_translation_languages,
     load_config,
     validate_config_keys,
 )
+from infrastructure.core.config_queries import get_testing_config, get_translation_languages
 
 
 @pytest.fixture

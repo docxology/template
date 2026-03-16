@@ -79,10 +79,7 @@ uv sync
 ### Step 3: Generate Your First PDF
 
 ```bash
-# Generate everything (runs all 8 pipeline stages)
-uv run python scripts/execute_pipeline.py --core-only
-
-# Or use unified interactive menu
+# Run the unified interactive menu and select Option 8 (Full Pipeline)
 ./run.sh
 
 # Open the result
@@ -592,10 +589,10 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 ### If you're ready to
 
 **Add your own figures and data**
-→ Read **[Figures and Analysis Guide](../guides/figures-and-analysis.md)** (Levels 4-6)
+→ Read **[Figures and Analysis Guide](figures-and-analysis.md)** (Levels 4-6)
 
 **Learn test-driven development**
-→ Read **[Testing and Reproducibility Guide](../guides/testing-and-reproducibility.md)** (Levels 7-9)
+→ Read **[Testing and Reproducibility Guide](testing-and-reproducibility.md)** (Levels 7-9)
 
 **Understand the system architecture**
 → Read **[Architecture Guide](../core/architecture.md)**

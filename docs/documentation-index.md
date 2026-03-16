@@ -23,7 +23,7 @@ This index provides an overview of all documentation files in the Research Proje
 ### 🏗️ **Contributor / Maintainer**
 
 1. **[development/contributing.md](development/contributing.md)** - Contribution guidelines
-2. **[.cursorrules/AGENTS.md](rules/AGENTS.md)** - Development standards
+2. **[rules/AGENTS.md](rules/AGENTS.md)** - Development standards
 3. **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - TDD workflow (Levels 7-9)
 4. **[development/testing/testing-guide.md](development/testing/testing-guide.md)** - Testing requirements
 5. **[development/code-of-conduct.md](development/code-of-conduct.md)** - Community standards
@@ -52,25 +52,25 @@ This index provides an overview of all documentation files in the Research Proje
 
 ## 🏗️ **Development Rules**
 
-Development standards are documented in the `.cursorrules/` directory:
+Development standards (formerly in `.cursorrules/`) are documented in the `rules/` directory:
 
-- **[`.cursorrules/AGENTS.md`](rules/AGENTS.md)** - Overview and navigation guide
-- **[`.cursorrules/README.md`](rules/README.md)** - Quick reference and patterns
-- **[`.cursorrules/error_handling.md`](rules/error_handling.md)** - Exception handling patterns
-- **[`.cursorrules/security.md`](rules/security.md)** - Security standards
-- **[`.cursorrules/python_logging.md`](rules/python_logging.md)** - Logging standards
-- **[`.cursorrules/infrastructure_modules.md`](rules/infrastructure_modules.md)** - Infrastructure module development
-- **[`.cursorrules/testing_standards.md`](rules/testing_standards.md)** - Testing patterns
-- **[`.cursorrules/documentation_standards.md`](rules/documentation_standards.md)** - Documentation writing guide
-- **[`.cursorrules/type_hints_standards.md`](rules/type_hints_standards.md)** - Type annotation patterns
-- **[`.cursorrules/llm_standards.md`](rules/llm_standards.md)** - LLM/Ollama integration
-- **[`.cursorrules/code_style.md`](rules/code_style.md)** - Code formatting
-- **[`.cursorrules/git_workflow.md`](rules/git_workflow.md)** - Git workflow
-- **[`.cursorrules/api_design.md`](rules/api_design.md)** - API design
-- **[`.cursorrules/manuscript_style.md`](rules/manuscript_style.md)** - Manuscript formatting
-- **[`.cursorrules/reporting.md`](rules/reporting.md)** - Reporting module standards
-- **[`.cursorrules/refactoring.md`](rules/refactoring.md)** - Refactoring standards
-- **[`.cursorrules/folder_structure.md`](rules/folder_structure.md)** - Folder structure
+- **[`rules/AGENTS.md`](rules/AGENTS.md)** - Overview and navigation guide
+- **[`rules/README.md`](rules/README.md)** - Quick reference and patterns
+- **[`rules/error_handling.md`](rules/error_handling.md)** - Exception handling patterns
+- **[`rules/security.md`](rules/security.md)** - Security standards
+- **[`rules/python_logging.md`](rules/python_logging.md)** - Logging standards
+- **[`rules/infrastructure_modules.md`](rules/infrastructure_modules.md)** - Infrastructure module development
+- **[`rules/testing_standards.md`](rules/testing_standards.md)** - Testing patterns
+- **[`rules/documentation_standards.md`](rules/documentation_standards.md)** - Documentation writing guide
+- **[`rules/type_hints_standards.md`](rules/type_hints_standards.md)** - Type annotation patterns
+- **[`rules/llm_standards.md`](rules/llm_standards.md)** - LLM/Ollama integration
+- **[`rules/code_style.md`](rules/code_style.md)** - Code formatting
+- **[`rules/git_workflow.md`](rules/git_workflow.md)** - Git workflow
+- **[`rules/api_design.md`](rules/api_design.md)** - API design
+- **[`rules/manuscript_style.md`](rules/manuscript_style.md)** - Manuscript formatting
+- **[`rules/reporting.md`](rules/reporting.md)** - Reporting module standards
+- **[`rules/refactoring.md`](rules/refactoring.md)** - Refactoring standards
+- **[`rules/folder_structure.md`](rules/folder_structure.md)** - Folder structure
 
 ---
 
@@ -78,7 +78,9 @@ Development standards are documented in the `.cursorrules/` directory:
 
 - **[README.md](../README.md)** - Main project overview and quick start
 - **[AGENTS.md](../AGENTS.md)** - System documentation
-- **[CLOUD_DEPLOY.md](../CLOUD_DEPLOY.md)** - **Headless / cloud server deployment guide** ☁️
+- **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** - **Headless / cloud server deployment guide** ☁️
+- **[PAI.md](PAI.md)** - **Personal AI Infrastructure (PAI)** 🤖
+- **[RUN_GUIDE.md](RUN_GUIDE.md)** - **Run guide and pipeline reference** 🚀
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 
 ### Quick Reference
@@ -163,6 +165,7 @@ Development standards are documented in the `.cursorrules/` directory:
 
 - **[operational/build/build-system.md](operational/build/build-system.md)** - Build pipeline
 - **[operational/build/build-history.md](operational/build/build-history.md)** - Build changelog
+- **[operational/build/build-performance.md](operational/build/build-performance.md)** - Build performance tuning
 - **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - GitHub Actions
 - **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - uv package manager
 
@@ -188,6 +191,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[operational/troubleshooting/environment-setup.md](operational/troubleshooting/environment-setup.md)** - Environment setup
 - **[operational/troubleshooting/recovery-procedures.md](operational/troubleshooting/recovery-procedures.md)** - Recovery
 - **[operational/troubleshooting/llm-review.md](operational/troubleshooting/llm-review.md)** - LLM review issues
+- **[operational/troubleshooting/llm-diagnostics.md](operational/troubleshooting/llm-diagnostics.md)** - LLM diagnostics
 
 ### Other Operational Guides
 
@@ -265,6 +269,7 @@ docs/
 ├── operational/                        # Operational workflows
 │   ├── build/                          # Build pipeline & CI/CD
 │   │   ├── build-system.md, build-history.md
+│   │   ├── build-performance.md
 │   │   ├── ci-cd-integration.md
 │   │   └── dependency-management.md
 │   ├── config/                         # Configuration & performance
@@ -280,7 +285,8 @@ docs/
 │   │   ├── common-errors.md, build-tools.md
 │   │   ├── test-failures.md, environment-setup.md
 │   │   ├── recovery-procedures.md
-│   │   └── llm-review.md
+│   │   ├── llm-review.md
+│   │   └── llm-diagnostics.md
 │   ├── reporting-guide.md
 │   └── error-handling-guide.md
 │

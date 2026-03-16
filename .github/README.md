@@ -46,14 +46,14 @@ graph TD
     Root["/ (Root)"] --> Infra["infrastructure/ (Layer 1: Generic Core)"]
     Root --> Scripts["scripts/ (Generic Entry Points)"]
     Root --> Projects["projects/ (Layer 2: Active Projects)"]
-    Root --> ProjectsIP["projects_in_progress/ (Back-burner)"]
-    Root --> ProjectsArch["projects_archive/ (Historic)"]
+    Root --> Docs["docs/ (Documentation Hub)"]
+    Root --> Cursor[".cursor/ (Editor Rules)"]
     Root --> Output["output/ (Final Deliverables)"]
 
     subgraph "Layer 1: Shared Capabilities"
         Infra --> Core["core/ (Pipeline, logging)"]
-        Infra --> Render["rendering/ (PDF, LaTeX)"]
-        Infra --> Valid["validation/ (QA docs)"]
+        Infra --> Config["config/ (Security, .env)"]
+        Infra --> Docker["docker/ (Dockerfile, compose)"]
     end
 
     subgraph "Layer 2: Research Domains"
@@ -275,8 +275,11 @@ uvx ruff format infrastructure/ projects/*/src/
 | [`ISSUE_TEMPLATE/`](ISSUE_TEMPLATE/) | Structured issue templates |
 | [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | PR checklist |
 | [`dependabot.yml`](dependabot.yml) | Automated dependency updates |
-| [`AGENTS.md`](AGENTS.md) | Deep technical CI/CD documentation |
-| [`workflows/AGENTS.md`](workflows/AGENTS.md) | Per-workflow technical docs |
+| [`AGENTS.md`](../AGENTS.md) | Deep system documentation |
+| [`docs/`](../docs/) | Documentation hub (PAI, Deploy, Guides) |
+| [`infrastructure/config/`](../infrastructure/config/) | Security and environment templates |
+| [`infrastructure/docker/`](../infrastructure/docker/) | Docker configuration |
+| [`.cursor/`](../.cursor/) | Editor rules and ignore patterns |
 
 ---
 

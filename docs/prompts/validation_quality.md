@@ -10,7 +10,7 @@ This prompt leverages the validation infrastructure to ensure quality and compli
 
 - [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation procedures
 - [`../../infrastructure/validation/`](../../infrastructure/validation/) modules - Validation implementation
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Quality standards
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Quality standards
 
 ## Prompt Template
 
@@ -651,7 +651,7 @@ class ValidationReport:
 
 ## Standards Compliance Checklist
 
-### Quality Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+### Quality Standards ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 - [ ] Coverage requirements met (90% project, 60% infrastructure)
 - [ ] No mocks policy maintained
 - [ ] data validation throughout
@@ -662,7 +662,7 @@ class ValidationReport:
 - [ ] Output quality assessment completed
 - [ ] reporting generated
 
-### Code Quality Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+### Code Quality Standards ([`../rules/code_style.md`](../rules/code_style.md))
 - [ ] Type hints validated
 - [ ] Error handling verified
 - [ ] Documentation standards checked
@@ -689,5 +689,5 @@ QUALITY LEVEL: ```
 
 - [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation procedures
 - [`../../infrastructure/validation/`](../../infrastructure/validation/) - Validation implementation modules
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing and quality standards
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Testing and quality standards
 ```

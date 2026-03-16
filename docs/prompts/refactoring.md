@@ -8,9 +8,9 @@ Refactor existing code following the clean break approach, ensuring improved mai
 
 This prompt enforces the clean break refactoring approach and leverages refactoring standards:
 
-- [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) - Code quality and style standards
+- [`../rules/code_style.md`](../rules/code_style.md) - Code quality and style standards
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow and refactoring
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing during refactoring
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Testing during refactoring
 
 ## Prompt Template
 
@@ -541,21 +541,21 @@ class RefactoringCheckpoint:
 
 ## Standards Compliance Checklist
 
-### Refactoring Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+### Refactoring Standards ([`../rules/code_style.md`](../rules/code_style.md))
 - [ ] Clean break approach (no backward compatibility)
 - [ ] Modularization with single responsibility principle
 - [ ] Testing during refactoring (full coverage maintained)
 - [ ] Safety measures (incremental changes, rollback capability)
 - [ ] Documentation updates during refactoring
 
-### Code Quality Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+### Code Quality Standards ([`../rules/code_style.md`](../rules/code_style.md))
 - [ ] Type hints on all new APIs
 - [ ] Black formatting and isort compliance
 - [ ] Google-style docstrings
 - [ ] Error handling with custom exceptions
 - [ ] Unified logging system
 
-### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+### Testing Standards ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 - [ ] No mocks policy maintained
 - [ ] Coverage requirements met (90% project, 60% infrastructure)
 - [ ] data testing throughout refactoring
@@ -578,7 +578,7 @@ REFACTORING GOAL: Separate concerns into validator, transformer, and orchestrato
 
 ## Related Documentation
 
-- [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) - Code quality and style standards
+- [`../rules/code_style.md`](../rules/code_style.md) - Code quality and style standards
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow and refactoring
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing during refactoring
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Testing during refactoring
 ```

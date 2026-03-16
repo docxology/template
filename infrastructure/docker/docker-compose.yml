@@ -6,11 +6,11 @@
 services:
   research-template:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile
     container_name: research-template-dev
     volumes:
-      - .:/home/research/template
+      - ../../:/home/research/template
       - output_data:/home/research/template/output
     working_dir: /home/research/template
     environment:

@@ -16,7 +16,7 @@ from infrastructure.scientific import (
     create_scientific_module_template,
     create_scientific_workflow_template,
     generate_api_documentation,
-    generate_performance_report,
+    format_benchmark_report,
     generate_scientific_documentation,
     validate_scientific_best_practices,
     validate_scientific_implementation,

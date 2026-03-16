@@ -20,4 +20,4 @@ Instead of using the default `./run.sh` pipeline menu, launch the pipeline using
 ./secure_run.sh
 ```
 
-This will wrap your specified scientific orchestrations inside an augmented pipeline. After the PDF rendering phase completes, it automatically reads your `secure_config.yaml` and executes the steganographer across all your finalized manuscripts, dropping secured copies into `<project>/output/pdf/` labeled `_steganography.pdf` along with cryptographic manifests (`.hashes.json`).
+complements your specified scientific orchestrations inside an augmented pipeline. After the PDF rendering phase completes, it automatically reads your `infrastructure/config/secure_config.yaml` and executes the steganographer across all your finalized manuscripts, dropping secured copies into `<project>/output/pdf/` labeled `_steganography.pdf` along with cryptographic manifests (`.hashes.json`).

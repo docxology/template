@@ -8,7 +8,7 @@ Create generic, reusable infrastructure modules that provide domain-independent 
 
 This prompt enforces infrastructure module standards for reusable components:
 
-- [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
+- [`../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md) - Infrastructure development standards
 - [`../core/architecture.md`](../core/architecture.md) - Infrastructure layer architecture
 - [`../architecture/two-layer-architecture.md`](../architecture/two-layer-architecture.md) - Two-layer architecture guide
 
@@ -685,7 +685,7 @@ class ResearchAnalyzer:
 
 - [`README.md`](README.md) - Quick reference guide
 - [`../../core/architecture.md`](../../docs/core/architecture.md) - Infrastructure layer architecture
-- [`../../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
+- [`../../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md) - Infrastructure development standards
 - [`../validation/AGENTS.md`](../modules/pdf-validation.md) - Validation infrastructure
 
 ```
@@ -704,7 +704,7 @@ class ResearchAnalyzer:
 
 ## Standards Compliance Checklist
 
-### Infrastructure Standards ([`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md))
+### Infrastructure Standards ([`../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md))
 - [ ] Generic focus (domain-independent)
 - [ ] 60% minimum test coverage achieved
 - [ ] Public API with clear `__all__` exports
@@ -712,13 +712,13 @@ class ResearchAnalyzer:
 - [ ] Error handling with custom exceptions
 - [ ] Type hints on all public APIs
 
-### Code Quality Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+### Code Quality Standards ([`../rules/code_style.md`](../rules/code_style.md))
 - [ ] Black formatting and isort compliance
 - [ ] Google-style docstrings
 - [ ] Unified logging system
 - [ ] Consistent API design
 
-### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+### Testing Standards ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 - [ ] No mocks policy (data only)
 - [ ] Coverage validation (pytest-cov)
 - [ ] Test organization and structure
@@ -744,7 +744,7 @@ REUSABILITY SCOPE: All research projects needing data validation and quality met
 
 ## Related Documentation
 
-- [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
+- [`../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md) - Infrastructure development standards
 - [`../core/architecture.md`](../core/architecture.md) - Infrastructure layer architecture
 - [`../architecture/two-layer-architecture.md`](../architecture/two-layer-architecture.md) - Two-layer architecture guide
 ```
