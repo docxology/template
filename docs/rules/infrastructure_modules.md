@@ -245,8 +245,8 @@ Infrastructure modules are integrated into the build pipeline through:
 
 **Pipeline Entry Points**: Two orchestrators available:
 
-- `./run.sh --pipeline`: 10 stages (1-10) with optional LLM stages (stage 0 cleanup, stages 1-9 tracked)
-- `python3 scripts/run_all.py`: 8-stage core pipeline (00-07) only
+- `./run.sh --pipeline`: 9 stages (shown as [1/9]..[9/9]) with an initial clean step shown as [0/9]; optional LLM stages are included when configured/enabled
+- `uv run python scripts/execute_pipeline.py --core-only`: core pipeline without LLM stages
 
 Update these scripts to discover and use new infrastructure modules as needed.
 
@@ -473,10 +473,10 @@ Before merging a new infrastructure module:
 
 ## References
 
-- [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Module organization
-- [Modules Guide](../docs/modules/modules-guide.md) - guide to all advanced modules
-- [API Reference](../docs/reference/api-reference.md) - API documentation for all modules
-- [Two-Layer Architecture](../docs/architecture/two-layer-architecture.md) - Architecture explanation
+- [Infrastructure AGENTS.md](../../infrastructure/AGENTS.md) - Module organization
+- [Modules Guide](../modules/modules-guide.md) - guide to all advanced modules
+- [API Reference](../reference/api-reference.md) - API documentation for all modules
+- [Two-Layer Architecture](../architecture/two-layer-architecture.md) - Architecture explanation
 - [Testing Guide](testing_standards.md) - Testing infrastructure code
 - [Error Handling Guide](error_handling.md) - Exception patterns
 - [Logging Guide](python_logging.md) - Logging standards

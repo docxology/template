@@ -46,7 +46,7 @@ class ConversationContext:
         tokens = len(content) // 4
 
         logger.debug(
-            "Adding message role=%s len=%d tokens_est=%d total=%d/%d msgs=%d",
+            "Adding message to context role=%s len=%d tokens_est=%d total=%d/%d msgs=%d",
             role, len(content), tokens, self.estimated_tokens, self.max_tokens, len(self.messages),
         )
 

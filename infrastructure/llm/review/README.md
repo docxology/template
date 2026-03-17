@@ -43,7 +43,7 @@ from pathlib import Path
 
 generator = ReviewGenerator()
 review = generator.generate_review(
-    manuscript_path=Path("output/pdf/manuscript.pdf"),
+    manuscript_path=Path("output/{project_name}/pdf/{project_name}_combined.pdf"),
     review_type="comprehensive"
 )
 

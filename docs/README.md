@@ -31,7 +31,7 @@ graph TD
     end
 
     subgraph Operational["⚙️ Operational"]
-        BUILD[operational/build/<br/>Build Pipeline & CI/CD]
+        PIPELINE[RUN_GUIDE.md<br/>Pipeline Orchestration]
         TROUBLESHOOT[operational/troubleshooting/<br/>Fix Issues]
         CONFIG[operational/config/<br/>Settings & Performance]
         LOGGING[operational/logging/<br/>Logging System]
@@ -58,7 +58,7 @@ graph TD
 
     ARCH --> WORKFLOW
 
-    BUILD --> TROUBLESHOOT
+    PIPELINE --> TROUBLESHOOT
     TROUBLESHOOT --> CONFIG
 
     FAQ --> CHEATSHEET
@@ -86,7 +86,7 @@ graph TD
 | [`guides/`](guides/) | Skill-level guides (1-12) | getting-started, figures-and-analysis, testing, extending |
 | [`architecture/`](architecture/) | System design | two-layer-architecture.md, thin-orchestrator, decision-tree |
 | [`usage/`](usage/) | Content authoring & patterns | examples, markdown guide, style guide, visualization |
-| [`operational/`](operational/) | Operational workflows | `build/`, `config/`, `logging/`, `troubleshooting/` sub-folders |
+| [`operational/`](operational/) | Operational workflows | `config/`, `logging/`, `troubleshooting/` sub-folders |
 | [`reference/`](reference/) | Reference materials | api-reference, faq, glossary, cheatsheet, workflows |
 | [`modules/`](modules/) | Infrastructure modules | modules-guide, scientific simulation, pdf-validation, `guides/` |
 | [`development/`](development/) | Development & contribution | contributing, security, roadmap, `testing/` sub-folder |

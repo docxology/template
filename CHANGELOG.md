@@ -80,7 +80,7 @@ quality gates across all 8 infrastructure packages (126 source files).
 ### Added (v2.0.0)
 
 - Two-Layer Architecture (Infrastructure + Projects)
-- 10-stage build pipeline with thin orchestrator pattern
+- Build pipeline with thin orchestrator pattern
 - Program-aware project discovery
 - Executive reporting dashboard
 - Standalone Project Paradigm with Graduation Pattern

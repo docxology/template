@@ -38,7 +38,8 @@ These modules are located in `infrastructure/` and provide generic tools applica
 
 ### Project Modules (Layer 2 - Project-Specific)
 
-These modules are located in `projects/{name}/src/` and contain project-specific scientific code:
+Project modules live in `projects/{name}/src/` and contain project-specific scientific code.
+Module names and contents vary by project; the list below is **illustrative**, not a required template.
 
 #### Core Operations
 
@@ -59,10 +60,7 @@ These modules are located in `projects/{name}/src/` and contain project-specific
 
 #### Simulation & Analysis
 
-- `projects/{name}/src/simulation.py` - Core simulation framework with reproducibility and checkpointing
-- `projects/{name}/src/parameters.py` - Parameter set management, validation, sweeps, serialization
-- `projects/{name}/src/performance.py` - Convergence analysis, scalability metrics, benchmark comparisons
-- `projects/{name}/src/reporting.py` - Automated report generation from simulation results
+- Example modules (if your project needs them): `simulation.py`, `parameters.py`, `performance_analysis.py`, `reporting.py`
 
 ---
 
@@ -838,14 +836,14 @@ For API documentation of all modules, see:
 - **[Visualization Guide](../usage/visualization-guide.md)** - Visualization and figure management
 - **[Image Management Guide](../usage/image-management.md)** - Image insertion and cross-referencing
 
-**Key Project Modules (projects/{name}/src/):**
+**Key Project Modules (illustrative; `projects/{name}/src/` names vary by project):**
 
 - `data_processing.py` - Data cleaning, normalization, outlier detection
 - `metrics.py` - Performance metrics, convergence metrics, quality metrics
 - `validation.py` - Result validation framework
 - `simulation.py` - Core simulation framework
 - `parameters.py` - Parameter management and sweeps
-- `performance.py` - Convergence and scalability analysis
+- `performance_analysis.py` - Convergence and scalability analysis (example module name)
 - `reporting.py` - Automated report generation
 - `plots.py` - Plot type implementations
 

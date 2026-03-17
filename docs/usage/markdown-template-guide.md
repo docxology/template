@@ -369,9 +369,9 @@ The system demonstrates best practices for academic writing while maintaining th
 For more details on architecture and workflow, see:
 
 - **[`../core/architecture.md`](../core/architecture.md)** - System design overview
-- **[`two-layer-architecture.md`](../core/architecture.md)** - two-layer architecture guide
+- **[`../architecture/two-layer-architecture.md`](../architecture/two-layer-architecture.md)** - two-layer architecture guide
 - **[`../core/workflow.md`](../core/workflow.md)** - Development workflow
 
 For manuscript formatting standards, see:
 
-- **[`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md)** - manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)
+- **[`docs/rules/manuscript_style.md`](../rules/manuscript_style.md)** - manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)

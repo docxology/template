@@ -185,8 +185,20 @@ def _check_code_path_match(
         return None
 
     resolved_path = _resolve_template_path(path_ref, repo_root)
-    if not (resolved_path and not resolved_path.exists()):
+    if not resolved_path:
         return None
+    try:
+        if resolved_path.exists():
+            return None
+    except ValueError as e:
+        # Path objects can throw ValueError for invalid paths (e.g., embedded NUL).
+        return {
+            "file": str(file_path),
+            "line": block.get("line", 0) + content[:match_start].count("\n"),
+            "target": path_ref,
+            "issue": f"Invalid file path in code block: {path_ref} ({e})",
+            "type": "code_block_path",
+        }
 
     if resolved_path.suffix or not path_ref.endswith("/"):
         return {
@@ -675,7 +687,7 @@ def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tup
             if md_path.exists() and md_path.is_file():
                 return True, str(md_path.relative_to(repo_root_resolved))
             return False, f"File or directory does not exist: {target_path}"
-    except OSError as e:
+    except (OSError, ValueError) as e:
         return False, f"Error resolving path: {e}"
 
 

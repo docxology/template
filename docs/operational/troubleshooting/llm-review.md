@@ -733,7 +733,7 @@ cat projects/{name}/output/llm/quality_review.md
 - [LLM Integration](../../../infrastructure/llm/AGENTS.md) - LLM system documentation
 - [Run Guide](../../RUN_GUIDE.md) - Pipeline orchestration
 - [Configuration](../config/configuration.md) - Configuration system
-- [LLM Standards](../../../.cursorrules/llm_standards.md) - LLM development standards
+- [LLM Standards](../../rules/llm_standards.md) - LLM development standards
 
 ---
 

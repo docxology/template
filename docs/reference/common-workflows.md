@@ -182,7 +182,7 @@
    ax.set_title('Data Analysis')
    
    # Save to output
-   output_path = 'projects/code_projects/{name}/output/figures/my_analysis.png'
+   output_path = 'projects/{name}/output/figures/my_analysis.png'
    os.makedirs(os.path.dirname(output_path), exist_ok=True)
    fig.savefig(output_path)
    print(output_path)  # Print for manifest
@@ -633,7 +633,7 @@ def test_process_negative():
 - PDF fails → Check pandoc/xelatex installation
 - References show ?? → Check label spelling
 
-**See Also**: [Build System](../operational/build/build-system.md) | [PDF Validation](../modules/pdf-validation.md)
+**See Also**: [Pipeline Orchestration](../RUN_GUIDE.md) | [PDF Validation](../modules/pdf-validation.md)
 
 ---
 

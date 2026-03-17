@@ -212,6 +212,7 @@ class TestClientHelperMethods:
 
 
 @pytest.mark.requires_ollama
+@pytest.mark.timeout(180)
 class TestLLMClientWithOllama:
     """Integration tests requiring running Ollama server.
 

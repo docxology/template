@@ -391,7 +391,7 @@ Link between related documentation:
 
 ```markdown
 # Link to directory doc
-See [infrastructure/AGENTS.md](../infrastructure/AGENTS.md)
+See [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md)
 
 # Link within same directory
 See [README.md](README.md) for quick start
@@ -523,21 +523,20 @@ Before committing documentation:
 
 ### Good AGENTS.md References
 
-- [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - module docs
-- [act_inf_metaanalysis/AGENTS.md](../projects/act_inf_metaanalysis/AGENTS.md) - Project code docs
-- [tests/AGENTS.md](../tests/AGENTS.md) - Test framework docs
+- [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - module docs
+- [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) - Example manuscript (archived project)
+- [tests/AGENTS.md](../../tests/AGENTS.md) - Test framework docs
 
 ### Good README.md References
 
-- [infrastructure/README.md](../infrastructure/README.md) - Quick patterns
-- [scripts/README.md](../scripts/README.md) - Quick commands
-- [act_inf_metaanalysis/README.md](../projects/act_inf_metaanalysis/README.md) - Project quick start
+- [infrastructure/README.md](../../infrastructure/README.md) - Quick patterns
+- [scripts/README.md](../../scripts/README.md) - Quick commands
 
 ## See Also
 
 - [testing_standards.md](testing_standards.md) - Document tests properly
 - [type_hints_standards.md](type_hints_standards.md) - Type hint documentation
-- [../documentation-index.md](../docs/documentation-index.md) - documentation index
-- [../AGENTS.md](../docs/AGENTS.md) - Main project documentation
+- [docs/documentation-index.md](../documentation-index.md) - documentation index
+- [docs/AGENTS.md](../AGENTS.md) - Main docs hub guide
 - [../AGENTS.md](../AGENTS.md) - Root documentation
-- [../core/architecture.md](../docs/core/architecture.md) - System architecture
+- [docs/core/architecture.md](../core/architecture.md) - System architecture

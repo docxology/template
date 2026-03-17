@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import os
 import subprocess
 import time
 import unicodedata
@@ -69,6 +70,50 @@ class PDFRenderer:
         """Initialize the PDF renderer with configuration."""
         self.config = config
 
+    # ---------------------------------------------------------------------
+    # Backwards-compatible helpers expected by infra tests.
+    # Implementations live in `infrastructure.rendering._pdf_latex_helpers`.
+    # ---------------------------------------------------------------------
+
+    def _generate_title_page_preamble(self, manuscript_dir: Path | str | None = None) -> str:
+        """Generate LaTeX title preamble commands from config.yaml."""
+
+        md = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
+        return generate_title_page_preamble(md)
+
+    def _generate_title_page_body(self, manuscript_dir: Path | str | None = None) -> str:
+        """Generate LaTeX title body commands (e.g., \\maketitle)."""
+
+        md = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
+        return generate_title_page_body(md)
+
+    def _fix_figure_paths(
+        self,
+        latex_content: str,
+        manuscript_dir: Path | str | None = None,
+        output_dir: Path | str | None = None,
+    ) -> str:
+        r"""Rewrite ``\includegraphics{...}`` paths for LaTeX compilation."""
+
+        ms_dir = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
+        out_dir = Path(output_dir) if output_dir is not None else Path(self.config.pdf_dir)
+        return fix_figure_paths(latex_content, manuscript_dir=ms_dir, output_dir=out_dir)
+
+    def _extract_preamble(self, preamble_file: Path | str) -> str:
+        """Extract LaTeX preamble from a markdown preamble file."""
+
+        return extract_preamble(Path(preamble_file))
+
+    def _fix_math_delimiters(self, latex_content: str) -> str:
+        """Fix display-math delimiter issues that break LaTeX compilation."""
+
+        return fix_math_delimiters(latex_content)
+
+    def _check_latex_log_for_graphics_errors(self, log_file: Path | str) -> dict[str, list[str]]:
+        """Parse a LaTeX log file for graphics errors/warnings."""
+
+        return check_latex_log_for_graphics_errors(Path(log_file))
+
     def render(self, source_file: Path, output_name: str | None = None) -> Path:
         """Render manuscript to PDF.
 
@@ -134,7 +179,13 @@ class PDFRenderer:
         logger.info(f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
+            subprocess.run(
+                cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=(8 if os.environ.get("PYTEST_CURRENT_TEST") else 600),
+            )
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -282,7 +333,11 @@ class PDFRenderer:
             logger.info(f"Processing bibliography with {bibtex_cmd}...")
 
             result = subprocess.run(
-                cmd, capture_output=True, text=True, cwd=str(output_dir), timeout=600
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=str(output_dir),
+                timeout=(8 if os.environ.get("PYTEST_CURRENT_TEST") else 600),
             )
 
             if result.returncode != 0 and result.stderr.strip():
@@ -644,6 +699,48 @@ class PDFRenderer:
             f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
         )
 
+        # Pre-process: completely remove Mermaid code blocks before Pandoc conversion.
+        # Pandoc/LaTeX cannot render Mermaid natively — raw mermaid fences appear as
+        # verbatim code blocks in the PDF.  We strip the entire fence and body so no
+        # code text leaks into the rendered output.
+        import re as _re
+
+        mermaid_pattern = _re.compile(
+            r"```\s*mermaid\s*\n.*?```", _re.DOTALL | _re.IGNORECASE
+        )
+        combined_content, n_removed = mermaid_pattern.subn("", combined_content)
+        if n_removed:
+            logger.info(f"✓ Removed {n_removed} Mermaid diagram block(s) from combined markdown")
+            combined_md.write_text(combined_content, encoding="utf-8")
+        else:
+            logger.debug("No Mermaid blocks found in combined markdown")
+
+        # Pre-process: normalise figure paths in the combined markdown.
+        # Chapter files use relative paths like ../../output/figures/ or
+        # ../output/figures/ which are correct relative to manuscript/ subdirs
+        # but break when Pandoc processes the combined file from output/pdf/.
+        # Convert all variants to ../figures/ which is correct from output/pdf/.
+        fig_path_replacements = [
+            ("../../output/figures/", "../figures/"),
+            ("../output/figures/", "../figures/"),
+            ("output/figures/", "../figures/"),
+        ]
+        n_fig_paths = 0
+        for old_prefix, new_prefix in fig_path_replacements:
+            count = combined_content.count(old_prefix)
+            if count:
+                combined_content = combined_content.replace(old_prefix, new_prefix)
+                n_fig_paths += count
+        if n_fig_paths:
+            logger.info(f"✓ Normalised {n_fig_paths} figure path(s) to ../figures/ in combined markdown")
+            combined_md.write_text(combined_content, encoding="utf-8")
+
+
+
+
+
+
+
         # Convert combined markdown to LaTeX using Pandoc
         # This handles raw LaTeX commands properly
         # --standalone: Create a complete LaTeX document with document class and preamble
@@ -708,7 +805,13 @@ class PDFRenderer:
                     logger.debug(f"Failed to read markdown for error reporting: {read_err}")
 
         try:
-            subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True, timeout=600)
+            subprocess.run(
+                pandoc_to_tex,
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=(8 if os.environ.get("PYTEST_CURRENT_TEST") else 600),
+            )
         except subprocess.CalledProcessError as e:
             raise self._build_pandoc_render_error(e, combined_md, source_files, md_content, pandoc_to_tex) from e
 
@@ -721,6 +824,23 @@ class PDFRenderer:
         if "\\usepackage{lmodern}" in tex_content:
             tex_content = tex_content.replace("\\usepackage{lmodern}", "% \\usepackage{lmodern}")
             logger.info("✓ Disabled lmodern package to prevent XeLaTeX font conflicts")
+
+        # Fix pandoc's hidelinks to enable coloured hyperlinks.
+        # Pandoc always injects \hypersetup{hidelinks,...} which suppresses link colours.
+        # We replace it with colorlinks=true and red link colours.
+        if "hidelinks" in tex_content:
+            tex_content = tex_content.replace(
+                "hidelinks,",
+                "colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,",
+            )
+            # In case there's no trailing comma (e.g. standalone hidelinks)
+            tex_content = tex_content.replace(
+                "  hidelinks,\n",
+                "  colorlinks=true,\n  linkcolor=red,\n  urlcolor=red,\n  citecolor=red,\n",
+            )
+            logger.info("✓ Patched hidelinks → colorlinks=true with red link colours")
+
+
 
         # Fix broken math delimiters from Pandoc conversion
         try:
@@ -1009,6 +1129,9 @@ class PDFRenderer:
                     logger.debug(f"  Cleaned stale auxiliary file: {stale_file.name}")
 
             logger.info("  LaTeX compilation pass 1/4...")
+            # In the test suite we prefer failing fast over hanging in LaTeX,
+            # so we keep the subprocess timeout below the global pytest timeout.
+            latex_timeout = 8 if os.environ.get("PYTEST_CURRENT_TEST") else 600
             # Redirect stdout/stderr to a log file instead of DEVNULL.
             # Using DEVNULL causes SIGPIPE (exit 141) when xelatex's
             # -shell-escape child processes (e.g. extractbb) write to
@@ -1024,7 +1147,7 @@ class PDFRenderer:
                     stdout=stdout_sink,
                     stderr=subprocess.STDOUT,
                     cwd=str(output_dir),
-                    timeout=600,
+                    timeout=latex_timeout,
                 )
 
             # Repair truncated .aux file after each pass.
@@ -1072,7 +1195,7 @@ class PDFRenderer:
                         stdout=stdout_sink,
                         stderr=subprocess.STDOUT,
                         cwd=str(output_dir),
-                        timeout=600,
+                        timeout=latex_timeout,
                     )
 
                 # Repair truncated .aux after each pass
@@ -1206,7 +1329,7 @@ class PDFRenderer:
                             stdout=stdout_sink,
                             stderr=subprocess.STDOUT,
                             cwd=str(output_dir),
-                            timeout=600,
+                            timeout=(8 if os.environ.get("PYTEST_CURRENT_TEST") else 600),
                         )
                     if not self._validate_pdf_structure(temp_pdf):
                         logger.warning(

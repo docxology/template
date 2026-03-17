@@ -5,8 +5,8 @@
 - **System**: Research Project Template
 - **Role**: Standardized Research Execution Environment
 - **Type**: Core Infrastructure / Skill
-- **Version**: Pipeline v2.1 (10-stage extended, 8-stage core)
-- **Signposting**: Linked to [PAI Core](../../.gemini/antigravity/knowledge/personal_ai_infrastructure_pai_system/artifacts/overview.md)
+- **Version**: Pipeline v2.1 (full pipeline shown as [1/9]..[9/9] with clean shown as [0/9]; core pipeline available without LLM)
+- **Signposting**: This repository is a PAI “template” node; it is intended to be self-describing via `AGENTS.md` and `docs/`.
 
 ---
 
@@ -44,8 +44,9 @@ template/
 │   ├── execute_pipeline.py     # Single-project orchestrator
 │   └── execute_multi_project.py # Multi-project orchestrator
 ├── projects/              # Active research projects (Layer 2)
-│   ├── code_project/      # Optimization research exemplar
-│   └── cognitive_case_diagrams/  # Cognitive case system diagrams
+│   ├── code_project/      # Optimization research exemplar (example)
+│   ├── biology_textbook/  # Example project (content-heavy)
+│   └── project/           # Example project scaffold
 ├── projects_archive/      # Archived projects (not executed)
 ├── tests/                 # Infrastructure tests
 ├── CLOUD_DEPLOY.md        # ☁️ Headless cloud server guide
@@ -67,14 +68,14 @@ projects = discover_projects(repo_root)
 ### Execute
 
 ```bash
-# Full 10-stage pipeline (auto-installs uv on headless servers)
+# Full pipeline (auto-installs uv on headless servers)
 ./run.sh --pipeline
 
 # Core pipeline (no LLM stages)
 uv run scripts/execute_pipeline.py --project code_project --core-only
 
 # Specific project
-./run.sh --project cognitive_case_diagrams --pipeline
+./run.sh --project code_project --pipeline
 
 # All projects
 ./run.sh --all-projects --pipeline
@@ -138,6 +139,6 @@ uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscri
 - [`AGENTS.md`](AGENTS.md) — Full system documentation
 - [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) — Headless cloud deployment guide ☁️
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Pipeline orchestration reference
-- [`docs/documentation-index.md`](docs/documentation-index.md) — Full docs hub
+- [`docs/documentation-index.md`](documentation-index.md) — Full docs hub
 - [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
 - [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration

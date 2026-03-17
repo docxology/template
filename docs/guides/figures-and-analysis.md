@@ -523,7 +523,7 @@ uv run python scripts/execute_pipeline.py --core-only
 
 **Total**: ~84 seconds (without optional LLM review)
 
-**See [build-system.md](../operational/build/build-system.md) for detailed breakdown.**
+**See [RUN_GUIDE.md](../RUN_GUIDE.md) for pipeline breakdown and stage reference.**
 
 ### Output Directory Structure
 
@@ -557,7 +557,7 @@ output/
 
 ```bash
 # 1. Edit source code
-vim projects/code_projects/{name}/src/my_module.py
+vim projects/{name}/src/my_module.py
 
 # 2. Write tests
 vim projects/code_project/tests/test_my_module.py
@@ -738,7 +738,7 @@ with Pool() as pool:
 
 - **[Quick Start Cheatsheet](../reference/quick-start-cheatsheet.md)** - Essential commands
 - **[Glossary](../reference/glossary.md)** - Terms and definitions
-- **[Build System](../operational/build/build-system.md)** - build system reference
+- **[Pipeline Orchestration](../RUN_GUIDE.md)** - pipeline stages and commands
 - **[Examples Showcase](../usage/examples-showcase.md)** - Real-world applications
 - **[Documentation Index](../documentation-index.md)** - reference
 

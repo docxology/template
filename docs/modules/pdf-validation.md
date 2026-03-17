@@ -2,7 +2,7 @@
 
 > **Automated quality checking** for generated PDFs
 
-**Quick Reference:** [Build System](../operational/build/build-system.md) | [Common Workflows](../reference/common-workflows.md#generate-pdf-of-manuscript) | [FAQ](../reference/faq.md)
+**Quick Reference:** [Pipeline Orchestration](../RUN_GUIDE.md) | [Common Workflows](../reference/common-workflows.md#generate-pdf-of-manuscript) | [FAQ](../reference/faq.md)
 
 ## Overview
 

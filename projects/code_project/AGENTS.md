@@ -149,10 +149,10 @@ The project uses the template's configuration system via `pyproject.toml` and en
 
 ```bash
 # Run project tests
-pytest tests/ -v
+uv run pytest projects/code_project/tests/ -v
 
 # With coverage
-pytest tests/ --cov=src --cov-report=html
+uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 ```
 
 ## API Reference
@@ -384,10 +384,10 @@ This project complies with the template's development standards defined in `.cur
 
 ```bash
 # Test coverage verification
-pytest tests/ --cov=src --cov-fail-under=90
+uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 
 # Type hint verification
-python3 -c "import ast; import inspect; # Type checking logic here"
+uv run python -c "import ast; import inspect; # Type checking logic here"
 
 # Documentation completeness check
 find . -name "*.py" -exec grep -L '"""' {} \;

@@ -32,14 +32,14 @@ This index provides an overview of all documentation files in the Research Proje
 
 1. **[operational/troubleshooting/](operational/troubleshooting/)** - Troubleshooting guides
 2. **[reference/faq.md](reference/faq.md)** - Common questions and solutions
-3. **[operational/build/build-system.md](operational/build/build-system.md)** - Build system details
+3. **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and commands
 4. **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance issues
 5. **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md#️-project-packages-missing-from-root-venv--silent-stage-4-failure)** - ⚠️ Silent Stage 4 failure pattern
 
 ---
 
 > [!IMPORTANT]
-> **Critical Rules for Multi-Project Pipelines (March 2026)**
+> **Critical Rules for Multi-Project Pipelines**
 >
 > 1. **Root Venv Dependency Coverage** — If `projects/<name>/.venv` does NOT exist, every package in that project's `pyproject.toml` must also be in the root `pyproject.toml`. Violation: Stage 4 fails silently in < 1s. Fix: `uv sync` after adding to root deps.
 > 2. **`matplotlib` in Core Deps** — Must be in `[project.dependencies]`, not `[project.optional-dependencies]`. `uv sync` without flags skips optional groups.
@@ -161,13 +161,10 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ## ⚙️ **Operational Guides**
 
-### Build & CI/CD (`operational/build/`)
+### Pipeline & CI/CD
 
-- **[operational/build/build-system.md](operational/build/build-system.md)** - Build pipeline
-- **[operational/build/build-history.md](operational/build/build-history.md)** - Build changelog
-- **[operational/build/build-performance.md](operational/build/build-performance.md)** - Build performance tuning
-- **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - GitHub Actions
-- **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - uv package manager
+- **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and stage reference
+- **[.github/README.md](../.github/README.md)** - Repository CI/CD and contribution automation
 
 ### Configuration & Performance (`operational/config/`)
 
@@ -267,11 +264,6 @@ docs/
 │   └── template-description.md
 │
 ├── operational/                        # Operational workflows
-│   ├── build/                          # Build pipeline & CI/CD
-│   │   ├── build-system.md, build-history.md
-│   │   ├── build-performance.md
-│   │   ├── ci-cd-integration.md
-│   │   └── dependency-management.md
 │   ├── config/                         # Configuration & performance
 │   │   ├── configuration.md
 │   │   ├── checkpoint-resume.md
@@ -342,7 +334,7 @@ docs/
 
 ## 📋 Documentation Maintenance Notes
 
-- All documentation is maintained as evergreen content (no time-sensitive dates).
+- Documentation is intended to be evergreen; when behaviour changes, we may include dated notes so it’s clear which guidance is newer.
 - Each sub-directory has a `README.md` (user-facing) and `AGENTS.md` (technical guide).
 - Documentation is verified for accuracy and completeness on an ongoing basis.
 

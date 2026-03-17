@@ -505,7 +505,7 @@ Before committing tests:
 
 - [error_handling.md](error_handling.md) - Exception patterns for tests
 - [documentation_standards.md](documentation_standards.md) - Documenting tests
-- [../guides/testing-and-reproducibility.md](../docs/guides/testing-and-reproducibility.md) - Test-driven development guide
-- [../development/testing-guide.md](../docs/development/testing-guide.md) - Testing best practices
-- [../tests/AGENTS.md](../tests/AGENTS.md) - Test framework setup
+- [docs/guides/testing-and-reproducibility.md](../guides/testing-and-reproducibility.md) - Test-driven development guide
+- [docs/development/testing/testing-guide.md](../development/testing/testing-guide.md) - Testing best practices
+- [tests/AGENTS.md](../../tests/AGENTS.md) - Test framework setup
 - [pytest Documentation](https://docs.pytest.org/)

@@ -181,4 +181,4 @@ export LLM_REVIEW_TIMEOUT=600  # 10 minutes
 - [LLM Troubleshooting](llm-review.md) — Common issues and solutions
 - [LLM Integration](../../../infrastructure/llm/AGENTS.md) — LLM system documentation
 - [Configuration](../config/configuration.md) — Configuration system
-- [LLM Standards](../../../.cursorrules/llm_standards.md) — LLM development standards
+- [LLM Standards](../../rules/llm_standards.md) — LLM development standards

@@ -9,6 +9,7 @@ import pytest
 
 from infrastructure.validation import repo_scanner
 from infrastructure.validation.repo_scanner import (
+    AccuracyIssue,
     CompletenessGap,
     RepositoryScanner,
     RepoScanResults,

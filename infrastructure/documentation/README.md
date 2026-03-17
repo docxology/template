@@ -43,10 +43,6 @@ graph TD
     RENDER --> GLOSSARY
     RENDER --> REPORTS
 
-    classDef layers fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef workflow fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class DocumentationLayers layers
     class DocumentationWorkflow workflow
     class DocumentationOutput output
@@ -99,11 +95,6 @@ flowchart LR
     GLOSSARY_GEN --> API_TABLES
     REPORT_GEN --> VALIDATION
 
-    classDef sources fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef processing fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef generation fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class Sources sources
     class Processing processing
     class Generation generation
@@ -142,10 +133,6 @@ flowchart TD
     A --> B --> C --> D --> E --> F
     G --> H --> I --> J --> K
     L --> M --> N --> O --> P
-
-    classDef figure fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef api fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef integration fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class FigureWorkflow figure
     class APIWorkflow api

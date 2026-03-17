@@ -2,7 +2,7 @@
 
 > **Solutions** for pandoc, LaTeX, and PDF generation issues
 
-**Quick Reference:** [Main Troubleshooting](README.md) | [Environment](environment-setup.md) | [Build System](../build/build-system.md)
+**Quick Reference:** [Main Troubleshooting](README.md) | [Environment](environment-setup.md) | [Pipeline Orchestration](../../RUN_GUIDE.md)
 
 ---
 

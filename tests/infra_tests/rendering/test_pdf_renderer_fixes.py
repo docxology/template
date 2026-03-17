@@ -10,6 +10,8 @@ Follows No Mocks Policy - all tests use real data and real execution.
 
 import unicodedata
 
+import pytest
+
 
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
@@ -266,6 +268,7 @@ class TestFigurePathResolution:
 class TestCitationProcessing:
     """Test citation processing in rendering pipeline."""
 
+    @pytest.mark.timeout(90)
     def test_render_combined_includes_bibliography(self, tmp_path):
         """Test that render_combined includes bibliography processing."""
         config = RenderingConfig(

@@ -250,7 +250,7 @@ Level 10-12: Expert Usage (1-2 months)
 
 ### Build System
 
-- **[Build System](../operational/build/build-system.md)** - reference (status, performance, fixes)
+- **[Pipeline Orchestration](../RUN_GUIDE.md)** - reference (stages, flags, troubleshooting entry points)
 - **[PDF Validation](../modules/pdf-validation.md)** - Quality checks
 
 ### Writing & Formatting
@@ -284,8 +284,8 @@ Level 10-12: Expert Usage (1-2 months)
 
 - **[Two-Layer Architecture](../architecture/two-layer-architecture.md)** - architecture guide
 - **[Modules Guide](../modules/modules-guide.md)** - Using all 10 infrastructure modules
-- **[Dependency Management](../operational/build/dependency-management.md)** - uv package manager guide
-- **[CI/CD Integration](../operational/build/ci-cd-integration.md)** - GitHub Actions setup
+- **[Dependency management](../../README.md)** - `uv` usage and install/sync commands
+- **[CI/CD automation](../../.github/README.md)** - GitHub Actions and repository automation
 - **[Performance Optimization](../operational/config/performance-optimization.md)** - Build time optimization
 - **[Migration Guide](../best-practices/migration-guide.md)** - Migrating from other templates
 
@@ -298,7 +298,7 @@ Having issues? Here's where to look:
 3. **[Common Workflows](../reference/common-workflows.md)** - Step-by-step help
 4. **[Quick Start Cheatsheet](../reference/quick-start-cheatsheet.md)** - Quick troubleshooting section
 5. **[Glossary](../reference/glossary.md)** - Term definitions
-6. **[Build System](../operational/build/build-system.md)** - Build system details
+6. **[Pipeline Orchestration](../RUN_GUIDE.md)** - Pipeline stages and execution
 
 **Common Issues**:
 

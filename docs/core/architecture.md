@@ -63,11 +63,11 @@ Run with: `uv run python scripts/execute_pipeline.py --core-only`
 | Thin orchestrator pattern | [thin-orchestrator-summary.md](../architecture/thin-orchestrator-summary.md) |
 | Code placement decisions | [decision-tree.md](../architecture/decision-tree.md) |
 | Development workflow | [workflow.md](workflow.md) |
-| Build system details | [build-system.md](../operational/build/build-system.md) |
+| Pipeline orchestration | [RUN_GUIDE.md](../RUN_GUIDE.md) |
 | API reference | [api-reference.md](../reference/api-reference.md) |
 
 ## Development Rules
 
-- **[`.cursorrules/AGENTS.md`](../../.cursorrules/AGENTS.md)** — Development standards
-- **[`.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md)** — Infrastructure module development
-- **[`.cursorrules/README.md`](../../.cursorrules/README.md)** — Quick reference and patterns
+- **[`docs/rules/AGENTS.md`](../rules/AGENTS.md)** — Development standards
+- **[`docs/rules/infrastructure_modules.md`](../rules/infrastructure_modules.md)** — Infrastructure module development
+- **[`docs/rules/README.md`](../rules/README.md)** — Quick reference and patterns

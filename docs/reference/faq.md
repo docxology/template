@@ -146,21 +146,21 @@
 
 ### **Q: How do I set up CI/CD?**
 
-**A:** See the [CI/CD Integration Guide](../operational/build/ci-cd-integration.md) for GitHub Actions setup, automated testing, and deployment workflows.
+**A:** See [`.github/README.md`](../../.github/README.md) for GitHub Actions setup, automated testing, and repository workflows.
 
 ### **Q: Can I automate PDF generation in CI?**
 
-**A:** Yes! The [CI/CD Integration Guide](../operational/build/ci-cd-integration.md) includes examples for automated PDF generation in GitHub Actions and other CI systems.
+**A:** Yes. Start with [`.github/workflows/README.md`](../../.github/workflows/README.md), then adapt workflows to run `uv sync` and the pipeline entry point you need (see [RUN_GUIDE.md](../RUN_GUIDE.md)).
 
 ## 📦 **Dependency Management**
 
 ### **Q: How do I manage dependencies with uv?**
 
-**A:** See the [Dependency Management Guide](../operational/build/dependency-management.md) for instructions on using uv for package management, including adding, updating, and removing dependencies.
+**A:** See the root [README.md](../../README.md) for `uv` install/sync commands, and use `uv run` to execute scripts consistently.
 
 ### **Q: What if I have dependency conflicts?**
 
-**A:** The [Dependency Management Guide](../operational/build/dependency-management.md) includes troubleshooting for dependency conflicts and resolution strategies.
+**A:** Start with `uv lock --upgrade` (if used in your workflow) and re-run `uv sync`. If conflicts persist, simplify optional groups and ensure project dependencies are represented in the root environment when running under the root venv (see [docs/AGENTS.md](../AGENTS.md)).
 
 ## ⚡ **Performance**
 
@@ -170,7 +170,7 @@
 
 ### **Q: What's the current build performance?**
 
-**A:** The build system achieves 84-second builds for core pipeline regeneration (without optional LLM review). See [Build System](../operational/build/build-system.md) for detailed performance metrics and [Performance Optimization Guide](../operational/config/performance-optimization.md) for optimization strategies.
+**A:** See [Performance Optimization Guide](../operational/config/performance-optimization.md) for measurement and tuning, and [RUN_GUIDE.md](../RUN_GUIDE.md) for pipeline execution details.
 
 ## 📞 **Getting Help**
 

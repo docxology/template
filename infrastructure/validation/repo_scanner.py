@@ -27,6 +27,10 @@ from infrastructure.validation.doc_models import CompletenessGap, ScanAccuracyIs
 
 logger = get_logger(__name__)
 
+# Backwards-compatible alias: tests and older callers refer to "AccuracyIssue".
+# Repo scans use the richer ScanAccuracyIssue schema (category/severity/message/details).
+AccuracyIssue = ScanAccuracyIssue
+
 
 @dataclass
 class RepoScanResults:

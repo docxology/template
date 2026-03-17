@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -152,11 +153,46 @@ def validate_packages(
         f"Validating {len(required)} required and {len(optional)} optional LaTeX packages..."
     )
 
-    # Check required packages
-    required_status = [check_latex_package(pkg, kpsewhich_path) for pkg in required]
+    def _bulk_check(packages: list[str]) -> list[PackageStatus]:
+        """Check many packages with a single kpsewhich invocation (fast path)."""
 
-    # Check optional packages
-    optional_status = [check_latex_package(pkg, kpsewhich_path) for pkg in optional]
+        if not packages:
+            return []
+        if kpsewhich_path is None:
+            return [PackageStatus(name=p, installed=False, path=None) for p in packages]
+
+        sty_files = [f"{p}.sty" for p in packages]
+        try:
+            # kpsewhich supports multiple filenames; it prints one line per argument.
+            # Using a single process is far faster than spawning N subprocesses.
+            timeout_s = 8 if os.environ.get("PYTEST_CURRENT_TEST") else 20
+            result = subprocess.run(
+                [str(kpsewhich_path), *sty_files],
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=timeout_s,
+            )
+            lines = result.stdout.splitlines()
+            if len(lines) != len(packages):
+                # Unexpected output shape; fall back to per-package checking.
+                return [check_latex_package(p, kpsewhich_path) for p in packages]
+
+            statuses: list[PackageStatus] = []
+            for pkg, path_line in zip(packages, lines, strict=True):
+                path_line = path_line.strip()
+                if path_line:
+                    statuses.append(PackageStatus(name=pkg, installed=True, path=path_line))
+                else:
+                    statuses.append(PackageStatus(name=pkg, installed=False, path=None))
+            return statuses
+        except subprocess.TimeoutExpired:
+            logger.warning("Timeout checking LaTeX packages (bulk); falling back to per-package checks")
+            return [check_latex_package(p, kpsewhich_path) for p in packages]
+
+    # Check required/optional packages
+    required_status = _bulk_check(required)
+    optional_status = _bulk_check(optional)
 
     # Identify missing packages
     missing_required = [s.name for s in required_status if not s.installed]

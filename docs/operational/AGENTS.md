@@ -12,11 +12,6 @@ docs/operational/
 ├── README.md                       # Quick reference
 ├── reporting-guide.md              # Reporting system guide
 ├── error-handling-guide.md         # Error handling patterns
-├── build/                          # Build pipeline & CI/CD
-│   ├── build-system.md
-│   ├── build-history.md
-│   ├── ci-cd-integration.md
-│   └── dependency-management.md
 ├── config/                         # Configuration & performance
 │   ├── configuration.md
 │   ├── checkpoint-resume.md
@@ -38,7 +33,8 @@ docs/operational/
 
 ## Key Conventions
 
-- **Build files** → `build/` sub-folder (pipeline, CI/CD, deps)
+- **Pipeline orchestration** → `docs/RUN_GUIDE.md` (stages, flags, common invocations)
+- **CI/CD automation** → `.github/` (workflows and repository automation docs)
 - **Config files** → `config/` sub-folder (settings, checkpoints, perf)
 - **Logging** → `logging/README.md` is the comprehensive entry point
 - **Troubleshooting** → `troubleshooting/README.md` has the diagnostic flowchart
@@ -62,5 +58,6 @@ LOG_LEVEL=0 uv run python scripts/03_render_pdf.py
 ## See Also
 
 - [README.md](README.md) — Quick navigation
+- [Pipeline Orchestration](../RUN_GUIDE.md) — Pipeline stages and commands
 - [docs/AGENTS.md](../AGENTS.md) — System-wide documentation guide
 - [documentation-index.md](../documentation-index.md) — Full index

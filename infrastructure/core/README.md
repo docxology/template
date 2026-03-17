@@ -45,7 +45,7 @@ graph TD
         PROGRESS[progress.py<br/>Progress tracking<br/>Visual indicators]
         CHECKPOINT[checkpoint.py<br/>Pipeline state<br/>Resume capability]
         RETRY[retry.py<br/>Retry logic<br/>Exponential backoff]
-        PERFORMANCE[performance.py<br/>Resource monitoring<br/>System metrics]
+        PERFORMANCE[stage_monitor.py<br/>Resource monitoring<br/>System metrics]
     end
 
     subgraph Operations["Operations Layer"]
@@ -69,11 +69,6 @@ graph TD
     ENVIRONMENT --> SCRIPTS
     SCRIPTS --> FILES
     SECURITY --> HEALTH
-
-    classDef foundation fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef utilities fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef operations fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef security fill:#fce4ec,stroke:#c2185b,stroke-width:2px
 
     class Foundation foundation
     class Utilities utilities
@@ -120,10 +115,6 @@ flowchart LR
     PROGRESS --> METRICS
     SECURITY --> ERRORS
 
-    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef process fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class Input input
     class Processing process
     class Output output
@@ -159,14 +150,7 @@ flowchart TD
 
     F -->|Error| H
     G -->|Performance issue| J
-
-    classDef init fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef op fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
-    class Initialization init
-    class Operation op
-    class Completion ```
+```
 
 ## Error Handling Flow
 
@@ -188,10 +172,6 @@ flowchart TD
     J --> A
     K --> L[Pipeline failure]
 
-    classDef operation fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef error fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef recovery fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class A,B,C,D,E,F,G operation
     class H,I,J error
     class K,L recovery
@@ -211,14 +191,14 @@ flowchart TD
 | **progress.py** | Progress tracking with visual indicators | `ProgressBar`, `LLMProgressTracker`, `SubStageProgress` |
 | **checkpoint.py** | Pipeline state management for resume capability | `CheckpointManager`, `PipelineCheckpoint`, `StageResult` |
 | **retry.py** | Exponential backoff retry logic | `retry_with_backoff()`, `RetryableOperation` |
-| **performance.py** | Resource monitoring and performance metrics | `PerformanceMonitor`, `ResourceUsage`, `StagePerformanceTracker` |
+| **stage_monitor.py** | Resource monitoring and performance metrics | `PerformanceMonitor`, `ResourceUsage`, `StagePerformanceTracker` |
 | **environment.py** | System validation and dependency checking | `check_python_version()`, `check_dependencies()`, `setup_directories()` |
 | **script_discovery.py** | Dynamic script finding and execution coordination | `discover_analysis_scripts()`, `discover_orchestrators()` |
 | **file_operations.py** | File management and output handling | `clean_output_directory()`, `copy_final_deliverables()` |
 | **credentials.py** | Credential management from multiple sources | `CredentialManager` |
 | **logging_progress.py** | Advanced progress logging utilities | `calculate_eta()`, `log_with_spinner()`, `StreamingProgress` |
 | **logging_formatters.py** | Specialized logging formatters | `JSONFormatter`, `TemplateFormatter` |
-| **performance_monitor.py** | Detailed performance monitoring and benchmarking | `monitor_performance()`, `benchmark_function()`, `benchmark_llm_query()` |
+| **function_profiler.py** | Function-level profiling and memory snapshots | `CodeProfiler`, `monitor_performance()`, `profile_memory_usage()` |
 | **config_cli.py** | Configuration command-line interface | `main()` |
 
 ### Module Dependencies
@@ -240,7 +220,7 @@ graph TD
         PROGRESS[progress.py<br/>Progress tracking]
         CHECKPOINT[checkpoint.py<br/>State management]
         RETRY[retry.py<br/>Error recovery]
-        PERFORMANCE[performance.py<br/>Resource monitoring]
+        PERFORMANCE[stage_monitor.py<br/>Resource monitoring]
     end
 
     subgraph Operations["Operations Layer"]
@@ -260,11 +240,6 @@ graph TD
     PERFORMANCE --> ENVIRONMENT
     ENVIRONMENT --> SCRIPTS
     SCRIPTS --> FILES
-
-    classDef base fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
-    classDef infra fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef util fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef ops fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class Base base
     class Infrastructure infra
@@ -294,7 +269,7 @@ graph TD
 - **`load_config()`** - YAML configuration file loading with validation
 - **`get_config_as_dict()`** - Convert config to environment variable format
 - **`get_config_as_env_vars()`** - Export config as shell environment variables
-- **`find_config_file()`** - Discover config at standard `project/manuscript/config.yaml` location
+- **`find_config_file()`** - Discover config at standard `projects/{project_name}/manuscript/config.yaml` location
 - **`get_translation_languages()`** - Extract LLM translation languages from config
 - **`get_testing_config()`** - Load test failure tolerance settings
 
@@ -432,7 +407,7 @@ from infrastructure.core import load_config, get_config_as_dict
 def initialize_module():
     """Initialize with configuration."""
     # Load from standard location
-    config = load_config()  # project/manuscript/config.yaml
+    config = load_config()  # projects/{project_name}/manuscript/config.yaml
 
     # Get as environment variables for subprocess
     env_vars = get_config_as_dict()

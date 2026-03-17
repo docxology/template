@@ -272,14 +272,14 @@ def plot_experimental_results(
 
 ```
 1. Analyze the feature
-   ├─ Generic part: "convergence analysis" → infrastructure/scientific/performance.py
+   ├─ Generic part: "benchmarking and performance measurement" → infrastructure/scientific/benchmarking.py
    ├─ Specific part: "our stopping criterion" → projects/{name}/src/analysis.py
    └─ Decision: Split into two files
 
 2. Create infrastructure first
-   └─ infrastructure/scientific/performance.py
-      ├─ Generic convergence metrics
-      ├─ Reusable analysis functions
+   └─ infrastructure/scientific/benchmarking.py
+      ├─ Generic timing/measurement utilities
+      ├─ Reusable benchmark/report helpers
       └─ 100% tested
 
 3. Use infrastructure in project code

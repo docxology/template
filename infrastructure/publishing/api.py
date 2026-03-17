@@ -31,7 +31,8 @@ class ZenodoConfig:
     def api_base_url(self) -> str:
         """Return base_url if set, else sandbox or production Zenodo API endpoint."""
         if self.base_url:
-            return self.base_url
+            base = self.base_url.rstrip("/")
+            return base if base.endswith("/api") else f"{base}/api"
         return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"
 
 
@@ -67,7 +68,10 @@ class ZenodoClient:
         """Upload file to deposition."""
         file_path = Path(file_path)
         filename = file_path.name
-        url = f"{self.config.api_base_url}/deposit/depositions/{deposition_id}/files/{filename}"
+        # Zenodo uploads go to the deposition "bucket" endpoint:
+        #   PUT {api_base_url}/files/{bucket_id}/{filename}
+        # Tests pass `deposition_id` as a bucket identifier (e.g. "bucket123").
+        url = f"{self.config.api_base_url}/files/{deposition_id}/{filename}"
 
         try:
             with open(file_path, "rb") as f:

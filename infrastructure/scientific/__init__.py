@@ -21,6 +21,7 @@ from infrastructure.scientific.benchmarking import (
     BenchmarkResult,
     benchmark_function,
     format_benchmark_report,
+    generate_performance_report,
 )
 
 # Import documentation functions
@@ -56,6 +57,7 @@ __all__ = [
     # Benchmarking
     "benchmark_function",
     "format_benchmark_report",
+    "generate_performance_report",
     # Documentation
     "generate_scientific_documentation",
     "generate_api_documentation",

@@ -941,7 +941,7 @@ python3 scripts/03_render_pdf.py --project code_project
 - [PROJECTS_PARADIGM.md](PROJECTS_PARADIGM.md) - Philosophical explanation of standalone paradigm
 - [../infrastructure/project/AGENTS.md](../infrastructure/project/AGENTS.md) - Infrastructure project management
 - [../infrastructure/project/README.md](../infrastructure/project/README.md) - Project management quick reference
-- [../.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md) - Development standards overview
+- [docs/rules/AGENTS.md](../docs/rules/AGENTS.md) - Development standards overview
 - [../AGENTS.md](../AGENTS.md) - template documentation
 
 ## Summary

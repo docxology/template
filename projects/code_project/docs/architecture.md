@@ -3,7 +3,7 @@
 The `code_project` exemplar is designed around a strict separation of concerns, divided into three main operational layers:
 
 1. **`src/` (Pure Scientific Logic)**: Contains deterministic, zero-mock testable mathematical algorithms. No I/O, no side-effects.
-2. **`scripts/` (Thin Orchestrators)**: Scripts coordinate the flow of data. They import from `src/`, compute results, and immediately pass those results to the `infrastructure/` layer. They do not contain math.
+2. **`scripts/` (Thin Orchestrators)**: Scripts coordinate experiments and visualization. They import the optimization algorithm(s) from `src/` and use `infrastructure/` modules for cross-cutting concerns (logging, validation, benchmarking, figure registration). Scripts may contain *experiment loops* and *plotting*, but they must not re-implement the optimization algorithm update rule.
 3. **`infrastructure/` (Core Operations)**: Handles all side-effects: logging, PDF rendering, metric generation, and validation.
 
 ## Target Flow Model

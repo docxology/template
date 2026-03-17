@@ -368,13 +368,10 @@ def collect_figure_statistics(self) -> Dict[str, Any]:
 @dataclass
 class ApiEntry:
     """Represents an API entry for documentation."""
-    name: str
-    kind: str  # 'function', 'class', 'method', 'constant'
     module: str
-    signature: str
-    docstring: Optional[str] = None
-    line_number: Optional[int] = None
-    source_file: Optional[str] = None
+    name: str
+    kind: str  # "function" | "class"
+    summary: str
 ```
 
 #### _first_sentence (function)

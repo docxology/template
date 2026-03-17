@@ -323,5 +323,6 @@ grep "Completed in" projects/{name}/output/*.log | awk '{print $NF}'
 ## See Also
 
 - [`../../scripts/execute_pipeline.py`](../../../scripts/execute_pipeline.py) - Performance tracking implementation
-- [`infrastructure/core/performance.py`](../../../infrastructure/core/performance.py) - Performance utilities
+- [`infrastructure/core/stage_monitor.py`](../../../infrastructure/core/stage_monitor.py) - Stage timing and progress tracking
+- [`infrastructure/core/function_profiler.py`](../../../infrastructure/core/function_profiler.py) - Function-level profiling utilities
 - [Troubleshooting](../troubleshooting/) - Performance troubleshooting

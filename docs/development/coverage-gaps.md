@@ -39,7 +39,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Add tests for retry_with_backoff decorator
      - Test exponential backoff timing
      - Test RetryableOperation context manager
-   - **Test File**: `tests/infrastructure/core/test_retry.py` (created)
+   - **Test File**: `tests/infra_tests/core/test_retry.py` (created)
 
 2. **`infrastructure/core/progress.py` (18.09%)**
    - **Status**: Progress reporting utilities
@@ -48,7 +48,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Add tests for ProgressBar class
      - Test SubStageProgress tracking
      - Test ETA calculations
-   - **Test File**: `tests/infrastructure/core/test_progress.py` (created)
+   - **Test File**: `tests/infra_tests/core/test_progress.py` (created)
 
 3. **`infrastructure/core/checkpoint.py` (39.24%)**
    - **Status**: Pipeline checkpoint system for resume capability
@@ -58,7 +58,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Test checkpoint validation
      - Test corruption detection
      - Test resume functionality
-   - **Test File**: `tests/infrastructure/core/test_checkpoint.py` (created)
+   - **Test File**: `tests/infra_tests/core/test_checkpoint.py` (created)
 
 ## Coverage Improvement Strategy
 
@@ -79,11 +79,11 @@ The following modules have coverage below 50% and are prioritized for improvemen
 
 ✅ **Test Files Created**
 
-- `tests/infrastructure/core/test_file_operations.py` - File and directory operation utilities
-- `tests/infrastructure/core/test_credentials.py` - Credential management with .env and YAML support
-- `tests/infrastructure/core/test_environment.py` - Environment setup and validation functions
-- `tests/infrastructure/core/test_script_discovery.py` - Script discovery and output verification
-- `tests/infrastructure/core/test_performance.py` - Performance monitoring and resource tracking
+- `tests/infra_tests/core/test_file_operations.py` - File and directory operation utilities
+- `tests/infra_tests/core/test_credentials.py` - Credential management with .env and YAML support
+- `tests/infra_tests/core/test_environment.py` - Environment setup and validation functions
+- `tests/infra_tests/core/test_script_discovery.py` - Script discovery and output verification
+- `tests/infra_tests/core/test_stage_monitor.py` - Stage-level performance monitoring and resource tracking
 
 ### Phase 4: Additional Coverage Improvements (Completed)
 
@@ -123,13 +123,13 @@ The following modules have coverage below 50% and are prioritized for improvemen
 
 ```bash
 # Infrastructure coverage
-uv run python -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
+uv run python -m pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
 
 # View HTML report
 open htmlcov/index.html
 
 # Check specific module
-uv run python -m pytest tests/infrastructure/core/ --cov=infrastructure.core.checkpoint --cov-report=term
+uv run python -m pytest tests/infra_tests/core/ --cov=infrastructure.core.checkpoint --cov-report=term
 ```
 
 ### Coverage Trends

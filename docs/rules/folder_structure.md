@@ -249,7 +249,7 @@ Before committing folder structure changes:
 - [documentation_standards.md](documentation_standards.md) - Detailed AGENTS.md/README.md writing guidelines
 - [AGENTS.md](AGENTS.md) - Overview of all development standards
 - [../AGENTS.md](../AGENTS.md) - Root documentation structure
-- [../](../docs/) - Main documentation hub
+- [docs/](../) - Main documentation hub
 
 ---
 

@@ -158,7 +158,7 @@ This section presents the experimental results from the gradient descent optimiz
 
 Figure \ref{fig:convergence} illustrates the convergence behavior of gradient descent for different step sizes, starting from the initial point $x_0 = 0$. The algorithm iteratively updates the solution using the rule $x_{k+1} = x_k - \alpha \nabla f(x_k)$.
 
-![Gradient descent convergence trajectories for 6 step sizes ($\\alpha = 0.01, \\alpha = 0.1, \\alpha = 0.5, \\alpha = 1.0, \\alpha = 1.5, \\alpha = 2.5$) on the quadratic $f(x) = \frac{1}{2}x^2 - x$. Larger step sizes reach the analytical minimum $f(x^*) = -0.5$ faster, while $\alpha \geq 2$ diverges. The fastest convergence occurs at $\alpha = 1.0$ (1 iterations).](../output/figures/convergence_plot.png){#fig:convergence}
+![Gradient descent convergence trajectories for 6 step sizes ($\\alpha = 0.01, \\alpha = 0.1, \\alpha = 0.5, \\alpha = 1.0, \\alpha = 1.5, \\alpha = 2.5$) on the quadratic $f(x) = \frac{1}{2}x^2 - x$. Larger step sizes reach the analytical minimum $f(x^*) = -0.5$ faster, while $\alpha \geq 2$ diverges. The fastest convergence occurs at $\alpha = 1.0$ (1 iterations).](../figures/convergence_plot.png){#fig:convergence}
 
 **Key observations from Figure \ref{fig:convergence}:**
 
@@ -170,7 +170,7 @@ Figure \ref{fig:convergence} illustrates the convergence behavior of gradient de
 
 Figure \ref{fig:step_sensitivity} examines how the choice of step size affects the convergence path and solution quality. The analysis reveals the trade-off between convergence speed and numerical stability.
 
-![Step size sensitivity analysis spanning all four agency categories (conservative, near-optimal, aggressive, divergent). Left panel: iterations to convergence vs step size, with points colour-coded by category. Right panel: final objective values showing convergent settings clustering at $f(x^*) = -0.5$ while divergent settings fail to reach the optimum.](../output/figures/step_size_sensitivity.png){#fig:step_sensitivity}
+![Step size sensitivity analysis spanning all four agency categories (conservative, near-optimal, aggressive, divergent). Left panel: iterations to convergence vs step size, with points colour-coded by category. Right panel: final objective values showing convergent settings clustering at $f(x^*) = -0.5$ while divergent settings fail to reach the optimum.](../figures/step_size_sensitivity.png){#fig:step_sensitivity}
 
 ## Quantitative Results
 
@@ -193,7 +193,7 @@ Modern convergence analysis builds on foundational work in gradient methods \cit
 
 Figure \ref{fig:convergence_rate} provides a comparative analysis of convergence rates across different step sizes, validating theoretical predictions against empirical results.
 
-![Convergence rate comparison on logarithmic scale. Each step size's error $|f(x) - f(x^*)|$ is plotted per iteration. Converging settings show downward-sloping lines with slopes determined by the contraction factor $\rho = |1 - \alpha|$, while divergent settings show upward trajectories. The dashed tolerance line at $\varepsilon = 10^{-8}$ marks the convergence criterion.](../output/figures/convergence_rate_comparison.png){#fig:convergence_rate}
+![Convergence rate comparison on logarithmic scale. Each step size's error $|f(x) - f(x^*)|$ is plotted per iteration. Converging settings show downward-sloping lines with slopes determined by the contraction factor $\rho = |1 - \alpha|$, while divergent settings show upward trajectories. The dashed tolerance line at $\varepsilon = 10^{-8}$ marks the convergence criterion.](../figures/convergence_rate_comparison.png){#fig:convergence_rate}
 
 The theoretical convergence rate for our quadratic problem satisfies:
 
@@ -278,7 +278,7 @@ Divergent step sizes ($\alpha \geq 2$) confirm the theoretical instability bound
 
 Figure \ref{fig:complexity} provides a visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
 
-![Algorithm performance analysis in four panels: (TL) empirical iteration counts per step size, colour-coded by agency category, (TR) solution accuracy as $\log_{10} |f(x) - f(x^*)|$ with the $\varepsilon = 10^{-8}$ tolerance line, (BL) theoretical bound overlaid on empirical iterations in log scale, (BR) contraction factor $\rho = |1-\alpha|$ per step size.](../output/figures/algorithm_complexity.png){#fig:complexity}
+![Algorithm performance analysis in four panels: (TL) empirical iteration counts per step size, colour-coded by agency category, (TR) solution accuracy as $\log_{10} |f(x) - f(x^*)|$ with the $\varepsilon = 10^{-8}$ tolerance line, (BL) theoretical bound overlaid on empirical iterations in log scale, (BR) contraction factor $\rho = |1-\alpha|$ per step size.](../figures/algorithm_complexity.png){#fig:complexity}
 
 The algorithm demonstrates efficient performance for small-scale optimization problems:
 
@@ -291,13 +291,13 @@ The algorithm demonstrates efficient performance for small-scale optimization pr
 
 Figure \ref{fig:benchmark} shows how `gradient_descent()` scales with problem dimension by running the optimizer on identity-Hessian quadratics of dimension $d \in \{1, 2, 5, 10, 20, 50\}$.
 
-![Dimensional scaling benchmark. Left: mean execution time ($\mu$s) per `gradient_descent()` call across problem dimensions $d = 1$ to $50$, showing sub-millisecond performance throughout. Right: iterations to convergence remain constant ($\sim$17) for all dimensions because the identity-matrix condition number $\kappa = 1$ is dimension-independent.](../output/figures/performance_benchmark.png){#fig:benchmark}
+![Dimensional scaling benchmark. Left: mean execution time ($\mu$s) per `gradient_descent()` call across problem dimensions $d = 1$ to $50$, showing sub-millisecond performance throughout. Right: iterations to convergence remain constant ($\sim$17) for all dimensions because the identity-matrix condition number $\kappa = 1$ is dimension-independent.](../figures/performance_benchmark.png){#fig:benchmark}
 
 ### Numerical Stability Analysis
 
 Figure \ref{fig:stability} maps the optimizer's accuracy across a grid of 8 starting points ($x_0 \in [-50, 50]$) and 6 step sizes ($\alpha \in [0.01, 0.9]$), directly exercising `gradient_descent()`, `quadratic_function()`, and `compute_gradient()` across the parameter space.
 
-![Numerical stability heatmap: each cell shows $\log_{10} |f(x) - f(x^*)|$ for a (starting point, step size) combination, with 48 total evaluations. The right panel reports the aggregate stability score of 1.00 from `check_numerical_stability()`.](../output/figures/stability_analysis.png){#fig:stability}
+![Numerical stability heatmap: each cell shows $\log_{10} |f(x) - f(x^*)|$ for a (starting point, step size) combination, with 48 total evaluations. The right panel reports the aggregate stability score of 1.00 from `check_numerical_stability()`.](../figures/stability_analysis.png){#fig:stability}
 
 ### Performance Metrics Summary
 
@@ -442,7 +442,7 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 - **Python**: 3.12.11
 - **NumPy**: 2.4.1
 - **Platform**: Darwin arm64
-- **Generated**: 2026-03-16T16:02:28Z
+- **Generated**: 2026-03-17T22:47:01Z
 
 
 
@@ -558,7 +558,7 @@ Pandoc-crossref resolves `{#eq:label}` and `@eq:label` during rendering. Do **no
 @fig:convergence demonstrates...
 ```
 
-- Images must exist in `output/figures/` at render time
+- Images must exist in `../figures/` at render time
 - Use `width=` or `height=` to control sizing (prevents float-too-large warnings)
 - Captions should be descriptive (they appear in the PDF)
 

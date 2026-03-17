@@ -314,6 +314,12 @@ def calculate_metadata_complexity_score(metadata: PublicationMetadata) -> int:
     return min(score, 100)
 
 
+def calculate_complexity_score(metadata: PublicationMetadata) -> int:
+    """Backwards-compatible alias for complexity scoring."""
+
+    return calculate_metadata_complexity_score(metadata)
+
+
 def create_repository_metadata(metadata: PublicationMetadata) -> str:
     """Create repository metadata JSON for GitHub/GitLab.
 

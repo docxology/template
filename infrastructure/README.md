@@ -46,11 +46,6 @@ graph TD
     LLM --> PUBLISHING
     LLM --> SCIENTIFIC
 
-    classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef doc fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef integration fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef build fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class CORE,EXCEPTIONS core
     class DOC,RENDER,VALIDATION doc
     class LLM,PUBLISHING,SCIENTIFIC integration
@@ -95,10 +90,6 @@ flowchart TD
     CORE_MOD --> PUBLISHING_MOD
     CORE_MOD --> REPORTING_MOD
 
-    classDef scripts fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class ANALYSIS,FIGURES scripts
     class CORE_MOD,VALIDATION_MOD,DOCUMENTATION_MOD,RENDERING_MOD,LLM_MOD,PUBLISHING_MOD,REPORTING_MOD infra
     class OUTPUTS output
@@ -125,7 +116,7 @@ flowchart TD
     C --> N[progress.py<br/>Progress tracking]
     C --> O[checkpoint.py<br/>Pipeline state]
     C --> P[retry.py<br/>Exponential backoff]
-    C --> Q[performance.py<br/>Resource monitoring]
+    C --> Q[stage_monitor.py<br/>Resource monitoring]
     C --> R[environment.py<br/>Setup validation]
     C --> S[script_discovery.py<br/>Dynamic discovery]
     C --> T[file_operations.py<br/>I/O utilities]
@@ -139,18 +130,18 @@ flowchart TD
     E --> Z[markdown_validator.py<br/>Markdown validation]
     E --> AA[integrity.py<br/>Cross-reference validation]
 
-    F --> BB[render_manager.py<br/>Multi-format output]
+    F --> BB[core.py<br/>RenderManager orchestrator]
     F --> CC[latex_utils.py<br/>LaTeX processing]
-    F --> DD[html_generator.py<br/>Web output]
+    F --> DD[web_renderer.py<br/>Web output]
 
-    G --> EE[llm_client.py<br/>Ollama integration]
-    G --> FF[prompt_templates.py<br/>Research templates]
-    G --> GG[conversation.py<br/>Context management]
+    G --> EE[llm/core/client.py<br/>Ollama integration]
+    G --> FF[llm/templates/<br/>Research templates]
+    G --> GG[llm/core/context.py<br/>Context management]
 
-    H --> HH[zenodo_client.py<br/>DOI minting]
-    H --> II[arxiv_client.py<br/>Submission prep]
-    H --> JJ[github_client.py<br/>Release automation]
-    H --> KK[citation_generator.py<br/>BibTeX/APA]
+    H --> HH[api.py<br/>Platform API clients]
+    H --> II[package.py<br/>Submission packaging]
+    H --> JJ[platforms.py<br/>Release automation]
+    H --> KK[citations.py<br/>BibTeX/APA/MLA]
 
     I --> LL[benchmarking.py<br/>Performance analysis]
     I --> MM[validation.py<br/>Scientific standards]
@@ -159,16 +150,6 @@ flowchart TD
     J --> OO[pipeline_reporter.py<br/>Build reports]
     J --> PP[error_aggregator.py<br/>Error categorization]
     J --> QQ[html_templates.py<br/>Visual reports]
-
-    classDef start fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
-    classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef doc fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef validation fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef rendering fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef llm fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    classDef publishing fill:#f1f8e9,stroke:#33691e,stroke-width:2px
-    classDef scientific fill:#e0f2f1,stroke:#00695c,stroke-width:2px
-    classDef reporting fill:#fff8e1,stroke:#f57f17,stroke-width:2px
 
     class A start
     class C,K,L,M,N,O,P,Q,R,S,T core
@@ -201,10 +182,10 @@ flowchart LR
     end
 
     subgraph Output["📤 Generated Outputs"]
-        PDF[output/pdf/<br/>Manuscript PDFs]
-        FIGURES[output/figures/<br/>Publication plots]
-        REPORTS[output/reports/<br/>Validation reports]
-        HTML[output/web/<br/>HTML versions]
+        PDF[output/{project_name}/pdf/<br/>Manuscript PDFs]
+        FIGURES[output/{project_name}/figures/<br/>Publication plots]
+        REPORTS[output/{project_name}/reports/<br/>Validation reports]
+        HTML[output/{project_name}/web/<br/>HTML versions]
     end
 
     YAML --> CONFIG
@@ -221,10 +202,6 @@ flowchart LR
     RENDER --> FIGURES
     REPORT --> REPORTS
     RENDER --> HTML
-
-    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef process fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class Input input
     class Processing process
@@ -303,9 +280,6 @@ flowchart TD
 
     PROCESS --> LLM
     RENDER --> PUBLISH
-
-    classDef script fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
 
     class INIT,CONFIG,PROCESS,VALIDATE,RENDER,REPORT script
     class CORE,DOC,LLM,PUBLISH infra

@@ -144,7 +144,7 @@ class InputSanitizer:
         text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
         return text.strip()
 
-    def _limit_length(self, text: str, max_length: int = 500000) -> str:
+    def _limit_length(self, text: str, max_length: int = 100000) -> str:
         """Limit text length to prevent resource exhaustion."""
         if len(text) > max_length:
             logger.warning(f"Text truncated from {len(text)} to {max_length} characters")

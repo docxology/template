@@ -27,7 +27,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 - Each sub-directory has a `README.md` (user-facing index) and `AGENTS.md` (technical guide)
 - `documentation-index.md` is the comprehensive flat index of all files
 - Cross-references use relative paths with descriptive link text
-- All documentation is evergreen (no time-sensitive dates)
+- Documentation is intended to be evergreen; when behaviour changes, we may include dated notes so it’s clear which guidance is newer.
 
 ## Entry Points
 
@@ -47,7 +47,7 @@ Key discoveries from multi-project development are documented in:
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** — Comprehensive setup checklist with all pitfalls
 - **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** — Pipeline-specific error patterns
 
-### ⚠️ Critical Rule: Root Venv Must Include All Project Dependencies (March 2026)
+### ⚠️ Critical Rule: Root Venv Must Include All Project Dependencies
 
 If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/` directory**, every package listed in that `pyproject.toml#dependencies` must also appear in the **root** `pyproject.toml`. Analysis scripts (`02_run_analysis.py`) run under the root venv in this case.
 

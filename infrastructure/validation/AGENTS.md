@@ -1401,7 +1401,7 @@ def main():
 ```python
 from infrastructure.validation import validate_pdf_rendering
 
-report = validate_pdf_rendering(Path("output/pdf/manuscript.pdf"))
+report = validate_pdf_rendering(Path("output/{project_name}/pdf/{project_name}_combined.pdf"))
 # Returns: issues, text preview, document structure validation
 ```
 

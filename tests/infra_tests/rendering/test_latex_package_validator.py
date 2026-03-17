@@ -156,6 +156,7 @@ class TestValidatePreamblePackages:
     """Test validate_preamble_packages function using real execution."""
 
     @pytest.mark.skipif(not shutil.which("kpsewhich"), reason="kpsewhich not available")
+    @pytest.mark.timeout(60)
     def test_validate_preamble_non_strict(self):
         """Test preamble validation in non-strict mode using real execution."""
         # Use real validation
@@ -166,6 +167,7 @@ class TestValidatePreamblePackages:
         assert len(result.optional_packages) >= 0
 
     @pytest.mark.skipif(not shutil.which("kpsewhich"), reason="kpsewhich not available")
+    @pytest.mark.timeout(60)
     def test_validate_preamble_strict_mode(self):
         """Test preamble validation in strict mode using real execution."""
         # Use real validation - may or may not raise depending on package availability

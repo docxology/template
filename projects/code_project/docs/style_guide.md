@@ -10,12 +10,13 @@ The most critical style rule is the absolute prohibition of mocking (`unittest.m
 
 Project code should **never** implement its own logging, PDF rendering, or basic data validation validation.
 
-- Use `infrastructure.core.logging_utils.ProjectLogger` for logging.
+- `projects/code_project/src/` must not import `infrastructure.*`. `src/` is infrastructure-independent and may use stdlib logging (`logging.getLogger(__name__)`).
+- Use `infrastructure.core.logging_utils` in `projects/code_project/scripts/` (and in the pipeline) for structured logging configuration.
 - Use `infrastructure.core.progress.PipelineProgress` for CLI progress updates.
 
 ## 3. The Thin Orchestrator Pattern
 
-Files in `scripts/` must be "thin orchestrators". They must not contain any `for` loops computing math, or implementation-heavy logic. They simply connect `src/` to `infrastructure/`.
+Files in `scripts/` must be "thin orchestrators": they may run experiment loops and generate plots, but must not re-implement algorithms that belong in `projects/code_project/src/` (e.g., the gradient descent update rule). Scripts should compose `src/` functions and route cross-cutting concerns through `infrastructure/`.
 
 ## 4. Manuscript "Show, Not Tell"
 

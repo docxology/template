@@ -159,6 +159,7 @@ class LLMClient:
         model_name = model or self.config.default_model
 
         if reset_context:
+            logger.info("Resetting context", extra={"model": model_name})
             self.context.clear()
             self._system_prompt_injected = False
             if self.config.auto_inject_system_prompt:
@@ -402,7 +403,7 @@ class LLMClient:
         prompt = sanitize_llm_input(prompt)
         model_name = model or self.config.default_model
 
-        logger.debug("Starting structured query (JSON) model=%s", model_name)
+        logger.info("Starting structured query", extra={"model": model_name})
 
         # Configure for JSON output
         struct_options = options or GenerationOptions()
@@ -447,7 +448,16 @@ class LLMClient:
             return value
 
         try:
-            return _parse_dict(response_text)
+            parsed = _parse_dict(response_text)
+            logger.info(
+                "Structured query completed",
+                extra={
+                    "model": model_name,
+                    "generation_time_seconds": generation_time,
+                    "response_length": len(response_text),
+                },
+            )
+            return parsed
         except (json.JSONDecodeError, ValueError) as e:
             # Try to extract JSON if wrapped in surrounding text
             if "{" in response_text and "}" in response_text:
@@ -461,6 +471,14 @@ class LLMClient:
                             "model": model_name,
                             "extracted_length": end - start,
                             "original_length": len(response_text),
+                        },
+                    )
+                    logger.info(
+                        "Structured query completed",
+                        extra={
+                            "model": model_name,
+                            "generation_time_seconds": generation_time,
+                            "response_length": len(response_text),
                         },
                     )
                     return parsed

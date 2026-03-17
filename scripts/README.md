@@ -59,7 +59,7 @@ Core Pipeline Scripts:
   6. LLM Translations (requires Ollama)
 
 Orchestration:
-  8. Run Full Pipeline (10 stages: [1/10] to [10/10])
+  8. Run Full Pipeline (9 stages: [1/9] to [9/9], clean shown as [0/9])
 ============================================================
 ```
 
@@ -67,7 +67,7 @@ Orchestration:
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Extended pipeline (10 stages displayed as [1/10] to [10/10], includes LLM)
+./run.sh --pipeline          # Pipeline (9 stages displayed as [1/9] to [9/9], clean shown as [0/9]; includes optional LLM stages)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests       # Run infrastructure tests only
 ./run.sh --project-tests     # Run project tests only
@@ -101,7 +101,7 @@ uv run python scripts/execute_multi_project.py --no-llm
 ```mermaid
 flowchart TD
     subgraph EntryPoints["Entry Points"]
-        RUNSH[./run.sh<br/>Interactive Menu<br/>10-stage pipeline]
+        RUNSH[./run.sh<br/>Interactive Menu<br/>Pipeline]
         PYTHON[execute_pipeline.py<br/>Programmatic<br/>Core pipeline]
         MULTI[execute_multi_project.py<br/>Multi-project<br/>Cross-project execution]
     end
@@ -176,7 +176,7 @@ Additional stages available in the interactive orchestrator:
 
 **Stage Numbering:**
 
-- `./run.sh`: 10 stages displayed as [1/10] to [10/10] in logs (Clean Output Directories, Environment Setup, Infrastructure Tests, Project Tests, Project Analysis, PDF Rendering, Output Validation, Copy Outputs, LLM Scientific Review, LLM Translations)
+- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs, with clean shown as [0/9]
 - `scripts/execute_pipeline.py`: core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 ## Running Individual Stages
@@ -325,7 +325,7 @@ cat projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json | uv ru
 rm -f projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json
 ```
 
-See [`docs/operational/checkpoint-resume.md`](../docs/operational/checkpoint-resume.md) for documentation.
+See [`docs/operational/config/checkpoint-resume.md`](../docs/operational/config/checkpoint-resume.md) for documentation.
 
 ## Project-Specific Scripts
 

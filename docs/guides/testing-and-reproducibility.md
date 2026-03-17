@@ -26,7 +26,7 @@ By the end of this guide, you'll be able to:
 - Understanding of software testing concepts
 - Familiarity with pytest framework
 
-**Development Standards:** See [Testing Standards](../../.cursorrules/testing_standards.md) and [Type Hints Standards](../../.cursorrules/type_hints_standards.md) for TDD and type safety guidelines.
+**Development Standards:** See [Testing Standards](../rules/testing_standards.md) and [Type Hints Standards](../rules/type_hints_standards.md) for TDD and type safety guidelines.
 
 ## 📖 Table of Contents
 
@@ -629,7 +629,7 @@ with open('output/environment.json', 'w') as f:
 → Read **[Architecture Guide](../core/architecture.md)**
 
 **See build system details**
-→ Read **[Build System](../operational/build/build-system.md)**
+→ Read **[Pipeline Orchestration](../RUN_GUIDE.md)**
 
 **Review testing standards**
 

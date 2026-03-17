@@ -55,9 +55,12 @@ def function1(param1: float, param2: int) -> float:
         >>> print(result)
         3.0
     """
-    # Type checking is enforced by the function signature; callers must pass correct types.
-    result = param1 * param2 + 1.0
-    return result
+    try:
+        # Type checking is enforced by the function signature; callers must pass correct types.
+        result = param1 * param2 + 1.0
+        return result
+    except (OverflowError, FloatingPointError) as e:
+        raise ValueError(f"Numerical failure in function1: {{e}}") from e
 
 def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], float]:
     """[Brief description of function2].
@@ -75,19 +78,21 @@ def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], f
     Raises:
         ValueError: If data is empty or invalid
     """
-    if not data:
-        raise ValueError("Input data cannot be empty")
+    try:
+        if not data:
+            raise ValueError("Input data cannot be empty")
 
-    # list[float] type annotation enforces element types; no runtime isinstance check needed.
+        # list[float] type annotation enforces element types; no runtime isinstance check needed.
+        filtered_data = [x for x in data if x > threshold]
 
-    filtered_data = [x for x in data if x > threshold]
+        if filtered_data:
+            summary = sum(filtered_data) / len(filtered_data)
+        else:
+            summary = 0.0
 
-    if filtered_data:
-        summary = sum(filtered_data) / len(filtered_data)
-    else:
-        summary = 0.0
-
-    return filtered_data, summary
+        return filtered_data, summary
+    except Exception as e:
+        raise ValueError(f"Failed to process data in function2: {{e}}") from e
 '''
     return template
 
@@ -271,28 +276,32 @@ def generate_workflow_report(results: dict[str, Any], reproducibility_report: An
 
 def main():
     """Main workflow execution function."""
-    setup_workflow_environment()
+    try:
+        setup_workflow_environment()
 
-    # Generate reproducibility report
-    reproducibility_report = generate_reproducibility_report(Path("output"))
+        # Generate reproducibility report
+        reproducibility_report = generate_reproducibility_report(Path("output"))
 
-    # Run main workflow
-    results = run_data_processing()
+        # Run main workflow
+        results = run_data_processing()
 
-    # Validate results
-    if not validate_workflow_results(results):
-        logger.error("Workflow validation failed")
-        raise SystemExit(1)
+        # Validate results
+        if not validate_workflow_results(results):
+            logger.error("Workflow validation failed")
+            sys.exit(1)
 
-    # Generate final report
-    report_content = generate_workflow_report(results, reproducibility_report)
-    with open('output/workflow_report.md', 'w') as f:
-        f.write(report_content)
+        # Generate final report
+        report_content = generate_workflow_report(results, reproducibility_report)
+        with open('output/workflow_report.md', 'w') as f:
+            f.write(report_content)
 
-    # Save reproducibility information
-    save_reproducibility_report(reproducibility_report, Path("output/reproducibility_report.json"))
+        # Save reproducibility information
+        save_reproducibility_report(reproducibility_report, Path("output/reproducibility_report.json"))
 
-    logger.info("Workflow completed successfully")
+        logger.info("Workflow completed successfully")
+    except Exception as e:
+        logger.error(f"Workflow failed: {{e}}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

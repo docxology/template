@@ -7,6 +7,8 @@ Follows No Mocks Policy - all tests use real data and real execution.
 import subprocess
 from pathlib import Path
 
+import pytest
+
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
@@ -122,6 +124,7 @@ class TestBeamerRendering:
             # Expected to fail if dependencies not available
             pass
 
+    @pytest.mark.timeout(90)
     def test_render_beamer_with_resource_paths(self, tmp_path):
         """Test beamer rendering with manuscript and figures directories using real execution."""
         config = RenderingConfig(output_dir=tmp_path)
@@ -137,6 +140,7 @@ class TestBeamerRendering:
 
         # Use real execution
         try:
+            # XeLaTeX compilation can exceed the repo-default pytest timeout on some machines.
             result = renderer._render_beamer_with_paths(source, output, manuscript_dir, figures_dir)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)

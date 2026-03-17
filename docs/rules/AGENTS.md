@@ -67,7 +67,7 @@ The template provides **two pipeline orchestrators** with different scope:
 **Interactive Menu (`./run.sh`)**
 
 - **Use for**: Full pipeline with optional LLM stages
-- **Stages**: 1-10 (displayed as [1/10] to [10/10])
+- **Stages**: 1-9 (displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 - **Features**: Interactive menu, research templates, LLM reviews, translations
 - **When to use**: Full builds, LLM features needed
 
@@ -197,7 +197,7 @@ infrastructure/<module>/
 
 **Related Documentation:**
 
-- [../infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - Module organization
+- [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - Module organization
 - [infrastructure_modules.md](infrastructure_modules.md) - Development standards
 - [error_handling.md](error_handling.md) - Exception patterns
 - [python_logging.md](python_logging.md) - Logging standards
@@ -229,8 +229,8 @@ As shown in \eqref{eq:objective}, the objective function...
 **Related Documentation:**
 
 - [manuscript_style.md](manuscript_style.md) - manuscript formatting guide
-- [../projects/act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) - Manuscript content
-- [../usage/markdown-template-guide.md](../docs/usage/markdown-template-guide.md) - Markdown guide
+- [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) - Example manuscript (archived project)
+- [docs/usage/markdown-template-guide.md](../usage/markdown-template-guide.md) - Markdown guide
 
 ## Testing Standards
 
@@ -431,9 +431,9 @@ template/
 ### Internal Documentation
 
 - [Root AGENTS.md](../AGENTS.md) - System overview
-- [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Infrastructure layer
-- [Projects AGENTS.md](../projects/AGENTS.md) - Projects layer
-- [Documentation Hub](../docs/AGENTS.md) - guides
+- [Infrastructure AGENTS.md](../../infrastructure/AGENTS.md) - Infrastructure layer
+- [Projects AGENTS.md](../../projects/AGENTS.md) - Projects layer
+- [Documentation Hub](../AGENTS.md) - docs hub guide
 
 ### External Resources
 
@@ -472,38 +472,38 @@ The .cursorrules standards align with and support the main documentation:
 |---|---|---|
 | System Design | [AGENTS.md](AGENTS.md) | [Root AGENTS.md](../AGENTS.md) |
 | Documentation Structure | [folder_structure.md](folder_structure.md) | [Root AGENTS.md](../AGENTS.md) |
-| Architecture | [AGENTS.md](AGENTS.md) | [docs/architecture.md](../docs/core/architecture.md) |
-| Infrastructure | [infrastructure_modules.md](infrastructure_modules.md) | [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
-| Error Handling | [error_handling.md](error_handling.md) | [docs/troubleshooting-guide.md](../docs/operational/troubleshooting-guide.md) |
-| Security | [security.md](security.md) | [docs/security.md](../docs/development/security.md) |
-| Logging | [python_logging.md](python_logging.md) | [docs/logging-guide.md](../docs/operational/logging-guide.md) |
-| Testing | [testing_standards.md](testing_standards.md) | [tests/AGENTS.md](../tests/AGENTS.md) |
-| Code Style | [code_style.md](code_style.md) | [docs/best-practices.md](../docs/best-practices/best-practices.md) |
-| Git Workflow | [git_workflow.md](git_workflow.md) | [docs/version-control.md](../docs/best-practices/version-control.md) |
-| API Design | [api_design.md](api_design.md) | [docs/architecture.md](../docs/core/architecture.md) |
-| Reporting | [reporting.md](reporting.md) | [docs/modules-guide.md](../docs/modules/modules-guide.md) |
-| Documentation | [documentation_standards.md](documentation_standards.md) | [docs/workflow.md](../docs/core/workflow.md) |
-| Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/architecture.md](../docs/core/architecture.md) |
-| LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
-| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) |
-| Refactoring | [refactoring.md](refactoring.md) | [docs/best-practices.md](../docs/best-practices/best-practices.md) |
+| Architecture | [AGENTS.md](AGENTS.md) | [docs/core/architecture.md](../core/architecture.md) |
+| Infrastructure | [infrastructure_modules.md](infrastructure_modules.md) | [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) |
+| Error Handling | [error_handling.md](error_handling.md) | [docs/operational/error-handling-guide.md](../operational/error-handling-guide.md) |
+| Security | [security.md](security.md) | [docs/development/security.md](../development/security.md) |
+| Logging | [python_logging.md](python_logging.md) | [docs/operational/logging/README.md](../operational/logging/README.md) |
+| Testing | [testing_standards.md](testing_standards.md) | [tests/AGENTS.md](../../tests/AGENTS.md) |
+| Code Style | [code_style.md](code_style.md) | [docs/best-practices/best-practices.md](../best-practices/best-practices.md) |
+| Git Workflow | [git_workflow.md](git_workflow.md) | [docs/best-practices/version-control.md](../best-practices/version-control.md) |
+| API Design | [api_design.md](api_design.md) | [docs/core/architecture.md](../core/architecture.md) |
+| Reporting | [reporting.md](reporting.md) | [docs/modules/modules-guide.md](../modules/modules-guide.md) |
+| Documentation | [documentation_standards.md](documentation_standards.md) | [docs/core/workflow.md](../core/workflow.md) |
+| Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/core/architecture.md](../core/architecture.md) |
+| LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../../infrastructure/llm/AGENTS.md) |
+| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) |
+| Refactoring | [refactoring.md](refactoring.md) | [docs/best-practices/best-practices.md](../best-practices/best-practices.md) |
 
 ## Cross-Reference Guide
 
 **For Architecture Decisions:**
 → Check [AGENTS.md](AGENTS.md) for decision criteria  
-→ Read [../core/architecture.md](../docs/core/architecture.md) for full architectural overview  
-→ Consult [../architecture/thin-orchestrator-summary.md](../docs/architecture/thin-orchestrator-summary.md) for pattern details
+→ Read [docs/core/architecture.md](../core/architecture.md) for full architectural overview  
+→ Consult [docs/architecture/thin-orchestrator-summary.md](../architecture/thin-orchestrator-summary.md) for pattern details
 
 **For Infrastructure Development:**
 → Check [infrastructure_modules.md](infrastructure_modules.md) for standards  
-→ Study [../infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module organization  
-→ Review [../infrastructure/README.md](../infrastructure/README.md) for quick patterns
+→ Study [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) for module organization  
+→ Review [infrastructure/README.md](../../infrastructure/README.md) for quick patterns
 
 **For Code Quality:**
 → Check [error_handling.md](error_handling.md) and [python_logging.md](python_logging.md)  
-→ Read [../best-practices/best-practices.md](../docs/best-practices/best-practices.md) for practices  
-→ See [../operational/error-handling-guide.md](../docs/operational/error-handling-guide.md) for detailed patterns
+→ Read [docs/best-practices/best-practices.md](../best-practices/best-practices.md) for practices  
+→ See [docs/operational/error-handling-guide.md](../operational/error-handling-guide.md) for detailed patterns
 
 ## Quick Navigation Guide
 
@@ -522,10 +522,10 @@ The .cursorrules standards align with and support the main documentation:
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
-| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [act_inf_metaanalysis/manuscript/](../projects/act_inf_metaanalysis/manuscript/) for manuscript structure |
+| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
-| Generating reports | [reporting.md](reporting.md) | [docs/modules-guide.md](../docs/modules/modules-guide.md) for module details |
+| Generating reports | [reporting.md](reporting.md) | [docs/modules/modules-guide.md](../modules/modules-guide.md) for module details |
 
 ### By File Size & Detail Level
 
@@ -583,14 +583,14 @@ When creating a new .cursorrules file:
 
 - [`README.md`](README.md) - Quick reference guide
 - [`../AGENTS.md`](../AGENTS.md) - system documentation
-- [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure layer documentation
-- [`../projects/AGENTS.md`](../projects/AGENTS.md) - Projects layer documentation
+- [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure layer documentation
+- [`projects/AGENTS.md`](../../projects/AGENTS.md) - Projects layer documentation
 
 **Related Documentation:**
 
-- [`../docs/core/architecture.md`](../docs/core/architecture.md) - System architecture overview
-- [`../docs/core/workflow.md`](../docs/core/workflow.md) - Development workflow
-- [`../tests/AGENTS.md`](../tests/AGENTS.md) - Testing philosophy and guide
+- [`docs/core/architecture.md`](../core/architecture.md) - System architecture overview
+- [`docs/core/workflow.md`](../core/workflow.md) - Development workflow
+- [`tests/AGENTS.md`](../../tests/AGENTS.md) - Testing philosophy and guide
 
 ---
 

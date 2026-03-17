@@ -7,13 +7,12 @@ infrastructure.scientific for stability analysis and benchmarking.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
 from typing import Callable
 
 import numpy as np
 
-from infrastructure.core.logging_utils import get_logger
-
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 @dataclass

@@ -24,13 +24,13 @@ The research project template includes a reporting system that generates detaile
 **Usage**:
 ```bash
 # View JSON report
-cat projects/projects/{name}/output/reports/pipeline_report.json | jq
+cat projects/{name}/output/reports/pipeline_report.json | jq
 
 # Open HTML report in browser
-open projects/projects/{name}/output/reports/pipeline_report.html
+open projects/{name}/output/reports/pipeline_report.html
 
 # Read Markdown report
-cat projects/projects/{name}/output/reports/pipeline_report.md
+cat projects/{name}/output/reports/pipeline_report.md
 ```
 
 ### 2. Validation Reports
@@ -66,10 +66,10 @@ cat projects/projects/{name}/output/reports/pipeline_report.md
 **Usage**:
 ```bash
 # View log summary
-cat projects/projects/{name}/output/reports/log_summary.txt
+cat projects/{name}/output/reports/log_summary.txt
 
 # Quick check for errors
-grep -i error projects/projects/{name}/output/reports/log_summary.txt
+grep -i error projects/{name}/output/reports/log_summary.txt
 ```
 
 ### 4. Output Statistics
@@ -89,10 +89,10 @@ grep -i error projects/projects/{name}/output/reports/log_summary.txt
 **Usage**:
 ```bash
 # View text report
-cat projects/projects/{name}/output/reports/output_statistics.txt
+cat projects/{name}/output/reports/output_statistics.txt
 
 # Parse JSON for programmatic access
-uv run python -c "import json; print(json.load(open('projects/projects/{name}/output/reports/output_statistics.json')))"
+uv run python -c "import json; print(json.load(open('projects/{name}/output/reports/output_statistics.json')))"
 ```
 
 ### 5. Multi-Project Summary
@@ -241,7 +241,7 @@ Reports can be integrated into CI/CD pipelines:
 
 ```bash
 # Check if validation passed
-if jq -e '.summary.all_passed == true' projects/projects/{name}/output/reports/validation_report.json > /dev/null; then
+if jq -e '.summary.all_passed == true' projects/{name}/output/reports/validation_report.json > /dev/null; then
     echo "Validation passed"
 else
     echo "Validation failed"
@@ -249,7 +249,7 @@ else
 fi
 
 # Check if pipeline succeeded
-if jq -e 'all(.stages[]; .status == "passed")' projects/projects/{name}/output/reports/pipeline_report.json > /dev/null; then
+if jq -e 'all(.stages[]; .status == "passed")' projects/{name}/output/reports/pipeline_report.json > /dev/null; then
     echo "Pipeline succeeded"
 else
     echo "Pipeline failed"
@@ -271,10 +271,10 @@ fi
 **Solutions**:
 ```bash
 # Check pipeline logs
-cat projects/projects/{name}/output/logs/pipeline.log | grep -i report
+cat projects/{name}/output/logs/pipeline.log | grep -i report
 
 # Verify write permissions
-touch projects/projects/{name}/output/reports/test.txt && rm projects/projects/{name}/output/reports/test.txt
+touch projects/{name}/output/reports/test.txt && rm projects/{name}/output/reports/test.txt
 
 # Reinstall dependencies
 uv sync
@@ -295,7 +295,7 @@ uv sync
 uv run python scripts/04_validate_output.py --project project
 
 # Check for errors in logs
-grep -i "failed to generate report" projects/projects/{name}/output/logs/pipeline.log
+grep -i "failed to generate report" projects/{name}/output/logs/pipeline.log
 ```
 
 ### Report Parsing Errors
@@ -310,7 +310,7 @@ grep -i "failed to generate report" projects/projects/{name}/output/logs/pipelin
 **Solutions**:
 ```bash
 # Validate JSON syntax
-jq . projects/projects/{name}/output/reports/pipeline_report.json
+jq . projects/{name}/output/reports/pipeline_report.json
 
 # Regenerate report
 uv run python scripts/execute_pipeline.py --project project --stage validate

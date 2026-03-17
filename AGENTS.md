@@ -24,7 +24,7 @@ This document provides documentation for the Research Project Template system, e
 #### Layer 1: Infrastructure (Generic - Reusable)
 
 - `infrastructure/` - Generic build/validation tools (reusable across projects)
-- `scripts/` - Entry point orchestrators (two pipeline options: 8-stage core or 10-stage extended)
+- `scripts/` - Entry point orchestrators (core pipeline or full pipeline via `./run.sh`)
 - `tests/` - Infrastructure and integration tests
 
 #### Layer 2: Projects (Project-Specific - Customizable)
@@ -179,7 +179,8 @@ Each directory contains documentation for easy navigation:
 | Directory | AGENTS.md | README.md | Purpose |
 | --------- | --------- | --------- | ------- |
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
-| [`projects/cognitive_case_diagrams/`](projects/cognitive_case_diagrams/) | [AGENTS.md](projects/cognitive_case_diagrams/AGENTS.md) | — | Cognitive case diagrams (categorical linguistics) |
+| [`projects/biology_textbook/`](projects/biology_textbook/) | [AGENTS.md](projects/biology_textbook/AGENTS.md) | [README.md](projects/biology_textbook/README.md) | Biology textbook exemplar |
+| [`projects/project/`](projects/project/) | — | — | Minimal project scaffold |
 
 ### Documentation Directories
 
@@ -409,7 +410,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: Extended pipeline (10 stages displayed as [1/10] to [10/10]) with optional LLM review
+# Non-interactive: Pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9]) with optional LLM review
 ./run.sh --pipeline
 ```
 
@@ -417,7 +418,7 @@ The template provides **three entry points** for pipeline execution:
 
 A **two-stage wrapper** around the standard pipeline that adds steganographic PDF hardening. It provides an interactive text menu identical to `run.sh`, but with options optimized for security, steganographic post-processing, and multi-project execution.
 
-**Stage 1:** Runs `run.sh --pipeline` (full 10-stage manuscript pipeline) or core pipeline.
+**Stage 1:** Runs `run.sh --pipeline` (pipeline stages shown as [1/9]..[9/9], clean shown as [0/9]) or the core pipeline.
 **Stage 2:** `infrastructure/steganography.SteganographyProcessor` post-processes every PDF,
 producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
 Original PDFs are always left untouched.
@@ -471,24 +472,24 @@ steganography:
 
 #### Entry Point Comparison
 
-- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages), includes optional LLM review stages. Stages are displayed as [1/10] to [10/10] in logs.
-- **`./run.sh --pipeline`**: 10 stages, includes optional LLM review stages. Stages are displayed as [1/10] to [10/10] in logs.
+- **`./run.sh`**: Main entry point - Interactive menu or pipeline run. Stages are displayed as [1/9] to [9/9], with an initial clean step shown as [0/9].
+- **`./run.sh --pipeline`**: Non-interactive pipeline execution; same stage display as above. Optional LLM stages run when enabled/configured.
 - **`python3 scripts/execute_pipeline.py --core-only`**: Core pipeline only (no LLM).
 
 ### Pipeline Stages
 
-**Full Pipeline Stages** (displayed as [1/10] to [10/10] in logs):
+**Full Pipeline Stages** (displayed as [1/9] to [9/9] in logs, with an initial clean step shown as [0/9]):
 
-1. **Clean Output Directories** - Clean working and final output directories
-2. **Environment Setup** - Verify system requirements and dependencies
-3. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
-4. **Project Tests** - Run project test suite (90% coverage minimum)
-5. **Project Analysis** - Execute `projects/{name}/scripts/` analysis workflows
-6. **PDF Rendering** - Generate manuscript PDFs and figures
-7. **Output Validation** - Validate all generated outputs
-8. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
-9. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
-10. **Copy Outputs** - Copy final deliverables to root `output/` directory
+- **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
+1. **Environment Setup** - Verify system requirements and dependencies
+2. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
+3. **Project Tests** - Run project test suite (90% coverage minimum)
+4. **Project Analysis** - Execute `projects/{name}/scripts/` analysis workflows
+5. **PDF Rendering** - Generate manuscript PDFs and figures
+6. **Output Validation** - Validate all generated outputs
+7. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
+8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
+9. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
 **Infrastructure Tests Behavior:**
 
@@ -501,7 +502,7 @@ steganography:
 
 **Stage Numbering:**
 
-- `./run.sh`: 10 stages displayed as [1/10] to [10/10] in progress logs
+- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in progress logs, with clean shown as [0/9]
 - `scripts/execute_pipeline.py`: Core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 ### Manual Execution Options
@@ -1198,7 +1199,7 @@ Key log files for debugging:
 - **Performance Monitoring**: Automatic bottleneck detection in pipeline summary
 - **Resource Tracking**: Memory and CPU usage reporting (when enabled)
 
-See [`docs/operational/performance-optimization.md`](docs/operational/performance-optimization.md) for optimization guide.
+See [`docs/operational/config/performance-optimization.md`](docs/operational/config/performance-optimization.md) for optimization guide.
 
 ### Checkpoint and Resume
 
@@ -1221,7 +1222,7 @@ python3 scripts/execute_pipeline.py --project {name} --core-only
 - Graceful handling of corrupted checkpoints
 - Preserves pipeline start time and stage durations
 
-See [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume.md) for documentation.
+See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/checkpoint-resume.md) for documentation.
 
 ## 📚 References
 
@@ -1315,7 +1316,7 @@ See [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume
 - ✅ Zero mock methods - all tests use data and HTTP calls
 - ✅ All .cursorrules standards implemented
 - ✅ compliance with thin orchestrator pattern
-- ✅ Production-ready build pipeline (8-stage core, 10-stage extended)
+- ✅ Production-ready build pipeline (core pipeline + full pipeline with optional LLM stages)
 - ✅ Reproducible outputs (deterministic with fixed seeds)
 - ✅ Graceful degradation for optional features
 - ✅ Multi-project support (projects/{name}/ structure)

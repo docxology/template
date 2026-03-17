@@ -7,6 +7,8 @@ Follows No Mocks Policy - all tests use real data and real execution.
 import subprocess
 from pathlib import Path
 
+import pytest
+
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import pdf_renderer
@@ -77,6 +79,7 @@ class TestPDFRendererClass:
 class TestRenderMarkdown:
     """Test render_markdown method using real execution."""
 
+    @pytest.mark.timeout(90)
     def test_render_markdown_success(self, tmp_path):
         """Test successful markdown rendering using real pandoc."""
         config = RenderingConfig(
@@ -103,6 +106,7 @@ class TestRenderMarkdown:
             # Expected to fail if pandoc not available
             pass
 
+    @pytest.mark.timeout(90)
     def test_render_markdown_failure(self, tmp_path):
         """Test markdown rendering failure handling with real execution."""
         config = RenderingConfig(output_dir=tmp_path, pdf_dir=tmp_path / "pdf")
@@ -121,6 +125,7 @@ class TestRenderMarkdown:
             # Expected to fail in some cases
             pass
 
+    @pytest.mark.timeout(90)
     def test_render_markdown_custom_output_name(self, tmp_path):
         """Test markdown rendering with custom output name using real execution."""
         config = RenderingConfig(output_dir=tmp_path, pdf_dir=tmp_path / "pdf")
@@ -169,6 +174,7 @@ class TestBibliographyProcessing:
 class TestTitlePageInsertion:
     """Test title page insertion using real execution."""
 
+    @pytest.mark.timeout(90)
     def test_title_page_body_insertion(self, tmp_path):
         """Test title page body insertion logic with real execution."""
         config = RenderingConfig(

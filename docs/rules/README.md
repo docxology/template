@@ -248,6 +248,6 @@ Before commit:
 
 - See [AGENTS.md](AGENTS.md) for documentation and navigation guide
 - See [Quick Navigation Guide](AGENTS.md#quick-navigation-guide) for activity-based guidance
-- See [../AGENTS.md](../docs/AGENTS.md) for main project documentation
-- See [../core/how-to-use.md](../docs/core/how-to-use.md) for usage guide
-- See [../development/security.md](../docs/development/security.md) for security policy
+- See [docs/AGENTS.md](../AGENTS.md) for main project documentation
+- See [docs/core/how-to-use.md](../core/how-to-use.md) for usage guide
+- See [docs/development/security.md](../development/security.md) for security policy

@@ -733,7 +733,7 @@ pytest tests/infra_tests/ -m "not requires_latex"
    pytest tests/infra_tests/
    ```
 
-See [docs/testing-with-credentials.md](../../docs/development/testing-with-credentials.md) for detailed setup.
+See [docs/development/testing/testing-with-credentials.md](../../docs/development/testing/testing-with-credentials.md) for detailed setup.
 
 ### Test Cleanup
 
@@ -1015,5 +1015,5 @@ pytest tests/infra_tests/ --durations=10
 
 - [`README.md`](README.md) - Quick reference guide
 - [`../AGENTS.md`](../AGENTS.md) - Test suite documentation
-- [`../../docs/development/testing-guide.md`](../../docs/development/testing-guide.md) - Testing best practices
+- [`../../docs/development/testing/testing-guide.md`](../../docs/development/testing/testing-guide.md) - Testing best practices
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure module overview

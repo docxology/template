@@ -52,15 +52,13 @@ The Core module provides fundamental foundation utilities used across the entire
 - Transient failure handling
 - Retryable operation wrappers
 
-**performance.py**
-- Performance monitoring and resource tracking
-- System resource queries
-- Performance metrics collection
+**stage_monitor.py**
+- Stage-level performance monitoring and resource tracking
+- Timing, memory, CPU, and IO metrics (psutil optional)
 
-**performance_monitor.py**
-- Performance monitoring utilities
-- Resource usage tracking
-- System metrics collection
+**function_profiler.py**
+- Function-level profiling utilities
+- Decorators/context managers for targeted profiling
 
 **security.py**
 - Security utilities and input sanitization
@@ -1131,7 +1129,7 @@ class RetryableOperation:
         """
 ```
 
-### performance.py
+### stage_monitor.py
 
 #### PerformanceMonitor (class)
 ```python
@@ -1614,7 +1612,7 @@ results = executor.execute_pipeline(resume=True)
 
 ### Multi-Project Orchestration
 ```python
-from infrastructure.core import MultiProjectOrchestrator
+from infrastructure.core.multi_project import MultiProjectOrchestrator
 
 # Execute multiple projects
 orchestrator = MultiProjectOrchestrator(
@@ -1625,8 +1623,6 @@ results = orchestrator.execute_all_projects(core_only=True)
 
 # Generate executive report
 reports = orchestrator.generate_executive_report(Path("output/executive"))
-```le not found or testing section missing
-    """
 ```
 
 ### health_check.py
@@ -1996,7 +1992,7 @@ def log_stage_with_eta(
     """
 ```
 
-### performance_monitor.py
+### function_profiler.py
 
 #### PerformanceMonitor (class)
 ```python
@@ -2585,7 +2581,7 @@ def retry(self, exception: Exception) -> None:
     """
 ```
 
-### performance.py
+### stage_monitor.py
 
 #### ResourceUsage (class)
 ```python
@@ -3525,9 +3521,9 @@ This module provides additional logging helper functions beyond those in `loggin
 
 This module provides progress logging utilities that integrate progress tracking with logging.
 
-### performance_monitor.py
+### function_profiler.py
 
-This module provides performance monitoring utilities, resource usage tracking, and system metrics collection. See `performance.py` for related functionality.
+This module provides function-level profiling utilities (cProfile/tracemalloc) and benchmarking helpers. See `stage_monitor.py` for stage-level resource monitoring.
 
 ### pipeline_summary.py
 
@@ -3589,9 +3585,9 @@ with log_timing("Algorithm execution", logger):
 ```python
 from infrastructure.core import load_config, get_config_as_dict, get_translation_languages, find_config_file
 
-config = load_config(Path("project/manuscript/config.yaml"))
-env_dict = get_config_as_dict(Path("."))  # Loads from project/manuscript/config.yaml
-config_path = find_config_file(Path("."))  # Returns project/manuscript/config.yaml if found
+config = load_config(Path("projects/{project_name}/manuscript/config.yaml"))
+env_dict = get_config_as_dict(Path("."))  # Loads from projects/{project_name}/manuscript/config.yaml
+config_path = find_config_file(Path("."))  # Returns projects/{project_name}/manuscript/config.yaml if found
 languages = get_translation_languages(Path("."))
 ```
 
@@ -3714,7 +3710,7 @@ for result in results:
 
 ### Multi-Project Orchestration
 ```python
-from infrastructure.core import MultiProjectOrchestrator, MultiProjectConfig
+from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.project.discovery import discover_projects
 
 projects = discover_projects(Path("."))
@@ -3774,7 +3770,7 @@ Core module is imported by all other infrastructure modules for:
 **Issue**: `load_config()` returns None or empty configuration.
 
 **Solutions**:
-- Verify `project/manuscript/config.yaml` exists and is valid YAML
+- Verify `projects/{project_name}/manuscript/config.yaml` exists and is valid YAML
 - Check file permissions (read access required)
 - Review YAML syntax for errors
 - Use `find_config_file()` to locate config file

@@ -152,7 +152,7 @@ uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov
 # Check coverage (must be 100%)
 coverage report
 
-# Make code changes in projects/code_projects/{name}/src/
+# Make code changes in projects/{name}/src/
 # Update corresponding tests
 # Update documentation if needed
 ```

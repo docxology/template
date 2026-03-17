@@ -125,7 +125,7 @@ falling back to the root `.venv`, then to system `python3`.
 
 ## 6. Running the Pipeline (Non-Interactive)
 
-### Full pipeline (all 10 stages including optional LLM review)
+### Full pipeline (9 stages with an initial clean step, including optional LLM review)
 
 ```bash
 ./run.sh --pipeline
@@ -242,7 +242,7 @@ options.
 
 ## 10. CI/CD Reference
 
-The canonical headless configuration is [`.github/workflows/ci.yml`](.github/workflows/ci.yml):
+The canonical headless configuration is [`.github/workflows/ci.yml`](../.github/workflows/ci.yml):
 
 ```yaml
 - uses: astral-sh/setup-uv@v7          # installs uv in CI
@@ -323,6 +323,6 @@ uv run scripts/00_setup_environment.py
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Full pipeline orchestration reference
 - [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
 - [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration
-- [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — CI reference
+- [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — CI reference
 - [`AGENTS.md`](AGENTS.md) — Complete system reference
-- [`docs/operational/troubleshooting/`](docs/operational/troubleshooting/) — Detailed troubleshooting
+- [`operational/troubleshooting/`](operational/troubleshooting/) — Detailed troubleshooting

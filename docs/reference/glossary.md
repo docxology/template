@@ -14,7 +14,7 @@
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: v2.0 (current system version)
 - **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code
-- **Build Pipeline**: 8-stage automated pipeline (00-07) or 10-stage extended pipeline (0-9)
+- **Build Pipeline**: Core pipeline (stage scripts `00`–`05`) or full pipeline (run via `./run.sh --pipeline`, shown as [1/9]..[9/9] with an initial clean step [0/9])
 
 ---
 
@@ -46,7 +46,7 @@ Automated sequence of operations that validates tests, runs scripts, generates d
 
 **Stages**: Tests → Scripts → Validation → Glossary → Individual PDFs → Combined PDF
 
-**See**: [build-system.md](../operational/build/build-system.md)
+**See**: [RUN_GUIDE.md](../RUN_GUIDE.md)
 
 ### Business Logic
 
@@ -188,7 +188,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**Location**: [`code_projects/{name}/manuscript/preamble.md`](../../projects/code_projects/{name}/manuscript/preamble.md)
+**Location**: `projects/{name}/manuscript/preamble.md`
 
 ## M
 
@@ -264,7 +264,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 **Time**: ~84 seconds for rebuild (without optional LLM review)
 
-**See**: [build-system.md](../operational/build/build-system.md)
+**See**: [RUN_GUIDE.md](../RUN_GUIDE.md)
 
 ### PDF Validation
 

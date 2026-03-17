@@ -10,10 +10,13 @@ The `infrastructure/project/` module provides project discovery, validation, and
 
 **Core Functions:**
 
-- `discover_projects(repo_root)` - Find all valid projects in `projects/` directory
+- `discover_projects(repo_root, projects_dir="projects")` - Find all valid projects in the active projects directory
 - `validate_project_structure(project_dir)` - Validate required directories exist
 - `get_project_metadata(project_dir)` - Extract configuration from pyproject.toml and config.yaml
-- `get_default_project(repo_root)` - Get the default template project
+
+**Internal helpers (not exported from `infrastructure.project`)**:
+
+- `get_default_project(repo_root, projects_dir="projects")` - Get the default template project if present
 
 **ProjectInfo Dataclass:**
 ```python
@@ -26,10 +29,15 @@ class ProjectInfo:
     has_scripts: bool      # Has scripts/ directory
     has_manuscript: bool   # Has manuscript/ directory
     metadata: dict         # Extracted metadata
+    program: str           # Parent program directory name ("" for standalone projects)
     
     @property
     def is_valid(self) -> bool:
         """Check if project has minimum required structure."""
+
+    @property
+    def qualified_name(self) -> str:
+        """Display name (name or program/name for nested projects)."""
 ```
 
 ## Project Structure Requirements
@@ -91,16 +99,19 @@ The infrastructure distinguishes between **active projects** and **archived proj
 ### Discovery Behavior
 
 ```python
-# discover_projects() only scans projects/ directory
-def discover_projects(repo_root: Path | str) -> list[ProjectInfo]:
-    """Discover all valid projects in projects/ directory.
+# discover_projects() scans the active projects directory (default: projects/)
+projects = discover_projects(repo_root)
 
-    This function intentionally excludes projects_archive/ directory.
-    Only projects in projects/ are discovered and executed by infrastructure.
-    """
-    projects_dir = repo_root / "projects"  # Only this directory is scanned
-    # projects_archive/ is intentionally excluded
+# Advanced: scan a different directory explicitly
+wip_projects = discover_projects(repo_root, projects_dir="projects_in_progress")
 ```
+
+### Nested Projects (“program directories”)
+
+`discover_projects()` supports nested layouts where a top-level directory is a **program**
+containing multiple projects. If a direct child of `projects/` is not itself a valid project,
+it will be scanned for valid subprojects and returned with `ProjectInfo.program` set and
+`ProjectInfo.qualified_name` formatted as `program/name`.
 
 ## Usage
 

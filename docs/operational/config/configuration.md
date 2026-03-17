@@ -2,7 +2,7 @@
 
 > **reference** for all configuration options and environment variables
 
-**Quick Reference:** [Troubleshooting Guide](../troubleshooting/) | [Performance Optimization](performance-optimization.md) | [Build System](../build/build-system.md)
+**Quick Reference:** [Troubleshooting Guide](../troubleshooting/) | [Performance Optimization](performance-optimization.md) | [Pipeline Orchestration](../../RUN_GUIDE.md)
 
 This guide documents all configuration options available in the Research Project Template, including environment variables, configuration files, and runtime settings.
 
@@ -236,7 +236,7 @@ uv run python -c "from infrastructure.core.config_loader import load_config; pri
 ### See Also
 
 - [Troubleshooting Guide](../troubleshooting/) - Common issues and solutions
-- [Build System](../build/build-system.md) - Build configuration
+- [Build System](../../RUN_GUIDE.md) - Build configuration
 - [Performance Optimization](performance-optimization.md) - Performance tuning
 
 

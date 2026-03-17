@@ -27,13 +27,16 @@ for project in projects:
 from infrastructure.project import validate_project_structure
 
 # Validate that a project has all required directories
-is_valid = validate_project_structure(project_path)
+is_valid, message = validate_project_structure(project_path)
 ```
 
 **Required directories:**
 
 - `src/` — Project source code
 - `tests/` — Test suite
+
+**Optional (recommended) directories:**
+
 - `scripts/` — Analysis scripts (thin orchestrators)
 - `manuscript/` — Markdown manuscript sections
 
@@ -42,9 +45,9 @@ is_valid = validate_project_structure(project_path)
 ```python
 from infrastructure.project import get_project_metadata
 
-# Extract project metadata from config.yaml
+# Extract project metadata from pyproject.toml and/or manuscript/config.yaml
 metadata = get_project_metadata(project_path)
-print(metadata.title, metadata.version, metadata.authors)
+print(metadata.get("title"), metadata["version"], metadata["authors"])
 ```
 
 ## Active vs Archived Projects
@@ -66,7 +69,7 @@ Multi-project orchestration lives in `infrastructure.core`, not this module:
 
 ```python
 from infrastructure.project import discover_projects
-from infrastructure.core import MultiProjectOrchestrator, MultiProjectConfig
+from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 
 # Discover and run all projects
 projects = discover_projects(repo_root)

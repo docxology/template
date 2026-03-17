@@ -61,10 +61,6 @@ graph TD
     PIPELINE --> REVIEW
     PROJECTS --> TEMPLATES
 
-    classDef module fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef flow fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef integration fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class LLMModule module
     class DataFlow flow
     class Integration integration

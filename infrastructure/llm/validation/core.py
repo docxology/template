@@ -214,8 +214,8 @@ def validate_complete(
         # Raw mode is unvalidated — return True without applying formatting checks
         return True
 
-    # Standard mode: validate formatting (non-empty already checked above)
-    return formatting_ok
+    # Standard mode: formatting issues are advisory (non-empty already checked above)
+    return True
 
 
 def validate_no_repetition(

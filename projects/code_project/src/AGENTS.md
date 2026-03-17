@@ -33,12 +33,12 @@ This module uses standard scientific Python libraries:
 
 ## Infrastructure Integration
 
-This module integrates seamlessly with the repository's infrastructure modules for analysis, logging, and validation.
+`src/` code is **infrastructure-independent**: it must not import `infrastructure.*`. Any coupling to infrastructure (logging configuration, benchmarking, stability analysis, validation, rendering) happens in `projects/code_project/scripts/` and the repository pipeline.
 
 ### Available Infrastructure Capabilities
 
 - **Scientific Analysis**: `infrastructure.scientific` - Numerical stability and performance benchmarking
-- **Logging**: `infrastructure.core.logging_utils` - Structured logging with context
+- **Logging**: `infrastructure.core.logging_utils` - Structured logging configuration used by scripts/pipeline (not by `src/`)
 - **Validation**: `infrastructure.validation` - Output integrity and quality checks
 - **Rendering**: `infrastructure.rendering` - Multi-format output generation
 - **Publishing**: `infrastructure.publishing` - Academic publishing workflows

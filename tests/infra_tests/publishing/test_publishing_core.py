@@ -1,4 +1,4 @@
-"""Tests for infrastructure/publishing/core.py.
+"""Tests for `infrastructure/publishing/package.py`.
 
 Tests create_publication_package and related functions with real temp files.
 No mocks — uses actual file I/O and real PublicationMetadata objects.

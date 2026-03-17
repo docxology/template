@@ -57,6 +57,13 @@ def benchmark_function(
         func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func))
     )
 
+    iterations = max(1, int(iterations))
+
+    # Small repeated trials reduce OS scheduling noise enough for unit tests to
+    # make coarse assertions (e.g., "same order of magnitude") without requiring
+    # a dedicated benchmarking harness.
+    trials = 5
+
     for test_input in test_inputs:
         # Warm up
         for _ in range(10):
@@ -65,18 +72,19 @@ def benchmark_function(
             except (TypeError, ValueError, RuntimeError) as e:
                 logger.debug(f"Benchmark warm-up failed for {func_name}: {e}")
 
-        # Measure execution time
-        start_time = time.perf_counter()
+        per_iter_samples: list[float] = []
+        for _trial in range(trials):
+            start = time.perf_counter_ns()
+            for _ in range(iterations):
+                try:
+                    func(test_input)
+                except (TypeError, ValueError, RuntimeError) as e:
+                    logger.warning(f"Benchmark measurement failed for {func_name}: {e}")
+            end = time.perf_counter_ns()
+            per_iter_samples.append(((end - start) / 1e9) / iterations)
 
-        for _ in range(iterations):
-            try:
-                func(test_input)
-            except (TypeError, ValueError, RuntimeError) as e:
-                logger.warning(f"Benchmark measurement failed for {func_name}: {e}")
-
-        end_time = time.perf_counter()
-        avg_time = (end_time - start_time) / iterations
-        execution_times.append(avg_time)
+        # Median is more stable than mean when the system is noisy.
+        execution_times.append(float(np.median(per_iter_samples)))
 
         # Try to measure memory usage
         if psutil_available:
@@ -171,4 +179,13 @@ def format_benchmark_report(benchmark_results: list[BenchmarkResult]) -> str:
     report.append("")
 
     return "\n".join(report)
+
+
+def generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str:
+    """Generate a performance analysis report.
+
+    This is a convenience wrapper kept for backwards compatibility with earlier
+    scientific-dev APIs and tests.
+    """
+    return format_benchmark_report(benchmark_results)
 

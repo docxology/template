@@ -44,10 +44,6 @@ graph TD
     VALIDATION --> REPORTING
     REPORTING --> OUTPUT
 
-    classDef layers fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef modules fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef pipeline fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class ValidationLayers layers
     class ValidationModules modules
     class ValidationPipeline pipeline
@@ -58,9 +54,9 @@ graph TD
 ```mermaid
 flowchart LR
     subgraph Sources["Input Sources"]
-        PDF_FILES[output/pdf/*.pdf<br/>Rendered manuscripts]
-        MD_FILES[manuscript/*.md<br/>Research content]
-        OUTPUT_DIR[output/<br/>Generated artifacts]
+        PDF_FILES[output/{project_name}/pdf/*.pdf<br/>Rendered manuscripts]
+        MD_FILES[projects/{project_name}/manuscript/*.md<br/>Research content]
+        OUTPUT_DIR[output/{project_name}/<br/>Generated artifacts]
         CONFIG_FILES[config.yaml<br/>Project configuration]
     end
 
@@ -102,11 +98,6 @@ flowchart LR
     COMPLIANCE_VERIFY --> INTEGRITY_REPORT
     COMPLIANCE_VERIFY --> QUALITY_METRICS
     COMPLIANCE_VERIFY --> FIX_SUGGESTIONS
-
-    classDef sources fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef engine fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef analysis fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class Sources sources
     class ValidationEngine engine
@@ -156,10 +147,6 @@ flowchart TD
 
     O --> P --> Q --> R --> S
 
-    classDef build fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef quality fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef manual fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class BuildIntegration build
     class QualityGates quality
     class ManualValidation manual
@@ -180,7 +167,7 @@ manuscript_dir = find_manuscript_directory(Path("."))
 print(f"Found manuscript at: {manuscript_dir}")
 
 # Validate PDF after rendering
-pdf_report = validate_pdf_rendering(Path("output/pdf/project_combined.pdf"))
+pdf_report = validate_pdf_rendering(Path("output/{project_name}/pdf/{project_name}_combined.pdf"))
 if pdf_report['summary']['has_issues']:
     print(f"PDF has {pdf_report['issues']['total_issues']} issues")
     for issue_type, count in pdf_report['issues'].items():
@@ -366,10 +353,10 @@ print(f"Completeness gaps: {len(results.completeness_gaps)}")
 ### PDF Validation
 ```bash
 # Validate single PDF with verbose output
-python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf --verbose
+python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Validate with custom word preview length
-python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf --words 300
+python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --words 300
 
 # Validate PDF from different path
 python3 -m infrastructure.validation.cli pdf /path/to/document.pdf
@@ -378,13 +365,13 @@ python3 -m infrastructure.validation.cli pdf /path/to/document.pdf
 ### Markdown Validation
 ```bash
 # Validate markdown in manuscript directory
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
 
 # Strict validation (fail on any issue)
-python3 -m infrastructure.validation.cli markdown project/manuscript/ --strict
+python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/ --strict
 
 # Validate specific markdown file
-python3 -m infrastructure.validation.cli markdown project/manuscript/01_abstract.md
+python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/01_abstract.md
 ```
 
 ### Integrity Validation
@@ -393,7 +380,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/01_abstract
 python3 -m infrastructure.validation.cli integrity output/
 
 # Check specific subdirectories
-python3 -m infrastructure.validation.cli integrity output/pdf/
+python3 -m infrastructure.validation.cli integrity output/{project_name}/pdf/
 python3 -m infrastructure.validation.cli integrity output/data/
 
 # Generate integrity manifest for future comparison
@@ -561,7 +548,11 @@ pytest tests/integration/test_validation_pipeline.py -v
 - Verify PDF is not corrupted
 
 **Markdown References Not Found**:
-- Check reference syntax (`[text](target)`)
+- Check reference syntax (example):
+
+  ```text
+  [text](relative/path.md)
+  ```
 - Verify target files exist
 - Ensure proper relative paths
 
@@ -577,7 +568,7 @@ pytest tests/integration/test_validation_pipeline.py -v
 export LOG_LEVEL=0
 
 # Run validation with verbose output
-python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf --verbose
+python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Check validation logs
 tail -f logs/validation_*.log

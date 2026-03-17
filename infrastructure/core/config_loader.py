@@ -151,9 +151,6 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
 
     Returns:
         ManuscriptConfig dictionary, or None if file doesn't exist
-
-    Raises:
-        InvalidConfigurationError: If the file exists but contains invalid YAML
     """
     if not YAML_AVAILABLE:
         return None
@@ -174,9 +171,8 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
         logger.warning(f"Permission denied reading config {config_path}: {e}")
         return None
     except yaml.YAMLError as e:
-        raise InvalidConfigurationError(
-            f"YAML parse error in config {config_path}: {e}"
-        ) from e
+        logger.warning(f"YAML parse error in config {config_path}: {e}")
+        return None
 
 
 def format_author_details(authors: list[AuthorConfig], doi: str = "") -> str:

@@ -4,7 +4,7 @@
 
 The Research Project Template provides **two main entry points** for pipeline operations:
 
-1. **`run.sh`** - Main entry point for manuscript pipeline operations (10 stages displayed as [1/10] to [10/10])
+1. **`run.sh`** - Main entry point for manuscript pipeline operations (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 2. **`uv run scripts/execute_pipeline.py --core-only`** - Core 8-stage pipeline without LLM features
 
 ## 🏗️ Thin Orchestration Architecture
@@ -122,12 +122,15 @@ The template now supports **multiple research projects** in a single repository.
 
 ### Available Projects
 
-The template includes the following active projects:
+Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`), so this guide avoids hard-coding a canonical list.
 
-- **`code_project`** - Optimization research exemplar
-- **`cognitive_case_diagrams`** - Cognitive case system diagrams (categorical linguistics)
+In this repository right now, examples under `projects/` include:
 
-**Note:** Additional projects can be created following the template structure. Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
+- **`biology_textbook`**
+- **`code_project`**
+- **`project`**
+
+Archived and in-progress projects live outside `projects/` and are not executed by default.
 
 ### Multi-Project Commands
 
@@ -170,8 +173,8 @@ uv run scripts/execute_multi_project.py
     6  LLM Translations
 
 🚀 ORCHESTRATION
-    7  Core Pipeline              [+infra] [-LLM] Stages 1-7
-    8  Full Pipeline              [+infra] [+LLM] All 10 stages
+    7  Core Pipeline              [+infra] [-LLM] Stages [1/9]..[9/9] (no LLM stages)
+    8  Full Pipeline              [+infra] [+LLM] Stages [1/9]..[9/9] + optional LLM stages
     9  Full Pipeline (fast)       [-infra] [+LLM] Skip infra tests
 
 📚 MULTI-PROJECT
@@ -269,13 +272,13 @@ Executes the core pipeline (stages 0-6) without LLM features.
 
 #### Option 8: Run Full Pipeline
 
-Executes the 10-stage build pipeline (displayed as [1/10] to [10/10]):
+Executes the 9-stage pipeline (displayed as [1/9] to [9/9], with an initial clean step shown as [0/9]):
 
 - Includes all core stages plus LLM review and translations
 - manuscript generation with AI assistance
 - Automatic checkpointing and resume capability
 
-**Note**: The pipeline stages are displayed as [1/10] to [10/10] in progress logs. Clean Output Directories is stage 1.
+**Note**: The pipeline stages are displayed as [1/9] to [9/9] in progress logs. Clean Output Directories is displayed as a pre-step ([0/9]).
 
 #### Option 9: Run Full Pipeline (skip infrastructure tests)
 
@@ -288,7 +291,7 @@ Executes the full pipeline but skips infrastructure tests.
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Run pipeline (10 stages displayed as [1/10] to [10/10], includes LLM)
+./run.sh --pipeline          # Run pipeline (9 stages displayed as [1/9] to [9/9], clean shown as [0/9], includes optional LLM stages)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests        # Run infrastructure tests only
 ./run.sh --project-tests      # Run project tests only
@@ -336,7 +339,7 @@ uv run scripts/execute_pipeline.py --core-only
 | Entry Point | Pipeline Stages | LLM Support | Use Case |
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
-| `./run.sh --pipeline` | 10 stages ([1/10] to [10/10]) | Optional | Manuscript pipeline with LLM |
+| `./run.sh --pipeline` | 9 stages ([1/9] to [9/9]) + pre-clean ([0/9]) | Optional | Manuscript pipeline with LLM |
 | `uv run scripts/execute_pipeline.py --core-only` | 8 stages (00-05) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
@@ -475,12 +478,12 @@ ollama pull llama3-gradient
 
 ## See Also
 
-- [`scripts/README.md`](scripts/README.md) - Stage orchestrators documentation
-- [`scripts/AGENTS.md`](scripts/AGENTS.md) - scripts documentation
+- [`scripts/README.md`](../scripts/README.md) - Stage orchestrators documentation
+- [`scripts/AGENTS.md`](../scripts/AGENTS.md) - scripts documentation
 - [`AGENTS.md`](AGENTS.md) - system documentation
 - [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) - **Headless / cloud server deployment guide** ⭐
-- [`docs/core/workflow.md`](docs/core/workflow.md) - Development workflow
-- [`docs/operational/build-system.md`](docs/operational/build-system.md) - Detailed build system reference
+- [`core/workflow.md`](core/workflow.md) - Development workflow
+- [`RUN_GUIDE.md`](RUN_GUIDE.md) - Pipeline orchestration reference (this document)
 
 ---
 

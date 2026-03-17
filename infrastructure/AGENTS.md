@@ -64,9 +64,13 @@ infrastructure/
 │   ├── cli.py               # CLI for rendering
 │   └── SKILL.md, AGENTS.md, README.md
 ├── publishing/     # Academic publishing & dissemination
-│   ├── core.py              # Publishing workflows
 │   ├── api.py               # Platform API clients (Zenodo)
 │   ├── citations.py         # Citation generation
+│   ├── metadata.py          # Metadata extraction/normalization
+│   ├── package.py           # Submission/release packaging
+│   ├── platforms.py         # Platform routing and helpers
+│   ├── cli.py               # CLI entry point
+│   ├── publish_cli.py       # Publishing-oriented CLI wrapper
 │   └── SKILL.md, AGENTS.md, README.md
 ├── reporting/      # Pipeline reporting & error aggregation
 │   ├── pipeline_reporter.py  # Pipeline report generation
@@ -424,9 +428,9 @@ from infrastructure.core.function_profiler import CodeProfiler
 **CLI:**
 
 ```bash
-python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf
-python3 -m infrastructure.validation.cli markdown project/manuscript/
-python3 -m infrastructure.validation.cli integrity output/
+python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf
+python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
+python3 -m infrastructure.validation.cli integrity output/{project_name}/
 ```
 
 ### Documentation Module (`documentation/`)
@@ -456,7 +460,7 @@ python3 -m infrastructure.validation.cli integrity output/
 **CLI:**
 
 ```bash
-python3 -m infrastructure.documentation.cli generate-api src/
+uv run python infrastructure/documentation/generate_glossary_cli.py src/ manuscript/98_symbols_glossary.md
 ```
 
 ### Scientific Module (`scientific/`)
@@ -681,7 +685,7 @@ export NO_COLOR=1
 
 ### Configuration File
 
-For persistent configuration, use `project/manuscript/config.yaml`:
+For persistent configuration, use `projects/{project_name}/manuscript/config.yaml`:
 
 ```yaml
 paper:
@@ -731,18 +735,20 @@ print(f"Published with DOI: {doi}")
 
 ```bash
 # Validate manuscript
-python3 -m infrastructure.validation.cli markdown project/manuscript/
-python3 -m infrastructure.validation.cli integrity output/
+python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
+python3 -m infrastructure.validation.cli integrity output/{project_name}/
 
 # Generate API documentation
-python3 -m infrastructure.documentation.cli generate-api project/src/
+uv run python infrastructure/documentation/generate_glossary_cli.py \
+  projects/{project_name}/src/ \
+  projects/{project_name}/manuscript/98_symbols_glossary.md
 
 # Render to multiple formats
 python3 -m infrastructure.rendering.cli all manuscript.tex
 
 # Publish release
-python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
-python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOKEN
+python3 -m infrastructure.publishing.cli publish-zenodo output/{project_name}/ --title "My Research"
+python3 -m infrastructure.publishing.cli create-release v1.0 output/{project_name}/ $GITHUB_TOKEN
 ```
 
 ## Testing
@@ -792,7 +798,7 @@ If you see `ModuleNotFoundError: No module named 'infrastructure.xxx'`:
 
 If configuration isn't loading:
 
-1. Check `project/manuscript/config.yaml` exists
+1. Check `projects/{project_name}/manuscript/config.yaml` exists
 2. Verify YAML is well-formed
 3. Fall back to environment variables as needed
 

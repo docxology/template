@@ -2,6 +2,7 @@ import json
 
 import pytest
 from pytest_httpserver import HTTPServer
+import threading
 
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import LLMConfig
@@ -127,7 +128,12 @@ def ollama_test_server():
     try:
         yield server
     finally:
-        server.stop()
+        # Under heavy load (e.g., coverage runs) server shutdown can occasionally
+        # block long enough to trip the repo-wide pytest-timeout. Make teardown
+        # best-effort and bounded.
+        stopper = threading.Thread(target=server.stop, daemon=True)
+        stopper.start()
+        stopper.join(timeout=2.0)
 
 
 @pytest.fixture

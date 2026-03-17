@@ -223,17 +223,22 @@ def _validate_single_file(
 
 def _populate_statistics(scan_results: ScanResults) -> None:
     """Calculate statistics for the scan results."""
-    scan_results.scanned_files = len(scan_results.documentation_files)
+    _calculate_statistics(scan_results)
 
-    # Calculate statistics by issue type
-    stats = {
+
+def _calculate_statistics(scan_results: ScanResults) -> None:
+    """Populate `scanned_files` and `statistics` on ScanResults.
+
+    Some tests and older callers import `_calculate_statistics` directly, and
+    expect it to mutate the passed-in `ScanResults`.
+    """
+    scan_results.scanned_files = len(scan_results.documentation_files)
+    scan_results.statistics = {
         "link_issues": len(scan_results.link_issues),
         "accuracy_issues": len(scan_results.accuracy_issues),
         "completeness_gaps": len(scan_results.completeness_gaps),
         "quality_issues": len(scan_results.quality_issues),
     }
-
-    scan_results.statistics = stats
 
 
 def generate_audit_report(

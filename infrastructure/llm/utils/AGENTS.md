@@ -687,4 +687,4 @@ def diagnose_ollama_setup():
 **System Documentation:**
 
 - [`../../../AGENTS.md`](../../../AGENTS.md) - LLM module overview
-- [`../../../docs/operational/llm-review-troubleshooting.md`](../../../docs/operational/llm-review-troubleshooting.md) - LLM troubleshooting guide
+- [`../../../docs/operational/troubleshooting/llm-review.md`](../../../docs/operational/troubleshooting/llm-review.md) - LLM troubleshooting guide

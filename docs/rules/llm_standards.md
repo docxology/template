@@ -737,9 +737,6 @@ if not is_valid:
 
 # Don't hardcode model names unnecessarily
 config = LLMConfig(default_model="some-model")  # Use env vars or from_env() instead
-
-# Don't mock LLM responses in tests
-with patch("infrastructure.llm.LLMClient"):  # NEVER use mocks
 ```
 
 ## Checklist
@@ -774,8 +771,8 @@ with patch("infrastructure.llm.LLMClient"):  # NEVER use mocks
 - [testing_standards.md](testing_standards.md) - Testing patterns
 - [error_handling.md](error_handling.md) - Exception handling
 - [python_logging.md](python_logging.md) - Logging standards
-- [../infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) - Detailed LLM documentation
-- [../infrastructure/llm/README.md](../infrastructure/llm/README.md) - Quick reference
+- [infrastructure/llm/AGENTS.md](../../infrastructure/llm/AGENTS.md) - Detailed LLM documentation
+- [infrastructure/llm/README.md](../../infrastructure/llm/README.md) - Quick reference
 
 ---
 

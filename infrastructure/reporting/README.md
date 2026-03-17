@@ -72,10 +72,6 @@ graph TD
     OUTPUT_ORG --> PDF
     OUTPUT_ORG --> CSV
 
-    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef module fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class InputSources input
     class ReportingModules module
     class OutputFormats output

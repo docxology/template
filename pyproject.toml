@@ -43,6 +43,10 @@ dependencies = [
   # networkx is required by cognitive_case_diagrams visualization layer (category_diagrams.py,
   # functor_diagrams.py) and tested via the root pipeline venv — must be in core deps
   "networkx>=3.0",
+  "scipy>=1.15.3",
+  "scikit-learn>=1.7.2",
+  "wordcloud>=1.9.6",
+  "rdflib>=7.6.0",
 ]
 
 [project.scripts]
@@ -117,7 +121,7 @@ dev = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
-default-groups = ["dev"]
+default-groups = ["dev", "rendering"]
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
@@ -230,7 +234,6 @@ ignore = [
 "infrastructure/llm/*" = ["E501"]
 "infrastructure/project/discovery.py" = ["E501"]
 "infrastructure/publishing/citations.py" = ["E501"]
-"infrastructure/publishing/core.py" = ["E501"]
 "infrastructure/rendering/slides_renderer.py" = ["E501"]
 "infrastructure/reporting/*" = ["E501"]
 "infrastructure/scientific/templates.py" = ["E501"]

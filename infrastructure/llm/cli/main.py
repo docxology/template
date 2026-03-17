@@ -98,6 +98,7 @@ def check_command(args: argparse.Namespace) -> None:
         print(f"  Default model: {config.default_model}")
         print(f"  Temperature: {config.temperature}")
         print(f"  Max tokens: {config.max_tokens}")
+        raise SystemExit(0)
     else:
         raise CLIError(f"Cannot connect to Ollama at {config.base_url}. Start with: ollama serve")
 
@@ -244,6 +245,7 @@ def main() -> None:
 
     try:
         args.func(args)
+        raise SystemExit(0)
     except KeyboardInterrupt as e:
         logger.info("Interrupted")
         raise SystemExit(130) from e

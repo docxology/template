@@ -777,6 +777,7 @@ authors:
         # Check graphicx was mentioned
         assert "graphicx" in caplog.text.lower() or True  # May be logged
 
+    @pytest.mark.timeout(90)
     def test_graphicx_added_when_no_preamble(self, tmp_path, caplog):
         """Test graphicx is added when no preamble file exists."""
         manuscript_dir = tmp_path / "manuscript"

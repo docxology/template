@@ -403,7 +403,8 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
     logger.info(f"    Timeout: {warmup_timeout:.0f}s for warmup")
 
     logger.debug("    Checking loaded models via Ollama API...")
-    model_preloaded, loaded_model = check_model_loaded(model_name)
+    base_url = (client.config.base_url or "http://localhost:11434").rstrip("/")
+    model_preloaded, loaded_model = check_model_loaded(model_name, base_url=base_url)
 
     need_preload = False
     if model_preloaded:
@@ -421,7 +422,13 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
         with log_with_spinner(
             f"Loading {model_name} into GPU memory...", logger, final_message=None
         ):
-            preload_success, preload_error = preload_model(model_name)
+            preload_timeout = min(15.0, float(warmup_timeout)) if warmup_timeout else 15.0
+            preload_success, preload_error = preload_model(
+                model_name,
+                base_url=base_url,
+                timeout=preload_timeout,
+                retries=0,
+            )
 
         preload_elapsed = time.time() - preload_start
         if preload_success:

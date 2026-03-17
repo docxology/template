@@ -95,17 +95,7 @@ fm.register_figure(
 ```
 projects/{name}/src/
 ├── example.py                 # Basic operations (template example)
-├── simulation.py              # Scientific simulation framework
-├── statistics.py              # Statistical analysis
-├── data_generator.py          # Synthetic data generation
-├── data_processing.py         # Data preprocessing and cleaning
-├── metrics.py                 # Performance metrics
-├── parameters.py              # Parameter management
-├── performance.py             # Convergence and scalability analysis
-├── plots.py                   # Plot implementations
-├── reporting.py               # Report generation
-├── validation.py              # Result validation
-└── visualization.py           # Visualization engine
+├── ...                        # Project-specific modules (names vary by project)
 ```
 
 **Scripts (thin orchestrators):**
@@ -279,17 +269,7 @@ project/                       # Project-specific code
 │   ├── AGENTS.md              # Project documentation
 │   ├── README.md              # Quick reference
 │   ├── example.py
-│   ├── simulation.py
-│   ├── statistics.py
-│   ├── data_generator.py
-│   ├── data_processing.py
-│   ├── metrics.py
-│   ├── parameters.py
-│   ├── performance.py
-│   ├── plots.py
-│   ├── reporting.py
-│   ├── validation.py
-│   └── visualization.py
+│   └── ...                    # Project modules (names vary by project)
 ├── scripts/                   # Project orchestrators
 │   ├── example_figure.py
 │   ├── generate_research_figures.py

@@ -227,7 +227,7 @@ For full per-module details, see:
 - **[Scientific Simulation Guide](../modules/scientific-simulation-guide.md)** — Simulation and analysis modules
 - **[Visualization Guide](../usage/visualization-guide.md)** — Visualization and figure management
 
-**Key project modules (`projects/{name}/src/`):**
+**Key project modules (illustrative; `projects/{name}/src/` names vary by project):**
 
 | Module | Purpose |
 |--------|---------|
@@ -236,7 +236,7 @@ For full per-module details, see:
 | `validation.py` | Result validation framework |
 | `simulation.py` | Core simulation framework |
 | `parameters.py` | Parameter management and sweeps |
-| `performance.py` | Convergence and scalability analysis |
+| `performance_analysis.py` | Convergence and scalability analysis (example module name) |
 | `reporting.py` | Automated report generation |
 | `plots.py` | Plot type implementations |
 

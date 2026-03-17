@@ -62,20 +62,11 @@ def test_database_operations(test_db):
 ```
 
 ### Forbidden Mocking Approaches
-```python
-# ❌ BAD: Mocking prohibited
-def test_with_mocks(mocker):
-    mock_response = mocker.Mock()
-    mock_response.json.return_value = {"result": "ok"}
+Do not use any of the following patterns in tests:
 
-    mocker.patch('requests.get', return_value=mock_response)
-    # This violates the no-mocks policy
-
-# ❌ BAD: Patching prohibited
-with patch('module.function') as mock_func:
-    mock_func.return_value = "mocked"
-    # This violates the no-mocks policy
-```
+- `unittest.mock` (including `patch`, `Mock`, `MagicMock`)
+- `pytest-mock` / `mocker` fixtures (including `mocker.patch`)
+- Any monkeypatching that replaces the behavior under test
 
 ## 2. Coverage Requirements
 

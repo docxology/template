@@ -6,10 +6,10 @@ Research project demonstrating optimization algorithms with automated figure gen
 
 ```bash
 # Run the analysis pipeline
-python3 scripts/optimization_analysis.py
+uv run python projects/code_project/scripts/optimization_analysis.py
 
 # Run tests
-pytest tests/ -v
+uv run pytest projects/code_project/tests/ -v
 
 # View generated outputs
 ls -la output/
@@ -30,7 +30,7 @@ ls -la output/
 ### Run Analysis
 
 ```bash
-python3 scripts/optimization_analysis.py
+uv run python projects/code_project/scripts/optimization_analysis.py
 ```
 
 Generates convergence plots, performs scientific validation, creates dashboard, and saves all results.
@@ -38,7 +38,7 @@ Generates convergence plots, performs scientific validation, creates dashboard, 
 ### Run Tests
 
 ```bash
-pytest tests/ -v
+uv run pytest projects/code_project/tests/ -v
 ```
 
 Tests optimization algorithms and numerical accuracy.

@@ -7,7 +7,7 @@ Multi-format output generation for research manuscripts.
 ```mermaid
 graph TD
     subgraph Input["Input Sources"]
-        MANUSCRIPT[Manuscript Files<br/>Markdown sections<br/>project/manuscript/*.md]
+        MANUSCRIPT[Manuscript Files<br/>Markdown sections<br/>projects/{project_name}/manuscript/*.md]
         CONFIG[Configuration<br/>config.yaml<br/>Title page & metadata]
         FIGURES[Figures<br/>Generated figures<br/>output/figures/*.png]
         BIBLIOGRAPHY[Bibliography<br/>references.bib<br/>Academic citations]
@@ -28,10 +28,10 @@ graph TD
     end
 
     subgraph Output["Output Formats"]
-        PDF_OUT[PDF Document<br/>Professional typesetting<br/>output/pdf/*.pdf]
-        SLIDES_OUT[Slides<br/>PDF & HTML formats<br/>output/slides/]
-        WEB_OUT[Web HTML<br/>Interactive with MathJax<br/>output/web/*.html]
-        POSTER_OUT[Posters<br/>Large format<br/>output/posters/]
+        PDF_OUT[PDF Document<br/>Professional typesetting<br/>output/{project_name}/pdf/*.pdf]
+        SLIDES_OUT[Slides<br/>PDF & HTML formats<br/>output/{project_name}/slides/]
+        WEB_OUT[Web HTML<br/>Interactive with MathJax<br/>output/{project_name}/web/*.html]
+        POSTER_OUT[Posters<br/>Large format<br/>output/{project_name}/posters/]
     end
 
     MANUSCRIPT --> MANAGER
@@ -57,11 +57,6 @@ graph TD
     COMBINE --> SLIDES_OUT
     COMBINE --> WEB_OUT
     COMBINE --> POSTER_OUT
-
-    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef rendering fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef processing fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class Input input
     class Rendering rendering
@@ -131,13 +126,13 @@ from pathlib import Path
 manager = RenderManager()
 manager.render_combined_pdf(
     [Path("01_abstract.md"), Path("02_intro.md"), ...],
-    manuscript_dir=Path("manuscript/")
+    manuscript_dir=Path("projects/{project_name}/manuscript/")
 )
 ```
 
 ### Configure Title Page
 
-Edit `project/manuscript/config.yaml`:
+Edit `projects/{project_name}/manuscript/config.yaml`:
 
 ```yaml
 paper:
@@ -155,7 +150,7 @@ publication:
   journal: "Zenodo Preprints"
   year: "2026"
 
-# CAUTION: If you create a 'manuscript/preamble.md' with \date{}, \title{}, or \author{} commands,
+# CAUTION: If you create a 'projects/{project_name}/manuscript/preamble.md' with \date{}, \title{}, or \author{} commands,
 # they will OVERRIDE these configuration values in the final PDF.
 ```
 
@@ -163,7 +158,7 @@ publication:
 
 ### Add Bibliography and Citations
 
-Place bibliography in `manuscript/references.bib`:
+Place bibliography in `projects/{project_name}/manuscript/references.bib`:
 
 ```bibtex
 @article{author2024,
@@ -184,7 +179,7 @@ According to recent work \cite{author2024}, we demonstrate...
 
 ### Add Figures
 
-Place figures in `project/output/figures/` and reference in markdown:
+Place figures in `output/{project_name}/figures/` and reference in markdown:
 
 ```latex
 \begin{figure}[h]
@@ -197,7 +192,7 @@ Place figures in `project/output/figures/` and reference in markdown:
 Reference in text: Figure \ref{fig:your_figure}
 ```
 
-**Important**: The rendering system automatically ensures `\usepackage{graphicx}` is included in the LaTeX preamble. This package is required for `\includegraphics` commands. If not in your custom preamble (`manuscript/preamble.md`), it will be added automatically during compilation.
+**Important**: The rendering system automatically ensures `\usepackage{graphicx}` is included in the LaTeX preamble. This package is required for `\includegraphics` commands. If not in your custom preamble (`projects/{project_name}/manuscript/preamble.md`), it will be added automatically during compilation.
 
 **Note**: Figure paths are automatically corrected during rendering. The system handles:
 
@@ -298,12 +293,6 @@ graph TD
     PDF_RENDERER --> BIBLIOGRAPHY_PROCESSING
     PDF_RENDERER --> CROSS_REF_RESOLUTION
 
-    classDef entry fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef core fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef renderers fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef support fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef processing fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-
     class EntryPoints entry
     class CoreEngine core
     class SpecializedRenderers renderers
@@ -345,7 +334,7 @@ manager = RenderManager(config)
 
 # Render with error handling
 try:
-    pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
+    pdf_path = manager.render_pdf(Path("projects/{project_name}/manuscript/main.tex"))
     print(f"PDF generated successfully: {pdf_path}")
 
     # Verify the output
@@ -361,7 +350,7 @@ except Exception as e:
 
 ```python
 # Render to all formats in one call
-outputs = manager.render_all(Path("manuscript/complete_manuscript.md"))
+outputs = manager.render_all(Path("projects/{project_name}/manuscript/complete_manuscript.md"))
 
 print("Generated outputs:")
 for format_name, output_path in outputs.items():
@@ -374,13 +363,13 @@ for format_name, output_path in outputs.items():
 ```python
 # Generate PDF slides for conferences
 pdf_slides = manager.render_slides(
-    Path("manuscript/presentation.md"),
+    Path("projects/{project_name}/manuscript/presentation.md"),
     format="beamer"
 )
 
 # Generate interactive HTML slides for web
 html_slides = manager.render_slides(
-    Path("manuscript/presentation.md"),
+    Path("projects/{project_name}/manuscript/presentation.md"),
     format="revealjs"
 )
 ```
@@ -525,7 +514,7 @@ The rendering module is deeply integrated with the build pipeline:
 # 5. Handles figure path resolution
 # 6. Performs cross-reference resolution
 
-python3 scripts/03_render_pdf.py --project project
+python3 scripts/03_render_pdf.py --project {project_name}
 ```
 
 ### Pipeline Data Flow
@@ -533,9 +522,9 @@ python3 scripts/03_render_pdf.py --project project
 ```mermaid
 flowchart TD
     subgraph Input["Pipeline Input"]
-        MANUSCRIPT[Manuscript Files<br/>project/manuscript/*.md]
+        MANUSCRIPT[Manuscript Files<br/>projects/{project_name}/manuscript/*.md]
         CONFIG[Configuration<br/>config.yaml<br/>Title and author info]
-        FIGURES[Generated Figures<br/>project/output/figures/*.png]
+        FIGURES[Generated Figures<br/>output/{project_name}/figures/*.png]
         SCRIPTS[Analysis Scripts<br/>Generated content]
     end
 
@@ -548,8 +537,8 @@ flowchart TD
     end
 
     subgraph Output["Pipeline Output"]
-        PDF[Final PDF<br/>output/pdf/project_combined.pdf]
-        LOGS[Compilation Logs<br/>output/pdf/_combined_manuscript.log]
+        PDF[Final PDF<br/>output/{project_name}/pdf/{project_name}_combined.pdf]
+        LOGS[Compilation Logs<br/>output/{project_name}/pdf/_combined_manuscript.log]
         AUX_FILES[Auxiliary Files<br/>*.aux, *.bbl, *.blg files]
         REPORTS[Validation Reports<br/>Quality and error reports]
     end
@@ -568,10 +557,6 @@ flowchart TD
     COMPILATION --> LOGS
     COMPILATION --> AUX_FILES
     VERIFICATION --> REPORTS
-
-    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef processing fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class Input input
     class Processing processing
@@ -695,12 +680,12 @@ kpsewhich multirow.sty
 # Check figure discovery
 python3 -c "
 from infrastructure.rendering.manuscript_discovery import verify_figures_exist
-report = verify_figures_exist(Path('.'), Path('manuscript'))
+report = verify_figures_exist(Path('.'), Path('projects/{project_name}/manuscript'))
 print('Figure verification:', report)
 "
 
 # Check path resolution in generated LaTeX
-grep "includegraphics" output/pdf/_combined_manuscript.tex
+grep "includegraphics" output/{project_name}/pdf/_combined_manuscript.tex
 ```
 
 **Problem**: Unicode filenames cause issues
@@ -719,16 +704,16 @@ grep "includegraphics" output/pdf/_combined_manuscript.tex
 
 ```bash
 # Check bibliography file
-ls -la manuscript/references.bib
-head -10 manuscript/references.bib
+ls -la projects/{project_name}/manuscript/references.bib
+head -10 projects/{project_name}/manuscript/references.bib
 
 # Check citation keys in manuscript
-grep -r "cite{" manuscript/
-grep -r "@" manuscript/references.bib
+grep -r "cite{" projects/{project_name}/manuscript/
+grep -r "@" projects/{project_name}/manuscript/references.bib
 
 # Check BibTeX log
-ls -la output/pdf/*.blg
-tail -20 output/pdf/_combined_manuscript.blg
+ls -la output/{project_name}/pdf/*.blg
+tail -20 output/{project_name}/pdf/_combined_manuscript.blg
 ```
 
 ### Memory and Performance Issues
@@ -801,7 +786,7 @@ rendering:
 ### Document Structure
 
 - **Consistent Section Naming**: Use predictable section headers for automation
-- **Standard File Organization**: Keep manuscripts in `manuscript/` directory
+- **Standard File Organization**: Keep manuscripts in `projects/{project_name}/manuscript/`
 - **Figure Path Conventions**: Use relative paths from manuscript directory
 - **Bibliography Standards**: Follow BibTeX formatting conventions
 
@@ -836,7 +821,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 
 **Solutions**:
 
-1. Verify `references.bib` file exists in `manuscript/` directory
+1. Verify `references.bib` file exists in `projects/{project_name}/manuscript/`
 2. Check citation keys in markdown match `@` entries in `.bib` file
 3. Ensure bibliography is formatted correctly:
 
@@ -859,10 +844,10 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 1. **Verify graphicx package is loaded** (the system should add it automatically):
 
    ```bash
-   grep "usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex
+   grep "usepackage{graphicx}" output/{project_name}/pdf/_combined_manuscript.tex
    ```
 
-   If missing, ensure `manuscript/preamble.md` contains `\usepackage{graphicx}` or check build logs.
+   If missing, ensure `projects/{project_name}/manuscript/preamble.md` contains `\usepackage{graphicx}` or check build logs.
 
 2. **Generate missing figures**:
 
@@ -873,13 +858,13 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 3. **Verify figures are in correct location**:
 
    ```bash
-   ls -la project/output/figures/ | grep -E "\.png|\.pdf|\.jpg"
+   ls -la output/{project_name}/figures/ | grep -E "\.png|\.pdf|\.jpg"
    ```
 
 4. **Check figure paths in markdown** are correct:
 
    ```bash
-   grep -r "includegraphics" project/manuscript/ | head -5
+   grep -r "includegraphics" projects/{project_name}/manuscript/ | head -5
    ```
 
    Should be: `\includegraphics{../output/figures/name.png}`
@@ -887,13 +872,13 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 5. **Check filename matches exactly** (case-sensitive):
 
    ```bash
-   ls project/output/figures/ | grep "your_figure"
+   ls output/{project_name}/figures/ | grep "your_figure"
    ```
 
 6. **Check LaTeX compilation log** for graphics-specific errors:
 
    ```bash
-   tail -150 project/output/pdf/_combined_manuscript.log | grep -i "graphic\|Error"
+   tail -150 output/{project_name}/pdf/_combined_manuscript.log | grep -i "graphic\|Error"
    ```
 
    Look for:
@@ -904,7 +889,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 7. **For Unicode filenames**, ensure proper encoding:
 
    ```bash
-   file project/output/figures/your_figure.png
+   file output/{project_name}/figures/your_figure.png
    ```
 
 ### LaTeX Compilation Errors
@@ -913,10 +898,10 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 
 **Solutions**:
 
-1. Check preamble in `manuscript/preamble.md` for required packages
+1. Check preamble in `projects/{project_name}/manuscript/preamble.md` for required packages
 2. Verify all LaTeX commands are valid (use `\ref{}`, not `\ref {}`)
 3. Ensure all `\label{}` commands exist for referenced items
-4. Run validation: `python3 -m infrastructure.validation.cli markdown project/manuscript/`
+4. Run validation: `python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/`
 
 ## Testing
 

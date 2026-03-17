@@ -87,6 +87,7 @@ def run_infrastructure_tests(
     quiet: bool = True,
     include_slow: bool = False,
     include_ollama_tests: bool = False,
+    strict: bool = True,
 ) -> tuple[int, dict]:
     """Execute infrastructure test suite with coverage."""
     import shutil
@@ -165,6 +166,10 @@ def run_infrastructure_tests(
             spinner_label="Running infrastructure tests",
         )
         exit_code, test_results = run_test_suite(config)
+        if strict and test_results.get("failed", 0) > 0:
+            # The suite runner supports configurable "max failures" tolerances for
+            # exploratory workflows, but this script defaults to strict behavior.
+            exit_code = 1
         duration = time.time() - start_time
         logger.info(f"Infrastructure test suite completed in {duration:.1f}s")
         if exit_code == 0:
@@ -177,7 +182,11 @@ def run_infrastructure_tests(
 
 
 def run_project_tests(
-    repo_root: Path, project_name: str = "project", quiet: bool = True, include_slow: bool = False
+    repo_root: Path,
+    project_name: str = "project",
+    quiet: bool = True,
+    include_slow: bool = False,
+    strict: bool = True,
 ) -> tuple[int, dict]:
     """Execute project test suite with coverage."""
     import shutil
@@ -257,6 +266,8 @@ def run_project_tests(
             spinner_label=f"Running project tests for '{project_name}'",
         )
         exit_code, test_results = run_test_suite(config)
+        if strict and test_results.get("failed", 0) > 0:
+            exit_code = 1
         duration = time.time() - start_time
         logger.info(f"Project test suite completed in {duration:.1f}s")
         if exit_code == 0:
@@ -480,6 +491,11 @@ def main() -> int:
         help="Project name in projects/ directory (default: project)",
     )
     parser.add_argument(
+        "--non-strict",
+        action="store_true",
+        help="Allow configured test-failure tolerances (not recommended for CI)",
+    )
+    parser.add_argument(
         "--include-slow",
         action="store_true",
         help="Include slow tests (normally skipped for faster execution)",
@@ -517,6 +533,26 @@ def main() -> int:
     log_live_resource_usage("Test stage start", logger)
 
     repo_root = Path(__file__).parent.parent
+    strict = not args.non_strict
+
+    # If the default placeholder project is selected but isn't a runnable project,
+    # pick the first discovered runnable project (has src/ and tests/).
+    project_root = repo_root / "projects" / args.project
+    if args.project == "project" and (
+        not (project_root / "src").exists() or not (project_root / "tests").exists()
+    ):
+        try:
+            from infrastructure.project.discovery import discover_projects
+
+            # `discover_projects` expects the repository root and will look for
+            # a `projects/` directory under it.
+            discovered = discover_projects(repo_root)
+            runnable = [p for p in discovered if (p.path / "src").exists() and (p.path / "tests").exists()]
+            if runnable:
+                args.project = runnable[0].name
+                log_substep(f"Default project placeholder is not runnable; using '{args.project}' instead.")
+        except Exception as e:  # noqa: BLE001 - fall back to provided arg
+            logger.warning("Project discovery failed; continuing with project=%s (%s)", args.project, e)
 
     # Initialize result variables
     infra_exit, infra_results = 0, {}
@@ -535,6 +571,7 @@ def main() -> int:
             quiet=quiet,
             include_slow=args.include_slow,
             include_ollama_tests=args.include_ollama_tests,
+            strict=strict,
         )
 
     # Phase 2: Project Tests (run unless --infra-only specified)
@@ -549,7 +586,11 @@ def main() -> int:
 
         # Run project tests (even if infrastructure tests fail, for complete reporting)
         project_exit, project_results = run_project_tests(
-            repo_root, args.project, quiet=quiet, include_slow=args.include_slow
+            repo_root,
+            args.project,
+            quiet=quiet,
+            include_slow=args.include_slow,
+            strict=strict,
         )
 
     # Generate and save test report with detailed coverage information
@@ -598,8 +639,8 @@ def main() -> int:
 
     # Return exit code based on execution mode
     if run_project and run_infra:
-        # Both tests run - return failure only if project tests failed (infrastructure tests are optional)  # noqa: E501
-        return 1 if project_exit != 0 else 0
+        # Both tests run - strict mode treats either suite failing as fatal.
+        return 1 if (infra_exit != 0 or project_exit != 0) else 0
     elif run_project:
         # Project tests only
         return project_exit

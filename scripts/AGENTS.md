@@ -32,7 +32,7 @@ The template provides multiple entry points organized by function:
 **Main Entry Point** (`run.sh`):
 
 - Interactive menu with manuscript pipeline operations (0-9)
-- Full pipeline execution (10 stages displayed as [1/10] to [10/10])
+- Full pipeline execution (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 - Non-interactive: `./run.sh [options]` for direct pipeline operations
 - Non-interactive flags: `--pipeline`, `--infra-tests`, `--project-tests`, `--render-pdf`, `--reviews`, `--translations`, `--option`, `--all-projects`
 - **Headless bootstrap**: Detects any non-interactive flag before `log_uv_status`, sets `PIPELINE_MODE=1`, which triggers `ensure_uv()` + `uv sync` if `.venv` is absent
@@ -56,7 +56,7 @@ post-processing to all generated PDFs. Sources `scripts/bash_utils.sh` for loggi
 
 **Stage flow:**
 
-1. `run.sh --pipeline [args]` — executes the standard 10-stage manuscript pipeline
+1. `run.sh --pipeline [args]` — executes the manuscript pipeline (9 stages shown as [1/9]..[9/9], with clean shown as [0/9])
 2. `infrastructure/steganography.SteganographyProcessor` — post-processes every PDF,
    producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
    Original PDFs are always left untouched.

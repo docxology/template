@@ -127,7 +127,7 @@ All modules work independently or together with minimal coupling.
 
 - **[API Reference](../reference/api-reference.md)** - Full API documentation
 - **[Infrastructure Guide](../../infrastructure/AGENTS.md)** - Module architecture
-- **[Build System](../operational/build/build-system.md)** - Build pipeline integration
+- **[Pipeline Orchestration](../RUN_GUIDE.md)** - Build pipeline integration
 
 ---
 
