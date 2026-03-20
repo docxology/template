@@ -140,7 +140,7 @@ uv run scripts/execute_pipeline.py --core-only
 ### Specific project
 
 ```bash
-./run.sh --project cognitive_case_diagrams --pipeline
+./run.sh --project code_project --pipeline
 ```
 
 ### Resume from checkpoint after failure

@@ -109,7 +109,8 @@ Projects are tracked across three sibling directories:
 To run the pipeline against a non-default directory (e.g., for smoke-testing an in-progress project without moving it):
 
 ```python
-from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
+from infrastructure.core.pipeline_types import PipelineConfig
+from infrastructure.core.pipeline import PipelineExecutor
 
 config = PipelineConfig(
     project_name="my_wip_project",

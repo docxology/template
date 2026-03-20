@@ -124,11 +124,11 @@ The template now supports **multiple research projects** in a single repository.
 
 Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`), so this guide avoids hard-coding a canonical list.
 
-In this repository right now, examples under `projects/` include:
+In this repository right now, active projects under `projects/` include:
 
-- **`biology_textbook`**
-- **`code_project`**
-- **`project`**
+- **`act_inf_metaanalysis`** — Active Inference meta-analysis
+- **`code_project`** — Optimization research exemplar
+- **`template`** — Template self-documentation project
 
 Archived and in-progress projects live outside `projects/` and are not executed by default.
 
@@ -270,10 +270,12 @@ Executes the core pipeline (stages 0-6) without LLM features.
 - Stops on first failure with clear error messages
 - Suitable for CI/CD environments
 
-#### Option 8: Run Full Pipel**What it does:**
-Executes the eight-stage pipeline (displayed as [1/8] to [8/8], with an initial clean step shown as [0/8]):
-1. Configures environment and checks requirements LLM review and translations
-- manuscript generation with AI assistance
+#### Option 8: Run Full Pipeline
+
+Executes the full pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9]):
+
+- All core stages (setup → tests → analysis → PDF → validate → copy)
+- LLM review and translations (optional, requires Ollama)
 - Automatic checkpointing and resume capability
 
 **Note**: The pipeline stages are displayed as [1/9] to [9/9] in progress logs. Clean Output Directories is displayed as a pre-step ([0/9]).
@@ -330,6 +332,7 @@ uv run scripts/execute_pipeline.py --core-only
 | 03 | `03_render_pdf.py` | PDF rendering orchestration |
 | 04 | `04_validate_output.py` | Output validation & reporting |
 | 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
+| 06 | `06_llm_review.py` | LLM manuscript review & translations (optional, requires Ollama) |
 | 07 | `07_generate_executive_report.py` | Executive summaries & dashboards (multi-project only) |
 
 ## Entry Point Comparison

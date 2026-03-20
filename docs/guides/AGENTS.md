@@ -12,6 +12,7 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 | `figures-and-analysis.md` | Levels 4-6 | Researchers adding figures and automation |
 | `testing-and-reproducibility.md` | Levels 7-9 | Developers implementing TDD workflow |
 | `extending-and-automation.md` | Levels 10-12 | Expert users extending the template |
+| `new-project-setup.md` | All levels | Complete setup checklist with pitfalls |
 
 ## Key Conventions
 

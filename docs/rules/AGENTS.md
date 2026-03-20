@@ -1,8 +1,10 @@
-# .cursorrules - Development Standards and Guidelines
+# Development Standards and Guidelines — `docs/rules/`
 
 ## Overview
 
 This directory contains development standards, coding guidelines, and best practices for the Research Project Template system. All code must follow these standards.
+
+> **Note**: These rules were formerly stored in `.cursorrules/`. They now live in `docs/rules/`.
 
 ## Files
 
@@ -103,7 +105,7 @@ The template provides **two pipeline orchestrators** with different scope:
 
 ### Before Starting
 
-1. ✅ Read relevant .cursorrules files
+1. ✅ Read relevant rules files in `docs/rules/`
 2. ✅ Understand two-layer architecture
 3. ✅ Review existing similar code
 4. ✅ Plan with thin orchestrator pattern
@@ -229,7 +231,7 @@ As shown in \eqref{eq:objective}, the objective function...
 **Related Documentation:**
 
 - [manuscript_style.md](manuscript_style.md) - manuscript formatting guide
-- [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) - Example manuscript (archived project)
+- [projects/act_inf_metaanalysis/manuscript/](../../projects/act_inf_metaanalysis/manuscript/) - Example manuscript (active project)
 - [docs/usage/markdown-template-guide.md](../usage/markdown-template-guide.md) - Markdown guide
 
 ## Testing Standards
@@ -397,7 +399,7 @@ template/
 ├── scripts/               # [LAYER 1] Generic entry points
 ├── tests/                 # [LAYER 1] Infrastructure tests
 ├── docs/                  # Documentation
-└── .cursorrules/          # Development standards (THIS DIR)
+└── docs/rules/                # Development standards (THIS DIR)
 ```
 
 ## Checklist for New Code
@@ -406,7 +408,7 @@ template/
 
 - [ ] Understand two-layer architecture
 - [ ] Identify correct layer (infrastructure vs project)
-- [ ] Review relevant .cursorrules files
+- [ ] Review relevant rules files in `docs/rules/`
 - [ ] Plan with thin orchestrator pattern
 
 ### While Writing
@@ -466,9 +468,9 @@ This directory provides modular development standards. Each file covers specific
 
 ## Integration with Main Documentation
 
-The .cursorrules standards align with and support the main documentation:
+The `docs/rules/` standards align with and support the main documentation:
 
-| Development Aspect | .cursorrules File | Main Documentation |
+| Development Aspect | Rules File | Main Documentation |
 |---|---|---|
 | System Design | [AGENTS.md](AGENTS.md) | [Root AGENTS.md](../AGENTS.md) |
 | Documentation Structure | [folder_structure.md](folder_structure.md) | [Root AGENTS.md](../AGENTS.md) |
@@ -485,7 +487,7 @@ The .cursorrules standards align with and support the main documentation:
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/core/workflow.md](../core/workflow.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/core/architecture.md](../core/architecture.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../../infrastructure/llm/AGENTS.md) |
-| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) |
+| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects/act_inf_metaanalysis/manuscript/](../../projects/act_inf_metaanalysis/manuscript/) |
 | Refactoring | [refactoring.md](refactoring.md) | [docs/best-practices/best-practices.md](../best-practices/best-practices.md) |
 
 ## Cross-Reference Guide
@@ -522,7 +524,7 @@ The .cursorrules standards align with and support the main documentation:
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
-| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) for manuscript structure |
+| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects/act_inf_metaanalysis/manuscript/](../../projects/act_inf_metaanalysis/manuscript/) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
 | Generating reports | [reporting.md](reporting.md) | [docs/modules/modules-guide.md](../modules/modules-guide.md) for module details |
@@ -568,7 +570,7 @@ This directory is maintained as part of the template repository. All updates sho
 
 ### Adding New Guidelines
 
-When creating a new .cursorrules file:
+When creating a new rules file:
 
 1. Add entry to Files table in this file
 2. Add entry to Files section in README.md

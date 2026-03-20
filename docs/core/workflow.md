@@ -21,7 +21,7 @@ The generic project template implements a **unified test-driven development para
 - **Tests** validate all functionality with coverage (60% infra, 90% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `projects/{name}/src/` methods
 - **Documentation** references code and displays generated outputs
-- **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the core 8-stage pipeline (or 9 stages via `run.sh` with optional LLM)
 
 ## Workflow Diagram
 
@@ -76,7 +76,7 @@ graph TB
 
 ## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes 8 stages sequentially, ensuring coherence between all components:
+The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes the pipeline stages sequentially, ensuring coherence between all components:
 
 ### 1. Code Validation Phase
 
@@ -174,14 +174,14 @@ uv run python -m infrastructure.validation.cli markdown projects/code_project/ma
 ### 3. Integration Phase
 
 ```bash
-# Run the pipeline (all 8 stages)
+# Run the core pipeline (stages 00-07)
 uv run python scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
 ```
 
-The pipeline orchestrator executes 8 stages:
+The pipeline orchestrator executes stages 00-07:
 
 - **Stage 00**: Environment setup & validation
 - **Stage 01**: Run tests with coverage (validates `projects/{name}/src/` code works)

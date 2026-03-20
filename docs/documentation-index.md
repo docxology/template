@@ -254,7 +254,9 @@ docs/
 ├── architecture/                       # Architecture documentation
 │   ├── two-layer-architecture.md       # Full architecture guide
 │   ├── thin-orchestrator-summary.md    # Pattern implementation
-│   └── decision-tree.md               # Code placement decisions
+│   ├── decision-tree.md               # Code placement decisions
+│   ├── migration-from-flat.md          # Migration from flat structure
+│   └── testing-strategy.md            # Testing strategy & coverage
 │
 ├── usage/                              # Content authoring & patterns
 │   ├── examples.md, examples-showcase.md
@@ -279,6 +281,12 @@ docs/
 │   │   ├── recovery-procedures.md
 │   │   ├── llm-review.md
 │   │   └── llm-diagnostics.md
+│   ├── build/                         # Build system & CI/CD
+│   │   ├── build-system.md
+│   │   ├── build-performance.md
+│   │   ├── build-history.md
+│   │   ├── ci-cd-integration.md
+│   │   └── dependency-management.md
 │   ├── reporting-guide.md
 │   └── error-handling-guide.md
 │

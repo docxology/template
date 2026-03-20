@@ -11,6 +11,8 @@ Technical guide for `docs/architecture/` — system architecture, design pattern
 | `two-layer-architecture.md` | Comprehensive Layer 1 (Infrastructure) vs Layer 2 (Project) guide |
 | `thin-orchestrator-summary.md` | Thin orchestrator pattern implementation |
 | `decision-tree.md` | Decision tree for code placement |
+| `migration-from-flat.md` | Migration guide from flat project structure |
+| `testing-strategy.md` | Testing strategy and coverage architecture |
 
 ## Key Conventions
 

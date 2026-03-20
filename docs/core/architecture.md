@@ -32,7 +32,7 @@ graph TB
     class OUTPUTS output
 ```
 
-## Build Pipeline (8 Stages)
+## Core Pipeline (8 Stages via Python Orchestrator)
 
 | Stage | Name | Purpose |
 |-------|------|---------|

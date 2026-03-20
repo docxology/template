@@ -44,9 +44,9 @@ template/
 │   ├── execute_pipeline.py     # Single-project orchestrator
 │   └── execute_multi_project.py # Multi-project orchestrator
 ├── projects/              # Active research projects (Layer 2)
-│   ├── code_project/      # Optimization research exemplar (example)
-│   ├── biology_textbook/  # Example project (content-heavy)
-│   └── project/           # Example project scaffold
+│   ├── act_inf_metaanalysis/  # Active Inference meta-analysis
+│   ├── code_project/          # Optimization research exemplar
+│   └── template/              # Template self-documentation project
 ├── projects_archive/      # Archived projects (not executed)
 ├── tests/                 # Infrastructure tests
 ├── CLOUD_DEPLOY.md        # ☁️ Headless cloud server guide
