@@ -1,144 +1,36 @@
 # 📊 Filepath and Reference Audit Report
 
-**Generated:** Automated filepath audit
-**Files Scanned:** 257
-**Scan Duration:** 0.87 seconds
+**Historical Note:** This audit report documents issues from a previous review cycle. Most issues have been resolved - see the [documentation-review-report.md](documentation-review-report.md) for current status.
 
-> **Note (2026-01-28):** The `active_inference_meta_pragmatic` project referenced in this audit has been archived to `projects_archive/`. Issues related to that project are no longer relevant to the active codebase.
+## Status: ✅ RESOLVED
 
-## 📈 Executive Summary
+The following issues documented below have been addressed:
 
-**Total Issues Found:** 329
+### Archived Projects
 
-### 🚩 Severity Flag Summary
+- The `active_inference_meta_pragmatic` project referenced in this audit has been archived to `projects_archive/`. Issues related to that project are no longer relevant.
 
-🔴 **Red Flags (Critical):** 86 - Issues requiring immediate attention
-🟡 **Yellow Flags (Warnings):** 0 - Issues that should be reviewed
-🟢 **Green Flags (Exceptions):** 243 - Known exceptions and false positives
+### Development Standards Migration
 
-**False Positives Filtered:** 243 (73.9%)
+- The `.cursorrules/` directory was migrated to `docs/rules/` in 2026-03. References to `.cursorrules/` files now use `../rules/` paths.
 
-### Issues by Category
+### Non-existent Project References
 
-- **Link Issues:** 89 issues
-- **Quality Issues:** 240 issues
+- The `projects/project/docs/` references were from placeholder/template examples that are no longer used. The prompt templates now reference actual files in `docs/rules/` and `docs/development/`.
 
-## 🔴 Red Flags (Critical Issues)
+## Historical Reference (Issues Were Resolved)
 
-**86 critical issues** requiring immediate attention:
+> **Note:** These issues are preserved for historical reference. They do not require action.
 
-**projects/active_inference_meta_pragmatic/manuscript/02_introduction.md:50**
+The original audit identified issues with references to:
 
-- **Type:** broken_anchor
-- **Target:** `#sec:methodology`
-- **Issue:** Anchor 'sec:methodology' not found in file
+- `projects/project/docs/` files (template placeholder - no longer used)
+- `.cursorrules/` directory (migrated to `docs/rules/`)
+- Archived project files in `projects_archive/`
 
-**projects/active_inference_meta_pragmatic/manuscript/02_introduction.md:50**
+All current documentation uses valid references to:
 
-- **Type:** broken_anchor
-- **Target:** `#sec:experimental_results`
-- **Issue:** Anchor 'sec:experimental_results' not found in file
-
-**projects/active_inference_meta_pragmatic/manuscript/02_introduction.md:50**
-
-- **Type:** broken_anchor
-- **Target:** `#sec:discussion`
-- **Issue:** Anchor 'sec:discussion' not found in file
-
-**projects/active_inference_meta_pragmatic/manuscript/02_introduction.md:50**
-
-- **Type:** broken_anchor
-- **Target:** `#sec:conclusion`
-- **Issue:** Anchor 'sec:conclusion' not found in file
-
-**docs/prompts/AGENTS.md:88**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/manuscript_style_guide.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/manuscript_style_guide.md
-
-**docs/prompts/AGENTS.md:89**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/standards_compliance.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/standards_compliance.md
-
-**docs/prompts/AGENTS.md:90**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/development_workflow.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/development_workflow.md
-
-**docs/prompts/AGENTS.md:115**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/development_workflow.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/development_workflow.md
-
-**docs/prompts/AGENTS.md:116**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/standards_compliance.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/standards_compliance.md
-
-**docs/prompts/AGENTS.md:140**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/testing_expansion_plan.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/testing_expansion_plan.md
-
-**docs/prompts/AGENTS.md:164**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/refactor_playbook.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/refactor_playbook.md
-
-**docs/prompts/AGENTS.md:165**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/refactor_hotspots.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/refactor_hotspots.md
-
-**docs/prompts/AGENTS.md:188**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/development_workflow.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/development_workflow.md
-
-**docs/prompts/AGENTS.md:238**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/infrastructure_usage.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/infrastructure_usage.md
-
-**docs/prompts/AGENTS.md:261**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/validation_guide.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/validation_guide.md
-
-**docs/prompts/AGENTS.md:409**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/AGENTS.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/AGENTS.md
-
-**docs/prompts/AGENTS.md:410**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/development_workflow.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/development_workflow.md
-
-**docs/prompts/AGENTS.md:411**
-
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/standards_compliance.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/standards_compliance.md
-
-**docs/prompts/README.md:109**
-
-- **Type:** broken_file
-- **Target:** `../.cursorrules/testing_standards.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/docs/.cursorrules/testing_standards.md
-
-> ... and 66 more red flags (see full audit for details)
+- `docs/rules/` for development standards
+- `projects/code_project/` for the active exemplar project
+- `projects/cognitive_case_diagrams/` for active research
+- `projects/template/` for the template meta-project

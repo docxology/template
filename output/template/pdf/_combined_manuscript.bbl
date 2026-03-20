@@ -1,0 +1,477 @@
+\begin{thebibliography}{57}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Allaire et~al.(2024)Allaire, Teague, Scheidegger, Xie, and
+  Dervieux]{allaire2024quarto}
+J.~J. Allaire, Charles Teague, Carlos Scheidegger, Yihui Xie, and Christophe
+  Dervieux.
+\newblock Quarto, 2024.
+\newblock URL \url{https://github.com/quarto-dev/quarto-cli}.
+
+\bibitem[Amstutz et~al.(2016)Amstutz, Crusoe, Tijani\'{c}, Chapman, Chilton,
+  Heber, Kartashov, Leehr, M\'{e}nager, Nedeljkovich, Scales, Soiland-Reyes,
+  and Stojanovic]{amstutz2016cwl}
+Peter Amstutz, Michael~R. Crusoe, Neboj\v{s}a Tijani\'{c}, Brad Chapman, John
+  Chilton, Michael Heber, Andrey Kartashov, Dan Leehr, Herv\'{e} M\'{e}nager,
+  Maya Nedeljkovich, Matt Scales, Stian Soiland-Reyes, and Luka Stojanovic.
+\newblock Common workflow language, v1.0.
+\newblock \emph{Specification, Common Workflow Language working group}, 2016.
+\newblock \doi{10.6084/m9.figshare.3115156.v2}.
+
+\bibitem[{Anthropic}(2024)]{anthropic2024mcp}
+{Anthropic}.
+\newblock Introducing the model context protocol.
+\newblock Anthropic Engineering Blog, November 2024.
+\newblock URL \url{https://www.anthropic.com/news/model-context-protocol}.
+\newblock Open-source protocol for secure, two-way communication between AI
+  models and external tools/data sources. Donated to the Linux Foundation,
+  December 2025.
+
+\bibitem[Baker(2016)]{baker2016reproducibility}
+Monya Baker.
+\newblock 1,500 scientists lift the lid on reproducibility.
+\newblock \emph{Nature}, 533\penalty0 (7604):\penalty0 452--454, 2016.
+\newblock \doi{10.1038/533452a}.
+
+\bibitem[Barba(2018)]{barba2018terminologies}
+Lorena~A. Barba.
+\newblock Terminologies for reproducible research.
+\newblock \emph{arXiv preprint arXiv:1802.03311}, 2018.
+\newblock \doi{10.48550/arXiv.1802.03311}.
+
+\bibitem[Barker et~al.(2022)Barker, Chue~Hong, Katz, Lamprecht, Martinez-Ortiz,
+  Psomopoulos, Harrow, Castro, Gruenpeter, Martinez, and
+  Honeyman]{barker2022fair4rs}
+Michelle Barker, Neil~P. Chue~Hong, Daniel~S. Katz, Anna-Lena Lamprecht, Carlos
+  Martinez-Ortiz, Fotis Psomopoulos, Jennifer Harrow, Leyla~Jael Castro, Morane
+  Gruenpeter, Paula~Andrea Martinez, and Tom Honeyman.
+\newblock Introducing the {FAIR} principles for research software.
+\newblock \emph{Scientific Data}, 9\penalty0 (1):\penalty0 622, 2022.
+\newblock \doi{10.1038/s41597-022-01710-x}.
+
+\bibitem[Boettiger(2015)]{boettiger2015docker}
+Carl Boettiger.
+\newblock An introduction to docker for reproducible research.
+\newblock \emph{ACM SIGOPS Operating Systems Review}, 49\penalty0 (1):\penalty0
+  71--79, 2015.
+\newblock \doi{10.1145/2723872.2723882}.
+
+\bibitem[Cohen et~al.(2021)Cohen, Katz, Barker, Chue~Hong, Haines, and
+  Jay]{cohen2021four}
+Jeremy Cohen, Daniel~S. Katz, Michelle Barker, Neil~P. Chue~Hong, Robert
+  Haines, and Caroline Jay.
+\newblock The four pillars of research software engineering.
+\newblock \emph{IEEE Software}, 38\penalty0 (1):\penalty0 97--105, 2021.
+\newblock \doi{10.1109/MS.2020.2973362}.
+
+\bibitem[Cox et~al.(1997)Cox, Kilian, Leighton, and Shamoon]{cox1997secure}
+Ingemar~J. Cox, Joe Kilian, F.~Thomson Leighton, and Talal Shamoon.
+\newblock Secure spread spectrum watermarking for multimedia.
+\newblock \emph{IEEE Transactions on Image Processing}, 6\penalty0
+  (12):\penalty0 1673--1687, 1997.
+\newblock \doi{10.1109/83.650120}.
+
+\bibitem[Di~Cosmo et~al.(2020)Di~Cosmo, Gruenpeter, and
+  Zacchiroli]{cosmo2020softwareheritage}
+Roberto Di~Cosmo, Morane Gruenpeter, and Stefano Zacchiroli.
+\newblock Referencing source code artifacts: A separate concern in software
+  citation.
+\newblock \emph{Computing in Science \& Engineering}, 22\penalty0 (2):\penalty0
+  33--43, 2020.
+\newblock \doi{10.1109/MCSE.2019.2963148}.
+
+\bibitem[Di~Tommaso et~al.(2017)Di~Tommaso, Chatzou, Floden, Barja, Palumbo,
+  and Notredame]{ditommaso2017nextflow}
+Paolo Di~Tommaso, Maria Chatzou, Evan~W. Floden, Pablo~Prieto Barja, Emilio
+  Palumbo, and Cedric Notredame.
+\newblock Nextflow enables reproducible computational workflows.
+\newblock \emph{Nature Biotechnology}, 35\penalty0 (4):\penalty0 316--319,
+  2017.
+\newblock \doi{10.1038/nbt.3820}.
+
+\bibitem[Freedman et~al.(2015)Freedman, Cockburn, and
+  Simcoe]{freedman2015economics}
+Leonard~P. Freedman, Iain~M. Cockburn, and Timothy~S. Simcoe.
+\newblock The economics of reproducibility in preclinical research.
+\newblock \emph{PLOS Biology}, 13\penalty0 (6):\penalty0 e1002165, 2015.
+\newblock \doi{10.1371/journal.pbio.1002165}.
+
+\bibitem[Gamma et~al.(1995)Gamma, Helm, Johnson, and
+  Vlissides]{gamma1995design}
+Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides.
+\newblock \emph{Design Patterns: Elements of Reusable Object-Oriented
+  Software}.
+\newblock Addison-Wesley, 1995.
+\newblock ISBN 0-201-63361-2.
+
+\bibitem[Garijo et~al.(2024)Garijo, Garc\'{i}a, Barker, Chaves, Corcho,
+  et~al.]{garijo2024fairsoft}
+Daniel Garijo, Luis Garc\'{i}a, Matthias Barker, Rub\'{e}n Chaves, Oscar
+  Corcho, et~al.
+\newblock {FAIRsoft}---a practical implementation of {FAIR} principles for
+  research software.
+\newblock \emph{Bioinformatics}, 40\penalty0 (8):\penalty0 btae464, 2024.
+\newblock \doi{10.1093/bioinformatics/btae464}.
+
+\bibitem[Gentleman and Temple~Lang(2007)]{gentleman2007research}
+Robert Gentleman and Duncan Temple~Lang.
+\newblock Statistical analyses and reproducible research.
+\newblock \emph{Journal of Computational and Graphical Statistics}, 16\penalty0
+  (1):\penalty0 1--23, 2007.
+\newblock \doi{10.1198/106186007X178663}.
+
+\bibitem[Goble et~al.(2020)Goble, Cohen-Boulakia, Soiland-Reyes, Garijo, Gil,
+  Crusoe, Peters, and Schober]{goble2020fair}
+Carole Goble, Sarah Cohen-Boulakia, Stian Soiland-Reyes, Daniel Garijo, Yolanda
+  Gil, Michael~R. Crusoe, Kristian Peters, and Daniel Schober.
+\newblock {FAIR} computational workflows.
+\newblock \emph{Data Intelligence}, 2\penalty0 (1--2):\penalty0 108--121, 2020.
+\newblock \doi{10.1162/dint_a_00033}.
+
+\bibitem[{Google}(2025)]{google2025a2a}
+{Google}.
+\newblock Agent2agent ({A2A}) protocol specification.
+\newblock Open Protocol Specification, 2025.
+\newblock URL \url{https://a2a-protocol.org/latest/specification/}.
+\newblock Open protocol for AI agent interoperability built on HTTP, JSON-RPC,
+  and SSE; announced at Google Cloud Next '25, April 2025.
+
+\bibitem[Gruenpeter et~al.(2021)Gruenpeter, Katz, Lamprecht, Honeyman, Garijo,
+  Struck, Niehues, Martinez, Castro, Rabemanantsoa, Chue~Hong, Martinez-Ortiz,
+  Sesink, Liffers, et~al.]{gruenpeter2021research}
+Morane Gruenpeter, Daniel~S. Katz, Anna-Lena Lamprecht, Tom Honeyman, Daniel
+  Garijo, Alexander Struck, Anna Niehues, Paula~Andrea Martinez, Leyla~Jael
+  Castro, Tovo Rabemanantsoa, Neil~P. Chue~Hong, Carlos Martinez-Ortiz,
+  Laurents Sesink, Matthias Liffers, et~al.
+\newblock Defining research software: A controversial discussion.
+\newblock In \emph{SSRN Preprint}, 2021.
+\newblock \doi{10.2139/ssrn.3884311}.
+
+\bibitem[Honeyman et~al.(2024)Honeyman, Barker, Katz, and
+  Chue~Hong]{honeyman2024fair4rs}
+Tom Honeyman, Michelle Barker, Daniel~S. Katz, and Neil~P. Chue~Hong.
+\newblock The {FAIR} principles for research software: Three years on.
+\newblock Research Data Alliance Virtual Plenary 24, 2024.
+\newblock URL
+  \url{https://www.rd-alliance.org/wp-content/uploads/2025/04/RDA_VP24_FAIR4RS_Three_Years_On_Reformatted.pdf}.
+\newblock Two-year retrospective review recommending principle amendments
+  including explicit reproducibility requirement and clarification of
+  domain-relevant standards.
+
+\bibitem[{Iterative, Inc.}(2024)]{iterative2024dvc}
+{Iterative, Inc.}
+\newblock {DVC}: Data version control.
+\newblock \url{https://dvc.org}, 2024.
+\newblock Open-source tool for ML experiment management, data versioning, and
+  pipeline orchestration.
+
+\bibitem[Jimenez et~al.(2024)Jimenez, Yang, Wettig, Yao, Pei, Press, and
+  Narasimhan]{jimenez2024swebench}
+Carlos~E. Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir
+  Press, and Karthik Narasimhan.
+\newblock {SWE-bench}: Can language models resolve real-world {GitHub} issues?
+\newblock In \emph{Proceedings of the Twelfth International Conference on
+  Learning Representations (ICLR 2024)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2310.06770}.
+
+\bibitem[Katz et~al.(2021)Katz, Chue~Hong, Clark, Crosas, Khomtchouk, Kratz,
+  Leinweber, Niemeyer, Smith, and Vandewalle]{katz2021software}
+Daniel~S. Katz, Neil~P. Chue~Hong, Tim Clark, Merc{\`{e}} Crosas, Bohdan~B.
+  Khomtchouk, John~E. Kratz, David Leinweber, Kyle Niemeyer, Arfon Smith, and
+  Patrick Vandewalle.
+\newblock Recognizing the value of software: A software citation guide.
+\newblock \emph{F1000Research}, 9:\penalty0 1257, 2021.
+\newblock \doi{10.12688/f1000research.26932.2}.
+
+\bibitem[Kluyver et~al.(2016)Kluyver, Ragan-Kelley, P\'{e}rez, Granger,
+  Bussonnier, Frederic, Kelley, Hamrick, Grout, Corlay, Ivanov, Avila, Abdalla,
+  and Willing]{kluyver2016jupyter}
+Thomas Kluyver, Benjamin Ragan-Kelley, Fernando P\'{e}rez, Brian Granger,
+  Matthias Bussonnier, Jonathan Frederic, Kyle Kelley, Jessica Hamrick, Jason
+  Grout, Sylvain Corlay, Paul Ivanov, Dami\'{a}n Avila, Safia Abdalla, and
+  Carol Willing.
+\newblock Jupyter notebooks --- a publishing format for reproducible
+  computational workflows.
+\newblock In \emph{Positioning and Power in Academic Publishing: Players,
+  Agents and Agendas}, pages 87--90, 2016.
+\newblock \doi{10.3233/978-1-61499-649-1-87}.
+
+\bibitem[Knuth(1984)]{knuth1984literate}
+Donald~E. Knuth.
+\newblock Literate programming.
+\newblock \emph{The Computer Journal}, 27\penalty0 (2):\penalty0 97--111, 1984.
+\newblock \doi{10.1093/comjnl/27.2.97}.
+
+\bibitem[K\"{o}ster and Rahmann(2012)]{koster2012snakemake}
+Johannes K\"{o}ster and Sven Rahmann.
+\newblock Snakemake---a scalable bioinformatics workflow engine.
+\newblock \emph{Bioinformatics}, 28\penalty0 (19):\penalty0 2520--2522, 2012.
+\newblock \doi{10.1093/bioinformatics/bts480}.
+
+\bibitem[Lamport(1994)]{lamport1994latex}
+Leslie Lamport.
+\newblock \emph{{\LaTeX}: A Document Preparation System}.
+\newblock Addison-Wesley, 2nd edition, 1994.
+\newblock ISBN 978-0201529838.
+
+\bibitem[Lamprecht et~al.(2020)Lamprecht, Garcia, Kuzak, Martinez, Arcila,
+  Martin Del~Pico, Dominguez Del~Angel, van~de Sandt, Ison, Martinez,
+  McQuilton, Valencia, Harrow, Psomopoulos, Gelpi, Chue~Hong, Goble, and
+  Capella-Gutierrez]{lamprecht2020towards}
+Anna-Lena Lamprecht, Leyla Garcia, Mateusz Kuzak, Carlos Martinez, Ricardo
+  Arcila, Eva Martin Del~Pico, Victoria Dominguez Del~Angel, Stephanie van~de
+  Sandt, Jon Ison, Paula~Andrea Martinez, Peter McQuilton, Alfonso Valencia,
+  Jennifer Harrow, Fotis Psomopoulos, Josep~Ll. Gelpi, Neil Chue~Hong, Carole
+  Goble, and Salvador Capella-Gutierrez.
+\newblock Towards {FAIR} principles for research software.
+\newblock \emph{Data Science}, 3\penalty0 (1):\penalty0 37--59, 2020.
+\newblock \doi{10.3233/DS-190026}.
+
+\bibitem[Lau and Guo(2025)]{lau2025aicoding}
+Sam Lau and Philip~J. Guo.
+\newblock The design space of {LLM}-based {AI} coding assistants: An analysis
+  of 90 systems.
+\newblock In \emph{IEEE Symposium on Visual Languages and Human-Centric
+  Computing (VL/HCC)}, 2025.
+\newblock URL
+  \url{https://pg.ucsd.edu/publications/ai-coding-assistants-design-space_VLHCC-2025.pdf}.
+
+\bibitem[Lu et~al.(2024)Lu, Clune, Foerster, Lim, Lange, Tang, Mao,
+  et~al.]{lu2024aiscientist}
+Chris Lu, Jeff Clune, Jakob Foerster, Brian Lim, Robert~Tjarko Lange, Yutian
+  Tang, Shengran Mao, et~al.
+\newblock The {AI} scientist: Towards fully automated open-ended scientific
+  discovery.
+\newblock arXiv preprint arXiv:2408.06292, 2024.
+\newblock URL \url{https://arxiv.org/abs/2408.06292}.
+
+\bibitem[Martin(2008)]{martin2008clean}
+Robert~C. Martin.
+\newblock \emph{Clean Code: A Handbook of Agile Software Craftsmanship}.
+\newblock Prentice Hall, 2008.
+\newblock ISBN 978-0132350884.
+
+\bibitem[Meszaros(2007)]{meszaros2007xunit}
+Gerard Meszaros.
+\newblock \emph{xUnit Test Patterns: Refactoring Test Code}.
+\newblock Addison-Wesley, 2007.
+\newblock ISBN 978-0131495050.
+
+\bibitem[Moreau and Missier(2013)]{moreau2013provdm}
+Luc Moreau and Paolo Missier.
+\newblock {PROV-DM}: The {PROV} data model.
+\newblock W3c recommendation, World Wide Web Consortium, 2013.
+\newblock URL \url{https://www.w3.org/TR/prov-dm/}.
+
+\bibitem[Mädje and Haug(2023)]{madje2023typst}
+Laurenz Mädje and Martin Haug.
+\newblock Typst: A new markup-based typesetting system, 2023.
+\newblock URL \url{https://typst.app}.
+\newblock Programmable typesetting system with incremental compilation;
+  open-sourced 2023.
+
+\bibitem[{National Telecommunications and Information
+  Administration}(2021)]{ntia2021sbom}
+{National Telecommunications and Information Administration}.
+\newblock The minimum elements for a software bill of materials ({SBOM}).
+\newblock Technical report, U.S. Department of Commerce, 2021.
+\newblock URL
+  \url{https://www.ntia.gov/sites/default/files/publications/sbom_minimum_elements_report_0.pdf}.
+\newblock Defines minimum SBOM fields: supplier, component name, version,
+  unique identifier, dependency relationship, author, timestamp.
+
+\bibitem[Nosek et~al.(2018)Nosek, Ebersole, DeHaven, and
+  Mellor]{nosek2018preregistration}
+Brian~A. Nosek, Charles~R. Ebersole, Alexander~C. DeHaven, and David~T. Mellor.
+\newblock The preregistration revolution.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 115\penalty0
+  (11):\penalty0 2600--2606, 2018.
+\newblock \doi{10.1073/pnas.1708274114}.
+
+\bibitem[N\"{u}st et~al.(2017)N\"{u}st, Konkol, Pebesma, Kray, Schutzeichel,
+  Przibytzin, and Lorenz]{nust2017containerization}
+Daniel N\"{u}st, Markus Konkol, Edzer Pebesma, Christian Kray, Marc
+  Schutzeichel, Holger Przibytzin, and J\"{o}rg Lorenz.
+\newblock Opening the publication process with executable research compendia.
+\newblock \emph{D-Lib Magazine}, 23\penalty0 (1/2), 2017.
+\newblock \doi{10.1045/january2017-nuest}.
+
+\bibitem[{Open Source Security Foundation}(2023)]{openssf2023slsa}
+{Open Source Security Foundation}.
+\newblock {SLSA}: Supply-chain levels for software artifacts, v1.0.
+\newblock \url{https://slsa.dev/spec/v1.0/}, 2023.
+\newblock Accessed: 2026-03-19.
+
+\bibitem[{OpenAI}(2026)]{openai2026prism}
+{OpenAI}.
+\newblock Prism: {AI}-assisted research writing environment.
+\newblock \url{https://openai.com/prism}, 2026.
+\newblock Launched 2026-01-27 on GPT-5.2; provides context-aware manuscript
+  assistance across notes, drafts, equations, and citations.
+
+\bibitem[{Overleaf (Digital Science)}(2025)]{overleaf2025}
+{Overleaf (Digital Science)}.
+\newblock Overleaf: Collaborative cloud {\LaTeX} editor.
+\newblock \url{https://www.overleaf.com}, 2025.
+\newblock Real-time collaborative LaTeX editor used by 15M+ researchers across
+  4,000+ institutions.
+
+\bibitem[Peng(2011)]{peng2011reproducible}
+Roger~D. Peng.
+\newblock Reproducible research in computational science.
+\newblock \emph{Science}, 334\penalty0 (6060):\penalty0 1226--1227, 2011.
+\newblock \doi{10.1126/science.1213847}.
+
+\bibitem[Piccolo and Frampton(2016)]{piccolo2016tools}
+Stephen~R. Piccolo and Michael~B. Frampton.
+\newblock Tools and techniques for computational reproducibility.
+\newblock \emph{GigaScience}, 5\penalty0 (1):\penalty0 30, 2016.
+\newblock \doi{10.1186/s13742-016-0135-4}.
+
+\bibitem[Pimentel et~al.(2019)Pimentel, Murta, Braganholo, and
+  Freire]{pimentel2019jupyter}
+Jo\~{a}o~Felipe Pimentel, Leonardo Murta, Vanessa Braganholo, and Juliana
+  Freire.
+\newblock A large-scale study about quality and reproducibility of {Jupyter}
+  notebooks.
+\newblock In \emph{Proceedings of the 35th IEEE/ACM International Conference on
+  Software Maintenance and Evolution (ICSME)}, pages 507--517, 2019.
+\newblock \doi{10.1109/ICSME.2019.00080}.
+
+\bibitem[Ram(2013)]{ram2013git}
+Karthik Ram.
+\newblock Git can facilitate greater reproducibility and increased transparency
+  in science.
+\newblock \emph{Source Code for Biology and Medicine}, 8\penalty0 (1):\penalty0
+  7, 2013.
+\newblock \doi{10.1186/1751-0473-8-7}.
+
+\bibitem[{Research Software Alliance}(2024)]{resa2024actionable}
+{Research Software Alliance}.
+\newblock Developing actionable guidelines for {FAIR} research software.
+\newblock ReSA Task Force, 2024.
+\newblock URL \url{https://zenodo.org/records/18877929}.
+\newblock Task Force launched December 2024 analyzing 17 FAIR4RS principles
+  into 6 actionable categories; builds on FAIR-BioRS methodology.
+
+\bibitem[Sandve et~al.(2013)Sandve, Nekrutenko, Taylor, and
+  Hovig]{sandve2013ten}
+Geir~Kjetil Sandve, Anton Nekrutenko, James Taylor, and Eivind Hovig.
+\newblock Ten simple rules for reproducible computational research.
+\newblock \emph{PLOS Computational Biology}, 9\penalty0 (10):\penalty0
+  e1003285, 2013.
+\newblock \doi{10.1371/journal.pcbi.1003285}.
+
+\bibitem[Schick et~al.(2023)Schick, Dwivedi-Yu, Dess{\`i}, Raileanu, Lomeli,
+  Zettlemoyer, Cancedda, and Scialom]{schick2023toolformer}
+Timo Schick, Jane Dwivedi-Yu, Roberto Dess{\`i}, Roberta Raileanu, Maria
+  Lomeli, Luke Zettlemoyer, Nicola Cancedda, and Thomas Scialom.
+\newblock Toolformer: Language models can teach themselves to use tools.
+\newblock arXiv preprint arXiv:2302.04761, 2023.
+\newblock URL \url{https://arxiv.org/abs/2302.04761}.
+
+\bibitem[Schulte et~al.(2012)Schulte, Davison, Dye, and
+  Dominik]{schulte2012multilanguage}
+Eric Schulte, Dan Davison, Thomas Dye, and Carsten Dominik.
+\newblock A multi-language computing environment for literate programming and
+  reproducible research.
+\newblock \emph{Journal of Statistical Software}, 46\penalty0 (3):\penalty0
+  1--24, 2012.
+\newblock \doi{10.18637/jss.v046.i03}.
+
+\bibitem[Simmons et~al.(2011)Simmons, Nelson, and
+  Simonsohn]{simmons2011falsepositive}
+Joseph~P. Simmons, Leif~D. Nelson, and Uri Simonsohn.
+\newblock False-positive psychology: Undisclosed flexibility in data collection
+  and analysis allows presenting anything as significant.
+\newblock \emph{Psychological Science}, 22\penalty0 (11):\penalty0 1359--1366,
+  2011.
+\newblock \doi{10.1177/0956797611417632}.
+
+\bibitem[Stodden et~al.(2016)Stodden, McNutt, Bailey, Deelman, Gil, Hanson,
+  Heroux, Ioannidis, and Taufer]{stodden2016enhancing}
+Victoria Stodden, Marcia McNutt, David~H. Bailey, Ewa Deelman, Yolanda Gil,
+  Brooks Hanson, Michael~A. Heroux, John P.~A. Ioannidis, and Michela Taufer.
+\newblock Enhancing reproducibility for computational methods.
+\newblock \emph{Science}, 354\penalty0 (6317):\penalty0 1240--1241, 2016.
+\newblock \doi{10.1126/science.aah6168}.
+
+\bibitem[Torres-Arias et~al.(2019)Torres-Arias, Afzali, Kuppusamy, Curtmola,
+  and Cappos]{torresarias2019intoto}
+Santiago Torres-Arias, Hammad Afzali, Trishank~Karthik Kuppusamy, Reza
+  Curtmola, and Justin Cappos.
+\newblock in-toto: Providing farm-to-table guarantees for bits and bytes.
+\newblock In \emph{28th USENIX Security Symposium}, pages 1393--1410, 2019.
+\newblock URL
+  \url{https://www.usenix.org/conference/usenixsecurity19/presentation/torres-arias}.
+
+\bibitem[Wang et~al.(2023)Wang, Xie, Jiang, Mandlekar, Xiao, Zhu, Fan, and
+  Anandkumar]{wang2023voyager}
+Guanzhi Wang, Yuqi Xie, Yunfan Jiang, Ajay Mandlekar, Chaowei Xiao, Yuke Zhu,
+  Linxi Fan, and Anima Anandkumar.
+\newblock Voyager: An open-ended embodied agent with large language models.
+\newblock arXiv preprint arXiv:2305.16291, 2023.
+\newblock URL \url{https://arxiv.org/abs/2305.16291}.
+
+\bibitem[Wang et~al.(2024{\natexlab{a}})Wang, Ma, Feng, Zhang, Yang, Zhang,
+  Chen, Tang, Chen, Lin, Zhao, Wei, and Wen]{wang2024llmagents}
+Lei Wang, Chen Ma, Xueyang Feng, Zeyu Zhang, Hao Yang, Jingsen Zhang, Zhiyuan
+  Chen, Jiakai Tang, Xu~Chen, Yankai Lin, Wayne~Xin Zhao, Zhewei Wei, and
+  Ji-Rong Wen.
+\newblock A survey on large language model based autonomous agents.
+\newblock \emph{Frontiers of Computer Science}, 18\penalty0 (6):\penalty0
+  186345, 2024{\natexlab{a}}.
+\newblock \doi{10.1007/s11704-024-40231-1}.
+
+\bibitem[Wang et~al.(2024{\natexlab{b}})Wang, Li, Song, Xu, Tang, Zhuge, Pan,
+  Song, Li, Li, Zhang, Ma, Yu, Yin, Livescu, and Neubig]{wang2024opendevin}
+Xingyao Wang, Boxuan Li, Yufan Song, Frank~F. Xu, Xiangru Tang, Mingchen Zhuge,
+  Jiayi Pan, Yunzhu Song, Bowen Li, Jasmine Li, Tao Zhang, Chuyi Ma, Ruohan Yu,
+  Wangchunshu Yin, Karen Livescu, and Graham Neubig.
+\newblock {OpenDevin}: An open platform for {AI} software developers as
+  generalist agents.
+\newblock arXiv preprint arXiv:2407.16741; published as OpenHands at ICLR 2025,
+  2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2407.16741}.
+
+\bibitem[Wilkinson et~al.(2016)Wilkinson, Dumontier, Aalbersberg, Appleton,
+  Axton, Baak, Blomberg, Boiten, da~Silva~Santos, Bourne,
+  et~al.]{wilkinson2016fair}
+Mark~D. Wilkinson, Michel Dumontier, IJsbrand~Jan Aalbersberg, Gabrielle
+  Appleton, Myles Axton, Arie Baak, Niklas Blomberg, Jan-Willem Boiten,
+  Luiz~Bonino da~Silva~Santos, Philip~E. Bourne, et~al.
+\newblock The {FAIR} guiding principles for scientific data management and
+  stewardship.
+\newblock \emph{Scientific Data}, 3:\penalty0 160018, 2016.
+\newblock \doi{10.1038/sdata.2016.18}.
+
+\bibitem[Wilson et~al.(2017)Wilson, Bryan, Cranston, Kitzes, Nederbragt, and
+  Teal]{wilson2017good}
+Greg Wilson, Jennifer Bryan, Karen Cranston, Justin Kitzes, Lex Nederbragt, and
+  Tracy~K. Teal.
+\newblock Good enough practices in scientific computing.
+\newblock \emph{PLOS Computational Biology}, 13\penalty0 (6):\penalty0
+  e1005510, 2017.
+\newblock \doi{10.1371/journal.pcbi.1005510}.
+
+\bibitem[Xie et~al.(2018)Xie, Allaire, and Grolemund]{xie2018dynamic}
+Yihui Xie, J.~J. Allaire, and Garrett Grolemund.
+\newblock \emph{R Markdown: The Definitive Guide}.
+\newblock Chapman and Hall/CRC, 2018.
+\newblock ISBN 978-1138359338.
+\newblock \doi{10.1201/9781138359444}.
+
+\bibitem[Yao et~al.(2023)Yao, Zhao, Yu, Du, Shafran, Narasimhan, and
+  Cao]{yao2023react}
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan,
+  and Yuan Cao.
+\newblock {ReAct}: Synergizing reasoning and acting in language models.
+\newblock In \emph{Proceedings of the Eleventh International Conference on
+  Learning Representations (ICLR 2023)}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2210.03629}.
+
+\end{thebibliography}

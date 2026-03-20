@@ -14,7 +14,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `usage/` | Content authoring, formatting, visualization patterns |
 | `operational/` | Build, config, logging, troubleshooting, reporting |
 | `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
-| `modules/` | Infrastructure module guides (10 modules) |
+| `modules/` | Infrastructure module guides (12 modules) |
 | `development/` | Contributing, testing, security, roadmap |
 | `best-practices/` | Best practices, version control, migration |
 | `prompts/` | AI prompt templates (9 expert prompts) |
@@ -60,8 +60,8 @@ If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/
 | Project | Location | Extra packages needed in root venv |
 | --- | --- | --- |
 | `code_project` | `projects/` (active) | has local `.venv/` — no root venv issue |
-| `act_inf_metaanalysis` | `projects_in_progress/` | `scipy`, `pandas`, `networkx`, `requests`, `rdflib`, `wordcloud`, `scikit-learn` |
-| `template` | `projects_in_progress/` | `matplotlib` (must be core dep, not optional group) |
+| `act_inf_metaanalysis` | `projects/` (active) | `scipy`, `pandas`, `networkx`, `requests`, `rdflib`, `wordcloud`, `scikit-learn` |
+| `template` | `projects/` (active) | `matplotlib` (must be core dep, not optional group) |
 
 ### ⚠️ Critical Rule: `matplotlib` Must be in Core Dependencies
 

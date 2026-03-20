@@ -1,6 +1,6 @@
 # 🔬 Modules Guide
 
-> **Guide** to the 10 infrastructure modules
+> **Guide** to the 12 infrastructure modules
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
@@ -20,6 +20,8 @@
 | 📊 **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
 | 🔍 **Project** | Project discovery | Multi-project orchestration | — |
 | 🔒 **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | — |
+| ⚙️ **Config** | Configuration schemas | Secure config, environment templates | — |
+| 🐳 **Docker** | Containerization | Dockerfile, docker-compose | — |
 
 All modules follow the thin orchestrator pattern with test coverage.
 

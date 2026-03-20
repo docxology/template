@@ -1,0 +1,10 @@
+{
+  "source_file": "template_combined.pdf",
+  "timestamp": "2026-03-20T22:09:56.443614+00:00",
+  "hashes": {
+    "sha256": "e1e885b952d814a86e3d178c6e3bce82c78faf5fbd5e4d514b3fbd3e533d7fef",
+    "sha512": "2ee0bc6361541a46edf71d7a0c06a08c643baedcf189de332f65d1d5c0cc86ef92844f6c3ccf3eceddb83b7f06ddbbe4d44004151bbc4d31fa2eb7798c732762"
+  },
+  "document_id": "89d9efe727dc1f4b534e83a7ca9c732a",
+  "steganography_applied": "true"
+}

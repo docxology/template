@@ -144,7 +144,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ## 🧪 **Advanced Modules**
 
-- **[modules/modules-guide.md](modules/modules-guide.md)** - All 10 infrastructure modules
+- **[modules/modules-guide.md](modules/modules-guide.md)** - All 12 infrastructure modules
 - **[reference/api-reference.md](reference/api-reference.md)** - Unified API documentation
 - **[modules/pdf-validation.md](modules/pdf-validation.md)** - PDF validation system
 

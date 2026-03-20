@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-03-20T15:08:51.747897",
+  "infrastructure": {},
+  "project": {
+    "passed": 65,
+    "failed": 0,
+    "skipped": 0,
+    "total": 65,
+    "warnings": 0,
+    "exit_code": 0,
+    "discovery_count": 65,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 16.13,
+      "execution": 16.13
+    },
+    "test_categories": {},
+    "coverage_percent": 94.24603174603175,
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 65,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 65,
+    "all_passed": true,
+    "project_coverage": 94.24603174603175
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 94.24603174603175,
+      "total_executed": 475,
+      "total_missing": 29,
+      "total_excluded": 0,
+      "total_lines": 504,
+      "file_coverage": {
+        "projects/template/src/template/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 6,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 6
+        },
+        "projects/template/src/template/architecture_viz.py": {
+          "coverage_percent": 98.5,
+          "executed_lines": 197,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 200
+        },
+        "projects/template/src/template/inject_metrics.py": {
+          "coverage_percent": 90.32258064516128,
+          "executed_lines": 56,
+          "missing_lines": 6,
+          "excluded_lines": 0,
+          "total_lines": 62
+        },
+        "projects/template/src/template/introspection.py": {
+          "coverage_percent": 92.99363057324841,
+          "executed_lines": 146,
+          "missing_lines": 11,
+          "excluded_lines": 0,
+          "total_lines": 157
+        },
+        "projects/template/src/template/metrics.py": {
+          "coverage_percent": 88.60759493670885,
+          "executed_lines": 70,
+          "missing_lines": 9,
+          "excluded_lines": 0,
+          "total_lines": 79
+        }
+      }
+    }
+  }
+}

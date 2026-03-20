@@ -270,11 +270,9 @@ Executes the core pipeline (stages 0-6) without LLM features.
 - Stops on first failure with clear error messages
 - Suitable for CI/CD environments
 
-#### Option 8: Run Full Pipeline
-
-Executes the 9-stage pipeline (displayed as [1/9] to [9/9], with an initial clean step shown as [0/9]):
-
-- Includes all core stages plus LLM review and translations
+#### Option 8: Run Full Pipel**What it does:**
+Executes the eight-stage pipeline (displayed as [1/8] to [8/8], with an initial clean step shown as [0/8]):
+1. Configures environment and checks requirements LLM review and translations
 - manuscript generation with AI assistance
 - Automatic checkpointing and resume capability
 

@@ -186,13 +186,21 @@ run_steganography_processor() {
     local current_proj="${1:-$CURRENT_PROJECT}"
     log_header "Steganographic PDF Post-Processing ($current_proj)"
 
+    # Steganography uses infrastructure modules from the root venv, not project venvs.
+    # Ensure the root venv has rendering + steganography deps installed.
     if command -v uv >/dev/null 2>&1; then
-        uv sync --group rendering --group steganography >/dev/null 2>&1 || true
+        (cd "$REPO_ROOT" && uv sync --group rendering --group steganography) >/dev/null 2>&1 || true
+    fi
+
+    # Always use root venv Python for infrastructure modules (pypdf, reportlab, etc.)
+    local steg_python="python3"
+    if [[ -f "$REPO_ROOT/.venv/bin/python3" ]]; then
+        steg_python="$REPO_ROOT/.venv/bin/python3"
     fi
 
     log_info "Processing project: $current_proj"
 
-    $(get_python_cmd) -c "
+    $steg_python -c "
 import sys
 from pathlib import Path
 

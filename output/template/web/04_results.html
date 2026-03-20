@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_results</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="results">Results</h1>
+<p><code>template/</code> was evaluated through a multi-project pipeline
+execution, measuring test coverage, pipeline timing, output integrity,
+and steganographic performance across three heterogeneous exemplar
+projects.</p>
+<h2 id="multi-project-pipeline-execution">Multi-Project Pipeline
+Execution</h2>
+<p>All three projects were executed through the full eight-stage
+pipeline using the <code>run.sh</code> interactive orchestrator with the
+“all projects core (fast)” configuration, which skips infrastructure
+tests and LLM review to isolate project-level performance.</p>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Stages</th>
+<th>Duration</th>
+<th>Tests</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_project</code></td>
+<td>7</td>
+<td>~40s</td>
+<td>39/39</td>
+<td>90%+</td>
+</tr>
+<tr>
+<td><code>act_inf_metaanalysis</code></td>
+<td>7</td>
+<td>~60s</td>
+<td>505/505</td>
+<td>90%+</td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td>7</td>
+<td>~25s</td>
+<td>65/65</td>
+<td>90%+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Overall success rate</strong>: 100.0% (3/3 projects)
+<strong>Total pipeline duration</strong>: ~125s <strong>Average per
+project</strong>: ~42s</p>
+<p><em>Timing measured on Apple M-series hardware with SSD; analysis
+scripts use fixed random seeds. Figures are representative; actual
+duration scales with system load, test suite size, and manuscript
+complexity.</em></p>
+<p>The <code>act_inf_metaanalysis</code> project, with its 505 tests and
+programmatically generated figures, represents the most computationally
+intensive exemplar—yet completes in under one minute, confirming that
+the Zero-Mock policy’s real-method overhead remains tractable at this
+scale.</p>
+<h2 id="infrastructure-test-suite">Infrastructure Test Suite</h2>
+<p>The infrastructure layer is validated by a separate test suite of
+significant scale:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test files</td>
+<td>163+</td>
+</tr>
+<tr>
+<td>Total tests</td>
+<td>~3,083</td>
+</tr>
+<tr>
+<td>Infrastructure coverage threshold</td>
+<td>60% (achieved: 83%+)</td>
+</tr>
+<tr>
+<td>Zero-mock violations</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Real filesystem operations</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Real subprocess invocations</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<p>This test suite exercises all twelve infrastructure modules,
+including the rendering pipeline (Pandoc/XeLaTeX integration),
+steganographic operations (alpha-channel overlay, QR injection), and LLM
+client interactions (real HTTP calls to Ollama).</p>
+<h2 id="infrastructure-module-inventory">Infrastructure Module
+Inventory</h2>
+<p>The introspection module (<code>template.introspection</code>)
+programmatically enumerates the infrastructure layer, confirming the
+following module distribution:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th style="text-align: center;">Python Files</th>
+<th>Key Exports</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>core</code></td>
+<td style="text-align: center;">28</td>
+<td><code>get_logger</code>, <code>load_config</code>,
+<code>TemplateError</code></td>
+</tr>
+<tr>
+<td><code>documentation</code></td>
+<td style="text-align: center;">6</td>
+<td><code>FigureManager</code>, <code>generate_glossary</code></td>
+</tr>
+<tr>
+<td><code>llm</code></td>
+<td style="text-align: center;">30</td>
+<td>LLM review, literature search, translation</td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td style="text-align: center;">2</td>
+<td><code>discover_projects</code>, workspace management</td>
+</tr>
+<tr>
+<td><code>publishing</code></td>
+<td style="text-align: center;">9</td>
+<td>Citation generation (APA, BibTeX, MLA), Zenodo</td>
+</tr>
+<tr>
+<td><code>rendering</code></td>
+<td style="text-align: center;">12</td>
+<td>PDF rendering, Pandoc filters, HTML reports</td>
+</tr>
+<tr>
+<td><code>reporting</code></td>
+<td style="text-align: center;">14</td>
+<td>Coverage parsing, executive reports</td>
+</tr>
+<tr>
+<td><code>scientific</code></td>
+<td style="text-align: center;">6</td>
+<td><code>check_numerical_stability</code>,
+<code>benchmark_function</code></td>
+</tr>
+<tr>
+<td><code>steganography</code></td>
+<td style="text-align: center;">8</td>
+<td>Metadata injection, QR overlays, hashing</td>
+</tr>
+<tr>
+<td><code>validation</code></td>
+<td style="text-align: center;">22</td>
+<td>PDF validation, Markdown checking, CLI</td>
+</tr>
+<tr>
+<td>(+ config, docker)</td>
+<td style="text-align: center;">—</td>
+<td>Configuration, containerization</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: center;"><strong>~150</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><em>The ~150 figure includes approximately 13 additional modules in
+the <code>config/</code> and <code>docker/</code> subpackages
+(configuration schemas and containerization utilities) not enumerated
+individually above.</em></p>
+<p>All 12 modules have 100% documentation coverage at Tiers 1–2
+(<code>AGENTS.md</code>, <code>README.md</code>); the 10 active
+subpackages additionally carry <code>SKILL.md</code> for Tier-3 agentic
+skill discovery. This places <code>template/</code> among the first
+research software frameworks to implement an MCP-aligned skill layer
+<span class="citation"
+data-cites="anthropic2024mcp">[@anthropic2024mcp]</span> across its
+infrastructure stack.</p>
+<h2 id="agentic-skill-documentation-coverage">Agentic Skill
+Documentation Coverage</h2>
+<p>The three-tier <a
+href="#documentation-duality-and-the-agentic-skill-architecture">skill
+protocol</a> achieves complete coverage across all infrastructure
+modules:</p>
+<table>
+<thead>
+<tr>
+<th>Documentation Layer</th>
+<th style="text-align: center;">Files</th>
+<th style="text-align: center;">Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System (<code>CLAUDE.md</code>)</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">100%</td>
+</tr>
+<tr>
+<td>Structural (<code>AGENTS.md</code>)</td>
+<td style="text-align: center;">12+ per-directory</td>
+<td style="text-align: center;">100%</td>
+</tr>
+<tr>
+<td>Skill (<code>SKILL.md</code>)</td>
+<td style="text-align: center;">12 modules</td>
+<td style="text-align: center;">100%</td>
+</tr>
+<tr>
+<td>PAI (<code>PAI.md</code>)</td>
+<td style="text-align: center;">1 (infrastructure-level)</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Human (<code>README.md</code>)</td>
+<td style="text-align: center;">12+ per-directory</td>
+<td style="text-align: center;">100%</td>
+</tr>
+</tbody>
+</table>
+<p>This four-layer coverage creates 12 fully described, MCP-mappable
+tool endpoints that a sufficiently capable agent could invoke without
+any source-code access. The aggregate documentation footprint (145+
+files) represents a deliberate engineering investment: each
+documentation file is not commentary but a specification, enforcing
+architectural constraints through structured natural language <span
+class="citation"
+data-cites="lau2025aicoding">[@lau2025aicoding]</span>.</p>
+<h2 id="pipeline-stage-execution">Pipeline Stage Execution</h2>
+<p>The eight pipeline stages execute sequentially with strict error
+propagation:</p>
+<table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 27%" />
+<col style="width: 34%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Script</th>
+<th>Responsibility</th>
+<th>Failure Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td><code>00_setup_environment.py</code></td>
+<td>Environment validation</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>01</td>
+<td><code>01_run_tests.py</code></td>
+<td>Test execution + coverage</td>
+<td>Configurable tolerance</td>
+</tr>
+<tr>
+<td>02</td>
+<td><code>02_run_analysis.py</code></td>
+<td>Script invocation</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>03</td>
+<td><code>03_render_pdf.py</code></td>
+<td>Pandoc + XeLaTeX</td>
+<td>Hard fail</td>
+</tr>
+<tr>
+<td>04</td>
+<td><code>04_validate_output.py</code></td>
+<td>PDF integrity</td>
+<td>Warning + report</td>
+</tr>
+<tr>
+<td>05</td>
+<td><code>05_copy_outputs.py</code></td>
+<td>Output organization</td>
+<td>Soft fail</td>
+</tr>
+<tr>
+<td>06</td>
+<td><code>06_llm_review.py</code></td>
+<td>LLM-assisted review</td>
+<td>Skippable</td>
+</tr>
+<tr>
+<td>07</td>
+<td><code>07_generate_executive_report.py</code></td>
+<td>Report aggregation</td>
+<td>Soft fail</td>
+</tr>
+</tbody>
+</table>
+<h2 id="steganographic-performance">Steganographic Performance</h2>
+<p>The steganography subsystem
+(<code>infrastructure.steganography</code>) was benchmarked across all
+three project PDFs:</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 11%" />
+<col style="width: 16%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr>
+<th>Project</th>
+<th style="text-align: center;">Pages</th>
+<th style="text-align: center;">Metadata</th>
+<th style="text-align: center;">SHA-256</th>
+<th style="text-align: center;">Overlay</th>
+<th style="text-align: center;">QR Code</th>
+<th style="text-align: center;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_project</code></td>
+<td style="text-align: center;">~20</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 0.8s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 1.5s</td>
+</tr>
+<tr>
+<td><code>act_inf_metaanalysis</code></td>
+<td style="text-align: center;">~80</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 2.0s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 2.8s</td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td style="text-align: center;">~30</td>
+<td style="text-align: center;">&lt; 0.3s</td>
+<td style="text-align: center;">&lt; 0.05s</td>
+<td style="text-align: center;">&lt; 0.9s</td>
+<td style="text-align: center;">&lt; 0.4s</td>
+<td style="text-align: center;">&lt; 1.6s</td>
+</tr>
+</tbody>
+</table>
+<p><em>Performance measured on Apple M-series hardware with SSD,
+single-threaded execution. Values represent wall-clock time; actual
+performance scales with PDF page count and system I/O.</em></p>
+<p>The steganographic watermark survives standard PDF operations
+(viewing, printing) but is detectable through pixel-level analysis of
+the alpha channel. Performance scales linearly with page count,
+dominated by the alpha-channel overlay phase.</p>
+<h2 id="self-referential-analysis">Self-Referential Analysis</h2>
+<p>This manuscript is itself a product of the <code>template/</code>
+pipeline, demonstrating its self-productive capability. The
+<code>template</code> project’s
+<code>src/template/introspection.py</code> module programmatically
+analyzes the repository and generates four architecture figures, all
+presented below. The numeric values in the tables above—module counts,
+test counts, file totals—were not typed by hand but injected at build
+time by the <code>${variable}</code> substitution system described in
+the Methods, reading live metrics from the repository’s own structure.
+The figures below were rendered by the same
+<code>architecture_viz.py</code> module whose font-size constraints are
+specified in the <a href="#quality-assurance">Quality Assurance</a>
+section. In this way, the manuscript does not merely <em>describe</em>
+but <em>enacts</em> the pipeline it documents.</p>
+<p><img src="figures/architecture_overview.png"
+alt="Two-Layer Architecture Overview" /> <strong>Figure 1</strong>:
+Two-Layer Architecture separating the generic, reusable infrastructure
+layer (12 subpackages, upper panel) from domain-specific project
+workspaces (lower panel), connected by the eight-stage pipeline. Each
+module box displays its Python file count and a documentation badge (A =
+<code>AGENTS.md</code>, R = <code>README.md</code>, S =
+<code>SKILL.md</code>, P = <code>PAI.md</code>; a dot <code>·</code>
+means absent). Project boxes show chapter and test counts. All labels
+are drawn from live repository introspection at render time; font sizes
+follow the 16 pt <a href="#visualization-standards">accessibility
+floor</a>.</p>
+<p><img src="figures/pipeline_stages.png" alt="Pipeline Stage Flow" />
+<strong>Figure 2</strong>: Sequential eight-stage build pipeline (Stage
+00–07, plus a pre-step clean stage). Viridis colour progression encodes
+stage ordering. Each box includes a short description of the stage’s
+primary action. Stage names and descriptions are generated from
+<code>PipelineStage</code> objects returned by
+<code>report.pipeline_stages</code>, ensuring the figure reflects the
+actual pipeline.</p>
+<p><img src="figures/module_inventory.png"
+alt="Infrastructure Module Inventory" /> <strong>Figure 3</strong>:
+Python source-file count per infrastructure subpackage, sorted
+descending. Bar colour intensity scales with file count. Documentation
+badges <code>[ARSP]</code> appear to the right of each count (A =
+<code>AGENTS.md</code>, R = <code>README.md</code>, S =
+<code>SKILL.md</code>, P = <code>PAI.md</code>; a dot <code>·</code>
+means absent). Total file count is annotated at chart bottom.</p>
+<h2 id="comparative-feature-analysis">Comparative Feature Analysis</h2>
+<p>To contextualize <code>template/</code>’s contributions, we compare
+its feature set against nine established tools. The full capability
+matrix (14 capabilities × 10 tools) is rendered as a colour-coded
+heatmap in Figure 4 and reproduced as a text table in Appendix F. Rows
+are grouped into three categories — <em>Core Pipeline</em>, <em>Quality
+&amp; Security</em>, and <em>Ecosystem</em> — separated by horizontal
+dividers.</p>
+<p><img src="figures/comparative_feature_matrix.png"
+alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4</strong>:
+Comparative feature matrix (14 capabilities × 10 tools). Colour scale:
+green <strong>✓</strong> = full native support; yellow
+<strong>◐</strong> = partial / plugin-based; red <strong>—</strong> =
+absent. The <code>template/</code> column is outlined in blue.
+Capabilities are grouped into <em>Core Pipeline</em> (rows 1–2),
+<em>Quality &amp; Security</em> (rows 3–8), and <em>Ecosystem</em> (rows
+9–14). <code>template/</code> is, to our knowledge, the only open-source
+system that integrates all twelve unique capabilities (pipeline
+orchestration through zero-mock policy, plus optional containerization)
+within a single cohesive architecture. Snakemake, Nextflow, and CWL
+provide superior distributed execution support not yet in
+<code>template/</code>.</p>
+<p>¹ Nextflow 25.04.0: data-lineage provenance tracking at build level,
+not document level. ² DVC: content-addressed artifact versioning via
+object store. ³ DVC: remote storage integration (S3, GCS, Azure) without
+native distributed compute orchestration.</p>
+<h2 id="test-quality-metrics">Test Quality Metrics</h2>
+<p>The Zero-Mock testing policy produces measurably higher-fidelity
+tests:</p>
+<ul>
+<li><strong>Zero mock objects</strong> across all test suites (verified
+by automated scanning for <code>unittest.mock</code>,
+<code>MagicMock</code>, and <code>patch</code> imports).</li>
+<li><strong>Real filesystem operations</strong>: Tests create, read,
+validate, and delete actual files in temporary directories.</li>
+<li><strong>Real subprocess calls</strong>: Pipeline stage tests invoke
+actual <code>pytest</code>, <code>pandoc</code>, and
+<code>xelatex</code> subprocesses.</li>
+<li><strong>Marker-based skip logic</strong>: Tests requiring optional
+services (Ollama, network) use <code>@pytest.mark.requires_ollama</code>
+for graceful degradation.</li>
+<li><strong>Categorical axiom verification</strong>: The
+<code>cognitive_case_diagrams</code> project tests validate identity
+morphisms, composition, weight multiplication, and the triangle
+inequality on real enriched category objects.</li>
+</ul>
+</body>
+</html>

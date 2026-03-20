@@ -4,11 +4,11 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.82",
-      "total_size_bytes": 1909255,
+      "total_size_bytes": 1907897,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
-          "size_mb": "1.63",
+          "size_mb": "1.62",
           "path": "pdf/code_project_combined.pdf"
         },
         {
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.19",
-      "total_size_bytes": 203599,
+      "total_size_bytes": 203563,
       "largest_files": [
         {
           "name": "index.html",
@@ -64,8 +64,8 @@
     "slides": {
       "exists": true,
       "file_count": 64,
-      "size_mb": "2.39",
-      "total_size_bytes": 2501778,
+      "size_mb": "2.38",
+      "total_size_bytes": 2500575,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "1.52",
-      "total_size_bytes": 1589437,
+      "size_mb": "1.51",
+      "total_size_bytes": 1588109,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -152,7 +152,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.01",
-      "total_size_bytes": 8436,
+      "total_size_bytes": 8424,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -196,7 +196,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2655,
+      "total_size_bytes": 2662,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -210,11 +210,11 @@
     }
   },
   "total_files": 103,
-  "total_size_mb": 5.938201904296875,
+  "total_size_mb": 5.934453964233398,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
-      "size_mb": "1.63",
+      "size_mb": "1.62",
       "category": "pdf",
       "path": "pdf/code_project_combined.pdf"
     },
@@ -275,15 +275,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8208074569702148,
-    "web": 0.1941671371459961,
-    "slides": 2.3858814239501953,
-    "figures": 1.5158052444458008,
+    "pdf": 1.8195123672485352,
+    "web": 0.19413280487060547,
+    "slides": 2.3847341537475586,
+    "figures": 1.5145387649536133,
     "data": 0.01096343994140625,
-    "reports": 0.008045196533203125,
+    "reports": 0.00803375244140625,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0025320053100585938
+    "logs": 0.0025386810302734375
   },
   "file_counts_by_type": {
     ".md": 4,

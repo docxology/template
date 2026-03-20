@@ -283,7 +283,7 @@ Level 10-12: Expert Usage (1-2 months)
 ### Advanced Topics
 
 - **[Two-Layer Architecture](../architecture/two-layer-architecture.md)** - architecture guide
-- **[Modules Guide](../modules/modules-guide.md)** - Using all 10 infrastructure modules
+- **[Modules Guide](../modules/modules-guide.md)** - Using all 12 infrastructure modules
 - **[Dependency management](../../README.md)** - `uv` usage and install/sync commands
 - **[CI/CD automation](../../.github/README.md)** - GitHub Actions and repository automation
 - **[Performance Optimization](../operational/config/performance-optimization.md)** - Build time optimization

@@ -8,7 +8,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 
 | File | Purpose |
 |------|---------|
-| `modules-guide.md` | Overview of all 10 infrastructure modules |
+| `modules-guide.md` | Overview of all 12 infrastructure modules |
 | `scientific-simulation-guide.md` | Scientific simulation and analysis system |
 | `pdf-validation.md` | PDF validation system documentation |
 | `guides/integrity-module.md` | Integrity verification module |
@@ -22,7 +22,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 
 - Each per-module guide in `guides/` covers: purpose, API, usage examples, and testing
 - All modules live in `infrastructure/` (Layer 1) and are project-agnostic
-- Module development follows `.cursorrules/infrastructure_modules.md` standards
+- Module development follows `../rules/infrastructure_modules.md` standards
 - 60% minimum test coverage for infrastructure modules
 
 ## See Also
