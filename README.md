@@ -5,8 +5,10 @@
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/RUN_GUIDE.md)
 [![Tests](https://img.shields.io/badge/tests-3025%20passing%20(100%25)-brightgreen)](docs/RUN_GUIDE.md)
 [![Documentation](https://img.shields.io/badge/docs-105%2B%20files-blue)](docs/documentation-index.md)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
+> **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
+>
 > **Template Repository** - Click "Use this template" to create a research project with this structure
 
 A system for research and development projects. This template provides a test-driven structure with automated PDF generation, professional documentation, and validated build pipelines.

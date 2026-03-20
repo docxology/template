@@ -4,6 +4,13 @@
 
 This document provides documentation for the Research Project Template system, ensuring understanding of all functionality, configuration options, and operational procedures.
 
+### 📄 Publication
+
+**Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
+**DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
+
+The reproducibility crisis in computational research is fundamentally structural: research artifacts are scattered across disconnected tools—LaTeX editors, Jupyter notebooks, ad-hoc shell scripts—with no enforced mechanism to keep code, data, and manuscript synchronized. `template/` applies the principle of Infrastructure as Code to the research lifecycle, making the manuscript, test suite, and provenance chain version-controlled, deterministically buildable, and independently verifiable. It is built on a Two-Layer Architecture that separates 12 reusable infrastructure subpackages (~150 Python modules, validated by ~3,083 tests) from self-contained project workspaces, connected by an eight-stage build pipeline. A Documentation Duality standard equips every directory with both human-readable `README.md` and machine-readable `AGENTS.md` files, while each infrastructure module additionally carries a `SKILL.md`—a structured skill descriptor aligned with the Model Context Protocol—enabling AI agents to locate and invoke module capabilities without hallucinating API signatures. Scalability is demonstrated across three heterogeneous projects achieving 100% pipeline success with zero mock violations. `template/` is open source under the Apache 2.0 License at `github.com/docxology/template`.
+
 ## 📋 Table of Contents
 
 1. [Core Architecture](#-core-architecture)

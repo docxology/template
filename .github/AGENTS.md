@@ -1,6 +1,12 @@
 # GitHub Integration
 ## Overview
 The `.github/` directory contains GitHub-specific configuration and automation for the Research Project Template. This includes continuous integration workflows, issue templates, PR templates, and other GitHub integrations that ensure code quality and collaborative development.
+
+## Publication
+**Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
+**DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
+**Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
+**License**: Apache 2.0
 ## Directory Structure
 ```text
 .github/
