@@ -65,7 +65,7 @@
       "exists": true,
       "file_count": 168,
       "size_mb": "3.04",
-      "total_size_bytes": 3191869,
+      "total_size_bytes": 3191873,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
@@ -183,7 +183,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2668,
+      "total_size_bytes": 2660,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -197,7 +197,7 @@
     }
   },
   "total_files": 211,
-  "total_size_mb": 5.937946319580078,
+  "total_size_mb": 5.9379425048828125,
   "largest_files": [
     {
       "name": "template_combined.pdf",
@@ -264,13 +264,13 @@
   "sizes_by_category": {
     "pdf": 1.5131359100341797,
     "web": 0.5055294036865234,
-    "slides": 3.044003486633301,
+    "slides": 3.0440073013305664,
     "figures": 0.862431526184082,
     "data": 0.0034017562866210938,
     "reports": 0.006899833679199219,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.002544403076171875
+    "logs": 0.002536773681640625
   },
   "file_counts_by_type": {
     ".md": 4,

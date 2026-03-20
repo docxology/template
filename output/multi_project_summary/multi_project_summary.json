@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-03-20T15:35:17.387430",
+  "total_projects": 3,
+  "successful_projects": 3,
+  "failed_projects": 0,
+  "total_duration": 316.63627791404724,
+  "infra_test_duration": 0.0,
+  "projects": {
+    "act_inf_metaanalysis": {
+      "success": true,
+      "duration": 118.16425919532776,
+      "stages_completed": 7,
+      "errors": []
+    },
+    "code_project": {
+      "success": true,
+      "duration": 73.58378982543945,
+      "stages_completed": 7,
+      "errors": []
+    },
+    "template": {
+      "success": true,
+      "duration": 124.8352632522583,
+      "stages_completed": 7,
+      "errors": []
+    }
+  },
+  "performance_analysis": {
+    "slowest_project": "template",
+    "fastest_project": "code_project",
+    "average_duration": 105.52777075767517,
+    "total_pipeline_time": 316.5833122730255
+  },
+  "error_aggregation": {
+    "total_errors": 0,
+    "errors_by_project": {
+      "act_inf_metaanalysis": 0,
+      "code_project": 0,
+      "template": 0
+    }
+  },
+  "recommendations": []
+}

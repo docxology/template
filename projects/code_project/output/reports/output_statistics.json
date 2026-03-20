@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.82",
-      "total_size_bytes": 1907897,
+      "size_mb": "1.83",
+      "total_size_bytes": 1918999,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
-          "size_mb": "1.62",
+          "size_mb": "1.63",
           "path": "pdf/code_project_combined.pdf"
         },
         {
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 64,
-      "size_mb": "2.38",
-      "total_size_bytes": 2500575,
+      "size_mb": "2.40",
+      "total_size_bytes": 2511683,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "1.54",
+          "size_mb": "1.55",
           "path": "slides/03_results_slides.pdf"
         },
         {
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "1.51",
-      "total_size_bytes": 1588109,
+      "size_mb": "1.53",
+      "total_size_bytes": 1599201,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -152,7 +152,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.01",
-      "total_size_bytes": 8424,
+      "total_size_bytes": 8425,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -196,7 +196,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2662,
+      "total_size_bytes": 2666,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -210,17 +210,17 @@
     }
   },
   "total_files": 103,
-  "total_size_mb": 5.934453964233398,
+  "total_size_mb": 5.966217994689941,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
-      "size_mb": "1.62",
+      "size_mb": "1.63",
       "category": "pdf",
       "path": "pdf/code_project_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "1.54",
+      "size_mb": "1.55",
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
@@ -275,15 +275,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8195123672485352,
+    "pdf": 1.8301000595092773,
     "web": 0.19413280487060547,
-    "slides": 2.3847341537475586,
-    "figures": 1.5145387649536133,
+    "slides": 2.395327568054199,
+    "figures": 1.5251169204711914,
     "data": 0.01096343994140625,
-    "reports": 0.00803375244140625,
+    "reports": 0.008034706115722656,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0025386810302734375
+    "logs": 0.0025424957275390625
   },
   "file_counts_by_type": {
     ".md": 4,
