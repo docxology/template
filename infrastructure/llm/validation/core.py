@@ -185,7 +185,8 @@ def validate_complete(
         schema: Required when mode is ``structured``; ignored otherwise.
 
     Returns:
-        True when the content meets the mode's requirements.
+        True when content passes validation; False for length or format failures
+        (short and long modes). Structured mode returns True on success.
 
     Raises:
         ValidationError: If content is empty, or if mode is ``structured`` and

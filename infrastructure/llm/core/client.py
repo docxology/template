@@ -421,13 +421,7 @@ class LLMClient:
         # Configure for JSON output
         struct_options = options or GenerationOptions()
         if use_native_json:
-            struct_options = GenerationOptions(
-                temperature=struct_options.temperature,
-                max_tokens=struct_options.max_tokens,
-                seed=struct_options.seed,
-                stop=struct_options.stop,
-                format_json=True,  # Ollama native JSON mode
-            )
+            struct_options = dataclasses.replace(struct_options, format_json=True)
 
         schema_instruction = ""
         if schema:

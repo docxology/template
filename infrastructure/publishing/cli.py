@@ -125,9 +125,9 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
     # For environment-specific tokens, CredentialManager uses ZENODO_PROD_TOKEN /
     # ZENODO_SANDBOX_TOKEN instead. Fall back to ZENODO_PROD_TOKEN so both naming
     # conventions work for production use.
-    token = args.token or os.getenv("ZENODO_TOKEN") or os.getenv("ZENODO_PROD_TOKEN")
+    token = args.token or os.getenv("ZENODO_PROD_TOKEN") or os.getenv("ZENODO_TOKEN")
     if not token:
-        logger.error("Set ZENODO_TOKEN or ZENODO_PROD_TOKEN environment variable")
+        logger.error("Set ZENODO_PROD_TOKEN or ZENODO_TOKEN environment variable")
         raise SystemExit(1)
 
     output_dir = Path(args.output_dir)

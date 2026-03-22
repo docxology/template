@@ -129,7 +129,7 @@ def run_comprehensive_audit(
 
     # Phase 4: Calculate statistics
     scan_results.scan_duration = time.time() - start_time
-    _populate_statistics(scan_results)
+    _calculate_statistics(scan_results)
 
     logger.info(f"Audit completed in {scan_results.scan_duration:.2f}s")
     logger.info(
@@ -219,16 +219,6 @@ def _validate_single_file(
                 logger.warning(f"{issue_type} validation failed for {md_file}: {e}")
 
     return results
-
-
-def _populate_statistics(scan_results: ScanResults) -> None:
-    """Calculate statistics for the scan results.
-
-    .. deprecated::
-        One-liner wrapper — call ``_calculate_statistics`` directly.
-        Planned for removal: 2026-09-01.
-    """
-    _calculate_statistics(scan_results)
 
 
 def _calculate_statistics(scan_results: ScanResults) -> None:
