@@ -50,6 +50,17 @@ def generate_scientific_documentation(func: Callable[..., Any]) -> str:
         )
         return_info = f"Returns: {ret_name}"
 
+    if return_info:
+        returns_section = f"### Returns\n{return_info}\n\n"
+    else:
+        returns_section = "### Returns\nNo return annotation specified.\n\n"
+
+    if signature.parameters:
+        arg_example = ", ".join(signature.parameters.keys())
+        usage_line = f"result = {func.__name__}({arg_example})"
+    else:
+        usage_line = f"result = {func.__name__}()"
+
     documentation = f"""## {func.__name__}
 
 **Function**: `{func.__name__}{signature}`
@@ -60,8 +71,15 @@ def generate_scientific_documentation(func: Callable[..., Any]) -> str:
 ### Parameters
 {chr(10).join(parameters)}
 
-### {return_info if return_info else "Returns"}
-No return annotation specified.
+{returns_section}### Usage Example
+
+```python
+{usage_line}
+```
+
+### Scientific Context
+
+Generated documentation for a scientific workflow function; confirm units, ranges, and error handling for your experiment.
 
 """
 

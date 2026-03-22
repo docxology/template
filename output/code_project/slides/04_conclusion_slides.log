@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  20 MAR 2026 15:32
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 14:06
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1532,14 +1532,12 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-Missing character: There is no ≥ (U+2265) in font [lmsans10-regular]:mapping=te
-x-text;!
 
 LaTeX Warning: Citation `kingma2014adam' on page 1 undefined on input line 129.
 
 
 )
-Overfull \vbox (1085.88419pt too high) detected at line 247
+Overfull \vbox (1072.28418pt too high) detected at line 247
  []
 
 [1
@@ -1569,7 +1567,7 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  29353 strings out of 468168
  593253 string characters out of 5432816
- 1177942 words of memory out of 5000000
+ 1176942 words of memory out of 5000000
  57552 multiletter control sequences out of 15000+600000
  631248 words of font info for 71 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

@@ -27,7 +27,7 @@ class TestCleanOutputDirectory:
 
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir.exists()
         assert len(list(output_dir.iterdir())) == 0
 
@@ -38,7 +38,7 @@ class TestCleanOutputDirectory:
 
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir.exists()
         assert len(list(output_dir.iterdir())) == 0
 
@@ -49,7 +49,7 @@ class TestCleanOutputDirectory:
         assert not output_dir.exists()
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir.exists()
         assert output_dir.is_dir()
 
@@ -67,7 +67,7 @@ class TestCleanOutputDirectory:
 
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir.exists()
         assert len(list(output_dir.iterdir())) == 0
 
@@ -80,7 +80,7 @@ class TestCleanOutputDirectory:
         original_path = output_dir
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir == original_path
         assert output_dir.exists()
 
@@ -99,7 +99,7 @@ class TestCleanOutputDirectory:
         result = clean_output_directory(output_dir)
 
         # Should still succeed even with read-only files
-        assert result is True
+        assert result is None
         assert output_dir.exists()
         # File should be gone (or at least we tried)
         assert not readonly_file.exists() or len(list(output_dir.iterdir())) == 0
@@ -120,7 +120,7 @@ class TestCleanOutputDirectory:
 
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir.exists()
         assert len(list(output_dir.iterdir())) == 0
 

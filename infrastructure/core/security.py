@@ -189,6 +189,18 @@ def get_cors_headers(origin: str | None = None) -> dict[str, str]:
     return headers
 
 
+class SecurityHeaders:
+    """Static helpers for HTTP security and CORS headers (tests and legacy callers)."""
+
+    @staticmethod
+    def get_security_headers() -> dict[str, str]:
+        return get_security_headers()
+
+    @staticmethod
+    def get_cors_headers(origin: str | None = None) -> dict[str, str]:
+        return get_cors_headers(origin)
+
+
 class RateLimiter:
     """Simple in-memory rate limiter.
 
@@ -331,22 +343,47 @@ class SecurityMonitor:
 
 
 
+<<<<<<< HEAD
 @lru_cache(maxsize=1)
+=======
+# Module-level singletons — initialized on first access to avoid import-time side effects
+# (SecurityMonitor starts background threads; RateLimiter holds mutable rate-window state).
+_security_validator: SecurityValidator | None = None
+_rate_limiter: RateLimiter | None = None
+_security_monitor: SecurityMonitor | None = None
+
+
+>>>>>>> desloppify/code-health
 def get_security_validator() -> SecurityValidator:
-    """Get the global security validator instance (lazily initialized)."""
-    return SecurityValidator()
+    """Return the process-wide SecurityValidator singleton."""
+    global _security_validator
+    if _security_validator is None:
+        _security_validator = SecurityValidator()
+    return _security_validator
 
 
+<<<<<<< HEAD
 @lru_cache(maxsize=1)
+=======
+>>>>>>> desloppify/code-health
 def get_rate_limiter() -> RateLimiter:
-    """Get the global rate limiter instance (lazily initialized)."""
-    return RateLimiter()
+    """Return the process-wide RateLimiter singleton."""
+    global _rate_limiter
+    if _rate_limiter is None:
+        _rate_limiter = RateLimiter()
+    return _rate_limiter
 
 
+<<<<<<< HEAD
 @lru_cache(maxsize=1)
+=======
+>>>>>>> desloppify/code-health
 def get_security_monitor() -> SecurityMonitor:
-    """Get the global security monitor instance (lazily initialized)."""
-    return SecurityMonitor()
+    """Return the process-wide SecurityMonitor singleton."""
+    global _security_monitor
+    if _security_monitor is None:
+        _security_monitor = SecurityMonitor()
+    return _security_monitor
 
 
 def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..., Any]:

@@ -27,11 +27,7 @@ PROJECT_NAME=""
 STEG_ONLY=false
 PIPELINE_ARGS=""
 
-declare -a PROJECT_LIST=()
-CURRENT_PROJECT="project"
-SELECTED_PROJECT=""
-
-# ── Argument parsing & Help ──────────────────────────────────────────────
+# ── Argument parsing ─────────────────────────────────────────────────────
 
 show_secure_help() {
     echo
@@ -40,7 +36,6 @@ show_secure_help() {
     echo
     echo -e "${BOLD}USAGE${NC}"
     echo "  $0 [OPTIONS]"
-    echo "  $0                                  # Interactive menu"
     echo
     echo -e "${BOLD}OPTIONS${NC}"
     echo -e "  ${GREEN}--project <name>${NC}          Target project (default: auto-discover)"
@@ -50,6 +45,7 @@ show_secure_help() {
     echo -e "  ${GREEN}--help, -h${NC}                Show this help"
     echo
     echo -e "${BOLD}EXAMPLES${NC}"
+    echo "  $0                                  # Full pipeline + steganography"
     echo "  $0 --project cognitive_case_diagrams # Specific project"
     echo "  $0 --steganography-only              # Re-process existing PDFs"
     echo
@@ -64,174 +60,96 @@ show_secure_help() {
     echo
 }
 
-# ── Project Discovery ────────────────────────────────────────────────────
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --help|-h)
+            show_secure_help
+            exit 0
+            ;;
+        --project)
+            if [[ -z "${2:-}" ]]; then
+                log_error "Missing project name after --project"
+                exit 1
+            fi
+            PROJECT_NAME="$2"
+            PIPELINE_ARGS="$PIPELINE_ARGS --project $2"
+            shift 2
+            ;;
+        --steganography-only)
+            STEG_ONLY=true
+            shift
+            ;;
+        --skip-infra)
+            PIPELINE_ARGS="$PIPELINE_ARGS --skip-infra"
+            shift
+            ;;
+        --core-only)
+            PIPELINE_ARGS="$PIPELINE_ARGS --core-only"
+            shift
+            ;;
+        *)
+            PIPELINE_ARGS="$PIPELINE_ARGS $1"
+            shift
+            ;;
+    esac
+done
 
-discover_projects() {
-    PROJECT_LIST=()
-    local python_output
-    if ! python_output=$(python3 -c "
+# ── Step 1: Run the normal pipeline (unless --steganography-only) ────────
+
+if [[ "$STEG_ONLY" != "true" ]]; then
+    log_header "STEP 1/2: Running Core/Interactive Pipeline"
+    
+    if ! bash "$SCRIPT_DIR/run.sh" $PIPELINE_ARGS; then
+        log_error "Pipeline failed — steganographic post-processing skipped"
+        exit 1
+    fi
+    
+    log_success "Pipeline section completed successfully"
+    echo
+fi
+
+# ── Step 2: Steganographic post-processing ───────────────────────────────
+
+log_header "STEP 2/2: Steganographic PDF Post-Processing"
+
+# Discover projects if not specified
+if [[ -z "$PROJECT_NAME" ]]; then
+    PROJECT_NAME=$($(get_python_cmd) -c "
 import sys
-from pathlib import Path
 sys.path.insert(0, '$REPO_ROOT')
-try:
-    from infrastructure.project.discovery import discover_projects
-    projects = discover_projects(Path('$REPO_ROOT'))
-    for project in projects:
-        print(project.qualified_name)
-except Exception as e:
-    print('ERROR:' + str(e), file=sys.stderr)
-    sys.exit(1)
-"); then
-        log_error "Failed to discover projects using Python module"
-        return 1
+from infrastructure.project.discovery import discover_projects
+from pathlib import Path
+
+projects = discover_projects(Path('$REPO_ROOT'))
+for p in projects:
+    print(p.qualified_name)
+" 2>/dev/null | head -1)
+    
+    if [[ -z "$PROJECT_NAME" ]]; then
+        log_error "No projects found"
+        exit 1
     fi
+fi
 
-    while IFS= read -r line; do
-        if [[ -n "$line" && "$line" != ERROR* ]]; then
-            PROJECT_LIST+=("$line")
-        fi
-    done <<< "$python_output"
+log_info "Processing project: $PROJECT_NAME"
 
-    if [[ ${#PROJECT_LIST[@]} -eq 0 ]]; then
-        log_error "No valid projects found in $REPO_ROOT/projects/"
-        return 1
-    fi
-    return 0
-}
-
-display_project_selection() {
-    echo -e "${BOLD}${CYAN}Available Projects:${NC}"
-    echo
-
-    local idx=0
-    for project_name in "${PROJECT_LIST[@]}"; do
-        local marker=" "
-        if [[ "$project_name" == "$CURRENT_PROJECT" ]]; then
-            marker="→"
-        fi
-        echo -e "  ${marker} ${idx}. ${BOLD}${project_name}${NC}"
-        
-        local desc=""
-        if [[ -f "$REPO_ROOT/projects/$project_name/README.md" ]]; then
-            desc=$(head -3 "$REPO_ROOT/projects/$project_name/README.md" | grep -v "^#" | head -1 | xargs)
-        elif [[ -f "$REPO_ROOT/projects/$project_name/pyproject.toml" ]]; then
-            desc=$(grep "^description" "$REPO_ROOT/projects/$project_name/pyproject.toml" 2>/dev/null | cut -d'"' -f2 || true)
-        fi
-
-        if [[ -n "$desc" && ${#desc} -lt 60 ]]; then
-            echo -e "      ${GRAY}${desc}${NC}"
-        fi
-        echo
-        ((idx++))
-    done
-
-    echo -e "${BLUE}────────────────────────────────────────────────────────${NC}"
-    echo -e "  ${BOLD}a${NC}. Run all projects sequentially"
-    echo -e "  ${BOLD}q${NC}. Quit"
-    echo -e "${BLUE}────────────────────────────────────────────────────────${NC}"
-    echo
-}
-
-select_project() {
-    while true; do
-        display_project_selection
-
-        echo -n "Select project [0-$((${#PROJECT_LIST[@]}-1))], 'a' for all, 'q' to quit: "
-        read -r choice
-
-        case "$choice" in
-            [0-9]*)
-                if [[ $choice -ge 0 && $choice -lt ${#PROJECT_LIST[@]} ]]; then
-                    SELECTED_PROJECT="${PROJECT_LIST[$choice]}"
-                    log_success "Selected project: $SELECTED_PROJECT"
-                    break
-                else
-                    log_error "Invalid selection: $choice"
-                fi
-                ;;
-            a|A)
-                SELECTED_PROJECT="all"
-                log_success "Selected: Run all projects"
-                break
-                ;;
-            q|Q)
-                log_info "Goodbye!"
-                exit 0
-                ;;
-            *)
-                log_error "Invalid choice: $choice"
-                ;;
-        esac
-        echo
-        press_enter_to_continue
-    done
-}
-
-show_project_info() {
-    local project_name="${1:-$CURRENT_PROJECT}"
-    clear
-    $(get_python_cmd) "$REPO_ROOT/scripts/show_project_info.py" --project "$project_name"
-    return $?
-}
-
-press_enter_to_continue() {
-    echo
-    echo -e "${CYAN}Press Enter to continue...${NC}"
-    read -r
-}
-
-# ── Steganography Processor ────────────────────────────────────────────────
-
-run_steganography_processor() {
-    local current_proj="${1:-$CURRENT_PROJECT}"
-    log_header "Steganographic PDF Post-Processing ($current_proj)"
-
-    # Steganography uses infrastructure modules from the root venv, not project venvs.
-    # Ensure the root venv has rendering + steganography deps installed.
-    if command -v uv >/dev/null 2>&1; then
-        (cd "$REPO_ROOT" && uv sync --group rendering --group steganography) >/dev/null 2>&1 || true
-    fi
-
-    # Always use root venv Python for infrastructure modules (pypdf, reportlab, etc.)
-    local steg_python="python3"
-    if [[ -f "$REPO_ROOT/.venv/bin/python3" ]]; then
-        steg_python="$REPO_ROOT/.venv/bin/python3"
-    fi
-
-    log_info "Processing project: $current_proj"
-
-    $steg_python -c "
+# Run steganographic post-processing via Python
+$(get_python_cmd) -c "
 import sys
 from pathlib import Path
 
 sys.path.insert(0, '$REPO_ROOT')
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger, setup_logger
 from infrastructure.core.config_loader import load_config
 from infrastructure.steganography import SteganographyProcessor, SteganographyConfig
 
 logger = get_logger('secure_run')
 
 repo_root = Path('$REPO_ROOT')
-project_name = '$current_proj'
+project_name = '$PROJECT_NAME'
 
-repo_config_path = None
-for candidate in [
-    repo_root / 'infrastructure' / 'config' / 'secure_config.yaml',
-    repo_root / 'secure_config.yaml',
-]:
-    if candidate.exists():
-        repo_config_path = candidate
-        break
-
-steg_config = SteganographyConfig.all_enabled()
-if repo_config_path:
-    import yaml
-    with open(repo_config_path) as f:
-        repo_raw = yaml.safe_load(f) or {}
-    if 'steganography' in repo_raw:
-        steg_config = SteganographyConfig.from_dict(repo_raw['steganography'])
-
+# Load steganography config from config.yaml
 config_path = None
 for candidate in [
     repo_root / 'projects' / project_name / 'manuscript' / 'config.yaml',
@@ -241,6 +159,7 @@ for candidate in [
         config_path = candidate
         break
 
+steg_config = SteganographyConfig.all_enabled()
 title = project_name
 authors = []
 keywords = []
@@ -250,14 +169,12 @@ if config_path:
     with open(config_path) as f:
         raw = yaml.safe_load(f) or {}
     
+    # Override with config.yaml steganography section if present
     if 'steganography' in raw:
-        proj_steg = SteganographyConfig.from_dict(raw['steganography'])
-        for f in SteganographyConfig.__dataclass_fields__:
-            if f in raw['steganography']:
-                setattr(steg_config, f, getattr(proj_steg, f))
-        
-    steg_config.enabled = True
+        steg_config = SteganographyConfig.from_dict(raw['steganography'])
+        steg_config.enabled = True  # secure_run always enables
     
+    # Extract title and authors from config
     paper = raw.get('paper', {})
     title = paper.get('title', project_name)
     authors = [a.get('name', '') for a in raw.get('authors', [])]
@@ -265,8 +182,10 @@ if config_path:
 
 logger.info('Steganography config loaded (enabled=%s)', steg_config.enabled)
 
+# Find all PDFs in the project output directory
 pdf_dir = repo_root / 'projects' / project_name / 'output' / 'pdf'
 if not pdf_dir.exists():
+    # Try root-level output
     pdf_dir = repo_root / 'output' / project_name
 
 if not pdf_dir.exists():
@@ -274,6 +193,7 @@ if not pdf_dir.exists():
     sys.exit(0)
 
 pdfs = list(pdf_dir.glob('*.pdf'))
+# Exclude already-processed steganography files
 pdfs = [p for p in pdfs if '_steganography' not in p.stem]
 
 if not pdfs:
@@ -301,271 +221,18 @@ for pdf_path in pdfs:
 logger.info('Steganography complete: %d/%d PDFs processed', success_count, len(pdfs))
 sys.exit(0 if success_count == len(pdfs) else 1)
 "
-    local exit_code=$?
 
-    if [[ $exit_code -eq 0 ]]; then
-        log_success "Steganographic post-processing complete"
-        
-        # Copy steganography outputs to root output directory
-        local proj_pdf_dir="$REPO_ROOT/projects/$current_proj/output/pdf"
-        local root_pdf_dir="$REPO_ROOT/output/$current_proj/pdf"
-        
-        if [[ -d "$proj_pdf_dir" ]]; then
-            mkdir -p "$root_pdf_dir"
-            cp "$proj_pdf_dir"/*_steganography.pdf "$root_pdf_dir/" 2>/dev/null || true
-            cp "$proj_pdf_dir"/*.hashes.json "$root_pdf_dir/" 2>/dev/null || true
-            log_success "Copied steganographic outputs to output/$current_proj/pdf/"
-        fi
-        
-        echo
-        echo -e "${BOLD}📁 Output locations:${NC}"
-        echo -e "  Project PDFs:       ${CYAN}projects/$current_proj/output/pdf/${NC}"
-        echo -e "  Root Output PDFs:   ${CYAN}output/$current_proj/pdf/${NC}"
-    else
-        log_error "Steganographic post-processing failed (exit code: $exit_code)"
-    fi
+exit_code=$?
 
-    return $exit_code
-}
-
-# ── Pipeline Execution Functions ──────────────────────────────────────────
-
-run_secure_pipeline() {
-    local target_proj="${1:-$CURRENT_PROJECT}"
-    local p_args="${2:-}"
-    
-    log_header "STEP 1/2: Running Full Pipeline ($target_proj)"
-    if ! bash "$SCRIPT_DIR/run.sh" --pipeline --project "$target_proj" $p_args; then
-        log_error "Pipeline failed — steganographic post-processing skipped"
-        return 1
-    fi
-    log_success "Pipeline completed successfully"
+if [[ $exit_code -eq 0 ]]; then
+    log_success "Steganographic post-processing complete"
     echo
-    
-    run_steganography_processor "$target_proj"
-    return $?
-}
+    echo -e "${BOLD}📁 Output locations:${NC}"
+    echo -e "  Normal PDFs:        ${CYAN}projects/$PROJECT_NAME/output/pdf/*.pdf${NC}"
+    echo -e "  Steganography PDFs: ${CYAN}projects/$PROJECT_NAME/output/pdf/*_steganography.pdf${NC}"
+    echo -e "  Hash manifests:     ${CYAN}projects/$PROJECT_NAME/output/pdf/*.hashes.json${NC}"
+else
+    log_error "Steganographic post-processing failed (exit code: $exit_code)"
+fi
 
-run_secure_core_pipeline() {
-    local target_proj="${1:-$CURRENT_PROJECT}"
-    local p_args="${2:-}"
-    
-    log_header "STEP 1/2: Running Core Pipeline ($target_proj)"
-    if ! $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$target_proj" --core-only $p_args; then
-        log_error "Core pipeline failed — steganographic post-processing skipped"
-        return 1
-    fi
-    log_success "Core pipeline completed successfully"
-    echo
-    
-    run_steganography_processor "$target_proj"
-    return $?
-}
-
-run_all_projects_secure() {
-    local mode="${1:-full}"
-    local p_args="${2:-}"
-    local exit_code=0
-    
-    for proj in "${PROJECT_LIST[@]}"; do
-        if [[ "$mode" == "full" ]]; then
-            run_secure_pipeline "$proj" "$p_args" || exit_code=$?
-        elif [[ "$mode" == "core" ]]; then
-            run_secure_core_pipeline "$proj" "$p_args" || exit_code=$?
-        elif [[ "$mode" == "steg_only" ]]; then
-            run_steganography_processor "$proj" || exit_code=$?
-        fi
-        echo
-    done
-    return $exit_code
-}
-
-# ── Interactive Menu ─────────────────────────────────────────────────────
-
-display_menu() {
-    clear
-
-    # Header with project name
-    echo -e "${BOLD}${BLUE}┌────────────────────────────────────────────────────────────────┐${NC}"
-    echo -e "${BOLD}${BLUE}│${NC}  ${BOLD}🔒 SECURE MANUSCRIPT PIPELINE${NC}                                 ${BLUE}│${NC}"
-    echo -e "${BOLD}${BLUE}│${NC}  Project: ${CYAN}${CURRENT_PROJECT}${NC}$(printf '%*s' $((42 - ${#CURRENT_PROJECT})) '')${BLUE}│${NC}"
-    echo -e "${BOLD}${BLUE}└────────────────────────────────────────────────────────────────┘${NC}"
-    echo
-
-    # Core Pipeline Scripts
-    echo -e "${BOLD}⚙️  SECURE STAGES${NC}"
-    echo -e "    ${GREEN}1${NC}  Full Secure Pipeline       ${CYAN}[+infra] [+LLM] [+steg] All 10 stages${NC}"
-    echo -e "    ${GREEN}2${NC}  Full Secure Pipeline (fast) ${CYAN}[-infra] [+LLM] [+steg] Skip infra tests${NC}"
-    echo -e "    ${GREEN}3${NC}  Core Secure Pipeline       ${CYAN}[+infra] [-LLM] [+steg] Stages 1-7${NC}"
-    echo -e "    ${GREEN}4${NC}  Core Secure Pipeline (fast) ${CYAN}[-infra] [-LLM] [+steg] Skip infra tests${NC}"
-    echo -e "    ${GREEN}5${NC}  Steganography Only         ${CYAN}Post-process existing PDFs only${NC}"
-    echo
-
-    # Multi-Project Operations
-    echo -e "${BOLD}📚 MULTI-PROJECT${NC}"
-    echo -e "    ${GREEN}a${NC}  All projects full          ${CYAN}[+infra] [+LLM] [+steg] [+report]${NC}"
-    echo -e "    ${GREEN}b${NC}  All projects full (fast)   ${CYAN}[-infra] [+LLM] [+steg] [+report]${NC}"
-    echo -e "    ${GREEN}c${NC}  All projects core          ${CYAN}[+infra] [-LLM] [+steg] [+report]${NC}"
-    echo -e "    ${GREEN}d${NC}  All projects core (fast)   ${CYAN}[-infra] [-LLM] [+steg] [+report]${NC}"
-    echo -e "    ${GREEN}e${NC}  All projects steg-only     ${CYAN}Post-process all PDFs${NC}"
-    echo
-
-    # Project Management
-    echo -e "${BOLD}📁 PROJECT${NC}"
-    echo -e "    ${GREEN}p${NC}  Change Project             ${GREEN}i${NC}  Show Project Info"
-    echo -e "    ${GREEN}q${NC}  Quit"
-    echo
-
-    # Status bar
-    echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
-    local py_version=$($(get_python_cmd) --version 2>&1 | cut -d' ' -f2)
-    echo -e "  ${CYAN}Python${NC} $py_version  │  ${CYAN}Logs${NC} projects/*/output/logs/"
-    echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
-}
-
-handle_menu_choice() {
-    local choice="$1"
-    local exit_code=0
-    
-    case "$choice" in
-        1)
-            run_secure_pipeline "$CURRENT_PROJECT" ""
-            exit_code=$?
-            ;;
-        2)
-            run_secure_pipeline "$CURRENT_PROJECT" "--skip-infra"
-            exit_code=$?
-            ;;
-        3)
-            run_secure_core_pipeline "$CURRENT_PROJECT" ""
-            exit_code=$?
-            ;;
-        4)
-            run_secure_core_pipeline "$CURRENT_PROJECT" "--skip-infra"
-            exit_code=$?
-            ;;
-        5)
-            run_steganography_processor "$CURRENT_PROJECT"
-            exit_code=$?
-            ;;
-        a|A)
-            run_all_projects_secure "full" ""
-            exit_code=$?
-            ;;
-        b|B)
-            run_all_projects_secure "full" "--skip-infra"
-            exit_code=$?
-            ;;
-        c|C)
-            run_all_projects_secure "core" ""
-            exit_code=$?
-            ;;
-        d|D)
-            run_all_projects_secure "core" "--skip-infra"
-            exit_code=$?
-            ;;
-        e|E)
-            run_all_projects_secure "steg_only" ""
-            exit_code=$?
-            ;;
-        p|P)
-            select_project
-            if [[ "$SELECTED_PROJECT" == "all" ]]; then
-                log_info "To run all projects, please use options 'a', 'b', or 'c' from the main menu."
-            else
-                CURRENT_PROJECT="$SELECTED_PROJECT"
-            fi
-            ;;
-        i|I)
-            show_project_info "$CURRENT_PROJECT"
-            exit_code=$?
-            ;;
-        q|Q)
-            log_info "Goodbye!"
-            exit 0
-            ;;
-        *)
-            log_error "Invalid option: $choice"
-            exit_code=1
-            ;;
-    esac
-
-    if [[ $exit_code -ne 0 ]]; then
-        log_error "Last operation exited with code $exit_code"
-    fi
-    
-    if [[ "$choice" != "p" && "$choice" != "P" ]]; then
-        press_enter_to_continue
-    fi
-    return $exit_code
-}
-
-# ── Main Entry ───────────────────────────────────────────────────────────
-
-main() {
-    discover_projects || exit 1
-    
-    if [[ ${#PROJECT_LIST[@]} -gt 0 ]] && [[ " ${PROJECT_LIST[*]} " == *" project "* ]]; then
-        CURRENT_PROJECT="project"
-    elif [[ ${#PROJECT_LIST[@]} -gt 0 ]]; then
-        CURRENT_PROJECT="${PROJECT_LIST[0]}"
-    fi
-
-    local has_args=false
-    while [[ $# -gt 0 ]]; do
-        has_args=true
-        case "$1" in
-            --help|-h)
-                show_secure_help
-                exit 0
-                ;;
-            --project)
-                if [[ -z "${2:-}" ]]; then
-                    log_error "Missing project name after --project"
-                    exit 1
-                fi
-                CURRENT_PROJECT="$2"
-                shift 2
-                ;;
-            --steganography-only)
-                STEG_ONLY=true
-                shift
-                ;;
-            --skip-infra)
-                PIPELINE_ARGS="$PIPELINE_ARGS --skip-infra"
-                shift
-                ;;
-            --core-only)
-                PIPELINE_ARGS="$PIPELINE_ARGS --core-only"
-                shift
-                ;;
-            *)
-                PIPELINE_ARGS="$PIPELINE_ARGS $1"
-                shift
-                ;;
-        esac
-    done
-
-    if [[ "$has_args" == "true" ]]; then
-        if [[ "$STEG_ONLY" == "true" ]]; then
-            run_steganography_processor "$CURRENT_PROJECT"
-        else
-            if [[ "$PIPELINE_ARGS" == *"--core-only"* ]]; then
-                local clean_args="${PIPELINE_ARGS//--core-only/}"
-                run_secure_core_pipeline "$CURRENT_PROJECT" "$clean_args"
-            else
-                run_secure_pipeline "$CURRENT_PROJECT" "$PIPELINE_ARGS"
-            fi
-        fi
-        exit $?
-    fi
-
-    while true; do
-        display_menu
-        echo -n "Select option [1-3, a-c, p, i, q]: "
-        read -r choice
-        handle_menu_choice "$choice"
-    done
-}
-
-main "$@"
+exit $exit_code

@@ -80,6 +80,10 @@ class OutputOrganizer:
     ensuring consistent directory structure across all reporting modules.
     """
 
+    def get_subdirectory(self, file_type: FileType) -> str:
+        """Return the subdirectory name used for organized output of ``file_type``."""
+        return file_type.subdirectory
+
     def detect_file_type(self, file_path: Path) -> FileType | None:
         """Detect file type from file extension.
 

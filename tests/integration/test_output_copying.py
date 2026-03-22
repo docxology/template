@@ -103,7 +103,7 @@ class TestCleanOutputDirectory:
 
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir.exists()
 
     def test_clean_existing_directory(self, temp_project_structure):
@@ -121,7 +121,7 @@ class TestCleanOutputDirectory:
         # Clean
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir.exists()  # Directory still exists
         assert not (output_dir / "test.txt").exists()  # Files removed
         assert not (output_dir / "subdir").exists()  # Subdirs removed
@@ -133,7 +133,7 @@ class TestCleanOutputDirectory:
 
         result = clean_output_directory(output_dir)
 
-        assert result is True
+        assert result is None
         assert output_dir.exists()
 
 
@@ -283,7 +283,7 @@ class TestCompleteOutputCopyingWorkflow:
 
         # Clean
         clean_result = clean_output_directory(output_dir)
-        assert clean_result is True
+        assert clean_result is None
         assert not (output_dir / "old_file.txt").exists()
 
         # Copy
@@ -306,7 +306,7 @@ class TestCompleteOutputCopyingWorkflow:
 
         # Clean
         clean_result = clean_output_directory(output_dir)
-        assert clean_result is True
+        assert clean_result is None
 
         # Copy
         stats = copy_final_deliverables(repo_root, output_dir, "code_project")

@@ -54,10 +54,20 @@ class LLMClient:
     both blocking and streaming query variants. All inputs are sanitized
     before sending; structured queries parse JSON responses automatically.
 
+<<<<<<< HEAD
     Parameter asymmetry by design: blocking variants (query, query_structured)
     and streaming variants (stream_query) expose different optional parameters
     because streaming requires chunk-level callbacks and retry semantics that
     are not applicable to blocking calls.
+=======
+    **Blocking vs streaming parameter asymmetry:**
+    Streaming variants (stream_query, stream_short, stream_long) accept extra
+    params not available on their blocking counterparts:
+      - ``save_response`` (bool): persist streamed output to disk
+      - ``save_path`` (Path | None): override the default save location
+      - ``retries`` (int): retry count on transient errors
+    Use the streaming variant when response persistence or retry control is needed.
+>>>>>>> desloppify/code-health
 
     Example:
         >>> client = LLMClient()
@@ -583,6 +593,16 @@ class LLMClient:
                 # Strip thinking tags if present (e.g., from Qwen models)
                 content = strip_thinking_tags(content)
 
+                if not content:
+                    logger.warning(
+                        "strip_thinking_tags reduced response to empty string; "
+                        "model may have returned only <think> content"
+                    )
+                    raise LLMConnectionError(
+                        "Model response was empty after stripping thinking tags",
+                        context={"model": model, "url": url},
+                    )
+
                 if attempt > 0:
                     logger.info(f"Request succeeded on retry {attempt + 1}")
 
@@ -810,9 +830,17 @@ class LLMClient:
         """Get list of available models from Ollama.
 
         Returns:
+<<<<<<< HEAD
             List of model names (deduplicated). On network failure, returns
             ``config.fallback_models`` instead of raising — callers cannot
             distinguish a live model list from the fallback.
+=======
+            List of model names (deduplicated, version tags stripped).
+            Falls back to ``config.fallback_models`` if the Ollama server is
+            unreachable or returns a non-200 response. The fallback list is
+            never empty — callers can always rely on at least one model name
+            being present in the return value.
+>>>>>>> desloppify/code-health
         """
         url = f"{self.config.base_url}/api/tags"
         try:
@@ -826,6 +854,7 @@ class LLMClient:
             return self.config.fallback_models
 
     def check_connection(self, timeout: float = 2.0) -> bool:
+<<<<<<< HEAD
         """Return True if the Ollama server is reachable.
 
         Use check_connection_detailed() when you need the failure reason.
@@ -838,6 +867,14 @@ class LLMClient:
 
         Use check_connection() when only the boolean result is needed.
         """
+=======
+        """Return True if the Ollama server is reachable."""
+        is_available, _ = self.check_connection_with_reason(timeout=timeout)
+        return is_available
+
+    def check_connection_with_reason(self, timeout: float = 2.0) -> tuple[bool, str | None]:
+        """Return (is_available, error_message) for the Ollama server."""
+>>>>>>> desloppify/code-health
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)
             if response.status_code == 200:
