@@ -85,7 +85,13 @@ class QualityIssue:
 
 @dataclass
 class ScanResults:
-    """Container for all scan results."""
+    """Container for doc-scanner scan results (doc_scanner.py output only).
+
+    Note: This is distinct from ``RepoScanResults`` (repo_scanner.py), which
+    holds accuracy and completeness results from repository-wide scanning.
+    Use ``ScanResults`` for documentation file enumeration; use
+    ``RepoScanResults`` for accuracy/completeness audit results.
+    """
 
     scan_date: str
     total_files: int = 0

@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Check documentation links and references for accuracy.
 
-This script validates:
+Dual role: (1) library — individual validator functions are imported by
+``audit_orchestrator`` for programmatic link checking; (2) standalone CLI —
+``main()`` and ``generate_comprehensive_report()`` provide a self-contained
+audit entry point invokable as ``python -m infrastructure.validation.check_links``.
+
+This module validates:
 - Internal markdown links resolve correctly
 - File references point to existing files
 - Anchor links match actual headings

@@ -32,7 +32,7 @@ and ensuring data integrity across the research project.
 
 **Output validation**:
     output_validator: Pipeline output validation
-    output_statistics: Output statistics collection
+    (output statistics live in infrastructure/reporting/output_reporter.py)
 """
 
 from __future__ import annotations
@@ -74,6 +74,10 @@ from .issue_categorizer import (
 # Output validation
 from .output_validator import validate_copied_outputs, validate_output_structure
 
+# The validation package intentionally exports a broad surface because pipeline scripts
+# import a variety of validators from a single entry point rather than from individual
+# submodules. Sibling packages (rendering, documentation) have narrower entry points
+# because their callers use more targeted imports.
 __all__ = [
     # Content validators
     "validate_pdf_rendering",
