@@ -14,9 +14,7 @@ from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger, log_success
 from infrastructure.core.env_deps import (
-    check_build_tools,
     check_dependencies as _check_dependencies,
-    install_missing_packages,
 )
 
 logger = get_logger(__name__)
