@@ -18,7 +18,7 @@ from __future__ import annotations
 
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 
 # No mock imports needed - using real HTTP server
 
@@ -37,7 +37,7 @@ class TestQueryLogging:
         logger.setLevel(logging.DEBUG)
         logger.propagate = True  # Ensure propagation for caplog
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -73,7 +73,7 @@ class TestQueryLogging:
         logger.setLevel(logging.DEBUG)
         logger.propagate = True  # Ensure propagation for caplog
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -108,7 +108,7 @@ class TestQueryLogging:
         client_logger.setLevel(logging.INFO)
         context_logger.setLevel(logging.INFO)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -134,7 +134,7 @@ class TestQueryRawLogging:
         logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -154,7 +154,7 @@ class TestQueryRawLogging:
         logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -177,7 +177,7 @@ class TestQueryShortLogging:
         logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -188,7 +188,7 @@ class TestQueryShortLogging:
 
     def test_query_short_returns_response(self, ollama_test_server):
         """Test query_short returns a non-empty string response."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -210,7 +210,7 @@ class TestQueryLongLogging:
         logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -221,7 +221,7 @@ class TestQueryLongLogging:
 
     def test_query_long_returns_response(self, ollama_test_server):
         """Test query_long returns a non-empty string response."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -242,7 +242,7 @@ class TestQueryStructuredLogging:
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -263,7 +263,7 @@ class TestQueryStructuredLogging:
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -361,7 +361,7 @@ class TestErrorLogging:
         logger.propagate = True
 
         # Point client at a port with no server listening to trigger real ConnectionError
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = "http://localhost:1"  # Port 1 refuses connections
         config.fallback_models = []  # No fallbacks to keep test fast
         client = LLMClient(config=config)
@@ -386,7 +386,7 @@ class TestErrorLogging:
         logger.propagate = True
 
         # Point client at a non-routable IP with a very short timeout to force real Timeout
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = "http://10.255.255.1"  # Non-routable — never responds
         config.timeout = 0.01  # 10ms — times out before route resolves
         config.fallback_models = []  # No fallbacks to keep test fast
@@ -413,7 +413,7 @@ class TestLoggingLevels:
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -432,7 +432,7 @@ class TestLoggingLevels:
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 

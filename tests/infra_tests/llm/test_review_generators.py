@@ -8,7 +8,7 @@ import pytest
 from pytest_httpserver import HTTPServer
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 from infrastructure.llm.review.generator import (
     extract_manuscript_text,
     generate_improvement_suggestions,
@@ -295,7 +295,7 @@ class TestGenerateReviewWithMetricsRetry:
         server.expect_request("/api/tags").respond_with_json({"models": [{"name": "gemma3:4b"}]})
 
         try:
-            config = LLMConfig(auto_inject_system_prompt=False)
+            config = OllamaClientConfig(auto_inject_system_prompt=False)
             config.base_url = server.url_for("/")
             config.default_model = "gemma3:4b"
             client = LLMClient(config=config)
@@ -340,7 +340,7 @@ class TestGenerateReviewWithMetricsRetry:
         server.expect_request("/api/tags").respond_with_json({"models": [{"name": "gemma3:4b"}]})
 
         try:
-            config = LLMConfig(auto_inject_system_prompt=False)
+            config = OllamaClientConfig(auto_inject_system_prompt=False)
             config.base_url = server.url_for("/")
             config.default_model = "gemma3:4b"
             client = LLMClient(config=config)
@@ -359,7 +359,7 @@ class TestWarmupModelOffline:
     """Offline tests for warmup_model() using a local HTTP server."""
 
     def _make_client(self, server: HTTPServer) -> LLMClient:
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = server.url_for("/")
         config.default_model = "gemma3:4b"
         config.timeout = 5

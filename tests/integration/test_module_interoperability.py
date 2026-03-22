@@ -140,11 +140,11 @@ class TestModuleInteroperability:
     def test_configuration_independence(self):
         """Test that module configurations are independent."""
         from infrastructure.literature.core import LiteratureConfig
-        from infrastructure.llm.core.config import LLMConfig
+        from infrastructure.llm.core.config import OllamaClientConfig
         from infrastructure.rendering.config import RenderingConfig
 
         lit_config = LiteratureConfig()
-        llm_config = LLMConfig()
+        llm_config = OllamaClientConfig()
         render_config = RenderingConfig()
 
         # Each has distinct configuration

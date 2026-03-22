@@ -1018,7 +1018,7 @@ class TestLLMReviewIntegration:
     def test_generate_review_with_real_llm(self):
         """Test generating a review with real LLM."""
         from infrastructure.llm.core.client import LLMClient
-        from infrastructure.llm.core.config import LLMConfig
+        from infrastructure.llm.core.config import OllamaClientConfig
         from infrastructure.llm.review.generator import generate_llm_executive_summary as generate_executive_summary
         from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
 
@@ -1052,7 +1052,7 @@ class TestLLMReviewIntegration:
                 "=" * 80
             )
 
-        config = LLMConfig.from_env()
+        config = OllamaClientConfig.from_env()
         config.default_model = model
         client = LLMClient(config)
 
