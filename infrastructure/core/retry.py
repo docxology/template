@@ -25,6 +25,14 @@ T = TypeVar("T")
 # retry_on_transient_failure() for a pre-configured shorthand.
 TRANSIENT_EXCEPTIONS: tuple[type[Exception], ...] = (ConnectionError, TimeoutError, OSError)
 
+
+def _compute_backoff_delay(
+    attempt: int, initial_delay: float, exponential_base: float, max_delay: float
+) -> float:
+    """Return capped exponential backoff delay for the given attempt (1-indexed)."""
+    return min(initial_delay * (exponential_base ** (attempt - 1)), max_delay)
+
+
 def retry_with_backoff(
     max_attempts: int = 3,
     initial_delay: float = 1.0,
@@ -64,7 +72,7 @@ def retry_with_backoff(
                         logger.error(f"{func.__name__} failed after {max_attempts} attempts: {e}")
                         raise
 
-                    delay = min(initial_delay * (exponential_base ** (attempt - 1)), max_delay)
+                    delay = _compute_backoff_delay(attempt, initial_delay, exponential_base, max_delay)
 
                     # Add jitter to prevent synchronized retries (thundering herd)
                     if jitter:
@@ -183,9 +191,8 @@ class RetryableOperation:
             logger.error(f"Operation failed after {self.max_attempts} attempts: {exception}")
             raise exception
 
-        delay = min(
-            self.initial_delay * (self.exponential_base ** (self.attempt - 1)),
-            self.max_delay,
+        delay = _compute_backoff_delay(
+            self.attempt, self.initial_delay, self.exponential_base, self.max_delay
         )
 
         logger.warning(

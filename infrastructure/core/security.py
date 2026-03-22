@@ -249,6 +249,13 @@ class RateLimiter:
         self.requests: dict[str, list[float]] = {}
         self._lock = threading.Lock()
 
+    def _clean_window(self, key: str, now: float) -> None:
+        """Remove timestamps outside the current window for the given key."""
+        if key in self.requests:
+            self.requests[key] = [
+                ts for ts in self.requests[key] if now - ts < self.window_seconds
+            ]
+
     def is_allowed(self, key: str) -> bool:
         """Check if request is allowed for given key.
 
@@ -264,7 +271,7 @@ class RateLimiter:
                 self.requests[key] = []
 
             # Remove old requests outside the window
-            self.requests[key] = [ts for ts in self.requests[key] if now - ts < self.window_seconds]
+            self._clean_window(key, now)
 
             # Check if under limit
             if len(self.requests[key]) < self.max_requests:
@@ -289,7 +296,7 @@ class RateLimiter:
                 return self.max_requests
 
             # Clean old requests
-            self.requests[key] = [ts for ts in self.requests[key] if now - ts < self.window_seconds]
+            self._clean_window(key, now)
 
             return max(0, self.max_requests - len(self.requests[key]))
 

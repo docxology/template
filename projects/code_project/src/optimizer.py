@@ -27,10 +27,19 @@ class OptimizationResult:
     objective_history: list[float] | None = None
 
 
-def quadratic_function(
-    x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
-) -> float:
-    """Evaluate f(x) = (1/2) x^T A x - b^T x. A defaults to identity, b to ones."""
+def _validate_quadratic_inputs(
+    x: np.ndarray,
+    A: np.ndarray | None,
+    b: np.ndarray | None,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Coerce and validate inputs for quadratic_function and compute_gradient.
+
+    Returns:
+        Tuple (x, A, b) as float64 arrays with defaults applied.
+
+    Raises:
+        ValueError: If A or b shapes are incompatible with x.
+    """
     x = np.asarray(x, dtype=float)
     n = len(x)
 
@@ -48,6 +57,15 @@ def quadratic_function(
         if len(b) != n:
             raise ValueError(f"b must be length {n}, got {len(b)}")
 
+    return x, A, b
+
+
+def quadratic_function(
+    x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
+) -> float:
+    """Evaluate f(x) = (1/2) x^T A x - b^T x. A defaults to identity, b to ones."""
+    x, A, b = _validate_quadratic_inputs(x, A, b)
+
     # f(x) = (1/2) x^T A x - b^T x
     quadratic_term = 0.5 * x.T @ A @ x
     linear_term = b.T @ x
@@ -59,18 +77,7 @@ def compute_gradient(
     x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
 ) -> np.ndarray:
     """Compute ∇f(x) = A x - b for the quadratic objective. A defaults to identity, b to ones."""
-    x = np.asarray(x, dtype=float)
-    n = len(x)
-
-    if A is None:
-        A = np.eye(n)
-    else:
-        A = np.asarray(A, dtype=float)
-
-    if b is None:
-        b = np.ones(n)
-    else:
-        b = np.asarray(b, dtype=float)
+    x, A, b = _validate_quadratic_inputs(x, A, b)
 
     # ∇f(x) = A x - b
     return np.asarray(A @ x - b)
