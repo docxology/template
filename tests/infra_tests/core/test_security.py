@@ -17,6 +17,7 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.core.exceptions import SecurityError
 from infrastructure.core.security import (
     RateLimiter,
     SecurityMonitor,
@@ -29,38 +30,35 @@ from infrastructure.core.security import (
     get_security_validator,
     rate_limit,
 )
+from infrastructure.llm.core.sanitization import sanitize_llm_input
 
 
 class TestSecurityValidator:
     """Tests for SecurityValidator class."""
 
     def test_validate_llm_input_valid_prompt(self):
-        """Test validation of a normal prompt."""
-        validator = SecurityValidator()
+        """Test sanitization of a normal prompt."""
         prompt = "Write a Python function to calculate the factorial of a number."
-        result = validator.validate_llm_input(prompt)
+        result = sanitize_llm_input(prompt)
         assert isinstance(result, str)
         assert len(result) > 0
 
     def test_validate_llm_input_empty_prompt(self):
-        """Test validation of empty prompt."""
-        validator = SecurityValidator()
-        prompt = ""
-        result = validator.validate_llm_input(prompt)
+        """Test sanitization of empty prompt."""
+        result = sanitize_llm_input("")
         assert result == ""
 
     def test_validate_llm_input_non_string_raises(self):
-        """Test that non-string input raises SecurityViolation."""
-        validator = SecurityValidator()
-        with pytest.raises(SecurityViolation, match="Input must be a string"):
-            validator.validate_llm_input(123)  # type: ignore
+        """Test that non-string input raises SecurityError."""
+        with pytest.raises(SecurityError, match="Prompt must be a string"):
+            sanitize_llm_input(123)  # type: ignore
 
-    def test_validate_llm_input_too_long_raises(self):
-        """Test that overly long input raises SecurityViolation."""
-        validator = SecurityValidator()
-        long_prompt = "x" * 150000  # Exceeds 100000 limit
-        with pytest.raises(SecurityViolation, match="Prompt too long"):
-            validator.validate_llm_input(long_prompt)
+    def test_validate_llm_input_too_long_truncates(self):
+        """Test that overly long input is truncated rather than rejected."""
+        long_prompt = "x" * 600000  # Exceeds 500000 limit
+        result = sanitize_llm_input(long_prompt)
+        assert result.endswith("...[truncated]")
+        assert len(result) < 600000
 
     @pytest.mark.parametrize(
         "dangerous_input",
@@ -87,23 +85,20 @@ class TestSecurityValidator:
     )
     def test_validate_llm_input_dangerous_patterns(self, dangerous_input: str):
         """Test that dangerous patterns are detected and rejected."""
-        validator = SecurityValidator()
-        with pytest.raises(SecurityViolation, match="potentially dangerous content"):
-            validator.validate_llm_input(dangerous_input)
+        with pytest.raises(SecurityError, match="Dangerous content detected in input"):
+            sanitize_llm_input(dangerous_input)
 
     def test_validate_llm_input_sanitizes_html(self):
         """Test that HTML entities are escaped."""
-        validator = SecurityValidator()
         prompt = "Use <tag> and &amp; in text"
-        result = validator.validate_llm_input(prompt)
+        result = sanitize_llm_input(prompt)
         assert "&lt;tag&gt;" in result
         assert "&amp;amp;" in result
 
     def test_validate_llm_input_normalizes_whitespace(self):
         """Test that excessive whitespace is normalized."""
-        validator = SecurityValidator()
         prompt = "Hello    world\n\n\n\n\nTest"
-        result = validator.validate_llm_input(prompt)
+        result = sanitize_llm_input(prompt)
         assert "    " not in result  # Multiple spaces removed
         assert "\n\n\n" not in result  # Excessive newlines reduced
 
@@ -539,9 +534,9 @@ class TestSecurityIntegration:
         """Test complete validation workflow."""
         validator = get_security_validator()
 
-        # Validate prompt
+        # Sanitize prompt
         prompt = "Analyze this data and provide insights"
-        validated = validator.validate_llm_input(prompt)
+        validated = sanitize_llm_input(prompt)
         assert len(validated) > 0
 
         # Validate filename

@@ -15,6 +15,7 @@ from infrastructure.validation.doc_models import (
     CompletenessGap,
     LinkIssue,
     QualityIssue,
+    ScanAccuracyIssue,
 )
 from infrastructure.validation.known_exceptions import (
     is_code_block_artifact,
@@ -31,8 +32,8 @@ from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-# Type alias for any issue type
-Issue = Union[LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue]
+# Type alias for any issue type (includes both legacy AccuracyIssue and new ScanAccuracyIssue)
+Issue = Union[LinkIssue, AccuracyIssue, ScanAccuracyIssue, CompletenessGap, QualityIssue]
 
 
 def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
@@ -333,6 +334,8 @@ def _get_issue_text(issue: Issue) -> str:
     """Extract text content from any issue type."""
     if hasattr(issue, "issue_message"):
         return str(issue.issue_message)
+    elif hasattr(issue, "message"):
+        return str(issue.message)  # type: ignore[union-attr]
     elif hasattr(issue, "description"):
         return str(issue.description)
     elif hasattr(issue, "text"):
@@ -360,6 +363,8 @@ def _get_issue_type(issue: Issue) -> str:
     """Extract issue type from any issue type."""
     if hasattr(issue, "issue_type"):
         return issue.issue_type
+    elif isinstance(issue, ScanAccuracyIssue):
+        return issue.category
     elif isinstance(issue, LinkIssue):
         return "link_issue"
     elif isinstance(issue, AccuracyIssue):

@@ -15,7 +15,6 @@ from __future__ import annotations
 import re
 import threading
 import time
-import warnings
 from functools import lru_cache, wraps
 from pathlib import Path
 from typing import Any, Callable
@@ -68,49 +67,6 @@ class SecurityValidator:
             "content_size": 50 * 1024 * 1024,  # 50MB max content size
         }
         self.dangerous_patterns = self._DANGEROUS_PATTERNS
-
-    def validate_llm_input(self, prompt: str, context: dict[str, Any] | None = None) -> str:
-        """Validate and sanitize LLM input.
-
-        Deprecated: use ``infrastructure.llm.core.sanitization.sanitize_llm_input`` instead.
-        That function calls ``InputSanitizer`` which delegates pattern detection to this class
-        and adds LLM-specific whitespace and length handling. Retained here for test compatibility.
-
-        Sunset plan: remove after tests/infra_tests/core/test_security.py migrates its
-        ``validate_llm_input`` assertions to ``sanitize_llm_input``.
-        TODO: remove by 2026-06-01 or next major version bump (whichever comes first).
-
-        Args:
-            prompt: The LLM input string to validate.
-            context: Accepted for interface compatibility; not used by this implementation.
-                Callers should not rely on context being processed.
-
-        Raises:
-            SecurityViolation: If input contains dangerous content
-        """
-        warnings.warn(
-            "SecurityValidator.validate_llm_input is deprecated; use "
-            "infrastructure.llm.core.sanitization.sanitize_llm_input instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        if not isinstance(prompt, str):
-            raise SecurityViolation("Input must be a string")
-
-        if len(prompt) > self.limits["prompt_length"]:
-            raise SecurityViolation(
-                f"Prompt too long: {len(prompt)} > {self.limits['prompt_length']}"
-            )
-
-        for pattern in self.dangerous_patterns:
-            if re.search(pattern, prompt, re.IGNORECASE):
-                logger.warning(f"Security pattern detected: {pattern}")
-                raise SecurityViolation("Input contains potentially dangerous content")
-
-        prompt = self._sanitize_html(prompt)
-        prompt = self._normalize_whitespace(prompt)
-
-        return prompt
 
     def validate_file_path(self, path: str | Path) -> Path:
         """Validate file path for security.

@@ -9,7 +9,7 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.validation.doc_models import AccuracyIssue, LinkIssue
+from infrastructure.validation.doc_models import LinkIssue, ScanAccuracyIssue
 
 logger = get_logger(__name__)
 
@@ -202,7 +202,7 @@ def extract_script_name(command: str) -> str | None:
     return None
 
 
-def verify_commands(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue]:
+def verify_commands(md_files: list[Path], repo_root: Path) -> list[ScanAccuracyIssue]:
     """Verify commands in documentation match actual implementations."""
     issues = []
     command_pattern = re.compile(r"```(?:bash|sh|shell)?\n(.*?)\n```", re.DOTALL)
@@ -227,12 +227,12 @@ def verify_commands(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue
                                 script_path = repo_root / script_name
                                 if not script_path.exists():
                                     issues.append(
-                                        AccuracyIssue(
+                                        ScanAccuracyIssue(
+                                            category="command",
+                                            severity="error",
                                             file=file_key,
                                             line=line_num,
-                                            issue_type="command",
-                                            issue_message=f"Referenced script '{script_name}' does not exist",  # noqa: E501
-                                            severity="error",
+                                            message=f"Referenced script '{script_name}' does not exist",  # noqa: E501
                                         )
                                     )
         except (OSError, UnicodeDecodeError) as e:
@@ -241,7 +241,7 @@ def verify_commands(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue
     return issues
 
 
-def check_file_paths(md_files: list[Path], repo_root: Path) -> list[AccuracyIssue]:
+def check_file_paths(md_files: list[Path], repo_root: Path) -> list[ScanAccuracyIssue]:
     """Check file paths mentioned in documentation."""
     issues = []
     path_pattern = re.compile(r"`([\w/\.\-]+)`")
@@ -265,12 +265,12 @@ def check_file_paths(md_files: list[Path], repo_root: Path) -> list[AccuracyIssu
                             path_type == "directory" and not path_str.endswith("/")
                         ):
                             issues.append(
-                                AccuracyIssue(
+                                ScanAccuracyIssue(
+                                    category="path",
+                                    severity=("warning" if path_type == "directory" else "error"),
                                     file=file_key,
                                     line=line_num,
-                                    issue_type="path",
-                                    issue_message=f"Referenced path '{path_str}' may not exist: {message}",  # noqa: E501
-                                    severity=("warning" if path_type == "directory" else "error"),
+                                    message=f"Referenced path '{path_str}' may not exist: {message}",  # noqa: E501
                                 )
                             )
         except (OSError, UnicodeDecodeError) as e:
@@ -281,9 +281,9 @@ def check_file_paths(md_files: list[Path], repo_root: Path) -> list[AccuracyIssu
 
 def validate_config_options(
     md_files: list[Path], config_files: dict[str, Path]
-) -> list[AccuracyIssue]:
+) -> list[ScanAccuracyIssue]:
     """Validate configuration options mentioned in docs."""
-    issues: list[AccuracyIssue] = []
+    issues: list[ScanAccuracyIssue] = []
 
     # Load actual config files
     config_data = {}
@@ -300,9 +300,9 @@ def validate_config_options(
     return issues
 
 
-def check_terminology(md_files: list[Path]) -> list[AccuracyIssue]:
+def check_terminology(md_files: list[Path]) -> list[ScanAccuracyIssue]:
     """Check terminology consistency across documentation."""
-    issues: list[AccuracyIssue] = []
+    issues: list[ScanAccuracyIssue] = []
     # This would check for inconsistent terminology
     # For now, return empty - could be enhanced with a terminology dictionary
     return issues
@@ -310,7 +310,7 @@ def check_terminology(md_files: list[Path]) -> list[AccuracyIssue]:
 
 def run_accuracy_phase(
     md_files: list[Path], repo_root: Path, config_files: dict[str, Path]
-) -> tuple[dict[str, Any], list[LinkIssue], list[AccuracyIssue], dict[str, set[str]]]:
+) -> tuple[dict[str, Any], list[LinkIssue], list[ScanAccuracyIssue], dict[str, set[str]]]:
     """Run Phase 2: Accuracy Verification.
 
     Args:
