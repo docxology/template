@@ -43,10 +43,8 @@ dependencies = [
   # networkx is required by cognitive_case_diagrams visualization layer (category_diagrams.py,
   # functor_diagrams.py) and tested via the root pipeline venv — must be in core deps
   "networkx>=3.0",
-  "scipy>=1.15.3",
-  "scikit-learn>=1.7.2",
-  "wordcloud>=1.9.6",
-  "rdflib>=7.6.0",
+  # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:
+  # uv sync --group scientific
 ]
 
 [project.scripts]

@@ -76,14 +76,22 @@ class PDFRenderer:
     # ---------------------------------------------------------------------
 
     def _generate_title_page_preamble(self, manuscript_dir: Path | str | None = None) -> str:
-        """Generate LaTeX title preamble commands from config.yaml."""
+        """Generate LaTeX title preamble commands from config.yaml.
 
+        .. deprecated::
+            Delegation wrapper — call ``generate_title_page_preamble`` directly.
+            Planned for removal: 2026-09-01.
+        """
         md = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
         return generate_title_page_preamble(md)
 
     def _generate_title_page_body(self, manuscript_dir: Path | str | None = None) -> str:
-        """Generate LaTeX title body commands (e.g., \\maketitle)."""
+        """Generate LaTeX title body commands (e.g., \\maketitle).
 
+        .. deprecated::
+            Delegation wrapper — call ``generate_title_page_body`` directly.
+            Planned for removal: 2026-09-01.
+        """
         md = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
         return generate_title_page_body(md)
 
@@ -93,25 +101,41 @@ class PDFRenderer:
         manuscript_dir: Path | str | None = None,
         output_dir: Path | str | None = None,
     ) -> str:
-        r"""Rewrite ``\includegraphics{...}`` paths for LaTeX compilation."""
+        r"""Rewrite ``\includegraphics{...}`` paths for LaTeX compilation.
 
+        .. deprecated::
+            Delegation wrapper — call ``fix_figure_paths`` directly.
+            Planned for removal: 2026-09-01.
+        """
         ms_dir = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
         out_dir = Path(output_dir) if output_dir is not None else Path(self.config.pdf_dir)
         return fix_figure_paths(latex_content, manuscript_dir=ms_dir, output_dir=out_dir)
 
     def _extract_preamble(self, preamble_file: Path | str) -> str:
-        """Extract LaTeX preamble from a markdown preamble file."""
+        """Extract LaTeX preamble from a markdown preamble file.
 
+        .. deprecated::
+            Delegation wrapper — call ``extract_preamble`` directly.
+            Planned for removal: 2026-09-01.
+        """
         return extract_preamble(Path(preamble_file))
 
     def _fix_math_delimiters(self, latex_content: str) -> str:
-        """Fix display-math delimiter issues that break LaTeX compilation."""
+        """Fix display-math delimiter issues that break LaTeX compilation.
 
+        .. deprecated::
+            Delegation wrapper — call ``fix_math_delimiters`` directly.
+            Planned for removal: 2026-09-01.
+        """
         return fix_math_delimiters(latex_content)
 
     def _check_latex_log_for_graphics_errors(self, log_file: Path | str) -> dict[str, list[str]]:
-        """Parse a LaTeX log file for graphics errors/warnings."""
+        """Parse a LaTeX log file for graphics errors/warnings.
 
+        .. deprecated::
+            Delegation wrapper — call ``check_latex_log_for_graphics_errors`` directly.
+            Planned for removal: 2026-09-01.
+        """
         return check_latex_log_for_graphics_errors(Path(log_file))
 
     def render(self, source_file: Path, output_name: str | None = None) -> Path:

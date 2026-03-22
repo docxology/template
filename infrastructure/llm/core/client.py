@@ -744,7 +744,6 @@ class LLMClient:
     ) -> Iterator[str]:
         """Prepend instruction to prompt and stream with custom token limit."""
         from infrastructure.llm.core._client_streaming import stream_query_impl
-        from infrastructure.llm.core.sanitization import sanitize_llm_input
 
         scoped_options = GenerationOptions(
             max_tokens=max_tokens,
