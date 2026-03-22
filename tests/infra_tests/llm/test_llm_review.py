@@ -1000,7 +1000,7 @@ class TestLLMReviewIntegration:
     def test_select_and_start_ollama_model(self):
         """Test Ollama model selection and startup."""
         from infrastructure.llm.utils.ollama import (
-            get_available_models,
+            get_available_model_info,
             is_ollama_running,
             select_best_model,
         )
@@ -1008,7 +1008,7 @@ class TestLLMReviewIntegration:
         # Since the fixture ensures Ollama is ready, these should all work
         assert is_ollama_running() is True
 
-        models = get_available_models()
+        models = get_available_model_info()
         assert len(models) > 0
 
         model = select_best_model()

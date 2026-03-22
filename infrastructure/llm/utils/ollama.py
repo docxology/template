@@ -152,7 +152,7 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
     return False
 
 
-def get_available_models(
+def get_available_model_info(
     base_url: str = "http://localhost:11434", timeout: float = 5.0, retries: int = 2
 ) -> list[dict[str, Any]]:
     """Get list of available models from Ollama with retry logic.
@@ -166,7 +166,7 @@ def get_available_models(
         List of model dictionaries with 'name', 'size', etc.
 
     Example:
-        >>> models = get_available_models()
+        >>> models = get_available_model_info()
         >>> print(f"Found {len(models)} models")
     """
     last_error = None
@@ -228,7 +228,7 @@ def get_model_names(base_url: str = "http://localhost:11434") -> list[str]:
     Returns:
         List of model names (e.g., ["llama3:latest", "mistral:7b"])
     """
-    models = get_available_models(base_url)
+    models = get_available_model_info(base_url)
     return [m["name"] for m in models]
 
 
@@ -344,7 +344,7 @@ def get_model_info(
     Returns:
         Model info dictionary or None if not found
     """
-    models = get_available_models(base_url)
+    models = get_available_model_info(base_url)
     for model in models:
         if model["name"] == model_name or model_name in model["name"]:
             return model

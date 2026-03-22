@@ -10,7 +10,7 @@ from infrastructure.llm.utils.ollama import (
     DEFAULT_MODEL_PREFERENCES,
     check_model_loaded,
     ensure_ollama_ready,
-    get_available_models,
+    get_available_model_info,
     get_model_info,
     get_model_names,
     is_ollama_running,
@@ -54,17 +54,17 @@ class TestGetAvailableModels:
 
     def test_get_available_models_returns_list(self):
         """Test that get_available_models returns a list."""
-        models = get_available_models()
+        models = get_available_model_info()
         assert isinstance(models, list)
 
     def test_get_available_models_has_entries(self):
         """Test that get_available_models returns models."""
-        models = get_available_models()
+        models = get_available_model_info()
         assert len(models) > 0, "Ollama should have at least one model installed"
 
     def test_get_available_models_has_name_field(self):
         """Test that model entries have 'name' field."""
-        models = get_available_models()
+        models = get_available_model_info()
         for model in models:
             assert "name" in model, f"Model entry missing 'name': {model}"
 
@@ -229,13 +229,13 @@ class TestOllamaUtilsWithoutServer:
 
     def test_get_available_models_no_server(self):
         """Test get_available_models with no server returns empty list."""
-        models = get_available_models(base_url="http://localhost:99999", timeout=0.5)
+        models = get_available_model_info(base_url="http://localhost:99999", timeout=0.5)
         assert models == []
 
     def test_get_available_models_retries(self):
         """Test get_available_models with retry logic."""
         # Should retry on timeout
-        models = get_available_models(base_url="http://localhost:99999", timeout=0.1, retries=1)
+        models = get_available_model_info(base_url="http://localhost:99999", timeout=0.1, retries=1)
         assert models == []
 
     def test_get_model_names_no_server(self):

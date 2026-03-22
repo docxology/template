@@ -39,7 +39,7 @@ from infrastructure.llm.utils.ollama import (
     is_ollama_running,
     ensure_ollama_ready,
     select_best_model,
-    get_available_models,
+    get_available_model_info,
     check_model_loaded,
     preload_model,
 )
@@ -381,7 +381,7 @@ def select_and_start_ollama_model() -> tuple[bool, str | None]:
             log_success("Ollama server is running", logger)
             break  # server already running — no start needed
 
-    available_models = get_available_models()
+    available_models = get_available_model_info()
     if not available_models:
         logger.warning("❌ No Ollama models available")
         return False, None
