@@ -473,14 +473,6 @@ class LLMClient:
                             "original_length": len(response_text),
                         },
                     )
-                    logger.info(
-                        "Structured query completed",
-                        extra={
-                            "model": model_name,
-                            "generation_time_seconds": generation_time,
-                            "response_length": len(response_text),
-                        },
-                    )
                     return parsed
                 except (json.JSONDecodeError, ValueError) as e:
                     logger.error(

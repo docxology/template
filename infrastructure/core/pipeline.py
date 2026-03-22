@@ -338,7 +338,7 @@ class PipelineExecutor:
             total_stages=self.config.total_stages,
         )
 
-    def _run_clean_outputs(self) -> bool:
+    def _run_clean_outputs(self) -> None:
         """Clean output directories for a fresh run.
 
         After cleaning, recreates the log file handler since clean_output_directories
@@ -351,8 +351,6 @@ class PipelineExecutor:
         # This ensures logs for subsequent stages are captured
         self._setup_log_file_handler()
         logger.info(f"Recreated pipeline log file: {self.log_file}")
-
-        return True
 
     def _run_setup_environment(self) -> bool:
         return self._run_script("00_setup_environment.py", "--project", self.config.project_name)

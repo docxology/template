@@ -57,6 +57,9 @@ def encrypt_payload(
     Returns:
         Dict with ``ciphertext`` (base64), ``nonce`` (base64), and
         ``key`` (base64) — all strings for easy JSON serialisation.
+
+    Raises:
+        ImportError: If the ``cryptography`` package is not installed.
     """
     _require_cryptography()
 

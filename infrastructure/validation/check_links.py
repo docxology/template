@@ -18,7 +18,7 @@ import ast
 import re
 import sys
 from pathlib import Path
-from typing import Any, Set, TypedDict
+from typing import Any, Set, TypedDict, Union
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.validation.doc_accuracy import extract_headings
@@ -35,7 +35,7 @@ class LinkCheckResult(TypedDict):
     type: str
 
 
-def find_all_markdown_files(repo_root: str) -> list[Path]:
+def find_all_markdown_files(repo_root: Union[str, Path]) -> list[Path]:
     """Find all markdown files in the repository."""
     repo_path = Path(repo_root)
     md_files = []
