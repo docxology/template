@@ -339,7 +339,7 @@ class SecurityMonitor:
         elif severity == "critical":
             logger.critical(f"Security event: {event_type} - {details}")
         else:
-            logger.info(f"Security event: {event_type} - {details}")
+            logger.debug(f"Security event: {event_type} - {details}")
 
     def get_recent_events(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get recent security events."""

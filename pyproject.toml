@@ -95,7 +95,6 @@ monitoring = [
 ]
 # Required for cognitive_case_diagrams project (real DisCoPy methods, not optional)
 cognitive-case-diagrams = [
-  "networkx>=3.0",
   "discopy>=1.0.0",
 ]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)

@@ -290,7 +290,7 @@ class PDFRenderer:
                 try:
                     _tmp.write_text("\n".join(lines) + "\n", encoding="utf-8")
                     _tmp.replace(aux_file)
-                except Exception:
+                except Exception:  # noqa: BLE001 — .aux atomic-write may fail with OS/FS errors
                     _tmp.unlink(missing_ok=True)
                     raise
         except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — .aux repair is best-effort; skip on failure
@@ -726,7 +726,7 @@ class PDFRenderer:
         try:
             _tmp.write_text(combined_content, encoding="utf-8")
             _tmp.replace(combined_md)
-        except Exception:
+        except Exception:  # noqa: BLE001 — markdown atomic-write may fail with OS/FS errors
             _tmp.unlink(missing_ok=True)
             raise
         logger.debug(
@@ -1027,7 +1027,7 @@ class PDFRenderer:
         try:
             _tmp.write_text(tex_content)
             _tmp.replace(combined_tex)
-        except Exception:
+        except Exception:  # noqa: BLE001 — LaTeX atomic-write may fail with OS/FS errors
             _tmp.unlink(missing_ok=True)
             raise
 

@@ -66,7 +66,7 @@ def create_test_count_chart(projects: list[ProjectMetrics]) -> Figure:
         label="Total",
         color=COLORS["primary"],
     )
-    ax.bar([i for i in x], passed_tests, width, label="Passed", color=COLORS["success"])
+    ax.bar(x, passed_tests, width, label="Passed", color=COLORS["success"])
     ax.bar(
         [i + width for i in x],
         failed_tests,
@@ -651,7 +651,7 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
             alpha=0.8,
         )
         ax1.bar(
-            [i for i in x],
+            x,
             passed_tests,
             width,
             label="Passed",
