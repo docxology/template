@@ -118,7 +118,7 @@ class TestInputSanitizer:
     def test_validate_file_input_rejects_directory_traversal(self):
         """Test that directory traversal is rejected."""
         sanitizer = InputSanitizer()
-        with pytest.raises(SecurityError, match="Invalid file path"):
+        with pytest.raises(SecurityError, match="Directory traversal detected"):
             sanitizer.validate_file_input(Path("../../../etc/passwd"))
 
     def test_validate_file_input_checks_extension(self, tmp_path):

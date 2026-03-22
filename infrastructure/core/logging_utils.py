@@ -41,6 +41,7 @@ import sys
 import time
 from contextlib import contextmanager
 from pathlib import Path
+from functools import wraps
 from typing import Any, Callable, Iterator, ParamSpec, TypeVar
 
 # Import from split modules
@@ -253,6 +254,7 @@ def log_function_call(logger: logging.Logger | None = None) -> Callable[[Callabl
     def decorator(func: Callable[P, T]) -> Callable[P, T]:
         func_logger = logger or get_logger(func.__module__)
 
+        @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
             func_logger.debug(f"Calling: {func.__name__}")
             start_time = time.time()
@@ -266,8 +268,6 @@ def log_function_call(logger: logging.Logger | None = None) -> Callable[[Callabl
                 func_logger.error(f"Failed: {func.__name__} after {duration:.1f}s - {e}")
                 raise
 
-        wrapper.__name__ = func.__name__
-        wrapper.__doc__ = func.__doc__
         return wrapper
 
     return decorator

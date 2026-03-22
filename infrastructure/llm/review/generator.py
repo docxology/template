@@ -691,6 +691,9 @@ def generate_review_with_metrics(
                 break
             elif attempt == max_retries:
                 response = best_response or response
+                if not response:
+                    metrics.generation_time_seconds = time.time() - start_time
+                    return None, metrics
                 logger.warning(
                     f"All {max_retries + 1} attempts failed validation for {review_name}; "
                     f"using longest response ({len(response.split())} words) despite quality issues: "

@@ -62,13 +62,13 @@ def run_comprehensive_audit(
     doc_categories = categorize_documentation(md_files, repo_root)
 
     # Phase 2: Collect headings and cache file contents to avoid re-reading in Phase 3
-    all_headings: dict[str, list[str]] = {}
+    all_headings: dict[str, set[str]] = {}
     file_contents: dict[Path, str] = {}
     for md_file in md_files:
         try:
             content = md_file.read_text(encoding="utf-8")
             file_contents[md_file] = content
-            all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
+            all_headings[str(md_file.relative_to(repo_root))] = set(extract_headings(content))
         except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Error reading {md_file}: {e}")
 

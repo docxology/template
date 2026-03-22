@@ -81,8 +81,10 @@ class InputSanitizer:
             raise SecurityError("Invalid file path") from e
 
         # Check for directory traversal attempts
-        if ".." in str(file_path) or not resolved.exists():
-            raise SecurityError("Invalid file path")
+        if ".." in str(file_path):
+            raise SecurityError("Directory traversal detected")
+        if not resolved.exists():
+            raise SecurityError("File not found")
 
         # Check file extension
         if allowed_extensions:

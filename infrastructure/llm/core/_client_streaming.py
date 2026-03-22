@@ -223,6 +223,9 @@ def stream_query_impl(
                                         )
 
                         except json.JSONDecodeError as e:
+                            # Malformed chunks are silently dropped; callers receive
+                            # a potentially truncated response with no direct signal.
+                            # Inspect logs (WARNING level) to detect dropped chunks.
                             logger.warning(
                                 f"Failed to parse streaming chunk: {e}",
                                 extra={"line": line[:100]},

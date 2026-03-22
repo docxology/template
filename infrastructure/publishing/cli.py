@@ -12,6 +12,7 @@ from pathlib import Path
 from infrastructure.core.logging_utils import get_logger
 
 from .api import ZenodoClient, ZenodoConfig
+from infrastructure.core.exceptions import PublishingError, UploadError
 from .citations import generate_citation_bibtex
 from .metadata import extract_publication_metadata
 
@@ -165,7 +166,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
             logger.info(f"Uploaded: {pdf.name}")
         doi = client.publish(deposition_id)
         print(f"Published successfully! DOI: {doi}")
-    except Exception as e:
+    except (PublishingError, UploadError) as e:
         logger.error(f"Zenodo upload failed: {e}")
         raise SystemExit(1) from e
 
