@@ -176,7 +176,8 @@ class RetryableOperation:
             exception: Exception that triggered the retry
 
         Raises:
-            StopIteration: If max attempts reached
+            Exception: Re-raises the caller-provided ``exception`` when max attempts are reached.
+                The exact type depends on what the caller passed in.
         """
         if self.attempt >= self.max_attempts:
             logger.error(f"Operation failed after {self.max_attempts} attempts: {exception}")

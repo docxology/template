@@ -103,12 +103,13 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
 
     Finds all PDF files in the specified output directory and uploads them
     to Zenodo as a new publication. Requires a valid Zenodo API token either
-    via command-line argument or ZENODO_TOKEN environment variable.
+    via command-line argument or ZENODO_TOKEN / ZENODO_PROD_TOKEN environment variable.
 
     Args:
         args: Argparse namespace containing:
             - output_dir (str): Path to directory containing PDF files to upload.
-            - token (str, optional): Zenodo API token. Falls back to ZENODO_TOKEN env.
+            - token (str, optional): Zenodo API token. Falls back to ZENODO_TOKEN, then
+              ZENODO_PROD_TOKEN (for compatibility with CredentialManager naming).
             - title (str, optional): Publication title. Defaults to 'Research Publication'.
             - authors (str, optional): Comma-separated author names.
             - description (str, optional): Publication description text.
@@ -120,9 +121,13 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         SystemExit: If no token is available, directory does not exist,
             no PDF files are found, or the upload fails.
     """
-    token = args.token or os.getenv("ZENODO_TOKEN")
+    # ZENODO_TOKEN is the simple single-token form used by this CLI command.
+    # For environment-specific tokens, CredentialManager uses ZENODO_PROD_TOKEN /
+    # ZENODO_SANDBOX_TOKEN instead. Fall back to ZENODO_PROD_TOKEN so both naming
+    # conventions work for production use.
+    token = args.token or os.getenv("ZENODO_TOKEN") or os.getenv("ZENODO_PROD_TOKEN")
     if not token:
-        logger.error("ZENODO_TOKEN environment variable not set")
+        logger.error("Set ZENODO_TOKEN or ZENODO_PROD_TOKEN environment variable")
         raise SystemExit(1)
 
     output_dir = Path(args.output_dir)

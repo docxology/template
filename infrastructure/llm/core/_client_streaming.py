@@ -37,7 +37,14 @@ def _try_save_partial(
     context: str,
     skip_if_already_saved: bool = True,
 ) -> bool:
-    """Try to save a partial streaming response; returns new partial_saved state."""
+    """Try to save a partial streaming response; returns new partial_saved state.
+
+    Parameters split into three groups:
+    - Guards: full_response, save_response, partial_saved, skip_if_already_saved
+    - Callback: save_streaming_state_fn (and save_path, model_name, prompt, chunk_count,
+      start_time which are forwarded verbatim to it)
+    - Logging: context (used in the info message on success)
+    """
     if not (full_response and save_response):
         return partial_saved
     if skip_if_already_saved and partial_saved:

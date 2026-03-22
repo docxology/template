@@ -80,6 +80,11 @@ class SecurityValidator:
         ``validate_llm_input`` assertions to ``sanitize_llm_input``.
         TODO: remove by 2026-06-01 or next major version bump (whichever comes first).
 
+        Args:
+            prompt: The LLM input string to validate.
+            context: Accepted for interface compatibility; not used by this implementation.
+                Callers should not rely on context being processed.
+
         Raises:
             SecurityViolation: If input contains dangerous content
         """
@@ -383,6 +388,10 @@ def get_security_monitor() -> SecurityMonitor:
 
 def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..., Any]:
     """Decorator for rate limiting functions.
+
+    Note: This decorator is implemented and functional but not yet applied to any
+    production callable. Apply to LLMClient or API boundary callables when rate
+    limiting is needed.
 
     Args:
         max_requests: Maximum requests per window

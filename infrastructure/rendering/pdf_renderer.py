@@ -408,16 +408,14 @@ class PDFRenderer:
         content = re.sub(r"`[^`]+`", "", content)
 
         brace_count = 0
-        in_latex_cmd = False
         i = 0
         while i < len(content):
             char = content[i]
             if char == "\\" and i < len(content) - 1 and content[i + 1].isalpha():
-                # Skip LaTeX command name
+                # Skip LaTeX command including optional [...] and required {...} arguments
                 j = i + 2
                 while j < len(content) and content[j].isalpha():
                     j += 1
-                # Skip optional argument [...]
                 if j < len(content) and content[j] == "[":
                     depth = 1
                     j += 1
@@ -427,7 +425,6 @@ class PDFRenderer:
                         elif content[j] == "]":
                             depth -= 1
                         j += 1
-                # Skip required argument {...}
                 if j < len(content) and content[j] == "{":
                     depth = 1
                     j += 1
@@ -438,13 +435,11 @@ class PDFRenderer:
                             depth -= 1
                         j += 1
                 i = j
-                in_latex_cmd = False
                 continue
-            elif char == "{" and not in_latex_cmd:
+            elif char == "{":
                 brace_count += 1
-            elif char == "}" and not in_latex_cmd:
+            elif char == "}":
                 brace_count -= 1
-            in_latex_cmd = False
             i += 1
 
         if brace_count != 0:

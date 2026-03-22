@@ -231,6 +231,10 @@ class LLMClient:
         would interfere with the intended low-level interaction (e.g. testing
         raw model behaviour). Prefer ``query()`` for user-facing prompts.
 
+        Security note: callers are responsible for validating the prompt before
+        passing it here. No SecurityMonitor audit event is emitted; if you need
+        an audit trail for raw LLM calls, log one at the call site.
+
         Args:
             prompt: Raw prompt to send
             model: Model to use (overrides config)
