@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 14:06
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 14:32
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1502,29 +1502,29 @@ _slides.nav)
 (/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/SYNTAX
 _slides.vrb
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 53.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 54.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 63.
+(Font)              scaled to size 7.8961pt on input line 64.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 63.
+(Font)              scaled to size 5.64008pt on input line 64.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 6
-3.
+4.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 63.
+(Font)              scaled to size 11.28131pt on input line 64.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 63.
+(Font)              scaled to size 7.89691pt on input line 64.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 63.
+(Font)              scaled to size 5.64066pt on input line 64.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 63.
+(Font)              scaled to size 11.27914pt on input line 64.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 63.
+(Font)              scaled to size 7.8954pt on input line 64.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 63.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 63.
+(Font)              scaled to size 5.63957pt on input line 64.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 64.
 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1533,7 +1533,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 63.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 64.
 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1544,10 +1544,10 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 
 LaTeX Font Warning: Font shape `TU/lmtt/bx/it' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 97.
+(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 98.
 
 )
-Overfull \vbox (1098.42648pt too high) detected at line 320
+Overfull \vbox (1112.02649pt too high) detected at line 321
  []
 
 [1

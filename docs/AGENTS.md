@@ -21,6 +21,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `audit/` | Audit reports and findings |
 | `security/` | Security documentation and policies |
 | `rules/` | Development standards and guidelines (formerly .cursorrules) |
+| `streams/` | Timestamped notes for livestreams and recorded talks |
 
 ## Key Conventions
 
@@ -60,7 +61,6 @@ If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/
 | Project | Location | Extra packages needed in root venv |
 | --- | --- | --- |
 | `code_project` | `projects/` (active) | has local `.venv/` — no root venv issue |
-| `act_inf_metaanalysis` | `projects/` (active) | `scipy`, `pandas`, `networkx`, `requests`, `rdflib`, `wordcloud`, `scikit-learn` |
 | `template` | `projects/` (active) | `matplotlib` (must be core dep, not optional group) |
 
 ### ⚠️ Critical Rule: `matplotlib` Must be in Core Dependencies

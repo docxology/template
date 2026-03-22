@@ -86,10 +86,13 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 ### Quick Reference
 
 - **[reference/copypasta.md](reference/copypasta.md)** - Ready-to-use sharing content
+- **[reference/copypasta-diagrams.md](reference/copypasta-diagrams.md)** - Diagram copypasta blocks
+- **[reference/copypasta-outreach.md](reference/copypasta-outreach.md)** - Outreach/social copypasta
 - **[reference/faq.md](reference/faq.md)** - FAQs
 - **[reference/quick-start-cheatsheet.md](reference/quick-start-cheatsheet.md)** - Essential commands
 - **[reference/common-workflows.md](reference/common-workflows.md)** - Step-by-step recipes
 - **[reference/glossary.md](reference/glossary.md)** - Glossary of terms
+- **[reference/api-project-modules.md](reference/api-project-modules.md)** - Project module API reference
 
 ---
 
@@ -231,6 +234,13 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
+## 🎙️ **Streams & Talks**
+
+- **[streams/README.md](streams/README.md)** - Navigation index for livestream/talk notes
+- **[streams/inferant-stream-018-1.md](streams/inferant-stream-018-1.md)** - InferAnt #018.1 — March 2026 stream on the Zenodo paper
+
+---
+
 ## 📁 **Directory Structure**
 
 ```text
@@ -331,6 +341,10 @@ docs/
 │   ├── steganography.md
 │   ├── hashing_and_manifests.md
 │   └── secure_execution.md
+│
+├── streams/                            # Livestream & talk notes
+│   ├── README.md
+│   └── inferant-stream-018-1.md        # InferAnt #018.1 — March 2026
 │
 └── audit/                              # Audit reports
     ├── documentation-review-report.md

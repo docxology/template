@@ -343,9 +343,6 @@ class SecurityMonitor:
 
 
 
-<<<<<<< HEAD
-@lru_cache(maxsize=1)
-=======
 # Module-level singletons — initialized on first access to avoid import-time side effects
 # (SecurityMonitor starts background threads; RateLimiter holds mutable rate-window state).
 _security_validator: SecurityValidator | None = None
@@ -353,7 +350,6 @@ _rate_limiter: RateLimiter | None = None
 _security_monitor: SecurityMonitor | None = None
 
 
->>>>>>> desloppify/code-health
 def get_security_validator() -> SecurityValidator:
     """Return the process-wide SecurityValidator singleton."""
     global _security_validator
@@ -362,10 +358,6 @@ def get_security_validator() -> SecurityValidator:
     return _security_validator
 
 
-<<<<<<< HEAD
-@lru_cache(maxsize=1)
-=======
->>>>>>> desloppify/code-health
 def get_rate_limiter() -> RateLimiter:
     """Return the process-wide RateLimiter singleton."""
     global _rate_limiter
@@ -374,10 +366,6 @@ def get_rate_limiter() -> RateLimiter:
     return _rate_limiter
 
 
-<<<<<<< HEAD
-@lru_cache(maxsize=1)
-=======
->>>>>>> desloppify/code-health
 def get_security_monitor() -> SecurityMonitor:
     """Return the process-wide SecurityMonitor singleton."""
     global _security_monitor

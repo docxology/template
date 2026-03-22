@@ -37,13 +37,6 @@ def check_python_version() -> bool:
 def check_build_tools(tools: dict[str, str]) -> bool:
     """Return True if every named executable is on PATH.
 
-<<<<<<< HEAD
-    This function is a stable public entry point used by integration tests and
-    pipeline setup. The implementation lives in `env_deps.py` to keep modules small.
-    """
-
-    return _check_dependencies(required_packages=packages)
-=======
     Args:
         tools: Map of executable name to short human-readable purpose (for logging).
 
@@ -97,7 +90,6 @@ def install_missing_packages(packages: list[str], cwd: Path | None = None) -> bo
         return False
     log_success(f"Installed packages: {', '.join(packages)}", logger)
     return True
->>>>>>> desloppify/code-health
 
 
 def _project_output_dirs(project_name: str) -> list[str]:

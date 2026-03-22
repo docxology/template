@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.51",
-      "total_size_bytes": 1586638,
+      "size_mb": "1.50",
+      "total_size_bytes": 1574746,
       "largest_files": [
         {
           "name": "template_combined.pdf",
-          "size_mb": "1.10",
+          "size_mb": "1.09",
           "path": "pdf/template_combined.pdf"
         },
         {
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 168,
-      "size_mb": "3.04",
-      "total_size_bytes": 3191873,
+      "size_mb": "3.03",
+      "total_size_bytes": 3179978,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "0.90",
+          "size_mb": "0.89",
           "path": "slides/04_results_slides.pdf"
         },
         {
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 4,
-      "size_mb": "0.86",
-      "total_size_bytes": 904325,
+      "size_mb": "0.85",
+      "total_size_bytes": 892492,
       "largest_files": [
         {
           "name": "comparative_feature_matrix.png",
@@ -107,7 +107,7 @@
         },
         {
           "name": "architecture_overview.png",
-          "size_mb": "0.23",
+          "size_mb": "0.22",
           "path": "figures/architecture_overview.png"
         },
         {
@@ -140,7 +140,7 @@
       "exists": true,
       "file_count": 4,
       "size_mb": "0.01",
-      "total_size_bytes": 7235,
+      "total_size_bytes": 7237,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -197,17 +197,17 @@
     }
   },
   "total_files": 211,
-  "total_size_mb": 5.9379425048828125,
+  "total_size_mb": 5.903974533081055,
   "largest_files": [
     {
       "name": "template_combined.pdf",
-      "size_mb": "1.10",
+      "size_mb": "1.09",
       "category": "pdf",
       "path": "pdf/template_combined.pdf"
     },
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "0.90",
+      "size_mb": "0.89",
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
@@ -219,7 +219,7 @@
     },
     {
       "name": "architecture_overview.png",
-      "size_mb": "0.23",
+      "size_mb": "0.22",
       "category": "figures",
       "path": "figures/architecture_overview.png"
     },
@@ -262,12 +262,12 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.5131359100341797,
+    "pdf": 1.5017948150634766,
     "web": 0.5055294036865234,
-    "slides": 3.0440073013305664,
-    "figures": 0.862431526184082,
+    "slides": 3.032663345336914,
+    "figures": 0.8511466979980469,
     "data": 0.0034017562866210938,
-    "reports": 0.006899833679199219,
+    "reports": 0.006901741027832031,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.002536773681640625

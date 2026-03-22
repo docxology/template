@@ -738,13 +738,8 @@ def generate_review_with_metrics(
 
 
 def generate_llm_executive_summary(
-<<<<<<< HEAD
-    client: LLMClient, text: str, model_name: str = ""
-) -> tuple[str | None, ReviewMetrics]:
-=======
     client: LLMClient, text: str, model_name: str = "", temperature: float = 0.3
 ) -> tuple[str, ReviewMetrics]:
->>>>>>> desloppify/code-health
     """Named public API entry point for executive summary reviews.
 
     Binds review_type='executive_summary' and ManuscriptExecutiveSummary template.
@@ -768,12 +763,7 @@ def generate_llm_executive_summary(
         max_tokens=None,
     )
 
-<<<<<<< HEAD
 
-def generate_improvement_suggestions(
-    client: LLMClient, text: str, model_name: str = ""
-) -> tuple[str | None, ReviewMetrics]:
-=======
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = "", temperature: float = 0.3
 ) -> tuple[str, ReviewMetrics]:
@@ -829,7 +819,6 @@ def generate_methodology_review(
 def generate_improvement_suggestions(
     client: LLMClient, text: str, model_name: str = "", temperature: float = 0.4
 ) -> tuple[str, ReviewMetrics]:
->>>>>>> desloppify/code-health
     """Named public API entry point for improvement suggestions (ManuscriptImprovementSuggestions template).
 
     Uses temperature=0.4 (vs 0.3 for other reviews) because generative ideation

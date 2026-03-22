@@ -54,12 +54,6 @@ class LLMClient:
     both blocking and streaming query variants. All inputs are sanitized
     before sending; structured queries parse JSON responses automatically.
 
-<<<<<<< HEAD
-    Parameter asymmetry by design: blocking variants (query, query_structured)
-    and streaming variants (stream_query) expose different optional parameters
-    because streaming requires chunk-level callbacks and retry semantics that
-    are not applicable to blocking calls.
-=======
     **Blocking vs streaming parameter asymmetry:**
     Streaming variants (stream_query, stream_short, stream_long) accept extra
     params not available on their blocking counterparts:
@@ -67,7 +61,6 @@ class LLMClient:
       - ``save_path`` (Path | None): override the default save location
       - ``retries`` (int): retry count on transient errors
     Use the streaming variant when response persistence or retry control is needed.
->>>>>>> desloppify/code-health
 
     Example:
         >>> client = LLMClient()
@@ -830,17 +823,11 @@ class LLMClient:
         """Get list of available models from Ollama.
 
         Returns:
-<<<<<<< HEAD
-            List of model names (deduplicated). On network failure, returns
-            ``config.fallback_models`` instead of raising — callers cannot
-            distinguish a live model list from the fallback.
-=======
             List of model names (deduplicated, version tags stripped).
             Falls back to ``config.fallback_models`` if the Ollama server is
             unreachable or returns a non-200 response. The fallback list is
             never empty — callers can always rely on at least one model name
             being present in the return value.
->>>>>>> desloppify/code-health
         """
         url = f"{self.config.base_url}/api/tags"
         try:
@@ -854,7 +841,6 @@ class LLMClient:
             return self.config.fallback_models
 
     def check_connection(self, timeout: float = 2.0) -> bool:
-<<<<<<< HEAD
         """Return True if the Ollama server is reachable.
 
         Use check_connection_detailed() when you need the failure reason.
@@ -862,19 +848,11 @@ class LLMClient:
         is_available, _ = self.check_connection_detailed(timeout=timeout)
         return is_available
 
-    def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
+    def check_connection_with_reason(self, timeout: float = 2.0) -> tuple[bool, str | None]:
         """Return (is_available, error_message) for the Ollama server.
 
-        Use check_connection() when only the boolean result is needed.
+        Alias: check_connection_detailed() delegates here for backwards compatibility.
         """
-=======
-        """Return True if the Ollama server is reachable."""
-        is_available, _ = self.check_connection_with_reason(timeout=timeout)
-        return is_available
-
-    def check_connection_with_reason(self, timeout: float = 2.0) -> tuple[bool, str | None]:
-        """Return (is_available, error_message) for the Ollama server."""
->>>>>>> desloppify/code-health
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)
             if response.status_code == 200:
@@ -895,6 +873,14 @@ class LLMClient:
             error_msg = f"Request error: {e}"
             logger.warning(f"Ollama connection check failed: {error_msg}")
             return (False, error_msg)
+
+    def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
+        """Return (is_available, error_message) for the Ollama server.
+
+        Use check_connection() when only the boolean result is needed.
+        Backwards-compat alias for check_connection_with_reason().
+        """
+        return self.check_connection_with_reason(timeout=timeout)
 
     def reset(self) -> None:
         """Reset client state, clearing context and system prompt."""

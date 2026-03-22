@@ -95,6 +95,7 @@ graph TD
 | [`security/`](security/) | Security & provenance | steganography, hashing, secure execution |
 | [`audit/`](audit/) | Audit reports | documentation-review, filepath-audit |
 | [`rules/`](rules/) | Project Rules | AGENTS, README, testing, manuscript, etc. |
+| [`streams/`](streams/) | Livestream & talk notes | timestamped session notes tied to releases or papers |
 
 ## Quick Navigation
 

@@ -5,22 +5,22 @@ OUTPUT STATISTICS REPORT
 Output Directory: /Users/4d/Documents/GitHub/template/output/template
 
 Total Files: 211
-Total Size: 5.94 MB
+Total Size: 5.90 MB
 
 Files by Category:
-  • pdf: 10 files (1.51 MB)
+  • pdf: 10 files (1.50 MB)
   • web: 23 files (0.51 MB)
-  • slides: 168 files (3.04 MB)
-  • figures: 4 files (0.86 MB)
+  • slides: 168 files (3.03 MB)
+  • figures: 4 files (0.85 MB)
   • data: 1 files (0.00 MB)
   • reports: 4 files (0.01 MB)
   • logs: 1 files (0.00 MB)
 
 Largest Files:
-  • template_combined.pdf: 1.10 MB (pdf)
-  • 04_results_slides.pdf: 0.90 MB (slides)
+  • template_combined.pdf: 1.09 MB (pdf)
+  • 04_results_slides.pdf: 0.89 MB (slides)
   • comparative_feature_matrix.png: 0.34 MB (figures)
-  • architecture_overview.png: 0.23 MB (figures)
+  • architecture_overview.png: 0.22 MB (figures)
   • index.html: 0.17 MB (web)
 
 File Types:

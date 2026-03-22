@@ -55,15 +55,12 @@ def function1(param1: float, param2: int) -> float:
         >>> print(result)
         3.0
     """
-<<<<<<< HEAD
-=======
     # Input validation: reject non-numeric values early with clear errors.
     if not isinstance(param1, (int, float)):
         raise TypeError("param1 must be int or float")
     if not isinstance(param2, int):
         raise TypeError("param2 must be int")
 
->>>>>>> desloppify/code-health
     try:
         # Type checking is enforced by the function signature; callers must pass correct types.
         result = param1 * param2 + 1.0
@@ -294,17 +291,10 @@ def main():
         # Run main workflow
         results = run_data_processing()
 
-<<<<<<< HEAD
         # Validate results
         if not validate_workflow_results(results):
             logger.error("Workflow validation failed")
             sys.exit(1)
-=======
-    # Validate results
-    if not validate_workflow_results(results):
-        logger.error("Workflow validation failed")
-        sys.exit(1)
->>>>>>> desloppify/code-health
 
         # Generate final report
         report_content = generate_workflow_report(results, reproducibility_report)

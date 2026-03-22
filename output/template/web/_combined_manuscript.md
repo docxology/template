@@ -466,7 +466,7 @@ The three-tier [skill protocol](#documentation-duality-and-the-agentic-skill-arc
 | PAI (`PAI.md`) | 1 (infrastructure-level) | — |
 | Human (`README.md`) | 12+ per-directory | 100% |
 
-This four-layer coverage creates 12 fully described, MCP-mappable tool endpoints that a sufficiently capable agent could invoke without any source-code access. The aggregate documentation footprint (145+ files) represents a deliberate engineering investment: each documentation file is not commentary but a specification, enforcing architectural constraints through structured natural language [@lau2025aicoding].
+This four-layer coverage creates 12 fully described, MCP-mappable tool endpoints that a sufficiently capable agent could invoke without any source-code access. The aggregate documentation footprint (147+ files) represents a deliberate engineering investment: each documentation file is not commentary but a specification, enforcing architectural constraints through structured natural language [@lau2025aicoding].
 
 ## Pipeline Stage Execution
 
