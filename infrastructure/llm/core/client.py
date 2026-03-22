@@ -807,7 +807,9 @@ class LLMClient:
         """Get list of available models from Ollama.
 
         Returns:
-            List of model names (deduplicated)
+            List of model names (deduplicated). On network failure, returns
+            ``config.fallback_models`` instead of raising — callers cannot
+            distinguish a live model list from the fallback.
         """
         url = f"{self.config.base_url}/api/tags"
         try:

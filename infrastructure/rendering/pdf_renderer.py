@@ -78,6 +78,10 @@ class PDFRenderer:
     def _generate_title_page_preamble(self, manuscript_dir: Path | str | None = None) -> str:
         """Generate LaTeX title preamble commands from config.yaml.
 
+        Args:
+            manuscript_dir: Override for the manuscript directory. Defaults to
+                ``self.config.manuscript_dir`` when ``None``.
+
         .. deprecated::
             Delegation wrapper — call ``generate_title_page_preamble`` directly.
             Planned for removal: 2026-09-01.
@@ -87,6 +91,10 @@ class PDFRenderer:
 
     def _generate_title_page_body(self, manuscript_dir: Path | str | None = None) -> str:
         """Generate LaTeX title body commands (e.g., \\maketitle).
+
+        Args:
+            manuscript_dir: Override for the manuscript directory. Defaults to
+                ``self.config.manuscript_dir`` when ``None``.
 
         .. deprecated::
             Delegation wrapper — call ``generate_title_page_body`` directly.
@@ -102,6 +110,13 @@ class PDFRenderer:
         output_dir: Path | str | None = None,
     ) -> str:
         r"""Rewrite ``\includegraphics{...}`` paths for LaTeX compilation.
+
+        Args:
+            latex_content: Raw LaTeX string with ``\includegraphics`` commands.
+            manuscript_dir: Override for the manuscript directory. Defaults to
+                ``self.config.manuscript_dir`` when ``None``.
+            output_dir: Override for the PDF output directory. Defaults to
+                ``self.config.pdf_dir`` when ``None``.
 
         .. deprecated::
             Delegation wrapper — call ``fix_figure_paths`` directly.
