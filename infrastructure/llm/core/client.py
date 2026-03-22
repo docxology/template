@@ -232,8 +232,9 @@ class LLMClient:
         raw model behaviour). Prefer ``query()`` for user-facing prompts.
 
         Security note: callers are responsible for validating the prompt before
-        passing it here. No SecurityMonitor audit event is emitted; if you need
-        an audit trail for raw LLM calls, log one at the call site.
+        passing it here. A ``raw_llm_query`` audit event is emitted to
+        SecurityMonitor at ``info`` severity so the sanitization bypass is
+        traceable in the audit log.
 
         Args:
             prompt: Raw prompt to send
@@ -248,6 +249,14 @@ class LLMClient:
             >>> response = client.query_raw("Complete: The quick brown fox")
         """
         model_name = model or self.config.default_model
+
+        # Emit audit event so the sanitization bypass is traceable in SecurityMonitor.
+        from infrastructure.core.security import get_security_monitor  # noqa: PLC0415
+        get_security_monitor().log_security_event(
+            "raw_llm_query",
+            {"model": model_name, "prompt_length": len(prompt)},
+            "info",
+        )
 
         # Create temporary context for raw query
         messages = [{"role": "user", "content": prompt}]
