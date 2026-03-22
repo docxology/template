@@ -1,0 +1,13 @@
+\frametitle{Conclusion}
+\protect\phantomsection\label{conclusion}
+Finite-\(Q\) rational proximity is a coarse lens: it rewards numbers
+that admit unusually accurate low-height approximations, not
+``randomness'' in a probabilistic sense. At \(Q=120\), \(\pi\) is a
+visible outlier relative to uniform draws, while the golden ratio sits
+near the median of the pooled reference---consistent with its badly
+approximable, bounded-quotient profile at the level of heuristics. The
+pipeline is modular (\texttt{continued\_fractions},
+\texttt{rational\_distance}, \texttt{sampling},
+\texttt{statistics\_compare}), fully tested without mocks, and
+parameterized from YAML so \(Q\) and baselines can be altered for
+coursework or further experiments.

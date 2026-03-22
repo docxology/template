@@ -1,0 +1,130 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Recommendations}
+\protect\phantomsection\label{recommendations}
+Prioritized actions in the fixture include data-sharing agreements,
+bridge maintenance bonds, and resilience hub pilots.
+\textbf{Recommendations} carry the highest weights where consensus
+already exists in source documents.
+
+The handbook is not a substitute for democratic deliberation; it is a
+structured rollup of what evidence-backed proposals are on the table at
+version print time.
+
+\textbf{Rows.} \texttt{ev-015} (weight 0.9, Regional planning task force
+draft) calls for a recurring interagency data sharing agreement for
+transit and land use permits. \texttt{ev-016} (weight 0.88, DOT capital
+program white paper) proposes funding a five-year bridge maintenance
+bond aligned to the priority repair list---directly echoing
+infrastructure evidence about deferred repairs. \texttt{ev-017} (weight
+0.72, Heat equity working group) pilots neighborhood resilience hubs in
+districts with longest cooling-center travel times, linking
+recommendations to risks and communities chapters without duplicating
+their evidence ids.
+
+\textbf{Weight ordering.} The data-sharing row tops the weight list
+among recommendations, signaling strongest reviewer confidence or
+institutional buy-in in this fictional exercise. Weights are not votes;
+they guide synthesis caps and gap detection, not automatic budget
+allocation.
+
+\textbf{Narrative boundaries.} Recommendations prose should clarify that
+inclusion in the corpus does not imply adoption by any elected body
+{[}@bowker2005{]}. The corpus records that a proposal was documented and
+reviewed on a date, not that it passed a council vote.
+
+\textbf{Versioning.} Task-force drafts evolve quickly; when PDFs
+supersede one another, update \texttt{source\_label} strings or add
+successor rows so readers know which draft the handbook referenced.
+\end{frame}
+
+\end{document}

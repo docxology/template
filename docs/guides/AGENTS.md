@@ -13,6 +13,7 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 | `testing-and-reproducibility.md` | Levels 7-9 | Developers implementing TDD workflow |
 | `extending-and-automation.md` | Levels 10-12 | Expert users extending the template |
 | `new-project-setup.md` | All levels | Complete setup checklist with pitfalls |
+| `new-project-one-shot-prompt.md` | All levels | LLM one-shot scaffold prompt; positive controls `code_project`, `template` |
 
 ## Key Conventions
 

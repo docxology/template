@@ -9,8 +9,8 @@
 \beamer@slide {convergence-rate-analysis}{1}
 \beamer@slide {theoretical-vs-empirical-convergence}{1}
 \beamer@slide {fig:convergence_rate}{1}
+\beamer@slide {eq:scalar_linear_update}{1}
 \beamer@slide {eq:convergence_bound}{1}
-\beamer@slide {eq:optimal_step_convergence}{1}
 \beamer@slide {error-bounds}{1}
 \beamer@slide {eq:error_bound}{1}
 \beamer@slide {performance-metrics}{1}

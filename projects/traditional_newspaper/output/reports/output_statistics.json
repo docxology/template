@@ -1,0 +1,285 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "0.28",
+      "total_size_bytes": 293612,
+      "largest_files": [
+        {
+          "name": "traditional_newspaper_combined.pdf",
+          "size_mb": "0.08",
+          "path": "pdf/traditional_newspaper_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.07",
+          "path": "pdf/_combined_manuscript.tex"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.07",
+          "path": "pdf/_combined_manuscript.md"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".pdf": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 20,
+      "size_mb": "0.27",
+      "total_size_bytes": 282090,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.07",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.07",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "01_front_page.html",
+          "size_mb": "0.01",
+          "path": "web/01_front_page.html"
+        }
+      ],
+      "extensions": {
+        ".html": 19,
+        ".md": 1
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 128,
+      "size_mb": "1.42",
+      "total_size_bytes": 1487573,
+      "largest_files": [
+        {
+          "name": "98_newspaper_and_pipeline_terms_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/98_newspaper_and_pipeline_terms_slides.log"
+        },
+        {
+          "name": "S01_layout_and_pipeline_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/S01_layout_and_pipeline_slides.log"
+        },
+        {
+          "name": "01_front_page_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/01_front_page_slides.log"
+        }
+      ],
+      "extensions": {
+        ".nav": 18,
+        ".snm": 18,
+        ".log": 18,
+        ".aux": 18,
+        ".pdf": 18,
+        ".tex": 18,
+        ".toc": 18,
+        ".vrb": 2
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.02",
+      "total_size_bytes": 18874,
+      "largest_files": [
+        {
+          "name": "masthead.png",
+          "size_mb": "0.02",
+          "path": "figures/masthead.png"
+        }
+      ],
+      "extensions": {
+        ".png": 1
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 2152,
+      "largest_files": [
+        {
+          "name": "manuscript_stats.json",
+          "size_mb": "0.00",
+          "path": "data/manuscript_stats.json"
+        }
+      ],
+      "extensions": {
+        ".json": 1
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 4,
+      "size_mb": "0.01",
+      "total_size_bytes": 7560,
+      "largest_files": [
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
+        },
+        {
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "path": "reports/test_results.json"
+        },
+        {
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "path": "reports/test_results.md"
+        }
+      ],
+      "extensions": {
+        ".md": 2,
+        ".json": 2
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 2677,
+      "largest_files": [
+        {
+          "name": "pipeline.log",
+          "size_mb": "0.00",
+          "path": "logs/pipeline.log"
+        }
+      ],
+      "extensions": {
+        ".log": 1
+      }
+    }
+  },
+  "total_files": 165,
+  "total_size_mb": 1.997507095336914,
+  "largest_files": [
+    {
+      "name": "traditional_newspaper_combined.pdf",
+      "size_mb": "0.08",
+      "category": "pdf",
+      "path": "pdf/traditional_newspaper_combined.pdf"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.07",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.07",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.md"
+    },
+    {
+      "name": "index.html",
+      "size_mb": "0.07",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.07",
+      "category": "web",
+      "path": "web/_combined_manuscript.md"
+    },
+    {
+      "name": "98_newspaper_and_pipeline_terms_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/98_newspaper_and_pipeline_terms_slides.log"
+    },
+    {
+      "name": "S01_layout_and_pipeline_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/S01_layout_and_pipeline_slides.log"
+    },
+    {
+      "name": "01_front_page_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/01_front_page_slides.log"
+    },
+    {
+      "name": "masthead.png",
+      "size_mb": "0.02",
+      "category": "figures",
+      "path": "figures/masthead.png"
+    },
+    {
+      "name": "01_front_page.html",
+      "size_mb": "0.01",
+      "category": "web",
+      "path": "web/01_front_page.html"
+    }
+  ],
+  "missing_expected_files": [],
+  "sizes_by_category": {
+    "pdf": 0.2800102233886719,
+    "web": 0.26902198791503906,
+    "slides": 1.4186601638793945,
+    "figures": 0.017999649047851562,
+    "data": 0.00205230712890625,
+    "reports": 0.00720977783203125,
+    "simulations": 0.0,
+    "llm": 0.0,
+    "logs": 0.0025529861450195312
+  },
+  "file_counts_by_type": {
+    ".md": 4,
+    ".log": 21,
+    ".aux": 19,
+    ".blg": 1,
+    ".bib": 1,
+    ".pdf": 19,
+    ".tex": 19,
+    ".toc": 19,
+    ".bbl": 1,
+    ".html": 19,
+    ".nav": 18,
+    ".snm": 18,
+    ".vrb": 2,
+    ".png": 1,
+    ".json": 3
+  },
+  "pdf_files": 10,
+  "figures": 1,
+  "data_files": 1
+}

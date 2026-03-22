@@ -1,0 +1,7 @@
+\frametitle{Relation to continued fractions}
+\protect\phantomsection\label{relation-to-continued-fractions}
+Continued-fraction convergents supply excellent rational approximations
+but need not attain \(\delta_Q(x)\) for a fixed \(Q\) without
+semiconvergents; \texttt{cf\_distance.py} documents the convergent-only
+lower envelope used for quick certificates. The three-\(p\) scan closes
+that gap numerically at the chosen \(Q\) ceiling.

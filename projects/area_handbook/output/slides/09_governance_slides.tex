@@ -1,0 +1,129 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Governance and services}
+\protect\phantomsection\label{governance-and-services}
+Overlapping special districts and aging emergency-plan synchronization
+are \textbf{governance} concerns that span jurisdictions. The handbook
+makes fragmentation visible without pretending a single author owns all
+fixes.
+
+Cross-reference the risks chapter when governance gaps amplify single
+points of failure (e.g., shared river crossings).
+
+\textbf{Fixture evidence.} \texttt{ev-011} (weight 0.8, Interlocal
+services audit) reports nine special districts overlap tax boundaries in
+the central corridor, complicating service accounting. \texttt{ev-012}
+(weight 0.45, State readiness checklist) states emergency operations
+plans were last synchronized across counties in 2021---a lower-weight
+row flagging stale coordination that may need tabletop exercises to
+refresh.
+
+\textbf{Interpreting weights.} The emergency-plan row carries the lowest
+weight among Riverbend governance items, signaling uncertainty about
+whether 2021 remains accurate or whether partial updates occurred
+without a full sync. Handbook authors should describe that nuance;
+reviewers can raise the weight after a new statewide drill report enters
+the corpus.
+
+\textbf{Service accounting.} Overlapping districts often confuse
+residents during tax mailings; the handbook can cite \texttt{ev-011}
+when explaining why service maps disagree across PDFs from different
+agencies {[}@star1989{]}.
+
+\textbf{Risks coupling.} Freight dependence on a single river crossing
+(\texttt{ev-014} in the risks chapter) becomes more alarming when
+governance synchronization lags (\texttt{ev-012}). Narrative
+cross-references help readers connect institutional drift to physical
+vulnerability.
+\end{frame}
+
+\end{document}

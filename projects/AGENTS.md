@@ -935,6 +935,20 @@ python3 scripts/02_run_analysis.py --project code_project
 python3 scripts/03_render_pdf.py --project code_project
 ```
 
+### Area handbook (`projects/area_handbook/`)
+
+**Standalone Guarantees:**
+
+- **Tests**: 32 tests, 100% `src/` coverage, zero mocks
+- **Methods**: Corpus I/O, outline template, synthesis, Markdown builders, metrics (`src/`)
+- **Manuscript**: Fourteen numbered sections plus `SYNTAX.md`; fixture-driven `data/fixtures/riverbend_area.yaml`
+
+```bash
+python3 scripts/01_run_tests.py --project area_handbook
+python3 scripts/02_run_analysis.py --project area_handbook
+python3 scripts/03_render_pdf.py --project area_handbook
+```
+
 ## See Also
 
 - [README.md](README.md) - Quick reference and getting started

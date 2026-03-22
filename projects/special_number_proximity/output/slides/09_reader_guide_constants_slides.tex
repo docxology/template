@@ -1,0 +1,127 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Reader's guide to registered constants}
+\protect\phantomsection\label{readers-guide-to-registered-constants}
+Each entry below mirrors \texttt{src/constants.py}. Classification
+strings are \textbf{informative only}; no formal proof is recomputed in
+software.
+
+\textbf{\texttt{pi} --- transcendental (documentary).} Circle constant.
+Famous rational approximants at moderate height (e.g.~\(355/113\)) can
+make \(\delta_Q\) extremely small at finite \(Q\) when those
+denominators enter the search range.
+
+\textbf{\texttt{e} --- transcendental (documentary).} Base of the
+natural logarithm. Continued-fraction coefficients are unbounded;
+finite-\(Q\) behaviour is read from the JSON after each run.
+
+\textbf{\texttt{sqrt2}, \texttt{sqrt3} --- irrational algebraic degree
+\(2\).} Quadratic irrationals are badly approximable in the classical
+sense; nonetheless \(\delta_Q\) and \(\mu_Q\) at fixed \(Q\) depend on
+which rational with \(q\le Q\) wins the minimum.
+
+\textbf{\texttt{golden\_ratio} --- \(\varphi=(1+\sqrt5)/2\), quadratic
+irrational.} All partial quotients equal \(1\) in exact
+continued-fraction theory; expect bounded-quotient heuristics to
+interact with \(\mu_Q\) ranks differently from \(\delta_Q\) ranks at the
+same \(Q\).
+
+\textbf{\texttt{ln2} --- transcendental (documentary).} Natural
+logarithm of \(2\); included to show a transcendental on \((0,1)\)
+alongside uniform-style references.
+
+\textbf{\texttt{one\_sixth} --- rational control.} Exact value \(1/6\);
+\(\delta_Q=\mu_Q=0\) for \(Q\ge 6\) under exact arithmetic. Serves as a
+zero baseline for the scan and CSV export.
+\end{frame}
+
+\end{document}

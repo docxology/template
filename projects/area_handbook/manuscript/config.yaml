@@ -1,0 +1,34 @@
+paper:
+  title: "Holistic Area Reporting and Living Handbooks"
+  version: "0.1"
+  subtitle: "From structured evidence to updated handbook sections"
+  date: "2026-03-22"
+
+authors:
+  - name: "Area Handbook Author"
+    orcid: "0000-0000-0000-0000"
+    email: "handbook@example.com"
+    affiliation: "Docxology Template"
+    corresponding: true
+
+keywords:
+  - "area report"
+  - "handbook"
+  - "evidence synthesis"
+  - "living documents"
+  - "reproducible publishing"
+
+metadata:
+  license: "Apache-2.0"
+  language: "en"
+
+llm:
+  reviews:
+    enabled: false
+  translations:
+    enabled: false
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 3
+  max_project_test_failures: 0

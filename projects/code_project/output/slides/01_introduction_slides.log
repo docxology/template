@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 14:31
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 15:42
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1534,8 +1534,13 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
 File: mt-LatinModernRoman.cfg 2026/02/26 v1.2 microtype config. file: Latin Mod
 ern Roman (RS)
-))
-Overfull \vbox (787.35645pt too high) detected at line 211
+)
+
+LaTeX Warning: Reference `eq:scalar_linear_update' on page 1 undefined on input
+ line 153.
+
+)
+Overfull \vbox (1146.69162pt too high) detected at line 250
  []
 
 [1
@@ -1557,13 +1562,17 @@ roduction_slides.aux)
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 29446 strings out of 468168
- 596960 string characters out of 5432816
- 1167892 words of memory out of 5000000
- 57628 multiletter control sequences out of 15000+600000
- 631264 words of font info for 73 fonts, out of 8000000 for 9000
+ 29461 strings out of 468168
+ 597370 string characters out of 5432816
+ 1181972 words of memory out of 5000000
+ 57637 multiletter control sequences out of 15000+600000
+ 631288 words of font info for 76 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1091b,753s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

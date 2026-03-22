@@ -1,0 +1,13 @@
+# Recommendations
+
+Prioritized actions in the fixture include data-sharing agreements, bridge maintenance bonds, and resilience hub pilots. **Recommendations** carry the highest weights where consensus already exists in source documents.
+
+The handbook is not a substitute for democratic deliberation; it is a structured rollup of what evidence-backed proposals are on the table at version print time.
+
+**Rows.** `ev-015` (weight 0.9, Regional planning task force draft) calls for a recurring interagency data sharing agreement for transit and land use permits. `ev-016` (weight 0.88, DOT capital program white paper) proposes funding a five-year bridge maintenance bond aligned to the priority repair list—directly echoing infrastructure evidence about deferred repairs. `ev-017` (weight 0.72, Heat equity working group) pilots neighborhood resilience hubs in districts with longest cooling-center travel times, linking recommendations to risks and communities chapters without duplicating their evidence ids.
+
+**Weight ordering.** The data-sharing row tops the weight list among recommendations, signaling strongest reviewer confidence or institutional buy-in in this fictional exercise. Weights are not votes; they guide synthesis caps and gap detection, not automatic budget allocation.
+
+**Narrative boundaries.** Recommendations prose should clarify that inclusion in the corpus does not imply adoption by any elected body [@bowker2005]. The corpus records that a proposal was documented and reviewed on a date, not that it passed a council vote.
+
+**Versioning.** Task-force drafts evolve quickly; when PDFs supersede one another, update `source_label` strings or add successor rows so readers know which draft the handbook referenced.

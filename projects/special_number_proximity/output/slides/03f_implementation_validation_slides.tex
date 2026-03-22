@@ -1,0 +1,147 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Implementation validation}\label{implementation-validation}
+
+\begin{frame}[fragile]{Three-numerator lemma}
+\protect\phantomsection\label{three-numerator-lemma}
+Fix \(q\) and real \(x\). The function \(p \mapsto |x - p/q|\) is convex
+along the integer line; its minimum over \(\mathbb{Z}\) occurs at
+\(p_0 = \mathrm{round}(qx)\), and only \(p_0-1\), \(p_0\), and \(p_0+1\)
+can beat other integers. The same remark applies to \(q^2|x-p/q|\) for
+fixed \(q\). Hence the loops in \texttt{rational\_distance.py} are
+exhaustive over \(p\) at each \(q \leq Q\).
+\end{frame}
+
+\begin{frame}[fragile]{Brute-force regression tests}
+\protect\phantomsection\label{brute-force-regression-tests}
+The suite \texttt{tests/test\_rational\_distance\_exhaustive.py}
+compares the scan to a full enumeration of admissible \(p\) for random
+\(x \in [0,1)\) and \(Q \leq 30\). Agreement holds in IEEE-754 double
+arithmetic at stated tolerances.
+\end{frame}
+
+\begin{frame}[fragile]{Continued-fraction cross-check}
+\protect\phantomsection\label{continued-fraction-cross-check}
+\texttt{cf\_distance.min\_distance\_among\_convergents} minimises
+\(|x-p/q|\) over \textbf{convergents only} (no semiconvergents). For
+fixed \(Q\) this value is always at least the true \(\delta_Q(x)\);
+tests in \texttt{tests/test\_cf\_distance.py} check near-equality for
+quadratic irrationals at Fibonacci denominators and global inequality
+for \(\pi\).
+\end{frame}
+
+\begin{frame}[fragile]{Scaled-lattice identity}
+\protect\phantomsection\label{scaled-lattice-identity}
+\texttt{diophantine\_bounds.min\_rational\_distance\_via\_scaled\_lattice}
+recomputes \(\delta_Q\) as \(\min_q \|qx\|/q\). It matches
+\texttt{min\_rational\_distance} on a grid of \((x,Q)\) in unit tests;
+\texttt{scripts/02\_lattice\_crosscheck.py} exports a small JSON witness
+under \texttt{output/data/lattice\_crosscheck.json}.
+\end{frame}
+
+\begin{frame}[fragile]{Vectorised batch parity}
+\protect\phantomsection\label{vectorised-batch-parity}
+\texttt{statistics\_compare.batch\_min\_rational\_distances} defaults to
+a vectorised three-\(p\) inner loop;
+\texttt{tests/test\_batch\_implementation\_parity.py} asserts bitwise
+agreement with the scalar path on random batches.
+\end{frame}
+
+\begin{frame}{Floating-point scope}
+\protect\phantomsection\label{floating-point-scope}
+All constants use C doubles. Extremely large partial quotients in a
+continued fraction can be truncated early; the convergent cross-check is
+therefore diagnostic, not a substitute for semiconvergent theory at
+arbitrary \(Q\).
+\end{frame}
+
+\end{document}

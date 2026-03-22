@@ -1,0 +1,47 @@
+\frametitle{Handbook maintenance}
+\protect\phantomsection\label{handbook-maintenance}
+A living handbook requires \textbf{three operational habits}:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Version the corpus} when evidence changes materially.
+\item
+  \textbf{Run analysis scripts} before rendering so figures and JSON
+  match the corpus.
+\item
+  \textbf{Archive PDFs} with the corpus version in metadata or filename.
+\end{enumerate}
+
+The template pipeline encodes steps 2--3; teams adopt step 1 through
+governance. Optional LLM assists are disabled in \texttt{config.yaml}
+for this exemplar to keep builds deterministic.
+
+\textbf{Pull-request discipline.} Treat \texttt{riverbend\_area.yaml}
+(or production corpora) like code: require review, run
+\texttt{uv\ run\ pytest\ projects/area\_handbook/tests/}, and attach
+\texttt{handbook\_report.json} diffs when scores move. Figure
+regeneration via \texttt{scripts/02\_generate\_handbook\_figure.py}
+updates PNGs and \texttt{figure\_registry.json}, keeping validation
+green in \texttt{04\_validate\_output.py}.
+
+\textbf{Release artifacts.} Ship three bundles together: the corpus file
+at a tagged version, \texttt{handbook\_report.json}, and the combined
+PDF (or HTML). Consumers can then verify that narrative, metrics, and
+data describe the same snapshot {[}@gray2005{]}.
+
+\textbf{Threshold policy.} Changing \texttt{DEFAULT\_GAP\_THRESHOLD} in
+code alters which sections gap without any prose edit. Document
+threshold policy in steering minutes and prefer explicit
+\texttt{synthesize(...,\ gap\_threshold=...)} in custom scripts if
+regional policy diverges from repository defaults.
+
+\textbf{Supplemental sections.} Files such as \texttt{S01\_*.md} and
+\texttt{S02\_*.md} follow manuscript discovery ordering; add them when
+limitations or worked examples grow too long for the main chapter flow.
+
+\textbf{Slides and web.} The same markdown feeds Beamer slides and
+static web mirrors; maintenance includes checking relative figure paths
+after directory moves and confirming browser loads for
+\texttt{output/web/index.html} after each major template upgrade
+{[}@template2026{]}.

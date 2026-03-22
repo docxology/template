@@ -75,6 +75,10 @@ projects/code_project/
 │   ├── 02_methodology.md
 │   ├── 03_results.md
 │   ├── 04_conclusion.md
+│   ├── 05_experimental_setup.md
+│   ├── 06_reproducibility.md
+│   ├── 07_scope_and_related_work.md
+│   ├── SYNTAX.md           # Citation/figure syntax reference (supplemental)
 │   ├── config.yaml         # Publication metadata
 │   ├── config.yaml.example # Example configuration
 │   ├── preamble.md         # LaTeX preamble

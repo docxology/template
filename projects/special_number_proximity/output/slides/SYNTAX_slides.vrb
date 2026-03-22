@@ -1,0 +1,19 @@
+\frametitle{Manuscript syntax}
+\protect\phantomsection\label{manuscript-syntax}
+\begin{itemize}
+\tightlist
+\item
+  Citations: \texttt{{[}@khinchin1964continued{]}}; keys must exist in
+  \texttt{references.bib}.
+\item
+  Equations: use \texttt{\textbackslash{}begin\{equation\}} /
+  \texttt{\textbackslash{}label\{eq:...\}}; reference with
+  \texttt{\textbackslash{}ref\{eq:...\}}.
+\item
+  Figures:
+  e.g.~\texttt{!{[}caption{]}(../output/figures/proximity\_histogram.png)\{\#fig:label\}}
+  or \texttt{proximity\_histogram\_pooled.png}; then
+  \texttt{\textbackslash{}ref\{fig:label\}} in prose.
+\end{itemize}
+
+See \texttt{infrastructure/rendering} for Pandoc and crossref details.

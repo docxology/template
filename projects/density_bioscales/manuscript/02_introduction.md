@@ -1,0 +1,13 @@
+# Introduction
+
+Mass density links fluid mechanics, respiration, cuticle mechanics, and organismal form. In engineering thermodynamics, gases and liquids are catalogued with explicit temperature and pressure anchors; Archimedean buoyancy in a uniform medium compares body density to that of the displaced fluid. At insect scale, the same scalar **effective** density becomes a useful organizing quantity even though real bodies are heterogeneous: cuticle and sclerites, aqueous tissues, hemolymph, and internal gas-filled lumina (tracheae, gut headspace) contribute differently to **mass** and **volume**.
+
+Three difficulties recur in informal reasoning. First, **ideal gas** densities are tiny compared to condensed phases; quoting “air density” beside tissue densities is correct for a pure gas but misleading if one naively plugs atmospheric \(\rho\) into a mass-fraction mixture with percent-level gas **mass**. Second, **temperature** shifts liquid densities only slightly between typical lab conditions (e.g. 15–25 °C for water), yet those shifts matter when asking whether a model body is just above or below neutral buoyancy in a water column. Third, **salinity** raises ocean surface densities relative to fresh water; a density that sinks in a beaker might behave differently in estuarine or marine settings at the same temperature.
+
+This project keeps three layers explicit and implements them as small, test-covered Python modules:
+
+1. **Gases** — Ideal gas law \(\rho = p M / (R T)\) with \(p\) in pascals, \(T\) in kelvin, and molar mass \(M\) in kg mol⁻¹. Constants follow `constants.py`; dry air at STP is compared to a fixed literature band in `ideal_gas.py` [@nist_constants].
+2. **Liquids** — A compact reference table (`reference_liquids_table`) at stated temperatures for fresh water, seawater (illustrative 15 °C anchor), and ethanol, plus a linear thermal proxy for water between two anchors [@haynes2014crc].
+3. **Insect-scale composites** — Mass-fraction mixture rule with an **effective** internal-gas density (`DENSITY_INTERNAL_GAS_SPACE_KG_M3` in `insect_composition.py`). Literal \(\rho \approx 1.2\) kg m⁻³ air at percent-level **mass** fractions would drive the harmonic mean toward implausibly light effective densities in this toy rule; the proxy instead encodes “gas-filled volume with negligible mass” at the resolution of the model.
+
+Subsequent sections reference function names in `src/` so prose, tests, and exports stay aligned. Presets (`preset_adult_fly_illustrative`, `preset_larva_illustrative`, `preset_arid_beetle_illustrative`) are **illustrative splits** for sensitivity analysis, not inference from dissection data.

@@ -115,6 +115,9 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - Levels 7-9 (Advanced)
 - **[guides/extending-and-automation.md](guides/extending-and-automation.md)** - Levels 10-12 (Expert)
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** - New project checklist (all learnings)
+- **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (code_project, template, area_handbook controls)
+- **[../projects/density_bioscales/README.md](../projects/density_bioscales/README.md)** - Cross-scale density exemplar (gases, liquids, composite insect model)
+- **[../projects/traditional_newspaper/README.md](../projects/traditional_newspaper/README.md)** - Tabloid multicolumn newspaper layout exemplar (16 folios, `S01` supplemental, `98` glossary, masthead figure)
 
 ### Content Authoring
 

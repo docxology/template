@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03c_monte_carlo_design</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="monte-carlo-design">Monte Carlo design</h1>
+<h2 id="reference-samples-pooled-abscissa">Reference samples (pooled
+abscissa)</h2>
+<p>The analysis script <code>proximity_monte_carlo.py</code> builds a
+single pooled array <span class="math inline">\(X\)</span> on <span
+class="math inline">\([0,1)\)</span> from three independent components,
+all driven by one NumPy <code>Generator</code> seeded by
+<code>experiment.rng_seed</code> in
+<code>manuscript/config.yaml</code>:</p>
+<ol type="1">
+<li><strong>Uniform baseline:</strong> <span
+class="math inline">\(U_1,\ldots,U_{n_{\mathrm{u}}} \sim
+\mathrm{Unif}(0,1)\)</span>.</li>
+<li><strong>Quadratic fractional baseline:</strong> values <span
+class="math inline">\(\{\sqrt{k}\}\)</span> (fractional part after
+reduction mod <span class="math inline">\(1\)</span> in the sampling
+helper) for <span class="math inline">\(k\)</span> sampled with
+replacement from <code>experiment.quadratic_candidates</code> (default
+square-free integers up to <span class="math inline">\(19\)</span>
+excluding squares).</li>
+<li><strong>Beta baseline:</strong> when
+<code>experiment.n_beta &gt; 0</code>, additional draws <span
+class="math inline">\(B_i \sim \mathrm{Beta}(a,b)\)</span> with
+parameters <code>beta_a</code>, <code>beta_b</code> from config. The
+repository default sets <span
+class="math inline">\(n_{\mathrm{beta}}=1000\)</span> with <span
+class="math inline">\(a=b=1/2\)</span> (arcsine-type law), which
+concentrates mass near <span class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span> and <strong>thickens the mixture
+tails</strong> relative to uniform-only sampling.</li>
+</ol>
+<p>Distances <span class="math inline">\(\delta_Q(X_i)\)</span> and
+<span class="math inline">\(\mu_Q(X_i)\)</span> are computed for
+<strong>every</strong> pooled draw. JSON output includes
+<code>reference_summary</code> and
+<code>reference_q_squared_summary</code> (count, mean, min/max,
+quartiles, <code>p05</code>, <code>p95</code>) for the full pooled
+sample, plus <code>reference_combined_n</code>.</p>
+<h2 id="constants-registry">Constants registry</h2>
+<p><code>src/constants.py</code> registers <span
+class="math inline">\(\pi\)</span>, <span
+class="math inline">\(e\)</span>, <span
+class="math inline">\(\sqrt{2}\)</span>, <span
+class="math inline">\(\sqrt{3}\)</span>, <span
+class="math inline">\(\varphi\)</span>, <span class="math inline">\(\ln
+2\)</span>, and <span class="math inline">\(1/6\)</span> (rational
+control). <code>NumberClass</code> tags are
+<strong>documentary</strong>; the code does not certify transcendence or
+algebraicity.</p>
+<h2 id="multi-q-sensitivity">Multi-<span
+class="math inline">\(Q\)</span> sensitivity</h2>
+<p>When <code>experiment.q_sensitivity</code> lists integers (default
+<code>[30, 60, 120]</code> alongside <code>q_max=120</code>), the JSON
+gains a <code>q_sensitivity</code> object keyed by <span
+class="math inline">\(Q\)</span>. For each key, reference summaries and
+constant tables are recomputed on the <strong>same</strong> pooled <span
+class="math inline">\(X\)</span>; only the functional <span
+class="math inline">\(\delta_Q\)</span> (and <span
+class="math inline">\(\mu_Q\)</span>) changes. This isolates the effect
+of enlarging the rational search set from resampling noise.</p>
+<h2 id="histograms-versus-tables">Histograms versus tables</h2>
+<p>Tables and percentiles use the <strong>full</strong> pooled counts
+(<code>n_uniform + n_quadratic + n_beta</code>). Figures use a
+<strong>visualisation subsample</strong> capped by
+<code>histogram_uniform_cap</code>: uniform draws truncated to the cap,
+plus a quadratic stream sized relative to the cap (see script),
+<strong>excluding</strong> Beta draws from the histogram arrays for
+clarity. Captions in <code>04_results.md</code> state this distinction
+explicitly.</p>
+<h2 id="secondary-validation-artifact">Secondary validation
+artifact</h2>
+<p><code>scripts/02_lattice_crosscheck.py</code> writes
+<code>output/data/lattice_crosscheck.json</code>, comparing brute-force
+<span class="math inline">\(\delta_Q\)</span> to the scaled-lattice
+formulation and recording Dirichlet residual checks on fixed test
+reals.</p>
+</body>
+</html>

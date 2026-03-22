@@ -1,0 +1,165 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Scope, Related Work, and Positioning}
+\protect\phantomsection\label{scope-related-work-and-positioning}
+This section situates the exemplar scientifically and states explicit
+boundaries. The goal is not to compete with monographs on nonlinear
+programming \cite{nocedal2006numerical,bertsekas1999nonlinear}, but to
+show how a minimal, test-backed optimization story fits the template's
+reproducibility and rendering stack \cite{peng2011reproducible}.
+
+\begin{block}{Classical gradient methods}
+\protect\phantomsection\label{classical-gradient-methods}
+Smooth unconstrained minimization via first-order updates has a long
+lineage, from Cauchy's early descent perspective
+\cite{cauchy1847methode} to modern treatments of convex problems
+\cite{boyd2004convex} and accelerated gradient schemes
+\cite{nesterov2013gradient}. Polyak's classical discussion of gradient
+convergence factors remains relevant when interpreting empirical
+iteration counts \cite{polyak1964some}. The present manuscript restricts
+attention to \textbf{fixed-step} gradient descent on a \textbf{convex
+quadratic}, where rates reduce to scalar linear recurrences in the error
+(Section 3, Equation \ref{eq:scalar_linear_update}).
+\end{block}
+
+\begin{block}{Adaptive and stochastic extensions}
+\protect\phantomsection\label{adaptive-and-stochastic-extensions}
+Practical machine-learning optimizers (e.g., Adam \cite{kingma2014adam})
+introduce momentum, adaptive preconditioning, or noise from
+minibatching. Those methods are \textbf{out of scope} for
+\texttt{code\_project}: the exemplar deliberately keeps the algorithm
+minimal so that failures (divergent \(\alpha\), iteration caps) are
+interpretable without confounding from stochastic sampling or
+line-search logic.
+\end{block}
+
+\begin{block}{What this project proves about the template}
+\protect\phantomsection\label{what-this-project-proves-about-the-template}
+The scientific claims in Sections 1--3 are standard textbook material.
+The \textbf{non-standard} contribution is procedural: configuration in
+\texttt{manuscript/config.yaml} drives
+\texttt{run\_convergence\_experiment()}, figures, CSV exports, and
+\texttt{\{\{RESULT\_*\}\}} substitution
+(\texttt{scripts/z\_generate\_manuscript\_variables.py}) so that PDF,
+HTML, and validation logs refer to the same numbers. That pattern is
+what downstream projects should copy---whether the domain is
+optimization, differential equations, or Bayesian workflows.
+\end{block}
+
+\begin{block}{Explicit limitations}
+\protect\phantomsection\label{explicit-limitations}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Dimensionality}: Default experiments emphasize \(d = 1\) with
+  \(A = I\) for transparent plotting; the benchmark figure explores
+  \(d > 1\) only with identity Hessians, so no ill-conditioning effects
+  appear.
+\item
+  \textbf{Step-size policy}: Only constant \(\alpha\) is implemented in
+  \texttt{src/optimizer.py}; there is no Wolfe or Armijo backtracking.
+\item
+  \textbf{Global optimization}: Convexity is assumed; no basin-hopping
+  or restarts are studied.
+\item
+  \textbf{Numerical model}: Double-precision floating point only; no
+  interval or arbitrary-precision analysis.
+\end{enumerate}
+
+These limitations are intentional: they narrow the failure surface so
+that infrastructure concerns---tests, logging, figure registration, and
+PDF cross-references---remain visible rather than buried under
+algorithmic complexity.
+\end{block}
+\end{frame}
+
+\end{document}

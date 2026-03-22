@@ -249,13 +249,18 @@ validated by
 </table>
 <h2 id="numerical-validation-summary">Numerical Validation Summary</h2>
 <h3 id="convergence-verification">Convergence Verification</h3>
-<p>All 6 tested step sizes converged to the analytical optimum: No</p>
+<p>Within the configured grid, <strong>4</strong> of <strong>6</strong>
+runs satisfied <code>gradient_descent()</code> convergence
+(<code>No</code> indicates whether every row in
+<code>optimization_results.csv</code> converged).</p>
 <ul>
-<li>Fastest convergence: <span class="math inline">\(\alpha =
-1.0\)</span> (1 iterations)</li>
-<li>Slowest convergence: <span class="math inline">\(\alpha =
-0.01\)</span> (1000 iterations)</li>
-<li>Average iterations: 372</li>
+<li>Converged step sizes: 0.1, 0.5, 1.0, 1.5</li>
+<li>Non-convergent or hit-iteration-cap step sizes: 0.01, 2.5</li>
+<li>Smallest recorded iteration count: 1 (at <span
+class="math inline">\(\alpha = 1.0\)</span>)</li>
+<li>Largest recorded iteration count: 1000 (at <span
+class="math inline">\(\alpha = 0.01\)</span>)</li>
+<li>Mean iterations across all rows: 372</li>
 </ul>
 <h3 id="numerical-stability">Numerical Stability</h3>
 <p>Stability score from

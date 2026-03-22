@@ -195,12 +195,15 @@ across 6 values:</p>
 <ul>
 <li><span class="math inline">\(\\alpha = 0.01\)</span>
 (conservative)</li>
-<li><span class="math inline">\(\\alpha = 0.1\)</span> (moderate)</li>
-<li><span class="math inline">\(\\alpha = 0.5\)</span> (aggressive)</li>
-<li><span class="math inline">\(\\alpha = 1.0\)</span> (very
-aggressive)</li>
-<li><span class="math inline">\(\\alpha = 1.5\)</span></li>
-<li><span class="math inline">\(\\alpha = 2.5\)</span></li>
+<li><span class="math inline">\(\\alpha = 0.1\)</span>
+(conservative)</li>
+<li><span class="math inline">\(\\alpha = 0.5\)</span>
+(near-optimal)</li>
+<li><span class="math inline">\(\\alpha = 1.0\)</span>
+(near-optimal)</li>
+<li><span class="math inline">\(\\alpha = 1.5\)</span> (aggressive)</li>
+<li><span class="math inline">\(\\alpha = 2.5\)</span> (divergent
+(expected unstable for H = I))</li>
 </ul>
 <p>All runs start from the initial point <span class="math inline">\(x_0
 = 0.0\)</span> and use a convergence tolerance of <span
@@ -224,7 +227,73 @@ conditioning effects.</p>
 <li><strong>Python</strong>: 3.12.11</li>
 <li><strong>NumPy</strong>: 2.4.1</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-03-22T21:31:47Z</li>
+<li><strong>Generated</strong>: 2026-03-22T22:42:03Z</li>
 </ul>
+<h2 id="pipeline-ordering">Pipeline ordering</h2>
+<p>Typical <code>code_project</code> analysis order (see
+<code>scripts/02_run_analysis.py</code> discovery) is:</p>
+<ol type="1">
+<li><code>optimization_analysis.py</code> — writes
+<code>output/data/optimization_results.csv</code>,
+<code>output/figures/*.png</code>, and JSON reports under
+<code>output/reports/</code>.</li>
+<li><code>z_generate_manuscript_variables.py</code> — reads the CSV and
+YAML, emits <code>output/data/manuscript_variables.json</code>, and
+writes substituted copies to <code>output/manuscript/</code> for
+rendering.</li>
+<li><code>generate_api_docs.py</code> — refreshes API markdown consumed
+by documentation targets.</li>
+</ol>
+<p>PDF compilation then reads from <code>output/manuscript/</code> so
+that figure paths and numeric tables match the analysis that just
+completed.</p>
+<h2 id="relation-to-figures">Relation to figures</h2>
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th>Figure (Section 3)</th>
+<th>Primary inputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Convergence trajectories</td>
+<td><code>experiment.step_sizes</code>, <code>initial_point</code>,
+<code>tolerance</code>, <code>max_iterations</code></td>
+</tr>
+<tr>
+<td>Step-size sensitivity</td>
+<td>Dense <span class="math inline">\(\alpha\)</span> sweep internal to
+<code>generate_step_size_sensitivity_plot()</code></td>
+</tr>
+<tr>
+<td>Convergence rate</td>
+<td>Same trajectories as above; tolerance line uses
+<code>convergence_tolerance</code></td>
+</tr>
+<tr>
+<td>Complexity quad panel</td>
+<td>One bar chart per row of <code>optimization_results.csv</code></td>
+</tr>
+<tr>
+<td>Stability heatmap</td>
+<td><code>stability_starting_points</code> <span
+class="math inline">\(\times\)</span>
+<code>stability_step_sizes</code></td>
+</tr>
+<tr>
+<td>Dimensional benchmark</td>
+<td><code>benchmark_dimensions</code>, fixed <span
+class="math inline">\(\alpha=0.1\)</span>, internal tol <span
+class="math inline">\(10^{-10}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>This table is descriptive documentation only; it is not executed as
+code during the build.</p>
 </body>
 </html>

@@ -251,15 +251,37 @@ factor becomes :</p>
 class="math inline">\(\rho = \frac{\kappa - 1}{\kappa + 1}\)</span>.</p>
 <h2 id="experimental-setup">Experimental Setup</h2>
 <h3 id="step-size-analysis">Step Size Analysis</h3>
-<p>We investigate the effect of different step sizes on convergence:</p>
+<p>Step sizes are not chosen ad hoc in the manuscript: they are read
+from <code>experiment.step_sizes</code> in
+<code>manuscript/config.yaml</code> and passed through
+<code>run_convergence_experiment()</code> in
+<code>optimization_analysis.py</code>. The active grid for this build
+is:</p>
 <ul>
-<li><span class="math inline">\(\alpha = 0.01\)</span>
+<li><span class="math inline">\(\\alpha = 0.01\)</span>
 (conservative)</li>
-<li><span class="math inline">\(\alpha = 0.05\)</span> (moderate)</li>
-<li><span class="math inline">\(\alpha = 0.10\)</span> (aggressive)</li>
-<li><span class="math inline">\(\alpha = 0.20\)</span> (very
-aggressive)</li>
+<li><span class="math inline">\(\\alpha = 0.1\)</span>
+(conservative)</li>
+<li><span class="math inline">\(\\alpha = 0.5\)</span>
+(near-optimal)</li>
+<li><span class="math inline">\(\\alpha = 1.0\)</span>
+(near-optimal)</li>
+<li><span class="math inline">\(\\alpha = 1.5\)</span> (aggressive)</li>
+<li><span class="math inline">\(\\alpha = 2.5\)</span> (divergent
+(expected unstable for H = I))</li>
 </ul>
+<p>Labels follow the same agency taxonomy used for plot colours
+(<code>_agency_category</code> in the analysis script):
+<strong>conservative</strong> (small <span
+class="math inline">\(\alpha\)</span>, slow but stable on <span
+class="math inline">\(H=I\)</span>), <strong>near-optimal</strong>
+(including <span class="math inline">\(\alpha=1\)</span> where the
+method reaches <span class="math inline">\(x^\ast\)</span> in one step
+for this quadratic), <strong>aggressive</strong> (<span
+class="math inline">\(1 &lt; \alpha &lt; 2\)</span>, still linearly
+contracting in <span class="math inline">\(|x-x^\ast|\)</span> but
+oscillatory in sign), and <strong>divergent</strong> (<span
+class="math inline">\(|1-\alpha| \geq 1\)</span>).</p>
 <h3 id="zero-mock-testing-methodology">Zero-Mock Testing
 Methodology</h3>
 <p>The most critical aspect of the project’s methodology is its
@@ -280,8 +302,32 @@ modules (e.g., <code>pipeline_reporter.py</code>,
 <li><strong>Coverage Gates</strong>: The <a
 href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml">GitHub
 Actions CI workflow</a> enforces a mandatory ≥90% statement coverage
-gate prior to compiling the manuscript to a PDF.</li>
+gate on <code>projects/code_project/src/</code> prior to treating the
+project as build-green.</li>
 </ol>
+<h3 id="stopping-rule-and-reporting">Stopping rule and reporting</h3>
+<p><code>gradient_descent()</code> terminates when <span
+class="math inline">\(\|\nabla f(x_k)\|\)</span> falls below
+<code>experiment.tolerance</code> or when <span
+class="math inline">\(k\)</span> reaches
+<code>experiment.max_iterations</code>. The boolean
+<code>converged</code> in exported CSV rows distinguishes these
+outcomes. Downstream,
+<code>scripts/z_generate_manuscript_variables.py</code> aggregates the
+CSV into <code>RESULT_*</code> placeholders so tables and prose cannot
+drift from the last analysis run.</p>
+<h3 id="figure-generation-contract">Figure generation contract</h3>
+<p>Each figure in <code>03_results.md</code> maps to a single generator
+in <code>optimization_analysis.py</code>
+(<code>generate_convergence_plot</code>,
+<code>generate_step_size_sensitivity_plot</code>,
+<code>generate_convergence_rate_plot</code>,
+<code>generate_complexity_visualization</code>,
+<code>generate_stability_visualization</code>,
+<code>generate_benchmark_visualization</code>). Captions in the markdown
+intentionally name the function and the key parameters (tolerance lines,
+grids, dimensions) so reviewers can navigate from PDF to code without
+inferring hidden defaults.</p>
 <h2 id="analysis-pipeline-latex-integration">Analysis Pipeline &amp;
 LaTeX Integration</h2>
 <p>The automated analysis script leverages

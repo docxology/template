@@ -1,0 +1,43 @@
+\frametitle{Glossary: Newspaper and pipeline terms}
+\protect\phantomsection\label{glossary-newspaper-and-pipeline-terms}
+Short definitions for readers of this exemplar (not a general journalism
+style guide).
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2727}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7273}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meaning here
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\textbf{Folio} & One manuscript slice (\texttt{01\_*.md} \ldots{}
+\texttt{16\_*.md}) that becomes a new page boundary in the combined PDF
+after the previous slice (plus template title front matter). \\
+\textbf{Masthead} & The nameplate graphic at the top of the front page;
+raster asset \texttt{output/figures/masthead.png}. \\
+\textbf{Slice} & Same as folio file: one ordered markdown unit in
+\texttt{manuscript/}. \\
+\textbf{Preamble} & \texttt{manuscript/preamble.md}: LaTeX injected into
+the Pandoc document (geometry, \texttt{graphicx}, \texttt{multicol}). \\
+\textbf{Raw LaTeX block} & Pandoc fenced region
+\texttt{\textasciigrave{}\textasciigrave{}\textasciigrave{}\{=latex\}}
+\ldots{} \texttt{\textasciigrave{}\textasciigrave{}\textasciigrave{}}
+passing TeX through to the PDF engine. \\
+\textbf{Thin orchestrator} & Script under \texttt{scripts/} that only
+configures paths, logging, and calls \texttt{src/newspaper/}
+functions. \\
+\textbf{Fixture copy} & Deterministic placeholder paragraphs from
+\texttt{newspaper.content.fixture\_copy} / \texttt{fixture\_paragraph}
+for layout stress tests. \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The sixteen core folios are the ``edition pages''; \texttt{S01\_*} and
+\texttt{98\_*} files document the system without changing the numbering
+of those pages.

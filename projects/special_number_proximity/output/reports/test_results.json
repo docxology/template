@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-03-22T15:26:32.171092",
+  "infrastructure": {},
+  "project": {
+    "passed": 117,
+    "failed": 0,
+    "skipped": 0,
+    "total": 117,
+    "warnings": 0,
+    "exit_code": 0,
+    "discovery_count": 117,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 2.01,
+      "collection": 2.01,
+      "execution": 2.01
+    },
+    "test_categories": {},
+    "coverage_percent": 99.54022988505747,
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 117,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 117,
+    "all_passed": true,
+    "project_coverage": 99.54022988505747
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 100.0,
+      "total_executed": 305,
+      "total_missing": 0,
+      "total_excluded": 0,
+      "total_lines": 305,
+      "file_coverage": {
+        "projects/special_number_proximity/src/cf_distance.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 19,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 19
+        },
+        "projects/special_number_proximity/src/constants.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 20,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 20
+        },
+        "projects/special_number_proximity/src/continued_fractions.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 41,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 41
+        },
+        "projects/special_number_proximity/src/diophantine_bounds.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 33,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 33
+        },
+        "projects/special_number_proximity/src/rational_distance.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 52,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 52
+        },
+        "projects/special_number_proximity/src/sampling.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 44,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 44
+        },
+        "projects/special_number_proximity/src/statistics_compare.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 96,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 96
+        }
+      }
+    }
+  }
+}

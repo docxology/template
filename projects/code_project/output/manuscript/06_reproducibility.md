@@ -28,11 +28,13 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 
 ### Convergence Verification
 
-All 6 tested step sizes converged to the analytical optimum: No
+Within the configured grid, **4** of **6** runs satisfied `gradient_descent()` convergence (`No` indicates whether every row in `optimization_results.csv` converged).
 
-- Fastest convergence: $\alpha = 1.0$ (1 iterations)
-- Slowest convergence: $\alpha = 0.01$ (1000 iterations)
-- Average iterations: 372
+- Converged step sizes: 0.1, 0.5, 1.0, 1.5
+- Non-convergent or hit-iteration-cap step sizes: 0.01, 2.5
+- Smallest recorded iteration count: 1 (at $\alpha = 1.0$)
+- Largest recorded iteration count: 1000 (at $\alpha = 0.01$)
+- Mean iterations across all rows: 372
 
 ### Numerical Stability
 

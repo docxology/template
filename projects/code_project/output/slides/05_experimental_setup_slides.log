@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 14:32
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 15:43
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1114,12 +1114,92 @@ LaTeX Info: Redefining \microtypesetup on input line 3065.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 )
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
+\LTleft=\skip71
+\LTright=\skip72
+\LTpre=\skip73
+\LTpost=\skip74
+\LTchunksize=\count385
+\LTcapwidth=\dimen310
+\LT@head=\box81
+\LT@firsthead=\box82
+\LT@foot=\box83
+\LT@lastfoot=\box84
+\LT@gbox=\box85
+\LT@cols=\count386
+\LT@rows=\count387
+\c@LT@tables=\count388
+\c@LT@chunks=\count389
+\LT@p@ftn=\toks48
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen311
+\lightrulewidth=\dimen312
+\cmidrulewidth=\dimen313
+\belowrulesep=\dimen314
+\belowbottomsep=\dimen315
+\aboverulesep=\dimen316
+\abovetopsep=\dimen317
+\cmidrulesep=\dimen318
+\cmidrulekern=\dimen319
+\defaultaddspace=\dimen320
+\@cmidla=\count390
+\@cmidlb=\count391
+\@aboverulesep=\dimen321
+\@belowrulesep=\dimen322
+\@thisruleclass=\count392
+\@lastruleclass=\count393
+\@thisrulewidth=\dimen323
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty
+Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
+\col@sep=\dimen324
+\ar@mcellbox=\box86
+\extrarowheight=\dimen325
+\NC@list=\toks49
+\extratabsurround=\skip75
+\backup@length=\skip76
+\ar@cellbox=\box87
+)
+\c@none=\count394
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen326
+\captionmargin=\dimen327
+\caption@leftmargin=\dimen328
+\caption@rightmargin=\dimen329
+\caption@width=\dimen330
+\caption@indent=\dimen331
+\caption@parindent=\dimen332
+\caption@hangindent=\dimen333
+Package caption Info: beamer document class detected.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption-beamer.sto
+File: caption-beamer.sto 2022/01/06 v2.0c Adaption of the caption package to th
+e beamer document classes (AR)
+))
+\c@caption@flags=\count395
+\c@continuedfloat=\count396
+Package caption Info: hyperref package is loaded.
+Package caption Info: Hyperref support is turned off
+(caption)             because hyperref has stopped early.
+Package caption Info: longtable package is loaded.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/caption/ltcaption.sty
+Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
+))
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count385
+\BKM@id=\count397
 ))
 (/usr/local/texlive/2026/texmf-dist/tex/latex/xurl/xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
@@ -1128,26 +1208,26 @@ Package: xurl 2022/01/09 v 0.10 modify URL breaks
 erimental_setup_slides.aux)
 \openout1 = `05_experimental_setup_slides.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 98.
+LaTeX Font Info:    ... okay on input line 98.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1183,7 +1263,7 @@ LaTeX Font Info:    ... okay on input line 90.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 90.
+Package hyperref Info: Link coloring OFF on input line 98.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -1210,19 +1290,19 @@ tionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 90.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 90.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 90.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 90.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 90.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 90.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 90.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 98.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1253,7 +1333,7 @@ allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
 =math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 90.
+(Font)              scaled to size 11.28015pt on input line 98.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1296,17 +1376,17 @@ dern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 =math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 90.
+(Font)              scaled to size 11.28015pt on input line 98.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 90.
+(Font)              `operators' in the math version `normal' on input line 98.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 90.
+ line 98.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 90.
+(Font)              `operators' in the math version `bold' on input line 98.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 90.
+t line 98.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1380,15 +1460,15 @@ nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 90.
+(Font)              `symbols' in the math version `normal' on input line 98.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 90.
+t line 98.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 90.
+(Font)              `symbols' in the math version `bold' on input line 98.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 90.
+t line 98.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1457,23 +1537,23 @@ t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 9
-0.
+8.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 90.
+t line 98.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 90.
+(Font)              `largesymbols' in the math version `bold' on input line 98.
 
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 90.
-LaTeX Info: Redefining \microtypecontext on input line 90.
-Package microtype Info: Applying patch `item' on input line 90.
-Package microtype Info: Applying patch `toc' on input line 90.
-Package microtype Info: Applying patch `eqnum' on input line 90.
-Package microtype Info: Applying patch `footnote' on input line 90.
-Package microtype Info: Applying patch `verbatim' on input line 90.
-LaTeX Info: Redefining \microtypesetup on input line 90.
+t line 98.
+LaTeX Info: Redefining \microtypecontext on input line 98.
+Package microtype Info: Applying patch `item' on input line 98.
+Package microtype Info: Applying patch `toc' on input line 98.
+Package microtype Info: Applying patch `eqnum' on input line 98.
+Package microtype Info: Applying patch `footnote' on input line 98.
+Package microtype Info: Applying patch `verbatim' on input line 98.
+LaTeX Info: Redefining \microtypesetup on input line 98.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1483,6 +1563,8 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmss' (encoding: TU).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
 
 (/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/05_exp
 erimental_setup_slides.nav)
@@ -1595,7 +1677,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.31   \(\\a
-            lpha = 0.1\) (moderate)
+            lpha = 0.1\) (conservative)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1604,7 +1686,7 @@ or  <return>  to continue without it.
 <inserted text> 
                 $
 l.31   \(\\a
-            lpha = 0.1\) (moderate)
+            lpha = 0.1\) (conservative)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -1612,7 +1694,7 @@ you left one out. Proceed, with fingers crossed.
 <inserted text> 
                 }
 l.31   \(\\a
-            lpha = 0.1\) (moderate)
+            lpha = 0.1\) (conservative)
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1623,7 +1705,7 @@ my insertion and my current dilemma will both disappear.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
 l.31   \(\\a
-            lpha = 0.1\) (moderate)
+            lpha = 0.1\) (conservative)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1638,7 +1720,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.31   \(\\alpha = 0.1\)
-                         (moderate)
+                         (conservative)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1651,7 +1733,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.33   \(\\a
-            lpha = 0.5\) (aggressive)
+            lpha = 0.5\) (near-optimal)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1660,7 +1742,7 @@ or  <return>  to continue without it.
 <inserted text> 
                 $
 l.33   \(\\a
-            lpha = 0.5\) (aggressive)
+            lpha = 0.5\) (near-optimal)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -1668,7 +1750,7 @@ you left one out. Proceed, with fingers crossed.
 <inserted text> 
                 }
 l.33   \(\\a
-            lpha = 0.5\) (aggressive)
+            lpha = 0.5\) (near-optimal)
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1679,7 +1761,7 @@ my insertion and my current dilemma will both disappear.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
 l.33   \(\\a
-            lpha = 0.5\) (aggressive)
+            lpha = 0.5\) (near-optimal)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1694,7 +1776,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.33   \(\\alpha = 0.5\)
-                         (aggressive)
+                         (near-optimal)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1707,7 +1789,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.35   \(\\a
-            lpha = 1.0\) (very aggressive)
+            lpha = 1.0\) (near-optimal)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1716,7 +1798,7 @@ or  <return>  to continue without it.
 <inserted text> 
                 $
 l.35   \(\\a
-            lpha = 1.0\) (very aggressive)
+            lpha = 1.0\) (near-optimal)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -1724,7 +1806,7 @@ you left one out. Proceed, with fingers crossed.
 <inserted text> 
                 }
 l.35   \(\\a
-            lpha = 1.0\) (very aggressive)
+            lpha = 1.0\) (near-optimal)
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1735,7 +1817,7 @@ my insertion and my current dilemma will both disappear.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
 l.35   \(\\a
-            lpha = 1.0\) (very aggressive)
+            lpha = 1.0\) (near-optimal)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1750,7 +1832,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.35   \(\\alpha = 1.0\)
-                         (very aggressive)
+                         (near-optimal)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1763,7 +1845,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.37   \(\\a
-            lpha = 1.5\)
+            lpha = 1.5\) (aggressive)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1772,7 +1854,7 @@ or  <return>  to continue without it.
 <inserted text> 
                 $
 l.37   \(\\a
-            lpha = 1.5\)
+            lpha = 1.5\) (aggressive)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -1780,7 +1862,7 @@ you left one out. Proceed, with fingers crossed.
 <inserted text> 
                 }
 l.37   \(\\a
-            lpha = 1.5\)
+            lpha = 1.5\) (aggressive)
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1791,7 +1873,7 @@ my insertion and my current dilemma will both disappear.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
 l.37   \(\\a
-            lpha = 1.5\)
+            lpha = 1.5\) (aggressive)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1806,7 +1888,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.37   \(\\alpha = 1.5\)
-                        
+                         (aggressive)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1819,7 +1901,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.39   \(\\a
-            lpha = 2.5\)
+            lpha = 2.5\) (divergent (expected unstable for H = I))
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1828,7 +1910,7 @@ or  <return>  to continue without it.
 <inserted text> 
                 $
 l.39   \(\\a
-            lpha = 2.5\)
+            lpha = 2.5\) (divergent (expected unstable for H = I))
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -1836,7 +1918,7 @@ you left one out. Proceed, with fingers crossed.
 <inserted text> 
                 }
 l.39   \(\\a
-            lpha = 2.5\)
+            lpha = 2.5\) (divergent (expected unstable for H = I))
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1847,7 +1929,7 @@ my insertion and my current dilemma will both disappear.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
 l.39   \(\\a
-            lpha = 2.5\)
+            lpha = 2.5\) (divergent (expected unstable for H = I))
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1862,7 +1944,7 @@ Type  H <return>  for immediate help.
  ...                                              
                                                   
 l.39   \(\\alpha = 2.5\)
-                        
+                         (divergent (expected unstable for H = I))
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1871,8 +1953,18 @@ or  <return>  to continue without it.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
 File: mt-LatinModernRoman.cfg 2026/02/26 v1.2 microtype config. file: Latin Mod
 ern Roman (RS)
-))
-Overfull \vbox (390.55362pt too high) detected at line 168
+)
+Overfull \hbox (72.8267pt too wide) in paragraph at lines 120--122
+\TU/lmtt/m/n/10.95 generate_step_size_sensitivity_plot()|  
+ []
+
+
+Overfull \hbox (3.84172pt too wide) in paragraph at lines 126--128
+[]|\TU/lmtt/m/n/10.95 stability_starting_points 
+ []
+
+)
+Overfull \vbox (921.80772pt too high) detected at line 236
  []
 
 [1
@@ -1896,10 +1988,10 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 29430 strings out of 468168
- 596655 string characters out of 5432816
- 1159888 words of memory out of 5000000
- 57614 multiletter control sequences out of 15000+600000
+ 31098 strings out of 468168
+ 628359 string characters out of 5432816
+ 1205520 words of memory out of 5000000
+ 59260 multiletter control sequences out of 15000+600000
  631256 words of font info for 72 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1097b,711s stack positions out of 10000i,1000n,20000p,200000b,200000s

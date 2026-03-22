@@ -1,0 +1,13 @@
+# Economy and livelihoods
+
+Sector concentration (healthcare and logistics) and lengthening commutes describe a labor market that is employed yet stressed for time. **Economy** evidence items capture payroll composition and travel-cost signals.
+
+Economic narratives in the handbook should cite the same source labels as the corpus so PDF and data exports do not diverge.
+
+**Evidence detail.** `ev-005` (weight 0.85, State labor market review) states healthcare and logistics account for 34% of payroll employment region-wide—a single scalar summarizing sector concentration. `ev-006` (weight 0.55, ACS five-year comparison) records median commute time rose six minutes between 2018 and 2024 despite flat population, signaling time poverty even when headcounts hold steady. The lower weight on `ev-006` invites future corroboration from employer surveys or mode-share data without discarding the commute signal today.
+
+**Reading the charts.** In Figure \ref{fig:bytheme}, economy shares the bar chart with other themes; Riverbend carries two economy rows, matching the two statements above. Coverage charts show how those rows combine with the template’s `theme_ids` for `06_economy` to produce a bounded section score.
+
+**Policy links.** Concentration and commute duration interact with infrastructure and environment chapters: bridge delays and heat exposure can compound commute stress. Cross-chapter reading is intentional; the risks chapter (`10_risks`) names systemic couplings explicitly.
+
+**Data hygiene.** When labor market reviews update NAICS rollups or ACS releases new vintages, add rows or deprecate old ones in the corpus rather than patching PDFs only [@bowker2005].

@@ -1,0 +1,50 @@
+\frametitle{Methods: Corpus model}
+\protect\phantomsection\label{methods-corpus-model}
+The \textbf{area corpus} is a YAML (or JSON) document with:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Identity} --- \texttt{area\_id}, \texttt{area\_label}, and
+  semantic \texttt{version}.
+\item
+  \textbf{Themes} --- Stable identifiers used to route evidence into
+  handbook chapters; each theme includes human-readable \texttt{label}
+  and \texttt{description} for glossaries and reviewer orientation.
+\item
+  \textbf{Evidence} --- Atomic statements with \texttt{theme},
+  \texttt{weight} in \([0,1]\), \texttt{source\_label}, and
+  \texttt{reviewed\_at}.
+\end{itemize}
+
+Validation rejects unknown themes, out-of-range or non-finite weights,
+blank text fields, \textbf{duplicate} \texttt{themes{[}{]}.id} or
+\texttt{evidence{[}{]}.id} values, and missing keys so corrupt files
+fail fast at load time. The loader lives in \texttt{src/corpus\_io.py}
+and is covered by dedicated tests (including JSON and YAML entry
+points).
+
+\textbf{Weights as bounded signals.} Each evidence \texttt{weight} is a
+single scalar in \([0,1]\). It is not a probability distribution across
+rows; it is a reviewer-assigned strength or credibility hint. During
+synthesis, \texttt{section\_coverage\_score()} sums weights for all
+evidence whose \texttt{theme} matches a section's \texttt{theme\_ids},
+then caps the sum at \(1.0\). That cap prevents stacking many
+low-confidence rows into an artificially ``certain'' chapter score.
+
+\textbf{Provenance is intentionally lightweight.} The field
+\texttt{source\_label} names the document, export, or system row that
+justified the statement---e.g., ``Regional GIS Compendium 2024'' or
+``DOT condition database export''---without embedding a full citation
+graph in the corpus. Bibliographic detail remains in
+\texttt{references.bib} for the manuscript narrative layer.
+\texttt{reviewed\_at} uses ISO-8601 dates so freshness checks sort
+lexicographically and render cleanly in Markdown tables.
+
+\textbf{Riverbend shape.} The fixture declares eight themes (landscape
+through recommendations) and seventeen evidence rows. Every theme
+receives at least one row, which yields an empty
+\texttt{themes\_without\_evidence} list in metrics---a deliberate
+``happy path'' for teaching the pipeline. Sparse corpora in tests
+demonstrate the opposite: empty \texttt{themes\_without\_evidence} is
+not guaranteed when teams add themes before evidence arrives.

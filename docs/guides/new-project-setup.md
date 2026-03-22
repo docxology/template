@@ -2,6 +2,8 @@
 
 Complete checklist for creating a new project workspace in the Docxology Template. Consolidates lessons learned from building `code_project`, `cognitive_case_diagrams`, and `template`.
 
+For a copy-paste prompt that anchors on `code_project` and `template` as positive controls, see [new-project-one-shot-prompt.md](new-project-one-shot-prompt.md). For many manuscript slices plus a custom LaTeX preamble (tabloid, `multicol`), see [`projects/traditional_newspaper/`](../../projects/traditional_newspaper/README.md).
+
 > **Key Principle**: A project is auto-discovered if `projects/<name>/manuscript/config.yaml` exists. No infrastructure changes needed.
 >
 > **3-Directory Lifecycle**: Projects live in one of three directories: `projects/` (active, rendered by `./run.sh`), `projects_in_progress/` (WIP, not auto-discovered), or `projects_archive/` (completed/paused, not auto-discovered). Move projects freely between directories; only what is in `projects/` is rendered.

@@ -158,16 +158,22 @@ Analysis reports & 6 \\
 \protect\phantomsection\label{numerical-validation-summary}
 \begin{block}{Convergence Verification}
 \protect\phantomsection\label{convergence-verification}
-All 6 tested step sizes converged to the analytical optimum: No
+Within the configured grid, \textbf{4} of \textbf{6} runs satisfied
+\texttt{gradient\_descent()} convergence (\texttt{No} indicates whether
+every row in \texttt{optimization\_results.csv} converged).
 
 \begin{itemize}
 \tightlist
 \item
-  Fastest convergence: \(\alpha = 1.0\) (1 iterations)
+  Converged step sizes: 0.1, 0.5, 1.0, 1.5
 \item
-  Slowest convergence: \(\alpha = 0.01\) (1000 iterations)
+  Non-convergent or hit-iteration-cap step sizes: 0.01, 2.5
 \item
-  Average iterations: 372
+  Smallest recorded iteration count: 1 (at \(\alpha = 1.0\))
+\item
+  Largest recorded iteration count: 1000 (at \(\alpha = 0.01\))
+\item
+  Mean iterations across all rows: 372
 \end{itemize}
 \end{block}
 

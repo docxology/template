@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03e_q_squared_quality</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="q2-error-scale-lagrange-hurwitz-viewpoint"><span
+class="math inline">\(q^2\)</span> error scale (Lagrange / Hurwitz
+viewpoint)</h1>
+<p>For integers <span class="math inline">\(p,q\)</span> with <span
+class="math inline">\(q \geq 1\)</span>, define the
+<strong>weighted</strong> error <span
+class="math display">\[\begin{equation}
+\label{eq:lagrange}
+\mu_Q(x) = \min_{1 \leq q \leq Q}\ \min_{p \in \mathbb{Z}} q^2 \left| x
+- \frac{p}{q} \right|.
+\end{equation}\]</span></p>
+<p>For fixed <span class="math inline">\(q\)</span>, the inner minimum
+is attained at <span class="math inline">\(p =
+\mathrm{round}(qx)\)</span>, so the implementation checks the same three
+candidates per <span class="math inline">\(q\)</span> as for <span
+class="math inline">\(\delta_Q(x)\)</span> in
+<code>02_problem_statement.md</code>. The factor <span
+class="math inline">\(q^2\)</span> makes <span
+class="math inline">\(\mu_Q\)</span> dimensionless in the sense used in
+Hurwitz-type theorems: for infinitely many convergents one has <span
+class="math inline">\(q^2|x - p/q| &lt; 1\)</span>, and for every
+irrational <span class="math inline">\(x\)</span> there are infinitely
+many pairs with <span class="math inline">\(q^2|x-p/q| &lt;
+1/\sqrt{5}\)</span> <span class="citation"
+data-cites="hurwitz1891">[@hurwitz1891]</span>.</p>
+<h2 id="interpreting-mu_q-at-finite-q">Interpreting <span
+class="math inline">\(\mu_Q\)</span> at finite <span
+class="math inline">\(Q\)</span></h2>
+<p>At <strong>finite</strong> <span class="math inline">\(Q\)</span>,
+<span class="math inline">\(\mu_Q(x)\)</span> answers: <em>how small is
+the best weighted error achievable with denominators up to <span
+class="math inline">\(Q\)</span>?</em> A superb approximant with small
+<span class="math inline">\(q\)</span> can yield a
+<strong>moderate</strong> <span class="math inline">\(\delta_Q\)</span>
+but a <strong>very small</strong> <span
+class="math inline">\(\mu_Q\)</span> because <span
+class="math inline">\(q^2\)</span> penalises large denominators less
+aggressively than <span class="math inline">\(1/q\)</span> rewards them
+in <span class="math inline">\(\delta_Q\)</span>. Conversely, a number
+may have a tiny <span class="math inline">\(\delta_Q\)</span> because
+some modest <span class="math inline">\(q\)</span> lands unusually
+close, while <span class="math inline">\(\mu_Q\)</span> need not be
+extreme if that hit is not outstanding on the <span
+class="math inline">\(q^2\)</span> scale.</p>
+<p>The Monte Carlo pipeline records both <span
+class="math inline">\(\delta_Q\)</span> and <span
+class="math inline">\(\mu_Q\)</span> for named constants and for the
+pooled reference (<code>min_q_squared_error</code>,
+<code>empirical_percentile_rank_q_squared</code>,
+<code>reference_q_squared_summary</code> in
+<code>output/data/proximity_summary.json</code>). Figure <span
+class="math inline">\(\ref{fig:proximity_mu}\)</span> shows the pooled
+reference distribution of <span
+class="math inline">\(\log_{10}\mu_Q\)</span> with the same constant
+markers as the <span class="math inline">\(\delta_Q\)</span> panels.</p>
+<h2 id="comparison-to-badly-approximable-heuristics">Comparison to badly
+approximable heuristics</h2>
+<p>Badly approximable numbers satisfy <span
+class="math inline">\(\liminf_q q^2|x-p/q|&gt;0\)</span>, so <span
+class="math inline">\(\mu_Q(x)\)</span> is bounded away from <span
+class="math inline">\(0\)</span> as <span
+class="math inline">\(Q\to\infty\)</span> along worst-case subsequences.
+At fixed moderate <span class="math inline">\(Q\)</span>, empirical
+ranks of <span class="math inline">\(\mu_Q\)</span> still fluctuate with
+the <strong>best</strong> hit available below the ceiling; reporting
+both statistics reduces the risk of over-interpreting a single
+scale.</p>
+</body>
+</html>

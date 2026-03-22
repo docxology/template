@@ -1,0 +1,54 @@
+{
+  "dry_air_ideal_stp_kg_m3": 1.292274442613265,
+  "dry_air_literature_band_kg_m3": {
+    "min": 1.18,
+    "max": 1.32
+  },
+  "reference_liquids": {
+    "water": {
+      "temp_c": 15.0,
+      "density_kg_m3": 999.1
+    },
+    "water_25c": {
+      "temp_c": 25.0,
+      "density_kg_m3": 997.0
+    },
+    "ethanol": {
+      "temp_c": 20.0,
+      "density_kg_m3": 789.0
+    },
+    "seawater": {
+      "temp_c": 15.0,
+      "density_kg_m3": 1025.0
+    }
+  },
+  "insect_presets": [
+    {
+      "preset": "adult_fly_illustrative",
+      "description": "Phenomenological adult fly\u2013like mass split for model demos.",
+      "mixture_density_kg_m3": 913.6025511224818,
+      "internal_gas_sweep_kg_m3": {
+        "low": 817.0472663817145,
+        "high": 1036.0371606827628
+      }
+    },
+    {
+      "preset": "larva_illustrative",
+      "description": "Phenomenological larva-like preset with low internal_gas fraction.",
+      "mixture_density_kg_m3": 1028.2836691663654,
+      "internal_gas_sweep_kg_m3": {
+        "low": 907.8102671026344,
+        "high": 1028.2836691663654
+      }
+    },
+    {
+      "preset": "arid_beetle_illustrative",
+      "description": "Phenomenological beetle-like preset emphasizing cuticle.",
+      "mixture_density_kg_m3": 902.7669613267614,
+      "internal_gas_sweep_kg_m3": {
+        "low": 807.8365729091033,
+        "high": 1058.2067878411265
+      }
+    }
+  ]
+}

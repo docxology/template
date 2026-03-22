@@ -1,0 +1,10 @@
+\frametitle{Relation to the pooled reference}
+\protect\phantomsection\label{relation-to-the-pooled-reference}
+The Monte Carlo pipeline does not sample from Haar measure on
+\(\mathbb{R}/\mathbb{Z}\) in a measure-theoretic sense; it mixes simple
+laws on \([0,1)\) chosen for reproducibility and interpretability.
+Percentiles are \textbf{always conditional} on that mixture. Changing
+\texttt{experiment.n\_uniform}, \texttt{n\_quadratic}, \texttt{n\_beta},
+or \texttt{quadratic\_candidates} shifts the empirical CDF;
+\texttt{compare\_mod1:\ true} aligns constants with \([0,1)\) when
+comparing primarily to the uniform component.

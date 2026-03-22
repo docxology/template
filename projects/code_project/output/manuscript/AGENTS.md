@@ -52,7 +52,7 @@ If tasked to add a new algorithm or feature, follow this exact sequence:
 4. Implement the logic in `scripts/`, utilizing `infrastructure.scientific`.
 5. Execute `pytest` locally to verify zero-mock success.
 6. Regenerate visualizations via `python3 scripts/optimization_analysis.py`.
-7. Update `03_results.md` and `04_conclusion.md`.
+7. Update `03_results.md`, `04_conclusion.md`, and (if scope or citations change) `07_scope_and_related_work.md`.
 8. Re-render the manuscript via `python3 scripts/03_render_pdf.py` to ensure pandoc compatibility.
 
 **Failure to adhere to these protocol standards will result in immediate rejection by the infrastructure validation gates.**

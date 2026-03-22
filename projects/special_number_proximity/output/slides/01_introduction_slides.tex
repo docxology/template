@@ -1,0 +1,148 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Introduction}
+\protect\phantomsection\label{introduction}
+Rational numbers are dense in the reals, yet the \textbf{quality} of the
+best rational approximation at a fixed denominator ceiling varies
+sharply across individual \(x\). Number theory classifies extremes:
+algebraic irrationals of degree two have bounded partial quotients in
+their continued fraction expansion and are \emph{badly approximable} in
+the sense of {[}@cassels1957{]}; almost every \(x \in \mathbb{R}\)
+satisfies Khinchin-type statistics for the growth of those quotients
+{[}@khinchin1964continued{]}. Transcendental constants carry no
+finite-degree algebraic constraint, but particular numbers such as
+\(\pi\) or \(e\) still admit \textbf{structured} rational approximations
+from series, integrals, or independent constructions---so their
+finite-\(Q\) behaviour need not resemble a ``generic'' draw from a
+simple continuous law.
+
+\begin{block}{Finite \(Q\) as a deliberate lens}
+\protect\phantomsection\label{finite-q-as-a-deliberate-lens}
+As \(Q\) grows, \(\delta_Q(x)\) tends to \(0\) for every irrational
+\(x\), and \(\mu_Q(x)\) admits universal upper bounds tied to
+continued-fraction convergents {[}@hurwitz1891{]}. Those limits wash out
+differences on a logarithmic scale unless one studies \textbf{rates} or
+\textbf{exceptional sets}. By contrast, fixing \(Q\) at a moderate value
+(for example \(Q=120\) in the default configuration) asks a different
+question: \emph{among all rationals with denominators up to \(Q\), how
+small is the best error, and how does that single number compare to the
+same functional evaluated on random \(X\)?} The answer is a
+\textbf{scalar summary}---an empirical percentile relative to a chosen
+reference law---not a Diophantine \emph{type} in the classical sense.
+\end{block}
+
+\begin{block}{Statistical comparison protocol}
+\protect\phantomsection\label{statistical-comparison-protocol}
+The implementation draws a pooled sample \(X_1,\ldots,X_n\) on
+\([0,1)\), computes \(\delta_Q(X_i)\) and \(\mu_Q(X_i)\) for each draw,
+and records distribution summaries (quantiles, tail percentiles). For
+each registered constant \(x^\star\) it stores \(\delta_Q(x^\star)\),
+\(\mu_Q(x^\star)\), and the \textbf{empirical rank} (proportion of
+reference samples strictly below the constant's value). Optional
+\texttt{experiment.q\_sensitivity} repeats the constant table at
+additional \(Q\) values \textbf{without resampling} \(X\), so shifts in
+rank isolate the effect of enlarging the rational search set.
+\end{block}
+
+\begin{block}{Scope of this note}
+\protect\phantomsection\label{scope-of-this-note}
+We do not prove new Diophantine bounds. The goal is
+\textbf{methodological}: connect classical statements about
+\(Q\to\infty\) to concrete finite-\(Q\) measurements, document the
+numerical chain (three-numerator scan, lattice cross-checks,
+convergent-only certificates), and parameterize the study from YAML so
+\(Q\), sample sizes, reference components, and \texttt{compare\_mod1}
+can change without editing infrastructure code.
+\end{block}
+\end{frame}
+
+\end{document}

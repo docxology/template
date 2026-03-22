@@ -1,0 +1,25 @@
+\contentsline {section}{\numberline {1}Abstract}{3}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{4}{section.2}%
+\contentsline {section}{\numberline {3}Problem statement}{5}{section.3}%
+\contentsline {section}{\numberline {4}Measure-theoretic context (qualitative)}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Almost every number is well approximable}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Badly approximable numbers}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}What transcendence does not encode at fixed \(Q\)}{6}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Continued fractions as an explanatory tool}{7}{section.5}%
+\contentsline {section}{\numberline {6}Monte Carlo design}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Reference samples}{8}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Constants}{8}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Outputs}{8}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Scaled lattice and Dirichlet residual}{9}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Identity}{9}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Pigeonhole bound on the integer residual}{9}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Relation to continued fractions}{9}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Results}{10}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Empirical percentiles of \(\mitdelta _{120}(x^\star )\)}{10}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Histogram}{10}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Conclusion}{12}{section.9}%
+\contentsline {section}{\numberline {10}Reproducibility}{13}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Software}{13}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Regenerating artifacts}{13}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Data paths}{13}{subsection.10.3}%
+\contentsline {section}{\numberline {11}Manuscript syntax}{14}{section.11}%

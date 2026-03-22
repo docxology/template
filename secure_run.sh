@@ -226,11 +226,34 @@ exit_code=$?
 
 if [[ $exit_code -eq 0 ]]; then
     log_success "Steganographic post-processing complete"
+
+    # ── Mirror stego outputs to root output/{name}/pdf/ ──────────────────
+    # The pipeline's copy stage (05_copy_outputs.py) runs before steganography,
+    # so we manually sync the new *_steganography.pdf and *.hashes.json files.
+    ROOT_PDF_DIR="$SCRIPT_DIR/output/$PROJECT_NAME/pdf"
+    PROJECT_PDF_DIR="$SCRIPT_DIR/projects/$PROJECT_NAME/output/pdf"
+
+    if [[ -d "$ROOT_PDF_DIR" && -d "$PROJECT_PDF_DIR" ]]; then
+        steg_count=0
+        for f in "$PROJECT_PDF_DIR"/*_steganography.pdf "$PROJECT_PDF_DIR"/*.hashes.json; do
+            [[ -f "$f" ]] || continue
+            cp "$f" "$ROOT_PDF_DIR/"
+            steg_count=$((steg_count + 1))
+        done
+        if [[ $steg_count -gt 0 ]]; then
+            log_info "Mirrored $steg_count steganographic file(s) → output/$PROJECT_NAME/pdf/"
+        fi
+    else
+        log_info "Root output directory not found — skipping mirror (output/$PROJECT_NAME/pdf/ may not exist yet)"
+    fi
+
     echo
     echo -e "${BOLD}📁 Output locations:${NC}"
-    echo -e "  Normal PDFs:        ${CYAN}projects/$PROJECT_NAME/output/pdf/*.pdf${NC}"
-    echo -e "  Steganography PDFs: ${CYAN}projects/$PROJECT_NAME/output/pdf/*_steganography.pdf${NC}"
-    echo -e "  Hash manifests:     ${CYAN}projects/$PROJECT_NAME/output/pdf/*.hashes.json${NC}"
+    echo -e "  Normal PDFs:             ${CYAN}projects/$PROJECT_NAME/output/pdf/*.pdf${NC}"
+    echo -e "  Steganography PDFs:      ${CYAN}projects/$PROJECT_NAME/output/pdf/*_steganography.pdf${NC}"
+    echo -e "  Hash manifests:          ${CYAN}projects/$PROJECT_NAME/output/pdf/*.hashes.json${NC}"
+    echo -e "  (also mirrored to)       ${CYAN}output/$PROJECT_NAME/pdf/*_steganography.pdf${NC}"
+    echo -e "  (also mirrored to)       ${CYAN}output/$PROJECT_NAME/pdf/*.hashes.json${NC}"
 else
     log_error "Steganographic post-processing failed (exit code: $exit_code)"
 fi

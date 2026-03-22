@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>_combined_manuscript</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<style>
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: #2c3e50;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#front-page" id="toc-front-page"><span
+class="toc-section-number">1</span> Front Page</a></li>
+<li><a href="#national" id="toc-national"><span
+class="toc-section-number">2</span> National</a></li>
+<li><a href="#world" id="toc-world"><span
+class="toc-section-number">3</span> World</a></li>
+<li><a href="#business" id="toc-business"><span
+class="toc-section-number">4</span> Business</a></li>
+<li><a href="#technology" id="toc-technology"><span
+class="toc-section-number">5</span> Technology</a></li>
+<li><a href="#sports" id="toc-sports"><span
+class="toc-section-number">6</span> Sports</a></li>
+<li><a href="#arts-culture" id="toc-arts-culture"><span
+class="toc-section-number">7</span> Arts &amp; Culture</a></li>
+<li><a href="#editorial" id="toc-editorial"><span
+class="toc-section-number">8</span> Editorial</a></li>
+<li><a href="#opinion" id="toc-opinion"><span
+class="toc-section-number">9</span> Opinion</a></li>
+<li><a href="#letters" id="toc-letters"><span
+class="toc-section-number">10</span> Letters</a></li>
+<li><a href="#local" id="toc-local"><span
+class="toc-section-number">11</span> Local</a></li>
+<li><a href="#features" id="toc-features"><span
+class="toc-section-number">12</span> Features</a></li>
+<li><a href="#health" id="toc-health"><span
+class="toc-section-number">13</span> Health</a></li>
+<li><a href="#science" id="toc-science"><span
+class="toc-section-number">14</span> Science</a></li>
+<li><a href="#obituaries" id="toc-obituaries"><span
+class="toc-section-number">15</span> Obituaries</a></li>
+<li><a href="#classifieds" id="toc-classifieds"><span
+class="toc-section-number">16</span> Classifieds</a></li>
+<li><a href="#supplement-layout-and-pipeline"
+id="toc-supplement-layout-and-pipeline"><span
+class="toc-section-number">17</span> Supplement: Layout and
+pipeline</a></li>
+<li><a href="#glossary-newspaper-and-pipeline-terms"
+id="toc-glossary-newspaper-and-pipeline-terms"><span
+class="toc-section-number">18</span> Glossary: Newspaper and pipeline
+terms</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="front-page"><span
+class="header-section-number">1</span> Front Page</h1>
+<p><strong>Late edition</strong> — Lead item for the Template Gazette
+demonstration edition.</p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="2" id="national"><span
+class="header-section-number">2</span> National</h1>
+<p><strong>Capitol and provinces</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="3" id="world"><span
+class="header-section-number">3</span> World</h1>
+<p><strong>Foreign desks</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="4" id="business"><span
+class="header-section-number">4</span> Business</h1>
+<p><strong>Markets and work</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="5" id="technology"><span
+class="header-section-number">5</span> Technology</h1>
+<p><strong>Tools and systems</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="6" id="sports"><span
+class="header-section-number">6</span> Sports</h1>
+<p><strong>Scores and fixtures</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="7" id="arts-culture"><span
+class="header-section-number">7</span> Arts &amp; Culture</h1>
+<p><strong>Stages and screens</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="8" id="editorial"><span
+class="header-section-number">8</span> Editorial</h1>
+<p><strong>The leader column</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="9" id="opinion"><span
+class="header-section-number">9</span> Opinion</h1>
+<p><strong>Guest essays</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="10" id="letters"><span
+class="header-section-number">10</span> Letters</h1>
+<p><strong>Reader mail</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="11" id="local"><span
+class="header-section-number">11</span> Local</h1>
+<p><strong>City desk</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="12" id="features"><span
+class="header-section-number">12</span> Features</h1>
+<p><strong>Long reads</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="13" id="health"><span
+class="header-section-number">13</span> Health</h1>
+<p><strong>Wellness briefs</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="14" id="science"><span
+class="header-section-number">14</span> Science</h1>
+<p><strong>Research notes</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="15" id="obituaries"><span
+class="header-section-number">15</span> Obituaries</h1>
+<p><strong>Remembrances</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="16" id="classifieds"><span
+class="header-section-number">16</span> Classifieds</h1>
+<p><strong>Notices</strong></p>
+<p>The compositor holds the column measure while Pandoc pours Markdown
+into LaTeX. Each folio slice maps to one manuscript file in this
+exemplar. XeLaTeX prints the sheet; the pipeline records the run. No
+mock interviews appear; every paragraph is static fixture copy for
+layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress. The compositor holds the column measure while Pandoc
+pours Markdown into LaTeX. Each folio slice maps to one manuscript file
+in this exemplar. XeLaTeX prints the sheet; the pipeline records the
+run. No mock interviews appear; every paragraph is static fixture copy
+for layout stress.</p>
+<hr />
+<h1 data-number="17" id="supplement-layout-and-pipeline"><span
+class="header-section-number">17</span> Supplement: Layout and
+pipeline</h1>
+<p><strong>How this PDF is built.</strong> Sixteen markdown slices under
+<code>projects/traditional_newspaper/manuscript/</code> are discovered
+by
+<code>infrastructure.rendering.manuscript_discovery.discover_manuscript_files</code>,
+combined in stem order, and separated by <code>\newpage</code> inside
+<code>infrastructure.rendering.pdf_renderer.PDFRenderer</code> before
+Pandoc emits LaTeX. Tabloid paper (11 in × 17 in) and
+<code>\usepackage{multicol}</code> come from
+<code>manuscript/preamble.md</code>; column separation matches
+<code>src/newspaper/layout_spec.py</code>
+(<code>LAYOUT.column_sep_in</code>).</p>
+<p>The masthead PNG is produced by
+<code>scripts/generate_masthead.py</code> calling
+<code>newspaper.masthead.render_masthead_png</code> during Stage 02
+analysis. Optional environment variables <code>NEWSPAPER_TITLE</code>
+and <code>NEWSPAPER_TAGLINE</code> override banner text without editing
+Python.</p>
+<p>This supplemental folio appears <strong>after</strong> the sixteen
+edition pages and <strong>before</strong> the glossary slice, per the
+template’s ordering: main numeric sections, then <code>S*</code>, then
+<code>98_*</code>, then <code>99_*</code> if present.</p>
+<hr />
+<h1 data-number="18" id="glossary-newspaper-and-pipeline-terms"><span
+class="header-section-number">18</span> Glossary: Newspaper and pipeline
+terms</h1>
+<p>Short definitions for readers of this exemplar (not a general
+journalism style guide).</p>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 72%" />
+</colgroup>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Folio</strong></td>
+<td>One manuscript slice (<code>01_*.md</code> … <code>16_*.md</code>)
+that becomes a new page boundary in the combined PDF after the previous
+slice (plus template title front matter).</td>
+</tr>
+<tr>
+<td><strong>Masthead</strong></td>
+<td>The nameplate graphic at the top of the front page; raster asset
+<code>output/figures/masthead.png</code>.</td>
+</tr>
+<tr>
+<td><strong>Slice</strong></td>
+<td>Same as folio file: one ordered markdown unit in
+<code>manuscript/</code>.</td>
+</tr>
+<tr>
+<td><strong>Preamble</strong></td>
+<td><code>manuscript/preamble.md</code>: LaTeX injected into the Pandoc
+document (geometry, <code>graphicx</code>, <code>multicol</code>).</td>
+</tr>
+<tr>
+<td><strong>Raw LaTeX block</strong></td>
+<td>Pandoc fenced region <code>```{=latex}</code> … <code>```</code>
+passing TeX through to the PDF engine.</td>
+</tr>
+<tr>
+<td><strong>Thin orchestrator</strong></td>
+<td>Script under <code>scripts/</code> that only configures paths,
+logging, and calls <code>src/newspaper/</code> functions.</td>
+</tr>
+<tr>
+<td><strong>Fixture copy</strong></td>
+<td>Deterministic placeholder paragraphs from
+<code>newspaper.content.fixture_copy</code> /
+<code>fixture_paragraph</code> for layout stress tests.</td>
+</tr>
+</tbody>
+</table>
+<p>The sixteen core folios are the “edition pages”; <code>S01_*</code>
+and <code>98_*</code> files document the system without changing the
+numbering of those pages.</p>
+</body>
+</html>

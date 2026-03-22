@@ -36,7 +36,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | -------- | ---------- |
 | New user | `core/how-to-use.md` → `guides/getting-started.md` |
 | Developer | `core/architecture.md` → `architecture/two-layer-architecture.md` |
-| **New project** | **`guides/new-project-setup.md`** → `architecture/thin-orchestrator-summary.md` |
+| **New project** | **`guides/new-project-setup.md`** → **`guides/new-project-one-shot-prompt.md`** (optional LLM scaffold) → `architecture/thin-orchestrator-summary.md` |
 | Contributor | `development/contributing.md` → `development/testing/` |
 | AI Agent | `rules/AGENTS.md` → `rules/README.md` |
 | Troubleshooter | `operational/troubleshooting/` → `reference/faq.md` |

@@ -1,0 +1,31 @@
+\frametitle{Supplement: Layout and pipeline}
+\protect\phantomsection\label{supplement-layout-and-pipeline}
+\begin{multicols}{3}
+
+\textbf{How this PDF is built.} Sixteen markdown slices under
+\texttt{projects/traditional\_newspaper/manuscript/} are discovered by
+\texttt{infrastructure.rendering.manuscript\_discovery.discover\_manuscript\_files},
+combined in stem order, and separated by
+\texttt{\textbackslash{}newpage} inside
+\texttt{infrastructure.rendering.pdf\_renderer.PDFRenderer} before
+Pandoc emits LaTeX. Tabloid paper (11 in × 17 in) and
+\texttt{\textbackslash{}usepackage\{multicol\}} come from
+\texttt{manuscript/preamble.md}; column separation matches
+\texttt{src/newspaper/layout\_spec.py}
+(\texttt{LAYOUT.column\_sep\_in}).
+
+The masthead PNG is produced by \texttt{scripts/generate\_masthead.py}
+calling \texttt{newspaper.masthead.render\_masthead\_png} during Stage
+02 analysis. Optional environment variables \texttt{NEWSPAPER\_TITLE}
+and \texttt{NEWSPAPER\_TAGLINE} override banner text without editing
+Python.
+
+This supplemental folio appears \textbf{after} the sixteen edition pages
+and \textbf{before} the glossary slice, per the template's ordering:
+main numeric sections, then \texttt{S*}, then \texttt{98\_*}, then
+\texttt{99\_*} if present.
+
+\noindent For citation metadata see \cite{template2026gazette}.
+\par\smallskip
+
+\end{multicols}

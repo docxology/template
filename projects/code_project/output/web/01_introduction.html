@@ -269,5 +269,40 @@ to the RASP methodology and <code>AGENTS.md</code> guidelines, ensuring
 the logic remains verifiable by both human and artificial
 intelligence.</li>
 </ol>
+<h2 id="readers-guide-to-the-manuscript">Reader’s guide to the
+manuscript</h2>
+<ul>
+<li><strong>Section 2 (Methodology)</strong> ties pseudocode to
+<code>gradient_descent()</code> and explains how stability checks and
+benchmarks call into <code>infrastructure.scientific</code>.</li>
+<li><strong>Section 3 (Results)</strong> is figure-centric: every panel
+references the generator function in
+<code>optimization_analysis.py</code> and uses <code>{{CONFIG_*}}</code>
+/ <code>{{RESULT_*}}</code> placeholders for numeric values.</li>
+<li><strong>Section 5 (Experimental setup)</strong> lists the exact YAML
+fields (<code>experiment:</code> block) that controlled the run whose
+artifacts you are viewing.</li>
+<li><strong>Section 6 (Reproducibility)</strong> records the
+configuration hash and artifact inventory produced alongside the
+PDF.</li>
+<li><strong>Section 7</strong> states scope and related literature so
+the exemplar is not mistaken for a general-purpose optimizer benchmark
+suite.</li>
+</ul>
+<h2 id="why-a-quadratic-model">Why a quadratic model</h2>
+<p>Restricting <span class="math inline">\(f\)</span> to a quadratic
+with known <span class="math inline">\((A,b)\)</span> keeps the optimum,
+gradient, and spectral data explicit. For <span class="math inline">\(A
+= I\)</span> and <span class="math inline">\(b = \mathbf{1}\)</span>,
+the optimal point is <span class="math inline">\(x^\ast =
+\mathbf{1}\)</span> and gradient descent with fixed <span
+class="math inline">\(\alpha\)</span> reduces to a linear iteration in
+the error (see Equation <span
+class="math inline">\(\ref{eq:scalar_linear_update}\)</span> in the
+results section). That simplicity isolates step-size effects and makes
+divergent choices (<span class="math inline">\(\alpha \geq 2\)</span> in
+1D) visible in both plots and CSV rows without requiring trust-region or
+line-search fixes—those extensions are left to future work (Section
+7).</p>
 </body>
 </html>

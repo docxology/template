@@ -120,12 +120,21 @@ def generate_variables() -> dict[str, str]:
     variables["CONFIG_MIN_STEP_SIZE"] = str(min(step_sizes))
     variables["CONFIG_MAX_STEP_SIZE"] = str(max(step_sizes))
 
-    # Bullet list for methodology section
-    labels = ["conservative", "moderate", "aggressive", "very aggressive"]
+    # Bullet list for methodology section (labels match optimization_analysis._agency_category)
+    def _step_agency_label(alpha: float) -> str:
+        if alpha < 0.3:
+            return "conservative"
+        if alpha <= 1.0:
+            return "near-optimal"
+        if alpha < 2.0:
+            return "aggressive"
+        return "divergent (expected unstable for H = I)"
+
     bullets = []
-    for i, s in enumerate(step_sizes):
-        label = labels[i] if i < len(labels) else ""
-        bullets.append(f"- $\\\\alpha = {s}$ ({label})" if label else f"- $\\\\alpha = {s}$")
+    for s in step_sizes:
+        a = float(s)
+        lbl = _step_agency_label(a)
+        bullets.append(f"- $\\\\alpha = {a}$ ({lbl})")
     variables["CONFIG_STEP_SIZES_BULLETS"] = "\n".join(bullets)
 
     variables["CONFIG_INITIAL_POINT"] = str(experiment.get("initial_point", 0.0))

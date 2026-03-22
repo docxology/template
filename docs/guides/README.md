@@ -16,6 +16,8 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`figures-and-analysis.md`](figures-and-analysis.md) | Figures and analysis guide (Levels 4-6) | Intermediate |
 | [`testing-and-reproducibility.md`](testing-and-reproducibility.md) | Testing and reproducibility guide (Levels 7-9) | Advanced |
 | [`extending-and-automation.md`](extending-and-automation.md) | Extending and automation guide (Levels 10-12) | Expert |
+| [`new-project-setup.md`](new-project-setup.md) | New project checklist (pitfalls and venv) | All levels |
+| [`new-project-one-shot-prompt.md`](new-project-one-shot-prompt.md) | Copy-paste LLM prompt (positive controls: code_project + template) | All levels |
 
 ## Learning Path
 
@@ -46,6 +48,8 @@ The `guides/` directory contains skill-level specific usage guides that progress
 
 ## Related Documentation
 
+- **[`new-project-setup.md`](new-project-setup.md)** — step-by-step checklist before first pipeline run
+- **[`new-project-one-shot-prompt.md`](new-project-one-shot-prompt.md)** — one-shot scaffold prompt for AI-assisted projects
 - **[`../core/how-to-use.md`](../core/how-to-use.md)** - usage guide (navigation hub)
 - **[`../usage/`](../usage/)** - Usage examples and patterns
 - **[`../reference/common-workflows.md`](../reference/common-workflows.md)** - Step-by-step recipes

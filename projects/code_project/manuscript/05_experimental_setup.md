@@ -35,3 +35,26 @@ Performance benchmarking spans problem dimensions $d \in \{{{CONFIG_BENCHMARK_DI
 - **NumPy**: {{NUMPY_VERSION}}
 - **Platform**: {{PLATFORM}}
 - **Generated**: {{GENERATION_TIMESTAMP}}
+
+## Pipeline ordering
+
+Typical `code_project` analysis order (see `scripts/02_run_analysis.py` discovery) is:
+
+1. `optimization_analysis.py` — writes `output/data/optimization_results.csv`, `output/figures/*.png`, and JSON reports under `output/reports/`.
+2. `z_generate_manuscript_variables.py` — reads the CSV and YAML, emits `output/data/manuscript_variables.json`, and writes substituted copies to `output/manuscript/` for rendering.
+3. `generate_api_docs.py` — refreshes API markdown consumed by documentation targets.
+
+PDF compilation then reads from `output/manuscript/` so that figure paths and numeric tables match the analysis that just completed.
+
+## Relation to figures
+
+| Figure (Section 3) | Primary inputs |
+|--------------------|------------------|
+| Convergence trajectories | `experiment.step_sizes`, `initial_point`, `tolerance`, `max_iterations` |
+| Step-size sensitivity | Dense $\alpha$ sweep internal to `generate_step_size_sensitivity_plot()` |
+| Convergence rate | Same trajectories as above; tolerance line uses `convergence_tolerance` |
+| Complexity quad panel | One bar chart per row of `optimization_results.csv` |
+| Stability heatmap | `stability_starting_points` $\times$ `stability_step_sizes` |
+| Dimensional benchmark | `benchmark_dimensions`, fixed $\alpha=0.1$, internal tol $10^{-10}$ |
+
+This table is descriptive documentation only; it is not executed as code during the build.

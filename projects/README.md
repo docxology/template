@@ -4,11 +4,31 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Active Projects
 
-This directory contains **one active project**, which serves as the **master exemplar**:
+Stand-alone workspaces under `projects/` are discovered by `discover_projects()` and listed in `./run.sh`. Highlights:
 
-### **code_project**: The Template Project of docxology/template/ repository
+### **code_project** — master numerical exemplar
 
-A fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures.
+Optimization study with figures, dashboard, and full manuscript.
+
+### **template** — meta-documentation project
+
+Self-referential manuscript and metrics for the repository.
+
+### **area_handbook** — holistic area report to living handbook
+
+Structured YAML corpus (themes + weighted evidence), synthesis into section coverage and gaps, JSON artifacts, coverage figure, multi-section manuscript. See [area_handbook/README.md](area_handbook/README.md).
+
+### **density_bioscales** — fluids, gases, and composite density
+
+Ideal gas and reference liquids, mass-fraction mixture model with an internal-gas proxy, buoyancy helpers, and interval sweeps. See [density_bioscales/README.md](density_bioscales/README.md).
+
+### **traditional_newspaper** — layout exemplar
+
+Sixteen markdown folios, tabloid `geometry`, three-column `multicol` body, deterministic masthead PNG. See [traditional_newspaper/README.md](traditional_newspaper/README.md).
+
+### **special_number_proximity** — Diophantine distance statistics
+
+Finite-$Q$ rational proximity for $\pi$, $e$, quadratic irrationals, and Monte Carlo baselines; modular `src/` with 100% test coverage. See [special_number_proximity/README.md](special_number_proximity/README.md).
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -73,6 +93,9 @@ mv projects_archive/myproject projects/myproject
 # Project will be automatically discovered on next run.sh execution
 
 | `code_project/` | The master exemplar implementation | ✅ Active |
+| `area_handbook/` | Area corpus, handbook synthesis, multi-section manuscript | ✅ Active |
+| `density_bioscales/` | Gas/liquid/insect-scale density models | ✅ Active |
+| `traditional_newspaper/` | Tabloid newspaper layout (16 slices + masthead) | ✅ Active |
 
 **Archived projects** are available in `projects_archive/` for historical reference (e.g., `blake_active_inference`, `cognitive_integrity`, `active_inference_meta_pragmatic`).
 

@@ -528,6 +528,9 @@ def generate_convergence_rate_plot(results):
     logger = _get_logger()
     logger.info("Generating convergence rate comparison plot...")
 
+    exp_config = _load_experiment_config()
+    conv_tol = float(exp_config.get("convergence_tolerance", exp_config.get("tolerance", 1e-8)))
+
     fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
     # Use colorblind-safe palette
@@ -576,16 +579,17 @@ def generate_convergence_rate_plot(results):
     ax.set_yscale("log")
     ax.set_ylim(1e-12, 1e4)
 
-    # Add convergence threshold annotation
+    # Horizontal reference at manuscript / config convergence tolerance
     ax.axhline(
-        y=1e-6,
+        y=conv_tol,
         color=VIZ_CONFIG["colors"]["neutral"],
         linestyle=":",
         linewidth=2,
         alpha=0.8,
     )
+    tol_str = f"{conv_tol:.0e}".replace("e-0", "e-").replace("e+0", "e+")
     ax.annotate(
-        "Tolerance ε = 10⁻⁶",
+        f"Tolerance ε = {tol_str}",
         xy=(0.85, 0.35),
         xycoords="axes fraction",
         fontsize=VIZ_CONFIG["fonts"]["annotation"],
@@ -612,11 +616,15 @@ def generate_complexity_visualization(results):
 
     (TL) Empirical iterations bar chart.
     (TR) Solution quality: log₁₀ absolute error from optimum per step size.
-    (BL) Theory vs empirical on log scale.
-    (BR) Contraction factor ρ = 1 − 2α(1−α) per step size.
+    (BL) Empirical iterations vs step size compared to 1/(2α(1−α)) proxy curve.
+    (BR) Per-step error contraction ρ = |1 − α| for the unit Hessian quadratic.
     """
     logger = _get_logger()
     logger.info("Generating algorithm complexity visualization...")
+
+    exp_config = _load_experiment_config()
+    conv_tol = float(exp_config.get("convergence_tolerance", exp_config.get("tolerance", 1e-8)))
+    log_tol = float(np.log10(conv_tol))
 
     step_sizes = list(results.keys())
     iterations = [results[step_size].iterations for step_size in step_sizes]
@@ -678,8 +686,10 @@ def generate_complexity_visualization(results):
         )
 
     # (2) Solution quality: log₁₀ |f(x) − f(x*)|
-    bar_colors_2 = [success_color if le < -6 else theory_color if le < -3 else bar_color
-                    for le in log_errors]
+    bar_colors_2 = [
+        success_color if le < log_tol else theory_color if le < -3 else bar_color
+        for le in log_errors
+    ]
     bars2 = ax2.bar(
         range(len(step_sizes)),
         log_errors,
@@ -687,8 +697,14 @@ def generate_complexity_visualization(results):
         color=bar_colors_2,
         alpha=0.85,
     )
-    ax2.axhline(y=-6, color=VIZ_CONFIG["colors"]["neutral"], linestyle="--",
-                linewidth=1, alpha=0.7, label="ε = 10⁻⁶ tolerance")
+    ax2.axhline(
+        y=log_tol,
+        color=VIZ_CONFIG["colors"]["neutral"],
+        linestyle="--",
+        linewidth=1,
+        alpha=0.7,
+        label=f"ε = {conv_tol:.0e} tolerance",
+    )
     ax2.set_xlabel("Step Size", fontsize=11, fontweight="medium")
     ax2.set_ylabel("log₁₀ |f(x) − f(x*)|")
     ax2.set_title("Solution Accuracy\n(Lower = More Accurate)", fontsize=12, fontweight="bold")
@@ -733,7 +749,7 @@ def generate_complexity_visualization(results):
     ax3.legend(loc="upper right", framealpha=0.95, fontsize=9)
     ax3.grid(True, alpha=0.3)
 
-    # (4) Contraction factor ρ = 1 − 2α(1−α)
+    # (4) Scalar unit-Hessian contraction: |x_{k+1}−x*| / |x_k−x*| = |1−α|
     bars4 = ax4.bar(
         range(len(step_sizes)),
         contraction_factors,
@@ -744,13 +760,13 @@ def generate_complexity_visualization(results):
     ax4.set_xlabel("Step Size", fontsize=11, fontweight="medium")
     ax4.set_ylabel("Contraction Factor ρ", fontsize=11, fontweight="medium")
     ax4.set_title(
-        "Convergence Rate per Iteration\nρ = 1 − 2α(1−α)  (Lower = Faster)",
+        "Error contraction per step (H = I)\nρ = |1 − α|  (smaller ρ ⇒ faster)",
         fontsize=12,
         fontweight="bold",
     )
-    ax4.set_ylim(0, 1.05)
+    ax4.set_ylim(0, max(1.05, max(contraction_factors, default=1.0) * 1.15))
     ax4.axhline(y=0.5, color=VIZ_CONFIG["colors"]["neutral"], linestyle=":",
-                linewidth=1, alpha=0.6, label="ρ = 0.5 (optimal α=0.5)")
+                linewidth=1, alpha=0.6, label="ρ = 0.5 (α = 0.5)")
     ax4.legend(loc="upper right", fontsize=9, framealpha=0.95)
     ax4.grid(True, alpha=0.3, axis="y")
     for bar, val in zip(bars4, contraction_factors):
@@ -935,22 +951,36 @@ def generate_stability_visualization(stability_path):
 
     logger.info("Generating stability visualization...")
 
-    # Sweep starting points and step sizes
-    starting_points = [-50.0, -10.0, -5.0, 0.0, 0.1, 5.0, 10.0, 50.0]
-    step_sizes = [0.01, 0.05, 0.1, 0.2, 0.3, 0.4]
-    optimal_value = -0.5
+    exp_config = _load_experiment_config()
+    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
+    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
+    x_star = np.linalg.solve(A, b)
+    optimal_value = float(0.5 * x_star.T @ A @ x_star - b.T @ x_star)
+
+    starting_points = exp_config.get(
+        "stability_starting_points",
+        [-50.0, -10.0, -5.0, 0.0, 0.1, 5.0, 10.0, 50.0],
+    )
+    step_sizes = exp_config.get(
+        "stability_step_sizes",
+        [0.01, 0.05, 0.1, 0.2, 0.5, 0.9],
+    )
+    max_iter = int(exp_config.get("max_iterations", 500))
+    tol = float(exp_config.get("tolerance", 1e-8))
+
+    obj_func, grad_func = make_quadratic_problem(A, b)
 
     # Build error matrix: rows=starting points, cols=step sizes
     error_matrix = np.zeros((len(starting_points), len(step_sizes)))
     for i, x0 in enumerate(starting_points):
         for j, alpha in enumerate(step_sizes):
             result = gradient_descent(
-                initial_point=np.array([x0]),
-                objective_func=lambda x: quadratic_function(x, np.array([[1.0]]), np.array([1.0])),
-                gradient_func=lambda x: compute_gradient(x, np.array([[1.0]]), np.array([1.0])),
-                step_size=alpha,
-                max_iterations=500,
-                tolerance=1e-12,
+                initial_point=np.array([float(x0)]),
+                objective_func=obj_func,
+                gradient_func=grad_func,
+                step_size=float(alpha),
+                max_iterations=max_iter,
+                tolerance=tol,
             )
             err = abs(result.objective_value - optimal_value)
             error_matrix[i, j] = np.log10(max(err, 1e-16))
@@ -1033,7 +1063,8 @@ def generate_benchmark_visualization(benchmark_path):
 
     import time
 
-    dimensions = [1, 2, 5, 10, 20, 50]
+    exp_config = _load_experiment_config()
+    dimensions = exp_config.get("benchmark_dimensions", [1, 2, 5, 10, 20, 50])
     times_us = []
     iter_counts = []
 

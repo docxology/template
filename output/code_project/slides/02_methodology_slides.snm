@@ -9,4 +9,6 @@
 \beamer@slide {experimental-setup}{1}
 \beamer@slide {step-size-analysis}{1}
 \beamer@slide {zero-mock-testing-methodology}{1}
+\beamer@slide {stopping-rule-and-reporting}{1}
+\beamer@slide {figure-generation-contract}{1}
 \beamer@slide {analysis-pipeline-latex-integration}{1}

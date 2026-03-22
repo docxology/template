@@ -1,0 +1,20 @@
+\frametitle{Abstract}
+\protect\phantomsection\label{abstract}
+We quantify how close fixed mathematical constants lie to rationals
+\(p/q\) with bounded denominator \(q \leq Q\), and contrast them against
+Monte Carlo draws from reference ensembles on \([0,1)\) and from
+fractional parts of square roots. The statistic is the elementary
+minimum absolute error
+\(\min_{p \in \mathbb{Z},\,1 \leq q \leq Q} |x - p/q|\), evaluated in
+IEEE-754 double precision with deterministic seeds. Classical
+Diophantine theory (Dirichlet, Hurwitz, Khinchin) explains why almost
+every real admits arbitrarily sharp rational approximations as
+\(Q \to \infty\); here we fix modest \(Q\) and compare empirical tail
+placement of named constants (including a rational control) relative to
+synthetic baselines. All computation lives in
+\texttt{projects/special\_number\_proximity/src/} with a zero-mock test
+suite; figures and tables are produced by
+\texttt{scripts/proximity\_monte\_carlo.py}.
+
+\textbf{Keywords:} Diophantine approximation, continued fractions, Monte
+Carlo methods, reproducible computing

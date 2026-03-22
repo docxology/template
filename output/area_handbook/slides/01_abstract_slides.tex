@@ -1,0 +1,125 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Abstract}
+\protect\phantomsection\label{abstract}
+Holistic area reports aggregate geography, communities, economy,
+infrastructure, environment, and governance into a single maintained
+narrative. This project treats the \textbf{handbook} as a versioned
+artifact: evidence items with themes and weights roll up into
+chapter-level coverage scores (with a configurable gap threshold),
+unused themes and duplicate corpus ids are detected at load time, and
+analysis scripts regenerate figures plus JSON and Markdown rollups from
+a committed fixture corpus {[}@bowker2005; @template2026{]}.
+
+The Riverbend Metropolitan Area fixture demonstrates the full path
+offline: seventeen evidence rows span eight handbook themes, each row
+carrying \texttt{source\_label} and \texttt{reviewed\_at} so reviewers
+can see how fresh a claim is without opening side spreadsheets.
+Synthesis caps section scores at unity, lists gaps when scores sit
+strictly below policy threshold, and emits
+\texttt{handbook\_report.json} for dashboards or funder reporting.
+Figures show per-section coverage, evidence counts by theme, and
+gap-aware coloring so visual review stays aligned with machine-readable
+metrics.
+
+The workflow is offline-first, reproducible, and aligned with the
+template thin-orchestrator pattern so that prose, code, and outputs stay
+traceable across update cycles {[}@edwards2010{]}. Boundary-style
+collaboration---planners, funders, and residents interpreting the same
+outline files differently but converging on shared versions---mirrors
+how provenance-aware systems stabilize meaning across communities of
+practice {[}@gray2005; @star1989{]}. LLM assists are disabled in this
+exemplar's \texttt{config.yaml} so CI and local builds remain
+deterministic.
+\end{frame}
+
+\end{document}

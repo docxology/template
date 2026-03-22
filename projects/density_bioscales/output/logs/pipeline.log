@@ -1,0 +1,21 @@
+[2026-03-22 15:44:32,110] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/density_bioscales/output/logs/pipeline.log
+[2026-03-22 15:44:32,110] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-22 15:44:32,111] [INFO] 
+[2026-03-22 15:44:32,111] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-22 15:44:32,111] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-22 15:44:32,111] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:44:34,094] [INFO] ✓ Stage 2 completed successfully (2.0s)
+[2026-03-22 15:44:34,096] [INFO] 
+[2026-03-22 15:44:34,096] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-22 15:44:34,096] [INFO]   Elapsed: 2s | ETA: 3s
+[2026-03-22 15:44:34,096] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:44:43,590] [INFO] ✓ Stage 3 completed successfully (9.5s)
+[2026-03-22 15:44:43,592] [INFO] 
+[2026-03-22 15:44:43,592] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-22 15:44:43,592] [INFO]   Elapsed: 11s | ETA: 11s
+[2026-03-22 15:44:43,592] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:44:47,807] [INFO] ✓ Stage 4 completed successfully (4.2s)
+[2026-03-22 15:44:47,811] [INFO] 
+[2026-03-22 15:44:47,811] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-22 15:44:47,811] [INFO]   Elapsed: 15s | ETA: 9s
+[2026-03-22 15:44:47,812] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

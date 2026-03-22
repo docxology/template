@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_introduction</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="introduction">Introduction</h1>
+<p>Rational numbers are dense in the reals, yet the
+<strong>quality</strong> of the best rational approximation at a fixed
+denominator ceiling varies sharply across individual <span
+class="math inline">\(x\)</span>. Number theory classifies extremes:
+algebraic irrationals of degree two have bounded partial quotients in
+their continued fraction expansion and are <em>badly approximable</em>
+in the sense of <span class="citation"
+data-cites="cassels1957">[@cassels1957]</span>; almost every <span
+class="math inline">\(x \in \mathbb{R}\)</span> satisfies Khinchin-type
+statistics for the growth of those quotients <span class="citation"
+data-cites="khinchin1964continued">[@khinchin1964continued]</span>.
+Transcendental constants carry no finite-degree algebraic constraint,
+but particular numbers such as <span class="math inline">\(\pi\)</span>
+or <span class="math inline">\(e\)</span> still admit
+<strong>structured</strong> rational approximations from series,
+integrals, or independent constructions—so their finite-<span
+class="math inline">\(Q\)</span> behaviour need not resemble a “generic”
+draw from a simple continuous law.</p>
+<h3 id="finite-q-as-a-deliberate-lens">Finite <span
+class="math inline">\(Q\)</span> as a deliberate lens</h3>
+<p>As <span class="math inline">\(Q\)</span> grows, <span
+class="math inline">\(\delta_Q(x)\)</span> tends to <span
+class="math inline">\(0\)</span> for every irrational <span
+class="math inline">\(x\)</span>, and <span
+class="math inline">\(\mu_Q(x)\)</span> admits universal upper bounds
+tied to continued-fraction convergents <span class="citation"
+data-cites="hurwitz1891">[@hurwitz1891]</span>. Those limits wash out
+differences on a logarithmic scale unless one studies
+<strong>rates</strong> or <strong>exceptional sets</strong>. By
+contrast, fixing <span class="math inline">\(Q\)</span> at a moderate
+value (for example <span class="math inline">\(Q=120\)</span> in the
+default configuration) asks a different question: <em>among all
+rationals with denominators up to <span
+class="math inline">\(Q\)</span>, how small is the best error, and how
+does that single number compare to the same functional evaluated on
+random <span class="math inline">\(X\)</span>?</em> The answer is a
+<strong>scalar summary</strong>—an empirical percentile relative to a
+chosen reference law—not a Diophantine <em>type</em> in the classical
+sense.</p>
+<h3 id="statistical-comparison-protocol">Statistical comparison
+protocol</h3>
+<p>The implementation draws a pooled sample <span
+class="math inline">\(X_1,\ldots,X_n\)</span> on <span
+class="math inline">\([0,1)\)</span>, computes <span
+class="math inline">\(\delta_Q(X_i)\)</span> and <span
+class="math inline">\(\mu_Q(X_i)\)</span> for each draw, and records
+distribution summaries (quantiles, tail percentiles). For each
+registered constant <span class="math inline">\(x^\star\)</span> it
+stores <span class="math inline">\(\delta_Q(x^\star)\)</span>, <span
+class="math inline">\(\mu_Q(x^\star)\)</span>, and the <strong>empirical
+rank</strong> (proportion of reference samples strictly below the
+constant’s value). Optional <code>experiment.q_sensitivity</code>
+repeats the constant table at additional <span
+class="math inline">\(Q\)</span> values <strong>without
+resampling</strong> <span class="math inline">\(X\)</span>, so shifts in
+rank isolate the effect of enlarging the rational search set.</p>
+<h3 id="scope-of-this-note">Scope of this note</h3>
+<p>We do not prove new Diophantine bounds. The goal is
+<strong>methodological</strong>: connect classical statements about
+<span class="math inline">\(Q\to\infty\)</span> to concrete finite-<span
+class="math inline">\(Q\)</span> measurements, document the numerical
+chain (three-numerator scan, lattice cross-checks, convergent-only
+certificates), and parameterize the study from YAML so <span
+class="math inline">\(Q\)</span>, sample sizes, reference components,
+and <code>compare_mod1</code> can change without editing infrastructure
+code.</p>
+</body>
+</html>

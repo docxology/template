@@ -1,0 +1,113 @@
+{
+  "project": "traditional_newspaper",
+  "files": [
+    {
+      "path": "manuscript/01_front_page.md",
+      "lines": 20,
+      "words": 749,
+      "bytes": 4877
+    },
+    {
+      "path": "manuscript/02_national.md",
+      "lines": 15,
+      "words": 641,
+      "bytes": 4089
+    },
+    {
+      "path": "manuscript/03_world.md",
+      "lines": 15,
+      "words": 640,
+      "bytes": 4078
+    },
+    {
+      "path": "manuscript/04_business.md",
+      "lines": 15,
+      "words": 641,
+      "bytes": 4084
+    },
+    {
+      "path": "manuscript/05_technology.md",
+      "lines": 15,
+      "words": 641,
+      "bytes": 4087
+    },
+    {
+      "path": "manuscript/06_sports.md",
+      "lines": 15,
+      "words": 641,
+      "bytes": 4085
+    },
+    {
+      "path": "manuscript/07_arts.md",
+      "lines": 15,
+      "words": 643,
+      "bytes": 4092
+    },
+    {
+      "path": "manuscript/08_editorial.md",
+      "lines": 15,
+      "words": 641,
+      "bytes": 4086
+    },
+    {
+      "path": "manuscript/09_opinion.md",
+      "lines": 15,
+      "words": 640,
+      "bytes": 4079
+    },
+    {
+      "path": "manuscript/10_letters.md",
+      "lines": 15,
+      "words": 640,
+      "bytes": 4078
+    },
+    {
+      "path": "manuscript/11_local.md",
+      "lines": 15,
+      "words": 640,
+      "bytes": 4074
+    },
+    {
+      "path": "manuscript/12_features.md",
+      "lines": 15,
+      "words": 640,
+      "bytes": 4078
+    },
+    {
+      "path": "manuscript/13_health.md",
+      "lines": 15,
+      "words": 640,
+      "bytes": 4081
+    },
+    {
+      "path": "manuscript/14_science.md",
+      "lines": 15,
+      "words": 640,
+      "bytes": 4081
+    },
+    {
+      "path": "manuscript/15_obituaries.md",
+      "lines": 15,
+      "words": 639,
+      "bytes": 4082
+    },
+    {
+      "path": "manuscript/16_classifieds.md",
+      "lines": 15,
+      "words": 639,
+      "bytes": 4078
+    },
+    {
+      "path": "manuscript/S01_layout_and_pipeline.md",
+      "lines": 20,
+      "words": 119,
+      "bytes": 1176
+    },
+    {
+      "path": "manuscript/98_newspaper_and_pipeline_terms.md",
+      "lines": 15,
+      "words": 177,
+      "bytes": 1204
+    }
+  ]
+}

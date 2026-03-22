@@ -161,3 +161,12 @@ A tabular comparison against other tools appears **in the paper**; treat strong 
 - [Zenodo record 19139090](https://zenodo.org/records/19139090) — versioned paper + artifact context  
 - [template repository](https://github.com/docxology/template) — source, issues, `README.md` / `AGENTS.md`  
 - Further citations and comparison tables — **see the paper’s bibliography** (not duplicated here to avoid drift from the published PDF)
+
+
+
+
+@iam0inbinary
+​
+
+#2
+​question not particularly for active inference, but do you think about souls? while active inference is for mind, there is nothing that touches soul.

@@ -47,12 +47,16 @@ Optimal convergence occurs when $\alpha = \frac{2}{\lambda_{\min} + \lambda_{\ma
 
 ### Step Size Analysis
 
-We investigate the effect of different step sizes on convergence:
+Step sizes are not chosen ad hoc in the manuscript: they are read from `experiment.step_sizes` in `manuscript/config.yaml` and passed through `run_convergence_experiment()` in `optimization_analysis.py`. The active grid for this build is:
 
-- $\alpha = 0.01$ (conservative)
-- $\alpha = 0.05$ (moderate)
-- $\alpha = 0.10$ (aggressive)
-- $\alpha = 0.20$ (very aggressive)
+- $\\alpha = 0.01$ (conservative)
+- $\\alpha = 0.1$ (conservative)
+- $\\alpha = 0.5$ (near-optimal)
+- $\\alpha = 1.0$ (near-optimal)
+- $\\alpha = 1.5$ (aggressive)
+- $\\alpha = 2.5$ (divergent (expected unstable for H = I))
+
+Labels follow the same agency taxonomy used for plot colours (`_agency_category` in the analysis script): **conservative** (small $\alpha$, slow but stable on $H=I$), **near-optimal** (including $\alpha=1$ where the method reaches $x^\ast$ in one step for this quadratic), **aggressive** ($1 < \alpha < 2$, still linearly contracting in $|x-x^\ast|$ but oscillatory in sign), and **divergent** ($|1-\alpha| \geq 1$).
 
 ### Zero-Mock Testing Methodology
 
@@ -60,7 +64,15 @@ The most critical aspect of the project's methodology is its validation framewor
 
 1. **Integration Testing**: The `tests/integration/` battery ensures that the optimization algorithm, the analysis pipeline, and the `infrastructure.rendering` components operate flawlessly together without simulated data.
 2. **Infrastructure Validation**: The `tests/infra_tests/` suite confirms that the underlying modules (e.g., `pipeline_reporter.py`, `doc_discovery.py`) behave deterministically.
-3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate prior to compiling the manuscript to a PDF.
+3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/code_project/src/` prior to treating the project as build-green.
+
+### Stopping rule and reporting
+
+`gradient_descent()` terminates when $\|\nabla f(x_k)\|$ falls below `experiment.tolerance` or when $k$ reaches `experiment.max_iterations`. The boolean `converged` in exported CSV rows distinguishes these outcomes. Downstream, `scripts/z_generate_manuscript_variables.py` aggregates the CSV into `RESULT_*` placeholders so tables and prose cannot drift from the last analysis run.
+
+### Figure generation contract
+
+Each figure in `03_results.md` maps to a single generator in `optimization_analysis.py` (`generate_convergence_plot`, `generate_step_size_sensitivity_plot`, `generate_convergence_rate_plot`, `generate_complexity_visualization`, `generate_stability_visualization`, `generate_benchmark_visualization`). Captions in the markdown intentionally name the function and the key parameters (tolerance lines, grids, dimensions) so reviewers can navigate from PDF to code without inferring hidden defaults.
 
 ## Analysis Pipeline & LaTeX Integration
 

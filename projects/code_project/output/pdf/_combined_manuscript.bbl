@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{8}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -10,6 +10,19 @@ Dimitri~P Bertsekas.
 \newblock \emph{Nonlinear programming}.
 \newblock Athena Scientific, 2nd edition, 1999.
 \newblock ISBN 978-1-886529-14-6.
+
+\bibitem[Boyd and Vandenberghe(2004)]{boyd2004convex}
+Stephen Boyd and Lieven Vandenberghe.
+\newblock Convex optimization.
+\newblock \emph{Cambridge university press}, 2004.
+\newblock \doi{10.1017/CBO9780511804441}.
+
+\bibitem[Cauchy(1847)]{cauchy1847methode}
+Augustin-Louis Cauchy.
+\newblock Méthode générale pour la résolution des systèmes d'équations
+  simultanées.
+\newblock \emph{Comptes rendus hebdomadaires des séances de l'Académie des
+  Sciences}, 25:\penalty0 536--538, 1847.
 
 \bibitem[Kingma and Ba(2014)]{kingma2014adam}
 Diederik~P Kingma and Jimmy Ba.
@@ -23,6 +36,19 @@ Yurii Nesterov.
 \newblock \emph{Mathematical Programming}, 140\penalty0 (1):\penalty0 125--161,
   2013.
 \newblock \doi{10.1007/s10107-012-0629-5}.
+
+\bibitem[Nocedal and Wright(2006)]{nocedal2006numerical}
+Jorge Nocedal and Stephen Wright.
+\newblock \emph{Numerical optimization}.
+\newblock Springer Science \& Business Media, 2nd edition, 2006.
+\newblock ISBN 978-0-387-30303-1.
+\newblock \doi{10.1007/978-0-387-40065-5}.
+
+\bibitem[Peng(2011)]{peng2011reproducible}
+Roger~D Peng.
+\newblock Reproducible research in computational science.
+\newblock \emph{Science}, 334\penalty0 (6060):\penalty0 1226--1227, 2011.
+\newblock \doi{10.1126/science.1213847}.
 
 \bibitem[Polyak(1964)]{polyak1964some}
 Boris~T Polyak.

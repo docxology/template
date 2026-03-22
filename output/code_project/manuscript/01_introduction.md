@@ -46,3 +46,15 @@ As the representative project for the repository, this implementation explicitly
 2. **Zero-Mock Verification**: A strict comprehensive validation suite proving numerical accuracy without artificial test boundaries.
 3. **Automated Research Pipelines**: High-precision analyses that generate publication-quality, accessible visualizations automatically.
 4. **Agentic Documentation standards**: Native adherence to the RASP methodology and `AGENTS.md` guidelines, ensuring the logic remains verifiable by both human and artificial intelligence.
+
+## Reader's guide to the manuscript
+
+- **Section 2 (Methodology)** ties pseudocode to `gradient_descent()` and explains how stability checks and benchmarks call into `infrastructure.scientific`.
+- **Section 3 (Results)** is figure-centric: every panel references the generator function in `optimization_analysis.py` and uses `{{CONFIG_*}}` / `{{RESULT_*}}` placeholders for numeric values.
+- **Section 5 (Experimental setup)** lists the exact YAML fields (`experiment:` block) that controlled the run whose artifacts you are viewing.
+- **Section 6 (Reproducibility)** records the configuration hash and artifact inventory produced alongside the PDF.
+- **Section 7** states scope and related literature so the exemplar is not mistaken for a general-purpose optimizer benchmark suite.
+
+## Why a quadratic model
+
+Restricting $f$ to a quadratic with known $(A,b)$ keeps the optimum, gradient, and spectral data explicit. For $A = I$ and $b = \mathbf{1}$, the optimal point is $x^\ast = \mathbf{1}$ and gradient descent with fixed $\alpha$ reduces to a linear iteration in the error (see Equation \ref{eq:scalar_linear_update} in the results section). That simplicity isolates step-size effects and makes divergent choices ($\alpha \geq 2$ in 1D) visible in both plots and CSV rows without requiring trust-region or line-search fixes—those extensions are left to future work (Section 7).

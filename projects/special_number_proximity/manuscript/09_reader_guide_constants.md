@@ -1,0 +1,15 @@
+# Reader’s guide to registered constants
+
+Each entry below mirrors `src/constants.py`. Classification strings are **informative only**; no formal proof is recomputed in software.
+
+**`pi` — transcendental (documentary).** Circle constant. Famous rational approximants at moderate height (e.g. $355/113$) can make $\delta_Q$ extremely small at finite $Q$ when those denominators enter the search range.
+
+**`e` — transcendental (documentary).** Base of the natural logarithm. Continued-fraction coefficients are unbounded; finite-$Q$ behaviour is read from the JSON after each run.
+
+**`sqrt2`, `sqrt3` — irrational algebraic degree $2$.** Quadratic irrationals are badly approximable in the classical sense; nonetheless $\delta_Q$ and $\mu_Q$ at fixed $Q$ depend on which rational with $q\le Q$ wins the minimum.
+
+**`golden_ratio` — $\varphi=(1+\sqrt5)/2$, quadratic irrational.** All partial quotients equal $1$ in exact continued-fraction theory; expect bounded-quotient heuristics to interact with $\mu_Q$ ranks differently from $\delta_Q$ ranks at the same $Q$.
+
+**`ln2` — transcendental (documentary).** Natural logarithm of $2$; included to show a transcendental on $(0,1)$ alongside uniform-style references.
+
+**`one_sixth` — rational control.** Exact value $1/6$; $\delta_Q=\mu_Q=0$ for $Q\ge 6$ under exact arithmetic. Serves as a zero baseline for the scan and CSV export.

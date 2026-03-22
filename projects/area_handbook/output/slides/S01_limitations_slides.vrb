@@ -1,0 +1,34 @@
+\frametitle{Supplement: Limitations and assumptions}
+\protect\phantomsection\label{supplement-limitations-and-assumptions}
+This exemplar prioritizes \textbf{reproducibility and teachability} over
+geographic realism. Riverbend is fictional; weights and source labels
+illustrate schema use, not empirical findings about any jurisdiction.
+
+\textbf{No live data.} The pipeline does not call HTTP APIs, scrape
+documents, or perform NLP on attachments. Every number in the handbook
+narrative traces to a hand-authored YAML row or to derived metrics
+computed from those rows.
+
+\textbf{Weights are subjective.} Reviewers assign \texttt{weight} in
+\([0,1]\) without a universal rubric. Cross-team calibration is a
+governance task outside this repository; the code assumes weights are
+already consensus values.
+
+\textbf{Single corpus per build.} The scripts load one fixture path
+(\texttt{data/fixtures/riverbend\_area.yaml} in production use of this
+demo). Merging multiple corpora or federating regions would require new
+modules and tests, not configuration toggles alone.
+
+\textbf{Outline static in code.} \texttt{HANDBOOK\_TEMPLATE} is Python
+source, not a per-area YAML file. Customizing chapters without editing
+code is possible only within the existing section files and themes;
+adding a ninth scored section demands code and test updates.
+
+\textbf{Citation depth.} \texttt{source\_label} is a short string, not a
+BibTeX key. Formal citations belong in manuscript markdown using
+\texttt{references.bib}; the corpus stays lean {[}@bowker2005{]}.
+
+\textbf{Threshold semantics.} ``Gap'' means strictly below threshold,
+not ``close.'' Sections barely above the line still pass; policy teams
+may want stricter thresholds or secondary rules implemented in future
+metrics fields.

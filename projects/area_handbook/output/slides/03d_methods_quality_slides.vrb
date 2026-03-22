@@ -1,0 +1,48 @@
+\frametitle{Methods: Quality gates on the corpus file}
+\protect\phantomsection\label{methods-quality-gates-on-the-corpus-file}
+Before synthesis runs, \texttt{src/corpus\_io.py} rejects files that
+would silently corrupt metrics:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Unique ids} --- Duplicate \texttt{themes{[}{]}.id} or
+  \texttt{evidence{[}{]}.id} values raise
+  \texttt{CorpusValidationError}.
+\item
+  \textbf{Non-empty text fields} --- Theme \texttt{label} and
+  \texttt{description}, evidence \texttt{statement},
+  \texttt{source\_label}, and \texttt{reviewed\_at} must be non-blank
+  after stripping.
+\item
+  \textbf{Numeric weights} --- Each \texttt{weight} must parse as a
+  finite float in \([0, 1]\) (NaN and infinity are rejected).
+\end{itemize}
+
+These checks keep CI deterministic: the same YAML on disk always loads
+or always fails with an actionable message. Downstream
+\texttt{src/corpus\_stats.py} then reports themes that have
+\textbf{zero} evidence rows, which is valid (reserved buckets) but
+visible in the executive summary Markdown.
+
+\textbf{Operational implications.} Teams can run the project test suite
+locally before pushing corpus edits; failures point to line-level
+validation rather than cryptic PDF breaks later. The gates also protect
+multi-author editing: two contributors cannot both add \texttt{ev-001}
+without merge resolution---the second duplicate id triggers an exception
+at load.
+
+\textbf{Cross-field consistency.} Every \texttt{evidence.theme} must
+reference an existing \texttt{themes{[}{]}.id}. Typos therefore surface
+immediately (``economy'' vs ``economy\_sector'') instead of producing
+silent empty matches during synthesis. Combined with the cap on section
+scores, these rules keep the handbook honest about what was reviewed and
+what was never supplied.
+
+\textbf{Downstream consumers.} \texttt{handbook\_report.json} carries
+\texttt{evidence\_count}, \texttt{theme\_count}, \texttt{gap\_count},
+and \texttt{themes\_without\_evidence}. Oversight bodies can treat
+non-zero \texttt{themes\_without\_evidence} or rising
+\texttt{gap\_count} under a fixed threshold as signals to schedule
+evidence workshops---not as build failures, but as explicit visibility
+{[}@template2026{]}.

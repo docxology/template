@@ -227,22 +227,21 @@ This foundation could be extended to:
 
 \begin{block}{Final Assessment}
 \protect\phantomsection\label{final-assessment}
-This work conclusively demonstrates that the research template
-seamlessly supports projects spanning the full spectrum---from
-prose-focused manuscripts to fully-tested algorithmic ecosystems. The
-optimization study achieved convergence across four step sizes with
-accuracy below \(10^{-4}\) relative error, completely validated by the
-39-test suite at 96.6\% statement coverage exceeding the 90\% threshold.
+This work demonstrates that the research template supports projects
+spanning the full spectrum---from prose-focused manuscripts to
+fully-tested algorithmic ecosystems. The optimization exemplar ties
+every quantitative claim to \texttt{output/data/} artifacts and enforces
+a zero-mock test policy on \texttt{projects/code\_project/src/} with
+coverage gates documented in the root \texttt{pyproject.toml}.
 
-As the ultimate proof of the template's architecture, consider the
-document you are reading right now. By operating entirely over the
-\texttt{infrastructure} components, the pipeline produced six robust
-figures, generated quantitative CSVs, and rendered this exact markdown
-file (\texttt{projects/code\_project/manuscript/04\_conclusion.md})
-alongside \texttt{config.yaml} flawlessly into a finalized PDF. The
-\texttt{code\_project} implementation stands as a fully verified
-blueprint for automated, reproducible computational research, showcasing
-the extraordinary depth of the \texttt{docxology/template} repository.
+The pipeline produced the figures referenced in \texttt{03\_results.md},
+wrote \texttt{optimization\_results.csv}, and rendered this markdown
+(\texttt{projects/code\_project/manuscript/04\_conclusion.md}) together
+with \texttt{config.yaml} into PDF through
+\texttt{infrastructure.rendering}. The \texttt{code\_project} tree
+remains the canonical reference for how algorithm code, analysis
+scripts, variable injection, and manuscript stay synchronized across
+rebuilds.
 \end{block}
 \end{frame}
 

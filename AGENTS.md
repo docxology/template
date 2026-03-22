@@ -89,7 +89,10 @@ The template now supports **multiple independent projects** within a single repo
 **Active Projects:**
 
 - `projects/code_project/` — Optimization research exemplar (master exemplar, numerical methods & convergence)
+- `projects/area_handbook/` — Holistic area reporting and living handbook (corpus, synthesis, multi-section manuscript)
 - `projects/cognitive_case_diagrams/` — Cognitive case system diagrams (categorical linguistics research)
+- `projects/density_bioscales/` — Gases, reference liquids, insect-scale mixture density, buoyancy, scenario intervals
+- `projects/traditional_newspaper/` — Tabloid-style 16-slice newspaper layout exemplar (multicolumn preamble + masthead figure)
 
 **Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -186,6 +189,9 @@ Each directory contains documentation for easy navigation:
 | Directory | AGENTS.md | README.md | Purpose |
 | --------- | --------- | --------- | ------- |
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
+| [`projects/area_handbook/`](projects/area_handbook/) | [AGENTS.md](projects/area_handbook/AGENTS.md) | [README.md](projects/area_handbook/README.md) | Area report and handbook synthesis |
+| [`projects/density_bioscales/`](projects/density_bioscales/) | [AGENTS.md](projects/density_bioscales/AGENTS.md) | [README.md](projects/density_bioscales/README.md) | Fluids, gases, insect-scale composite density |
+| [`projects/traditional_newspaper/`](projects/traditional_newspaper/) | [AGENTS.md](projects/traditional_newspaper/AGENTS.md) | [README.md](projects/traditional_newspaper/README.md) | Newspaper layout exemplar (16 folios) |
 | [`projects/biology_textbook/`](projects/biology_textbook/) | [AGENTS.md](projects/biology_textbook/AGENTS.md) | [README.md](projects/biology_textbook/README.md) | Biology textbook exemplar |
 | [`projects/project/`](projects/project/) | — | — | Minimal project scaffold |
 

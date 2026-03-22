@@ -1,0 +1,80 @@
+\frametitle{Methods: Synthesis, gaps, and coverage scores}
+\protect\phantomsection\label{methods-synthesis-gaps-and-coverage-scores}
+\textbf{Synthesis} (\texttt{src/synthesis.py}) maps each handbook
+section to the tuple of evidence items whose themes intersect the
+section's \texttt{theme\_ids}. The \textbf{coverage score} is computed
+by \texttt{section\_coverage\_score()}: the sum of weights for that
+section, capped at \(1.0\), so many weak items cannot masquerade as
+certainty.
+
+Sections whose score is \textbf{strictly below} the configured gap
+threshold (default \texttt{DEFAULT\_GAP\_THRESHOLD\ =\ 0.35}) are listed
+in \texttt{gaps}. Callers may pass
+\texttt{synthesize(corpus,\ gap\_threshold=…)} when a stricter or looser
+policy applies; the chosen value is stored on
+\texttt{SynthesisResult.gap\_threshold} and echoed in JSON metrics via
+\texttt{build\_metrics\_report()} (\texttt{gap\_threshold},
+\texttt{gap\_section\_ids}, \texttt{gap\_count}).
+
+Figure \ref{fig:coverage} shows section-level scores for the Riverbend
+fixture. Figure \ref{fig:bytheme} shows how many evidence rows attach to
+each theme id in the same fixture. Figure \ref{fig:gapstatus} repeats
+the section ordering used in metrics export (sorted ids) and colors bars
+by membership in \texttt{gap\_section\_ids}, so readers can see which
+chapters would be flagged without rereading JSON.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\linewidth,height=\textheight,keepaspectratio,alt={Riverbend fixture (version 2026.1): horizontal coverage score per handbook section (capped sum of matching evidence weights, range 0--1). Red dashed vertical line: current gap threshold from synthesis; sections strictly to the left would be listed in the JSON gaps array.}]{../figures/handbook_evidence_coverage.png}
+\caption{Riverbend fixture (version 2026.1): horizontal coverage score
+per handbook section (capped sum of matching evidence weights, range
+0--1). Red dashed vertical line: current gap threshold from synthesis;
+sections strictly to the left would be listed in the JSON gaps
+array.}\label{fig:coverage}
+\end{figure}
+
+Under the default threshold, the Riverbend exemplar places every outline
+section at or above the line (\texttt{gap\_count} is zero in
+\texttt{handbook\_report.json}), which is why the executive summary can
+describe a ``fully covered'' template run. The chart still documents the
+contract: any future corpus revision that drags a section left of the
+dashed line will surface automatically in the gap table from
+\texttt{build\_gap\_report\_md()} and in pipeline metrics.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\linewidth,height=\textheight,keepaspectratio,alt={Riverbend fixture: count of evidence rows per theme id after corpus validation (duplicate ids and invalid weights rejected at load). Bar height shows how many statements contribute to each thematic bucket used for section routing.}]{../figures/handbook_evidence_by_theme.png}
+\caption{Riverbend fixture: count of evidence rows per theme id after
+corpus validation (duplicate ids and invalid weights rejected at load).
+Bar height shows how many statements contribute to each thematic bucket
+used for section routing.}\label{fig:bytheme}
+\end{figure}
+
+The histogram is intentionally simple: it answers whether evidence
+volume is balanced across themes or concentrated in a few buckets. For
+Riverbend, economy, infrastructure, and recommendations each carry
+multiple rows, while every declared theme has at least one row
+(\texttt{themes\_without\_evidence} is empty). Editors use this view to
+spot missing thematic coverage before rewriting chapter prose.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.85\linewidth,height=\textheight,keepaspectratio,alt={Same scores as the coverage chart, sorted by section id, with bars colored by gap status: coral = section id in gap\_section\_ids (score strictly below threshold); steel blue = at or above threshold. For this fixture under the default threshold, all sections are above the line (empty gap list), illustrating a fully covered outline.}]{../figures/handbook_section_gap_status.png}
+\caption{Same scores as the coverage chart, sorted by section id, with
+bars colored by gap status: coral = section id in gap\_section\_ids
+(score strictly below threshold); steel blue = at or above threshold.
+For this fixture under the default threshold, all sections are above the
+line (empty gap list), illustrating a fully covered
+outline.}\label{fig:gapstatus}
+\end{figure}
+
+When \texttt{gap\_section\_ids} is non-empty, coral bars identify
+exactly which sections require new evidence or threshold tuning before
+publication. The sort order matches \texttt{scores\_by\_section} keys in
+JSON, which keeps figure inspection aligned with diff review of
+\texttt{handbook\_report.json}.
+
+Markdown bodies for preview or annex publication are assembled in
+\texttt{src/handbook\_md.py}: executive bullets, gap table,
+evidence-by-theme table, per-section evidence lists, and optional
+\texttt{build\_toc\_md()} for outline-only exports.

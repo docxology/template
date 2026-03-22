@@ -1,0 +1,145 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Glossary: Newspaper and pipeline terms}
+\protect\phantomsection\label{glossary-newspaper-and-pipeline-terms}
+Short definitions for readers of this exemplar (not a general journalism
+style guide).
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.2727}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7273}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Term
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Meaning here
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\textbf{Folio} & One manuscript slice (\texttt{01\_*.md} \ldots{}
+\texttt{16\_*.md}) that becomes a new page boundary in the combined PDF
+after the previous slice (plus template title front matter). \\
+\textbf{Masthead} & The nameplate graphic at the top of the front page;
+raster asset \texttt{output/figures/masthead.png}. \\
+\textbf{Slice} & Same as folio file: one ordered markdown unit in
+\texttt{manuscript/}. \\
+\textbf{Preamble} & \texttt{manuscript/preamble.md}: LaTeX injected into
+the Pandoc document (geometry, \texttt{graphicx}, \texttt{multicol}). \\
+\textbf{Raw LaTeX block} & Pandoc fenced region
+\texttt{\textasciigrave{}\textasciigrave{}\textasciigrave{}\{=latex\}}
+\ldots{} \texttt{\textasciigrave{}\textasciigrave{}\textasciigrave{}}
+passing TeX through to the PDF engine. \\
+\textbf{Thin orchestrator} & Script under \texttt{scripts/} that only
+configures paths, logging, and calls \texttt{src/newspaper/}
+functions. \\
+\textbf{Fixture copy} & Deterministic placeholder paragraphs from
+\texttt{newspaper.content.fixture\_copy} / \texttt{fixture\_paragraph}
+for layout stress tests. \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The sixteen core folios are the ``edition pages''; \texttt{S01\_*} and
+\texttt{98\_*} files document the system without changing the numbering
+of those pages.
+\end{frame}
+
+\end{document}

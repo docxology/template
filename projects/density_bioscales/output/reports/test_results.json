@@ -1,0 +1,97 @@
+{
+  "timestamp": "2026-03-22T15:44:43.304215",
+  "infrastructure": {},
+  "project": {
+    "passed": 47,
+    "failed": 0,
+    "skipped": 0,
+    "total": 47,
+    "warnings": 0,
+    "exit_code": 0,
+    "discovery_count": 47,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 5.24,
+      "collection": 5.24,
+      "execution": 5.24
+    },
+    "test_categories": {},
+    "coverage_percent": 100.0,
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 47,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 47,
+    "all_passed": true,
+    "project_coverage": 100.0
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 100.0,
+      "total_executed": 160,
+      "total_missing": 0,
+      "total_excluded": 0,
+      "total_lines": 160,
+      "file_coverage": {
+        "projects/density_bioscales/src/buoyancy.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 21,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 21
+        },
+        "projects/density_bioscales/src/composite_density.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 18,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 18
+        },
+        "projects/density_bioscales/src/constants.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 8,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 8
+        },
+        "projects/density_bioscales/src/envelopes.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 17,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 17
+        },
+        "projects/density_bioscales/src/fluid_reference.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 10,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 10
+        },
+        "projects/density_bioscales/src/ideal_gas.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 17,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 17
+        },
+        "projects/density_bioscales/src/insect_composition.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 34,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 34
+        },
+        "projects/density_bioscales/src/scenarios.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 35,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 35
+        }
+      }
+    }
+  }
+}

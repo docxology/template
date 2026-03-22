@@ -1,0 +1,88 @@
+\frametitle{Appendix: YAML corpus schema (normative summary)}
+\protect\phantomsection\label{appendix-yaml-corpus-schema-normative-summary}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2188}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3438}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4375}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Field
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Location
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Constraint
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\texttt{area\_id} & root & Non-empty string \\
+\texttt{area\_label} & root & Non-empty string \\
+\texttt{version} & root & Non-empty string (semantic or calendar
+versioning recommended) \\
+\texttt{themes} & root & Non-empty list of objects with \texttt{id},
+\texttt{label}, \texttt{description} \\
+\texttt{evidence} & root & List (may be empty) of objects with
+\texttt{id}, \texttt{statement}, \texttt{theme}, \texttt{weight},
+\texttt{source\_label}, \texttt{reviewed\_at} \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Each \texttt{evidence.theme} must equal some \texttt{themes{[}{]}.id}.
+Weights are unitless credibility or strength signals capped per row at
+\(1.0\); section scores cap the sum per chapter at \(1.0\) in
+\texttt{src/synthesis.py}.
+
+\textbf{Example evidence object (Riverbend).}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ ev{-}007}
+\AttributeTok{  }\FunctionTok{statement}\KeywordTok{:}\AttributeTok{ Deferred bridge maintenance now spans 47 structures flagged as priority repair.}
+\AttributeTok{  }\FunctionTok{theme}\KeywordTok{:}\AttributeTok{ infrastructure}
+\AttributeTok{  }\FunctionTok{weight}\KeywordTok{:}\AttributeTok{ }\FloatTok{0.9}
+\AttributeTok{  }\FunctionTok{source\_label}\KeywordTok{:}\AttributeTok{ DOT condition database export}
+\AttributeTok{  }\FunctionTok{reviewed\_at}\KeywordTok{:}\AttributeTok{ }\StringTok{"2025{-}11{-}28"}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Example theme object.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{{-}}\AttributeTok{ }\FunctionTok{id}\KeywordTok{:}\AttributeTok{ infrastructure}
+\AttributeTok{  }\FunctionTok{label}\KeywordTok{:}\AttributeTok{ Infrastructure}
+\AttributeTok{  }\FunctionTok{description}\KeywordTok{:}\AttributeTok{ Transport, utilities, broadband, and maintenance backlogs.}
+\end{Highlighting}
+\end{Shaded}
+
+Machine-readable outline and metrics after a build:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{projects/area\_handbook/output/data/area\_outline.json}
+\item
+  \texttt{projects/area\_handbook/output/data/handbook\_report.json}
+\item
+  \texttt{projects/area\_handbook/output/data/handbook\_toc.md}
+\end{itemize}
+
+The combined human-readable rollup lives in \texttt{handbook\_body.md}
+in the same directory.
+
+\textbf{Figures and registry.} Running
+\texttt{scripts/02\_generate\_handbook\_figure.py} writes PNGs under
+\texttt{projects/area\_handbook/output/figures/} and updates
+\texttt{figure\_registry.json} for validation. Manuscript labels
+\texttt{fig:coverage}, \texttt{fig:bytheme}, and \texttt{fig:gapstatus}
+must stay aligned with that script.
+
+\textbf{Empty evidence list.} An empty \texttt{evidence} array still
+instantiates all template sections with score zero; metrics report
+\texttt{gap\_count} equal to section count. This edge case is tested to
+prevent divide-by-zero surprises in coverage ratios.
+
+\textbf{JSON interchange.} \texttt{load\_corpus\_from\_dict} accepts
+Python dicts shaped like parsed JSON for tests and API adapters; the
+same constraints as YAML apply {[}@template2026{]}.

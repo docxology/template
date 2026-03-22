@@ -1,0 +1,128 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Supplement: Limitations and assumptions}
+\protect\phantomsection\label{supplement-limitations-and-assumptions}
+This exemplar prioritizes \textbf{reproducibility and teachability} over
+geographic realism. Riverbend is fictional; weights and source labels
+illustrate schema use, not empirical findings about any jurisdiction.
+
+\textbf{No live data.} The pipeline does not call HTTP APIs, scrape
+documents, or perform NLP on attachments. Every number in the handbook
+narrative traces to a hand-authored YAML row or to derived metrics
+computed from those rows.
+
+\textbf{Weights are subjective.} Reviewers assign \texttt{weight} in
+\([0,1]\) without a universal rubric. Cross-team calibration is a
+governance task outside this repository; the code assumes weights are
+already consensus values.
+
+\textbf{Single corpus per build.} The scripts load one fixture path
+(\texttt{data/fixtures/riverbend\_area.yaml} in production use of this
+demo). Merging multiple corpora or federating regions would require new
+modules and tests, not configuration toggles alone.
+
+\textbf{Outline static in code.} \texttt{HANDBOOK\_TEMPLATE} is Python
+source, not a per-area YAML file. Customizing chapters without editing
+code is possible only within the existing section files and themes;
+adding a ninth scored section demands code and test updates.
+
+\textbf{Citation depth.} \texttt{source\_label} is a short string, not a
+BibTeX key. Formal citations belong in manuscript markdown using
+\texttt{references.bib}; the corpus stays lean {[}@bowker2005{]}.
+
+\textbf{Threshold semantics.} ``Gap'' means strictly below threshold,
+not ``close.'' Sections barely above the line still pass; policy teams
+may want stricter thresholds or secondary rules implemented in future
+metrics fields.
+\end{frame}
+
+\end{document}

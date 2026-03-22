@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>_combined_manuscript</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+
+<style>
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: #2c3e50;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#abstract" id="toc-abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#introduction" id="toc-introduction"><span
+class="toc-section-number">2</span> Introduction</a></li>
+<li><a href="#methods-corpus-model" id="toc-methods-corpus-model"><span
+class="toc-section-number">3</span> Methods: Corpus model</a></li>
+<li><a href="#methods-outline-and-chapter-routing"
+id="toc-methods-outline-and-chapter-routing"><span
+class="toc-section-number">4</span> Methods: Outline and chapter
+routing</a></li>
+<li><a href="#methods-synthesis-gaps-and-coverage-scores"
+id="toc-methods-synthesis-gaps-and-coverage-scores"><span
+class="toc-section-number">5</span> Methods: Synthesis, gaps, and
+coverage scores</a></li>
+<li><a href="#methods-quality-gates-on-the-corpus-file"
+id="toc-methods-quality-gates-on-the-corpus-file"><span
+class="toc-section-number">6</span> Methods: Quality gates on the corpus
+file</a></li>
+<li><a href="#landscape-and-setting"
+id="toc-landscape-and-setting"><span class="toc-section-number">7</span>
+Landscape and setting</a></li>
+<li><a href="#communities-and-civic-life"
+id="toc-communities-and-civic-life"><span
+class="toc-section-number">8</span> Communities and civic life</a></li>
+<li><a href="#economy-and-livelihoods"
+id="toc-economy-and-livelihoods"><span
+class="toc-section-number">9</span> Economy and livelihoods</a></li>
+<li><a href="#infrastructure-and-connectivity"
+id="toc-infrastructure-and-connectivity"><span
+class="toc-section-number">10</span> Infrastructure and
+connectivity</a></li>
+<li><a href="#environment-and-stewardship"
+id="toc-environment-and-stewardship"><span
+class="toc-section-number">11</span> Environment and
+stewardship</a></li>
+<li><a href="#governance-and-services"
+id="toc-governance-and-services"><span
+class="toc-section-number">12</span> Governance and services</a></li>
+<li><a href="#cross-cutting-risks" id="toc-cross-cutting-risks"><span
+class="toc-section-number">13</span> Cross-cutting risks</a></li>
+<li><a href="#recommendations" id="toc-recommendations"><span
+class="toc-section-number">14</span> Recommendations</a></li>
+<li><a href="#handbook-maintenance" id="toc-handbook-maintenance"><span
+class="toc-section-number">15</span> Handbook maintenance</a></li>
+<li><a href="#stakeholders-and-use-cases"
+id="toc-stakeholders-and-use-cases"><span
+class="toc-section-number">16</span> Stakeholders and use cases</a></li>
+<li><a href="#appendix-yaml-corpus-schema-normative-summary"
+id="toc-appendix-yaml-corpus-schema-normative-summary"><span
+class="toc-section-number">17</span> Appendix: YAML corpus schema
+(normative summary)</a></li>
+<li><a href="#supplement-limitations-and-assumptions"
+id="toc-supplement-limitations-and-assumptions"><span
+class="toc-section-number">18</span> Supplement: Limitations and
+assumptions</a></li>
+<li><a href="#supplement-worked-example-reading-riverbend-end-to-end"
+id="toc-supplement-worked-example-reading-riverbend-end-to-end"><span
+class="toc-section-number">19</span> Supplement: Worked example —
+reading Riverbend end to end</a></li>
+<li><a href="#manuscript-syntax-area-handbook"
+id="toc-manuscript-syntax-area-handbook"><span
+class="toc-section-number">20</span> Manuscript syntax (area
+handbook)</a>
+<ul>
+<li><a href="#citations" id="toc-citations"><span
+class="toc-section-number">20.1</span> Citations</a></li>
+<li><a href="#figures" id="toc-figures"><span
+class="toc-section-number">20.2</span> Figures</a></li>
+<li><a href="#section-files" id="toc-section-files"><span
+class="toc-section-number">20.3</span> Section files</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 data-number="1" id="abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>Holistic area reports aggregate geography, communities, economy,
+infrastructure, environment, and governance into a single maintained
+narrative. This project treats the <strong>handbook</strong> as a
+versioned artifact: evidence items with themes and weights roll up into
+chapter-level coverage scores (with a configurable gap threshold),
+unused themes and duplicate corpus ids are detected at load time, and
+analysis scripts regenerate figures plus JSON and Markdown rollups from
+a committed fixture corpus <span class="citation"
+data-cites="bowker2005 template2026">[@bowker2005;
+@template2026]</span>.</p>
+<p>The Riverbend Metropolitan Area fixture demonstrates the full path
+offline: seventeen evidence rows span eight handbook themes, each row
+carrying <code>source_label</code> and <code>reviewed_at</code> so
+reviewers can see how fresh a claim is without opening side
+spreadsheets. Synthesis caps section scores at unity, lists gaps when
+scores sit strictly below policy threshold, and emits
+<code>handbook_report.json</code> for dashboards or funder reporting.
+Figures show per-section coverage, evidence counts by theme, and
+gap-aware coloring so visual review stays aligned with machine-readable
+metrics.</p>
+<p>The workflow is offline-first, reproducible, and aligned with the
+template thin-orchestrator pattern so that prose, code, and outputs stay
+traceable across update cycles <span class="citation"
+data-cites="edwards2010">[@edwards2010]</span>. Boundary-style
+collaboration—planners, funders, and residents interpreting the same
+outline files differently but converging on shared versions—mirrors how
+provenance-aware systems stabilize meaning across communities of
+practice <span class="citation"
+data-cites="gray2005 star1989">[@gray2005; @star1989]</span>. LLM
+assists are disabled in this exemplar’s <code>config.yaml</code> so CI
+and local builds remain deterministic.</p>
+<hr />
+<h1 data-number="2" id="introduction"><span
+class="header-section-number">2</span> Introduction</h1>
+<p>Regions, counties, and cross-border metros rarely lack data; they
+lack <strong>shared, maintained synthesis</strong>. Dashboards age, PDFs
+fork, and narrative documents drift from underlying sources. A
+<strong>living handbook</strong> addresses this by binding three
+commitments:</p>
+<ol type="1">
+<li><strong>Structured evidence</strong> — Each claim carries a theme,
+source label, review date, and explicit weight.</li>
+<li><strong>Deterministic rollups</strong> — Section coverage and gap
+lists derive from the same rules on every build.</li>
+<li><strong>Pipeline coupling</strong> — Figures and tables are
+regenerated by tested scripts before PDF rendering.</li>
+</ol>
+<p>Stakeholders include planners, funders, and community liaisons who
+need a single entry point that still respects provenance <span
+class="citation" data-cites="gray2005">[@gray2005]</span>. Update
+cadence can follow fiscal quarters, grant milestones, or incident-driven
+reviews; the corpus <code>version</code> string records which snapshot
+the rendered handbook reflects, while <code>reviewed_at</code> on each
+evidence row signals row-level freshness inside that snapshot.</p>
+<p>The Riverbend Metropolitan Area fixture in
+<code>data/fixtures/riverbend_area.yaml</code> illustrates the pattern
+without network calls: it is fictional, exhaustive across declared
+themes, and safe for continuous integration. Evidence
+<code>ev-001</code> and <code>ev-002</code> anchor the landscape chapter
+to watershed extent and post-slide zoning; <code>ev-005</code> through
+<code>ev-008</code> tie economy and infrastructure to payroll mix,
+commute trends, bridge backlog, and broadband reach. Authoring
+conventions for this manuscript live in <a
+href="handbook_syntax.md">handbook_syntax.md</a>.</p>
+<p><strong>Why YAML first.</strong> The corpus is intentionally flatter
+than a full knowledge graph: reviewers can diff pull requests, auditors
+can grep for <code>source_label</code>, and the loader can fail fast on
+schema violations <span class="citation"
+data-cites="bowker2005">[@bowker2005]</span>. Bibliographic richness
+stays in <code>references.bib</code> for the narrative; the corpus
+records <em>which institutional artifact</em> backed a row, not a
+complete citation object.</p>
+<p><strong>Roles and boundary objects.</strong> Outline JSON, coverage
+plots, and <code>handbook_report.json</code> function as shared
+artifacts that technical staff, policy staff, and external partners
+interpret differently while pinning releases to the same file hashes
+<span class="citation" data-cites="star1989">[@star1989]</span>. When a
+chapter’s bar sits left of the gap threshold, the gap list names a
+<code>section_id</code> that is stable in PDF, HTML, and JSON—reducing
+translation error between “the economy chapter feels thin” and
+“<code>06_economy</code> is below threshold 0.35.”</p>
+<p><strong>Scope.</strong> This exemplar does not ingest live APIs,
+scrape the web, or resolve DOIs for evidence rows. It shows how a frozen
+corpus plus tested Python modules produce reproducible handbook bodies,
+slides, and web mirrors under the template pipeline <span
+class="citation" data-cites="template2026">[@template2026]</span>.</p>
+<hr />
+<h1 data-number="3" id="methods-corpus-model"><span
+class="header-section-number">3</span> Methods: Corpus model</h1>
+<p>The <strong>area corpus</strong> is a YAML (or JSON) document
+with:</p>
+<ul>
+<li><strong>Identity</strong> — <code>area_id</code>,
+<code>area_label</code>, and semantic <code>version</code>.</li>
+<li><strong>Themes</strong> — Stable identifiers used to route evidence
+into handbook chapters; each theme includes human-readable
+<code>label</code> and <code>description</code> for glossaries and
+reviewer orientation.</li>
+<li><strong>Evidence</strong> — Atomic statements with
+<code>theme</code>, <code>weight</code> in <span
+class="math inline">\([0,1]\)</span>, <code>source_label</code>, and
+<code>reviewed_at</code>.</li>
+</ul>
+<p>Validation rejects unknown themes, out-of-range or non-finite
+weights, blank text fields, <strong>duplicate</strong>
+<code>themes[].id</code> or <code>evidence[].id</code> values, and
+missing keys so corrupt files fail fast at load time. The loader lives
+in <code>src/corpus_io.py</code> and is covered by dedicated tests
+(including JSON and YAML entry points).</p>
+<p><strong>Weights as bounded signals.</strong> Each evidence
+<code>weight</code> is a single scalar in <span
+class="math inline">\([0,1]\)</span>. It is not a probability
+distribution across rows; it is a reviewer-assigned strength or
+credibility hint. During synthesis,
+<code>section_coverage_score()</code> sums weights for all evidence
+whose <code>theme</code> matches a section’s <code>theme_ids</code>,
+then caps the sum at <span class="math inline">\(1.0\)</span>. That cap
+prevents stacking many low-confidence rows into an artificially
+“certain” chapter score.</p>
+<p><strong>Provenance is intentionally lightweight.</strong> The field
+<code>source_label</code> names the document, export, or system row that
+justified the statement—e.g., “Regional GIS Compendium 2024” or “DOT
+condition database export”—without embedding a full citation graph in
+the corpus. Bibliographic detail remains in <code>references.bib</code>
+for the manuscript narrative layer. <code>reviewed_at</code> uses
+ISO-8601 dates so freshness checks sort lexicographically and render
+cleanly in Markdown tables.</p>
+<p><strong>Riverbend shape.</strong> The fixture declares eight themes
+(landscape through recommendations) and seventeen evidence rows. Every
+theme receives at least one row, which yields an empty
+<code>themes_without_evidence</code> list in metrics—a deliberate “happy
+path” for teaching the pipeline. Sparse corpora in tests demonstrate the
+opposite: empty <code>themes_without_evidence</code> is not guaranteed
+when teams add themes before evidence arrives.</p>
+<hr />
+<h1 data-number="4" id="methods-outline-and-chapter-routing"><span
+class="header-section-number">4</span> Methods: Outline and chapter
+routing</h1>
+<p>Handbook chapters follow a <strong>fixed template</strong>
+(<code>HANDBOOK_TEMPLATE</code> in <code>src/outline.py</code>). Each
+chapter lists one or more <code>theme_ids</code>; evidence items whose
+<code>theme</code> matches are attached during synthesis.</p>
+<p>Ordering is lexicographic by <code>section_id</code> after discovery
+in the manuscript directory; numeric prefixes (<code>04_</code>,
+<code>05_</code>, …) keep print and PDF alignment with the conceptual
+flow: landscape through recommendations. The template lists eight
+sections (<code>04_landscape</code> … <code>11_recommendations</code>);
+manuscript files <code>12_</code>–<code>14_</code> extend the bound
+volume with maintenance guidance, stakeholder notes, and schema appendix
+without altering the core scoring template unless
+<code>HANDBOOK_TEMPLATE</code> is edited in code.</p>
+<p><strong>One-to-many routing.</strong> A single theme id may feed
+multiple sections if the template repeats it, but in this exemplar each
+operational theme maps to its namesake chapter. Recommendations-themed
+evidence rolls into <code>11_recommendations</code>; risks-themed
+evidence into <code>10_risks</code>. That keeps reviewer mental models
+simple: the YAML <code>theme</code> field is the bucket name reviewers
+already use in workshops.</p>
+<p><strong>Stability for tests and diffs.</strong> The template can
+later be parameterized per area (e.g., coastal zones inserting hazard
+chapters) while keeping the same synthesis interface. For this exemplar,
+the outline is static so tests assert stable section counts,
+deterministic score keys, and reproducible
+<code>area_outline.json</code>. Any pull request that changes
+<code>HANDBOOK_TEMPLATE</code> should update tests, fixture
+expectations, and manuscript headings together.</p>
+<p><strong>Manuscript discovery.</strong> Rendering combines numbered
+section files, optional <code>S01_</code>–style supplemental markdown,
+then glossary and references buckets per
+<code>infrastructure.rendering.manuscript_discovery</code>. Authors
+should keep <code>section_id</code> strings in code, JSON, and filenames
+aligned so cross-links and gap reports do not drift.</p>
+<hr />
+<h1 data-number="5"
+id="methods-synthesis-gaps-and-coverage-scores"><span
+class="header-section-number">5</span> Methods: Synthesis, gaps, and
+coverage scores</h1>
+<p><strong>Synthesis</strong> (<code>src/synthesis.py</code>) maps each
+handbook section to the tuple of evidence items whose themes intersect
+the section’s <code>theme_ids</code>. The <strong>coverage
+score</strong> is computed by <code>section_coverage_score()</code>: the
+sum of weights for that section, capped at <span
+class="math inline">\(1.0\)</span>, so many weak items cannot masquerade
+as certainty.</p>
+<p>Sections whose score is <strong>strictly below</strong> the
+configured gap threshold (default
+<code>DEFAULT_GAP_THRESHOLD = 0.35</code>) are listed in
+<code>gaps</code>. Callers may pass
+<code>synthesize(corpus, gap_threshold=…)</code> when a stricter or
+looser policy applies; the chosen value is stored on
+<code>SynthesisResult.gap_threshold</code> and echoed in JSON metrics
+via <code>build_metrics_report()</code> (<code>gap_threshold</code>,
+<code>gap_section_ids</code>, <code>gap_count</code>).</p>
+<p>Figure <span class="math inline">\(\ref{fig:coverage}\)</span> shows
+section-level scores for the Riverbend fixture. Figure <span
+class="math inline">\(\ref{fig:bytheme}\)</span> shows how many evidence
+rows attach to each theme id in the same fixture. Figure <span
+class="math inline">\(\ref{fig:gapstatus}\)</span> repeats the section
+ordering used in metrics export (sorted ids) and colors bars by
+membership in <code>gap_section_ids</code>, so readers can see which
+chapters would be flagged without rereading JSON.</p>
+<figure id="fig:coverage">
+<img src="../output/figures/handbook_evidence_coverage.png"
+style="width:85.0%"
+alt="Riverbend fixture (version 2026.1): horizontal coverage score per handbook section (capped sum of matching evidence weights, range 0–1). Red dashed vertical line: current gap threshold from synthesis; sections strictly to the left would be listed in the JSON gaps array." />
+<figcaption aria-hidden="true">Riverbend fixture (version 2026.1):
+horizontal coverage score per handbook section (capped sum of matching
+evidence weights, range 0–1). Red dashed vertical line: current gap
+threshold from synthesis; sections strictly to the left would be listed
+in the JSON gaps array.</figcaption>
+</figure>
+<p>Under the default threshold, the Riverbend exemplar places every
+outline section at or above the line (<code>gap_count</code> is zero in
+<code>handbook_report.json</code>), which is why the executive summary
+can describe a “fully covered” template run. The chart still documents
+the contract: any future corpus revision that drags a section left of
+the dashed line will surface automatically in the gap table from
+<code>build_gap_report_md()</code> and in pipeline metrics.</p>
+<figure id="fig:bytheme">
+<img src="../output/figures/handbook_evidence_by_theme.png"
+style="width:80.0%"
+alt="Riverbend fixture: count of evidence rows per theme id after corpus validation (duplicate ids and invalid weights rejected at load). Bar height shows how many statements contribute to each thematic bucket used for section routing." />
+<figcaption aria-hidden="true">Riverbend fixture: count of evidence rows
+per theme id after corpus validation (duplicate ids and invalid weights
+rejected at load). Bar height shows how many statements contribute to
+each thematic bucket used for section routing.</figcaption>
+</figure>
+<p>The histogram is intentionally simple: it answers whether evidence
+volume is balanced across themes or concentrated in a few buckets. For
+Riverbend, economy, infrastructure, and recommendations each carry
+multiple rows, while every declared theme has at least one row
+(<code>themes_without_evidence</code> is empty). Editors use this view
+to spot missing thematic coverage before rewriting chapter prose.</p>
+<figure id="fig:gapstatus">
+<img src="../output/figures/handbook_section_gap_status.png"
+style="width:85.0%"
+alt="Same scores as the coverage chart, sorted by section id, with bars colored by gap status: coral = section id in gap_section_ids (score strictly below threshold); steel blue = at or above threshold. For this fixture under the default threshold, all sections are above the line (empty gap list), illustrating a fully covered outline." />
+<figcaption aria-hidden="true">Same scores as the coverage chart, sorted
+by section id, with bars colored by gap status: coral = section id in
+gap_section_ids (score strictly below threshold); steel blue = at or
+above threshold. For this fixture under the default threshold, all
+sections are above the line (empty gap list), illustrating a fully
+covered outline.</figcaption>
+</figure>
+<p>When <code>gap_section_ids</code> is non-empty, coral bars identify
+exactly which sections require new evidence or threshold tuning before
+publication. The sort order matches <code>scores_by_section</code> keys
+in JSON, which keeps figure inspection aligned with diff review of
+<code>handbook_report.json</code>.</p>
+<p>Markdown bodies for preview or annex publication are assembled in
+<code>src/handbook_md.py</code>: executive bullets, gap table,
+evidence-by-theme table, per-section evidence lists, and optional
+<code>build_toc_md()</code> for outline-only exports.</p>
+<hr />
+<h1 data-number="6" id="methods-quality-gates-on-the-corpus-file"><span
+class="header-section-number">6</span> Methods: Quality gates on the
+corpus file</h1>
+<p>Before synthesis runs, <code>src/corpus_io.py</code> rejects files
+that would silently corrupt metrics:</p>
+<ul>
+<li><strong>Unique ids</strong> — Duplicate <code>themes[].id</code> or
+<code>evidence[].id</code> values raise
+<code>CorpusValidationError</code>.</li>
+<li><strong>Non-empty text fields</strong> — Theme <code>label</code>
+and <code>description</code>, evidence <code>statement</code>,
+<code>source_label</code>, and <code>reviewed_at</code> must be
+non-blank after stripping.</li>
+<li><strong>Numeric weights</strong> — Each <code>weight</code> must
+parse as a finite float in <span class="math inline">\([0, 1]\)</span>
+(NaN and infinity are rejected).</li>
+</ul>
+<p>These checks keep CI deterministic: the same YAML on disk always
+loads or always fails with an actionable message. Downstream
+<code>src/corpus_stats.py</code> then reports themes that have
+<strong>zero</strong> evidence rows, which is valid (reserved buckets)
+but visible in the executive summary Markdown.</p>
+<p><strong>Operational implications.</strong> Teams can run the project
+test suite locally before pushing corpus edits; failures point to
+line-level validation rather than cryptic PDF breaks later. The gates
+also protect multi-author editing: two contributors cannot both add
+<code>ev-001</code> without merge resolution—the second duplicate id
+triggers an exception at load.</p>
+<p><strong>Cross-field consistency.</strong> Every
+<code>evidence.theme</code> must reference an existing
+<code>themes[].id</code>. Typos therefore surface immediately (“economy”
+vs “economy_sector”) instead of producing silent empty matches during
+synthesis. Combined with the cap on section scores, these rules keep the
+handbook honest about what was reviewed and what was never supplied.</p>
+<p><strong>Downstream consumers.</strong>
+<code>handbook_report.json</code> carries <code>evidence_count</code>,
+<code>theme_count</code>, <code>gap_count</code>, and
+<code>themes_without_evidence</code>. Oversight bodies can treat
+non-zero <code>themes_without_evidence</code> or rising
+<code>gap_count</code> under a fixed threshold as signals to schedule
+evidence workshops—not as build failures, but as explicit visibility
+<span class="citation"
+data-cites="template2026">[@template2026]</span>.</p>
+<hr />
+<h1 data-number="7" id="landscape-and-setting"><span
+class="header-section-number">7</span> Landscape and setting</h1>
+<p>Riverbend spans two watersheds feeding a shared estuary; hillside
+zoning tightened after repeated slide seasons. These facts anchor
+transportation, hazard planning, and conservation priorities.</p>
+<p>The corpus ties <strong>landscape</strong>-themed evidence to this
+chapter; synthesis surfaces both strengths (GIS-backed extent data) and
+places where only policy narrative exists without quantitative
+backup.</p>
+<p><strong>Evidence in the fixture.</strong> Row <code>ev-001</code>
+(weight 0.9, Regional GIS Compendium 2024) states the core county spans
+420 square miles with two major watersheds feeding the Riverbend
+estuary—establishing geographic scale for every downstream chapter that
+references “the region.” Row <code>ev-002</code> (weight 0.7, County
+zoning bulletin Q3/2025) records hillside development restrictions after
+the 2019 slide season, linking land-use law to hazard history. Together
+they give handbook authors concrete source labels to echo in prose while
+keeping numbers traceable to reviewed rows.</p>
+<p><strong>Synthesis view.</strong> Landscape evidence is among the
+strongest-weighted rows in Riverbend; under the default gap threshold
+the landscape section clears the bar with room to spare. If a future
+corpus revision removed <code>ev-001</code> or slashed weights, the
+coverage chart and <code>gap_section_ids</code> would show the
+regression before narrative edits masked it.</p>
+<p><strong>Editorial practice.</strong> When new lidar or watershed
+models arrive, add evidence rows rather than overwriting chapter
+paragraphs alone. Bump <code>version</code> when those rows materially
+change scores, and cite the new <code>source_label</code> in the
+handbook text so PDF readers can align sentences with corpus metadata
+<span class="citation"
+data-cites="edwards2010">[@edwards2010]</span>.</p>
+<hr />
+<h1 data-number="8" id="communities-and-civic-life"><span
+class="header-section-number">8</span> Communities and civic life</h1>
+<p>Unincorporated neighborhoods without chartered councils and
+overstretched youth programs illustrate how <strong>communities</strong>
+evidence maps to service gaps. Handbook readers should see both
+demographic pressure points and civic infrastructure that still
+functions.</p>
+<p>Updates to this chapter should add dated evidence rows rather than
+rewriting paragraphs ad hoc, preserving auditability.</p>
+<p><strong>Fixture rows.</strong> <code>ev-003</code> (weight 0.8)
+reports twelve unincorporated neighborhoods lack a permanent community
+council charter, sourced to an internal civic inventory spreadsheet
+reviewed 2025-10-18. <code>ev-004</code> (weight 0.65) notes youth
+program waitlists exceed capacity in three east-bank school districts,
+with the school district annual report 2025 as provenance. The weight
+spread reflects slightly higher confidence in the charter gap count than
+in the waitlist claim, a judgment reviewers encode explicitly rather
+than hiding in prose.</p>
+<p><strong>Why both rows matter.</strong> Council charters and youth
+programs are different failure modes—governance form versus service
+throughput—but both sit in the communities theme so synthesis can roll
+them into one chapter score. If either row were removed, the section
+score would fall, potentially triggering a gap flag under stricter
+thresholds.</p>
+<p><strong>Handbook voice.</strong> Narrative paragraphs can humanize
+the spreadsheet facts, but the corpus remains the authority for “how
+many neighborhoods” and “which school districts.” That split mirrors
+database provenance practice: store the atomic claim once, reference it
+many times <span class="citation"
+data-cites="gray2005">[@gray2005]</span>.</p>
+<p><strong>Maintenance.</strong> When a district publishes a new annual
+report, add a superseding row or bump <code>reviewed_at</code> on a
+revised statement; avoid silent edits that leave old dates on new
+numbers.</p>
+<hr />
+<h1 data-number="9" id="economy-and-livelihoods"><span
+class="header-section-number">9</span> Economy and livelihoods</h1>
+<p>Sector concentration (healthcare and logistics) and lengthening
+commutes describe a labor market that is employed yet stressed for time.
+<strong>Economy</strong> evidence items capture payroll composition and
+travel-cost signals.</p>
+<p>Economic narratives in the handbook should cite the same source
+labels as the corpus so PDF and data exports do not diverge.</p>
+<p><strong>Evidence detail.</strong> <code>ev-005</code> (weight 0.85,
+State labor market review) states healthcare and logistics account for
+34% of payroll employment region-wide—a single scalar summarizing sector
+concentration. <code>ev-006</code> (weight 0.55, ACS five-year
+comparison) records median commute time rose six minutes between 2018
+and 2024 despite flat population, signaling time poverty even when
+headcounts hold steady. The lower weight on <code>ev-006</code> invites
+future corroboration from employer surveys or mode-share data without
+discarding the commute signal today.</p>
+<p><strong>Reading the charts.</strong> In Figure <span
+class="math inline">\(\ref{fig:bytheme}\)</span>, economy shares the bar
+chart with other themes; Riverbend carries two economy rows, matching
+the two statements above. Coverage charts show how those rows combine
+with the template’s <code>theme_ids</code> for <code>06_economy</code>
+to produce a bounded section score.</p>
+<p><strong>Policy links.</strong> Concentration and commute duration
+interact with infrastructure and environment chapters: bridge delays and
+heat exposure can compound commute stress. Cross-chapter reading is
+intentional; the risks chapter (<code>10_risks</code>) names systemic
+couplings explicitly.</p>
+<p><strong>Data hygiene.</strong> When labor market reviews update NAICS
+rollups or ACS releases new vintages, add rows or deprecate old ones in
+the corpus rather than patching PDFs only <span class="citation"
+data-cites="bowker2005">[@bowker2005]</span>.</p>
+<hr />
+<h1 data-number="10" id="infrastructure-and-connectivity"><span
+class="header-section-number">10</span> Infrastructure and
+connectivity</h1>
+<p>Bridge maintenance backlogs and uneven broadband coverage are classic
+<strong>infrastructure</strong> themes. The fixture encodes both
+physical asset risk and digital divide geography.</p>
+<p>Handbook maintenance teams can prioritize bond packages or grant
+applications using gap flags when coverage scores fall below policy
+thresholds.</p>
+<p><strong>Evidence rows.</strong> <code>ev-007</code> (weight 0.9, DOT
+condition database export) states deferred bridge maintenance spans 47
+structures flagged as priority repair—high confidence because asset
+registries are auditable. <code>ev-008</code> (weight 0.75, Broadband
+map consortium) reports fiber-to-premises coverage reaches 78% of
+households with rural gaps along the northern ridge. Together they pair
+heavy civil liability with last-mile equity, a common pairing in
+regional handbooks.</p>
+<p><strong>Synthesis and finance.</strong> Strong weights on both rows
+help the infrastructure section score stay robust under default
+thresholds. If bond scoring workflows consume
+<code>handbook_report.json</code>, teams can watch
+<code>scores_by_section</code> for <code>07_infrastructure</code>
+alongside raw evidence counts to see whether narrative urgency matches
+quantitative backing.</p>
+<p><strong>Digital divide nuance.</strong> The broadband row is
+explicitly geographic (“northern ridge”), which handbook prose should
+preserve rather than generalizing to “rural areas” without naming the
+ridge feature, unless new evidence broadens the claim.</p>
+<p><strong>Operations.</strong> When DOT exports a new quarterly
+extract, version the corpus and add or update rows so
+<code>reviewed_at</code> reflects the extract date <span
+class="citation" data-cites="template2026">[@template2026]</span>.</p>
+<hr />
+<h1 data-number="11" id="environment-and-stewardship"><span
+class="header-section-number">11</span> Environment and stewardship</h1>
+<p>Wildland-urban interface expansion and improved sewer overflow
+performance sit in tension: growth pressure versus capital investment
+wins. <strong>Environment</strong> evidence should be reviewed after
+major projects or regulatory cycles.</p>
+<p>Linking environmental claims to dated review metadata avoids stale
+hazard language after remediation.</p>
+<p><strong>Rows in Riverbend.</strong> <code>ev-009</code> (weight 0.7,
+Remote sensing memo 2025) documents wildland-urban interface acres grew
+11% since the last land-cover assessment—framing exposure growth
+independent of any single fire event. <code>ev-010</code> (weight 0.6,
+Water authority annual compliance letter) notes combined sewer overflows
+dropped after the north interceptor project went online, tying
+infrastructure capital to ambient water-quality outcomes.</p>
+<p><strong>Tension as a feature.</strong> The handbook presents both
+statements in one chapter so readers cannot pretend growth and
+compliance are unrelated. Synthesis still produces a single score;
+authors interpret trade-offs in prose while the corpus preserves the
+underlying claims with weights reflecting reviewer confidence.</p>
+<p><strong>Review cadence.</strong> Land-cover assessments arrive on
+multi-year cycles; compliance letters annually or on permit schedules.
+<code>reviewed_at</code> should jump when those documents refresh;
+otherwise dashboards overstate freshness <span class="citation"
+data-cites="edwards2010">[@edwards2010]</span>.</p>
+<p><strong>Cross-links.</strong> Heat and hydrology threads continue in
+<code>10_risks</code> and <code>07_infrastructure</code>; environment
+evidence here grounds those discussions in stewardship and regulatory
+performance.</p>
+<hr />
+<h1 data-number="12" id="governance-and-services"><span
+class="header-section-number">12</span> Governance and services</h1>
+<p>Overlapping special districts and aging emergency-plan
+synchronization are <strong>governance</strong> concerns that span
+jurisdictions. The handbook makes fragmentation visible without
+pretending a single author owns all fixes.</p>
+<p>Cross-reference the risks chapter when governance gaps amplify single
+points of failure (e.g., shared river crossings).</p>
+<p><strong>Fixture evidence.</strong> <code>ev-011</code> (weight 0.8,
+Interlocal services audit) reports nine special districts overlap tax
+boundaries in the central corridor, complicating service accounting.
+<code>ev-012</code> (weight 0.45, State readiness checklist) states
+emergency operations plans were last synchronized across counties in
+2021—a lower-weight row flagging stale coordination that may need
+tabletop exercises to refresh.</p>
+<p><strong>Interpreting weights.</strong> The emergency-plan row carries
+the lowest weight among Riverbend governance items, signaling
+uncertainty about whether 2021 remains accurate or whether partial
+updates occurred without a full sync. Handbook authors should describe
+that nuance; reviewers can raise the weight after a new statewide drill
+report enters the corpus.</p>
+<p><strong>Service accounting.</strong> Overlapping districts often
+confuse residents during tax mailings; the handbook can cite
+<code>ev-011</code> when explaining why service maps disagree across
+PDFs from different agencies <span class="citation"
+data-cites="star1989">[@star1989]</span>.</p>
+<p><strong>Risks coupling.</strong> Freight dependence on a single river
+crossing (<code>ev-014</code> in the risks chapter) becomes more
+alarming when governance synchronization lags (<code>ev-012</code>).
+Narrative cross-references help readers connect institutional drift to
+physical vulnerability.</p>
+<hr />
+<h1 data-number="13" id="cross-cutting-risks"><span
+class="header-section-number">13</span> Cross-cutting risks</h1>
+<p>Heat trends and freight dependence on one river crossing compound one
+another. <strong>Risks</strong> evidence is intentionally cross-domain
+so readers see systemic coupling, not siloed hazards.</p>
+<p>Scenario planning exercises can attach new evidence rows after each
+tabletop drill, bumping the corpus version when the handbook is
+regenerated.</p>
+<p><strong>Evidence.</strong> <code>ev-013</code> (weight 0.85, NOAA
+station history) states heat-wave days above 95°F have doubled in the
+last two decades at the airport station—climate exposure anchored to a
+specific observing site. <code>ev-014</code> (weight 0.7, Freight model
+technical appendix) notes a single river crossing carries 62% of
+east-west freight truck trips, concentrating economic and emergency risk
+on one structure.</p>
+<p><strong>Compounding.</strong> Either hazard alone warrants attention;
+together they stress cooling centers, detour capacity, and redundant
+corridors. The handbook’s risks chapter is where such interactions
+belong, even when thematic evidence also appears under environment or
+infrastructure.</p>
+<p><strong>Figures.</strong> Section coverage plots (Figure <span
+class="math inline">\(\ref{fig:coverage}\)</span>) include
+<code>10_risks</code>; gap status coloring (Figure <span
+class="math inline">\(\ref{fig:gapstatus}\)</span>) applies the same
+threshold logic. Under Riverbend defaults all sections pass, but a
+sparse risks portfolio would show coral bars here first.</p>
+<p><strong>After-action reviews.</strong> Each drill or incident should
+yield dated rows: new <code>reviewed_at</code>, possibly new
+<code>source_label</code> strings pointing to after-action PDFs. That
+habit keeps the living handbook aligned with operational learning <span
+class="citation" data-cites="template2026">[@template2026]</span>.</p>
+<hr />
+<h1 data-number="14" id="recommendations"><span
+class="header-section-number">14</span> Recommendations</h1>
+<p>Prioritized actions in the fixture include data-sharing agreements,
+bridge maintenance bonds, and resilience hub pilots.
+<strong>Recommendations</strong> carry the highest weights where
+consensus already exists in source documents.</p>
+<p>The handbook is not a substitute for democratic deliberation; it is a
+structured rollup of what evidence-backed proposals are on the table at
+version print time.</p>
+<p><strong>Rows.</strong> <code>ev-015</code> (weight 0.9, Regional
+planning task force draft) calls for a recurring interagency data
+sharing agreement for transit and land use permits. <code>ev-016</code>
+(weight 0.88, DOT capital program white paper) proposes funding a
+five-year bridge maintenance bond aligned to the priority repair
+list—directly echoing infrastructure evidence about deferred repairs.
+<code>ev-017</code> (weight 0.72, Heat equity working group) pilots
+neighborhood resilience hubs in districts with longest cooling-center
+travel times, linking recommendations to risks and communities chapters
+without duplicating their evidence ids.</p>
+<p><strong>Weight ordering.</strong> The data-sharing row tops the
+weight list among recommendations, signaling strongest reviewer
+confidence or institutional buy-in in this fictional exercise. Weights
+are not votes; they guide synthesis caps and gap detection, not
+automatic budget allocation.</p>
+<p><strong>Narrative boundaries.</strong> Recommendations prose should
+clarify that inclusion in the corpus does not imply adoption by any
+elected body <span class="citation"
+data-cites="bowker2005">[@bowker2005]</span>. The corpus records that a
+proposal was documented and reviewed on a date, not that it passed a
+council vote.</p>
+<p><strong>Versioning.</strong> Task-force drafts evolve quickly; when
+PDFs supersede one another, update <code>source_label</code> strings or
+add successor rows so readers know which draft the handbook
+referenced.</p>
+<hr />
+<h1 data-number="15" id="handbook-maintenance"><span
+class="header-section-number">15</span> Handbook maintenance</h1>
+<p>A living handbook requires <strong>three operational
+habits</strong>:</p>
+<ol type="1">
+<li><strong>Version the corpus</strong> when evidence changes
+materially.</li>
+<li><strong>Run analysis scripts</strong> before rendering so figures
+and JSON match the corpus.</li>
+<li><strong>Archive PDFs</strong> with the corpus version in metadata or
+filename.</li>
+</ol>
+<p>The template pipeline encodes steps 2–3; teams adopt step 1 through
+governance. Optional LLM assists are disabled in
+<code>config.yaml</code> for this exemplar to keep builds
+deterministic.</p>
+<p><strong>Pull-request discipline.</strong> Treat
+<code>riverbend_area.yaml</code> (or production corpora) like code:
+require review, run
+<code>uv run pytest projects/area_handbook/tests/</code>, and attach
+<code>handbook_report.json</code> diffs when scores move. Figure
+regeneration via <code>scripts/02_generate_handbook_figure.py</code>
+updates PNGs and <code>figure_registry.json</code>, keeping validation
+green in <code>04_validate_output.py</code>.</p>
+<p><strong>Release artifacts.</strong> Ship three bundles together: the
+corpus file at a tagged version, <code>handbook_report.json</code>, and
+the combined PDF (or HTML). Consumers can then verify that narrative,
+metrics, and data describe the same snapshot <span class="citation"
+data-cites="gray2005">[@gray2005]</span>.</p>
+<p><strong>Threshold policy.</strong> Changing
+<code>DEFAULT_GAP_THRESHOLD</code> in code alters which sections gap
+without any prose edit. Document threshold policy in steering minutes
+and prefer explicit <code>synthesize(..., gap_threshold=...)</code> in
+custom scripts if regional policy diverges from repository defaults.</p>
+<p><strong>Supplemental sections.</strong> Files such as
+<code>S01_*.md</code> and <code>S02_*.md</code> follow manuscript
+discovery ordering; add them when limitations or worked examples grow
+too long for the main chapter flow.</p>
+<p><strong>Slides and web.</strong> The same markdown feeds Beamer
+slides and static web mirrors; maintenance includes checking relative
+figure paths after directory moves and confirming browser loads for
+<code>output/web/index.html</code> after each major template upgrade
+<span class="citation"
+data-cites="template2026">[@template2026]</span>.</p>
+<hr />
+<h1 data-number="16" id="stakeholders-and-use-cases"><span
+class="header-section-number">16</span> Stakeholders and use cases</h1>
+<p><strong>Regional planners</strong> use the handbook as a single
+narrative spine across departments; the corpus gives them a checklist of
+which chapters still lack reviewed evidence. Shared artifacts such as
+the outline JSON and coverage figures act as <strong>boundary
+objects</strong> in the sense of <span class="citation"
+data-cites="star1989">@star1989</span>: different groups attach
+different meanings while aligning on the same file versions.</p>
+<p><strong>Funders and oversight bodies</strong> can require a corpus
+version string and the <code>handbook_report.json</code> metrics block
+as deliverables, without mandating a particular writing style in the
+prose chapters. <code>coverage_ratio</code>, <code>gap_count</code>, and
+<code>total_evidence_weight</code> summarize whether the outline is
+backed at the threshold encoded in the build—useful for pass/fail gates
+on grants.</p>
+<p><strong>Community liaisons</strong> benefit when gap sections name
+<code>section_id</code> codes that map back to outline rows—those ids
+are stable across PDF, HTML, and JSON exports. When a chapter is thin,
+liaisons can translate <code>06_economy</code> into plain language
+without losing traceability to the same machine-readable key funders
+see.</p>
+<p><strong>Tooling maintainers</strong> extend
+<code>HANDBOOK_TEMPLATE</code> in <code>src/outline.py</code> when new
+policy domains appear (e.g., housing, broadband equity), then add
+matching themes to the YAML schema and manuscript files in the same pull
+request. Skipping any leg of that triangle yields empty scores or orphan
+markdown files.</p>
+<p><strong>Emergency managers and public works directors</strong> may
+never edit YAML; they consume PDFs and slides. For them, figures such as
+Figure <span class="math inline">\(\ref{fig:bytheme}\)</span>
+communicate whether thematic buckets are balanced, while Figure <span
+class="math inline">\(\ref{fig:gapstatus}\)</span> shows whether any
+section failed the gap policy on the last build.</p>
+<p><strong>Researchers studying provenance</strong> can treat the corpus
+as a bounded case of lightweight metadata practice: enough structure for
+automation, not so much that community partners cannot contribute rows
+<span class="citation" data-cites="gray2005">[@gray2005]</span>.</p>
+<p>The Riverbend fixture is intentionally <strong>fictional</strong> so
+public repos can ship a full worked example without redacting real
+resident data.</p>
+<hr />
+<h1 data-number="17"
+id="appendix-yaml-corpus-schema-normative-summary"><span
+class="header-section-number">17</span> Appendix: YAML corpus schema
+(normative summary)</h1>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 34%" />
+<col style="width: 43%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Location</th>
+<th>Constraint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>area_id</code></td>
+<td>root</td>
+<td>Non-empty string</td>
+</tr>
+<tr>
+<td><code>area_label</code></td>
+<td>root</td>
+<td>Non-empty string</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>root</td>
+<td>Non-empty string (semantic or calendar versioning recommended)</td>
+</tr>
+<tr>
+<td><code>themes</code></td>
+<td>root</td>
+<td>Non-empty list of objects with <code>id</code>, <code>label</code>,
+<code>description</code></td>
+</tr>
+<tr>
+<td><code>evidence</code></td>
+<td>root</td>
+<td>List (may be empty) of objects with <code>id</code>,
+<code>statement</code>, <code>theme</code>, <code>weight</code>,
+<code>source_label</code>, <code>reviewed_at</code></td>
+</tr>
+</tbody>
+</table>
+<p>Each <code>evidence.theme</code> must equal some
+<code>themes[].id</code>. Weights are unitless credibility or strength
+signals capped per row at <span class="math inline">\(1.0\)</span>;
+section scores cap the sum per chapter at <span
+class="math inline">\(1.0\)</span> in <code>src/synthesis.py</code>.</p>
+<p><strong>Example evidence object (Riverbend).</strong></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ev-007</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">statement</span><span class="kw">:</span><span class="at"> Deferred bridge maintenance now spans 47 structures flagged as priority repair.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">theme</span><span class="kw">:</span><span class="at"> infrastructure</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">weight</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.9</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">source_label</span><span class="kw">:</span><span class="at"> DOT condition database export</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">reviewed_at</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2025-11-28&quot;</span></span></code></pre></div>
+<p><strong>Example theme object.</strong></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> infrastructure</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">label</span><span class="kw">:</span><span class="at"> Infrastructure</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">description</span><span class="kw">:</span><span class="at"> Transport, utilities, broadband, and maintenance backlogs.</span></span></code></pre></div>
+<p>Machine-readable outline and metrics after a build:</p>
+<ul>
+<li><code>projects/area_handbook/output/data/area_outline.json</code></li>
+<li><code>projects/area_handbook/output/data/handbook_report.json</code></li>
+<li><code>projects/area_handbook/output/data/handbook_toc.md</code></li>
+</ul>
+<p>The combined human-readable rollup lives in
+<code>handbook_body.md</code> in the same directory.</p>
+<p><strong>Figures and registry.</strong> Running
+<code>scripts/02_generate_handbook_figure.py</code> writes PNGs under
+<code>projects/area_handbook/output/figures/</code> and updates
+<code>figure_registry.json</code> for validation. Manuscript labels
+<code>fig:coverage</code>, <code>fig:bytheme</code>, and
+<code>fig:gapstatus</code> must stay aligned with that script.</p>
+<p><strong>Empty evidence list.</strong> An empty <code>evidence</code>
+array still instantiates all template sections with score zero; metrics
+report <code>gap_count</code> equal to section count. This edge case is
+tested to prevent divide-by-zero surprises in coverage ratios.</p>
+<p><strong>JSON interchange.</strong> <code>load_corpus_from_dict</code>
+accepts Python dicts shaped like parsed JSON for tests and API adapters;
+the same constraints as YAML apply <span class="citation"
+data-cites="template2026">[@template2026]</span>.</p>
+<hr />
+<h1 data-number="18" id="supplement-limitations-and-assumptions"><span
+class="header-section-number">18</span> Supplement: Limitations and
+assumptions</h1>
+<p>This exemplar prioritizes <strong>reproducibility and
+teachability</strong> over geographic realism. Riverbend is fictional;
+weights and source labels illustrate schema use, not empirical findings
+about any jurisdiction.</p>
+<p><strong>No live data.</strong> The pipeline does not call HTTP APIs,
+scrape documents, or perform NLP on attachments. Every number in the
+handbook narrative traces to a hand-authored YAML row or to derived
+metrics computed from those rows.</p>
+<p><strong>Weights are subjective.</strong> Reviewers assign
+<code>weight</code> in <span class="math inline">\([0,1]\)</span>
+without a universal rubric. Cross-team calibration is a governance task
+outside this repository; the code assumes weights are already consensus
+values.</p>
+<p><strong>Single corpus per build.</strong> The scripts load one
+fixture path (<code>data/fixtures/riverbend_area.yaml</code> in
+production use of this demo). Merging multiple corpora or federating
+regions would require new modules and tests, not configuration toggles
+alone.</p>
+<p><strong>Outline static in code.</strong>
+<code>HANDBOOK_TEMPLATE</code> is Python source, not a per-area YAML
+file. Customizing chapters without editing code is possible only within
+the existing section files and themes; adding a ninth scored section
+demands code and test updates.</p>
+<p><strong>Citation depth.</strong> <code>source_label</code> is a short
+string, not a BibTeX key. Formal citations belong in manuscript markdown
+using <code>references.bib</code>; the corpus stays lean <span
+class="citation" data-cites="bowker2005">[@bowker2005]</span>.</p>
+<p><strong>Threshold semantics.</strong> “Gap” means strictly below
+threshold, not “close.” Sections barely above the line still pass;
+policy teams may want stricter thresholds or secondary rules implemented
+in future metrics fields.</p>
+<hr />
+<h1 data-number="19"
+id="supplement-worked-example-reading-riverbend-end-to-end"><span
+class="header-section-number">19</span> Supplement: Worked example —
+reading Riverbend end to end</h1>
+<p>This note walks a reviewer from fixture file to rendered artifacts
+without running commands, highlighting how ids line up across
+layers.</p>
+<p><strong>1. Load and validate.</strong>
+<code>src/corpus_io.load_corpus</code> reads
+<code>riverbend_area.yaml</code>, checks ids, weights, and theme
+membership, and builds an <code>AreaCorpus</code> object. Failure modes
+include duplicate <code>ev-001</code> or a <code>weight</code> of
+<code>nan</code>.</p>
+<p><strong>2. Outline.</strong> <code>build_handbook_outline</code>
+returns <code>HANDBOOK_TEMPLATE</code>: eight sections from
+<code>04_landscape</code> through <code>11_recommendations</code>, each
+with <code>theme_ids</code> that pick up matching evidence.</p>
+<p><strong>3. Synthesis.</strong> <code>synthesize</code> attaches
+evidence to sections, sums weights with a cap of <span
+class="math inline">\(1.0\)</span>, compares each score to
+<code>DEFAULT_GAP_THRESHOLD</code> (0.35), and fills <code>gaps</code>
+with ids strictly below threshold. Riverbend under defaults yields an
+empty gap tuple because every section clears the bar.</p>
+<p><strong>4. Metrics JSON.</strong> <code>build_metrics_report</code>
+flattens scores, gap lists, theme histograms, and descriptive stats. A
+CI job can assert <code>evidence_count == 17</code> and
+<code>themes_without_evidence == []</code> for this fixture.</p>
+<p><strong>5. Markdown bodies.</strong>
+<code>build_full_handbook_body</code> emits section headings, evidence
+lists, and tables suitable for annex publication;
+<code>handbook_toc.md</code> mirrors outline depth.</p>
+<p><strong>6. Figures.</strong>
+<code>02_generate_handbook_figure.py</code> plots scores, theme counts,
+and gap-colored bars, then registers <code>fig:coverage</code>,
+<code>fig:bytheme</code>, and <code>fig:gapstatus</code> in
+<code>figure_registry.json</code> so
+<code>validate_figure_registry</code> passes during output
+validation.</p>
+<p><strong>7. Manuscript.</strong> Numbered markdown sections plus this
+supplemental file combine through manuscript discovery; Pandoc assigns
+figure numbers from attributes <code>{#fig:...}</code> while preserving
+<code>\ref{...}</code> in PDF.</p>
+<p><strong>Traceability spot check.</strong> If prose cites “47 priority
+bridges,” the reviewer should find <code>ev-007</code> with that
+statement and DOT export provenance. If not, the narrative drifted from
+the corpus <span class="citation"
+data-cites="gray2005">[@gray2005]</span>.</p>
+<hr />
+<h1 data-number="20" id="manuscript-syntax-area-handbook"><span
+class="header-section-number">20</span> Manuscript syntax (area
+handbook)</h1>
+<h2 data-number="20.1" id="citations"><span
+class="header-section-number">20.1</span> Citations</h2>
+<p>Use Pandoc bracket cites with keys from
+<code>references.bib</code>:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>See <span class="co">[</span><span class="ot">@bowker2005; @template2026</span><span class="co">]</span> for context.</span></code></pre></div>
+<h2 data-number="20.2" id="figures"><span
+class="header-section-number">20.2</span> Figures</h2>
+<p>Analysis writes PNGs under <code>../output/figures/</code>. Reference
+from markdown:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="al">![Coverage by section](../output/figures/handbook_evidence_coverage.png)</span>{#fig:coverage width=85%}</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="al">![Evidence counts by theme](../output/figures/handbook_evidence_by_theme.png)</span>{#fig:bytheme width=80%}</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="al">![Gap status by section](../output/figures/handbook_section_gap_status.png)</span>{#fig:gapstatus width=85%}</span></code></pre></div>
+<p>Run <code>scripts/02_generate_handbook_figure.py</code> via the
+pipeline before rendering (also refreshes
+<code>output/figures/figure_registry.json</code>).</p>
+<h2 data-number="20.3" id="section-files"><span
+class="header-section-number">20.3</span> Section files</h2>
+<p>Numbered prefixes <code>01_</code>–<code>14_</code> and
+<code>03a</code>–<code>03d</code> sort in the main manuscript group.
+This file lives in the <strong>other</strong> discovery bucket (name
+does not start with a digit or <code>S01_</code> pattern) and is ordered
+lexicographically among other non-main files—keep the filename stable so
+build logs stay predictable.</p>
+</body>
+</html>

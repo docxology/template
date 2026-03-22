@@ -1,0 +1,32 @@
+[2026-03-22 15:27:22,497] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/traditional_newspaper/output/logs/pipeline.log
+[2026-03-22 15:27:22,497] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-22 15:27:22,497] [INFO] 
+[2026-03-22 15:27:22,497] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-22 15:27:22,497] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-22 15:27:22,497] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:27:30,102] [INFO] ✓ Stage 2 completed successfully (7.6s)
+[2026-03-22 15:27:30,109] [INFO] 
+[2026-03-22 15:27:30,109] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-22 15:27:30,109] [INFO]   Elapsed: 7s | ETA: 12s
+[2026-03-22 15:27:30,109] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:28:12,350] [INFO] ✓ Stage 3 completed successfully (42.2s)
+[2026-03-22 15:28:12,352] [INFO] 
+[2026-03-22 15:28:12,352] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-22 15:28:12,352] [INFO]   Elapsed: 49s | ETA: 49s
+[2026-03-22 15:28:12,352] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:28:13,992] [INFO] ✓ Stage 4 completed successfully (1.6s)
+[2026-03-22 15:28:13,992] [INFO] 
+[2026-03-22 15:28:13,993] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-22 15:28:13,993] [INFO]   Elapsed: 51s | ETA: 30s
+[2026-03-22 15:28:13,993] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:30:01,422] [INFO] ✓ Stage 5 completed successfully (107.4s)
+[2026-03-22 15:30:01,429] [INFO] 
+[2026-03-22 15:30:01,429] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-22 15:30:01,429] [INFO]   Elapsed: 2m 38s | ETA: 52s
+[2026-03-22 15:30:01,429] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:30:02,438] [INFO] ✓ Stage 6 completed successfully (1.0s)
+[2026-03-22 15:30:02,439] [INFO] 
+[2026-03-22 15:30:02,439] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-22 15:30:02,439] [INFO]   Elapsed: 2m 39s | ETA: 22s
+[2026-03-22 15:30:02,439] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:30:02,439] [INFO] Running output copying...

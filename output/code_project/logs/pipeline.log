@@ -1,32 +1,32 @@
-[2026-03-22 14:31:34,376] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
-[2026-03-22 14:31:34,376] [INFO] ✓ Stage 1 completed successfully (0.0s)
-[2026-03-22 14:31:34,376] [INFO] 
-[2026-03-22 14:31:34,376] [INFO] [2/8] Environment Setup (25% complete)
-[2026-03-22 14:31:34,376] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-03-22 14:31:34,376] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-22 14:31:37,085] [INFO] ✓ Stage 2 completed successfully (2.7s)
-[2026-03-22 14:31:37,086] [INFO] 
-[2026-03-22 14:31:37,086] [INFO] [3/8] Project Tests (37% complete)
-[2026-03-22 14:31:37,086] [INFO]   Elapsed: 2s | ETA: 4s
-[2026-03-22 14:31:37,086] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-22 14:31:43,879] [INFO] ✓ Stage 3 completed successfully (6.8s)
-[2026-03-22 14:31:43,881] [INFO] 
-[2026-03-22 14:31:43,881] [INFO] [4/8] Project Analysis (50% complete)
-[2026-03-22 14:31:43,881] [INFO]   Elapsed: 9s | ETA: 9s
-[2026-03-22 14:31:43,881] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-22 14:31:47,247] [INFO] ✓ Stage 4 completed successfully (3.4s)
-[2026-03-22 14:31:47,248] [INFO] 
-[2026-03-22 14:31:47,248] [INFO] [5/8] PDF Rendering (62% complete)
-[2026-03-22 14:31:47,248] [INFO]   Elapsed: 12s | ETA: 7s
-[2026-03-22 14:31:47,248] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-22 14:32:35,400] [INFO] ✓ Stage 5 completed successfully (48.2s)
-[2026-03-22 14:32:35,401] [INFO] 
-[2026-03-22 14:32:35,401] [INFO] [6/8] Output Validation (75% complete)
-[2026-03-22 14:32:35,401] [INFO]   Elapsed: 1m 1s | ETA: 20s
-[2026-03-22 14:32:35,402] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-22 14:32:35,762] [INFO] ✓ Stage 6 completed successfully (0.4s)
-[2026-03-22 14:32:35,763] [INFO] 
-[2026-03-22 14:32:35,763] [INFO] [7/8] Copy Outputs (87% complete)
-[2026-03-22 14:32:35,763] [INFO]   Elapsed: 1m 1s | ETA: 8s
-[2026-03-22 14:32:35,763] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-22 14:32:35,763] [INFO] Running output copying...
+[2026-03-22 15:41:41,293] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-03-22 15:41:41,293] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-22 15:41:41,294] [INFO] 
+[2026-03-22 15:41:41,294] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-22 15:41:41,294] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-22 15:41:41,294] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:41:43,849] [INFO] ✓ Stage 2 completed successfully (2.6s)
+[2026-03-22 15:41:43,850] [INFO] 
+[2026-03-22 15:41:43,850] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-22 15:41:43,850] [INFO]   Elapsed: 2s | ETA: 4s
+[2026-03-22 15:41:43,850] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:41:55,707] [INFO] ✓ Stage 3 completed successfully (11.9s)
+[2026-03-22 15:41:55,709] [INFO] 
+[2026-03-22 15:41:55,709] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-22 15:41:55,709] [INFO]   Elapsed: 14s | ETA: 14s
+[2026-03-22 15:41:55,709] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:42:03,696] [INFO] ✓ Stage 4 completed successfully (8.0s)
+[2026-03-22 15:42:03,714] [INFO] 
+[2026-03-22 15:42:03,714] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-22 15:42:03,714] [INFO]   Elapsed: 22s | ETA: 13s
+[2026-03-22 15:42:03,714] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:44:29,872] [INFO] ✓ Stage 5 completed successfully (146.2s)
+[2026-03-22 15:44:29,875] [INFO] 
+[2026-03-22 15:44:29,875] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-22 15:44:29,875] [INFO]   Elapsed: 2m 48s | ETA: 56s
+[2026-03-22 15:44:29,875] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:44:31,160] [INFO] ✓ Stage 6 completed successfully (1.3s)
+[2026-03-22 15:44:31,161] [INFO] 
+[2026-03-22 15:44:31,161] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-22 15:44:31,161] [INFO]   Elapsed: 2m 49s | ETA: 24s
+[2026-03-22 15:44:31,161] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-22 15:44:31,161] [INFO] Running output copying...

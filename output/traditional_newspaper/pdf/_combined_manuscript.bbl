@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Docxology}(2026)]{template2026gazette}
+{Docxology}.
+\newblock Research project template: Newspaper layout exemplar.
+\newblock \url{https://github.com/docxology/template}, 2026.
+\newblock Demonstration folio; not a peer-reviewed publication.
+
+\end{thebibliography}
