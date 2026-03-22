@@ -26,6 +26,13 @@ except ImportError:
         pass
 
 
+# Platform API base URLs — extracted here so they are easy to override in tests
+# and visible to callers without instantiating CredentialManager.
+_ZENODO_SANDBOX_URL = "https://sandbox.zenodo.org/api"
+_ZENODO_PROD_URL = "https://zenodo.org/api"
+_GITHUB_API_URL = "https://api.github.com"
+
+
 class CredentialManager:
     """Manage credentials from .env and YAML config files.
 
@@ -119,9 +126,7 @@ class CredentialManager:
         return {
             "token": token,
             "use_sandbox": use_sandbox,
-            "base_url": (
-                "https://sandbox.zenodo.org/api" if use_sandbox else "https://zenodo.org/api"
-            ),
+            "base_url": _ZENODO_SANDBOX_URL if use_sandbox else _ZENODO_PROD_URL,
         }
 
     def get_github_credentials(self) -> dict[str, Any]:
@@ -133,7 +138,7 @@ class CredentialManager:
         return {
             "token": self._get_credential("GITHUB_TOKEN"),
             "repository": self._get_credential("GITHUB_REPO"),
-            "api_url": "https://api.github.com",
+            "api_url": _GITHUB_API_URL,
         }
 
     def get_arxiv_credentials(self) -> dict[str, Any]:

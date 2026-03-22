@@ -69,41 +69,9 @@ class PromptComposer:
             fragment_values: dict[str, str] = {}
 
             for fragment_key, fragment_ref in fragments.items():
-                if "section_structures.json#" in fragment_ref:
-                    # Load section structure by key from the fragment ref
-                    structure_key = fragment_ref.split("#", 1)[1]
-                    fragment_values[fragment_key] = self._build_section_structure(structure_key)
-                elif "format_requirements" in fragment_ref:
-                    # Build format requirements
-                    headers = template.get("section_config", {}).get("headers", [])
-                    fragment_values[fragment_key] = self._build_format_requirements(headers)
-                elif "content_requirements" in fragment_ref:
-                    fragment_values[fragment_key] = self._build_content_requirements()
-                elif "token_budget_awareness" in fragment_ref:
-                    section_config = template.get("section_config", {})
-                    sections = section_config.get("sections", 2)
-                    total = max_tokens or 1000
-                    section_budgets = {
-                        f"Section{i + 1}": total // sections for i in range(sections)
-                    }
-                    fragment_values[fragment_key] = self._build_token_budget_awareness(
-                        total_tokens=total, section_budgets=section_budgets
-                    )
-                elif "validation_hints" in fragment_ref:
-                    word_count = template.get("variables", {}).get("word_count_range", [100, 200])
-                    required = template.get("variables", {}).get("required_elements", [])
-                    fragment_values[fragment_key] = self._build_validation_hints(
-                        word_count_range=tuple(word_count), required_elements=required
-                    )
-                else:
-                    # Load fragment directly
-                    fragment_data = self.loader.load_fragment(fragment_ref)
-                    if isinstance(fragment_data, dict):
-                        fragment_values[fragment_key] = str(
-                            fragment_data.get("content", fragment_data)
-                        )
-                    else:
-                        fragment_values[fragment_key] = str(fragment_data)
+                fragment_values[fragment_key] = self._build_fragment(
+                    fragment_ref, template, max_tokens
+                )
 
             # Merge template variables
             template_vars = template.get("variables", {})
@@ -176,6 +144,55 @@ class PromptComposer:
             # If retry prompt not found, return base unchanged
             logger.debug(f"Retry prompt {retry_type} not found, returning base prompt")
             return base_prompt
+
+    def _build_fragment(
+        self, fragment_ref: str, template: dict[str, Any], max_tokens: int | None
+    ) -> str:
+        """Dispatch fragment_ref to the appropriate builder.
+
+        Fragment dispatch registry (checked in order — first match wins):
+            "section_structures.json#<key>" → _build_section_structure(key)
+            "format_requirements"           → _build_format_requirements(headers)
+            "content_requirements"          → _build_content_requirements()
+            "token_budget_awareness"        → _build_token_budget_awareness(total, budgets)
+            "validation_hints"              → _build_validation_hints(range, elements)
+            <anything else>                 → loader.load_fragment(fragment_ref)
+
+        To add a new fragment type: append an entry to this docstring and add
+        an elif branch below.  The keyword should be unique to avoid false matches.
+        """
+        if "section_structures.json#" in fragment_ref:
+            structure_key = fragment_ref.split("#", 1)[1]
+            return self._build_section_structure(structure_key)
+
+        if "format_requirements" in fragment_ref:
+            headers = template.get("section_config", {}).get("headers", [])
+            return self._build_format_requirements(headers)
+
+        if "content_requirements" in fragment_ref:
+            return self._build_content_requirements()
+
+        if "token_budget_awareness" in fragment_ref:
+            section_config = template.get("section_config", {})
+            sections = section_config.get("sections", 2)
+            total = max_tokens or 1000
+            section_budgets = {f"Section{i + 1}": total // sections for i in range(sections)}
+            return self._build_token_budget_awareness(
+                total_tokens=total, section_budgets=section_budgets
+            )
+
+        if "validation_hints" in fragment_ref:
+            word_count = template.get("variables", {}).get("word_count_range", [100, 200])
+            required = template.get("variables", {}).get("required_elements", [])
+            return self._build_validation_hints(
+                word_count_range=tuple(word_count), required_elements=required
+            )
+
+        # Default: load fragment directly from disk
+        fragment_data = self.loader.load_fragment(fragment_ref)
+        if isinstance(fragment_data, dict):
+            return str(fragment_data.get("content", fragment_data))
+        return str(fragment_data)
 
     def _build_format_requirements(self, headers_list: list[str]) -> str:
         """Build format requirements fragment.
