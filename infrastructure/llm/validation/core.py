@@ -186,11 +186,12 @@ def validate_complete(
 
     Returns:
         True when content passes validation; False for length or format failures
-        (short and long modes). Structured mode returns True on success.
+        (short and long modes). Structured mode **never** returns False — it
+        either returns True or raises ``ValidationError``.
 
     Raises:
-        ValidationError: If content is empty, or if mode is ``structured`` and
-            *schema* is None.
+        ValidationError: If content is empty, if mode is ``structured`` and
+            *schema* is None, or if structured content fails schema validation.
     """
     if not content or not content.strip():
         raise ValidationError("Empty response")
