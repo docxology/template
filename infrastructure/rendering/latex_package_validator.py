@@ -15,7 +15,12 @@ logger = get_logger(__name__)
 
 
 class PackageStatus(NamedTuple):
-    """Status of a LaTeX package."""
+    """Status of a LaTeX package.
+
+    NamedTuple is intentional: package status is immutable once checked,
+    and the fixed (name, installed, path) shape is used for hashable
+    membership tests in sets and dict keys.
+    """
 
     name: str
     installed: bool

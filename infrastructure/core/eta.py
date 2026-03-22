@@ -13,6 +13,10 @@ class ETAEstimate(NamedTuple):
     """Three-point ETA estimate with optimistic, realistic, and pessimistic values.
 
     All values are in seconds, or None when indeterminate.
+
+    NamedTuple is intentional: the three estimates are a fixed-length,
+    ordered tuple; callers may unpack them positionally and the values
+    are immutable after construction.
     """
 
     optimistic: float | None

@@ -18,12 +18,9 @@ from infrastructure.core.eta import (
 from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled
 from infrastructure.core.logging_helpers import format_duration
 
-__all__ = [
-    "ETAEstimate",
-    "calculate_eta",
-    "calculate_eta_ema",
-    "calculate_eta_with_confidence",
-]
+# ETA symbols (ETAEstimate, calculate_eta, etc.) are imported for internal use
+# only — callers should import them directly from infrastructure.core.eta.
+__all__: list[str] = []
 
 
 
