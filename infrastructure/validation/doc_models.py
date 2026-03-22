@@ -36,7 +36,13 @@ class LinkIssue:
 
 @dataclass
 class AccuracyIssue:
-    """Represents an accuracy issue in documentation."""
+    """Represents an accuracy issue in documentation.
+
+    .. deprecated::
+        Legacy shape — new code should use ``ScanAccuracyIssue`` from repo_scanner.
+        Planned for removal: 2026-09-01. Migrate callers in doc_accuracy.py,
+        audit_orchestrator.py, and issue_categorizer.py to ScanAccuracyIssue.
+    """
 
     file: str
     line: int

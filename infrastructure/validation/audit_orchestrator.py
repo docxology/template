@@ -222,7 +222,12 @@ def _validate_single_file(
 
 
 def _populate_statistics(scan_results: ScanResults) -> None:
-    """Calculate statistics for the scan results."""
+    """Calculate statistics for the scan results.
+
+    .. deprecated::
+        One-liner wrapper — call ``_calculate_statistics`` directly.
+        Planned for removal: 2026-09-01.
+    """
     _calculate_statistics(scan_results)
 
 

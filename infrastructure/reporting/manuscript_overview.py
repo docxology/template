@@ -450,13 +450,15 @@ def generate_all_manuscript_overviews(
     for project in summary.project_metrics:
         project_name = project.name
 
-        # Try multiple locations and filename patterns for the manuscript PDF
+        # Try multiple locations and filename patterns for the manuscript PDF.
+        # "project_combined.pdf" entries are legacy fallbacks — remove by 2026-09-01
+        # once all active projects produce {project_name}_combined.pdf via render_pdf.sh.
         pdf_paths = [
             repo_root / "output" / project_name / f"{project_name}_combined.pdf",
-            repo_root / "output" / project_name / "project_combined.pdf",  # legacy naming
             repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf",
-            repo_root / "output" / project_name / "pdf" / "project_combined.pdf",
-            repo_root / "projects" / project_name / "output" / "pdf" / "project_combined.pdf",
+            repo_root / "output" / project_name / "project_combined.pdf",  # legacy
+            repo_root / "output" / project_name / "pdf" / "project_combined.pdf",  # legacy
+            repo_root / "projects" / project_name / "output" / "pdf" / "project_combined.pdf",  # legacy
         ]
 
         pdf_path = None

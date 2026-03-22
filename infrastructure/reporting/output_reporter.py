@@ -183,6 +183,8 @@ def collect_output_statistics(
     # Use project basename for file matching (handles nested projects like "cognitive_integrity/cogsec_multiagent_1_theory")  # noqa: E501
     project_basename = Path(project_name).name
     combined_pdf_found = False
+    # "project_combined.pdf" is a legacy fallback — remove by 2026-09-01 once all
+    # active projects produce {project_name}_combined.pdf via render_pdf.sh
     for pdf_name in [f"{project_basename}_combined.pdf", "project_combined.pdf"]:
         pdf_path = output_dir / "pdf" / pdf_name
         if pdf_path.exists():
