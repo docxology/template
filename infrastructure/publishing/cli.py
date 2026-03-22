@@ -112,6 +112,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
             - title (str, optional): Publication title. Defaults to 'Research Publication'.
             - authors (str, optional): Comma-separated author names.
             - description (str, optional): Publication description text.
+            - sandbox (bool): Use Zenodo sandbox API (default True for safety).
 
     Returns:
         None. Prints the Zenodo record ID on success.
@@ -136,8 +137,10 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         logger.error("No PDF files found")
         raise SystemExit(1)
 
-    logger.info(f"Publishing {len(pdfs)} files to Zenodo")
-    config = ZenodoConfig(access_token=token, sandbox=True)
+    use_sandbox = not getattr(args, "production", False)
+    env_label = "sandbox" if use_sandbox else "production"
+    logger.info(f"Publishing {len(pdfs)} files to Zenodo ({env_label})")
+    config = ZenodoConfig(access_token=token, sandbox=use_sandbox)
     client = ZenodoClient(config=config)
 
     # Build Zenodo-formatted metadata
@@ -206,6 +209,20 @@ def main() -> None:
     zenodo_parser.add_argument("--title", help="Publication title")
     zenodo_parser.add_argument("--authors", help="Comma-separated author list")
     zenodo_parser.add_argument("--description", help="Publication description")
+    zenodo_sandbox_group = zenodo_parser.add_mutually_exclusive_group()
+    zenodo_sandbox_group.add_argument(
+        "--sandbox",
+        dest="production",
+        action="store_false",
+        default=True,
+        help="Use Zenodo sandbox API (default; safe for testing)",
+    )
+    zenodo_sandbox_group.add_argument(
+        "--production",
+        dest="production",
+        action="store_true",
+        help="Use live Zenodo production API (publishes permanently)",
+    )
     zenodo_parser.set_defaults(func=publish_zenodo_command)
 
     args = parser.parse_args()

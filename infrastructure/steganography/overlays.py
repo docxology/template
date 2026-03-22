@@ -171,7 +171,17 @@ def create_qr_overlay(
 def create_footer_overlay(
     page_width: float,
     page_height: float,
-    cfg: FooterConfig,
+    cfg: FooterConfig | None = None,
+    *,
+    document_id: str = "",
+    page_number: int = 1,
+    total_pages: int = 1,
+    hash_short: str = "",
+    title: str = "",
+    authors: str = "",
+    source_filename: str = "",
+    source_file_size: int = 0,
+    font_size: int = 5,
 ) -> bytes:
     """Generate a two-line footer overlay with comprehensive document metrics.
 
@@ -184,11 +194,34 @@ def create_footer_overlay(
     Args:
         page_width: Target page width in points.
         page_height: Target page height in points.
-        cfg: Footer configuration dataclass.
+        cfg: Footer configuration dataclass. If omitted, keyword fields build a :class:`FooterConfig`.
+
+        document_id: Short document identifier (when ``cfg`` is omitted).
+        page_number: Current page (1-based).
+        total_pages: Total pages in document.
+        hash_short: Short hash string for the metrics line.
+        title: Document title (first footer line).
+        authors: Author string (right side of first line).
+        source_filename: Original filename for metrics.
+        source_file_size: Byte size of source file.
+        font_size: Footer font size in points.
 
     Returns:
         PDF bytes of the one-page footer overlay.
     """
+    if cfg is None:
+        cfg = FooterConfig(
+            document_id=document_id,
+            page_number=page_number,
+            total_pages=total_pages,
+            hash_short=hash_short,
+            title=title,
+            authors=authors,
+            source_filename=source_filename,
+            source_file_size=source_file_size,
+            font_size=font_size,
+        )
+
     rl_canvas, _letter, _inch = _get_reportlab()
     from datetime import datetime, timezone
 

@@ -30,7 +30,7 @@ All functions include:
 from __future__ import annotations
 
 import numpy as np
-from typing import Union
+from typing import List, Optional, Tuple, Union
 
 def function1(param1: float, param2: int) -> float:
     """[Brief description of function1].
@@ -54,7 +54,11 @@ def function1(param1: float, param2: int) -> float:
         >>> print(result)
         3.0
     """
-    # Type checking is enforced by the function signature; callers must pass correct types.
+    # Input validation: reject non-numeric values early with clear errors.
+    if not isinstance(param1, (int, float)):
+        raise TypeError("param1 must be int or float")
+    if not isinstance(param2, int):
+        raise TypeError("param2 must be int")
 
     try:
         result = param1 * param2 + 1.0
@@ -62,7 +66,7 @@ def function1(param1: float, param2: int) -> float:
     except OverflowError:
         raise ValueError("Computation resulted in overflow")
 
-def function2(data: list[float], threshold: float = 0.0) -> tuple[list[float], float]:
+def function2(data: List[float], threshold: float = 0.0) -> Tuple[List[float], float]:
     """[Brief description of function2].
 
     This function processes [data type] using [algorithm approach]
@@ -195,7 +199,7 @@ import sys
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Any
+from typing import Any, Dict
 
 # Scientific computing imports
 import numpy as np
@@ -224,7 +228,7 @@ def setup_workflow_environment():
     for dir_path in output_dirs:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
 
-def run_data_processing() -> dict[str, Any]:
+def run_data_processing() -> Dict[str, Any]:
     """Run the main data processing workflow."""
     logger.info(f"Starting {workflow_name} workflow")
 
@@ -245,12 +249,12 @@ def run_data_processing() -> dict[str, Any]:
     logger.info(f"Completed {workflow_name} workflow")
     return results
 
-def validate_workflow_results(results: dict[str, Any]) -> bool:
+def validate_workflow_results(results: Dict[str, Any]) -> bool:
     """Validate workflow results for correctness."""
     # Add validation logic here
     return True
 
-def generate_workflow_report(results: dict[str, Any], reproducibility_report: Any) -> str:
+def generate_workflow_report(results: Dict[str, Any], reproducibility_report: Any) -> str:
     """Generate comprehensive workflow report."""
     report = []
     report.append("# Scientific Workflow Report")
@@ -283,7 +287,7 @@ def main():
     # Validate results
     if not validate_workflow_results(results):
         logger.error("Workflow validation failed")
-        raise SystemExit(1)
+        sys.exit(1)
 
     # Generate final report
     report_content = generate_workflow_report(results, reproducibility_report)

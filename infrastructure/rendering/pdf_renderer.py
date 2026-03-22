@@ -66,6 +66,25 @@ class PDFRenderer:
     def __init__(self, config: RenderingConfig):
         self.config = config
 
+    def _fix_math_delimiters(self, content: str) -> str:
+        """Normalize math delimiter usage in LaTeX content (see ``fix_math_delimiters``)."""
+        return fix_math_delimiters(content)
+
+    def _extract_preamble(self, preamble_file: Path) -> str:
+        return extract_preamble(preamble_file)
+
+    def _check_latex_log_for_graphics_errors(self, log_file: Path) -> dict[str, list[str]]:
+        return check_latex_log_for_graphics_errors(log_file)
+
+    def _generate_title_page_preamble(self, manuscript_dir: Path) -> str:
+        return generate_title_page_preamble(manuscript_dir)
+
+    def _generate_title_page_body(self, manuscript_dir: Path) -> str:
+        return generate_title_page_body(manuscript_dir)
+
+    def _fix_figure_paths(self, tex_content: str, manuscript_dir: Path, output_dir: Path) -> str:
+        return fix_figure_paths(tex_content, manuscript_dir, output_dir)
+
     def render(self, source_file: Path, output_name: str | None = None) -> Path:
         """Render manuscript to PDF.
 

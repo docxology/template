@@ -17,6 +17,7 @@ from infrastructure.llm.cli.main import (
     models_command,
     query_command,
     template_command,
+    CLIError,
 )
 
 
@@ -124,11 +125,11 @@ class TestCLICheckCommand:
 
         try:
             with caplog.at_level(logging.ERROR):
-                with pytest.raises(SystemExit) as exc_info:
+                with pytest.raises(CLIError) as exc_info:
                     check_command(args)
 
-            assert exc_info.value.code == 1
-            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower()
+            assert exc_info.value.exit_code == 1
+            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower() or "Cannot connect" in str(exc_info.value)
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host
@@ -154,11 +155,11 @@ class TestCLITemplateCommand:
         args = argparse.Namespace(list=False, name=None, input=None)
 
         with caplog.at_level(logging.ERROR):
-            with pytest.raises(SystemExit) as exc_info:
+            with pytest.raises(CLIError) as exc_info:
                 template_command(args)
 
-        assert exc_info.value.code == 1
-        assert "Template name required" in caplog.text or "template" in caplog.text.lower()
+        assert exc_info.value.exit_code == 1
+        assert "Template name required" in caplog.text or "template" in caplog.text.lower() or "Template name required" in str(exc_info.value)
 
 
 class TestCLIModelsCommand:
@@ -174,10 +175,10 @@ class TestCLIModelsCommand:
         os.environ["OLLAMA_HOST"] = "http://localhost:99999"
 
         try:
-            with pytest.raises(SystemExit) as exc_info:
+            with pytest.raises(CLIError) as exc_info:
                 models_command(args)
 
-            assert exc_info.value.code == 1
+            assert exc_info.value.exit_code == 1
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host
@@ -208,11 +209,11 @@ class TestCLIQueryCommand:
 
         try:
             with caplog.at_level(logging.ERROR):
-                with pytest.raises(SystemExit) as exc_info:
+                with pytest.raises(CLIError) as exc_info:
                     query_command(args)
 
-            assert exc_info.value.code == 1
-            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower()
+            assert exc_info.value.exit_code == 1
+            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower() or "Cannot connect" in str(exc_info.value)
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host
@@ -245,11 +246,8 @@ class TestCLIWithOllama:
         """Test check command with Ollama running."""
         args = argparse.Namespace()
 
-        with pytest.raises(SystemExit) as exc_info:
-            check_command(args)
-
-        # Should exit 0 (success)
-        assert exc_info.value.code == 0
+        # check_command should complete successfully and return None
+        check_command(args)
 
         captured = capsys.readouterr()
         assert "running" in captured.out.lower()

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 import platform
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -19,14 +20,72 @@ logger = get_logger(__name__)
 
 
 def check_python_version() -> bool:
-    """Verify Python 3.8+ is available."""
+    """Verify Python 3.10+ is available (matches ``requires-python`` in pyproject.toml)."""
     version_str = platform.python_version()
 
-    if sys.version_info < (3, 8):
-        logger.error(f"Python 3.8+ required, found {version_str}")
+    if sys.version_info < (3, 10):
+        logger.error(f"Python 3.10+ required, found {version_str}")
         return False
 
     log_success(f"Python {version_str} available", logger)
+    return True
+
+
+def check_build_tools(tools: dict[str, str]) -> bool:
+    """Return True if every named executable is on PATH.
+
+    Args:
+        tools: Map of executable name to short human-readable purpose (for logging).
+
+    Returns:
+        True when all tools are found, False if any are missing.
+    """
+    all_ok = True
+    for name, purpose in tools.items():
+        if shutil.which(name):
+            logger.debug(f"Build tool OK: {name} ({purpose})")
+        else:
+            logger.warning(f"Build tool missing: {name} ({purpose})")
+            all_ok = False
+    return all_ok
+
+
+def install_missing_packages(packages: list[str], cwd: Path | None = None) -> bool:
+    """Install packages with ``uv pip install`` when uv is available.
+
+    Args:
+        packages: Package names/specifiers for pip.
+        cwd: Working directory for the subprocess (optional).
+
+    Returns:
+        True on success, False if uv is missing or the install command fails.
+    """
+    if not packages:
+        return True
+    if not check_uv_available():
+        logger.warning("install_missing_packages: uv not on PATH")
+        return False
+    cmd = ["uv", "pip", "install", *packages]
+    try:
+        result = subprocess.run(
+            cmd,
+            cwd=str(cwd) if cwd is not None else None,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=300,
+            env=get_subprocess_env(),
+        )
+    except (subprocess.SubprocessError, subprocess.TimeoutExpired) as e:
+        logger.error(f"install_missing_packages failed: {e}", exc_info=True)
+        return False
+    if result.returncode != 0:
+        logger.error(
+            "install_missing_packages: uv pip install failed: %s",
+            (result.stderr or result.stdout or "").strip() or "(no output)",
+        )
+        return False
+    log_success(f"Installed packages: {', '.join(packages)}", logger)
     return True
 
 

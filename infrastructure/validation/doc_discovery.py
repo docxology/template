@@ -40,6 +40,10 @@ def discover_markdown_files(repo_root: Path) -> list[Path]:
     return sorted(md_files)
 
 
+def find_markdown_files(repo_root: Path) -> list[Path]:
+    """Backward-compatible alias for :func:`discover_markdown_files`."""
+    return discover_markdown_files(repo_root)
+
 
 def catalog_agents_readme(md_files: list[Path], repo_root: Path) -> list[str]:
     """Catalog all AGENTS.md and README.md files."""

@@ -28,5 +28,12 @@
   "commit_tracking_enabled": true,
   "commit_pr": 0,
   "commit_default_branch": "",
-  "commit_message_template": "desloppify: {status} {count} issue(s) \u2014 {summary}"
+  "commit_message_template": "desloppify: {status} {count} issue(s) \u2014 {summary}",
+  "trust_plugins": false,
+  "transition_messages": {},
+  "hermes_enabled": false,
+  "hermes_models": {
+    "execute": "openrouter:x-ai/grok-4.20-beta",
+    "review": "openrouter:google/gemini-3.1-pro-preview"
+  }
 }

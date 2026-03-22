@@ -97,14 +97,14 @@ done
 # ── Step 1: Run the normal pipeline (unless --steganography-only) ────────
 
 if [[ "$STEG_ONLY" != "true" ]]; then
-    log_header "STEP 1/2: Running Full Pipeline"
+    log_header "STEP 1/2: Running Core/Interactive Pipeline"
     
-    if ! bash "$SCRIPT_DIR/run.sh" --pipeline $PIPELINE_ARGS; then
+    if ! bash "$SCRIPT_DIR/run.sh" $PIPELINE_ARGS; then
         log_error "Pipeline failed — steganographic post-processing skipped"
         exit 1
     fi
     
-    log_success "Pipeline completed successfully"
+    log_success "Pipeline section completed successfully"
     echo
 fi
 
@@ -145,7 +145,6 @@ from infrastructure.core.config_loader import load_config
 from infrastructure.steganography import SteganographyProcessor, SteganographyConfig
 
 logger = get_logger('secure_run')
-setup_logger(logger)
 
 repo_root = Path('$REPO_ROOT')
 project_name = '$PROJECT_NAME'

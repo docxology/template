@@ -2233,6 +2233,7 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pyyaml" },
+    { name = "requests" },
 ]
 
 [package.dev-dependencies]
@@ -2261,9 +2262,6 @@ dev = [
 ]
 dotenv = [
     { name = "python-dotenv" },
-]
-llm = [
-    { name = "requests" },
 ]
 monitoring = [
     { name = "psutil" },
@@ -2295,6 +2293,7 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.7" },
     { name = "numpy", specifier = ">=1.22" },
     { name = "pyyaml", specifier = ">=6.0" },
+    { name = "requests", specifier = ">=2.31.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -2321,7 +2320,7 @@ dev = [
     { name = "types-requests", specifier = ">=2.32.4.20260107" },
 ]
 dotenv = [{ name = "python-dotenv", specifier = ">=1.0.0" }]
-llm = [{ name = "requests", specifier = ">=2.31.0" }]
+llm = []
 monitoring = [{ name = "psutil", specifier = ">=5.9.0" }]
 rendering = [
     { name = "pdfplumber", specifier = ">=0.11.0" },

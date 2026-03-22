@@ -219,6 +219,18 @@ def get_cors_headers(origin: str | None = None) -> dict[str, str]:
     return headers
 
 
+class SecurityHeaders:
+    """Static helpers for HTTP security and CORS headers (tests and legacy callers)."""
+
+    @staticmethod
+    def get_security_headers() -> dict[str, str]:
+        return get_security_headers()
+
+    @staticmethod
+    def get_cors_headers(origin: str | None = None) -> dict[str, str]:
+        return get_cors_headers(origin)
+
+
 class RateLimiter:
     """Simple in-memory rate limiter.
 

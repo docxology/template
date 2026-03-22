@@ -13,7 +13,7 @@ from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, LLMConfig
 from infrastructure.llm.core.context import ConversationContext
-from tests.infra_tests._test_helpers import safe_network_test
+from .._test_helpers import safe_network_test
 
 
 class TestLLMClientInitialization:
@@ -194,12 +194,12 @@ class TestClientHelperMethods:
         assert result is False  # Should fail to connect
 
     def test_check_connection_detailed_returns_tuple(self, default_config):
-        """Test check_connection_detailed returns tuple with error message."""
+        """Test check_connection_with_reason returns tuple with error message."""
         # Use non-existent host to ensure it fails quickly
         config = LLMConfig(base_url="http://localhost:99999", timeout=0.1)
         client = LLMClient(config)
 
-        is_available, error = client.check_connection_detailed()
+        is_available, error = client.check_connection_with_reason()
         assert isinstance(is_available, bool)
         assert is_available is False
         assert error is not None

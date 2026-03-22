@@ -116,7 +116,7 @@ dev = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
-default-groups = ["dev"]
+default-groups = ["dev", "rendering"]
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support

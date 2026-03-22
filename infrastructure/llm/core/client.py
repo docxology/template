@@ -56,6 +56,14 @@ class LLMClient:
     both blocking and streaming query variants. All inputs are sanitized
     before sending; structured queries parse JSON responses automatically.
 
+    **Blocking vs streaming parameter asymmetry:**
+    Streaming variants (stream_query, stream_short, stream_long) accept extra
+    params not available on their blocking counterparts:
+      - ``save_response`` (bool): persist streamed output to disk
+      - ``save_path`` (Path | None): override the default save location
+      - ``retries`` (int): retry count on transient errors
+    Use the streaming variant when response persistence or retry control is needed.
+
     Example:
         >>> client = LLMClient()
         >>>
@@ -796,7 +804,11 @@ class LLMClient:
         """Get list of available models from Ollama.
 
         Returns:
-            List of model names (deduplicated)
+            List of model names (deduplicated, version tags stripped).
+            Falls back to ``config.fallback_models`` if the Ollama server is
+            unreachable or returns a non-200 response. The fallback list is
+            never empty — callers can always rely on at least one model name
+            being present in the return value.
         """
         url = f"{self.config.base_url}/api/tags"
         try:
@@ -811,10 +823,10 @@ class LLMClient:
 
     def check_connection(self, timeout: float = 2.0) -> bool:
         """Return True if the Ollama server is reachable."""
-        is_available, _ = self.check_connection_detailed(timeout=timeout)
+        is_available, _ = self.check_connection_with_reason(timeout=timeout)
         return is_available
 
-    def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
+    def check_connection_with_reason(self, timeout: float = 2.0) -> tuple[bool, str | None]:
         """Return (is_available, error_message) for the Ollama server."""
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)

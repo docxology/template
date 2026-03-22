@@ -165,7 +165,7 @@ package = false
         # Should return boolean based on actual Python version
         assert isinstance(result, bool)
 
-        # Should pass for Python 3.8+ (our minimum requirement)
+        # Should pass for Python 3.10+ (pyproject requires-python)
         assert result is True, f"Python version check failed: {sys.version}"
 
     def test_dependency_validation(self):

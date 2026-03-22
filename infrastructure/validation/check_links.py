@@ -622,7 +622,7 @@ def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tup
             if md_path.exists() and md_path.is_file():
                 return True, str(md_path.relative_to(repo_root_resolved))
             return False, f"File or directory does not exist: {target_path}"
-    except OSError as e:
+    except (OSError, ValueError) as e:
         return False, f"Error resolving path: {e}"
 
 def main() -> int:
