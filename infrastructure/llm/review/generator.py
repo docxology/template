@@ -15,7 +15,7 @@ import os
 import re
 import subprocess
 import time
-from typing import Any, Callable, Literal, TYPE_CHECKING
+from typing import Any, Callable, Literal, TypedDict, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from infrastructure.llm.templates.base import ResearchTemplate
@@ -116,15 +116,30 @@ ReviewType = Literal[
 ]
 
 
+class ReviewQualityDetails(TypedDict, total=False):
+    """Known shape of the details dict returned by validate_review_quality."""
+
+    sections_found: list[str]
+    scores_found: list[str]
+    format_compliance: dict[str, Any]
+    repetition: dict[str, Any]
+    repetition_warning: str
+    format_warnings: list[str]
+    word_count: int
+    min_required: int
+    sections_required: int
+    has_assessment: bool
+
+
 def validate_review_quality(
     response: str,
     review_type: ReviewType,
     min_words: int | None = None,
     model_name: str = "",
-) -> tuple[bool, list[str], dict[str, Any]]:
+) -> tuple[bool, list[str], ReviewQualityDetails]:
     """Validate the quality and formatting of an LLM review response."""
     issues = []
-    details: dict[str, Any] = {
+    details: ReviewQualityDetails = {
         "sections_found": [],
         "scores_found": [],
         "format_compliance": {},

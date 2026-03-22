@@ -13,10 +13,28 @@ import re
 import subprocess
 import time
 from pathlib import Path
+from typing import TypedDict
 
 from infrastructure.core.environment import get_python_command
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.config_queries import get_testing_config
+
+
+class FailedTestInfo(TypedDict, total=False):
+    """Shape of a failed-test entry returned by extract_failed_tests."""
+
+    test: str
+    error_type: str
+    error_message: str
+    traceback: list[str]
+
+
+class TimeoutErrorInfo(TypedDict):
+    """Shape of a timeout-error entry returned by extract_timeout_errors."""
+
+    test: str
+    timeout_duration: str
+    suggestion: str
 
 logger = get_logger(__name__)
 
@@ -34,9 +52,9 @@ def check_cov_datafile_support() -> bool:
         return False
 
 
-def _parse_failures_section(combined_output: str) -> list[dict]:
+def _parse_failures_section(combined_output: str) -> list[FailedTestInfo]:
     """Parse failures from the FAILURES section (--tb=line format)."""
-    failed_tests: list[dict] = []
+    failed_tests: list[FailedTestInfo] = []
     failures_section = False
     current_test = None
 
@@ -68,9 +86,9 @@ def _parse_failures_section(combined_output: str) -> list[dict]:
     return failed_tests
 
 
-def _parse_failures_verbose(combined_output: str) -> list[dict]:
+def _parse_failures_verbose(combined_output: str) -> list[FailedTestInfo]:
     """Parse failures from verbose output (--verbose format)."""
-    failed_tests: list[dict] = []
+    failed_tests: list[FailedTestInfo] = []
     for line in combined_output.split("\n"):
         if " FAILED" in line and "::" in line and not line.strip().startswith("="):
             m = re.search(r"([^\s]+)\s+FAILED", line.strip())
@@ -85,9 +103,9 @@ def _parse_failures_verbose(combined_output: str) -> list[dict]:
     return failed_tests
 
 
-def _parse_failures_short(combined_output: str) -> list[dict]:
+def _parse_failures_short(combined_output: str) -> list[FailedTestInfo]:
     """Parse failures from short FAILED lines."""
-    failed_tests: list[dict] = []
+    failed_tests: list[FailedTestInfo] = []
     for line in combined_output.split("\n"):
         if line.strip().startswith("FAILED ") and "::" in line:
             m = re.search(r"FAILED\s+([^\s]+)", line)
@@ -104,9 +122,9 @@ def _parse_failures_short(combined_output: str) -> list[dict]:
     return failed_tests
 
 
-def _parse_failures_timeout(combined_output: str) -> list[dict]:
+def _parse_failures_timeout(combined_output: str) -> list[FailedTestInfo]:
     """Parse timeout failures by scanning context around timeout lines."""
-    failed_tests: list[dict] = []
+    failed_tests: list[FailedTestInfo] = []
     lines = combined_output.split("\n")
     for i, line in enumerate(lines):
         if "timeout" in line.lower() or "pytest_timeout" in line.lower():
@@ -124,9 +142,9 @@ def _parse_failures_timeout(combined_output: str) -> list[dict]:
     return failed_tests
 
 
-def _parse_failures_fallback(combined_output: str) -> list[dict]:
+def _parse_failures_fallback(combined_output: str) -> list[FailedTestInfo]:
     """Parse any remaining FAILED lines as a last resort."""
-    failed_tests: list[dict] = []
+    failed_tests: list[FailedTestInfo] = []
     for line in combined_output.split("\n"):
         if line.strip().startswith("FAILED") and "::" in line:
             m = re.search(r"FAILED\s+([^\s]+)", line)
@@ -150,7 +168,7 @@ _FAILURE_STRATEGIES = [
 ]
 
 
-def extract_failed_tests(stdout: str, stderr: str) -> list[dict]:
+def extract_failed_tests(stdout: str, stderr: str) -> list[FailedTestInfo]:
     """Extract failed test info from pytest output using cascading parse strategies."""
     combined_output = stdout + "\n" + stderr
     for strategy in _FAILURE_STRATEGIES:
@@ -160,9 +178,9 @@ def extract_failed_tests(stdout: str, stderr: str) -> list[dict]:
     return []
 
 
-def extract_timeout_errors(stdout: str, stderr: str) -> list[dict]:
+def extract_timeout_errors(stdout: str, stderr: str) -> list[TimeoutErrorInfo]:
     """Extract timeout errors from pytest output."""
-    timeout_errors = []
+    timeout_errors: list[TimeoutErrorInfo] = []
     combined_output = stdout + "\n" + stderr
 
     timeout_patterns = [
