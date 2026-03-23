@@ -1,8 +1,0 @@
-\frametitle{Section files}
-\protect\phantomsection\label{section-files}
-Numbered prefixes \texttt{01\_}--\texttt{14\_} and
-\texttt{03a}--\texttt{03d} sort in the main manuscript group. This file
-lives in the \textbf{other} discovery bucket (name does not start with a
-digit or \texttt{S01\_} pattern) and is ordered lexicographically among
-other non-main files---keep the filename stable so build logs stay
-predictable.

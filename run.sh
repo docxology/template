@@ -862,6 +862,8 @@ show_help() {
     echo -e "${BOLD}CLI FLAGS${NC}"
     echo -e "  ${GREEN}--pipeline${NC}            Full pipeline (9 stages)"
     echo -e "  ${GREEN}--resume${NC}              Resume from checkpoint"
+    echo -e "  ${GREEN}--core-only${NC}           With --pipeline: run core stages only (no LLM)"
+    echo -e "  ${GREEN}--skip-infra${NC}          With --pipeline: skip infrastructure tests"
     echo -e "  ${GREEN}--infra-tests${NC}         Infrastructure tests only"
     echo -e "  ${GREEN}--project-tests${NC}       Project tests only"
     echo -e "  ${GREEN}--render-pdf${NC}          PDF rendering only"
@@ -1186,6 +1188,10 @@ except Exception as e:
         exit 1
     fi
 
+    # CLI pipeline modifiers (used with --pipeline).
+    local cli_skip_infra="false"
+    local cli_core_only="false"
+
     # Parse command line arguments (now PROJECT_LIST is available)
     while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -1218,6 +1224,16 @@ except Exception as e:
                 shift
                 continue
                 ;;
+            --skip-infra)
+                cli_skip_infra="true"
+                shift
+                continue
+                ;;
+            --core-only)
+                cli_core_only="true"
+                shift
+                continue
+                ;;
             --option)
                 if [[ -z "${2:-}" ]]; then
                     log_error "Missing option number"
@@ -1244,11 +1260,20 @@ except Exception as e:
                 if [[ "${2:-}" == "--resume" ]]; then
                     shift  # Remove --pipeline
                     shift  # Remove --resume
-                    run_full_pipeline "--resume"
+                    if [[ "$cli_core_only" == "true" ]]; then
+                        run_core_pipeline_no_llm "--resume" "$CURRENT_PROJECT" "$cli_skip_infra"
+                    else
+                        run_full_pipeline "--resume" "$CURRENT_PROJECT" "$cli_skip_infra"
+                    fi
                     exit $?
                 else
-                    run_non_interactive 8
-                    exit $?
+                    if [[ "$cli_core_only" == "true" ]]; then
+                        run_core_pipeline_no_llm "" "$CURRENT_PROJECT" "$cli_skip_infra"
+                        exit $?
+                    else
+                        run_full_pipeline "" "$CURRENT_PROJECT" "$cli_skip_infra"
+                        exit $?
+                    fi
                 fi
                 ;;
             --resume)

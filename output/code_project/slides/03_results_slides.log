@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 15:43
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:09
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -2653,7 +2653,7 @@ ine 460.
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 473.
 )
-Overfull \vbox (4494.75296pt too high) detected at line 589
+Overfull \vbox (4494.72075pt too high) detected at line 589
  []
 
 [1
@@ -2683,7 +2683,7 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  31334 strings out of 468168
  636060 string characters out of 5432816
- 1320639 words of memory out of 5000000
+ 1320638 words of memory out of 5000000
  59467 multiletter control sequences out of 15000+600000
  634214 words of font info for 97 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

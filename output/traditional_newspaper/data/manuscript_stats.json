@@ -3,111 +3,123 @@
   "files": [
     {
       "path": "manuscript/01_front_page.md",
-      "lines": 20,
-      "words": 749,
-      "bytes": 4877
+      "lines": 42,
+      "words": 314,
+      "bytes": 2395
     },
     {
       "path": "manuscript/02_national.md",
-      "lines": 15,
-      "words": 641,
-      "bytes": 4089
+      "lines": 31,
+      "words": 184,
+      "bytes": 1479
     },
     {
       "path": "manuscript/03_world.md",
-      "lines": 15,
-      "words": 640,
-      "bytes": 4078
+      "lines": 31,
+      "words": 138,
+      "bytes": 1284
     },
     {
       "path": "manuscript/04_business.md",
-      "lines": 15,
-      "words": 641,
-      "bytes": 4084
+      "lines": 31,
+      "words": 156,
+      "bytes": 1294
     },
     {
       "path": "manuscript/05_technology.md",
-      "lines": 15,
-      "words": 641,
-      "bytes": 4087
+      "lines": 31,
+      "words": 157,
+      "bytes": 1337
     },
     {
       "path": "manuscript/06_sports.md",
-      "lines": 15,
-      "words": 641,
-      "bytes": 4085
+      "lines": 31,
+      "words": 128,
+      "bytes": 1170
     },
     {
       "path": "manuscript/07_arts.md",
-      "lines": 15,
-      "words": 643,
-      "bytes": 4092
+      "lines": 31,
+      "words": 147,
+      "bytes": 1210
     },
     {
       "path": "manuscript/08_editorial.md",
-      "lines": 15,
-      "words": 641,
-      "bytes": 4086
+      "lines": 29,
+      "words": 112,
+      "bytes": 1008
     },
     {
       "path": "manuscript/09_opinion.md",
-      "lines": 15,
-      "words": 640,
-      "bytes": 4079
+      "lines": 29,
+      "words": 112,
+      "bytes": 1014
     },
     {
       "path": "manuscript/10_letters.md",
-      "lines": 15,
-      "words": 640,
-      "bytes": 4078
+      "lines": 28,
+      "words": 107,
+      "bytes": 914
     },
     {
       "path": "manuscript/11_local.md",
-      "lines": 15,
-      "words": 640,
-      "bytes": 4074
+      "lines": 28,
+      "words": 105,
+      "bytes": 963
     },
     {
       "path": "manuscript/12_features.md",
-      "lines": 15,
-      "words": 640,
-      "bytes": 4078
+      "lines": 28,
+      "words": 120,
+      "bytes": 1035
     },
     {
       "path": "manuscript/13_health.md",
-      "lines": 15,
-      "words": 640,
-      "bytes": 4081
+      "lines": 30,
+      "words": 109,
+      "bytes": 1064
     },
     {
       "path": "manuscript/14_science.md",
-      "lines": 15,
-      "words": 640,
-      "bytes": 4081
+      "lines": 28,
+      "words": 106,
+      "bytes": 1044
     },
     {
       "path": "manuscript/15_obituaries.md",
-      "lines": 15,
-      "words": 639,
-      "bytes": 4082
+      "lines": 28,
+      "words": 113,
+      "bytes": 977
     },
     {
       "path": "manuscript/16_classifieds.md",
-      "lines": 15,
-      "words": 639,
-      "bytes": 4078
+      "lines": 32,
+      "words": 138,
+      "bytes": 1164
     },
     {
       "path": "manuscript/S01_layout_and_pipeline.md",
-      "lines": 20,
-      "words": 119,
-      "bytes": 1176
+      "lines": 60,
+      "words": 759,
+      "bytes": 6708
+    },
+    {
+      "path": "manuscript/S02_typography_and_measure.md",
+      "lines": 57,
+      "words": 816,
+      "bytes": 6356
+    },
+    {
+      "path": "manuscript/S03_validation_and_outputs.md",
+      "lines": 61,
+      "words": 691,
+      "bytes": 5921
     },
     {
       "path": "manuscript/98_newspaper_and_pipeline_terms.md",
-      "lines": 15,
-      "words": 177,
-      "bytes": 1204
+      "lines": 82,
+      "words": 1362,
+      "bytes": 10213
     }
   ]
 }

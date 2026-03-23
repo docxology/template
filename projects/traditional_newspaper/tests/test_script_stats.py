@@ -28,7 +28,7 @@ def test_report_manuscript_stats_writes_json(tmp_path: Path) -> None:
     data = json.loads(json_path.read_text(encoding="utf-8"))
     assert data.get("project") == "traditional_newspaper"
     files = data.get("files", [])
-    assert len(files) >= 18
+    assert len(files) >= 20
     stems = {Path(str(f["path"])).name for f in files}
     assert "01_front_page.md" in stems
     assert "S01_layout_and_pipeline.md" in stems

@@ -431,8 +431,9 @@ The template provides **three entry points** for pipeline execution:
 
 A **two-stage wrapper** around the standard pipeline that adds steganographic PDF hardening. It provides an interactive text menu identical to `run.sh`, but with options optimized for security, steganographic post-processing, and multi-project execution.
 
-**Stage 1:** Runs `run.sh --pipeline` (pipeline stages shown as [1/9]..[9/9], clean shown as [0/9]) or the core pipeline.
-**Stage 2:** `infrastructure/steganography.SteganographyProcessor` post-processes every PDF,
+**Stage 1:** Runs `run.sh [args]` (interactive or non-interactive depending on flags).
+**Stage 2:** `infrastructure/steganography.SteganographyProcessor` post-processes PDFs for
+all discovered active projects by default, or only the `--project` target when provided,
 producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
 Original PDFs are always left untouched.
 
@@ -447,7 +448,10 @@ Original PDFs are always left untouched.
 ./secure_run.sh --steganography-only --project code_project
 
 # Core pipeline only (no LLM) + steganography
-./secure_run.sh --core-only
+./secure_run.sh --pipeline --core-only
+
+# Multi-project core pipeline then steganography for all discovered projects
+./secure_run.sh d
 ```
 
 **Output files:**

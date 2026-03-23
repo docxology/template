@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 15:28
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:27
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1486,6 +1486,11 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 (/Users/4d/Documents/GitHub/template/projects/traditional_newspaper/output/slid
 es/01_front_page_slides.nav)
+\openout4 = `01_front_page_slides.vrb'.
+
+
+(/Users/4d/Documents/GitHub/template/projects/traditional_newspaper/output/slid
+es/01_front_page_slides.vrb
 File: ../figures/masthead.png Graphic file (type bmp)
 <../figures/masthead.png>
 
@@ -1496,32 +1501,34 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.171 \end{frame}
-                 
+l.10 \begin{multicols}
+                      {3}
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
 LaTeX Warning: Citation `template2026gazette' on page 1 undefined on input line
- 171.
+ 14.
 
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 18.
 
-! LaTeX Error: \begin{beamer@framepauses} on input line 171 ended by \end{multi
+! LaTeX Error: \begin{beamer@framepauses} on input line 148 ended by \end{multi
 cols}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.171 \end{frame}
-                 
+l.56 \end{multicols}
+                    
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-
-Overfull \vbox (861.84709pt too high) detected at line 171
+)
+Overfull \vbox (420.08203pt too high) detected at line 148
  []
 
 [1
@@ -1549,13 +1556,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 29149 strings out of 468168
- 587641 string characters out of 5432816
- 1173649 words of memory out of 5000000
- 57387 multiletter control sequences out of 15000+600000
- 628389 words of font info for 51 fonts, out of 8000000 for 9000
+ 29202 strings out of 468168
+ 589012 string characters out of 5432816
+ 1153674 words of memory out of 5000000
+ 57431 multiletter control sequences out of 15000+600000
+ 628421 words of font info for 55 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1098b,401s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1098b,433s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/traditional_news
 paper/output/slides/01_front_page_slides.pdf (1 page).

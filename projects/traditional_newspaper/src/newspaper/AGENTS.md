@@ -9,7 +9,10 @@
 | `snippets.py` | `multicol_begin`, `multicol_end`, `headline`, `byline`, `rule_line`, `dateline`, `section_label`, `pull_quote`, `classified_line`; internal `_escape_latex_fragment` |
 | `content.py` | `FIXTURE_SENTENCES`, `fixture_paragraph(seed=...)`, `fixture_copy(n, seed=...)` |
 | `masthead.py` | `render_masthead_png(path, *, seed=42, dpi=200, title=..., tagline=...)` |
-| `__init__.py` | Re-exports above |
+| `layout_figure.py` | `render_layout_schematic_png(path, *, layout=None, dpi=150)` |
+| `visualization.py` | `configure_matplotlib_bw_style()`, `wordcount_pairs_from_manuscript_stats(data)`, `load_manuscript_stats(path)`, `render_wordcount_bar_chart_bw(path, entries, ...)`, `render_wordcount_chart_from_stats_file(stats_json, out_png, ...)` |
+| `section_graphics.py` | `render_section_banner_bw(path, stem, section_title, ...)`, `section_banner_filename(stem)` |
+| `__init__.py` | Re-exports above including `render_layout_schematic_png` and visualization helpers |
 
 ## Conventions
 

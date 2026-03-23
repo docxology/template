@@ -1,39 +1,28 @@
 # Features
 
 ```{=latex}
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{../output/figures/section_banner_12_features.png}
+\caption{Monochrome desk banner for this folio; raster from \texttt{generate\_section\_banners.py}.}
+\label{fig:banner_12_features}
+\end{figure}
 \begin{multicols}{3}
 ```
 
-**Long-form**
+**Long read**
 
-**MAGAZINE DESK.** `12_features` runs longer paragraphs than briefs pages. Profile writers traced an anonymous artisan’s career arc from apprenticeship to teaching workshops. Quotes are invented; the cadence is what matters for justification.
+```{=latex}
+\noindent\textit{Features —}\par\smallskip
+```
 
-Investigative tone appeared in a section on public records delays. FOIA analogies and redaction humor fill space without teaching law. Editors would vet claims; CI only vets braces.
+**FEATURES.** **Saturday profile:** She maps urban heat islands block by block, carrying a sensor pack that looks like a field biologist’s kit. Neighbors think she’s counting birds; she’s counting degrees that decide who sleeps safely during heat waves.
 
-Travel writing described a coastal town by texture—fog, rope coiled on docks, bakery hours. No airline advertises here. Maps would be figures; none are bundled in the minimal analysis set.
+Her notebooks mix timestamps, humidity scribbles, and coffee stains—data, in the old sense. When the city adopts her overlays, the story will deserve a second edition; today’s is still a layout exercise.
 
-Food feature explored fermentation without recipes that require special symbols. Ingredient lists often break columns badly; testers noted that keeping prose narrative avoids tabular overflow for now.
+Sidebars on methodology were cut for space; the template’s margin is already generous, not infinite.
 
-History column recalled a factory closure decades ago. Archival photos would carry credit lines; rights differ from news wire shots. Template authors should store credits in caption text when they add real assets.
-
-Science-for-general-readers explained sampling bias with a carnival analogy. It points readers toward `14_science.md` for tone continuity. Cross-slice narrative is optional; cross-repo linking in docs is mandatory for onboarding.
-
-Features end with a kicker about reading past the jump. In PDF, jumps are implicit page breaks between stems. Web might use anchor links if CSS adds intra-page navigation later.
-
-**Depth notes.** Narrative nonfiction uses scene, character, and stakes. Fact-checkers map each scene to sourcing notes. The template maps each slice to a filename—different job, similar discipline.
-
-Photo essays need captions that add information, not repeat the obvious. Cutlines name people left-to-right when groups appear. Accessibility alt text should not be empty for informative images.
-
-Serial features build audience over weeks; RSS and newsletters rebundle them. PDF editions are one-shot bundles unless you regenerate nightly—document cadence in your ops guide.
-
-Sidebars explain jargon for general readers. Pull quotes break gray text deserts. `snippets.pull_quote` helps when you want LaTeX `quote` environment styling.
-
-Editor’s notes disclose conflicts or updates post-publication. Version strings in `config.yaml` can surface on title pages to show which build readers hold.
-
-Longform paywalls interact with SEO and social snippets. Open-access research faces analogous tensions between visibility and sustainability. Choose licenses deliberately—Apache-2.0 governs this repo’s code; manuscript text may differ if you fork.
-
-Features finis: `12_features` yields to `13_health.md`, where service journalism tone sharpens.
-
+Features yield to the health pages next.
 ```{=latex}
 \end{multicols}
 ```

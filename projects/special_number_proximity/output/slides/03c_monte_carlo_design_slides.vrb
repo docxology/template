@@ -1,6 +1,0 @@
-\frametitle{Secondary validation artifact}
-\protect\phantomsection\label{secondary-validation-artifact}
-\texttt{scripts/02\_lattice\_crosscheck.py} writes
-\texttt{output/data/lattice\_crosscheck.json}, comparing brute-force
-\(\delta_Q\) to the scaled-lattice formulation and recording Dirichlet
-residual checks on fixed test reals.

@@ -1,45 +1,28 @@
 # Opinion
 
 ```{=latex}
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{../output/figures/section_banner_09_opinion.png}
+\caption{Monochrome desk banner for this folio; raster from \texttt{generate\_section\_banners.py}.}
+\label{fig:banner_09_opinion}
+\end{figure}
 \begin{multicols}{3}
 ```
 
-**Columnists**
+**Guest essays**
 
 ```{=latex}
-\begin{quote}\itshape
-We print arguments here, not verdicts from the bench.
-\end{quote}
-\par\smallskip
+\noindent\textit{Opinion —}\par\smallskip
 ```
 
-**OPINION.** Stem `09_opinion` follows the unsigned editorial. Columnists take first-person positions on infrastructure, education, and zoning—always in the abstract. No ballot measures are named; no candidates are endorsed.
+**OPINION.** **Guest columnist:** I taught introductory statistics for a decade; the public understands uncertainty better than pundits assume. What people hate is inconsistency—graphs that move axes between segments without saying so.
 
-**Transit first.** A columnist argued that frequent bus headways matter more than ribbon-cuttings on megaprojects. Operating budgets, not capital photos, determine whether riders trust the schedule. Counterpoint: rail anchors development. Rebuttal: development must still serve renters. The template learns nothing from this debate except line width.
+**Guest columnist:** Local news deserts are not a technology problem first. They are a revenue-and-trust problem. Subsidies help; accountability reporting helps more.
 
-**Schools.** Another writer urged smaller class sizes and better pay for paraprofessionals. Funding formulas differ by jurisdiction; this text does not pick one. The reproducibility angle is that education policy slices could be generated from YAML fixtures like other projects in the monorepo.
+**Guest columnist:** If your “AI editorial assistant” cannot cite sources, it is not an assistant; it is a slot machine wearing a tie.
 
-**Housing.** A third voice promoted gentle density near transit. Parking minimums and setback rules appear as generic friction points. If you embed actual ordinances, cite primary sources in `references.bib`.
-
-**Climate habits.** Personal carbon choices versus structural incentives received a paragraph of balanced hand-waving. Opinion desks often pair facts with values; here values stand alone.
-
-**Technology skepticism.** A contributor cautioned against over-relying on large language models for fact-finding. Human editors remain accountable. That aligns with the template’s testing philosophy: automated help is fine; mocks masquerading as integration tests are not.
-
-Letters responding to these columns would appear in `10_letters.md`. Cross-references are editorial convention only. Opinion ends here.
-
-**Depth notes.** Column inches historically determined length limits; digital pages scroll infinitely but attention does not. Opinion writers still aim for one clear thesis, two supporting arcs, and a landing that reframes the opening hook.
-
-Fact-checkers contact columnists when claims drift toward news territory. Hybrid pieces—reported opinion—carry higher burden. This file avoids numbers that need verification beyond template internals.
-
-Anonymous sources rarely appear in signed opinion; when they do, editors know identities. Here, identities are moot—everything is synthetic.
-
-Satire and parody require cultural context; misreadings spark backlash. Labels matter. The template labels slices by filename stems so machines parse structure reliably.
-
-Social promotion snippets differ from print headlines; A/B tests on clicks bias toward outrage. Ethical opinion desks resist pure engagement optimization; reproducible research should resist “green builds at any cost” too—fix warnings, do not hide them.
-
-Community guidelines for comment sections fight spam and harassment. Moderation costs scale with traffic. Static PDFs sidestep comments; HTML might reintroduce them—policy choice.
-
-Opinion out: `09_opinion` yields the floor to `10_letters.md`, where readers answer back in epistolary form.
+Readers can disagree in letters to the editor.
 
 ```{=latex}
 \end{multicols}

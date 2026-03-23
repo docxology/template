@@ -4,33 +4,33 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: /Users/4d/Documents/GitHub/template/output/traditional_newspaper
 
-Total Files: 165
-Total Size: 2.00 MB
+Total Files: 205
+Total Size: 2.99 MB
 
 Files by Category:
-  • pdf: 10 files (0.28 MB)
-  • web: 20 files (0.27 MB)
-  • slides: 128 files (1.42 MB)
-  • figures: 1 files (0.02 MB)
+  • pdf: 10 files (0.54 MB)
+  • web: 22 files (0.22 MB)
+  • slides: 145 files (1.97 MB)
+  • figures: 22 files (0.25 MB)
   • data: 1 files (0.00 MB)
   • reports: 4 files (0.01 MB)
   • logs: 1 files (0.00 MB)
 
 Largest Files:
-  • traditional_newspaper_combined.pdf: 0.08 MB (pdf)
-  • _combined_manuscript.tex: 0.07 MB (pdf)
-  • _combined_manuscript.md: 0.07 MB (pdf)
-  • index.html: 0.07 MB (web)
-  • _combined_manuscript.md: 0.07 MB (web)
+  • traditional_newspaper_combined.pdf: 0.36 MB (pdf)
+  • S03_validation_and_outputs_slides.pdf: 0.10 MB (slides)
+  • wordcount_bars_bw.png: 0.07 MB (figures)
+  • _combined_manuscript.log: 0.06 MB (pdf)
+  • 98_newspaper_and_pipeline_terms_slides.log: 0.06 MB (slides)
 
 File Types:
-  • .log: 21 file(s)
-  • .aux: 19 file(s)
-  • .pdf: 19 file(s)
-  • .tex: 19 file(s)
-  • .toc: 19 file(s)
-  • .html: 19 file(s)
-  • .nav: 18 file(s)
-  • .snm: 18 file(s)
-  • .md: 4 file(s)
-  • .json: 3 file(s)
+  • .log: 23 file(s)
+  • .png: 22 file(s)
+  • .aux: 21 file(s)
+  • .pdf: 21 file(s)
+  • .tex: 21 file(s)
+  • .toc: 21 file(s)
+  • .html: 21 file(s)
+  • .nav: 20 file(s)
+  • .snm: 20 file(s)
+  • .vrb: 5 file(s)

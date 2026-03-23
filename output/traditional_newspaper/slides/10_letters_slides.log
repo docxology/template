@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 15:29
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:28
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1486,6 +1486,9 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 (/Users/4d/Documents/GitHub/template/projects/traditional_newspaper/output/slid
 es/10_letters_slides.nav)
+File: ../figures/section_banner_10_letters.png Graphic file (type bmp)
+<../figures/section_banner_10_letters.png>
+
 
 ! LaTeX Error: Environment multicols undefined.
 
@@ -1493,28 +1496,30 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.157 \end{frame}
+l.121 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 121.
 
-! LaTeX Error: \begin{beamer@framepauses} on input line 157 ended by \end{multi
+! LaTeX Error: \begin{beamer@framepauses} on input line 121 ended by \end{multi
 cols}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.157 \end{frame}
+l.121 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \vbox (653.59572pt too high) detected at line 157
+Overfull \vbox (65.82344pt too high) detected at line 121
  []
 
 [1
@@ -1538,13 +1543,13 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 29138 strings out of 468168
- 587328 string characters out of 5432816
- 1167637 words of memory out of 5000000
- 57379 multiletter control sequences out of 15000+600000
- 628389 words of font info for 51 fonts, out of 8000000 for 9000
+ 29192 strings out of 468168
+ 588709 string characters out of 5432816
+ 1142671 words of memory out of 5000000
+ 57425 multiletter control sequences out of 15000+600000
+ 628413 words of font info for 54 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1095b,401s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1095b,407s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/traditional_news
 paper/output/slides/10_letters_slides.pdf (1 page).

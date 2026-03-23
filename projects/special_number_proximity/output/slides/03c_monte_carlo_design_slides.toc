@@ -1,1 +1,0 @@
-\beamer@sectionintoc {1}{Monte Carlo design}{1}{0}{1}

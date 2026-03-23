@@ -50,15 +50,11 @@ dependencies = [
   "requests>=2.31.0",
 ]
 
-[project.scripts]
-# Development workflow scripts (run with: uv run <script-name>)
-test = "pytest tests/ --cov=infrastructure --cov-report=html --cov-fail-under=70"
-test-infra = "pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=60 --tb=short -m 'not requires_ollama' --ignore=tests/infra_tests/core/test_module_interoperability.py"
-test-project = "pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
-lint = "mypy infrastructure/"
-security = "bandit -r infrastructure/"
-format = "black infrastructure/"
-type-check = "mypy --strict infrastructure/"
+
+# NOTE: [project.scripts] removed — entries were shell commands, not Python
+# entrypoint references (PEP 517 violation). Use `uv run pytest ...` or
+# the scripts/ directory for dev workflows.  package = false (line 120) means
+# no console_scripts are installed anyway.
 
 [dependency-groups]
 # Optional scientific computing (used by act_inf_metaanalysis project; not needed for core template)

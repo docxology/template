@@ -47,6 +47,7 @@ The template provides multiple entry points organized by function:
 - `check_uv()` — returns 0 if uv is available and functional
 - `ensure_uv()` — **idempotent uv installer**: if uv is absent, downloads via `curl`/`wget` from `https://astral.sh/uv/install.sh`, sources `$HOME/.local/bin/env`, re-checks. Exits 1 on failure.
 - `log_uv_status()` — in `PIPELINE_MODE=1` calls `ensure_uv()` then runs `uv sync` to bootstrap the `.venv`; in interactive mode warns if uv is absent with install hint
+- `ensure_secure_run_environment()` — used by `secure_run.sh`: `ensure_uv` then `uv sync --group steganography` (adds `qrcode`, `python-barcode` on top of default dependency groups).
 - `get_python_cmd()` — resolves `.venv/bin/python3` → root `.venv` → system `python3`
 
 **Secure Entry Point** (`secure_run.sh` + `secure_config.yaml`):
@@ -56,19 +57,21 @@ post-processing to all generated PDFs. Sources `scripts/bash_utils.sh` for loggi
 
 **Stage flow:**
 
-1. `run.sh --pipeline [args]` — executes the manuscript pipeline (9 stages shown as [1/9]..[9/9], with clean shown as [0/9])
-2. `infrastructure/steganography.SteganographyProcessor` — post-processes every PDF,
-   producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
-   Original PDFs are always left untouched.
+0. **`ensure_secure_run_environment`** (`bash_utils.sh`) — after CLI parse (so `--help` skips this): `ensure_uv` (install uv if absent, same policy as pipeline mode) then `uv sync --group steganography` so the repo `.venv` has default groups plus `qrcode[pil]` and `python-barcode` for QR/Code128 steganography.
+1. `run.sh [args]` — interactive menu or non-interactive pipeline, depending on arguments (not forced to `--pipeline`).
+2. `infrastructure/steganography.SteganographyProcessor` — post-processes PDFs for all
+   discovered active projects by default, or only the explicit `--project` target when
+   provided. Produces a companion `*_steganography.pdf` and a `.hashes.json` integrity
+   manifest. Original PDFs are always left untouched.
 
 **CLI flags:**
 
 | Flag | Description |
 |------|-------------|
-| `--project <name>` | Target a specific project (default: auto-discover first project) |
+| `--project <name>` | Target a specific project (default stego scope: all discovered active projects) |
 | `--steganography-only` | Skip pipeline; re-process existing PDFs only |
-| `--skip-infra` | Pass-through to `run.sh` to skip infrastructure tests |
-| `--core-only` | Pass-through to `run.sh` for core-only pipeline (no LLM) |
+| `--skip-infra` | Pass-through to `run.sh`; applies when used with `--pipeline` |
+| `--core-only` | Pass-through to `run.sh`; applies when used with `--pipeline` |
 | `--help` | Show usage and technique summary |
 
 **Usage:**
@@ -82,6 +85,12 @@ post-processing to all generated PDFs. Sources `scripts/bash_utils.sh` for loggi
 
 # Re-process existing PDFs without re-running the pipeline
 ./secure_run.sh --steganography-only --project code_project
+
+# Core-only non-interactive pipeline + steganography
+./secure_run.sh --pipeline --core-only
+
+# Multi-project core pipeline + steganography across all active projects
+./secure_run.sh d
 ```
 
 **Output files:**

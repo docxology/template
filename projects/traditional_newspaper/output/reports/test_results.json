@@ -1,45 +1,45 @@
 {
-  "timestamp": "2026-03-22T15:28:12.184165",
+  "timestamp": "2026-03-23T05:27:22.678209",
   "infrastructure": {},
   "project": {
-    "passed": 54,
+    "passed": 79,
     "failed": 0,
     "skipped": 0,
-    "total": 54,
+    "total": 79,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 54,
+    "discovery_count": 79,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 4.52,
-      "execution": 4.52
+      "setup": 9.47,
+      "execution": 9.47
     },
     "test_categories": {},
     "coverage_percent": 100.0,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 54,
+    "total_passed": 79,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 54,
+    "total_tests": 79,
     "all_passed": true,
     "project_coverage": 100.0
   },
   "coverage_details": {
     "project": {
       "overall_coverage": 100.0,
-      "total_executed": 126,
+      "total_executed": 269,
       "total_missing": 0,
       "total_excluded": 0,
-      "total_lines": 126,
+      "total_lines": 269,
       "file_coverage": {
         "projects/traditional_newspaper/src/newspaper/__init__.py": {
           "coverage_percent": 100.0,
-          "executed_lines": 6,
+          "executed_lines": 9,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 6
+          "total_lines": 9
         },
         "projects/traditional_newspaper/src/newspaper/content.py": {
           "coverage_percent": 100.0,
@@ -47,6 +47,13 @@
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 14
+        },
+        "projects/traditional_newspaper/src/newspaper/layout_figure.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 37,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 37
         },
         "projects/traditional_newspaper/src/newspaper/layout_spec.py": {
           "coverage_percent": 100.0,
@@ -62,12 +69,19 @@
           "excluded_lines": 0,
           "total_lines": 22
         },
-        "projects/traditional_newspaper/src/newspaper/sections.py": {
+        "projects/traditional_newspaper/src/newspaper/section_graphics.py": {
           "coverage_percent": 100.0,
-          "executed_lines": 23,
+          "executed_lines": 37,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 23
+          "total_lines": 37
+        },
+        "projects/traditional_newspaper/src/newspaper/sections.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 31,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 31
         },
         "projects/traditional_newspaper/src/newspaper/snippets.py": {
           "coverage_percent": 100.0,
@@ -75,6 +89,13 @@
           "missing_lines": 0,
           "excluded_lines": 0,
           "total_lines": 44
+        },
+        "projects/traditional_newspaper/src/newspaper/visualization.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 58,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 58
         }
       }
     }

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 15:29
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:28
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1572,8 +1572,32 @@ es/98_newspaper_and_pipeline_terms_slides.nav)
 
 
 (/Users/4d/Documents/GitHub/template/projects/traditional_newspaper/output/slid
-es/98_newspaper_and_pipeline_terms_slides.vrb)
-Overfull \vbox (147.64204pt too high) detected at line 143
+es/98_newspaper_and_pipeline_terms_slides.vrb
+File: ../figures/section_banner_98_newspaper_and_pipeline_terms.png Graphic fil
+e (type bmp)
+<../figures/section_banner_98_newspaper_and_pipeline_terms.png>
+
+Overfull \hbox (28.63348pt too wide) in paragraph at lines 62--62
+[]|\TU/lmss/bx/n/10.95 layout_schematic.png|  
+ []
+
+
+Overfull \hbox (43.77733pt too wide) in paragraph at lines 66--66
+[]|\TU/lmss/m/n/10.95 **section_banner_*.png**|  
+ []
+
+
+Overfull \hbox (137.43265pt too wide) in paragraph at lines 72--72
+[]|\TU/lmss/bx/n/10.95 MANUSCRIPT_OPTIONAL_FILENAMES|  
+ []
+
+
+Overfull \hbox (49.99692pt too wide) in paragraph at lines 75--75
+[]|\TU/lmss/bx/n/10.95 discover_manuscript_files|  
+ []
+
+)
+Overfull \vbox (2435.29753pt too high) detected at line 333
  []
 
 [1
@@ -1597,13 +1621,13 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 30804 strings out of 468168
- 619531 string characters out of 5432816
- 1179297 words of memory out of 5000000
- 59018 multiletter control sequences out of 15000+600000
- 628397 words of font info for 52 fonts, out of 8000000 for 9000
+ 30885 strings out of 468168
+ 621835 string characters out of 5432816
+ 1253483 words of memory out of 5000000
+ 59094 multiletter control sequences out of 15000+600000
+ 628413 words of font info for 54 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1116b,401s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1116b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/traditional_news
 paper/output/slides/98_newspaper_and_pipeline_terms_slides.pdf (1 page).

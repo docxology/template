@@ -89,83 +89,60 @@
 
 \begin{document}
 
-\begin{frame}{Front Page}
+\begin{frame}[fragile]{Front Page}
 \protect\phantomsection\label{front-page}
+\begin{figure}[!t]
+\centering
 \includegraphics[width=\linewidth]{../figures/masthead.png}
+\caption{Deterministic nameplate raster from render\_masthead\_png, built during pipeline analysis. Override title and tagline with environment variables NEWSPAPER\_TITLE and NEWSPAPER\_TAGLINE. Outputs to masthead.png in project output figures.}
+\label{fig:masthead}
+\end{figure}
 \vspace{0.6em}
 \begin{multicols}{3}
 
-\textbf{Late edition} --- Lead item for the Template Gazette
-demonstration edition.
+\textbf{Late edition}
 
 \noindent Citation hook: \cite{template2026gazette}.
 \par\smallskip
 
-The compositor holds the column measure while Pandoc pours Markdown into
-LaTeX. Each folio slice maps to one manuscript file in this exemplar.
-XeLaTeX prints the sheet; the pipeline records the run. No mock
-interviews appear; every paragraph is static fixture copy for layout
-stress. The compositor holds the column measure while Pandoc pours
-Markdown into LaTeX. Each folio slice maps to one manuscript file in
-this exemplar. XeLaTeX prints the sheet; the pipeline records the run.
-No mock interviews appear; every paragraph is static fixture copy for
-layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress. The compositor holds the column measure while Pandoc
-pours Markdown into LaTeX. Each folio slice maps to one manuscript file
-in this exemplar. XeLaTeX prints the sheet; the pipeline records the
-run. No mock interviews appear; every paragraph is static fixture copy
-for layout stress.
+\noindent\textbf{\Large City braces for overnight vote on transit bond}\par\smallskip
+\textit{By Staff — City Desk}\par\smallskip
+
+\textbf{CITY.} Council leaders said they were ``within sight of yes'' on
+a nine-figure bond package meant to rebuild aging tunnels and buy new
+rail cars. Skeptics demanded firmer cost caps; unions demanded labor
+standards written into the contract language, not just the press
+release.
+
+The mayor's office released a two-page summary dense with renderings of
+stations that gleam in sunlight. Engineers privately noted change orders
+are where budgets breathe; this story keeps the argument in prose so the
+page can flex in three columns without a live database.
+
+Commuters interviewed at random---actually, invented for this
+demo---split between relief and fatigue. ``Fix the signals first,'' one
+said. ``I'll believe the headways when my phone agrees with the platform
+clock.''
+
+Weather for the weekend looks ordinary: rain likely, wind modest, no
+named storms. The desk runs it anyway because narrow columns need short
+paragraphs as much as they need long ones.
+
+\textbf{Inside today:} National briefs open on the next folio with a
+monochrome desk banner; every interior page carries a generated strip so
+floats, captions, and measure stay exercised. For pipeline geometry,
+floats, and validation detail, see supplements
+\texttt{S01}--\texttt{S03} and the glossary slice.
+
+\textbf{Jump note.} Nameplate, lead, then body: this page keeps the
+masthead as the lone top float so the first multicolumn block can start
+cleanly. If your fork adds second art above the fold, watch LaTeX float
+queues.
+
+\textbf{Production.} Rebuild figures with
+\texttt{scripts/02\_run\_analysis.py} before complaining about missing
+PNG paths; mirrored outputs land under
+\texttt{output/traditional\_newspaper/} after a full run.
 
 \end{multicols}
 \end{frame}

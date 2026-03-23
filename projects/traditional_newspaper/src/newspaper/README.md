@@ -1,6 +1,6 @@
 # `src/newspaper/`
 
-Layout constants, section inventory, deterministic fixture copy, Pandoc/LaTeX snippet builders, and masthead rasterization for the Template Gazette exemplar.
+Layout constants, section inventory, deterministic fixture copy, Pandoc/LaTeX snippet builders, masthead and layout schematic rasterization, and monochrome manuscript metric charts for the Template Gazette exemplar.
 
 ## Imports
 

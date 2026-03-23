@@ -1,1 +1,0 @@
-\beamer@sectionintoc {1}{Scaled lattice and Dirichlet residual}{1}{0}{1}

@@ -1,6 +1,0 @@
-\frametitle{Vectorised batch parity}
-\protect\phantomsection\label{vectorised-batch-parity}
-\texttt{statistics\_compare.batch\_min\_rational\_distances} defaults to
-a vectorised three-\(p\) inner loop;
-\texttt{tests/test\_batch\_implementation\_parity.py} asserts bitwise
-agreement with the scalar path on random batches.

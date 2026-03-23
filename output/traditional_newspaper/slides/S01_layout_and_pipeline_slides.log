@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  22 MAR 2026 15:29
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:28
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1491,6 +1491,12 @@ es/S01_layout_and_pipeline_slides.nav)
 
 (/Users/4d/Documents/GitHub/template/projects/traditional_newspaper/output/slid
 es/S01_layout_and_pipeline_slides.vrb
+File: ../figures/section_banner_S01_layout_and_pipeline.png Graphic file (type 
+bmp)
+<../figures/section_banner_S01_layout_and_pipeline.png>
+File: ../figures/layout_schematic.png Graphic file (type bmp)
+<../figures/layout_schematic.png>
+
 
 ! LaTeX Error: Environment multicols undefined.
 
@@ -1498,38 +1504,41 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.3 \begin{multicols}
-                     {3}
+l.15 \begin{multicols}
+                      {3}
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (102.39331pt too wide) in paragraph at lines 5--16
+Overfull \hbox (102.39331pt too wide) in paragraph at lines 17--30
 \TU/lmtt/m/n/10.95 infrastructure.rendering.manuscript_discovery.discover_manus
 cript_files\TU/lmss/m/n/10.95 , 
  []
 
 
+LaTeX Warning: Reference `fig:masthead' on page 1 undefined on input line 36.
+
+
 LaTeX Warning: Citation `template2026gazette' on page 1 undefined on input line
- 28.
+ 142.
 
 
-! LaTeX Error: \begin{beamer@framepauses} on input line 123 ended by \end{multi
+! LaTeX Error: \begin{beamer@framepauses} on input line 237 ended by \end{multi
 cols}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.31 \end{multicols}
-                    
+l.145 \end{multicols}
+                     
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 )
-Overfull \vbox (57.67725pt too high) detected at line 123
+Overfull \vbox (1909.28325pt too high) detected at line 237
  []
 
 [1
@@ -1557,13 +1566,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 29152 strings out of 468168
- 588075 string characters out of 5432816
- 1143699 words of memory out of 5000000
- 57388 multiletter control sequences out of 15000+600000
- 628397 words of font info for 52 fonts, out of 8000000 for 9000
+ 29208 strings out of 468168
+ 589741 string characters out of 5432816
+ 1182780 words of memory out of 5000000
+ 57438 multiletter control sequences out of 15000+600000
+ 628413 words of font info for 54 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1108b,401s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1108b,436s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/traditional_news
 paper/output/slides/S01_layout_and_pipeline_slides.pdf (1 page).

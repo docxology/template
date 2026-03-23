@@ -1,0 +1,10 @@
+{
+  "source_file": "traditional_newspaper_combined.pdf",
+  "timestamp": "2026-03-23T12:41:04.312016+00:00",
+  "hashes": {
+    "sha256": "2c4347049f48856c4ecac53036fc08e911237d84391cad3dae5b17fea21c8090",
+    "sha512": "b7d85c34a38414c93f5fedef389cf823f7ef0404dadeeca85175afe10f61a22030150011320cdd0464b2dc4354fc3d9f515a2de5f313d72c509d83bbb629339f"
+  },
+  "document_id": "50046e8a08b530520ff690975f0ccc93",
+  "steganography_applied": "true"
+}

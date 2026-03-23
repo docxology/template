@@ -4,9 +4,11 @@
     "PDF validation": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": true
+    "Figure registry": false
   },
-  "figure_issues": [],
+  "figure_issues": [
+    "Figure registry not found but 24 figure reference(s) found in manuscript"
+  ],
   "output_statistics": {
     "detailed_validation": {
       "structure": {
@@ -14,7 +16,6 @@
         "issues": [],
         "missing_files": [],
         "suspicious_sizes": [
-          "Combined PDF is unusually small: 0.08 MB",
           "pdf/ directory is empty",
           "web/ directory is empty",
           "slides/ directory is empty",
@@ -26,7 +27,7 @@
         "directory_structure": {
           "project_combined_pdf": {
             "exists": true,
-            "size_mb": 0.08,
+            "size_mb": 0.36,
             "readable": true
           },
           "pdf": {
@@ -165,7 +166,6 @@
       "issues_by_severity": {
         "critical": [],
         "warning": [
-          "Combined PDF is unusually small: 0.08 MB",
           "pdf/ directory is empty",
           "web/ directory is empty",
           "slides/ directory is empty",
@@ -179,23 +179,30 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 0.2800102233886719
+      "size_mb": 0.5389595031738281
     },
     "figures": {
-      "files": 1,
-      "size_mb": 0.017999649047851562
+      "files": 22,
+      "size_mb": 0.24514293670654297
     },
     "data": {
       "files": 1,
-      "size_mb": 0.00205230712890625
+      "size_mb": 0.0022993087768554688
     }
   },
   "summary": {
     "total_checks": 4,
-    "passed": 4,
-    "failed": 0,
-    "figure_issues_count": 0,
-    "all_passed": true
+    "passed": 3,
+    "failed": 1,
+    "figure_issues_count": 1,
+    "all_passed": false
   },
-  "recommendations": []
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "1 figure reference issue(s)",
+      "action": "Register missing figures or remove unused references",
+      "file": "projects/traditional_newspaper/output/figures/figure_registry.json"
+    }
+  ]
 }

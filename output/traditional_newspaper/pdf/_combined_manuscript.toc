@@ -15,4 +15,9 @@
 \contentsline {section}{\numberline {15}Obituaries}{16}{section.15}%
 \contentsline {section}{\numberline {16}Classifieds}{17}{section.16}%
 \contentsline {section}{\numberline {17}Supplement: Layout and pipeline}{18}{section.17}%
-\contentsline {section}{\numberline {18}Glossary: Newspaper and pipeline terms}{19}{section.18}%
+\contentsline {section}{\numberline {18}Supplement: Typography and measure}{19}{section.18}%
+\contentsline {section}{\numberline {19}Supplement: Validation and outputs}{21}{section.19}%
+\contentsline {section}{\numberline {20}Glossary: Newspaper and pipeline terms}{23}{section.20}%
+\contentsline {subsection}{\numberline {20.1}Narrative: how the terms fit together}{23}{subsection.20.1}%
+\contentsline {subsection}{\numberline {20.2}Using this glossary in reviews}{23}{subsection.20.2}%
+\contentsline {subsection}{\numberline {20.3}Future-facing notes}{24}{subsection.20.3}%

@@ -69,6 +69,27 @@ MANUSCRIPT_OPTIONAL_FILENAMES: tuple[str, ...] = (
     "98_newspaper_and_pipeline_terms.md",
 )
 
+# Display titles for supplemental/glossary banners (``get_slice`` returns None).
+OPTIONAL_MANUSCRIPT_STEM_TO_TITLE: dict[str, str] = {
+    "S01_layout_and_pipeline": "Layout & Pipeline",
+    "S02_typography_and_measure": "Typography & Measure",
+    "S03_validation_and_outputs": "Validation & Outputs",
+    "98_newspaper_and_pipeline_terms": "Glossary",
+}
+
+
+def section_banner_targets() -> tuple[tuple[str, str], ...]:
+    """``(stem, title)`` pairs for B&W banner PNGs (excludes front page).
+
+    Includes interior core folios and optional supplemental/glossary stems.
+    """
+    core = tuple((s, t) for s, t in PAGE_SLICES if s != "01_front_page")
+    optional: list[tuple[str, str]] = []
+    for name in MANUSCRIPT_OPTIONAL_FILENAMES:
+        stem = Path(name).stem
+        optional.append((stem, OPTIONAL_MANUSCRIPT_STEM_TO_TITLE[stem]))
+    return core + tuple(optional)
+
 
 def all_tracked_manuscript_basenames() -> tuple[str, ...]:
     """Core folios plus optional supplemental/glossary names."""

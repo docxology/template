@@ -1,6 +1,12 @@
 # Supplement: Typography and measure
 
 ```{=latex}
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{../output/figures/section_banner_S02_typography_and_measure.png}
+\caption{Typography supplement banner (B\&W).}
+\label{fig:banner_S02_typography_and_measure}
+\end{figure}
 \begin{multicols}{3}
 ```
 

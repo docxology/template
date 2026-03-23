@@ -4,14 +4,24 @@ from newspaper.content import FIXTURE_SENTENCES, fixture_copy, fixture_paragraph
 from newspaper.layout_figure import render_layout_schematic_png
 from newspaper.layout_spec import LAYOUT, NewspaperLayout, column_count_valid
 from newspaper.masthead import render_masthead_png
+from newspaper.visualization import (
+    configure_matplotlib_bw_style,
+    load_manuscript_stats,
+    render_wordcount_bar_chart_bw,
+    render_wordcount_chart_from_stats_file,
+    wordcount_pairs_from_manuscript_stats,
+)
+from newspaper.section_graphics import render_section_banner_bw, section_banner_filename
 from newspaper.sections import (
     MANUSCRIPT_OPTIONAL_FILENAMES,
+    OPTIONAL_MANUSCRIPT_STEM_TO_TITLE,
     PAGE_SLICES,
     SLICE_BY_STEM,
     all_tracked_manuscript_basenames,
     get_slice,
     manuscript_filenames,
     manuscript_stems_ordered,
+    section_banner_targets,
     slice_count,
     slice_stems,
     validate_inventory,
@@ -32,6 +42,7 @@ __all__ = [
     "FIXTURE_SENTENCES",
     "LAYOUT",
     "MANUSCRIPT_OPTIONAL_FILENAMES",
+    "OPTIONAL_MANUSCRIPT_STEM_TO_TITLE",
     "NewspaperLayout",
     "PAGE_SLICES",
     "SLICE_BY_STEM",
@@ -56,4 +67,12 @@ __all__ = [
     "slice_count",
     "slice_stems",
     "validate_inventory",
+    "wordcount_pairs_from_manuscript_stats",
+    "configure_matplotlib_bw_style",
+    "load_manuscript_stats",
+    "render_wordcount_bar_chart_bw",
+    "render_wordcount_chart_from_stats_file",
+    "render_section_banner_bw",
+    "section_banner_filename",
+    "section_banner_targets",
 ]

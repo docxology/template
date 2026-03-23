@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Pipeline exemplar: **16 core markdown folios** + **supplemental `S01`** + **glossary `98`** + **custom preamble** (11×17 in, three columns) + **deterministic masthead** figure. No cross-project imports; logic in `src/newspaper/`.
+Pipeline exemplar: **16 core markdown folios** + **supplemental `S01`–`S03`** + **glossary `98`** + **custom preamble** (11×17 in, three columns) + **deterministic masthead** figure. No cross-project imports; logic in `src/newspaper/`.
 
 ## Layout
 
@@ -14,10 +14,16 @@ Pipeline exemplar: **16 core markdown folios** + **supplemental `S01`** + **glos
 | `src/newspaper/content.py` | `FIXTURE_SENTENCES`, `fixture_paragraph`, `fixture_copy` (deterministic filler) |
 | `src/newspaper/masthead.py` | `render_masthead_png(path, *, seed=42, title=..., tagline=...)` |
 | `scripts/generate_masthead.py` | Masthead PNG; env `NEWSPAPER_TITLE`, `NEWSPAPER_TAGLINE` |
+| `scripts/generate_layout_schematic.py` | Tabloid/column schematic PNG (`layout_schematic.png`) |
+| `scripts/generate_section_banners.py` | B\&W desk banners `section_banner_{stem}.png` for folios `02`–`16` and supplements |
 | `scripts/report_manuscript_stats.py` | Word/line counts → `output/data/manuscript_stats.json` |
+| `scripts/visualization_wordcount_bw.py` | B&W word-count bar chart → `output/figures/wordcount_bars_bw.png` (requires stats JSON) |
+| `src/newspaper/visualization.py` | Monochrome matplotlib helpers and word-count chart builders |
+| `src/newspaper/section_graphics.py` | `render_section_banner_bw`, `section_banner_filename`; uses BW style from `visualization` |
 | `manuscript/01_*.md` … `16_*.md` | Core folios; front page includes masthead + optional `\cite` |
-| `manuscript/S01_*.md` | Supplemental (after 16, before 98) |
+| `manuscript/S01_*.md` … `S03_*.md` | Supplemental (after 16, before 98) |
 | `manuscript/98_*.md` | Glossary table |
+| `docs/` | Modular docs hub ([`docs/README.md`](docs/README.md), [`docs/AGENTS.md`](docs/AGENTS.md)) |
 
 ## Discovery
 

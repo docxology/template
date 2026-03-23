@@ -169,6 +169,9 @@
       vertical-align: middle;
     }
   </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
 </head>
 <body>
 <h1 id="supplement-layout-and-pipeline">Supplement: Layout and
@@ -183,13 +186,106 @@ Pandoc emits LaTeX. Tabloid paper (11 in × 17 in) and
 <code>\usepackage{multicol}</code> come from
 <code>manuscript/preamble.md</code>; column separation matches
 <code>src/newspaper/layout_spec.py</code>
-(<code>LAYOUT.column_sep_in</code>).</p>
+(<code>LAYOUT.column_sep_in</code>). Figure~<span
+class="math inline">\(\ref{fig:layout_schematic}\)</span> (above this
+column block) summarizes the same numbers as a grid diagram.</p>
 <p>The masthead PNG is produced by
 <code>scripts/generate_masthead.py</code> calling
 <code>newspaper.masthead.render_masthead_png</code> during Stage 02
 analysis. Optional environment variables <code>NEWSPAPER_TITLE</code>
 and <code>NEWSPAPER_TAGLINE</code> override banner text without editing
-Python.</p>
+Python. In the combined PDF it is captioned as Figure~<span
+class="math inline">\(\ref{fig:masthead}\)</span>. A companion schematic
+ships from <code>scripts/generate_layout_schematic.py</code> via
+<code>render_layout_schematic_png</code>, giving a second captioned
+figure for float and caption testing.</p>
+<p><strong>Stage ordering (core pipeline).</strong>
+<code>execute_pipeline.py</code> and <code>./run.sh --core-only</code>
+run, among others: environment setup, tests, analysis scripts (including
+both figure generators when present), PDF rendering, validation, and
+output copy. Analysis writes into
+<code>projects/traditional_newspaper/output/</code>; copy stages mirror
+selected artifacts into <code>output/traditional_newspaper/</code> for
+distribution. Exact stage labels appear in console logs with progress
+markers.</p>
+<p><strong>Manuscript combination.</strong> Each slice file is read as
+UTF-8 text. Preamble metadata from <code>preamble.md</code> injects
+geometry and packages. Title page fields derive from
+<code>config.yaml</code> (<code>paper.title</code>, authors, version,
+date). Bibliography entries live in <code>references.bib</code>;
+<code>\cite{template2026gazette}</code> appears on the front page and
+here to exercise BibTeX wiring.</p>
+<p><strong>Word counts.</strong>
+<code>scripts/report_manuscript_stats.py</code> walks
+<code>all_tracked_manuscript_basenames()</code> and emits
+<code>output/data/manuscript_stats.json</code> with per-file words,
+lines, and bytes. CI or humans can diff that JSON across branches to
+catch accidental truncation. It is a thin orchestrator: no analytics
+logic beyond counting.</p>
+<p><strong>Why tabloid.</strong> The 11×17 inch choice stresses wide
+measure and long vertical flow compared to letter paper. Three columns
+mimic newspaper grids while remaining simple <code>multicol</code>
+environments—no custom column balancers. If you shrink paper, update
+<code>NewspaperLayout</code> constants, regenerate
+<code>layout_schematic.png</code>, and rerun tests that assert geometry
+text in captions still matches code.</p>
+<p><strong>Floats versus multicol.</strong> Standard <code>figure</code>
+floats are not supported inside <code>multicols</code>; the layout
+schematic therefore sits before <code>\begin{multicols}{3}</code> in
+this slice, matching the front page pattern (masthead float, then
+three-column body). Use <code>\includegraphics</code> without a float if
+you ever need art mid-column.</p>
+<p><strong>Slides and web.</strong> The same stems feed Beamer slides
+and HTML web output via infrastructure renderers. Figure captions pass
+through Lua filters for HTML; keep <code>\caption{}</code> text free of
+unmatched braces so extraction regexes succeed.</p>
+<p><strong>Checkpointing and resume.</strong> Root pipeline scripts
+support checkpoints so long builds can restart after transient failures.
+Newspaper builds are shorter than some monographs, but CI timeouts still
+happen—resume flags save compute. Read
+<code>docs/operational/config/checkpoint-resume.md</code> for semantics;
+behavior is uniform across projects.</p>
+<p><strong>Multi-project runs.</strong>
+<code>./run.sh --all-projects</code> executes many exemplars
+sequentially. Infrastructure tests may run once up front. When debugging
+<code>traditional_newspaper</code> alone, pass
+<code>--project traditional_newspaper</code> to avoid unrelated failures
+blocking iteration.</p>
+<p><strong>Environment variables.</strong> Beyond masthead overrides,
+<code>LOG_LEVEL</code> tunes verbosity, <code>MPLBACKEND=Agg</code>
+ensures headless matplotlib, and <code>PROJECT_DIR</code> helps scripts
+resolve paths when invoked from unexpected working directories. Document
+any new vars in <code>scripts/AGENTS.md</code>.</p>
+<p><strong>BibTeX keys.</strong> <code>template2026gazette</code> in
+<code>references.bib</code> exists to exercise citation machinery.
+Replace with your publication entry when forking; keep keys ASCII and
+stable so diffs stay readable.</p>
+<p><strong>Figure path normalization.</strong>
+<code>_pdf_tex_transforms.fix_figure_paths</code> rewrites
+<code>../output/figures/</code> to <code>../figures/</code> relative to
+the compile directory inside <code>output/.../pdf/</code>. If you add
+figures, place PNGs under
+<code>projects/traditional_newspaper/output/figures/</code> before copy,
+or under final <code>output/traditional_newspaper/figures/</code> after
+pipeline—know which stage consumes which path.</p>
+<p><strong>Extending slice count.</strong> If you truly need seventeen
+core folios, you must edit <code>PAGE_SLICES</code>, rename files, and
+update every test asserting <code>16</code>. Prefer supplemental
+<code>S*</code> files for extra prose—it avoids renumbering tourism.</p>
+<p><strong>Teaching use.</strong> Instructors can assign students to
+modify one slice, regenerate PDFs, and explain diff in log output. The
+constrained structure makes grading objective: does inventory pass? do
+captions resolve? do tests stay green?</p>
+<p><strong>Handover checklist (extended).</strong> Before merging a
+layout change, capture: (1) <code>git diff</code> on
+<code>preamble.md</code> and <code>layout_spec.py</code>, (2)
+regenerated <code>layout_schematic.png</code> if constants moved, (3)
+<code>manuscript_stats.json</code> after
+<code>report_manuscript_stats.py</code>, (4) PDF validator output
+excerpt showing zero <code>??</code> references, (5) a one-line note in
+the PR describing float behavior on the front page. Reviewers use the
+checklist to avoid approving partial state where code and figures
+disagree.</p>
 <p>This supplemental folio appears <strong>after</strong> the sixteen
 edition pages and <strong>before</strong> the glossary slice, per the
 template’s ordering: main numeric sections, then <code>S*</code>, then
