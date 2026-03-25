@@ -1,4 +1,4 @@
-"""Tests for infrastructure.validation.doc_scanner module.
+"""Tests for infrastructure.validation.docs.scanner module.
 
 Comprehensive tests for the documentation scanner covering all phases
 and report generation.
@@ -6,15 +6,16 @@ and report generation.
 
 import pytest
 
-from infrastructure.validation import doc_scanner
-from infrastructure.validation.doc_discovery import (
+from infrastructure.validation.docs import scanner as doc_scanner
+from infrastructure.validation.docs.discovery import (
     analyze_documentation_file,
     catalog_agents_readme,
     find_config_files,
     find_markdown_files,
     find_script_files,
 )
-from infrastructure.validation.doc_scanner import (
+from infrastructure.validation.docs._docs_scan_report import build_documentation_scan_report
+from infrastructure.validation.docs.scanner import (
     AccuracyIssue,
     CompletenessGap,
     DocumentationFile,
@@ -422,6 +423,17 @@ Also check [section](#nonexistent-section).
 
         # Should detect the broken links
         assert "total_issues" in scanner.results.statistics.get("phase2", {})
+
+
+class TestDocsScanReport:
+    """Tests for extracted documentation scan report builder."""
+
+    def test_build_report_contains_core_sections(self) -> None:
+        results = ScanResults(scan_date="2024-01-01T00:00:00", total_files=0)
+        text = build_documentation_scan_report(results)
+        assert "# Documentation Scan and Improvement Report" in text
+        assert "## Executive Summary" in text
+        assert "## Phase 2: Accuracy Verification" in text
 
 
 class TestDocScannerModule:

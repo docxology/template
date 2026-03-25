@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -28,7 +28,7 @@ sys.path.insert(0, str(repo_root / "src"))
 
 try:
     from infrastructure.core.exceptions import PDFValidationError
-    from infrastructure.validation.pdf_validator import validate_pdf_rendering
+    from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
 except ImportError as e:
     logger.error("Failed to import from infrastructure/validation/pdf_validator.py")
     logger.error(f"   {e}")

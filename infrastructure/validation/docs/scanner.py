@@ -20,15 +20,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success
-from infrastructure.validation.doc_accuracy import run_accuracy_phase
-from infrastructure.validation.doc_completeness import run_completeness_phase
-from infrastructure.validation.doc_discovery import (
+from infrastructure.core.logging.utils import get_logger, log_header, log_success
+from infrastructure.validation.docs.accuracy import run_accuracy_phase
+from infrastructure.validation.docs.completeness import run_completeness_phase
+from infrastructure.validation.docs.discovery import (
     discover_markdown_files,
     identify_cross_references,
     run_discovery_phase,
 )
-from infrastructure.validation.doc_models import (
+from infrastructure.validation.docs.models import (
     AccuracyIssue,
     CompletenessGap,
     DocumentationFile,
@@ -36,7 +36,8 @@ from infrastructure.validation.doc_models import (
     QualityIssue,
     ScanResults,
 )
-from infrastructure.validation.doc_quality import run_quality_phase
+from infrastructure.validation.docs.quality import run_quality_phase
+from infrastructure.validation.docs._docs_scan_report import build_documentation_scan_report
 
 __all__ = [
     "DocumentationScanner",
@@ -238,106 +239,7 @@ class DocumentationScanner:
 
     def _generate_report(self) -> str:
         """Generate comprehensive scan report."""
-        report_lines = [
-            "# Documentation Scan and Improvement Report",
-            "",
-            f"**Date**: {self.results.scan_date}",
-            "**Scope**: Comprehensive 7-phase documentation scan across entire repository",
-            f"**Files Scanned**: {self.results.total_files} markdown files",
-            "",
-            "## Executive Summary",
-            "",
-            "A comprehensive documentation scan was performed across the entire repository following the systematic 7-phase approach.",  # noqa: E501
-            "",
-            "### Key Statistics",
-            "",
-            f"- **Total Files Scanned**: {self.results.total_files} markdown files",
-            f"- **Link Issues Found**: {len(self.results.link_issues)}",
-            f"- **Accuracy Issues Found**: {len(self.results.accuracy_issues)}",
-            f"- **Completeness Gaps**: {len(self.results.completeness_gaps)}",
-            f"- **Quality Issues**: {len(self.results.quality_issues)}",
-            f"- **Improvements Identified**: {len(self.results.improvements_made)}",
-            "",
-            "## Phase 1: Discovery and Inventory",
-            "",
-            "### Documentation Structure",
-            "",
-        ]
-
-        # Add phase 1 details
-        if "phase1" in self.results.statistics:
-            phase1 = self.results.statistics["phase1"]
-            report_lines.extend(
-                [
-                    f"- **Markdown Files**: {phase1['markdown_files']}",
-                    f"- **AGENTS.md/README.md Files**: {phase1['agents_readme_files']}",
-                    f"- **Configuration Files**: {phase1['config_files']}",
-                    f"- **Script Files**: {phase1['script_files']}",
-                    "",
-                ]
-            )
-
-        # Add phase 2 details
-        report_lines.extend(["## Phase 2: Accuracy Verification", ""])
-        if "phase2" in self.results.statistics:
-            phase2 = self.results.statistics["phase2"]
-            report_lines.extend(
-                [
-                    f"- **Link Issues**: {phase2['link_issues']}",
-                    f"- **Command Issues**: {phase2['command_issues']}",
-                    f"- **Path Issues**: {phase2['path_issues']}",
-                    f"- **Config Issues**: {phase2['config_issues']}",
-                    f"- **Terminology Issues**: {phase2['terminology_issues']}",
-                    f"- **Total Issues**: {phase2['total_issues']}",
-                    "",
-                ]
-            )
-
-        # Add detailed issue lists
-        if self.results.link_issues:
-            report_lines.extend(["### Link Issues", ""])
-            for issue in self.results.link_issues[:20]:  # Limit to first 20
-                report_lines.append(
-                    f"- `{issue.file}:{issue.line}` - {issue.target} ({issue.issue_message})"
-                )
-            if len(self.results.link_issues) > 20:
-                report_lines.append(f"- ... and {len(self.results.link_issues) - 20} more")
-            report_lines.append("")
-
-        # Add other phases
-        report_lines.extend(
-            [
-                "## Phase 3: Completeness Analysis",
-                "",
-                f"Found {len(self.results.completeness_gaps)} completeness gaps across various categories.",  # noqa: E501
-                "",
-                "## Phase 4: Quality Assessment",
-                "",
-                f"Found {len(self.results.quality_issues)} quality issues requiring attention.",
-                "",
-                "## Phase 5: Intelligent Improvements",
-                "",
-                f"Identified {len(self.results.improvements_made)} improvements to implement.",
-                "",
-                "## Phase 6: Verification and Validation",
-                "",
-                "All verification checks completed.",
-                "",
-                "## Recommendations",
-                "",
-                "1. Fix all broken links identified in Phase 2",
-                "2. Address completeness gaps identified in Phase 3",
-                "3. Improve quality issues identified in Phase 4",
-                "4. Implement improvements identified in Phase 5",
-                "",
-                "---",
-                "",
-                f"**Report Generated**: {self.results.scan_date}",
-                "**Next Review Recommended**: Quarterly or after major changes",
-            ]
-        )
-
-        return "\n".join(report_lines)
+        return build_documentation_scan_report(self.results)
 
     def run_full_scan(self) -> tuple[ScanResults, str]:
         """Run all 7 phases of the documentation scan."""

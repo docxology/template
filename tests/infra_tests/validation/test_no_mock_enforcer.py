@@ -4,7 +4,7 @@ Tests the no-mock validation utility using real files.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.validation.no_mock_enforcer import validate_no_mocks
+from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 
 
 class TestValidateNoMocks:

@@ -3,8 +3,8 @@
 Tests repository scanning functionality comprehensively.
 """
 
-from infrastructure.validation import repo_scanner
-from infrastructure.validation.repo_scanner import (
+from infrastructure.validation.repo import scanner as repo_scanner
+from infrastructure.validation.repo.scanner import (
     CompletenessGap,
     RepositoryScanner,
     ScanAccuracyIssue,

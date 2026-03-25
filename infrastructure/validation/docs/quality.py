@@ -6,8 +6,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.validation.doc_models import QualityIssue
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.models import QualityIssue
 
 logger = get_logger(__name__)
 

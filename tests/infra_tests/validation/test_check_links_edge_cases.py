@@ -12,7 +12,7 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from pathlib import Path
 
 
-from infrastructure.validation import check_links
+from infrastructure.validation.integrity import check_links
 
 
 class TestCheckFileReferenceEdgeCases:

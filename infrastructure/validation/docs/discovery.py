@@ -8,9 +8,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Set
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.discovery import discover_projects
-from infrastructure.validation.doc_models import DocumentationFile
+from infrastructure.validation.docs.models import DocumentationFile
 
 logger = get_logger(__name__)
 

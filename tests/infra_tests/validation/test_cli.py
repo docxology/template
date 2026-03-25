@@ -1,4 +1,4 @@
-"""Tests for infrastructure.validation.cli module."""
+"""Tests for infrastructure.validation.cli.main module."""
 
 import argparse
 import logging
@@ -6,8 +6,8 @@ import sys
 
 import pytest
 
-from infrastructure.validation import cli
-from infrastructure.validation.cli import (
+from infrastructure.validation.cli import main as cli
+from infrastructure.validation.cli.main import (
     validate_markdown_command,
     validate_pdf_command,
     verify_integrity_command,
@@ -145,7 +145,7 @@ class TestCLIMain:
         import subprocess
 
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.validation.cli"],
+            [sys.executable, "-m", "infrastructure.validation.cli.main"],
             capture_output=True,
             text=True,
             timeout=10,

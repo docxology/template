@@ -15,14 +15,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 repo_root = Path(__file__).parent.parent
 
 logger = get_logger(__name__)
 
 try:
-    from infrastructure.validation.markdown_validator import (
+    from infrastructure.validation.content.markdown_validator import (
         collect_symbols,  # noqa: F401 — re-exported for tests
         find_manuscript_directory,
         find_markdown_files,  # noqa: F401 — re-exported for tests

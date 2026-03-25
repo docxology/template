@@ -3,7 +3,7 @@
 Tests link checking and reference validation functionality.
 """
 
-from infrastructure.validation import check_links
+from infrastructure.validation.integrity import check_links
 
 
 class TestCheckLinksCore:

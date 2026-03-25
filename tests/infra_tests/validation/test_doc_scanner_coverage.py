@@ -4,8 +4,8 @@ Tests documentation scanning functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.validation import doc_scanner
-from infrastructure.validation.doc_scanner import DocumentationScanner
+from infrastructure.validation.docs import scanner as doc_scanner
+from infrastructure.validation.docs.scanner import DocumentationScanner
 
 
 class TestDocScannerCore:

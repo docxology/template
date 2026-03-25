@@ -8,12 +8,12 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
-from .integrity import verify_output_integrity
-from .link_validator import LinkValidator
-from .markdown_validator import validate_markdown
-from .pdf_validator import validate_pdf_rendering
+from infrastructure.validation.integrity.checks import verify_output_integrity
+from infrastructure.validation.integrity.link_validator import LinkValidator
+from infrastructure.validation.content.markdown_validator import validate_markdown
+from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
 
 logger = get_logger(__name__)
 

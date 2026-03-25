@@ -1,4 +1,4 @@
-"""Comprehensive tests for infrastructure/validation/validate_markdown_cli.py.
+"""Comprehensive tests for infrastructure/validation/cli/markdown.py.
 
 Tests Markdown validation CLI functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
@@ -14,7 +14,7 @@ class TestValidateMarkdownCliModule:
 
     def test_module_imports(self):
         """Test module imports correctly."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         assert validate_markdown_cli is not None
 
@@ -24,13 +24,13 @@ class TestValidateMarkdownCliMain:
 
     def test_main_exists(self):
         """Test main function exists."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         assert hasattr(validate_markdown_cli, "main")
 
     def test_main_with_valid_file(self, tmp_path, capsys):
         """Test main with valid markdown file using real execution."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         md = tmp_path / "test.md"
         md.write_text("# Title\n\nValid content here.")
@@ -45,7 +45,7 @@ class TestValidateMarkdownCliMain:
 
     def test_main_with_directory(self, tmp_path, capsys):
         """Test main with directory using real execution."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         (tmp_path / "a.md").write_text("# Doc A\n")
         (tmp_path / "b.md").write_text("# Doc B\n")
@@ -59,7 +59,7 @@ class TestValidateMarkdownCliMain:
 
     def test_main_with_missing_file(self, tmp_path, capsys):
         """Test main with missing file using real execution."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         missing = tmp_path / "missing.md"
 
@@ -81,7 +81,7 @@ class TestValidateMarkdownCliMain:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.validate_markdown_cli",
+                "infrastructure.validation.cli.markdown",
                 str(md),
             ],
             capture_output=True,
@@ -99,7 +99,7 @@ class TestValidateMarkdownFunctions:
 
     def test_validate_markdown_file(self, tmp_path):
         """Test validating single file using real validation."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         md = tmp_path / "test.md"
         md.write_text("# Title\n\n[Link](other.md)")
@@ -110,7 +110,7 @@ class TestValidateMarkdownFunctions:
 
     def test_validate_markdown_content(self):
         """Test validating markdown content using real validation."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         content = "# Title\n\nValid content"
 
@@ -124,7 +124,7 @@ class TestValidateMarkdownCliIntegration:
 
     def test_full_validation_workflow(self, tmp_path):
         """Test complete validation workflow with real execution."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         md = tmp_path / "test.md"
         md.write_text("# Test\n\n## Section\n\nContent here.")

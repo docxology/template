@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 # Import the module to test
-import infrastructure.validation.integrity as integrity
+import infrastructure.validation.integrity.checks as integrity
 
 
 class TestFileIntegrity:
@@ -480,7 +480,7 @@ class TestReportGeneration:
 
     def test_generate_integrity_report_complete(self):
         """Test generation of complete integrity report."""
-        from infrastructure.validation.integrity import IntegrityReport
+        from infrastructure.validation.integrity.checks import IntegrityReport
 
         report = IntegrityReport()
         report.file_integrity = {"file1.pdf": True, "file2.pdf": False}
@@ -670,7 +670,7 @@ class TestEdgeCases:
 
     def test_generate_integrity_report_with_warnings(self):
         """Test integrity report generation with warnings."""
-        from infrastructure.validation.integrity import IntegrityReport
+        from infrastructure.validation.integrity.checks import IntegrityReport
 
         report = IntegrityReport()
         report.file_integrity = {"file1.pdf": True}
@@ -686,7 +686,7 @@ class TestEdgeCases:
 
     def test_generate_integrity_report_with_recommendations(self):
         """Test integrity report generation with recommendations."""
-        from infrastructure.validation.integrity import IntegrityReport
+        from infrastructure.validation.integrity.checks import IntegrityReport
 
         report = IntegrityReport()
         report.file_integrity = {"file1.pdf": True}

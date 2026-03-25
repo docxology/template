@@ -22,8 +22,8 @@ from pathlib import Path
 from typing import Any, TypedDict
 
 from infrastructure.core._optional_deps import np
-from infrastructure.core.file_operations import calculate_file_hash
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.files.operations import calculate_file_hash
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

@@ -1,10 +1,10 @@
-"""Comprehensive tests for infrastructure/validation/validate_pdf_cli.py.
+"""Comprehensive tests for infrastructure/validation/cli/pdf.py.
 
 Tests the PDF validation CLI script using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.validation import validate_pdf_cli
+from infrastructure.validation.cli import pdf as validate_pdf_cli
 
 
 class TestValidatePdfCliModule:

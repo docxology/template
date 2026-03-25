@@ -13,11 +13,11 @@ graph TD
     end
 
     subgraph ValidationModules["Validation Modules"]
-        PDF_VAL[pdf_validator.py<br/>PDF rendering validation]
-        MD_VAL[markdown_validator.py<br/>Markdown structure validation]
-        INTEGRITY_MOD[integrity.py<br/>File integrity verification]
-        DOC_SCAN[doc_scanner.py<br/>Documentation quality scanning]
-        LINK_VAL[link_validator.py<br/>Link and reference validation]
+        PDF_VAL[content/output/output/pdf_validator.py<br/>PDF rendering validation]
+        MD_VAL[content/content/content/markdown_validator.py<br/>Markdown structure validation]
+        INTEGRITY_MOD[integrity/checks.py<br/>File integrity verification]
+        DOC_SCAN[docs/scanner.py<br/>Documentation quality scanning]
+        LINK_VAL[integrity/docs/docs/link_validator.py<br/>Link and reference validation]
     end
 
     subgraph ValidationPipeline["Validation Pipeline"]
@@ -61,11 +61,11 @@ flowchart LR
     end
 
     subgraph ValidationEngine["Validation Engine"]
-        PDF_EXTRACT[Text Extraction<br/>pdf_validator.extract_text_from_pdf]
-        MD_PARSE[Structure Parsing<br/>markdown_validator.collect_symbols]
-        INTEGRITY_CHECK[Integrity Verification<br/>integrity.verify_file_integrity]
-        CROSS_REF[Cross-Reference Check<br/>integrity.verify_cross_references]
-        QUALITY_SCAN[Quality Assessment<br/>doc_scanner.scan_quality]
+        PDF_EXTRACT[Text Extraction<br/>content.pdf_validator.extract_text_from_pdf]
+        MD_PARSE[Structure Parsing<br/>content.markdown_validator.collect_symbols]
+        INTEGRITY_CHECK[Integrity Verification<br/>integrity.checks.verify_file_integrity]
+        CROSS_REF[Cross-Reference Check<br/>integrity.checks.verify_cross_references]
+        QUALITY_SCAN[Quality Assessment<br/>docs.scanner.scan_quality]
     end
 
     subgraph Analysis["Analysis & Rules"]
@@ -195,7 +195,7 @@ if integrity_report.warnings:
         print(f"  WARNING: {warning}")
 
 # Generate human-readable report
-from infrastructure.validation.integrity import generate_integrity_report
+from infrastructure.validation.integrity.checks import generate_integrity_report
 print(generate_integrity_report(integrity_report))
 ```
 
@@ -203,15 +203,15 @@ print(generate_integrity_report(integrity_report))
 
 | Module | Purpose | Key Functions |
 |--------|---------|----------------|
-| **pdf_validator.py** | PDF rendering validation and text extraction | `validate_pdf_rendering()`, `extract_text_from_pdf()`, `scan_for_issues()` |
-| **markdown_validator.py** | Markdown structure and reference validation | `validate_markdown()`, `validate_images()`, `validate_refs()`, `validate_math()` |
-| **integrity.py** | File integrity and consistency verification | `verify_output_integrity()`, `verify_file_integrity()`, `verify_cross_references()` |
-| **doc_scanner.py** | Documentation quality and completeness scanning | `DocumentationScanner`, accuracy and completeness checks |
-| **link_validator.py** | Link and reference validation | `LinkValidator`, file and heading reference checking |
-| **output_validator.py** | Output structure and completeness validation | `validate_output_structure()`, `validate_copied_outputs()` |
-| **figure_validator.py** | Figure registry validation | `validate_figure_registry()` |
-| **repo_scanner.py** | Repository-wide validation scanning | `RepositoryScanner`, repo analysis |
-| **doc_*.py** | Specialized documentation validation | Quality assessment, accuracy checking, completeness analysis |
+| **content/pdf_validator.py** | PDF rendering validation and text extraction | `validate_pdf_rendering()`, `extract_text_from_pdf()`, `scan_for_issues()` |
+| **content/markdown_validator.py** | Markdown structure and reference validation | `validate_markdown()`, `validate_images()`, `validate_refs()`, `validate_math()` |
+| **integrity/checks.py** | File integrity and consistency verification | `verify_output_integrity()`, `verify_file_integrity()`, `verify_cross_references()` |
+| **docs/scanner.py** | Documentation quality and completeness scanning | `DocumentationScanner`, accuracy and completeness checks |
+| **integrity/link_validator.py** | Link and reference validation | `LinkValidator`, file and heading reference checking |
+| **output/validator.py** | Output structure and completeness validation | `validate_output_structure()`, `validate_copied_outputs()` |
+| **content/figure_validator.py** | Figure registry validation | `validate_figure_registry()` |
+| **repo/scanner.py** | Repository-wide validation scanning | `RepositoryScanner`, repo analysis |
+| **docs/*.py** | Specialized documentation validation | Quality assessment, accuracy checking, completeness analysis |
 
 ## Validation Workflow
 
@@ -314,7 +314,7 @@ stateDiagram-v2
 ### Documentation Quality Scanning
 ```python
 # documentation analysis
-from infrastructure.validation.doc_scanner import DocumentationScanner
+from infrastructure.validation.docs.scanner import DocumentationScanner
 
 scanner = DocumentationScanner(Path("."))
 results = scanner.scan_repository()
@@ -326,7 +326,7 @@ print(f"Found {len(results.completeness_gaps)} completeness gaps")
 ### Link Validation
 ```python
 # Validate all links in documentation
-from infrastructure.validation.link_validator import LinkValidator
+from infrastructure.validation.integrity.link_validator import LinkValidator
 
 validator = LinkValidator(Path("."))
 issues = validator.validate_all_links()
@@ -338,7 +338,7 @@ for issue in issues:
 ### Repository Scanning
 ```python
 # Full repository validation
-from infrastructure.validation.repo_scanner import RepositoryScanner
+from infrastructure.validation.repo.scanner import RepositoryScanner
 
 scanner = RepositoryScanner(Path("."))
 results = scanner.scan_repository()
@@ -353,47 +353,47 @@ print(f"Completeness gaps: {len(results.completeness_gaps)}")
 ### PDF Validation
 ```bash
 # Validate single PDF with verbose output
-python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
+python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Validate with custom word preview length
-python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --words 300
+python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --words 300
 
 # Validate PDF from different path
-python3 -m infrastructure.validation.cli pdf /path/to/document.pdf
+python3 -m infrastructure.validation.cli.main pdf /path/to/document.pdf
 ```
 
 ### Markdown Validation
 ```bash
 # Validate markdown in manuscript directory
-python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
+python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
 
 # Strict validation (fail on any issue)
-python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/ --strict
+python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/ --strict
 
 # Validate specific markdown file
-python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/01_abstract.md
+python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/01_abstract.md
 ```
 
 ### Integrity Validation
 ```bash
 # Full integrity check of output directory
-python3 -m infrastructure.validation.cli integrity output/
+python3 -m infrastructure.validation.cli.main integrity output/
 
 # Check specific subdirectories
-python3 -m infrastructure.validation.cli integrity output/{project_name}/pdf/
-python3 -m infrastructure.validation.cli integrity output/data/
+python3 -m infrastructure.validation.cli.main integrity output/{project_name}/pdf/
+python3 -m infrastructure.validation.cli.main integrity output/data/
 
 # Generate integrity manifest for future comparison
-python3 -m infrastructure.validation.cli integrity output/ --manifest
+python3 -m infrastructure.validation.cli.main integrity output/ --manifest
 ```
 
 ### Link Validation
 ```bash
 # Validate all links in repository
-python3 -m infrastructure.validation.cli links
+python3 -m infrastructure.validation.cli.main links
 
 # Validate links in specific directory
-python3 -m infrastructure.validation.cli links docs/
+python3 -m infrastructure.validation.cli.main links docs/
 ```
 
 ## Integration with Build Pipeline
@@ -568,7 +568,7 @@ pytest tests/integration/test_validation_pipeline.py -v
 export LOG_LEVEL=0
 
 # Run validation with verbose output
-python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
+python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Check validation logs
 tail -f logs/validation_*.log

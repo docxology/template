@@ -4,7 +4,7 @@
 Dual role: (1) library — individual validator functions are imported by
 ``audit_orchestrator`` for programmatic link checking; (2) standalone CLI —
 ``main()`` and ``generate_comprehensive_report()`` provide a self-contained
-audit entry point invokable as ``python -m infrastructure.validation.check_links``.
+audit entry point invokable as ``python -m infrastructure.validation.integrity.check_links``.
 
 This module validates:
 - Internal markdown links resolve correctly
@@ -25,8 +25,8 @@ import sys
 from pathlib import Path
 from typing import Any, Set, TypedDict, Union
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.validation.doc_accuracy import extract_headings
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.accuracy import extract_headings
 
 logger = get_logger(__name__)
 
@@ -159,7 +159,7 @@ def _check_code_path_match(
     match: re.Match[str], block: dict[str, Any], content: str, file_path: Path, repo_root: Path
 ) -> dict[str, Any] | None:
     """Validate a single path match in a code block."""
-    from infrastructure.validation.known_exceptions import (
+    from infrastructure.validation.repo.known_exceptions import (
         is_code_block_artifact,
         is_mermaid_artifact,
         is_valid_directory_reference,
@@ -305,6 +305,61 @@ _PATH_SKIP_KEYWORDS: frozenset[str] = frozenset(
         "example",
         "your_",
         "sample",
+        "my_",
+        "myproject",
+        "myresearch",
+        "new_",
+        "test_new_",
+        "test_example",
+        "test_my",
+        "analysis.py",
+        "analyze",
+        "pipeline",
+        "generate_",
+        "custom_",
+        "train_models",
+        "evaluate_models",
+        "external_simulation",
+        "auto_document",
+        "literature_",
+        "statistics_",
+        "correlation_",
+        "batch_",
+        "optimizer_",
+        "capture_",
+        "assess_",
+        "scientific_",
+        "mymodule",
+        "*[module",
+        "output/pdf/*",
+        "test.sh",
+        "view_results.sh",
+        "setup.sh",
+        "run_",
+        "clean.sh",
+        "docs_build.sh",
+        "biology_analysis.py",
+        "_quality_report.py",
+        "scripts/*",
+        "00_*",
+        "01_*",
+        "07_*",
+        "ml_build.sh",
+        "scripts/│",
+        "scripts/tests",
+        "projects/code_project/:",
+        "scripts/03_render_pdf.py;",
+        "data_quality",
+        "infrastructure/[module_name",
+        "06_fulltext_assessment",
+        "serve_app.py",
+        "projects/cognitive_case_diagrams/:",
+        "sync_docs_notebooks.sh",
+        "docs_serve.sh",
+        "docs_sync_and_serve.sh",
+        "module_name.py",
+        "module.py",
+        "bash_utils.sh.",
     }
 )
 

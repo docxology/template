@@ -1,4 +1,4 @@
-"""Comprehensive tests for infrastructure/validation/validate_pdf_cli.py.
+"""Comprehensive tests for infrastructure/validation/cli/pdf.py.
 
 Tests PDF validation CLI functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real validation.
@@ -17,13 +17,13 @@ class TestValidatePdfCliCore:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         assert validate_pdf_cli is not None
 
     def test_has_main_function(self):
         """Test that module has main function."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         assert hasattr(validate_pdf_cli, "main")
 
@@ -33,7 +33,7 @@ class TestPdfValidationCommand:
 
     def test_validate_single_pdf(self, tmp_path):
         """Test validating a single PDF file using real PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF
         pdf = tmp_path / "test.pdf"
@@ -47,7 +47,7 @@ class TestPdfValidationCommand:
 
     def test_validate_pdf_directory(self, tmp_path):
         """Test validating a directory of PDFs using real PDFs."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create real PDF files
         pdf1 = tmp_path / "a.pdf"
@@ -66,7 +66,7 @@ class TestPdfValidationCommand:
 
     def test_validate_nonexistent_pdf(self, tmp_path):
         """Test validating a nonexistent PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         missing_pdf = tmp_path / "nonexistent.pdf"
         exit_code = validate_pdf_cli.main(pdf_path=missing_pdf)
@@ -92,7 +92,7 @@ class TestPdfCliParsing:
                 [
                     sys.executable,
                     "-m",
-                    "infrastructure.validation.validate_pdf_cli",
+                    "infrastructure.validation.cli.pdf",
                     str(pdf),
                 ],
                 capture_output=True,
@@ -120,7 +120,7 @@ class TestPdfCliParsing:
                 [
                     sys.executable,
                     "-m",
-                    "infrastructure.validation.validate_pdf_cli",
+                    "infrastructure.validation.cli.pdf",
                     str(pdf),
                     "--verbose",
                 ],
@@ -139,7 +139,7 @@ class TestPdfValidationOutput:
 
     def test_format_results(self):
         """Test result formatting via print_validation_report."""
-        from infrastructure.validation.validate_pdf_cli import print_validation_report
+        from infrastructure.validation.cli.pdf import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -163,7 +163,7 @@ class TestPdfValidationOutput:
 
     def test_print_summary(self, caplog):
         """Test summary printing."""
-        from infrastructure.validation.validate_pdf_cli import print_validation_report
+        from infrastructure.validation.cli.pdf import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -204,7 +204,7 @@ class TestPdfCliMain:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.validate_pdf_cli",
+                "infrastructure.validation.cli.pdf",
                 str(pdf),
             ],
             capture_output=True,
@@ -225,7 +225,7 @@ class TestPdfCliMain:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.validate_pdf_cli",
+                "infrastructure.validation.cli.pdf",
                 str(missing_pdf),
             ],
             capture_output=True,
@@ -243,7 +243,7 @@ class TestValidatePdfCliIntegration:
 
     def test_full_validation_workflow(self, tmp_path):
         """Test complete validation workflow with real PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF with content
         pdf = tmp_path / "test.pdf"

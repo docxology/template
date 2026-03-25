@@ -4,7 +4,7 @@ Tests documentation scanner phase functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.validation.doc_scanner import DocumentationScanner
+from infrastructure.validation.docs.scanner import DocumentationScanner
 
 
 class TestDocScannerPhase5:

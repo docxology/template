@@ -10,23 +10,23 @@ import time
 from pathlib import Path
 from typing import TypedDict
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.validation.check_links import (
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.integrity.check_links import (
     validate_directory_structures,
     validate_file_paths_in_code,
     validate_placeholder_consistency,
     validate_python_imports,
 )
-from infrastructure.validation.doc_accuracy import check_links, extract_headings
-from infrastructure.validation.doc_discovery import categorize_documentation, discover_markdown_files
-from infrastructure.validation.doc_models import (
+from infrastructure.validation.docs.accuracy import check_links, extract_headings
+from infrastructure.validation.docs.discovery import categorize_documentation, discover_markdown_files
+from infrastructure.validation.docs.models import (
     AccuracyIssue,
     DocumentationFile,
     LinkIssue,
     QualityIssue,
     ScanResults,
 )
-from infrastructure.validation.issue_categorizer import (
+from infrastructure.validation.repo.issue_categorizer import (
     generate_issue_summary,
     get_severity_flag,
     prioritize_issues,

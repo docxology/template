@@ -4,7 +4,7 @@ This test suite validates edge cases including hash mismatches, missing
 cross-references, permission checks, and validation for missing categories.
 """
 
-from infrastructure.validation import integrity
+from infrastructure.validation.integrity import checks as integrity
 
 
 class TestIntegrityEdgeCases:

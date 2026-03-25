@@ -1,4 +1,4 @@
-"""Tests for infrastructure.validation.repo_scanner module.
+"""Tests for infrastructure.validation.repo.scanner module.
 
 Comprehensive tests for repository accuracy and completeness scanning.
 """
@@ -7,8 +7,8 @@ import logging
 
 import pytest
 
-from infrastructure.validation import repo_scanner
-from infrastructure.validation.repo_scanner import (
+from infrastructure.validation.repo import scanner as repo_scanner
+from infrastructure.validation.repo.scanner import (
     AccuracyIssue,
     CompletenessGap,
     RepositoryScanner,

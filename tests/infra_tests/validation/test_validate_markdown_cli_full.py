@@ -1,4 +1,4 @@
-"""Full tests for infrastructure/validation/validate_markdown_cli.py.
+"""Full tests for infrastructure/validation/cli/markdown.py.
 
 Tests Markdown validation CLI functionality thoroughly.
 """
@@ -14,7 +14,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_repo_root(self):
         """Test _repo_root helper."""
-        from infrastructure.validation.validate_markdown_cli import _repo_root
+        from infrastructure.validation.cli.markdown import _repo_root
 
         result = _repo_root()
         assert isinstance(result, str)
@@ -22,7 +22,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_find_markdown_files(self, tmp_path):
         """Test find_markdown_files function."""
-        from infrastructure.validation.validate_markdown_cli import find_markdown_files
+        from infrastructure.validation.cli.markdown import find_markdown_files
 
         (tmp_path / "01_intro.md").write_text("# Intro")
         (tmp_path / "02_body.md").write_text("# Body")
@@ -36,7 +36,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_find_markdown_files_no_extension(self, tmp_path):
         """Test find_markdown_files with non-markdown files."""
-        from infrastructure.validation.validate_markdown_cli import find_markdown_files
+        from infrastructure.validation.cli.markdown import find_markdown_files
 
         (tmp_path / "test.txt").write_text("Not markdown")
         (tmp_path / "doc.md").write_text("# Doc")
@@ -48,7 +48,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_collect_symbols(self, tmp_path):
         """Test collect_symbols function (canonical: labels=LaTeX \\label{}, anchors={#...})."""
-        from infrastructure.validation.validate_markdown_cli import collect_symbols
+        from infrastructure.validation.cli.markdown import collect_symbols
 
         md = tmp_path / "test.md"
         md.write_text("# Title {#title}\n\n\\label{eq:one}")
@@ -60,7 +60,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_collect_symbols_empty_file(self, tmp_path):
         """Test collect_symbols with empty file."""
-        from infrastructure.validation.validate_markdown_cli import collect_symbols
+        from infrastructure.validation.cli.markdown import collect_symbols
 
         md = tmp_path / "empty.md"
         md.write_text("")
@@ -72,7 +72,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_validate_images_found(self, tmp_path):
         """Test validate_images with existing image."""
-        from infrastructure.validation.validate_markdown_cli import validate_images
+        from infrastructure.validation.cli.markdown import validate_images
 
         (tmp_path / "img.png").write_bytes(b"\x89PNG")
         md = tmp_path / "doc.md"
@@ -84,7 +84,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_validate_images_missing(self, tmp_path):
         """Test validate_images with missing image."""
-        from infrastructure.validation.validate_markdown_cli import validate_images
+        from infrastructure.validation.cli.markdown import validate_images
 
         md = tmp_path / "doc.md"
         md.write_text("![Alt](missing.png)")
@@ -96,7 +96,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_validate_images_no_refs(self, tmp_path):
         """Test validate_images with no image references produces no issues."""
-        from infrastructure.validation.validate_markdown_cli import validate_images
+        from infrastructure.validation.cli.markdown import validate_images
 
         md = tmp_path / "doc.md"
         md.write_text("# Title\n\nNo images here.")
@@ -107,7 +107,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_validate_refs_found(self, tmp_path):
         """Test validate_refs with existing internal anchor reference."""
-        from infrastructure.validation.validate_markdown_cli import validate_refs
+        from infrastructure.validation.cli.markdown import validate_refs
 
         md = tmp_path / "doc.md"
         md.write_text("# Section {#section}\n\n[Link to section](#section)")
@@ -122,7 +122,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_validate_refs_missing(self, tmp_path):
         """Test validate_refs with missing internal anchor reference."""
-        from infrastructure.validation.validate_markdown_cli import validate_refs
+        from infrastructure.validation.cli.markdown import validate_refs
 
         md = tmp_path / "doc.md"
         md.write_text("[Link text](#missing)")
@@ -134,7 +134,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_validate_math_no_issues(self, tmp_path):
         """Test validate_math with clean content (no display math constructs)."""
-        from infrastructure.validation.validate_markdown_cli import validate_math
+        from infrastructure.validation.cli.markdown import validate_math
 
         md = tmp_path / "doc.md"
         md.write_text("Inline math: $E = mc^2$ is fine.")
@@ -145,7 +145,7 @@ class TestValidateMarkdownCliFunctions:
 
     def test_validate_math_double_dollar(self, tmp_path):
         """Test validate_math flags $$ display math (use equation env instead)."""
-        from infrastructure.validation.validate_markdown_cli import validate_math
+        from infrastructure.validation.cli.markdown import validate_math
 
         md = tmp_path / "doc.md"
         md.write_text("$$E = mc^2$$")
@@ -171,7 +171,7 @@ class TestValidateMarkdownMain:
 
         # Run CLI directly
         repo_root = Path(__file__).resolve().parent.parent.parent.parent
-        script_path = repo_root / "infrastructure" / "validation" / "validate_markdown_cli.py"
+        script_path = repo_root / "infrastructure" / "validation" / "cli" / "markdown.py"
 
         env = os.environ.copy()
         env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
@@ -195,7 +195,7 @@ class TestValidateMarkdownMain:
         md_file.write_text("# Test\n\nSee [broken link](nonexistent.md) for details.")
 
         repo_root = Path(__file__).resolve().parent.parent.parent.parent
-        script_path = repo_root / "infrastructure" / "validation" / "validate_markdown_cli.py"
+        script_path = repo_root / "infrastructure" / "validation" / "cli" / "markdown.py"
 
         env = os.environ.copy()
         env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
@@ -216,7 +216,7 @@ class TestValidateMarkdownMain:
         """Test that main handles import errors gracefully."""
         # This tests the import error handling in the CLI
         repo_root = Path(__file__).resolve().parent.parent.parent.parent
-        script_path = repo_root / "infrastructure" / "validation" / "validate_markdown_cli.py"
+        script_path = repo_root / "infrastructure" / "validation" / "cli" / "markdown.py"
 
         # Run in a directory without proper setup to potentially trigger import issues
         result = subprocess.run(
@@ -236,7 +236,7 @@ class TestValidateMarkdownIntegration:
 
     def test_module_structure(self):
         """Test module has expected structure."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         assert hasattr(validate_markdown_cli, "main")
         assert hasattr(validate_markdown_cli, "find_markdown_files")

@@ -22,8 +22,8 @@ from typing import Any
 
 import yaml
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.validation.doc_models import CompletenessGap, ScanAccuracyIssue
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.models import CompletenessGap, ScanAccuracyIssue
 
 logger = get_logger(__name__)
 

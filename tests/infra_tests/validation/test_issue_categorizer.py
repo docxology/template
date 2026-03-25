@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Tests for issue_categorizer module."""
 
-from infrastructure.validation.doc_models import AccuracyIssue, LinkIssue, QualityIssue
-from infrastructure.validation.issue_categorizer import (
+from infrastructure.validation.docs.models import AccuracyIssue, LinkIssue, QualityIssue
+from infrastructure.validation.repo.issue_categorizer import (
     assign_severity,
     categorize_by_type,
     filter_false_positives,
@@ -370,7 +370,7 @@ class TestIssueCategorizer:
 
     def test_issue_text_extraction(self):
         """Test text extraction from different issue types."""
-        from infrastructure.validation.issue_categorizer import _get_issue_text
+        from infrastructure.validation.repo.issue_categorizer import _get_issue_text
 
         # Test LinkIssue
         link_issue = LinkIssue(

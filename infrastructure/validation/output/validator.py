@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, TypedDict
 
-from infrastructure.core.logging_utils import get_logger, log_success
+from infrastructure.core.logging.utils import get_logger, log_success
 
 
 from infrastructure.project.discovery import discover_projects

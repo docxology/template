@@ -1,4 +1,4 @@
-"""Comprehensive tests for infrastructure/validation/validate_pdf_cli.py.
+"""Comprehensive tests for infrastructure/validation/cli/pdf.py.
 
 Tests PDF validation CLI functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real validation.
@@ -18,7 +18,7 @@ class TestValidatePdfCliModule:
 
     def test_module_imports(self):
         """Test module imports correctly."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         assert validate_pdf_cli is not None
 
@@ -28,7 +28,7 @@ class TestPrintValidationReport:
 
     def test_print_report_no_issues(self, caplog):
         """Test printing report with no issues."""
-        from infrastructure.validation.validate_pdf_cli import print_validation_report
+        from infrastructure.validation.cli.pdf import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -54,7 +54,7 @@ class TestPrintValidationReport:
 
     def test_print_report_with_issues(self, caplog):
         """Test printing report with issues."""
-        from infrastructure.validation.validate_pdf_cli import print_validation_report
+        from infrastructure.validation.cli.pdf import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -83,7 +83,7 @@ class TestPrintValidationReport:
 
     def test_print_report_verbose(self, caplog):
         """Test printing report with verbose flag."""
-        from infrastructure.validation.validate_pdf_cli import print_validation_report
+        from infrastructure.validation.cli.pdf import print_validation_report
 
         report = {
             "pdf_path": "/path/to/test.pdf",
@@ -110,7 +110,7 @@ class TestMainFunction:
 
     def test_main_success(self, tmp_path, capsys):
         """Test main with successful validation using real PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF file
         pdf = tmp_path / "test.pdf"
@@ -127,7 +127,7 @@ class TestMainFunction:
 
     def test_main_with_issues(self, tmp_path, capsys):
         """Test main with validation - uses real PDF validation."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF file
         pdf = tmp_path / "test.pdf"
@@ -144,7 +144,7 @@ class TestMainFunction:
 
     def test_main_file_not_found(self, tmp_path, caplog):
         """Test main with missing PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         missing_pdf = tmp_path / "missing.pdf"
 
@@ -156,7 +156,7 @@ class TestMainFunction:
 
     def test_main_validation_error(self, tmp_path, capsys):
         """Test main with validation error - uses real validation."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a minimal PDF that might cause validation issues
         pdf = tmp_path / "test.pdf"
@@ -170,7 +170,7 @@ class TestMainFunction:
 
     def test_main_unexpected_error(self, tmp_path, capsys):
         """Test main error handling - uses real validation."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF
         pdf = tmp_path / "test.pdf"
@@ -186,7 +186,7 @@ class TestMainFunction:
 
     def test_main_verbose_with_error(self, tmp_path, caplog):
         """Test main verbose mode - uses real validation."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF
         pdf = tmp_path / "test.pdf"
@@ -209,7 +209,7 @@ class TestDefaultPdfPath:
 
     def test_main_default_path(self, capsys):
         """Test main uses default path when none specified."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Without a real PDF, should return error
         exit_code = validate_pdf_cli.main()
@@ -223,7 +223,7 @@ class TestValidatePdfCliIntegration:
 
     def test_full_validation_workflow(self, tmp_path):
         """Test complete validation workflow with real PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF with content
         pdf = tmp_path / "test.pdf"
@@ -256,7 +256,7 @@ class TestValidatePdfCliSubprocess:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.validate_pdf_cli",
+                "infrastructure.validation.cli.pdf",
                 str(pdf),
             ],
             capture_output=True,
@@ -281,7 +281,7 @@ class TestValidatePdfCliSubprocess:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.validate_pdf_cli",
+                "infrastructure.validation.cli.pdf",
                 str(pdf),
                 "--verbose",
             ],

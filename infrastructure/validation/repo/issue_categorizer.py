@@ -10,14 +10,14 @@ from __future__ import annotations
 import re
 from typing import Any, Union
 
-from infrastructure.validation.doc_models import (
+from infrastructure.validation.docs.models import (
     AccuracyIssue,
     CompletenessGap,
     LinkIssue,
     QualityIssue,
     ScanAccuracyIssue,
 )
-from infrastructure.validation.known_exceptions import (
+from infrastructure.validation.repo.known_exceptions import (
     is_code_block_artifact,
     is_code_example,
     is_latex_reference,
@@ -28,7 +28,7 @@ from infrastructure.validation.known_exceptions import (
     is_venv_reference,
 )
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

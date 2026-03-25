@@ -10,7 +10,7 @@ import pytest
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.insert(0, ROOT)
 
-from infrastructure.validation.markdown_validator import (
+from infrastructure.validation.content.markdown_validator import (
     collect_symbols,
     find_manuscript_directory,
     find_markdown_files,

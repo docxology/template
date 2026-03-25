@@ -3,7 +3,7 @@
 Tests link validation, file reference checking, and anchor validation.
 """
 
-from infrastructure.validation import check_links
+from infrastructure.validation.integrity import check_links
 
 
 class TestFindAllMarkdownFiles:
