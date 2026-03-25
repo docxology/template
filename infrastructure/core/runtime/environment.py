@@ -13,11 +13,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from infrastructure.core.env_deps import check_dependencies  # noqa: F401 — re-exported for backwards compat
-from infrastructure.core.logging_utils import get_logger, log_success
-from infrastructure.core.env_deps import (
-    check_dependencies as _check_dependencies,
-)
+from infrastructure.core.runtime.env_deps import check_dependencies  # noqa: F401 — public re-export
+from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
 

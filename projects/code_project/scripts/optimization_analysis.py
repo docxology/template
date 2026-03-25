@@ -50,8 +50,7 @@ try:
     from infrastructure.core import (CheckpointManager, ProgressBar,
                                      SystemHealthChecker, get_logger,
                                      log_success)
-    from infrastructure.core.exceptions import (BuildError,
-                                                ScriptExecutionError,
+    from infrastructure.core.exceptions import (ScriptExecutionError,
                                                 TemplateError, ValidationError)
     from infrastructure.publishing import (generate_citation_apa,
                                            generate_citation_bibtex,
@@ -533,9 +532,6 @@ def generate_convergence_rate_plot(results):
 
     fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
-    # Use colorblind-safe palette
-    colors = VIZ_CONFIG["palette"]
-    markers = VIZ_CONFIG["markers"]
     step_sizes = list(results.keys())
 
     for step_size in step_sizes:

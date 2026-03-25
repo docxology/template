@@ -13,7 +13,6 @@ from infrastructure.validation.repo_scanner import (
     CompletenessGap,
     RepositoryScanner,
     RepoScanResults,
-    ScanAccuracyIssue,
 )
 
 
