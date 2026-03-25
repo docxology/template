@@ -1,7 +1,7 @@
 """Tests for uncovered code paths in infrastructure/rendering/pdf_renderer.py.
 
 Targets functions and error paths that are currently not covered:
-- _parse_missing_package_error() function
+- parse_missing_latex_package_from_log() function
 - _extract_preamble() function
 - _fix_math_delimiters() function
 - _check_latex_log_for_graphics_errors() function
@@ -23,13 +23,14 @@ from infrastructure.rendering._pdf_latex_helpers import (
     fix_math_delimiters,
     generate_title_page_body,
     generate_title_page_preamble,
+    parse_missing_latex_package_from_log,
 )
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.pdf_renderer import PDFRenderer, _parse_missing_package_error
+from infrastructure.rendering.pdf_renderer import PDFRenderer
 
 
 class TestParseMissingPackageError:
-    """Test _parse_missing_package_error function."""
+    """Test parse_missing_latex_package_from_log function."""
 
     def test_parse_missing_package_from_log(self, tmp_path):
         """Test parsing missing package from LaTeX log file."""
@@ -45,7 +46,7 @@ or enter new name. (Default extension: sty)
 """
         log_file.write_text(log_content)
 
-        result = _parse_missing_package_error(log_file)
+        result = parse_missing_latex_package_from_log(log_file)
 
         assert result == "newunicodechar"
 
@@ -58,7 +59,7 @@ File `cleveref.sty' not found
 """
         log_file.write_text(log_content)
 
-        result = _parse_missing_package_error(log_file)
+        result = parse_missing_latex_package_from_log(log_file)
 
         assert result == "cleveref"
 
@@ -71,7 +72,7 @@ Output written on document.pdf (10 pages).
 """
         log_file.write_text(log_content)
 
-        result = _parse_missing_package_error(log_file)
+        result = parse_missing_latex_package_from_log(log_file)
 
         assert result is None
 
@@ -79,7 +80,7 @@ Output written on document.pdf (10 pages).
         """Test parsing when log file does not exist."""
         log_file = tmp_path / "nonexistent.log"
 
-        result = _parse_missing_package_error(log_file)
+        result = parse_missing_latex_package_from_log(log_file)
 
         assert result is None
 
@@ -89,7 +90,7 @@ Output written on document.pdf (10 pages).
         log_file = tmp_path / "test.log"
         log_file.mkdir()  # This will cause read_text() to fail
 
-        result = _parse_missing_package_error(log_file)
+        result = parse_missing_latex_package_from_log(log_file)
 
         assert result is None
 
@@ -608,10 +609,12 @@ class TestModuleLevel:
         assert callable(pdf_renderer.PDFRenderer)
 
     def test_module_has_parse_missing_package(self):
-        """Test that module exports _parse_missing_package_error."""
-        from infrastructure.rendering.pdf_renderer import _parse_missing_package_error
+        """Test that helpers export parse_missing_latex_package_from_log."""
+        from infrastructure.rendering._pdf_latex_helpers import (
+            parse_missing_latex_package_from_log,
+        )
 
-        assert callable(_parse_missing_package_error)
+        assert callable(parse_missing_latex_package_from_log)
 
     def test_pdf_renderer_has_required_methods(self):
         """Test PDFRenderer has all required methods."""
@@ -905,7 +908,7 @@ class TestRenderMethodDispatch:
 
 
 class TestParseMissingPackagePatterns:
-    """Additional tests for _parse_missing_package_error patterns."""
+    """Additional tests for parse_missing_latex_package_from_log patterns."""
 
     def test_parse_sty_not_found_pattern(self, tmp_path):
         """Test parsing 'File X.sty not found' pattern."""
@@ -917,7 +920,7 @@ Type X to quit or <RETURN> to proceed,
 """
         log_file.write_text(log_content)
 
-        result = _parse_missing_package_error(log_file)
+        result = parse_missing_latex_package_from_log(log_file)
 
         assert result == "multirow"
 
@@ -929,7 +932,7 @@ Type X to quit or <RETURN> to proceed,
 """
         log_file.write_text(log_content)
 
-        result = _parse_missing_package_error(log_file)
+        result = parse_missing_latex_package_from_log(log_file)
 
         # May or may not match - depends on implementation
         assert result is None or result == "custom"
@@ -943,7 +946,7 @@ LaTeX Warning: There were undefined references.
 """
         log_file.write_text(log_content)
 
-        result = _parse_missing_package_error(log_file)
+        result = parse_missing_latex_package_from_log(log_file)
 
         assert result is None
 

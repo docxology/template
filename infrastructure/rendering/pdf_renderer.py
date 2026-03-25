@@ -10,8 +10,8 @@ import unicodedata
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.logging_progress import log_progress_bar
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.logging.progress import log_progress_bar
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
     extract_preamble,
@@ -19,48 +19,13 @@ from infrastructure.rendering._pdf_latex_helpers import (
     fix_math_delimiters,
     generate_title_page_body,
     generate_title_page_preamble,
+    parse_missing_latex_package_from_log,
 )
+from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
 logger = get_logger(__name__)
-
-
-def _parse_missing_package_error(log_file: Path) -> str | None:
-    """Parse LaTeX log for missing package errors.
-
-    Args:
-        log_file: Path to LaTeX .log file
-
-    Returns:
-        Name of missing package, or None if no package error found
-    """
-    if not log_file.exists():
-        return None
-
-    try:
-        log_content = log_file.read_text(encoding="utf-8", errors="ignore")
-
-        # Look for "File `*.sty' not found" pattern
-
-        match = re.search(r"File `([^']+\.sty)' not found", log_content)
-        if match:
-            sty_file = match.group(1)
-            # Extract package name (remove .sty extension)
-            package_name = sty_file.replace(".sty", "")
-            return package_name
-
-        # Also check for the "! LaTeX Error: File *.sty not found" pattern
-        match = re.search(r"! LaTeX Error: File `?([^'`\s]+\.sty)'? not found", log_content)
-        if match:
-            sty_file = match.group(1)
-            package_name = sty_file.replace(".sty", "")
-            return package_name
-
-    except OSError as e:  # optional log inspection; UnicodeDecodeError is pre-empted by errors="ignore"
-        logger.debug(f"Error parsing log file for package errors: {e}")
-
-    return None
 
 
 class PDFRenderer:
@@ -69,6 +34,10 @@ class PDFRenderer:
     def __init__(self, config: RenderingConfig):
         """Initialize the PDF renderer with configuration."""
         self.config = config
+
+    def _combine_markdown_files(self, source_files: list[Path]) -> str:
+        """Combine section markdown files; logic lives in ``_pdf_markdown_combine``."""
+        return combine_manuscript_markdown_sections(source_files)
 
     # ---------------------------------------------------------------------
     # Backwards-compatible helpers expected by infra tests.
@@ -1254,7 +1223,7 @@ class PDFRenderer:
                             log_content = log_file.read_text()
 
                             # Check for missing package errors
-                            missing_pkg = _parse_missing_package_error(log_file)
+                            missing_pkg = parse_missing_latex_package_from_log(log_file)
                             if missing_pkg:
                                 raise RenderingError(
                                     f"Missing LaTeX package: {missing_pkg}",
@@ -1410,117 +1379,3 @@ class PDFRenderer:
         end_time = time.time()
         total_duration = end_time - start_time
         logger.info(f"   Duration: {total_duration:.2f} seconds")
-
-    def _combine_markdown_files(self, source_files: list[Path]) -> str:
-        """Combine multiple markdown files into one.
-
-        Args:
-            source_files: List of markdown files in order
-
-        Returns:
-            Combined markdown content
-
-        Raises:
-            RenderingError: If any file cannot be read or contains invalid content
-        """
-        combined_parts = []
-
-        for i, md_file in enumerate(source_files):
-            try:
-                # Read with explicit UTF-8 encoding and error handling
-                content = md_file.read_text(encoding="utf-8", errors="strict")
-
-                # Validate file ends with newline for proper spacing
-                if not content.endswith("\n"):
-                    content += "\n"
-
-                # Strip trailing whitespace from each file to avoid double newlines
-                # But preserve a single trailing newline
-                content = content.rstrip() + "\n"
-
-                # Validate section header syntax in this file
-
-                header_attrs = re.findall(r"\{#([^}]+)\}", content)
-                for attr in header_attrs:
-                    # Check for balanced braces
-                    if attr.count("{") != attr.count("}"):
-                        logger.warning(
-                            f"Potential unbalanced braces in {md_file.name} header attribute: {{#{attr}}}"  # noqa: E501
-                        )
-
-                # Add file content
-                combined_parts.append(content)
-
-                # Add page break between sections (only if not the last file)
-                if i < len(source_files) - 1:
-                    # Use Pandoc raw LaTeX block syntax for \newpage command
-                    # This ensures Pandoc properly handles it with +raw_tex extension
-                    # Add proper spacing around the page break
-                    combined_parts.append("\n```{=latex}\n\\newpage\n```\n")
-
-            except UnicodeDecodeError as e:
-                raise RenderingError(
-                    f"Failed to read markdown file (encoding error): {md_file.name}",
-                    context={
-                        "file": str(md_file),
-                        "error": str(e),
-                        "position": i + 1,
-                        "total_files": len(source_files),
-                    },
-                    suggestions=[
-                        f"Check file encoding: {md_file}",
-                        "Ensure file is UTF-8 encoded",
-                        "Remove any non-UTF-8 characters from the file",
-                    ],
-                ) from e
-            except Exception as e:  # noqa: BLE001
-                raise RenderingError(
-                    f"Failed to read markdown file: {md_file.name}",
-                    context={
-                        "file": str(md_file),
-                        "error": str(e),
-                        "position": i + 1,
-                        "total_files": len(source_files),
-                    },
-                    suggestions=[
-                        f"Verify file exists and is readable: {md_file}",
-                        "Check file permissions",
-                        "Ensure file is valid markdown",
-                    ],
-                ) from e
-
-        # Join with newlines, ensuring proper spacing
-        combined = "\n\n".join(combined_parts)
-
-        # Ensure the combined content starts cleanly (no leading whitespace issues)
-        combined = combined.lstrip("\n\r")
-
-        # Validate that the combined markdown is not empty
-        if not combined.strip():
-            raise RenderingError(
-                "Combined markdown is empty",
-                context={
-                    "source_files": [str(f) for f in source_files],
-                    "file_count": len(source_files),
-                },
-                suggestions=[
-                    "Verify that all source markdown files contain content",
-                    "Check file permissions and encoding",
-                ],
-            )
-
-        # Validate basic structure - check for common issues at the start
-        # Remove BOM if present (UTF-8 BOM is \ufeff)
-        if combined.startswith("\ufeff"):
-            logger.warning("Removing UTF-8 BOM from combined markdown")
-            combined = combined[1:]
-
-        # Ensure the file doesn't start with problematic characters
-        # Pandoc might complain about certain characters at position 0
-        if combined and combined[0] in ["(", ")", "[", "]", "{", "}"]:
-            logger.warning(
-                f"Combined markdown starts with potentially problematic character: {repr(combined[0])}"  # noqa: E501
-            )
-
-        return combined
-
