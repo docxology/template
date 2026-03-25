@@ -50,6 +50,19 @@ class TestJSONValidation:
         with pytest.raises(ValidationError):
             validate_json(invalid_json)
 
+    def test_validate_invalid_json_error_context_is_bounded(self):
+        """Invalid JSON errors must not embed full LLM-sized blobs in context."""
+        invalid_json = '{"broken": '
+        long_tail = "word " * 200
+        blob = invalid_json + long_tail
+        with pytest.raises(ValidationError) as exc_info:
+            validate_json(blob)
+        ctx = exc_info.value.context
+        assert ctx.get("content_len") == len(blob)
+        preview = ctx.get("content_preview", "")
+        assert len(preview) <= 48
+        assert "content" not in ctx
+
     def test_validate_empty_json_object(self):
         """Test empty JSON object validation."""
         empty_json = "{}"

@@ -19,6 +19,7 @@ Model Selection:
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import time
 from typing import Any
@@ -33,7 +34,7 @@ except ImportError:
     RequestException = OSError  # type: ignore[misc,assignment]
     Timeout = OSError  # type: ignore[misc,assignment]
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -110,15 +111,14 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
             if attempt > 0:
                 logger.info(f"Retry {attempt}/{max_retries}...")
 
-            # Check if ollama command exists
-            result = subprocess.run(["which", "ollama"], capture_output=True, timeout=2.0)
-            if result.returncode != 0:
+            ollama_bin = shutil.which("ollama")
+            if not ollama_bin:
                 logger.error("Ollama command not found. Install Ollama: https://ollama.ai")
                 return False
 
-            # Start server
+            # Start server: list argv only, no shell interpolation.
             process = subprocess.Popen(
-                ["ollama", "serve"],
+                [ollama_bin, "serve"],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 start_new_session=True,

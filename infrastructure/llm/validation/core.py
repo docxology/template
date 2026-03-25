@@ -23,8 +23,9 @@ import re
 from typing import Any, Literal
 
 from infrastructure.core.exceptions import ValidationError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core.config import ResponseMode
+from infrastructure.llm.core.log_preview import preview_for_log
 
 # Import from split modules
 from infrastructure.llm.validation.repetition import deduplicate_sections, detect_repetition
@@ -45,7 +46,11 @@ def validate_json(content: str) -> Any:
     except json.JSONDecodeError as e:
         raise ValidationError(
             "LLM output is not valid JSON",
-            context={"error": str(e), "content": content[:100]},
+            context={
+                "error": str(e),
+                "content_len": len(content),
+                "content_preview": preview_for_log(content, 48),
+            },
         ) from e
 
 

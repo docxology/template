@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import os
 import re
-import subprocess
+import shutil
 import time
 from typing import Any, Callable, Literal, TypedDict, TYPE_CHECKING
 
@@ -21,12 +21,12 @@ if TYPE_CHECKING:
     from infrastructure.llm.templates.base import ResearchTemplate
 from pathlib import Path
 
-from infrastructure.core.logging_utils import (
+from infrastructure.core.logging.utils import (
     get_logger,
     log_substep,
     log_success,
 )
-from infrastructure.core.logging_progress import (
+from infrastructure.core.logging.progress import (
     log_with_spinner,
     StreamingProgress,
     Spinner,
@@ -65,7 +65,7 @@ from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptInputMetr
 # This is an intentional seam — PDF text extraction lives in validation because it is also
 # used by the output validator. If this becomes a problem, move extract_text_from_pdf to
 # infrastructure/core/pdf_utils.py so both subsystems can import without circular deps.
-from infrastructure.validation.pdf_validator import extract_text_from_pdf
+from infrastructure.validation.content.pdf_validator import extract_text_from_pdf
 from infrastructure.core.exceptions import PDFValidationError
 
 logger = get_logger(__name__)
@@ -362,13 +362,8 @@ def select_and_start_ollama_model() -> tuple[bool, str | None]:
     log_substep("Checking Ollama availability...")
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
-    try:
-        result = subprocess.run(["which", "ollama"], capture_output=True, timeout=2.0)
-        if result.returncode != 0:
-            logger.error("❌ Ollama command not found. Install Ollama: https://ollama.ai")
-            return False, None
-    except (subprocess.SubprocessError, FileNotFoundError):  # noqa: BLE001 — failure propagated as (False, None) return value
-        logger.error("❌ Unable to check if Ollama is installed")
+    if not shutil.which("ollama"):
+        logger.error("❌ Ollama command not found. Install Ollama: https://ollama.ai")
         return False, None
 
     max_retries = 3
