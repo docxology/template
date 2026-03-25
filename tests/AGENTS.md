@@ -100,7 +100,7 @@ def test_cli_validation(tmp_path):
 
     # Execute real CLI command
     result = subprocess.run([
-        'python', '-m', 'infrastructure.validation.cli',
+        'python', '-m', 'infrastructure.validation.cli.main',
         'pdf', str(pdf_file)
     ], capture_output=True, text=True)
     assert result.returncode == 0
@@ -293,7 +293,7 @@ for project_name in active_projects:
 This allows tests to import directly:
 
 ```python
-from infrastructure.core.config_loader import load_config  # Infrastructure imports
+from infrastructure.core.config.loader import load_config  # Infrastructure imports
 from projects.code_project.src.optimizer import gradient_descent  # Project imports
 ```
 

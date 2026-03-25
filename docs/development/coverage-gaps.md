@@ -32,7 +32,7 @@ The infrastructure test coverage has achieved **83.33%**, representing a **+22% 
 
 The following modules have coverage below 50% and are prioritized for improvement:
 
-1. **`infrastructure/core/retry.py` (22.22%)**
+1. **`infrastructure/core/runtime/retry.py` (22.22%)**
    - **Status**: Retry utilities for handling transient failures
    - **Gap**: Retry decorators and context manager untested
    - **Improvement Plan**:
@@ -41,7 +41,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Test RetryableOperation context manager
    - **Test File**: `tests/infra_tests/core/test_retry.py` (created)
 
-2. **`infrastructure/core/progress.py` (18.09%)**
+2. **`infrastructure/core/pipeline/progress.py` (18.09%)**
    - **Status**: Progress reporting utilities
    - **Gap**: Progress bar and sub-stage tracking untested
    - **Improvement Plan**:
@@ -50,7 +50,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Test ETA calculations
    - **Test File**: `tests/infra_tests/core/test_progress.py` (created)
 
-3. **`infrastructure/core/checkpoint.py` (39.24%)**
+3. **`infrastructure/core/pipeline/checkpoint.py` (39.24%)**
    - **Status**: Pipeline checkpoint system for resume capability
    - **Gap**: Checkpoint validation and error handling untested
    - **Improvement Plan**:
@@ -129,7 +129,7 @@ uv run python -m pytest tests/infra_tests/ --cov=infrastructure --cov-report=ter
 open htmlcov/index.html
 
 # Check specific module
-uv run python -m pytest tests/infra_tests/core/ --cov=infrastructure.core.checkpoint --cov-report=term
+uv run python -m pytest tests/infra_tests/core/ --cov=infrastructure.core.runtime.checkpoint --cov-report=term
 ```
 
 ### Coverage Trends
@@ -149,9 +149,9 @@ Track coverage improvements over time:
 2. ✅ Phase 3: Missing test files (5 test files created)
 3. ✅ Expand literature CLI tests (edge cases and environment variable handling)
 4. ⏳ Expand remaining low-coverage modules:
-   - `infrastructure/core/retry.py` (22.22%) - Tests exist but may need expansion
-   - `infrastructure/core/progress.py` (18.09%) - Tests exist but may need expansion
-   - `infrastructure/core/checkpoint.py` (39.24%) - Tests exist but may need expansion
+   - `infrastructure/core/runtime/retry.py` (22.22%) - Tests exist but may need expansion
+   - `infrastructure/core/pipeline/progress.py` (18.09%) - Tests exist but may need expansion
+   - `infrastructure/core/pipeline/checkpoint.py` (39.24%) - Tests exist but may need expansion
 5. ⏳ Expand build_verifier tests
 6. ⏳ Add integration tests for checkpoint/resume
 7. ⏳ Document testing patterns and best practices

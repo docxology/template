@@ -1138,7 +1138,7 @@ the iterative algorithm described in Section \ref{sec:algorithm}.
 ## See Also
 
 - [docs/usage/style-guide.md](../usage/style-guide.md) - User-facing manuscript style guide (equations, figures, captions, tables)
-- [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) - Example manuscript (archived project)
+- [projects/code_project/manuscript/](../../projects/code_project/manuscript/) - Example manuscript (active project)
 - [docs/usage/markdown-template-guide.md](../usage/markdown-template-guide.md) - Markdown and cross-referencing guide
 - [docs/usage/manuscript-numbering-system.md](../usage/manuscript-numbering-system.md) - Section numbering system
 - [code_style.md](code_style.md) - Code formatting standards

@@ -18,7 +18,7 @@
 
 ### Two-Level Logging System
 
-1. **Infrastructure Logging** (`infrastructure.core.logging_utils`)
+1. **Infrastructure Logging** (`infrastructure.core.logging.logging_utils`)
    - Logging utilities
    - Environment-based configuration
    - Context managers and decorators
@@ -62,7 +62,7 @@ with log.operation("Running simulation"):
 
 ```python
 # Use the full infrastructure logging
-from infrastructure.core.logging_utils import get_logger, log_operation
+from infrastructure.core.logging.logging_utils import get_logger, log_operation
 
 log = get_logger(__name__)
 
@@ -169,7 +169,7 @@ with log.timing("Complex calculation"):
 ### File Logging
 
 ```python
-from infrastructure.core.logging_utils import setup_project_logging
+from infrastructure.core.logging.logging_utils import setup_project_logging
 
 # Log to file in addition to console
 log = setup_project_logging(__name__, log_file="analysis.log")

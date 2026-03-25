@@ -8,13 +8,13 @@ The Core module provides fundamental foundation utilities used across the entire
 
 ### Core Components
 
-**exceptions.py**
+**runtime/exceptions.py**
 - Base exception hierarchy (TemplateError and subclasses)
 - Context preservation with exception chaining
 - Module-specific exceptions (Literature, LLM, Rendering, Publishing)
 - Exception utility functions for context formatting
 
-**logging_utils.py**
+**logging/logging_utils.py**
 - Unified Python logging with consistent formatting
 - Environment-based configuration (LOG_LEVEL 0-3)
 - Context managers for operation tracking and timing
@@ -22,7 +22,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Integration with bash logging.sh format
 - Emoji support for TTY output
 
-**config_loader.py**
+**config/config_loader.py**
 - YAML configuration file loading
 - Environment variable support with priority
 - Author and metadata formatting
@@ -30,105 +30,105 @@ The Core module provides fundamental foundation utilities used across the entire
 - Environment variable export
 - Translation language configuration
 
-**credentials.py**
+**config/credentials.py**
 - Credential management from .env and YAML config files
 - Environment variable loading
 - YAML configuration with environment variable substitution
 - **Optional dependency**: `python-dotenv` (graceful fallback if not installed)
 - Supports credential access from multiple sources
 
-**progress.py**
+**runtime/progress.py**
 - Progress bar utilities for long-running operations
 - Sub-stage progress tracking
 - Visual progress indicators
 
-**checkpoint.py**
+**runtime/checkpoint.py**
 - Pipeline checkpoint management
 - Save/restore pipeline state
 - Stage result tracking
 
-**retry.py**
+**runtime/retry.py**
 - Retry logic with exponential backoff
 - Transient failure handling
 - Retryable operation wrappers
 
-**stage_monitor.py**
+**runtime/stage_monitor.py**
 - Stage-level performance monitoring and resource tracking
 - Timing, memory, CPU, and IO metrics (psutil optional)
 
-**function_profiler.py**
+**runtime/function_profiler.py**
 - Function-level profiling utilities
 - Decorators/context managers for targeted profiling
 
-**security.py**
+**runtime/security.py**
 - Security utilities and input sanitization
 - Security event monitoring
 - Rate limiting and health checks
 
-**health_check.py**
+**runtime/health_check.py**
 - System health monitoring
 - Component status checking
 - Health status reporting
 
-**cli.py**
+**runtime/cli.py**
 - Command-line interface utilities
 - CLI argument parsing and validation
 
-**config_cli.py**
+**config/config_cli.py**
 - Configuration CLI commands
 - Config file management from command line
 
-**menu.py**
+**runtime/menu.py**
 - Interactive menu system
 - Menu-driven user interfaces
 
-**logging_formatters.py**
+**logging/logging_formatters.py**
 - Logging formatter utilities
 - Custom log format definitions
 
-**logging_helpers.py**
+**logging/logging_helpers.py**
 - Logging helper functions
 - Additional logging utilities
 
-**logging_progress.py**
+**logging/logging_progress.py**
 - Progress logging utilities
 - Progress tracking with logging integration
 
-**environment.py**
+**runtime/environment.py**
 - Environment setup and validation
 - Dependency checking and installation
 - Build tool verification
 - Directory structure setup
 
-**script_discovery.py**
+**runtime/script_discovery.py**
 - Script discovery and execution
 - Analysis script finding
 - Orchestrator script discovery
 
-**file_operations.py**
+**files/file_operations.py**
 - File management utilities
 - Output directory cleanup
 - Final deliverable copying
 
-**file_inventory.py**
+**files/file_inventory.py**
 - File inventory generation and management
 - Directory scanning and categorization
 - File size calculation and formatting
 - Inventory reporting for pipeline summaries
 
-**pipeline.py**
+**pipeline/pipeline.py**
 - PipelineExecutor class for single project execution
 - Pipeline configuration management
 - Stage execution orchestration
 - Checkpoint and logging integration
 
-**multi_project.py**
+**pipeline/multi_project.py**
 - MultiProjectOrchestrator class for cross-project execution
 - Infrastructure test consolidation
 - Parallel project pipeline execution
 - Executive reporting integration
 
-**pipeline_summary.py**
+**pipeline/pipeline_summary.py**
 - Pipeline summary generation and reporting
 - Performance metrics calculation
 - File inventory integration
@@ -136,7 +136,7 @@ The Core module provides fundamental foundation utilities used across the entire
 
 ## Function Signatures
 
-### exceptions.py
+### runtime/exceptions.py
 
 #### TemplateError (class)
 ```python
@@ -478,7 +478,7 @@ def chain_exceptions(
     """
 ```
 
-### logging_utils.py
+### logging/logging_utils.py
 
 #### get_log_level_from_env (function)
 ```python
@@ -711,7 +711,7 @@ def log_resource_usage(
     """
 ```
 
-### config_loader.py
+### config/config_loader.py
 
 #### load_config (function)
 ```python
@@ -832,7 +832,7 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
     """
 ```
 
-### credentials.py
+### config/credentials.py
 
 #### load_credentials (function)
 ```python
@@ -888,7 +888,7 @@ def validate_credentials(
     """
 ```
 
-### progress.py
+### runtime/progress.py
 
 #### ProgressBar (class)
 ```python
@@ -968,7 +968,7 @@ class SubStageProgress:
         """Mark current substage as."""
 ```
 
-### checkpoint.py
+### runtime/checkpoint.py
 
 #### PipelineCheckpoint (class)
 ```python
@@ -1055,7 +1055,7 @@ class CheckpointManager:
         """
 ```
 
-### retry.py
+### runtime/retry.py
 
 #### retry_with_backoff (function)
 ```python
@@ -1129,7 +1129,7 @@ class RetryableOperation:
         """
 ```
 
-### stage_monitor.py
+### runtime/stage_monitor.py
 
 #### PerformanceMonitor (class)
 ```python
@@ -1179,7 +1179,7 @@ def get_system_resources() -> Dict[str, Any]:
     """
 ```
 
-### environment.py
+### runtime/environment.py
 
 #### check_python_version (function)
 ```python
@@ -1243,7 +1243,7 @@ def setup_environment(
     """
 ```
 
-### script_discovery.py
+### runtime/script_discovery.py
 
 #### discover_analysis_scripts (function)
 ```python
@@ -1284,11 +1284,11 @@ def validate_script(script_path: Path) -> Dict[str, Any]:
     """
 ```
 
-### file_operations.py
+### files/file_operations.py
 
 #### clean_output_directory (function)
 ```python
-def clean_output_directory(output_dir: Path) -> bool:
+def clean_output_directory(output_dir: Path) -> None:
     """Clean an output directory by removing all files and subdirectories.
 
     Args:
@@ -1335,7 +1335,7 @@ def copy_final_deliverables(
     """
 ```
 
-### file_inventory.py
+### files/file_inventory.py
 
 #### generate_file_inventory (function)
 ```python
@@ -1376,7 +1376,7 @@ def format_file_size(size_bytes: int) -> str:
     """
 ```
 
-### pipeline.py
+### pipeline/pipeline.py
 
 #### PipelineExecutor (class)
 ```python
@@ -1440,7 +1440,7 @@ class PipelineExecutor:
         """
 ```
 
-### multi_project.py
+### pipeline/multi_project.py
 
 #### MultiProjectOrchestrator (class)
 ```python
@@ -1500,7 +1500,7 @@ class MultiProjectOrchestrator:
         """
 ```
 
-### pipeline_summary.py
+### pipeline/pipeline_summary.py
 
 #### generate_pipeline_summary (function)
 ```python
@@ -1612,7 +1612,7 @@ results = executor.execute_pipeline(resume=True)
 
 ### Multi-Project Orchestration
 ```python
-from infrastructure.core.multi_project import MultiProjectOrchestrator
+from infrastructure.core.pipeline.multi_project import MultiProjectOrchestrator
 
 # Execute multiple projects
 orchestrator = MultiProjectOrchestrator(
@@ -1625,7 +1625,7 @@ results = orchestrator.execute_all_projects(core_only=True)
 reports = orchestrator.generate_executive_report(Path("output/executive"))
 ```
 
-### health_check.py
+### runtime/health_check.py
 
 #### SystemHealthChecker (class)
 ```python
@@ -1680,7 +1680,7 @@ def get_health_metrics() -> Dict[str, Any]:
     """
 ```
 
-### security.py
+### runtime/security.py
 
 #### SecurityValidator (class)
 ```python
@@ -1799,7 +1799,7 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
     """
 ```
 
-### logging_formatters.py
+### logging/logging_formatters.py
 
 #### JSONFormatter (class)
 ```python
@@ -1821,7 +1821,7 @@ class TemplateFormatter(logging.Formatter):
     """Template-aware formatter for logging."""
 ```
 
-### logging_progress.py
+### logging/logging_progress.py
 
 #### calculate_eta (function)
 ```python
@@ -1992,7 +1992,7 @@ def log_stage_with_eta(
     """
 ```
 
-### function_profiler.py
+### runtime/function_profiler.py
 
 #### PerformanceMonitor (class)
 ```python
@@ -2077,7 +2077,7 @@ def benchmark_function(
     """
 ```
 
-### config_cli.py
+### config/config_cli.py
 
 #### main (function)
 ```python
@@ -2085,7 +2085,7 @@ def main():
     """Main function for config CLI."""
 ```
 
-### credentials.py
+### config/credentials.py
 
 #### CredentialManager (class)
 ```python
@@ -2208,7 +2208,7 @@ def has_arxiv_credentials(self) -> bool:
     """Check if arXiv credentials are available."""
 ```
 
-### progress.py
+### runtime/progress.py
 
 #### ProgressBar (class)
 ```python
@@ -2378,7 +2378,7 @@ def log_progress(self) -> None:
     """Log current progress with ETA."""
 ```
 
-### checkpoint.py
+### runtime/checkpoint.py
 
 #### StageResult (class)
 ```python
@@ -2481,7 +2481,7 @@ def validate_checkpoint(self) -> Tuple[bool, Optional[str]]:
     """
 ```
 
-### retry.py
+### runtime/retry.py
 
 #### retry_with_backoff (function)
 ```python
@@ -2581,7 +2581,7 @@ def retry(self, exception: Exception) -> None:
     """
 ```
 
-### stage_monitor.py
+### runtime/stage_monitor.py
 
 #### ResourceUsage (class)
 ```python
@@ -2739,7 +2739,7 @@ def get_summary(self) -> dict[str, Any]:
     """
 ```
 
-### environment.py
+### runtime/environment.py
 
 #### check_python_version (function)
 ```python
@@ -3011,7 +3011,7 @@ def validate_directory_structure(repo_root: Path, project_name: str = "project")
     """
 ```
 
-### script_discovery.py
+### runtime/script_discovery.py
 
 #### discover_analysis_scripts (function)
 ```python
@@ -3058,11 +3058,11 @@ def verify_analysis_outputs(repo_root: Path) -> bool:
     """
 ```
 
-### file_operations.py
+### files/file_operations.py
 
 #### clean_output_directory (function)
 ```python
-def clean_output_directory(output_dir: Path) -> bool:
+def clean_output_directory(output_dir: Path) -> None:
     """Clean top-level output directory before copying.
 
     Args:
@@ -3114,7 +3114,7 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
     """
 ```
 
-### file_inventory.py
+### files/file_inventory.py
 
 #### FileInventoryManager (class)
 ```python
@@ -3143,7 +3143,7 @@ class FileInventoryManager:
         """
 ```
 
-### pipeline.py
+### pipeline/pipeline.py
 
 #### PipelineConfig (class)
 ```python
@@ -3186,7 +3186,7 @@ class PipelineExecutor:
         """
 ```
 
-### multi_project.py
+### pipeline/multi_project.py
 
 #### MultiProjectConfig (class)
 ```python
@@ -3240,7 +3240,7 @@ class MultiProjectOrchestrator:
         """
 ```
 
-### security.py
+### runtime/security.py
 
 #### SecurityValidator (class)
 ```python
@@ -3349,7 +3349,7 @@ def api_function():
     pass
 ```
 
-### health_check.py
+### runtime/health_check.py
 
 #### SystemHealthChecker (class)
 ```python
@@ -3414,7 +3414,7 @@ def get_health_metrics() -> Dict[str, Any]:
     """Get health metrics."""
 ```
 
-### cli.py
+### runtime/cli.py
 
 #### create_parser (function)
 ```python
@@ -3501,31 +3501,31 @@ def handle_discover_command(args: argparse.Namespace) -> int:
     """
 ```
 
-### config_cli.py
+### config/config_cli.py
 
 This module provides CLI commands for configuration management. See `cli.py` for integration.
 
-### menu.py
+### runtime/menu.py
 
 This module provides interactive menu system utilities for menu-driven user interfaces.
 
-### logging_formatters.py
+### logging/logging_formatters.py
 
 This module provides logging formatter utilities and custom log format definitions.
 
-### logging_helpers.py
+### logging/logging_helpers.py
 
 This module provides additional logging helper functions beyond those in `logging_utils.py`.
 
-### logging_progress.py
+### logging/logging_progress.py
 
 This module provides progress logging utilities that integrate progress tracking with logging.
 
-### function_profiler.py
+### runtime/function_profiler.py
 
 This module provides function-level profiling utilities (cProfile/tracemalloc) and benchmarking helpers. See `stage_monitor.py` for stage-level resource monitoring.
 
-### pipeline_summary.py
+### pipeline/pipeline_summary.py
 
 #### generate_pipeline_summary (function)
 ```python
@@ -3710,7 +3710,7 @@ for result in results:
 
 ### Multi-Project Orchestration
 ```python
-from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.project.discovery import discover_projects
 
 projects = discover_projects(Path("."))

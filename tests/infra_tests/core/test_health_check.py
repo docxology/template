@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import time
 
-from infrastructure.core.health_check import SystemHealthChecker
+from infrastructure.core.runtime.health_check import SystemHealthChecker
 
 
 class TestSystemHealthCheckerInit:

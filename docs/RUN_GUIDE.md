@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
-2. **`uv run scripts/execute_pipeline.py --core-only`** - Core 8-stage pipeline without LLM features
+2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core 8-stage pipeline without LLM features
 
 ## 🏗️ Thin Orchestration Architecture
 
@@ -22,7 +22,7 @@ The Research Project Template follows a **thin orchestrator pattern** where all 
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                 Orchestration Layer                         │
-│  scripts/00-07_*.py → infrastructure/ modules               │
+│  scripts/00_*.py … scripts/07_*.py → infrastructure/ modules  │
 │  projects/{name}/scripts/*.py → projects/{name}/src/        │
 └─────────────────────┬───────────────────────────────────────┘
                       │ implements
@@ -44,7 +44,7 @@ The Research Project Template follows a **thin orchestrator pattern** where all 
 
 **Layer 2: Stage Scripts (Thin Orchestrators)**
 
-- **`scripts/00-07_*.py`**: Import from `infrastructure/` for business logic
+- **`scripts/00_*.py`–`scripts/07_*.py`**: Import from `infrastructure/` for business logic (numbered stage entry points; not all run in a single `--core-only` pass)
 - **`projects/{name}/scripts/*.py`**: Import from `projects/{name}/src/` for business logic
 - **Purpose**: Stage-specific coordination and I/O handling
 
@@ -66,9 +66,9 @@ graph TD
     D --> G[scripts/02_run_analysis.py]
     D --> H[scripts/03_render_pdf.py]
 
-    E --> I[infrastructure.core.environment]
+    E --> I[infrastructure.core.runtime.environment]
     F --> J[infrastructure.reporting.test_reporter]
-    G --> K[infrastructure.core.script_discovery]
+    G --> K[infrastructure.core.runtime.script_discovery]
     H --> L[infrastructure.rendering.RenderManager]
 
     K --> M[projects/{name}/scripts/*.py]
@@ -122,15 +122,9 @@ The template now supports **multiple research projects** in a single repository.
 
 ### Available Projects
 
-Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`), so this guide avoids hard-coding a canonical list.
+Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`). **Authoritative names:** [_generated/active_projects.md](_generated/active_projects.md) (see [_generated/README.md](_generated/README.md) for policy and regeneration). **Examples in this guide** use **`code_project`** as the stable control-positive layout under `projects/`.
 
-In this repository right now, active projects under `projects/` include:
-
-- **`act_inf_metaanalysis`** — Active Inference meta-analysis
-- **`code_project`** — Optimization research exemplar
-- **`template`** — Template self-documentation project
-
-Archived and in-progress projects live outside `projects/` and are not executed by default.
+Archived and in-progress work lives under `projects_archive/` and `projects_in_progress/` and is not executed by `./run.sh` until moved into `projects/`.
 
 ### Multi-Project Commands
 
@@ -207,7 +201,7 @@ Verifies the environment is ready for the pipeline.
 Executes the test suite with coverage validation.
 
 - Runs infrastructure tests (`tests/infra_tests/`) with 60%+ coverage threshold
-- Runs project tests (`project/tests/`) with 90%+ coverage threshold
+- Runs project tests (`projects/{name}/tests/`) with 90%+ coverage threshold
 - Generates HTML coverage reports for both suites
 - Generates structured test reports (JSON, Markdown)
 
@@ -217,20 +211,20 @@ Executes the test suite with coverage validation.
 
 Executes project analysis scripts with progress tracking.
 
-- Discovers scripts in `project/scripts/`
+- Discovers scripts in `projects/{name}/scripts/`
 - Executes each script in order with progress tracking
-- Collects outputs to `project/output/`
+- Collects outputs to `projects/{name}/output/`
 
 #### Option 3: Render PDF
 
 Generates manuscript PDFs with progress tracking.
 
-- Processes `project/manuscript/` markdown files
+- Processes `projects/{name}/manuscript/` markdown files
 - Converts to LaTeX via pandoc
 - Compiles to PDF via xelatex
 - Also runs analysis scripts first (option 2)
 
-**Output**: `project/output/pdf/`
+**Output**: `projects/{name}/output/pdf/`
 
 #### Option 4: Validate Output
 
@@ -248,7 +242,7 @@ Generates AI-powered manuscript reviews using local Ollama LLM.
 - Checks Ollama availability and selects best model
 - Extracts full text from combined PDF manuscript
 - Generates executive summary, quality review, methodology review, and improvement suggestions
-- Saves all reviews to `project/output/llm/`
+- Saves all reviews to `projects/{name}/output/llm/`
 
 **Requires**: Running Ollama server with at least one model installed. Skips gracefully if unavailable.
 
@@ -256,9 +250,9 @@ Generates AI-powered manuscript reviews using local Ollama LLM.
 
 Generates multi-language technical abstract translations.
 
-- Translates abstract to configured languages (see `project/manuscript/config.yaml`)
+- Translates abstract to configured languages (see `projects/{name}/manuscript/config.yaml`)
 - Uses local Ollama LLM for translation
-- Saves translations to `project/output/llm/`
+- Saves translations to `projects/{name}/output/llm/`
 
 **Requires**: Running Ollama server and translation configuration in `config.yaml`.
 
@@ -311,16 +305,16 @@ For programmatic access or CI/CD integration, use the Python orchestrator:
 
 ```bash
 # Core pipeline (8 stages) - Python orchestrator
-uv run scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 **Features**:
 
-- 8-stage core pipeline (stages 00-05)
-- No LLM dependencies required
+- Eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF rendering, validation, copy outputs). Omit infrastructure tests with `--skip-infra` (seven stages).
+- No LLM stages (uses scripts through `05_copy_outputs.py` for the main path; `06`/`07` are optional add-ons for LLM and multi-project reporting)
+- No LLM dependencies required for `--core-only`
 - Suitable for automated environments
-- Zero-padded stage numbering (Python convention)
-- Checkpoint/resume support: `uv run scripts/execute_pipeline.py --core-only --resume`
+- Checkpoint/resume support: `uv run python scripts/execute_pipeline.py --project {name} --core-only --resume`
 
 ### Core Pipeline Stages + Executive Reporting
 
@@ -328,12 +322,14 @@ uv run scripts/execute_pipeline.py --core-only
 |-------|--------|---------|
 | 00 | `00_setup_environment.py` | Environment setup & validation |
 | 01 | `01_run_tests.py` | Run test suite (infrastructure + project) |
-| 02 | `02_run_analysis.py` | Discover & run `project/scripts/` |
+| 02 | `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
 | 03 | `03_render_pdf.py` | PDF rendering orchestration |
 | 04 | `04_validate_output.py` | Output validation & reporting |
 | 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
 | 06 | `06_llm_review.py` | LLM manuscript review & translations (optional, requires Ollama) |
 | 07 | `07_generate_executive_report.py` | Executive summaries & dashboards (multi-project only) |
+
+`--core-only` runs the executor stages through copy outputs and does **not** run `06` or `07`; those are optional or multi-project entry points.
 
 ## Entry Point Comparison
 
@@ -341,7 +337,7 @@ uv run scripts/execute_pipeline.py --core-only
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
 | `./run.sh --pipeline` | 9 stages ([1/9] to [9/9]) + pre-clean ([0/9]) | Optional | Manuscript pipeline with LLM |
-| `uv run scripts/execute_pipeline.py --core-only` | 8 stages (00-05) | None | Core pipeline, CI/CD automation |
+| `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Eight stages by default (see above); seven with `--skip-infra` | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
 
@@ -367,7 +363,7 @@ uv run scripts/execute_pipeline.py --core-only
 
 
 # Run core pipeline (Python)
-uv run scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Individual Stage Execution
@@ -398,7 +394,7 @@ uv run scripts/06_llm_review.py --translations-only # Translations only
 The scripts automatically set:
 
 - `PROJECT_ROOT`: Repository root directory
-- `PYTHONPATH`: Includes root, infrastructure, and project/src
+- `PYTHONPATH`: Includes root, infrastructure, and `projects/{name}/src`
 
 You can override by setting before running:
 
@@ -450,7 +446,7 @@ Verify `conftest.py` is in the repository root and contains proper path setup.
 
 ### Coverage threshold not met
 
-Check `pyproject.toml` `[tool.coverage.report]` for coverage thresholds. Increase test coverage in `tests/` and `project/tests/`.
+Check `pyproject.toml` `[tool.coverage.report]` for coverage thresholds. Increase test coverage in `tests/` and `projects/{name}/tests/`.
 
 ### PDF rendering fails
 

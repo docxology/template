@@ -2,12 +2,12 @@
 
 ## Unified Logging System
 
-All Python scripts use `infrastructure/core/logging_utils.py`.
+All Python scripts use `infrastructure/core/logging/logging_utils.py`.
 
 ### Import Pattern
 
 ```python
-from infrastructure.core.logging_utils import get_logger, log_operation, log_success
+from infrastructure.core.logging.logging_utils import get_logger, log_operation, log_success
 
 logger = get_logger(__name__)
 ```
@@ -113,7 +113,7 @@ print("Processing started")  # Should use logger.info()
 
 ```python
 from contextlib import contextmanager
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 import time
 
 logger = get_logger(__name__)
@@ -146,7 +146,7 @@ with log_operation("Data validation"):
 
 ```python
 import json
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -175,7 +175,7 @@ log_structured(
 ### Progress Logging Pattern
 
 ```python
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -209,7 +209,7 @@ process_items(users, process_user)
 ### Conditional Logging
 
 ```python
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 import os
 
 logger = get_logger(__name__)
@@ -258,7 +258,7 @@ print(f"Processing {count} items")
 ### Formatting Best Practices
 
 ```python
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -280,8 +280,8 @@ logger.error("Failed to save data", exc_info=True)  # Error occurred
 ## Integrating with Error Handling
 
 ```python
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.runtime.exceptions import ValidationError
 
 logger = get_logger(__name__)
 
@@ -356,7 +356,7 @@ logger.error("User authentication failed")
 
 ```python
 import pytest
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 def test_operation_logs_correctly(caplog):
     """Test that operation logs expected messages."""

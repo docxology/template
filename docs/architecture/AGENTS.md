@@ -16,6 +16,7 @@ Technical guide for `docs/architecture/` — system architecture, design pattern
 
 ## Key Conventions
 
+- **Project examples in prose**: default to [`projects/code_project/`](../../projects/code_project/); active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md).
 - **Layer 1** (`infrastructure/`): Generic, reusable tools — 60% test coverage minimum
 - **Layer 2** (`projects/{name}/`): Project-specific code — 90% test coverage minimum
 - **Thin orchestrator**: Scripts import and use `src/` methods, never implement algorithms

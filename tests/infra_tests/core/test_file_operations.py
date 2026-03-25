@@ -1,14 +1,14 @@
-"""Tests for infrastructure.core.file_operations module.
+"""Tests for infrastructure.core.files.operations module.
 
 Comprehensive tests for file and directory operation utilities including
 cleaning output directories and copying final deliverables.
 """
 
-from infrastructure.core.file_cleanup import (
+from infrastructure.core.files.cleanup import (
     clean_output_directories,
     clean_output_directory,
 )
-from infrastructure.core.file_operations import copy_final_deliverables
+from infrastructure.core.files.operations import copy_final_deliverables
 
 
 class TestCleanOutputDirectory:
@@ -470,7 +470,7 @@ class TestCleanCoverageFiles:
         (tmp_path / "coverage_project.json").write_text('{"coverage": "project"}')
 
         # Import and call function
-        from infrastructure.core.coverage_cleanup import clean_coverage_files
+        from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
         result = clean_coverage_files(tmp_path)
 
@@ -489,7 +489,7 @@ class TestCleanCoverageFiles:
         (tmp_path / "custom_coverage.db").write_text("custom data")
         (tmp_path / "other_file.txt").write_text("other data")
 
-        from infrastructure.core.coverage_cleanup import clean_coverage_files
+        from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
         result = clean_coverage_files(tmp_path, patterns=["custom_coverage.db"])
 
@@ -509,7 +509,7 @@ class TestCleanCoverageFiles:
         # Make it read-only to simulate lock
         coverage_file.chmod(0o444)  # Read-only
 
-        from infrastructure.core.coverage_cleanup import clean_coverage_files
+        from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
         result = clean_coverage_files(tmp_path)
 
@@ -521,7 +521,7 @@ class TestCleanCoverageFiles:
 
     def test_clean_coverage_files_no_files(self, tmp_path):
         """Test cleaning when no coverage files exist."""
-        from infrastructure.core.coverage_cleanup import clean_coverage_files
+        from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
         result = clean_coverage_files(tmp_path)
 
@@ -536,7 +536,7 @@ class TestCleanCoverageFiles:
         (tmp_path / "coverage_001.json").write_text("json1")
         (tmp_path / "coverage_002.json").write_text("json2")
 
-        from infrastructure.core.coverage_cleanup import clean_coverage_files
+        from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
         result = clean_coverage_files(tmp_path, patterns=[".coverage*", "coverage_*.json"])
 
@@ -553,7 +553,7 @@ class TestCleanCoverageFiles:
         """Test cleaning with empty patterns list."""
         (tmp_path / ".coverage").write_text("data")
 
-        from infrastructure.core.coverage_cleanup import clean_coverage_files
+        from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
         result = clean_coverage_files(tmp_path, patterns=[])
 
@@ -569,7 +569,7 @@ class TestCleanCoverageFiles:
         subdir.mkdir()
         (subdir / ".coverage").write_text("subdir coverage")
 
-        from infrastructure.core.coverage_cleanup import clean_coverage_files
+        from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
         result = clean_coverage_files(tmp_path)
 

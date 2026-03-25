@@ -30,7 +30,7 @@ class TestQueryLogging:
         """Test query logs start with structured data."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure logger is properly configured for test
         logger = get_logger("infrastructure.llm.core.client")
@@ -66,7 +66,7 @@ class TestQueryLogging:
         """Test query logs completion with metrics."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure logger is properly configured for test
         logger = get_logger("infrastructure.llm.core.client")
@@ -100,7 +100,7 @@ class TestQueryLogging:
         """Test query logs context reset."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure loggers are properly configured for test
         client_logger = get_logger("infrastructure.llm.core.client")
@@ -128,7 +128,7 @@ class TestQueryRawLogging:
         """Test query_raw logs the raw context add at DEBUG level."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
@@ -148,7 +148,7 @@ class TestQueryRawLogging:
         """Test query_raw triggers an Ollama request."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
@@ -171,7 +171,7 @@ class TestQueryShortLogging:
         """Test query_short triggers an Ollama request at DEBUG level."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
@@ -204,7 +204,7 @@ class TestQueryLongLogging:
         """Test query_long triggers an Ollama request at DEBUG level."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
@@ -237,7 +237,7 @@ class TestQueryStructuredLogging:
         """Test query_structured logs start."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
@@ -258,7 +258,7 @@ class TestQueryStructuredLogging:
         """Test query_structured logs completion."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
@@ -286,7 +286,7 @@ class TestContextLogging:
         """Test context add_message logs."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
         from infrastructure.llm.core.context import ConversationContext
 
         logger = get_logger("infrastructure.llm.core.context")
@@ -306,7 +306,7 @@ class TestContextLogging:
         """Test context clear logs."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
         from infrastructure.llm.core.context import ConversationContext
 
         logger = get_logger("infrastructure.llm.core.context")
@@ -324,7 +324,7 @@ class TestContextLogging:
         """Test context prune logs."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
         from infrastructure.llm.core.context import ConversationContext
 
         logger = get_logger("infrastructure.llm.core.context")
@@ -353,7 +353,7 @@ class TestErrorLogging:
         """Test connection errors are logged when server is unreachable."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure propagation so caplog can capture
         logger = get_logger("infrastructure.llm.core.client")
@@ -378,7 +378,7 @@ class TestErrorLogging:
         """Test timeout errors are logged when server is unresponsive."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure propagation so caplog can capture
         logger = get_logger("infrastructure.llm.core.client")
@@ -408,7 +408,7 @@ class TestLoggingLevels:
         """Test DEBUG level logging."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
@@ -427,7 +427,7 @@ class TestLoggingLevels:
         """Test that resetting context generates an INFO log."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)

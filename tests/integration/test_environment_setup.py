@@ -15,7 +15,7 @@ import sys
 
 import pytest
 
-from infrastructure.core.environment import (
+from infrastructure.core.runtime.environment import (
     check_build_tools,
     check_dependencies,
     check_python_version,

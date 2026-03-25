@@ -31,7 +31,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import (
+from infrastructure.core.logging.utils import (
     get_logger,
     log_header,
     log_live_resource_usage,
@@ -40,7 +40,7 @@ from infrastructure.core.logging_utils import (
 )
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.exceptions import ScriptExecutionError, PipelineError
-from infrastructure.core.environment import get_python_command, get_subprocess_env
+from infrastructure.core.runtime.environment import get_python_command, get_subprocess_env
 from infrastructure.core.script_discovery import (
     discover_analysis_scripts,
     verify_analysis_outputs,

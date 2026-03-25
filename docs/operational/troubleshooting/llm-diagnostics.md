@@ -77,13 +77,13 @@ print('Available:', client.check_connection())
 
 ```bash
 # Check PDF exists
-ls -la projects/{name}/output/pdf/project_combined.pdf
+ls -la projects/{name}/output/pdf/{name}_combined.pdf
 
 # Test PDF text extraction
 uv run python -c "
 from pathlib import Path
 import PyPDF2
-pdf_path = Path('projects/{name}/output/pdf/project_combined.pdf')
+pdf_path = Path('projects/{name}/output/pdf/{name}_combined.pdf')
 if pdf_path.exists():
     with open(pdf_path, 'rb') as f:
         reader = PyPDF2.PdfReader(f)

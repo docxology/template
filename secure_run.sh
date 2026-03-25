@@ -160,8 +160,8 @@ from pathlib import Path
 
 sys.path.insert(0, '$REPO_ROOT')
 
-from infrastructure.core.logging_utils import get_logger, setup_logger
-from infrastructure.core.config_loader import load_config
+from infrastructure.core.logging.utils import get_logger, setup_logger
+from infrastructure.core.config.loader import load_config
 from infrastructure.steganography import SteganographyProcessor, SteganographyConfig
 from infrastructure.project.discovery import discover_projects
 

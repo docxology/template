@@ -16,7 +16,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 

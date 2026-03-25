@@ -10,7 +10,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 
-from infrastructure.core.logging_utils import get_logger, log_success
+from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
 

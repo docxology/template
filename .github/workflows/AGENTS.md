@@ -57,7 +57,7 @@ test-infra + test-project
 #### 2. Verify No Mocks Policy (`verify-no-mocks`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
-- **Script:** `scripts/verify_no_mocks.py`
+- **Script:** [`scripts/verify_no_mocks.py`](../../scripts/verify_no_mocks.py) (repository root)
 - **Policy:** Absolutely no `MagicMock`, `mocker.patch`, `unittest.mock` in test files
 
 #### 3. Infrastructure Tests (`test-infra`)
@@ -217,6 +217,7 @@ print(s.getvalue())
 
 ## See Also
 
+- [`../README.md`](../README.md) — `.github/` human guide (workflows, Dependabot, templates)
 - [`../AGENTS.md`](../AGENTS.md) — GitHub integration overview
 - [`../../AGENTS.md`](../../AGENTS.md) — Root system overview and pipeline stages
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)

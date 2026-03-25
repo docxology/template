@@ -15,7 +15,7 @@ git clone https://github.com/docxology/template.git
 uv sync
 
 # Run build
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Daily Workflow Commands
@@ -30,13 +30,13 @@ uv run python scripts/02_run_analysis.py --project code_project
 uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Open manuscript
-open output/project_combined.pdf  # Top-level output
+open output/code_project/pdf/code_project_combined.pdf  # Top-level output (example project)
 ```
 
 ### Build Pipeline Commands
 ```bash
 # pipeline execution
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # With specific stage
 uv run python scripts/00_setup_environment.py --project code_project
@@ -76,7 +76,7 @@ vim projects/code_project/manuscript/07_new_section.md
 echo "# New Section {#sec:new_section}" > projects/code_project/manuscript/07_new_section.md
 
 # 3. Rebuild
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Add a New Figure
@@ -162,15 +162,17 @@ Reference it: \ref{fig:my_figure}
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
 | **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project code_project` first |
 | **References show ??** | Check label spelling and existence |
+| **Project not discovered** | Ensure `manuscript/config.yaml` exists |
+| **Stage 4 fails silently** | Check root pyproject.toml has project deps ([details](../guides/new-project-setup.md#pitfall-6-project-specific-packages-absent-from-root-venv--silent-stage-4-failure)) |
+| **Config warnings** | Nest custom keys under `project_config:` |
 
 ## 📊 Key Metrics
 
-**Current System Status:**
-- **Tests**: 2118/2118 passing (1796 infra [2 skipped] + 320 project)
-- **Coverage**: 100% project, 83.33% infra (exceeds requirements by 39%!)
-- **Build Time**: 84 seconds (without optional LLM review)
-- **PDFs Generated**: 13 sections
-- **Documentation**: 25+ guides
+**Current System Status (verify locally):**
+- **Tests**: `uv run pytest tests/infra_tests/ projects/<name>/tests/` (thresholds in `pyproject.toml`)
+- **Coverage**: 90% minimum project `src/`, 60% minimum `infrastructure/` (enforced by pytest)
+- **Build time**: measure with `/usr/bin/time` on your project; depends on manuscript size and machine
+- **Documentation**: see [documentation-index.md](../documentation-index.md)
 
 **See [Pipeline Orchestration](../RUN_GUIDE.md) for details**
 
@@ -198,8 +200,8 @@ Reference it: \ref{fig:my_figure}
 1. **Always run tests first**: `pytest projects/code_project/tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `projects/{name}/src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
-4. **Run pipeline**: `uv run python scripts/execute_pipeline.py --core-only` executes all stages
-5. **Pipeline stages**: 8 stages (00-05) from setup to final deliverables
+4. **Run pipeline**: `uv run python scripts/execute_pipeline.py --project {name} --core-only` executes all stages
+5. **Pipeline stages**: Core `--core-only` run is **eight** stages by default (clean through copy); see [RUN_GUIDE.md](../RUN_GUIDE.md)
 6. **Read build logs**: Check `projects/{name}/output/logs/pipeline.log` for errors
 7. **Individual stages**: Run `uv run python scripts/0X_stage_name.py --project {name}` for specific stages
 8. **CI/CD friendly**: Pipeline scripts support automated builds

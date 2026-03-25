@@ -39,7 +39,7 @@
 
 ### **Q: How does the PDF generation work?**
 
-**A:** The template uses Pandoc to convert markdown files to LaTeX, then XeLaTeX to generate PDFs. The `./run.sh` unified orchestrator (or `scripts/execute_pipeline.py`) executes all 6 pipeline stages, including figure generation, PDF rendering, and cross-referencing.
+**A:** The template uses Pandoc to convert markdown files to LaTeX, then XeLaTeX to generate PDFs. The `./run.sh` entry point (or `scripts/execute_pipeline.py`) runs the full pipeline sequence: tests, analysis scripts, PDF rendering, validation, and copy-out, with optional LLM stages when not using `--core-only`. Stage layout is documented in [RUN_GUIDE.md](../RUN_GUIDE.md).
 
 ### **Q: Can I customize the PDF output format?**
 

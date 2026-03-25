@@ -614,7 +614,48 @@ with open('output/environment.json', 'w') as f:
     json.dump(env_info, f, indent=2)
 ```
 
-**See [infrastructure/validation/integrity.py](../../infrastructure/validation/integrity.py) for integrity verification tools.**
+**See [infrastructure/validation/integrity/checks.py](../../infrastructure/validation/integrity/checks.py) for integrity verification tools.**
+
+---
+
+## Troubleshooting
+
+### Coverage Below 90%
+
+**Symptom**: `CoverageWarning: Total coverage 85% < 90% threshold`
+
+**Solution**:
+```bash
+# Find uncovered lines
+pytest --cov=projects.code_project.src --cov-report=term-missing
+# Add tests for lines marked as "Missing"
+```
+
+### Tests Timing Out
+
+**Symptom**: Tests hang or timeout
+
+**Solution**:
+- Check for infinite loops in test data
+- Add `@pytest.mark.timeout(60)` decorator
+- Verify `MPLBACKEND=Agg` is set in conftest.py
+
+### Import Errors in Tests
+
+**Symptom**: `ModuleNotFoundError` when running pytest
+
+**Solution**:
+- Ensure tests/conftest.py adds src/ to sys.path
+- Run tests via `uv run pytest` not bare `pytest`
+
+### Mock Policy Violation
+
+**Symptom**: Reviewer flags use of `MagicMock` or `@patch`
+
+**Solution**:
+- Use real data instead of mocks
+- Use pytest-httpserver for HTTP testing
+- Use temp files for file operations
 
 ---
 

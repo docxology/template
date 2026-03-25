@@ -901,7 +901,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 1. Check preamble in `projects/{project_name}/manuscript/preamble.md` for required packages
 2. Verify all LaTeX commands are valid (use `\ref{}`, not `\ref {}`)
 3. Ensure all `\label{}` commands exist for referenced items
-4. Run validation: `python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/`
+4. Run validation: `python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/`
 
 ## Testing
 

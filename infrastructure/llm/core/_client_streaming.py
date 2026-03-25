@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterator
 
 from infrastructure.core.exceptions import LLMConnectionError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core._text_utils import strip_thinking_tags
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext

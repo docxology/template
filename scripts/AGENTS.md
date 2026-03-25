@@ -81,7 +81,7 @@ post-processing to all generated PDFs. Sources `scripts/bash_utils.sh` for loggi
 ./secure_run.sh
 
 # Specific project
-./secure_run.sh --project medical_ai
+./secure_run.sh --project code_project
 
 # Re-process existing PDFs without re-running the pipeline
 ./secure_run.sh --steganography-only --project code_project
@@ -269,7 +269,7 @@ Creates multi-project directory structure:
 
 **Core Functionality:**
 
-- Thin orchestrator that coordinates `infrastructure.validation.audit_orchestrator`
+- Thin orchestrator that coordinates `infrastructure.validation.repo.audit_orchestrator`
 - Discovers all markdown files in repository
 - Validates internal/external links and file references
 - Checks code block paths and directory structures
@@ -381,7 +381,7 @@ def main():
 
 #### Multi-Project (`execute_multi_project.py`)
 
-**Purpose:** Execute pipelines across all discovered projects via `infrastructure.core.multi_project.MultiProjectOrchestrator`.
+**Purpose:** Execute pipelines across all discovered projects via `infrastructure.core.pipeline.multi_project.MultiProjectOrchestrator`.
 
 - Runs infrastructure tests once (optional)
 - Runs each project pipeline with infra tests skipped per-project
@@ -581,6 +581,7 @@ scripts/
 ├── 06_llm_review.py            # Entry: LLM review (optional)
 ├── execute_pipeline.py          # Entry: Single-project pipeline
 ├── execute_multi_project.py     # Entry: Multi-project pipeline
+├── generate_active_projects_doc.py  # docs/_generated/active_projects.md
 ├── bash_utils.sh               # Shared utilities
 ├── AGENTS.md                   # This file
 └── README.md                   # Quick reference

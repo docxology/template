@@ -116,8 +116,8 @@ def network_call():
 ## Performance Monitoring (`stage_monitor.py`, `function_profiler.py`)
 
 ```python
-from infrastructure.core.function_profiler import CodeProfiler, monitor_performance
-from infrastructure.core.stage_monitor import PerformanceMonitor, get_system_resources
+from infrastructure.core.runtime.function_profiler import CodeProfiler, monitor_performance
+from infrastructure.core.pipeline.stage_monitor import PerformanceMonitor, get_system_resources
 
 resources = get_system_resources()
 monitor = PerformanceMonitor()
@@ -165,7 +165,7 @@ copy_final_deliverables(source, destination)
 ## Multi-Project Orchestration (`multi_project.py`)
 
 ```python
-from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 config = MultiProjectConfig(projects=["proj_a", "proj_b"])
 orchestrator = MultiProjectOrchestrator(config)
 result = orchestrator.run()

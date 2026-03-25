@@ -1,25 +1,21 @@
 # One-shot LLM prompt: new `projects/{name}/`
 
-Use this prompt when you want a model to scaffold a full project in one pass. Attach or reference the positive controls so layout and conventions stay aligned with the repo.
+Use this prompt when you want a model to scaffold a full project in one pass. Anchor layout and conventions on the control-positive exemplar [`projects/code_project/`](../../projects/code_project/).
 
 **Checklist and pitfalls:** [new-project-setup.md](new-project-setup.md)
 
-## Positive controls (read or attach in your IDE)
+**Other active workspaces** (alternate packaging or manuscript depth) live under `projects/`; names are listed in [_generated/active_projects.md](../_generated/active_projects.md). Do not copy that list into this prompt—inspect those trees in the repo if you need a second reference.
 
-| Control | Path | Use when |
-| -------- | ----- | -------- |
-| A | [projects/code_project](../../projects/code_project/) | Flat `src/` modules, analysis `scripts/`, shorter manuscript arc, figures and reproducible outputs |
-| B | [projects/template](../../projects/template/) | Package under `src/<slug>/`, long multi-section manuscript, script-driven metrics or visualization |
-| C | [projects/area_handbook](../../projects/area_handbook/) | Flat `src/` as importable `src` package, YAML fixture corpus, synthesis-to-handbook narrative, coverage figure |
+## Positive control (read or attach in your IDE)
+
+| Control | Path | Role |
+| -------- | ----- | ----- |
+| A | [projects/code_project](../../projects/code_project/) | Flat `src/` modules, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/` layout |
 
 ## Prompt (copy from below into your assistant)
 
 ```text
-You are working inside the docxology/template monorepo. Create a new active project at projects/<PROJECT_SLUG>/ that matches the same shape and discipline as the positive controls:
-
-- projects/code_project — reference for flat src/ modules, analysis scripts, standard manuscript sectioning, reproducible figures/data, and tests/ layout (conftest.py path and MPLBACKEND=Agg if using matplotlib).
-- projects/template — reference when the domain needs a named Python package under src/<PROJECT_SLUG>/, multi-chapter manuscripts, and script-orchestrated metrics or visualization with zero domain logic in scripts/.
-- projects/area_handbook — reference for a committed YAML/JSON corpus, section coverage synthesis, gap lists, and handbook-style multi-section prose with `from src.*` imports in scripts (prepend `PROJECT_DIR` to `sys.path`).
+You are working inside the docxology/template monorepo. Create a new active project at projects/<PROJECT_SLUG>/ that matches the same shape and discipline as the control-positive exemplar projects/code_project/: flat src/ modules, analysis scripts as thin orchestrators, standard manuscript sectioning, reproducible figures/data, tests/ with conftest path and MPLBACKEND=Agg if using matplotlib, ≥90% coverage on projects/<PROJECT_SLUG>/src, no mocks.
 
 Required layout (must exist):
 
@@ -31,25 +27,25 @@ projects/<PROJECT_SLUG>/
     ├── __init__.py
     └── test_*.py           # ≥90% coverage on projects/<PROJECT_SLUG>/src; no mocks
 
-Strongly recommended (match the exemplars):
+Strongly recommended (match the exemplar):
 
-- scripts/ — thin orchestrators only: import from src or src.<package>, write outputs under projects/<PROJECT_SLUG>/output/, print paths for manifests where applicable.
-- manuscript/ — config.yaml, preamble.md, references.bib, ordered *.md sections consistent with scope (short paper like code_project vs long form like template).
+- scripts/ — thin orchestrators only: import from src, write outputs under projects/<PROJECT_SLUG>/output/, print paths for manifests where applicable.
+- manuscript/ — config.yaml, preamble.md, references.bib, ordered *.md sections.
 - docs/ — small hub (architecture, testing notes) if non-obvious.
-- Root AGENTS.md for the project + README.md where helpful; subdirectory AGENTS.md/README.md only where the exemplars do.
+- Root AGENTS.md for the project + README.md where helpful; subdirectory AGENTS.md/README.md only where the exemplar does.
 
 Rules:
 
 1. No unittest.mock, MagicMock, or pytest monkeypatch of domain code — use real data, temp files, subprocess, or pytest-httpserver for HTTP.
-2. Coverage: configure tool.coverage.run and fail_under in pyproject.toml like the exemplars; exercise all new src lines.
-3. Imports: use from src... in scripts/tests as in existing projects; infrastructure imports allowed; never import another projects/* package.
+2. Coverage: configure tool.coverage.run and fail_under in pyproject.toml like the exemplar; exercise all new src lines.
+3. Imports: use from src... in scripts/tests as in code_project; infrastructure imports allowed; never import another projects/* package.
 4. Determinism: fixed RNG seeds for anything stochastic; headless plotting (MPLBACKEND=Agg) where relevant.
 5. Naming: <PROJECT_SLUG> is lowercase snake_case; package name in pyproject.toml aligns with repo conventions.
 
 One-shot deliverables (do all in one pass):
 
 1. Full directory tree and files for projects/<PROJECT_SLUG>/ as above.
-2. Minimal but real domain implementation in src/ (not stubs), with typed public APIs and logging via infrastructure.core.logging_utils.get_logger where appropriate.
+2. Minimal but real domain implementation in src/ (not stubs), with typed public APIs and logging via infrastructure.core.logging.logging_utils.get_logger where appropriate.
 3. Tests that prove core behavior and meet coverage.
 4. At least one scripts/*.py orchestrator if the manuscript or pipeline expects figures/data (optional if the idea is purely non-computational — state that explicitly in the manuscript and skip scripts).
 5. Manuscript markdown + config.yaml metadata (title, authors placeholder OK) coherent with the code and tests.

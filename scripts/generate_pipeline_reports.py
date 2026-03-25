@@ -16,7 +16,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success
+from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.reporting.pipeline_reporter import (
     generate_pipeline_report,
     save_pipeline_report,

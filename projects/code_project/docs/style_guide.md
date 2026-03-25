@@ -11,7 +11,7 @@ The most critical style rule is the absolute prohibition of mocking (`unittest.m
 Project code should **never** implement its own logging, PDF rendering, or basic data validation validation.
 
 - `projects/code_project/src/` must not import `infrastructure.*`. `src/` is infrastructure-independent and may use stdlib logging (`logging.getLogger(__name__)`).
-- Use `infrastructure.core.logging_utils` in `projects/code_project/scripts/` (and in the pipeline) for structured logging configuration.
+- Use `infrastructure.core.logging.utils` in `projects/code_project/scripts/` (and in the pipeline) for structured logging configuration.
 - Use `infrastructure.core.progress.PipelineProgress` for CLI progress updates.
 
 ## 3. The Thin Orchestrator Pattern

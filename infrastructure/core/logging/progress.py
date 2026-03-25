@@ -9,14 +9,14 @@ import time
 from contextlib import contextmanager
 from typing import Any, Iterator
 
-from infrastructure.core.eta import (
+from infrastructure.core.runtime.eta import (
     calculate_eta,
 )
-from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled
-from infrastructure.core.logging_helpers import format_duration
+from infrastructure.core.logging.constants import EMOJIS, get_emoji_enabled
+from infrastructure.core.logging.helpers import format_duration
 
 # ETA symbols (ETAEstimate, calculate_eta, etc.) are imported for internal use
-# only — callers should import them directly from infrastructure.core.eta.
+# only — callers should import them directly from infrastructure.core.runtime.eta.
 __all__: list[str] = []
 
 

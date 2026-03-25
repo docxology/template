@@ -16,7 +16,7 @@ from pathlib import Path
 
 from dataclasses import dataclass, field
 
-from infrastructure.core.logging_utils import get_logger, log_operation
+from infrastructure.core.logging.utils import get_logger, log_operation
 from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig
 
 logger = get_logger(__name__)

@@ -135,7 +135,7 @@ class ConfigurableProcessor(ABC, Generic[T]):
 # infrastructure/[module_name]/exceptions.py
 """Exception classes for infrastructure module."""
 
-from infrastructure.core.exceptions import TemplateError
+from infrastructure.core.runtime.exceptions import TemplateError
 
 class ModuleError(TemplateError):
     """Base exception for module errors."""
@@ -165,7 +165,7 @@ class ProcessingError(ModuleError):
 from typing import Any, Dict, List, Optional, Union
 from .exceptions import ValidationError, ConfigurationError, ProcessingError
 from .validators import validate_input
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 

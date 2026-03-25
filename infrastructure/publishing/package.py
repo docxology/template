@@ -9,14 +9,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.file_operations import calculate_file_hash
+from infrastructure.core.files.operations import calculate_file_hash
 from infrastructure.publishing.citations import (
     extract_citations_from_markdown,
     generate_citation_apa,
 )
 from infrastructure.publishing.models import PublicationMetadata
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

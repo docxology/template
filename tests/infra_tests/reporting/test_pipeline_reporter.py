@@ -328,7 +328,7 @@ def test_generate_error_markdown_with_suggestions() -> None:
 
 def test_stage_result_dataclass_fields() -> None:
     """Test StageResult dataclass with all fields."""
-    from infrastructure.core.checkpoint import StageResult
+    from infrastructure.core.runtime.checkpoint import StageResult
 
     stage = StageResult(
         name="test",
@@ -345,7 +345,7 @@ def test_stage_result_dataclass_fields() -> None:
 def test_pipeline_report_dataclass_fields() -> None:
     """Test PipelineReport dataclass with all fields."""
     from infrastructure.reporting.pipeline_reporter import PipelineReport
-    from infrastructure.core.checkpoint import StageResult as ReportingStageResult
+    from infrastructure.core.runtime.checkpoint import StageResult as ReportingStageResult
 
     report = PipelineReport(
         timestamp="2025-01-01T00:00:00",

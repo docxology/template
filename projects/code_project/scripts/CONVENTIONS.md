@@ -9,7 +9,7 @@ Scripts **coordinate** — they never **compute**:
 ```python
 # ✅ CORRECT: Script imports and orchestrates
 from src.optimizer import gradient_descent, quadratic_function, compute_gradient
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -52,7 +52,7 @@ from src.optimizer import gradient_descent, OptimizationResult
 
 # 4. Infrastructure imports (graceful fallback)
 try:
-    from infrastructure.core.logging_utils import get_logger
+    from infrastructure.core.logging.utils import get_logger
     logger = get_logger(__name__)
 except ImportError:
     logger = logging.getLogger(__name__)

@@ -86,6 +86,10 @@ python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/
 
 # Generate API documentation
 python3 -m infrastructure.documentation.generate_glossary_cli --project {project_name}
+
+# Agent SKILL.md manifest (Cursor / editors)
+uv run python -m infrastructure.skills write
+uv run python -m infrastructure.skills check
 ```
 
 ### Multi-Project Operations
@@ -101,7 +105,7 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `area_handbook`, `code_project`, `cognitive_case_diagrams`, `density_bioscales`, `template`, `traditional_newspaper`
+**Active projects:** `code_project`, `fep_lean`, `template` (run `discover_projects` or `ls projects/` for the current set; see `docs/_generated/active_projects.md`)
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -165,7 +169,7 @@ avg = calculate_average(data)  # Use tested method
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-**Current active projects:** `area_handbook`, `code_project`, `cognitive_case_diagrams`, `density_bioscales`, `template`, `traditional_newspaper`
+**Current active projects:** `code_project`, `fep_lean`, `template`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`
@@ -360,7 +364,7 @@ Scripts in `projects/{name}/scripts/` should:
 
 from pathlib import Path
 from projects.my_project.src.analysis import run_analysis
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

@@ -355,7 +355,7 @@ def validate_review_quality(response: str, review_type: str) -> Tuple[bool, List
 ### LLM-Specific Exceptions
 
 ```python
-from infrastructure.core.exceptions import (
+from infrastructure.core.runtime.exceptions import (
     LLMConnectionError,
     LLMTemplateError,
     ValidationError,

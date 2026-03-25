@@ -91,9 +91,9 @@ Many "broken" references are actually:
 
 ### Verification Results
 
-- ✅ `infrastructure/core/logging_utils.py` - All documented functions exist with correct signatures
-- ✅ `infrastructure/core/config_loader.py` - Function signatures match documentation
-- ✅ `infrastructure/core/exceptions.py` - Exception hierarchy matches documentation
+- ✅ `infrastructure/core/logging/logging_utils.py` - All documented functions exist with correct signatures
+- ✅ `infrastructure/core/config/loader.py` - Function signatures match documentation
+- ✅ `infrastructure/core/runtime/exceptions.py` - Exception hierarchy matches documentation
 - ✅ Module descriptions accurately reflect implementation
 
 ### Sample Verification
@@ -106,7 +106,7 @@ def setup_logger(name: str, level: Optional[int] = None, ...) -> logging.Logger:
 def log_operation(func: Callable, logger: Optional[logging.Logger] = None) -> Callable:
 ```
 
-**Actual code in `infrastructure/core/logging_utils.py`:**
+**Actual code in `infrastructure/core/logging/logging_utils.py`:**
 
 ```python
 def get_logger(name: str) -> logging.Logger:  # ✅ Matches

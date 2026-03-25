@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from infrastructure.llm.templates.base import ResearchTemplate
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

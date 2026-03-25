@@ -13,16 +13,16 @@ The reproducibility crisis in computational research is fundamentally structural
 
 ## 📋 Table of Contents
 
-1. [Core Architecture](#-core-architecture)
-2. [Directory-Level Documentation](#-directory-level-documentation)
-3. [Configuration System](#-configuration-system)
-4. [Rendering Pipeline](#-rendering-pipeline)
-5. [Validation Systems](#-validation-systems)
-6. [Testing Framework](#-testing-framework)
-7. [Output Formats](#-output-formats)
-8. [Advanced Modules](#-advanced-modules)
-9. [Troubleshooting](#-troubleshooting)
-10. [Maintenance](#-maintenance)
+1. [Core Architecture](#core-architecture)
+2. [Directory-Level Documentation](#directory-level-documentation)
+3. [Configuration System](#configuration-system)
+4. [Rendering Pipeline](#rendering-pipeline)
+5. [Validation Systems](#validation-systems)
+6. [Testing Framework](#testing-framework)
+7. [Output Formats](#output-formats)
+8. [Advanced Modules](#advanced-modules)
+9. [Troubleshooting](#troubleshooting)
+10. [Maintenance](#maintenance)
 
 ## 🏗️ Core Architecture
 
@@ -86,15 +86,13 @@ The template now supports **multiple independent projects** within a single repo
 - Interactive project selection menu
 - Backward compatibility with single-project workflows
 
-**Active Projects:**
+**Active Projects** (under `projects/` today; authoritative list from `discover_projects()`):
 
-- `projects/code_project/` — Optimization research exemplar (master exemplar, numerical methods & convergence)
-- `projects/area_handbook/` — Holistic area reporting and living handbook (corpus, synthesis, multi-section manuscript)
-- `projects/cognitive_case_diagrams/` — Cognitive case system diagrams (categorical linguistics research)
-- `projects/density_bioscales/` — Gases, reference liquids, insect-scale mixture density, buoyancy, scenario intervals
-- `projects/traditional_newspaper/` — Tabloid-style 16-slice newspaper layout exemplar (multicolumn preamble + masthead figure)
+- `projects/code_project/` — Optimization research exemplar (numerical methods and convergence)
+- `projects/fep_lean/` — Formal-methods / Lean-oriented manuscript and tooling
+- `projects/template/` — Meta-documentation and template metrics
 
-**Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
+**Note:** Additional exemplars (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `cognitive_case_diagrams`) live under `projects_archive/` until moved back into `projects/`. Archived projects are not discovered or executed by the pipeline.
 
 ## 📂 Project Organization: Active vs Archived
 
@@ -132,7 +130,7 @@ An optional intermediate staging area for projects that are under active develop
 - **NOT executed** by any pipeline scripts
 - Useful for drafting new project scaffolding before promoting to `projects/`
 
-**Current projects in progress:** `act_inf_metaanalysis`, `pragmatism_blake`, `template`
+**Current projects in progress:** `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `cognitive_case_diagrams`, `ento_linguistics` (see `projects_in_progress/`; not executed by `./run.sh` until promoted to `projects/`)
 
 **To promote:** Move `projects_in_progress/{name}/` → `projects/{name}/`
 
@@ -189,11 +187,10 @@ Each directory contains documentation for easy navigation:
 | Directory | AGENTS.md | README.md | Purpose |
 | --------- | --------- | --------- | ------- |
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
-| [`projects/area_handbook/`](projects/area_handbook/) | [AGENTS.md](projects/area_handbook/AGENTS.md) | [README.md](projects/area_handbook/README.md) | Area report and handbook synthesis |
-| [`projects/density_bioscales/`](projects/density_bioscales/) | [AGENTS.md](projects/density_bioscales/AGENTS.md) | [README.md](projects/density_bioscales/README.md) | Fluids, gases, insect-scale composite density |
-| [`projects/traditional_newspaper/`](projects/traditional_newspaper/) | [AGENTS.md](projects/traditional_newspaper/AGENTS.md) | [README.md](projects/traditional_newspaper/README.md) | Newspaper layout exemplar (16 folios) |
-| [`projects/biology_textbook/`](projects/biology_textbook/) | [AGENTS.md](projects/biology_textbook/AGENTS.md) | [README.md](projects/biology_textbook/README.md) | Biology textbook exemplar |
-| [`projects/project/`](projects/project/) | — | — | Minimal project scaffold |
+| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | Formal / Lean-oriented project |
+| [`projects/template/`](projects/template/) | [AGENTS.md](projects/template/AGENTS.md) | [README.md](projects/template/README.md) | Template meta-documentation |
+
+See [`projects/README.md`](projects/README.md) for narrative descriptions. Archived exemplars (e.g. [`projects_archive/traditional_newspaper/`](projects_archive/traditional_newspaper/)) are under [`projects_archive/`](projects_archive/) (not executed until moved into `projects/`). Regenerate [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) after changing `projects/` layout (`uv run python scripts/generate_active_projects_doc.py`).
 
 ### Documentation Directories
 
@@ -442,7 +439,7 @@ Original PDFs are always left untouched.
 ./secure_run.sh
 
 # Full secure pipeline (pipeline + steganography)
-./secure_run.sh --project medical_ai
+./secure_run.sh --project code_project
 
 # Re-process existing PDFs only (skip pipeline re-run)
 ./secure_run.sh --steganography-only --project code_project
@@ -818,8 +815,8 @@ Enterprise-grade security and system monitoring.
 **Usage:**
 
 ```python
-from infrastructure.core.security import validate_llm_input, get_security_validator
-from infrastructure.core.health_check import quick_health_check, get_health_status
+from infrastructure.core.runtime.security import validate_llm_input, get_security_validator
+from infrastructure.core.runtime.health_check import quick_health_check, get_health_status
 
 # Validate LLM input with security checks
 sanitized = validate_llm_input(user_prompt)
@@ -829,7 +826,7 @@ if quick_health_check():
     status = get_health_status()
 ```
 
-### 🔍 Integrity Verification (`infrastructure/validation/integrity.py`)
+### 🔍 Integrity Verification (`infrastructure/validation/integrity/integrity.py`)
 
 File integrity and cross-reference validation.
 
@@ -844,7 +841,7 @@ File integrity and cross-reference validation.
 **Usage:**
 
 ```python
-from infrastructure.validation.integrity import verify_output_integrity, generate_integrity_report
+from infrastructure.validation.integrity.integrity import verify_output_integrity, generate_integrity_report
 
 report = verify_output_integrity(output_dir)
 print(generate_integrity_report(report))
@@ -1194,7 +1191,7 @@ Key log files for debugging:
 
    ```bash
    # Clean outputs before backup
-   python3 -c "from pathlib import Path; from infrastructure.core.file_operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
+   python3 -c "from pathlib import Path; from infrastructure.core.files.operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
 
    # Backup source files only
    tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/

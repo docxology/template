@@ -14,9 +14,9 @@ import subprocess
 import time
 from typing import Callable
 
-from infrastructure.core.checkpoint import CheckpointManager, StageResult
-from infrastructure.core.environment import get_python_command, get_subprocess_env
-from infrastructure.core.logging_utils import (
+from infrastructure.core.runtime.checkpoint import CheckpointManager, StageResult
+from infrastructure.core.runtime.environment import get_python_command, get_subprocess_env
+from infrastructure.core.logging.utils import (
     flush_file_handlers,
     get_logger,
     log_pipeline_stage_with_eta,
@@ -29,8 +29,8 @@ from infrastructure.core.errors import (
     STAGE_EXCEPTION,
     STAGE_FAILED,
 )
-from infrastructure.core.file_cleanup import clean_output_directories
-from infrastructure.core.pipeline_types import (
+from infrastructure.core.files.cleanup import clean_output_directories
+from infrastructure.core.pipeline.types import (
     PipelineConfig,
     PipelineStageResult,
     StageSpec,

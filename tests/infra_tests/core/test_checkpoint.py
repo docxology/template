@@ -1,4 +1,4 @@
-"""Tests for infrastructure.core.checkpoint module.
+"""Tests for infrastructure.core.runtime.checkpoint module.
 
 Comprehensive tests for pipeline checkpoint system including save, load, resume,
 and error handling scenarios.
@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 
 
-from infrastructure.core.checkpoint import CheckpointManager, PipelineCheckpoint, StageResult
+from infrastructure.core.runtime.checkpoint import CheckpointManager, PipelineCheckpoint, StageResult
 
 
 class TestStageResult:

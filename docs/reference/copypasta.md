@@ -53,7 +53,7 @@ Get started immediately with this **[research project template](https://github.c
 
 ```bash
 # Clean all outputs and regenerate everything
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### **🧪 Running Tests**
@@ -85,10 +85,10 @@ export PROJECT_TITLE="Your Project Title"
 uv sync
 
 # Run pipeline
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Run pipeline (includes cleanup)
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### **📊 Development Workflow**
@@ -103,7 +103,7 @@ uv run python projects/code_project/scripts/example_figure.py
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # 4. Build pipeline
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ## 📱 **Social Media Posts**
@@ -157,7 +157,7 @@ cd template
 uv sync
 
 # Generate everything
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 The template automatically handles LaTeX compilation, figure integration, and generates publication-ready PDFs. for academic papers and research documentation. Check the **[how to use guide](../core/how-to-use.md)** for step-by-step instructions and the **[architecture guide](../core/architecture.md)** for detailed system design.
@@ -453,7 +453,7 @@ graph LR
 - [ ] Click **[Use this template](https://github.com/docxology/template)** on GitHub
 - [ ] Clone your new repository
 - [ ] Run `uv sync` to install dependencies
-- [ ] Execute `uv run python scripts/execute_pipeline.py --core-only` to test the pipeline
+- [ ] Execute `uv run python scripts/execute_pipeline.py --project {name} --core-only` to test the pipeline
 
 ### **🔧 Customization Steps**
 

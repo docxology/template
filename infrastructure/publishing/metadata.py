@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.citations import generate_citation_apa
 from infrastructure.publishing.models import PublicationMetadata
 

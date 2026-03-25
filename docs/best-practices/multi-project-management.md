@@ -49,7 +49,7 @@ mv projects_archive/old_paper projects_in_progress/old_paper
 **Advanced: running the pipeline against a different directory:**
 
 ```python
-from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
+from infrastructure.core.pipeline.pipeline import PipelineConfig, PipelineExecutor
 from pathlib import Path
 
 # Test an in-progress project without moving it
@@ -62,8 +62,7 @@ PipelineExecutor(config).execute_core_pipeline()
 ```
 
 Infrastructure modules (`discovery.py`, `script_discovery.py`, `config_loader.py`,
-`checkpoint.py`, and the reporting layer) all accept a `project_dir` or `projects_dir`
-parameter, so this configuration propagates automatically throughout the pipeline.
+`checkpoint.py`, and the reporting layer) accept a `projects_dir` string (or resolve paths via `PipelineConfig`, whose **`project_dir`** property is the computed `repo_root / projects_dir / project_name` path), so this configuration propagates throughout the pipeline.
 
 ## Organizing Multiple Projects
 
@@ -532,7 +531,7 @@ done
 
 **Symptom:** `❌ project_name: 4 stages, 7.7s` with 3 stages obviously fast (clean + setup + tests) and Stage 4 (analysis) never producing output.
 
-**Most common root cause:** Project-specific packages missing from root `.venv` (see [Root Venv Dependency Coverage](#️-root-venv-dependency-coverage-critical-rule) above).
+**Most common root cause:** Project-specific packages missing from root `.venv` (see [Root Venv Dependency Coverage](#root-venv-dependency-coverage-critical-rule) above).
 
 **Diagnosis checklist:**
 

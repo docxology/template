@@ -69,7 +69,7 @@ Multi-project orchestration lives in `infrastructure.core`, not this module:
 
 ```python
 from infrastructure.project import discover_projects
-from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 
 # Discover and run all projects
 projects = discover_projects(repo_root)

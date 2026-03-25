@@ -33,6 +33,7 @@ docs/operational/
 
 ## Key Conventions
 
+- **Project paths in commands**: use `--project code_project` in examples unless documenting placeholders; active names → [_generated/active_projects.md](../_generated/active_projects.md).
 - **Pipeline orchestration** → `docs/RUN_GUIDE.md` (stages, flags, common invocations)
 - **CI/CD automation** → `.github/` (workflows and repository automation docs)
 - **Config files** → `config/` sub-folder (settings, checkpoints, perf)
@@ -44,7 +45,7 @@ docs/operational/
 
 ```bash
 # Full pipeline
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project code_project --core-only
 
 # Individual stages
 uv run python scripts/00_setup_environment.py

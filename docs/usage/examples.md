@@ -78,7 +78,7 @@ LICENSE="CC-BY-4.0"
 
 ## Project Structure After Renaming
 
-After running `rename_project.sh`, your project will have this structure:
+After configuring your project, your project will have this structure:
 
 ```mermaid
 graph TB
@@ -167,7 +167,7 @@ Validate that everything works:
 
 ```bash
 # Pipeline automatically handles cleanup
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### 5. Customize Further
@@ -336,7 +336,7 @@ After renaming, ensure:
 
 ## Summary
 
-The `rename_project.sh` script transforms the generic template into a project-specific structure while maintaining:
+The project configuration system transforms the generic template into a project-specific structure while maintaining:
 
 - **Thin orchestrator pattern** - Scripts use projects/{name}/src/ methods
 - **test coverage** - All functionality validated

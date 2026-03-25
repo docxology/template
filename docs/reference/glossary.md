@@ -14,7 +14,7 @@
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: v2.0 (current system version)
 - **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code
-- **Build Pipeline**: Core pipeline (stage scripts `00`–`05`) or full pipeline (run via `./run.sh --pipeline`, shown as [1/9]..[9/9] with an initial clean step [0/9])
+- **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Stage scripts are `scripts/00_*.py`–`scripts/05_*.py` plus `06`/`07` for LLM and executive reporting where used.
 
 ---
 
@@ -60,7 +60,7 @@ Core algorithms, mathematical functions, and computational methods. Must reside 
 
 Single PDF document containing all manuscript sections in proper order. Generated from individual section PDFs by the build pipeline.
 
-**File**: `output/project_combined.pdf` (top-level, copied by stage 5)
+**File**: `output/{name}/pdf/{name}_combined.pdf` (top-level deliverable after copy outputs)
 
 **See**: [PDF Generation](#pdf-generation)
 
@@ -318,7 +318,7 @@ LaTeX-based cross-referencing that automatically numbers and links sections, equ
 
 Another name for [Build Pipeline](#build-pipeline). The sequence from tests to final PDF.
 
-**Script**: `uv run python scripts/execute_pipeline.py --core-only`
+**Script**: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 ### Reproducibility
 
@@ -326,7 +326,7 @@ Ability to regenerate exact same results from source. Ensured through determinis
 
 **Tools**: Version locking, seed fixing, environment capture
 
-**See**: [infrastructure/validation/integrity.py](../../infrastructure/validation/integrity.py)
+**See**: [infrastructure/validation/integrity/checks.py](../../infrastructure/validation/integrity/checks.py)
 
 ## S
 
@@ -415,9 +415,9 @@ Percentage of code executed during test runs. This template requires 90% minimum
 
 Collection of all test files in `tests/` directory. Ensures all functionality works correctly.
 
-**Status**: 2118 tests total (1796 infra [2 skipped] + 320 project, all passing)
+**Status**: Run `uv run pytest tests/infra_tests/ projects/<name>/tests/ --collect-only` to count tests on your checkout.
 
-**Run**: `pytest tests/`
+**Run**: `uv run python scripts/01_run_tests.py --project <name>` (or separate infra/project pytest invocations; see [RUN_GUIDE.md](../RUN_GUIDE.md))
 
 **See**: [tests/AGENTS.md](../../tests/AGENTS.md)
 

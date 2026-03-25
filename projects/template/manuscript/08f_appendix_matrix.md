@@ -3,7 +3,7 @@
 ## Appendix: Comparative Tool Matrix {#appendix-matrix}
 
 **Symbol key** (applies to all cells): **Y** = full native support  ·  **~** = partial or plugin-based  ·  **N** = absent.
-See also [Figure 4](#comparative-feature-analysis) for a colour-coded heatmap rendering of this table.
+See also [Figure 4](04_results.md#comparative-feature-analysis) for a colour-coded heatmap rendering of this table.
 
 \begin{table}[h]
 \caption{Comparative feature matrix (14 capabilities $\times$ 10 tools). Y~=~full native support, \textasciitilde~=~partial or plugin-based, N~=~absent.}

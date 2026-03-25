@@ -213,7 +213,7 @@ jobs:
     
     - name: Run build pipeline
       run: |
-        uv run python scripts/execute_pipeline.py --core-only
+        uv run python scripts/execute_pipeline.py --project {name} --core-only
     
     - name: Upload PDFs
       uses: actions/upload-artifact@v3
@@ -421,6 +421,37 @@ git push origin feature/new-algorithm
 3. **Log all external interactions**
 4. **Use timeouts for external calls**
 5. **Document integration requirements**
+
+---
+
+## Troubleshooting
+
+### CI/CD Pipeline Fails
+
+**Symptom**: GitHub Actions workflow fails
+
+**Solution**:
+- Check Python version compatibility in workflow matrix
+- Verify pytest-cov installed: `pip install pytest-cov`
+- Check coverage thresholds match project settings
+
+### External Tool Integration Fails
+
+**Symptom**: `subprocess.run` fails with external tool
+
+**Solution**:
+- Verify tool is installed: `which external_tool`
+- Add error handling for missing tool
+- Use absolute paths for tool execution
+
+### Artifact Upload Fails
+
+**Symptom**: `actions/upload-artifact` fails
+
+**Solution**:
+- Check file paths exist before upload
+- Verify no file size limits exceeded
+- Use correct artifact path patterns
 
 ---
 

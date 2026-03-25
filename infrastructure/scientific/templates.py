@@ -213,7 +213,7 @@ import matplotlib.pyplot as plt
 
 # Project imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from reproducibility import generate_reproducibility_report, save_reproducibility_report
 from integrity import verify_output_integrity
 from quality_checker import analyze_document_quality

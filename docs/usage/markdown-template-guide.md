@@ -306,6 +306,18 @@ Generated outputs include:
 4. **Build failures**: Check markdown validation output
 5. **Script import errors**: Ensure `projects/{name}/src/` modules exist and are properly tested
 
+### Reference Shows ??
+
+**Symptom**: `\ref{sec:label}` shows `??` in PDF
+
+**Solution**: Check label exists - search for `{#sec:label_name}` in manuscript files
+
+### Figure Path Error
+
+**Symptom**: Figure renders but wrong location
+
+**Solution**: Use relative path `../output/figures/name.png` not absolute paths
+
 ### Validation Errors
 
 The validation system will report:

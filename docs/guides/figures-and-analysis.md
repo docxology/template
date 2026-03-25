@@ -509,7 +509,7 @@ print('projects/code_project/output/data/analysis_data.csv')
 The pipeline orchestrator (`scripts/execute_pipeline.py`) orchestrates everything:
 
 ```bash
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 **What happens**:
@@ -569,24 +569,24 @@ uv run pytest projects/code_project/tests/test_my_module.py --cov=projects.code_
 vim projects/code_project/scripts/my_figure.py
 
 # 5. Run build
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
-# 6. View result (top-level output after stage 5)
+# 6. View result (top-level output after copy outputs)
 open output/code_project/pdf/code_project_combined.pdf
 ```
 
 **Advanced workflow with validation**:
 
 ```bash
-# 1. Full rebuild with validation (recommended - all 8 stages)
-uv run python scripts/execute_pipeline.py --core-only
+# 1. Full rebuild with validation (recommended — core pipeline, eight stages by default)
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
 # Alternative: Manual steps
 # # Pipeline automatically handles cleanup
-# uv run python scripts/execute_pipeline.py --core-only
+# uv run python scripts/execute_pipeline.py --project {name} --core-only
 # uv run python scripts/04_validate_output.py
 ```
 
@@ -655,6 +655,82 @@ def main():
 
 if __name__ == '__main__':
     main()
+```
+
+---
+
+## Troubleshooting
+
+### Figure Generation Fails
+
+**Symptom**: Script runs but no figure appears
+
+**Check**:
+- Ensure output directory exists: `os.makedirs(output_dir, exist_ok=True)`
+- Verify matplotlib backend is set: `matplotlib.use('Agg')`
+- Check file permissions on output directory
+
+**Solution**:
+```python
+import os
+output_dir = 'projects/code_project/output/figures'
+os.makedirs(output_dir, exist_ok=True)  # Create if missing
+fig.savefig(os.path.join(output_dir, 'figure.png'), dpi=300)
+```
+
+### Import Errors in Scripts
+
+**Symptom**: `ModuleNotFoundError: No module named 'projects.code_project.src'`
+
+**Cause**: Script run outside of project context
+
+**Solution**: Use `uv run` to ensure proper Python path:
+```bash
+uv run python projects/code_project/scripts/my_figure.py
+```
+
+### Matplotlib Display Errors
+
+**Symptom**: `RuntimeError: Invalid DISPLAY` or hangs on `plt.show()`
+
+**Solution**:
+```python
+import matplotlib
+matplotlib.use('Agg')  # Must be BEFORE pyplot import
+import matplotlib.pyplot as plt
+```
+
+Also set in environment:
+```bash
+export MPLBACKEND=Agg
+```
+
+### Cross-Reference Shows ?? in PDF
+
+**Symptom**: Figure reference shows as `??` in compiled PDF
+
+**Cause**: Label not registered with FigureManager
+
+**Solution**:
+```python
+from infrastructure.documentation import FigureManager
+fm = FigureManager()
+fm.register_figure(
+    filename="my_figure.png",
+    caption="Description",
+    label="fig:my_figure"  # Use in LaTeX as \ref{fig:my_figure}
+)
+```
+
+### Data File Not Found
+
+**Symptom**: `FileNotFoundError: data.csv`
+
+**Solution**: Use absolute paths with project root:
+```python
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+data_path = PROJECT_ROOT / "data" / "data.csv"
 ```
 
 ---

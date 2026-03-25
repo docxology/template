@@ -23,7 +23,7 @@ Technical specification for the template project's source code package.
 ## Patterns
 
 - All functions accept `Path` arguments and return plain dataclasses
-- Uses `infrastructure.core.logging_utils.get_logger` for structured logging
+- Uses `infrastructure.core.logging.utils.get_logger` for structured logging
 - Config parsing via `yaml.safe_load` with graceful error handling
 - Module introspection uses `importlib.import_module` with `try/except` fallback
 - Script-facing logic is imported by thin orchestrators in `projects/template/scripts/`

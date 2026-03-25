@@ -47,8 +47,8 @@
 3. **Generate the PDF**
 
    ```bash
-   # Run pipeline (all 8 stages)
-   uv run python scripts/execute_pipeline.py --core-only
+   # Run core pipeline (eight stages by default; see RUN_GUIDE.md)
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 4. **View the result**
@@ -95,7 +95,7 @@
 4. **Rebuild manuscript**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 5. **Reference from other sections**
@@ -249,7 +249,7 @@
 4. **Rebuild**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 **Expected Result**: Numbered equations with clickable references
@@ -580,25 +580,24 @@ def test_process_negative():
 1. **Run pipeline (recommended)**
 
    ```bash
-   # Standard build - executes all 8 stages (00-07)
-   uv run python scripts/execute_pipeline.py --core-only
+   # Standard core build (eight executor stages by default; no LLM)
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    
    # Or use unified interactive menu
    ./run.sh
    
-   # Run individual stages if needed (stages 00-07)
-   uv run python scripts/00_setup_environment.py  # Stage 00: Setup Environment
-   uv run python scripts/01_run_tests.py          # Stage 01: Run Tests
-   uv run python scripts/02_run_analysis.py       # Stage 02: Run Analysis
-   uv run python scripts/03_render_pdf.py         # Stage 03: Render PDF
-   uv run python scripts/04_validate_output.py    # Stage 04: Validate Output
-   uv run python scripts/05_copy_outputs.py       # Stage 05: Copy Outputs
-   uv run python scripts/06_llm_review.py         # Stage 06: LLM Review
-   uv run python scripts/07_generate_executive_report.py  # Stage 07: Executive Report
+   # Run individual stage scripts (each requires --project {name})
+   uv run python scripts/00_setup_environment.py --project {name}
+   uv run python scripts/01_run_tests.py --project {name}
+   uv run python scripts/02_run_analysis.py --project {name}
+   uv run python scripts/03_render_pdf.py --project {name}
+   uv run python scripts/04_validate_output.py --project {name}
+   uv run python scripts/05_copy_outputs.py --project {name}
+   # Optional: LLM (06), executive report (07) — see RUN_GUIDE.md
    ```
 
 2. **Check for errors**
-   - Tests must pass (2118/2118)
+   - Tests must pass (project and infrastructure thresholds in `pyproject.toml` / CI)
    - Scripts must succeed
    - Markdown validation must pass
    - PDF compilation must succeed
@@ -606,25 +605,16 @@ def test_process_negative():
 3. **View output**
 
    ```bash
-   # Combined PDF is copied to top-level output/ directory
-   open output/project_combined.pdf
+   # Combined PDF after copy outputs
+   open output/{name}/pdf/{name}_combined.pdf
    
-   # Or view in project output directory
-   open projects/{name}/output/pdf/project_combined.pdf
+   # Or working copy under the project tree
+   open projects/{name}/output/pdf/{name}_combined.pdf
    ```
 
-**Build Pipeline Stages** (8 stages total):
+**Core pipeline** (`--core-only`, default flags): eight executor stages — clean outputs, environment setup, infrastructure tests, project tests, analysis, PDF rendering, output validation, copy outputs. **Not** part of core: LLM stages (`06_llm_review.py`) and cross-project executive reporting (`07_generate_executive_report.py`).
 
-1. **Stage 00**: Environment setup & validation (~1s)
-2. **Stage 01**: Run tests with coverage (~27s)
-3. **Stage 02**: Execute analysis scripts (~2s)
-4. **Stage 03**: Render PDFs from markdown (~45s)
-5. **Stage 04**: Validate outputs (~1s)
-6. **Stage 05**: Copy final deliverables (~1s)
-7. **Stage 06**: LLM scientific review (optional)
-8. **Stage 07**: Generate executive report
-
-**Total Time**: 84 seconds (without optional LLM review)
+**Total Time**: Varies by project and machine; the sequence above is ordered as in `PipelineExecutor`.
 
 **Troubleshooting**:
 
@@ -679,7 +669,7 @@ def test_process_negative():
 4. **Generate with custom metadata**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 **Applied To**:
@@ -724,7 +714,7 @@ def test_process_negative():
 4. **Rebuild**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 **Naming Convention**:
@@ -778,8 +768,8 @@ def test_process_negative():
 5. **Run build**
 
    ```bash
-   # Standard build - executes all 8 stages
-   uv run python scripts/execute_pipeline.py --core-only
+   # Core pipeline (eight stages by default)
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    
    # Or use unified interactive menu
    ./run.sh
@@ -801,7 +791,7 @@ def test_process_negative():
 
 **Contribution Checklist**:
 
-- [ ] Tests pass (2118/2118)
+- [ ] Tests pass (infra + project suites for your branch)
 - [ ] Coverage maintained/improved
 - [ ] Documentation updated
 - [ ] Thin orchestrator pattern followed

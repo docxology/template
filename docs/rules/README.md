@@ -35,7 +35,7 @@ Development standards and coding guidelines for the Research Project Template.
   - 60% minimum test coverage required (currently achieving 83.33% - exceeds stretch goal!)
   - Can be copied to other repositories
 
-- **Layer 2: Project** (`project/`): Research-specific code
+- **Layer 2: Project** (`projects/`): Research-specific code
   - Domain-specific algorithms and analysis
   - Uses Layer 1 tools
   - 90% minimum test coverage required (currently achieving 100% - coverage!)
@@ -52,8 +52,8 @@ Development standards and coding guidelines for the Research Project Template.
 - **Tests**: 60% infrastructure minimum, 90% project minimum (currently 83.33% infra, 100% project) with data (no mocks)
 - **Types**: Type hints on all public APIs and functions
 - **Docs**: AGENTS.md + README.md for every directory
-- **Errors**: Use custom exception hierarchy from `infrastructure.core.exceptions`
-- **Logging**: Unified logging via `infrastructure.core.logging_utils`
+- **Errors**: Use custom exception hierarchy from `infrastructure.core.runtime.exceptions`
+- **Logging**: Unified logging via `infrastructure.core.logging.logging_utils`
 
 ### Terminology Standards
 
@@ -78,8 +78,8 @@ import os
 from pathlib import Path
 
 # Infrastructure core utilities
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.exceptions import TemplateError
+from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.runtime.exceptions import TemplateError
 
 # Type hints
 from typing import List, Dict, Optional
@@ -88,7 +88,7 @@ from typing import List, Dict, Optional
 ### Logging
 
 ```python
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 logger.debug("Debug message")
@@ -100,7 +100,7 @@ logger.error("Operation failed", exc_info=True)
 ### Errors
 
 ```python
-from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.runtime.exceptions import ValidationError
 
 try:
     result = operation()

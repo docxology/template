@@ -58,7 +58,7 @@ graph TD
 from src.term_extraction import TerminologyExtractor
 
 # ✅ ALLOWED: Import from infrastructure
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.figure_manager import FigureManager
 
 # ❌ FORBIDDEN: Import from other projects
@@ -407,7 +407,7 @@ All projects can import from `infrastructure/` for common utilities:
 
 ```python
 # ✅ ALLOWED: All projects can use infrastructure
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.figure_manager import FigureManager
 from infrastructure.validation import validate_pdf_rendering
 from infrastructure.rendering import RenderManager

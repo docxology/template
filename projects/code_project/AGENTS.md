@@ -374,7 +374,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Logging Standards Compliance**
 
-- **Unified logging**: Uses `infrastructure.core.logging_utils.get_logger(__name__)`
+- **Unified logging**: Uses `infrastructure.core.logging.utils.get_logger(__name__)`
 - **Appropriate levels**: DEBUG, INFO, WARNING, ERROR as appropriate
 - **Context-rich messages**: Includes relevant context in log messages
 
@@ -452,7 +452,7 @@ except TemplateError as e:
 Infrastructure-backed logging with operation timing:
 
 ```python
-from infrastructure.core.logging_utils import log_operation, log_success
+from infrastructure.core.logging.utils import log_operation, log_success
 
 with log_operation("Running convergence experiments", logger=logger):
     results = run_convergence_experiment()

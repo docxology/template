@@ -16,7 +16,7 @@ from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.api import REQUEST_TIMEOUT
 from infrastructure.publishing.models import PublicationMetadata
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

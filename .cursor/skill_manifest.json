@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "skills": [
+    {
+      "name": "infrastructure-overview",
+      "description": "Top-level skill for the research template infrastructure layer. Use in Cursor, Claude Code, or similar agents when editing or importing anything under infrastructure/, understanding the two-layer architecture, or wiring build/validation/rendering/publishing. Covers module discovery, import patterns, thin orchestrators, per-subpackage SKILL.md paths, and .cursor/skill_manifest.json (see infrastructure.skills).",
+      "path": "infrastructure/SKILL.md",
+      "cursor_at": "infrastructure/SKILL.md"
+    },
+    {
+      "name": "infrastructure-config",
+      "description": "Repository-scoped configuration for the template—environment variable templates and default secure/steganography YAML. Use when editing .env patterns, secure_config defaults, or cross-referencing project manuscript config overrides.",
+      "path": "infrastructure/config/SKILL.md",
+      "cursor_at": "infrastructure/config/SKILL.md"
+    },
+    {
+      "name": "infrastructure-core",
+      "description": "Skill for the core infrastructure module providing logging, configuration, exception handling, progress tracking, checkpoints, retry logic, pipeline execution, performance monitoring, security, file operations, and multi-project orchestration. Use when setting up logging, loading config, handling errors, running pipelines, or monitoring performance.",
+      "path": "infrastructure/core/SKILL.md",
+      "cursor_at": "infrastructure/core/SKILL.md"
+    },
+    {
+      "name": "infrastructure-docker",
+      "description": "Container build and compose assets for the research template. Use when reproducing CI or cloud environments with Docker, following docs/CLOUD_DEPLOY.md, or wiring Ollama sidecars via docker-compose.",
+      "path": "infrastructure/docker/SKILL.md",
+      "cursor_at": "infrastructure/docker/SKILL.md"
+    },
+    {
+      "name": "infrastructure-documentation",
+      "description": "Skill for the documentation infrastructure module providing figure management, image handling, markdown integration, and API glossary generation. Use when managing research figures, inserting images into manuscripts, auto-numbering figures, or generating API documentation.",
+      "path": "infrastructure/documentation/SKILL.md",
+      "cursor_at": "infrastructure/documentation/SKILL.md"
+    },
+    {
+      "name": "infrastructure-llm",
+      "description": "Skill for the LLM infrastructure module providing local Large Language Model integration via Ollama. Covers client initialization, prompt templates, output validation, manuscript review generation, conversation context, and CLI usage. Use when querying LLMs, generating manuscript reviews, validating LLM outputs, or managing Ollama models.",
+      "path": "infrastructure/llm/SKILL.md",
+      "cursor_at": "infrastructure/llm/SKILL.md"
+    },
+    {
+      "name": "infrastructure-project",
+      "description": "Skill for the project management infrastructure module providing multi-project discovery, structure validation, and metadata extraction. Use when discovering active projects, validating project directory structure, or extracting project configuration metadata.",
+      "path": "infrastructure/project/SKILL.md",
+      "cursor_at": "infrastructure/project/SKILL.md"
+    },
+    {
+      "name": "infrastructure-publishing",
+      "description": "Skill for the publishing infrastructure module providing academic publishing workflows including citation generation (BibTeX, APA, MLA), DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, or preparing submissions.",
+      "path": "infrastructure/publishing/SKILL.md",
+      "cursor_at": "infrastructure/publishing/SKILL.md"
+    },
+    {
+      "name": "infrastructure-rendering",
+      "description": "Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, Beamer/Reveal.js slides, and posters. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.",
+      "path": "infrastructure/rendering/SKILL.md",
+      "cursor_at": "infrastructure/rendering/SKILL.md"
+    },
+    {
+      "name": "infrastructure-reporting",
+      "description": "Skill for the reporting infrastructure module providing pipeline reporting, error aggregation, executive summaries, dashboard generation, test reporting, and multi-project reports. Use when generating build reports, aggregating errors, creating visual dashboards, or producing executive summaries across projects.",
+      "path": "infrastructure/reporting/SKILL.md",
+      "cursor_at": "infrastructure/reporting/SKILL.md"
+    },
+    {
+      "name": "infrastructure-scientific",
+      "description": "Skill for the scientific infrastructure module providing numerical stability checks, performance benchmarking, scientific documentation generation, implementation validation, and module/workflow templates. Use when benchmarking functions, checking numerical stability, validating scientific implementations, or creating scientific module scaffolds.",
+      "path": "infrastructure/scientific/SKILL.md",
+      "cursor_at": "infrastructure/scientific/SKILL.md"
+    },
+    {
+      "name": "infrastructure-skills",
+      "description": "Programmatic discovery of agent SKILL.md files under infrastructure/. Use when enumerating skills, validating .cursor/skill_manifest.json, or wiring editor automation. Exposes discover_skills, write_skill_manifest, and manifest_matches_discovery.",
+      "path": "infrastructure/skills/SKILL.md",
+      "cursor_at": "infrastructure/skills/SKILL.md"
+    },
+    {
+      "name": "infrastructure-steganography",
+      "description": "Skill for the steganography infrastructure module providing QR code generation with dynamic mailto links, invisible hashing payloads, and document-wide overlay processing. Use this module to insert secure cryptographic and steganographic data onto PDFs.",
+      "path": "infrastructure/steganography/SKILL.md",
+      "cursor_at": "infrastructure/steganography/SKILL.md"
+    },
+    {
+      "name": "infrastructure-validation",
+      "description": "Skill for the validation infrastructure module providing PDF validation, markdown validation, output integrity checks, link verification, documentation audits, issue categorization, and repository scanning. Use when validating research outputs, checking document quality, running audits, or verifying cross-references.",
+      "path": "infrastructure/validation/SKILL.md",
+      "cursor_at": "infrastructure/validation/SKILL.md"
+    }
+  ]
+}

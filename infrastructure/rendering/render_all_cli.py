@@ -10,7 +10,7 @@ from pathlib import Path
 root_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(root_dir))
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering import RenderManager
 
 logger = get_logger(__name__)

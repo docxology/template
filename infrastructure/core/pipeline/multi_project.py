@@ -13,9 +13,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
-from infrastructure.core.logging_utils import get_logger, log_operation
+from infrastructure.core.logging.utils import get_logger, log_operation
 from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
-from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
+from infrastructure.core.pipeline.executor import PipelineConfig, PipelineExecutor, PipelineStageResult
 
 if TYPE_CHECKING:
     from infrastructure.project.discovery import ProjectInfo

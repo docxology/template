@@ -6,6 +6,8 @@ This directory contains development standards, coding guidelines, and best pract
 
 > **Note**: These rules were formerly stored in `.cursorrules/`. They now live in `docs/rules/`.
 
+> **Project paths in examples**: default to [`projects/code_project/`](../../projects/code_project/). Authoritative active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md) (see [_generated/README.md](../_generated/README.md)).
+
 ## Files
 
 | File | Purpose | Best For |
@@ -75,10 +77,10 @@ The template provides **two pipeline orchestrators** with different scope:
 
 **Python Orchestrator (`python3 scripts/execute_pipeline.py`)**
 
-- **Use for**: Core pipeline only, programmatic execution
-- **Stages**: 00-05 (zero-padded Python convention)
-- **Features**: Minimal dependencies, fast execution
-- **When to use**: Automated environments, no LLM requirements
+- **Use for**: Core or full pipeline, programmatic execution (`--core-only` skips LLM stages)
+- **Stages**: Default **core** run is **eight** executor stages (clean outputs, setup, infrastructure tests, project tests, analysis, PDF rendering, validation, copy outputs). With `--skip-infra`, infrastructure tests are omitted (seven stages). Full pipeline adds LLM review and translations before copy; see `infrastructure/core/pipeline/pipeline.py` (`PipelineExecutor._build_stage_list`).
+- **Features**: Checkpoint/resume; delegates to numbered scripts `scripts/00_*.py`–`scripts/05_*.py` plus optional `06`/`07` where applicable
+- **When to use**: Automated environments, CI/CD, or when you want explicit flags instead of the menu
 
 ## Quick Start
 
@@ -134,7 +136,7 @@ See [error_handling.md](error_handling.md)
 
 **Key Points**:
 
-- Use custom exception hierarchy from `infrastructure/core/exceptions.py`
+- Use custom exception hierarchy from `infrastructure/core/runtime/exceptions.py`
 - Always chain exceptions with `from`
 - Provide context in exceptions
 - Log before raising critical errors
@@ -142,7 +144,7 @@ See [error_handling.md](error_handling.md)
 **Example**:
 
 ```python
-from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.runtime.exceptions import ValidationError
 
 try:
     result = process_data(input)
@@ -156,7 +158,7 @@ See [python_logging.md](python_logging.md)
 
 **Key Points**:
 
-- Use `infrastructure.core.logging_utils.get_logger(__name__)`
+- Use `infrastructure.core.logging.logging_utils.get_logger(__name__)`
 - Log at appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 - Include context in log messages
 - Use structured logging where possible
@@ -164,7 +166,7 @@ See [python_logging.md](python_logging.md)
 **Example**:
 
 ```python
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 logger.info(f"Processing {count} items")
@@ -231,7 +233,7 @@ As shown in \eqref{eq:objective}, the objective function...
 **Related Documentation:**
 
 - [manuscript_style.md](manuscript_style.md) - manuscript formatting guide
-- [projects/act_inf_metaanalysis/manuscript/](../../projects/act_inf_metaanalysis/manuscript/) - Example manuscript (active project)
+- [projects/code_project/manuscript/](../../projects/code_project/manuscript/) - Example manuscript (active project)
 - [docs/usage/markdown-template-guide.md](../usage/markdown-template-guide.md) - Markdown guide
 
 ## Testing Standards
@@ -330,8 +332,8 @@ import requests
 import pytest
 
 # Local infrastructure (Layer 1)
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.exceptions import TemplateError
+from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.runtime.exceptions import TemplateError
 from infrastructure.documentation import FigureManager
 
 # Local project (Layer 2)
@@ -362,8 +364,8 @@ class ModuleConfig:
 ### Error Handling Pattern
 
 ```python
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.exceptions import TemplateError
+from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.runtime.exceptions import TemplateError
 
 logger = get_logger(__name__)
 
@@ -487,7 +489,7 @@ The `docs/rules/` standards align with and support the main documentation:
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/core/workflow.md](../core/workflow.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/core/architecture.md](../core/architecture.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../../infrastructure/llm/AGENTS.md) |
-| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects/act_inf_metaanalysis/manuscript/](../../projects/act_inf_metaanalysis/manuscript/) |
+| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects/code_project/manuscript/](../../projects/code_project/manuscript/) |
 | Refactoring | [refactoring.md](refactoring.md) | [docs/best-practices/best-practices.md](../best-practices/best-practices.md) |
 
 ## Cross-Reference Guide
@@ -524,7 +526,7 @@ The `docs/rules/` standards align with and support the main documentation:
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
-| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects/act_inf_metaanalysis/manuscript/](../../projects/act_inf_metaanalysis/manuscript/) for manuscript structure |
+| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects/code_project/manuscript/](../../projects/code_project/manuscript/) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
 | Generating reports | [reporting.md](reporting.md) | [docs/modules/modules-guide.md](../modules/modules-guide.md) for module details |

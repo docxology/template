@@ -25,7 +25,7 @@ except ImportError:
     requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core._text_utils import strip_thinking_tags
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig, ResponseMode
 from infrastructure.llm.core.context import ConversationContext

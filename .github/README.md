@@ -15,9 +15,23 @@ Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
 
-[**⚡ Quick Start**](#quick-start) · [**📐 Architecture**](#architecture) · [**🔄 Pipeline**](#pipeline) · [**🤖 AI Collaboration**](#ai-collaboration) · [**🔒 Provenance**](#security--provenance) · [**📚 Docs**](#documentation-hub)
+[**⚡ Quick Start**](#quick-start) · [**📐 Architecture**](#architecture) · [**🔄 Pipeline**](#pipeline) · [**🤖 AI Collaboration**](#ai-collaboration) · [**🔒 Provenance**](#security-provenance) · [**📚 Docs**](#documentation-hub)
 
 </div>
+
+---
+
+## About `.github/`
+
+This folder is the **GitHub integration surface**: Actions workflows, Dependabot, and issue/PR templates. It is not importable application code.
+
+| Document | Use |
+| --- | --- |
+| **This file** | Human overview while browsing the repo on GitHub |
+| [`AGENTS.md`](AGENTS.md) | Technical index: job names, triggers, coverage thresholds |
+| [`workflows/README.md`](workflows/README.md) | CI job graph and commands to mirror CI locally |
+
+**Related (repo root):** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) lists agent `SKILL.md` descriptors. After adding or editing `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit the updated manifest (see [`infrastructure/skills/`](../infrastructure/skills/)).
 
 ---
 
@@ -31,7 +45,7 @@ The **Docxology Template** solves the structural root of research irreproducibil
 | **Real test enforcement** | Zero-Mock policy · ≥90% project coverage · ≥60% infra coverage |
 | **Cryptographic provenance** | SHA-256/512 hashing + steganographic watermarking on every PDF |
 | **Horizontal scaling** | N independent projects share one infrastructure layer — no coupling |
-| **AI-agent-ready codebase** | `AGENTS.md` + `README.md` at every single directory level |
+| **AI-agent-ready codebase** | `AGENTS.md` + `README.md` per directory; `SKILL.md` + [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) for routing |
 | **Interactive orchestration** | `run.sh` TUI menu for humans · `--pipeline` flag for CI |
 
 ---
@@ -73,7 +87,7 @@ graph TD
     Root --> Docs["docs/ (Documentation Hub — 90+ files)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 12 Subpackages · ~150 Python Modules"
+    subgraph "Layer 1 · 13 infrastructure subpackages · ~150 Python modules"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -92,7 +106,7 @@ graph TD
 
 | Path | Persistence | Purpose |
 |------|:-----------:|---------|
-| `infrastructure/` | Permanent | 12 reusable subpackages — Layer 1 core |
+| `infrastructure/` | Permanent | 13 subpackages (+ hub `SKILL.md`); see [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
@@ -193,13 +207,15 @@ Every directory at every level contains **two documentation files**:
 - **`README.md`** — Human-readable overview and quick-start
 - **`AGENTS.md`** — Machine-readable spec for AI coding assistants: API tables, dependency graphs, architectural constraints, naming conventions
 
+Under `infrastructure/`, each subpackage also has **`SKILL.md`** (YAML frontmatter). The aggregated list for editors is [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (regenerate with `uv run python -m infrastructure.skills write`). Cursor project rules live under [`.cursor/rules/`](../.cursor/rules/).
+
 ```
 CLAUDE.md (root)          ← Global constraints: Zero-Mock, Thin Orchestrator, naming
   └── AGENTS.md (per dir) ← Local API surfaces, file inventories, integration patterns
         └── README.md     ← Human navigation and quick-start
 ```
 
-AI agents can navigate, modify, and extend the codebase with full architectural awareness without hallucinating APIs or violating architectural invariants. See [docs/rules/](../docs/rules/) for the complete set of standards.
+See [docs/rules/](../docs/rules/) for standards and [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) for the infrastructure skill hub.
 
 ---
 
@@ -232,7 +248,7 @@ Full specification: [docs/security/steganography.md](../docs/security/steganogra
 # Mirror CI locally
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 uv run pytest projects/code_project/tests/ --cov-fail-under=90 -m "not requires_ollama"
-python .github/verify_no_mocks.py
+python scripts/verify_no_mocks.py
 ```
 
 See [docs/development/testing/](../docs/development/testing/) and [docs/guides/testing-and-reproducibility.md](../docs/guides/testing-and-reproducibility.md).
@@ -316,7 +332,7 @@ Infrastructure subpackage documentation.
 
 | File | Purpose |
 |------|---------|
-| [modules-guide.md](../docs/modules/modules-guide.md) | Overview of all 12 infrastructure subpackages |
+| [modules-guide.md](../docs/modules/modules-guide.md) | Overview of infrastructure subpackages |
 | [pdf-validation.md](../docs/modules/pdf-validation.md) | `infrastructure.validation` — PDF integrity checking |
 | [scientific-simulation-guide.md](../docs/modules/scientific-simulation-guide.md) | `infrastructure.scientific` — stability, benchmarking |
 | [guides/](../docs/modules/guides/) | Per-module usage guides |
@@ -382,7 +398,7 @@ API reference, glossary, cheatsheets, and FAQ.
 
 | File | Purpose |
 |------|---------|
-| [api-reference.md](../docs/reference/api-reference.md) | Full public API for all 12 infrastructure subpackages |
+| [api-reference.md](../docs/reference/api-reference.md) | Public API reference for infrastructure modules |
 | [api-project-modules.md](../docs/reference/api-project-modules.md) | Project-level module patterns and conventions |
 | [glossary.md](../docs/reference/glossary.md) | Definitions for all template-specific terms |
 | [faq.md](../docs/reference/faq.md) | Frequently asked questions |

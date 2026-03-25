@@ -13,7 +13,7 @@ from typing import Any
 from .figure_manager import FigureManager
 from .image_manager import ImageManager
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

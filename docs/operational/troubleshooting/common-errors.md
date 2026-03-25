@@ -85,7 +85,7 @@ uv sync                              # Re-sync
 
 ### ⚠️ Project packages missing from root venv — silent Stage 5 failure
 
-**Symptom:** `❌ act_inf_metaanalysis: 5 stages, 7.7s` — Stage 5 fails in under 1 second with no visible import error in console.
+**Symptom:** `❌ project_name: 5 stages, 7.7s` — Stage 5 fails in under 1 second with no visible import error in console.
 
 **Root Cause:** Each project sub-directory may have its own `pyproject.toml` declaring extra dependencies (`scipy`, `pandas`, `wordcloud`, `rdflib`, `scikit-learn`, `networkx`, `requests`, etc.). When `02_run_analysis.py` runs analysis scripts, it uses the **root venv** unless the project has a local `.venv` directory. If these packages are only in the project's `pyproject.toml` and not in the root `pyproject.toml`, analysis scripts crash on import immediately — but the error is captured by subprocess and only logged as a stage failure.
 
@@ -111,7 +111,7 @@ dependencies = [
   "numpy>=1.22",
   "pyyaml>=6.0",
   "matplotlib>=3.7",
-  # act_inf_metaanalysis project requirements
+  # project-specific requirements
   "scipy>=1.10.0",
   "pandas>=2.0.0",
   "networkx>=3.0",
@@ -128,6 +128,49 @@ uv sync   # installs newly listed packages
 ```
 
 **Rule:** If a project has its own `pyproject.toml` but **no** `.venv/` directory, every package in that project's `dependencies` must also be in the root `pyproject.toml`.
+
+---
+
+### Project Not Discovered
+
+**Symptom:** Project doesn't appear in `./run.sh` menu
+
+**Root Cause:** Missing `manuscript/config.yaml` in project directory
+
+**Solutions:**
+
+```bash
+# Verify project structure
+ls projects/<name>/manuscript/config.yaml
+
+# Create config.yaml if missing
+cat > projects/<name>/manuscript/config.yaml << 'EOF'
+paper:
+  title: "My Project"
+  version: "1.0"
+
+authors:
+  - name: "Author Name"
+EOF
+```
+
+---
+
+### Config Key Warnings
+
+**Symptom:** `WARNING: Unknown config key 'X'` on every pipeline run
+
+**Root Cause:** Project-specific keys in config.yaml not in shared schema
+
+**Solutions:**
+
+1. Move custom keys under `project_config:` prefix:
+   ```yaml
+   project_config:
+     my_custom_key: value  # Won't trigger warnings
+   ```
+2. Remove non-standard keys from config.yaml
+3. Register key in infrastructure config schema (if truly shared)
 
 ---
 

@@ -14,6 +14,7 @@ Technical guide for `docs/core/` — essential documentation including system ar
 
 ## Key Conventions
 
+- **Concrete `projects/` paths in docs**: default to `code_project` (see [_generated/active_projects.md](../_generated/active_projects.md) for the full active set).
 - `how-to-use.md` is the primary entry point for all users
 - `architecture.md` is a concise overview — detailed architecture is in `architecture/` folder
 - `workflow.md` documents the development process and build pipeline stages

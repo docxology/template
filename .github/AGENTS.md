@@ -2,6 +2,8 @@
 ## Overview
 The `.github/` directory contains GitHub-specific configuration and automation for the Research Project Template. This includes continuous integration workflows, issue templates, PR templates, and other GitHub integrations that ensure code quality and collaborative development.
 
+**Human entry point:** [README.md](README.md) (browsing on GitHub). **This file (`AGENTS.md`):** job names, paths, and thresholds for automation and agents.
+
 ## Publication
 **Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 **DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
@@ -41,6 +43,9 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 | 6 | `security` — pip-audit + bandit | lint | 3.12 | ubuntu |
 | 7 | `performance` — import ≤ 5 s | test-infra + test-project | 3.12 | ubuntu |
 Coverage is uploaded to **Codecov** after each test job (3.12/ubuntu-latest only).
+
+The `verify-no-mocks` job runs [`scripts/verify_no_mocks.py`](../scripts/verify_no_mocks.py) at the repository root (not under `.github/`).
+
 ### Stale Workflow (`workflows/stale.yml`)
 Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale after 30 days, closed after 14 more. Exempt labels: `pinned`, `security`, `in-progress`, `blocked`, `do-not-close`.
 ### Release Workflow (`workflows/release.yml`)
@@ -102,6 +107,7 @@ gh run list --workflow=CI --limit=5
 gh run view <run-id> --log
 ```
 ## See Also
+- [`README.md`](README.md) — Contributor-oriented GitHub integration guide
 - [`workflows/AGENTS.md`](workflows/AGENTS.md) — Detailed CI/CD workflow documentation
 - [`../AGENTS.md`](../AGENTS.md) — Root system overview
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)

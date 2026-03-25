@@ -8,7 +8,7 @@ real implementations or skip when services are unavailable.
 import pytest
 
 from infrastructure import publishing
-from infrastructure.core.health_check import SystemHealthChecker
+from infrastructure.core.runtime.health_check import SystemHealthChecker
 from infrastructure.llm.core.client import LLMClient
 
 
@@ -124,7 +124,7 @@ class TestModuleInteroperability:
 
     def test_shared_logging(self):
         """Test that all modules use common logging."""
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Create loggers for each module
         lit_logger = get_logger("infrastructure.literature")

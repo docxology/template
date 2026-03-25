@@ -74,7 +74,7 @@ def process_data(
 
 ### Error Handling ([`../rules/error_handling.md`](../rules/error_handling.md))
 ```python
-from infrastructure.core.exceptions import TemplateError, ValidationError
+from infrastructure.core.runtime.exceptions import TemplateError, ValidationError
 
 class ResearchAlgorithmError(TemplateError):
     """Custom exception for research algorithm failures."""
@@ -102,7 +102,7 @@ def validate_algorithm_input(data: Any) -> None:
 
 ### Logging ([`../rules/python_logging.md`](../rules/python_logging.md))
 ```python
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 

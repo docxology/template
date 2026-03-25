@@ -11,14 +11,14 @@ from __future__ import annotations
 import sys
 import time
 
-from infrastructure.core.logging_helpers import format_duration
-from infrastructure.core.eta import (
+from infrastructure.core.logging.helpers import format_duration
+from infrastructure.core.runtime.eta import (
     ETAEstimate,
     calculate_eta,
     calculate_eta_ema,
     calculate_eta_with_confidence,
 )
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

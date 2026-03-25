@@ -524,7 +524,7 @@ Before committing documentation:
 ### Good AGENTS.md References
 
 - [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - module docs
-- [projects_archive/act_inf_metaanalysis/manuscript/](../../projects_archive/act_inf_metaanalysis/manuscript/) - Example manuscript (archived project)
+- [projects/code_project/manuscript/](../../projects/code_project/manuscript/) - Example manuscript (active project)
 - [tests/AGENTS.md](../../tests/AGENTS.md) - Test framework docs
 
 ### Good README.md References

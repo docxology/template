@@ -32,7 +32,7 @@ All modules follow the thin orchestrator pattern with test coverage.
 ### Integrity Checking
 
 ```python
-from infrastructure.validation.integrity import verify_output_integrity
+from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
 
 report = verify_output_integrity("output/")
 if report.overall_integrity:
@@ -85,7 +85,7 @@ uv run python -m infrastructure.validation.cli integrity output/
 ### Using Multiple Modules Together
 
 ```python
-from infrastructure.validation.integrity import verify_output_integrity
+from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
 from infrastructure.publishing.core import extract_publication_metadata
 
 def comprehensive_validation(output_dir, manuscript_files):

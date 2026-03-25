@@ -18,7 +18,7 @@ for path_str in (str(REPO_ROOT), str(SRC_DIR)):
     if path_str not in sys.path:
         sys.path.insert(0, path_str)
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from template import generate_all_architecture_figures
 
 logger = get_logger(__name__)

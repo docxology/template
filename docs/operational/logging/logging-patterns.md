@@ -11,7 +11,7 @@
 ### Simple Progress
 
 ```python
-from infrastructure.core.logging_utils import log_progress, log_progress_bar
+from infrastructure.core.logging.logging_utils import log_progress, log_progress_bar
 
 # Simple progress
 for i, file_path in enumerate(files, 1):
@@ -25,7 +25,7 @@ log_progress_bar(current=15, total=100, message="Processing files")
 ### Advanced Progress with ETA
 
 ```python
-from infrastructure.core.progress import SubStageProgress, ProgressBar
+from infrastructure.core.pipeline.progress import SubStageProgress, ProgressBar
 
 # Sub-stage progress with EMA-based ETA
 progress = SubStageProgress(
@@ -46,7 +46,7 @@ realistic, optimistic, pessimistic = progress.get_eta_with_confidence()
 ### LLM Progress Tracking
 
 ```python
-from infrastructure.core.progress import LLMProgressTracker
+from infrastructure.core.pipeline.progress import LLMProgressTracker
 
 tracker = LLMProgressTracker(
     total_tokens=1000,
@@ -65,7 +65,7 @@ tracker.finish()
 ## ETA Calculation Methods
 
 ```python
-from infrastructure.core.logging_utils import (
+from infrastructure.core.logging.logging_utils import (
     calculate_eta,            # Simple linear ETA
     calculate_eta_ema,        # Exponential moving average
     calculate_eta_with_confidence  # With confidence intervals

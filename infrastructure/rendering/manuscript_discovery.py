@@ -10,7 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger, log_success
+from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
 

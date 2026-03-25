@@ -1,12 +1,64 @@
 # New Project Setup Checklist
 
-Complete checklist for creating a new project workspace in the Docxology Template. Consolidates lessons learned from building `code_project`, `cognitive_case_diagrams`, and `template`.
+Complete checklist for creating a new project workspace in the Docxology Template. Lessons are framed around folder patterns and the stable exemplar [`projects/code_project/`](../../projects/code_project/).
 
-For a copy-paste prompt that anchors on `code_project` and `template` as positive controls, see [new-project-one-shot-prompt.md](new-project-one-shot-prompt.md). For many manuscript slices plus a custom LaTeX preamble (tabloid, `multicol`), see [`projects/traditional_newspaper/`](../../projects/traditional_newspaper/README.md).
+For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-shot-prompt.md](new-project-one-shot-prompt.md). Other active layouts under `projects/` are listed in [_generated/active_projects.md](../_generated/active_projects.md). For archived reference trees (not run by default), see `projects_archive/`.
 
 > **Key Principle**: A project is auto-discovered if `projects/<name>/manuscript/config.yaml` exists. No infrastructure changes needed.
 >
 > **3-Directory Lifecycle**: Projects live in one of three directories: `projects/` (active, rendered by `./run.sh`), `projects_in_progress/` (WIP, not auto-discovered), or `projects_archive/` (completed/paused, not auto-discovered). Move projects freely between directories; only what is in `projects/` is rendered.
+
+---
+
+## Troubleshooting
+
+### Project Not Discovered
+
+**Symptom**: Project doesn't appear in `./run.sh` menu
+
+**Cause**: Missing `manuscript/config.yaml`
+
+**Solution**: Create `projects/<name>/manuscript/config.yaml` with required fields
+
+### Test Import Errors
+
+**Symptom**: `ModuleNotFoundError: No module named '<package>'`
+
+**Cause**: Missing or incorrect `tests/conftest.py`
+
+**Solution**:
+```python
+import os
+import sys
+os.environ.setdefault("MPLBACKEND", "Agg")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+SRC = os.path.join(ROOT, "src")
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)
+```
+
+### Stage 4 Fails Silently
+
+**Symptom**: `4 stages, <2s` - Analysis stage fails immediately
+
+**Cause**: Project-specific packages missing from root venv
+
+**Diagnosis & Fix**:
+```bash
+# Check which packages are missing
+.venv/bin/python -c "import scipy"  # Replace with your package
+
+# Add to root pyproject.toml dependencies
+uv sync
+```
+
+### Config Warning Spam
+
+**Symptom**: `WARNING: Unknown config key 'X'` on every run
+
+**Cause**: Non-standard keys in config.yaml
+
+**Solution**: Nest project-specific keys under `project_config:` prefix
 
 ---
 
@@ -161,7 +213,7 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 
 **Symptom**: Pipeline stage fails immediately with `ImportError`.
 
-**Example**: `02_run_analysis.py` imported `format_error_with_suggestions` from `infrastructure.core.logging_utils`, but this symbol was never defined.
+**Example**: `02_run_analysis.py` imported `format_error_with_suggestions` from `infrastructure.core.logging.logging_utils`, but this symbol was never defined.
 
 **Prevention**:
 
@@ -192,7 +244,7 @@ dependencies = [
   "numpy>=1.22",
   "pyyaml>=6.0",
   "matplotlib>=3.7",
-  # act_inf_metaanalysis-specific (no local .venv)
+  # project-specific requirements (no local .venv)
   "scipy>=1.10.0",
   "pandas>=2.0.0",
   "networkx>=3.0",

@@ -45,7 +45,7 @@ graph TB
 | 06 | LLM Review | Optional manuscript review |
 | 07 | Report | Executive summary generation |
 
-Run with: `uv run python scripts/execute_pipeline.py --core-only`
+Run with: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 ## Key Principles
 
@@ -71,3 +71,26 @@ Run with: `uv run python scripts/execute_pipeline.py --core-only`
 - **[`docs/rules/AGENTS.md`](../rules/AGENTS.md)** — Development standards
 - **[`docs/rules/infrastructure_modules.md`](../rules/infrastructure_modules.md)** — Infrastructure module development
 - **[`docs/rules/README.md`](../rules/README.md)** — Quick reference and patterns
+
+---
+
+## Troubleshooting
+
+### Layer Violation
+
+**Symptom**: `ModuleNotFoundError` when infrastructure imports project code
+
+**Solution**: Refactor - infrastructure must not depend on project code. Move shared logic to infrastructure.
+
+### Import Errors
+
+**Symptom**: Scripts fail with import errors
+
+**Solution**:
+- Use `uv run python` for proper environment
+- Ensure conftest.py adds src/ to path
+- Check thin orchestrator pattern: scripts import from src/, not implement
+
+---
+
+**Quick Reference**: [Troubleshooting Guide](../operational/troubleshooting/README.md)

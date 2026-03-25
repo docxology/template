@@ -10,7 +10,7 @@ This guide covers **development security standards** for the Research Project Te
 
 ```python
 # ✅ GOOD: Validate all external inputs
-from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.runtime.exceptions import ValidationError
 
 def process_user_data(data: dict) -> dict:
     """Process user data with validation."""

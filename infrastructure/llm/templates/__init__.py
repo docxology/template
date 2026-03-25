@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from infrastructure.core.exceptions import LLMTemplateError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.templates.base import ResearchTemplate
 from infrastructure.llm.templates.helpers import (
     content_requirements,

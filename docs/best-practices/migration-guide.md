@@ -406,7 +406,7 @@ uv run pytest projects/my_project/tests/ --cov=projects/my_project/src
 # Pipeline automatically handles cleanup
 
 # Run build
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Verify outputs
 ls -la output/pdf/
@@ -531,7 +531,7 @@ tar -czf outputs_backup.tar.gz output/
 cd old_project && ./build.sh
 
 # Run new build
-cd new_project && uv run python scripts/execute_pipeline.py --core-only
+cd new_project && uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Compare outputs
 diff -r old_project/output/ new_project/output/

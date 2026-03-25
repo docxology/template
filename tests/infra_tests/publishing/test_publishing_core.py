@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from infrastructure.publishing.package import create_publication_package
 from infrastructure.publishing.models import PublicationMetadata
-from infrastructure.core.file_operations import calculate_file_hash
+from infrastructure.core.files.operations import calculate_file_hash
 
 def make_metadata(**kwargs) -> PublicationMetadata:
     """Create a minimal PublicationMetadata for testing."""

@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 
 
-from infrastructure.core.file_inventory import (
+from infrastructure.core.files.inventory import (
     FileInventoryEntry,
     FileInventoryManager,
     collect_output_files,

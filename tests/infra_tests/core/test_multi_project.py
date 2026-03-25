@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.multi_project import (
+from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
     MultiProjectResult,

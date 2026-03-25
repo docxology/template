@@ -4,7 +4,7 @@ Tests dependency and build tool checking utilities using real execution.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.core.env_deps import check_dependencies, check_build_tools
+from infrastructure.core.runtime.env_deps import check_dependencies, check_build_tools
 
 
 class TestCheckDependencies:

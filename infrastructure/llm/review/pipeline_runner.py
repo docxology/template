@@ -7,13 +7,13 @@ from functools import partial
 from pathlib import Path
 
 from infrastructure.core.exceptions import PDFValidationError
-from infrastructure.core.logging_utils import (
+from infrastructure.core.logging.utils import (
     get_logger,
     log_substep,
     log_success,
     log_progress,
 )
-from infrastructure.core.config_queries import get_translation_languages, get_review_types
+from infrastructure.core.config.queries import get_translation_languages, get_review_types
 from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES, ManuscriptQualityReview, ManuscriptMethodologyReview
 from infrastructure.llm.review.io import (
     save_review_outputs,

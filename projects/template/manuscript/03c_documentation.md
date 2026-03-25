@@ -1,4 +1,4 @@
-## Documentation Duality and AI Collaboration
+## Documentation Duality and AI Collaboration {#documentation-duality-and-ai-collaboration}
 
 Every directory at every level of the repository hierarchy contains two documentation files:
 
@@ -9,9 +9,9 @@ This Documentation Duality standard serves two purposes. First, it ensures that 
 
 The template additionally includes `CLAUDE.md` at the repository root, providing system-level instructions for AI coding assistants—architectural principles, testing requirements, and naming conventions that apply globally. This creates a three-tier documentation architecture: per-directory `AGENTS.md` for local context, root `README.md` and `CLAUDE.md` for global constraints, and `README.md` for human navigation.
 
-## Agentic Skill Architecture
+## Agentic Skill Architecture {#agentic-skill-architecture}
 
-The [Documentation Duality](#documentation-duality-and-the-agentic-skill-architecture) standard addresses human and AI navigation at the directory level. A complementary layer operates at the *module* level: every infrastructure subpackage carries two additional machine-readable files that transform it from a passive code library into an active, protocol-aligned skill endpoint.
+The [Documentation Duality](#documentation-duality-and-ai-collaboration) standard addresses human and AI navigation at the directory level. A complementary layer operates at the *module* level: every infrastructure subpackage carries two additional machine-readable files that transform it from a passive code library into an active, protocol-aligned skill endpoint.
 
 ### The Three-Tier Skill Protocol
 

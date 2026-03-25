@@ -18,6 +18,7 @@ infrastructure/reporting/
 ├── executive_reporter.py    # Cross-project metrics and summaries
 ├── dashboard_generator.py   # Visual dashboard generation
 ├── manuscript_overview.py   # Manuscript PDF page overview generation
+├── SKILL.md                 # Agent skill descriptor (YAML frontmatter)
 ├── README.md                # Quick reference
 └── AGENTS.md                # This file
 ```

@@ -10,8 +10,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.multi_project import MultiProjectResult
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.multi_project import MultiProjectResult
 from infrastructure.reporting.executive_reporter import (
     generate_executive_summary,
     save_executive_summary,

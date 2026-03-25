@@ -292,7 +292,7 @@ from .my_module import my_algorithm               # ✅ Import from same project
 from .my_module import AnalysisResult              # ✅ Import from same project
 
 # Infrastructure utilities (allowed)
-from infrastructure.core.logging_utils import get_logger  # ✅ Infrastructure access
+from infrastructure.core.logging.utils import get_logger  # ✅ Infrastructure access
 from infrastructure.figure_manager import FigureManager   # ✅ Infrastructure access
 ```
 
@@ -302,7 +302,7 @@ from infrastructure.figure_manager import FigureManager   # ✅ Infrastructure a
 # projects/{name}/scripts/analysis_pipeline.py
 from src.my_module import my_algorithm               # ✅ Import project algorithms
 from src.my_module import helper_function             # ✅ Import project methods
-from infrastructure.core.logging_utils import get_logger # ✅ Infrastructure utilities
+from infrastructure.core.logging.utils import get_logger # ✅ Infrastructure utilities
 ```
 
 ### ❌ **Incorrect Import Patterns (Violate Isolation)**
@@ -320,11 +320,11 @@ from projects.another_project.src.module import some_function
 ```python
 # ❌ NEVER: Import infrastructure algorithms (infrastructure is utilities only)
 from infrastructure.rendering.core import RenderManager  # ❌ Business logic
-from infrastructure.validation.pdf_validator import PDFValidator  # ❌ Business logic
+from infrastructure.validation.content.pdf_validator import PDFValidator  # ❌ Business logic
 
 # ✅ ALLOWED: Infrastructure utilities
-from infrastructure.core.logging_utils import get_logger  # ✅ Utility
-from infrastructure.core.config_loader import load_config  # ✅ Utility
+from infrastructure.core.logging.utils import get_logger  # ✅ Utility
+from infrastructure.core.config.loader import load_config  # ✅ Utility
 ```
 
 ## Testing Standards and Requirements
@@ -547,7 +547,7 @@ All projects in this directory comply with the template's development standards 
 
 ### ✅ **Logging Standards Compliance**
 
-- **Unified logging**: Uses `infrastructure.core.logging_utils.get_logger(__name__)`
+- **Unified logging**: Uses `infrastructure.core.logging.utils.get_logger(__name__)`
 - **Appropriate levels**: DEBUG, INFO, WARNING, ERROR as appropriate
 - **Context-rich messages**: Includes relevant context in log messages
 
@@ -590,7 +590,7 @@ All projects in this directory comply with the template's development standards 
 # Compliance verification commands (all pass):
 python3 -m pytest projects/*/tests/ --cov=projects/*/src --cov-report=html
 find projects/ -name "*.py" -exec grep -L '"""' {} \;  # Returns empty (all have docstrings)
-python3 -c "from infrastructure.validation.output_validator import validate_output_structure"  # Imports successfully
+python3 -c "from infrastructure.validation.output.validator import validate_output_structure"  # Imports successfully
 ```
 
 ## Best Practices and Compliance
@@ -627,7 +627,7 @@ All projects must follow standards defined in `.cursorrules/`:
 
 #### ✅ **Logging Standards** (`.cursorrules/python_logging.md`)
 
-- [ ] Unified logging via `infrastructure.core.logging_utils.get_logger(__name__)`
+- [ ] Unified logging via `infrastructure.core.logging.utils.get_logger(__name__)`
 - [ ] Appropriate log levels (DEBUG, INFO, WARNING, ERROR)
 - [ ] Context-rich log messages for debugging
 
@@ -838,7 +838,7 @@ cat > projects/myproject/scripts/analysis_pipeline.py << 'EOF'
 """Analysis pipeline for myproject."""
 
 from src.algorithms import MyAlgorithm
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -895,10 +895,10 @@ print('Import successful')
 
 ```bash
 # Validate markdown before rendering
-python3 -m infrastructure.validation.cli markdown projects/myproject/manuscript/
+python3 -m infrastructure.validation.cli.main markdown projects/myproject/manuscript/
 
 # Check for missing figure registrations
-python3 -m infrastructure.validation.cli integrity projects/myproject/output/
+python3 -m infrastructure.validation.cli.main integrity projects/myproject/output/
 
 # Render with verbose logging
 LOG_LEVEL=0 python3 scripts/03_render_pdf.py --project myproject
@@ -935,15 +935,16 @@ python3 scripts/02_run_analysis.py --project code_project
 python3 scripts/03_render_pdf.py --project code_project
 ```
 
-### Area handbook (`projects/area_handbook/`)
+### Area handbook (archived: `projects_archive/area_handbook/`)
 
-**Standalone Guarantees:**
+**Standalone Guarantees** (when reactivated under `projects/`):
 
-- **Tests**: 32 tests, 100% `src/` coverage, zero mocks
+- **Tests**: Corpus and synthesis code covered in `src/` with zero mocks
 - **Methods**: Corpus I/O, outline template, synthesis, Markdown builders, metrics (`src/`)
-- **Manuscript**: Fourteen numbered sections plus `SYNTAX.md`; fixture-driven `data/fixtures/riverbend_area.yaml`
+- **Manuscript**: Multi-section handbook-style markdown and fixtures
 
 ```bash
+# After moving the project back to projects/area_handbook/
 python3 scripts/01_run_tests.py --project area_handbook
 python3 scripts/02_run_analysis.py --project area_handbook
 python3 scripts/03_render_pdf.py --project area_handbook

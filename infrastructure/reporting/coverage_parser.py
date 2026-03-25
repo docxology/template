@@ -15,9 +15,9 @@ import time
 from pathlib import Path
 from typing import TypedDict
 
-from infrastructure.core.environment import get_python_command
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.config_queries import get_testing_config
+from infrastructure.core.runtime.environment import get_python_command
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.config.queries import get_testing_config
 
 
 class FailedTestInfo(TypedDict, total=False):

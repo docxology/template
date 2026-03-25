@@ -16,6 +16,7 @@ Technical guide for `docs/best-practices/` — code organization, version contro
 
 ## Key Conventions
 
+- **Project paths**: exemplar [`projects/code_project/`](../../projects/code_project/); authoritative active list → [_generated/active_projects.md](../_generated/active_projects.md).
 - `best-practices.md` consolidates patterns from all other documentation
 - Code organization follows the two-layer architecture (infrastructure / projects)
 - Version control practices follow conventional commits

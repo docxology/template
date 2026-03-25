@@ -29,13 +29,13 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header
-from infrastructure.core.file_cleanup import (
+from infrastructure.core.logging.utils import get_logger, log_success, log_header
+from infrastructure.core.files.cleanup import (
     clean_output_directory,
     clean_root_output_directory,
 )
-from infrastructure.core.file_operations import copy_final_deliverables
-from infrastructure.validation.output_validator import (
+from infrastructure.core.files.operations import copy_final_deliverables
+from infrastructure.validation.output.validator import (
     validate_copied_outputs,
     validate_output_structure,
 )

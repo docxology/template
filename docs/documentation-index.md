@@ -34,7 +34,7 @@ This index provides an overview of all documentation files in the Research Proje
 2. **[reference/faq.md](reference/faq.md)** - Common questions and solutions
 3. **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and commands
 4. **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance issues
-5. **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md#️-project-packages-missing-from-root-venv--silent-stage-4-failure)** - ⚠️ Silent Stage 4 failure pattern
+5. **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** - ⚠️ Silent Stage 4 failure pattern
 
 ---
 
@@ -81,6 +81,8 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** - **Headless / cloud server deployment guide** ☁️
 - **[PAI.md](PAI.md)** - **Personal AI Infrastructure (PAI)** 🤖
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - **Run guide and pipeline reference** 🚀
+- **[../.github/README.md](../.github/README.md)** - **GitHub**: Actions workflows, Dependabot, issue/PR templates, mirroring CI locally
+- **[_generated/](_generated/README.md)** - Machine-generated snippets; **[_generated/active_projects.md](_generated/active_projects.md)** is the single source of truth for active `projects/` names (do not copy that list into other guides; default path examples to [`projects/code_project/`](../projects/code_project/))
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 
 ### Quick Reference
@@ -115,9 +117,8 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - Levels 7-9 (Advanced)
 - **[guides/extending-and-automation.md](guides/extending-and-automation.md)** - Levels 10-12 (Expert)
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** - New project checklist (all learnings)
-- **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (code_project, template, area_handbook controls)
-- **[../projects/density_bioscales/README.md](../projects/density_bioscales/README.md)** - Cross-scale density exemplar (gases, liquids, composite insect model)
-- **[../projects/traditional_newspaper/README.md](../projects/traditional_newspaper/README.md)** - Tabloid multicolumn newspaper layout exemplar (16 folios, `S01` supplemental, `98` glossary, masthead figure)
+- **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (primary exemplar: [`projects/code_project/`](../projects/code_project/); other active names: [_generated/active_projects.md](_generated/active_projects.md))
+- **[../projects/code_project/README.md](../projects/code_project/README.md)** - Control-positive exemplar under `projects/`
 
 ### Content Authoring
 

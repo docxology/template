@@ -101,8 +101,47 @@ print(f"By section: {stats['figures_by_section']}")
 ## Best Practices
 
 1. **Register before inserting** - Always register figures first
-2. **Use descriptive labels** - Use meaningful figure labels
+2. **Use descriptive labels** - Use meaningful figure labels (e.g., `fig:convergence_curve`, not `fig:plot1`)
 3. **Validate regularly** - Check figures after insertion
 4. **Maintain registry** - Keep figure registry up to date
 5. **Check paths** - Ensure relative paths are correct
+6. **Use consistent naming** - Follow naming conventions: `{section_number}_{figure_name}.png`
+7. **Test in isolation** - Validate figures before building PDF
+
+## Common Issues
+
+### Missing Figures
+
+**Symptom**: `Figure not found: fig:example`
+
+**Solution**:
+```python
+# Verify figure exists
+from pathlib import Path
+figure_path = Path("output/figures/example.png")
+assert figure_path.exists(), f"Figure not found: {figure_path}"
+```
+
+### Broken References
+
+**Symptom**: Reference shows as `??` in PDF
+
+**Solution**:
+```python
+# Validate all references
+errors = image_manager.validate_figures(markdown_file)
+# Fix any errors before building PDF
+```
+
+### Path Issues
+
+**Symptom**: Figures render but wrong location in PDF
+
+**Solution**: Ensure relative paths are correct - use `output/figures/` not `../output/figures/`
+
+## See Also
+
+- [`docs/operational/troubleshooting/common-errors.md`](../operational/troubleshooting/common-errors.md) - General troubleshooting
+- [`docs/guides/figures-and-analysis.md`](../guides/figures-and-analysis.md) - Figure generation guide
+- [`infrastructure/documentation/figure_manager.py`](../../infrastructure/documentation/figure_manager.py) - Figure manager source
 

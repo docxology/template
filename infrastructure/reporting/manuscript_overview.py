@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from infrastructure.core.exceptions import FileNotFoundError, PDFValidationError, ValidationError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 if TYPE_CHECKING:
     import PIL.Image

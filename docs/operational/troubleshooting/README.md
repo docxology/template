@@ -95,6 +95,11 @@ uv tree
 | `Coverage below threshold` | [Test Failures](test-failures.md) |
 | `Permission denied` | [Common Errors](common-errors.md) |
 | `No such file` | [Common Errors](common-errors.md) |
+| `Project not discovered` | [Common Errors](common-errors.md) |
+| `Stage 4 fails silently` | [Common Errors](common-errors.md) |
+| `Config warning spam` | [Common Errors](common-errors.md) |
+| `Reference shows ??` | [Common Errors](common-errors.md) |
+| `Figure not found` | [Common Errors](common-errors.md) |
 
 ---
 

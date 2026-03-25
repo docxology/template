@@ -4,33 +4,31 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Active Projects
 
-Stand-alone workspaces under `projects/` are discovered by `discover_projects()` and listed in `./run.sh`. Highlights:
+Stand-alone workspaces under `projects/` are discovered by `discover_projects()` and listed in `./run.sh`. Current entries:
 
 ### **code_project** — master numerical exemplar
 
-Optimization study with figures, dashboard, and full manuscript.
+Optimization study with figures, dashboard, and full manuscript. See [code_project/README.md](code_project/README.md) and [code_project/AGENTS.md](code_project/AGENTS.md).
+
+### **fep_lean** — formal / Lean-oriented manuscript
+
+Lean-linked manuscript workflow, reports, and validation. See [fep_lean/README.md](fep_lean/README.md) and [fep_lean/AGENTS.md](fep_lean/AGENTS.md).
 
 ### **template** — meta-documentation project
 
-Self-referential manuscript and metrics for the repository.
+Self-referential manuscript and metrics for the repository. See [template/README.md](template/README.md) and [template/AGENTS.md](template/AGENTS.md).
 
-### **area_handbook** — holistic area report to living handbook
+### Archived exemplars (not in `projects/`)
 
-Structured YAML corpus (themes + weighted evidence), synthesis into section coverage and gaps, JSON artifacts, coverage figure, multi-section manuscript. See [area_handbook/README.md](area_handbook/README.md).
+These are kept under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them:
 
-### **density_bioscales** — fluids, gases, and composite density
+- **traditional_newspaper** — multi-folio tabloid layout (`geometry` / `multicol`, masthead figure); see [`projects_archive/traditional_newspaper/README.md`](../projects_archive/traditional_newspaper/README.md)
+- **area_handbook** — corpus-driven handbook-style manuscript (was `projects/area_handbook/`)
+- **density_bioscales** — fluids and composite density scenarios
+- **cognitive_case_diagrams** — diagram / categorical linguistics (also see `projects_in_progress/` for WIP)
+- **special_number_proximity** — Diophantine proximity statistics
 
-Ideal gas and reference liquids, mass-fraction mixture model with an internal-gas proxy, buoyancy helpers, and interval sweeps. See [density_bioscales/README.md](density_bioscales/README.md).
-
-### **traditional_newspaper** — layout exemplar
-
-Sixteen markdown folios, tabloid `geometry`, three-column `multicol` body, deterministic masthead PNG. See [traditional_newspaper/README.md](traditional_newspaper/README.md).
-
-### **special_number_proximity** — Diophantine distance statistics
-
-Finite-$Q$ rational proximity for $\pi$, $e$, quadratic irrationals, and Monte Carlo baselines; modular `src/` with 100% test coverage. See [special_number_proximity/README.md](special_number_proximity/README.md).
-
-**Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
+**Note:** Promote by moving a directory from `projects_archive/` or `projects_in_progress/` into `projects/`.
 
 ## Standalone Project Paradigm
 
@@ -82,22 +80,23 @@ Projects in the `projects_archive/` directory are **preserved but not executed**
 - **NOT executed** by any pipeline scripts
 - **Preserved** for historical reference and potential reactivation
 
+```bash
 # Move project to archive
-
 mv projects/myproject projects_archive/myproject
 
 # Move project back to active
-
 mv projects_archive/myproject projects/myproject
 
 # Project will be automatically discovered on next run.sh execution
+```
 
-| `code_project/` | The master exemplar implementation | ✅ Active |
-| `area_handbook/` | Area corpus, handbook synthesis, multi-section manuscript | ✅ Active |
-| `density_bioscales/` | Gas/liquid/insect-scale density models | ✅ Active |
-| `traditional_newspaper/` | Tabloid newspaper layout (16 slices + masthead) | ✅ Active |
+| Directory | Role |
+|-----------|------|
+| `code_project/` | Master numerical exemplar |
+| `fep_lean/` | Formal / Lean-oriented manuscript |
+| `template/` | Meta-documentation |
 
-**Archived projects** are available in `projects_archive/` for historical reference (e.g., `blake_active_inference`, `cognitive_integrity`, `active_inference_meta_pragmatic`).
+**Archived projects** live in `projects_archive/` (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `medical_ai`, `cognitive_integrity`, `special_number_proximity`, `active_inference_meta_pragmatic`).
 
 ```mermaid
 graph TD
@@ -269,7 +268,7 @@ Every project must comply with development standards defined in `.cursorrules/`:
 
 ### ✅ **Logging Standards** (`.cursorrules/python_logging.md`)
 
-- [ ] **Unified logging** via `infrastructure.core.logging_utils.get_logger(__name__)`
+- [ ] **Unified logging** via `infrastructure.core.logging.utils.get_logger(__name__)`
 - [ ] **Appropriate log levels** (DEBUG, INFO, WARNING, ERROR)
 - [ ] **Context-rich messages** for debugging
 
@@ -742,7 +741,7 @@ cat > projects/myproject/scripts/analysis_pipeline.py << 'EOF'
 """Analysis pipeline for my research project."""
 
 from src.example import hello_research
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -779,7 +778,7 @@ vim projects/myproject/tests/test_missing_functionality.py
 
 ```bash
 # Check .cursorrules compliance
-python3 -m infrastructure.validation.cli markdown projects/myproject/manuscript/
+python3 -m infrastructure.validation.cli.main markdown projects/myproject/manuscript/
 
 # Validate type hints
 python3 -c "
@@ -800,10 +799,10 @@ for file in src_files:
 
 ```bash
 # Validate markdown before rendering
-python3 -m infrastructure.validation.cli markdown projects/myproject/manuscript/
+python3 -m infrastructure.validation.cli.main markdown projects/myproject/manuscript/
 
 # Check for missing references or figures
-python3 -m infrastructure.validation.cli integrity projects/myproject/output/
+python3 -m infrastructure.validation.cli.main integrity projects/myproject/output/
 
 # Render with verbose output
 LOG_LEVEL=0 python3 scripts/03_render_pdf.py --project myproject

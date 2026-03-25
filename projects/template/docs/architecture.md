@@ -13,7 +13,7 @@ The template project follows the system-wide Two-Layer Architecture:
 | **Infrastructure** (Layer 1) | `infrastructure/` (repo root) | 12 subpackages, ~150 modules: logging, rendering, validation, steganography |
 | **Project** (Layer 2) | `projects/template/` | 5 src modules, 21 manuscript chapters, 2 scripts, 4 test files |
 
-The project imports from infrastructure (`infrastructure.core.logging_utils`, etc.) but never modifies it.
+The project imports from infrastructure (`infrastructure.core.logging.utils`, etc.) but never modifies it.
 
 ## Source Module Architecture
 

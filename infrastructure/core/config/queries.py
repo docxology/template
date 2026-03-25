@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -29,7 +29,7 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
         List of language codes (e.g., ['zh', 'hi', 'ru']) if translations
         are enabled, empty list otherwise
     """
-    from infrastructure.core.config_loader import find_config_file, load_config
+    from infrastructure.core.config.loader import find_config_file, load_config
 
     config_path = find_config_file(repo_root, project_name)
     config = load_config(config_path) if config_path else None
@@ -63,7 +63,7 @@ def get_review_types(repo_root: Path | str, project_name: str = "project") -> li
         are enabled, empty list if disabled, or ['executive_summary'] as default
         if no config found.
     """
-    from infrastructure.core.config_loader import find_config_file, load_config
+    from infrastructure.core.config.loader import find_config_file, load_config
 
     VALID_REVIEW_TYPES = [
         "executive_summary",
@@ -163,7 +163,7 @@ def get_testing_config(repo_root: Path | str) -> "ResolvedTestingConfig":
     Returns:
         ResolvedTestingConfig with all fields populated.
     """
-    from infrastructure.core.config_loader import (
+    from infrastructure.core.config.loader import (
         ResolvedTestingConfig,
         find_config_file,
         load_config,

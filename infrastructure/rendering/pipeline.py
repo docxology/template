@@ -1,0 +1,573 @@
+"""Rendering pipeline orchestrator module.
+
+This module coordinates the PDF rendering stage by:
+1. Validating LaTeX packages
+2. Verifying figures
+3. Rendering individual manuscript files to multiple formats
+4. Generating a combined PDF and HTML
+5. Verifying output quality
+"""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+from pathlib import Path
+
+from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_live_resource_usage
+from infrastructure.core.progress import SubStageProgress
+from infrastructure.core.exceptions import RenderingError, ValidationError
+from infrastructure.rendering import RenderManager
+from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.manuscript_discovery import (
+    discover_manuscript_files,
+    verify_figures_exist,
+)
+from infrastructure.rendering.latex_package_validator import validate_preamble_packages
+
+logger = get_logger(__name__)
+
+
+def run_render_pipeline(project_name: str = "project") -> int:
+    """Execute the PDF rendering pipeline using infrastructure rendering.
+
+    This pipeline:
+    1. Validates LaTeX packages (pre-flight check)
+    2. Verifies figures from analysis stage
+    3. Renders individual manuscript files to multiple formats
+    4. Generates a combined PDF from all manuscript sections
+    5. Reports on all generated outputs
+
+    Args:
+        project_name: Name of project in projects/ directory (default: "project")
+    """
+    logger.info(f"Executing PDF rendering pipeline for project '{project_name}'...")
+
+    repo_root = Path(__file__).parent.parent.parent
+    project_root = repo_root / "projects" / project_name
+
+    # Render from output/manuscript if variables have been injected there
+    injected_dir = project_root / "output" / "manuscript"
+    if injected_dir.exists() and any(injected_dir.glob("*.md")):
+        manuscript_dir = injected_dir
+        logger.info(f"Rendering from injected manuscript directory: {manuscript_dir}")
+    else:
+        manuscript_dir = project_root / "manuscript"
+
+    # Check for project-specific render override script
+    override_script = project_root / "scripts" / "_render_pdf_override.py"
+    if override_script.exists():
+        logger.info(f"⚡ Found custom render override: {override_script.name}")
+        logger.info("Transferring control to project-specific renderer...")
+
+        from infrastructure.core.runtime.environment import get_python_command
+
+        cmd = get_python_command() + [str(override_script)]
+        try:
+            result = subprocess.run(cmd, cwd=str(project_root), check=False)
+            if result.returncode == 0:
+                log_success("Custom PDF rendering completed successfully", logger)
+                return 0
+            else:
+                logger.error(f"Custom PDF rendering failed (exit code {result.returncode})")
+                return result.returncode
+        except (subprocess.SubprocessError, OSError) as e:
+            logger.error(f"Failed to execute custom renderer: {e}")
+            return 1
+
+    # Pre-flight: Validate LaTeX packages
+    logger.info("Running pre-flight LaTeX package validation...")
+    try:
+        package_report = validate_preamble_packages(strict=False)
+
+        if not package_report.all_required_available:
+            logger.error("❌ Missing required LaTeX packages!")
+            logger.error(f"   Missing: {', '.join(package_report.missing_required)}")
+            logger.error(
+                f"   Install: sudo tlmgr install {' '.join(package_report.missing_required)}"
+            )
+            return 1
+
+        if package_report.missing_optional:
+            logger.warning(
+                f"⚠️  Missing {len(package_report.missing_optional)} optional package(s):"
+            )
+            for pkg in package_report.missing_optional:
+                logger.warning(f"   - {pkg}")
+            logger.warning("   PDF will render with reduced functionality")
+            logger.info(
+                f"   To install: sudo tlmgr install {' '.join(package_report.missing_optional)}"
+            )
+        else:
+            logger.info("✓ All LaTeX packages available")
+
+    except ValidationError as e:
+        logger.error(f"❌ LaTeX package validation failed: {e}")
+        for suggestion in e.suggestions:
+            logger.error(f"   {suggestion}")
+        return 1
+    except (OSError, subprocess.SubprocessError) as e:
+        logger.warning(f"⚠️  Could not validate LaTeX packages: {e}")
+        logger.warning("   Proceeding anyway - compilation may fail if packages are missing")
+
+    # Verify figures from analysis stage
+    logger.info("Verifying figures from analysis stage...")
+    fig_status = verify_figures_exist(project_root, manuscript_dir)
+    if fig_status["found_figures"]:
+        logger.info(f"  Found figures: {', '.join(fig_status['found_figures'][:3])}")
+        if len(fig_status["found_figures"]) > 3:
+            logger.info(f"  ... and {len(fig_status['found_figures']) - 3} more")
+    else:
+        logger.warning("  ⚠️  No figures found - will render PDF with missing figures")
+
+    # Discover files to render
+    source_files = discover_manuscript_files(manuscript_dir)
+
+    if not source_files:
+        logger.warning("No manuscript files found")
+        return 0
+
+    # Log manuscript composition summary with file sizes
+    logger.info("\n" + "=" * 60)
+    logger.info(f"MANUSCRIPT COMPOSITION - Project: {project_name}")
+    logger.info("=" * 60)
+
+    md_files = [f for f in source_files if f.suffix == ".md"]
+    tex_files = [f for f in source_files if f.suffix == ".tex"]
+
+    if md_files:
+        logger.info(f"Markdown sections ({len(md_files)}):")
+        for f in md_files:
+             size_kb = f.stat().st_size / 1024
+             logger.info(f"  • {f.name:<40} ({size_kb:>6.1f} KB)")
+
+        total_size_kb = sum(f.stat().st_size for f in md_files) / 1024
+        logger.info(f"  {'Total markdown:':<40} ({total_size_kb:>6.1f} KB)")
+
+    if tex_files:
+        logger.info(f"LaTeX files ({len(tex_files)}):")
+        for f in tex_files:
+            size_kb = f.stat().st_size / 1024
+            logger.info(f"  • {f.name:<40} ({size_kb:>6.1f} KB)")
+
+    logger.info("=" * 60 + "\n")
+
+    # Initialize render manager with absolute paths
+    try:
+        config = RenderingConfig(
+            manuscript_dir=str(manuscript_dir),
+            figures_dir=str(project_root / "output" / "figures"),
+            output_dir=str(project_root / "output"),
+            pdf_dir=str(project_root / "output" / "pdf"),
+            web_dir=str(project_root / "output" / "web"),
+            slides_dir=str(project_root / "output" / "slides"),
+            poster_dir=str(project_root / "output" / "posters"),
+        )
+        figures_dir = project_root / "output" / "figures"
+        manager = RenderManager(config, manuscript_dir=manuscript_dir, figures_dir=figures_dir)
+        log_success("Initialized RenderManager from infrastructure.rendering", logger)
+    except (OSError, ValueError, TypeError) as e:
+        logger.error(f"Failed to initialize RenderManager: {e}")
+        return 1
+
+    # Separate markdown files (for combined PDF) from other files
+    md_files = [f for f in source_files if f.suffix == ".md"]
+
+    # Render individual files with progress tracking
+    rendered_count = 0
+    failed_files = []
+
+    if source_files:
+        progress = SubStageProgress(total=len(source_files), stage_name="Rendering Files")
+
+        for i, source_file in enumerate(source_files, 1):
+            progress.start_substage(i, source_file.name)
+
+            try:
+                # Use RenderManager to render in appropriate format
+                outputs = manager.render_all(source_file)
+
+                if outputs:
+                    for output_path in outputs:
+                        log_success(f"Generated: {output_path.name}", logger)
+                    rendered_count += 1
+                else:
+                    logger.warning(f"  No output generated for {source_file.name}")
+
+            except RenderingError as re:
+                logger.warning(f"  ❌ Rendering error for {source_file.name}: {re.message}")
+                if re.context:
+                    logger.debug(f"    Context: {re.context}")
+                failed_files.append(source_file.name)
+            except (OSError, subprocess.SubprocessError, ValueError) as e:
+                logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")
+                failed_files.append(source_file.name)
+
+            progress.complete_substage()
+
+    # Generate combined PDF from all markdown files
+    if md_files:
+        try:
+            logger.info("\n" + "=" * 60)
+            logger.info("Generating combined PDF manuscript...")
+            combined_pdf = manager.render_combined_pdf(md_files, manuscript_dir, project_name)
+            logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
+
+        except RenderingError as re:
+            logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
+            if re.message:
+                logger.error(f"  Full error details:\n{re.message}")
+
+            if re.context:
+                logger.error(f"  Source file: {re.context.get('source', 'unknown')}")
+                if "problematic_file" in re.context:
+                    logger.error(f"  Problematic source file: {re.context['problematic_file']}")
+                    logger.error(
+                        f"  File index: {re.context.get('problematic_file_index', 'unknown')}"
+                    )
+                if "error_position" in re.context:
+                    pos = re.context["error_position"]
+                    line = re.context.get("error_line", "unknown")
+                    logger.error(f"  Error at position {pos} (line {line})")
+                if "error_context" in re.context:
+                    logger.error("  Error context (content around error position):")
+                    context = re.context["error_context"]
+                    lines = context.split("\n")
+                    if len(lines) <= 20:
+                        for i, line in enumerate(lines, 1):
+                            logger.error(f"    {i:3d}: {line}")
+                    else:
+                        logger.error(f"    {context[:500]}...")
+                if "error_line_content" in re.context:
+                    logger.error(f"  Problematic line: {repr(re.context['error_line_content'])}")
+                if "error_position" not in re.context:
+                    if "first_200_chars" in re.context:
+                        logger.error(f"  First 200 chars: {repr(re.context['first_200_chars'])}")
+                    if "last_200_chars" in re.context:
+                        logger.error(f"  Last 200 chars: {repr(re.context['last_200_chars'])}")
+                if "total_size" in re.context:
+                    logger.error(f"  Combined markdown size: {re.context['total_size']} characters")
+                if re.suggestions:
+                    logger.error("  Suggestions:")
+                    for suggestion in re.suggestions:
+                        logger.error(f"    • {suggestion}")
+                logger.debug(f"  Full context: {re.context}")
+
+            if re.suggestions:
+                logger.warning("  Suggestions to fix the error:")
+                for suggestion in re.suggestions:
+                    logger.warning(f"    • {suggestion}")
+            else:
+                logger.warning("  No specific suggestions available")
+            
+            if rendered_count > 0:
+                logger.info(
+                    f"ℹ️  Note: {rendered_count} individual PDF file(s) were generated successfully despite combined PDF failure."
+                )
+        except (OSError, subprocess.SubprocessError, ValueError, TypeError) as e:
+            logger.error(f"❌ Unexpected error generating combined PDF: {e}")
+            import traceback
+
+            logger.error(f"  Error type: {type(e).__name__}")
+            logger.error("  This is an unexpected error - please report this issue")
+            logger.error(f"  Full traceback:\n{traceback.format_exc()}")
+            if hasattr(e, "stderr") and e.stderr:
+                logger.error(f"  Full stderr:\n{e.stderr}")
+            if hasattr(e, "stdout") and e.stdout:
+                logger.error(f"  Full stdout:\n{e.stdout}")
+
+            combined_md_path = None
+            try:
+                output_dir = Path(manuscript_dir.parent) / "output" / "tex"
+                combined_md_path = output_dir / "_combined_manuscript.md"
+                if combined_md_path.exists():
+                    logger.error(f"  Combined markdown file location: {combined_md_path}")
+                    logger.error(
+                        f"  Combined markdown file size: {combined_md_path.stat().st_size} bytes"
+                    )
+            except OSError as stat_err:
+                logger.debug(f"  Could not stat combined markdown file: {stat_err}")
+            logger.warning("  This is an unexpected error - please report this issue")
+
+        try:
+            logger.info("\n" + "=" * 60)
+            logger.info("Generating combined HTML manuscript...")
+            manager.render_combined_web(md_files, manuscript_dir, project_name)
+        except RenderingError as re:
+            logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
+            if re.context:
+                logger.debug(f"  Context: {re.context}")
+        except (OSError, subprocess.SubprocessError, ValueError) as e:
+            logger.warning(f"⚠️  Unexpected error generating combined HTML: {e}")
+
+    # Report results
+    logger.info("\nRendering Summary:")
+    logger.info(f"  Individual files processed: {rendered_count}")
+    logger.info(f"  Markdown files: {len(md_files)}")
+
+    if failed_files:
+        logger.warning(f"  Failed: {len(failed_files)} file(s)")
+        for fname in failed_files:
+            logger.warning(f"    - {fname}")
+
+    summary = generate_rendering_summary(project_name)
+    log_rendering_summary(summary)
+
+    log_success("PDF rendering pipeline completed", logger)
+    return 0
+
+
+def generate_rendering_summary(project_name: str = "project") -> dict:
+    """Generate comprehensive summary of rendering results.
+
+    Returns:
+        Dictionary with rendering statistics and file information
+    """
+    repo_root = Path(__file__).parent.parent.parent
+    project_root = repo_root / "projects" / project_name
+    output_dir = project_root / "output"
+
+    summary = {
+        "project": project_name,
+        "individual_pdfs": [],
+        "combined_pdf": None,
+        "combined_html": None,
+        "web_outputs": [],
+        "slides": [],
+        "total_size_kb": 0,
+    }
+
+    project_basename = Path(project_name).name
+
+    pdf_dir = output_dir / "pdf"
+    if pdf_dir.exists():
+        for pdf in sorted(pdf_dir.glob("*.pdf")):
+            if pdf.name != f"{project_basename}_combined.pdf":
+                size_kb = pdf.stat().st_size / 1024
+                summary["individual_pdfs"].append({"name": pdf.name, "size_kb": size_kb})
+                summary["total_size_kb"] += size_kb
+
+    combined_pdf = pdf_dir / f"{project_basename}_combined.pdf"
+    if combined_pdf.exists():
+        size_kb = combined_pdf.stat().st_size / 1024
+        summary["combined_pdf"] = {
+            "name": combined_pdf.name,
+            "size_kb": size_kb,
+            "path": str(combined_pdf),
+        }
+        summary["total_size_kb"] += size_kb
+
+    web_dir = output_dir / "web"
+    if web_dir.exists():
+        combined_html = web_dir / "index.html"
+        if combined_html.exists():
+            size_kb = combined_html.stat().st_size / 1024
+            summary["combined_html"] = {
+                "name": combined_html.name,
+                "size_kb": size_kb,
+                "path": str(combined_html),
+            }
+            summary["total_size_kb"] += size_kb
+
+    if web_dir.exists():
+        for html in sorted(web_dir.glob("*.html")):
+            if html.name != "index.html":
+                size_kb = html.stat().st_size / 1024
+                summary["web_outputs"].append({"name": html.name, "size_kb": size_kb})
+
+    slides_dir = output_dir / "slides"
+    if slides_dir.exists():
+        for slide in sorted(slides_dir.glob("*.pdf")):
+            size_kb = slide.stat().st_size / 1024
+            summary["slides"].append({"name": slide.name, "size_kb": size_kb})
+
+    return summary
+
+
+def log_rendering_summary(summary: dict) -> None:
+    """Log comprehensive rendering summary with formatted output."""
+    logger.info("\n" + "=" * 60)
+    logger.info("RENDERING RESULTS SUMMARY")
+    logger.info("=" * 60)
+    logger.info(f"Project: {summary['project']}")
+
+    if summary["combined_pdf"]:
+        pdf = summary["combined_pdf"]
+        logger.info("\n📕 Combined Manuscript PDF:")
+        logger.info(f"   {pdf['name']:<40} {pdf['size_kb']:>8.1f} KB")
+        logger.info(f"   Location: {pdf['path']}")
+
+    if summary["combined_html"]:
+        html = summary["combined_html"]
+        logger.info("\n🌐 Combined Manuscript HTML:")
+        logger.info(f"   {html['name']:<40} {html['size_kb']:>8.1f} KB")
+        logger.info(f"   Location: {html['path']}")
+
+    if summary["individual_pdfs"]:
+        logger.info(f"\n📄 Individual Section PDFs ({len(summary['individual_pdfs'])}):")
+        for pdf in summary["individual_pdfs"]:
+            logger.info(f"   {pdf['name']:<40} {pdf['size_kb']:>8.1f} KB")
+
+    if summary["web_outputs"]:
+        logger.info(f"\n🌐 Web Outputs ({len(summary['web_outputs'])}):")
+        for web in summary["web_outputs"]:
+            logger.info(f"   {web['name']:<40} {web['size_kb']:>8.1f} KB")
+
+    if summary["slides"]:
+        logger.info(f"\n📊 Presentation Slides ({len(summary['slides'])}):")
+        for slide in summary["slides"]:
+            logger.info(f"   {slide['name']:<40} {slide['size_kb']:>8.1f} KB")
+
+    logger.info(
+        f"\n📦 Total Output Size: {summary['total_size_kb']:.1f} KB ({summary['total_size_kb'] / 1024:.2f} MB)"  
+    )
+    logger.info("=" * 60 + "\n")
+
+
+def _check_citations_used(manuscript_dir: Path) -> bool:
+    """Check if any manuscript files contain citation commands."""
+    import re
+
+    citation_patterns = [
+        r"\\cite\{[^}]+\}",
+        r"\\citep\{[^}]+\}",
+        r"\\citet\{[^}]+\}",
+        r"\\citeauthor\{[^}]+\}",
+        r"\\citeyear\{[^}]+\}",
+        r"@[^@\s]+\s",
+    ]
+
+    manuscript_files = list(manuscript_dir.glob("*.md"))
+    supplemental_dir = manuscript_dir / "supplemental"
+    if supplemental_dir.exists():
+        manuscript_files.extend(list(supplemental_dir.glob("*.md")))
+
+    for md_file in manuscript_files:
+        try:
+            content = md_file.read_text(encoding="utf-8")
+            for pattern in citation_patterns:
+                if re.search(pattern, content):
+                    return True
+        except (OSError, UnicodeDecodeError) as e:
+            logger.debug(f"Could not read {md_file}: {e}")
+            continue
+    return False
+
+
+def verify_pdf_outputs(project_name: str = "project") -> bool:
+    """Verify that PDFs were generated with quality checks."""
+    logger.info("Verifying PDF outputs...")
+
+    repo_root = Path(__file__).parent.parent.parent
+    project_root = repo_root / "projects" / project_name
+    pdf_dir = project_root / "output" / "pdf"
+    manuscript_dir = project_root / "manuscript"
+
+    if not pdf_dir.exists():
+        logger.error("PDF output directory not found")
+        return False
+
+    pdf_files = list(pdf_dir.glob("*.pdf"))
+    project_basename = Path(project_name).name
+    combined_pdf = pdf_dir / f"{project_basename}_combined.pdf"
+
+    if pdf_files:
+        log_success(f"Generated {len(pdf_files)} PDF file(s)", logger)
+
+        valid_pdfs = 0
+        failed_compilations = []
+
+        for pdf_file in sorted(pdf_files):
+            size_mb = pdf_file.stat().st_size / (1024 * 1024)
+            size_kb = pdf_file.stat().st_size / 1024
+
+            if size_mb > 0.01:
+                valid_pdfs += 1
+                marker = "📕" if pdf_file == combined_pdf else "  "
+                logger.info(f"  {marker} {pdf_file.name} ({size_mb:.2f} MB) ✓")
+            else:
+                marker = "📕" if pdf_file == combined_pdf else "  "
+                status_msg = f"  {marker} {pdf_file.name}"
+
+                if size_kb < 0.1:
+                    status_msg += f" - FAILED COMPILATION ({size_kb:.1f} KB)"
+                    failed_compilations.append(pdf_file)
+                    log_file = pdf_file.parent / f"{pdf_file.stem}.log"
+                    if log_file.exists():
+                        status_msg += f" - Check log: {log_file.name}"
+                    else:
+                        alt_log = pdf_file.parent / f"_{pdf_file.stem}.log"
+                        if alt_log.exists():
+                            status_msg += f" - Check log: {alt_log.name}"
+                    logger.error(status_msg)
+                else:
+                    status_msg += f" - file too small ({size_kb:.1f} KB)"
+                    logger.warning(status_msg)
+
+        bib_file = manuscript_dir / "references.bib"
+        citations_used = _check_citations_used(manuscript_dir)
+
+        if bib_file.exists():
+            logger.info("\n✅ Bibliography file found and will be processed")
+        elif citations_used:
+            logger.warning(
+                "\n⚠️  Bibliography file not found (citations detected in manuscript - bibliography processing will be skipped)"  
+            )
+        else:
+            logger.info(
+                "\nℹ️  Bibliography file not found (no citations detected in manuscript - this is fine)"  
+            )
+
+        if failed_compilations:
+            logger.error(f"\n❌ {len(failed_compilations)} PDF compilation(s) failed:")
+            for pdf_file in failed_compilations:
+                logger.error(f"  - {pdf_file.name} (0.0 KB - compilation failed)")
+
+        if combined_pdf.exists():
+            size_mb = combined_pdf.stat().st_size / (1024 * 1024)
+            if size_mb > 0.01:
+                if failed_compilations:
+                    logger.warning(
+                        f"\n⚠️  Combined manuscript PDF generated but {len(failed_compilations)} other PDF(s) failed to compile"  
+                    )
+                else:
+                    logger.info("\n✅ Combined manuscript PDF successfully generated!")
+                logger.info(f"  File size: {size_mb:.2f} MB")
+                logger.info(f"  Valid PDFs: {valid_pdfs}/{len(pdf_files)}")
+            else:
+                logger.error(f"\n❌ Combined manuscript PDF compilation failed ({size_mb:.3f} MB)")
+                return False
+        else:
+            logger.error("\n❌ Combined manuscript PDF not found")
+            return False
+
+        return valid_pdfs > 0 and not failed_compilations
+    else:
+        logger.error("No PDF files found in output directory")
+        return False
+
+
+def execute_render_pipeline(project_name: str = "project") -> int:
+    """Execute PDF rendering orchestration.
+    
+    Returns:
+        Exit code (0=success, 1=failure)
+    """
+    log_live_resource_usage("PDF rendering stage start", logger)
+    try:
+        exit_code = run_render_pipeline(project_name)
+        if exit_code == 0:
+            outputs_valid = verify_pdf_outputs(project_name)
+            if outputs_valid:
+                log_success("PDF rendering complete - ready for validation", logger)
+            else:
+                logger.warning("PDF rendering completed but output verification failed")
+        else:
+            logger.error("PDF rendering failed - check logs for details")
+
+        log_live_resource_usage("PDF rendering stage end", logger)
+        return exit_code
+    except Exception as e:
+        logger.error(f"Render pipeline error: {e}", exc_info=True)
+        log_live_resource_usage("PDF rendering stage end (error)", logger)
+        return 1

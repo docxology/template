@@ -78,6 +78,10 @@ git clone https://github.com/docxology/template.git
 cd template
 ```
 
+### Active `projects/` names
+
+The pipeline discovers workspaces under `projects/` that have `src/` and `tests/`. **Current names:** [_generated/active_projects.md](_generated/active_projects.md). **Examples in this guide** use `--project code_project` as the stable exemplar.
+
 ---
 
 ## 4. Install Repo-Level Dependencies
@@ -134,7 +138,7 @@ falling back to the root `.venv`, then to system `python3`.
 ### Core pipeline (no LLM stages — suitable for CI/CD)
 
 ```bash
-uv run scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Specific project

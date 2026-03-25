@@ -13,6 +13,7 @@ The `tests/infra_tests/` directory contains tests for the reusable infrastructur
 ```text
 tests/infra_tests/
 ├── conftest.py                      # Shared test configuration and fixtures
+├── test_docs_discovery_consistency.py  # docs/ project links + _generated/active_projects.md vs discover_projects()
 ├── _test_helpers.py                 # Test utility functions (underscore = not a test file)
 ├── core/                           # Core utilities tests (24 test files)
 │   ├── test_checkpoint.py          # Checkpoint/resume functionality
@@ -113,6 +114,9 @@ tests/infra_tests/
 │   ├── test_output_reporter.py     # Output reporting
 │   ├── test_pipeline_reporter.py   # Pipeline reporting
 │   └── test_test_reporter.py       # Test result reporting
+├── skills/                         # SKILL.md discovery tests (1 test file)
+│   ├── AGENTS.md                   # Skills test documentation
+│   └── test_skill_discovery.py     # Manifest + discover_skills coverage
 ├── scientific/                     # Scientific tools tests (7 test files)
 │   ├── test_benchmarking.py        # Performance benchmarking
 │   ├── test_documentation.py       # Scientific documentation
@@ -806,6 +810,7 @@ Current coverage: **83.33%** (exceeds 60% requirement by 39%!)
 | `publishing/` | 9 | 100% | ✅ |
 | `rendering/` | 21 | 91% | ✅ |
 | `reporting/` | 9 | 75% | ✅ |
+| `skills/` | 1 | 87% | ✅ |
 | `scientific/` | 7 | 100% | ✅ |
 | `validation/` | 32 | 100% | ✅ |
 

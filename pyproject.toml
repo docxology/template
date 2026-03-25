@@ -129,7 +129,7 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-pythonpath = [".", "infrastructure", "projects/code_project/src", "projects/cognitive_case_diagrams/src"]
+pythonpath = [".", "infrastructure", "projects/code_project/src", "projects_in_progress/cognitive_case_diagrams/src"]
 testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

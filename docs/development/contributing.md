@@ -38,10 +38,16 @@ pip install -e ".[dev]"
 
 ### 3. **Run Tests**
 ```bash
-# Run all tests
-pytest
+# Recommended: match CI (see ../.github/README.md)
+uv sync
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
+uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90 -m "not requires_ollama"
+```
 
-# Run with coverage
+Legacy one-liners (if not using `uv`):
+
+```bash
+pytest
 pytest --cov=src --cov-report=html
 ```
 
@@ -64,6 +70,7 @@ pytest --cov=src --cov-report=html
 - **Add docstrings** to new functions
 - **Update relevant guides** in the docs/ directory
 - **Include examples** for new functionality
+- **Agent `SKILL.md`:** If you add or change `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit [`.cursor/skill_manifest.json`](../../.cursor/skill_manifest.json) so CI tests and Cursor stay in sync
 
 ### 🔄 **Commit Messages**
 Use clear, descriptive commit messages:
@@ -98,7 +105,7 @@ pytest
 pytest --cov=src --cov-report=html
 
 # Test the build pipeline
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### 4. **Submit a Pull Request**
@@ -148,6 +155,7 @@ uv run python scripts/execute_pipeline.py --core-only
 
 ## 📚 **Resources**
 
+- **[`../../.github/README.md`](../../.github/README.md)** - GitHub Actions, branch protection, local CI mirror
 - **[`../core/architecture.md`](../core/architecture.md)** - System design overview
 - **[`../core/workflow.md`](../core/workflow.md)** - Development workflow guide
 - **[`markdown-template-guide.md`](../usage/markdown-template-guide.md)** - Writing and formatting guide

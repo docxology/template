@@ -17,8 +17,8 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success
-from infrastructure.validation.no_mock_enforcer import validate_no_mocks
+from infrastructure.core.logging.utils import get_logger, log_header, log_success
+from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 
 logger = get_logger(__name__)
 

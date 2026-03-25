@@ -37,17 +37,16 @@ template/
 │   ├── reporting/         # Pipeline + executive reports
 │   ├── scientific/        # Numerical stability, benchmarking
 │   └── documentation/     # Figure manager, glossary gen
+├── run.sh                 # Main interactive + pipeline entry point
 ├── scripts/               # Entry-point orchestrators (thin wrappers)
-│   ├── run.sh             # Main interactive + pipeline entry point
 │   ├── bash_utils.sh      # Shared bash utilities + ensure_uv() bootstrap
 │   ├── 00_setup_environment.py → 06_llm_review.py  # Pipeline stages
 │   ├── execute_pipeline.py     # Single-project orchestrator
 │   └── execute_multi_project.py # Multi-project orchestrator
-├── projects/              # Active research projects (Layer 2)
-│   ├── act_inf_metaanalysis/  # Active Inference meta-analysis
-│   ├── code_project/          # Optimization research exemplar
-│   └── template/              # Template self-documentation project
-├── projects_archive/      # Archived projects (not executed)
+├── projects/              # Active research projects (Layer 2); names = discover_projects()
+│   └── code_project/          # Control-positive exemplar (concrete paths in docs use this)
+├── projects_archive/      # Archived projects (not executed by default)
+├── projects_in_progress/ # WIP (not discovered until moved under projects/)
 ├── tests/                 # Infrastructure tests
 ├── CLOUD_DEPLOY.md        # ☁️ Headless cloud server guide
 ├── infrastructure/docker/Dockerfile             # Container specification
@@ -87,9 +86,11 @@ uv run scripts/execute_pipeline.py --project code_project --core-only
 # Always run tests before changes
 uv run scripts/01_run_tests.py
 
-# Validate markdown
-uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+# Validate markdown (exemplar path)
+uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 ```
+
+Active project slugs: see [_generated/active_projects.md](_generated/active_projects.md).
 
 ### Document
 

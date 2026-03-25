@@ -60,7 +60,7 @@ All ${module_count} modules have 100% documentation coverage at Tiers 1–2 (`AG
 
 ## Agentic Skill Documentation Coverage
 
-The three-tier [skill protocol](#documentation-duality-and-the-agentic-skill-architecture) achieves complete coverage across all infrastructure modules:
+The three-tier [skill protocol](03c_documentation.md#agentic-skill-architecture) achieves complete coverage across all infrastructure modules:
 
 | Documentation Layer | Files | Coverage |
 |--------------------|:-----:|:---------:|
@@ -103,10 +103,10 @@ The steganographic watermark survives standard PDF operations (viewing, printing
 
 ## Self-Referential Analysis
 
-This manuscript is itself a product of the `template/` pipeline, demonstrating its self-productive capability. The `template` project's `src/template/introspection.py` module programmatically analyzes the repository and generates four architecture figures, all presented below. The numeric values in the tables above—module counts, test counts, file totals—were not typed by hand but injected at build time by the `$${variable}` substitution system described in the Methods, reading live metrics from the repository's own structure. The figures below were rendered by the same `architecture_viz.py` module whose font-size constraints are specified in the [Quality Assurance](#quality-assurance) section. In this way, the manuscript does not merely *describe* but *enacts* the pipeline it documents.
+This manuscript is itself a product of the `template/` pipeline, demonstrating its self-productive capability. The `template` project's `src/template/introspection.py` module programmatically analyzes the repository and generates four architecture figures, all presented below. The numeric values in the tables above—module counts, test counts, file totals—were not typed by hand but injected at build time by the metric-placeholder system (`string.Template`–style tokens such as `module_count`, `infra_test_count_approx`) described in the Methods, reading live metrics from the repository's own structure. The figures below were rendered by the same `architecture_viz.py` module whose font-size constraints are specified in the [Quality Assurance](03e_quality.md#quality-assurance) section. In this way, the manuscript does not merely *describe* but *enacts* the pipeline it documents.
 
 ![Two-Layer Architecture Overview](figures/architecture_overview.png)
-**Figure 1**: Two-Layer Architecture separating the generic, reusable infrastructure layer (12 subpackages, upper panel) from domain-specific project workspaces (lower panel), connected by the eight-stage pipeline. Each module box displays its Python file count and a documentation badge (A = `AGENTS.md`, R = `README.md`, S = `SKILL.md`, P = `PAI.md`; a dot `·` means absent). Project boxes show chapter and test counts. All labels are drawn from live repository introspection at render time; font sizes follow the 16 pt [accessibility floor](#visualization-standards).
+**Figure 1**: Two-Layer Architecture separating the generic, reusable infrastructure layer (12 subpackages, upper panel) from domain-specific project workspaces (lower panel), connected by the eight-stage pipeline. Each module box displays its Python file count and a documentation badge (A = `AGENTS.md`, R = `README.md`, S = `SKILL.md`, P = `PAI.md`; a dot `·` means absent). Project boxes show chapter and test counts. All labels are drawn from live repository introspection at render time; font sizes follow the 16 pt [accessibility floor](03e_quality.md#visualization-standards).
 
 ![Pipeline Stage Flow](figures/pipeline_stages.png)
 **Figure 2**: Sequential eight-stage build pipeline (Stage 00–07, plus a pre-step clean stage). Viridis colour progression encodes stage ordering. Each box includes a short description of the stage's primary action. Stage names and descriptions are generated from `PipelineStage` objects returned by `report.pipeline_stages`, ensuring the figure reflects the actual pipeline.

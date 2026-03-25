@@ -112,7 +112,7 @@ class FigureManager:
 **Example: Integrity Verification**
 
 ```python
-# infrastructure/validation/integrity.py
+# infrastructure/validation/integrity/checks.py
 
 def verify_output_integrity(
     output_dir: str,
@@ -331,7 +331,7 @@ If both generic + specific:
 ### ❌ Wrong: Infrastructure Imports Scientific
 
 ```python
-# BAD: infrastructure/validation/integrity.py
+# BAD: infrastructure/validation/integrity/checks.py
 from project.src.simulation import MySimulation  # ❌ Don't do this!
 
 def verify_scientific_output(sim: MySimulation):

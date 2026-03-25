@@ -1,4 +1,4 @@
-"""Tests for infrastructure.core.eta module.
+"""Tests for infrastructure.core.runtime.eta module.
 
 Tests ETA calculation functions using real numerical examples (No Mocks Policy).
 """
@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import pytest
 
-from infrastructure.core.eta import (
+from infrastructure.core.runtime.eta import (
     ETAEstimate,
     calculate_eta,
     calculate_eta_ema,

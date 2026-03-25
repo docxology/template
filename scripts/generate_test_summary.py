@@ -13,7 +13,7 @@ from pathlib import Path
 # Add infrastructure to path for config loading
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success
+from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.reporting.suite_summary_generator import run_test_summary_generation
 
 logger = get_logger(__name__)

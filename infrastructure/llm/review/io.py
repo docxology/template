@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger, log_success
+from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.llm.core.config import OllamaClientConfig
 from infrastructure.llm.review.metrics import ReviewMetrics, SessionMetrics
 from infrastructure.llm.review.review_analysis import (

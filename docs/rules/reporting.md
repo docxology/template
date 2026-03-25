@@ -27,8 +27,8 @@ Guidelines for using and extending the reporting utilities (multi-format reports
 
 ## Logging & Errors
 
-- Use `infrastructure.core.logging_utils.get_logger(__name__)`.
-- Raise module-specific errors from `infrastructure.core.exceptions` (e.g., `ValidationError`, `BuildError`) with context.
+- Use `infrastructure.core.logging.logging_utils.get_logger(__name__)`.
+- Raise module-specific errors from `infrastructure.core.runtime.exceptions` (e.g., `ValidationError`, `BuildError`) with context.
 - Log summaries at INFO; detailed diagnostics at DEBUG.
 - Never swallow errors—propagate with `raise ... from e`.
 

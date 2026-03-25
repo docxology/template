@@ -21,7 +21,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 ## Key Conventions
 
 - Each per-module guide in `guides/` covers: purpose, API, usage examples, and testing
-- All modules live in `infrastructure/` (Layer 1) and are project-agnostic
+- All modules live in `infrastructure/` (Layer 1) and are project-agnostic; project-side examples use [`projects/code_project/`](../../projects/code_project/), active list → [_generated/active_projects.md](../_generated/active_projects.md)
 - Module development follows `../rules/infrastructure_modules.md` standards
 - 60% minimum test coverage for infrastructure modules
 

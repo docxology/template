@@ -246,8 +246,10 @@ class TestCLIWithOllama:
         """Test check command with Ollama running."""
         args = argparse.Namespace()
 
-        # check_command should complete successfully and return None
-        check_command(args)
+        # CLI exits 0 on success (SystemExit)
+        with pytest.raises(SystemExit) as exc_info:
+            check_command(args)
+        assert exc_info.value.code == 0
 
         captured = capsys.readouterr()
         assert "running" in captured.out.lower()

@@ -74,7 +74,7 @@
 | 0:52 | Quality gates + docs map |
 | 0:62 | Paper pointer + Q&A |
 
-Adjust spacing if you run **`execute_pipeline.py --core-only`** for a shorter middle act.
+Adjust spacing if you run **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** for a shorter middle act.
 
 ---
 

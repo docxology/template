@@ -5,7 +5,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 from infrastructure.rendering.slides_renderer import SlidesRenderer

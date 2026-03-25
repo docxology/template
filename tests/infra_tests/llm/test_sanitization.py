@@ -103,8 +103,8 @@ class TestInputSanitizer:
     def test_sanitize_prompt_truncates_long_input(self):
         """Test that very long prompts are truncated."""
         sanitizer = InputSanitizer()
-        # Create a prompt longer than max_length (100000)
-        long_prompt = "A" * 150000
+        # Default _limit_length max is 500_000 characters
+        long_prompt = "A" * 600_000
         result = sanitizer.sanitize_prompt(long_prompt)
         assert len(result) < len(long_prompt)
         assert "[truncated]" in result

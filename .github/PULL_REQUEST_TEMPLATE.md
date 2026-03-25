@@ -23,6 +23,7 @@ Link to any relevant issues using 'Closes #123' syntax.
 - [ ] **Infrastructure Coverage**: ≥ 60% (as reported by CI)
 - [ ] **Project Coverage**: ≥ 90% (as reported by CI)
 - [ ] **Pipeline Validation**: Full `./run.sh --pipeline` (or specific stages) passed locally.
+- [ ] **Skill manifest** (if `infrastructure/**/SKILL.md` changed): Ran `uv run python -m infrastructure.skills write` and included `.cursor/skill_manifest.json` in the PR.
 
 ---
 

@@ -22,8 +22,8 @@ These modules are located in `infrastructure/` and provide generic tools applica
 
 #### Validation & Quality Assurance
 
-- `infrastructure/validation/pdf_validator.py` - PDF rendering validation
-- `infrastructure/validation/integrity.py` - Output integrity verification
+- `infrastructure/validation/content/pdf_validator.py` - PDF rendering validation
+- `infrastructure/validation/integrity/checks.py` - Output integrity verification
 
 #### Scientific Computing
 

@@ -40,7 +40,7 @@ Plus:
 1. **Click "Use this template"** on the [GitHub repository](https://github.com/docxology/template)
 2. **Clone your new repository**
 3. **Install dependencies**: `uv sync`
-4. **Generate your first document**: `uv run python scripts/execute_pipeline.py --core-only`
+4. **Generate your first document**: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 That's it! You now have a research project structure.
 
@@ -49,10 +49,10 @@ That's it! You now have a research project structure.
 - ✅ **project structure** with clear organization
 - ✅ **Professional PDF generation** from markdown
 - ✅ **Cross-referencing system** for equations and figures
-- ✅ **Automated testing** framework (2118 tests: 1796 infrastructure [2 skipped] + 320 project, all passing)
-- ✅ **Build pipeline** that validates everything (58-second builds)
-- ✅ **Terminal output logging** - all pipeline output saved to timestamped log files
-- ✅ **25+ guides** for all skill levels
+- ✅ **Automated testing** framework (infrastructure + per-project suites; thresholds in `pyproject.toml`)
+- ✅ **Build pipeline** that validates tests, analysis, PDFs, and outputs before copy
+- ✅ **Terminal output logging** - pipeline logs under `projects/<name>/output/logs/`
+- ✅ **Documentation hub** under `docs/` (see [documentation-index.md](../documentation-index.md))
 
 ## 📖 Guides by Skill Level
 
@@ -327,6 +327,6 @@ Having issues? Here's where to look:
 
 **Ready to start?** Choose your skill level above and dive in!
 
-**System Status**: ✅ All operational | **Build Time**: 84s (without optional LLM review) | **Coverage**: 100%/90% (project), 83.33%/60% (infra) | **Tests**: 2118 passing
+**Verify locally**: run `uv run python scripts/01_run_tests.py --project <name>` and `./run.sh --pipeline` (or `--core-only`) on your machine for timing and coverage numbers.
 
 **Need help?** Start with **[Getting Started Guide](../guides/getting-started.md)** or check the **[FAQ](../reference/faq.md)**

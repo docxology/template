@@ -272,12 +272,13 @@ graph TB
 
 ### Example Projects
 
-The template includes two active projects:
+Active projects under `projects/` (discovered by `./run.sh`; list may change):
 
-- **`projects/code_project/`** - Optimization research exemplar (master exemplar)
-- **`projects/medical_ai/`** - Medical AI clinical pipeline (multi-agent governance framework)
+- **`projects/code_project/`** — Optimization research exemplar
+- **`projects/fep_lean/`** — Formal / Lean-oriented manuscript
+- **`projects/template/`** — Meta-documentation for the template
 
-**Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
+**Note:** More exemplars (e.g. `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved into `projects/`. See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for a generated list from `discover_projects()`.
 
 ### Usage
 
@@ -325,8 +326,9 @@ Projects in `projects_archive/` are **preserved but not executed**:
 
 **Current Active Projects:**
 
-- `code_project/` - Optimization research exemplar
-- `medical_ai/` - Medical AI multi-agent clinical governance pipeline
+- `code_project/` — Optimization research exemplar
+- `fep_lean/` — Formal / Lean-oriented manuscript
+- `template/` — Meta-documentation
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
@@ -811,7 +813,7 @@ The utility scripts can be used with any project that follows this structure, ma
 
 ## 🔒 Security & Monitoring
 
-**[Security Guide](docs/development/security.md)** | **[Health Monitoring](infrastructure/core/health_check.py)**
+**[Security Guide](docs/development/security.md)** | **[Health Monitoring](infrastructure/core/runtime/health_check.py)**
 
 The template includes enterprise-grade security features:
 
@@ -824,8 +826,8 @@ The template includes enterprise-grade security features:
 **Usage:**
 
 ```python
-from infrastructure.core.security import validate_llm_input, get_security_validator
-from infrastructure.core.health_check import quick_health_check, get_health_status
+from infrastructure.core.runtime.security import validate_llm_input, get_security_validator
+from infrastructure.core.runtime.health_check import quick_health_check, get_health_status
 
 # Validate LLM input
 sanitized = validate_llm_input(user_prompt)
@@ -1232,7 +1234,7 @@ flowchart TD
 
 - **[docs/modules/modules-guide.md](docs/modules/modules-guide.md)** - Guide for all modules
 - **[docs/reference/api-reference.md](docs/reference/api-reference.md)** - API documentation for all modules
-- **[infrastructure/validation/integrity.py](infrastructure/validation/integrity.py)** - File integrity and cross-reference validation
+- **[infrastructure/validation/integrity/integrity.py](infrastructure/validation/integrity/integrity.py)** - File integrity and cross-reference validation
 - **[infrastructure/publishing/metadata.py](infrastructure/publishing/metadata.py)** - Publication metadata extraction utilities
 - **[infrastructure/publishing/api.py](infrastructure/publishing/api.py)** - Publishing API clients (Zenodo/GitHub/arXiv)
 - **[infrastructure/scientific/](infrastructure/scientific/)** - Scientific computing best practices (modular: stability, benchmarking, documentation, validation, templates)

@@ -315,7 +315,7 @@ citations = generate_citations_from_metadata(metadata)
 Infrastructure-backed logging with operation timing:
 
 ```python
-from infrastructure.core.logging_utils import log_operation, log_success
+from infrastructure.core.logging.utils import log_operation, log_success
 
 with log_operation("Running convergence experiments", logger=logger):
     results = run_convergence_experiment()

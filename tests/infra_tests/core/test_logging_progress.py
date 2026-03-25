@@ -1,4 +1,4 @@
-"""Tests for infrastructure.core.logging_progress module.
+"""Tests for infrastructure.core.logging.progress module.
 
 Comprehensive tests for progress tracking functionality including
 ETA calculations, progress bars, and spinners.
@@ -13,11 +13,13 @@ from io import StringIO
 
 import pytest
 
-from infrastructure.core.logging_progress import (
-    Spinner,
+from infrastructure.core.runtime.eta import (
     calculate_eta,
     calculate_eta_ema,
     calculate_eta_with_confidence,
+)
+from infrastructure.core.logging.progress import (
+    Spinner,
     log_progress_bar,
     log_with_spinner,
 )

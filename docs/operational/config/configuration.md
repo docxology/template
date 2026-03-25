@@ -112,7 +112,7 @@ metadata:
 ```bash
 # Resume from checkpoint
 export PIPELINE_RESUME=1
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Disable checkpoints
 export CHECKPOINT_ENABLED=false
@@ -123,7 +123,7 @@ export CHECKPOINT_ENABLED=false
 Retry behavior is configured programmatically via the retry decorators:
 
 ```python
-from infrastructure.core.retry import retry_with_backoff
+from infrastructure.core.runtime.retry import retry_with_backoff
 
 @retry_with_backoff(
     max_attempts=3,
@@ -173,7 +173,7 @@ export AUTHOR_EMAIL="jane@example.edu"
 export PROJECT_TITLE="My Research Project"
 
 # Run pipeline
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Verbose Debugging
@@ -183,7 +183,7 @@ uv run python scripts/execute_pipeline.py --core-only
 export LOG_LEVEL=0
 
 # Run with detailed output
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Resume from Checkpoint
@@ -193,7 +193,7 @@ uv run python scripts/execute_pipeline.py --core-only
 export PIPELINE_RESUME=1
 
 # Pipeline will resume from last successful stage
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ### Performance Monitoring
@@ -204,7 +204,7 @@ export ENABLE_PERFORMANCE_MONITORING=1
 export PERFORMANCE_LOG_FILE="output/performance.log"
 
 # Run with monitoring
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ## Configuration Validation
@@ -213,7 +213,7 @@ The template validates configuration at startup:
 
 ```bash
 # Check configuration
-uv run python -c "from infrastructure.core.config_loader import load_config; print(load_config())"
+uv run python -c "from infrastructure.core.config.loader import load_config; print(load_config())"
 ```
 
 ## Best Practices

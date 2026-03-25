@@ -2,12 +2,12 @@
 
 ## Exception Hierarchy
 
-All custom exceptions inherit from `TemplateError` in `infrastructure/core/exceptions.py`.
+All custom exceptions inherit from `TemplateError` in `infrastructure/core/runtime/exceptions.py`.
 
 ### Import Pattern
 
 ```python
-from infrastructure.core.exceptions import (
+from infrastructure.core.runtime.exceptions import (
     ValidationError,
     ConfigurationError,
     BuildError,
@@ -163,7 +163,7 @@ class IntegrationError(TemplateError):
 ### Exception Context Pattern
 
 ```python
-from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.runtime.exceptions import ValidationError
 import logging
 
 logger = logging.getLogger(__name__)
@@ -317,7 +317,7 @@ def validate_user_registration(data: dict) -> None:
 
 ```python
 import pytest
-from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.runtime.exceptions import ValidationError
 
 def test_validation_error_raised():
     """Test that validation error is raised."""

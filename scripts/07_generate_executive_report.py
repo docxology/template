@@ -24,7 +24,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep
+from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep
 from infrastructure.project.discovery import discover_projects
 from infrastructure.reporting.executive_reporter import (
     generate_executive_summary,
@@ -104,7 +104,7 @@ def main() -> int:
     log_header("STAGE 10: Executive Reporting", logger)
 
     # Log resource usage at start
-    from infrastructure.core.logging_utils import log_live_resource_usage
+    from infrastructure.core.logging.utils import log_live_resource_usage
 
     log_live_resource_usage("Executive reporting stage start", logger)
 

@@ -21,7 +21,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -31,7 +31,7 @@ repo_root = Path(__file__).parent.parent.parent
 def main() -> None:
     """Main function to load and export configuration."""
     try:
-        from infrastructure.core.config_loader import YAML_AVAILABLE, get_config_as_dict
+        from infrastructure.core.config.loader import YAML_AVAILABLE, get_config_as_dict
     except ImportError as e:
         logger.error(f"Failed to import from infrastructure/core/config_loader.py: {e}")
         logger.error("Falling back to environment variables only")

@@ -1,4 +1,4 @@
-"""Tests for infrastructure.core.pipeline_types module.
+"""Tests for infrastructure.core.pipeline.types module.
 
 Tests PipelineConfig, PipelineStageResult, and StageSpec using real
 data (No Mocks Policy).
@@ -6,7 +6,7 @@ data (No Mocks Policy).
 
 from __future__ import annotations
 
-from infrastructure.core.pipeline_types import (
+from infrastructure.core.pipeline.types import (
     PipelineConfig,
     PipelineStageResult,
     StageSpec,

@@ -20,7 +20,7 @@ uv sync
 uv run pytest tests/
 
 # Rebuild pipeline
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ---
@@ -63,7 +63,7 @@ uv run python scripts/03_render_pdf.py
 
 ```bash
 rm -f projects/{name}/output/.checkpoints/pipeline_checkpoint.json
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ---

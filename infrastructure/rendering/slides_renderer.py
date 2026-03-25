@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 

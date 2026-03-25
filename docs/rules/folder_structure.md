@@ -81,7 +81,7 @@ directory/
 | `infrastructure/` | ✅ module documentation | ✅ Quick reference | Generic build/validation tools |
 | `scripts/` | ✅ Entry point documentation | ✅ Quick reference | Orchestration scripts |
 | `tests/` | ✅ Testing philosophy | ✅ Quick reference | Test suites |
-| `project/` | ✅ Project structure guide | ✅ Quick reference | Research code |
+| `projects/` | ✅ Project structure guide | ✅ Quick reference | Research code |
 | `docs/` | ✅ Documentation organization | ✅ Quick reference | Documentation hub |
 | `.cursorrules/` | ✅ Standards overview | ✅ Quick reference | Development guidelines |
 
@@ -102,10 +102,10 @@ infrastructure/module/
 
 ### Project Subdirectories
 
-All `project/` subdirectories follow the pattern:
+All `projects/` subdirectories follow the pattern:
 
 ```
-project/subdir/
+projects/<name>/
 ├── AGENTS.md            # REQUIRED: Directory documentation
 ├── README.md            # REQUIRED: Quick reference
 ├── [code files]

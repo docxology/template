@@ -455,7 +455,7 @@ class TestEdgeCases:
 
     def test_calculate_file_hash_exception(self, tmp_path):
         """Test file hash calculation with real execution."""
-        from infrastructure.core.file_operations import calculate_file_hash
+        from infrastructure.core.files.operations import calculate_file_hash
         test_file = tmp_path / "test.txt"
         test_file.write_text("Content")
 

@@ -4,13 +4,13 @@ The Secure Execution orchestrator (`secure_run.sh`) is an alternative launch poi
 
 ## Verified Multi-Project Results
 
-All three active projects have been verified to render and secure successfully:
+Post-processing is the same for every workspace returned by `discover_projects()`. **Representative row** (control-positive exemplar):
 
 | Project | Pages | Overlays | Barcodes | Metadata | XMP | Manifest |
 |---------|-------|----------|----------|----------|-----|----------|
-| `code_project` | 20 | ✅ | ✅ | ✅ (12 keys) | ✅ | ✅ |
-| `cognitive_case_diagrams` | 77 | ✅ | ✅ | ✅ (12 keys) | ✅ | ✅ |
-| `template` | 5 | ✅ | ✅ | ✅ (12 keys) | ✅ | ✅ |
+| `code_project` | varies by manuscript build | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+**All other active `projects/` names:** [_generated/active_projects.md](../_generated/active_projects.md). Anything under `projects_archive/` or `projects_in_progress/` is not processed until moved into `projects/`.
 
 The `secure_run.sh` script discovers all active projects and processes each one in sequence. Steganographic outputs include:
 

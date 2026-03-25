@@ -17,13 +17,13 @@ class TestConfigCli:
 
     def test_module_imports(self):
         """Test module imports correctly."""
-        from infrastructure.core import config_cli
+        from infrastructure.core.config import cli as config_cli
 
         assert config_cli is not None
 
     def test_has_main(self):
         """Test module has main function."""
-        from infrastructure.core import config_cli
+        from infrastructure.core.config import cli as config_cli
 
         assert hasattr(config_cli, "main") or callable(config_cli)
 
@@ -31,7 +31,7 @@ class TestConfigCli:
         """Test main function execution with --help option."""
         # Test real CLI execution with subprocess
         repo_root = Path(__file__).resolve().parent.parent.parent.parent
-        script_path = repo_root / "infrastructure" / "core" / "config_cli.py"
+        script_path = repo_root / "infrastructure" / "core" / "config" / "cli.py"
 
         if script_path.exists():
             env = os.environ.copy()
@@ -56,7 +56,7 @@ class TestConfigCli:
     def test_main_execution_no_args(self):
         """Test main function execution without arguments."""
         repo_root = Path(__file__).resolve().parent.parent.parent.parent
-        script_path = repo_root / "infrastructure" / "core" / "config_cli.py"
+        script_path = repo_root / "infrastructure" / "core" / "config" / "cli.py"
 
         if script_path.exists():
             env = os.environ.copy()
@@ -77,7 +77,7 @@ class TestConfigCli:
     def test_main_execution_with_project(self):
         """Test main function execution with --project argument."""
         repo_root = Path(__file__).resolve().parent.parent.parent.parent
-        script_path = repo_root / "infrastructure" / "core" / "config_cli.py"
+        script_path = repo_root / "infrastructure" / "core" / "config" / "cli.py"
 
         if script_path.exists():
             env = os.environ.copy()

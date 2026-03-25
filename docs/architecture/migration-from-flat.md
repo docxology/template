@@ -20,7 +20,16 @@ If you have an old project with a flat `src/` directory, migrating to the two-la
 ### 1. Create Packages
 
 ```bash
-mkdir -p infrastructure projects/{name}/src
+# Create the infrastructure directory (if it doesn't exist)
+mkdir -p infrastructure
+
+# Create the project source directory
+mkdir -p projects/{name}/src
+
+# Create supporting directories
+mkdir -p projects/{name}/tests
+mkdir -p projects/{name}/scripts
+mkdir -p projects/{name}/manuscript
 ```
 
 ### 2. Move Modules
@@ -29,6 +38,15 @@ mkdir -p infrastructure projects/{name}/src
 - Project modules → `projects/{name}/src/`
 
 **Use the [Decision Tree](decision-tree.md) to determine which layer each module belongs in:**
+
+#### Decision Criteria
+
+| Question | If Yes → | If No → |
+|----------|----------|----------|
+| Is this reusable across projects? | `infrastructure/` | `projects/{name}/src/` |
+| Is this generic build/validation/tooling? | `infrastructure/` | `projects/{name}/src/` |
+| Is this domain-specific science/analysis? | `projects/{name}/src/` | `infrastructure/` |
+| Is this custom visualization for your data? | `projects/{name}/src/` | `infrastructure/` |
 
 | Module Type | Destination |
 |-------------|------------|

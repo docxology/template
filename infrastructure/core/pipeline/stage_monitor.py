@@ -16,8 +16,8 @@ from typing import Any, Iterator, TypedDict
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.exceptions import BuildError
-from infrastructure.core.logging_helpers import format_duration
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.helpers import format_duration
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

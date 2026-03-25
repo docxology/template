@@ -4,7 +4,7 @@ Tests stage performance monitoring utilities using real execution.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.core.stage_monitor import (
+from infrastructure.core.pipeline.stage_monitor import (
     ResourceUsage,
     StageMetricsDict,
 )

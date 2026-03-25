@@ -9,7 +9,7 @@ import argparse
 import os
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 from .api import ZenodoClient, ZenodoConfig
 from infrastructure.core.exceptions import PublishingError, UploadError

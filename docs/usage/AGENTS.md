@@ -19,6 +19,7 @@ Technical guide for `docs/usage/` — content authoring, formatting, visualizati
 
 ## Key Conventions
 
+- **Manuscript examples**: default to [`projects/code_project/manuscript/`](../../projects/code_project/manuscript/); active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md).
 - Figures use LaTeX `\begin{figure}` environments with `\label{fig:name}` and `\ref{fig:name}`
 - Equations use `\begin{equation}\label{eq:name}` and `\eqref{eq:name}`
 - All images must exist in `output/figures/` before manuscript build

@@ -38,7 +38,7 @@ This module uses standard scientific Python libraries:
 ### Available Infrastructure Capabilities
 
 - **Scientific Analysis**: `infrastructure.scientific` - Numerical stability and performance benchmarking
-- **Logging**: `infrastructure.core.logging_utils` - Structured logging configuration used by scripts/pipeline (not by `src/`)
+- **Logging**: `infrastructure.core.logging.utils` - Structured logging configuration used by scripts/pipeline (not by `src/`)
 - **Validation**: `infrastructure.validation` - Output integrity and quality checks
 - **Rendering**: `infrastructure.rendering` - Multi-format output generation
 - **Publishing**: `infrastructure.publishing` - Academic publishing workflows
@@ -50,7 +50,7 @@ This module uses standard scientific Python libraries:
 ```python
 from optimizer import gradient_descent
 from infrastructure.scientific import check_numerical_stability, benchmark_function
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

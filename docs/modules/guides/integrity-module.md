@@ -2,7 +2,7 @@
 
 > **File integrity and cross-reference validation**
 
-**Location:** `infrastructure/validation/integrity.py`  
+**Location:** `infrastructure/validation/integrity/checks.py`  
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
@@ -22,7 +22,7 @@
 ### Integrity Check
 
 ```python
-from infrastructure.validation.integrity import verify_output_integrity
+from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
 
 # Verify entire output directory
 report = verify_output_integrity("output/")
@@ -40,7 +40,7 @@ else:
 ### Cross-Reference Validation
 
 ```python
-from infrastructure.validation.integrity import verify_cross_references
+from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_cross_references
 
 # Check markdown files for reference integrity
 markdown_files = ["manuscript/01_abstract.md", "manuscript/02_introduction.md"]
@@ -60,7 +60,7 @@ for ref_type, is_valid in integrity_status.items():
 uv run python scripts/04_validate_output.py
 
 # Manual integrity check
-uv run python -m infrastructure.validation.integrity.cli output/
+uv run python -m infrastructure.validation.integrity.integrity.integrity.checks.checks.cli output/
 ```
 
 ---

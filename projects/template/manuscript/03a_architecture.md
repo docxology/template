@@ -38,7 +38,7 @@ All scripts in `scripts/` (both infrastructure-level and project-level) follow t
 - **No domain logic**: Scripts contain zero algorithmic implementation. They import functions from `src/` modules and wire them to infrastructure services.
 - **Configuration-driven**: Behavior is parameterized by `config.yaml`, not by hardcoded values.
 - **Stateless**: Scripts read inputs, call functions, write outputs. They maintain no persistent state between invocations.
-- **Logged**: Every significant action is logged via `infrastructure.core.logging_utils.get_logger`.
+- **Logged**: Every significant action is logged via `infrastructure.core.logging.utils.get_logger`.
 
 This pattern ensures that all testable logic lives in `src/` where it is subject to the Zero-Mock testing policy, while scripts remain thin enough to be audited by visual inspection. The separation draws on the Mediator pattern from Gamma et al. [@gamma1995design], where scripts mediate between infrastructure services and project-specific code without implementing any logic of their own.
 

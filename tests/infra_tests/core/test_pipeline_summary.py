@@ -7,9 +7,9 @@ import tempfile
 from pathlib import Path
 
 
-from infrastructure.core.file_inventory import FileInventoryEntry
+from infrastructure.core.files.inventory import FileInventoryEntry
 from infrastructure.core.pipeline import PipelineStageResult
-from infrastructure.core.pipeline_summary import (
+from infrastructure.core.pipeline.summary import (
     PipelineSummary,
     PipelineSummaryGenerator,
     generate_pipeline_summary,

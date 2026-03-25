@@ -316,7 +316,7 @@ If validation fails, the pipeline starts fresh with a warning.
 
 ```bash
 # Check if checkpoint exists
-uv run python -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
+uv run python -c "from infrastructure.core.runtime.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
 
 # View checkpoint contents
 cat projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json | uv run python -m json.tool
@@ -596,6 +596,10 @@ projects/{name}/scripts/ (Project-Specific)
 - File logging functions
 
 This follows the thin orchestrator pattern: utilities in source, scripts orchestrate.
+
+## Documentation utilities
+
+- `generate_active_projects_doc.py` — writes `docs/_generated/active_projects.md` from `discover_projects()` (includes policy: link this file from guides; default path examples to `projects/code_project/`). Run after changing `projects/` layout: `uv run python scripts/generate_active_projects_doc.py`.
 
 ## Deploying with Different Project
 

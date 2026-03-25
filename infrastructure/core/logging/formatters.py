@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 from typing import ClassVar
 
-from infrastructure.core.logging_constants import EMOJIS, get_emoji_enabled
+from infrastructure.core.logging.constants import EMOJIS, get_emoji_enabled
 
 
 class JSONFormatter(logging.Formatter):

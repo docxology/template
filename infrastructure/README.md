@@ -6,13 +6,36 @@ Reusable build tools, validation systems, and integration components that suppor
 
 The infrastructure layer provides generic, reusable functionality that can be applied across different research projects. All modules follow the **thin orchestrator pattern** - scripts coordinate business logic implemented in these infrastructure modules.
 
+## Agent skills (`SKILL.md`)
+
+Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (or `@.cursor/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`. When editing under `infrastructure/`, Cursor can apply [`.cursor/rules/infrastructure-skills.mdc`](../.cursor/rules/infrastructure-skills.mdc) (globs `infrastructure/**`) and the always-on [`.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc).
+
+| Path | Frontmatter `name` |
+|------|-------------------|
+| [SKILL.md](SKILL.md) | `infrastructure-overview` |
+| [config/SKILL.md](config/SKILL.md) | `infrastructure-config` |
+| [core/SKILL.md](core/SKILL.md) | `infrastructure-core` |
+| [docker/SKILL.md](docker/SKILL.md) | `infrastructure-docker` |
+| [documentation/SKILL.md](documentation/SKILL.md) | `infrastructure-documentation` |
+| [llm/SKILL.md](llm/SKILL.md) | `infrastructure-llm` |
+| [project/SKILL.md](project/SKILL.md) | `infrastructure-project` |
+| [publishing/SKILL.md](publishing/SKILL.md) | `infrastructure-publishing` |
+| [rendering/SKILL.md](rendering/SKILL.md) | `infrastructure-rendering` |
+| [reporting/SKILL.md](reporting/SKILL.md) | `infrastructure-reporting` |
+| [scientific/SKILL.md](scientific/SKILL.md) | `infrastructure-scientific` |
+| [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` |
+| [steganography/SKILL.md](steganography/SKILL.md) | `infrastructure-steganography` |
+| [validation/SKILL.md](validation/SKILL.md) | `infrastructure-validation` |
+
+Pair each `SKILL.md` with the matching **`AGENTS.md`** for full API tables.
+
 ## Module Categories
 
 ```mermaid
 graph TD
     subgraph "🔧 Core Infrastructure"
         CORE[core/<br/>Fundamental utilities<br/>Logging, config, progress]
-        EXCEPTIONS[core/exceptions.py<br/>Exception hierarchy<br/>Context preservation]
+        EXCEPTIONS[core/runtime/exceptions.py<br/>Exception hierarchy<br/>Context preservation]
     end
 
     subgraph "📝 Document Processing"
@@ -52,12 +75,14 @@ graph TD
     class REPORTING build
 ```
 
+Diagrams above are selective. These packages also exist under `infrastructure/`: **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor).
+
 ## Infrastructure Dependencies
 
 ```mermaid
 flowchart TD
     subgraph "📋 Project Scripts"
-        ANALYSIS[analysis_pipeline.py<br/>Data processing & figures]
+        ANALYSIS[analysis_pipeline/pipeline.py<br/>Data processing & figures]
         FIGURES[example_figure.py<br/>Visualization scripts]
     end
 
@@ -110,25 +135,25 @@ flowchart TD
     B --> I[Scientific Module]
     B --> J[Reporting Module]
 
-    C --> K[exceptions.py<br/>Base exception classes]
-    C --> L[logging_utils.py<br/>Unified logging system]
-    C --> M[config_loader.py<br/>YAML configuration]
-    C --> N[progress.py<br/>Progress tracking]
-    C --> O[checkpoint.py<br/>Pipeline state]
-    C --> P[retry.py<br/>Exponential backoff]
-    C --> Q[stage_monitor.py<br/>Resource monitoring]
-    C --> R[environment.py<br/>Setup validation]
-    C --> S[script_discovery.py<br/>Dynamic discovery]
-    C --> T[file_operations.py<br/>I/O utilities]
+    C --> K[runtime/exceptions.py<br/>Base exception classes]
+    C --> L[logging/logging_utils.py<br/>Unified logging system]
+    C --> M[config/config_loader.py<br/>YAML configuration]
+    C --> N[runtime/progress.py<br/>Progress tracking]
+    C --> O[runtime/checkpoint.py<br/>Pipeline state]
+    C --> P[runtime/retry.py<br/>Exponential backoff]
+    C --> Q[runtime/stage_monitor.py<br/>Resource monitoring]
+    C --> R[runtime/environment.py<br/>Setup validation]
+    C --> S[runtime/script_discovery.py<br/>Dynamic discovery]
+    C --> T[files/file_operations.py<br/>I/O utilities]
 
     D --> U[figure_manager.py<br/>Figure registration]
     D --> V[image_manager.py<br/>Image handling]
     D --> W[markdown_integration.py<br/>Auto-insertion]
     D --> X[glossary_gen.py<br/>API documentation]
 
-    E --> Y[pdf_validator.py<br/>PDF quality checks]
-    E --> Z[markdown_validator.py<br/>Markdown validation]
-    E --> AA[integrity.py<br/>Cross-reference validation]
+    E --> Y[output/pdf_validator.py<br/>PDF quality checks]
+    E --> Z[content/markdown_validator.py<br/>Markdown validation]
+    E --> AA[integrity/integrity.py<br/>Cross-reference validation]
 
     F --> BB[core.py<br/>RenderManager orchestrator]
     F --> CC[latex_utils.py<br/>LaTeX processing]
@@ -330,7 +355,7 @@ infrastructure/new_module/
 ├── __init__.py      # Public API exports
 ├── core.py          # Main functionality
 ├── utils.py         # Helper functions
-├── cli.py           # Command-line interface (if needed)
+├── runtime/cli.py           # Command-line interface (if needed)
 ├── AGENTS.md        # Technical documentation
 └── README.md        # Quick reference
 ```

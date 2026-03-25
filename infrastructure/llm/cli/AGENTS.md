@@ -354,7 +354,7 @@ if args.structured:
 - `infrastructure.llm.templates` - Template system
 
 **Shared Infrastructure:**
-- `infrastructure.core.logging_utils` - Logging integration
+- `infrastructure.core.logging.utils` - Logging integration
 - `infrastructure.core.exceptions` - Error handling
 
 ### Import Structure
@@ -369,7 +369,7 @@ from infrastructure.llm.core.config import LLMConfig, GenerationOptions
 from infrastructure.llm.utils.ollama import select_best_model, is_ollama_running
 
 # Shared infrastructure
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.exceptions import LLMConnectionError
 ```
 

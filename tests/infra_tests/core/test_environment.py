@@ -7,7 +7,7 @@ No mocks - uses actual system state and temp directories.
 import os
 
 
-from infrastructure.core.environment import (
+from infrastructure.core.runtime.environment import (
     check_dependencies,
     check_python_version,
     get_subprocess_env,

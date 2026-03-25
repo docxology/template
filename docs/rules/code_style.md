@@ -43,7 +43,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 from project.src.data_processing import clean_data
 
 # ❌ BAD: Not grouped or ordered
@@ -125,7 +125,7 @@ Use Black with these settings:
 
 ```bash
 # Format specific file
-black infrastructure/core/config_loader.py
+black infrastructure/core/config/loader.py
 
 # Format directory
 black infrastructure/core/
@@ -176,8 +176,8 @@ from typing import Dict, List, Optional
 import numpy as np
 import pandas as pd
 
-from infrastructure.core.exceptions import ValidationError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.runtime.exceptions import ValidationError
+from infrastructure.core.logging.logging_utils import get_logger
 ```
 
 ### isort Settings
@@ -196,7 +196,7 @@ known_third_party = ["numpy", "pandas", "pytest"]
 
 ```bash
 # Sort imports in file
-isort infrastructure/core/config_loader.py
+isort infrastructure/core/config/loader.py
 
 # Sort imports in directory
 isort infrastructure/core/
@@ -231,7 +231,7 @@ per-file-ignores =
 
 ```bash
 # Lint specific file
-flake8 infrastructure/core/config_loader.py
+flake8 infrastructure/core/config/loader.py
 
 # Lint directory
 flake8 infrastructure/core/
@@ -386,7 +386,7 @@ __all__ = ["process_data", "validate_input", "DataConfig"]
 # core.py - Main implementation
 """Core data processing functionality."""
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 

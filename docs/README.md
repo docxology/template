@@ -2,11 +2,13 @@
 
 > **Documentation hub** for the Research Project Template
 
-**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md)
+**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md) | [GitHub / CI](../.github/README.md)
 
 ## Purpose
 
 The `docs/` directory contains project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
+
+Machine-generated snippets (including the authoritative list of active `projects/` workspaces) live under [`_generated/`](_generated/README.md). Human-written pages should link there instead of copying project rosters; concrete examples should use [`projects/code_project/`](../projects/code_project/) as the control-positive layout.
 
 ## Documentation Navigation Map
 

@@ -66,7 +66,7 @@ from ..reporting import generate_pipeline_report  # DON'T
 
 ```python
 # Good: Use infrastructure exceptions
-from infrastructure.core.exceptions import (
+from infrastructure.core.runtime.exceptions import (
     ReportingError, 
     LLMConnectionError,
     RenderingError
@@ -83,7 +83,7 @@ raise ReportingError(
 
 ```python
 # Good: Use infrastructure logging
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 logger.info(f"Processing {count} items")
@@ -246,7 +246,7 @@ Infrastructure modules are integrated into the build pipeline through:
 **Pipeline Entry Points**: Two orchestrators available:
 
 - `./run.sh --pipeline`: 9 stages (shown as [1/9]..[9/9]) with an initial clean step shown as [0/9]; optional LLM stages are included when configured/enabled
-- `uv run python scripts/execute_pipeline.py --core-only`: core pipeline without LLM stages
+- `uv run python scripts/execute_pipeline.py --project {name} --core-only`: core pipeline without LLM stages
 
 Update these scripts to discover and use new infrastructure modules as needed.
 
@@ -326,8 +326,8 @@ __all__ = [
 ```python
 """Core functionality for example module."""
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.exceptions import ValidationError
+from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.runtime.exceptions import ValidationError
 
 logger = get_logger(__name__)
 
@@ -421,7 +421,7 @@ class ExampleConfig:
 """Command-line interface for example module."""
 
 import argparse
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 from .core import process_data
 from .config import ExampleConfig
 

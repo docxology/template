@@ -11,10 +11,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from infrastructure.core.file_inventory import FileInventoryEntry, FileInventoryManager
-from infrastructure.core.logging_helpers import format_duration
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.pipeline import PipelineStageResult
+from infrastructure.core.files.inventory import FileInventoryEntry, FileInventoryManager
+from infrastructure.core.logging.helpers import format_duration
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.executor import PipelineStageResult
 
 logger = get_logger(__name__)
 

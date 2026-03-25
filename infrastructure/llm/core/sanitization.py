@@ -17,7 +17,7 @@ from typing import Any
 # Both names are valid here; SecurityError is used for backwards compatibility with
 # call sites that catch SecurityError specifically.
 from infrastructure.core.exceptions import SecurityError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.security import get_security_validator
 
 logger = get_logger(__name__)

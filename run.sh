@@ -318,7 +318,7 @@ clean_output_directories() {
 
     # Use Python function that handles multi-project structure correctly
     $(get_python_cmd) -c "
-from infrastructure.core.file_operations import clean_output_directories
+from infrastructure.core.files.operations import clean_output_directories
 from pathlib import Path
 import sys
 

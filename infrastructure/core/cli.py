@@ -12,8 +12,8 @@ import argparse
 import sys
 from pathlib import Path
 
-from infrastructure.core.file_inventory import FileInventoryManager
-from infrastructure.core.logging_utils import get_logger, setup_logger
+from infrastructure.core.files.inventory import FileInventoryManager
+from infrastructure.core.logging.utils import get_logger, setup_logger
 from infrastructure.core.errors import (
     CLI_COMMAND_FAILED,
     CLI_UNKNOWN_COMMAND,
@@ -29,7 +29,7 @@ from infrastructure.core.errors import (
     PROJECTS_INCOMPLETE,
 )
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
-from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 
 logger = get_logger(__name__)
 

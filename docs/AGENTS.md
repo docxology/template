@@ -22,6 +22,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `security/` | Security documentation and policies |
 | `rules/` | Development standards and guidelines (formerly .cursorrules) |
 | `streams/` | Timestamped notes for livestreams and recorded talks |
+| `_generated/` | Machine-generated snippets; authoritative active `projects/` names in `active_projects.md` — link there instead of duplicating rosters in guides |
 
 ## Key Conventions
 
@@ -56,12 +57,13 @@ If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/
 
 **Fix:** Add missing packages to root `pyproject.toml`, then `uv sync`.
 
-**Projects and their required root packages:**
+**Root venv vs project `pyproject.toml`:**
 
-| Project | Location | Extra packages needed in root venv |
-| --- | --- | --- |
-| `code_project` | `projects/` (active) | has local `.venv/` — no root venv issue |
-| `template` | `projects/` (active) | `matplotlib` (must be core dep, not optional group) |
+| Scope | Notes |
+| --- | --- |
+| [`projects/code_project/`](../projects/code_project/) | Stable exemplar; often uses a local `projects/code_project/.venv/`. |
+| Any other `projects/{name}/` | Listed in [_generated/active_projects.md](_generated/active_projects.md). If that project has **no** `.venv/`, every package in its `pyproject.toml` must also appear in the **root** `pyproject.toml`. |
+| Plotting | `matplotlib` must be in root `[project.dependencies]` (not only optional groups) when analysis needs it under the root interpreter. |
 
 ### ⚠️ Critical Rule: `matplotlib` Must be in Core Dependencies
 
@@ -109,8 +111,8 @@ Projects are tracked across three sibling directories:
 To run the pipeline against a non-default directory (e.g., for smoke-testing an in-progress project without moving it):
 
 ```python
-from infrastructure.core.pipeline_types import PipelineConfig
-from infrastructure.core.pipeline import PipelineExecutor
+from infrastructure.core.pipeline.types import PipelineConfig
+from infrastructure.core.pipeline.pipeline import PipelineExecutor
 
 config = PipelineConfig(
     project_name="my_wip_project",
@@ -121,4 +123,4 @@ executor = PipelineExecutor(config)
 executor.execute_core_pipeline()
 ```
 
-The `projects_dir` field defaults to `"projects"`, preserving the standard `./run.sh` behaviour. All infrastructure modules (`discovery.py`, `script_discovery.py`, `checkpoint.py`, `config_loader.py`, etc.) respect `PipelineConfig.project_dir` and the `projects_dir` parameter where applicable.
+The `projects_dir` field on `PipelineConfig` defaults to `"projects"`, preserving the standard `./run.sh` behaviour. The resolved project root path is the read-only property `project_dir` (`repo_root / projects_dir / project_name`). Call sites and helpers that accept an explicit directory typically take a `projects_dir` string (or derive paths from `PipelineConfig`).

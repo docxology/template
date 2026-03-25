@@ -12,7 +12,7 @@ except ImportError:
     requests = None  # type: ignore[assignment]
 
 from infrastructure.core.exceptions import PublishingError, UploadError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

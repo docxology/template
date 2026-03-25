@@ -48,7 +48,7 @@ from template import (  # noqa: E402  (path setup must precede import)
     render_all_chapters,
     save_metrics_json,
 )
-from infrastructure.core.logging_utils import get_logger  # noqa: E402
+from infrastructure.core.logging.utils import get_logger  # noqa: E402
 
 logger = get_logger(__name__)
 

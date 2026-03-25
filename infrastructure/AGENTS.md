@@ -7,31 +7,45 @@ The Infrastructure layer provides reusable, modular tools for building, validati
 ## Modular Architecture (v2.1)
 
 The infrastructure has been reorganized into focused modules grouping related functionalities.
-Each module also has a `SKILL.md` file for Claude Code skill discovery.
+Each subpackage has a `SKILL.md` file (YAML frontmatter) for agent skill discovery in Cursor, Claude Code, and similar tools—see also the canonical list in `infrastructure/SKILL.md` and the machine-readable manifest `.cursor/skill_manifest.json` (maintained by `infrastructure/skills/`). In this repository, `.cursor/rules/infrastructure-skills.mdc` applies when working under `infrastructure/` (globs `infrastructure/**`), and `.cursor/rules/skill-manifest.mdc` is always on for the manifest pointer.
 
 ```text
 infrastructure/
 ├── SKILL.md        # Top-level infrastructure skill
 ├── core/           # Foundation utilities
-│   ├── exceptions.py       # Exception hierarchy with context
-│   ├── logging_utils.py    # Unified Python logging
-│   ├── config_loader.py    # Configuration management
-│   ├── pipeline.py         # Pipeline execution system
-│   ├── multi_project.py    # Multi-project orchestration
-│   ├── checkpoint.py       # Pipeline state persistence
-│   ├── retry.py            # Exponential backoff retries
-│   ├── function_profiler.py # Function-level performance profiling
-│   ├── security.py         # Security & rate limiting
-│   ├── environment.py      # Environment setup & validation
-│   ├── file_operations.py  # File I/O utilities
+│   ├── runtime/exceptions.py       # Exception hierarchy with context
+│   ├── logging/logging_utils.py    # Unified Python logging
+│   ├── config/config_loader.py    # Configuration management
+│   ├── pipeline/pipeline.py         # Pipeline execution system
+│   ├── pipeline/multi_project.py    # Multi-project orchestration
+│   ├── runtime/checkpoint.py       # Pipeline state persistence
+│   ├── runtime/retry.py            # Exponential backoff retries
+│   ├── runtime/function_profiler.py # Function-level performance profiling
+│   ├── runtime/security.py         # Security & rate limiting
+│   ├── runtime/environment.py      # Environment setup & validation
+│   ├── files/file_operations.py  # File I/O utilities
+│   └── SKILL.md, AGENTS.md, README.md
+├── config/         # Repository configuration templates
+│   ├── .env.template        # Example environment variables
+│   ├── secure_config.yaml   # Default steganography / secure settings
+│   └── SKILL.md, AGENTS.md
+├── docker/         # Containerization
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── SKILL.md, AGENTS.md
+├── skills/         # SKILL.md discovery; .cursor/skill_manifest.json generation
+│   ├── __init__.py
+│   ├── discovery.py
+│   ├── runtime/cli.py
+│   ├── __main__.py
 │   └── SKILL.md, AGENTS.md, README.md
 ├── validation/     # Quality & validation tools
-│   ├── pdf_validator.py      # PDF rendering validation
-│   ├── markdown_validator.py # Markdown structure validation
-│   ├── integrity.py          # File integrity & cross-references
-│   ├── audit_orchestrator.py # Comprehensive audit coordination
+│   ├── output/pdf_validator.py      # PDF rendering validation
+│   ├── content/markdown_validator.py # Markdown structure validation
+│   ├── integrity/integrity.py          # File integrity & cross-references
+│   ├── repo/audit_orchestrator.py # Comprehensive audit coordination
 │   ├── repo_scanner.py       # Repository-wide scanning
-│   ├── cli.py                # CLI for validation tools
+│   ├── runtime/cli.py                # CLI for validation tools
 │   └── SKILL.md, AGENTS.md, README.md
 ├── documentation/  # Documentation & figure management
 │   ├── figure_manager.py       # Automatic figure numbering
@@ -61,7 +75,7 @@ infrastructure/
 │   ├── slides_renderer.py   # Beamer/Reveal.js slides
 │   ├── web_renderer.py      # HTML generation
 │   ├── latex_utils.py       # LaTeX utilities
-│   ├── cli.py               # CLI for rendering
+│   ├── runtime/cli.py               # CLI for rendering
 │   └── SKILL.md, AGENTS.md, README.md
 ├── publishing/     # Academic publishing & dissemination
 │   ├── api.py               # Platform API clients (Zenodo)
@@ -69,7 +83,7 @@ infrastructure/
 │   ├── metadata.py          # Metadata extraction/normalization
 │   ├── package.py           # Submission/release packaging
 │   ├── platforms.py         # Platform routing and helpers
-│   ├── cli.py               # CLI entry point
+│   ├── runtime/cli.py               # CLI entry point
 │   ├── publish_cli.py       # Publishing-oriented CLI wrapper
 │   └── SKILL.md, AGENTS.md, README.md
 ├── reporting/      # Pipeline reporting & error aggregation
@@ -93,7 +107,7 @@ infrastructure/
 
 ### Core Module
 
-#### exceptions.py
+#### runtime/exceptions.py
 
 - `class TemplateError(Exception):`
 - `class ConfigurationError(TemplateError):`
@@ -116,7 +130,7 @@ infrastructure/
 - `def format_file_context(file_path, line=None) -> dict:`
 - `def chain_exceptions(new_exception, original) -> TemplateError:`
 
-#### logging_utils.py
+#### logging/logging_utils.py
 
 - `class ProjectLogger:`
 - `def get_project_logger(name: str, level: Optional[int] = None) -> ProjectLogger:`
@@ -137,7 +151,7 @@ infrastructure/
 - `def log_stage_with_eta(stage_name: str, current: int, total: int, ...) -> None:`
 - `def log_resource_usage(logger: Optional[logging.Logger] = None) -> None:`
 
-#### config_loader.py
+#### config/config_loader.py
 
 - `def load_config(config_path: Path | str) -> Optional[Dict[str, Any]]:`
 - `def find_config_file(repo_root: Path | str) -> Optional[Path]:`
@@ -147,7 +161,7 @@ infrastructure/
 - `def format_author_name(authors: List[AuthorConfig]) -> str:`
 - `def format_author_details(authors: List[AuthorConfig], doi: str = "") -> str:`
 
-#### checkpoint.py
+#### runtime/checkpoint.py
 
 - `class PipelineCheckpoint:`
 - `class CheckpointManager:`
@@ -156,7 +170,7 @@ infrastructure/
 - `def load_checkpoint(checkpoint_dir: Path) -> Optional[PipelineCheckpoint]:`
 - `def validate_checkpoint(checkpoint: PipelineCheckpoint) -> bool:`
 
-#### file_operations.py
+#### files/file_operations.py
 
 - `def clean_output_directory(output_dir: Path, project_name: str) -> None:`
 - `def copy_final_deliverables(output_dir: Path, final_dir: Path, project_name: str) -> None:`
@@ -164,7 +178,7 @@ infrastructure/
 - `def get_file_size_mb(file_path: Path) -> float:`
 - `def calculate_directory_size(directory: Path) -> int:`
 
-#### function_profiler.py
+#### runtime/function_profiler.py
 
 - `class ProfilingMetrics:`
 - `class CodeProfiler:`
@@ -174,13 +188,13 @@ infrastructure/
 
 ### Validation Module
 
-#### pdf_validator.py
+#### output/pdf_validator.py
 
 - `def validate_pdf_rendering(pdf_path: Path) -> dict:`
 - `def extract_text_from_pdf(pdf_path: Path) -> str:`
 - `def scan_for_issues(pdf_path: Path) -> List[dict]:`
 
-#### markdown_validator.py
+#### content/markdown_validator.py
 
 - `def validate_markdown(manuscript_dir: Path) -> dict:`
 - `def find_markdown_files(directory: Path) -> List[Path]:`
@@ -188,7 +202,7 @@ infrastructure/
 - `def validate_refs(md_content: str) -> List[str]:`
 - `def validate_math(md_content: str) -> List[str]:`
 
-#### integrity.py
+#### integrity/integrity.py
 
 - `def verify_output_integrity(output_dir: Path) -> dict:`
 - `def verify_file_integrity(file_path: Path) -> bool:`
@@ -197,12 +211,12 @@ infrastructure/
 - `def verify_academic_standards(manuscript_dir: Path) -> dict:`
 - `def generate_integrity_report(report: dict) -> str:`
 
-#### audit_orchestrator.py
+#### repo/audit_orchestrator.py
 
 - `def run_comprehensive_audit(project_path: Path) -> dict:`
 - `def generate_audit_report(audit_results: dict) -> str:`
 
-#### issue_categorizer.py
+#### content/issue_categorizer.py
 
 - `def categorize_by_type(issues: List) -> dict:`
 - `def assign_severity(issues: List) -> List:`
@@ -337,7 +351,7 @@ infrastructure/
 - Each module has:
   - `__init__.py` - Public API exports
   - `core.py` - Core business logic (100% tested)
-  - `cli.py` - Command-line interface (optional)
+  - `runtime/cli.py` - Command-line interface (optional)
   - `config.py` - Configuration management (optional)
   - `AGENTS.md` - Detailed documentation
   - `README.md` - Quick reference
@@ -349,48 +363,48 @@ infrastructure/
 
 **Foundation utilities used by all other modules.**
 
-- `exceptions.py` - Exception hierarchy with context preservation
+- `runtime/exceptions.py` - Exception hierarchy with context preservation
   - `TemplateError` - Base exception
   - Module-specific exceptions (LLM, Rendering, Publishing)
   - Context utilities and exception chaining
 
-- `logging_utils.py` - Unified Python logging system
+- `logging/logging_utils.py` - Unified Python logging system
   - Environment-based configuration (LOG_LEVEL 0-3)
   - Context managers for operation tracking
   - Decorators for function logging
   - TTY-aware color output
 
-- `config_loader.py` - Configuration management
+- `config/config_loader.py` - Configuration management
   - YAML configuration file loading
   - Environment variable integration
   - Author and metadata formatting
 
-- `progress.py` - Progress tracking utilities
+- `runtime/progress.py` - Progress tracking utilities
   - `ProgressBar` - Visual progress indicators
   - `SubStageProgress` - Nested progress tracking
 
-- `checkpoint.py` - Pipeline checkpoint management
+- `runtime/checkpoint.py` - Pipeline checkpoint management
   - `CheckpointManager` - Save/restore pipeline state
   - `PipelineCheckpoint` - Checkpoint data structures
 
-- `retry.py` - Retry logic with backoff
+- `runtime/retry.py` - Retry logic with backoff
   - `retry_with_backoff` - Exponential backoff retries
   - `RetryableOperation` - Retryable operation wrapper
 
-- `function_profiler.py` - Function-level performance profiling
+- `runtime/function_profiler.py` - Function-level performance profiling
   - `CodeProfiler` - cProfile/tracemalloc-based profiling
   - `monitor_performance` - Decorator for function monitoring
 
-- `environment.py` - Environment setup and validation
+- `runtime/environment.py` - Environment setup and validation
   - Dependency checking and installation
   - Build tool verification
   - Directory structure setup
 
-- `script_discovery.py` - Script discovery and execution
+- `runtime/script_discovery.py` - Script discovery and execution
   - `discover_analysis_scripts` - Find project scripts
   - `discover_orchestrators` - Find orchestrator scripts
 
-- `file_operations.py` - File management utilities
+- `files/file_operations.py` - File management utilities
   - `clean_output_directory` - Cleanup operations
   - `copy_final_deliverables` - Output copying
 
@@ -401,25 +415,25 @@ from infrastructure.core import (
     get_logger, TemplateError, load_config,
     CheckpointManager, ProgressBar
 )
-from infrastructure.core.function_profiler import CodeProfiler
+from infrastructure.core.runtime.function_profiler import CodeProfiler
 ```
 
 ### Validation Module (`validation/`)
 
 **Quality assurance and validation tools.**
 
-- `pdf_validator.py` - PDF rendering validation
+- `output/pdf_validator.py` - PDF rendering validation
   - Text extraction and analysis
   - Issue detection (unresolved references, warnings)
   - Document structure verification
 
-- `markdown_validator.py` - Markdown structure validation
+- `content/markdown_validator.py` - Markdown structure validation
   - Image reference validation
   - Cross-reference verification
   - Mathematical equation validation
   - Link integrity checking
 
-- `integrity.py` - File integrity & cross-reference validation
+- `integrity/integrity.py` - File integrity & cross-reference validation
   - SHA-256 hash verification
   - Cross-reference validation
   - Data consistency checking
@@ -428,9 +442,9 @@ from infrastructure.core.function_profiler import CodeProfiler
 **CLI:**
 
 ```bash
-python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf
-python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
-python3 -m infrastructure.validation.cli integrity output/{project_name}/
+python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf
+python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
+python3 -m infrastructure.validation.cli.main integrity output/{project_name}/
 ```
 
 ### Documentation Module (`documentation/`)
@@ -608,7 +622,7 @@ python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOK
 ### 2. Documentation
 
 - Each module includes:
-  - `SKILL.md` - Claude Code skill for auto-discovery
+  - `SKILL.md` - Agent skill descriptor (YAML frontmatter) for Cursor, Claude Code, and similar tools
   - `AGENTS.md` - Detailed architecture and API
   - `README.md` - Quick reference and examples
   - Inline docstrings for all public APIs
@@ -735,8 +749,8 @@ print(f"Published with DOI: {doi}")
 
 ```bash
 # Validate manuscript
-python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
-python3 -m infrastructure.validation.cli integrity output/{project_name}/
+python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
+python3 -m infrastructure.validation.cli.main integrity output/{project_name}/
 
 # Generate API documentation
 uv run python infrastructure/documentation/generate_glossary_cli.py \
@@ -785,10 +799,10 @@ If you see `ModuleNotFoundError: No module named 'infrastructure.xxx'`:
 1. Verify you're using the correct modular import path:
 
    ```python
-   from infrastructure.validation.pdf_validator import validate_pdf_rendering
+   from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
    from infrastructure.documentation.figure_manager import FigureManager
-   from infrastructure.core.config_loader import load_config
-   from infrastructure.core.logging_utils import get_logger
+   from infrastructure.core.config.loader import load_config
+   from infrastructure.core.logging.utils import get_logger
    from infrastructure.core.exceptions import TemplateError
    ```
 
@@ -827,7 +841,7 @@ Planned additions:
 **Module Documentation:**
 
 - Each module has detailed docs: `infrastructure/[module]/AGENTS.md`
-- Each module has a Claude Code skill: `infrastructure/[module]/SKILL.md`
+- Each module has a skill file: `infrastructure/[module]/SKILL.md` (hub: [`SKILL.md`](SKILL.md))
 - Quick reference guides: `infrastructure/[module]/README.md`
 
 **Cross-Module Reference:**
