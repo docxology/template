@@ -10,13 +10,9 @@ This script performs comprehensive checks for:
 
 from __future__ import annotations
 
-import ast
 import re
 import subprocess
-from datetime import datetime
 import sys
-from collections import defaultdict
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -24,27 +20,24 @@ import yaml
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.docs.models import CompletenessGap, ScanAccuracyIssue
+from infrastructure.validation.repo._repo_ast import extract_imports, verify_import
+from infrastructure.validation.repo._repo_documented_commands import check_documented_commands
+from infrastructure.validation.repo._repo_scan_report import build_repo_scan_report
+from infrastructure.validation.repo.models import RepoScanResults
 
 logger = get_logger(__name__)
 
 # Backwards-compatible alias: tests and older callers refer to "AccuracyIssue".
-# Repo scans use the richer ScanAccuracyIssue schema (category/severity/message/details).
 AccuracyIssue = ScanAccuracyIssue
 
 
-@dataclass
-class RepoScanResults:
-    """Container for repository scan results.
-
-    Attributes:
-        accuracy_issues: Import verification failures, missing commands, etc.
-        completeness_gaps: Missing documentation, tests, or thin-orchestrator violations.
-        statistics: Aggregate metrics produced by each scan phase.
-    """
-
-    accuracy_issues: list[ScanAccuracyIssue] = field(default_factory=list)
-    completeness_gaps: list[CompletenessGap] = field(default_factory=list)
-    statistics: dict[str, Any] = field(default_factory=dict)
+def _find_repo_root_for_main() -> Path:
+    """Walk parents from this file until a directory containing pyproject.toml."""
+    here = Path(__file__).resolve().parent
+    for p in [here, *here.parents]:
+        if (p / "pyproject.toml").exists():
+            return p
+    return here.parents[3]
 
 
 class RepositoryScanner:
@@ -98,14 +91,12 @@ class RepositoryScanner:
 
     def _discover_structure(self) -> None:
         """Discover repository structure."""
-        # Find src modules
         src_dir = self.repo_root / "src"
         if src_dir.exists():
             for py_file in src_dir.glob("*.py"):
                 if py_file.name != "__init__.py":
                     self.src_modules.add(py_file.stem)
 
-        # Find scripts
         for script_dir in [
             self.repo_root / "scripts",
             self.repo_root / "repo_utilities",
@@ -115,13 +106,11 @@ class RepositoryScanner:
                     if py_file.name != "__init__.py":
                         self.script_files.append(py_file)
 
-        # Find tests
         tests_dir = self.repo_root / "tests"
         if tests_dir.exists():
             for test_file in tests_dir.glob("test_*.py"):
                 self.test_files.append(test_file)
 
-        # Find documented modules
         self._find_documented_modules()
 
         logger.info(f"Found {len(self.src_modules)} src/ modules")
@@ -144,7 +133,6 @@ class RepositoryScanner:
             for md_file in docs_dir.rglob("*.md"):
                 try:
                     content = md_file.read_text(encoding="utf-8")
-                    # Look for module references
                     for module in self.src_modules:
                         if module in content:
                             self.documented_modules.add(module)
@@ -153,18 +141,15 @@ class RepositoryScanner:
 
     def _check_code_accuracy(self) -> None:
         """Check code accuracy."""
-        issues = []
+        issues: list[ScanAccuracyIssue] = []
 
-        # Check if scripts can import src modules
         for script in self.script_files:
             try:
-                imports = self._extract_imports(script)
+                imports = extract_imports(script)
                 for imp in imports:
                     if imp.startswith("src.") or imp in self.src_modules:
-                        # Try to verify import would work
                         module_name = imp.replace("src.", "")
                         if module_name in self.src_modules:
-                            # Check if function/class exists
                             if not self._verify_import(script, module_name, imports[imp]):
                                 issues.append(
                                     ScanAccuracyIssue(
@@ -185,130 +170,34 @@ class RepositoryScanner:
                     )
                 )
 
-        # Check if documented commands exist
-        self._check_documented_commands()
+        self._check_documented_commands_into(issues)
 
         self.results.accuracy_issues.extend(issues)
         logger.info(f"Found {len(issues)} code accuracy issues")
 
     def _extract_imports(self, file_path: Path) -> dict[str, list[str]]:
-        """Extract imports from Python file."""
-        imports: dict[str, list[str]] = {}
-        try:
-            content = file_path.read_text(encoding="utf-8")
-            tree = ast.parse(content)
-
-            for node in ast.walk(tree):
-                if isinstance(node, ast.Import):
-                    for alias in node.names:
-                        imports[alias.name] = []
-                elif isinstance(node, ast.ImportFrom):
-                    module = node.module or ""
-                    for alias in node.names:
-                        if module not in imports:
-                            imports[module] = []
-                        imports[module].append(alias.name)
-        except (OSError, UnicodeDecodeError, SyntaxError) as e:
-            logger.debug(f"Failed to parse imports from script: {e}")
-
-        return imports
+        """Extract imports from a Python file (delegates to shared AST helper)."""
+        return extract_imports(file_path)
 
     def _verify_import(self, script_path: Path, module_name: str, items: list[str]) -> bool:
-        """Verify that imported items exist in module."""
-        module_path = self.repo_root / "src" / f"{module_name}.py"
-        if not module_path.exists():
-            return False
-
-        try:
-            content = module_path.read_text(encoding="utf-8")
-            tree = ast.parse(content)
-
-            defined = set()
-            for node in ast.walk(tree):
-                if isinstance(node, ast.FunctionDef):
-                    defined.add(node.name)
-                elif isinstance(node, ast.ClassDef):
-                    defined.add(node.name)
-
-            # Check if all imported items are defined
-            for item in items:
-                if item not in defined:
-                    return False
-            return True
-        except (OSError, UnicodeDecodeError, SyntaxError) as e:
-            logger.debug(f"Failed to verify imports in module {module_name}: {e}")
-            return False
+        """Verify imported symbols exist in src (script_path reserved for API stability)."""
+        _ = script_path
+        return verify_import(self.repo_root, module_name, items)
 
     def _check_documented_commands(self) -> None:
-        """Check if documented commands/scripts actually exist."""
-        issues = []
+        """Append documented-command issues to ``results`` (tests and scan phase 2)."""
+        self.results.accuracy_issues.extend(
+            check_documented_commands(self.repo_root, self.src_modules)
+        )
 
-        # Check README and docs for script references
-        for md_file in [self.repo_root / "README.md"] + list(
-            (self.repo_root / "docs").glob("*.md")
-        ):
-            if not md_file.exists():
-                continue
-            try:
-                content = md_file.read_text(encoding="utf-8")
-                # Look for script references (but exclude src/ modules and code examples)
-                script_pattern = r"`([\w/]+\.(?:py|sh))`|\./([\w/]+\.(?:py|sh))"
-                for match in re.finditer(script_pattern, content):
-                    script_ref = match.group(1) or match.group(2)
-
-                    # Skip if it's a src/ module (those are documented, not scripts)
-                    if script_ref.startswith("src/") or script_ref in self.src_modules:
-                        continue
-
-                    # Skip if it's in a code block (likely an example)
-                    before_match = content[: match.start()]
-                    code_block_count = before_match.count("```")
-                    if code_block_count % 2 == 1:  # Inside a code block
-                        continue
-
-                    # Check if it exists as a script
-                    script_path = self.repo_root / script_ref
-                    # Also check common script locations
-                    if not script_path.exists():
-                        # Check scripts/ and repo_utilities/
-                        for script_dir in ["scripts", "repo_utilities"]:
-                            alt_path = self.repo_root / script_dir / Path(script_ref).name
-                            if alt_path.exists():
-                                break
-                        else:
-                            # Only report if it's clearly a script reference (has .sh or in scripts/)  # noqa: E501
-                            # Skip if it's in EXAMPLES.md (those are templates/examples)
-                            if (
-                                md_file.name == "EXAMPLES.md"
-                                and "Create" in content[max(0, match.start() - 50) : match.start()]
-                            ):
-                                continue
-
-                            if (
-                                script_ref.endswith(".sh")
-                                or "scripts/" in script_ref
-                                or "repo_utilities/" in script_ref
-                            ):
-                                line_num = content[: match.start()].count("\n") + 1
-                                issues.append(
-                                    ScanAccuracyIssue(
-                                        category="command",
-                                        severity="error",
-                                        file=str(md_file.relative_to(self.repo_root)),
-                                        line=line_num,
-                                        message=f"Documented script does not exist: {script_ref}",
-                                    )
-                                )
-            except (OSError, UnicodeDecodeError) as e:
-                logger.debug(f"Failed to check code accuracy in {md_file}: {e}")
-
-        self.results.accuracy_issues.extend(issues)
+    def _check_documented_commands_into(self, issues: list[ScanAccuracyIssue]) -> None:
+        """Merge documented-command findings into a local issues list (phase 2)."""
+        issues.extend(check_documented_commands(self.repo_root, self.src_modules))
 
     def _check_completeness(self) -> None:
         """Check completeness."""
         gaps = []
 
-        # Check if all src modules are documented
         for module in self.src_modules:
             if module not in self.documented_modules:
                 gaps.append(
@@ -320,7 +209,6 @@ class RepositoryScanner:
                     )
                 )
 
-        # Check if all src modules have tests
         tested_modules = set()
         for test_file in self.test_files:
             test_name = test_file.stem.replace("test_", "")
@@ -338,9 +226,7 @@ class RepositoryScanner:
                     )
                 )
 
-        # Check if scripts are documented
         documented_scripts = set()
-        # Check multiple documentation locations
         doc_locations = [
             self.repo_root / "README.md",
             self.repo_root / "scripts" / "README.md",
@@ -374,7 +260,6 @@ class RepositoryScanner:
 
     def _check_test_coverage(self) -> None:
         """Check test coverage."""
-        # Try to run pytest (without coverage to avoid dependency issues)
         try:
             result = subprocess.run(
                 [sys.executable, "-m", "pytest", "tests/", "-q", "--tb=short"],
@@ -386,7 +271,6 @@ class RepositoryScanner:
             if result.returncode == 0:
                 logger.info("Test suite passes")
             else:
-                # Only report if there are actual test failures (not just missing deps)
                 if "FAILED" in result.stdout or "ERROR" in result.stdout:
                     self.results.accuracy_issues.append(
                         ScanAccuracyIssue(
@@ -413,18 +297,16 @@ class RepositoryScanner:
         """Check configuration accuracy."""
         issues = []
 
-        # Check config.yaml structure
         config_path = self.repo_root / "project" / "manuscript" / "config.yaml"
         example_path = self.repo_root / "project" / "manuscript" / "config.yaml.example"
 
         if config_path.exists() and example_path.exists():
             try:
-                with open(config_path, "r") as f:
+                with open(config_path, encoding="utf-8") as f:
                     config = yaml.safe_load(f)
-                with open(example_path, "r") as f:
+                with open(example_path, encoding="utf-8") as f:
                     example = yaml.safe_load(f)
 
-                # Check structure matches
                 if not self._configs_match(config, example):
                     issues.append(
                         ScanAccuracyIssue(
@@ -449,14 +331,12 @@ class RepositoryScanner:
 
     def _configs_match(self, config: dict[str, Any], example: dict[str, Any]) -> bool:
         """Check if config structures match."""
-        # Simplified check - just verify top-level keys
         if not config or not example:
             return False
 
         config_keys = set(config.keys())
         example_keys = set(example.keys())
 
-        # Config should have same or subset of example keys
         return config_keys.issubset(example_keys) or config_keys == example_keys
 
     def _check_thin_orchestrator_pattern(self) -> None:
@@ -469,16 +349,14 @@ class RepositoryScanner:
 
             try:
                 content = script.read_text(encoding="utf-8")
-                imports = self._extract_imports(script)
+                imports = extract_imports(script)
 
-                # Check if script imports from src/
                 has_src_import = False
                 for imp in imports:
                     if imp in self.src_modules or "src" in imp.lower():
                         has_src_import = True
                         break
 
-                # Check for business logic patterns (simplified)
                 business_logic_patterns = [
                     r'def\s+\w+\([^)]*\):\s*\n\s*"""[^"]*algorithm',
                     r"def\s+\w+\([^)]*\):\s*\n\s*#\s*[Cc]ompute",
@@ -488,7 +366,6 @@ class RepositoryScanner:
                     if re.search(pattern, content, re.MULTILINE):
                         break
 
-                # Scripts should import from src, not implement business logic
                 if not has_src_import and script.parent.name == "scripts":
                     issues.append(
                         ScanAccuracyIssue(
@@ -513,68 +390,7 @@ class RepositoryScanner:
 
     def generate_report(self) -> str:
         """Generate comprehensive report."""
-        lines = [
-            "# Repository Accuracy and Completeness Scan Report",
-            "",
-            f"**Scan Date**: {datetime.now().isoformat()}",
-            "",
-            "## Executive Summary",
-            "",
-            f"- **Accuracy Issues**: {len(self.results.accuracy_issues)}",
-            f"- **Completeness Gaps**: {len(self.results.completeness_gaps)}",
-            "",
-            "## Accuracy Issues",
-            "",
-        ]
-
-        # Group by category
-        by_category = defaultdict(list)
-        for issue in self.results.accuracy_issues:
-            by_category[issue.category].append(issue)
-
-        for category, issues in sorted(by_category.items()):
-            lines.append(f"### {category.title()} Issues ({len(issues)})")
-            lines.append("")
-            for issue in issues[:20]:  # Limit to first 20
-                lines.append(f"- **{issue.severity.upper()}**: `{issue.file}`")
-                if issue.line:
-                    lines.append(f"  - Line {issue.line}: {issue.message}")
-                else:
-                    lines.append(f"  - {issue.message}")
-                if issue.details:
-                    lines.append(f"  - Details: {issue.details}")
-            if len(issues) > 20:
-                lines.append(f"- ... and {len(issues) - 20} more")
-            lines.append("")
-
-        lines.extend(["## Completeness Gaps", ""])
-
-        # Group by category
-        by_category = defaultdict(list)
-        for gap in self.results.completeness_gaps:
-            by_category[gap.category].append(gap)
-
-        for category, gaps in sorted(by_category.items()):
-            lines.append(f"### {category.title()} Gaps ({len(gaps)})")
-            lines.append("")
-            for gap in gaps:
-                lines.append(f"- **{gap.severity.upper()}**: {gap.item}")
-                lines.append(f"  - {gap.description}")
-            lines.append("")
-
-        lines.extend(
-            [
-                "## Recommendations",
-                "",
-                "1. Address all ERROR-level accuracy issues",
-                "2. Review WARNING-level issues for potential problems",
-                "3. Fill completeness gaps where appropriate",
-                "4. Ensure all src/ modules are tested and documented",
-                "",
-            ]
-        )
-
-        return "\n".join(lines)
+        return build_repo_scan_report(self.results)
 
 
 def main() -> int:
@@ -591,12 +407,11 @@ def main() -> int:
     Raises:
         OSError: If report file cannot be written to the docs directory.
     """
-    repo_root = Path(__file__).parent.parent
+    repo_root = _find_repo_root_for_main()
     scanner = RepositoryScanner(repo_root)
 
     results = scanner.scan_all()
 
-    # Generate report
     report = scanner.generate_report()
     report_path = repo_root / "docs" / "REPO_ACCURACY_COMPLETENESS_REPORT.md"
     _tmp = report_path.with_suffix(report_path.suffix + ".tmp")
@@ -615,7 +430,6 @@ def main() -> int:
     logger.info(f"  Accuracy Issues: {len(results.accuracy_issues)}")
     logger.info(f"  Completeness Gaps: {len(results.completeness_gaps)}")
 
-    # Count by severity
     error_count = sum(1 for i in results.accuracy_issues if i.severity == "error")
     warning_count = sum(1 for i in results.accuracy_issues if i.severity == "warning")
 

@@ -87,7 +87,7 @@ class QualityIssue:
 class ScanResults:
     """Container for doc-scanner scan results (doc_scanner.py output only).
 
-    Note: This is distinct from ``RepoScanResults`` (repo_scanner.py), which
+    Note: This is distinct from ``RepoScanResults`` (``repo/models.py``), which
     holds accuracy and completeness results from repository-wide scanning.
     Use ``ScanResults`` for documentation file enumeration; use
     ``RepoScanResults`` for accuracy/completeness audit results.

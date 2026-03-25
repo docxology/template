@@ -8,6 +8,7 @@ import logging
 import pytest
 
 from infrastructure.validation.repo import scanner as repo_scanner
+from infrastructure.validation.repo._repo_scan_report import build_repo_scan_report
 from infrastructure.validation.repo.scanner import (
     AccuracyIssue,
     CompletenessGap,
@@ -53,6 +54,13 @@ class TestDataClasses:
         assert results.accuracy_issues == []
         assert results.completeness_gaps == []
         assert results.statistics == {}
+
+    def test_build_repo_scan_report_empty(self) -> None:
+        """Report builder includes title and summary sections."""
+        text = build_repo_scan_report(RepoScanResults())
+        assert "# Repository Accuracy and Completeness Scan Report" in text
+        assert "## Executive Summary" in text
+        assert "## Completeness Gaps" in text
 
 
 class TestRepositoryScanner:

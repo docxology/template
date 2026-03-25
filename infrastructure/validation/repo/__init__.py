@@ -13,7 +13,8 @@ from infrastructure.validation.repo.issue_categorizer import (
     is_false_positive,
     prioritize_issues,
 )
-from infrastructure.validation.repo.scanner import RepoScanResults, RepositoryScanner
+from infrastructure.validation.repo.models import RepoScanResults
+from infrastructure.validation.repo.scanner import RepositoryScanner
 
 __all__ = [
     "RepoScanResults",
