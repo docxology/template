@@ -4,11 +4,11 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.89",
-      "total_size_bytes": 1986118,
+      "total_size_bytes": 1982975,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
-          "size_mb": "1.65",
+          "size_mb": "1.64",
           "path": "pdf/code_project_combined.pdf"
         },
         {
@@ -65,7 +65,7 @@
       "exists": true,
       "file_count": 72,
       "size_mb": "1.26",
-      "total_size_bytes": 1318718,
+      "total_size_bytes": 1318767,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
@@ -98,7 +98,7 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "1.52",
-      "total_size_bytes": 1592733,
+      "total_size_bytes": 1589476,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -152,7 +152,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.01",
-      "total_size_bytes": 8308,
+      "total_size_bytes": 8307,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -210,11 +210,11 @@
     }
   },
   "total_files": 112,
-  "total_size_mb": 4.926363945007324,
+  "total_size_mb": 4.920306205749512,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
-      "size_mb": "1.65",
+      "size_mb": "1.64",
       "category": "pdf",
       "path": "pdf/code_project_combined.pdf"
     },
@@ -275,12 +275,12 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8941097259521484,
+    "pdf": 1.8911123275756836,
     "web": 0.23426055908203125,
-    "slides": 1.2576274871826172,
-    "figures": 1.5189485549926758,
+    "slides": 1.257674217224121,
+    "figures": 1.5158424377441406,
     "data": 0.011018753051757812,
-    "reports": 0.007923126220703125,
+    "reports": 0.007922172546386719,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.002475738525390625

@@ -1,12 +1,12 @@
 {
   "project_name": "template",
-  "total_duration": 93.029,
+  "total_duration": 83.123,
   "total_stages": 7,
   "stages": [
     {
       "stage_name": "Clean Output Directories",
       "stage_num": 1,
-      "duration": 0.014,
+      "duration": 0.02,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -20,7 +20,7 @@
     {
       "stage_name": "Environment Setup",
       "stage_num": 2,
-      "duration": 1.947,
+      "duration": 1.687,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -34,7 +34,7 @@
     {
       "stage_name": "Project Tests",
       "stage_num": 3,
-      "duration": 29.176,
+      "duration": 25.453,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -48,7 +48,7 @@
     {
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "duration": 4.518,
+      "duration": 3.813,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -62,7 +62,7 @@
     {
       "stage_name": "PDF Rendering",
       "stage_num": 5,
-      "duration": 56.629,
+      "duration": 51.513,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -76,7 +76,7 @@
     {
       "stage_name": "Output Validation",
       "stage_num": 6,
-      "duration": 0.397,
+      "duration": 0.294,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -90,7 +90,7 @@
     {
       "stage_name": "Copy Outputs",
       "stage_num": 7,
-      "duration": 0.345,
+      "duration": 0.339,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -106,18 +106,18 @@
     {
       "warning_type": "slow_stage",
       "stage_name": "Project Tests",
-      "message": "Stage 'Project Tests' took 29.2s (2.0\u00d7 the average 13.3s)",
+      "message": "Stage 'Project Tests' took 25.5s (2.0\u00d7 the average 11.9s)",
       "suggestion": "Consider optimizing this stage or running it in parallel",
-      "value": 29.18,
-      "threshold": 26.58
+      "value": 25.45,
+      "threshold": 23.75
     },
     {
       "warning_type": "slow_stage",
       "stage_name": "PDF Rendering",
-      "message": "Stage 'PDF Rendering' took 56.6s (2.0\u00d7 the average 13.3s)",
+      "message": "Stage 'PDF Rendering' took 51.5s (2.0\u00d7 the average 11.9s)",
       "suggestion": "Consider optimizing this stage or running it in parallel",
-      "value": 56.63,
-      "threshold": 26.58
+      "value": 51.51,
+      "threshold": 23.75
     }
   ],
   "system_info": {},

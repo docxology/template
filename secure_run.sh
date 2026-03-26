@@ -109,6 +109,7 @@ fi
 if [[ "$STEG_ONLY" != "true" ]]; then
     log_header "STEP 1/2: Running Core/Interactive Pipeline"
     
+    export SECURE_RUN_ACTIVE=1
     if ! bash "$SCRIPT_DIR/run.sh" $PIPELINE_ARGS; then
         log_error "Pipeline failed — steganographic post-processing skipped"
         exit 1

@@ -66,5 +66,5 @@
   "module_steganography_has_readme_md": "true",
   "module_validation_has_readme_md": "true",
   "module_inventory_table": "| Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |\n|--------|:-----------:|:-------------:|:-------------:|-------------|\n| `config` | 0 | ✓ | ✓ | Configuration schemas |\n| `core` | 46 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |\n| `docker` | 0 | ✓ | ✓ | Containerisation |\n| `documentation` | 6 | ✓ | ✓ | `FigureManager`, `generate_glossary` |\n| `llm` | 35 | ✓ | ✓ | LLM review, literature search, translation |\n| `project` | 2 | ✓ | ✓ | `discover_projects`, workspace management |\n| `publishing` | 9 | ✓ | ✓ | Citation generation (APA, BibTeX, MLA), Zenodo |\n| `rendering` | 20 | ✓ | ✓ | PDF rendering, Pandoc filters, HTML reports |\n| `reporting` | 19 | ✓ | ✓ | Coverage parsing, executive reports |\n| `scientific` | 6 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |\n| `skills` | 4 | ✓ | ✓ | — |\n| `steganography` | 8 | ✓ | ✓ | Metadata injection, QR overlays, hashing |\n| `validation` | 35 | ✓ | ✓ | PDF validation, Markdown checking, CLI |",
-  "generated_at": "2026-03-26T14:34:52Z"
+  "generated_at": "2026-03-26T16:03:50Z"
 }

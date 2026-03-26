@@ -765,13 +765,19 @@ run_full_pipeline() {
     fi
 
     # Redirect output to log file while preserving terminal output
+    local exit_code=0
     if [[ -n "$PIPELINE_LOG_FILE" ]]; then
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
-        return ${PIPESTATUS[0]}  # Return Python script exit code
+        exit_code=${PIPESTATUS[0]}
     else
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-        return $?
+        exit_code=$?
     fi
+
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only --project "$project_name"
+    fi
+    return $exit_code
 }
 run_core_pipeline_no_llm() {
     local resume_flag="${1:-}"
@@ -793,13 +799,19 @@ run_core_pipeline_no_llm() {
     fi
 
     # Redirect output to log file while preserving terminal output
+    local exit_code=0
     if [[ -n "$PIPELINE_LOG_FILE" ]]; then
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
-        return ${PIPESTATUS[0]}  # Return Python script exit code
+        exit_code=${PIPESTATUS[0]}
     else
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-        return $?
+        exit_code=$?
     fi
+
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only --project "$project_name"
+    fi
+    return $exit_code
 }
 run_all_projects_full() {
     # Setup consolidated multi-project logging
@@ -808,9 +820,12 @@ run_all_projects_full() {
 
     # Use Python orchestrator script for multi-project execution with logging
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py"
+    local exit_code=$?
 
-    # Return the exit code from Python
-    return $?
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only
+    fi
+    return $exit_code
 }
 
 run_all_projects_core() {
@@ -820,9 +835,12 @@ run_all_projects_core() {
 
     # Use Python orchestrator script for multi-project execution with logging
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-llm
+    local exit_code=$?
 
-    # Return the exit code from Python
-    return $?
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only
+    fi
+    return $exit_code
 }
 
 
@@ -1070,9 +1088,12 @@ run_all_projects_full_no_infra() {
 
     # Use Python orchestrator script for multi-project execution with logging
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-infra-tests
+    local exit_code=$?
 
-    # Return the exit code from Python
-    return $?
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only
+    fi
+    return $exit_code
 }
 
 run_all_projects_core_no_infra() {
@@ -1082,9 +1103,12 @@ run_all_projects_core_no_infra() {
 
     # Use Python orchestrator script for multi-project execution with logging
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-infra-tests --no-llm
+    local exit_code=$?
 
-    # Return the exit code from Python
-    return $?
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only
+    fi
+    return $exit_code
 }
 
 run_full_pipeline_no_infra() {
@@ -1103,13 +1127,19 @@ run_full_pipeline_no_infra() {
     fi
 
     # Redirect output to log file while preserving terminal output
+    local exit_code=0
     if [[ -n "$PIPELINE_LOG_FILE" ]]; then
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
-        return ${PIPESTATUS[0]}  # Return Python script exit code
+        exit_code=${PIPESTATUS[0]}
     else
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-        return $?
+        exit_code=$?
     fi
+
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only --project "$project_name"
+    fi
+    return $exit_code
 }
 
 run_core_pipeline_no_llm_no_infra() {
@@ -1128,13 +1158,19 @@ run_core_pipeline_no_llm_no_infra() {
     fi
 
     # Redirect output to log file while preserving terminal output
+    local exit_code=0
     if [[ -n "$PIPELINE_LOG_FILE" ]]; then
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
-        return ${PIPESTATUS[0]}  # Return Python script exit code
+        exit_code=${PIPESTATUS[0]}
     else
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-        return $?
+        exit_code=$?
     fi
+
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only --project "$project_name"
+    fi
+    return $exit_code
 }
 
 show_project_info() {
