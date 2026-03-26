@@ -2,103 +2,42 @@
 
 This module provides functions for loading manuscript configuration from YAML files
 and formatting metadata for LaTeX and bash export. Part of the infrastructure layer.
+
+Implementation is split across:
+- ``schema``: TypedDict and dataclass type definitions
+- ``formatting``: author formatting utilities
 """
 
 from __future__ import annotations
 
 import difflib
 import os
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, TypedDict, cast
+from typing import Any, cast
 
 from infrastructure.core.logging.utils import get_logger
 
+# Re-export all schema types so existing imports continue to work
+from infrastructure.core.config.schema import (  # noqa: F401
+    AuthorConfig,
+    LLMYAMLConfig,
+    ManuscriptConfig,
+    PaperConfig,
+    PublicationConfig,
+    ResolvedTestingConfig,
+    ReviewsConfig,
+    SteganographyConfigYAML,
+    TestingConfig,
+    TranslationsConfig,
+)
+
+# Re-export formatting functions so existing imports continue to work
+from infrastructure.core.config.formatting import (  # noqa: F401
+    format_author_details,
+    format_author_name,
+)
+
 logger = get_logger(__name__)
-
-
-class AuthorConfig(TypedDict, total=False):
-    """Configuration for a manuscript author."""
-    name: str
-    corresponding: bool
-    orcid: str
-    email: str
-
-
-class PaperConfig(TypedDict, total=False):
-    """Configuration for a paper's base metadata."""
-    title: str
-
-
-class PublicationConfig(TypedDict, total=False):
-    """Configuration for a paper's publication details."""
-    doi: str
-
-
-class TranslationsConfig(TypedDict, total=False):
-    """Configuration for LLM translation settings."""
-    enabled: bool
-    languages: list[str]
-
-
-class ReviewsConfig(TypedDict, total=False):
-    """Configuration for LLM review settings."""
-    enabled: bool
-    types: list[str]
-
-class LLMYAMLConfig(TypedDict, total=False):
-    """YAML config schema for the ``llm:`` section of config.yaml."""
-    translations: TranslationsConfig
-    reviews: ReviewsConfig
-
-
-class TestingConfig(TypedDict, total=False):
-    """Configuration for test thresholds and coverage."""
-    max_test_failures: int
-    max_infra_test_failures: int
-    max_project_test_failures: int
-    infra_coverage_threshold: int
-    project_coverage_threshold: int
-
-
-class SteganographyConfigYAML(TypedDict, total=False):
-    """YAML schema for the steganography config section."""
-
-    enabled: bool
-    overlays: bool
-    barcodes: bool
-    metadata: bool
-    hashing: bool
-    encryption: bool
-    overlay_text: str
-    overlay_opacity: float
-    pdf_password: str
-
-
-@dataclass(frozen=True)
-class ResolvedTestingConfig:
-    """Immutable, fully-resolved testing configuration with defaults applied."""
-
-    max_test_failures: int = 0
-    max_infra_test_failures: int = 0
-    max_project_test_failures: int = 0
-    infra_coverage_threshold: int = 60
-    project_coverage_threshold: int = 90
-
-
-class ManuscriptConfig(TypedDict, total=False):
-    """Full manuscript configuration combining all sections."""
-    paper: PaperConfig
-    authors: list[AuthorConfig]
-    publication: PublicationConfig
-    llm: LLMYAMLConfig
-    testing: TestingConfig
-    steganography: SteganographyConfigYAML
-    keywords: list[str]
-    metadata: dict[str, str]
-    project_config: dict[str, Any]  # passthrough for project-specific config sections
-    experiment: dict[str, Any]      # passthrough for project experimental parameters
-
 
 try:
     import yaml
@@ -172,49 +111,6 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
     except yaml.YAMLError as e:
         logger.warning(f"YAML parse error in config {config_path}: {e}")
         return None
-
-
-def format_author_details(authors: list[AuthorConfig], doi: str = "") -> str:
-    """Format author details string for LaTeX.
-
-    Args:
-        authors: List of author dictionaries (name, orcid, email, etc.)
-        doi: Optional DOI string to include
-
-    Returns:
-        Formatted string with LaTeX line breaks
-    """
-    if not authors:
-        return ""
-
-    # Get primary/corresponding author (first one marked corresponding, or first)
-    primary = next((a for a in authors if a.get("corresponding", False)), authors[0])
-
-    parts = []
-    if primary.get("orcid"):
-        parts.append(f"ORCID: {primary['orcid']}")
-    if primary.get("email"):
-        parts.append(f"Email: {primary['email']}")
-    if doi:
-        parts.append(f"DOI: {doi}")
-
-    # Join with "\\\\ " (double backslash + space) for LaTeX line breaks
-    return "\\\\ ".join(parts)
-
-
-def format_author_name(authors: list[AuthorConfig]) -> str:
-    """Format author name(s) for display.
-
-    Args:
-        authors: List of author dictionaries
-
-    Returns:
-        Primary author name or "Project Author" if empty
-    """
-    if not authors:
-        return "Project Author"
-
-    return authors[0].get("name", "Project Author")
 
 
 def get_config_as_dict(repo_root: Path | str, respect_existing: bool = False) -> dict[str, str]:
@@ -301,4 +197,3 @@ def find_config_file(
         return config_path
 
     return None
-

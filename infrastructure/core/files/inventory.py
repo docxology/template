@@ -4,49 +4,43 @@ This module provides utilities for collecting and managing file inventories
 from output directories, extracted from the bash run.sh script into testable Python code.
 
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
+
+Sub-modules:
+    inventory_entry  -- FileInventoryEntry dataclass and format_file_size
+    inventory_reports -- Report generation (text, JSON, HTML)
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from pathlib import Path
 
+from infrastructure.core.files.inventory_entry import FileInventoryEntry, format_file_size
+from infrastructure.core.files.inventory_reports import (
+    OUTPUT_CATEGORIES,
+    generate_html_report,
+    generate_json_report,
+    generate_text_report,
+    group_by_category,
+)
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
-
-@dataclass
-class FileInventoryEntry:
-    """Entry in file inventory."""
-
-    path: Path
-    size: int
-    category: str
-    modified: float
-
-    @property
-    def size_formatted(self) -> str:
-        """Get human-readable file size."""
-        return format_file_size(self.size)
+# Re-export so every existing ``from infrastructure.core.files.inventory import X`` keeps working.
+__all__ = [
+    "FileInventoryEntry",
+    "FileInventoryManager",
+    "collect_output_files",
+    "format_file_size",
+    "generate_inventory_report",
+]
 
 
 class FileInventoryManager:
     """Manage file inventory and reports."""
 
     # Standard output categories to scan and display
-    OUTPUT_CATEGORIES = (
-        "pdf",
-        "figures",
-        "data",
-        "reports",
-        "simulations",
-        "llm",
-        "logs",
-        "web",
-        "slides",
-        "tex",
-    )
+    OUTPUT_CATEGORIES = OUTPUT_CATEGORIES
 
     def collect_output_files(
         self, output_dir: Path, categories: tuple[str, ...] | list[str] | None = None
@@ -169,185 +163,14 @@ class FileInventoryManager:
             return "No files found in output directory"
 
         if output_format == "json":
-            return self._generate_json_report(entries, base_dir)
+            return generate_json_report(entries, base_dir)
         elif output_format == "html":
-            return self._generate_html_report(entries, base_dir)
+            return generate_html_report(entries, base_dir)
         else:
-            return self._generate_text_report(entries, base_dir)
+            return generate_text_report(entries, base_dir)
 
-    def _generate_text_report(
-        self, entries: list[FileInventoryEntry], base_dir: Path | None = None
-    ) -> str:
-        """Generate text format inventory report.
-
-        Args:
-            entries: File inventory entries
-            base_dir: Base directory for relative paths
-
-        Returns:
-            Text report
-        """
-        if not entries:
-            return "No files found"
-
-        # Group by category
-        category_groups = self._group_by_category(entries)
-
-        lines = []
-        lines.append("Generated Files Inventory:")
-        lines.append("")
-
-        for category in self.OUTPUT_CATEGORIES:
-            if category in category_groups:
-                category_entries = category_groups[category]
-                total_size = sum(entry.size for entry in category_entries)
-                count = len(category_entries)
-
-                # Use uppercase for known categories, title case for others
-                category_name = category.upper() if category in ["pdf", "tex"] else category.title()
-                lines.append(
-                    f"  {category_name} ({count} file(s), {format_file_size(total_size)}):"
-                )
-
-                # Show first 10 files, then count if more
-                shown_count = 0
-                for entry in sorted(category_entries, key=lambda e: e.path):
-                    if shown_count >= 10:
-                        remaining = len(category_entries) - 10
-                        if remaining > 0:
-                            lines.append(f"    ... and {remaining} more file(s)")
-                        break
-
-                    rel_path = entry.path.relative_to(base_dir) if base_dir else entry.path
-                    lines.append(f"    - {rel_path} ({entry.size_formatted})")
-                    shown_count += 1
-
-                lines.append("")
-
-        return "\n".join(lines)
-
-    def _generate_json_report(
-        self, entries: list[FileInventoryEntry], base_dir: Path | None = None
-    ) -> str:
-        """Generate JSON format inventory report.
-
-        Args:
-            entries: File inventory entries
-            base_dir: Base directory for relative paths
-
-        Returns:
-            JSON report
-        """
-        import json
-
-        # Group by category
-        category_groups = self._group_by_category(entries)
-
-        # Convert to JSON-serializable format
-        result = {}
-        for category, category_entries in category_groups.items():
-            result[category] = {
-                "count": len(category_entries),
-                "total_size": sum(entry.size for entry in category_entries),
-                "total_size_formatted": format_file_size(
-                    sum(entry.size for entry in category_entries)
-                ),
-                "files": [
-                    {
-                        "path": (
-                            str(entry.path.relative_to(base_dir)) if base_dir else str(entry.path)
-                        ),
-                        "size": entry.size,
-                        "size_formatted": entry.size_formatted,
-                        "modified": entry.modified,
-                    }
-                    for entry in sorted(category_entries, key=lambda e: e.path)
-                ],
-            }
-
-        return json.dumps(result, indent=2)
-
-    def _generate_html_report(
-        self, entries: list[FileInventoryEntry], base_dir: Path | None = None
-    ) -> str:
-        """Generate HTML format inventory report.
-
-        Args:
-            entries: File inventory entries
-            base_dir: Base directory for relative paths
-
-        Returns:
-            HTML report
-        """
-        if not entries:
-            return "<p>No files found in output directory</p>"
-
-        # Group by category
-        category_groups = self._group_by_category(entries)
-
-        html_parts = []
-        html_parts.append("<div class='file-inventory'>")
-        html_parts.append("<h3>Generated Files Inventory</h3>")
-
-        for category in self.OUTPUT_CATEGORIES:
-            if category in category_groups:
-                category_entries = category_groups[category]
-                total_size = sum(entry.size for entry in category_entries)
-                count = len(category_entries)
-
-                # Use uppercase for known categories, title case for others
-                category_name = category.upper() if category in ["pdf", "tex"] else category.title()
-                html_parts.append(
-                    f"<h4>{category_name} ({count} file(s), {format_file_size(total_size)})</h4>"
-                )
-                html_parts.append("<ul>")
-
-                for entry in sorted(category_entries, key=lambda e: e.path):
-                    rel_path = entry.path.relative_to(base_dir) if base_dir else entry.path
-                    html_parts.append(f"<li><code>{rel_path}</code> ({entry.size_formatted})</li>")
-
-                html_parts.append("</ul>")
-
-        html_parts.append("</div>")
-
-        return "\n".join(html_parts)
-
-    def _group_by_category(
-        self, entries: list[FileInventoryEntry]
-    ) -> dict[str, list[FileInventoryEntry]]:
-        """Group entries by category.
-
-        Args:
-            entries: File inventory entries
-
-        Returns:
-            Dictionary mapping category names to lists of entries
-        """
-        groups: dict[str, list[FileInventoryEntry]] = {}
-        for entry in entries:
-            if entry.category not in groups:
-                groups[entry.category] = []
-            groups[entry.category].append(entry)
-        return groups
-
-
-def format_file_size(bytes_size: int) -> str:
-    """Convert bytes to human-readable format.
-
-    Args:
-        bytes_size: Size in bytes
-
-    Returns:
-        Human-readable size string
-    """
-    if bytes_size < 1024:
-        return f"{bytes_size}B"
-    elif bytes_size < 1024 * 1024:
-        return f"{round(bytes_size / 1024)}KB"
-    elif bytes_size < 1024 * 1024 * 1024:
-        return f"{round(bytes_size / (1024 * 1024))}MB"
-    else:
-        return f"{round(bytes_size / (1024 * 1024 * 1024))}GB"
+    # Kept for internal use by report methods that need category grouping
+    _group_by_category = staticmethod(group_by_category)
 
 
 def collect_output_files(
