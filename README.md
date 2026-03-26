@@ -356,7 +356,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 # Or run the manuscript pipeline directly (includes optional LLM review)
 ./run.sh --pipeline
 
-# Alternative: Core 8-stage pipeline (no LLM dependencies)
+# Alternative: Core 10-stage declarative DAG pipeline (no LLM dependencies)
 uv run scripts/execute_pipeline.py --core-only
 
 # Run tests with coverage (infrastructure + project)
@@ -875,7 +875,7 @@ pip install -e .
 # Or run the manuscript pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 ./run.sh --pipeline
 
-# Alternative: Core 8-stage pipeline (stages 00-05, no LLM dependencies)
+# Alternative: Core 10-stage DAG pipeline (stages 00-05, no LLM dependencies)
 uv run python scripts/execute_pipeline.py --core-only
 
 # Or run stages individually (using generic entry point orchestrators)
@@ -891,7 +891,7 @@ uv run python scripts/05_copy_outputs.py           # Copy final deliverables
 
 - **`./run.sh`**: Main entry point - Interactive menu or pipeline run (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 - **`./run.sh --pipeline`**: Same stage display as above; optional LLM stages run when enabled/configured
-- **`uv run python scripts/execute_pipeline.py --core-only`**: 8 stages (00-05) - Core pipeline only, no LLM dependencies
+- **`uv run python scripts/execute_pipeline.py --core-only`**: 10-stage DAG — Core pipeline only, no LLM dependencies
 
 **See [How To Use Guide](docs/core/how-to-use.md) for setup instructions at all skill levels.**
 
@@ -1155,7 +1155,7 @@ flowchart TD
 
 ### Entry Point 2: Core Pipeline (`uv run python scripts/execute_pipeline.py --core-only`)
 
-**8-stage core pipeline** (stages 00-05) without LLM dependencies:
+**10-stage declarative pipeline** (stages 00-05) without LLM dependencies:
 
 | Stage | Script | Purpose |
 |-------|--------|---------|

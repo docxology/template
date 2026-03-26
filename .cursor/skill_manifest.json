@@ -20,6 +20,12 @@
       "cursor_at": "infrastructure/core/SKILL.md"
     },
     {
+      "name": "telemetry",
+      "description": "Unified pipeline telemetry — collects per-stage performance metrics (CPU, memory, I/O) and diagnostic events into structured reports (JSON, text).",
+      "path": "infrastructure/core/telemetry/SKILL.md",
+      "cursor_at": "infrastructure/core/telemetry/SKILL.md"
+    },
+    {
       "name": "infrastructure-docker",
       "description": "Container build and compose assets for the research template. Use when reproducing CI or cloud environments with Docker, following docs/CLOUD_DEPLOY.md, or wiring Ollama sidecars via docker-compose.",
       "path": "infrastructure/docker/SKILL.md",

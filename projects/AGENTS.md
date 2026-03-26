@@ -61,12 +61,17 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[code_project<br/>Optimization Exemplar - Active]
+        P1[code_project<br/>Optimization Exemplar<br/>100% coverage · 45 tests]
+        P2[template<br/>Meta-Documentation<br/>94.4% coverage · 65 tests]
+    end
+
+    subgraph InProgress["In-Progress Projects (projects_in_progress/)"]
+        IP1[fep_lean<br/>In Progress - NOT Discovered]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
-        A1[medical_ai<br/>Archived - NOT Discovered]
-        A2[blake_active_inference<br/>Archived - NOT Discovered]
+        A1[traditional_newspaper<br/>Archived - NOT Discovered]
+        A2[area_handbook<br/>Archived - NOT Discovered]
     end
 
     subgraph Infrastructure["Infrastructure Discovery"]
@@ -76,12 +81,15 @@ graph TD
     end
 
     P1 -->|Discovered| DISCOVER
+    P2 -->|Discovered| DISCOVER
+    IP1 -.->|NOT Scanned| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
     A2 -.->|NOT Scanned| DISCOVER
 
     DISCOVER -->|Active Projects| RUNSH
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
+    PIPELINE -->|Executes| P2
 ```
 
 ### Project Lifecycle
@@ -564,7 +572,8 @@ All projects in this directory comply with the template's development standards 
 #### Testing Standards Results
 
 - **code_project**: 100% coverage (45 tests), all data-driven ✅
-- **Combined**: All tests use data, no mocks detected ✅
+- **template**: 94.4% coverage (65 tests), all data-driven ✅
+- **Combined**: 110 tests across 2 projects, all use data, no mocks detected ✅
 
 #### Documentation Standards Results
 

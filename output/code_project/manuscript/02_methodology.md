@@ -6,7 +6,7 @@ This section describes the implementation methodology, explicitly detailing how 
 
 ### Gradient Descent Algorithm
 
-The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging_utils.ProjectLogger` and executing under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
+The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging.utils.ProjectLogger` and executing under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
 
 **Algorithm 1: Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138))**
 

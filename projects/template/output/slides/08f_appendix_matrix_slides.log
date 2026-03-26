@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:26
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  26 MAR 2026 07:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1827,7 +1827,7 @@ Here is how much of TeX's memory you used:
  59140 multiletter control sequences out of 15000+600000
  631307 words of font info for 71 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1091b,668s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1091b,659s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/template/output/
 slides/08f_appendix_matrix_slides.pdf (2 pages).

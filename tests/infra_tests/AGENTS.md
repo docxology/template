@@ -39,7 +39,8 @@ tests/infra_tests/
 │   ├── test_project_logger.py      # Project-specific logging
 │   ├── test_retry.py               # Retry mechanisms
 │   ├── test_script_discovery.py    # Script auto-discovery
-│   └── test_security.py            # Security utilities
+│   ├── test_security.py            # Security utilities
+│   └── test_dag.py                 # Pipeline DAG engine
 ├── documentation/                  # Documentation tools tests (4 test files)
 │   ├── test_figure_manager.py      # Figure registry and numbering
 │   ├── test_glossary_gen.py        # API documentation generation
@@ -105,7 +106,7 @@ tests/infra_tests/
 ├── reporting/                      # Reporting tests (9 test files)
 │   ├── AGENTS.md                   # Reporting test documentation
 │   ├── README.md                   # Quick reference
-│   ├── test_dashboard_generator.py # Dashboard generation
+│   ├── test_dashboard_generator.py # Dashboard system (_dashboard_matplotlib + modules)
 │   ├── test_error_aggregator.py    # Error aggregation
 │   ├── test_executive_reporter.py  # Executive reporting
 │   ├── test_html_templates.py      # HTML template rendering
@@ -564,7 +565,7 @@ def test_custom_config(tmp_path):
 
 **Purpose:** Test pipeline reporting and error aggregation (9 test files)
 
-- **`test_dashboard_generator.py`** - Dashboard generation
+- **`test_dashboard_generator.py`** - Dashboard system (_dashboard_matplotlib + extracted modules)
   - Health-scored visual dashboard creation
   - Multi-metric aggregation
 

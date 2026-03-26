@@ -93,7 +93,7 @@ This section describes the implementation methodology, explicitly detailing how 
 
 ### Gradient Descent Algorithm
 
-The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging_utils.ProjectLogger` and executing under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
+The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging.utils.ProjectLogger` and executing under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
 
 **Algorithm 1: Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138))**
 
@@ -389,7 +389,7 @@ The hallmark of this implementation is the test matrix:
 ### Infrastructure-Backed Capabilities
 
 - **Analytical Automation**: `infrastructure.core.progress.PipelineProgress` executing deterministic optimization experiments.
-- **Reporting & Integrity**: `infrastructure.reporting.pipeline_reporter` and `infrastructure.validation.output_validator` assuring CSV/JSON configurations conform.
+- **Reporting & Integrity**: `infrastructure.reporting.pipeline_reporter` and `infrastructure.validation.output.validator` assuring CSV/JSON configurations conform.
 - **Visual Cryptography**: Publication-ready graphics compiled by `infrastructure.rendering.pdf_renderer.py` using metadata from `projects/code_project/manuscript/config.yaml`, automatically linked via the LaTeX configuration in `projects/code_project/manuscript/preamble.md`.
 
 ## Research Pipeline Validation
@@ -470,7 +470,7 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 - **Python**: 3.12.11
 - **NumPy**: 2.4.1
 - **Platform**: Darwin arm64
-- **Generated**: 2026-03-23T12:09:35Z
+- **Generated**: 2026-03-26T14:33:41Z
 
 ## Pipeline ordering
 
@@ -519,7 +519,7 @@ The configuration hash changes whenever any parameter in `config.yaml` is modifi
 
 ## Generated Artifact Registry
 
-The analysis pipeline produced the following artifacts, each validated by `infrastructure.validation.output_validator`:
+The analysis pipeline produced the following artifacts, each validated by `infrastructure.validation.output.validator`:
 
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |

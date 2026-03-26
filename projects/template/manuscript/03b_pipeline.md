@@ -1,4 +1,4 @@
-## The Eight-Stage Pipeline
+## The Ten-Stage DAG Pipeline
 
 The build pipeline is orchestrated by `scripts/execute_pipeline.py`, which invokes numbered stage scripts sequentially. Each stage is a standalone Python script that exits cleanly or raises an exception to halt the pipeline.
 
@@ -68,4 +68,4 @@ The primary user interface is `run.sh`, a Bash TUI (text user interface) that pr
 
 ### `secure_run.sh`: The Steganographic Superset
 
-The `secure_run.sh` orchestrator is a strict superset of `run.sh`: it executes the standard eight-stage pipeline and then appends steganographic post-processing. For each rendered PDF, it applies metadata injection, cryptographic hashing, alpha-channel text overlay, and QR code injection, producing a provenance-embedded output alongside the original. It supports the same project selection and mode flags as `run.sh`.
+The `secure_run.sh` orchestrator is a strict superset of `run.sh`: it executes the standard ten-stage DAG pipeline and then appends steganographic post-processing. For each rendered PDF, it applies metadata injection, cryptographic hashing, alpha-channel text overlay, and QR code injection, producing a provenance-embedded output alongside the original. It supports the same project selection and mode flags as `run.sh`.

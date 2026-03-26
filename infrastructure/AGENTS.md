@@ -90,7 +90,10 @@ infrastructure/
 │   ├── pipeline_reporter.py  # Pipeline report generation
 │   ├── error_aggregator.py   # Error collection & categorization
 │   ├── executive_reporter.py # Cross-project summaries
-│   ├── dashboard_generator.py # Visual dashboards
+│   ├── _dashboard_matplotlib.py # Dashboard orchestrator + re-exports
+│   ├── _dashboard_charts.py     # Base chart generators
+│   ├── _dashboard_specialized.py # Health, pipeline, codebase charts
+│   ├── _dashboard_csv.py        # CSV data exports
 │   └── SKILL.md, AGENTS.md, README.md
 └── steganography/  # Secure PDF post-processing
     ├── core.py              # Steganography orchestration
@@ -101,6 +104,11 @@ infrastructure/
     ├── hashing.py           # SHA-256 integrity manifests
     ├── encryption.py        # AES-256 PDF encryption
     └── SKILL.md, AGENTS.md, README.md
+├── telemetry/      # Unified pipeline telemetry
+│   ├── config.py            # TelemetryConfig dataclass (YAML-configurable)
+│   ├── models.py            # StageTelemetry, PipelineTelemetry dataclasses
+│   ├── collector.py         # TelemetryCollector lifecycle (start/end stage, finalize)
+│   └── SKILL.md, AGENTS.md, README.md
 ```
 
 ## Function Signatures

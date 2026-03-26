@@ -176,7 +176,7 @@ Underfull \hbox (badness 1365) in paragraph at lines 384--391
 delegating all logging to
 
 Underfull \hbox (badness 5862) in paragraph at lines 384--391
-\TU/lmtt/m/n/10 infrastructure.core.logging_utils.ProjectLogger \TU/lmr/m/n/10 
+\TU/lmtt/m/n/10 infrastructure.core.logging.utils.ProjectLogger \TU/lmr/m/n/10 
 and executing under the hermetic
 
 ! LaTeX Error: Bad math environment delimiter.
@@ -457,7 +457,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1101--1106
 ructure.reporting.pipeline_reporter \TU/lmr/m/n/10 and
 
 Underfull \hbox (badness 10000) in paragraph at lines 1101--1106
-\TU/lmtt/m/n/10 infrastructure.validation.output_validator \TU/lmr/m/n/10 assur
+\TU/lmtt/m/n/10 infrastructure.validation.output.validator \TU/lmr/m/n/10 assur
 ing CSV/JSON configurations
 
 Overfull \hbox (88.36372pt too wide) in paragraph at lines 1106--1111
@@ -487,7 +487,7 @@ Overfull \hbox (78.12378pt too wide) in paragraph at lines 1309--1311
 [22]
 Overfull \hbox (100.8874pt too wide) in paragraph at lines 1368--1370
 \TU/lmr/m/n/10 The analysis pipeline produced the following artifacts, each val
-idated by \TU/lmtt/m/n/10 infrastructure.validation.output_validator\TU/lmr/m/n
+idated by \TU/lmtt/m/n/10 infrastructure.validation.output.validator\TU/lmr/m/n
 /10 : 
 [23] [24]
 ! Missing $ inserted.

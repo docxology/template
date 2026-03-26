@@ -90,16 +90,11 @@ ty)) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg)
 (./_combined_manuscript.toc [1] [2]) [3] [4] [5] [6] [7] [8] [9] [10] [11]
-[12] [13]
-
-LaTeX Warning: Hyper reference `documentation-duality-and-the-agentic-skill-arc
-hitecture' on page 14 undefined on input line 909.
-
-[14] [15] [16]
-Overfull \hbox (8.44249pt too wide) in paragraph at lines 1192--1192
+[12] [13] [14] [15] [16]
+Overfull \hbox (8.44249pt too wide) in paragraph at lines 1198--1198
 []|\TU/lmtt/m/n/10 projects/*/src/|  
 
-Overfull \hbox (8.44249pt too wide) in paragraph at lines 1194--1194
+Overfull \hbox (8.44249pt too wide) in paragraph at lines 1200--1200
 []|\TU/lmtt/m/n/10 infrastructure/|  
 [17] [18]
 Missing character: There is no ✓ (U+2713) in font [lmroman10-regular]:mapping=t
@@ -107,27 +102,22 @@ ex-text;!
 Missing character: There is no ✓ (U+2713) in font [lmroman10-regular]:mapping=t
 ex-text;!
  [19]
-
-LaTeX Warning: Hyper reference `documentation-duality-and-the-agentic-skill-arc
-hitecture' on page 20 undefined on input line 1378.
-
-
-Overfull \hbox (2.46281pt too wide) in paragraph at lines 1428--1428
+Overfull \hbox (2.46281pt too wide) in paragraph at lines 1434--1434
 []|\TU/lmtt/m/n/10 00_setup_environment.py|  
 
-Overfull \hbox (44.46281pt too wide) in paragraph at lines 1438--1438
+Overfull \hbox (44.46281pt too wide) in paragraph at lines 1444--1444
 []|\TU/lmtt/m/n/10 07_generate_executive_report.py|  
 
-Overfull \hbox (3.33919pt too wide) in paragraph at lines 1478--1478
+Overfull \hbox (3.33919pt too wide) in paragraph at lines 1484--1484
 []|\TU/lmtt/m/n/10 code_project|  
 
-Overfull \hbox (45.33919pt too wide) in paragraph at lines 1481--1481
+Overfull \hbox (45.33919pt too wide) in paragraph at lines 1487--1487
 []|\TU/lmtt/m/n/10 act_inf_metaanalysis|  
 [20]
-Underfull \hbox (badness 10000) in paragraph at lines 1514--1525
+Underfull \hbox (badness 10000) in paragraph at lines 1522--1533
 [][]
 [21]
-Underfull \hbox (badness 10000) in paragraph at lines 1526--1534
+Underfull \hbox (badness 10000) in paragraph at lines 1534--1542
 [][]
 [22]
 Missing character: There is no ✓ (U+2713) in font [lmroman10-bold]:mapping=tex-
@@ -135,66 +125,51 @@ text;!
 Missing character: There is no ◐ (U+25D0) in font [lmroman10-bold]:mapping=tex-
 text;!
 
-Underfull \hbox (badness 10000) in paragraph at lines 1553--1565
+Underfull \hbox (badness 10000) in paragraph at lines 1561--1573
 [][]
 
-Overfull \hbox (63.48872pt too wide) in paragraph at lines 1588--1592
+Overfull \hbox (63.48872pt too wide) in paragraph at lines 1596--1600
 []\TU/lmr/bx/n/10 Marker-based skip logic\TU/lmr/m/n/10 : Tests requiring optio
 nal services (Ollama, network) use \TU/lmtt/m/n/10 @pytest.mark.requires_ollama
 
-[23]
+[23] [24]
 Missing character: There is no ∣ (U+2223) in font [lmmono10-regular]:!
 Missing character: There is no ∣ (U+2223) in font [lmmono10-regular]:!
-[24] [25]
-
-LaTeX Warning: Hyper reference `documentation-duality-and-the-agentic-skill-arc
-hitecture' on page 26 undefined on input line 1809.
-
-[26]
-
-LaTeX Warning: Hyper reference `documentation-duality-and-the-agentic-skill-arc
-hitecture' on page 27 undefined on input line 1852.
-
-[27] [28] [29] [30] [31] [32]
-Overfull \hbox (6.552pt too wide) in paragraph at lines 2325--2330
+[25] [26] [27] [28] [29] [30] [31] [32] [33]
+Overfull \hbox (6.552pt too wide) in paragraph at lines 2337--2342
 []\TU/lmr/bx/n/10 Integration\TU/lmr/m/n/10 : Core of Stage 03. Reads \TU/lmtt/
 m/n/10 manuscript/*.md \TU/lmr/m/n/10 and \TU/lmtt/m/n/10 config.yaml\TU/lmr/m/
 n/10 , produces \TU/lmtt/m/n/10 output/<project>.pdf\TU/lmr/m/n/10 .
-[33] [34]
-
-LaTeX Warning: Hyper reference `documentation-duality-and-the-agentic-skill-arc
-hitecture' on page 35 undefined on input line 2497.
-
-[35] [36]
-Overfull \hbox (34.24498pt too wide) in paragraph at lines 2620--2620
+[34] [35] [36] [37]
+Overfull \hbox (34.24498pt too wide) in paragraph at lines 2633--2633
 []\TU/lmtt/m/n/10 template/ | built: 2026-03-19T14:23:11Z | commit: a4f2c1b | p
 ipeline: v2.0.0 | project: template[] 
 
-Overfull \hbox (46.58481pt too wide) in paragraph at lines 2632--2636
+Overfull \hbox (46.58481pt too wide) in paragraph at lines 2645--2649
 \TU/lmr/m/n/10 An optional QR code is generated containing a URL pointing to th
 e repository (e.g., \TU/lmtt/m/n/10 github.com/docxology/template\TU/lmr/m/n/10
  ).
-[37]
-Missing character: There is no ✓ (U+2713) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ✓ (U+2713) in font [lmroman10-regular]:mapping=t
-ex-text;!
 [38]
-Overfull \hbox (5.73528pt too wide) in paragraph at lines 2815--2815
+Missing character: There is no ✓ (U+2713) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ✓ (U+2713) in font [lmroman10-regular]:mapping=t
+ex-text;!
+[39]
+Overfull \hbox (5.73528pt too wide) in paragraph at lines 2828--2828
 []|\TU/lmtt/m/n/10 00_setup_environment.py|  
 
-Overfull \hbox (22.14735pt too wide) in paragraph at lines 2817--2818
+Overfull \hbox (22.14735pt too wide) in paragraph at lines 2830--2831
 \TU/lmtt/m/n/10 projects/*/tests/|  
 
-Overfull \hbox (53.64735pt too wide) in paragraph at lines 2820--2820
+Overfull \hbox (53.64735pt too wide) in paragraph at lines 2833--2833
 []|\TU/lmtt/m/n/10 projects/*/scripts/*.py|  
 
-Overfull \hbox (13.03735pt too wide) in paragraph at lines 2822--2823
+Overfull \hbox (13.03735pt too wide) in paragraph at lines 2835--2836
 []|\TU/lmtt/m/n/10 manuscript/*.md\TU/lmr/m/n/10 , 
 
-Overfull \hbox (47.73528pt too wide) in paragraph at lines 2830--2830
+Overfull \hbox (47.73528pt too wide) in paragraph at lines 2843--2843
 []|\TU/lmtt/m/n/10 07_generate_executive_report.py|  
-[39] [40]
+[40] [41]
 Missing character: There is no ├ (U+251C) in font [lmmono10-regular]:!
 Missing character: There is no ─ (U+2500) in font [lmmono10-regular]:!
 Missing character: There is no ─ (U+2500) in font [lmmono10-regular]:!
@@ -327,56 +302,52 @@ Missing character: There is no ─ (U+2500) in font [lmmono10-regular]:!
 Missing character: There is no └ (U+2514) in font [lmmono10-regular]:!
 Missing character: There is no ─ (U+2500) in font [lmmono10-regular]:!
 Missing character: There is no ─ (U+2500) in font [lmmono10-regular]:!
-[41]
-Overfull \hbox (5.24493pt too wide) in paragraph at lines 2980--2980
+[42]
+Overfull \hbox (5.24493pt too wide) in paragraph at lines 2993--2993
 []|\TU/lmtt/m/n/10 code_project|  
 
-Overfull \hbox (47.24493pt too wide) in paragraph at lines 2982--2982
+Overfull \hbox (47.24493pt too wide) in paragraph at lines 2995--2995
 []|\TU/lmtt/m/n/10 act_inf_metaanalysis|  
 
-Overfull \hbox (0.69049pt too wide) in paragraph at lines 2984--2984
+Overfull \hbox (0.69049pt too wide) in paragraph at lines 2997--2997
 \TU/lmr/m/n/10 architecture|  
 
-Overfull \hbox (0.59016pt too wide) in paragraph at lines 2985--2985
+Overfull \hbox (0.59016pt too wide) in paragraph at lines 2998--2998
  []|\TU/lmtt/m/n/10 introspection.py| 
-[42] [43]
-Overfull \hbox (13.81471pt too wide) in paragraph at lines 3082--3083
+[43] [44]
+Overfull \hbox (13.81471pt too wide) in paragraph at lines 3095--3096
  []\TU/lmtt/m/n/10 template/ 
 
-Overfull \hbox (17.48308pt too wide) in paragraph at lines 3084--3085
+Overfull \hbox (17.48308pt too wide) in paragraph at lines 3097--3098
  []\TU/lmr/m/n/10 Snakemake 
 
-Overfull \hbox (7.40308pt too wide) in paragraph at lines 3086--3087
+Overfull \hbox (7.40308pt too wide) in paragraph at lines 3099--3100
  []\TU/lmr/m/n/10 Nextflow 
 
-Overfull \hbox (5.44246pt too wide) in paragraph at lines 3090--3091
+Overfull \hbox (5.44246pt too wide) in paragraph at lines 3103--3104
  []\TU/lmr/m/n/10 Quarto 
 
-Overfull \hbox (3.78818pt too wide) in paragraph at lines 3096--3097
+Overfull \hbox (3.78818pt too wide) in paragraph at lines 3109--3110
  []\TU/lmr/m/n/10 DVC 
 
-Overfull \hbox (2.96227pt too wide) in paragraph at lines 3108--3108
+Overfull \hbox (2.96227pt too wide) in paragraph at lines 3121--3121
 []|\TU/lmr/m/n/10 Manuscript 
 
-Overfull \hbox (16.82227pt too wide) in paragraph at lines 3111--3111
+Overfull \hbox (16.82227pt too wide) in paragraph at lines 3124--3124
 []|\TU/lmr/m/n/10 Cryptographic 
 
-Overfull \hbox (20.40227pt too wide) in paragraph at lines 3113--3113
+Overfull \hbox (20.40227pt too wide) in paragraph at lines 3126--3126
 []|\TU/lmr/m/n/10 Steganographic 
 
-Overfull \hbox (2.53226pt too wide) in paragraph at lines 3118--3118
+Overfull \hbox (2.53226pt too wide) in paragraph at lines 3131--3131
 \TU/lmr/m/n/10 (SKILL.md 
 
-Overfull \hbox (3.65227pt too wide) in paragraph at lines 3123--3123
+Overfull \hbox (3.65227pt too wide) in paragraph at lines 3136--3136
 []|\TU/lmr/m/n/10 Distributed 
 Missing character: There is no ⁴ (U+2074) in font [lmroman10-regular]:mapping=t
 ex-text;!
-[44] [45] (./_combined_manuscript.bbl [46] [47] [48]) [49]
-(./_combined_manuscript.aux)
-
-LaTeX Warning: There were undefined references.
-
- )
+[45] [46] (./_combined_manuscript.bbl [47] [48] [49]) [50]
+(./_combined_manuscript.aux) )
 (see the transcript file for additional information)
-Output written on _combined_manuscript.pdf (49 pages).
+Output written on _combined_manuscript.pdf (50 pages).
 Transcript written on _combined_manuscript.log.

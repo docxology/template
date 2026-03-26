@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:10
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  26 MAR 2026 07:34
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1414,7 +1414,7 @@ delegating all logging to
 
 
 Underfull \hbox (badness 5862) in paragraph at lines 384--391
-\TU/lmtt/m/n/10 infrastructure.core.logging_utils.ProjectLogger \TU/lmr/m/n/10 
+\TU/lmtt/m/n/10 infrastructure.core.logging.utils.ProjectLogger \TU/lmr/m/n/10 
 and executing under the hermetic
  []
 
@@ -1846,7 +1846,7 @@ ructure.reporting.pipeline_reporter \TU/lmr/m/n/10 and
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 1101--1106
-\TU/lmtt/m/n/10 infrastructure.validation.output_validator \TU/lmr/m/n/10 assur
+\TU/lmtt/m/n/10 infrastructure.validation.output.validator \TU/lmr/m/n/10 assur
 ing CSV/JSON configurations
  []
 
@@ -1891,7 +1891,7 @@ Overfull \hbox (78.12378pt too wide) in paragraph at lines 1309--1311
 [22]
 Overfull \hbox (100.8874pt too wide) in paragraph at lines 1368--1370
 \TU/lmr/m/n/10 The analysis pipeline produced the following artifacts, each val
-idated by \TU/lmtt/m/n/10 infrastructure.validation.output_validator\TU/lmr/m/n
+idated by \TU/lmtt/m/n/10 infrastructure.validation.output.validator\TU/lmr/m/n
 /10 : 
  []
 

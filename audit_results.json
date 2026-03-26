@@ -1,0 +1,40 @@
+{
+  "scan_date": "2026-03-25 08:40:14",
+  "total_files": 881,
+  "scan_duration": 1.9168360233306885,
+  "statistics": {
+    "link_issues": 103,
+    "accuracy_issues": 0,
+    "completeness_gaps": 0,
+    "quality_issues": 1480
+  },
+  "severity_flags": {
+    "red": 0,
+    "yellow": 0,
+    "green": 1583
+  },
+  "summary": {
+    "total": 1583,
+    "by_severity": {
+      "critical": 103,
+      "error": 0,
+      "warning": 30,
+      "info": 1450
+    },
+    "by_severity_flag": {
+      "red": 0,
+      "yellow": 0,
+      "green": 1583
+    },
+    "by_type": {
+      "broken_file": 103,
+      "directory_structure": 1442,
+      "placeholder_consistency": 8,
+      "code_block_path": 30
+    },
+    "false_positives": 223
+  },
+  "red_flags": [],
+  "yellow_flags": [],
+  "green_flags": []
+}

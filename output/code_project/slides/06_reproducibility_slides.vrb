@@ -38,7 +38,7 @@ traceable to a specific configuration state.
 \begin{block}{Generated Artifact Registry}
 \protect\phantomsection\label{generated-artifact-registry}
 The analysis pipeline produced the following artifacts, each validated
-by \texttt{infrastructure.validation.output\_validator}:
+by \texttt{infrastructure.validation.output.validator}:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}ll@{}}

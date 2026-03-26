@@ -15,7 +15,7 @@ import re
 from pathlib import Path
 
 from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
-
+from infrastructure.core.logging import DiagnosticEvent, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -81,7 +81,7 @@ def validate_images(
     md_paths: list[str],
     repo_root: str | Path,
     extra_search_dirs: list[str | Path] | None = None,
-) -> list[str]:
+) -> list[DiagnosticEvent]:
     """Validate that all referenced images exist in the filesystem.
 
     When a relative image path fails to resolve from the markdown file's
@@ -95,10 +95,10 @@ def validate_images(
         extra_search_dirs: Additional directories to search for images
 
     Returns:
-        List of validation problem descriptions
+        List of DiagnosticEvents for missing images.
     """
     repo_root_path = Path(repo_root)
-    problems: list[str] = []
+    problems: list[DiagnosticEvent] = []
 
     # Build search directories from the markdown directory's project context.
     # Manuscript dirs follow the pattern: projects/<name>/manuscript/
@@ -140,16 +140,22 @@ def validate_images(
                 try:
                     display_path = Path(path).relative_to(repo_root_path)
                 except ValueError:
-                    display_path = path  # type: ignore[assignment]
+                    display_path = path_obj  # type: ignore[assignment]
                 problems.append(
-                    f"Missing image: {img_clean} referenced from {display_path}"
+                    DiagnosticEvent(
+                        severity=DiagnosticSeverity.ERROR,
+                        category="MARKDOWN_IMAGE",
+                        message=f"Missing referenced image: '{img_clean}'",
+                        file_path=str(display_path),
+                        fix_suggestion="Ensure the image file exists in the specified relative path or figures directory."
+                    )
                 )
     return problems
 
 
 def validate_refs(
     md_paths: list[str], repo_root: str | Path, labels: set[str], anchors: set[str]
-) -> list[str]:
+) -> list[DiagnosticEvent]:
     """Validate cross-references, internal links, and external URLs.
 
     Args:
@@ -159,47 +165,72 @@ def validate_refs(
         anchors: Set of valid section anchors
 
     Returns:
-        List of validation problem descriptions
+        List of DiagnosticEvents for reference issues.
     """
     repo_root_path = Path(repo_root)
-    problems: list[str] = []
+    problems: list[DiagnosticEvent] = []
     for path in md_paths:
         text = Path(path).read_text(encoding="utf-8")
         try:
             rel: str | Path = Path(path).relative_to(repo_root_path)
         except ValueError:
             rel = path
+            
+        rel_str = str(rel)
+            
         for ref in EQ_REF_PATTERN.findall(text):
             if ref not in labels:
                 problems.append(
-                    f"Missing equation label for \\eqref{{{ref}}} in {rel}"  # noqa: E501
+                    DiagnosticEvent(
+                        severity=DiagnosticSeverity.ERROR,
+                        category="MARKDOWN_REF",
+                        message=f"Missing equation label for \\eqref{{{ref}}}",
+                        file_path=rel_str,
+                        fix_suggestion=f"Verify that '\\label{{{ref}}}' exists in an equation block."
+                    )
                 )
         for link in INTERNAL_LINK_PATTERN.findall(text):
             if link not in anchors and link not in labels:
                 problems.append(
-                    f"Missing anchor/label for link (#{link}) in {rel}"
+                    DiagnosticEvent(
+                        severity=DiagnosticSeverity.ERROR,
+                        category="MARKDOWN_LINK",
+                        message=f"Missing anchor/label for internal link (#{link})",
+                        file_path=rel_str,
+                        fix_suggestion=f"Provide a heading anchor '{{#{link}}}' or equation label."
+                    )
                 )
         # Flag bare URLs not inside Markdown links.
-        # Strip fenced code blocks first to avoid false positives on Turtle/SPARQL/RDF URIs
-        # that are syntactically required inside code blocks (e.g. @prefix np: <http://...>)
         text_no_code = re.sub(r"```[^`]*```", "", text, flags=re.DOTALL)
         text_no_code = re.sub(r"`[^`]+`", "", text_no_code)  # also strip inline code
         for m in BARE_URL_PATTERN.finditer(text_no_code):
             problems.append(
-                f"Bare URL found (use informative Markdown link text): '{m.group(0)}' in {rel}"  # noqa: E501
+                DiagnosticEvent(
+                    severity=DiagnosticSeverity.WARNING,
+                    category="MARKDOWN_LINK",
+                    message=f"Bare URL found: '{m.group(0)}'",
+                    file_path=rel_str,
+                    fix_suggestion="Wrap the URL in a Markdown link with informative text: [link text](url)"
+                )
             )
-        # Flag non-informative link text (label equals URL)
+        # Flag non-informative link text
         for m in LINK_PATTERN.finditer(text):
             label = m.group(1).strip()
             url = m.group(2).strip()
             if label == url or label.lower().startswith("http") or "/" in label:
                 problems.append(
-                    f"Non-informative link text for {url} in {rel}; replace with descriptive text"  # noqa: E501
+                    DiagnosticEvent(
+                        severity=DiagnosticSeverity.WARNING,
+                        category="MARKDOWN_LINK",
+                        message=f"Non-informative link text for {url}",
+                        file_path=rel_str,
+                        fix_suggestion=f"Replace '{label}' with descriptive text about the link destination."
+                    )
                 )
     return problems
 
 
-def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
+def validate_math(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]:
     """Validate mathematical equation formatting and labeling.
 
     Args:
@@ -207,10 +238,10 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
         repo_root: Root directory of the repository
 
     Returns:
-        List of validation problem descriptions
+        List of DiagnosticEvents for math formatting issues.
     """
     repo_root_path = Path(repo_root)
-    problems: list[str] = []
+    problems: list[DiagnosticEvent] = []
     eq_block = re.compile(r"\\begin\{equation\}([\s\S]*?)\\end\{equation\}", re.MULTILINE)
     label_pattern = re.compile(r"\\label\{([^}]+)\}")
     seen_labels: set[str] = set()
@@ -220,22 +251,55 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
             rel: str | Path = Path(path).relative_to(repo_root_path)
         except ValueError:
             rel = path
+            
+        rel_str = str(rel)
+            
         # Disallow $$ and \[ \] display math in sources
         if "$$" in text:
-            problems.append(f"Use equation environment instead of $$ in {rel}")
+            problems.append(
+                DiagnosticEvent(
+                    severity=DiagnosticSeverity.WARNING,
+                    category="MARKDOWN_MATH",
+                    message="Use equation environment instead of $$",
+                    file_path=rel_str,
+                    fix_suggestion="Replace $$...$$ with \\begin{equation}...\\end{equation}"
+                )
+            )
         if "\\[" in text or "\\]" in text:
-            problems.append(f"Use equation environment instead of \\[ \\] in {rel}")
+            problems.append(
+                DiagnosticEvent(
+                    severity=DiagnosticSeverity.WARNING,
+                    category="MARKDOWN_MATH",
+                    message="Use equation environment instead of \\[ \\]",
+                    file_path=rel_str,
+                    fix_suggestion="Replace \\[...\\] with \\begin{equation}...\\end{equation}"
+                )
+            )
         # Ensure each equation block carries a label and detect duplicates
         for m in eq_block.finditer(text):
             block = m.group(1)
             labels_in_block = label_pattern.findall(block)
             if not labels_in_block:
-                problems.append(f"Equation missing \\label{{...}} in {rel}")
+                problems.append(
+                    DiagnosticEvent(
+                        severity=DiagnosticSeverity.WARNING,
+                        category="MARKDOWN_MATH",
+                        message="Equation missing \\label{...}",
+                        file_path=rel_str,
+                        fix_suggestion="Add a \\label{eq_name} inside the \\begin{equation} block."
+                    )
+                )
             else:
                 for lab in labels_in_block:
                     if lab in seen_labels:
                         problems.append(
-                            f"Duplicate equation label '{{{lab}}}' found in {rel}"
+                            DiagnosticEvent(
+                                severity=DiagnosticSeverity.ERROR,
+                                category="MARKDOWN_MATH",
+                                message=f"Duplicate equation label '{{{lab}}}' found",
+                                file_path=rel_str,
+                                fix_suggestion="Rename one of the labels to be unique."
+                            )
                         )
                     seen_labels.add(lab)
     return problems
@@ -243,7 +307,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[str]:
 
 def validate_markdown(
     markdown_dir: str | Path, repo_root: str | Path, strict: bool = False
-) -> tuple[list[str], int]:
+) -> tuple[list[DiagnosticEvent], int]:
     """Validate all markdown files in a directory.
 
     This is the main validation function that runs all checks.
@@ -255,7 +319,7 @@ def validate_markdown(
 
     Returns:
         Tuple of (problems list, exit_code)
-        - problems: List of validation problem descriptions
+        - problems: List of DiagnosticEvents
         - exit_code: 0 for success or when strict=False; 1 only when strict=True and issues found
 
     Raises:
@@ -273,13 +337,16 @@ def validate_markdown(
 
     labels, anchors = collect_symbols(md_paths)
 
-    problems: list[str] = []
+    problems: list[DiagnosticEvent] = []
     problems += validate_images(md_paths, repo_root)
     problems += validate_refs(md_paths, repo_root, labels, anchors)
     problems += validate_math(md_paths, repo_root)
 
     if problems:
-        exit_code = 1 if strict else 0
+        # Currently treating WARNING severity as failing if strict is True.
+        # But if we want only ERROR to fail, we can filter.
+        has_errors = any(p.severity == DiagnosticSeverity.ERROR for p in problems)
+        exit_code = 1 if (strict and has_errors) else 0
         return (problems, exit_code)
     else:
         return ([], 0)

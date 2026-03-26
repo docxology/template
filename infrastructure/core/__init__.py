@@ -12,6 +12,7 @@ from their submodules:
     infrastructure.core.pipeline      — PipelineConfig, PipelineExecutor
     infrastructure.core.pipeline.multi_project — MultiProjectConfig, MultiProjectResult
     infrastructure.core.runtime.health_check  — quick_health_check, get_health_status
+    infrastructure.core.telemetry     — TelemetryCollector, TelemetryConfig
 """
 
 from __future__ import annotations

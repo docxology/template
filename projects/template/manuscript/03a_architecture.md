@@ -1,6 +1,6 @@
 # Methods
 
-The `template/` architecture is deliberately bifurcated into a globally shared `infrastructure/` layer and project-specific `projects/` silos. This section describes the four core design patterns, the eight-stage pipeline that operationalizes them, and the AI collaboration model that distinguishes this system from conventional research templates.
+The `template/` architecture is deliberately bifurcated into a globally shared `infrastructure/` layer and project-specific `projects/` silos. This section describes the four core design patterns, the ten-stage DAG pipeline that operationalizes them, and the AI collaboration model that distinguishes this system from conventional research templates.
 
 ## The Two-Layer Architecture
 

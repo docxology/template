@@ -104,7 +104,7 @@ class TestValidateImages:
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
 
         assert len(problems) == 1
-        assert "Missing image: ../output/figures/missing.png" in problems[0]
+        assert "Missing referenced image: '../output/figures/missing.png'" in problems[0].message
 
     def test_validates_existing_image(self, tmp_path):
         """Test validate_images doesn't flag existing images."""
@@ -131,7 +131,7 @@ class TestValidateImages:
         problems = validate_images([str(manuscript / "test.md")], tmp_path)
 
         assert len(problems) == 1
-        assert abs_image_path in problems[0]
+        assert "Missing referenced image" in problems[0].message
 
     def test_relative_path_not_absolute_after_normpath(self, tmp_path, monkeypatch):
         """Test validate_images with relative path that stays relative after normpath.
@@ -156,9 +156,7 @@ class TestValidateImages:
 
         # Should report missing image since we didn't create it
         assert len(problems) == 1
-        assert (
-            "output/figures/test.png" in problems[0] or "../output/figures/test.png" in problems[0]
-        )
+        assert "Missing referenced image" in problems[0].message
 
     def test_relative_path_exists_after_repo_root_join(self, tmp_path):
         """Test validate_images with relative path that exists when joined with repo_root.
@@ -195,7 +193,7 @@ class TestValidateRefs:
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
 
         assert len(problems) == 1
-        assert "Missing equation label for \\eqref{eq:missing}" in problems[0]
+        assert "Missing equation label for \\eqref{eq:missing}" in problems[0].message
 
     def test_detects_missing_anchor(self, tmp_path):
         """Test validate_refs detects missing anchors."""
@@ -207,7 +205,7 @@ class TestValidateRefs:
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
 
         assert len(problems) == 1
-        assert "Missing anchor/label for link (#missing_anchor)" in problems[0]
+        assert "Missing anchor/label for internal link (#missing_anchor)" in problems[0].message
 
     def test_detects_bare_url(self, tmp_path):
         """Test validate_refs detects bare URLs."""
@@ -219,7 +217,7 @@ class TestValidateRefs:
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
 
         assert len(problems) == 1
-        assert "Bare URL found" in problems[0]
+        assert "Bare URL found" in problems[0].message
 
     def test_detects_non_informative_link(self, tmp_path):
         """Test validate_refs detects non-informative link text."""
@@ -232,7 +230,7 @@ class TestValidateRefs:
 
         # The regex patterns can detect multiple issues with the same text
         assert len(problems) >= 1
-        assert any("Non-informative link text" in p for p in problems)
+        assert any("Non-informative link text" in p.message for p in problems)
 
 
 class TestValidateMath:
@@ -248,7 +246,7 @@ class TestValidateMath:
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
 
         assert len(problems) == 1
-        assert "Use equation environment instead of $$" in problems[0]
+        assert "Use equation environment instead of $$" in problems[0].message
 
     def test_detects_bracket_math(self, tmp_path):
         """Test validate_math detects bracket math notation."""
@@ -260,7 +258,7 @@ class TestValidateMath:
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
 
         assert len(problems) == 1
-        assert "Use equation environment instead of \\[ \\]" in problems[0]
+        assert "Use equation environment instead of \\[ \\]" in problems[0].message
 
     def test_detects_missing_label(self, tmp_path):
         """Test validate_math detects equations without labels."""
@@ -272,7 +270,7 @@ class TestValidateMath:
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
 
         assert len(problems) == 1
-        assert "Equation missing \\label{...}" in problems[0]
+        assert "Equation missing \\label{...}" in problems[0].message
 
     def test_detects_duplicate_label(self, tmp_path):
         """Test validate_math detects duplicate equation labels."""
@@ -287,7 +285,7 @@ class TestValidateMath:
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
 
         assert len(problems) == 1
-        assert "Duplicate equation label '{eq:duplicate}'" in problems[0]
+        assert "Duplicate equation label '{eq:duplicate}'" in problems[0].message
 
     def test_accepts_valid_equations(self, tmp_path):
         """Test validate_math accepts valid labeled equations."""
@@ -333,10 +331,10 @@ class TestValidateMarkdown:
 
     def test_problems_strict_returns_one(self, tmp_path):
         """Test validate_markdown returns 1 with problems in strict mode."""
-        # Create test markdown directory with problems
+        # Create test markdown directory with an ERROR-level problem
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text("\\begin{equation}x^2\\end{equation}")
+        (manuscript / "test.md").write_text("![Missing image](../output/figures/missing.png)")
 
         problems, exit_code = validate_markdown(manuscript, tmp_path, strict=True)
 

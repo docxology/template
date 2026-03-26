@@ -253,7 +253,7 @@ The thin orchestrator pattern has been successfully implemented, establishing a 
 
 **Master Orchestrator:**
 
-- **`scripts/execute_pipeline.py`** orchestrates the 8-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the 10-stage DAG pipeline
 
 This architecture ensures:
 

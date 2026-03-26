@@ -25,6 +25,7 @@ from infrastructure.rendering._pdf_latex_helpers import (
     generate_title_page_preamble,
     parse_missing_latex_package_from_log,
 )
+from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 
@@ -455,7 +456,7 @@ class TestBibliographyProcessingEdgeCases:
 
         bib_file = tmp_path / "nonexistent.bib"
 
-        result = renderer._process_bibliography(tex_file, output_dir, bib_file)
+        result = process_bibliography(tex_file, output_dir, bib_file)
 
         assert result is False
 
@@ -471,7 +472,7 @@ class TestBibliographyProcessingEdgeCases:
         bib_file.write_text("@article{test, title={Test}}")
 
         # Don't create aux file
-        result = renderer._process_bibliography(tex_file, output_dir, bib_file)
+        result = process_bibliography(tex_file, output_dir, bib_file)
 
         assert result is False
 
@@ -626,14 +627,25 @@ class TestModuleLevel:
         assert hasattr(renderer, "render")
         assert hasattr(renderer, "render_markdown")
         assert hasattr(renderer, "render_combined")
-        assert hasattr(renderer, "_process_bibliography")
         assert hasattr(renderer, "_combine_markdown_files")
-        assert hasattr(renderer, "_extract_preamble")
-        assert hasattr(renderer, "_fix_figure_paths")
-        assert hasattr(renderer, "_fix_math_delimiters")
-        assert hasattr(renderer, "_check_latex_log_for_graphics_errors")
-        assert hasattr(renderer, "_generate_title_page_preamble")
-        assert hasattr(renderer, "_generate_title_page_body")
+
+        # Verify extracted module functions are importable
+        from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
+        from infrastructure.rendering._pdf_latex_helpers import (
+            extract_preamble,
+            fix_figure_paths,
+            fix_math_delimiters,
+            check_latex_log_for_graphics_errors,
+            generate_title_page_preamble,
+            generate_title_page_body,
+        )
+        assert callable(process_bibliography)
+        assert callable(extract_preamble)
+        assert callable(fix_figure_paths)
+        assert callable(fix_math_delimiters)
+        assert callable(check_latex_log_for_graphics_errors)
+        assert callable(generate_title_page_preamble)
+        assert callable(generate_title_page_body)
 
 
 class TestCombineMarkdownFilesEdgeCases:

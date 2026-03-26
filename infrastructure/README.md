@@ -25,6 +25,7 @@ Each subpackage (and the package root) includes a **`SKILL.md`** with YAML front
 | [scientific/SKILL.md](scientific/SKILL.md) | `infrastructure-scientific` |
 | [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` |
 | [steganography/SKILL.md](steganography/SKILL.md) | `infrastructure-steganography` |
+| [core/telemetry/SKILL.md](core/telemetry/SKILL.md) | `telemetry` |
 | [validation/SKILL.md](validation/SKILL.md) | `infrastructure-validation` |
 
 Pair each `SKILL.md` with the matching **`AGENTS.md`** for full API tables.
@@ -75,7 +76,7 @@ graph TD
     class REPORTING build
 ```
 
-Diagrams above are selective. These packages also exist under `infrastructure/`: **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor).
+Diagrams above are selective. These packages also exist under `infrastructure/`: **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor), **`telemetry/`** (`TelemetryCollector`, per-stage resource + diagnostic reports).
 
 ## Infrastructure Dependencies
 
@@ -119,7 +120,6 @@ flowchart TD
     class CORE_MOD,VALIDATION_MOD,DOCUMENTATION_MOD,RENDERING_MOD,LLM_MOD,PUBLISHING_MOD,REPORTING_MOD infra
     class OUTPUTS output
 ```
-
 
 ## Module Dependency Flow
 
@@ -239,6 +239,7 @@ flowchart LR
 - **Exception handling** - Custom exception hierarchy and error handling
 
 ### Document Processing
+
 - **[documentation/](documentation/)** - Figure management and API documentation generation
 - **[rendering/](rendering/)** - Multi-format output generation (PDF, HTML, slides)
 - **[validation/](validation/)** - Quality assurance and content validation
@@ -260,6 +261,10 @@ flowchart LR
 ### Security & Integrity
 
 - **[steganography/](steganography/)** - Cryptographic watermarking, PDF metadata injection, and hashing
+
+### Pipeline Telemetry
+
+- **[telemetry/](telemetry/)** - Unified per-stage resource + diagnostic tracking (`TelemetryCollector`)
 
 ## Usage in Projects
 
@@ -312,7 +317,7 @@ flowchart TD
 
 ## Testing
 
-Infrastructure modules maintain **83.33% test coverage** (exceeds 60% requirement):
+Infrastructure modules maintain **≥60% test coverage** (typically 80-84% overall):
 
 ```bash
 # Test all infrastructure
@@ -325,16 +330,19 @@ pytest tests/infra_tests/core/ -v
 ## Architecture Principles
 
 ### Thin Orchestrator Pattern
+
 - **Business logic** resides in infrastructure modules
 - **Scripts** provide thin orchestration layer
 - **Clean separation** between reusable code and project-specific logic
 
 ### Data Policy
+
 - **No mock methods** in business logic
 - **computations** with actual data
 - **Deterministic outputs** for reproducibility
 
 ### Validation
+
 - **Quality assurance** for all outputs
 - **Integration testing** across modules
 - **Error handling** with informative messages
@@ -350,7 +358,8 @@ pytest tests/infra_tests/core/ -v
 5. Ensure 60%+ test coverage
 
 ### Module Structure
-```
+
+```text
 infrastructure/new_module/
 ├── __init__.py      # Public API exports
 ├── core.py          # Main functionality

@@ -271,7 +271,7 @@ root <code>README.md</code> and <code>CLAUDE.md</code> for global
 constraints, and <code>README.md</code> for human navigation.</p>
 <h2 id="agentic-skill-architecture">Agentic Skill Architecture</h2>
 <p>The <a
-href="#documentation-duality-and-the-agentic-skill-architecture">Documentation
+href="#documentation-duality-and-ai-collaboration">Documentation
 Duality</a> standard addresses human and AI navigation at the directory
 level. A complementary layer operates at the <em>module</em> level:
 every infrastructure subpackage carries two additional machine-readable
@@ -389,7 +389,7 @@ resources)</li>
 MCP <strong>Resource</strong> (hash manifests)</li>
 </ul>
 <p>An agent orchestrating a full research pipeline could, in principle,
-compose these MCP tools to reproduce the entire eight-stage pipeline
+compose these MCP tools to reproduce the entire ten-stage DAG pipeline
 programmatically—discovering available tools via <code>SKILL.md</code>
 frontmatter, executing them via MCP protocol calls, and consuming their
 outputs as Resources. The <code>SKILL.md</code> files parallel Voyager’s
@@ -408,7 +408,7 @@ data-cites="yao2023react">[@yao2023react]</span> demonstrates that
 interleaving reasoning traces with tool actions dramatically improves
 agent reliability in interactive settings. The <code>template/</code>
 skill architecture provides the tool-use layer aligned with these
-frameworks, the eight-stage pipeline provides the planning scaffold, and
-the checkpoint system provides the memory layer.</p>
+frameworks, the ten-stage DAG pipeline provides the planning scaffold,
+and the checkpoint system provides the memory layer.</p>
 </body>
 </html>

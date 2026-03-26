@@ -1,6 +1,6 @@
 ## The AI Collaboration Model
 
-The [Documentation Duality](#documentation-duality-and-the-agentic-skill-architecture) standard and three-tier skill architecture represent an empirical bet: that structured, machine-readable documentation measurably improves AI agent performance in research codebases. This section reports our key observations.
+The [Documentation Duality](03c_documentation.md#documentation-duality-and-ai-collaboration) standard and three-tier skill architecture represent an empirical bet: that structured, machine-readable documentation measurably improves AI agent performance in research codebases. This section reports our key observations.
 
 The documentation investment creates a positive feedback loop: as agents produce higher-quality outputs from structured context, developers maintain that documentation, which in turn improves future interactions [@lau2025aicoding]. We observed this concretely during `template/` development—each module's `SKILL.md` was refined through iterative AI-assisted generation, serving as both input prompt and output validator.
 

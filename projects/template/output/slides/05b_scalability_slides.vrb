@@ -30,7 +30,7 @@ We have validated this scaling model with three heterogeneous projects:
 \end{itemize}
 
 These projects share no code with each other. They share only the
-infrastructure layer---12 modules, \textasciitilde150 Python
+infrastructure layer---14 modules, \textasciitilde150 Python
 files---which provides logging, rendering, validation, steganography,
 and reporting services identically to each project. This validates the
 Two-Layer Architecture's claim that infrastructure and project concerns
@@ -69,7 +69,7 @@ Figures (auto-generated) & 3 & 10+ & 4 \\
 }
 
 The infrastructure overhead per project is constant regardless of
-project size: the same 12 modules, the same 9 pipeline stages, the same
+project size: the same 14 modules, the same 9 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.
 \end{block}

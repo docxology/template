@@ -90,9 +90,16 @@ def validate_markdown(project_name: str = "project") -> bool:
             log_success("Markdown validation passed (no issues found)", logger)
             return True
         else:
+            from infrastructure.core.logging.diagnostic import DiagnosticReporter
+            reporter = DiagnosticReporter(project_name=project_name, output_dir=repo_root / "projects" / project_name / "output")
             logger.info(f"  Found {len(problems)} validation note(s):")
-            for problem in problems[:5]:
-                logger.info(f"    • {problem}")
+            for p in problems:
+                reporter.record(p)
+            reporter.save_report()
+            
+            for p in problems[:5]:
+                loc = f"[{p.file_path}] " if p.file_path else ""
+                logger.info(f"    • {loc}{p.message}")
             if len(problems) > 5:
                 logger.info(f"    ... and {len(problems) - 5} more")
             logger.info("  (Markdown validation notes are non-critical)")
@@ -232,6 +239,12 @@ def generate_validation_report(
         with open(report_file, "w") as f:
             json.dump(validation_results, f, indent=2)
         logger.info(f"Validation report saved: {report_file}")
+
+    # Print final diagnostic telemetry report (end of pipeline run)
+    from infrastructure.core.logging.diagnostic import DiagnosticReporter
+    reporter = DiagnosticReporter(project_name=project_name, output_dir=output_dir.parent)
+    if reporter.events:
+        reporter.print_report()
 
     return validation_results
 

@@ -70,7 +70,7 @@ pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
 
 ### Additional Test Modules
 
-- **`test_dashboard_generator.py`** - Dashboard generation
+- **`test_dashboard_generator.py`** - Dashboard system (_dashboard_matplotlib + extracted modules)
 - **`test_executive_reporter.py`** - Executive reporting
 - **`test_html_templates.py`** - HTML template rendering
 - **`test_manuscript_overview.py`** - Manuscript overview reports

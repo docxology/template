@@ -2,35 +2,30 @@
 
 from __future__ import annotations
 
-import re
 import os
 import subprocess
-import time
-import unicodedata
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.logging.progress import log_progress_bar
+from infrastructure.rendering._pdf_combined_renderer import (
+    build_pandoc_tex_command,
+    inject_bibliography,
+    inject_latex_preamble,
+    postprocess_latex,
+    preprocess_combined_markdown,
+    prevalidate_markdown,
+    run_pandoc_conversion,
+    verify_figure_references,
+)
 from infrastructure.rendering._pdf_latex_helpers import (
-    check_latex_log_for_graphics_errors,
-    extract_preamble,
     fix_figure_paths,
-    fix_math_delimiters,
-    generate_title_page_body,
-    generate_title_page_preamble,
-    parse_missing_latex_package_from_log,
 )
 from infrastructure.rendering._pdf_latex_pipeline import (
     compile_latex_manuscript,
-    log_pdf_success,
-    process_bibliography,
-    repair_truncated_aux,
-    validate_pdf_structure,
 )
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
-from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
-from infrastructure.rendering._pdf_preflight import check_brace_balance
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
@@ -47,89 +42,6 @@ class PDFRenderer:
     def _combine_markdown_files(self, source_files: list[Path]) -> str:
         """Combine section markdown files; logic lives in ``_pdf_markdown_combine``."""
         return combine_manuscript_markdown_sections(source_files)
-
-    # ---------------------------------------------------------------------
-    # Backwards-compatible helpers expected by infra tests.
-    # Implementations live in `infrastructure.rendering._pdf_latex_helpers`.
-    # ---------------------------------------------------------------------
-
-    def _generate_title_page_preamble(self, manuscript_dir: Path | str | None = None) -> str:
-        """Generate LaTeX title preamble commands from config.yaml.
-
-        Args:
-            manuscript_dir: Override for the manuscript directory. Defaults to
-                ``self.config.manuscript_dir`` when ``None``.
-
-        .. deprecated::
-            Delegation wrapper — call ``generate_title_page_preamble`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        md = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
-        return generate_title_page_preamble(md)
-
-    def _generate_title_page_body(self, manuscript_dir: Path | str | None = None) -> str:
-        """Generate LaTeX title body commands (e.g., \\maketitle).
-
-        Args:
-            manuscript_dir: Override for the manuscript directory. Defaults to
-                ``self.config.manuscript_dir`` when ``None``.
-
-        .. deprecated::
-            Delegation wrapper — call ``generate_title_page_body`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        md = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
-        return generate_title_page_body(md)
-
-    def _fix_figure_paths(
-        self,
-        latex_content: str,
-        manuscript_dir: Path | str | None = None,
-        output_dir: Path | str | None = None,
-    ) -> str:
-        r"""Rewrite ``\includegraphics{...}`` paths for LaTeX compilation.
-
-        Args:
-            latex_content: Raw LaTeX string with ``\includegraphics`` commands.
-            manuscript_dir: Override for the manuscript directory. Defaults to
-                ``self.config.manuscript_dir`` when ``None``.
-            output_dir: Override for the PDF output directory. Defaults to
-                ``self.config.pdf_dir`` when ``None``.
-
-        .. deprecated::
-            Delegation wrapper — call ``fix_figure_paths`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        ms_dir = Path(manuscript_dir) if manuscript_dir is not None else Path(self.config.manuscript_dir)
-        out_dir = Path(output_dir) if output_dir is not None else Path(self.config.pdf_dir)
-        return fix_figure_paths(latex_content, manuscript_dir=ms_dir, output_dir=out_dir)
-
-    def _extract_preamble(self, preamble_file: Path | str) -> str:
-        """Extract LaTeX preamble from a markdown preamble file.
-
-        .. deprecated::
-            Delegation wrapper — call ``extract_preamble`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        return extract_preamble(Path(preamble_file))
-
-    def _fix_math_delimiters(self, latex_content: str) -> str:
-        """Fix display-math delimiter issues that break LaTeX compilation.
-
-        .. deprecated::
-            Delegation wrapper — call ``fix_math_delimiters`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        return fix_math_delimiters(latex_content)
-
-    def _check_latex_log_for_graphics_errors(self, log_file: Path | str) -> dict[str, list[str]]:
-        """Parse a LaTeX log file for graphics errors/warnings.
-
-        .. deprecated::
-            Delegation wrapper — call ``check_latex_log_for_graphics_errors`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        return check_latex_log_for_graphics_errors(Path(log_file))
 
     def render(self, source_file: Path, output_name: str | None = None) -> Path:
         """Render manuscript to PDF.
@@ -211,58 +123,6 @@ class PDFRenderer:
                 context={"source": str(source_file), "target": str(output_file)},
             ) from e
 
-    def _repair_truncated_aux(self, aux_file: Path) -> None:
-        """Repair a truncated .aux file by removing the last incomplete entry.
-
-        .. deprecated::
-            Delegation wrapper — call ``repair_truncated_aux`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        repair_truncated_aux(aux_file)
-
-    def _validate_pdf_structure(self, pdf_path: Path) -> bool:
-        """Check that a PDF file has valid trailer markers.
-
-        .. deprecated::
-            Delegation wrapper — call ``validate_pdf_structure`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        return validate_pdf_structure(pdf_path)
-
-    def _process_bibliography(self, tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
-        """Process bibliography using bibtex.
-
-        .. deprecated::
-            Delegation wrapper — call ``process_bibliography`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        return process_bibliography(tex_file, output_dir, bib_file)
-
-    def _check_brace_balance(self, md_content: str) -> list[str]:
-        """Check markdown content for unbalanced braces.
-
-        .. deprecated::
-            Delegation wrapper — call ``check_brace_balance`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        return check_brace_balance(md_content)
-
-    def _build_pandoc_render_error(
-        self,
-        e: "subprocess.CalledProcessError",
-        combined_md: Path,
-        source_files: list[Path],
-        md_content: str,
-        pandoc_cmd: list[str],
-    ) -> "RenderingError":
-        """Parse a CalledProcessError from pandoc and build a RenderingError with full context.
-
-        .. deprecated::
-            Delegation wrapper — call ``build_pandoc_render_error`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        return build_pandoc_render_error(e, combined_md, source_files, md_content, pandoc_cmd)
-
     def render_combined(
         self,
         source_files: list[Path],
@@ -285,7 +145,7 @@ class PDFRenderer:
             RenderingError: If combination or rendering fails
         """
 
-        # NEW: Log sections being combined
+        # Log sections being combined
         logger.info("\n" + "=" * 60)
         logger.info("COMBINED MANUSCRIPT RENDERING")
         logger.info("=" * 60)
@@ -301,9 +161,6 @@ class PDFRenderer:
         output_dir = Path(self.config.pdf_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Use only the project basename for the output filename (not the full qualified path)
-        # For nested projects like "cognitive_integrity/cogsec_multiagent_1_theory",
-        # extract just "cogsec_multiagent_1_theory" for the filename
         project_basename = Path(project_name).name
         output_file = output_dir / f"{project_basename}_combined.pdf"
 
@@ -312,374 +169,71 @@ class PDFRenderer:
             output_file.unlink()
             logger.debug(f"Removed existing output file: {output_file.name}")
 
-        # Check if bibliography exists (prefer references.bib, fallback to 99_references.bib)
+        # Check if bibliography exists
         bib_file = manuscript_dir / "references.bib"
         if not bib_file.exists():
             bib_file = manuscript_dir / "99_references.bib"
         bib_exists = bib_file.exists()
 
-        # Create temporary combined LaTeX file from combined markdown
+        # Create combined markdown
         combined_tex = output_dir / "_combined_manuscript.tex"
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = self._combine_markdown_files(source_files)
-        # Write with explicit UTF-8 encoding
+
+        # Write combined markdown atomically
         _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
         try:
             _tmp.write_text(combined_content, encoding="utf-8")
             _tmp.replace(combined_md)
-        except Exception:  # noqa: BLE001 — markdown atomic-write may fail with OS/FS errors
+        except Exception:  # noqa: BLE001
             _tmp.unlink(missing_ok=True)
             raise
         logger.debug(
             f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
         )
 
-        # Pre-process: completely remove Mermaid code blocks before Pandoc conversion.
-        # Pandoc/LaTeX cannot render Mermaid natively — raw mermaid fences appear as
-        # verbatim code blocks in the PDF.  We strip the entire fence and body so no
-        # code text leaks into the rendered output.
-        import re as _re
-
-        mermaid_pattern = _re.compile(
-            r"```\s*mermaid\s*\n.*?```", _re.DOTALL | _re.IGNORECASE
-        )
-        combined_content, n_removed = mermaid_pattern.subn("", combined_content)
-        if n_removed:
-            logger.info(f"✓ Removed {n_removed} Mermaid diagram block(s) from combined markdown")
-            combined_md.write_text(combined_content, encoding="utf-8")
-        else:
-            logger.debug("No Mermaid blocks found in combined markdown")
-
-        # Pre-process: normalise figure paths in the combined markdown.
-        # Chapter files use relative paths like ../../output/figures/ or
-        # ../output/figures/ which are correct relative to manuscript/ subdirs
-        # but break when Pandoc processes the combined file from output/pdf/.
-        # Convert all variants to ../figures/ which is correct from output/pdf/.
-        fig_path_replacements = [
-            ("../../output/figures/", "../figures/"),
-            ("../output/figures/", "../figures/"),
-            ("output/figures/", "../figures/"),
-        ]
-        n_fig_paths = 0
-        for old_prefix, new_prefix in fig_path_replacements:
-            count = combined_content.count(old_prefix)
-            if count:
-                combined_content = combined_content.replace(old_prefix, new_prefix)
-                n_fig_paths += count
+        # Step 1: Preprocess markdown (Mermaid stripping + figure path normalization)
+        combined_content, _, n_fig_paths = preprocess_combined_markdown(combined_content)
         if n_fig_paths:
-            logger.info(f"✓ Normalised {n_fig_paths} figure path(s) to ../figures/ in combined markdown")
             combined_md.write_text(combined_content, encoding="utf-8")
 
-
-
-
-
-
-
-        # Convert combined markdown to LaTeX using Pandoc
-        # This handles raw LaTeX commands properly
-        # --standalone: Create a complete LaTeX document with document class and preamble
-        pandoc_to_tex = [
-            self.config.pandoc_path,
-            str(combined_md),
-            "-o",
-            str(combined_tex),
-            "--from=markdown+tex_math_dollars+raw_tex+header_attributes",  # Preserve LaTeX math, raw blocks, and header attributes like {#sec:...}  # noqa: E501
-            "--to=latex",
-            "--standalone",
-            "--number-sections",
-            # "--toc",  # Managed manually in manuscript for precise placement
-            "--natbib",  # Use natbib for bibliography support with BibTeX
-        ]
-
-        # Note: We do NOT use --citeproc here because we want to preserve LaTeX \cite{}
-        # commands for BibTeX processing. Using --citeproc would have pandoc process
-        # citations directly, bypassing BibTeX. Instead, we let BibTeX handle citations
-        # during the LaTeX compilation phase (see _process_bibliography() below).
-        # The --natbib flag ensures that LaTeX \cite{} commands are properly formatted.
-
-        # Add resource paths for figure resolution
-        figures_dir = Path(self.config.figures_dir)
-        pandoc_to_tex.extend(
-            [
-                "--resource-path=" + str(manuscript_dir),
-                "--resource-path=" + str(figures_dir),
-            ]
-        )
-
+        # Step 2: Pre-validate markdown for common issues
         logger.info("Converting combined markdown to LaTeX...")
         logger.debug(f"Combined markdown file: {combined_md}")
+        _validation_errors, md_content = prevalidate_markdown(combined_md)
 
-        # Pre-validate combined markdown for common issues
-        validation_errors = []
-        md_content = ""
-        if combined_md.exists():
-            try:
-                md_content = combined_md.read_text(encoding="utf-8")
+        # Step 3: Run Pandoc markdown→LaTeX conversion
+        pandoc_cmd = build_pandoc_tex_command(self.config, combined_md, combined_tex, manuscript_dir)
+        run_pandoc_conversion(pandoc_cmd, combined_md, source_files, md_content)
 
-                # Validate basic markdown structure for common issues that Pandoc reports poorly.
-                # NOTE: We do not check parentheses inside math blocks — the regex patterns
-                # for $...$ and $$...$$ produce false positives for valid LaTeX like
-                # H(\mathcal{F}_c) or (\cref{sec:omega4}). LaTeX compilation handles those.
-                validation_errors = self._check_brace_balance(md_content)
-
-                if validation_errors:
-                    logger.warning(
-                        f"Pre-validation found {len(validation_errors)} potential issue(s):"
-                    )
-                    for err in validation_errors:
-                        logger.warning(f"  • {err}")
-                    # Note: These are warnings only, don't block PDF generation
-                    logger.info("  (These are warnings - PDF generation will proceed)")
-            except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001 — pre-validation is advisory; PDF generation continues
-                logger.debug(f"Pre-validation check failed: {e}")
-                # Try to read content anyway for error reporting
-                try:
-                    md_content = combined_md.read_text(encoding="utf-8")
-                except (OSError, UnicodeDecodeError) as read_err:
-                    logger.debug(f"Failed to read markdown for error reporting: {read_err}")
-
-        try:
-            subprocess.run(
-                pandoc_to_tex,
-                check=True,
-                capture_output=True,
-                text=True,
-                timeout=(8 if os.environ.get("PYTEST_CURRENT_TEST") else 600),
-            )
-        except subprocess.CalledProcessError as e:
-            raise self._build_pandoc_render_error(e, combined_md, source_files, md_content, pandoc_to_tex) from e
-
-        # Read and process LaTeX content
+        # Step 4: Post-process LaTeX (lmodern, hidelinks, math delimiters)
         tex_content = combined_tex.read_text()
+        tex_content = postprocess_latex(tex_content)
 
-        # Fix lmodern conflict with xelatex (causes run-on words)
-        # The lmodern package relies on T1 font encoding which can conflict with
-        # XeLaTeX's font handling, leading to missing spaces between words.
-        if "\\usepackage{lmodern}" in tex_content:
-            tex_content = tex_content.replace("\\usepackage{lmodern}", "% \\usepackage{lmodern}")
-            logger.info("✓ Disabled lmodern package to prevent XeLaTeX font conflicts")
-
-        # Fix pandoc's hidelinks to enable coloured hyperlinks.
-        # Pandoc always injects \hypersetup{hidelinks,...} which suppresses link colours.
-        # We replace it with colorlinks=true and red link colours.
-        if "hidelinks" in tex_content:
-            tex_content = tex_content.replace(
-                "hidelinks,",
-                "colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,",
-            )
-            # In case there's no trailing comma (e.g. standalone hidelinks)
-            tex_content = tex_content.replace(
-                "  hidelinks,\n",
-                "  colorlinks=true,\n  linkcolor=red,\n  urlcolor=red,\n  citecolor=red,\n",
-            )
-            logger.info("✓ Patched hidelinks → colorlinks=true with red link colours")
-
-
-
-        # Fix broken math delimiters from Pandoc conversion
-        try:
-            tex_content = fix_math_delimiters(tex_content)
-        except Exception as e:  # noqa: BLE001
-            logger.warning(
-                f"Math delimiter fixing failed: {e}. Continuing with original LaTeX content."
-            )
-            logger.debug(f"Math delimiter fixing error details: {type(e).__name__}: {e}")
-            # Continue with original tex_content - it may still compile
-
-        # Fix figure paths for LaTeX compilation
+        # Step 5: Fix figure paths for LaTeX compilation
         tex_content = fix_figure_paths(tex_content, manuscript_dir, output_dir)
 
-        # Extract and apply preamble directly to LaTeX
-        preamble_file = manuscript_dir / "preamble.md"
-        preamble_content = ""
-        if preamble_file.exists():
-            preamble_content = extract_preamble(preamble_file)
-            if preamble_content:
-                logger.info(f"✓ Extracted preamble from {preamble_file.name}")
-            else:
-                logger.warning("⚠️  Preamble file found but no LaTeX content extracted")
-        else:
-            logger.debug(f"No preamble file found at {preamble_file}")
+        # Step 6: Inject preamble and title page
+        tex_content = inject_latex_preamble(tex_content, manuscript_dir)
 
-        # Generate title page preamble and body commands from config.yaml
-        title_page_preamble = generate_title_page_preamble(manuscript_dir)
-        title_page_body = generate_title_page_body(manuscript_dir)
+        # Step 7: Inject bibliography
+        tex_content = inject_bibliography(tex_content, bib_exists)
 
-        # Ensure graphicx package is always included (required for \includegraphics)
-        # Check preamble_content (from preamble.md), not tex_content (Pandoc output)
-        graphicx_required = r"\usepackage{graphicx}"
-        if preamble_content and graphicx_required not in preamble_content:
-            logger.info("⚠️  graphicx package not found in preamble, adding it")
-            preamble_content = graphicx_required + "\n" + preamble_content
-        elif not preamble_content:
-            # No preamble at all, ensure graphicx is included
-            logger.info("⚠️  No preamble found, adding graphicx package")
-            preamble_content = graphicx_required
-
-        if preamble_content or title_page_preamble:
-            # Insert preamble and title page preamble commands BEFORE \begin{document}
-            begin_doc_idx = tex_content.find("\\begin{document}")
-            if begin_doc_idx > 0:
-                # Build combined preamble content
-                combined_preamble = ""
-                # Insert defaults (config.yaml) first, but checking for duplicates
-                if title_page_preamble:
-                    # Filter out commands that would overwrite existing Pandoc-generated metadata
-                    lines = title_page_preamble.split("\n")
-                    filtered_lines = []
-                    for line in lines:
-                        # We want to inject our formatted metadata even if Pandoc generated some.
-                        # Since we append to combined_preamble which is inserted before \begin{document}  # noqa: E501
-                        # (likely after Pandoc's preamble), our definitions should take precedence or at least exist.  # noqa: E501
-                        # For \author and \date, redefinition is standard.
-                        filtered_lines.append(line)
-
-                    if filtered_lines:
-                        combined_preamble += "\n".join(filtered_lines) + "\n\n"
-
-                # Insert overrides (preamble.md) second
-                if preamble_content:
-                    combined_preamble += preamble_content + "\n\n"
-
-                # Insert before \begin{document}
-                tex_content = (
-                    tex_content[:begin_doc_idx] + combined_preamble + tex_content[begin_doc_idx:]
-                )
-                logger.debug(
-                    f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}"  # noqa: E501
-                )
-
-        # Insert title page body commands AFTER \begin{document}
-        if title_page_body:
-            # We want to ensure our custom title page body is used and we also
-            # want a table of contents and a newpage.
-            full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
-
-            begin_doc_idx = tex_content.find("\\begin{document}")
-            if begin_doc_idx > 0:
-                tex_preamble = tex_content[:begin_doc_idx]
-                tex_body = tex_content[begin_doc_idx:]
-
-                # Check if \maketitle is already present in the body
-                if "\\maketitle" in tex_body:
-                    logger.debug(
-                        "✓ \\maketitle already present in LaTeX body - replacing with our full title/TOC body"  # noqa: E501
-                    )
-                    # Find the first occurrence of \maketitle in the body and replace it
-                    tex_body = tex_body.replace("\\maketitle", full_title_body, 1)
-                else:
-                    # Find position right after \begin{document}
-                    end_of_begin_doc = tex_body.find("\n") + 1
-                    if end_of_begin_doc > 0:
-                        # Insert full title body and formatting after \begin{document}
-                        tex_body = (
-                            tex_body[:end_of_begin_doc]
-                            + "\n"
-                            + full_title_body
-                            + "\n\n"
-                            + tex_body[end_of_begin_doc:]
-                        )
-                    logger.info(
-                        r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"  # noqa: E501
-                    )
-
-                tex_content = tex_preamble + tex_body
-
-        # Insert \bibliography{references} before \end{document} if not already present.
-        # Pandoc's --natbib flag generates \bibliographystyle{plainnat} in the preamble
-        # but does NOT generate \bibliography{} unless used with --citeproc.
-        # We insert it here using the same style (plainnat) to avoid conflicts.
-        if bib_exists and "\\bibliography{" not in tex_content:
-            end_doc_idx = tex_content.rfind("\\end{document}")
-            if end_doc_idx > 0:
-                tex_content = (
-                    tex_content[:end_doc_idx]
-                    + "\n\n\\bibliography{references}\n"
-                    + tex_content[end_doc_idx:]
-                )
-                logger.info("✓ Inserted \\bibliography{references} before \\end{document}")
-            else:
-                logger.warning("⚠️  Could not find \\end{document} to insert bibliography")
-
-        # Ensure \bibdata{references} is written to .aux early via an \AtBeginDocument hook.
-        # xelatex has internal write-buffer limits that truncate the .aux file on large
-        # documents (>80 KB). When \bibliography{references} is at the end of the document,
-        # its \bibdata entry may be lost in the truncated tail. Writing it at document
-        # start guarantees bibtex can always find the bibliography database.
-        # NOTE: We use \AtBeginDocument to insert it early, but we only do this if it's
-        # not already handled by a clear \bibliography command that BibTeX can find.
-        # To avoid "Illegal, another \bibdata command" errors in BibTeX, we comment this
-        # out if we believe the standard \bibliography command is sufficient.
-        # if bib_exists:
-        #     bibdata_hook = (
-        #         "\\makeatletter\n"
-        #         "\\AtBeginDocument{\\immediate\\write\\@auxout{\\string\\bibdata{references}}}\n"
-        #         "\\makeatother\n"
-        #     )
-        #     begin_doc_idx = tex_content.find("\\begin{document}")
-        #     if begin_doc_idx > 0:
-        #         tex_content = (
-        #             tex_content[:begin_doc_idx] + bibdata_hook + tex_content[begin_doc_idx:]
-        #         )
-        #         logger.info("✓ Inserted early \\bibdata hook for .aux buffer safety")
-
+        # Write final .tex file atomically
         _tmp = combined_tex.with_suffix(combined_tex.suffix + ".tmp")
         try:
             _tmp.write_text(tex_content)
             _tmp.replace(combined_tex)
-        except Exception:  # noqa: BLE001 — LaTeX atomic-write may fail with OS/FS errors
+        except Exception:  # noqa: BLE001
             _tmp.unlink(missing_ok=True)
             raise
 
-        # Verify figure files exist before compilation
+        # Step 8: Verify figure references
         figures_dir = Path(self.config.figures_dir)
+        verify_figure_references(tex_content, figures_dir)
 
-        fig_pattern = r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}"
-        referenced_figures = re.findall(fig_pattern, tex_content)
-
-        if referenced_figures:
-            logger.info(f"Verifying {len(referenced_figures)} figure reference(s)...")
-            missing_figures = []
-            found_figures = []
-
-            for fig_ref in referenced_figures:
-                # Extract filename from path
-                filename = fig_ref.split("/")[-1]
-                fig_path = figures_dir / filename
-
-                # Try both normalized and non-normalized paths
-                fig_normalized = figures_dir / unicodedata.normalize("NFC", filename)
-
-                if fig_path.exists():
-                    found_figures.append(filename)
-                    logger.debug(f"  ✓ Found: {filename}")
-                elif fig_normalized.exists():
-                    found_figures.append(filename)
-                    logger.debug(f"  ✓ Found (normalized): {filename}")
-                else:
-                    missing_figures.append(filename)
-                    logger.warning(f"  ✗ Missing: {filename}")
-                    # Check if file exists with similar name
-                    if figures_dir.exists():
-                        similar = [
-                            f.name
-                            for f in figures_dir.iterdir()
-                            if f.name.lower().startswith(filename.split(".")[0].lower())
-                        ]
-                        if similar:
-                            logger.debug(f"    Similar files found: {', '.join(similar)}")
-
-            logger.info(f"  Found: {len(found_figures)}/{len(referenced_figures)} figures")
-            if missing_figures:
-                logger.warning(
-                    f"  Missing {len(missing_figures)} figure(s): {', '.join(missing_figures[:5])}"
-                )
-                if len(missing_figures) > 5:
-                    logger.warning(f"  ... and {len(missing_figures) - 5} more missing figures")
-
-        # Compile LaTeX to PDF with multi-pass xelatex
-        return self._compile_latex_to_pdf(
+        # Step 9: Compile LaTeX to PDF with multi-pass xelatex
+        return compile_latex_manuscript(
             combined_tex=combined_tex,
             combined_md=combined_md,
             output_dir=output_dir,
@@ -688,40 +242,3 @@ class PDFRenderer:
             bib_exists=bib_exists,
             source_files=source_files,
         )
-
-    def _compile_latex_to_pdf(
-        self,
-        combined_tex: Path,
-        combined_md: Path,
-        output_dir: Path,
-        output_file: Path,
-        bib_file: Path,
-        bib_exists: bool,
-        source_files: list[Path],
-    ) -> Path:
-        """Run multi-pass xelatex compilation with bibliography processing.
-
-        .. deprecated::
-            Delegation wrapper — call ``compile_latex_manuscript`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        return compile_latex_manuscript(
-            combined_tex,
-            combined_md,
-            output_dir,
-            output_file,
-            bib_file,
-            bib_exists,
-            source_files,
-        )
-
-    def _log_pdf_success(
-        self, output_file: Path, source_files: list[Path], start_time: float
-    ) -> None:
-        """Log successful PDF generation with size and duration metrics.
-
-        .. deprecated::
-            Delegation wrapper — call ``log_pdf_success`` directly.
-            Planned for removal: 2026-09-01.
-        """
-        log_pdf_success(output_file, source_files, start_time)

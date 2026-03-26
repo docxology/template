@@ -28,10 +28,10 @@ This is the most critical constraint in the repository.
 
 When modifying python logic in `scripts/`, you must route functionality through the `infrastructure` modules:
 
-* **Logging**: Use `infrastructure.core.logging_utils.ProjectLogger`. NEVER use print().
+* **Logging**: Use `infrastructure.core.logging.utils.ProjectLogger`. NEVER use print().
 * **Validation**: Use `infrastructure.scientific.stability.check_numerical_stability` instead of manual NaN checks.
 * **Benchmarking**: Use `infrastructure.scientific.benchmarking.benchmark_function` instead of manual `time.time()` tracking.
-* **Configuration**: Rely on `infrastructure.core.config_loader.load_config()`.
+* **Configuration**: Rely on `infrastructure.core.config.loader.load_config()`.
 
 ## 4. Manuscript & Rendering (RASP Standard)
 

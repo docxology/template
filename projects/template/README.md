@@ -8,9 +8,12 @@ The Template Project serves as a live demonstration of the pipeline's capabiliti
 
 - **Repository Introspection**: `src/template/introspection.py` discovers infrastructure modules, projects, pipeline stages, and test configurations from the live filesystem.
 - **Metrics Injection**: `src/template/metrics.py` computes ~40 manuscript variables; `inject_metrics.py` renders them via `${var}` substitution into output chapters.
-- **Publication-Quality Visualization**: `scripts/generate_architecture_viz.py` generates 4 architecture figures using real introspection data with a 16 pt font floor### Key Features Demonstrated
-- **Comprehensive Manuscript**: 21 modular chapters (~13,500 words) documenting the Two-Layer Architecture, eight-stage pipeline, 12 infrastructure modules, and steganographic provenance layer.
-- **Dynamic Introspection**: Architecture visualizations (Figure 1-4) are generated at render-time by scanning the live `template/` repository infrastructure. real repository.
+- **Publication-Quality Visualization**: `scripts/generate_architecture_viz.py` generates 4 architecture figures using real introspection data with a 16 pt font floor.
+
+### Key Features Demonstrated
+
+- **Comprehensive Manuscript**: 21 modular chapters (~13,500 words) documenting the Two-Layer Architecture, ten-stage DAG pipeline, 13 infrastructure modules, and steganographic provenance layer.
+- **Dynamic Introspection**: Architecture visualizations (Figure 1-4) are generated at render-time by scanning the live `template/` repository infrastructure.
 
 ## Quick Start
 

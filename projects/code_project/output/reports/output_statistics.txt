@@ -8,7 +8,7 @@ Total Files: 112
 Total Size: 4.93 MB
 
 Files by Category:
-  • pdf: 10 files (1.90 MB)
+  • pdf: 10 files (1.89 MB)
   • web: 11 files (0.23 MB)
   • slides: 72 files (1.26 MB)
   • figures: 7 files (1.52 MB)

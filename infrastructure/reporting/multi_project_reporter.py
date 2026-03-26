@@ -18,7 +18,7 @@ from infrastructure.reporting.executive_reporter import (
 )
 
 try:
-    from infrastructure.reporting.dashboard_generator import generate_all_dashboards
+    from infrastructure.reporting._dashboard_matplotlib import generate_all_dashboards
 
     _DASHBOARD_AVAILABLE = True
 except ImportError:

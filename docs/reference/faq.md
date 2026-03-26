@@ -132,7 +132,7 @@
 
 ### **Q: What are the advanced modules?**
 
-**A:** The template includes 12 infrastructure modules: core (logging, config, exceptions), documentation (figure management, glossary), validation (output verification, integrity), publishing (academic workflows), scientific (scientific computing), llm (local LLM assistance, literature search), rendering (multi-format output), reporting (pipeline reporting and error aggregation), project (project discovery and orchestration), steganography (watermarking, provenance), config (configuration schemas and templates), and docker (containerization). See [Modules Guide](../modules/modules-guide.md) for documentation.
+**A:** The template includes 14 infrastructure modules: core (logging, config, pipeline, telemetry, exceptions), documentation (figure management, glossary), validation (output verification, integrity), publishing (academic workflows), scientific (scientific computing), llm (local LLM assistance, literature search), rendering (multi-format output), reporting (pipeline reporting and error aggregation), project (project discovery and orchestration), steganography (watermarking, provenance), config (configuration schemas and templates), docker (containerization), skills (SKILL.md discovery and Cursor manifest), and telemetry (unified pipeline resource and diagnostic tracking). See [Modules Guide](../modules/modules-guide.md) for documentation.
 
 ### **Q: How do I use the advanced modules?**
 

@@ -14,6 +14,7 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import pdf_renderer
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
+from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
 
 
 class TestPDFRendererClass:
@@ -163,7 +164,7 @@ class TestBibliographyProcessing:
 
         # Use real execution - may succeed or fail depending on bibtex
         try:
-            result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+            result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # Should return boolean
             assert isinstance(result, bool)
         except (RenderingError, OSError, subprocess.SubprocessError):

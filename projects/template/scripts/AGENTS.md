@@ -20,7 +20,7 @@ Technical specification for the template project's analysis scripts.
 | Figure | Filename | Description |
 |--------|----------|-------------|
 | 1 | `architecture_overview.png` | Two-Layer Architecture diagram with module file counts and four-layer doc badges |
-| 2 | `pipeline_stages.png` | Eight-stage pipeline flow with stage descriptions |
+| 2 | `pipeline_stages.png` | Ten-stage DAG pipeline flow with stage descriptions |
 | 3 | `module_inventory.png` | Bar chart of Python files per infrastructure module with [ARSP] doc badges |
 | 4 | `comparative_feature_matrix.png` | 14×10 tool capability heatmap with ✓/◐/— symbols and group dividers |
 

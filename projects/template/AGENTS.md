@@ -8,7 +8,7 @@ Programmatic introspection and documentation of the template repository's own ar
 
 ## Architecture
 
-```
+```text
 template/
 ├── src/template/              # Core modules (5 files, 6 dataclasses)
 │   ├── __init__.py            # Public API exports
@@ -28,7 +28,7 @@ template/
 │   ├── 01_abstract.md         # Dense system summary
 │   ├── 02_introduction.md     # Reproducibility crisis + solution
 │   ├── 03a_architecture.md    # Two-Layer patterns
-│   ├── 03b_pipeline.md        # 8-stage pipeline + orchestrators
+│   ├── 03b_pipeline.md        # 10-stage DAG pipeline + orchestrators
 │   ├── 03c_documentation.md   # Documentation Duality + Agentskills, MCP mapping
 │   ├── 03d_fair_iac.md        # FAIR4RS alignment, IaC
 │   ├── 03e_quality.md         # Zero-Mock, visualization standards
@@ -38,7 +38,7 @@ template/
 │   ├── 05c_comparison.md      # Tool comparison + FAIR4RS update
 │   ├── 05d_ai_collaboration.md # AI model, limitations
 │   ├── 05e_future_conclusion.md # Future + conclusion
-│   ├── 06_infrastructure_modules.md  # 12-module reference
+│   ├── 06_infrastructure_modules.md  # 13-module reference
 │   ├── 07_security_provenance.md     # Steganography deep-dive
 │   ├── 08a_appendix_pipeline.md   # Appendix A: Pipeline reference
 │   ├── 08b_appendix_config.md     # Appendix B: Configuration
@@ -55,42 +55,42 @@ template/
 
 ### 1. Introspection Module (`src/template/introspection.py`)
 
-| Function | Returns | Description |
-|----------|---------|-------------|
-| `discover_infrastructure_modules` | `list[ModuleInfo]` | Scan infrastructure subpackages |
-| `discover_projects` | `list[ProjectInfo]` | Find project workspaces |
-| `count_pipeline_stages` | `list[PipelineStage]` | Enumerate pipeline scripts |
-| `analyze_test_coverage_config` | `CoverageConfig` | Parse testing thresholds |
-| `build_infrastructure_report` | `InfrastructureReport` | Full aggregated report |
+| Function                       | Returns                 | Description                            |
+|--------------------------------|-------------------------|----------------------------------------|
+| `discover_infrastructure_modules` | `list[ModuleInfo]`   | Scan infrastructure subpackages        |
+| `discover_projects`            | `list[ProjectInfo]`     | Find project workspaces                |
+| `count_pipeline_stages`        | `list[PipelineStage]`   | Enumerate pipeline scripts             |
+| `analyze_test_coverage_config` | `CoverageConfig`        | Parse testing thresholds               |
+| `build_infrastructure_report`  | `InfrastructureReport`  | Full aggregated report                 |
 
 ### 2. Metrics Module (`src/template/metrics.py`)
 
-| Function | Returns | Description |
-|----------|---------|-------------|
-| `count_test_functions` | `int` | Count `def test_` definitions |
-| `count_docs_markdown_files` | `int` | Count `.md` files under `docs/` |
-| `count_docs_subdirs` | `int` | Count `docs/` subdirectories |
-| `format_count` | `str` | Format count with optional `~` prefix |
-| `build_manuscript_metrics_dict` | `dict` | Full metrics from live repo data |
-| `save_metrics_json` | `Path` | Serialise metrics to JSON |
-| `build_module_inventory_table` | `str` | Render module inventory as Markdown |
+| Function                       | Returns  | Description                                 |
+|--------------------------------|----------|---------------------------------------------|
+| `count_test_functions`         | `int`    | Count `def test_` definitions               |
+| `count_docs_markdown_files`    | `int`    | Count `.md` files under `docs/`             |
+| `count_docs_subdirs`           | `int`    | Count `docs/` subdirectories                |
+| `format_count`                 | `str`    | Format count with optional `~` prefix       |
+| `build_manuscript_metrics_dict`| `dict`   | Full metrics from live repo data            |
+| `save_metrics_json`            | `Path`   | Serialise metrics to JSON                   |
+| `build_module_inventory_table` | `str`    | Render module inventory as Markdown         |
 
 ### 3. Injection Module (`src/template/inject_metrics.py`)
 
-| Function | Returns | Description |
-|----------|---------|-------------|
-| `load_metrics` | `dict` | Deserialise `metrics.json` to flat dict |
-| `render_chapter` | `Path` | Substitute `${vars}` in one chapter |
-| `render_all_chapters` | `list[Path]` | Process all chapters + copy ancillary files |
+| Function             | Returns  | Description                                    |
+|----------------------|----------|------------------------------------------------|
+| `load_metrics`       | `dict`   | Deserialise `metrics.json` to flat dict        |
+| `render_chapter`     | `Path`   | Substitute `${vars}` in one chapter            |
+| `render_all_chapters`| `list[Path]` | Process all chapters + copy ancillary files|
 
 ### 4. Visualization Module (`src/template/architecture_viz.py`)
 
-| Output | Description |
-|--------|-------------|
-| `architecture_overview.png` | Two-Layer architecture and 12 modules |
-| `pipeline_stages.png` | 8-stage pipeline flow with descriptions |
-| `module_inventory.png` | Complexity/size chart for all infrastructure with doc badges |
-| `comparative_feature_matrix.png` | 14×10 tool capability heatmap |
+| Output                          | Description                                                |
+|---------------------------------|------------------------------------------------------------|
+| `architecture_overview.png`     | Two-Layer architecture and 13 modules                      |
+| `pipeline_stages.png`           | 10-stage DAG pipeline flow with descriptions               |
+| `module_inventory.png`          | Complexity/size chart for all infrastructure with doc badges|
+| `comparative_feature_matrix.png`| 14×10 tool capability heatmap                              |
 
 ### 5. Test Suite (`tests/`)
 

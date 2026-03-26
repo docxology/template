@@ -134,6 +134,37 @@ The Core module provides fundamental foundation utilities used across the entire
 - File inventory integration
 - Executive reporting for multi-project runs
 
+**pipeline/dag.py**
+- Declarative pipeline DAG engine
+- YAML-based stage definition parsing from `pipeline.yaml`
+- Topological sorting via Kahn's algorithm
+- Tag-based stage filtering (`core`, `optional`, `llm`)
+- Project-specific `pipeline.yaml` override support
+
+**pipeline/pipeline.yaml**
+- Default declarative pipeline stage definitions
+- 10 stages with dependency graph (DAG)
+- Tag-based filtering for `--core-only` vs full pipeline
+- Stage metadata: name, script, description, dependencies, tags
+- Optional `telemetry:` configuration block
+
+**telemetry/collector.py**
+- `TelemetryCollector` — unified stage-level metrics + diagnostic aggregation
+- Bridges `StagePerformanceTracker` and `DiagnosticReporter`
+- Context-managed `start_stage()` / `end_stage()` lifecycle
+- Performance warning detection (slow stage, high memory, high CPU)
+- JSON + text report persistence
+
+**telemetry/config.py**
+- `TelemetryConfig` dataclass (YAML-loadable via `from_dict()`)
+- Configurable thresholds: `slow_stage_multiplier`, `high_memory_mb`, `high_cpu_percent`
+- Output format selection: `json`, `text`
+
+**telemetry/models.py**
+- `StageTelemetry` — per-stage timing, resource usage, diagnostic counts
+- `PipelineTelemetry` — full pipeline report with warnings and system info
+- `PerformanceWarning` — individual anomaly record
+
 ## Function Signatures
 
 ### runtime/exceptions.py

@@ -3,8 +3,8 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.52",
-      "total_size_bytes": 1592274,
+      "size_mb": "1.53",
+      "total_size_bytes": 1600818,
       "largest_files": [
         {
           "name": "template_combined.pdf",
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 23,
       "size_mb": "0.51",
-      "total_size_bytes": 530086,
+      "total_size_bytes": 531878,
       "largest_files": [
         {
           "name": "index.html",
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 168,
-      "size_mb": "3.05",
-      "total_size_bytes": 3197509,
+      "size_mb": "3.06",
+      "total_size_bytes": 3206671,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "0.91",
+          "size_mb": "0.92",
           "path": "slides/04_results_slides.pdf"
         },
         {
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 4,
-      "size_mb": "0.87",
-      "total_size_bytes": 909122,
+      "size_mb": "0.88",
+      "total_size_bytes": 919763,
       "largest_files": [
         {
           "name": "comparative_feature_matrix.png",
@@ -112,7 +112,7 @@
         },
         {
           "name": "module_inventory.png",
-          "size_mb": "0.15",
+          "size_mb": "0.17",
           "path": "figures/module_inventory.png"
         }
       ],
@@ -124,7 +124,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 3858,
+      "total_size_bytes": 3907,
       "largest_files": [
         {
           "name": "metrics.json",
@@ -140,7 +140,7 @@
       "exists": true,
       "file_count": 4,
       "size_mb": "0.01",
-      "total_size_bytes": 7237,
+      "total_size_bytes": 7094,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -183,7 +183,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2669,
+      "total_size_bytes": 2603,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -197,7 +197,7 @@
     }
   },
   "total_files": 211,
-  "total_size_mb": 5.953555107116699,
+  "total_size_mb": 5.982145309448242,
   "largest_files": [
     {
       "name": "template_combined.pdf",
@@ -207,7 +207,7 @@
     },
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "0.91",
+      "size_mb": "0.92",
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
@@ -231,7 +231,7 @@
     },
     {
       "name": "module_inventory.png",
-      "size_mb": "0.15",
+      "size_mb": "0.17",
       "category": "figures",
       "path": "figures/module_inventory.png"
     },
@@ -262,15 +262,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.5185108184814453,
-    "web": 0.5055294036865234,
-    "slides": 3.049382209777832,
-    "figures": 0.8670063018798828,
-    "data": 0.0036792755126953125,
-    "reports": 0.006901741027832031,
+    "pdf": 1.5266590118408203,
+    "web": 0.5072383880615234,
+    "slides": 3.058119773864746,
+    "figures": 0.8771543502807617,
+    "data": 0.0037260055541992188,
+    "reports": 0.0067653656005859375,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0025453567504882812
+    "logs": 0.0024824142456054688
   },
   "file_counts_by_type": {
     ".md": 4,

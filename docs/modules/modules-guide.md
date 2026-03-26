@@ -1,6 +1,6 @@
 # 🔬 Modules Guide
 
-> **Guide** to the 12 infrastructure modules
+> **Guide** to the 14 infrastructure modules
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
@@ -22,6 +22,8 @@
 | 🔒 **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | — |
 | ⚙️ **Config** | Configuration schemas | Secure config, environment templates | — |
 | 🐳 **Docker** | Containerization | Dockerfile, docker-compose | — |
+| 🔍 **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | — |
+| 📡 **Telemetry** | Unified pipeline telemetry | Stage resource metrics, diagnostic aggregation, JSON/text reports | — |
 
 All modules follow the thin orchestrator pattern with test coverage.
 
@@ -112,6 +114,8 @@ def comprehensive_validation(output_dir, manuscript_files):
 | Reporting | json, pathlib | 75% |
 | Project | pathlib | 85% |
 | Steganography | PIL/Pillow, qrcode, pypdf | 80% |
+| Skills | pathlib | 85% |
+| Telemetry | psutil, json, pathlib | 84% |
 
 All modules work independently or together with minimal coupling.
 

@@ -384,7 +384,7 @@ Algorithm}\label{gradient-descent-algorithm}
 The core algorithm implements the iterative procedure for unconstrained
 optimization. Crucially, the implementation is designed to be highly
 observable, delegating all logging to
-\texttt{infrastructure.core.logging\_utils.ProjectLogger} and executing
+\texttt{infrastructure.core.logging.utils.ProjectLogger} and executing
 under the hermetic boundaries defined in the
 \href{https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py}{test
 configuration}.
@@ -1100,7 +1100,7 @@ Capabilities}\label{infrastructure-backed-capabilities}
 \item
   \textbf{Reporting \& Integrity}:
   \texttt{infrastructure.reporting.pipeline\_reporter} and
-  \texttt{infrastructure.validation.output\_validator} assuring CSV/JSON
+  \texttt{infrastructure.validation.output.validator} assuring CSV/JSON
   configurations conform.
 \item
   \textbf{Visual Cryptography}: Publication-ready graphics compiled by
@@ -1259,7 +1259,7 @@ to isolate algorithmic scaling from problem conditioning effects.
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-03-23T12:09:35Z
+  \textbf{Generated}: 2026-03-26T14:33:41Z
 \end{itemize}
 
 \subsection{Pipeline ordering}\label{pipeline-ordering}
@@ -1366,7 +1366,7 @@ traceable to a specific configuration state.
 Registry}\label{generated-artifact-registry}
 
 The analysis pipeline produced the following artifacts, each validated
-by \texttt{infrastructure.validation.output\_validator}:
+by \texttt{infrastructure.validation.output.validator}:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}ll@{}}

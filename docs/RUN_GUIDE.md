@@ -4,8 +4,8 @@
 
 The Research Project Template provides **two main entry points** for pipeline operations:
 
-1. **`run.sh`** - Main entry point for manuscript pipeline operations (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
-2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core 8-stage pipeline without LLM features
+1. **`run.sh`** - Main entry point for manuscript pipeline operations (Interactive TUI)
+2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core 10-stage DAG pipeline without LLM features
 
 ## 🏗️ Thin Orchestration Architecture
 
@@ -304,7 +304,7 @@ Executes the full pipeline but skips infrastructure tests.
 For programmatic access or CI/CD integration, use the Python orchestrator:
 
 ```bash
-# Core pipeline (8 stages) - Python orchestrator
+# Core pipeline (10-stage DAG) - Python orchestrator
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
@@ -336,8 +336,8 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 | Entry Point | Pipeline Stages | LLM Support | Use Case |
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
-| `./run.sh --pipeline` | 9 stages ([1/9] to [9/9]) + pre-clean ([0/9]) | Optional | Manuscript pipeline with LLM |
-| `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Eight stages by default (see above); seven with `--skip-infra` | None | Core pipeline, CI/CD automation |
+| `./run.sh --pipeline` | Full 10 stages | Optional | Manuscript pipeline with LLM |
+| `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Core stages | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
 

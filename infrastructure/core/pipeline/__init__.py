@@ -23,6 +23,7 @@ from infrastructure.core.pipeline.stage_monitor import (
 )
 from infrastructure.core.pipeline.summary import generate_pipeline_summary
 from infrastructure.core.pipeline.types import StageSpec
+from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
 
 __all__ = [
     "MultiProjectConfig",
@@ -35,6 +36,8 @@ __all__ = [
     "PipelineStageResult",
     "StagePerformanceTracker",
     "StageSpec",
+    "TelemetryCollector",
+    "TelemetryConfig",
     "generate_pipeline_summary",
     "get_system_resources",
 ]

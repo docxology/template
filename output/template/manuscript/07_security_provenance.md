@@ -62,7 +62,7 @@ An optional QR code is generated containing a URL pointing to the repository (e.
 
 The steganographic pipeline is orchestrated by `secure_run.sh`, a Bash script that wraps the standard `run.sh` pipeline with post-processing steganography:
 
-1. Execute the standard eight-stage pipeline for the target project.
+1. Execute the standard ten-stage DAG pipeline for the target project.
 2. The `secure_run.sh` script invokes `SteganographyProcessor`.
 3. Apply metadata injection, hashing, text overlay, and QR code injection.
 4. Save the secured PDF alongside the original.

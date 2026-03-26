@@ -344,7 +344,7 @@ This template enforces the **thin orchestrator pattern** where:
 - **`projects/{name}/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`projects/{name}/scripts/`** are lightweight wrappers that import and use `projects/{name}/src/` methods
 - **`projects/{name}/tests/`** ensures coverage of `projects/{name}/src/` functionality
-- **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the entire 10-stage DAG pipeline
 
 ### Script Requirements
 

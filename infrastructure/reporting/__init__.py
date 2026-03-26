@@ -49,9 +49,9 @@ from .suite_summary_generator import (
 )
 
 
-# Optional imports: dashboard_generator requires matplotlib/plotly which may not be installed
+# Optional imports: _dashboard_matplotlib requires matplotlib/plotly which may not be installed
 try:
-    from .dashboard_generator import (
+    from ._dashboard_matplotlib import (
         generate_all_dashboards,
         generate_matplotlib_dashboard,
         generate_plotly_dashboard,

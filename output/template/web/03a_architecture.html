@@ -240,7 +240,7 @@
 <p>The <code>template/</code> architecture is deliberately bifurcated
 into a globally shared <code>infrastructure/</code> layer and
 project-specific <code>projects/</code> silos. This section describes
-the four core design patterns, the eight-stage pipeline that
+the four core design patterns, the ten-stage DAG pipeline that
 operationalizes them, and the AI collaboration model that distinguishes
 this system from conventional research templates.</p>
 <h2 id="the-two-layer-architecture">The Two-Layer Architecture</h2>
@@ -331,7 +331,7 @@ wire them to infrastructure services.</li>
 write outputs. They maintain no persistent state between
 invocations.</li>
 <li><strong>Logged</strong>: Every significant action is logged via
-<code>infrastructure.core.logging_utils.get_logger</code>.</li>
+<code>infrastructure.core.logging.utils.get_logger</code>.</li>
 </ul>
 <p>This pattern ensures that all testable logic lives in
 <code>src/</code> where it is subject to the Zero-Mock testing policy,

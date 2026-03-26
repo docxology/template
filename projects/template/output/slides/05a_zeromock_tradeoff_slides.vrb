@@ -1,9 +1,9 @@
 \frametitle{The Zero-Mock Tradeoff}
 \protect\phantomsection\label{the-zero-mock-tradeoff}
-The \hyperlink{zero-mock-testing-policy}{Zero-Mock testing policy} is
-\texttt{template/}'s most distinctive design decision. By prohibiting
-all mock objects, we gain confidence that tests exercise real code
-paths---a pytest run against the template genuinely invokes
+The \href{03e_quality.md\#zero-mock-testing-policy}{Zero-Mock testing
+policy} is \texttt{template/}'s most distinctive design decision. By
+prohibiting all mock objects, we gain confidence that tests exercise
+real code paths---a pytest run against the template genuinely invokes
 \texttt{pandoc}, writes to disk, and parses real YAML. The cost is test
 duration: the full infrastructure test suite (\textasciitilde3,083
 tests) takes 2--4 minutes, compared to sub-second execution typical of

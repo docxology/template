@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:26
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  26 MAR 2026 07:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1610,7 +1610,7 @@ Overfull \hbox (10.83917pt too wide) in paragraph at lines 294--296
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 395.
 )
-Overfull \vbox (3517.81511pt too high) detected at line 504
+Overfull \vbox (3517.81511pt too high) detected at line 506
  []
 
 [1

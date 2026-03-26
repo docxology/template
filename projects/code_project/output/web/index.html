@@ -822,7 +822,7 @@ Algorithm</h3>
 <p>The core algorithm implements the iterative procedure for
 unconstrained optimization. Crucially, the implementation is designed to
 be highly observable, delegating all logging to
-<code>infrastructure.core.logging_utils.ProjectLogger</code> and
+<code>infrastructure.core.logging.utils.ProjectLogger</code> and
 executing under the hermetic boundaries defined in the <a
 href="https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py">test
 configuration</a>.</p>
@@ -1506,7 +1506,7 @@ Capabilities</h3>
 deterministic optimization experiments.</li>
 <li><strong>Reporting &amp; Integrity</strong>:
 <code>infrastructure.reporting.pipeline_reporter</code> and
-<code>infrastructure.validation.output_validator</code> assuring
+<code>infrastructure.validation.output.validator</code> assuring
 CSV/JSON configurations conform.</li>
 <li><strong>Visual Cryptography</strong>: Publication-ready graphics
 compiled by <code>infrastructure.rendering.pdf_renderer.py</code> using
@@ -1634,7 +1634,7 @@ class="header-section-number">6.5</span> Computational Environment</h2>
 <li><strong>Python</strong>: 3.12.11</li>
 <li><strong>NumPy</strong>: 2.4.1</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-03-23T12:09:35Z</li>
+<li><strong>Generated</strong>: 2026-03-26T14:33:41Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -1755,7 +1755,7 @@ class="header-section-number">7.2</span> Generated Artifact
 Registry</h2>
 <p>The analysis pipeline produced the following artifacts, each
 validated by
-<code>infrastructure.validation.output_validator</code>:</p>
+<code>infrastructure.validation.output.validator</code>:</p>
 <table>
 <thead>
 <tr>

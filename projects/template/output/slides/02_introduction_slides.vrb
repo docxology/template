@@ -2,15 +2,16 @@
 \protect\phantomsection\label{scope-and-contributions}
 This paper is itself a product of the template it describes. The metrics
 populating its tables were computed by the introspection module
-documented in the \hyperlink{methods}{Methods}; the figures were
-rendered by the visualization code validated by the test suite described
-in \hyperlink{quality-assurance}{Quality Assurance}; the PDF carrying
-these words was assembled by the same eight-stage pipeline whose
-architecture is the subject of the \hyperlink{results}{Results}. This
-self-productive loop---where the system that is described is also the
-system that produces the description---is not incidental but structural,
-a concrete demonstration that \texttt{template/} can sustain the full
-lifecycle from source code to published artifact within a single,
+documented in the \href{03a_architecture.md\#methods}{Methods}; the
+figures were rendered by the visualization code validated by the test
+suite described in \href{03e_quality.md\#quality-assurance}{Quality
+Assurance}; the PDF carrying these words was assembled by the same
+ten-stage DAG pipeline whose architecture is the subject of the
+\href{04_results.md\#results}{Results}. This self-productive
+loop---where the system that is described is also the system that
+produces the description---is not incidental but structural, a concrete
+demonstration that \texttt{template/} can sustain the full lifecycle
+from source code to published artifact within a single,
 version-controlled, pipeline-enforced repository. Our contributions are:
 
 \begin{itemize}
@@ -20,9 +21,9 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   Project Paradigm that enables N independent research projects to share
   infrastructure without coupling.
 \item
-  A detailed specification of the eight-stage build pipeline (Stages
-  00--07), from environment sanitization through executive report
-  generation.
+  A detailed specification of the ten-stage DAG-based build pipeline
+  (Stages 00--07), from environment sanitization through executive
+  report generation.
 \item
   A comparative analysis positioning \texttt{template/} against ten peer
   tools---Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R Markdown,

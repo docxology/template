@@ -138,7 +138,7 @@ post-processing steganography:
 \begin{enumerate}
 \tightlist
 \item
-  Execute the standard eight-stage pipeline for the target project.
+  Execute the standard ten-stage DAG pipeline for the target project.
 \item
   The \texttt{secure\_run.sh} script invokes
   \texttt{SteganographyProcessor}.

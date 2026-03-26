@@ -1,4 +1,4 @@
-\beamer@slide {the-eight-stage-pipeline}{1}
+\beamer@slide {the-ten-stage-dag-pipeline}{1}
 \beamer@slide {stage-00-environment-setup-00_setup_environment.py}{1}
 \beamer@slide {stage-01-test-execution-01_run_tests.py}{1}
 \beamer@slide {stage-02-analysis-execution-02_run_analysis.py}{1}

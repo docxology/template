@@ -4,7 +4,7 @@
 
 ## Multi-Project Pipeline Execution
 
-All three projects were executed through the full eight-stage pipeline using the `run.sh` interactive orchestrator with the "all projects core (fast)" configuration, which skips infrastructure tests and LLM review to isolate project-level performance.
+All three projects were executed through the full ten-stage DAG pipeline using the `run.sh` interactive orchestrator with the "all projects core (fast)" configuration, which skips infrastructure tests and LLM review to isolate project-level performance.
 
 | Project | Stages | Duration | Tests | Coverage |
 |---------|--------|----------|-------|----------|
@@ -26,8 +26,8 @@ The infrastructure layer is validated by a separate test suite of significant sc
 
 | Metric | Value |
 |--------|-------|
-| Test files | 163+ |
-| Total tests | ~3,083 |
+| Test files | 169+ |
+| Total tests | ~3,152 |
 | Infrastructure coverage threshold | 60% (achieved: 83%+) |
 | Zero-mock violations | 0 |
 | Real filesystem operations | ✓ |
@@ -52,25 +52,25 @@ The introspection module (`template.introspection`) programmatically enumerates 
 | `steganography` | 8 | Metadata injection, QR overlays, hashing |
 | `validation` | 22 | PDF validation, Markdown checking, CLI |
 | (+ config, docker) | — | Configuration, containerization |
-| **Total** | **~150** | |
+| **Total** | **~190** | |
 
-*The ~150 figure includes approximately 13 additional modules in the `config/` and `docker/` subpackages (configuration schemas and containerization utilities) not enumerated individually above.*
+*The ~190 figure includes approximately 13 additional modules in the `config/` and `docker/` subpackages (configuration schemas and containerization utilities) not enumerated individually above.*
 
-All 12 modules have 100% documentation coverage at Tiers 1–2 (`AGENTS.md`, `README.md`); the 10 active subpackages additionally carry `SKILL.md` for Tier-3 agentic skill discovery. This places `template/` among the first research software frameworks to implement an MCP-aligned skill layer [@anthropic2024mcp] across its infrastructure stack.
+All 13 modules have 100% documentation coverage at Tiers 1–2 (`AGENTS.md`, `README.md`); the 10 active subpackages additionally carry `SKILL.md` for Tier-3 agentic skill discovery. This places `template/` among the first research software frameworks to implement an MCP-aligned skill layer [@anthropic2024mcp] across its infrastructure stack.
 
 ## Agentic Skill Documentation Coverage
 
-The three-tier [skill protocol](#documentation-duality-and-the-agentic-skill-architecture) achieves complete coverage across all infrastructure modules:
+The three-tier [skill protocol](03c_documentation.md#agentic-skill-architecture) achieves complete coverage across all infrastructure modules:
 
 | Documentation Layer | Files | Coverage |
 |--------------------|:-----:|:---------:|
 | System (`CLAUDE.md`) | 1 | 100% |
-| Structural (`AGENTS.md`) | 12+ per-directory | 100% |
-| Skill (`SKILL.md`) | 12 modules | 100% |
+| Structural (`AGENTS.md`) | 13+ per-directory | 100% |
+| Skill (`SKILL.md`) | 13 modules | 100% |
 | PAI (`PAI.md`) | 1 (infrastructure-level) | — |
-| Human (`README.md`) | 12+ per-directory | 100% |
+| Human (`README.md`) | 13+ per-directory | 100% |
 
-This four-layer coverage creates 12 fully described, MCP-mappable tool endpoints that a sufficiently capable agent could invoke without any source-code access. The aggregate documentation footprint (148+ files) represents a deliberate engineering investment: each documentation file is not commentary but a specification, enforcing architectural constraints through structured natural language [@lau2025aicoding].
+This four-layer coverage creates 13 fully described, MCP-mappable tool endpoints that a sufficiently capable agent could invoke without any source-code access. The aggregate documentation footprint (152+ files) represents a deliberate engineering investment: each documentation file is not commentary but a specification, enforcing architectural constraints through structured natural language [@lau2025aicoding].
 
 ## Pipeline Stage Execution
 
@@ -103,13 +103,13 @@ The steganographic watermark survives standard PDF operations (viewing, printing
 
 ## Self-Referential Analysis
 
-This manuscript is itself a product of the `template/` pipeline, demonstrating its self-productive capability. The `template` project's `src/template/introspection.py` module programmatically analyzes the repository and generates four architecture figures, all presented below. The numeric values in the tables above—module counts, test counts, file totals—were not typed by hand but injected at build time by the `${variable}` substitution system described in the Methods, reading live metrics from the repository's own structure. The figures below were rendered by the same `architecture_viz.py` module whose font-size constraints are specified in the [Quality Assurance](#quality-assurance) section. In this way, the manuscript does not merely *describe* but *enacts* the pipeline it documents.
+This manuscript is itself a product of the `template/` pipeline, demonstrating its self-productive capability. The `template` project's `src/template/introspection.py` module programmatically analyzes the repository and generates four architecture figures, all presented below. The numeric values in the tables above—module counts, test counts, file totals—were not typed by hand but injected at build time by the metric-placeholder system (`string.Template`–style tokens such as `module_count`, `infra_test_count_approx`) described in the Methods, reading live metrics from the repository's own structure. The figures below were rendered by the same `architecture_viz.py` module whose font-size constraints are specified in the [Quality Assurance](03e_quality.md#quality-assurance) section. In this way, the manuscript does not merely *describe* but *enacts* the pipeline it documents.
 
 ![Two-Layer Architecture Overview](figures/architecture_overview.png)
-**Figure 1**: Two-Layer Architecture separating the generic, reusable infrastructure layer (12 subpackages, upper panel) from domain-specific project workspaces (lower panel), connected by the eight-stage pipeline. Each module box displays its Python file count and a documentation badge (A = `AGENTS.md`, R = `README.md`, S = `SKILL.md`, P = `PAI.md`; a dot `·` means absent). Project boxes show chapter and test counts. All labels are drawn from live repository introspection at render time; font sizes follow the 16 pt [accessibility floor](#visualization-standards).
+**Figure 1**: Two-Layer Architecture separating the generic, reusable infrastructure layer (12 subpackages, upper panel) from domain-specific project workspaces (lower panel), connected by the ten-stage DAG pipeline. Each module box displays its Python file count and a documentation badge (A = `AGENTS.md`, R = `README.md`, S = `SKILL.md`, P = `PAI.md`; a dot `·` means absent). Project boxes show chapter and test counts. All labels are drawn from live repository introspection at render time; font sizes follow the 16 pt [accessibility floor](03e_quality.md#visualization-standards).
 
 ![Pipeline Stage Flow](figures/pipeline_stages.png)
-**Figure 2**: Sequential eight-stage build pipeline (Stage 00–07, plus a pre-step clean stage). Viridis colour progression encodes stage ordering. Each box includes a short description of the stage's primary action. Stage names and descriptions are generated from `PipelineStage` objects returned by `report.pipeline_stages`, ensuring the figure reflects the actual pipeline.
+**Figure 2**: Sequential ten-stage DAG-based build pipeline (Stage 00–07, plus a pre-step clean stage). Viridis colour progression encodes stage ordering. Each box includes a short description of the stage's primary action. Stage names and descriptions are generated from `PipelineStage` objects returned by `report.pipeline_stages`, ensuring the figure reflects the actual pipeline.
 
 ![Infrastructure Module Inventory](figures/module_inventory.png)
 **Figure 3**: Python source-file count per infrastructure subpackage, sorted descending. Bar colour intensity scales with file count. Documentation badges `[ARSP]` appear to the right of each count (A = `AGENTS.md`, R = `README.md`, S = `SKILL.md`, P = `PAI.md`; a dot `·` means absent). Total file count is annotated at chart bottom.

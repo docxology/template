@@ -47,6 +47,28 @@ class TemplateError(Exception):
 
         super().__init__(full_message)
 
+    def to_diagnostic_event(self, severity: Any = None) -> Any:
+        """Convert this error to a structured DiagnosticEvent."""
+        from infrastructure.core.logging.diagnostic import DiagnosticEvent, DiagnosticSeverity
+        
+        # Default severity to ERROR, allow override for warnings disguised as errors
+        event_severity = severity if severity is not None else DiagnosticSeverity.ERROR
+        
+        # Get line numbers/paths from context if available
+        file_path = self.context.get("source") or self.context.get("problematic_file")
+        line_num = self.context.get("error_line")
+        suggestion = self.suggestions[0] if self.suggestions else getattr(self, "message", None)
+        
+        return DiagnosticEvent(
+            severity=event_severity,
+            category=self.__class__.__name__,
+            message=self.message,
+            file_path=file_path,
+            line_number=line_num,
+            fix_suggestion=suggestion,
+            context=self.context,
+        )
+
 # CONFIGURATION ERRORS
 # =============================================================================
 

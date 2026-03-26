@@ -578,7 +578,7 @@ open output/code_project/pdf/code_project_combined.pdf
 **Advanced workflow with validation**:
 
 ```bash
-# 1. Full rebuild with validation (recommended — core pipeline, eight stages by default)
+# 1. Full rebuild with validation (recommended — core pipeline, ten stages by default)
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu

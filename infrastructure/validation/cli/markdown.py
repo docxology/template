@@ -81,9 +81,9 @@ def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
                 if not strict
                 else "Validation issues found"
             )
-            logger.warning(header + ":")
             for p in problems:
-                logger.warning(f" - {p}")
+                loc = f"[{p.file_path}] " if p.file_path else ""
+                logger.warning(f" - {loc}{p.message}")
         else:
             logger.info("Markdown validation passed: all images and references resolved.")
 

@@ -204,7 +204,7 @@ tests/
 │   │   ├── test_slides_renderer_*.py    # Presentation slides (core/coverage)
 │   │   └── test_web_renderer_*.py       # Web/HTML rendering
 │   ├── reporting/                       # Reporting and dashboard tests
-│   │   ├── test_dashboard_generator.py  # Dashboard generation
+│   │   ├── test_dashboard_generator.py  # Dashboard system (_dashboard_matplotlib + extracted modules)
 │   │   ├── test_error_aggregator.py     # Error aggregation
 │   │   ├── test_executive_reporter.py   # Executive reporting
 │   │   ├── test_html_templates.py       # HTML template rendering

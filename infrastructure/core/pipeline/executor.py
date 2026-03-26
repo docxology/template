@@ -35,6 +35,7 @@ from infrastructure.core.pipeline.types import (
     PipelineStageResult,
     StageSpec,
 )
+from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
 
 logger = get_logger(__name__)
 
@@ -68,6 +69,10 @@ class PipelineExecutor:
         # NOTE: This will be called again after clean stage to recreate the log file
         self._setup_log_file_handler()
 
+        # Unified telemetry collector (lazy: loads config from pipeline.yaml)
+        self._telemetry: TelemetryCollector | None = None
+        self._init_telemetry()
+
     def _setup_log_file_handler(self) -> None:
         """Set up or recreate the log file handler.
 
@@ -86,8 +91,76 @@ class PipelineExecutor:
         self._log_handler = setup_root_log_file_handler(self.log_file)
         logger.debug(f"Set up log file handler: {self.log_file}")
 
+    def _init_telemetry(self) -> None:
+        """Initialize the telemetry collector from pipeline YAML config."""
+        from infrastructure.core.pipeline.dag import load_telemetry_config
+
+        project_yaml = self.config.project_dir / "pipeline.yaml"
+        default_yaml = (
+            self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+        )
+        yaml_path = project_yaml if project_yaml.exists() else default_yaml
+
+        telem_config = TelemetryConfig()  # defaults
+        if yaml_path.exists():
+            loaded = load_telemetry_config(yaml_path)
+            if loaded is not None:
+                telem_config = loaded
+
+        output_dir = self.config.project_dir / "output"
+        self._telemetry = TelemetryCollector(
+            config=telem_config,
+            project_name=self.config.project_name,
+            output_dir=output_dir,
+        )
+        self._telemetry.capture_system_info()
+
     def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[StageSpec]:
-        """Build canonical stage list for active (non-skipped) stages only."""
+        """Build canonical stage list by loading the declarative pipeline DAG.
+
+        Resolution order:
+        1. ``projects/{name}/pipeline.yaml`` (project-specific override)
+        2. ``infrastructure/core/pipeline/pipeline.yaml`` (default definition)
+        3. Hardcoded fallback (for tests or missing config)
+
+        Tag-based filtering applies ``skip_clean``, ``skip_infra``, and ``skip_llm``
+        flags without modifying the YAML source.
+        """
+        from infrastructure.core.pipeline.dag import PipelineDAG
+
+        # Resolve YAML path: project-specific → default → fallback
+        project_yaml = self.config.project_dir / "pipeline.yaml"
+        default_yaml = (
+            self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+        )
+
+        yaml_path = None
+        if project_yaml.exists():
+            yaml_path = project_yaml
+            logger.info(f"Using project-specific pipeline: {yaml_path}")
+        elif default_yaml.exists():
+            yaml_path = default_yaml
+            logger.debug(f"Using default pipeline: {yaml_path}")
+
+        if yaml_path is not None:
+            dag = PipelineDAG.from_yaml(yaml_path)
+
+            # Apply flag-based filtering via tags
+            exclude_tags: set[str] = set()
+            if not include_llm or self.config.skip_llm:
+                exclude_tags.add("llm")
+            if skip_clean:
+                dag.remove_stage("Clean Output Directories")
+            if self.config.skip_infra:
+                dag.remove_stage("Infrastructure Tests")
+
+            if exclude_tags:
+                dag.filter_tags(exclude=exclude_tags)
+
+            return dag.to_stage_specs(self)
+
+        # Hardcoded fallback when no pipeline.yaml is available (e.g. tests)
+        logger.debug("No pipeline.yaml found — using hardcoded stage list")
         stages: list[StageSpec] = []
         if not skip_clean:
             stages.append(StageSpec("Clean Output Directories", self._run_clean_outputs))
@@ -164,6 +237,11 @@ class PipelineExecutor:
             if not result.success:
                 break
 
+        # Finalize telemetry report
+        if self._telemetry is not None:
+            total_duration = time.time() - pipeline_start
+            self._telemetry.finalize(total_duration=total_duration)
+
         return results
 
     def _execute_stage(
@@ -193,6 +271,10 @@ class PipelineExecutor:
         else:
             logger.info(f"Stage {stage_num}: {stage_name}")
 
+        # Telemetry: start tracking
+        if self._telemetry is not None:
+            self._telemetry.start_stage(stage_name, stage_num)
+
         try:
             success = stage_func()
 
@@ -200,6 +282,8 @@ class PipelineExecutor:
 
             if success:
                 logger.info(f"✓ Stage {stage_num} completed successfully ({duration:.1f}s)")
+                if self._telemetry is not None:
+                    self._telemetry.end_stage(stage_name, stage_num, success=True)
                 return PipelineStageResult(
                     stage_num=stage_num,
                     stage_name=stage_name,
@@ -208,6 +292,8 @@ class PipelineExecutor:
                 )
             else:
                 logger.error(STAGE_FAILED.format(stage_num=stage_num))
+                if self._telemetry is not None:
+                    self._telemetry.end_stage(stage_name, stage_num, success=False, exit_code=1)
                 return PipelineStageResult(
                     stage_num=stage_num,
                     stage_name=stage_name,
@@ -219,6 +305,10 @@ class PipelineExecutor:
         except Exception as e:  # noqa: BLE001 — intentional: stage executor isolates all failures into PipelineStageResult
             duration = time.time() - start_time
             logger.error(STAGE_EXCEPTION.format(stage_num=stage_num, error=e))
+            if self._telemetry is not None:
+                self._telemetry.end_stage(
+                    stage_name, stage_num, success=False, exit_code=1, error_message=str(e)
+                )
             return PipelineStageResult(
                 stage_num=stage_num,
                 stage_name=stage_name,

@@ -23,7 +23,7 @@ The hallmark of this implementation is the test matrix:
 ### Infrastructure-Backed Capabilities
 
 - **Analytical Automation**: `infrastructure.core.progress.PipelineProgress` executing deterministic optimization experiments.
-- **Reporting & Integrity**: `infrastructure.reporting.pipeline_reporter` and `infrastructure.validation.output_validator` assuring CSV/JSON configurations conform.
+- **Reporting & Integrity**: `infrastructure.reporting.pipeline_reporter` and `infrastructure.validation.output.validator` assuring CSV/JSON configurations conform.
 - **Visual Cryptography**: Publication-ready graphics compiled by `infrastructure.rendering.pdf_renderer.py` using metadata from `projects/code_project/manuscript/config.yaml`, automatically linked via the LaTeX configuration in `projects/code_project/manuscript/preamble.md`.
 
 ## Research Pipeline Validation

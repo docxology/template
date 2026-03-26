@@ -140,8 +140,8 @@
 The \texttt{template/} architecture is deliberately bifurcated into a
 globally shared \texttt{infrastructure/} layer and project-specific
 \texttt{projects/} silos. This section describes the four core design
-patterns, the eight-stage pipeline that operationalizes them, and the AI
-collaboration model that distinguishes this system from conventional
+patterns, the ten-stage DAG pipeline that operationalizes them, and the
+AI collaboration model that distinguishes this system from conventional
 research templates.
 
 \begin{block}{The Two-Layer Architecture}
@@ -228,7 +228,7 @@ project-level) follow the Thin Orchestrator pattern
   outputs. They maintain no persistent state between invocations.
 \item
   \textbf{Logged}: Every significant action is logged via
-  \texttt{infrastructure.core.logging\_utils.get\_logger}.
+  \texttt{infrastructure.core.logging.utils.get\_logger}.
 \end{itemize}
 
 This pattern ensures that all testable logic lives in \texttt{src/}

@@ -11,7 +11,7 @@ Self-referential publication describing the `template/` architecture, published 
 | `01_abstract.md` | Abstract | Dense single-paragraph summary with key metrics |
 | `02_introduction.md` | Introduction | Reproducibility crisis, Related Work (6 tool categories), gap analysis, 4 pillars |
 | `03a_architecture.md` | Methods: Architecture | Two-Layer Architecture, Standalone Project Paradigm, Thin Orchestrator pattern |
-| `03b_pipeline.md` | Methods: Pipeline | Eight-stage pipeline (Stages 00–07) + interactive orchestrators |
+| `03b_pipeline.md` | Methods: Pipeline | Ten-stage DAG pipeline (Stages 00–07) + interactive orchestrators |
 | `03c_documentation.md` | Methods: Documentation | Documentation Duality, agentic skill architecture, MCP server mapping |
 | `03d_fair_iac.md` | Methods: FAIR & IaC | FAIR4RS alignment, Infrastructure as Code for research |
 | `03e_quality.md` | Methods: Quality | Zero-Mock testing policy, visualization standards |
@@ -21,7 +21,7 @@ Self-referential publication describing the `template/` architecture, published 
 | `05c_comparison.md` | Discussion: Comparison | Tool comparison, FAIR4RS 2024-2026 update, research compendia |
 | `05d_ai_collaboration.md` | Discussion: AI | AI collaboration model, learning curve, limitations |
 | `05e_future_conclusion.md` | Discussion: Future | 10 future directions + conclusion |
-| `06_infrastructure_modules.md` | Module Reference | All 12 modules with file counts, key components, and pipeline integration points |
+| `06_infrastructure_modules.md` | Module Reference | All 14 modules with file counts, key components, and pipeline integration points |
 | `07_security_provenance.md` | Security | Threat model, 4 steganographic layers, tamper detection, FAIR and PROV alignment |
 | `08a_appendix_pipeline.md` | Appendix: Pipeline | Pipeline stage reference table |
 | `08b_appendix_config.md` | Appendix: Configuration | `config.yaml` schema reference |

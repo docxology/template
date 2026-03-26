@@ -15,7 +15,7 @@ The configuration hash changes whenever any parameter in `config.yaml` is modifi
 
 ## Generated Artifact Registry
 
-The analysis pipeline produced the following artifacts, each validated by `infrastructure.validation.output_validator`:
+The analysis pipeline produced the following artifacts, each validated by `infrastructure.validation.output.validator`:
 
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |

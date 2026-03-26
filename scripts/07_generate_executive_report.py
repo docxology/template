@@ -30,7 +30,7 @@ from infrastructure.reporting.executive_reporter import (
     generate_executive_summary,
     save_executive_summary,
 )
-from infrastructure.reporting.dashboard_generator import generate_all_dashboards
+from infrastructure.reporting._dashboard_matplotlib import generate_all_dashboards
 from infrastructure.reporting.output_organizer import OutputOrganizer
 
 # Set up logger for this module

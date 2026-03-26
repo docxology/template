@@ -29,8 +29,8 @@ Projects are **architecturally isolated** - each operates as if it were the only
 ```mermaid
 graph TD
     subgraph "Project Isolation"
-        P1[code_project<br/>The Master Exemplar<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
-        P2[your_project<br/>Your Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P1[code_project<br/>Master Numerical Exemplar<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P2[template<br/>Meta-Documentation<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
 
         P1 -.->|❌ No imports| P2
     end

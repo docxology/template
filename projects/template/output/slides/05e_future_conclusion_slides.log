@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:26
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  26 MAR 2026 07:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1503,9 +1503,9 @@ Overfull \vbox (803.06438pt too high) detected at line 179
 (/Users/4d/Documents/GitHub/template/projects/template/output/slides/05e_future
 _conclusion_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 28.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 30.
 )
-Overfull \vbox (265.99554pt too high) detected at line 220
+Overfull \vbox (265.99554pt too high) detected at line 222
  []
 
 [2

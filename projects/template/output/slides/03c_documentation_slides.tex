@@ -175,8 +175,7 @@ architecture: per-directory \texttt{AGENTS.md} for local context, root
 
 \begin{frame}[fragile]{Agentic Skill Architecture}
 \protect\phantomsection\label{agentic-skill-architecture}
-The
-\hyperlink{documentation-duality-and-the-agentic-skill-architecture}{Documentation
+The \hyperlink{documentation-duality-and-ai-collaboration}{Documentation
 Duality} standard addresses human and AI navigation at the directory
 level. A complementary layer operates at the \emph{module} level: every
 infrastructure subpackage carries two additional machine-readable files
@@ -298,7 +297,7 @@ functions), \textbf{Resources} (data the model can read), and
 \end{itemize}
 
 An agent orchestrating a full research pipeline could, in principle,
-compose these MCP tools to reproduce the entire eight-stage pipeline
+compose these MCP tools to reproduce the entire ten-stage DAG pipeline
 programmatically---discovering available tools via \texttt{SKILL.md}
 frontmatter, executing them via MCP protocol calls, and consuming their
 outputs as Resources. The \texttt{SKILL.md} files parallel Voyager's
@@ -314,7 +313,7 @@ Yao et al.'s ReAct framework {[}@yao2023react{]} demonstrates that
 interleaving reasoning traces with tool actions dramatically improves
 agent reliability in interactive settings. The \texttt{template/} skill
 architecture provides the tool-use layer aligned with these frameworks,
-the eight-stage pipeline provides the planning scaffold, and the
+the ten-stage DAG pipeline provides the planning scaffold, and the
 checkpoint system provides the memory layer.
 \end{block}
 \end{frame}

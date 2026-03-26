@@ -15,6 +15,8 @@ import pytest
 
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
+from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
+from infrastructure.rendering._pdf_latex_helpers import fix_figure_paths
 
 
 class TestBibliographyProcessing:
@@ -42,7 +44,7 @@ class TestBibliographyProcessing:
 
         # Use real bibtex execution - may fail if bibtex not available
         try:
-            result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+            result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # May succeed or fail depending on bibtex availability
             assert isinstance(result, bool)
         except Exception:
@@ -62,7 +64,7 @@ class TestBibliographyProcessing:
         tex_file = tmp_path / "test.tex"
         bib_file = tmp_path / "missing.bib"
 
-        result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+        result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
         assert result is False
 
     def test_process_bibliography_missing_aux_file(self, tmp_path):
@@ -82,7 +84,7 @@ class TestBibliographyProcessing:
         bib_file.write_text("@article{test, title={Test}}")
         (tmp_path / "pdf").mkdir(exist_ok=True)
 
-        result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+        result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
         assert result is False
 
     def test_process_bibliography_bibtex_warning(self, tmp_path):
@@ -106,7 +108,7 @@ class TestBibliographyProcessing:
 
         # Use real bibtex execution
         try:
-            result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+            result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # May succeed or fail depending on bibtex availability
             assert isinstance(result, bool)
         except Exception:
@@ -136,7 +138,7 @@ class TestFigurePathResolution:
         \includegraphics[width=0.8\textwidth]{../output/figures/test.png}
         """
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -158,7 +160,7 @@ class TestFigurePathResolution:
 
         tex_content = r"\includegraphics[width=0.9\textwidth]{../output/figures/test.png}"
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -182,7 +184,7 @@ class TestFigurePathResolution:
 
         tex_content = f"\\includegraphics{{../output/figures/{unicode_filename}}}"
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -204,7 +206,7 @@ class TestFigurePathResolution:
 
         tex_content = r"\includegraphics{../output/figures/missing.png}"
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -227,7 +229,7 @@ class TestFigurePathResolution:
         # Already in correct format
         tex_content = r"\includegraphics{../figures/test.png}"
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -256,7 +258,7 @@ class TestFigurePathResolution:
         \includegraphics[width=0.5\textwidth]{../output/figures/fig2.pdf}
         """
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -337,7 +339,7 @@ class TestIntegration:
         \end{document}
         """
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 

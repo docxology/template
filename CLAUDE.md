@@ -32,7 +32,7 @@ This is a research project template with a test-driven development workflow, aut
 # Full pipeline (10 stages: clean, setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
 
-# Core pipeline only (8 stages: no LLM)
+# Core pipeline only (10-stage DAG: no LLM)
 python3 scripts/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
@@ -211,7 +211,7 @@ output/
 
 ## Pipeline Stages
 
-### Core Pipeline (8 stages)
+### Core Pipeline (10-stage DAG)
 
 1. **Clean Output Directories** - Remove previous outputs for a fresh run
 2. **Setup Environment** - Validate dependencies, discover projects

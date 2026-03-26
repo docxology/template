@@ -290,8 +290,9 @@ embedding, (4) multi-project repository management, (5) FAIR-aligned
 software stewardship, and (6) AI-agent collaboration via structured
 documentation. Each existing framework addresses a subset; none provides
 the unified enforcement mechanism. The detailed tool-by-tool comparison
-is developed in the \hyperlink{comparison-to-existing-tools}{Comparison
-to Existing Tools} section; the summary table below captures the gap
+is developed in the
+\href{05c_comparison.md\#comparison-to-existing-tools}{Comparison to
+Existing Tools} section; the summary table below captures the gap
 landscape.
 \end{block}
 
@@ -405,15 +406,16 @@ pipeline-enforced system with version-controlled infrastructure
 \protect\phantomsection\label{scope-and-contributions}
 This paper is itself a product of the template it describes. The metrics
 populating its tables were computed by the introspection module
-documented in the \hyperlink{methods}{Methods}; the figures were
-rendered by the visualization code validated by the test suite described
-in \hyperlink{quality-assurance}{Quality Assurance}; the PDF carrying
-these words was assembled by the same eight-stage pipeline whose
-architecture is the subject of the \hyperlink{results}{Results}. This
-self-productive loop---where the system that is described is also the
-system that produces the description---is not incidental but structural,
-a concrete demonstration that \texttt{template/} can sustain the full
-lifecycle from source code to published artifact within a single,
+documented in the \href{03a_architecture.md\#methods}{Methods}; the
+figures were rendered by the visualization code validated by the test
+suite described in \href{03e_quality.md\#quality-assurance}{Quality
+Assurance}; the PDF carrying these words was assembled by the same
+ten-stage DAG pipeline whose architecture is the subject of the
+\href{04_results.md\#results}{Results}. This self-productive
+loop---where the system that is described is also the system that
+produces the description---is not incidental but structural, a concrete
+demonstration that \texttt{template/} can sustain the full lifecycle
+from source code to published artifact within a single,
 version-controlled, pipeline-enforced repository. Our contributions are:
 
 \begin{itemize}
@@ -423,9 +425,9 @@ version-controlled, pipeline-enforced repository. Our contributions are:
   Project Paradigm that enables N independent research projects to share
   infrastructure without coupling.
 \item
-  A detailed specification of the eight-stage build pipeline (Stages
-  00--07), from environment sanitization through executive report
-  generation.
+  A detailed specification of the ten-stage DAG-based build pipeline
+  (Stages 00--07), from environment sanitization through executive
+  report generation.
 \item
   A comparative analysis positioning \texttt{template/} against ten peer
   tools---Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R Markdown,
@@ -450,19 +452,22 @@ version-controlled, pipeline-enforced repository. Our contributions are:
 
 \begin{frame}{Paper Organization}
 \protect\phantomsection\label{paper-organization}
-The \hyperlink{methods}{Methods} describe the Two-Layer Architecture,
-Thin Orchestrator pattern, pipeline stages, and AI collaboration model.
-\hyperlink{results}{Results} present quantitative metrics from
-multi-project execution, coverage analysis, and steganographic
-benchmarks. The \hyperlink{the-zero-mock-tradeoff}{Discussion} addresses
-the Zero-Mock tradeoff, scalability implications, a detailed tool
-comparison, and future directions. The
-\hyperlink{infrastructure-module-reference}{Infrastructure Module
-Reference} provides detailed documentation for all twelve subpackages.
-\hyperlink{security-and-provenance}{Security and Provenance} describes
-the steganographic and cryptographic integrity layer. The
-\hyperlink{appendices}{Appendices} provide pipeline, configuration, and
-comparative references.
+The \href{03a_architecture.md\#methods}{Methods} describe the Two-Layer
+Architecture, Thin Orchestrator pattern, pipeline stages, and AI
+collaboration model. \href{04_results.md\#results}{Results} present
+quantitative metrics from multi-project execution, coverage analysis,
+and steganographic benchmarks. The
+\href{05a_zeromock_tradeoff.md\#the-zero-mock-tradeoff}{Discussion}
+addresses the Zero-Mock tradeoff, scalability implications, a detailed
+tool comparison, and future directions. The
+\href{06_infrastructure_modules.md\#infrastructure-module-reference}{Infrastructure
+Module Reference} provides detailed documentation for all twelve
+subpackages.
+\href{07_security_provenance.md\#security-and-provenance}{Security and
+Provenance} describes the steganographic and cryptographic integrity
+layer. The
+\href{08a_appendix_pipeline.md\#appendix-pipeline}{Appendices} provide
+pipeline, configuration, and comparative references.
 \end{frame}
 
 \end{document}

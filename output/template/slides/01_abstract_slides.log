@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:25
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  26 MAR 2026 07:34
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1494,7 +1494,7 @@ t_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `TU/lmss/m/sl' tried instead on input line 43.
 )
-Overfull \vbox (497.19565pt too high) detected at line 147
+Overfull \vbox (510.79565pt too high) detected at line 147
  []
 
 [1

@@ -178,7 +178,7 @@ and steganographic performance across three heterogeneous exemplar
 projects.</p>
 <h2 id="multi-project-pipeline-execution">Multi-Project Pipeline
 Execution</h2>
-<p>All three projects were executed through the full eight-stage
+<p>All three projects were executed through the full ten-stage DAG
 pipeline using the <code>run.sh</code> interactive orchestrator with the
 “all projects core (fast)” configuration, which skips infrastructure
 tests and LLM review to isolate project-level performance.</p>
@@ -241,11 +241,11 @@ significant scale:</p>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>163+</td>
+<td>169+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~3,083</td>
+<td>~3,152</td>
 </tr>
 <tr>
 <td>Infrastructure coverage threshold</td>
@@ -342,16 +342,16 @@ following module distribution:</p>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td style="text-align: center;"><strong>~150</strong></td>
+<td style="text-align: center;"><strong>~190</strong></td>
 <td></td>
 </tr>
 </tbody>
 </table>
-<p><em>The ~150 figure includes approximately 13 additional modules in
+<p><em>The ~190 figure includes approximately 13 additional modules in
 the <code>config/</code> and <code>docker/</code> subpackages
 (configuration schemas and containerization utilities) not enumerated
 individually above.</em></p>
-<p>All 12 modules have 100% documentation coverage at Tiers 1–2
+<p>All 13 modules have 100% documentation coverage at Tiers 1–2
 (<code>AGENTS.md</code>, <code>README.md</code>); the 10 active
 subpackages additionally carry <code>SKILL.md</code> for Tier-3 agentic
 skill discovery. This places <code>template/</code> among the first
@@ -362,7 +362,7 @@ infrastructure stack.</p>
 <h2 id="agentic-skill-documentation-coverage">Agentic Skill
 Documentation Coverage</h2>
 <p>The three-tier <a
-href="#documentation-duality-and-the-agentic-skill-architecture">skill
+href="03c_documentation.md#agentic-skill-architecture">skill
 protocol</a> achieves complete coverage across all infrastructure
 modules:</p>
 <table>
@@ -381,12 +381,12 @@ modules:</p>
 </tr>
 <tr>
 <td>Structural (<code>AGENTS.md</code>)</td>
-<td style="text-align: center;">12+ per-directory</td>
+<td style="text-align: center;">13+ per-directory</td>
 <td style="text-align: center;">100%</td>
 </tr>
 <tr>
 <td>Skill (<code>SKILL.md</code>)</td>
-<td style="text-align: center;">12 modules</td>
+<td style="text-align: center;">13 modules</td>
 <td style="text-align: center;">100%</td>
 </tr>
 <tr>
@@ -396,14 +396,14 @@ modules:</p>
 </tr>
 <tr>
 <td>Human (<code>README.md</code>)</td>
-<td style="text-align: center;">12+ per-directory</td>
+<td style="text-align: center;">13+ per-directory</td>
 <td style="text-align: center;">100%</td>
 </tr>
 </tbody>
 </table>
-<p>This four-layer coverage creates 12 fully described, MCP-mappable
+<p>This four-layer coverage creates 13 fully described, MCP-mappable
 tool endpoints that a sufficiently capable agent could invoke without
-any source-code access. The aggregate documentation footprint (148+
+any source-code access. The aggregate documentation footprint (152+
 files) represents a deliberate engineering investment: each
 documentation file is not commentary but a specification, enforcing
 architectural constraints through structured natural language <span
@@ -548,30 +548,33 @@ pipeline, demonstrating its self-productive capability. The
 analyzes the repository and generates four architecture figures, all
 presented below. The numeric values in the tables above—module counts,
 test counts, file totals—were not typed by hand but injected at build
-time by the <code>${variable}</code> substitution system described in
-the Methods, reading live metrics from the repository’s own structure.
-The figures below were rendered by the same
+time by the metric-placeholder system
+(<code>string.Template</code>–style tokens such as
+<code>module_count</code>, <code>infra_test_count_approx</code>)
+described in the Methods, reading live metrics from the repository’s own
+structure. The figures below were rendered by the same
 <code>architecture_viz.py</code> module whose font-size constraints are
-specified in the <a href="#quality-assurance">Quality Assurance</a>
-section. In this way, the manuscript does not merely <em>describe</em>
-but <em>enacts</em> the pipeline it documents.</p>
+specified in the <a href="03e_quality.md#quality-assurance">Quality
+Assurance</a> section. In this way, the manuscript does not merely
+<em>describe</em> but <em>enacts</em> the pipeline it documents.</p>
 <p><img src="figures/architecture_overview.png"
 alt="Two-Layer Architecture Overview" /> <strong>Figure 1</strong>:
 Two-Layer Architecture separating the generic, reusable infrastructure
 layer (12 subpackages, upper panel) from domain-specific project
-workspaces (lower panel), connected by the eight-stage pipeline. Each
+workspaces (lower panel), connected by the ten-stage DAG pipeline. Each
 module box displays its Python file count and a documentation badge (A =
 <code>AGENTS.md</code>, R = <code>README.md</code>, S =
 <code>SKILL.md</code>, P = <code>PAI.md</code>; a dot <code>·</code>
 means absent). Project boxes show chapter and test counts. All labels
 are drawn from live repository introspection at render time; font sizes
-follow the 16 pt <a href="#visualization-standards">accessibility
+follow the 16 pt <a
+href="03e_quality.md#visualization-standards">accessibility
 floor</a>.</p>
 <p><img src="figures/pipeline_stages.png" alt="Pipeline Stage Flow" />
-<strong>Figure 2</strong>: Sequential eight-stage build pipeline (Stage
-00–07, plus a pre-step clean stage). Viridis colour progression encodes
-stage ordering. Each box includes a short description of the stage’s
-primary action. Stage names and descriptions are generated from
+<strong>Figure 2</strong>: Sequential ten-stage DAG-based build pipeline
+(Stage 00–07, plus a pre-step clean stage). Viridis colour progression
+encodes stage ordering. Each box includes a short description of the
+stage’s primary action. Stage names and descriptions are generated from
 <code>PipelineStage</code> objects returned by
 <code>report.pipeline_stages</code>, ensuring the figure reflects the
 actual pipeline.</p>

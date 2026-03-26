@@ -36,7 +36,9 @@ template/
 │   ├── publishing/        # Zenodo, arXiv, GitHub release
 │   ├── reporting/         # Pipeline + executive reports
 │   ├── scientific/        # Numerical stability, benchmarking
-│   └── documentation/     # Figure manager, glossary gen
+│   ├── documentation/     # Figure manager, glossary gen
+│   ├── steganography/     # PDF hardening (overlays, hashes, encryption)
+│   └── telemetry/         # Unified stage telemetry (TelemetryCollector, JSON/text reports)
 ├── run.sh                 # Main interactive + pipeline entry point
 ├── scripts/               # Entry-point orchestrators (thin wrappers)
 │   ├── bash_utils.sh      # Shared bash utilities + ensure_uv() bootstrap

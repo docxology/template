@@ -1,0 +1,13 @@
+   3 scripts/*
+   1 scripts/analysis_pipeline.py
+   1 projects/my_research/{src,tests,manuscript,scripts
+   1 scripts/00_*.py
+   1 scripts/07_*.py
+   1 scripts/*.py
+   1 scripts/analyze_results.py
+   1 infrastructure/scientific/data_processing.py
+   1 scripts/analysis.py
+   1 infrastructure/plots.py
+   1 infrastructure/test_figure_manager.py
+   1 infrastructure/validation/new_validator.py
+   1 infrastructure/test_validation/test_new_validator.py

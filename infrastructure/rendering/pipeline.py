@@ -16,9 +16,9 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_live_resource_usage
 from infrastructure.core.progress import SubStageProgress
-from infrastructure.core.exceptions import RenderingError, ValidationError
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.rendering.manuscript_discovery import (
     discover_manuscript_files,
     verify_figures_exist,
@@ -42,6 +42,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
         project_name: Name of project in projects/ directory (default: "project")
     """
     logger.info(f"Executing PDF rendering pipeline for project '{project_name}'...")
+    reporter = DiagnosticReporter(project_name=project_name, output_dir=Path(__file__).parent.parent.parent / "projects" / project_name / "output")
 
     repo_root = Path(__file__).parent.parent.parent
     project_root = repo_root / "projects" / project_name
@@ -196,11 +197,15 @@ def run_render_pipeline(project_name: str = "project") -> int:
 
             except RenderingError as re:
                 logger.warning(f"  ❌ Rendering error for {source_file.name}: {re.message}")
-                if re.context:
-                    logger.debug(f"    Context: {re.context}")
+                reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
                 failed_files.append(source_file.name)
             except (OSError, subprocess.SubprocessError, ValueError) as e:
                 logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")
+                reporter.record_error(
+                    category="UnexpectedError",
+                    message=f"Unexpected error rendering {source_file.name}: {e}",
+                    file_path=source_file.name
+                )
                 failed_files.append(source_file.name)
 
             progress.complete_substage()
@@ -215,50 +220,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
 
         except RenderingError as re:
             logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
-            if re.message:
-                logger.error(f"  Full error details:\n{re.message}")
-
-            if re.context:
-                logger.error(f"  Source file: {re.context.get('source', 'unknown')}")
-                if "problematic_file" in re.context:
-                    logger.error(f"  Problematic source file: {re.context['problematic_file']}")
-                    logger.error(
-                        f"  File index: {re.context.get('problematic_file_index', 'unknown')}"
-                    )
-                if "error_position" in re.context:
-                    pos = re.context["error_position"]
-                    line = re.context.get("error_line", "unknown")
-                    logger.error(f"  Error at position {pos} (line {line})")
-                if "error_context" in re.context:
-                    logger.error("  Error context (content around error position):")
-                    context = re.context["error_context"]
-                    lines = context.split("\n")
-                    if len(lines) <= 20:
-                        for i, line in enumerate(lines, 1):
-                            logger.error(f"    {i:3d}: {line}")
-                    else:
-                        logger.error(f"    {context[:500]}...")
-                if "error_line_content" in re.context:
-                    logger.error(f"  Problematic line: {repr(re.context['error_line_content'])}")
-                if "error_position" not in re.context:
-                    if "first_200_chars" in re.context:
-                        logger.error(f"  First 200 chars: {repr(re.context['first_200_chars'])}")
-                    if "last_200_chars" in re.context:
-                        logger.error(f"  Last 200 chars: {repr(re.context['last_200_chars'])}")
-                if "total_size" in re.context:
-                    logger.error(f"  Combined markdown size: {re.context['total_size']} characters")
-                if re.suggestions:
-                    logger.error("  Suggestions:")
-                    for suggestion in re.suggestions:
-                        logger.error(f"    • {suggestion}")
-                logger.debug(f"  Full context: {re.context}")
-
-            if re.suggestions:
-                logger.warning("  Suggestions to fix the error:")
-                for suggestion in re.suggestions:
-                    logger.warning(f"    • {suggestion}")
-            else:
-                logger.warning("  No specific suggestions available")
+            reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
             
             if rendered_count > 0:
                 logger.info(
@@ -295,12 +257,14 @@ def run_render_pipeline(project_name: str = "project") -> int:
             manager.render_combined_web(md_files, manuscript_dir, project_name)
         except RenderingError as re:
             logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
-            if re.context:
-                logger.debug(f"  Context: {re.context}")
+            reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
         except (OSError, subprocess.SubprocessError, ValueError) as e:
             logger.warning(f"⚠️  Unexpected error generating combined HTML: {e}")
 
     # Report results
+    if reporter.events:
+        reporter.print_report()
+        reporter.save_report()
     logger.info("\nRendering Summary:")
     logger.info(f"  Individual files processed: {rendered_count}")
     logger.info(f"  Markdown files: {len(md_files)}")

@@ -173,14 +173,14 @@
 <body>
 <h1 id="discussion">Discussion</h1>
 <h2 id="the-zero-mock-tradeoff">The Zero-Mock Tradeoff</h2>
-<p>The <a href="#zero-mock-testing-policy">Zero-Mock testing policy</a>
-is <code>template/</code>’s most distinctive design decision. By
-prohibiting all mock objects, we gain confidence that tests exercise
-real code paths—a pytest run against the template genuinely invokes
-<code>pandoc</code>, writes to disk, and parses real YAML. The cost is
-test duration: the full infrastructure test suite (~3,083 tests) takes
-2–4 minutes, compared to sub-second execution typical of heavily-mocked
-suites.</p>
+<p>The <a href="03e_quality.md#zero-mock-testing-policy">Zero-Mock
+testing policy</a> is <code>template/</code>’s most distinctive design
+decision. By prohibiting all mock objects, we gain confidence that tests
+exercise real code paths—a pytest run against the template genuinely
+invokes <code>pandoc</code>, writes to disk, and parses real YAML. The
+cost is test duration: the full infrastructure test suite (~3,083 tests)
+takes 2–4 minutes, compared to sub-second execution typical of
+heavily-mocked suites.</p>
 <p>We argue this tradeoff is strongly favorable for research software.
 Unlike web applications where millisecond latency and thousands of daily
 deploys demand fast feedback loops, research pipelines run infrequently

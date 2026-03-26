@@ -1,6 +1,7 @@
 # 🧠 PAI.md - Infrastructure Context
 
 ## 📍 Purpose
+
 This directory contains the **Layer 1** generic tools that power the research template. Code here is **project-agnostic** and strictly separated from domain-specific logic.
 
 ## 🤖 Agent skills (`SKILL.md`)
@@ -22,8 +23,10 @@ Every infrastructure subpackage ships a **`SKILL.md`** at its root with YAML fro
 - **scientific**: Benchmarking, stability, templates.
 - **skills**: `discover_skills`, `.cursor/skill_manifest.json`, `python -m infrastructure.skills` (write/check/list-json).
 - **steganography**: Post-render PDF hardening (overlays, hashes, optional encryption).
+- **telemetry**: Unified per-stage resource + diagnostic tracking (`TelemetryCollector`; JSON/text reports in `output/reports/`).
 
 ## 🤖 Agent Guidelines
+
 - **Import Rules**: Can import from standard libs. **Cannot** import from `projects/` (prevents circular dependency).
 - **Testing**: Must be tested in `tests/infra_tests/`.
 - **Modifications**: Changes here affect ALL projects. Exercise caution.

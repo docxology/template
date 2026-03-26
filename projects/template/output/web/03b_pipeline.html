@@ -171,7 +171,7 @@
   </style>
 </head>
 <body>
-<h2 id="the-eight-stage-pipeline">The Eight-Stage Pipeline</h2>
+<h2 id="the-ten-stage-dag-pipeline">The Ten-Stage DAG Pipeline</h2>
 <p>The build pipeline is orchestrated by
 <code>scripts/execute_pipeline.py</code>, which invokes numbered stage
 scripts sequentially. Each stage is a standalone Python script that
@@ -276,7 +276,7 @@ indicators.</li>
 id="secure_run.sh-the-steganographic-superset"><code>secure_run.sh</code>:
 The Steganographic Superset</h3>
 <p>The <code>secure_run.sh</code> orchestrator is a strict superset of
-<code>run.sh</code>: it executes the standard eight-stage pipeline and
+<code>run.sh</code>: it executes the standard ten-stage DAG pipeline and
 then appends steganographic post-processing. For each rendered PDF, it
 applies metadata injection, cryptographic hashing, alpha-channel text
 overlay, and QR code injection, producing a provenance-embedded output

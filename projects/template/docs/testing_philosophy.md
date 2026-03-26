@@ -23,7 +23,7 @@ def test_build_report_mocked():
 
 ### Why This Matters for a Self-Referential Project
 
-The template project's tests are particularly sensitive to mocking because they validate claims that appear in the published manuscript. A mocked test that asserts `module_count == 12` passes regardless of whether the infrastructure actually has 12 modules. A real test fails immediately when the infrastructure changes — which is exactly the alert we need to update the manuscript.
+The template project's tests are particularly sensitive to mocking because they validate claims that appear in the published manuscript. A mocked test that asserts `module_count == 14` passes regardless of whether the infrastructure actually has 12 modules. A real test fails immediately when the infrastructure changes — which is exactly the alert we need to update the manuscript.
 
 ## Test Categories
 

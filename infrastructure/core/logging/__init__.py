@@ -6,6 +6,7 @@ Re-exports primary symbols for ``from infrastructure.core.logging import …`` u
 from __future__ import annotations
 
 from infrastructure.core.logging.constants import EMOJIS, get_emoji_enabled, get_structured_logging_enabled
+from infrastructure.core.logging.diagnostic import DiagnosticEvent, DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.formatters import JSONFormatter, TemplateFormatter
 from infrastructure.core.logging.helpers import format_duration, format_error_with_suggestions
 from infrastructure.core.logging.progress import (
@@ -25,6 +26,9 @@ from infrastructure.core.logging.utils import (
 )
 
 __all__ = [
+    "DiagnosticEvent",
+    "DiagnosticReporter",
+    "DiagnosticSeverity",
     "EMOJIS",
     "JSONFormatter",
     "Spinner",

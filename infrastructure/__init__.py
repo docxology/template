@@ -5,7 +5,7 @@ managing research projects. Organized by functionality into submodules.
 
 Modules:
     config: Repository templates (.env.template, secure_config.yaml); see config/SKILL.md
-    core: Foundation utilities (config, logging, exceptions, progress, checkpoint)
+    core: Foundation utilities (config, logging, exceptions, pipeline, telemetry, progress, checkpoint)
     docker: Dockerfile and docker-compose for container runs; see docker/SKILL.md
     validation: Quality & validation tools (PDF, Markdown, integrity)
     documentation: Documentation & figure management
@@ -17,6 +17,7 @@ Modules:
     project: Multi-project management and discovery
     skills: SKILL.md discovery and Cursor manifest (.cursor/skill_manifest.json); see skills/SKILL.md
     steganography: Optional secure PDF post-processing (overlays, barcodes, hashing)
+    telemetry: Unified pipeline telemetry (stage resource metrics + diagnostic aggregation, JSON/text reports)
 
 Each subpackage includes SKILL.md (YAML frontmatter) for agent-oriented discovery in Cursor, Claude Code, and similar tools; start at infrastructure/SKILL.md.
 

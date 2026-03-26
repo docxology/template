@@ -65,7 +65,8 @@ def validate_markdown_command(args: argparse.Namespace) -> None:
 
     if problems:
         for problem in problems:
-            logger.info(f"  {problem}")
+            loc = f"[{problem.file_path}] " if problem.file_path else ""
+            logger.info(f"  {loc}{problem.message}")
     else:
         logger.info("  No issues found!")
 

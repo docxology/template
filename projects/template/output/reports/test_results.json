@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-23T05:25:39.762272",
+  "timestamp": "2026-03-26T07:34:48.435202",
   "infrastructure": {},
   "project": {
     "passed": 65,
@@ -11,11 +11,11 @@
     "discovery_count": 65,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 42.71,
-      "execution": 42.71
+      "setup": 24.31,
+      "execution": 24.31
     },
     "test_categories": {},
-    "coverage_percent": 94.24603174603175,
+    "coverage_percent": 94.44444444444444,
     "failed_tests": []
   },
   "summary": {
@@ -24,13 +24,13 @@
     "total_skipped": 0,
     "total_tests": 65,
     "all_passed": true,
-    "project_coverage": 94.24603174603175
+    "project_coverage": 94.44444444444444
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 94.24603174603175,
-      "total_executed": 475,
-      "total_missing": 29,
+      "overall_coverage": 94.44444444444444,
+      "total_executed": 476,
+      "total_missing": 28,
       "total_excluded": 0,
       "total_lines": 504,
       "file_coverage": {
@@ -63,9 +63,9 @@
           "total_lines": 157
         },
         "projects/template/src/template/metrics.py": {
-          "coverage_percent": 88.60759493670885,
-          "executed_lines": 70,
-          "missing_lines": 9,
+          "coverage_percent": 89.87341772151899,
+          "executed_lines": 71,
+          "missing_lines": 8,
           "excluded_lines": 0,
           "total_lines": 79
         }

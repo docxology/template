@@ -3,8 +3,8 @@
 \textbf{Symbol key} (applies to all cells): \textbf{Y} = full native
 support · \textbf{\textasciitilde{}} = partial or plugin-based ·
 \textbf{N} = absent. See also
-\hyperlink{comparative-feature-analysis}{Figure 4} for a colour-coded
-heatmap rendering of this table.
+\href{04_results.md\#comparative-feature-analysis}{Figure 4} for a
+colour-coded heatmap rendering of this table.
 
 \begin{table}[h]
 \caption{Comparative feature matrix (14 capabilities $\times$ 10 tools). Y~=~full native support, \textasciitilde~=~partial or plugin-based, N~=~absent.}

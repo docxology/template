@@ -1,4 +1,4 @@
-## Documentation Duality and AI Collaboration
+## Documentation Duality and AI Collaboration {#documentation-duality-and-ai-collaboration}
 
 Every directory at every level of the repository hierarchy contains two documentation files:
 
@@ -9,9 +9,9 @@ This Documentation Duality standard serves two purposes. First, it ensures that 
 
 The template additionally includes `CLAUDE.md` at the repository root, providing system-level instructions for AI coding assistants—architectural principles, testing requirements, and naming conventions that apply globally. This creates a three-tier documentation architecture: per-directory `AGENTS.md` for local context, root `README.md` and `CLAUDE.md` for global constraints, and `README.md` for human navigation.
 
-## Agentic Skill Architecture
+## Agentic Skill Architecture {#agentic-skill-architecture}
 
-The [Documentation Duality](#documentation-duality-and-the-agentic-skill-architecture) standard addresses human and AI navigation at the directory level. A complementary layer operates at the *module* level: every infrastructure subpackage carries two additional machine-readable files that transform it from a passive code library into an active, protocol-aligned skill endpoint.
+The [Documentation Duality](#documentation-duality-and-ai-collaboration) standard addresses human and AI navigation at the directory level. A complementary layer operates at the *module* level: every infrastructure subpackage carries two additional machine-readable files that transform it from a passive code library into an active, protocol-aligned skill endpoint.
 
 ### The Three-Tier Skill Protocol
 
@@ -53,4 +53,4 @@ The mapping from `SKILL.md` descriptors to MCP server endpoints is intentional b
 - `infrastructure.publishing` → MCP **Tool** (`publish_to_zenodo`, `generate_citation_bibtex`) + MCP **Resource** (DOI registry)
 - `infrastructure.steganography` → MCP **Tool** (`SteganographyProcessor.process`) + MCP **Resource** (hash manifests)
 
-An agent orchestrating a full research pipeline could, in principle, compose these MCP tools to reproduce the entire eight-stage pipeline programmatically—discovering available tools via `SKILL.md` frontmatter, executing them via MCP protocol calls, and consuming their outputs as Resources. The `SKILL.md` files parallel Voyager's skill library [@wang2023voyager]—Voyager's agent accumulates a growing library of executable Minecraft skills represented as JavaScript functions; `template/`'s agent accumulates a curated library of research pipeline skills represented as YAML-frontmattered `SKILL.md` files. In both cases, the skill representation is machine-readable, version-controlled, and self-describing. Wang et al.'s LLM agent survey [@wang2024llmagents] identifies tool use, planning, and memory as the three fundamental capabilities of autonomous agents; Yao et al.'s ReAct framework [@yao2023react] demonstrates that interleaving reasoning traces with tool actions dramatically improves agent reliability in interactive settings. The `template/` skill architecture provides the tool-use layer aligned with these frameworks, the eight-stage pipeline provides the planning scaffold, and the checkpoint system provides the memory layer.
+An agent orchestrating a full research pipeline could, in principle, compose these MCP tools to reproduce the entire ten-stage DAG pipeline programmatically—discovering available tools via `SKILL.md` frontmatter, executing them via MCP protocol calls, and consuming their outputs as Resources. The `SKILL.md` files parallel Voyager's skill library [@wang2023voyager]—Voyager's agent accumulates a growing library of executable Minecraft skills represented as JavaScript functions; `template/`'s agent accumulates a curated library of research pipeline skills represented as YAML-frontmattered `SKILL.md` files. In both cases, the skill representation is machine-readable, version-controlled, and self-describing. Wang et al.'s LLM agent survey [@wang2024llmagents] identifies tool use, planning, and memory as the three fundamental capabilities of autonomous agents; Yao et al.'s ReAct framework [@yao2023react] demonstrates that interleaving reasoning traces with tool actions dramatically improves agent reliability in interactive settings. The `template/` skill architecture provides the tool-use layer aligned with these frameworks, the ten-stage DAG pipeline provides the planning scaffold, and the checkpoint system provides the memory layer.

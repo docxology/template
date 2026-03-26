@@ -8,15 +8,22 @@ Stand-alone workspaces under `projects/` are discovered by `discover_projects()`
 
 ### **code_project** — master numerical exemplar
 
-Optimization study with figures, dashboard, and full manuscript. See [code_project/README.md](code_project/README.md) and [code_project/AGENTS.md](code_project/AGENTS.md).
-
-### **fep_lean** — formal / Lean-oriented manuscript
-
-Lean-linked manuscript workflow, reports, and validation. See [fep_lean/README.md](fep_lean/README.md) and [fep_lean/AGENTS.md](fep_lean/AGENTS.md).
+Optimization study with figures, dashboard, and full manuscript (100% coverage, 45 tests). See [code_project/README.md](code_project/README.md) and [code_project/AGENTS.md](code_project/AGENTS.md).
 
 ### **template** — meta-documentation project
 
-Self-referential manuscript and metrics for the repository. See [template/README.md](template/README.md) and [template/AGENTS.md](template/AGENTS.md).
+Self-referential manuscript and metrics for the repository (94.4% coverage, 65 tests). See [template/README.md](template/README.md) and [template/AGENTS.md](template/AGENTS.md).
+
+### In-progress projects (not yet in `projects/`)
+
+These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready:
+
+- **fep_lean** — formal-methods / Lean-oriented manuscript and tooling
+- **act_inf_metaanalysis** — Active Inference meta-analysis
+- **active_inference** — Active Inference project
+- **biology_textbook** — biology textbook project
+- **cognitive_case_diagrams** — diagram / categorical linguistics
+- **ento_linguistics** — entomological linguistics
 
 ### Archived exemplars (not in `projects/`)
 
@@ -25,7 +32,6 @@ These are kept under [`projects_archive/`](../projects_archive/) until moved bac
 - **traditional_newspaper** — multi-folio tabloid layout (`geometry` / `multicol`, masthead figure); see [`projects_archive/traditional_newspaper/README.md`](../projects_archive/traditional_newspaper/README.md)
 - **area_handbook** — corpus-driven handbook-style manuscript (was `projects/area_handbook/`)
 - **density_bioscales** — fluids and composite density scenarios
-- **cognitive_case_diagrams** — diagram / categorical linguistics (also see `projects_in_progress/` for WIP)
 - **special_number_proximity** — Diophantine proximity statistics
 
 **Note:** Promote by moving a directory from `projects_archive/` or `projects_in_progress/` into `projects/`.
@@ -90,13 +96,13 @@ mv projects_archive/myproject projects/myproject
 # Project will be automatically discovered on next run.sh execution
 ```
 
-| Directory | Role |
-|-----------|------|
-| `code_project/` | Master numerical exemplar |
-| `fep_lean/` | Formal / Lean-oriented manuscript |
-| `template/` | Meta-documentation |
+| Directory        | Role                     | Tests | Coverage |
+|------------------|--------------------------|-------|----------|
+| `code_project/`  | Master numerical exemplar | 45    | 100%     |
+| `template/`      | Meta-documentation        | 65    | 94.4%    |
 
-**Archived projects** live in `projects_archive/` (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `medical_ai`, `cognitive_integrity`, `special_number_proximity`, `active_inference_meta_pragmatic`).
+**In-progress projects** live in `projects_in_progress/` (e.g. `fep_lean`, `act_inf_metaanalysis`, `cognitive_case_diagrams`).
+**Archived projects** live in `projects_archive/` (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `medical_ai`, `cognitive_integrity`, `special_number_proximity`).
 
 ```mermaid
 graph TD
@@ -837,11 +843,12 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 - **Quality Gates**: 90% coverage, documentation, type safety
 - **Infrastructure Access**: Import from `infrastructure/` modules for shared utilities
 
-### 🎯 **Active Project**
+### 🎯 **Active Projects**
 
-- **code_project**: Active Inference meta-analysis research
+- **code_project**: Optimization research exemplar (100% coverage, 45 tests)
+- **template**: Meta-documentation and repository metrics (94.4% coverage, 65 tests)
 
-**Note:** Archived projects are preserved in `projects_archive/` for reference.
+**Note:** In-progress projects are in `projects_in_progress/`; archived projects are preserved in `projects_archive/`.
 
 ### 🚀 **Workflow**
 

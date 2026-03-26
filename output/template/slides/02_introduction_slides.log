@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  23 MAR 2026 05:25
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  26 MAR 2026 07:34
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1584,12 +1584,12 @@ Overfull \vbox (374.7956pt too high) detected at line 148
 
 (/Users/4d/Documents/GitHub/template/projects/template/output/slides/02_introdu
 ction_slides.vrb
-Overfull \hbox (1.2204pt too wide) in paragraph at lines 174--174
+Overfull \hbox (1.2204pt too wide) in paragraph at lines 175--175
 []|\TU/lmss/m/n/10.95 Cryptographic 
  []
 
 )
-Overfull \vbox (1933.88966pt too high) detected at line 336
+Overfull \vbox (1933.88966pt too high) detected at line 337
  []
 
 [3
@@ -1600,7 +1600,7 @@ Overfull \vbox (1933.88966pt too high) detected at line 336
 
 (/Users/4d/Documents/GitHub/template/projects/template/output/slides/02_introdu
 ction_slides.vrb)
-Overfull \vbox (612.66429pt too high) detected at line 402
+Overfull \vbox (612.66429pt too high) detected at line 403
  []
 
 [4
@@ -1612,27 +1612,27 @@ Overfull \vbox (612.66429pt too high) detected at line 402
 (/Users/4d/Documents/GitHub/template/projects/template/output/slides/02_introdu
 ction_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 19.
+(Font)              scaled to size 7.8961pt on input line 20.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 19.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-9.
+(Font)              scaled to size 5.64008pt on input line 20.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
+0.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 19.
+(Font)              scaled to size 11.28131pt on input line 20.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 19.
+(Font)              scaled to size 7.89691pt on input line 20.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 19.
+(Font)              scaled to size 5.64066pt on input line 20.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 19.
+(Font)              scaled to size 11.27914pt on input line 20.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 19.
+(Font)              scaled to size 7.8954pt on input line 20.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 19.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 19.
+(Font)              scaled to size 5.63957pt on input line 20.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 20.
 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1641,7 +1641,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 19.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 20.
 
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1650,7 +1650,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ))
-Overfull \vbox (225.44737pt too high) detected at line 449
+Overfull \vbox (225.44737pt too high) detected at line 451
  []
 
 [5

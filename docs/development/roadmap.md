@@ -7,7 +7,7 @@ For architecture details see [`architecture.md`](../core/architecture.md) and [`
 
 ### v2.0.0 — Foundation (2025)
 
-Two-layer architecture, thin orchestrator pattern, 8-stage pipeline, multi-project support.
+Two-layer architecture, thin orchestrator pattern, 10-stage DAG pipeline, multi-project support.
 
 ### v3.0.0 — Production/Stable (2026-02-22)
 

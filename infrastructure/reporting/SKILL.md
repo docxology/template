@@ -68,7 +68,7 @@ files = save_executive_summary(summary, output_dir)
 metrics = collect_project_metrics(project_path)
 ```
 
-## Dashboard Generation (`dashboard_generator.py`)
+## Dashboard Generation (`_dashboard_matplotlib.py`)
 
 ```python
 from infrastructure.reporting import (
