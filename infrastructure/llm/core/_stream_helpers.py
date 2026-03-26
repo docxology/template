@@ -1,0 +1,66 @@
+"""Streaming helper utilities for LLM client.
+
+Provides the partial-response save helper and a lazy-import stub for the
+``requests`` library used by streaming queries.
+"""
+
+from __future__ import annotations
+
+from typing import Any, Callable
+from pathlib import Path
+
+from infrastructure.core.logging.utils import get_logger
+
+logger = get_logger(__name__)
+
+# Issue a one-time warning when elapsed time crosses this fraction of the configured timeout.
+# Gives callers early notice that a slow model may hit the timeout.
+TIMEOUT_WARNING_FRACTION = 0.3
+
+
+def try_save_partial(
+    full_response: list[str],
+    save_response: bool,
+    partial_saved: bool,
+    save_streaming_state_fn: Callable[..., bool],
+    save_path: Path | None,
+    model_name: str,
+    prompt: str,
+    chunk_count: int,
+    start_time: float,
+    context: str,
+    skip_if_already_saved: bool = True,
+) -> bool:
+    """Try to save a partial streaming response; returns new partial_saved state.
+
+    Parameters split into three groups:
+    - Guards: full_response, save_response, partial_saved, skip_if_already_saved
+    - Callback: save_streaming_state_fn (and save_path, model_name, prompt, chunk_count,
+      start_time which are forwarded verbatim to it)
+    - Logging: context (used in the info message on success)
+    """
+    if not (full_response and save_response):
+        return partial_saved
+    if skip_if_already_saved and partial_saved:
+        return partial_saved
+    if save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=True):
+        logger.info(f"Saved partial response ({chunk_count} chunks) {context}")
+        return True
+    return partial_saved
+
+
+# Lazy import to match client.py pattern
+try:
+    import requests
+except ImportError as _import_err:
+    _requests_import_error = _import_err
+
+    class _RequestsStub:
+        """Raises ImportError with clear message on any attribute access."""
+
+        def __getattr__(self, name: str) -> Any:
+            raise ImportError(
+                "LLM streaming requires the 'requests' package: pip install requests"
+            ) from _requests_import_error
+
+    requests = _RequestsStub()  # type: ignore[assignment]
