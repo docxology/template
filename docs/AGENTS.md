@@ -14,7 +14,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `usage/` | Content authoring, formatting, visualization patterns |
 | `operational/` | Build, config, logging, troubleshooting, reporting |
 | `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
-| `modules/` | Infrastructure module guides (14 modules) |
+| `modules/` | Infrastructure module guides (13 modules) |
 | `development/` | Contributing, testing, security, roadmap |
 | `best-practices/` | Best practices, version control, migration |
 | `prompts/` | AI prompt templates (9 expert prompts) |

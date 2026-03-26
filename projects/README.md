@@ -96,10 +96,10 @@ mv projects_archive/myproject projects/myproject
 # Project will be automatically discovered on next run.sh execution
 ```
 
-| Directory        | Role                     | Tests | Coverage |
-|------------------|--------------------------|-------|----------|
-| `code_project/`  | Master numerical exemplar | 45    | 100%     |
-| `template/`      | Meta-documentation        | 65    | 94.4%    |
+| Directory       | Role                      | Tests | Coverage |
+|-----------------|---------------------------|-------|----------|
+| `code_project/` | Master numerical exemplar | 45    | 100%     |
+| `template/`     | Meta-documentation        | 65    | 94.4%    |
 
 **In-progress projects** live in `projects_in_progress/` (e.g. `fep_lean`, `act_inf_metaanalysis`, `cognitive_case_diagrams`).
 **Archived projects** live in `projects_archive/` (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `medical_ai`, `cognitive_integrity`, `special_number_proximity`).
