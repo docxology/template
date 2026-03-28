@@ -46,10 +46,7 @@ _GRADE_TIERS = [
 def _apply_tier(tiers: list[tuple], value: float, label: str | None = None) -> dict[str, Any]:
     """Return the factor dict for the first tier whose threshold the value meets."""
     for threshold, pts, grade, reason_tpl in tiers:
-        if threshold is None:
-            if value == 0:
-                return {"score": pts, "grade": grade, "reason": reason_tpl}
-        elif value >= threshold:
+        if value >= threshold:
             reason = reason_tpl.format(label if label is not None else value)
             return {"score": pts, "grade": grade, "reason": reason}
     return {"score": 0, "grade": "F", "reason": "Unknown"}

@@ -62,7 +62,7 @@ def stream_query_impl(
 
     # Pre-bind stable per-request params so try_save_partial and the final save call
     # don't need to forward save_path, model_name, prompt, and start_time individually.
-    def _bound_save(full_response: list[str], chunk_count: int, *, is_error: bool = False, options: Any = None) -> bool:
+    def _bound_save(full_response: list[str], chunk_count: int, *, is_error: bool = False, options: GenerationOptions | None = None) -> bool:
         return save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=is_error, options=options)
 
     logger.debug("Starting streaming query model=%s", model_name)

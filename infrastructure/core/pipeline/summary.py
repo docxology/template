@@ -139,7 +139,7 @@ def generate_pipeline_summary(
     output_dir: Path,
     log_file: Path | None = None,
     skip_infra: bool = False,
-    format: str = "text",
+    output_format: str = "text",
 ) -> str:
     """Convenience function to generate and format pipeline summary.
 
@@ -149,7 +149,7 @@ def generate_pipeline_summary(
         output_dir: Output directory to scan for files
         log_file: Path to pipeline log file
         skip_infra: Whether infrastructure tests were skipped
-        format: Output format ("text", "json", "html")
+        output_format: Output format ("text", "json", "html")
 
     Returns:
         Formatted summary string
@@ -158,4 +158,4 @@ def generate_pipeline_summary(
     summary = generator.generate_summary(
         stage_results, total_duration, output_dir, log_file, skip_infra
     )
-    return generator.format_summary(summary, format)
+    return generator.format_summary(summary, output_format)

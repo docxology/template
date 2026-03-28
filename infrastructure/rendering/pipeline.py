@@ -13,6 +13,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from infrastructure.core.exceptions import RenderingError, ValidationError
 from infrastructure.core.logging.utils import get_logger, log_success, log_live_resource_usage
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.rendering import RenderManager

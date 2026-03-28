@@ -151,41 +151,23 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
             else:
                 return f"\\includegraphics{{{new_path}}}"
 
-    # Apply path fixes
+    # Primary pass: regex-based replacement handles well-formed \includegraphics commands
     tex_content = re.sub(pattern, fix_path, tex_content)
 
-    # Fallback: Simple string replacement for paths the regex missed
-    # This handles \pandocbounded{\includegraphics[...,alt={...}]{../output/figures/xxx.png}}
-    # where nested braces in options break the regex pattern
-    remaining_old_paths = tex_content.count("../output/figures/")
-    if remaining_old_paths > 0:
-        tex_content = tex_content.replace("../output/figures/", "../figures/")
-        fixed_count += remaining_old_paths
-        logger.info(f"Fixed {remaining_old_paths} additional figure path(s) via fallback")
-
-    # Second fallback: Handle bare "figures/" paths (no ../ prefix)
-    # These come from markdown ![...](figures/xxx.png) references that Pandoc
-    # converts to \includegraphics{figures/xxx.png}. Since LaTeX compiles
-    # from output/pdf/, these need to become ../figures/xxx.png.
-    # We match the pattern "]{figures/" inside \includegraphics commands
-    # to avoid false positives in regular text.
-    bare_figure_count = tex_content.count("]{figures/")
-    if bare_figure_count > 0:
-        tex_content = tex_content.replace("]{figures/", "]{../figures/")
-        fixed_count += bare_figure_count
-        logger.info(f"Fixed {bare_figure_count} bare figure path(s) via second fallback")
-
-    # Third fallback: Handle "output/figures/" paths (no ../ prefix)
-    # These come from markdown ![...](output/figures/xxx.png) references that Pandoc
-    # converts to \includegraphics{output/figures/xxx.png}. The primary regex may
-    # miss these when the \includegraphics options contain nested braces (e.g.,
-    # alt={...} with LaTeX math), breaking the [^\]]*] pattern. Since LaTeX compiles
-    # from output/pdf/, "output/figures/" is incorrect — it needs "../figures/".
-    remaining_output_figures = tex_content.count("]{output/figures/")
-    if remaining_output_figures > 0:
-        tex_content = tex_content.replace("]{output/figures/", "]{../figures/")
-        fixed_count += remaining_output_figures
-        logger.info(f"Fixed {remaining_output_figures} output/figures/ path(s) via third fallback")
+    # Fallback passes: catch paths the primary regex misses when \includegraphics options
+    # contain nested braces (e.g., alt={...} with LaTeX math) that break [^\]]*].
+    # Each pass targets a distinct prefix pattern that Pandoc/LaTeX can produce.
+    _fallbacks: list[tuple[str, str, str]] = [
+        ("../output/figures/", "../figures/", "fallback 1 (../output/figures/)"),
+        ("]{figures/", "]{../figures/", "fallback 2 (bare figures/)"),
+        ("]{output/figures/", "]{../figures/", "fallback 3 (output/figures/)"),
+    ]
+    for old, new, label in _fallbacks:
+        count = tex_content.count(old)
+        if count > 0:
+            tex_content = tex_content.replace(old, new)
+            fixed_count += count
+            logger.info(f"Fixed {count} figure path(s) via {label}")
 
     if fixed_count > 0:
         logger.info(f"Fixed {fixed_count} figure path(s)")

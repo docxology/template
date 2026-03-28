@@ -103,8 +103,12 @@ def retry_on_transient_failure(
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Decorator for retrying on common transient failures.
 
-    Convenience wrapper around retry_with_backoff that catches common
-    transient failure exceptions (IOError, ConnectionError, TimeoutError).
+    Pre-configured shorthand for ``retry_with_backoff`` with
+    ``exceptions=TRANSIENT_EXCEPTIONS`` and ``max_delay=10.0``.
+    Use this when you want the standard transient-error retry policy
+    (IOError, ConnectionError, TimeoutError) without specifying exception
+    types at each call site.  If you need different exception types or
+    backoff parameters, call ``retry_with_backoff`` directly.
     """
     return retry_with_backoff(
         max_attempts=max_attempts,

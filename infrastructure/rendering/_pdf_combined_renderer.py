@@ -162,50 +162,50 @@ def inject_latex_preamble(
         preamble_content = graphicx_required
 
     begin_doc_idx = tex_content.find("\\begin{document}")
-    if preamble_content or title_page_preamble:
-        if begin_doc_idx > 0:
-            combined_preamble = ""
-            if title_page_preamble:
-                lines = title_page_preamble.split("\n")
-                combined_preamble += "\n".join(lines) + "\n\n"
-            if preamble_content:
-                combined_preamble += preamble_content + "\n\n"
-            tex_content = (
-                tex_content[:begin_doc_idx] + combined_preamble + tex_content[begin_doc_idx:]
-            )
-            begin_doc_idx += len(combined_preamble)
-            logger.debug(
-                f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}"
-            )
+
+    # Inject package declarations and title-page preamble before \begin{document}
+    if (preamble_content or title_page_preamble) and begin_doc_idx > 0:
+        combined_preamble = ""
+        if title_page_preamble:
+            combined_preamble += "\n".join(title_page_preamble.split("\n")) + "\n\n"
+        if preamble_content:
+            combined_preamble += preamble_content + "\n\n"
+        tex_content = (
+            tex_content[:begin_doc_idx] + combined_preamble + tex_content[begin_doc_idx:]
+        )
+        begin_doc_idx += len(combined_preamble)
+        logger.debug(
+            f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}"
+        )
 
     # Insert title page body after \begin{document}
-    if title_page_body:
-        full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
-        if begin_doc_idx > 0:
-            tex_preamble = tex_content[:begin_doc_idx]
-            tex_body = tex_content[begin_doc_idx:]
+    if not title_page_body or begin_doc_idx <= 0:
+        return tex_content
 
-            if "\\maketitle" in tex_body:
-                logger.debug(
-                    "✓ \\maketitle already present in LaTeX body - replacing with our full title/TOC body"
-                )
-                tex_body = tex_body.replace("\\maketitle", full_title_body, 1)
-            else:
-                end_of_begin_doc = tex_body.find("\n") + 1
-                if end_of_begin_doc > 0:
-                    tex_body = (
-                        tex_body[:end_of_begin_doc]
-                        + "\n"
-                        + full_title_body
-                        + "\n\n"
-                        + tex_body[end_of_begin_doc:]
-                    )
-                logger.info(
-                    r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"
-                )
-            tex_content = tex_preamble + tex_body
+    full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
+    tex_preamble = tex_content[:begin_doc_idx]
+    tex_body = tex_content[begin_doc_idx:]
 
-    return tex_content
+    if "\\maketitle" in tex_body:
+        logger.debug(
+            "✓ \\maketitle already present in LaTeX body - replacing with our full title/TOC body"
+        )
+        tex_body = tex_body.replace("\\maketitle", full_title_body, 1)
+    else:
+        end_of_begin_doc = tex_body.find("\n") + 1
+        if end_of_begin_doc > 0:
+            tex_body = (
+                tex_body[:end_of_begin_doc]
+                + "\n"
+                + full_title_body
+                + "\n\n"
+                + tex_body[end_of_begin_doc:]
+            )
+        logger.info(
+            r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"
+        )
+
+    return tex_preamble + tex_body
 
 
 def inject_bibliography(tex_content: str, bib_exists: bool) -> str:

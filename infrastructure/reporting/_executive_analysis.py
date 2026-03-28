@@ -13,6 +13,28 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
+
+def _calc_aggregate_stats(values: list[float]) -> dict[str, float]:
+    """Calculate min, max, median, and average for a list of values."""
+    if not values:
+        return {"min": 0.0, "max": 0.0, "median": 0.0, "avg": 0.0}
+
+    sorted_values = sorted(values)
+    n = len(sorted_values)
+    median = (
+        sorted_values[n // 2]
+        if n % 2 == 1
+        else (sorted_values[n // 2 - 1] + sorted_values[n // 2]) / 2
+    )
+
+    return {
+        "min": min(values),
+        "max": max(values),
+        "median": median,
+        "avg": sum(values) / len(values),
+    }
+
+
 def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]:
     """Generate aggregate metrics across all projects.
 
@@ -24,27 +46,6 @@ def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]
     """
     if not projects:
         return {}
-
-    # Helper function to calculate statistics
-    def _calc_aggregate_stats(values: list[float]) -> dict[str, float]:
-        """Calculate min, max, median, and average for a list of values."""
-        if not values:
-            return {"min": 0.0, "max": 0.0, "median": 0.0, "avg": 0.0}
-
-        sorted_values = sorted(values)
-        n = len(sorted_values)
-        median = (
-            sorted_values[n // 2]
-            if n % 2 == 1
-            else (sorted_values[n // 2 - 1] + sorted_values[n // 2]) / 2
-        )
-
-        return {
-            "min": min(values),
-            "max": max(values),
-            "median": median,
-            "avg": sum(values) / len(values),
-        }
 
     # Collect values for statistics
     manuscript_words = [p.manuscript.total_words for p in projects]

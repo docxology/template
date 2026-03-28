@@ -17,7 +17,7 @@ from typing import Any
 # Both names are valid here; SecurityError is used for backwards compatibility with
 # call sites that catch SecurityError specifically.
 from infrastructure.core._validation import normalize_whitespace
-from infrastructure.core.exceptions import SecurityError
+from infrastructure.core.exceptions import SecurityError, SecurityViolation
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.security import get_security_validator
 
@@ -102,24 +102,24 @@ class InputSanitizer:
     def sanitize_filename(self, filename: str) -> str:
         """Strip path separators and control characters from an LLM-supplied filename.
 
+        Delegates core sanitization to SecurityValidator to avoid duplicating
+        the same regex patterns; applies an LLM-specific 255-character truncation
+        afterwards.
+
         Args:
             filename: Raw filename
 
         Returns:
             Sanitized filename safe for file operations
+
+        Raises:
+            SecurityError: If filename is empty, not a string, or otherwise invalid
         """
-        if not filename or not isinstance(filename, str):
-            raise SecurityError("Invalid filename")
-
-        filename = re.sub(r"[\/\\]", "_", filename)
-        filename = re.sub(r'[<>:"|?*]', "_", filename)
-        filename = re.sub(r"[\x00-\x1f\x7f-\x9f]", "", filename)
-        filename = filename[:255]
-
-        if not filename.strip():
-            filename = "unnamed_file"
-
-        return filename
+        try:
+            sanitized = get_security_validator().validate_filename(filename)
+        except SecurityViolation as e:
+            raise SecurityError(str(e)) from e
+        return sanitized[:255]
 
     def _remove_control_characters(self, text: str) -> str:
         """Remove control characters from text, preserving newlines, tabs, and spaces."""

@@ -190,11 +190,14 @@ def validate_complete(
         schema: Required when mode is ``structured``; ignored otherwise.
 
     Returns:
-        True when content passes validation; False for length or format failures
-        in short or long modes only. Standard and raw modes **always** return
-        True (formatting issues are logged as warnings, not failures).
-        Structured mode **never** returns False — it either returns True or
-        raises ``ValidationError``.
+        ``True`` when content passes validation.
+        ``False`` only when ``mode`` is ``short`` or ``long`` and content fails
+        the length/format check — callers should not test the return value
+        against ``False`` for other modes.
+        Standard and raw modes always return ``True`` (formatting issues are
+        logged as warnings, not failures).
+        Structured mode always returns ``True`` or raises ``ValidationError``
+        — it never returns ``False``.
 
     Raises:
         ValidationError: If content is empty, if mode is ``structured`` and

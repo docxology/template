@@ -18,20 +18,11 @@ except ImportError:
     MATPLOTLIB_AVAILABLE = False
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.reporting._dashboard_constants import COLORS
 from infrastructure.reporting.executive_reporter import ExecutiveSummary
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)
-
-# Professional color scheme
-COLORS = {
-    "primary": "#2E86AB",
-    "success": "#06A77D",
-    "warning": "#F77F00",
-    "danger": "#D62828",
-    "secondary": "#6C757D",
-    "light": "#F8F9FA",
-}
 
 def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate radar chart for health score factors.

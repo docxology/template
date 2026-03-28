@@ -11,7 +11,22 @@ import socket
 import tempfile
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
+
+
+class CheckResult(TypedDict, total=False):
+    status: str
+    details: dict[str, Any]
+    error: str
+    error_type: str
+    timestamp: float
+
+
+class HealthStatus(TypedDict):
+    timestamp: float
+    overall_status: str
+    checks: dict[str, CheckResult]
+    summary: dict[str, Any]
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging.utils import get_logger
@@ -48,9 +63,9 @@ class SystemHealthChecker:
             "uptime": self._check_uptime,
         }
 
-    def get_health_status(self) -> dict[str, Any]:
+    def get_health_status(self) -> HealthStatus:
         """Get comprehensive health status."""
-        status: dict[str, Any] = {
+        status: HealthStatus = {
             "timestamp": time.time(),
             "overall_status": "healthy",
             "checks": {},
