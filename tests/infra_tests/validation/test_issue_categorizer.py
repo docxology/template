@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Tests for issue_categorizer module."""
 
-from infrastructure.validation.docs.models import AccuracyIssue, LinkIssue, QualityIssue
+from infrastructure.validation.docs.models import LinkIssue, QualityIssue, ScanAccuracyIssue
 from infrastructure.validation.repo.issue_categorizer import (
     assign_severity,
     categorize_by_type,
@@ -37,12 +37,12 @@ class TestIssueCategorizer:
                 issue_message="File not found",
                 severity="error",
             ),
-            AccuracyIssue(
+            ScanAccuracyIssue(
+                category="accuracy",
+                severity="warning",
                 file="doc.md",
                 line=1,
-                issue_type="accuracy",
-                issue_message="Inaccurate information",
-                severity="warning",
+                message="Inaccurate information",
             ),
             QualityIssue(
                 file="readme.md",

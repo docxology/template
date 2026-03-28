@@ -29,11 +29,11 @@ from infrastructure.validation.docs.discovery import (
     run_discovery_phase,
 )
 from infrastructure.validation.docs.models import (
-    AccuracyIssue,
     CompletenessGap,
     DocumentationFile,
     LinkIssue,
     QualityIssue,
+    ScanAccuracyIssue,
     ScanResults,
 )
 from infrastructure.validation.docs.quality import run_quality_phase
@@ -41,7 +41,7 @@ from infrastructure.validation.docs._docs_scan_report import build_documentation
 
 __all__ = [
     "DocumentationScanner",
-    "AccuracyIssue",
+    "ScanAccuracyIssue",
     "CompletenessGap",
     "DocumentationFile",
     "LinkIssue",

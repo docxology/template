@@ -20,10 +20,10 @@ from infrastructure.validation.integrity.check_links import (
 from infrastructure.validation.docs.accuracy import check_links, extract_headings
 from infrastructure.validation.docs.discovery import categorize_documentation, discover_markdown_files
 from infrastructure.validation.docs.models import (
-    AccuracyIssue,
     DocumentationFile,
     LinkIssue,
     QualityIssue,
+    ScanAccuracyIssue,
     ScanResults,
 )
 from infrastructure.validation.repo.issue_categorizer import (
@@ -37,7 +37,7 @@ logger = get_logger(__name__)
 
 class _FileValidationResult(TypedDict):
     link_issues: list[LinkIssue]
-    accuracy_issues: list[AccuracyIssue]
+    accuracy_issues: list[ScanAccuracyIssue]
     quality_issues: list[QualityIssue]
 
 

@@ -5,318 +5,44 @@ as images and arranging them in a grid layout. Each page is rendered as a thumbn
 with page numbers, arranged in a 4-column grid.
 
 Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
+
+Implementation split across:
+- ``page_rendering``: PDF page extraction and rendering
+- ``page_grid``: Grid layout and PDF export
 """
 
 from __future__ import annotations
 
-import math
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from infrastructure.core.exceptions import FileNotFoundError, PDFValidationError, ValidationError
+from infrastructure.core.exceptions import PDFValidationError
 from infrastructure.core.logging.utils import get_logger
+
+# Re-export all public symbols so existing imports continue to work
+from infrastructure.reporting.page_grid import _save_image_as_pdf, create_page_grid
+from infrastructure.reporting.page_rendering import (
+    _render_pages_simple,
+    _render_pages_with_reportlab,
+    extract_pdf_pages_as_images,
+)
 
 if TYPE_CHECKING:
     import PIL.Image
-    from pypdf import PdfReader
 
     from infrastructure.reporting.executive_reporter import ExecutiveSummary
 
 logger = get_logger(__name__)
 
-
-def extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 300) -> list["PIL.Image.Image"]:
-    """Extract each PDF page as a PIL Image.
-
-    Uses pypdf to read PDF pages and renders them as images.
-    Falls back to simplified text-based rendering if full rendering unavailable.
-
-    Args:
-        pdf_path: Path to the PDF file
-        dpi: Resolution for image rendering (default: 300)
-
-    Returns:
-        List of PIL Images, one per PDF page
-
-    Raises:
-        FileNotFoundError: If PDF file doesn't exist
-        ValueError: If PDF is corrupted or has no pages
-    """
-    if not pdf_path.exists():
-        raise FileNotFoundError(f"PDF file not found: {pdf_path}", context={"file": str(pdf_path)})
-
-    try:
-        from pypdf import PdfReader
-    except ImportError as e:
-        raise ImportError("pypdf library required for PDF processing") from e
-
-    # Read PDF
-    try:
-        reader = PdfReader(pdf_path)
-        if len(reader.pages) == 0:
-            raise PDFValidationError(f"PDF has no pages: {pdf_path}")
-
-        logger.info(f"Extracting {len(reader.pages)} pages from {pdf_path.name}")
-    except PDFValidationError:
-        raise
-    except (OSError, ValueError) as e:
-        raise PDFValidationError(f"Failed to read PDF {pdf_path}: {e}") from e
-
-    images = []
-
-    # Try advanced rendering first (reportlab)
-    try:
-        images = _render_pages_with_reportlab(reader, dpi)
-    except (ImportError, OSError, ValueError) as e:  # noqa: BLE001 — fall back to simple rendering path
-        logger.warning(f"Advanced rendering failed, falling back to simple rendering: {e}")
-        try:
-            images = _render_pages_simple(reader, dpi)
-        except (OSError, ValueError, RuntimeError, ImportError) as e2:
-            logger.error(f"Simple rendering also failed: {e2}")
-            raise PDFValidationError(f"Failed to render PDF pages: {e2}") from e2
-
-    return images
-
-
-def _render_pages_with_reportlab(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image"]:
-    """Render PDF pages using reportlab for high-quality output."""
-    try:
-        import os
-        import tempfile
-
-        from PIL import Image
-        from reportlab.lib.pagesizes import letter
-        from reportlab.lib.utils import ImageReader  # noqa: F401
-        from reportlab.pdfgen import canvas
-    except ImportError as e:
-        raise ImportError("reportlab and PIL required for advanced rendering") from e
-
-    images = []
-
-    for i, page in enumerate(reader.pages):
-        # Create a temporary PDF for this page
-        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp_pdf:
-            temp_pdf_path = temp_pdf.name
-
-        try:
-            # Create single-page PDF with reportlab
-            c = canvas.Canvas(temp_pdf_path, pagesize=letter)
-            c.setFont("Helvetica", 10)
-
-            # Extract text from pypdf page
-            page_text = page.extract_text()
-
-            # Simple text rendering (could be enhanced)
-            lines = page_text.split("\n")
-            y_position = 750  # Start near top
-
-            for line in lines[:50]:  # Limit lines to fit page
-                if line.strip():
-                    c.drawString(50, y_position, line[:80])  # Limit line length
-                    y_position -= 12
-                    if y_position < 50:
-                        break
-
-            # Add page number
-            c.drawString(50, 30, f"Page {i + 1}")
-
-            c.save()
-
-            # Convert to PIL Image
-            try:
-                from pdf2image import convert_from_path
-
-                page_images = convert_from_path(temp_pdf_path, dpi=dpi, first_page=1, last_page=1)
-                if page_images:
-                    images.append(page_images[0])
-                else:
-                    # Fallback: create blank image
-                    img = Image.new("RGB", (800, 1100), color="white")
-                    images.append(img)
-            except ImportError:
-                # Fallback: create text-based image
-                img = Image.new("RGB", (800, 1100), color="white")
-                from PIL import ImageDraw, ImageFont
-
-                draw = ImageDraw.Draw(img)
-                try:
-                    font = ImageFont.truetype("Helvetica", 12)
-                except OSError as e:
-                    logger.debug(f"Could not load Helvetica font: {e}")
-                    font = ImageFont.load_default()
-
-                y_pos = 50
-                for line in lines[:30]:
-                    if line.strip():
-                        draw.text((50, y_pos), line[:60], fill="black", font=font)
-                        y_pos += 15
-                        if y_pos > 1050:
-                            break
-
-                draw.text((50, 1070), f"Page {i + 1}", fill="black", font=font)
-                images.append(img)
-
-        finally:
-            # Clean up temp file
-            try:
-                os.unlink(temp_pdf_path)
-            except OSError as e:
-                logger.debug(f"Failed to clean up temp file {temp_pdf_path}: {e}")
-
-    return images
-
-
-def _render_pages_simple(reader: "PdfReader", dpi: int) -> list["PIL.Image.Image"]:
-    """Render PDF pages using simple text extraction and PIL drawing."""
-    try:
-        from PIL import Image, ImageDraw, ImageFont
-    except ImportError as e:
-        raise ImportError("PIL required for PDF rendering") from e
-
-    images = []
-
-    for i, page in enumerate(reader.pages):
-        # Create blank page image (standard letter size at given DPI)
-        width = int(8.5 * dpi)  # 8.5 inches
-        height = int(11 * dpi)  # 11 inches
-        img = Image.new("RGB", (width, height), color="white")
-        draw = ImageDraw.Draw(img)
-
-        # Try to load a font
-        try:
-            font = ImageFont.truetype("Helvetica", 12)
-        except OSError as e:
-            logger.debug(f"Could not load Helvetica font: {e}")
-            font = ImageFont.load_default()
-
-        # Extract and render text
-        try:
-            page_text = page.extract_text()
-            lines = page_text.split("\n")
-
-            y_position = 50
-            for line in lines[:40]:  # Limit lines
-                if line.strip():
-                    # Handle very long lines
-                    line = line[:80] + "..." if len(line) > 80 else line
-                    draw.text((50, y_position), line, fill="black", font=font)
-                    y_position += 15
-                    if y_position > height - 100:
-                        break
-
-        except (OSError, ValueError, KeyError) as e:
-            logger.warning(f"Failed to extract text from page {i + 1}: {e}")
-
-        # Add page number
-        draw.text((50, height - 50), f"Page {i + 1}", fill="black", font=font)
-
-        images.append(img)
-
-    return images
-
-
-def create_page_grid(
-    images: list["PIL.Image.Image"],
-    cols: int = 4,
-    padding: int = 10,
-    max_thumb_size: tuple[int, int] = (600, 800),
-) -> "PIL.Image.Image":
-    """Arrange page images in a grid layout.
-
-    Args:
-        images: List of PIL Images (one per page)
-        cols: Number of columns in grid (default: 4)
-        padding: Padding between thumbnails in pixels (default: 10)
-        max_thumb_size: Maximum size for each thumbnail (width, height) (default: 600x800)
-
-    Returns:
-        Single PIL Image containing the grid layout
-    """
-    if not images:
-        raise ValidationError("No images provided for grid creation")
-
-    try:
-        from PIL import Image, ImageDraw, ImageFont
-    except ImportError as e:
-        raise ImportError("PIL required for image processing") from e
-
-    # Calculate grid dimensions
-    num_images = len(images)
-    rows = math.ceil(num_images / cols)
-
-    # Resize images to fit grid cells
-    thumb_width, thumb_height = max_thumb_size
-    resized_images = []
-
-    for img in images:
-        # Maintain aspect ratio
-        img_ratio = img.width / img.height
-        if img.width > img.height:
-            # Landscape or square
-            new_width = min(img.width, thumb_width)
-            new_height = int(new_width / img_ratio)
-            if new_height > thumb_height:
-                new_height = thumb_height
-                new_width = int(new_height * img_ratio)
-        else:
-            # Portrait
-            new_height = min(img.height, thumb_height)
-            new_width = int(new_height * img_ratio)
-            if new_width > thumb_width:
-                new_width = thumb_width
-                new_height = int(new_width / img_ratio)
-
-        # Resize image
-        resized = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
-        resized_images.append(resized)
-
-    # Calculate grid dimensions
-    grid_width = cols * (thumb_width + padding) + padding
-    grid_height = rows * (thumb_height + padding) + padding
-
-    # Create grid image
-    grid_img = Image.new("RGB", (grid_width, grid_height), color="white")
-    draw = ImageDraw.Draw(grid_img)
-
-    # Try to load font for page numbers
-    try:
-        font = ImageFont.truetype("Helvetica", 10)
-    except OSError as e:
-        logger.debug(f"Could not load Helvetica font: {e}")
-        font = ImageFont.load_default()
-
-    # Place images in grid
-    for i, img in enumerate(resized_images):
-        row = i // cols
-        col = i % cols
-
-        x = col * (thumb_width + padding) + padding
-        y = row * (thumb_height + padding) + padding
-
-        # Center image in cell if smaller than max size
-        cell_center_x = x + thumb_width // 2
-        cell_center_y = y + thumb_height // 2
-        img_x = cell_center_x - img.width // 2
-        img_y = cell_center_y - img.height // 2
-
-        # Paste image
-        grid_img.paste(img, (img_x, img_y))
-
-        # Add page number label
-        label = f"Page {i + 1}"
-        draw.text((img_x + 5, img_y + 5), label, fill="black", font=font)
-
-    # Add title
-    title = f"Manuscript Overview - {num_images} Pages"
-    try:
-        title_font = ImageFont.truetype("Helvetica-Bold", 16)
-    except OSError as e:
-        logger.debug(f"Could not load Helvetica-Bold font: {e}")
-        title_font = ImageFont.load_default()
-
-    draw.text((padding, padding // 2), title, fill="black", font=title_font)
-
-    return grid_img
+__all__ = [
+    "extract_pdf_pages_as_images",
+    "_render_pages_with_reportlab",
+    "_render_pages_simple",
+    "create_page_grid",
+    "_save_image_as_pdf",
+    "generate_manuscript_overview",
+    "generate_all_manuscript_overviews",
+]
 
 
 def generate_manuscript_overview(
@@ -387,51 +113,6 @@ def generate_manuscript_overview(
     return result
 
 
-def _save_image_as_pdf(image: "PIL.Image.Image", pdf_path: Path, title: str) -> None:
-    """Save a PIL Image as a PDF file using reportlab."""
-    try:
-        from reportlab.lib.pagesizes import letter
-        from reportlab.lib.utils import ImageReader
-        from reportlab.pdfgen import canvas
-    except ImportError as e:
-        raise ImportError("reportlab required for PDF output") from e
-
-    # Create PDF with the image
-    c = canvas.Canvas(str(pdf_path), pagesize=letter)
-
-    # Calculate scaling to fit page
-    page_width, page_height = letter
-    img_width, img_height = image.size
-
-    # Scale to fit page with margins
-    margin = 50
-    available_width = page_width - 2 * margin
-    available_height = page_height - 2 * margin
-
-    scale_x = available_width / img_width
-    scale_y = available_height / img_height
-    scale = min(scale_x, scale_y)
-
-    new_width = img_width * scale
-    new_height = img_height * scale
-
-    # Center on page
-    x = (page_width - new_width) / 2
-    y = (page_height - new_height) / 2
-
-    # Convert PIL image to reportlab ImageReader
-    img_reader = ImageReader(image)
-
-    # Draw image
-    c.drawImage(img_reader, x, y, width=new_width, height=new_height)
-
-    # Add title
-    c.setFont("Helvetica-Bold", 14)
-    c.drawCentredString(page_width / 2, page_height - 30, title)
-
-    c.save()
-
-
 def generate_all_manuscript_overviews(
     summary: "ExecutiveSummary", output_dir: Path, repo_root: Path
 ) -> dict[str, Path]:
@@ -450,15 +131,10 @@ def generate_all_manuscript_overviews(
     for project in summary.project_metrics:
         project_name = project.name
 
-        # Try multiple locations and filename patterns for the manuscript PDF.
-        # "project_combined.pdf" entries are legacy fallbacks — remove by 2026-09-01
-        # once all active projects produce {project_name}_combined.pdf via render_pdf.sh.
+        # Try standard locations for the manuscript PDF.
         pdf_paths = [
             repo_root / "output" / project_name / f"{project_name}_combined.pdf",
             repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf",
-            repo_root / "output" / project_name / "project_combined.pdf",  # legacy
-            repo_root / "output" / project_name / "pdf" / "project_combined.pdf",  # legacy
-            repo_root / "projects" / project_name / "output" / "pdf" / "project_combined.pdf",  # legacy
         ]
 
         pdf_path = None

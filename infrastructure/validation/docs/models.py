@@ -97,7 +97,7 @@ class ScanResults:
     total_files: int = 0
     documentation_files: list[DocumentationFile] = field(default_factory=list)
     link_issues: list[LinkIssue] = field(default_factory=list)
-    accuracy_issues: list[AccuracyIssue] = field(default_factory=list)
+    accuracy_issues: list[ScanAccuracyIssue] = field(default_factory=list)
     completeness_gaps: list[CompletenessGap] = field(default_factory=list)
     quality_issues: list[QualityIssue] = field(default_factory=list)
     improvements_made: list[dict[str, Any]] = field(default_factory=list)

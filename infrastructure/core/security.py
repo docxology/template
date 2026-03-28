@@ -77,7 +77,10 @@ def get_cors_headers(origin: str | None = None) -> dict[str, str]:
 
 
 class SecurityHeaders:
-    """Static helpers for HTTP security and CORS headers (tests and legacy callers)."""
+    """Backwards-compat shim — use module-level get_security_headers/get_cors_headers directly.
+
+    Planned removal: 2026-09-01.
+    """
 
     @staticmethod
     def get_security_headers() -> dict[str, str]:

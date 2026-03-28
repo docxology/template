@@ -11,7 +11,6 @@ import re
 from typing import Any, Union
 
 from infrastructure.validation.docs.models import (
-    AccuracyIssue,
     CompletenessGap,
     LinkIssue,
     QualityIssue,
@@ -32,8 +31,8 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
-# Type alias for any issue type (includes both legacy AccuracyIssue and new ScanAccuracyIssue)
-Issue = Union[LinkIssue, AccuracyIssue, ScanAccuracyIssue, CompletenessGap, QualityIssue]
+# Type alias for any issue type in the validation system
+Issue = Union[LinkIssue, ScanAccuracyIssue, CompletenessGap, QualityIssue]
 
 
 def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
@@ -367,8 +366,6 @@ def _get_issue_type(issue: Issue) -> str:
         return issue.category
     elif isinstance(issue, LinkIssue):
         return "link_issue"
-    elif isinstance(issue, AccuracyIssue):
-        return "accuracy_issue"
     elif isinstance(issue, CompletenessGap):
         return "completeness_gap"
     elif isinstance(issue, QualityIssue):
