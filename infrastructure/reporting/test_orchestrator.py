@@ -56,6 +56,7 @@ def _discover_tests(cmd: list[str], repo_root: Path, env: dict, label: str) -> N
                     test_count = int(match.group(1))
                     break
                 except (ValueError, IndexError):
+                    logger.debug("Could not parse match group as int, trying next pattern")
                     continue
         if test_count is not None:
             log_success(f"Discovered {test_count} {label} tests", logger)
