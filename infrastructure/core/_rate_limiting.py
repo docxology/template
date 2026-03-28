@@ -10,7 +10,7 @@ import functools
 import threading
 import time
 from functools import wraps
-from typing import Any, Callable
+from typing import Any, Callable, TypedDict
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -85,11 +85,20 @@ class RateLimiter:
             return max(0, self.max_requests - len(self.requests[key]))
 
 
+class SecurityEvent(TypedDict):
+    """Structured security event record stored by SecurityMonitor."""
+
+    timestamp: float
+    type: str
+    severity: str
+    details: dict[str, Any]
+
+
 class SecurityMonitor:
     """Monitor security events and anomalies."""
 
     def __init__(self) -> None:
-        self.events: list[dict[str, Any]] = []
+        self.events: list[SecurityEvent] = []
         self.max_events = 1000
 
     def log_security_event(
@@ -102,7 +111,7 @@ class SecurityMonitor:
             details: Event details
             severity: Event severity (info, warning, error, critical)
         """
-        event = {
+        event: SecurityEvent = {
             "timestamp": time.time(),
             "type": event_type,
             "severity": severity,
@@ -125,11 +134,11 @@ class SecurityMonitor:
         else:
             logger.debug(f"Security event: {event_type} - {details}")
 
-    def get_recent_events(self, limit: int = 100) -> list[dict[str, Any]]:
+    def get_recent_events(self, limit: int = 100) -> list[SecurityEvent]:
         """Get recent security events."""
         return self.events[-limit:]
 
-    def get_events_by_type(self, event_type: str) -> list[dict[str, Any]]:
+    def get_events_by_type(self, event_type: str) -> list[SecurityEvent]:
         """Get events by type."""
         return [event for event in self.events if event["type"] == event_type]
 

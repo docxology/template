@@ -18,6 +18,7 @@ class ResponseMode(str, Enum):
     LONG = "long"  # Comprehensive answers (> 500 tokens)
     STRUCTURED = "structured"  # JSON-formatted structured response
     RAW = "raw"  # Raw prompt without modification
+    STANDARD = "standard"  # Default: advisory-only formatting checks
 
 
 @dataclass

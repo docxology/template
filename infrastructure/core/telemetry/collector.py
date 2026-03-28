@@ -125,6 +125,10 @@ class TelemetryCollector:
         Args:
             stage_name: Human-readable stage label.
             stage_num: 1-based ordinal.
+
+        Note: start_stage intentionally accepts fewer arguments than end_stage.
+        At start time only the stage identity is known; outcome fields (success,
+        exit_code, error_message) only exist at end time and belong in end_stage.
         """
         if not self.config.enabled:
             return

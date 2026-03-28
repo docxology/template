@@ -19,6 +19,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from infrastructure.llm.core.client import LLMClient
+from infrastructure.llm.templates.base import ResearchTemplate
 from infrastructure.llm.templates.manuscript import (
     ManuscriptExecutiveSummary,
     ManuscriptImprovementSuggestions,
@@ -30,7 +31,7 @@ from infrastructure.llm.review.metrics import ReviewMetrics
 
 # Registry mapping review_type → (review_name, template_class, default_temperature).
 # Add new review types here; the _make_review_fn factory generates the public entry points.
-_REVIEW_REGISTRY: dict[str, tuple[str, type, float]] = {
+_REVIEW_REGISTRY: dict[str, tuple[str, type[ResearchTemplate], float]] = {
     "executive_summary": ("executive summary", ManuscriptExecutiveSummary, 0.3),
     "quality_review": ("quality review", ManuscriptQualityReview, 0.3),
     "methodology_review": ("methodology review", ManuscriptMethodologyReview, 0.3),

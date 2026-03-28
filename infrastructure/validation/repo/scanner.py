@@ -13,6 +13,7 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -27,8 +28,21 @@ from infrastructure.validation.repo.models import RepoScanResults
 
 logger = get_logger(__name__)
 
-# Backwards-compatible alias: tests and older callers refer to "AccuracyIssue".
-AccuracyIssue = ScanAccuracyIssue
+class AccuracyIssue(ScanAccuracyIssue):
+    """Backwards-compatible alias for ScanAccuracyIssue.
+
+    Deprecated since 2026-03. Use ``ScanAccuracyIssue`` directly.
+    Removal planned: 2026-09-01.
+    """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        warnings.warn(
+            "AccuracyIssue is deprecated; use ScanAccuracyIssue instead. "
+            "This alias will be removed on 2026-09-01.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(*args, **kwargs)
 
 
 def _find_repo_root_for_main() -> Path:

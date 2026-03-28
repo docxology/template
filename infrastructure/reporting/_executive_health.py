@@ -43,13 +43,18 @@ _GRADE_TIERS = [
 ]
 
 
-def _apply_tier(tiers: list[tuple], value: float, label: str | None = None) -> dict[str, Any]:
-    """Return the factor dict for the first tier whose threshold the value meets."""
+def _score_tier(tiers: list[tuple], value: float, label: str | None = None) -> dict[str, Any]:
+    """Return the factor dict for the first tier whose threshold the value meets.
+
+    All tier tables must include a catch-all entry at threshold 0 so this
+    function always returns on the first match and never falls through.
+    """
     for threshold, pts, grade, reason_tpl in tiers:
         if value >= threshold:
             reason = reason_tpl.format(label if label is not None else value)
             return {"score": pts, "grade": grade, "reason": reason}
-    return {"score": 0, "grade": "F", "reason": "Unknown"}
+    # Unreachable: all tier tables have a (0, ...) catch-all entry.
+    return {"score": 0, "grade": "F", "reason": "No tier matched"}
 
 
 def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
@@ -65,7 +70,7 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
     score = 0
 
     # Test coverage (40% weight)
-    cov = _apply_tier(_COVERAGE_TIERS, project.tests.coverage_percent)
+    cov = _score_tier(_COVERAGE_TIERS, project.tests.coverage_percent)
     factors["test_coverage"] = cov
     score += cov["score"]
 
@@ -88,7 +93,7 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
 
     # Manuscript completeness (20% weight)
     words = project.manuscript.total_words
-    ms = _apply_tier(_WORD_TIERS, words, label=str(words))
+    ms = _score_tier(_WORD_TIERS, words, label=str(words))
     factors["manuscript_size"] = ms
     score += ms["score"]
 
@@ -99,7 +104,7 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
         + project.outputs.slides
         + project.outputs.web_outputs
     )
-    out = _apply_tier(_OUTPUT_TIERS, outputs_generated, label=str(outputs_generated))
+    out = _score_tier(_OUTPUT_TIERS, outputs_generated, label=str(outputs_generated))
     factors["outputs"] = out
     score += out["score"]
 

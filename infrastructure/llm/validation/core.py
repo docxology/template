@@ -180,18 +180,18 @@ def validate_formatting(content: str) -> bool:
 
 
 def validate_complete(
-    content: str, mode: ResponseMode | str = "standard", schema: dict[str, Any] | None = None
+    content: str, mode: ResponseMode = ResponseMode.STANDARD, schema: dict[str, Any] | None = None
 ) -> bool:
     """Validate LLM response content based on the response mode.
 
     Args:
         content: Response text to validate.
-        mode: Expected response mode — short, long, structured, standard, or raw.
-        schema: Required when mode is ``structured``; ignored otherwise.
+        mode: Expected response mode — SHORT, LONG, STRUCTURED, STANDARD, or RAW.
+        schema: Required when mode is ``STRUCTURED``; ignored otherwise.
 
     Returns:
         ``True`` when content passes validation.
-        ``False`` only when ``mode`` is ``short`` or ``long`` and content fails
+        ``False`` only when ``mode`` is ``SHORT`` or ``LONG`` and content fails
         the length/format check — callers should not test the return value
         against ``False`` for other modes.
         Standard and raw modes always return ``True`` (formatting issues are
@@ -200,26 +200,27 @@ def validate_complete(
         — it never returns ``False``.
 
     Raises:
-        ValidationError: If content is empty, if mode is ``structured`` and
+        ValidationError: If content is empty, if mode is ``STRUCTURED`` and
             *schema* is None, or if structured content fails schema validation.
     """
     if not content or not content.strip():
         raise ValidationError("Empty response")
 
-    # Mode-specific validation
-    if mode in (ResponseMode.SHORT, "short"):
+    # Mode-specific validation. ResponseMode(str, Enum) so == matches both enum
+    # members and plain string equivalents for callers that pass string literals.
+    if mode == ResponseMode.SHORT:
         return validate_short_response(content)
-    elif mode in (ResponseMode.LONG, "long"):
+    elif mode == ResponseMode.LONG:
         return validate_long_response(content)
-    elif mode in (ResponseMode.STRUCTURED, "structured"):
+    elif mode == ResponseMode.STRUCTURED:
         if schema is None:
             raise ValidationError("Structured mode requires a schema")
         data = validate_json(content)
         return validate_structure(data, schema)
-    elif mode in (ResponseMode.RAW, "raw"):
+    elif mode == ResponseMode.RAW:
         # Raw mode is unvalidated — skip all formatting checks
         return True
-    elif mode not in (ResponseMode.STANDARD, "standard"):
+    elif mode != ResponseMode.STANDARD:
         raise ValueError(
             f"Unknown mode {mode!r}. Expected one of: short, long, structured, standard, raw."
         )

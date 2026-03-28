@@ -30,12 +30,11 @@ class InputSanitizer:
     def __init__(self) -> None:
         self.dangerous_patterns = get_security_validator().dangerous_patterns
 
-    def sanitize_prompt(self, prompt: str, context: dict[str, Any] | None = None) -> str:
+    def sanitize_prompt(self, prompt: str) -> str:
         """Sanitize LLM prompt for security.
 
         Args:
             prompt: Raw prompt text
-            context: Additional context for validation
 
         Returns:
             Sanitized prompt text

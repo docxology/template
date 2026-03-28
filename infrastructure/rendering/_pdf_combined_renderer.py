@@ -11,7 +11,7 @@ import re
 import subprocess
 import unicodedata
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NamedTuple
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_helpers import (
@@ -37,11 +37,19 @@ _FIG_PATH_REPLACEMENTS = [
 ]
 
 
-def preprocess_combined_markdown(combined_content: str) -> tuple[str, int, int]:
+class CombinedMarkdownResult(NamedTuple):
+    """Result of preprocess_combined_markdown."""
+
+    content: str
+    mermaid_blocks_removed: int
+    fig_paths_fixed: int
+
+
+def preprocess_combined_markdown(combined_content: str) -> CombinedMarkdownResult:
     """Strip Mermaid fences and normalise figure paths in combined markdown.
 
     Returns:
-        Tuple of (processed_content, mermaid_blocks_removed, fig_paths_fixed)
+        CombinedMarkdownResult with processed content and counts of removals/fixes.
     """
     content, n_mermaid = _MERMAID_RE.subn("", combined_content)
     if n_mermaid:
@@ -58,7 +66,7 @@ def preprocess_combined_markdown(combined_content: str) -> tuple[str, int, int]:
     if n_fig_paths:
         logger.info(f"✓ Normalised {n_fig_paths} figure path(s) to ../figures/ in combined markdown")
 
-    return content, n_mermaid, n_fig_paths
+    return CombinedMarkdownResult(content, n_mermaid, n_fig_paths)
 
 
 def build_pandoc_tex_command(

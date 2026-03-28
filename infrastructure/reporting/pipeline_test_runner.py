@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import time
 from pathlib import Path
+from typing import TypedDict
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep
 from infrastructure.core.config.queries import get_testing_config
@@ -28,6 +29,23 @@ from infrastructure.reporting.coverage_parser import check_cov_datafile_support
 from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite
 
 logger = get_logger(__name__)
+
+
+class TestSuiteResults(TypedDict, total=False):
+    """Structured result dict returned by run_infrastructure_tests / run_project_tests."""
+    passed: int
+    failed: int
+    skipped: int
+    total: int
+    warnings: int
+    exit_code: int
+    discovery_count: int
+    collection_errors: int
+    execution_phases: dict
+    test_categories: dict
+    coverage_percent: float
+    failed_tests: list
+
 
 _DISCOVERY_PATTERNS = [
     r"(\d+)\s+tests?\s+collected",
@@ -74,7 +92,7 @@ def run_infrastructure_tests(
     include_slow: bool = False,
     include_ollama_tests: bool = False,
     strict: bool = True,
-) -> tuple[int, dict]:
+) -> tuple[int, TestSuiteResults]:
     """Execute infrastructure test suite with coverage."""
     start_time = time.time()
     project_root = repo_root / "projects" / project_name
