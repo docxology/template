@@ -10,6 +10,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from infrastructure.project.metadata import get_project_metadata
+
 
 @dataclass
 class ProjectInfo:
@@ -51,3 +53,29 @@ class ProjectInfo:
         if self.program:
             return f"{self.program}/{self.name}"
         return self.name
+
+
+def build_project_info(project_dir: Path, program: str = "") -> "ProjectInfo":
+    """Build a ProjectInfo from a validated project directory.
+
+    Centralises the concern of constructing a ProjectInfo from a directory path
+    so that discovery.py focuses solely on filesystem walking.
+
+    Args:
+        project_dir: Path to the project directory.
+        program: Parent program directory name (empty for standalone projects).
+
+    Returns:
+        Populated ProjectInfo instance.
+    """
+    metadata = get_project_metadata(project_dir)
+    return ProjectInfo(
+        name=project_dir.name,
+        path=project_dir,
+        has_src=(project_dir / "src").exists(),
+        has_tests=(project_dir / "tests").exists(),
+        has_scripts=(project_dir / "scripts").exists(),
+        has_manuscript=(project_dir / "manuscript").exists(),
+        metadata=metadata,
+        program=program,
+    )

@@ -111,7 +111,6 @@ This test suite provides comprehensive validation for scientific functions
 including numerical stability, performance benchmarking, and correctness verification.
 """
 
-import sys
 import pytest
 import numpy as np
 from pathlib import Path
@@ -120,8 +119,9 @@ from pathlib import Path
 from infrastructure.scientific.stability import check_numerical_stability
 from infrastructure.scientific.benchmarking import benchmark_function
 
-# Import the module to test
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+# Import the module to test.
+# Ensure src/ is on the Python path via pyproject.toml [tool.pytest.ini_options] pythonpath
+# or pytest.ini rather than mutating sys.path at test load time.
 import {module_name}
 
 class TestNumericalStability:
@@ -211,8 +211,7 @@ from typing import Any, Dict
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Project imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+# Project imports (configure pythonpath in pyproject.toml/pytest.ini, not sys.path mutation)
 from infrastructure.core.logging.utils import get_logger
 from reproducibility import generate_reproducibility_report, save_reproducibility_report
 from integrity import verify_output_integrity

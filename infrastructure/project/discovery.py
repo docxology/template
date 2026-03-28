@@ -11,7 +11,7 @@ from typing import Union
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.metadata import get_project_metadata  # noqa: F401 — re-exported
-from infrastructure.project.project_info import ProjectInfo  # noqa: F401 — re-exported
+from infrastructure.project.project_info import ProjectInfo, build_project_info  # noqa: F401 — re-exported
 from infrastructure.project.validation import validate_project_structure  # noqa: F401 — re-exported
 
 logger = get_logger(__name__)
@@ -86,7 +86,7 @@ def discover_projects(
 
         if is_valid:
             # It's a standalone project
-            project_info = _build_project_info(child_dir)
+            project_info = build_project_info(child_dir)
             projects.append(project_info)
             logger.debug(
                 f"Discovered standalone project: {project_info.name} at {project_info.path}"
@@ -103,21 +103,6 @@ def discover_projects(
                 logger.debug(f"Skipping {child_dir.name}: {message}")
 
     return projects
-
-
-def _build_project_info(project_dir: Path, program: str = "") -> ProjectInfo:
-    """Build a ProjectInfo from a validated project directory."""
-    metadata = get_project_metadata(project_dir)
-    return ProjectInfo(
-        name=project_dir.name,
-        path=project_dir,
-        has_src=(project_dir / "src").exists(),
-        has_tests=(project_dir / "tests").exists(),
-        has_scripts=(project_dir / "scripts").exists(),
-        has_manuscript=(project_dir / "manuscript").exists(),
-        metadata=metadata,
-        program=program,
-    )
 
 
 def _discover_nested_projects(program_dir: Path, program_name: str) -> list[ProjectInfo]:
@@ -145,7 +130,7 @@ def _discover_nested_projects(program_dir: Path, program_name: str) -> list[Proj
         is_valid, _ = validate_project_structure(child_dir)
 
         if is_valid:
-            project_info = _build_project_info(child_dir, program=program_name)
+            project_info = build_project_info(child_dir, program=program_name)
             nested_projects.append(project_info)
             logger.debug(
                 f"Discovered nested project: {project_info.qualified_name} at {project_info.path}"
@@ -174,4 +159,4 @@ def get_default_project(repo_root: Path, projects_dir: str = "projects") -> Proj
         logger.warning(f"Default project is invalid: {message}")
         return None
 
-    return _build_project_info(default_project_dir)
+    return build_project_info(default_project_dir)
