@@ -177,7 +177,6 @@ def generate_validation_report(
             "figure_issues_count": len(figure_issues),
             "all_passed": all(result for _, result in check_results) and len(figure_issues) == 0,
         },
-        "recommendations": [],
     }
 
     recommendations = []

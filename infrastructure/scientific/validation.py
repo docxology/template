@@ -177,7 +177,6 @@ def check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]:
         "has_error_handling": False,
         "has_input_validation": False,
         "follows_naming_conventions": False,
-        "compliance_score": 0.0,
         "recommendations": [],
     }
 
