@@ -20,6 +20,15 @@ class MessageDict(TypedDict):
     content: str
 
 
+class ContextState(TypedDict):
+    """Shape of the dict produced by ``ConversationContext.save_state``."""
+
+    messages: list[dict[str, Any]]
+    estimated_tokens: int
+    max_tokens: int
+    usage_stats: dict[str, Any]
+
+
 @dataclass
 class Message:
     """A single message in the conversation."""
@@ -142,7 +151,7 @@ class ConversationContext:
                 },
             )
 
-    def save_state(self) -> dict[str, Any]:
+    def save_state(self) -> ContextState:
         """Save current context state for restoration via ``restore_state``."""
         state = {
             "messages": [asdict(msg) for msg in self.messages],
@@ -161,7 +170,7 @@ class ConversationContext:
 
         return state
 
-    def restore_state(self, state: dict[str, Any]) -> None:
+    def restore_state(self, state: ContextState) -> None:
         """Restore context from a ``save_state`` dictionary."""
         logger.info(
             "Restoring context state",

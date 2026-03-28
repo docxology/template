@@ -514,7 +514,7 @@ def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> l
                                     _validate_import_path(module_name, block, file_path, repo_root)
                                 )
                         elif isinstance(node, ast.ImportFrom):
-                            module_name = node.module  # type: ignore[assignment]
+                            module_name: str | None = node.module
                             if module_name is not None:
                                 issues.extend(
                                     _validate_import_path(module_name, block, file_path, repo_root)
@@ -852,6 +852,8 @@ def main() -> int:
 
             # Additional validations
             code_block_issues = validate_file_paths_in_code(content, md_file, repo_root)
+            # validate_* returns list[dict[str, Any]] whose keys match LinkCheckResult;
+            # mypy cannot verify structural compatibility without annotating the return type
             issues["code_block_paths"].extend(code_block_issues)  # type: ignore[arg-type]
 
             dir_structure_issues = validate_directory_structures(content, md_file, repo_root)

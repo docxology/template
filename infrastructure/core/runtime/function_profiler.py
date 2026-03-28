@@ -159,7 +159,7 @@ class CodeProfiler:
         """Return the most recent performance metrics."""
         return self.metrics_history[-limit:]
 
-    def clear_metrics_history(self):
+    def clear_metrics_history(self) -> None:
         """Clear the metrics history."""
         self.metrics_history.clear()
 
