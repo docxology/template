@@ -31,7 +31,8 @@ def count_test_functions(test_dir: Path) -> int:
         try:
             content = file_path.read_text(encoding="utf-8")
             count += len(re.findall(r"^\s*def test_", content, re.MULTILINE))
-        except OSError:
+        except OSError as e:
+            logger.debug(f"Skipping unreadable test file {file_path}: {e}")
             continue
     return count
 
@@ -96,14 +97,21 @@ def build_module_inventory_table(modules: list[ModuleInfo]) -> str:
 
 
 def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
-    """Compute the full metrics dictionary from live repository data."""
+    """Compute the full metrics dictionary from live repository data.
+
+    All values in the returned dictionary are injectable into manuscript
+    chapters as ``${key}`` tokens.  Per-project metrics are exposed as
+    ``project_{name}_{field}`` keys (e.g. ``project_code_project_test_count``).
+    """
     logger.info("Building infrastructure report from repository data...")
     report = build_infrastructure_report(repo_root)
 
+    # ── Per-project metrics (from report + test function counting) ──────
     projects_dir = repo_root / "projects"
     projects_in_progress_dir = repo_root / "projects_in_progress"
-    project_metrics: dict[str, dict[str, int]] = {}
+    project_metrics: dict[str, dict[str, int | str]] = {}
 
+    # Also count test *functions* (not just files) for finer granularity
     all_project_dirs = sorted(
         list(projects_dir.iterdir()) + list(projects_in_progress_dir.iterdir())
         if projects_in_progress_dir.is_dir()
@@ -127,6 +135,14 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
             "test_file_count": test_file_count,
         }
 
+    # Merge structural counts from InfrastructureReport.projects
+    for proj in report.projects:
+        if proj.name in project_metrics:
+            project_metrics[proj.name]["chapter_count"] = proj.chapter_count
+            project_metrics[proj.name]["script_count"] = proj.script_count
+            project_metrics[proj.name]["src_module_count"] = proj.src_module_count
+            project_metrics[proj.name]["figure_count"] = proj.figure_count
+
     infra_test_count = count_test_functions(repo_root / "tests")
     infra_test_file_count = len(list((repo_root / "tests").rglob("test_*.py")))
     total_infra_py = sum(module.python_file_count for module in report.modules)
@@ -140,6 +156,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
     )
 
     metrics: dict[str, Any] = {
+        # ── Top-level infrastructure metrics ──────────────────────────
         "module_count": report.module_count,
         "stage_count": report.stage_count,
         "project_count": report.project_count,
@@ -151,11 +168,13 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         "docs_file_count": docs_file_count,
         "docs_subdir_count": docs_subdir_count,
         "infrastructure_version": report.infrastructure_version,
+        # ── Per-project metrics (flat) ────────────────────────────────
         **{
             f"project_{name}_{k}": str(v)
             for name, stats in project_metrics.items()
             for k, v in stats.items()
         },
+        # ── Per-module metrics ────────────────────────────────────────
         **{
             f"module_{module.name}_python_file_count": module.python_file_count
             for module in report.modules
@@ -173,10 +192,12 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
     }
 
     logger.info(
-        "Metrics computed: %s modules, %s infra tests, %s infra Python files",
+        "Metrics computed: %s modules, %s infra tests, %s infra Python files, "
+        "%s per-project keys",
         report.module_count,
         infra_test_count,
         total_infra_py,
+        sum(len(v) for v in project_metrics.values()),
     )
     return metrics
 

@@ -61,6 +61,8 @@ class ProjectInfo:
     test_file_count: int
     has_scripts: bool
     script_count: int
+    src_module_count: int = 0
+    figure_count: int = 0
     config: dict[str, Any] = field(default_factory=dict)
 
 
@@ -215,6 +217,18 @@ def discover_projects(repo_root: Path) -> list[ProjectInfo]:
         scripts_dir = child / "scripts"
         scripts = list(scripts_dir.glob("*.py")) if scripts_dir.is_dir() else []
 
+        # Count source modules (.py files in src/, excluding __init__.py)
+        src_dir = child / "src"
+        src_modules = (
+            [f for f in src_dir.rglob("*.py") if not _is_excluded_path(f) and f.name != "__init__.py"]
+            if src_dir.is_dir()
+            else []
+        )
+
+        # Count auto-generated figures (.png in output/figures/)
+        figures_dir = child / "output" / "figures"
+        figures = list(figures_dir.glob("*.png")) if figures_dir.is_dir() else []
+
         projects.append(ProjectInfo(
             name=child.name,
             path=child,
@@ -224,6 +238,8 @@ def discover_projects(repo_root: Path) -> list[ProjectInfo]:
             test_file_count=len(test_files),
             has_scripts=scripts_dir.is_dir(),
             script_count=len(scripts),
+            src_module_count=len(src_modules),
+            figure_count=len(figures),
             config=config,
         ))
 
@@ -321,7 +337,7 @@ def build_infrastructure_report(repo_root: Path) -> InfrastructureReport:
         import infrastructure
         version = getattr(infrastructure, "__version__", "unknown")
     except ImportError:
-        pass
+        version = "unknown"  # infrastructure package not importable
 
     report = InfrastructureReport(
         repo_root=repo_root,

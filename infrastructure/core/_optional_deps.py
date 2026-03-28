@@ -22,6 +22,6 @@ np: _module_types.ModuleType | None = None
 try:
     import numpy as np  # type: ignore[no-redef]
 except ImportError:
-    pass
+    np = None  # numpy is optional
 
 __all__ = ["psutil", "np"]
