@@ -395,6 +395,28 @@ class TestInjectMetrics:
         for ch in chapter_names:
             assert ch in out_names, f"Chapter {ch} not in rendered output"
 
+    def test_discovery_criterion_divergence_is_documented(self):
+        """Template and infrastructure discover_projects use intentionally different criteria.
+
+        Template: requires manuscript/config.yaml (research manuscript projects).
+        Infrastructure: requires src/ + tests/ (runnable code projects).
+        Both sets can differ; this test documents the divergence is expected and
+        verifies at least one project (code_project) is discoverable by both.
+        """
+        from infrastructure.project.discovery import discover_projects as infra_discover
+
+        template_names = {p.name for p in discover_projects(REPO_ROOT)}
+        infra_names = {p.name for p in infra_discover(REPO_ROOT)}
+
+        # Criteria diverge by design — no requirement for the sets to be equal.
+        # code_project has both manuscript/config.yaml AND src/+tests/, so both find it.
+        assert "code_project" in template_names, (
+            f"code_project missing from template discovery: {template_names}"
+        )
+        assert "code_project" in infra_names, (
+            f"code_project missing from infra discovery: {infra_names}"
+        )
+
     def test_load_metrics_round_trip_with_generate_script(self, tmp_path):
         """generate_manuscript_metrics produces valid load_metrics input."""
         import json

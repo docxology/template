@@ -21,7 +21,7 @@ from infrastructure.core.logging.utils import (
 from infrastructure.core.logging.progress import StreamingProgress
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
+from infrastructure.llm.core.config import GenerationOptions
 
 from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
 from infrastructure.llm.validation.repetition import (
@@ -48,6 +48,10 @@ if PROMPT_SYSTEM_AVAILABLE:
     from infrastructure.llm.prompts.composer import PromptComposer
 
 logger = get_logger(__name__)
+
+# Default max input length when the caller does not provide one.
+# Matches OllamaClientConfig.max_input_length default (500 000 chars).
+_DEFAULT_MAX_INPUT_LENGTH = 500_000
 
 
 def extract_manuscript_text(
@@ -85,7 +89,7 @@ def extract_manuscript_text(
         logger.info(
             f"  Extracted: {metrics.total_chars:,} chars ({metrics.total_words:,} words, ~{metrics.total_tokens_est:,} tokens)"  # noqa: E501
         )
-        max_length = max_input_length if max_input_length is not None else OllamaClientConfig.from_env().max_input_length
+        max_length = max_input_length if max_input_length is not None else _DEFAULT_MAX_INPUT_LENGTH
 
         if max_length > 0 and len(text) > max_length:
             metrics.truncated = True

@@ -20,6 +20,7 @@ from infrastructure.rendering._pdf_latex_helpers import (
     generate_title_page_preamble,
 )
 from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
+from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
 from infrastructure.rendering._pdf_preflight import check_brace_balance
 
 if TYPE_CHECKING:
@@ -91,8 +92,6 @@ def run_pandoc_conversion(
     md_content: str,
 ) -> None:
     """Execute the Pandoc subprocess, raising on failure."""
-    from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
-
     try:
         subprocess.run(
             cmd,
