@@ -44,11 +44,18 @@ Issue = Union[LinkIssue, ScanAccuracyIssue, CompletenessGap, QualityIssue]
 def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
     """Categorize issues by their type and severity.
 
+    Each issue is appended to up to three buckets simultaneously: one severity
+    bucket (critical/error/warning/info), one type bucket (broken_links/
+    missing_files/etc.), and possibly false_positives.  The lists in the
+    returned dict therefore **overlap** — a single issue may appear in multiple
+    buckets.  Do not sum bucket sizes to count unique issues; use the top-level
+    ``total`` from :func:`generate_issue_summary` instead.
+
     Args:
         issues: List of issues from any validation module
 
     Returns:
-        Dictionary mapping category names to lists of issues
+        Dictionary mapping category names to lists of issues (overlapping).
     """
     categories: dict[str, list[Issue]] = {
         "critical": [],
@@ -362,17 +369,13 @@ def _get_issue_file(issue: Issue) -> str:
 
 def _get_issue_type(issue: Issue) -> str:
     """Extract issue type from any issue type."""
-    if hasattr(issue, "issue_type"):
+    if isinstance(issue, (LinkIssue, QualityIssue)):
         return issue.issue_type
     elif isinstance(issue, ScanAccuracyIssue):
         return issue.category
-    elif isinstance(issue, LinkIssue):
-        return ISSUE_TYPE_LINK
     elif isinstance(issue, CompletenessGap):
         return ISSUE_TYPE_COMPLETENESS
-    elif isinstance(issue, QualityIssue):
-        return ISSUE_TYPE_QUALITY
-    return ISSUE_TYPE_UNKNOWN
+    raise TypeError(f"Unexpected issue type: {type(issue).__name__}")
 
 
 def get_severity_flag(issue: Issue) -> str:

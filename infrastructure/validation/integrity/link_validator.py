@@ -460,7 +460,7 @@ def main() -> int:
         try:
             _tmp.write_text(report, encoding="utf-8")
             _tmp.replace(_output_path)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
         logger.info(f"Report written to {args.output}")
