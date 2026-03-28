@@ -118,55 +118,19 @@ class PipelineSummaryGenerator:
         else:
             return format_text_summary(summary, self.file_inventory_manager)
 
-    # --- Kept as private methods since they're part of generate_summary logic ---
-
     def _find_slowest_stage(self, results: list[PipelineStageResult]) -> PipelineStageResult | None:
-        """Find the slowest stage.
-
-        Args:
-            results: Stage results
-
-        Returns:
-            Slowest stage result, or None if no stages
-        """
+        """Find the slowest stage."""
         successful_results = [r for r in results if r.success]
         if not successful_results:
             return None
-
         return max(successful_results, key=lambda r: r.duration)
 
     def _find_fastest_stage(self, results: list[PipelineStageResult]) -> PipelineStageResult | None:
-        """Find the fastest stage (excluding stage 1 which is usually setup).
-
-        Args:
-            results: Stage results
-
-        Returns:
-            Fastest stage result, or None if no stages
-        """
+        """Find the fastest stage (excluding stage 1 which is usually setup)."""
         successful_results = [r for r in results if r.success and r.stage_num > 1]
         if not successful_results:
             return None
-
         return min(successful_results, key=lambda r: r.duration)
-
-    # Delegate helpers to module-level functions for backward compatibility
-    def _format_stage_result(
-        self, result: PipelineStageResult, total_duration: float, skip_infra: bool
-    ) -> str:
-        return format_stage_result(result, total_duration, skip_infra)
-
-    def _stage_result_to_dict(self, result: PipelineStageResult | None) -> dict | None:
-        return stage_result_to_dict(result)
-
-    def _get_final_log_path(self, log_file: Path) -> Path:
-        return get_final_log_path(log_file)
-
-    def _find_base_output_dir(self, inventory: list[FileInventoryEntry]) -> Path | None:
-        return find_base_output_dir(inventory)
-
-    def _extract_project_name_from_path(self, path: Path) -> str | None:
-        return extract_project_name_from_path(path)
 
 
 def generate_pipeline_summary(

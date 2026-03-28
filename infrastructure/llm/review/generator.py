@@ -26,6 +26,43 @@ from infrastructure.llm.templates.manuscript import (
 
 from infrastructure.llm.review.metrics import ReviewMetrics
 
+# Registry mapping review_type → (review_name, template_class, default_temperature).
+# Add new review types here; the _make_review_fn factory generates the public entry points.
+_REVIEW_REGISTRY: dict[str, tuple[str, type, float]] = {
+    "executive_summary": ("executive summary", ManuscriptExecutiveSummary, 0.3),
+    "quality_review": ("quality review", ManuscriptQualityReview, 0.3),
+    "methodology_review": ("methodology review", ManuscriptMethodologyReview, 0.3),
+    # improvement_suggestions uses 0.4 — generative ideation benefits from higher diversity
+    "improvement_suggestions": ("improvement suggestions", ManuscriptImprovementSuggestions, 0.4),
+}
+
+
+def _make_review_fn(review_type: str):
+    """Return a named review function bound to a specific review_type from _REVIEW_REGISTRY."""
+    review_name, template_class, default_temp = _REVIEW_REGISTRY[review_type]
+
+    def _review_fn(
+        client: LLMClient,
+        text: str,
+        model_name: str = "",
+        temperature: float = default_temp,
+    ) -> tuple[str, ReviewMetrics]:
+        return generate_review_with_metrics(
+            client=client,
+            text=text,
+            review_type=review_type,
+            review_name=review_name,
+            template_class=template_class,
+            model_name=model_name,
+            temperature=temperature,
+            max_tokens=None,
+        )
+
+    _review_fn.__name__ = f"generate_{review_type}"
+    _review_fn.__qualname__ = f"generate_{review_type}"
+    return _review_fn
+
+
 # Re-exports from quality.py — all public names that external code imports from generator.
 from infrastructure.llm.review.quality import (  # noqa: F401
     ReviewType,
@@ -50,107 +87,9 @@ from infrastructure.llm.review.generation import (  # noqa: F401
 )
 
 
-def generate_llm_executive_summary(
-    client: LLMClient, text: str, model_name: str = "", temperature: float = 0.3
-) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for executive summary reviews.
-
-    Binds review_type='executive_summary' and ManuscriptExecutiveSummary template.
-    Callers use the named function rather than the generic generate_review_with_metrics
-    to avoid having to know the template class and review_type string.
-
-    Args:
-        client: LLM client to use for generation.
-        text: Manuscript text to review.
-        model_name: Optional model override. Defaults to client's configured model.
-        temperature: Sampling temperature. Defaults to 0.3 (factual analysis).
-    """
-    return generate_review_with_metrics(
-        client=client,
-        text=text,
-        review_type="executive_summary",
-        review_name="executive summary",
-        template_class=ManuscriptExecutiveSummary,
-        model_name=model_name,
-        temperature=temperature,
-        max_tokens=None,
-    )
-
-
-def generate_quality_review(
-    client: LLMClient, text: str, model_name: str = "", temperature: float = 0.3
-) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for quality reviews.
-
-    Binds review_type='quality_review' and ManuscriptQualityReview template.
-    Callers use the named function rather than the generic generate_review_with_metrics
-    to avoid having to know the template class and review_type string.
-
-    Args:
-        client: LLM client to use for generation.
-        text: Manuscript text to review.
-        model_name: Optional model override. Defaults to client's configured model.
-        temperature: Sampling temperature. Defaults to 0.3 (factual analysis).
-    """
-    return generate_review_with_metrics(
-        client=client,
-        text=text,
-        review_type="quality_review",
-        review_name="quality review",
-        template_class=ManuscriptQualityReview,
-        model_name=model_name,
-        temperature=temperature,
-        max_tokens=None,
-    )
-
-def generate_methodology_review(
-    client: LLMClient, text: str, model_name: str = "", temperature: float = 0.3
-) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for methodology reviews.
-
-    Binds review_type='methodology_review' and ManuscriptMethodologyReview template.
-    Callers use the named function rather than the generic generate_review_with_metrics
-    to avoid having to know the template class and review_type string.
-
-    Args:
-        client: LLM client to use for generation.
-        text: Manuscript text to review.
-        model_name: Optional model override. Defaults to client's configured model.
-        temperature: Sampling temperature. Defaults to 0.3 (factual analysis).
-    """
-    return generate_review_with_metrics(
-        client=client,
-        text=text,
-        review_type="methodology_review",
-        review_name="methodology review",
-        template_class=ManuscriptMethodologyReview,
-        model_name=model_name,
-        temperature=temperature,
-        max_tokens=None,
-    )
-
-def generate_improvement_suggestions(
-    client: LLMClient, text: str, model_name: str = "", temperature: float = 0.4
-) -> tuple[str, ReviewMetrics]:
-    """Named public API entry point for improvement suggestions (ManuscriptImprovementSuggestions template).
-
-    Uses temperature=0.4 (vs 0.3 for other reviews) because generative ideation
-    benefits from higher diversity — the task is proposing novel directions, not
-    accurate analysis.
-
-    Args:
-        client: LLM client to use for generation.
-        text: Manuscript text to review.
-        model_name: Optional model override. Defaults to client's configured model.
-        temperature: Sampling temperature. Defaults to 0.4 (generative ideation).
-    """
-    return generate_review_with_metrics(
-        client=client,
-        text=text,
-        review_type="improvement_suggestions",
-        review_name="improvement suggestions",
-        template_class=ManuscriptImprovementSuggestions,
-        model_name=model_name,
-        temperature=temperature,
-        max_tokens=None,
-    )
+# Named public API entry points — generated from _REVIEW_REGISTRY to eliminate duplication.
+# Each function binds a specific review_type, template_class, and default temperature.
+generate_llm_executive_summary = _make_review_fn("executive_summary")
+generate_quality_review = _make_review_fn("quality_review")
+generate_methodology_review = _make_review_fn("methodology_review")
+generate_improvement_suggestions = _make_review_fn("improvement_suggestions")
