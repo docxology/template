@@ -59,6 +59,10 @@ def load_test_results(
 
     Raises:
         json.JSONDecodeError: If the results file exists but contains invalid JSON.
+
+    Note:
+        OSError (e.g. permission denied) is caught and logged as a warning;
+        returns ``{}`` rather than raising.
     """
     root = repo_root or Path.cwd()
     _base = project_dir if project_dir is not None else root / "projects" / project_name

@@ -9,12 +9,15 @@ This module coordinates the validation stage by:
 
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep, log_live_resource_usage
+from infrastructure.core.logging.diagnostic import DiagnosticReporter
+from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.validation.content.figure_validator import validate_figure_registry
+from infrastructure.validation.output.validator import collect_detailed_validation_results
 
 logger = get_logger(__name__)
 
@@ -91,7 +94,6 @@ def validate_markdown(project_name: str = "project") -> bool:
             log_success("Markdown validation passed (no issues found)", logger)
             return True
         else:
-            from infrastructure.core.logging.diagnostic import DiagnosticReporter
             reporter = DiagnosticReporter(project_name=project_name, output_dir=repo_root / "projects" / project_name / "output")
             logger.info(f"  Found {len(problems)} validation note(s):")
             for p in problems:
@@ -126,8 +128,6 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str,
 
     repo_root = Path(__file__).parent.parent.parent.parent
     output_dir = repo_root / "projects" / project_name / "output"
-
-    from infrastructure.validation.output.validator import collect_detailed_validation_results
 
     detailed_validation = collect_detailed_validation_results(output_dir)
     structure_valid = detailed_validation["structure"]["valid"]
@@ -229,8 +229,6 @@ def generate_validation_report(
         logger.info(f"Validation reports saved: {', '.join(str(p) for p in saved_files.values())}")
     except Exception as e:
         logger.warning(f"Failed to generate structured validation report: {e}")
-        import json
-
         report_file = output_dir / "validation_report.json"
         output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -241,7 +239,6 @@ def generate_validation_report(
         logger.info(f"Validation report saved: {report_file}")
 
     # Print final diagnostic telemetry report (end of pipeline run)
-    from infrastructure.core.logging.diagnostic import DiagnosticReporter
     reporter = DiagnosticReporter(project_name=project_name, output_dir=output_dir.parent)
     if reporter.events:
         reporter.print_report()

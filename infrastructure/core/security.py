@@ -76,7 +76,18 @@ class SecurityHeaders:
     """Backwards-compat shim — use module-level get_security_headers/get_cors_headers directly.
 
     Planned removal: 2026-09-01.
+
+    .. deprecated::
+        Use :func:`get_security_headers` and :func:`get_cors_headers` directly.
     """
+
+    def __init__(self) -> None:
+        import warnings
+        warnings.warn(
+            "SecurityHeaders is deprecated; use get_security_headers() / get_cors_headers() directly.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     @staticmethod
     def get_security_headers() -> dict[str, str]:

@@ -57,7 +57,7 @@ def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
     return stats
 
 
-def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str:
+def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str | None:
     """Generate summary report from log file.
 
     Args:
@@ -65,12 +65,13 @@ def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str
         output_file: Optional path to save summary (default: None)
 
     Returns:
-        Formatted summary string
+        Formatted summary string, or None if the file cannot be read.
     """
     try:
         stats = _collect_log_statistics(log_file)
     except (FileNotFoundError, OSError, UnicodeDecodeError) as e:
-        return f"Error: {e}"
+        logger.warning(f"Could not analyse log file {log_file}: {e}")
+        return None
 
     lines = [
         "",

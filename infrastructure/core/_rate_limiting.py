@@ -6,6 +6,7 @@ for backwards compatibility.
 
 from __future__ import annotations
 
+import functools
 import threading
 import time
 from functools import wraps
@@ -198,13 +199,12 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..
     return decorator
 
 
-# Module-level singleton (declared before get_security_monitor for top-down read order)
-_security_monitor: SecurityMonitor | None = None
-
-
+@functools.lru_cache(maxsize=1)
 def get_security_monitor() -> SecurityMonitor:
     """Return the process-wide SecurityMonitor singleton."""
-    global _security_monitor
-    if _security_monitor is None:
-        _security_monitor = SecurityMonitor()
-    return _security_monitor
+    return SecurityMonitor()
+
+
+def reset_security_monitor() -> None:
+    """Reset the security monitor singleton (for testing)."""
+    get_security_monitor.cache_clear()
