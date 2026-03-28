@@ -193,7 +193,7 @@ class TestClientHelperMethods:
         assert isinstance(result, bool)
         assert result is False  # Should fail to connect
 
-    def test_check_connection_detailed_returns_tuple(self, default_config):
+    def test_check_connection_with_reason_returns_tuple(self, default_config):
         """Test check_connection_with_reason returns tuple with error message."""
         # Use non-existent host to ensure it fails quickly
         config = OllamaClientConfig(base_url="http://localhost:99999", timeout=0.1)

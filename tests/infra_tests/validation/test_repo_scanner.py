@@ -9,8 +9,8 @@ import pytest
 
 from infrastructure.validation.repo import scanner as repo_scanner
 from infrastructure.validation.repo._repo_scan_report import build_repo_scan_report
+from infrastructure.validation.docs.models import ScanAccuracyIssue as AccuracyIssue
 from infrastructure.validation.repo.scanner import (
-    AccuracyIssue,
     CompletenessGap,
     RepositoryScanner,
     RepoScanResults,

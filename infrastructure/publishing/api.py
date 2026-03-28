@@ -6,7 +6,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import requests
+try:
+    import requests
+    _requests_available = True
+except ImportError:
+    requests = None  # type: ignore[assignment]
+    _requests_available = False
 
 from infrastructure.core.credentials import make_bearer_auth_headers
 from infrastructure.core.exceptions import PublishingError, UploadError
@@ -39,6 +44,8 @@ class ZenodoClient:
 
     def __init__(self, config: ZenodoConfig):
         """Initialize Zenodo client with configuration."""
+        if not _requests_available:
+            raise ImportError("requests package is required for ZenodoClient")
         self.config = config
         self.headers = make_bearer_auth_headers(config.access_token)
 

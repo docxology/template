@@ -14,8 +14,8 @@ from infrastructure.validation.docs.discovery import (
     find_markdown_files,
     find_script_files,
 )
+from infrastructure.validation.docs.models import ScanAccuracyIssue as AccuracyIssue
 from infrastructure.validation.docs.scanner import (
-    AccuracyIssue,
     CompletenessGap,
     DocumentationFile,
     DocumentationScanner,

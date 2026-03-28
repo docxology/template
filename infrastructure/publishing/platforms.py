@@ -7,7 +7,12 @@ import tarfile
 from datetime import datetime
 from pathlib import Path
 
-import requests
+try:
+    import requests
+    _requests_available = True
+except ImportError:
+    requests = None  # type: ignore[assignment]
+    _requests_available = False
 
 from infrastructure.core.credentials import make_token_auth_headers
 from infrastructure.core.exceptions import PublishingError
@@ -66,6 +71,8 @@ def publish_to_zenodo(
     for path in file_paths:
         if path.exists():
             client.upload_file(dep_id, path)
+        else:
+            logger.warning(f"Skipping non-existent file for Zenodo upload: {path}")
 
     # Publish
     return client.publish(dep_id)
@@ -148,6 +155,8 @@ def create_github_release(
         PublishingError: If the GitHub API request fails, including
             authentication errors or invalid repository names.
     """
+    if not _requests_available:
+        raise PublishingError("requests package is required for GitHub API calls")
     headers = {
         **make_token_auth_headers(token),  # GitHub PAT uses "token" prefix, not "Bearer"
         "Accept": "application/vnd.github.v3+json",
@@ -173,6 +182,7 @@ def create_github_release(
         # Upload assets
         for asset in assets:
             if not asset.exists():
+                logger.warning(f"Skipping non-existent asset for GitHub release: {asset}")
                 continue
 
             name = asset.name

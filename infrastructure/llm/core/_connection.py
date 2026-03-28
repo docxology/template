@@ -268,7 +268,6 @@ class _ConnectionMixin:
     def check_connection_with_reason(self, timeout: float = 2.0) -> tuple[bool, str | None]:
         """Return (is_available, error_message) for the Ollama server.
 
-        Alias: check_connection_detailed() delegates here for backwards compatibility.
         """
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)
@@ -291,10 +290,3 @@ class _ConnectionMixin:
             logger.warning(f"Ollama connection check failed: {error_msg}")
             return (False, error_msg)
 
-    def check_connection_detailed(self, timeout: float = 2.0) -> tuple[bool, str | None]:
-        """Return (is_available, error_message) for the Ollama server.
-
-        Use check_connection() when only the boolean result is needed.
-        Backwards-compat alias for check_connection_with_reason().
-        """
-        return self.check_connection_with_reason(timeout=timeout)
