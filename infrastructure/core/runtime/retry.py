@@ -207,7 +207,7 @@ class RetryableOperation:
             self.attempt, self.initial_delay, self.exponential_base, self.max_delay
         )
         # Add jitter to prevent thundering herd (matches retry_with_backoff behaviour)
-        delay += delay * 0.1 * random.random()
+        delay += delay * 0.1 * random.random()  # nosec B311 — not for cryptographic use
 
         logger.warning(
             f"Attempt {self.attempt}/{self.max_attempts} failed: {exception}. "
