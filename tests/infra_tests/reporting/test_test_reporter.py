@@ -6,7 +6,7 @@ from pathlib import Path
 from infrastructure.reporting.coverage_reporter import (
     generate_test_report,
     parse_pytest_output,
-    save_test_report,
+    save_test_report_to_files,
 )
 
 
@@ -51,7 +51,7 @@ def test_generate_test_report_combines_infra_and_project() -> None:
     assert summary["project_coverage"] == 93.5
 
 
-def test_save_test_report_writes_json_and_markdown(tmp_path: Path) -> None:
+def test_save_test_report_to_files_writes_json_and_markdown(tmp_path: Path) -> None:
     report = {
         "timestamp": "2025-01-01T00:00:00",
         "infrastructure": {
@@ -76,7 +76,7 @@ def test_save_test_report_writes_json_and_markdown(tmp_path: Path) -> None:
         },
     }
 
-    json_path, md_path = save_test_report(report, tmp_path)
+    json_path, md_path = save_test_report_to_files(report, tmp_path)
 
     assert json_path.exists()
     assert md_path.exists()
@@ -142,7 +142,7 @@ def test_generate_test_report_all_passed() -> None:
     assert report["summary"]["total_failed"] == 0
 
 
-def test_save_test_report_no_coverage(tmp_path: Path) -> None:
+def test_save_test_report_to_files_no_coverage(tmp_path: Path) -> None:
     """Test save_test_report when coverage is not present."""
     report = {
         "timestamp": "2025-01-01T00:00:00",
@@ -156,7 +156,7 @@ def test_save_test_report_no_coverage(tmp_path: Path) -> None:
         },
     }
 
-    json_path, md_path = save_test_report(report, tmp_path)
+    json_path, md_path = save_test_report_to_files(report, tmp_path)
 
     assert json_path.exists()
     assert md_path.exists()

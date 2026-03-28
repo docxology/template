@@ -11,10 +11,9 @@ This module coordinates the PDF rendering stage by:
 from __future__ import annotations
 
 import subprocess
-import sys
 from pathlib import Path
 
-from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_live_resource_usage
+from infrastructure.core.logging.utils import get_logger, log_success, log_live_resource_usage
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
@@ -36,7 +35,7 @@ from infrastructure.rendering._pipeline_summary import (  # noqa: F401
 logger = get_logger(__name__)
 
 
-def run_render_pipeline(project_name: str = "project") -> int:
+def _run_render_pipeline(project_name: str = "project") -> int:
     """Execute the PDF rendering pipeline using infrastructure rendering.
 
     This pipeline:
@@ -297,7 +296,7 @@ def execute_render_pipeline(project_name: str = "project") -> int:
     """
     log_live_resource_usage("PDF rendering stage start", logger)
     try:
-        exit_code = run_render_pipeline(project_name)
+        exit_code = _run_render_pipeline(project_name)
         if exit_code == 0:
             outputs_valid = verify_pdf_outputs(project_name)
             if outputs_valid:

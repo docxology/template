@@ -12,12 +12,12 @@ import subprocess
 import time
 from pathlib import Path
 
-from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep, log_live_resource_usage
+from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep
 from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.reporting.coverage_reporter import (
     generate_test_report,
-    save_test_report as save_test_report_to_files,
+    save_test_report_to_files,
     format_coverage_status,
     analyze_coverage_gaps,
     format_failure_suggestions,
@@ -38,7 +38,7 @@ _DISCOVERY_PATTERNS = [
 ]
 
 
-def _discover_tests(cmd: list[str], repo_root: Path, env: dict, label: str) -> None:
+def _log_discovered_tests(cmd: list[str], repo_root: Path, env: dict, label: str) -> None:
     """Run pytest --collect-only and log the discovered test count."""
     discovery_cmd = cmd.copy()
     discovery_cmd.append("--collect-only")
@@ -130,7 +130,7 @@ def run_infrastructure_tests(
     if shutil.which("uv"):
         env["PATH"] = f"{os.path.dirname(shutil.which('uv'))}:{env.get('PATH', '')}"
 
-    _discover_tests(cmd, repo_root, env, "infrastructure")
+    _log_discovered_tests(cmd, repo_root, env, "infrastructure")
 
     try:
         config = TestSuiteConfig(
@@ -223,7 +223,7 @@ def run_project_tests(
     if shutil.which("uv"):
         env["PATH"] = f"{os.path.dirname(shutil.which('uv'))}:{env.get('PATH', '')}"
 
-    _discover_tests(cmd, repo_root, env, f"project '{project_name}'")
+    _log_discovered_tests(cmd, repo_root, env, f"project '{project_name}'")
 
     try:
         config = TestSuiteConfig(
