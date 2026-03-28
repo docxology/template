@@ -1,13 +1,13 @@
-"""Tests for infrastructure.llm.core._client_streaming module.
+"""Tests for infrastructure.llm.core._stream_helpers module.
 
-Tests the _try_save_partial helper using real function calls (No Mocks Policy).
+Tests the try_save_partial helper using real function calls (No Mocks Policy).
 stream_query_impl requires a live Ollama server and is tested via integration
 tests; this file targets the unit-testable pure logic.
 """
 
 from __future__ import annotations
 
-from infrastructure.llm.core._client_streaming import _try_save_partial
+from infrastructure.llm.core._stream_helpers import try_save_partial as _try_save_partial
 
 
 def _noop_save(*args, **kwargs) -> bool:
