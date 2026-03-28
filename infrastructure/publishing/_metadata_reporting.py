@@ -15,6 +15,11 @@ from infrastructure.publishing.citations import generate_citation_apa
 from infrastructure.publishing.models import PublicationMetadata
 
 
+def _get_publication_type(metadata: PublicationMetadata) -> str:
+    """Classify publication type based on title keywords."""
+    return "software" if "template" in metadata.title.lower() else "article"
+
+
 def generate_publication_summary(metadata: PublicationMetadata) -> str:
     """Generate a publication summary for repository README.
 
@@ -65,7 +70,7 @@ def create_academic_profile_data(metadata: PublicationMetadata) -> dict[str, Any
         "authors": metadata.authors,
         "abstract": metadata.abstract,
         "keywords": metadata.keywords,
-        "publication_type": ("software" if "template" in metadata.title.lower() else "article"),
+        "publication_type": _get_publication_type(metadata),
         "license": metadata.license,
         "repository_url": metadata.repository_url,
         "publication_date": metadata.publication_date,
@@ -111,7 +116,7 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any
         "reading_time_minutes": reading_time_minutes,
         "license_type": metadata.license,
         "has_doi": bool(metadata.doi),
-        "publication_type": ("software" if "template" in metadata.title.lower() else "article"),
+        "publication_type": _get_publication_type(metadata),
         "complexity_score": calculate_metadata_complexity_score(metadata),
     }
 

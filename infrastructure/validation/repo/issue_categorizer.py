@@ -10,6 +10,12 @@ from __future__ import annotations
 import re
 from typing import Any, Union
 
+# Issue type string constants for _get_issue_type return values
+ISSUE_TYPE_LINK = "link_issue"
+ISSUE_TYPE_COMPLETENESS = "completeness_gap"
+ISSUE_TYPE_QUALITY = "quality_issue"
+ISSUE_TYPE_UNKNOWN = "unknown"
+
 from infrastructure.validation.docs.models import (
     CompletenessGap,
     LinkIssue,
@@ -365,12 +371,12 @@ def _get_issue_type(issue: Issue) -> str:
     elif isinstance(issue, ScanAccuracyIssue):
         return issue.category
     elif isinstance(issue, LinkIssue):
-        return "link_issue"
+        return ISSUE_TYPE_LINK
     elif isinstance(issue, CompletenessGap):
-        return "completeness_gap"
+        return ISSUE_TYPE_COMPLETENESS
     elif isinstance(issue, QualityIssue):
-        return "quality_issue"
-    return "unknown"
+        return ISSUE_TYPE_QUALITY
+    return ISSUE_TYPE_UNKNOWN
 
 
 def get_severity_flag(issue: Issue) -> str:
