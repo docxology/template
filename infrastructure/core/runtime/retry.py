@@ -150,7 +150,7 @@ class RetryableOperation:
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
         exc_tb: types.TracebackType | None,
-    ) -> None:
+    ) -> bool | None:
         """Exit context manager."""
         return None  # Don't suppress exceptions
 

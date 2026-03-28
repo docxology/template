@@ -16,6 +16,8 @@ This module re-exports from focused submodules for backwards compatibility:
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.templates.manuscript import (
     ManuscriptExecutiveSummary,
@@ -37,7 +39,7 @@ _REVIEW_REGISTRY: dict[str, tuple[str, type, float]] = {
 }
 
 
-def _make_review_fn(review_type: str):
+def _make_review_fn(review_type: str) -> Callable[[LLMClient, str, str, float], tuple[str, ReviewMetrics]]:
     """Return a named review function bound to a specific review_type from _REVIEW_REGISTRY."""
     review_name, template_class, default_temp = _REVIEW_REGISTRY[review_type]
 

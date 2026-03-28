@@ -86,6 +86,7 @@ __all__ = [
     "log_substep",
     "log_success",
     "log_timing",
+    "LOG_LEVEL_MAP",
     "set_global_log_level",
     "setup_logger",
     "setup_root_log_file_handler",

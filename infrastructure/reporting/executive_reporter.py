@@ -14,7 +14,6 @@ Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
 
 from __future__ import annotations
 
-from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting._executive_analysis import (  # noqa: F401 â€” re-exported
     generate_aggregate_metrics,
     generate_comparative_tables,
@@ -48,5 +47,3 @@ from infrastructure.reporting._executive_report_formats import (  # noqa: F401 â
     generate_html_report,
     generate_markdown_report,
 )
-
-logger = get_logger(__name__)

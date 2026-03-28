@@ -20,6 +20,7 @@ from infrastructure.core.logging.utils import get_logger
 
 # Re-export all public symbols so existing imports continue to work
 from infrastructure.steganography.barcode_generators import (
+    _get_reportlab,
     generate_code128,
     generate_qr_code,
 )

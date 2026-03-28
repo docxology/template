@@ -36,10 +36,6 @@ class PDFRenderer:
         """Initialize the PDF renderer with configuration."""
         self.config = config
 
-    def _combine_markdown_files(self, source_files: list[Path]) -> str:
-        """Combine section markdown files; logic lives in ``_pdf_markdown_combine``."""
-        return combine_manuscript_markdown_sections(source_files)
-
     def render(self, source_file: Path, output_name: str | None = None) -> Path:
         """Render manuscript to PDF.
 
@@ -175,7 +171,7 @@ class PDFRenderer:
         # Create combined markdown
         combined_tex = output_dir / "_combined_manuscript.tex"
         combined_md = output_dir / "_combined_manuscript.md"
-        combined_content = self._combine_markdown_files(source_files)
+        combined_content = combine_manuscript_markdown_sections(source_files)
 
         # Write combined markdown atomically
         _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")

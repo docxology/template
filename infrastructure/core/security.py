@@ -6,9 +6,7 @@ security headers, rate limiting, and security monitoring.
 API style note:
 - SecurityValidator, RateLimiter, SecurityMonitor are stateful classes (hold config/state).
 - get_security_headers(), get_cors_headers() are module-level convenience functions
-  for stateless one-off checks. validate_llm_input() is deprecated; use
-  infrastructure.llm.core.sanitization.sanitize_llm_input() instead.
-
+  for stateless one-off checks.
 Implementation split:
 - _validation.py   — SecurityValidator (input/path/filename/content validation)
 - _rate_limiting.py — RateLimiter, SecurityMonitor, rate_limit decorator
@@ -72,32 +70,6 @@ def get_cors_headers(origin: str | None = None) -> dict[str, str]:
         headers["Access-Control-Allow-Origin"] = "null"
 
     return headers
-
-
-class SecurityHeaders:
-    """Backwards-compat shim — use module-level get_security_headers/get_cors_headers directly.
-
-    Planned removal: 2026-09-01.
-
-    .. deprecated::
-        Use :func:`get_security_headers` and :func:`get_cors_headers` directly.
-    """
-
-    def __init__(self) -> None:
-        import warnings
-        warnings.warn(
-            "SecurityHeaders is deprecated; use get_security_headers() / get_cors_headers() directly.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-
-    @staticmethod
-    def get_security_headers() -> dict[str, str]:
-        return get_security_headers()
-
-    @staticmethod
-    def get_cors_headers(origin: str | None = None) -> dict[str, str]:
-        return get_cors_headers(origin)
 
 
 @functools.lru_cache(maxsize=1)

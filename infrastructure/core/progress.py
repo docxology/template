@@ -334,7 +334,7 @@ class SubStageProgress:
             ETAEstimate(optimistic, realistic, pessimistic) in seconds.
         """
         if self.current <= 0:
-            return None, None, None
+            return ETAEstimate(None, None, None)
 
         elapsed = time.time() - self.start_time
         return calculate_eta_with_confidence(
