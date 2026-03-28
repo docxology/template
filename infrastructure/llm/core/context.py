@@ -103,10 +103,13 @@ class ConversationContext:
 
         while self.messages and (self.estimated_tokens + new_tokens > self.max_tokens):
             removed = self.messages.pop(0)
-            # Don't remove system prompt if it's the first message
-            if removed.role == "system" and self.messages:
-                # Put it back and remove next
+            # Don't remove system prompt — put it back and either remove the next
+            # message or stop pruning when only the system message is left.
+            if removed.role == "system":
                 self.messages.insert(0, removed)
+                if len(self.messages) < 2:
+                    # Only the system message remains; nothing more to prune.
+                    break
                 removed = self.messages.pop(1)
 
             removed_tokens = len(removed.content) // 4

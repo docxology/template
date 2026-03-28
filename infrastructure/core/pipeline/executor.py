@@ -48,6 +48,14 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         (Python + subprocess output). Log file is located at:
         projects/{project_name}/output/logs/pipeline.log
 
+        Note: construction performs lightweight file I/O — it creates the log directory
+        (``mkdir -p``), opens the log file handler, and reads ``pipeline.yaml`` to
+        configure telemetry reporters.  These operations are intentional: the executor
+        cannot function without its log file, and the YAML load is a simple path probe
+        (existence check + YAML parse) on a small config file.  They are not deferred
+        because there is no meaningful "lazy" moment for a log handler — it must be
+        ready before the first stage runs.
+
         Args:
             config: Pipeline configuration
         """

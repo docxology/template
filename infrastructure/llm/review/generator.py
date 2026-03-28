@@ -1,5 +1,14 @@
 """Review generation utilities for manuscript review operations.
 
+This module is the **public API façade** for the llm/review package.  It owns:
+- ``_REVIEW_REGISTRY`` — the authoritative mapping of review types to their template
+  classes and default temperatures.  Adding a new review type requires a single entry here.
+- ``_make_review_fn`` — the factory that produces the four named public entry points
+  (``generate_llm_executive_summary``, ``generate_quality_review``, etc.).
+
+These are **not** leftovers from the submodule split; they are the intentional responsibility
+of this module.  Implementation details live in the focused submodules below.
+
 Error contract design:
 - Text extraction helpers (extract_manuscript_text) return (None, metrics) on failure
   so the pipeline can report a graceful skip rather than aborting on missing files.
@@ -8,7 +17,7 @@ Error contract design:
   be meaningfully recovered from in-line.
 - These are intentionally different contracts for different failure domains.
 
-This module re-exports from focused submodules for backwards compatibility:
+Submodule re-exports (backwards compatibility):
 - quality.py: review quality validation (validate_review_quality, ReviewType, etc.)
 - ollama_setup.py: Ollama server management and client setup
 - generation.py: core generation logic (generate_review_with_metrics, extract_manuscript_text, etc.)

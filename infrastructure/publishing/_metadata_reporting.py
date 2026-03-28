@@ -191,8 +191,12 @@ def calculate_metadata_complexity_score(metadata: PublicationMetadata) -> int:
 
 
 def calculate_complexity_score(metadata: PublicationMetadata) -> int:
-    """Backwards-compatible alias for complexity scoring."""
+    """Backwards-compatible alias — prefer ``calculate_metadata_complexity_score``.
 
+    ``calculate_metadata_complexity_score`` is the canonical name.  This alias exists
+    for callers that imported the shorter name before the function was renamed.
+    New code should import ``calculate_metadata_complexity_score`` directly.
+    """
     return calculate_metadata_complexity_score(metadata)
 
 

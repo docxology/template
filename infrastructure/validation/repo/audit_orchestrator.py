@@ -49,7 +49,14 @@ def run_comprehensive_audit(
     include_import_validation: bool = True,
     include_placeholder_validation: bool = True,
 ) -> ScanResults:
-    """Run audit across all validation modules and return categorized scan results."""
+    """Run audit across all validation modules and return categorized scan results.
+
+    Returns the doc-scanner ``ScanResults`` (not ``RepoScanResults``) because this
+    function produces a comprehensive documentation audit that includes link issues,
+    documentation file enumeration, and quality issues — fields that exist only on
+    ``ScanResults``.  ``RepoScanResults`` (``repo/models.py``) is the leaner type for
+    accuracy/completeness-only repo scans; use it when those extra fields are not needed.
+    """
     start_time = time.time()
 
     logger.info("Starting filepath and reference audit...")
