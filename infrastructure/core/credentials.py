@@ -164,3 +164,13 @@ class CredentialManager:
         """Check if arXiv credentials are available."""
         creds = self.get_arxiv_credentials()
         return bool(creds.get("enabled", False))
+
+
+def make_bearer_auth_headers(token: str) -> dict[str, str]:
+    """Return Authorization header dict using OAuth2 Bearer scheme."""
+    return {"Authorization": f"Bearer {token}"}
+
+
+def make_token_auth_headers(token: str) -> dict[str, str]:
+    """Return Authorization header dict using GitHub token scheme."""
+    return {"Authorization": f"token {token}"}

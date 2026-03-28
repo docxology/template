@@ -11,6 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from infrastructure.llm.core.context import MessageDict
+
 try:
     import requests
 except ImportError as _err:
@@ -42,7 +44,7 @@ class _ConnectionMixin:
     def _generate_response_direct(
         self,
         model: str,
-        messages: list[dict[str, Any]],
+        messages: list[MessageDict],
         options: GenerationOptions | None = None,
         retries: int = 1,
     ) -> str:
@@ -50,7 +52,7 @@ class _ConnectionMixin:
 
         Args:
             model: Model name
-            messages: List of message dicts
+            messages: List of conversation turn dicts
             options: Generation options
             retries: Number of retry attempts on transient failures
 

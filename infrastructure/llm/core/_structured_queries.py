@@ -15,6 +15,8 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core.config import GenerationOptions
 from infrastructure.llm.core.sanitization import sanitize_llm_input
 
+from infrastructure.llm.core.context import MessageDict
+
 if TYPE_CHECKING:
     from infrastructure.llm.core.config import OllamaClientConfig
     from infrastructure.llm.core.context import ConversationContext
@@ -41,7 +43,7 @@ class _StructuredQueryMixin:
     def _generate_response_direct(
         self,
         model: str,
-        messages: list[dict[str, Any]],
+        messages: list[MessageDict],
         options: GenerationOptions | None = None,
         retries: int = 1,
     ) -> str:

@@ -5,12 +5,19 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from infrastructure.core.exceptions import ContextLimitError
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
+
+class MessageDict(TypedDict):
+    """Wire format for a single conversation turn sent to the Ollama chat API."""
+
+    role: str
+    content: str
 
 
 @dataclass
@@ -21,9 +28,9 @@ class Message:
     content: str
     metadata: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> dict[str, Any]:
-        """Convert to dictionary for API."""
-        return {"role": self.role, "content": self.content}
+    def to_dict(self) -> MessageDict:
+        """Convert to wire-format dict for Ollama chat API."""
+        return MessageDict(role=self.role, content=self.content)
 
 
 class ConversationContext:
@@ -58,7 +65,7 @@ class ConversationContext:
         self._total_messages_added += 1
         self._total_tokens_estimated += tokens
 
-    def get_messages(self) -> list[dict[str, Any]]:
+    def get_messages(self) -> list[MessageDict]:
         """Return messages as list of {'role', 'content'} dicts for Ollama API."""
         return [m.to_dict() for m in self.messages]
 

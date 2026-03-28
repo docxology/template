@@ -9,6 +9,7 @@ from pathlib import Path
 
 import requests
 
+from infrastructure.core.credentials import make_token_auth_headers
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.api import REQUEST_TIMEOUT
 from infrastructure.publishing.models import PublicationMetadata
@@ -147,10 +148,8 @@ def create_github_release(
         PublishingError: If the GitHub API request fails, including
             authentication errors or invalid repository names.
     """
-    # GitHub API requires "token" prefix (not "Bearer") for PAT authentication.
-    # This divergence from Zenodo's "Bearer" format is intentional and required.
     headers = {
-        "Authorization": f"token {token}",
+        **make_token_auth_headers(token),  # GitHub PAT uses "token" prefix, not "Bearer"
         "Accept": "application/vnd.github.v3+json",
     }
 

@@ -8,6 +8,7 @@ from typing import Any
 
 import requests
 
+from infrastructure.core.credentials import make_bearer_auth_headers
 from infrastructure.core.exceptions import PublishingError, UploadError
 from infrastructure.core.logging.utils import get_logger
 
@@ -39,7 +40,7 @@ class ZenodoClient:
     def __init__(self, config: ZenodoConfig):
         """Initialize Zenodo client with configuration."""
         self.config = config
-        self.headers = {"Authorization": f"Bearer {config.access_token}"}
+        self.headers = make_bearer_auth_headers(config.access_token)
 
     def create_deposition(self, metadata: dict[str, Any]) -> str:
         """Create a new deposition.
