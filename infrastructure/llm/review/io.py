@@ -1,8 +1,11 @@
 """File I/O and output formatting for LLM review generation.
 
-Note:
-    This module re-exports from ``formatting`` and ``saving`` sub-modules.
-    All existing imports continue to work unchanged.
+This is the **preferred import path** for review I/O helpers. It consolidates
+the public API of the ``review_analysis``, ``saving``, and ``metrics``
+sub-modules so callers do not need to know the internal split.
+
+All existing imports (``from infrastructure.llm.review.io import ...``)
+continue to work unchanged.
 """
 
 from __future__ import annotations

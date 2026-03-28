@@ -41,7 +41,13 @@ _REVIEW_REGISTRY: dict[str, tuple[str, type[ResearchTemplate], float]] = {
 
 
 def _make_review_fn(review_type: str) -> Callable[[LLMClient, str, str, float], tuple[str, ReviewMetrics]]:
-    """Return a named review function bound to a specific review_type from _REVIEW_REGISTRY."""
+    """Return a named review function bound to a specific review_type from _REVIEW_REGISTRY.
+
+    The factory sets ``__name__`` / ``__qualname__`` on the generated function so that
+    stack traces, profiling, and introspection show the concrete review name rather than
+    the generic ``_review_fn``. This is the main reason to prefer the factory over a plain
+    dispatch dict (``dict[str, Callable]``), which cannot set the function name.
+    """
     review_name, template_class, default_temp = _REVIEW_REGISTRY[review_type]
 
     def _review_fn(
