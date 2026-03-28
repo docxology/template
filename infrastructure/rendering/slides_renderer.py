@@ -243,6 +243,7 @@ class SlidesRenderer:
             if "/" in path_str or "\\" in path_str:
                 return re.split(r"[/\\]", path_str)[-1]
             else:
+                # No separators — path_str is already a bare filename
                 return path_str
 
         def fix_path(match: re.Match[str]) -> str:
