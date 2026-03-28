@@ -124,6 +124,11 @@ class SecurityValidator:
         return html.escape(text, quote=True)
 
     def _normalize_whitespace(self, text: str) -> str:
-        text = re.sub(r" +", " ", text)
-        text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
-        return text.strip()
+        return normalize_whitespace(text)
+
+
+def normalize_whitespace(text: str) -> str:
+    """Collapse runs of spaces and blank lines; strip leading/trailing whitespace."""
+    text = re.sub(r" +", " ", text)
+    text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
+    return text.strip()
