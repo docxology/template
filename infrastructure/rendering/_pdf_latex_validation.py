@@ -42,7 +42,7 @@ def validate_pdf_structure(pdf_path: Path) -> bool:
             )
             return False
         return True
-    except Exception as e:  # noqa: BLE001
+    except OSError as e:
         logger.debug(f"  PDF validation skipped: {e}")
         return False
 

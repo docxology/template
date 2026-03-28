@@ -129,7 +129,7 @@ def postprocess_latex(tex_content: str) -> str:
     # Fix broken math delimiters
     try:
         tex_content = fix_math_delimiters(tex_content)
-    except Exception as e:  # noqa: BLE001
+    except (re.error, TypeError, ValueError) as e:
         logger.warning(f"Math delimiter fixing failed: {e}. Continuing with original LaTeX content.")
         logger.debug(f"Math delimiter fixing error details: {type(e).__name__}: {e}")
 

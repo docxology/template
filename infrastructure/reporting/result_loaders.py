@@ -56,6 +56,9 @@ def load_test_results(
         repo_root: Repository root (default: cwd).
         project_dir: Absolute path to the project directory. When provided,
             overrides ``repo_root / 'projects' / project_name``.
+
+    Raises:
+        json.JSONDecodeError: If the results file exists but contains invalid JSON.
     """
     root = repo_root or Path.cwd()
     _base = project_dir if project_dir is not None else root / "projects" / project_name
@@ -65,14 +68,13 @@ def load_test_results(
         try:
             with open(results_file, "r") as f:
                 data = json.load(f)
-                # Extract project results from the nested structure
-                if "project" in data:
-                    return data["project"]
-                else:
-                    return data
-        except (OSError, json.JSONDecodeError, KeyError) as e:
+        except OSError as e:
             logger.warning(f"Could not load results from {results_file}: {e}")
             return {}
+        # Extract project results from the nested structure
+        if "project" in data:
+            return data["project"]
+        return data
     else:
         logger.warning(f"Test results file not found: {results_file}")
         return {}
