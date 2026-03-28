@@ -65,7 +65,7 @@ def execute_single_stage(stage: str, project_name: str, repo_root: Path) -> int:
 
     import subprocess
 
-    result = subprocess.run(cmd, cwd=str(repo_root), check=False)
+    result = subprocess.run(cmd, cwd=str(repo_root), check=False, timeout=600)
     return result.returncode
 
 

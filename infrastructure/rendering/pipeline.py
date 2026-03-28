@@ -73,7 +73,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
 
         cmd = get_python_command() + [str(override_script)]
         try:
-            result = subprocess.run(cmd, cwd=str(project_root), check=False)
+            result = subprocess.run(cmd, cwd=str(project_root), check=False, timeout=300)
             if result.returncode == 0:
                 log_success("Custom PDF rendering completed successfully", logger)
                 return 0
