@@ -64,7 +64,7 @@ def publish_to_zenodo(
     # Upload files
     for path in file_paths:
         if path.exists():
-            client.upload_file(dep_id, str(path))
+            client.upload_file(dep_id, path)
 
     # Publish
     return client.publish(dep_id)
@@ -147,6 +147,8 @@ def create_github_release(
         PublishingError: If the GitHub API request fails, including
             authentication errors or invalid repository names.
     """
+    # GitHub API requires "token" prefix (not "Bearer") for PAT authentication.
+    # This divergence from Zenodo's "Bearer" format is intentional and required.
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json",
