@@ -36,6 +36,19 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
 
     logger.info("Cleaning coverage database files...")
 
+    def _remove_file(file_path: Path, label: str) -> tuple[str | None, str | None]:
+        """Attempt to remove a file; return (removed_label, locked_label)."""
+        try:
+            file_path.unlink()
+            logger.debug(f"  Removed: {label}")
+            return label, None
+        except PermissionError:
+            logger.debug(f"  Skipped (locked): {label}")
+            return None, label
+        except OSError as e:
+            logger.debug(f"  Failed to remove {label}: {e}")
+            return None, None
+
     try:
         removed_files = []
         locked_files = []
@@ -46,28 +59,21 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> 
                 # Glob pattern - search for matching files recursively
                 glob_pattern = f"**/{pattern}" if not pattern.startswith("**/") else pattern
                 for file_path in repo_root.glob(glob_pattern):
-                    try:
-                        file_path.unlink()
-                        removed_files.append(str(file_path.relative_to(repo_root)))
-                        logger.debug(f"  Removed: {file_path.relative_to(repo_root)}")
-                    except PermissionError:
-                        locked_files.append(str(file_path.relative_to(repo_root)))
-                        logger.debug(f"  Skipped (locked): {file_path.relative_to(repo_root)}")
-                    except OSError as e:
-                        logger.debug(f"  Failed to remove {file_path.relative_to(repo_root)}: {e}")
+                    label = str(file_path.relative_to(repo_root))
+                    removed, locked = _remove_file(file_path, label)
+                    if removed:
+                        removed_files.append(removed)
+                    if locked:
+                        locked_files.append(locked)
             else:
                 # Exact filename
                 file_path = repo_root / pattern
                 if file_path.exists():
-                    try:
-                        file_path.unlink()
-                        removed_files.append(str(file_path.name))
-                        logger.debug(f"  Removed: {file_path.name}")
-                    except PermissionError:
-                        locked_files.append(str(file_path.name))
-                        logger.debug(f"  Skipped (locked): {file_path.name}")
-                    except OSError as e:
-                        logger.debug(f"  Failed to remove {file_path.name}: {e}")
+                    removed, locked = _remove_file(file_path, file_path.name)
+                    if removed:
+                        removed_files.append(removed)
+                    if locked:
+                        locked_files.append(locked)
 
         # Log results
         if removed_files:

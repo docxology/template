@@ -14,16 +14,12 @@ logger = get_logger(__name__)
 
 # Make dotenv optional - only required for credential-based testing
 try:
-    from dotenv import load_dotenv
+    from dotenv import load_dotenv as _load_dotenv
 
     DOTENV_AVAILABLE = True
 except ImportError:
     DOTENV_AVAILABLE = False
-
-    # No-op function if dotenv not available
-    def load_dotenv(*args: Any, **kwargs: Any) -> None:
-        """No-op fallback when python-dotenv is not installed."""
-        pass
+    _load_dotenv = None  # type: ignore[assignment]
 
 
 # Platform API base URLs — extracted here so they are easy to override in tests
@@ -49,11 +45,12 @@ class CredentialManager:
             env_file: Path to .env file (optional, defaults to .env in root)
             config_file: Path to YAML config file (optional)
         """
-        # Load .env file
-        if env_file and env_file.exists():
-            load_dotenv(env_file)
-        else:
-            load_dotenv()  # Load from default .env if it exists
+        # Load .env file (skipped silently when python-dotenv is not installed)
+        if DOTENV_AVAILABLE and _load_dotenv is not None:
+            if env_file and env_file.exists():
+                _load_dotenv(env_file)
+            else:
+                _load_dotenv()
 
         # Load YAML config if provided
         self.config = {}

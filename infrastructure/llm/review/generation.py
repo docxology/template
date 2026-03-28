@@ -207,7 +207,12 @@ def generate_review_with_metrics(
     max_tokens: int | None = None,
     max_retries: int = 1,
 ) -> tuple[str | None, ReviewMetrics]:
-    """Generate a review using a specified template and record execution metrics."""
+    """Generate a review using a specified template and record execution metrics.
+
+    Returns:
+        Tuple of (review_text, metrics). review_text is None if the LLM returned an
+        empty response or if all retry attempts produced off-topic content.
+    """
     log_substep(f"Generating {review_name}...")
 
     if max_tokens is None:

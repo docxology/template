@@ -25,7 +25,7 @@ def generate_prioritized_recommendations_csv(summary: ExecutiveSummary, output_d
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
     csv_path = organizer.get_output_path(
-        "recommendations_prioritized.csv",  # type: ignore[arg-type]
+        "recommendations_prioritized.csv",
         output_dir,
         FileType.CSV,
     )

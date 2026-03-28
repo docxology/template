@@ -55,17 +55,13 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             project_name=config.project_name, repo_root=config.repo_root
         )
 
-        # Define log file path (will be created by _setup_log_file_handler)
-        log_dir = config.project_dir / "output" / "logs"
-        log_file = log_dir / "pipeline.log"
-        self.log_file = log_file  # Store for later access
-        self._log_handler: logging.FileHandler | None = None  # Track our file handler
-
-        # Set up log file handler initially
-        # NOTE: This will be called again after clean stage to recreate the log file
+        # Log file: projects/{project_name}/output/logs/pipeline.log
+        # Recreated by _setup_log_file_handler after clean stage deletes it.
+        self.log_file = config.project_dir / "output" / "logs" / "pipeline.log"
+        self._log_handler: logging.FileHandler | None = None
         self._setup_log_file_handler()
 
-        # Unified telemetry collector (lazy: loads config from pipeline.yaml)
+        # Telemetry collector (lazy: reads pipeline.yaml for enabled reporters)
         self._telemetry: TelemetryCollector | None = None
         self._init_telemetry()
 
@@ -257,6 +253,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             stage_num: Stage number
             stage_name: Stage name
             stage_func: Function to execute
+            pipeline_start: Pipeline start time for ETA calculation (optional)
 
         Returns:
             Stage result

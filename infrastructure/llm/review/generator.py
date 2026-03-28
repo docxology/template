@@ -68,7 +68,6 @@ from infrastructure.llm.review.quality import (  # noqa: F401
     ReviewType,
     ReviewQualityDetails,
     validate_review_quality,
-    _is_small_model,
 )
 
 # Re-exports from ollama_setup.py — all public names that external code imports from generator.

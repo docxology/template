@@ -11,13 +11,18 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 from __future__ import annotations
 
 import time
+from typing import TYPE_CHECKING
 
 from infrastructure.core.runtime.checkpoint import StageResult
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.types import (
+    PipelineConfig,
     PipelineStageResult,
     StageSpec,
 )
+
+if TYPE_CHECKING:
+    from infrastructure.core.runtime.checkpoint import CheckpointManager
 
 logger = get_logger(__name__)
 
@@ -25,13 +30,30 @@ logger = get_logger(__name__)
 class PipelineResumeMixin:
     """Mixin providing checkpoint save/load and pipeline resume capability.
 
-    Expects the host class to provide:
-        - self.config: PipelineConfig (with skip_llm, clean, total_stages)
-        - self.checkpoint_manager: CheckpointManager
-        - self._build_stage_list(include_llm, skip_clean): method
-        - self._execute_pipeline(stages): method
-        - self._run_stage_and_checkpoint(stage_num, stage_spec, results, pipeline_start): method
+    Host class must provide these attributes (declared here for type-checker visibility):
     """
+
+    # Host-class contract — declared as annotations so the type system sees them.
+    config: PipelineConfig
+    checkpoint_manager: "CheckpointManager"
+
+    def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[StageSpec]:
+        """Build ordered stage list (implemented by host class)."""
+        raise NotImplementedError  # pragma: no cover
+
+    def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
+        """Execute all stages (implemented by host class)."""
+        raise NotImplementedError  # pragma: no cover
+
+    def _run_stage_and_checkpoint(
+        self,
+        stage_num: int,
+        stage_spec: StageSpec,
+        results: list[PipelineStageResult],
+        pipeline_start: float,
+    ) -> PipelineStageResult:
+        """Run one stage and save checkpoint (implemented by host class)."""
+        raise NotImplementedError  # pragma: no cover
 
     def _start_fresh(self) -> list[PipelineStageResult]:
         """Run the pipeline from scratch, bypassing any checkpoint."""
