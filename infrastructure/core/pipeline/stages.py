@@ -194,7 +194,6 @@ class PipelineStageMixin(ABC):
                 cmd, cwd=self.config.repo_root, env=env, check=False, timeout=7200
             )
 
-            # Exit code 0 = success
             if result.returncode == 0:
                 return True
 

@@ -95,7 +95,6 @@ class PDFRenderer:
             "--standalone",
         ]
 
-        # Add resource paths
         cmd.extend(resource_paths)
 
         logger.info(f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}")
@@ -138,7 +137,6 @@ class PDFRenderer:
             RenderingError: If combination or rendering fails
         """
 
-        # Log sections being combined
         logger.info("\n" + "=" * 60)
         logger.info("COMBINED MANUSCRIPT RENDERING")
         logger.info("=" * 60)
@@ -168,7 +166,6 @@ class PDFRenderer:
             bib_file = manuscript_dir / "99_references.bib"
         bib_exists = bib_file.exists()
 
-        # Create combined markdown
         combined_tex = output_dir / "_combined_manuscript.tex"
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = combine_manuscript_markdown_sections(source_files)

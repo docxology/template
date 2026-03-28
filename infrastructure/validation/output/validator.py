@@ -210,7 +210,6 @@ def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
     project_folders = []
     invalid_folders = []
 
-    # Check each item in output directory
     for item in output_dir.iterdir():
         if not item.is_dir():
             continue  # Skip files
@@ -292,7 +291,6 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
         "recommendations": [],
     }
 
-    # Collect per-directory details
     for subdir_name in [
         "pdf",
         "web",
@@ -330,12 +328,10 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
                 f"Directory '{subdir_name}/' missing or empty"
             )
 
-    # Add issues from structure validation
     if not validation_results["structure"]["valid"]:
         for issue in validation_results["structure"]["issues"]:
             validation_results["issues_by_severity"]["critical"].append(issue)
 
-    # Add missing file issues
     for missing_file in validation_results["structure"].get("missing_files", []):
         if missing_file == "project_combined.pdf":
             validation_results["issues_by_severity"]["critical"].append(
@@ -351,11 +347,9 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
                 f"Missing expected file: {missing_file}"
             )
 
-    # Add suspicious size issues
     for size_issue in validation_results["structure"].get("suspicious_sizes", []):
         validation_results["issues_by_severity"]["warning"].append(size_issue)
 
-    # Generate recommendations based on issues
     if validation_results["issues_by_severity"]["critical"]:
         validation_results["recommendations"].append(
             {
@@ -411,7 +405,6 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
         "directory_structure": {},
     }
 
-    # Check output directory exists
     if not output_dir.exists():
         result["valid"] = False
         result["issues"].append("Output directory does not exist")
@@ -461,7 +454,6 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
             "readable": False,
         }
 
-    # Check all expected subdirectories
     expected_dirs = [
         "pdf",
         "web",
