@@ -11,12 +11,19 @@ from typing import Callable
 from infrastructure.core.logging.utils import get_logger
 
 try:
-    import requests  # noqa: F401 — re-exported for _stream_impl.py
-except ImportError as _err:
-    raise ImportError(
-        "The 'requests' package is required to use LLM streaming features. "
-        "Install it with: pip install requests  (or: pip install template[llm])"
-    ) from _err
+    import requests as _requests
+except ImportError:
+    _requests = None  # type: ignore[assignment]
+
+
+def _get_requests() -> "requests":  # type: ignore[name-defined]
+    """Return the requests module, raising a clear ImportError at call time if absent."""
+    if _requests is None:
+        raise ImportError(
+            "The 'requests' package is required to use LLM streaming features. "
+            "Install it with: pip install requests  (or: pip install template[llm])"
+        )
+    return _requests
 
 logger = get_logger(__name__)
 

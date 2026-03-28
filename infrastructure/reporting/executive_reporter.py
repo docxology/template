@@ -44,6 +44,6 @@ from infrastructure.reporting._executive_renderers import (  # noqa: F401 — re
     save_executive_summary,
 )
 from infrastructure.reporting._executive_report_formats import (  # noqa: F401 — re-exported
-    generate_html_report,
-    generate_markdown_report,
+    generate_executive_html_report,
+    generate_executive_markdown_report,
 )

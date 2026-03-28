@@ -11,7 +11,7 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
-def generate_markdown_report(summary: ExecutiveSummary) -> str:
+def generate_executive_markdown_report(summary: ExecutiveSummary) -> str:
     """Generate Markdown format executive report."""
     lines = [
         "# Executive Summary - All Projects",
@@ -230,7 +230,7 @@ def generate_markdown_report(summary: ExecutiveSummary) -> str:
     return "\n".join(lines)
 
 
-def generate_html_report(summary: ExecutiveSummary) -> str:
+def generate_executive_html_report(summary: ExecutiveSummary) -> str:
     """Generate HTML format executive report."""
     from infrastructure.reporting.html_templates import (
         get_base_html_template,

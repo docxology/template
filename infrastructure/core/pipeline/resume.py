@@ -30,7 +30,15 @@ logger = get_logger(__name__)
 class PipelineResumeMixin:
     """Mixin providing checkpoint save/load and pipeline resume capability.
 
-    Host class must provide these attributes (declared here for type-checker visibility):
+    Host class contract — the following attributes MUST be provided by the host
+    class (e.g. ``PipelineExecutor``) before any mixin method is called:
+
+    - ``config``: a :class:`PipelineConfig` instance with project settings.
+    - ``checkpoint_manager``: a :class:`CheckpointManager` instance managing
+      the checkpoint file for the active project.
+
+    These are declared as class-level annotations (not assigned) so that the
+    type checker can see them without ``PipelineResumeMixin`` constructing them.
     """
 
     # Host-class contract — declared as annotations so the type system sees them.

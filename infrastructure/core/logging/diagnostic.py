@@ -125,19 +125,19 @@ class DiagnosticReporter:
         yellow_flag = EMOJIS["warning"] if use_emojis else "[WARN]"
         info_flag = EMOJIS["info"] if use_emojis else "[INFO]"
 
-        print(f"\n{'='*80}")
-        print(f" DIAGNOSTIC REPORT: {self.project_name}")
-        print(f"{'='*80}\n")
+        logger.info(f"\n{'='*80}")
+        logger.info(f" DIAGNOSTIC REPORT: {self.project_name}")
+        logger.info(f"{'='*80}\n")
 
         errors = [e for e in self.events if e.severity == DiagnosticSeverity.ERROR]
         warnings = [e for e in self.events if e.severity == DiagnosticSeverity.WARNING]
         infos = [e for e in self.events if e.severity == DiagnosticSeverity.INFO]
 
-        def _print_group(title: str, items: list[DiagnosticEvent], icon: str) -> None:
+        def _log_group(title: str, items: list[DiagnosticEvent], icon: str) -> None:
             if not items:
                 return
-            print(f"{icon} {title} ({len(items)})")
-            print(f"{'-'*80}")
+            logger.info(f"{icon} {title} ({len(items)})")
+            logger.info(f"{'-'*80}")
             for item in items:
                 loc = ""
                 if item.file_path:
@@ -146,16 +146,16 @@ class DiagnosticReporter:
                         loc += f":{item.line_number}"
                     loc = f"[{loc}] "
 
-                print(f"  [{item.category}] {loc}{item.message}")
+                logger.info(f"  [{item.category}] {loc}{item.message}")
                 if item.fix_suggestion:
-                    print(f"      ↳ Fix: {item.fix_suggestion}")
-            print()
+                    logger.info(f"      ↳ Fix: {item.fix_suggestion}")
+            logger.info("")
 
-        _print_group("RED FLAGS (Errors)", errors, red_flag)
-        _print_group("YELLOW FLAGS (Warnings)", warnings, yellow_flag)
-        _print_group("DIAGNOSTICS (Info)", infos, info_flag)
+        _log_group("RED FLAGS (Errors)", errors, red_flag)
+        _log_group("YELLOW FLAGS (Warnings)", warnings, yellow_flag)
+        _log_group("DIAGNOSTICS (Info)", infos, info_flag)
 
-        print(f"{'='*80}\n")
+        logger.info(f"{'='*80}\n")
 
     def save_report(self) -> None:
         """Save the diagnostic report to JSON if output_dir is configured."""

@@ -71,9 +71,6 @@ class ProjectAnalysis:
     config: dict[str, Any] = field(default_factory=dict)
 
 
-# Backwards-compat alias — external code that imported ProjectInfo continues to work.
-ProjectInfo = ProjectAnalysis
-
 
 @dataclass
 class PipelineStage:
@@ -159,7 +156,7 @@ def discover_infrastructure_modules(repo_root: Path) -> list[ModuleInfo]:
                         s for s in dir(mod)
                         if not s.startswith("_")
                     ]
-            except Exception as exc:
+            except (ImportError, AttributeError, OSError) as exc:
                 logger.debug(f"Could not import infrastructure.{child.name}: {exc}")
 
         modules.append(ModuleInfo(
@@ -208,7 +205,7 @@ def discover_projects(repo_root: Path) -> list[ProjectAnalysis]:
         try:
             with open(config_path, "r") as f:
                 config = yaml.safe_load(f) or {}
-        except Exception as exc:
+        except (OSError, ValueError) as exc:
             logger.warning(f"Could not load config for {child.name}: {exc}")
 
         # Count chapters (markdown files in manuscript/)
@@ -307,7 +304,7 @@ def analyze_test_coverage_config(project_dir: Path) -> CoverageConfig | None:
     try:
         with open(config_path, "r") as f:
             config = yaml.safe_load(f) or {}
-    except Exception as exc:
+    except (OSError, ValueError) as exc:
         logger.warning(f"Could not parse config: {exc}")
         return None
 

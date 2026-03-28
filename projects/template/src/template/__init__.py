@@ -14,7 +14,6 @@ Injection API:
 
 Data classes:
     ModuleInfo, ProjectAnalysis, PipelineStage, CoverageConfig, InfrastructureReport
-    ProjectInfo is a backwards-compat alias for ProjectAnalysis.
 """
 
 from __future__ import annotations
@@ -26,7 +25,6 @@ from .introspection import (
     ModuleInfo,
     PipelineStage,
     ProjectAnalysis,
-    ProjectInfo,  # backwards-compat alias for ProjectAnalysis
     analyze_test_coverage_config,
     build_infrastructure_report,
     count_pipeline_stages,
@@ -54,7 +52,6 @@ __all__ = [
     # Introspection data classes
     "ModuleInfo",
     "ProjectAnalysis",
-    "ProjectInfo",  # backwards-compat alias for ProjectAnalysis
     "PipelineStage",
     "CoverageConfig",
     "InfrastructureReport",

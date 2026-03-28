@@ -27,8 +27,8 @@ from ._executive_health import (
 )
 from ._executive_models import ExecutiveSummary
 from ._executive_report_formats import (
-    generate_html_report,
-    generate_markdown_report,
+    generate_executive_html_report,
+    generate_executive_markdown_report,
 )
 
 logger = get_logger(__name__)
@@ -99,13 +99,13 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> dict[
 
     # Save Markdown (human-readable)
     md_path = organizer.get_output_path("consolidated_report.md", output_dir, FileType.MARKDOWN)
-    _atomic_write_text(md_path, generate_markdown_report(summary))
+    _atomic_write_text(md_path, generate_executive_markdown_report(summary))
     saved_files["markdown"] = md_path
     logger.info(f"Saved Markdown report: {md_path}")
 
     # Save HTML (styled)
     html_path = organizer.get_output_path("consolidated_report.html", output_dir, FileType.HTML)
-    _atomic_write_text(html_path, generate_html_report(summary))
+    _atomic_write_text(html_path, generate_executive_html_report(summary))
     saved_files["html"] = html_path
     logger.info(f"Saved HTML report: {html_path}")
 
