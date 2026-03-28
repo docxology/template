@@ -14,7 +14,7 @@ Note:
 from __future__ import annotations
 
 import shutil
-import subprocess
+import subprocess  # nosec B404 — used only for fixed-list Popen (no shell=True)
 import time
 
 try:
@@ -82,7 +82,7 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
                 return False
 
             # Start server: list argv only, no shell interpolation.
-            process = subprocess.Popen(
+            process = subprocess.Popen(  # nosec B603 — fixed list argv, ollama_bin from shutil.which
                 [ollama_bin, "serve"],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
