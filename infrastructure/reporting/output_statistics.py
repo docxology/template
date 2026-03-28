@@ -14,7 +14,7 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def generate_output_summary(
+def log_output_summary(
     output_dir: Path,
     stats: dict[str, Any],
     structure_validation: dict[str, Any] | None = None,

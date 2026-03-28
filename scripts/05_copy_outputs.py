@@ -40,7 +40,7 @@ from infrastructure.validation.output.validator import (
     validate_output_structure,
 )
 from infrastructure.reporting.output_reporter import (
-    generate_output_summary,
+    log_output_summary,
 )
 
 # Set up logger for this module
@@ -124,7 +124,7 @@ def main() -> int:
         logger.info(f"Output statistics JSON saved to: {json_file}")
 
         # Step 5: Generate original summary (for backward compatibility)
-        generate_output_summary(output_dir, stats, structure_validation)
+        log_output_summary(output_dir, stats, structure_validation)
 
         # Determine success/failure
         if stats.get("total_files", 0) > 0 and validation_passed:

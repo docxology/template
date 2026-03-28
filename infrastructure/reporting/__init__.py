@@ -25,7 +25,7 @@ from .pipeline_reporter import (
 # Output & statistics reporters (post-pipeline)
 from .output_reporter import (
     collect_output_statistics,
-    generate_output_summary,
+    log_output_summary,
 )
 from .output_organizer import FileType, OutputOrganizer
 
@@ -73,7 +73,7 @@ __all__ = [
     "ErrorEntry",
     "get_error_aggregator",
     "reset_error_aggregator",
-    "generate_output_summary",
+    "log_output_summary",
     "collect_output_statistics",
     "generate_executive_summary",
     "save_executive_summary",
