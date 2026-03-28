@@ -16,7 +16,7 @@ from projects.blake_bimetalism.src.analysis import (
 logger = get_logger("blake_bimetalism.analyze")
 
 
-def main():
+def main() -> None:
     """
     Main orchestration step. Reads no inputs, applies baseline historical models 
     for theoretical mapping, and outputs metadata to the project's output directory.
