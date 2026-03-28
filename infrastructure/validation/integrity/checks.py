@@ -206,6 +206,7 @@ def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
                 combined_content += f.read() + "\n"
         except OSError as e:
             logger.warning(f"Could not read markdown file {md_file}: {e}")
+            continue
 
     content_lower = combined_content.lower()
 
