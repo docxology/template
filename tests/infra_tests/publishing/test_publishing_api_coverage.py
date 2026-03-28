@@ -1,7 +1,9 @@
 """Comprehensive tests for infrastructure/publishing/api.py.
 
-Tests publishing API functionality.
+Tests publishing API functionality using pytest-httpserver (no mocks).
 """
+
+import pytest
 
 
 class TestPublishingApiCore:
@@ -20,19 +22,18 @@ class TestPublishingApiCore:
         module_funcs = [a for a in dir(api) if not a.startswith("_")]
         assert len(module_funcs) > 0
 
+    def test_zenodo_client_exists(self):
+        """ZenodoClient class is exported from publishing.api."""
+        from infrastructure.publishing.api import ZenodoClient
+
+        assert ZenodoClient is not None
+
 
 class TestZenodoApi:
-    """Test Zenodo API functionality."""
-
-    def test_zenodo_client_exists(self):
-        """Test ZenodoClient exists."""
-        from infrastructure.publishing import api
-
-        if hasattr(api, "ZenodoClient"):
-            assert api.ZenodoClient is not None
+    """Test Zenodo API functionality using real HTTP test server."""
 
     def test_zenodo_upload(self, tmp_path, zenodo_test_server):
-        """Test Zenodo upload function."""
+        """ZenodoClient.upload_file() calls the correct PUT endpoint."""
         from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
 
         pdf = tmp_path / "test.pdf"
@@ -40,127 +41,99 @@ class TestZenodoApi:
 
         config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
-
-        # Test real file upload to test server
-        try:
-            client.upload_file("bucket123", str(pdf))
-        except Exception:
-            pass  # May have setup requirements
+        # upload_file should not raise for a valid server response
+        client.upload_file("bucket123", str(pdf))
 
     def test_create_zenodo_deposition(self, zenodo_test_server):
-        """Test creating Zenodo deposition."""
+        """ZenodoClient.create_deposition() returns the deposition ID string."""
         from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
 
         config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
+        result = client.create_deposition({"title": "Test"})
+        assert result == "12345"
 
-        # Test real deposition creation with test server
-        try:
-            result = client.create_deposition({"title": "Test"})
-            assert result == "12345"
-        except Exception:
-            pass  # May have setup requirements
+    def test_zenodo_publish(self, zenodo_test_server):
+        """ZenodoClient.publish() returns the DOI string."""
+        from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
+
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
+        client = ZenodoClient(config)
+        result = client.publish("12345")
+        assert result == "10.5281/zenodo.12345"
 
 
 class TestArxivApi:
-    """Test arXiv API functionality."""
+    """Test arXiv submission helpers (skipped when not present)."""
 
     def test_prepare_arxiv_submission(self, tmp_path):
-        """Test arXiv submission preparation."""
+        """prepare_arxiv_submission is skipped if not exported."""
         from infrastructure.publishing import api
 
+        if not hasattr(api, "prepare_arxiv_submission"):
+            pytest.skip("prepare_arxiv_submission not available in this build")
         tex = tmp_path / "main.tex"
         tex.write_text("\\documentclass{article}")
-
-        if hasattr(api, "prepare_arxiv_submission"):
-            try:
-                api.prepare_arxiv_submission(str(tmp_path))
-            except Exception:
-                pass
+        result = api.prepare_arxiv_submission(str(tmp_path))
+        assert result is not None
 
     def test_create_arxiv_package(self, tmp_path):
-        """Test arXiv package creation."""
+        """create_arxiv_package is skipped if not exported."""
         from infrastructure.publishing import api
 
-        if hasattr(api, "create_arxiv_package"):
-            try:
-                api.create_arxiv_package(str(tmp_path))
-            except Exception:
-                pass
+        if not hasattr(api, "create_arxiv_package"):
+            pytest.skip("create_arxiv_package not available in this build")
+        result = api.create_arxiv_package(str(tmp_path))
+        assert result is not None
 
 
 class TestGitHubApi:
-    """Test GitHub release API functionality."""
+    """Test GitHub release API (create_github_release hardcodes api.github.com)."""
 
-    def test_create_github_release(self, github_test_server):
-        """Test GitHub release creation."""
+    def test_create_github_release_signature(self):
+        """create_github_release is importable and has the expected signature."""
+        import inspect
         from infrastructure.publishing.platforms import create_github_release
 
-        # Test real GitHub API call with test server
-        try:
-            result = create_github_release(
-                tag="v1.0.0",
-                name="Test Release",
-                description="Test release description",
-                files=[],
-                token="test_token",
-                repo="testuser/testrepo",
-                base_url=github_test_server.url_for(""),
-            )
-            assert result is not None
-        except Exception:
-            pass  # May require additional setup
-
-    def test_zenodo_publish(self, zenodo_test_server):
-        """Test Zenodo publication."""
-        from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
-
-        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
-        client = ZenodoClient(config)
-
-        # Test real publication with test server
-        try:
-            result = client.publish("12345")
-            assert result == "10.5281/zenodo.12345"
-        except Exception:
-            pass  # May have setup requirements
+        sig = inspect.signature(create_github_release)
+        assert "tag_name" in sig.parameters
+        assert "release_name" in sig.parameters
+        assert "token" in sig.parameters
+        assert "repo" in sig.parameters
 
 
 class TestMetadataExtraction:
-    """Test metadata extraction functionality."""
+    """Test metadata extraction helpers (skipped when not present)."""
 
     def test_extract_metadata(self, tmp_path):
-        """Test extracting publication metadata."""
+        """extract_metadata is skipped if not exported."""
         from infrastructure.publishing import api
 
+        if not hasattr(api, "extract_metadata"):
+            pytest.skip("extract_metadata not available in this build")
         md = tmp_path / "paper.md"
         md.write_text("# Title\nAuthors: Test")
-
-        if hasattr(api, "extract_metadata"):
-            result = api.extract_metadata(str(md))
-            assert result is not None
+        result = api.extract_metadata(str(md))
+        assert result is not None
 
     def test_generate_bibtex(self):
-        """Test BibTeX generation."""
+        """generate_bibtex is skipped if not exported."""
         from infrastructure.publishing import api
 
+        if not hasattr(api, "generate_bibtex"):
+            pytest.skip("generate_bibtex not available in this build")
         metadata = {"title": "Test Paper", "authors": ["Author One"], "year": 2024}
-
-        if hasattr(api, "generate_bibtex"):
-            result = api.generate_bibtex(metadata)
-            assert isinstance(result, str)
+        result = api.generate_bibtex(metadata)
+        assert isinstance(result, str)
 
 
 class TestPublishingApiIntegration:
     """Integration tests for publishing API."""
 
     def test_full_publishing_workflow(self, tmp_path):
-        """Test complete publishing workflow."""
-        from infrastructure.publishing import api
+        """Publishing module is importable and has expected classes."""
+        from infrastructure.publishing.api import ZenodoClient, ZenodoConfig
 
-        # Create test files
         (tmp_path / "paper.pdf").write_bytes(b"%PDF")
-        (tmp_path / "paper.tex").write_text("\\documentclass{article}")
-
-        # Module should be importable
-        assert api is not None
+        assert ZenodoClient is not None
+        assert ZenodoConfig is not None

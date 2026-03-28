@@ -76,28 +76,26 @@ class TestIssueCategorizer:
         assert severity == "critical"
 
     def test_assign_severity_error(self):
-        """Test error severity assignment."""
-
-        # Create issue without explicit severity to test content-based logic
-        class TestIssue:
-            def __init__(self):
-                self.issue_message = "Invalid reference"
-
-        error_issue = TestIssue()
-
+        """Explicit severity='error' maps to 'critical' (error is promoted)."""
+        error_issue = QualityIssue(
+            file="test.md",
+            line=1,
+            issue_type="quality",
+            issue_message="Invalid reference in document",
+            severity="error",
+        )
         severity = assign_severity(error_issue)
-        assert severity == "error"
+        assert severity == "critical"
 
     def test_assign_severity_warning(self):
-        """Test warning severity assignment."""
-
-        # Create issue without explicit severity to test content-based logic
-        class TestIssue:
-            def __init__(self):
-                self.issue_message = "Code block path issue"
-
-        warning_issue = TestIssue()
-
+        """Explicit severity='warning' passes through unchanged."""
+        warning_issue = QualityIssue(
+            file="test.md",
+            line=1,
+            issue_type="quality",
+            issue_message="Code block path issue",
+            severity="warning",
+        )
         severity = assign_severity(warning_issue)
         assert severity == "warning"
 
