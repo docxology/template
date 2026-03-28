@@ -71,7 +71,7 @@ def calculate_eta_with_confidence(
     elapsed_time: float,
     completed_items: int,
     total_items: int,
-    item_durations: list[float | None] = None,
+    item_durations: list[float | None] | None = None,
 ) -> ETAEstimate:
     """Return ETAEstimate(optimistic, realistic, pessimistic) based on min/avg/max item duration."""
     if completed_items <= 0 or total_items <= 0:

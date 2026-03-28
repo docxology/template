@@ -54,7 +54,7 @@ def validate_pdfs(project_name: str = "project") -> bool:
                 valid_count += 1
             else:
                 logger.error(f"PDF empty: {pdf_file.name}")
-        except Exception as e:
+        except OSError as e:
             logger.error(f"Cannot validate {pdf_file.name}: {e}")
 
     return valid_count == len(pdf_files)

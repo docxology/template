@@ -162,8 +162,8 @@ def inject_latex_preamble(
         logger.info("⚠️  No preamble found, adding graphicx package")
         preamble_content = graphicx_required
 
+    begin_doc_idx = tex_content.find("\\begin{document}")
     if preamble_content or title_page_preamble:
-        begin_doc_idx = tex_content.find("\\begin{document}")
         if begin_doc_idx > 0:
             combined_preamble = ""
             if title_page_preamble:
@@ -174,6 +174,7 @@ def inject_latex_preamble(
             tex_content = (
                 tex_content[:begin_doc_idx] + combined_preamble + tex_content[begin_doc_idx:]
             )
+            begin_doc_idx += len(combined_preamble)
             logger.debug(
                 f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}"
             )
@@ -181,7 +182,6 @@ def inject_latex_preamble(
     # Insert title page body after \begin{document}
     if title_page_body:
         full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
-        begin_doc_idx = tex_content.find("\\begin{document}")
         if begin_doc_idx > 0:
             tex_preamble = tex_content[:begin_doc_idx]
             tex_body = tex_content[begin_doc_idx:]
@@ -290,8 +290,4 @@ def prevalidate_markdown(combined_md: Path) -> tuple[list[str], str]:
                 logger.info("  (These are warnings - PDF generation will proceed)")
         except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001
             logger.debug(f"Pre-validation check failed: {e}")
-            try:
-                md_content = combined_md.read_text(encoding="utf-8")
-            except (OSError, UnicodeDecodeError) as read_err:
-                logger.debug(f"Failed to read markdown for error reporting: {read_err}")
     return validation_errors, md_content

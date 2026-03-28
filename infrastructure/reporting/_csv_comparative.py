@@ -124,11 +124,7 @@ def _calculate_percentile_and_rank(
 ) -> tuple[float, int]:
     """Calculate percentile rank for a value in a list."""
     if not values_list:
-        return (
-            50,
-            len([v for v in values_list if (v > value if higher_is_better else v < value)])
-            + 1,
-        )
+        return 50, 1
 
     sorted_values = sorted(values_list, reverse=higher_is_better)
     try:
