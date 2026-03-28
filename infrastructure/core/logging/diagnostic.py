@@ -52,14 +52,22 @@ class DiagnosticReporter:
     """Centralized collector and formatter for diagnostic events."""
 
     def __init__(self, project_name: str, output_dir: Path | None = None):
-        """Initialize the diagnostic reporter."""
+        """Set up the reporter, pre-loading any events saved from a prior run.
+
+        ``output_dir`` is optional; when omitted events are held in memory only
+        and no JSON file is read or written.
+        """
         self.project_name: str = project_name
         self.output_dir: Path | None = output_dir
         self.events: list[DiagnosticEvent] = []
         self._load_existing_events()
 
     def _load_existing_events(self) -> None:
-        """Load existing events from the diagnostics.json file if it exists."""
+        """Pre-populate ``self.events`` from the on-disk report of a prior run.
+
+        Called at construction time so that a reporter opened mid-pipeline can
+        accumulate events on top of those written by an earlier stage.
+        """
         if not self.output_dir:
             return
         report_file = self.output_dir / "reports" / "diagnostics.json"

@@ -117,32 +117,21 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
 
         file_exists = fig_full_path.exists() or fig_normalized.exists()
 
+        fixed_count += 1
         if file_exists:
-            fixed_count += 1
             paths_fixed.append(f"{original_path} -> {new_path}")
-            # Preserve options if present
-            full_match = match.group(0)
-            if "[" in full_match:
-                # Extract options
-                options_start = full_match.find("[")
-                options_end = full_match.find("]")
-                options = full_match[options_start : options_end + 1]
-                return f"\\includegraphics{options}{{{new_path}}}"
-            else:
-                return f"\\includegraphics{{{new_path}}}"
         else:
             logger.warning(f"Figure file not found: {fig_full_path}")
-            fixed_count += 1
             paths_fixed.append(f"{original_path} -> {new_path} (FILE NOT FOUND)")
-            # Still return fixed path so compilation continues
-            full_match = match.group(0)
-            if "[" in full_match:
-                options_start = full_match.find("[")
-                options_end = full_match.find("]")
-                options = full_match[options_start : options_end + 1]
-                return f"\\includegraphics{options}{{{new_path}}}"
-            else:
-                return f"\\includegraphics{{{new_path}}}"
+
+        # Preserve LaTeX options (e.g. [width=\textwidth]) if present; always rewrite path
+        full_match = match.group(0)
+        if "[" in full_match:
+            options_start = full_match.find("[")
+            options_end = full_match.find("]")
+            options = full_match[options_start : options_end + 1]
+            return f"\\includegraphics{options}{{{new_path}}}"
+        return f"\\includegraphics{{{new_path}}}"
 
     # Primary pass: regex-based replacement handles well-formed \includegraphics commands
     tex_content = re.sub(pattern, fix_path, tex_content)

@@ -153,6 +153,30 @@ class PipelineStageMixin(ABC):
 
     # -- Subprocess execution ------------------------------------------------
 
+    def _build_stage_env(self) -> dict[str, str]:
+        """Return the subprocess environment for a stage script invocation.
+
+        Extends the base uv-compatible env with project-specific PYTHONPATH entries
+        so that stage scripts can import from infrastructure/ and project src/.
+        """
+        env = get_subprocess_env()
+        env.setdefault("MPLBACKEND", "Agg")
+        env.setdefault("PYTHONIOENCODING", "utf-8")
+        env.setdefault("PROJECT_ROOT", str(self.config.repo_root))
+
+        project_src = self.config.project_dir / "src"
+        pythonpath_parts = [
+            str(self.config.repo_root),
+            str(self.config.repo_root / "infrastructure"),
+        ]
+        if project_src.exists():
+            pythonpath_parts.append(str(project_src))
+        existing = env.get("PYTHONPATH")
+        if existing:
+            pythonpath_parts.append(existing)
+        env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
+        return env
+
     def _run_script(self, script_name: str, *args: str, allow_skip_code: bool = False) -> bool:
         """Run a script with given arguments.
 
@@ -169,24 +193,7 @@ class PipelineStageMixin(ABC):
         cmd = get_python_command() + [str(script_path)] + list(args)
         logger.debug(f"Running: {' '.join(cmd)}")
 
-        # Get clean environment dict with uv compatibility (handles VIRTUAL_ENV warnings)
-        env = get_subprocess_env()
-        env.setdefault("MPLBACKEND", "Agg")
-        env.setdefault("PYTHONIOENCODING", "utf-8")
-        env.setdefault("PROJECT_ROOT", str(self.config.repo_root))
-
-        # Ensure project src is on PYTHONPATH for stage scripts that import project code.
-        project_src = self.config.project_dir / "src"
-        pythonpath_parts = [
-            str(self.config.repo_root),
-            str(self.config.repo_root / "infrastructure"),
-        ]
-        if project_src.exists():
-            pythonpath_parts.append(str(project_src))
-        existing = env.get("PYTHONPATH")
-        if existing:
-            pythonpath_parts.append(existing)
-        env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
+        env = self._build_stage_env()
 
         try:
             # Stream subprocess output to console for long-running stages; still capture exit code.

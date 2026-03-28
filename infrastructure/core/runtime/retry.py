@@ -119,7 +119,15 @@ def retry_on_transient_failure(
 
 
 class RetryableOperation:
-    """Context manager for retryable operations with manual retry control."""
+    """Context manager for retryable operations that require per-attempt step control.
+
+    Use this over ``retry_with_backoff`` when the caller must perform work *between*
+    attempts — for example, rolling back a database transaction before retrying, or
+    inspecting partial results from each attempt to decide whether to continue.
+
+    For the common case (retry a function transparently), prefer the
+    ``@retry_with_backoff`` decorator instead; it is less verbose and less error-prone.
+    """
 
     def __init__(
         self,
