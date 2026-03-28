@@ -22,7 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_live_resource_usage, log_substep
-from infrastructure.reporting.test_pipeline import execute_test_pipeline
+from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
 
 # Set up logger for this module
 logger = get_logger(__name__)

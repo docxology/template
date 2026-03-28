@@ -2230,8 +2230,6 @@ version = "3.0.0"
 source = { virtual = "." }
 dependencies = [
     { name = "matplotlib" },
-    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pyyaml" },
@@ -2241,6 +2239,8 @@ dependencies = [
 [package.dev-dependencies]
 cognitive-case-diagrams = [
     { name = "discopy" },
+    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
 dashboard = [
     { name = "plotly" },
@@ -2288,14 +2288,16 @@ steganography = [
 [package.metadata]
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.7" },
-    { name = "networkx", specifier = ">=3.0" },
     { name = "numpy", specifier = ">=1.22" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "requests", specifier = ">=2.31.0" },
 ]
 
 [package.metadata.requires-dev]
-cognitive-case-diagrams = [{ name = "discopy", specifier = ">=1.0.0" }]
+cognitive-case-diagrams = [
+    { name = "discopy", specifier = ">=1.0.0" },
+    { name = "networkx", specifier = ">=3.0" },
+]
 dashboard = [{ name = "plotly", specifier = ">=5.0.0" }]
 dev = [
     { name = "bandit", specifier = ">=1.7.0" },

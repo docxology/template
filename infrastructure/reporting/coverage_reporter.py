@@ -16,7 +16,7 @@ from .coverage_json_parser import parse_coverage_json
 from .pytest_output_parser import parse_pytest_output
 
 # Re-export test report generation and persistence
-from .test_report_generator import generate_test_report, save_test_report_to_files
+from .report_generator import generate_test_report, save_test_report_to_files
 
 # Re-export coverage analysis utilities
 from .coverage_analysis import (

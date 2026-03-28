@@ -308,32 +308,32 @@ def generate_integrity_report(report: IntegrityReport) -> str:
     lines.append(_REPORT_SEPARATOR)
 
     # Overall status
-    status = "PASSED" if report.overall_integrity else "FAILED"
-    lines.append(f"Overall Integrity: {status}")
+    overall_status = "PASSED" if report.overall_integrity else "FAILED"
+    lines.append(f"Overall Integrity: {overall_status}")
     lines.append("")
 
     lines.append("File Integrity:")
     for file_path, integrity in report.file_integrity.items():
-        status = "OK" if integrity else "FAIL"
-        lines.append(f"  [{status}] {file_path}")
+        check_status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{check_status}] {file_path}")
     lines.append("")
 
     lines.append("Cross-Reference Integrity:")
     for ref_type, integrity in report.cross_reference_integrity.items():
-        status = "OK" if integrity else "FAIL"
-        lines.append(f"  [{status}] {ref_type}")
+        check_status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{check_status}] {ref_type}")
     lines.append("")
 
     lines.append("Data Consistency:")
     for check_type, integrity in report.data_consistency.items():
-        status = "OK" if integrity else "FAIL"
-        lines.append(f"  [{status}] {check_type}")
+        check_status = "OK" if integrity else "FAIL"
+        lines.append(f"  [{check_status}] {check_type}")
     lines.append("")
 
     lines.append("Academic Standards:")
     for standard, compliance in report.academic_standards.items():
-        status = "OK" if compliance else "WARN"
-        lines.append(f"  [{status}] {standard}")
+        check_status = "OK" if compliance else "WARN"
+        lines.append(f"  [{check_status}] {standard}")
     lines.append("")
 
     # Issues
