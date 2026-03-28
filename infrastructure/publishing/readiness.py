@@ -43,11 +43,22 @@ def validate_publication_readiness(
             logger.debug(f"Skipping unreadable file {md_file}: {e}")
             continue
 
-    has_abstract = "abstract" in all_content.lower()
-    has_introduction = "introduction" in all_content.lower()
-    has_methodology = "methodology" in all_content.lower()
-    has_results = "results" in all_content.lower() or "experimental" in all_content.lower()
-    has_conclusion = "conclusion" in all_content.lower()
+    # Check for section headings (e.g. "# Abstract", "## Introduction") rather than
+    # bare substring matching to avoid false positives from body text mentions.
+    _heading_re = re.compile(r"^#{1,3}\s+", re.MULTILINE)
+    headings_lower = {
+        m.string[m.end():m.end() + 60].split("\n")[0].strip().lower()
+        for m in _heading_re.finditer(all_content)
+    }
+
+    def _has_section(*keywords: str) -> bool:
+        return any(any(kw in h for h in headings_lower) for kw in keywords)
+
+    has_abstract = _has_section("abstract")
+    has_introduction = _has_section("introduction")
+    has_methodology = _has_section("methodology", "methods", "approach")
+    has_results = _has_section("results", "experimental", "evaluation", "findings")
+    has_conclusion = _has_section("conclusion", "discussion", "summary")
 
     score = 0
     if has_abstract:

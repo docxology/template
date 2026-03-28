@@ -161,10 +161,16 @@ def validate_citations(content: str) -> list[str]:
 
 
 def validate_formatting(content: str) -> bool:
-    """Validate basic formatting quality."""
+    """Validate basic formatting quality of LLM output.
+
+    Uses intentionally lightweight heuristics (not full linguistic analysis):
+    - ``!!!`` / ``???`` catches LLM over-emphasis artifacts common in low-quality responses.
+    - Double spaces catches copy-paste or template interpolation artifacts.
+    These are advisory signals (caller logs a warning); they do not block the pipeline.
+    """
     issues = []
 
-    # Check for excessive punctuation
+    # Check for excessive punctuation (common LLM artifact in low-quality responses)
     if "!!!" in content or "???" in content:
         issues.append("Excessive punctuation detected")
 

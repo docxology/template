@@ -38,10 +38,10 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 # Type alias for any issue type in the validation system
-Issue = Union[LinkIssue, ScanAccuracyIssue, CompletenessGap, QualityIssue]
+ValidationIssue = Union[LinkIssue, ScanAccuracyIssue, CompletenessGap, QualityIssue]
 
 
-def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
+def categorize_by_type(issues: list[ValidationIssue]) -> dict[str, list[ValidationIssue]]:
     """Categorize issues by their type and severity.
 
     Each issue is appended to up to three buckets simultaneously: one severity
@@ -57,7 +57,7 @@ def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
     Returns:
         Dictionary mapping category names to lists of issues (overlapping).
     """
-    categories: dict[str, list[Issue]] = {
+    categories: dict[str, list[ValidationIssue]] = {
         "critical": [],
         "error": [],
         "warning": [],
@@ -96,11 +96,11 @@ def categorize_by_type(issues: list[Issue]) -> dict[str, list[Issue]]:
     return categories
 
 
-def assign_severity(issue: Issue) -> str:
+def assign_severity(issue: ValidationIssue) -> str:
     """Assign severity level to an issue.
 
     Args:
-        issue: Issue to evaluate
+        issue: ValidationIssue to evaluate
 
     Returns:
         Severity level: 'critical', 'error', 'warning', or 'info'
@@ -162,11 +162,11 @@ def assign_severity(issue: Issue) -> str:
     return "info"
 
 
-def is_false_positive(issue: Issue) -> bool:
+def is_false_positive(issue: ValidationIssue) -> bool:
     """Determine if an issue is likely a false positive.
 
     Args:
-        issue: Issue to evaluate
+        issue: ValidationIssue to evaluate
 
     Returns:
         True if issue appears to be a false positive
@@ -242,7 +242,7 @@ def is_false_positive(issue: Issue) -> bool:
     return False
 
 
-def filter_false_positives(issues: list[Issue]) -> list[Issue]:
+def filter_false_positives(issues: list[ValidationIssue]) -> list[ValidationIssue]:
     """Filter out false positive issues from the list.
 
     Args:
@@ -254,7 +254,7 @@ def filter_false_positives(issues: list[Issue]) -> list[Issue]:
     return [issue for issue in issues if not is_false_positive(issue)]
 
 
-def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
+def group_related_issues(issues: list[ValidationIssue]) -> list[list[ValidationIssue]]:
     """Group related issues together for better analysis.
 
     Args:
@@ -267,7 +267,7 @@ def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
         return []
 
     # Group by file first
-    file_groups: dict[str, list[Issue]] = {}
+    file_groups: dict[str, list[ValidationIssue]] = {}
     for issue in issues:
         file_key = _get_issue_file(issue)
         if file_key not in file_groups:
@@ -275,9 +275,9 @@ def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
         file_groups[file_key].append(issue)
 
     # Within each file, group by issue type
-    groups: list[list[Issue]] = []
+    groups: list[list[ValidationIssue]] = []
     for file_issues in file_groups.values():
-        type_groups: dict[str, list[Issue]] = {}
+        type_groups: dict[str, list[ValidationIssue]] = {}
         for issue in file_issues:
             issue_type = _get_issue_type(issue)
             if issue_type not in type_groups:
@@ -289,7 +289,7 @@ def group_related_issues(issues: list[Issue]) -> list[list[Issue]]:
     return groups
 
 
-def prioritize_issues(issues: list[Issue]) -> list[Issue]:
+def prioritize_issues(issues: list[ValidationIssue]) -> list[ValidationIssue]:
     """Sort issues by priority (severity, then type).
 
     Args:
@@ -299,7 +299,7 @@ def prioritize_issues(issues: list[Issue]) -> list[Issue]:
         Sorted list with highest priority issues first
     """
 
-    def sort_key(issue: Issue) -> tuple[int, str, str]:
+    def sort_key(issue: ValidationIssue) -> tuple[int, str, str]:
         """Sort by severity (critical first), then type, then file path."""
         severity = assign_severity(issue)
         severity_order = {"critical": 0, "error": 1, "warning": 2, "info": 3}
@@ -309,7 +309,7 @@ def prioritize_issues(issues: list[Issue]) -> list[Issue]:
 
     return sorted(issues, key=sort_key)
 
-def generate_issue_summary(issues: list[Issue]) -> dict[str, Any]:
+def generate_issue_summary(issues: list[ValidationIssue]) -> dict[str, Any]:
     """Generate a summary of issues by category and severity.
 
     Args:
@@ -342,7 +342,7 @@ def generate_issue_summary(issues: list[Issue]) -> dict[str, Any]:
     return summary
 
 
-def _get_issue_text(issue: Issue) -> str:
+def _get_issue_text(issue: ValidationIssue) -> str:
     """Extract text content from any issue type."""
     if isinstance(issue, (LinkIssue, QualityIssue)):
         return str(issue.issue_message)
@@ -353,21 +353,21 @@ def _get_issue_text(issue: Issue) -> str:
     return str(issue)
 
 
-def _get_issue_target(issue: Issue) -> str:
+def _get_issue_target(issue: ValidationIssue) -> str:
     """Extract target/path from any issue type."""
     if isinstance(issue, LinkIssue):
         return str(issue.target)
     return ""
 
 
-def _get_issue_file(issue: Issue) -> str:
+def _get_issue_file(issue: ValidationIssue) -> str:
     """Extract file path from any issue type."""
     if isinstance(issue, (LinkIssue, ScanAccuracyIssue, QualityIssue)):
         return str(issue.file)
     return "unknown"
 
 
-def _get_issue_type(issue: Issue) -> str:
+def _get_issue_type(issue: ValidationIssue) -> str:
     """Extract issue type from any issue type."""
     if isinstance(issue, (LinkIssue, QualityIssue)):
         return issue.issue_type
@@ -378,7 +378,7 @@ def _get_issue_type(issue: Issue) -> str:
     raise TypeError(f"Unexpected issue type: {type(issue).__name__}")
 
 
-def get_severity_flag(issue: Issue) -> str:
+def get_severity_flag(issue: ValidationIssue) -> str:
     """Get severity flag for an issue: 'red', 'yellow', or 'green'.
 
     Red flags are critical issues that need immediate attention.
@@ -386,7 +386,7 @@ def get_severity_flag(issue: Issue) -> str:
     Green flags are known exceptions or informational issues.
 
     Args:
-        issue: Issue to evaluate
+        issue: ValidationIssue to evaluate
 
     Returns:
         Severity flag: 'red', 'yellow', or 'green'
@@ -407,11 +407,11 @@ def get_severity_flag(issue: Issue) -> str:
         return "green"
 
 
-def is_directory_reference(issue: Issue) -> bool:
+def is_directory_reference(issue: ValidationIssue) -> bool:
     """Check if issue is about a directory reference (which is valid).
 
     Args:
-        issue: Issue to evaluate
+        issue: ValidationIssue to evaluate
 
     Returns:
         True if issue is about a valid directory reference

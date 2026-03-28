@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import logging
 import time
+from pathlib import Path
 from typing import Callable
 
 from infrastructure.core.runtime.checkpoint import CheckpointManager
@@ -83,15 +84,19 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         self._log_handler = setup_root_log_file_handler(self.log_file)
         logger.debug(f"Set up log file handler: {self.log_file}")
 
-    def _init_telemetry(self) -> None:
-        """Initialize the telemetry collector from pipeline YAML config."""
-        from infrastructure.core.pipeline.dag import load_telemetry_config
-
+    def _resolve_pipeline_yaml(self) -> Path:
+        """Return the pipeline YAML path to use: project-specific if it exists, else default."""
         project_yaml = self.config.project_dir / "pipeline.yaml"
         default_yaml = (
             self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
         )
-        yaml_path = project_yaml if project_yaml.exists() else default_yaml
+        return project_yaml if project_yaml.exists() else default_yaml
+
+    def _init_telemetry(self) -> None:
+        """Initialize the telemetry collector from pipeline YAML config."""
+        from infrastructure.core.pipeline.dag import load_telemetry_config
+
+        yaml_path = self._resolve_pipeline_yaml()
 
         telem_config = TelemetryConfig()  # defaults
         if yaml_path.exists():
@@ -123,18 +128,14 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         from infrastructure.core.pipeline.dag import PipelineDAG
 
         # Resolve YAML path: project-specific → default → fallback
-        project_yaml = self.config.project_dir / "pipeline.yaml"
-        default_yaml = (
-            self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
-        )
-
-        yaml_path = None
-        if project_yaml.exists():
-            yaml_path = project_yaml
-            logger.info(f"Using project-specific pipeline: {yaml_path}")
-        elif default_yaml.exists():
-            yaml_path = default_yaml
-            logger.debug(f"Using default pipeline: {yaml_path}")
+        resolved = self._resolve_pipeline_yaml()
+        yaml_path: Path | None = None
+        if resolved.exists():
+            yaml_path = resolved
+            if resolved == self.config.project_dir / "pipeline.yaml":
+                logger.info(f"Using project-specific pipeline: {yaml_path}")
+            else:
+                logger.debug(f"Using default pipeline: {yaml_path}")
 
         if yaml_path is not None:
             dag = PipelineDAG.from_yaml(yaml_path)
