@@ -1,13 +1,15 @@
 """Streaming helper utilities for LLM client.
 
-Provides the partial-response save helper and a lazy-import stub for the
-``requests`` library used by streaming queries.
+Provides the partial-response save helper and the TIMEOUT_WARNING_FRACTION constant
+used by streaming queries.
 """
 
 from __future__ import annotations
 
-from typing import Any, Callable
 from pathlib import Path
+from typing import Callable
+
+import requests
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -47,20 +49,3 @@ def try_save_partial(
         logger.info(f"Saved partial response ({chunk_count} chunks) {context}")
         return True
     return partial_saved
-
-
-# Lazy import to match client.py pattern
-try:
-    import requests
-except ImportError as _import_err:
-    _requests_import_error = _import_err
-
-    class _RequestsStub:
-        """Raises ImportError with clear message on any attribute access."""
-
-        def __getattr__(self, name: str) -> Any:
-            raise ImportError(
-                "LLM streaming requires the 'requests' package: pip install requests"
-            ) from _requests_import_error
-
-    requests = _RequestsStub()  # type: ignore[assignment]

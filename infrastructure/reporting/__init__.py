@@ -1,7 +1,13 @@
 """Pipeline reporting module for generating consolidated reports.
 
-Exports report generators for test results, validation, performance
-metrics, and error summaries from pipeline execution.
+Concern-based entry points (import directly for clarity):
+  - Pipeline execution:   infrastructure.reporting.pipeline_reporter
+  - Output statistics:    infrastructure.reporting.output_reporter
+  - Executive summaries:  infrastructure.reporting.executive_reporter
+  - Test suite summaries: infrastructure.reporting.suite_summary_generator
+  - Error aggregation:    infrastructure.reporting.error_aggregator
+
+This __init__ re-exports the most commonly used symbols for convenience.
 """
 
 from __future__ import annotations

@@ -28,10 +28,6 @@ from infrastructure.llm.review.saving import (
 from infrastructure.llm.review.metrics import SessionMetrics  # noqa: F401
 
 __all__ = [
-    # formatting
-    "_build_review_header",
-    "_build_combined_review_content",
-    "_build_review_metadata",
     # review_analysis (re-exported for backwards compat)
     "calculate_format_compliance_summary",
     "calculate_quality_summary",

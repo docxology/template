@@ -11,17 +11,12 @@ Provides LLMClient for interacting with Ollama local LLMs with:
 from __future__ import annotations
 
 import time as time_module
-import types as _module_types
 from pathlib import Path
 from typing import Any, Callable, Iterator, TypeVar
 
-_T = TypeVar("_T")
+import requests
 
-requests: _module_types.ModuleType | None = None
-try:
-    import requests  # type: ignore[no-redef]
-except ImportError:
-    pass
+_T = TypeVar("_T")
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
@@ -85,11 +80,6 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         Args:
             config: OllamaClientConfig instance. If None, loads from environment.
         """
-        if requests is None:
-            raise ImportError(
-                "The 'requests' package is required for LLM connectivity. "
-                "Install it with: pip install requests"
-            )
         self.config = config or OllamaClientConfig.from_env()
         self.context = ConversationContext(max_tokens=self.config.context_window)
         self._system_prompt_injected = False

@@ -40,9 +40,6 @@ dependencies = [
   "numpy>=1.22",
   "pyyaml>=6.0",
   "matplotlib>=3.7",
-  # networkx is required by cognitive_case_diagrams visualization layer (category_diagrams.py,
-  # functor_diagrams.py) and tested via the root pipeline venv — must be in core deps
-  "networkx>=3.0",
   # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:
   # uv sync --group scientific
   # requests is required: infrastructure/llm/core/__init__.py unconditionally re-exports
@@ -90,9 +87,10 @@ steganography = [
 monitoring = [
   "psutil>=5.9.0",
 ]
-# Required for cognitive_case_diagrams project (real DisCoPy methods, not optional)
+# Required for cognitive_case_diagrams project (real DisCoPy + graph methods, not optional)
 cognitive-case-diagrams = [
   "discopy>=1.0.0",
+  "networkx>=3.0",
 ]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)
 dev = [

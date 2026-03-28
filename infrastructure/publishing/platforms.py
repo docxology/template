@@ -4,15 +4,10 @@ from __future__ import annotations
 
 import shutil
 import tarfile
-import types as _module_types
 from datetime import datetime
 from pathlib import Path
 
-requests: _module_types.ModuleType | None = None
-try:
-    import requests  # type: ignore[no-redef]
-except ImportError:
-    pass
+import requests
 
 from infrastructure.core.exceptions import PublishingError
 from infrastructure.publishing.api import REQUEST_TIMEOUT

@@ -4,14 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-import types as _module_types
 from typing import Any
 
-requests: _module_types.ModuleType | None = None
-try:
-    import requests  # type: ignore[no-redef]
-except ImportError:
-    pass
+import requests
 
 from infrastructure.core.exceptions import PublishingError, UploadError
 from infrastructure.core.logging.utils import get_logger
@@ -43,8 +38,6 @@ class ZenodoClient:
 
     def __init__(self, config: ZenodoConfig):
         """Initialize Zenodo client with configuration."""
-        if requests is None:
-            raise ImportError("ZenodoClient requires the 'requests' package: pip install requests")
         self.config = config
         self.headers = {"Authorization": f"Bearer {config.access_token}"}
 

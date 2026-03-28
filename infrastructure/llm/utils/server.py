@@ -11,18 +11,10 @@ from __future__ import annotations
 import shutil
 import subprocess
 import time
-import types as _module_types
 
-requests: _module_types.ModuleType | None = None
-RequestsConnectionError: type[OSError] = OSError
-RequestException: type[OSError] = OSError
-Timeout: type[OSError] = OSError
-try:
-    import requests  # type: ignore[no-redef]
-    from requests.exceptions import ConnectionError as RequestsConnectionError  # type: ignore[no-redef]
-    from requests.exceptions import RequestException, Timeout  # type: ignore[no-redef]
-except ImportError:
-    pass
+import requests
+from requests.exceptions import ConnectionError as RequestsConnectionError
+from requests.exceptions import RequestException, Timeout
 
 from infrastructure.core.logging.utils import get_logger
 
