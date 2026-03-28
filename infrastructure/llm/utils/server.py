@@ -29,9 +29,8 @@ def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float =
         if response.status_code == 200:
             logger.debug(f"Ollama server responding at {base_url}")
             return True
-        else:
-            logger.warning(f"Ollama server returned status {response.status_code} at {base_url}")
-            return False
+        logger.warning(f"Ollama server returned status {response.status_code} at {base_url}")
+        return False
     except Timeout:
         logger.debug(f"Ollama server timeout at {base_url} (timeout={timeout}s)")
         return False

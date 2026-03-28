@@ -251,7 +251,9 @@ class _ConnectionMixin:
     def check_connection(self, timeout: float = 2.0) -> bool:
         """Return True if the Ollama server is reachable.
 
-        Use check_connection_detailed() when you need the failure reason.
+        Delegates to check_connection_with_reason() (via check_connection_detailed).
+        Use check_connection_detailed() / check_connection_with_reason() when you
+        also need the failure reason string.
         """
         is_available, _ = self.check_connection_detailed(timeout=timeout)
         return is_available

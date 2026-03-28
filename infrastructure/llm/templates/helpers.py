@@ -12,7 +12,12 @@ def format_requirements(
     markdown_format: bool = True,
     section_requirements: dict[str, str | None] | None = None,
 ) -> str:
-    """Generate format requirements section for prompts."""
+    """Return a FORMAT REQUIREMENTS block for injection into LLM prompts.
+
+    Instructs the model to use markdown headers from ``required_headers`` in
+    order. Pass ``section_requirements`` to add per-section constraints (e.g.,
+    minimum word counts). Omit ``markdown_format=False`` for plain-text outputs.
+    """
     lines = ["FORMAT REQUIREMENTS:"]
 
     if markdown_format:
@@ -34,7 +39,12 @@ def token_budget_awareness(
     section_budgets: dict[str, int] | None = None,
     word_targets: dict[str, tuple[int, int]] | None = None,
 ) -> str:
-    """Generate token budget awareness hints for prompts."""
+    """Return a TOKEN BUDGET AWARENESS block for injection into LLM prompts.
+
+    Tells the model how much output to produce. Use ``total_tokens`` for an
+    overall cap, ``section_budgets`` for per-section token allocations, and
+    ``word_targets`` for (min, max) word-count ranges per section.
+    """
     lines = ["TOKEN BUDGET AWARENESS:"]
 
     if total_tokens:
@@ -60,7 +70,13 @@ def content_requirements(
     evidence_based: bool = True,
     no_meta_commentary: bool = True,
 ) -> str:
-    """Generate content quality requirements section."""
+    """Return a CONTENT QUALITY REQUIREMENTS block for injection into LLM prompts.
+
+    Each flag enables one quality constraint: ``no_hallucination`` restricts the
+    model to information in the provided content, ``cite_sources`` requires quoting
+    specific passages, ``evidence_based`` demands reasoned claims, and
+    ``no_meta_commentary`` suppresses AI self-references.
+    """
     lines = ["CONTENT QUALITY REQUIREMENTS:"]
 
     if no_hallucination:
@@ -97,7 +113,12 @@ def section_structure(
     section_descriptions: dict[str, str | None] | None = None,
     required_order: bool = True,
 ) -> str:
-    """Generate section structure requirements."""
+    """Return a SECTION STRUCTURE block for injection into LLM prompts.
+
+    Lists the required sections and optional per-section descriptions. Set
+    ``required_order=False`` if the model may reorder sections; the default
+    enforces exact ordering.
+    """
     lines = ["SECTION STRUCTURE:"]
 
     if required_order:

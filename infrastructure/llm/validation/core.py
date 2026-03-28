@@ -191,8 +191,10 @@ def validate_complete(
 
     Returns:
         True when content passes validation; False for length or format failures
-        (short and long modes). Structured mode **never** returns False — it
-        either returns True or raises ``ValidationError``.
+        in short or long modes only. Standard and raw modes **always** return
+        True (formatting issues are logged as warnings, not failures).
+        Structured mode **never** returns False — it either returns True or
+        raises ``ValidationError``.
 
     Raises:
         ValidationError: If content is empty, if mode is ``structured`` and

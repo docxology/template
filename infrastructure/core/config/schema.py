@@ -3,6 +3,14 @@
 Defines TypedDict and dataclass types used across the config subsystem.
 These are pure data definitions with no I/O or logic dependencies.
 
+Type selection rationale:
+- ``TypedDict``: used for external/YAML-sourced shapes where partial keys are
+  normal (``total=False``) and dict compatibility matters (e.g., subscript access
+  after ``yaml.safe_load``).
+- ``@dataclass(frozen=True)``: used for internally-resolved value objects where
+  all fields have defaults, immutability is required, and attribute access is
+  preferred over dict subscript.
+
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
