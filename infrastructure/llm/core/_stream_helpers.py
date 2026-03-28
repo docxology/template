@@ -1,7 +1,7 @@
 """Streaming helper utilities for LLM client.
 
-Provides the partial-response save helper and the TIMEOUT_WARNING_FRACTION constant
-used by streaming queries.
+Provides the partial-response save helper, the TIMEOUT_WARNING_FRACTION constant,
+and the requests re-export (guarded so missing requests surfaces a clear error).
 """
 
 from __future__ import annotations
@@ -9,6 +9,14 @@ from __future__ import annotations
 from typing import Callable
 
 from infrastructure.core.logging.utils import get_logger
+
+try:
+    import requests  # noqa: F401 — re-exported for _stream_impl.py
+except ImportError as _err:
+    raise ImportError(
+        "The 'requests' package is required to use LLM streaming features. "
+        "Install it with: pip install requests  (or: pip install template[llm])"
+    ) from _err
 
 logger = get_logger(__name__)
 

@@ -7,13 +7,9 @@ No mocks - tests actual exception behavior and context.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
-
-# Add infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from infrastructure.core.exceptions import (
     BuildError,

@@ -15,12 +15,6 @@ from __future__ import annotations
 
 import logging
 import os
-import sys
-from pathlib import Path
-
-
-# Add repo root to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from infrastructure.core.logging.constants import get_emoji_enabled as _get_emoji_enabled
 USE_EMOJIS = _get_emoji_enabled()
