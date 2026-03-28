@@ -337,30 +337,26 @@ def generate_issue_summary(issues: list[Issue]) -> dict[str, Any]:
 
 def _get_issue_text(issue: Issue) -> str:
     """Extract text content from any issue type."""
-    if hasattr(issue, "issue_message"):
+    if isinstance(issue, (LinkIssue, QualityIssue)):
         return str(issue.issue_message)
-    elif hasattr(issue, "message"):
-        return str(issue.message)  # type: ignore[union-attr]
-    elif hasattr(issue, "description"):
+    elif isinstance(issue, ScanAccuracyIssue):
+        return str(issue.message)
+    elif isinstance(issue, CompletenessGap):
         return str(issue.description)
-    elif hasattr(issue, "text"):
-        return str(issue.text)
     return str(issue)
 
 
 def _get_issue_target(issue: Issue) -> str:
     """Extract target/path from any issue type."""
-    if hasattr(issue, "target"):
+    if isinstance(issue, LinkIssue):
         return str(issue.target)
     return ""
 
 
 def _get_issue_file(issue: Issue) -> str:
     """Extract file path from any issue type."""
-    if hasattr(issue, "file"):
+    if isinstance(issue, (LinkIssue, ScanAccuracyIssue, QualityIssue)):
         return str(issue.file)
-    elif hasattr(issue, "source_file"):
-        return str(issue.source_file)
     return "unknown"
 
 

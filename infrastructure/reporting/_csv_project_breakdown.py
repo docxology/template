@@ -8,10 +8,14 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting.executive_reporter import ExecutiveSummary
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
+
+if TYPE_CHECKING:
+    from infrastructure.reporting._executive_models import ProjectMetrics
 
 logger = get_logger(__name__)
 
@@ -53,10 +57,10 @@ def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_di
 # ── Internal helpers ─────────────────────────────────────────────────────────
 
 
-def _write_manuscript_rows(writer: csv.writer, project: object) -> None:  # type: ignore[type-arg]
+def _write_manuscript_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
     """Write manuscript metric rows for a single project."""
-    name = project.name  # type: ignore[attr-defined]
-    m = project.manuscript  # type: ignore[attr-defined]
+    name = project.name
+    m = project.manuscript
     rows = [
         (name, "Manuscript", "Total_Words", m.total_words, "words",
          "Total words in manuscript sections", "High", "1000-20000 words"),
@@ -73,10 +77,10 @@ def _write_manuscript_rows(writer: csv.writer, project: object) -> None:  # type
         writer.writerow(row)
 
 
-def _write_codebase_rows(writer: csv.writer, project: object) -> None:  # type: ignore[type-arg]
+def _write_codebase_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
     """Write codebase metric rows for a single project."""
-    name = project.name  # type: ignore[attr-defined]
-    c = project.codebase  # type: ignore[attr-defined]
+    name = project.name
+    c = project.codebase
     rows = [
         (name, "Codebase", "Source_Files", c.source_files, "files",
          "Python source files", "Medium", "1-20 files"),
@@ -93,10 +97,10 @@ def _write_codebase_rows(writer: csv.writer, project: object) -> None:  # type: 
         writer.writerow(row)
 
 
-def _write_test_rows(writer: csv.writer, project: object) -> None:  # type: ignore[type-arg]
+def _write_test_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
     """Write test metric rows for a single project."""
-    name = project.name  # type: ignore[attr-defined]
-    t = project.tests  # type: ignore[attr-defined]
+    name = project.name
+    t = project.tests
     rows = [
         (name, "Testing", "Test_Files", t.test_files, "files",
          "Test files discovered", "High", "1+ files"),
@@ -111,10 +115,10 @@ def _write_test_rows(writer: csv.writer, project: object) -> None:  # type: igno
         writer.writerow(row)
 
 
-def _write_output_rows(writer: csv.writer, project: object) -> None:  # type: ignore[type-arg]
+def _write_output_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
     """Write output metric rows for a single project."""
-    name = project.name  # type: ignore[attr-defined]
-    o = project.outputs  # type: ignore[attr-defined]
+    name = project.name
+    o = project.outputs
     rows = [
         (name, "Outputs", "PDF_Files", o.pdf_files, "files",
          "Generated PDF documents", "High", "1+ files"),
@@ -131,10 +135,10 @@ def _write_output_rows(writer: csv.writer, project: object) -> None:  # type: ig
         writer.writerow(row)
 
 
-def _write_pipeline_rows(writer: csv.writer, project: object) -> None:  # type: ignore[type-arg]
+def _write_pipeline_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
     """Write pipeline metric rows for a single project."""
-    name = project.name  # type: ignore[attr-defined]
-    p = project.pipeline  # type: ignore[attr-defined]
+    name = project.name
+    p = project.pipeline
     rows = [
         (name, "Pipeline", "Total_Duration", p.total_duration, "seconds",
          "Total pipeline execution time", "Medium", "60-600 seconds"),
