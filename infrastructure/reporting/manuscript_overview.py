@@ -61,37 +61,26 @@ def generate_manuscript_overview(
         FileNotFoundError: If PDF doesn't exist
         ValueError: If PDF processing fails
     """
+    if not pdf_path.exists():
+        raise FileNotFoundError(f"Manuscript PDF not found: {pdf_path}")
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Generating manuscript overview for {project_name}")
 
-    # Extract page images
-    try:
-        page_images = extract_pdf_pages_as_images(pdf_path, dpi)
-    except Exception as e:
-        logger.error(f"Failed to extract pages from {pdf_path}: {e}")
-        raise
+    page_images = extract_pdf_pages_as_images(pdf_path, dpi)
 
     if not page_images:
         raise PDFValidationError(f"No pages extracted from {pdf_path}")
 
     logger.info(f"Extracted {len(page_images)} page images")
 
-    # Create grid layout
-    try:
-        grid_image = create_page_grid(page_images, cols=4)
-    except Exception as e:
-        logger.error(f"Failed to create page grid: {e}")
-        raise
+    grid_image = create_page_grid(page_images, cols=4)
 
     # Save PNG
     png_path = output_dir / f"manuscript_overview_{project_name}.png"
-    try:
-        grid_image.save(png_path, "PNG", dpi=(dpi, dpi))
-        logger.info(f"Saved PNG overview: {png_path}")
-    except Exception as e:
-        logger.error(f"Failed to save PNG: {e}")
-        raise
+    grid_image.save(png_path, "PNG", dpi=(dpi, dpi))
+    logger.info(f"Saved PNG overview: {png_path}")
 
     # Save PDF
     pdf_output_path = output_dir / f"manuscript_overview_{project_name}.pdf"

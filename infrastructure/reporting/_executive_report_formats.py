@@ -7,7 +7,9 @@ and styled HTML reports.
 from __future__ import annotations
 
 from ._executive_models import ExecutiveSummary
+from infrastructure.core.logging.utils import get_logger
 
+logger = get_logger(__name__)
 
 def generate_markdown_report(summary: ExecutiveSummary) -> str:
     """Generate Markdown format executive report."""

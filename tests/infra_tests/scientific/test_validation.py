@@ -422,7 +422,7 @@ class TestCheckResearchCompliance:
                     raise TypeError("x must be numeric")
                 return x + 0.5 * y
             except Exception:
-                raise ValueError("Calculation failed")
+                raise ValueError("Calculation failed") from None
 
         result = check_research_compliance(compliant_function)
 

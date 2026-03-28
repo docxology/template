@@ -11,7 +11,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-import requests
+try:
+    import requests
+except ImportError as _err:
+    raise ImportError(
+        "The 'requests' package is required to use LLM features. "
+        "Install it with: pip install requests  (or: uv sync --group llm)"
+    ) from _err
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
@@ -98,22 +104,23 @@ class _ConnectionMixin:
                 content = data.get("message", {}).get("content", "")
 
                 if not content:
-                    logger.warning(f"Empty response from Ollama ({model})")
-                    # Check if there's an error in the response
+                    # Check if there's an error in the response before stripping
                     if "error" in data:
                         error_msg = data.get("error", "Unknown error")
                         raise LLMConnectionError(
                             f"Ollama returned error ({model}): {error_msg}",
                             context={"url": url, "model": model, "response": data},
                         )
+                    logger.warning(f"Empty response from Ollama ({model}); will proceed to strip phase")
 
                 # Strip thinking tags if present (e.g., from Qwen models)
                 content = strip_thinking_tags(content)
 
                 if not content:
+                    # Content was either empty before stripping or was entirely <think> tags
                     logger.warning(
-                        "strip_thinking_tags reduced response to empty string; "
-                        "model may have returned only <think> content"
+                        "Response is empty after stripping thinking tags; "
+                        "model may have returned only <think> content or an empty body"
                     )
                     raise LLMConnectionError(
                         "Model response was empty after stripping thinking tags",

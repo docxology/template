@@ -400,7 +400,7 @@ class TestContextPreservation:
                 raise ValueError("Original problem")
             except ValueError as e:
                 new_error = BuildError("Build failed")
-                raise chain_exceptions(new_error, e)
+                raise chain_exceptions(new_error, e) from e
         except BuildError as e:
             assert "Original problem" in e.context["original_error"]
             assert e.context["original_type"] == "ValueError"

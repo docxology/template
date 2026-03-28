@@ -7,7 +7,6 @@ metadata from projects in the projects/ directory.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Union
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.metadata import get_project_metadata  # noqa: F401 — re-exported
@@ -18,7 +17,7 @@ logger = get_logger(__name__)
 
 
 def discover_projects(
-    repo_root: Union[Path, str],
+    repo_root: Path | str,
     projects_dir: str = "projects",
 ) -> list[ProjectInfo]:
     """Discover all valid projects in the active projects directory.

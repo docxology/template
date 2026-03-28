@@ -216,6 +216,10 @@ def validate_complete(
     elif mode in (ResponseMode.RAW, "raw"):
         # Raw mode is unvalidated — skip all formatting checks
         return True
+    elif mode not in (ResponseMode.STANDARD, "standard"):
+        raise ValueError(
+            f"Unknown mode {mode!r}. Expected one of: short, long, structured, standard, raw."
+        )
 
     # Standard mode: formatting issues are advisory only
     formatting_ok = validate_formatting(content)

@@ -21,7 +21,7 @@ from infrastructure.core.logging.utils import (
 from infrastructure.core.logging.progress import StreamingProgress
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import GenerationOptions
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 
 from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
 from infrastructure.llm.validation.repetition import (
@@ -110,8 +110,8 @@ def extract_manuscript_text(
         raise PDFValidationError(f"Failed to read PDF file {pdf_path}: {e}") from e
 
 
-def _build_retry_prompt(prompt: str, had_off_topic: bool) -> str:
-    """Build a modified prompt for a retry, prepending an off-topic warning if needed."""
+def _build_off_topic_retry_prompt(prompt: str, had_off_topic: bool) -> str:
+    """Build a retry prompt, prepending an off-topic guard when the prior attempt drifted."""
     if not had_off_topic:
         return prompt
     prefix = "IMPORTANT: You must review the ACTUAL manuscript text provided below.\\n\\n"
@@ -247,7 +247,7 @@ def generate_review_with_metrics(
                 client.reset()
                 adjusted_temp = min(temperature + 0.15 * attempt, 0.8)
                 options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
-                current_prompt = _build_retry_prompt(prompt, had_off_topic)
+                current_prompt = _build_off_topic_retry_prompt(prompt, had_off_topic)
 
             response = _stream_with_heartbeat(
                 client, current_prompt, options, review_name, max_tokens, config

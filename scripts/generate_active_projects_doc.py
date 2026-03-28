@@ -11,10 +11,14 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 
+from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.project.discovery import discover_projects
+
+logger = get_logger(__name__)
 
 
 def main() -> None:
+    log_header("Generate Active Projects Documentation", logger)
     repo_root = Path(__file__).resolve().parents[1]
     out_dir = repo_root / "docs" / "_generated"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -56,7 +60,7 @@ def main() -> None:
         ]
     )
     out_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"Wrote {out_path} ({len(names)} project(s))")
+    log_success(f"Wrote {out_path} ({len(names)} project(s))", logger)
 
 
 if __name__ == "__main__":

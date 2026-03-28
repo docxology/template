@@ -23,7 +23,9 @@ from infrastructure.reporting._csv_tables import (  # noqa: F401
     generate_csv_data_tables,
     generate_prioritized_recommendations_csv,
 )
+from infrastructure.core.logging.utils import get_logger
 
+logger = get_logger(__name__)
 __all__ = [
     "generate_comparative_analysis_csv",
     "generate_csv_data_tables",

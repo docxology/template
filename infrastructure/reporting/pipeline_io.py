@@ -48,9 +48,9 @@ def save_pipeline_report(
     """Save pipeline report in multiple formats; returns dict mapping format to path.
 
     Raises:
-        OSError: On the first write failure. Formats written before the failure
-            are saved on disk but not reflected in the returned dict, since the
-            dict is only returned on full success.
+        OSError: On the first write failure. The exception has an ``already_saved``
+            attribute (``dict[str, Path]``) containing formats that were successfully
+            written before the failure, so callers can inspect partial output.
     """
     if formats is None:
         formats = ["json", "html", "markdown"]
@@ -92,6 +92,8 @@ def save_pipeline_report(
             logger.info(f"Pipeline report ({fmt.upper()}) saved: {path}")
         except OSError as e:
             logger.error(f"Failed to write {fmt.upper()} report {path}: {e}")
+            # Attach already-written files so callers can inspect partial output
+            e.already_saved = saved_files  # type: ignore[attr-defined]
             raise
 
     return saved_files

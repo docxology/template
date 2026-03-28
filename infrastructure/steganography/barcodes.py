@@ -60,8 +60,8 @@ def create_barcode_strip_overlay(
     strip_height: float = 68.0,
     title: str = "",
     authors: list[str] | None = None,
-    keywords: list[str | None] = None,
-    author_emails: list[str | None] = None,
+    keywords: list[str] | None = None,
+    author_emails: list[str] | None = None,
     document_id: str = "",
     hashes: dict[str, str] | None = None,
     source_filename: str = "",
@@ -82,7 +82,8 @@ def create_barcode_strip_overlay(
     Args:
         page_width: Target page width in points.
         page_height: Target page height in points.
-        qr_data: Fallback data for backward compatibility.
+        qr_data: Accepted for backward compatibility; not used in the current implementation.
+            Specific QR payloads are derived from title, authors, hashes, etc.
         code128_data: Data for Code128 barcode.
         strip_height: Height of the barcode strip area in points.
         title: Document title for QR content.

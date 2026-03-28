@@ -9,7 +9,9 @@ from __future__ import annotations
 from typing import Any
 
 from ._executive_models import ProjectMetrics
+from infrastructure.core.logging.utils import get_logger
 
+logger = get_logger(__name__)
 
 def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]:
     """Generate aggregate metrics across all projects.

@@ -57,11 +57,8 @@ def load_test_results(
         project_dir: Absolute path to the project directory. When provided,
             overrides ``repo_root / 'projects' / project_name``.
 
-    Raises:
-        json.JSONDecodeError: If the results file exists but contains invalid JSON.
-
     Note:
-        OSError (e.g. permission denied) is caught and logged as a warning;
+        OSError and json.JSONDecodeError are caught and logged as warnings;
         returns ``{}`` rather than raising.
     """
     root = repo_root or Path.cwd()
@@ -72,7 +69,7 @@ def load_test_results(
         try:
             with open(results_file, "r") as f:
                 data = json.load(f)
-        except OSError as e:
+        except (OSError, json.JSONDecodeError) as e:
             logger.warning(f"Could not load results from {results_file}: {e}")
             return {}
         # Extract project results from the nested structure
