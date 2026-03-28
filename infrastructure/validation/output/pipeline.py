@@ -110,7 +110,7 @@ def validate_markdown(project_name: str = "project") -> bool:
     except ImportError as e:
         logger.warning(f"Could not import markdown validator: {e}")
         return True
-    except Exception as e:
+    except (OSError, RuntimeError, ValueError, AttributeError) as e:
         logger.warning(f"Markdown validation error: {e}")
         return True
 
@@ -227,7 +227,7 @@ def generate_validation_report(
 
         saved_files = gen_validation_report(validation_results, output_dir)
         logger.info(f"Validation reports saved: {', '.join(str(p) for p in saved_files.values())}")
-    except Exception as e:
+    except (ImportError, OSError, TypeError, AttributeError) as e:
         logger.warning(f"Failed to generate structured validation report: {e}")
         report_file = output_dir / "validation_report.json"
         output_dir.mkdir(parents=True, exist_ok=True)

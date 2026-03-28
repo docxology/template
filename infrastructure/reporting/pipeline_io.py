@@ -45,7 +45,13 @@ def _atomic_write_text(path: Path, content: str) -> None:
 def save_pipeline_report(
     report: PipelineReport, output_dir: Path, formats: list[str] | None = None
 ) -> dict[str, Path]:
-    """Save pipeline report in multiple formats; returns dict mapping format to path."""
+    """Save pipeline report in multiple formats; returns dict mapping format to path.
+
+    Raises:
+        OSError: On the first write failure. Formats written before the failure
+            are saved on disk but not reflected in the returned dict, since the
+            dict is only returned on full success.
+    """
     if formats is None:
         formats = ["json", "html", "markdown"]
 

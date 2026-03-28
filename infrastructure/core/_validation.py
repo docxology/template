@@ -56,7 +56,7 @@ class SecurityValidator:
         self.dangerous_patterns = self._DANGEROUS_PATTERNS
 
     def validate_file_path(self, path: str | Path) -> Path:
-        """Validate file path for security.
+        """Resolve path and reject directory traversal or overlong paths.
 
         Raises:
             SecurityViolation: If path is unsafe
@@ -103,7 +103,7 @@ class SecurityValidator:
         return sanitized
 
     def validate_content_size(self, content: bytes) -> bytes:
-        """Validate content size.
+        """Reject content exceeding the configured maximum byte size.
 
         Args:
             content: Content to validate

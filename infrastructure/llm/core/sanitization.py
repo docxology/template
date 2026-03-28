@@ -57,7 +57,7 @@ class InputSanitizer:
     def validate_file_input(
         self, file_path: Path, allowed_extensions: list[str] | None = None
     ) -> None:
-        """Validate file input for security.
+        """Reject LLM-provided file paths that are absolute, traversal-based, missing, or oversized.
 
         Args:
             file_path: Path to file
@@ -99,7 +99,7 @@ class InputSanitizer:
 
 
     def sanitize_filename(self, filename: str) -> str:
-        """Sanitize filename for safe file operations.
+        """Strip path separators and control characters from an LLM-supplied filename.
 
         Args:
             filename: Raw filename

@@ -201,11 +201,6 @@ def validate_complete(
     if not content or not content.strip():
         raise ValidationError("Empty response")
 
-    # Basic formatting check — result is used for standard/raw modes below
-    formatting_ok = validate_formatting(content)
-    if not formatting_ok:
-        logger.warning("Response has formatting issues")
-
     # Mode-specific validation
     if mode in (ResponseMode.SHORT, "short"):
         return validate_short_response(content)
@@ -216,12 +211,14 @@ def validate_complete(
             raise ValidationError("Structured mode requires a schema")
         data = validate_json(content)
         return validate_structure(data, schema)
-
     elif mode in (ResponseMode.RAW, "raw"):
-        # Raw mode is unvalidated — return True without applying formatting checks
+        # Raw mode is unvalidated — skip all formatting checks
         return True
 
-    # Standard mode: formatting issues are advisory (non-empty already checked above)
+    # Standard mode: formatting issues are advisory only
+    formatting_ok = validate_formatting(content)
+    if not formatting_ok:
+        logger.warning("Response has formatting issues")
     return True
 
 

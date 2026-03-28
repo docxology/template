@@ -47,12 +47,12 @@ class FileType(Enum):
 
     @property
     def extension(self) -> str:
-        """Get the file extension for this file type."""
+        """File extension string (e.g. '.pdf')."""
         return self.value[0]
 
     @property
     def subdirectory(self) -> str:
-        """Get the subdirectory name for this file type."""
+        """Output subdirectory name (e.g. 'pdf')."""
         return self.value[1]
 
 
