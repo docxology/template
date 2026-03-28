@@ -242,6 +242,11 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         model_name = model or self.config.default_model
 
         # Emit audit event so the sanitization bypass is traceable in SecurityMonitor.
+        # Deferred import breaks the circular dependency: llm/core/client → core/security
+        # → (transitively) llm/core/sanitization → llm/core/client.  Moving this import
+        # to module level would create an import-time cycle.  The cycle itself is a known
+        # design debt; the correct long-term fix is to extract the SecurityMonitor audit
+        # interface into a separate lightweight module that neither side depends on.
         from infrastructure.core.security import get_security_monitor  # noqa: PLC0415
         get_security_monitor().log_security_event(
             "raw_llm_query",

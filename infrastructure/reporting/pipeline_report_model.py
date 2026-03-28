@@ -56,6 +56,13 @@ def generate_pipeline_report(
 ) -> PipelineReport:
     """Generate consolidated pipeline report from stage results and optional extras.
 
+    The five optional ``dict[str, Any]`` keyword arguments (``test_results``,
+    ``validation_results``, ``performance_metrics``, ``error_summary``,
+    ``output_statistics``) are intentionally typed as loose dicts.  Each is a
+    heterogeneous metrics blob produced by a different pipeline stage; the schemas
+    differ per project and are not fixed at the infrastructure level.  Callers that
+    need a fixed schema should define their own TypedDict and cast before passing.
+
     Args:
         stage_results: List of stage result dicts.
         total_duration: Total pipeline duration in seconds.

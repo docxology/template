@@ -1,13 +1,21 @@
-"""Pipeline reporting module for generating consolidated reports.
+"""Pipeline reporting façade — consolidates five distinct reporting subsystems.
 
-Concern-based entry points (import directly for clarity):
-  - Pipeline execution:   infrastructure.reporting.pipeline_io / pipeline_report_model
-  - Output statistics:    infrastructure.reporting.output_statistics
-  - Executive summaries:  infrastructure.reporting.executive_reporter
-  - Test suite summaries: infrastructure.reporting.markdown_formatter / report_builder
-  - Error aggregation:    infrastructure.reporting.error_aggregator
+**Subsystem responsibilities (import from these directly for clarity):**
 
-This __init__ re-exports the most commonly used symbols for convenience.
+1. **Pipeline execution** — stage results, validation/test/performance report files:
+   ``infrastructure.reporting.pipeline_io``, ``pipeline_report_model``
+2. **Output statistics** — file counts, sizes, output manifest:
+   ``infrastructure.reporting.output_statistics``
+3. **Executive summaries** — cross-project metrics and ProjectMetrics model:
+   ``infrastructure.reporting.executive_reporter``
+4. **Test suite summaries** — markdown test reports, result loading:
+   ``infrastructure.reporting.markdown_formatter``, ``report_builder``, ``result_loaders``
+5. **Error aggregation** — in-process error collector (ErrorAggregator):
+   ``infrastructure.reporting.error_aggregator``
+
+This ``__init__`` re-exports the most commonly used symbols from all five subsystems
+so that ``from infrastructure.reporting import X`` works for the typical caller.
+Prefer importing from the specific submodule when only one subsystem is needed.
 """
 
 from __future__ import annotations

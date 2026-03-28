@@ -25,7 +25,20 @@ logger = get_logger(__name__)
 
 
 class _StructuredQueryMixin:
-    """Mixin providing structured, short, long, and streaming query variants."""
+    """Mixin providing structured, short, long, and streaming query variants.
+
+    **Host-class contract:** This mixin depends on ``query`` and
+    ``_generate_response_direct`` being provided by the host class (``LLMClient``)
+    via Python's MRO.  The ``NotImplementedError`` stubs below serve the same role as
+    abstract method declarations: they make the dependency visible to type-checkers and
+    generate a clear error if the mixin is used without the required host class.
+
+    This pattern (mixin + stub) is the deliberate substitute for ``ABC``, chosen because
+    ``LLMClient`` composes four separate mixins and ``abstractmethod`` requires all
+    abstract methods to be in the same class hierarchy.  If this coupling is a concern,
+    the long-term fix is to extract a ``_LLMClientProtocol`` and replace the stubs with
+    a ``Protocol`` bound.
+    """
 
     # Host-class contract: type-checker-visible declarations for duck-typed dependencies.
     config: "OllamaClientConfig"
@@ -38,6 +51,7 @@ class _StructuredQueryMixin:
         reset_context: bool = False,
         options: GenerationOptions | None = None,
     ) -> str:
+        """Implemented by LLMClient via MRO."""
         raise NotImplementedError  # pragma: no cover
 
     def _generate_response_direct(
@@ -47,6 +61,7 @@ class _StructuredQueryMixin:
         options: GenerationOptions | None = None,
         retries: int = 1,
     ) -> str:
+        """Implemented by LLMClient via MRO."""
         raise NotImplementedError  # pragma: no cover
 
     def _save_streaming_state(
