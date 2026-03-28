@@ -1,5 +1,9 @@
 """Text similarity algorithms for repetition detection.
 
+**Internal implementation module** — consumed by ``detection.py``.
+Do not import from this module directly; use the public API via
+``infrastructure.llm.validation.repetition`` instead.
+
 Provides multiple similarity methods (Jaccard, TF-cosine, n-gram sequence)
 and a hybrid combiner used by the repetition detection module.
 """

@@ -1,5 +1,10 @@
 """Ollama utility functions for model discovery and server management.
 
+**This is the preferred import path** for all Ollama utilities.  Import from
+``infrastructure.llm.utils.ollama`` (this module) rather than from the
+implementation sub-modules ``server`` or ``models`` directly — those are
+internal details subject to change.
+
 Provides utilities for:
 - Discovering available local Ollama models
 - Selecting the best model based on preferences
@@ -15,10 +20,6 @@ Model Selection:
 
     Or set preferences programmatically:
         select_best_model(["llama3-gradient", "gemma3:4b"])
-
-Note:
-    This module re-exports from ``server`` and ``models`` sub-modules.
-    All existing imports continue to work unchanged.
 """
 
 from __future__ import annotations

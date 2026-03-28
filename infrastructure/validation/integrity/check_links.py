@@ -23,7 +23,7 @@ import ast
 import re
 import sys
 from pathlib import Path
-from typing import Any, Set, TypedDict, Union
+from typing import Any, Set, TypedDict, Union, cast
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.docs.accuracy import extract_headings
@@ -761,7 +761,9 @@ def main() -> int:
     logger.info("Running comprehensive filepath and reference audit")
 
     all_headings: dict[str, Set[str]] = {}
-    issues: dict[str, list[LinkCheckResult]] = {
+    # Accumulator uses list[Any] because the validate_* helpers return list[dict[str,Any]];
+    # generate_comprehensive_report receives a cast to the narrower LinkCheckResult type.
+    issues: dict[str, list[Any]] = {
         "broken_anchor_links": [],
         "broken_file_refs": [],
         "code_block_paths": [],
@@ -852,24 +854,22 @@ def main() -> int:
 
             # Additional validations
             code_block_issues = validate_file_paths_in_code(content, md_file, repo_root)
-            # validate_* returns list[dict[str, Any]] whose keys match LinkCheckResult;
-            # mypy cannot verify structural compatibility without annotating the return type
-            issues["code_block_paths"].extend(code_block_issues)  # type: ignore[arg-type]
+            issues["code_block_paths"].extend(code_block_issues)
 
             dir_structure_issues = validate_directory_structures(content, md_file, repo_root)
-            issues["directory_structures"].extend(dir_structure_issues)  # type: ignore[arg-type]
+            issues["directory_structures"].extend(dir_structure_issues)
 
             import_issues = validate_python_imports(content, md_file, repo_root)
-            issues["python_imports"].extend(import_issues)  # type: ignore[arg-type]
+            issues["python_imports"].extend(import_issues)
 
             placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
-            issues["placeholder_consistency"].extend(placeholder_issues)  # type: ignore[arg-type]
+            issues["placeholder_consistency"].extend(placeholder_issues)
 
         except (OSError, UnicodeDecodeError) as e:
             logger.error(f"Error processing {md_file}: {e}")
 
     # Generate comprehensive report
-    return generate_comprehensive_report(issues, len(md_files))
+    return generate_comprehensive_report(cast(dict[str, list[LinkCheckResult]], issues), len(md_files))
 
 def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], total_files: int) -> int:
     """Generate a comprehensive validation report."""
