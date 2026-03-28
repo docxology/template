@@ -1,0 +1,14 @@
+{
+  "timestamp": null,
+  "checks": {},
+  "figure_issues": [],
+  "output_statistics": {},
+  "summary": {
+    "total_checks": 0,
+    "passed": 0,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
+  },
+  "recommendations": []
+}
