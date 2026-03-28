@@ -13,15 +13,13 @@ import unicodedata
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_helpers import (
     extract_preamble,
-    fix_figure_paths,
-    fix_math_delimiters,
     generate_title_page_body,
     generate_title_page_preamble,
 )
+from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
 from infrastructure.rendering._pdf_preflight import check_brace_balance
 
 if TYPE_CHECKING:
@@ -92,7 +90,7 @@ def run_pandoc_conversion(
     source_files: list[Path],
     md_content: str,
 ) -> None:
-    """Execute the Pandoc subprocess, raising ``RenderingError`` on failure."""
+    """Execute the Pandoc subprocess, raising on failure."""
     from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
 
     try:
