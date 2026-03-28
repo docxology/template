@@ -36,7 +36,7 @@ from infrastructure.rendering._pipeline_summary import (  # noqa: F401
 logger = get_logger(__name__)
 
 
-def _run_render_pipeline(project_name: str = "project") -> int:
+def _render_pipeline_impl(project_name: str = "project") -> int:
     """Execute the PDF rendering pipeline using infrastructure rendering.
 
     This pipeline:
@@ -297,7 +297,7 @@ def execute_render_pipeline(project_name: str = "project") -> int:
     """
     log_live_resource_usage("PDF rendering stage start", logger)
     try:
-        exit_code = _run_render_pipeline(project_name)
+        exit_code = _render_pipeline_impl(project_name)
         if exit_code == 0:
             outputs_valid = verify_pdf_outputs(project_name)
             if outputs_valid:

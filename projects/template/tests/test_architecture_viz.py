@@ -14,7 +14,7 @@ from template.architecture_viz import (
     generate_module_inventory,
     generate_pipeline_stages,
 )
-from template.introspection import ModuleInfo, PipelineStage, ProjectInfo
+from template.introspection import ModuleInfo, PipelineStage, ProjectAnalysis
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROJECT_DIR = Path(__file__).resolve().parents[1]
@@ -43,9 +43,9 @@ def _sample_modules() -> list[ModuleInfo]:
     ]
 
 
-def _sample_projects() -> list[ProjectInfo]:
+def _sample_projects() -> list[ProjectAnalysis]:
     return [
-        ProjectInfo(
+        ProjectAnalysis(
             name="code_project",
             path=Path("/tmp/code_project"),
             has_manuscript=True,
@@ -56,7 +56,7 @@ def _sample_projects() -> list[ProjectInfo]:
             script_count=2,
             config={},
         ),
-        ProjectInfo(
+        ProjectAnalysis(
             name="template",
             path=Path("/tmp/template"),
             has_manuscript=True,

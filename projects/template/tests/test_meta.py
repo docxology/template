@@ -12,7 +12,7 @@ from template import (
     InfrastructureReport,
     ModuleInfo,
     PipelineStage,
-    ProjectInfo,
+    ProjectAnalysis,
     analyze_test_coverage_config,
     build_infrastructure_report,
     count_pipeline_stages,
@@ -91,7 +91,7 @@ class TestDiscoverProjects:
     def test_returns_list_of_project_info(self):
         projects = discover_projects(REPO_ROOT)
         assert isinstance(projects, list)
-        assert all(isinstance(p, ProjectInfo) for p in projects)
+        assert all(isinstance(p, ProjectAnalysis) for p in projects)
 
     def test_discovers_two_projects(self):
         projects = discover_projects(REPO_ROOT)

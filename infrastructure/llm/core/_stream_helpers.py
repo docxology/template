@@ -25,7 +25,7 @@ logger = get_logger(__name__)
 TIMEOUT_WARNING_FRACTION = 0.3
 
 
-def try_save_partial(
+def save_partial_if_needed(
     full_response: list[str],
     save_response: bool,
     partial_saved: bool,

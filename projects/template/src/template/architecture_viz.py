@@ -20,7 +20,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .introspection import ModuleInfo, PipelineStage, ProjectInfo, build_infrastructure_report
+from .introspection import ModuleInfo, PipelineStage, ProjectAnalysis, build_infrastructure_report
 
 ARCH_VIZ_COLORS = {
     "infra": "#0072B2",
@@ -148,7 +148,7 @@ def _doc_badge(module: ModuleInfo) -> str:
 
 def generate_architecture_overview(
     modules: Sequence[ModuleInfo],
-    projects: Sequence[ProjectInfo],
+    projects: Sequence[ProjectAnalysis],
     output_dir: Path,
     version: str = "v2.0.0",
 ) -> Path:

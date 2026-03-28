@@ -22,7 +22,6 @@ from infrastructure.core.runtime._python_env import (  # noqa: F401
 
 # Re-export from _directories
 from infrastructure.core.runtime._directories import (  # noqa: F401
-    _project_output_dirs,
     setup_directories,
     validate_directory_structure,
     verify_source_structure,
