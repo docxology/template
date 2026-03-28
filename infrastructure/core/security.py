@@ -17,6 +17,8 @@ Implementation split:
 
 from __future__ import annotations
 
+import functools
+
 # Re-export from submodules for backwards compatibility
 from infrastructure.core._rate_limiting import (  # noqa: F401
     RateLimiter,
@@ -98,22 +100,23 @@ class SecurityHeaders:
         return get_cors_headers(origin)
 
 
-# Module-level singletons — initialized on first access to avoid import-time side effects
-_security_validator: SecurityValidator | None = None
-_rate_limiter: RateLimiter | None = None
-
-
+@functools.lru_cache(maxsize=1)
 def get_security_validator() -> SecurityValidator:
     """Return the process-wide SecurityValidator singleton."""
-    global _security_validator
-    if _security_validator is None:
-        _security_validator = SecurityValidator()
-    return _security_validator
+    return SecurityValidator()
 
 
+def reset_security_validator() -> None:
+    """Reset the security validator singleton (for testing)."""
+    get_security_validator.cache_clear()
+
+
+@functools.lru_cache(maxsize=1)
 def get_rate_limiter() -> RateLimiter:
     """Return the process-wide RateLimiter singleton."""
-    global _rate_limiter
-    if _rate_limiter is None:
-        _rate_limiter = RateLimiter()
-    return _rate_limiter
+    return RateLimiter()
+
+
+def reset_rate_limiter() -> None:
+    """Reset the rate limiter singleton (for testing)."""
+    get_rate_limiter.cache_clear()
