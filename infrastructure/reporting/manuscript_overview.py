@@ -28,8 +28,6 @@ from infrastructure.reporting.page_rendering import (
 )
 
 if TYPE_CHECKING:
-    import PIL.Image
-
     from infrastructure.reporting.executive_reporter import ExecutiveSummary
 
 logger = get_logger(__name__)

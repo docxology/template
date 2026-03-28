@@ -9,12 +9,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-
 from infrastructure.core.logging.diagnostic import (
-    DiagnosticEvent,
     DiagnosticReporter,
-    DiagnosticSeverity,
 )
 from infrastructure.core.telemetry.collector import TelemetryCollector
 from infrastructure.core.telemetry.config import TelemetryConfig
@@ -208,7 +204,7 @@ class TestTelemetryCollector:
         )
 
         collector.start_stage("X", 1)
-        result = collector.end_stage("X", 1, success=True)
+        collector.end_stage("X", 1, success=True)
         report = collector.finalize()
 
         assert report.total_stages == 0  # nothing collected

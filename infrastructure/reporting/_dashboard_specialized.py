@@ -12,14 +12,13 @@ from typing import Any
 try:
     import matplotlib.pyplot as plt
     import numpy as np
-    from matplotlib.figure import Figure
 
     MATPLOTLIB_AVAILABLE = True
 except ImportError:
     MATPLOTLIB_AVAILABLE = False
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.reporting.executive_reporter import ExecutiveSummary, ProjectMetrics
+from infrastructure.reporting.executive_reporter import ExecutiveSummary
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)

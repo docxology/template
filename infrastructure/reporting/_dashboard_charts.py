@@ -13,7 +13,6 @@ from typing import Any
 
 try:
     import matplotlib.pyplot as plt
-    import numpy as np
     from matplotlib.figure import Figure
 
     MATPLOTLIB_AVAILABLE = True
