@@ -38,7 +38,7 @@ class TestResearchWorkflow:
             assert len(analysis) > 10
             assert "system" in analysis.lower() or "health" in analysis.lower()
 
-        except Exception as e:
+        except (ConnectionError, ImportError, OSError, RuntimeError) as e:
             pytest.skip(f"Service unavailable: {e}")
 
     def test_rendering_metadata_workflow(self, tmp_path):
