@@ -10,8 +10,6 @@ import subprocess
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from infrastructure.rendering.pipeline import (
     _log_manuscript_composition,
     _resolve_manuscript_dir,
