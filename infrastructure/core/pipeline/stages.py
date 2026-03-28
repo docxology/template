@@ -9,7 +9,6 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 
 from __future__ import annotations
 
-import logging
 import os
 import subprocess
 from pathlib import Path

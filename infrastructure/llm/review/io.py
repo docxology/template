@@ -8,7 +8,6 @@ Note:
 from __future__ import annotations
 
 from infrastructure.llm.review.formatting import (
-    _build_combined_review_content,
     _build_review_header,
     _build_review_metadata,
 )

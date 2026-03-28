@@ -9,8 +9,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Callable
 
-import requests
-
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)

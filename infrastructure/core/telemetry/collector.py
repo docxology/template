@@ -27,7 +27,6 @@ from typing import Any
 
 from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging.diagnostic import (
-    DiagnosticEvent,
     DiagnosticReporter,
     DiagnosticSeverity,
 )

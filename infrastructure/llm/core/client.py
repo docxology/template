@@ -14,8 +14,6 @@ import time as time_module
 from pathlib import Path
 from typing import Any, Callable, Iterator, TypeVar
 
-import requests
-
 _T = TypeVar("_T")
 
 from infrastructure.core.exceptions import LLMConnectionError

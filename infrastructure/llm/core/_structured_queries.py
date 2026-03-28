@@ -25,8 +25,44 @@ logger = get_logger(__name__)
 class _StructuredQueryMixin:
     """Mixin providing structured, short, long, and streaming query variants."""
 
-    config: OllamaClientConfig
-    context: ConversationContext
+    # Host-class contract: type-checker-visible declarations for duck-typed dependencies.
+    config: "OllamaClientConfig"
+    context: "ConversationContext"
+
+    def query(
+        self,
+        prompt: str,
+        model: str | None = None,
+        reset_context: bool = False,
+        options: GenerationOptions | None = None,
+    ) -> str:
+        raise NotImplementedError  # pragma: no cover
+
+    def _generate_response_direct(
+        self,
+        model: str,
+        messages: list[dict[str, Any]],
+        options: GenerationOptions | None = None,
+        retries: int = 1,
+    ) -> str:
+        raise NotImplementedError  # pragma: no cover
+
+    def _save_streaming_state(
+        self,
+        full_response: list[str],
+        save_path: Path | None,
+        model_name: str,
+        prompt: str,
+        chunk_count: int,
+        start_time: float,
+        is_error: bool = False,
+        options: GenerationOptions | None = None,
+    ) -> bool:
+        raise NotImplementedError  # pragma: no cover
+
+    @staticmethod
+    def _time_call(fn: Any) -> tuple[Any, float]:
+        raise NotImplementedError  # pragma: no cover
 
     def query_short(
         self,

@@ -17,10 +17,6 @@ Implementation split:
 
 from __future__ import annotations
 
-from typing import Any
-
-from infrastructure.core.exceptions import SecurityViolation
-
 # Re-export from submodules for backwards compatibility
 from infrastructure.core._rate_limiting import (  # noqa: F401
     RateLimiter,

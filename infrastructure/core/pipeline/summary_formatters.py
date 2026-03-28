@@ -14,7 +14,6 @@ from pathlib import Path
 
 from infrastructure.core.files.inventory import FileInventoryManager
 from infrastructure.core.logging.helpers import format_duration
-from infrastructure.core.pipeline.executor import PipelineStageResult
 from infrastructure.core.pipeline.summary_helpers import (
     extract_project_name_from_path,
     find_base_output_dir,
