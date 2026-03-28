@@ -8,9 +8,10 @@ The pipeline hook in ``scripts/03_render_pdf.py`` automatically picks up the
 rendered files from ``output/manuscript/`` if that directory is populated.
 
 Public API:
-    load_metrics      -- deserialise metrics.json
-    render_chapter    -- process one chapter file with variable substitution
+    load_metrics        -- deserialise metrics.json
+    render_chapter      -- process one chapter file with variable substitution
     render_all_chapters -- process all numbered chapters and copy ancillary files
+    validate_all_resolved -- post-render check that no ${...} tokens remain
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ import re
 import shutil
 from pathlib import Path
 from string import Template
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -32,7 +34,7 @@ _CHAPTER_PATTERN = re.compile(r"^\d")
 _ANCILLARY_EXTENSIONS = {".bib", ".tex", ".yaml", ".yml"}
 
 
-def load_metrics(metrics_path: Path) -> dict:
+def load_metrics(metrics_path: Path) -> dict[str, Any]:
     """Load and validate a metrics JSON file.
 
     Args:
@@ -75,7 +77,7 @@ def _flatten(obj: object, prefix: str, out: dict[str, str]) -> None:
         out[prefix] = str(obj) if obj is not None else ""
 
 
-def render_chapter(source_md: Path, metrics: dict, output_dir: Path) -> Path:
+def render_chapter(source_md: Path, metrics: dict[str, Any], output_dir: Path) -> Path:
     """Substitute ``${variable}`` tokens in a chapter file using *metrics*.
 
     Uses :class:`string.Template` ``safe_substitute`` so that any unrecognised
@@ -114,7 +116,7 @@ def render_chapter(source_md: Path, metrics: dict, output_dir: Path) -> Path:
 
 
 def render_all_chapters(
-    manuscript_dir: Path, metrics: dict, output_dir: Path
+    manuscript_dir: Path, metrics: dict[str, Any], output_dir: Path
 ) -> list[Path]:
     """Process all numbered chapter files and copy ancillary files.
 
@@ -155,4 +157,62 @@ def render_all_chapters(
     logger.info(
         f"render_all_chapters: {len(written)} files written to {output_dir}"
     )
+
+    # Post-render validation: check for unresolved tokens
+    issues = validate_all_resolved(output_dir)
+    if issues:
+        logger.warning(
+            f"Token validation: {len(issues)} unresolved token(s) found across "
+            f"rendered manuscripts. Run validate_all_resolved() for details."
+        )
+    else:
+        logger.info("Token validation: all ${...} tokens resolved successfully")
+
     return written
+
+
+def validate_all_resolved(output_dir: Path) -> list[str]:
+    """Scan rendered manuscript files for unresolved ``${...}`` tokens.
+
+    This implements the recommended pre-PDF dry-run validation step.
+    Call after ``render_all_chapters()`` to verify that every ``${variable}``
+    token in the rendered output has been substituted with a computed value.
+
+    Args:
+        output_dir: Directory containing rendered ``*.md`` files.
+
+    Returns:
+        List of human-readable issue strings.  An empty list means all
+        tokens were fully resolved.
+    """
+    if not output_dir.is_dir():
+        logger.warning(f"Output directory not found: {output_dir}")
+        return [f"Output directory not found: {output_dir}"]
+
+    issues: list[str] = []
+    token_pattern = re.compile(r"\$\{([^}]+)\}")
+
+    for md_file in sorted(output_dir.glob("*.md")):
+        if not _CHAPTER_PATTERN.match(md_file.name):
+            continue  # skip non-chapter files (AGENTS.md, README.md, etc.)
+
+        try:
+            content = md_file.read_text(encoding="utf-8")
+        except OSError:
+            issues.append(f"{md_file.name}: could not read file")
+            continue
+
+        tokens = token_pattern.findall(content)
+        if tokens:
+            unique = sorted(set(tokens))
+            issues.append(
+                f"{md_file.name}: {len(tokens)} unresolved token(s): "
+                + ", ".join(f"${{{t}}}" for t in unique)
+            )
+
+    if issues:
+        logger.warning("Unresolved tokens found:\n  " + "\n  ".join(issues))
+    else:
+        logger.info("All manuscript tokens resolved — zero unresolved ${...} tokens")
+
+    return issues

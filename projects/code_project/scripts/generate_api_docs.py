@@ -10,6 +10,7 @@ This script demonstrates the documentation infrastructure capabilities by:
 import sys
 from contextlib import nullcontext
 from pathlib import Path
+from typing import Any
 
 # Add project src to path
 project_root = Path(__file__).parent.parent
@@ -38,7 +39,7 @@ except ImportError:
         return nullcontext()
 
 
-def generate_api_documentation():
+def generate_api_documentation() -> dict[str, Any] | None:
     """Generate comprehensive API documentation for the code project."""
     logger = get_logger(__name__)
 
@@ -177,7 +178,7 @@ else:
         return None
 
 
-def generate_code_quality_report():
+def generate_code_quality_report() -> Any:
     """Generate code quality and documentation completeness report."""
     logger = get_logger(__name__)
 
@@ -207,7 +208,7 @@ def generate_code_quality_report():
         return None
 
 
-def main():
+def main() -> int | None:
     """Main API documentation generation function."""
     logger = get_logger(__name__)
 

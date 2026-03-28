@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep, log_live_resource_usage
 from infrastructure.validation.content.figure_validator import validate_figure_registry
@@ -112,7 +113,7 @@ def validate_markdown(project_name: str = "project") -> bool:
         return True
 
 
-def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict]:
+def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str, Any]]:
     """Verify all expected output files exist.
 
     Args:
@@ -155,9 +156,9 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict]:
 def generate_validation_report(
     check_results: list[tuple[str, bool]],
     figure_issues: list[str],
-    output_statistics: dict,
+    output_statistics: dict[str, Any],
     project_name: str = "project",
-) -> dict:
+) -> dict[str, Any]:
     """Generate validation report with structured output."""
     log_substep("Generating validation report...", logger)
 

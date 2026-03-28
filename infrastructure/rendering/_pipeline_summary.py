@@ -11,13 +11,14 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
 
-def generate_rendering_summary(project_name: str = "project") -> dict:
+def generate_rendering_summary(project_name: str = "project") -> dict[str, Any]:
     """Generate comprehensive summary of rendering results.
 
     Returns:
@@ -27,7 +28,7 @@ def generate_rendering_summary(project_name: str = "project") -> dict:
     project_root = repo_root / "projects" / project_name
     output_dir = project_root / "output"
 
-    summary: dict = {
+    summary: dict[str, Any] = {
         "project": project_name,
         "individual_pdfs": [],
         "combined_pdf": None,
@@ -84,7 +85,7 @@ def generate_rendering_summary(project_name: str = "project") -> dict:
     return summary
 
 
-def log_rendering_summary(summary: dict) -> None:
+def log_rendering_summary(summary: dict[str, Any]) -> None:
     """Log comprehensive rendering summary with formatted output."""
     logger.info("\n" + "=" * 60)
     logger.info("RENDERING RESULTS SUMMARY")

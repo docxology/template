@@ -129,7 +129,7 @@ VIZ_CONFIG = {
 project_root = Path(__file__).resolve().parent.parent
 
 
-def apply_visualization_style():
+def apply_visualization_style() -> None:
     """Apply global matplotlib style for publication-quality, accessible figures."""
     plt.rcParams.update({
         # Figure
@@ -207,7 +207,7 @@ def _save_figure_data(data, name, output_dir):
     return data_path
 
 
-def run_convergence_experiment():
+def run_convergence_experiment() -> Any:
     """Run gradient descent with different step sizes and track convergence."""
     logger = _get_logger()
     logger.info("Running convergence experiments...")
@@ -244,7 +244,7 @@ def run_convergence_experiment():
     return results
 
 
-def run_convergence_experiment_with_progress(progress_bar):
+def run_convergence_experiment_with_progress(progress_bar: Any) -> Any:
     """Run gradient descent with different step sizes and track convergence with progress bar."""
     logger = _get_logger()
     logger.info("Running convergence experiments...")
@@ -286,7 +286,7 @@ def run_convergence_experiment_with_progress(progress_bar):
     return results
 
 
-def generate_convergence_plot(results):
+def generate_convergence_plot(results: Any) -> Any:
     """Generate convergence plot showing objective value vs iteration.
     
     Uses agency-category colors and handles divergent trajectories.
@@ -377,7 +377,7 @@ def generate_convergence_plot(results):
 # It delegates to gradient_descent() and returns {"iterations": [...], "objectives": [...]}.
 
 
-def save_optimization_results(results):
+def save_optimization_results(results: Any) -> Any:
     """Save optimization results to CSV file."""
     logger = _get_logger()
     logger.info("Saving optimization results...")
@@ -402,7 +402,7 @@ def save_optimization_results(results):
     return data_path
 
 
-def generate_step_size_sensitivity_plot(results):
+def generate_step_size_sensitivity_plot(results: Any) -> Any:
     """Generate step size sensitivity analysis with expanded range.
 
     Left: iterations to convergence vs step size (log-x), sweeping α from
@@ -519,7 +519,7 @@ def generate_step_size_sensitivity_plot(results):
     return plot_path
 
 
-def generate_convergence_rate_plot(results):
+def generate_convergence_rate_plot(results: Any) -> Any:
     """Generate convergence rate comparison plot.
     
     Uses colorblind-safe palette and accessibility-optimized settings.
@@ -607,7 +607,7 @@ def generate_convergence_rate_plot(results):
     return plot_path
 
 
-def generate_complexity_visualization(results):
+def generate_complexity_visualization(results: Any) -> Any:
     """Generate algorithm performance analysis with 4 informative panels.
 
     (TL) Empirical iterations bar chart.
@@ -789,7 +789,7 @@ def generate_complexity_visualization(results):
     return plot_path
 
 
-def run_stability_analysis():
+def run_stability_analysis() -> Any:
     """Assess numerical stability of optimization algorithms."""
     logger = _get_logger()
     log = logger.info
@@ -858,7 +858,7 @@ def run_stability_analysis():
     return stability_path
 
 
-def run_performance_benchmarking():
+def run_performance_benchmarking() -> Any:
     """Benchmark gradient descent performance."""
     logger = _get_logger()
     log = logger.info
@@ -932,7 +932,7 @@ def run_performance_benchmarking():
     return benchmark_path
 
 
-def generate_stability_visualization(stability_path):
+def generate_stability_visualization(stability_path: Any) -> Any:
     """Generate heatmap of optimizer accuracy across starting points and step sizes.
 
     Runs gradient_descent from multiple starting points with multiple step sizes,
@@ -1043,7 +1043,7 @@ def generate_stability_visualization(stability_path):
     return plot_path
 
 
-def generate_benchmark_visualization(benchmark_path):
+def generate_benchmark_visualization(benchmark_path: Any) -> Any:
     """Generate dimensional scaling benchmark by running gradient_descent at d=1..50.
 
     Left: mean execution time (μs) per gradient_descent call vs problem dimension.
@@ -1130,7 +1130,7 @@ def generate_benchmark_visualization(benchmark_path):
     return plot_path
 
 
-def generate_analysis_dashboard(results, stability_path=None, benchmark_path=None):
+def generate_analysis_dashboard(results: Any, stability_path: Any = None, benchmark_path: Any = None) -> Any:
     """Generate comprehensive analysis dashboard."""
     logger = _get_logger()
     logger.info("Generating analysis dashboard...")
@@ -1241,7 +1241,7 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
         return None
 
 
-def validate_generated_outputs():
+def validate_generated_outputs() -> Any:
     """Validate integrity of generated analysis outputs."""
     logger = _get_logger()
     logger.info("Validating generated outputs...")
@@ -1282,7 +1282,7 @@ def validate_generated_outputs():
         return None
 
 
-def save_validation_report(validation_report):
+def save_validation_report(validation_report: Any) -> Any:
     """Save validation report to file."""
     logger = _get_logger()
 
@@ -1307,7 +1307,7 @@ def save_validation_report(validation_report):
         return None
 
 
-def register_figure():
+def register_figure() -> None:
     """Register the generated figures for manuscript reference."""
     logger = _get_logger()
 
@@ -1378,7 +1378,7 @@ def register_figure():
         logger.warning(f"Failed to register figures: {e}")
 
 
-def main():
+def main() -> None:
     """Main analysis function."""
     apply_visualization_style()
     logger = _get_logger()
