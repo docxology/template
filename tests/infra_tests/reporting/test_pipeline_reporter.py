@@ -8,18 +8,18 @@ from typing import Any
 import pytest
 
 from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-from infrastructure.reporting.pipeline_reporter import (
+from infrastructure.reporting.pipeline_html import generate_html_report
+from infrastructure.reporting.pipeline_io import (
     generate_error_markdown,
-    save_error_summary,
-    generate_html_report,
-    _generate_pipeline_markdown,
     generate_performance_report,
-    generate_pipeline_report,
     generate_validation_markdown,
     generate_validation_report,
+    save_error_summary,
     save_pipeline_report,
     save_test_results,
 )
+from infrastructure.reporting.pipeline_markdown import _generate_pipeline_markdown
+from infrastructure.reporting.pipeline_report_model import generate_pipeline_report
 
 
 @dataclass
@@ -344,7 +344,7 @@ def test_stage_result_dataclass_fields() -> None:
 
 def test_pipeline_report_dataclass_fields() -> None:
     """Test PipelineReport dataclass with all fields."""
-    from infrastructure.reporting.pipeline_reporter import PipelineReport
+    from infrastructure.reporting.pipeline_report_model import PipelineReport
     from infrastructure.core.runtime.checkpoint import StageResult as ReportingStageResult
 
     report = PipelineReport(

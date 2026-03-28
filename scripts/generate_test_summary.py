@@ -14,7 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
-from infrastructure.reporting.suite_summary_generator import run_test_summary_generation
+from infrastructure.reporting.markdown_formatter import run_test_summary_generation
 
 logger = get_logger(__name__)
 

@@ -39,7 +39,7 @@ from infrastructure.validation.output.validator import (
     validate_copied_outputs,
     validate_output_structure,
 )
-from infrastructure.reporting.output_reporter import (
+from infrastructure.reporting.output_statistics import (
     log_output_summary,
 )
 
@@ -96,7 +96,7 @@ def main() -> int:
         structure_validation = validate_output_structure(output_dir)
 
         # Step 4: Collect comprehensive output statistics
-        from infrastructure.reporting.output_reporter import (
+        from infrastructure.reporting.output_statistics import (
             collect_output_statistics,
             generate_detailed_output_report,
         )

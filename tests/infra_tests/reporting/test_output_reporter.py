@@ -3,10 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 
 
-from infrastructure.reporting.output_reporter import (
+from infrastructure.reporting.output_statistics import (
     collect_output_statistics,
-    generate_output_summary,
+    log_output_summary,
 )
+
+generate_output_summary = log_output_summary  # compat alias for tests below
 
 
 def _create_file(path: Path, size: int = 10) -> None:
