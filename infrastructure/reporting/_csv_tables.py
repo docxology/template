@@ -153,8 +153,6 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> dic
     Returns:
         Dictionary of saved CSV file paths
     """
-    from infrastructure.reporting.executive_reporter import calculate_project_health_score
-
     organizer = OutputOrganizer()
     organizer.ensure_directory_structure(output_dir)
     csv_files: dict[str, Path] = {}

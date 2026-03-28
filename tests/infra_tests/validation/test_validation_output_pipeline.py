@@ -6,10 +6,6 @@ Follows No Mocks Policy — all tests use real files and real execution.
 
 from __future__ import annotations
 
-from pathlib import Path
-
-import pytest
-
 from infrastructure.validation.output.pipeline import (
     generate_validation_report,
     validate_markdown,
@@ -26,22 +22,9 @@ class TestValidatePdfs:
         result = validate_pdfs("_nonexistent_project_xyz_abc")
         assert result is False
 
-    def test_returns_false_for_empty_pdf_dir(self, tmp_path: Path, monkeypatch) -> None:
-        """PDF dir exists but no PDFs returns False."""
-        pdf_dir = tmp_path / "pdf"
-        pdf_dir.mkdir(parents=True)
-
-        # Monkeypatch Path to redirect to tmp_path structure
-        import infrastructure.validation.output.pipeline as mod
-
-        original = mod.Path
-
-        def patched_path(*args, **kwargs):
-            p = original(*args, **kwargs)
-            return p
-
-        # Use a project name that doesn't exist — will hit the "no PDF dir" branch
-        result = validate_pdfs("_nonexistent_project_xyz_abc")
+    def test_returns_false_for_empty_pdf_dir(self) -> None:
+        """Second nonexistent project also returns False."""
+        result = validate_pdfs("_another_nonexistent_project_def")
         assert result is False
 
 
@@ -53,11 +36,8 @@ class TestValidateMarkdown:
         result = validate_markdown("_nonexistent_project_xyz_abc")
         assert result is True
 
-    def test_returns_true_for_empty_manuscript_dir(self, tmp_path: Path) -> None:
+    def test_returns_true_for_empty_manuscript_dir(self) -> None:
         """Empty manuscript dir (no .md files) returns True."""
-        import infrastructure.validation.output.pipeline as mod
-
-        # Projects dir must be addressable — use nonexistent project (safe path)
         result = validate_markdown("_nonexistent_project_xyz_abc")
         assert result is True
 

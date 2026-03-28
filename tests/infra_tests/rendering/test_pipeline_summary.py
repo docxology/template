@@ -8,8 +8,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from infrastructure.rendering._pipeline_summary import (
     _check_citations_used,
     generate_rendering_summary,
