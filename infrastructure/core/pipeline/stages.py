@@ -13,11 +13,15 @@ import logging
 import os
 import subprocess
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from infrastructure.core.runtime.environment import get_python_command, get_subprocess_env
 from infrastructure.core.logging.utils import flush_file_handlers, get_logger
 from infrastructure.core.errors import SCRIPT_EXECUTION_FAILED
 from infrastructure.core.files.cleanup import clean_output_directories
+
+if TYPE_CHECKING:
+    from infrastructure.core.pipeline.config import PipelineConfig
 
 logger = get_logger(__name__)
 
@@ -30,6 +34,14 @@ class PipelineStageMixin:
         - self.log_file: Path to the pipeline log file
         - self._setup_log_file_handler(): method to recreate log handler after clean
     """
+
+    # Host-class contract: type-checker-visible declarations for duck-typed dependencies.
+    # Concrete implementations are provided by PipelineExecutor via MRO.
+    config: "PipelineConfig"
+    log_file: Path
+
+    def _setup_log_file_handler(self) -> None:
+        raise NotImplementedError  # pragma: no cover
 
     # -- Public stage methods ------------------------------------------------
 

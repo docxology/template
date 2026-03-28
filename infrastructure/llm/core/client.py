@@ -326,7 +326,7 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
             >>> for chunk in client.stream_query("Explain AI", log_progress=True):
             ...     print(chunk, end="")
         """
-        from infrastructure.llm.core._client_streaming import stream_query_impl
+        from infrastructure.llm.core._stream_impl import stream_query_impl
 
         prompt = sanitize_llm_input(prompt)
         yield from stream_query_impl(

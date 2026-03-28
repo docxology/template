@@ -22,10 +22,8 @@ from infrastructure.llm.validation import (
     validate_short_response,
     validate_structure,
 )
-from infrastructure.llm.validation.repetition import (
-    _calculate_similarity,
-    calculate_unique_content_ratio,
-)
+from infrastructure.llm.validation.repetition import calculate_unique_content_ratio
+from infrastructure.llm.validation.similarity import _calculate_similarity
 
 
 class TestJSONValidation:

@@ -15,10 +15,6 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
-# Re-exports for backward compatibility — implementations moved to _pdf_tex_transforms.py
-from infrastructure.rendering._pdf_tex_transforms import fix_figure_paths as fix_figure_paths  # noqa: F401
-from infrastructure.rendering._pdf_tex_transforms import fix_math_delimiters as fix_math_delimiters  # noqa: F401
-
 
 def extract_preamble(preamble_file: Path) -> str:
     """Extract LaTeX preamble from markdown file.

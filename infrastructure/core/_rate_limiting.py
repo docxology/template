@@ -198,13 +198,13 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60) -> Callable[..
     return decorator
 
 
+# Module-level singleton (declared before get_security_monitor for top-down read order)
+_security_monitor: SecurityMonitor | None = None
+
+
 def get_security_monitor() -> SecurityMonitor:
     """Return the process-wide SecurityMonitor singleton."""
     global _security_monitor
     if _security_monitor is None:
         _security_monitor = SecurityMonitor()
     return _security_monitor
-
-
-# Module-level singleton
-_security_monitor: SecurityMonitor | None = None

@@ -267,7 +267,7 @@ class _StructuredQueryMixin:
         retries: int,
     ) -> Iterator[str]:
         """Prepend instruction to prompt and stream with custom token limit."""
-        from infrastructure.llm.core._client_streaming import stream_query_impl
+        from infrastructure.llm.core._stream_impl import stream_query_impl
 
         scoped_options = GenerationOptions(
             max_tokens=max_tokens,

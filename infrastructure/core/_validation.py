@@ -6,6 +6,7 @@ for backwards compatibility.
 
 from __future__ import annotations
 
+import html
 import re
 from pathlib import Path
 
@@ -121,8 +122,6 @@ class SecurityValidator:
         return content
 
     def _sanitize_html(self, text: str) -> str:
-        import html
-
         return html.escape(text, quote=True)
 
     def _normalize_whitespace(self, text: str) -> str:
