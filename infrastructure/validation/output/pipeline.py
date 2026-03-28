@@ -223,7 +223,7 @@ def generate_validation_report(
     validation_results["recommendations"] = recommendations
 
     try:
-        from infrastructure.reporting import generate_validation_report as gen_validation_report
+        from infrastructure.reporting import save_validation_report as gen_validation_report
 
         saved_files = gen_validation_report(validation_results, output_dir)
         logger.info(f"Validation reports saved: {', '.join(str(p) for p in saved_files.values())}")

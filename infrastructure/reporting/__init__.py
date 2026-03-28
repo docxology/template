@@ -20,11 +20,11 @@ from .error_aggregator import (
     reset_error_aggregator,
 )
 from .pipeline_io import (
-    generate_performance_report,
-    generate_validation_report,
     save_error_summary,
+    save_performance_report,
     save_pipeline_report,
     save_test_results,
+    save_validation_report,
 )
 from .pipeline_report_model import generate_pipeline_report
 
@@ -66,9 +66,9 @@ except ImportError:
 
 __all__ = [
     "generate_pipeline_report",
-    "generate_validation_report",
+    "save_validation_report",
     "save_test_results",
-    "generate_performance_report",
+    "save_performance_report",
     "save_error_summary",
     "save_pipeline_report",
     "ErrorAggregator",
