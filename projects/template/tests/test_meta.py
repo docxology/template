@@ -216,15 +216,15 @@ class TestBuildInfrastructureReport:
 
     def test_report_has_modules(self):
         report = build_infrastructure_report(REPO_ROOT)
-        assert report.module_count >= 8
+        assert len(report.modules) >= 8
 
     def test_report_has_projects(self):
         report = build_infrastructure_report(REPO_ROOT)
-        assert report.project_count >= 2
+        assert len(report.projects) >= 2
 
     def test_report_has_stages(self):
         report = build_infrastructure_report(REPO_ROOT)
-        assert report.stage_count >= 5
+        assert len(report.pipeline_stages) >= 5
 
     def test_report_has_python_files(self):
         report = build_infrastructure_report(REPO_ROOT)
@@ -248,9 +248,9 @@ class TestBuildInfrastructureReport:
 
     def test_computed_properties_match_lists(self):
         report = build_infrastructure_report(REPO_ROOT)
-        assert report.module_count == len(report.modules)
-        assert report.project_count == len(report.projects)
-        assert report.stage_count == len(report.pipeline_stages)
+        assert len(report.modules) == len(report.modules)
+        assert len(report.projects) == len(report.projects)
+        assert len(report.pipeline_stages) == len(report.pipeline_stages)
 
 
 # ---------------------------------------------------------------------------

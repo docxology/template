@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from infrastructure.core.pipeline._monitor_types import (
     PerformanceMetrics,
+    PerformanceWarningDict,
     ResourceUsage,
     StageMetricsDict,
 )
@@ -28,6 +29,7 @@ from infrastructure.core.pipeline._stage_tracker import StagePerformanceTracker
 __all__ = [
     "PerformanceMetrics",
     "PerformanceMonitor",
+    "PerformanceWarningDict",
     "ResourceUsage",
     "StageMetricsDict",
     "StagePerformanceTracker",

@@ -22,6 +22,18 @@ class StageMetricsDict(TypedDict, total=False):
     io_write_mb: float
 
 
+class PerformanceWarningDict(TypedDict, total=False):
+    """Typed dict for a single performance warning entry returned by get_performance_warnings()."""
+
+    type: str
+    stage: str
+    duration: float
+    average: float
+    memory_mb: float
+    message: str
+    suggestion: str
+
+
 # Performance warning thresholds
 SLOW_STAGE_MULTIPLIER = 2  # warn when a stage takes > N x the pipeline average
 HIGH_MEMORY_MB = 1024  # warn when a stage RSS exceeds 1 GB

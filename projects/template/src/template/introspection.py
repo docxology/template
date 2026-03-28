@@ -104,18 +104,6 @@ class InfrastructureReport:
     total_python_files: int
     total_test_files: int
 
-    @property
-    def module_count(self) -> int:
-        return len(self.modules)
-
-    @property
-    def project_count(self) -> int:
-        return len(self.projects)
-
-    @property
-    def stage_count(self) -> int:
-        return len(self.pipeline_stages)
-
 
 # ---------------------------------------------------------------------------
 # Discovery functions
@@ -356,8 +344,8 @@ def build_infrastructure_report(repo_root: Path) -> InfrastructureReport:
     )
 
     logger.info(
-        f"Infrastructure report: {report.module_count} modules, "
-        f"{report.project_count} projects, {report.stage_count} stages, "
+        f"Infrastructure report: {len(report.modules)} modules, "
+        f"{len(report.projects)} projects, {len(report.pipeline_stages)} stages, "
         f"{report.total_python_files} Python files"
     )
     return report

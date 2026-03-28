@@ -82,11 +82,12 @@ def calculate_eta_with_confidence(
 
     remaining_items = total_items - completed_items
 
-    if item_durations and len(item_durations) > 0:
+    durations = [d for d in (item_durations or []) if d is not None]
+    if durations:
         # Use actual item durations for better estimates
-        min_duration = min(item_durations)
-        avg_duration = sum(item_durations) / len(item_durations)
-        max_duration = max(item_durations)
+        min_duration = min(durations)
+        avg_duration = sum(durations) / len(durations)
+        max_duration = max(durations)
 
         optimistic = min_duration * remaining_items
         realistic = avg_duration * remaining_items

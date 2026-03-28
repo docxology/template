@@ -18,6 +18,7 @@ from infrastructure.core.pipeline._monitor_types import (
     HIGH_CPU_PERCENT,
     HIGH_MEMORY_MB,
     SLOW_STAGE_MULTIPLIER,
+    PerformanceWarningDict,
     StageMetricsDict,
 )
 
@@ -96,9 +97,9 @@ class StagePerformanceTracker:
 
         return metrics
 
-    def get_performance_warnings(self) -> list[StageMetricsDict]:
+    def get_performance_warnings(self) -> list[PerformanceWarningDict]:
         """Return performance warnings for stages."""
-        warnings: list[StageMetricsDict] = []
+        warnings: list[PerformanceWarningDict] = []
 
         if not self.stages:
             return warnings

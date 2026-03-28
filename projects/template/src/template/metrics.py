@@ -157,9 +157,9 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
 
     metrics: dict[str, Any] = {
         # ── Top-level infrastructure metrics ──────────────────────────
-        "module_count": report.module_count,
-        "stage_count": report.stage_count,
-        "project_count": report.project_count,
+        "module_count": len(report.modules),
+        "stage_count": len(report.pipeline_stages),
+        "project_count": len(report.projects),
         "total_infra_python_files": total_infra_py,
         "infra_test_file_count": infra_test_file_count,
         "infra_test_count": infra_test_count,
@@ -194,7 +194,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
     logger.info(
         "Metrics computed: %s modules, %s infra tests, %s infra Python files, "
         "%s per-project keys",
-        report.module_count,
+        len(report.modules),
         infra_test_count,
         total_infra_py,
         sum(len(v) for v in project_metrics.values()),

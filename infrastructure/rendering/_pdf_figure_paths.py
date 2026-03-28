@@ -17,6 +17,30 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
+def _normalize_path(path_str: str) -> str:
+    """Normalize path to handle Unicode and encoding issues."""
+    return unicodedata.normalize("NFC", path_str)
+
+
+def _extract_filename(path_str: str) -> str:
+    """Extract filename from various path formats."""
+    path_str = _normalize_path(path_str)
+
+    path_variations = [
+        "../output/figures/",
+        "output/figures/",
+        "../figures/",
+        "./figures/",
+    ]
+    for prefix in path_variations:
+        if prefix in path_str:
+            return path_str.split(prefix)[-1]
+
+    if "/" in path_str or "\\" in path_str:
+        return re.split(r"[/\\]", path_str)[-1]
+    return path_str
+
+
 def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -> str:
     r"""Fix figure paths in LaTeX content for proper compilation.
 
@@ -51,37 +75,6 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
     fixed_count = 0
     paths_fixed: list[str] = []
 
-    def normalize_path(path_str: str) -> str:
-        """Normalize path to handle Unicode and encoding issues."""
-        # Normalize Unicode characters using NFC (composition form)
-        normalized = unicodedata.normalize("NFC", path_str)
-        return normalized
-
-    def extract_filename(path_str: str) -> str:
-        """Extract filename from various path formats."""
-        # Normalize first
-        path_str = normalize_path(path_str)
-
-        # Handle various path formats
-        path_variations = [
-            "../output/figures/",
-            "output/figures/",
-            "../figures/",
-            "./figures/",
-        ]
-
-        for prefix in path_variations:
-            if prefix in path_str:
-                return path_str.split(prefix)[-1]
-
-        # If no prefix matched, could be just a filename or absolute path
-        if "/" in path_str or "\\" in path_str:
-            # Split by last / or \
-            return re.split(r"[/\\]", path_str)[-1]
-        else:
-            # Just a filename
-            return path_str
-
     def fix_path(match: re.Match[str]) -> str:
         r"""Fix a single includegraphics path to be relative to the compilation directory.
 
@@ -112,7 +105,7 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
             return match.group(0)
 
         # Extract filename, handling encoding issues
-        filename = extract_filename(old_path)
+        filename = _extract_filename(old_path)
 
         # Build new path relative to compilation directory
         # Since we're compiling in output_dir (output/pdf), figures are in ../figures/
@@ -120,7 +113,7 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
 
         # Verify the figure file exists (try both normalized and non-normalized)
         fig_full_path = figures_dir / filename
-        fig_normalized = figures_dir / normalize_path(filename)
+        fig_normalized = figures_dir / _normalize_path(filename)
 
         file_exists = fig_full_path.exists() or fig_normalized.exists()
 
