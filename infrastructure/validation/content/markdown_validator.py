@@ -137,10 +137,11 @@ def validate_images(
                     found = True
                     break
             if not found:
+                display_path: Path
                 try:
                     display_path = Path(path).relative_to(repo_root_path)
                 except ValueError:
-                    display_path = path_obj  # type: ignore[assignment]
+                    display_path = path_obj
                 problems.append(
                     DiagnosticEvent(
                         severity=DiagnosticSeverity.ERROR,

@@ -71,7 +71,7 @@ def compile_latex_manuscript(
         SIGPIPE_EXIT = 141
         xelatex_stdout_log = output_dir / "_xelatex_stdout.log"
         with open(xelatex_stdout_log, "w") as stdout_sink:
-            result = subprocess.run(  # type: ignore[assignment]
+            result: subprocess.CompletedProcess[bytes] = subprocess.run(
                 cmd,
                 check=False,
                 stdout=stdout_sink,
@@ -109,7 +109,7 @@ def compile_latex_manuscript(
         for run in range(1, max_passes):
             log_progress_bar(run + 1, max_passes, "LaTeX compilation", bar_width=20)
             with open(xelatex_stdout_log, "w") as stdout_sink:
-                result = subprocess.run(  # type: ignore[assignment]
+                result = subprocess.run(
                     cmd,
                     check=False,
                     stdout=stdout_sink,

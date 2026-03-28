@@ -4,12 +4,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import types as _module_types
 from typing import Any
 
+requests: _module_types.ModuleType | None = None
 try:
-    import requests
+    import requests  # type: ignore[no-redef]
 except ImportError:
-    requests = None  # type: ignore[assignment]
+    pass
 
 from infrastructure.core.exceptions import PublishingError, UploadError
 from infrastructure.core.logging.utils import get_logger

@@ -56,7 +56,7 @@ class StagePerformanceTracker:
             self.start_memory = 0.0
             self.start_io = None
 
-    def end_stage(self, stage_name: str, exit_code: int) -> dict[str, Any]:
+    def end_stage(self, stage_name: str, exit_code: int) -> StageMetricsDict:
         """End tracking a stage and return metrics."""
         if self.start_time is None:
             raise BuildError(f"end_stage called without start_stage for {stage_name}")

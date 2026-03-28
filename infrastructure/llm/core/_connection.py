@@ -7,14 +7,16 @@ These are mixed into LLMClient via _ConnectionMixin.
 from __future__ import annotations
 
 import time as time_module
+import types as _module_types
 from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+requests: _module_types.ModuleType | None = None
 try:
-    import requests
+    import requests  # type: ignore[no-redef]
 except ImportError:
-    requests = None  # type: ignore[assignment]
+    pass
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger

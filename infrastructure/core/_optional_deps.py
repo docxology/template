@@ -11,14 +11,17 @@ Usage:
 
 from __future__ import annotations
 
+import types as _module_types
+
 try:
     import psutil
 except ImportError:
     psutil = None
 
+np: _module_types.ModuleType | None = None
 try:
-    import numpy as np
+    import numpy as np  # type: ignore[no-redef]
 except ImportError:
-    np = None  # type: ignore[assignment]
+    pass
 
 __all__ = ["psutil", "np"]

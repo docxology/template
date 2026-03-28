@@ -18,17 +18,19 @@ Model Selection:
 from __future__ import annotations
 
 import time
+import types as _module_types
 from typing import Any
 
+requests: _module_types.ModuleType | None = None
+RequestsConnectionError: type[OSError] = OSError
+RequestException: type[OSError] = OSError
+Timeout: type[OSError] = OSError
 try:
-    import requests
-    from requests.exceptions import ConnectionError as RequestsConnectionError
-    from requests.exceptions import RequestException, Timeout
+    import requests  # type: ignore[no-redef]
+    from requests.exceptions import ConnectionError as RequestsConnectionError  # type: ignore[no-redef]
+    from requests.exceptions import RequestException, Timeout  # type: ignore[no-redef]
 except ImportError:
-    requests = None  # type: ignore[assignment]
-    RequestsConnectionError = OSError  # type: ignore[misc,assignment]
-    RequestException = OSError  # type: ignore[misc,assignment]
-    Timeout = OSError  # type: ignore[misc,assignment]
+    pass
 
 from infrastructure.core.logging.utils import get_logger
 

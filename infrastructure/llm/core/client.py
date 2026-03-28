@@ -11,15 +11,17 @@ Provides LLMClient for interacting with Ollama local LLMs with:
 from __future__ import annotations
 
 import time as time_module
+import types as _module_types
 from pathlib import Path
 from typing import Any, Callable, Iterator, TypeVar
 
 _T = TypeVar("_T")
 
+requests: _module_types.ModuleType | None = None
 try:
-    import requests
+    import requests  # type: ignore[no-redef]
 except ImportError:
-    requests = None  # type: ignore[assignment]
+    pass
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
