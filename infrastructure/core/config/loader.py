@@ -84,11 +84,17 @@ def load_config(config_path: Path | str) -> ManuscriptConfig | None:
 
     Validates top-level keys and logs warnings for unrecognized keys.
 
+    Design note: returns None (not ConfigurationError) for missing / unreadable configs
+    because config.yaml is *optional* — all callers treat None as "use defaults".
+    Errors that indicate programmer mistakes (e.g. wrong key names) are logged as
+    warnings, not raised, for the same reason: the pipeline should proceed with defaults
+    rather than aborting over a missing or partial config file.
+
     Args:
         config_path: Path to config.yaml file
 
     Returns:
-        ManuscriptConfig dictionary, or None if file doesn't exist
+        ManuscriptConfig dictionary, or None if file doesn't exist or cannot be parsed
     """
     if not YAML_AVAILABLE:
         return None

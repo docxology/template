@@ -45,6 +45,7 @@ def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]
         Dictionary of aggregate metrics with totals, averages, and min/max statistics
     """
     if not projects:
+        logger.warning("generate_aggregate_metrics called with no projects — returning empty dict; caller cannot distinguish 'no data' from 'zero totals'")
         return {}
 
     # Collect values for statistics

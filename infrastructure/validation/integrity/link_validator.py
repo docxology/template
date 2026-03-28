@@ -29,7 +29,12 @@ class LinkValidator:
         self._scan_repository()
 
     def _scan_repository(self) -> None:
-        """Scan repository for all files."""
+        """Scan repository for all files.
+
+        Raises:
+            OSError: If the repository root is unreadable or I/O fails during traversal.
+                Propagated to the constructor so callers know the scanner is not usable.
+        """
         exclude_patterns = {
             "__pycache__",
             ".git",
@@ -42,21 +47,25 @@ class LinkValidator:
             ".DS_Store",
         }
 
-        for path in self.repo_root.rglob("*"):
-            # Skip excluded directories - check if any path component exactly matches exclude pattern  # noqa: E501
-            path_parts = path.parts
-            should_exclude = False
-            for part in path_parts:
-                if part in exclude_patterns:
-                    should_exclude = True
-                    break
-            if should_exclude:
-                continue
+        try:
+            for path in self.repo_root.rglob("*"):
+                # Skip excluded directories - check if any path component exactly matches exclude pattern  # noqa: E501
+                path_parts = path.parts
+                should_exclude = False
+                for part in path_parts:
+                    if part in exclude_patterns:
+                        should_exclude = True
+                        break
+                if should_exclude:
+                    continue
 
-            if path.is_file():
-                self.all_files.add(path.relative_to(self.repo_root))
-            elif path.is_dir():
-                self.all_dirs.add(path.relative_to(self.repo_root))
+                if path.is_file():
+                    self.all_files.add(path.relative_to(self.repo_root))
+                elif path.is_dir():
+                    self.all_dirs.add(path.relative_to(self.repo_root))
+        except OSError as e:
+            logger.error(f"Failed to scan repository at {self.repo_root}: {e}")
+            raise
 
     def extract_markdown_links(self, content: str, file_path: Path) -> list[tuple[str, str, int]]:
         """Extract all markdown links from content, skipping those inside code blocks.

@@ -216,7 +216,7 @@ def monitor_performance(operation_name: str, track_memory: bool = True) -> Calla
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             """Inner wrapper that executes with monitoring."""
             monitor = get_performance_monitor()
-            op_name = operation_name or f"{func.__module__}.{func.__qualname__}"
+            op_name = operation_name
             with monitor.monitor(op_name, track_memory):
                 return func(*args, **kwargs)
 

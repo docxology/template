@@ -64,6 +64,10 @@ class TelemetryCollector:
             project_name: Name of the project being executed.
             output_dir: Directory for persisting telemetry reports.
             diagnostic_reporter: Optional existing reporter to aggregate from.
+
+        Note: No I/O is performed at construction time. Callers must explicitly call
+        ``capture_system_info()`` to snapshot system resources — this separates the
+        (cheap, always-safe) construction from the (expensive, optional) resource probe.
         """
         self.config = config
         self.project_name = project_name

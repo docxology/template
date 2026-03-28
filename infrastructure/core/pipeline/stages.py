@@ -70,7 +70,7 @@ class PipelineStageMixin:
         logger.info("Cleaning output directories...")
         try:
             clean_output_directories(self.config.repo_root, self.config.project_name)
-        except Exception as e:
+        except (OSError, PermissionError) as e:
             logger.error(f"Failed to clean output directories: {e}")
             return False
 

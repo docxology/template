@@ -85,8 +85,8 @@ class DiagnosticReporter:
                         # Avoid duplicates
                         if event not in self.events:
                             self.events.append(event)
-            except Exception as e:
-                logger.debug(f"Failed to load existing diagnostics: {e}")
+            except (OSError, ValueError, json.JSONDecodeError) as e:
+                logger.warning(f"Failed to load existing diagnostics from {report_file}: {e}")
 
     def record(self, event: DiagnosticEvent) -> None:
         """Record a single diagnostic event."""
