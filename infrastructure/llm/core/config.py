@@ -51,42 +51,27 @@ class GenerationOptions:
         Returns:
             Dictionary compatible with Ollama API options parameter
         """
-        options: dict[str, Any] = {}
+        def _pick(override: Any, fallback: Any) -> Any:
+            """Return override if not None, else fallback."""
+            return override if override is not None else fallback
 
-        # Use GenerationOptions value if provided, otherwise use config default
-        if self.temperature is not None:
-            options["temperature"] = self.temperature
-        else:
-            options["temperature"] = config.temperature
+        options: dict[str, Any] = {
+            "temperature": _pick(self.temperature, config.temperature),
+            "num_predict": _pick(self.max_tokens, config.max_tokens),
+            "top_p": _pick(self.top_p, config.top_p),
+            "num_ctx": _pick(self.num_ctx, config.context_window),
+        }
 
-        if self.max_tokens is not None:
-            options["num_predict"] = self.max_tokens
-        else:
-            options["num_predict"] = config.max_tokens
-
-        if self.top_p is not None:
-            options["top_p"] = self.top_p
-        else:
-            options["top_p"] = config.top_p
-
+        # Optional fields: only include if a value is available
         if self.top_k is not None:
             options["top_k"] = self.top_k
-
-        if self.seed is not None:
-            options["seed"] = self.seed
-        elif config.seed is not None:
-            options["seed"] = config.seed
-
+        seed = _pick(self.seed, config.seed)
+        if seed is not None:
+            options["seed"] = seed
         if self.stop is not None:
             options["stop"] = self.stop
-
         if self.repeat_penalty is not None:
             options["repeat_penalty"] = self.repeat_penalty
-
-        if self.num_ctx is not None:
-            options["num_ctx"] = self.num_ctx
-        else:
-            options["num_ctx"] = config.context_window
 
         return options
 

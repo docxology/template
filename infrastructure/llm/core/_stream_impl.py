@@ -59,6 +59,12 @@ def stream_query_impl(
     """
     start_time = time_module.time()
     model_name = model or config.default_model
+
+    # Pre-bind stable per-request params so try_save_partial and the final save call
+    # don't need to forward save_path, model_name, prompt, and start_time individually.
+    def _bound_save(full_response: list[str], chunk_count: int, *, is_error: bool = False, options: Any = None) -> bool:
+        return save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=is_error, options=options)
+
     logger.debug("Starting streaming query model=%s", model_name)
 
     context.add_message("user", prompt)
@@ -204,15 +210,15 @@ def stream_query_impl(
                     f"Streaming {error_label} (attempt {attempt + 1}/{retries + 1}), will retry..."
                 )
                 partial_saved = try_save_partial(
-                    full_response, save_response, partial_saved, save_streaming_state_fn,
-                    save_path, model_name, prompt, chunk_count, start_time, "before retry",
+                    full_response, save_response, partial_saved, _bound_save,
+                    chunk_count, "before retry",
                 )
                 continue
 
             logger.error(f"Streaming {error_label} after {retries + 1} attempts: {last_error_msg}")
             partial_saved = try_save_partial(
-                full_response, save_response, partial_saved, save_streaming_state_fn,
-                save_path, model_name, prompt, chunk_count, start_time, f"after {error_label}",
+                full_response, save_response, partial_saved, _bound_save,
+                chunk_count, f"after {error_label}",
                 skip_if_already_saved=False,
             )
             raise LLMConnectionError(
@@ -252,5 +258,5 @@ def stream_query_impl(
 
     # Save response if requested
     if save_response and not partial_saved:
-        if save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=error_count > 0, options=options):
+        if _bound_save(full_response, chunk_count, is_error=error_count > 0, options=options):
             logger.info("Saved final streaming response")

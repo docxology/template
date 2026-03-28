@@ -37,22 +37,24 @@ def _tally_log_level_counts(log_file: Path) -> dict[str, Any]:
             stats["total_lines"] += 1
             line_lower = line.lower()
 
-            if "debug" in line_lower:
-                stats["counts"]["debug"] += 1
-            elif "info" in line_lower:
-                stats["counts"]["info"] += 1
-            elif "warning" in line_lower or "warn" in line_lower:
-                stats["counts"]["warning"] += 1
-                if len(stats["warnings"]) < 10:
-                    stats["warnings"].append(line.strip())
+            # Check critical before error: a critical line also contains "error"
+            # in many logging formats, so checking error first would misclassify it.
+            if "critical" in line_lower:
+                stats["counts"]["critical"] += 1
+                if len(stats["errors"]) < 10:
+                    stats["errors"].append(line.strip())
             elif "error" in line_lower:
                 stats["counts"]["error"] += 1
                 if len(stats["errors"]) < 10:
                     stats["errors"].append(line.strip())
-            elif "critical" in line_lower:
-                stats["counts"]["critical"] += 1
-                if len(stats["errors"]) < 10:
-                    stats["errors"].append(line.strip())
+            elif "warning" in line_lower or "warn" in line_lower:
+                stats["counts"]["warning"] += 1
+                if len(stats["warnings"]) < 10:
+                    stats["warnings"].append(line.strip())
+            elif "info" in line_lower:
+                stats["counts"]["info"] += 1
+            elif "debug" in line_lower:
+                stats["counts"]["debug"] += 1
 
     return stats
 
