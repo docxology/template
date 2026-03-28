@@ -13,7 +13,8 @@ Injection API:
     render_all_chapters   — process all chapters into output/manuscript/
 
 Data classes:
-    ModuleInfo, ProjectInfo, PipelineStage, CoverageConfig, InfrastructureReport
+    ModuleInfo, ProjectAnalysis, PipelineStage, CoverageConfig, InfrastructureReport
+    ProjectInfo is a backwards-compat alias for ProjectAnalysis.
 """
 
 from __future__ import annotations
@@ -24,7 +25,8 @@ from .introspection import (
     InfrastructureReport,
     ModuleInfo,
     PipelineStage,
-    ProjectInfo,
+    ProjectAnalysis,
+    ProjectInfo,  # backwards-compat alias for ProjectAnalysis
     analyze_test_coverage_config,
     build_infrastructure_report,
     count_pipeline_stages,
@@ -51,7 +53,8 @@ from .metrics import (
 __all__ = [
     # Introspection data classes
     "ModuleInfo",
-    "ProjectInfo",
+    "ProjectAnalysis",
+    "ProjectInfo",  # backwards-compat alias for ProjectAnalysis
     "PipelineStage",
     "CoverageConfig",
     "InfrastructureReport",

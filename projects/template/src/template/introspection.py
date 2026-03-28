@@ -50,8 +50,13 @@ class ModuleInfo:
 
 
 @dataclass
-class ProjectInfo:
-    """Metadata for a single project workspace."""
+class ProjectAnalysis:
+    """Rich analysis metrics for a single project workspace.
+
+    Distinct from ``infrastructure.project.project_info.ProjectInfo`` which
+    records discovery/existence flags. ``ProjectAnalysis`` records counts
+    (chapters, figures, tests, scripts) produced by repository introspection.
+    """
 
     name: str
     path: Path
@@ -64,6 +69,10 @@ class ProjectInfo:
     src_module_count: int = 0
     figure_count: int = 0
     config: dict[str, Any] = field(default_factory=dict)
+
+
+# Backwards-compat alias — external code that imported ProjectInfo continues to work.
+ProjectInfo = ProjectAnalysis
 
 
 @dataclass
@@ -93,7 +102,7 @@ class InfrastructureReport:
     repo_root: Path
     infrastructure_version: str
     modules: list[ModuleInfo]
-    projects: list[ProjectInfo]
+    projects: list[ProjectAnalysis]
     pipeline_stages: list[PipelineStage]
     total_python_files: int
     total_test_files: int
@@ -169,7 +178,7 @@ def discover_infrastructure_modules(repo_root: Path) -> list[ModuleInfo]:
     return modules
 
 
-def discover_projects(repo_root: Path) -> list[ProjectInfo]:
+def discover_projects(repo_root: Path) -> list[ProjectAnalysis]:
     """Scan ``projects/`` for valid project workspaces.
 
     A directory counts as a project if it contains ``manuscript/config.yaml``.
@@ -178,14 +187,14 @@ def discover_projects(repo_root: Path) -> list[ProjectInfo]:
         repo_root: Absolute path to the repository root.
 
     Returns:
-        Sorted list of ``ProjectInfo``.
+        Sorted list of ``ProjectAnalysis``.
     """
     projects_dir = repo_root / "projects"
     if not projects_dir.is_dir():
         logger.warning(f"Projects directory not found: {projects_dir}")
         return []
 
-    projects: list[ProjectInfo] = []
+    projects: list[ProjectAnalysis] = []
     for child in sorted(projects_dir.iterdir()):
         if not child.is_dir() or child.name.startswith(("_", ".")):
             continue
@@ -229,7 +238,7 @@ def discover_projects(repo_root: Path) -> list[ProjectInfo]:
         figures_dir = child / "output" / "figures"
         figures = list(figures_dir.glob("*.png")) if figures_dir.is_dir() else []
 
-        projects.append(ProjectInfo(
+        projects.append(ProjectAnalysis(
             name=child.name,
             path=child,
             has_manuscript=manuscript_dir.is_dir(),
