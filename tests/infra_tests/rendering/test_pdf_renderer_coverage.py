@@ -144,9 +144,6 @@ class TestBibliographyProcessing:
 
     def test_process_bibliography_exception(self, tmp_path):
         """Test _process_bibliography exception handling with real execution."""
-        config = RenderingConfig(output_dir=tmp_path)
-        renderer = PDFRenderer(config)
-
         tex_file = tmp_path / "test.tex"
         tex_file.write_text(r"\documentclass{article}\begin{document}\cite{ref}\end{document}")
 

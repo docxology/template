@@ -8,7 +8,6 @@ from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.logging.progress import log_progress_bar
 from infrastructure.rendering._pdf_combined_renderer import (
     build_pandoc_tex_command,
     inject_bibliography,

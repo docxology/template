@@ -7,10 +7,6 @@ Note:
 
 from __future__ import annotations
 
-from infrastructure.llm.review.formatting import (
-    _build_review_header,
-    _build_review_metadata,
-)
 from infrastructure.llm.review.review_analysis import (
     calculate_format_compliance_summary,
     calculate_quality_summary,

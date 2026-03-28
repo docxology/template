@@ -76,11 +76,6 @@ def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
 
         # Print results
         if problems:
-            header = (
-                "Markdown validation issues (non-strict)"
-                if not strict
-                else "Validation issues found"
-            )
             for p in problems:
                 loc = f"[{p.file_path}] " if p.file_path else ""
                 logger.warning(f" - {loc}{p.message}")
