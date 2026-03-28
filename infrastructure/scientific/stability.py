@@ -32,6 +32,19 @@ class StabilityTest:
     recommendations: list[str]
 
 
+def _score_result(result: Any) -> tuple[str, float]:
+    """Return (behavior_label, stability_score) for a numeric result."""
+    has_nan = np.isnan(result).any() if hasattr(result, "any") else np.isnan(result)
+    has_inf = np.isinf(result).any() if hasattr(result, "any") else np.isinf(result)
+    if has_nan:
+        return "NaN values detected", 0.0
+    if has_inf:
+        return "Infinite values detected", 0.0
+    if np.abs(result) > 1e10:
+        return "Extremely large values", 0.3
+    return "Numerically stable", 1.0
+
+
 def check_numerical_stability(
     func: Callable[..., Any], test_inputs: list[Any], tolerance: float = 1e-12
 ) -> StabilityTest:
@@ -49,23 +62,8 @@ def check_numerical_stability(
 
     for test_input in test_inputs:
         try:
-            # Test function execution
             result = func(test_input)
-
-            # Check for NaN, inf, or extreme values
-            if np.isnan(result).any() if hasattr(result, "any") else np.isnan(result):
-                behavior = "NaN values detected"
-                score = 0.0
-            elif np.isinf(result).any() if hasattr(result, "any") else np.isinf(result):
-                behavior = "Infinite values detected"
-                score = 0.0
-            elif np.abs(result) > 1e10:  # Arbitrary large value threshold
-                behavior = "Extremely large values"
-                score = 0.3
-            else:
-                behavior = "Numerically stable"
-                score = 1.0
-
+            behavior, score = _score_result(result)
             results.append((test_input, result, behavior, score))
 
         except Exception as e:  # noqa: BLE001 — any function failure is a stability event

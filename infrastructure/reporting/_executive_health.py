@@ -108,9 +108,7 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
 
     max_score = 100  # 40 + 30 + 20 + 10
     percentage = score / max_score * 100
-    for threshold, grade, status in _GRADE_TIERS:
-        if percentage >= threshold:
-            break
+    _, grade, status = next(t for t in _GRADE_TIERS if percentage >= t[0])
 
     return {
         "score": score,
