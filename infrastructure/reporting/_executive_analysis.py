@@ -15,9 +15,9 @@ logger = get_logger(__name__)
 
 
 def _calc_aggregate_stats(values: list[float]) -> dict[str, float]:
-    """Calculate min, max, median, and average for a list of values."""
+    """Calculate min, max, median, and mean for a list of values."""
     if not values:
-        return {"min": 0.0, "max": 0.0, "median": 0.0, "avg": 0.0}
+        return {"min": 0.0, "max": 0.0, "median": 0.0, "mean": 0.0}
 
     sorted_values = sorted(values)
     n = len(sorted_values)
@@ -31,7 +31,7 @@ def _calc_aggregate_stats(values: list[float]) -> dict[str, float]:
         "min": min(values),
         "max": max(values),
         "median": median,
-        "avg": sum(values) / len(values),
+        "mean": sum(values) / len(values),
     }
 
 

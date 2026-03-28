@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import cProfile
 import functools
+import io
 import pstats
 import time
 import tracemalloc
@@ -96,9 +97,10 @@ class CodeProfiler:
 
             self.metrics_history.append(metrics)
 
+            peak_mb = f"{metrics.memory_peak / (1024 * 1024):.2f}" if metrics.memory_peak else "N/A"
             logger.debug(
                 f"Performance: {operation_name} completed in {execution_time:.3f}s "
-                f"(CPU: {cpu_time:.3f}s, Peak memory: {metrics.memory_peak or 'N/A'}MB)"
+                f"(CPU: {cpu_time:.3f}s, Peak memory: {peak_mb}MB)"
             )
 
     def profile_function(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
@@ -111,10 +113,9 @@ class CodeProfiler:
             return result
         finally:
             profiler.disable()
-            stats = pstats.Stats(profiler)
-            stats.sort_stats("cumulative")
-            logger.debug(f"Profile results for {func.__name__}:")
-            stats.print_stats(10)
+            buf = io.StringIO()
+            pstats.Stats(profiler, stream=buf).sort_stats("cumulative").print_stats(10)
+            logger.debug(f"Profile results for {func.__name__}:\n{buf.getvalue()}")
 
     def benchmark_function(
         self,
@@ -225,11 +226,9 @@ def monitor_performance(operation_name: str, track_memory: bool = True) -> Calla
 def profile_memory_usage(func: Callable[..., Any], *args: Any, **kwargs: Any) -> dict[str, Any]:
     """Profile memory usage of a function via CodeProfiler."""
     monitor = get_code_profiler()
-    result = None
     with monitor.monitor(func.__name__, track_memory=True):
         result = func(*args, **kwargs)
-    if not monitor.metrics_history:
-        return {"execution_time": 0.0, "memory_current": 0, "memory_peak": 0, "result": result}
+    # monitor.monitor() always appends a metric entry, so metrics_history is never empty here.
     metrics = monitor.metrics_history[-1]
     return {
         "execution_time": metrics.execution_time,

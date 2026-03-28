@@ -547,10 +547,10 @@ def create_summary_table(projects: list[ProjectMetrics], aggregate: dict[str, An
             "**AGGREGATE**",
             "**N/A**",
             "**N/A**",
-            f"**{aggregate['manuscript']['total_words']:,}**\n({manuscript_stats.get('avg', 0):,.0f} avg)",  # noqa: E501
+            f"**{aggregate['manuscript']['total_words']:,}**\n({manuscript_stats.get('mean', 0):,.0f} avg)",  # noqa: E501
             f"**{aggregate['tests']['total_tests']}**",
-            f"**{aggregate['tests']['average_coverage']:.1f}%**\n({coverage_stats.get('avg', 0):.1f} avg)",  # noqa: E501
-            f"**{aggregate['pipeline']['total_duration']:.0f}s**\n({duration_stats.get('avg', 0):.0f} avg)",  # noqa: E501
+            f"**{aggregate['tests']['average_coverage']:.1f}%**\n({coverage_stats.get('mean', 0):.1f} avg)",  # noqa: E501
+            f"**{aggregate['pipeline']['total_duration']:.0f}s**\n({duration_stats.get('mean', 0):.0f} avg)",  # noqa: E501
             f"**{aggregate['outputs']['total_pdfs']}**",
             f"**{aggregate['outputs']['total_figures']}**",
         ]
@@ -888,9 +888,9 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
             [
                 "**TOTAL**",
                 "**N/A**",
-                f"**{manuscript_agg.get('total_words', 0):,}**\n({words_stats.get('avg', 0):,.0f} avg)",  # noqa: E501
+                f"**{manuscript_agg.get('total_words', 0):,}**\n({words_stats.get('mean', 0):,.0f} avg)",  # noqa: E501
                 f"**{tests_agg.get('total_tests', 0)}**",
-                f"**{tests_agg.get('average_coverage', 0):.1f}%**\n({coverage_stats.get('avg', 0):.1f} avg)",  # noqa: E501
+                f"**{tests_agg.get('average_coverage', 0):.1f}%**\n({coverage_stats.get('mean', 0):.1f} avg)",  # noqa: E501
             ]
         )
 

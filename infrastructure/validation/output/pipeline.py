@@ -21,6 +21,10 @@ from infrastructure.validation.output.validator import collect_detailed_validati
 
 logger = get_logger(__name__)
 
+# Resolve repository root once at module load.
+# This file lives at infrastructure/validation/output/pipeline.py → 4 parents up = repo root.
+_REPO_ROOT = Path(__file__).parent.parent.parent.parent
+
 
 def validate_pdfs(project_name: str = "project") -> bool:
     """Validate generated PDF files.
@@ -30,7 +34,7 @@ def validate_pdfs(project_name: str = "project") -> bool:
     """
     log_substep("Validating PDF files...", logger)
 
-    repo_root = Path(__file__).parent.parent.parent.parent
+    repo_root = _REPO_ROOT
     project_root = repo_root / "projects" / project_name
     pdf_dir = project_root / "output" / "pdf"
 
@@ -68,7 +72,7 @@ def validate_markdown(project_name: str = "project") -> bool:
     """
     log_substep("Validating markdown files...", logger)
 
-    repo_root = Path(__file__).parent.parent.parent.parent
+    repo_root = _REPO_ROOT
     project_root = repo_root / "projects" / project_name
     manuscript_dir = project_root / "manuscript"
 
@@ -126,7 +130,7 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str,
     """
     log_substep("Verifying output structure...", logger)
 
-    repo_root = Path(__file__).parent.parent.parent.parent
+    repo_root = _REPO_ROOT
     output_dir = repo_root / "projects" / project_name / "output"
 
     detailed_validation = collect_detailed_validation_results(output_dir)
@@ -162,7 +166,7 @@ def generate_validation_report(
     """Generate validation report with structured output."""
     log_substep("Generating validation report...", logger)
 
-    repo_root = Path(__file__).parent.parent.parent.parent
+    repo_root = _REPO_ROOT
     output_dir = repo_root / "projects" / project_name / "output" / "reports"
 
     validation_results = {
@@ -280,7 +284,7 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
         results.append(("Output structure", False))
 
     try:
-        repo_root = Path(__file__).parent.parent.parent.parent
+        repo_root = _REPO_ROOT
         project_root = repo_root / "projects" / project_name
         registry_path = project_root / "output" / "figures" / "figure_registry.json"
         manuscript_dir = project_root / "manuscript"
