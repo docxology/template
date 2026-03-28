@@ -83,6 +83,50 @@ def validate_scientific_implementation(func: Callable[..., Any], test_cases: lis
     return validation_results
 
 
+def _type_hints_fraction(functions: list[tuple[str, Any]]) -> float:
+    """Return the fraction of functions that have at least one type annotation."""
+    typed = 0
+    for _, func in functions:
+        sig = inspect.signature(func)
+        has_return = sig.return_annotation != inspect.Signature.empty
+        has_params = any(
+            p.annotation != inspect.Parameter.empty for p in sig.parameters.values()
+        )
+        if has_return or has_params:
+            typed += 1
+    return typed / len(functions) if functions else 0.0
+
+
+def _analyze_source_features(module: Any) -> tuple[bool, bool]:
+    """Return (has_error_handling, has_input_validation) from module source text."""
+    try:
+        source_lines = inspect.getsource(module).split("\n")
+    except (OSError, TypeError) as e:
+        logger.debug(f"Could not get source for module {module}: {e}")
+        return False, False
+
+    has_error = any("try:" in line or "except" in line or "raise" in line for line in source_lines)
+    has_validation = any(
+        "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
+        for line in source_lines
+    )
+    return has_error, has_validation
+
+
+def _best_practices_recommendations(validation: dict[str, Any]) -> list[str]:
+    """Return actionable recommendations based on validation scores."""
+    recs: list[str] = []
+    if validation["docstring_coverage"] < _COVERAGE_THRESHOLD:
+        recs.append("Add docstrings to undocumented functions")
+    if validation["type_hints_coverage"] < _COVERAGE_THRESHOLD:
+        recs.append("Add type hints to function parameters and return values")
+    if not validation["error_handling"]:
+        recs.append("Add proper error handling with try/except blocks")
+    if not validation["input_validation"]:
+        recs.append("Add input validation to prevent invalid arguments")
+    return recs
+
+
 def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     """Validate that a module follows scientific computing best practices."""
     validation: dict[str, Any] = {
@@ -95,71 +139,28 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
         "recommendations": [],
     }
 
-    functions = []
-    for name in dir(module):
-        obj = getattr(module, name)
-        if callable(obj) and not name.startswith("_"):
-            functions.append((name, obj))
+    functions = [
+        (name, getattr(module, name))
+        for name in dir(module)
+        if callable(getattr(module, name)) and not name.startswith("_")
+    ]
 
     if not functions:
         return validation
 
-    documented_functions = sum(1 for _, func in functions if inspect.getdoc(func) is not None)
-    validation["docstring_coverage"] = documented_functions / len(functions)
+    validation["docstring_coverage"] = sum(
+        1 for _, func in functions if inspect.getdoc(func) is not None
+    ) / len(functions)
+    validation["type_hints_coverage"] = _type_hints_fraction(functions)
+    validation["error_handling"], validation["input_validation"] = _analyze_source_features(module)
 
-    typed_functions = 0
-    for _, func in functions:
-        sig = inspect.signature(func)
-        has_return_annotation = sig.return_annotation != inspect.Signature.empty
-        has_param_annotations = any(
-            p.annotation != inspect.Parameter.empty for p in sig.parameters.values()
-        )
-
-        if has_return_annotation or has_param_annotations:
-            typed_functions += 1
-
-    validation["type_hints_coverage"] = typed_functions / len(functions)
-
-    source_lines = []
-    try:
-        source = inspect.getsource(module)
-        source_lines = source.split("\n")
-    except (OSError, TypeError) as e:
-        logger.debug(f"Could not get source for module {module}: {e}")
-
-    has_try_except = any("try:" in line or "except" in line for line in source_lines)
-    has_raise = any("raise" in line for line in source_lines)
-    validation["error_handling"] = has_try_except or has_raise
-
-    has_validation = any(
-        "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
-        for line in source_lines
+    validation["best_practices_score"] = 0.25 * (
+        validation["docstring_coverage"]
+        + validation["type_hints_coverage"]
+        + (1.0 if validation["error_handling"] else 0.0)
+        + (1.0 if validation["input_validation"] else 0.0)
     )
-    validation["input_validation"] = has_validation
-
-    weights = {
-        "docstring_coverage": 0.25,
-        "type_hints_coverage": 0.25,
-        "error_handling": 0.25,
-        "input_validation": 0.25,
-    }
-
-    validation["best_practices_score"] = (
-        validation["docstring_coverage"] * weights["docstring_coverage"]        + validation["type_hints_coverage"] * weights["type_hints_coverage"]        + (1.0 if validation["error_handling"] else 0.0) * weights["error_handling"]
-        + (1.0 if validation["input_validation"] else 0.0) * weights["input_validation"]
-    )
-
-    if validation["docstring_coverage"] < _COVERAGE_THRESHOLD:
-        validation["recommendations"].append("Add docstrings to undocumented functions")
-    if validation["type_hints_coverage"] < _COVERAGE_THRESHOLD:
-        validation["recommendations"].append(
-            "Add type hints to function parameters and return values"
-        )
-
-    if not validation["error_handling"]:
-        validation["recommendations"].append("Add proper error handling with try/except blocks")
-    if not validation["input_validation"]:
-        validation["recommendations"].append("Add input validation to prevent invalid arguments")
+    validation["recommendations"] = _best_practices_recommendations(validation)
     return validation
 
 def check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]:
