@@ -211,10 +211,8 @@ def monitor_performance(operation_name: str, track_memory: bool = True) -> Calla
     """Decorator for monitoring function performance via the global CodeProfiler."""
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
-        """Decorator function wrapping the target function."""
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
-            """Inner wrapper that executes with monitoring."""
             monitor = get_code_profiler()
             op_name = operation_name
             with monitor.monitor(op_name, track_memory):

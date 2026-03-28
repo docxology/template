@@ -35,6 +35,7 @@ class PipelineResumeMixin(ABC):
     class (e.g. ``PipelineExecutor``) before any mixin method is called:
 
     - ``config``: a :class:`PipelineConfig` instance with project settings.
+      Sub-attributes accessed: ``clean``, ``skip_llm``, ``total_stages``.
     - ``checkpoint_manager``: a :class:`CheckpointManager` instance managing
       the checkpoint file for the active project.
 

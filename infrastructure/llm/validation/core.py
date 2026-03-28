@@ -187,7 +187,7 @@ def validate_formatting(content: str) -> bool:
 
 def validate_complete(
     content: str, mode: ResponseMode = ResponseMode.STANDARD, schema: dict[str, Any] | None = None
-) -> bool:
+) -> bool:  # True or raises for STRUCTURED/RAW/STANDARD; True or False for SHORT/LONG
     """Validate LLM response content based on the response mode.
 
     Args:

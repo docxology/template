@@ -1,8 +1,8 @@
 """Repetition detection functions for LLM output validation.
 
-This module re-exports from focused submodules:
-- similarity: text similarity algorithms (Jaccard, TF-cosine, n-gram, hybrid)
-- detection: repetition detection, unique-content ratio, section deduplication
+Re-exports the public API from ``detection`` (repetition detection algorithms).
+The ``similarity`` submodule provides lower-level text similarity helpers used
+internally by ``detection``; its functions are private and not re-exported here.
 """
 
 from __future__ import annotations

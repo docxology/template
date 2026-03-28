@@ -4,6 +4,11 @@ Provides utilities for:
 - Checking Ollama server status
 - Starting Ollama server if needed
 - Ensuring Ollama is ready with models available
+
+Note:
+    This is an implementation module. Prefer importing from
+    ``infrastructure.llm.utils.ollama``, which re-exports everything here
+    alongside model-discovery utilities under a stable, consolidated API.
 """
 
 from __future__ import annotations

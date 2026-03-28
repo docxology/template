@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import os
 import platform
-import subprocess
+import subprocess  # nosec B404
 import sys
 from pathlib import Path
 
@@ -32,7 +32,7 @@ def check_python_version() -> bool:
 def check_uv_available() -> bool:
     """Check if uv package manager is available and working."""
     try:
-        result = subprocess.run(
+        result = subprocess.run(  # nosec B603 B607
             ["uv", "--version"], capture_output=True, text=True, check=False, timeout=10
         )
         return result.returncode == 0

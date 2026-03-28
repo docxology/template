@@ -54,10 +54,8 @@ class RateLimiter:
             if key not in self.requests:
                 self.requests[key] = []
 
-            # Remove old requests outside the window
             self._clean_window(key, now)
 
-            # Check if under limit
             if len(self.requests[key]) < self.max_requests:
                 self.requests[key].append(now)
                 return True
@@ -79,7 +77,6 @@ class RateLimiter:
             if key not in self.requests:
                 return self.max_requests
 
-            # Clean old requests
             self._clean_window(key, now)
 
             return max(0, self.max_requests - len(self.requests[key]))

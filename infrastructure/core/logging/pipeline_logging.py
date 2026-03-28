@@ -39,7 +39,12 @@ def log_operation(
 ) -> Iterator[None]:
     """Context manager that logs operation start, completion, and failure.
 
-    Completion is only logged if above min_duration.
+    Args:
+        operation: Human-readable name of the operation being performed.
+        logger: Logger instance; defaults to module logger if None.
+        level: Log level for start/completion messages (default INFO).
+        min_duration_to_log: Completion is only logged when duration exceeds this (seconds).
+        log_completion: When False, suppress the completion log even if duration exceeds threshold.
     """
     logger = logger or get_logger(__name__)
 

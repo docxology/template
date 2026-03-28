@@ -228,7 +228,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             if not result.success:
                 break
 
-        # Finalize telemetry report
         if self._telemetry is not None:
             total_duration = time.time() - pipeline_start
             self._telemetry.finalize(total_duration=total_duration)
@@ -263,7 +262,6 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         else:
             logger.info(f"Stage {stage_num}: {stage_name}")
 
-        # Telemetry: start tracking
         if self._telemetry is not None:
             self._telemetry.start_stage(stage_name, stage_num)
 
