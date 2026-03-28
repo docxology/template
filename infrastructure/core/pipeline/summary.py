@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.core.files.inventory import FileInventoryEntry, FileInventoryManager
+from infrastructure.core.files.inventory import FileInventoryManager
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.types import PipelineStageResult
 

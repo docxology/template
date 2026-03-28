@@ -9,6 +9,7 @@ from pathlib import Path
 
 from infrastructure.core.files.inventory import FileInventoryEntry
 from infrastructure.core.pipeline import PipelineStageResult
+from infrastructure.core.pipeline.summary_models import PipelineSummary as PipelineSummaryDirect  # noqa: F401
 from infrastructure.core.pipeline.summary import (
     PipelineSummary,
     PipelineSummaryGenerator,

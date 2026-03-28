@@ -11,7 +11,6 @@ import functools
 import html
 import re
 from pathlib import Path
-from typing import Any
 
 # SecurityError is a subclass of SecurityViolation (see infrastructure/core/exceptions.py).
 # Both names are valid here; SecurityError is used for backwards compatibility with
