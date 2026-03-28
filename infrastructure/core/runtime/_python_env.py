@@ -102,3 +102,48 @@ def get_subprocess_env(base_env: dict[str, str] | None = None) -> dict[str, str]
     if check_uv_available() and "VIRTUAL_ENV" in env:
         env.pop("VIRTUAL_ENV", None)
     return env
+
+
+def build_analysis_script_cmd_and_env(
+    script_path: Path, project_root: Path, repo_root: Path
+) -> tuple[list[str], dict[str, str]]:
+    """Build the subprocess command and environment for running an analysis script.
+
+    Encapsulates venv detection, PYTHONPATH construction, and matplotlib env
+    setup that were previously inline in the analysis orchestrator script.
+
+    Args:
+        script_path: Path to the analysis script to execute.
+        project_root: Absolute path to the project directory (projects/{name}/).
+        repo_root: Absolute path to the repository root.
+
+    Returns:
+        A (cmd, env) tuple ready for ``subprocess.run(cmd, env=env, ...)``.
+    """
+    import shutil
+    import tempfile
+
+    # Detect project-local venv: if the project has its own .venv with optional
+    # dependencies (e.g. discopy), use uv run from the project directory.
+    project_venv = project_root / ".venv"
+    if project_venv.is_dir():
+        uv_path = shutil.which("uv")
+        if uv_path:
+            cmd: list[str] = [uv_path, "run", "--directory", str(project_root), "python", str(script_path)]
+        else:
+            cmd = get_python_command() + [str(script_path)]
+    else:
+        cmd = get_python_command() + [str(script_path)]
+
+    env = get_subprocess_env()
+    env.setdefault("MPLBACKEND", "Agg")
+    env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
+    env["PYTHONPATH"] = os.pathsep.join([
+        str(repo_root),
+        str(repo_root / "infrastructure"),
+        str(project_root / "src"),
+    ])
+    env["PROJECT_DIR"] = str(project_root)
+    env.pop("VIRTUAL_ENV", None)
+
+    return cmd, env

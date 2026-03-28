@@ -22,10 +22,8 @@ Architecture:
 
 from __future__ import annotations
 
-import os
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 # Add root to path for infrastructure imports
@@ -40,7 +38,7 @@ from infrastructure.core.logging.utils import (
 )
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.exceptions import ScriptExecutionError, PipelineError
-from infrastructure.core.runtime.environment import get_python_command, get_subprocess_env
+from infrastructure.core.runtime.environment import build_analysis_script_cmd_and_env
 from infrastructure.core.script_discovery import (
     discover_analysis_scripts,
     verify_analysis_outputs,
@@ -67,44 +65,11 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     logger.info(f"\n  Running: {project_name}/{script_path.name}")
 
     project_root = repo_root / "projects" / project_name
+    cmd, env = build_analysis_script_cmd_and_env(script_path, project_root, repo_root)
 
-    # Detect project-local venv: if the project has its own .venv with optional
-    # dependencies (e.g., discopy for cognitive_case_diagrams), use uv run
-    # from the project directory so those dependencies are available.
     project_venv = project_root / ".venv"
     if project_venv.is_dir():
-        import shutil
-
-        uv_path = shutil.which("uv")
-        if uv_path:
-            cmd = [uv_path, "run", "--directory", str(project_root), "python", str(script_path)]
-            logger.info(f"  Using project-local venv: {project_venv}")
-        else:
-            cmd = get_python_command() + [str(script_path)]
-            logger.warning("  Project has local .venv but 'uv' not found; using root Python")
-    else:
-        cmd = get_python_command() + [str(script_path)]
-
-    # Get clean environment dict with uv compatibility (handles VIRTUAL_ENV warnings)
-    env = get_subprocess_env()
-    env.setdefault("MPLBACKEND", "Agg")
-    env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
-
-    # Set up Python path to include infrastructure and project modules
-    pythonpath = os.pathsep.join(
-        [
-            str(repo_root),
-            str(repo_root / "infrastructure"),
-            str(project_root / "src"),
-        ]
-    )
-    env["PYTHONPATH"] = pythonpath
-
-    # Set PROJECT_ROOT env var for scripts that need to find resources relative to project
-    env["PROJECT_DIR"] = str(project_root)
-
-    # Remove VIRTUAL_ENV to prevent uv from getting confused when switching venvs
-    env.pop("VIRTUAL_ENV", None)
+        logger.info(f"  Using project-local venv: {project_venv}")
 
     try:
         with log_operation(f"Execute {script_path.name}", logger):

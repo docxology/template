@@ -13,6 +13,7 @@ from __future__ import annotations
 
 # Re-export from _python_env
 from infrastructure.core.runtime._python_env import (  # noqa: F401
+    build_analysis_script_cmd_and_env,
     check_python_version,
     check_uv_available,
     get_python_command,
