@@ -14,8 +14,8 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
-    """Collect statistics from a log file.
+def _tally_log_level_counts(log_file: Path) -> dict[str, Any]:
+    """Count log-level occurrences and collect error/warning samples from a log file.
 
     Raises:
         FileNotFoundError: If log_file does not exist.
@@ -70,7 +70,7 @@ def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str
     Raises:
         OSError: If the log file cannot be read.
     """
-    stats = _collect_log_statistics(log_file)
+    stats = _tally_log_level_counts(log_file)
 
     lines = [
         "",

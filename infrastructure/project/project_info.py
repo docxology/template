@@ -6,12 +6,9 @@ project and its directory layout within the repository.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from infrastructure.core.config.schema import ManuscriptConfig
+from typing import Any
 
 
 @dataclass
@@ -25,7 +22,7 @@ class ProjectInfo:
         has_tests: Whether project has tests/ directory
         has_scripts: Whether project has scripts/ directory
         has_manuscript: Whether project has manuscript/ directory
-        metadata: Extracted metadata from pyproject.toml or config.yaml
+        metadata: Raw metadata dict from pyproject.toml or config.yaml
         program: Parent program directory name (empty for standalone projects)
     """
 
@@ -35,7 +32,7 @@ class ProjectInfo:
     has_tests: bool
     has_scripts: bool
     has_manuscript: bool
-    metadata: ManuscriptConfig
+    metadata: dict[str, Any] = field(default_factory=dict)
     program: str = ""
 
     @property
