@@ -21,11 +21,7 @@ from infrastructure.core.pipeline.summary_helpers import (
     get_final_log_path,
     stage_result_to_dict,
 )
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from infrastructure.core.pipeline.summary import PipelineSummary
+from infrastructure.core.pipeline.summary_models import PipelineSummary
 
 
 def format_text_summary(

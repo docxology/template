@@ -12,12 +12,14 @@ statements continue to work unchanged.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.files.inventory import FileInventoryEntry, FileInventoryManager
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.pipeline.executor import PipelineStageResult
+from infrastructure.core.pipeline.types import PipelineStageResult
+
+# PipelineSummary lives in summary_models to avoid a cycle with summary_formatters
+from infrastructure.core.pipeline.summary_models import PipelineSummary  # noqa: F401
 
 # Re-export formatter and helper functions so callers that import from summary still work
 from infrastructure.core.pipeline.summary_formatters import (  # noqa: F401
@@ -34,25 +36,6 @@ from infrastructure.core.pipeline.summary_helpers import (  # noqa: F401
 )
 
 logger = get_logger(__name__)
-
-
-@dataclass
-class PipelineSummary:
-    """Summary of pipeline execution."""
-
-    total_duration: float
-    stage_results: list[PipelineStageResult]
-    slowest_stage: PipelineStageResult | None
-    fastest_stage: PipelineStageResult | None
-    failed_stages: list[PipelineStageResult]
-    inventory: list[FileInventoryEntry]
-    log_file: Path | None = None
-    skip_infra: bool = False
-
-    @property
-    def executed_stages(self) -> list[PipelineStageResult]:
-        """Stages that were actually run (excludes skipped stages)."""
-        return [r for r in self.stage_results if not r.is_skipped]
 
 
 class PipelineSummaryGenerator:
