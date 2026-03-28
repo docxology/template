@@ -258,7 +258,7 @@ class RepositoryScanner:
     def _check_test_coverage(self) -> None:
         """Check test coverage."""
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # nosec B603
                 [sys.executable, "-m", "pytest", "tests/", "-q", "--tb=short"],
                 capture_output=True,
                 text=True,

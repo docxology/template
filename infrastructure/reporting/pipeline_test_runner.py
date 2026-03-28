@@ -62,7 +62,7 @@ def _log_discovered_tests(cmd: list[str], repo_root: Path, env: dict, label: str
     discovery_cmd.append("--collect-only")
     log_substep(f"Discovering {label} tests...", logger)
     try:
-        result = subprocess.run(
+        result = subprocess.run(  # nosec B603
             discovery_cmd, cwd=str(repo_root), env=env,
             capture_output=True, text=True, timeout=30,
         )

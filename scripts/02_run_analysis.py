@@ -22,7 +22,7 @@ Architecture:
 
 from __future__ import annotations
 
-import subprocess
+import subprocess  # nosec B404
 import sys
 from pathlib import Path
 
@@ -76,7 +76,7 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
             # When using project-local venv, run from repo_root but let uv
             # handle the venv via --directory. Otherwise run from repo_root
             # as before.
-            result = subprocess.run(
+            result = subprocess.run(  # nosec B603
                 cmd, cwd=str(repo_root), capture_output=False, check=False, env=env, timeout=300
             )
 

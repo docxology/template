@@ -60,7 +60,7 @@ def _run_override_script(project_root: Path, override_script: Path) -> int:
     logger.info("Transferring control to project-specific renderer...")
     cmd = get_python_command() + [str(override_script)]
     try:
-        result = subprocess.run(cmd, cwd=str(project_root), check=False, timeout=300)
+        result = subprocess.run(cmd, cwd=str(project_root), check=False, timeout=300)  # nosec B603
         if result.returncode == 0:
             log_success("Custom PDF rendering completed successfully", logger)
         else:
