@@ -11,6 +11,7 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 from __future__ import annotations
 
 import time
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from infrastructure.core.runtime.checkpoint import StageResult
@@ -27,7 +28,7 @@ if TYPE_CHECKING:
 logger = get_logger(__name__)
 
 
-class PipelineResumeMixin:
+class PipelineResumeMixin(ABC):
     """Mixin providing checkpoint save/load and pipeline resume capability.
 
     Host class contract — the following attributes MUST be provided by the host
@@ -45,14 +46,15 @@ class PipelineResumeMixin:
     config: PipelineConfig
     checkpoint_manager: "CheckpointManager"
 
+    @abstractmethod
     def _build_stage_list(self, include_llm: bool, skip_clean: bool) -> list[StageSpec]:
         """Build ordered stage list (implemented by host class)."""
-        raise NotImplementedError  # pragma: no cover
 
+    @abstractmethod
     def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
         """Execute all stages (implemented by host class)."""
-        raise NotImplementedError  # pragma: no cover
 
+    @abstractmethod
     def _run_stage_and_checkpoint(
         self,
         stage_num: int,
@@ -61,7 +63,6 @@ class PipelineResumeMixin:
         pipeline_start: float,
     ) -> PipelineStageResult:
         """Run one stage and save checkpoint (implemented by host class)."""
-        raise NotImplementedError  # pragma: no cover
 
     def _start_fresh(self) -> list[PipelineStageResult]:
         """Run the pipeline from scratch, bypassing any checkpoint."""
