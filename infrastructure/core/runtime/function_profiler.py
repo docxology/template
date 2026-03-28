@@ -22,6 +22,11 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
+def _bytes_to_mb(b: int | None) -> float | None:
+    """Convert bytes to megabytes; returns None if input is None."""
+    return b / (1024 * 1024) if b is not None else None
+
+
 @dataclass
 class ProfilingMetrics:
     """Container for function-level performance measurement results.
@@ -40,10 +45,6 @@ class ProfilingMetrics:
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for reporting (memory values in MB)."""
-
-        def _bytes_to_mb(b: int | None) -> float | None:
-            return b / (1024 * 1024) if b is not None else None
-
         return {
             "operation": self.operation_name,
             "execution_time_seconds": round(self.execution_time, 3),
