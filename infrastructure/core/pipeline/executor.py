@@ -153,56 +153,50 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
             return dag.to_stage_specs(self)
 
-        # Hardcoded fallback when no pipeline.yaml is available (e.g. tests)
+        # Hardcoded fallback when no pipeline.yaml is available (e.g. tests).
+        # Applies the same skip_clean/skip_infra/skip_llm flags as the YAML path above.
         logger.debug("No pipeline.yaml found — using hardcoded stage list")
-        stages: list[StageSpec] = []
-        if not skip_clean:
-            stages.append(StageSpec("Clean Output Directories", self._run_clean_outputs))
-        stages.append(StageSpec("Environment Setup", self._run_setup_environment))
-        if not self.config.skip_infra:
-            stages.append(StageSpec("Infrastructure Tests", self.run_infrastructure_tests))
-        stages.append(StageSpec("Project Tests", self.run_project_tests))
-        stages.append(StageSpec("Project Analysis", self._run_analysis))
-        stages.append(StageSpec("PDF Rendering", self._run_pdf_rendering))
-        stages.append(StageSpec("Output Validation", self._run_validation))
-        if include_llm and not self.config.skip_llm:
-            stages.append(StageSpec("LLM Scientific Review", self._run_llm_review))
-            stages.append(StageSpec("LLM Translations", self._run_llm_translations))
-        stages.append(StageSpec("Copy Outputs", self._run_copy_outputs))
-        return stages
+        skip_llm = not include_llm or self.config.skip_llm
+        all_stages: list[StageSpec] = [
+            StageSpec("Clean Output Directories", self._run_clean_outputs),
+            StageSpec("Environment Setup", self._run_setup_environment),
+            StageSpec("Infrastructure Tests", self.run_infrastructure_tests),
+            StageSpec("Project Tests", self.run_project_tests),
+            StageSpec("Project Analysis", self._run_analysis),
+            StageSpec("PDF Rendering", self._run_pdf_rendering),
+            StageSpec("Output Validation", self._run_validation),
+            StageSpec("LLM Scientific Review", self._run_llm_review),
+            StageSpec("LLM Translations", self._run_llm_translations),
+            StageSpec("Copy Outputs", self._run_copy_outputs),
+        ]
+        skip_names: set[str] = set()
+        if skip_clean:
+            skip_names.add("Clean Output Directories")
+        if self.config.skip_infra:
+            skip_names.add("Infrastructure Tests")
+        if skip_llm:
+            skip_names.update({"LLM Scientific Review", "LLM Translations"})
+        return [s for s in all_stages if s.name not in skip_names]
 
     # -- Pipeline execution --------------------------------------------------
 
     def execute_full_pipeline(self) -> list[PipelineStageResult]:
-        """Execute complete pipeline (tests -> analysis -> PDF -> validate -> copy -> LLM).
-
-        Returns:
-            List of stage results
-        """
+        """Execute complete pipeline (tests -> analysis -> PDF -> validate -> copy -> LLM)."""
         logger.info(f"Executing full pipeline for project '{self.config.project_name}'")
-
-        if self.config.resume:
-            return self._resume_pipeline()
-
-        skip_clean = not self.config.clean
-        return self._execute_pipeline(
-            self._build_stage_list(include_llm=True, skip_clean=skip_clean)
-        )
+        return self._run_pipeline(include_llm=True)
 
     def execute_core_pipeline(self) -> list[PipelineStageResult]:
-        """Execute core pipeline (tests -> analysis -> PDF -> validate -> copy).
-
-        Returns:
-            List of stage results
-        """
+        """Execute core pipeline (tests -> analysis -> PDF -> validate -> copy)."""
         logger.info(f"Executing core pipeline for project '{self.config.project_name}'")
+        return self._run_pipeline(include_llm=False)
 
+    def _run_pipeline(self, include_llm: bool) -> list[PipelineStageResult]:
+        """Shared implementation for execute_full_pipeline and execute_core_pipeline."""
         if self.config.resume:
             return self._resume_pipeline()
-
         skip_clean = not self.config.clean
         return self._execute_pipeline(
-            self._build_stage_list(include_llm=False, skip_clean=skip_clean)
+            self._build_stage_list(include_llm=include_llm, skip_clean=skip_clean)
         )
 
     def _run_stage_and_checkpoint(
