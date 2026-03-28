@@ -64,7 +64,12 @@ class ContextLimitError(LLMError):
 
 
 class SecurityViolation(TemplateError):
-    """Raised when a security constraint is violated."""
+    """Raised when a security constraint is violated.
+
+    **Catch contract:** API boundaries and callers in infrastructure should catch
+    ``SecurityViolation`` — this catches both ``SecurityViolation`` and its subclass
+    ``SecurityError``, so a single ``except SecurityViolation`` handles both.
+    """
 
     pass
 
@@ -74,7 +79,7 @@ class SecurityError(SecurityViolation):
 
     Subclass of SecurityViolation kept for backwards compatibility with call
     sites that catch SecurityError specifically. Prefer catching SecurityViolation
-    at higher layers.
+    at higher layers — it is the canonical catch target and catches this class too.
     """
 
     pass

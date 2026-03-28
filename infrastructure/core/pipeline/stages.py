@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -25,7 +26,7 @@ if TYPE_CHECKING:
 logger = get_logger(__name__)
 
 
-class PipelineStageMixin:
+class PipelineStageMixin(ABC):
     """Mixin providing individual pipeline stage runner methods.
 
     Expects the host class to provide:
@@ -39,8 +40,8 @@ class PipelineStageMixin:
     config: "PipelineConfig"
     log_file: Path
 
-    def _setup_log_file_handler(self) -> None:
-        raise NotImplementedError  # pragma: no cover
+    @abstractmethod
+    def _setup_log_file_handler(self) -> None: ...
 
     # -- Public stage methods ------------------------------------------------
 
