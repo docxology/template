@@ -5,6 +5,10 @@ encode document metadata, hash values, and timestamps.  Each barcode is
 rendered as a PDF overlay strip via reportlab.
 
 Dependencies (``qrcode``, ``python-barcode``) are imported lazily.
+
+Implementation split across:
+- ``barcode_generators``: QR code and Code128 image generation
+- ``barcode_payload``: Compact text payload builders
 """
 
 from __future__ import annotations
@@ -14,243 +18,34 @@ from datetime import datetime, timezone
 
 from infrastructure.core.logging.utils import get_logger
 
+# Re-export all public symbols so existing imports continue to work
+from infrastructure.steganography.barcode_generators import (
+    generate_code128,
+    generate_qr_code,
+)
+from infrastructure.steganography.barcode_payload import (
+    build_barcode_payload,
+    build_citation_qr_text,
+    build_integrity_qr_text,
+    build_mailto_qr_text,
+    build_metadata_qr_text,
+)
+
 logger = get_logger(__name__)
 
-# ── Lazy imports ─────────────────────────────────────────────────────────
-
-
-def _get_qrcode():
-    try:
-        import qrcode  # type: ignore[import-untyped]
-        return qrcode
-    except ImportError as e:
-        raise ImportError(
-            "The 'qrcode' package is required for QR code generation. "
-            "Install it with: pip install qrcode[pil]"
-        ) from e
-
-
-def _get_barcode():
-    try:
-        import barcode  # type: ignore[import-untyped]
-        return barcode
-    except ImportError as e:
-        raise ImportError(
-            "The 'python-barcode' package is required for linear barcode generation. "
-            "Install it with: pip install python-barcode"
-        ) from e
-
-
-def _get_reportlab():
-    try:
-        from reportlab.lib.units import inch, mm  # type: ignore[import-untyped]
-        from reportlab.pdfgen import canvas as rl_canvas  # type: ignore[import-untyped]
-        from reportlab.lib.utils import ImageReader  # type: ignore[import-untyped]
-        return rl_canvas, inch, mm, ImageReader
-    except ImportError as e:
-        raise ImportError(
-            "The 'reportlab' package is required for barcode rendering. "
-            "Install it with: pip install reportlab"
-        ) from e
-
-
-# ── QR Code ──────────────────────────────────────────────────────────────
-
-
-def generate_qr_code(
-    data: str,
-    box_size: int = 4,
-    border: int = 1,
-) -> bytes:
-    """Generate a QR code PNG image.
-
-    Args:
-        data: String data to encode.
-        box_size: Size of each QR module in pixels.
-        border: Border width in modules.
-
-    Returns:
-        PNG image bytes.
-    """
-    qrcode = _get_qrcode()
-
-    qr = qrcode.QRCode(
-        version=None,  # Auto-size
-        error_correction=qrcode.constants.ERROR_CORRECT_M,  # M = good scan + less dense
-        box_size=box_size,
-        border=border,
-    )
-    qr.add_data(data)
-    qr.make(fit=True)
-
-    img = qr.make_image(fill_color="black", back_color="white")
-    buf = io.BytesIO()
-    img.save(buf, format="PNG")
-    buf.seek(0)
-    logger.debug(
-        f"QR code generated, data length={len(data)}, image size={buf.getbuffer().nbytes} bytes"
-    )
-    return buf.getvalue()
-
-
-# ── Code128 linear barcode ───────────────────────────────────────────────
-
-
-def generate_code128(
-    data: str,
-    module_width: float = 0.2,
-    module_height: float = 8.0,
-) -> bytes:
-    """Generate a Code128 linear barcode as SVG bytes.
-
-    Args:
-        data: String data to encode (ASCII printable characters).
-        module_width: Width of the narrowest bar in mm.
-        module_height: Height of bars in mm.
-
-    Returns:
-        SVG image bytes.
-    """
-    barcode_mod = _get_barcode()
-    from barcode.writer import SVGWriter  # type: ignore[import-untyped]
-
-    code128 = barcode_mod.get_barcode_class("code128")
-    bc = code128(data, writer=SVGWriter())
-
-    buf = io.BytesIO()
-    bc.write(
-        buf,
-        options={
-            "module_width": module_width,
-            "module_height": module_height,
-            "quiet_zone": 2,
-            "font_size": 6,
-            "text_distance": 2,
-        },
-    )
-    buf.seek(0)
-    logger.debug(f"Code128 barcode generated for data: {data[:30]}…")
-    return buf.getvalue()
-
-
-# ── Barcode data builder ─────────────────────────────────────────────────
-
-
-def build_barcode_payload(
-    title: str = "",
-    hashes: dict[str, str] | None = None,
-    document_id: str = "",
-    extra: dict[str, str] | None = None,
-) -> str:
-    """Build a compact barcode payload string.
-
-    The payload is a pipe-delimited string suitable for QR and Code128
-    encoding.
-
-    Args:
-        title: Document title.
-        hashes: Algorithm → digest mapping (only first 16 chars used).
-        document_id: Unique document identifier.
-        extra: Additional key=value pairs.
-
-    Returns:
-        Payload string.
-    """
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    parts = [f"T:{title[:60]}", f"TS:{timestamp}"]
-
-    if document_id:
-        parts.append(f"ID:{document_id}")
-
-    if hashes:
-        for algo, digest in hashes.items():
-            parts.append(f"{algo.upper()[:6]}:{digest[:16]}")
-
-    if extra:
-        for k, v in extra.items():
-            parts.append(f"{k}:{v}")
-
-    payload = "|".join(parts)
-    logger.debug(f"Barcode payload built: {payload[:80]}")
-    return payload
-
-
-# ── QR code content builders (COMPACT — ≤100 chars for phone scanning) ──
-#
-# Phone cameras need low-density QR codes to scan reliably at small sizes.
-# Each builder targets ≤100 characters to stay at QR version 5 or below,
-# which produces a ~37×37 module grid — easily scannable at 40–50pt.
-
-
-def build_metadata_qr_text(
-    title: str = "",
-    authors: list[str] | None = None,
-    document_id: str = "",
-    **_kwargs,
-) -> str:
-    """Build compact metadata for the metadata QR code (≤100 chars)."""
-    parts = []
-    if title:
-        parts.append(title[:40])
-    if document_id:
-        # Use hyphen instead of colon to avoid URI scheme triggering in camera apps
-        parts.append(f"Doc-ID {document_id[:16]}")
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    parts.append(ts)
-    return " | ".join(parts)
-
-
-def build_citation_qr_text(
-    title: str = "",
-    authors: list[str] | None = None,
-    **_kwargs,
-) -> str:
-    """Build a compact citation string (≤100 chars)."""
-    author = authors[0] if authors else "Unknown"
-    year = datetime.now(timezone.utc).strftime("%Y")
-    cite = f"{author} ({year}). {title[:50]}."
-    return cite[:100]
-
-
-def build_mailto_qr_text(
-    title: str = "",
-    authors: list[str] | None = None,
-    author_emails: list[str | None] = None,
-    **_kwargs,
-) -> str:
-    """Build a proper mailto: URI that opens an email draft.
-
-    Keeps the URI short and simple to avoid freezing phone apps.
-    Uses urllib to correctly URL-encode parameters.
-    """
-    if author_emails:
-        import urllib.parse
-
-        email = author_emails[0]
-        subject_raw = title[:40] if title else "Inquiry"
-        subject = urllib.parse.quote(subject_raw)
-        body = urllib.parse.quote("Please find my inquiry attached.")
-        return f"mailto:{email}?subject={subject}&body={body}"
-    # Fallback: just show name
-    name = authors[0] if authors else "Author"
-    return f"Contact {name}"
-
-
-def build_integrity_qr_text(
-    document_id: str = "",
-    hashes: dict[str, str] | None = None,
-    **_kwargs,
-) -> str:
-    """Build a compact integrity hash for the integrity QR (≤100 chars).
-
-    Shows the SHA256 of the compiled PDF binary file, avoiding colon prefixes.
-    """
-    parts = []
-    if hashes and "sha256" in hashes:
-        parts.append(f"SHA-256 {hashes['sha256'][:24]}...")
-    if document_id:
-        parts.append(f"ID {document_id[:12]}")
-    return " | ".join(parts)
+__all__ = [
+    # barcode_generators
+    "generate_qr_code",
+    "generate_code128",
+    # barcode_payload
+    "build_barcode_payload",
+    "build_metadata_qr_text",
+    "build_citation_qr_text",
+    "build_mailto_qr_text",
+    "build_integrity_qr_text",
+    # this module
+    "create_barcode_strip_overlay",
+]
 
 
 # ── Full barcode strip overlay ───────────────────────────────────────────
@@ -274,14 +69,14 @@ def create_barcode_strip_overlay(
 ) -> bytes:
     """Create a PDF overlay page with labeled QR codes and a barcode strip.
 
-    Layout (bottom of page, 0–68pt):
-        ┌──────────────┬──────────────┬──────────────┬──────────────┬────────┐
-        │   Metadata   │   Citation   │   Contact    │  Integrity   │ Code128│
-        │     QR       │     QR       │     QR       │     QR       │  bars  │
-        │   (label)    │   (label)    │   (label)    │   (label)    │        │
-        └──────────────┴──────────────┴──────────────┴──────────────┴────────┘
+    Layout (bottom of page, 0-68pt):
+        +--------------+--------------+--------------+--------------+--------+
+        |   Metadata   |   Citation   |   Contact    |  Integrity   | Code128|
+        |     QR       |     QR       |     QR       |     QR       |  bars  |
+        |   (label)    |   (label)    |   (label)    |   (label)    |        |
+        +--------------+--------------+--------------+--------------+--------+
 
-    Each QR encodes ≤100 chars so phone cameras can scan at this size.
+    Each QR encodes <=100 chars so phone cameras can scan at this size.
 
     Args:
         page_width: Target page width in points.
@@ -322,7 +117,7 @@ def create_barcode_strip_overlay(
     if qr_spacing < 8:
         qr_spacing = 8
 
-    # ── Build QR contents (compact — ≤100 chars each) ────────────────
+    # ── Build QR contents (compact -- <=100 chars each) ────────────────
     qr_items = []
 
     # 1. Metadata QR
