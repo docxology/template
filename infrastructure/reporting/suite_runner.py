@@ -195,6 +195,7 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
     exit_code = 1
     stdout_text = ""
     stderr_text = ""
+    coverage_conflict_suppressed = False  # tracks whether a coverage plugin error was suppressed
 
     while retry_count <= max_retries:
         try:
@@ -222,12 +223,13 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
                     clean_coverage_files(config.repo_root)
                     continue
                 else:
+                    # Defer exit_code override — checked against actual failure count below
                     logger.warning(
-                        "Coverage data conflict persisted for %s tests. "
-                        "Tests passed; ignoring coverage plugin error.",
+                        "Coverage data conflict persisted for %s tests; "
+                        "checking for actual test failures before suppressing error.",
                         config.label.lower(),
                     )
-                    exit_code = 0
+                    coverage_conflict_suppressed = True
             break
 
         except subprocess.SubprocessError as e:
@@ -280,8 +282,15 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
         config.max_failures_config_key,
     )
 
+    # Single exit_code mutation point: resolve coverage suppression and halt/warn decisions together
     if exit_code != 0:
-        if should_halt:
+        if coverage_conflict_suppressed and failed_count == 0:
+            logger.warning(
+                "Coverage plugin error for %s but no test failures — ignoring coverage error.",
+                config.label.lower(),
+            )
+            exit_code = 0
+        elif should_halt:
             logger.error(message)
         else:
             logger.warning(message)

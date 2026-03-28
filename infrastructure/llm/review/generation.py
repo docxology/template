@@ -278,18 +278,21 @@ def generate_review_with_metrics(
                 logger.error(f"Error generating {review_name}: {e}")
                 return None, metrics
 
-    response = _deduplicate_response(response, best_response)
+    # 'response' holds the loop's final state: either the last successful attempt, or
+    # best_response (set at line 263 when all attempts failed validation). Assign to a
+    # named variable to make this post-loop dependency explicit.
+    final_response = _deduplicate_response(response, best_response)
 
     metrics.generation_time_seconds = time.time() - start_time
-    metrics.output_chars = len(response)
-    metrics.output_words = len(response.split())
-    metrics.output_tokens_est = estimate_tokens(response)
+    metrics.output_chars = len(final_response)
+    metrics.output_words = len(final_response.split())
+    metrics.output_tokens_est = estimate_tokens(final_response)
     metrics.preview = (
-        response[:150].replace("\\n", " ") + "..." if len(response) > 150 else response
+        final_response[:150].replace("\\n", " ") + "..." if len(final_response) > 150 else final_response
     )
 
     log_success(f"{review_name} generated", logger)
-    return response, metrics
+    return final_response, metrics
 
 
 def generate_translation(
