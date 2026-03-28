@@ -94,7 +94,7 @@ class PromptFragmentLoader:
                 f"Invalid JSON in prompt file: {filepath}",
                 context={"error": str(e), "filepath": str(filepath)},
             ) from e
-        except Exception as e:
+        except OSError as e:
             raise LLMTemplateError(
                 f"Failed to load prompt file: {filepath}",
                 context={"error": str(e), "filepath": str(filepath)},

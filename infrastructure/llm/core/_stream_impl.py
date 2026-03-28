@@ -14,9 +14,9 @@ from typing import Any, Callable, Iterator
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
+import requests
 from infrastructure.llm.core._stream_helpers import (
     TIMEOUT_WARNING_FRACTION,
-    _get_requests,
     save_partial_if_needed,
 )
 from infrastructure.llm.core._text_utils import strip_thinking_tags
@@ -95,7 +95,6 @@ def stream_query_impl(
     # Initialize metrics (imported locally to avoid circular import with review.metrics)
     from infrastructure.llm.review.metrics import StreamingMetrics  # noqa: PLC0415
 
-    requests = _get_requests()
     metrics = StreamingMetrics()
 
     for attempt in range(retries + 1):

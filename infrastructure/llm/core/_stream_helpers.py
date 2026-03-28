@@ -1,7 +1,8 @@
 """Streaming helper utilities for LLM client.
 
-Provides the partial-response save helper, the TIMEOUT_WARNING_FRACTION constant,
-and the requests re-export (guarded so missing requests surfaces a clear error).
+Provides the partial-response save helper and the TIMEOUT_WARNING_FRACTION constant.
+``requests`` is a hard dependency here (same as in ``_connection.py``); missing it
+raises at import time with an actionable error message.
 """
 
 from __future__ import annotations
@@ -11,19 +12,12 @@ from typing import Callable
 from infrastructure.core.logging.utils import get_logger
 
 try:
-    import requests as _requests
-except ImportError:
-    _requests = None  # type: ignore[assignment]
-
-
-def _get_requests() -> "requests":  # type: ignore[name-defined]
-    """Return the requests module, raising a clear ImportError at call time if absent."""
-    if _requests is None:
-        raise ImportError(
-            "The 'requests' package is required to use LLM streaming features. "
-            "Install it with: pip install requests  (or: pip install template[llm])"
-        )
-    return _requests
+    import requests
+except ImportError as _err:
+    raise ImportError(
+        "The 'requests' package is required to use LLM streaming features. "
+        "Install it with: pip install requests  (or: uv sync --group llm)"
+    ) from _err
 
 logger = get_logger(__name__)
 

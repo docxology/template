@@ -1,7 +1,9 @@
-"""Project discovery and validation for multi-project support.
+"""Project discovery for multi-project support.
 
-This module provides utilities for discovering, validating, and extracting
-metadata from projects in the projects/ directory.
+Scans the projects/ directory for valid projects and returns ProjectInfo objects.
+For metadata extraction, validation, and ProjectInfo construction, import from the
+sibling sub-modules (``metadata``, ``validation``, ``project_info``) or from the
+``infrastructure.project`` package, which re-exports the full public API.
 """
 
 from __future__ import annotations
@@ -9,9 +11,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.project.metadata import get_project_metadata  # noqa: F401 — re-exported
-from infrastructure.project.project_info import ProjectInfo, build_project_info  # noqa: F401 — re-exported
-from infrastructure.project.validation import validate_project_structure  # noqa: F401 — re-exported
+from infrastructure.project.project_info import ProjectInfo, build_project_info
+from infrastructure.project.validation import validate_project_structure
 
 logger = get_logger(__name__)
 

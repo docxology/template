@@ -14,7 +14,7 @@ from infrastructure.core.pipeline.multi_project import (
     MultiProjectOrchestrator,
     MultiProjectResult,
 )
-from infrastructure.project.discovery import ProjectInfo
+from infrastructure.project.project_info import ProjectInfo
 
 
 def _create_test_repo_structure(tmp_dir: Path, make_project2_fail: bool = False) -> Path:

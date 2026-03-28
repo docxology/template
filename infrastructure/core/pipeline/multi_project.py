@@ -18,7 +18,7 @@ from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
 from infrastructure.core.pipeline.executor import PipelineConfig, PipelineExecutor, PipelineStageResult
 
 if TYPE_CHECKING:
-    from infrastructure.project.discovery import ProjectInfo
+    from infrastructure.project.project_info import ProjectInfo
 
 logger = get_logger(__name__)
 

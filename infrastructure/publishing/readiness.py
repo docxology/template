@@ -31,6 +31,7 @@ def validate_publication_readiness(
         "completeness_score": 0,
         "missing_elements": [],
         "recommendations": [],
+        "skipped_files": [],
     }
 
     # Check document completeness by reading file content
@@ -40,7 +41,8 @@ def validate_publication_readiness(
             with open(md_file, "r", encoding="utf-8") as f:
                 all_content += f.read()
         except (OSError, UnicodeDecodeError) as e:
-            logger.debug(f"Skipping unreadable file {md_file}: {e}")
+            logger.warning(f"Skipping unreadable file {md_file}: {e}")
+            readiness["skipped_files"].append(str(md_file))
             continue
 
     # Check for section headings (e.g. "# Abstract", "## Introduction") rather than
