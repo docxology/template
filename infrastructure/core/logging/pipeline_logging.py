@@ -207,4 +207,4 @@ def log_live_resource_usage(stage_name: str = "", logger: logging.Logger | None 
             logger.info(f"  Resource usage: {resource_info}")
 
     except (OSError, AttributeError) as e:
-        logger.debug(f"Failed to get resource usage: {e}")
+        logger.warning(f"Failed to get resource usage: {e}")

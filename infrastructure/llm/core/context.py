@@ -102,15 +102,16 @@ class ConversationContext:
         )
 
         while self.messages and (self.estimated_tokens + new_tokens > self.max_tokens):
-            removed = self.messages.pop(0)
-            # Don't remove system prompt — put it back and either remove the next
-            # message or stop pruning when only the system message is left.
-            if removed.role == "system":
-                self.messages.insert(0, removed)
-                if len(self.messages) < 2:
-                    # Only the system message remains; nothing more to prune.
-                    break
-                removed = self.messages.pop(1)
+            # Find the oldest non-system message to prune.
+            # System messages are preserved regardless of position.
+            prune_idx = next(
+                (i for i, m in enumerate(self.messages) if m.role != "system"),
+                None,
+            )
+            if prune_idx is None:
+                # Only system messages remain — nothing left to prune.
+                break
+            removed = self.messages.pop(prune_idx)
 
             removed_tokens = len(removed.content) // 4
             self.estimated_tokens -= removed_tokens

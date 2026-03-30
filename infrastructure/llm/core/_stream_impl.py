@@ -14,7 +14,13 @@ from typing import Any, Callable, Iterator
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
-import requests
+try:
+    import requests
+except ImportError as _err:
+    raise ImportError(
+        "The 'requests' package is required to use LLM streaming features. "
+        "Install it with: pip install requests  (or: uv sync)"
+    ) from _err
 from infrastructure.llm.core._stream_helpers import (
     TIMEOUT_WARNING_FRACTION,
     save_partial_if_needed,
@@ -231,8 +237,8 @@ def stream_query_impl(
             metrics.error_count = error_count
             logger.error(f"Streaming request error ({model_name}): {e}")
             raise LLMConnectionError(
-                f"Stream failed ({model_name}): {e}",
-                context={"url": url, "model": model_name, "chunks_received": chunk_count},
+                f"Stream request failed ({model_name}): {type(e).__name__}: {e}",
+                context={"url": url, "model": model_name, "chunks_received": chunk_count, "error_type": type(e).__name__},
             ) from e
 
     # Calculate final metrics

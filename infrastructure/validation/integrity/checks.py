@@ -159,7 +159,7 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
     for data_file in data_files:
         if not data_file.exists():
             logger.warning(f"Data file not found: {data_file}")
-            consistency["file_readable"] = False
+            consistency["file_readable"] &= False
             continue
 
         try:

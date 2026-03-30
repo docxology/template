@@ -85,7 +85,7 @@ class FileInventoryManager:
                         )
                     )
                 except OSError as e:
-                    logger.debug(f"Failed to stat file {file_path}: {e}")
+                    logger.warning(f"Failed to stat file {file_path}: {e}")
 
         return entries
 
@@ -117,9 +117,9 @@ class FileInventoryManager:
                             )
                         )
                     except OSError as e:
-                        logger.debug(f"Failed to stat file {file_path}: {e}")
+                        logger.warning(f"Failed to stat file {file_path}: {e}")
         except OSError as e:
-            logger.debug(f"Failed to scan directory {directory}: {e}")
+            logger.warning(f"Failed to scan directory {directory}: {e}")
 
         return entries
 
