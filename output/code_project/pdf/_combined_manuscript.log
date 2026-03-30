@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  30 MAR 2026 06:46
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  30 MAR 2026 14:56
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -721,6 +721,8 @@ File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/xurl/xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
 )
+Package hyperref Info: Option `colorlinks' set `true' on input line 113.
+
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks28
@@ -891,7 +893,9 @@ Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages
 Package siunitx Warning: Option "binary-units" has been removed in this
 (siunitx)                release.
 
-) (/usr/local/texlive/2026/texmf-dist/tex/latex/cleveref/cleveref.sty
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 154.
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/cleveref/cleveref.sty
 Package: cleveref 2018/03/27 v0.21.4 Intelligent cross-referencing
 Package cleveref Info: `hyperref' support loaded on input line 2370.
 LaTeX Info: Redefining \cref on input line 2370.
@@ -915,44 +919,44 @@ Package cleveref Info: no abbreviation of names on input line 7852.
 )
 ==> First Aid for cleveref.sty applied!
 Package translations Info: No language package found. I am going to use `englis
-h' as default language. on input line 157.
+h' as default language. on input line 158.
 (./_combined_manuscript.aux)
 \openout1 = `_combined_manuscript.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 157.
-LaTeX Font Info:    ... okay on input line 157.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 158.
+LaTeX Font Info:    ... okay on input line 158.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 157.
+(Font)                  OT1/cmr/m/n --> TU/lmr/m/n on input line 158.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 157.
+(Font)                  OT1/cmr/m/it --> TU/lmr/m/it on input line 158.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> TU/lmr/bx/n on input line 157.
+(Font)                  OT1/cmr/bx/n --> TU/lmr/bx/n on input line 158.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 157.
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 158.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 157.
+(Font)                  OT1/cmss/bx/n --> TU/lmss/bx/n on input line 158.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 157.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 158.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 157.
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/bx/n on input line 158.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -983,7 +987,7 @@ pt=math;language=dflt;"
 pt=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 157.
+(Font)              scaled to size 10.0pt on input line 158.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1026,18 +1030,18 @@ ath.otf]/OT:script=math;language=dflt;+ssty=1;"
 pt=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 157.
+(Font)              scaled to size 10.0pt on input line 158.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 157.
+(Font)              `operators' in the math version `normal' on input line 158.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 157.
+ line 158.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 157.
+(Font)              `operators' in the math version `bold' on input line 158.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 157.
+t line 158.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1111,15 +1115,15 @@ ript=math;language=dflt;"<6-8.5>s*[1.000096459334209]"[latinmodern-math.otf]/OT
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 157.
+(Font)              `symbols' in the math version `normal' on input line 158.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/cmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 157.
+t line 158.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 157.
+(Font)              `symbols' in the math version `bold' on input line 158.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/cmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 157.
+t line 158.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1188,23 +1192,23 @@ pt=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 1
-57.
+58.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/cmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 157.
+t line 158.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 157
+(Font)              `largesymbols' in the math version `bold' on input line 158
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/cmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 157.
-LaTeX Info: Redefining \microtypecontext on input line 157.
-Package microtype Info: Applying patch `item' on input line 157.
-Package microtype Info: Applying patch `toc' on input line 157.
-Package microtype Info: Applying patch `eqnum' on input line 157.
-Package microtype Info: Applying patch `footnote' on input line 157.
-Package microtype Info: Applying patch `verbatim' on input line 157.
-LaTeX Info: Redefining \microtypesetup on input line 157.
+t line 158.
+LaTeX Info: Redefining \microtypecontext on input line 158.
+Package microtype Info: Applying patch `item' on input line 158.
+Package microtype Info: Applying patch `toc' on input line 158.
+Package microtype Info: Applying patch `eqnum' on input line 158.
+Package microtype Info: Applying patch `footnote' on input line 158.
+Package microtype Info: Applying patch `verbatim' on input line 158.
+LaTeX Info: Redefining \microtypesetup on input line 158.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1220,7 +1224,7 @@ Package footnotehyper Info: Using the \@makefntext{} approach (see doc).
 (footnotehyper)    try sending the author a small illustrative document.
 (footnotehyper)    To turn off this message, add \footnotehyperwarnfalse
 (footnotehyper)    to the preamble.
-Package hyperref Info: Link coloring OFF on input line 157.
+Package hyperref Info: Link coloring ON on input line 158.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1264,26 +1268,26 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 157.
+or `english'. on input line 158.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 160.
+(Font)              scaled to size 12.0pt on input line 161.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 160.
+(Font)              scaled to size 8.0pt on input line 161.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 6.0pt on input line 160.
+(Font)              scaled to size 6.0pt on input line 161.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 12.0011pt on input line 160.
+(Font)              scaled to size 12.0011pt on input line 161.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 8.00073pt on input line 160.
+(Font)              scaled to size 8.00073pt on input line 161.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 6.00055pt on input line 160.
+(Font)              scaled to size 6.00055pt on input line 161.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.99872pt on input line 160.
+(Font)              scaled to size 11.99872pt on input line 161.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.99915pt on input line 160.
+(Font)              scaled to size 7.99915pt on input line 161.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.99936pt on input line 160.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 160
+(Font)              scaled to size 5.99936pt on input line 161.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 161
 .
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1292,7 +1296,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 160
+LaTeX Font Info:    Trying to load font information for U+msb on input line 161
 .
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1320,57 +1324,27 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 4.99947pt on input line 3.
  [1
 
-])
+] [2])
 \tf@toc=\write4
 \openout4 = `_combined_manuscript.toc'.
 
- [2]
-Underfull \hbox (badness 1024) in paragraph at lines 167--181
-\TU/lmr/m/n/10 This paper presents a comprehensive analysis of gradient descent
- optimization algorithms,
- []
-
-[3]
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 233.
-
-Underfull \hbox (badness 1521) in paragraph at lines 233--239
-\TU/lmtt/m/n/10 validation\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 scientific\TU/lmr/m/
-n/10 , \TU/lmtt/m/n/10 rendering\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 reporting\TU/l
-mr/m/n/10 , \TU/lmtt/m/n/10 documentation\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 llm\T
-U/lmr/m/n/10 , \TU/lmtt/m/n/10 publishing\TU/lmr/m/n/10 ,
+ [3]
+Underfull \hbox (badness 6445) in paragraph at lines 168--179
+\TU/lmr/m/n/10 by \TU/lmtt/m/n/10 projects/code_project/scripts/optimization_an
+alysis.py \TU/lmr/m/n/10 and hydrated into the
  []
 
 
-Overfull \hbox (133.30373pt too wide) in paragraph at lines 276--281
-[]\TU/lmr/bx/n/10 Scientific Utilities\TU/lmr/m/n/10 : Utilizing \TU/lmtt/m/n/1
-0 infrastructure.scientific.stability \TU/lmr/m/n/10 and \TU/lmtt/m/n/10 infras
-tructure.scientific.benchmarking
+Underfull \hbox (badness 1337) in paragraph at lines 180--189
+\TU/lmr/m/n/10 plate infrastructure end-to-end: scientific helpers (\TU/lmtt/m/
+n/10 infrastructure.scientific.stability\TU/lmr/m/n/10 ,
  []
 
 
-Overfull \hbox (35.49373pt too wide) in paragraph at lines 281--286
-[]\TU/lmr/bx/n/10 Hermetic Validation\TU/lmr/m/n/10 : Deploying \TU/lmtt/m/n/10
- infrastructure.validation \TU/lmr/m/n/10 components (\TU/lmtt/m/n/10 markdown_
-validator\TU/lmr/m/n/10 ,
- []
-
-[4] [5]
-Underfull \hbox (badness 1365) in paragraph at lines 345--351
-\TU/lmr/m/n/10 cially, the implementation is designed to be highly observable, 
-delegating all logging to
- []
-
-
-Underfull \hbox (badness 5862) in paragraph at lines 345--351
-\TU/lmtt/m/n/10 infrastructure.core.logging_utils.ProjectLogger \TU/lmr/m/n/10 
-and executing under the hermetic
- []
-
-
-Overfull \hbox (14.92044pt too wide) in paragraph at lines 353--354
-[]\TU/lmr/bx/n/10 Algorithm 1: Gradient Descent (implemented in []\TU/lmtt/b/n/
-10 projects/code_project/src/optimizer.py[]\TU/lmr/bx/n/10 ) 
+Overfull \hbox (89.46939pt too wide) in paragraph at lines 180--189
+\TU/lmtt/m/n/10 infrastructure.scientific.benchmarking\TU/lmr/m/n/10 ), validat
+ion, rendering (\TU/lmtt/m/n/10 infrastructure/rendering/pdf_renderer.py\TU/lmr
+/m/n/10 ),
  []
 
 
@@ -1380,33 +1354,146 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.357 \(
+l.203 \(
+        |1-\alpha| \geq 1\). The analytical minimizer remains \(x^\ast = 1.0\)
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[4]
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 234.
+
+Underfull \hbox (badness 1521) in paragraph at lines 234--240
+\TU/lmtt/m/n/10 validation\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 scientific\TU/lmr/m/
+n/10 , \TU/lmtt/m/n/10 rendering\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 reporting\TU/l
+mr/m/n/10 , \TU/lmtt/m/n/10 documentation\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 llm\T
+U/lmr/m/n/10 , \TU/lmtt/m/n/10 publishing\TU/lmr/m/n/10 ,
+ []
+
+
+Overfull \hbox (133.30373pt too wide) in paragraph at lines 277--282
+[]\TU/lmr/bx/n/10 Scientific Utilities\TU/lmr/m/n/10 : Utilizing \TU/lmtt/m/n/1
+0 infrastructure.scientific.stability \TU/lmr/m/n/10 and \TU/lmtt/m/n/10 infras
+tructure.scientific.benchmarking
+ []
+
+
+Overfull \hbox (35.49373pt too wide) in paragraph at lines 282--287
+[]\TU/lmr/bx/n/10 Hermetic Validation\TU/lmr/m/n/10 : Deploying \TU/lmtt/m/n/10
+ infrastructure.validation \TU/lmr/m/n/10 components (\TU/lmtt/m/n/10 markdown_
+validator\TU/lmr/m/n/10 ,
+ []
+
+[5]
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.366 choices (\(
+                 \alpha \geq 2\) in 1D) visible in both plots and CSV rows
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (27.62532pt too wide) in paragraph at lines 360--369
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][][][] []
+ []
+
+[6]
+Underfull \hbox (badness 1365) in paragraph at lines 384--391
+\TU/lmr/m/n/10 cially, the implementation is designed to be highly observable, 
+delegating all logging to
+ []
+
+
+Underfull \hbox (badness 5862) in paragraph at lines 384--391
+\TU/lmtt/m/n/10 infrastructure.core.logging.utils.ProjectLogger \TU/lmr/m/n/10 
+and executing under the hermetic
+ []
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.398 \(
         \epsilon\), max iterations \(N_{\max}\)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (165.52737pt too wide) in paragraph at lines 394--402
+Overfull \hbox (165.52737pt too wide) in paragraph at lines 435--443
 \TU/lmr/m/n/10 Rather than writing ad-hoc validation code, the project imports 
 \TU/lmtt/m/n/10 infrastructure.scientific.stability.check_numerical_stability\T
 U/lmr/m/n/10 .
  []
 
 
-Overfull \hbox (216.88739pt too wide) in paragraph at lines 405--411
+Overfull \hbox (216.88739pt too wide) in paragraph at lines 446--452
 \TU/lmr/m/n/10 Computational complexity is evaluated not just theoretically, bu
-t empirically via []\TU/lmtt/m/n/10 infrastructure.scientific.benchmarking.benc
-hmark_function[]\TU/lmr/m/n/10 .
+t empirically via [][]\TU/lmtt/m/n/10 infrastructure.scientific.benchmarking.be
+nchmark_function[][]\TU/lmr/m/n/10 .
  []
 
-[6]
-Underfull \hbox (badness 1297) in paragraph at lines 482--489
+[7]
+Overfull \hbox (60.03539pt too wide) in paragraph at lines 472--476
+\TU/lmtt/m/n/10 manuscript/config.yaml \TU/lmr/m/n/10 and passed through \TU/lm
+tt/m/n/10 run_convergence_experiment() \TU/lmr/m/n/10 in \TU/lmtt/m/n/10 optimi
+zation_analysis.py\TU/lmr/m/n/10 .
+ []
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.495 ...} (small \(\alpha), slow but stable on \(
+                                                  H=I\)),
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+Missing character: There is no ≥ (U+2265) in font [lmroman10-regular]:mapping=t
+ex-text;!
+[8]
+Underfull \hbox (badness 1127) in paragraph at lines 545--556
+\TU/lmr/m/n/10 Each figure in \TU/lmtt/m/n/10 03_results.md \TU/lmr/m/n/10 maps
+ to a single generator in \TU/lmtt/m/n/10 optimization_analysis.py
+ []
+
+
+Overfull \hbox (57.04938pt too wide) in paragraph at lines 545--556
+\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 generate_convergence_plot\TU/lmr/m/n/10 , \TU/l
+mtt/m/n/10 generate_step_size_sensitivity_plot\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 
+generate_convergence_rate_plot\TU/lmr/m/n/10 ,
+ []
+
+
+Overfull \hbox (94.40938pt too wide) in paragraph at lines 545--556
+\TU/lmtt/m/n/10 generate_complexity_visualization\TU/lmr/m/n/10 , \TU/lmtt/m/n/
+10 generate_stability_visualization\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 generate_be
+nchmark_visualization\TU/lmr/m/n/10 ).
+ []
+
+
+Underfull \hbox (badness 1297) in paragraph at lines 565--572
 []\TU/lmr/m/n/10 The research template supports advanced LaTeX customization th
 rough the \TU/lmtt/m/n/10 preamble.md
  []
 
-[7]
+[9]
 File: ../figures/convergence_plot.png Graphic file (type bmp)
 <../figures/convergence_plot.png>
 
@@ -1417,16 +1504,12 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.519 for \(\alpha = 0.01\).}
-                             \label{fig:convergence}
+l.603 \(\alpha=1.0\).}
+                      \label{fig:convergence}
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=t
-ex-text;!
 
 ! LaTeX Error: Bad math environment delimiter.
 
@@ -1434,107 +1517,465 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.519 for \(\alpha = 0.01\).}
-                             \label{fig:convergence}
+l.603 \(\alpha=1.0\).}
+                      \label{fig:convergence}
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=t
-ex-text;!
-[8]
+[10]
 File: ../figures/step_size_sensitivity.png Graphic file (type bmp)
 <../figures/step_size_sensitivity.png>
 
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.641 grid.}
+            \label{fig:step_sensitivity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.641 grid.}
+            \label{fig:step_sensitivity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.641 grid.}
+            \label{fig:step_sensitivity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.641 grid.}
+            \label{fig:step_sensitivity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.641 grid.}
+            \label{fig:step_sensitivity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.641 grid.}
+            \label{fig:step_sensitivity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Underfull \hbox (badness 1552) in paragraph at lines 641--641
+[]\TU/lmr/m/n/10 Figure 2: []Figure: Sensitivity sweep (independent dense grid 
+$[] [] [][][][][][][] [][][][]$) for the
+ []
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.669 ...alpha| \geq 1\). \label{tab:opt_results}}
+                                                  \tabularnewline
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.669 ...alpha| \geq 1\). \label{tab:opt_results}}
+                                                  \tabularnewline
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Underfull \hbox (badness 2799) in paragraph at lines 669--669
+\TU/lmr/m/n/10 state at termination, iteration count capped by $[][] []
+ []
+
+
+Underfull \hbox (badness 3108) in paragraph at lines 669--669
+\TU/lmr/m/n/10 ing $[][][][] [] [][][]$. Rows marked “No” either hit the
+ []
+
+
+Underfull \hbox (badness 3049) in paragraph at lines 669--669
+\TU/lmr/m/n/10 iteration cap before meeting the gradient tolerance (small
+ []
+
+Missing character: There is no α (U+03B1) in font [lmroman10-regular]:mapping=t
+ex-text;!
 Missing character: There is no α (U+03B1) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
-ignored: Infinite glue shrinkage found in box being split [9]
-File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
-<../figures/convergence_rate_comparison.png>
- [10] [11]
-File: ../figures/algorithm_complexity.png Graphic file (type bmp)
-<../figures/algorithm_complexity.png>
- [12] [13]
-File: ../figures/performance_benchmark.png Graphic file (type bmp)
-<../figures/performance_benchmark.png>
-
-Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ∼ (U+223C) in font [lmroman10-regular]:mapping=t
-ex-text;!
-
-Underfull \hbox (badness 5161) in paragraph at lines 809--809
-[]\TU/lmr/m/n/10 Figure 5: []Dimensional scaling benchmark. Left: mean executio
-n time ($[]$s) per
+Overfull \hbox (821.17511pt too wide) in paragraph at lines 706--707
+\TU/lmr/m/n/10 1233840596906177455240913358131801868905057899753059079921866755
+5409910008960556039568852130152776011678834551589497989620754880563800936176875
+2272295676536457470613583575384064.0000|  
  []
 
+[11]
+File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
+<../figures/convergence_rate_comparison.png>
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.731 dominates.}
+                 \label{fig:convergence_rate}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.731 dominates.}
+                 \label{fig:convergence_rate}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Underfull \hbox (badness 5847) in paragraph at lines 731--731
+\TU/lmr/m/n/10 aligned with the plot generated by \TU/lmtt/m/n/10 generate_conv
+ergence_rate_plot()\TU/lmr/m/n/10 . Divergent
+ []
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.735 ...th fixed \(\alpha) gives \begin{equation}
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! You can't use `\eqno' in math mode.
+\veqno ->\@kernel@eqno 
+                       \aftergroup \ignorespaces 
+l.738 \end{equation}
+                     so the distance to the minimizer contracts by
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.738 \end{equation}
+                     so the distance to the minimizer contracts by
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+! LaTeX Error: \begin{document} ended by \end{equation}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.738 \end{equation}
+                     so the distance to the minimizer contracts by
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.738 \end{equation}
+                     so the distance to the minimizer contracts by
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.738 \end{equation}
+                     so the distance to the minimizer contracts by
+Things are pretty mixed up, but I think the worst is over.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.747 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[12] [13] [14]
+File: ../figures/algorithm_complexity.png Graphic file (type bmp)
+<../figures/algorithm_complexity.png>
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.901 instability.}
+                   \label{fig:complexity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.901 instability.}
+                   \label{fig:complexity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.901 instability.}
+                   \label{fig:complexity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.901 instability.}
+                   \label{fig:complexity}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+File: ../figures/performance_benchmark.png Graphic file (type bmp)
+<../figures/performance_benchmark.png>
+[15] [16]
 File: ../figures/stability_analysis.png Graphic file (type bmp)
 <../figures/stability_analysis.png>
-[14]
-Overfull \hbox (3.39876pt too wide) in paragraph at lines 870--875
+
+Overfull \hbox (3.39876pt too wide) in paragraph at lines 1003--1008
 []\TU/lmr/bx/n/10 Infrastructure tests \TU/lmr/m/n/10 covering all underlying m
 echanisms across \TU/lmtt/m/n/10 infrastructure.reporting\TU/lmr/m/n/10 ,
  []
 
-
-Underfull \hbox (badness 1028) in paragraph at lines 901--902
-\TU/lmr/m/it/10 including all dynamic references (e.g., Figure []6[]), confirms
- the absolute reliability of the
+[17]
+Underfull \hbox (badness 1028) in paragraph at lines 1035--1036
+\TU/lmr/m/it/10 including all dynamic references (e.g., Figure [][]6[][]), conf
+irms the absolute reliability of the
  []
 
-[15]
-Underfull \hbox (badness 10000) in paragraph at lines 968--973
+[18]
+Missing character: There is no ≥ (U+2265) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+Underfull \hbox (badness 10000) in paragraph at lines 1101--1106
 []\TU/lmr/bx/n/10 Reporting & Integrity\TU/lmr/m/n/10 : \TU/lmtt/m/n/10 infrast
 ructure.reporting.pipeline_reporter \TU/lmr/m/n/10 and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 968--973
-\TU/lmtt/m/n/10 infrastructure.validation.output_validator \TU/lmr/m/n/10 assur
+Underfull \hbox (badness 10000) in paragraph at lines 1101--1106
+\TU/lmtt/m/n/10 infrastructure.validation.output.validator \TU/lmr/m/n/10 assur
 ing CSV/JSON configurations
  []
 
 
-Overfull \hbox (88.36372pt too wide) in paragraph at lines 973--978
+Overfull \hbox (88.36372pt too wide) in paragraph at lines 1106--1111
 []\TU/lmr/bx/n/10 Visual Cryptography\TU/lmr/m/n/10 : Publication-ready graphic
 s compiled by \TU/lmtt/m/n/10 infrastructure.rendering.pdf_renderer.py
  []
 
-[16]
-Overfull \hbox (32.11711pt too wide) in paragraph at lines 1035--1038
+[19]
+Overfull \hbox (32.11711pt too wide) in paragraph at lines 1168--1171
 []\TU/lmr/bx/n/10 Agentic Generation Systems\TU/lmr/m/n/10 : Extending validati
 on tools built over \TU/lmtt/m/n/10 infrastructure.validation
  []
 
-
-Underfull \hbox (badness 4713) in paragraph at lines 1049--1058
-\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 projects/code_project/manuscript/04_conclusion.
-md\TU/lmr/m/n/10 ) alongside \TU/lmtt/m/n/10 config.yaml \TU/lmr/m/n/10 flawles
-sly
+[20] [21]
+Underfull \hbox (badness 10000) in paragraph at lines 1274--1279
+[]\TU/lmtt/m/n/10 optimization_analysis.py \TU/lmr/m/n/10 — writes \TU/lmtt/m/n
+/10 output/data/optimization_results.csv\TU/lmr/m/n/10 ,
  []
 
-[17] [18]
+
+Overfull \hbox (125.79428pt too wide) in paragraph at lines 1279--1284
+[]\TU/lmtt/m/n/10 z_generate_manuscript_variables.py \TU/lmr/m/n/10 — reads the
+ CSV and YAML, emits \TU/lmtt/m/n/10 output/data/manuscript_variables.json\TU/l
+mr/m/n/10 ,
+ []
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1311 C
+        onvergence rate & Same trajectories as above; tolerance line uses
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (78.12378pt too wide) in paragraph at lines 1309--1311
+[][][][][][][][][][][][][][][][][][]$  
+ []
+
+[22]
+Overfull \hbox (100.8874pt too wide) in paragraph at lines 1368--1370
+\TU/lmr/m/n/10 The analysis pipeline produced the following artifacts, each val
+idated by \TU/lmtt/m/n/10 infrastructure.validation.output.validator\TU/lmr/m/n
+/10 : 
+ []
+
+[23] [24]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1480 
+       
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1473--1480
+\TU/lmr/m/n/10 gent $[][][] [][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][] []
+ []
+
+
+Overfull \hbox (15.5304pt too wide) in paragraph at lines 1484--1493
+\TU/lmr/m/n/10 tion is procedural: configuration in \TU/lmtt/m/n/10 manuscript/
+config.yaml \TU/lmr/m/n/10 drives \TU/lmtt/m/n/10 run_convergence_experiment()\
+TU/lmr/m/n/10 ,
+ []
+
+
+Overfull \hbox (28.90828pt too wide) in paragraph at lines 1484--1493
+\TU/lmr/m/n/10 figures, CSV exports, and \TU/lmtt/m/n/10 {{RESULT_*}} \TU/lmr/m
+/n/10 substitution (\TU/lmtt/m/n/10 scripts/z_generate_manuscript_variables.py\
+TU/lmr/m/n/10 )
+ []
+
+
+! LaTeX Error: Command \item invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1507 \item
+            
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1508   \textbf
+                {Global optimization}: Convexity is assumed; no basin-hopping
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (91.26051pt too wide) in paragraph at lines 1505--1508
+[]\TU/lmr/bx/n/10 Step-size policy\TU/lmr/m/n/10 : Only constant $[][][][][][][
+][][][][][][][][][][][][] [][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1505--1508
+
+ []
+
+[25] [26]
 
 LaTeX Font Warning: Font shape `TU/lmtt/bx/it' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 1153.
+(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 1615.
 
 
-[19] (./_combined_manuscript.bbl) [20] (./_combined_manuscript.aux)
+[27] (./_combined_manuscript.bbl) [28] (./_combined_manuscript.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 27714 strings out of 468168
- 559146 string characters out of 5432815
- 1118594 words of memory out of 5000000
- 56116 multiletter control sequences out of 15000+600000
- 633124 words of font info for 93 fonts, out of 8000000 for 9000
+ 27819 strings out of 468168
+ 561421 string characters out of 5432815
+ 1127921 words of memory out of 5000000
+ 56215 multiletter control sequences out of 15000+600000
+ 633156 words of font info for 97 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 90i,7n,114p,1017b,1127s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,9n,114p,1017b,1127s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (20 pages).
+Output written on _combined_manuscript.pdf (28 pages).

@@ -152,6 +152,19 @@ graph TD
 
 → **Details**: [projects/template/AGENTS.md](../projects/template/AGENTS.md) · [projects/template/README.md](../projects/template/README.md)
 
+### `blake_bimetalism` — Digital Humanities Synthesis
+
+> **`projects/blake_bimetalism/`** is an 18-part scholarly manuscript synthesizing William Blake's poetic critique with historical 18th-century bimetallism.
+
+| Feature | Implementation |
+| --- | --- |
+| Data-driven manuscript | 18 markdown chapters injected with script-generated esoteric metrics |
+| Custom visualization suite | Module-based plotting logic in `src/viz/` |
+| Rigorous testing | Zero-Mock validation of pipeline stages and semantic generation |
+| Cryptographic signing | Validated and steganographically watermarked as a final artifact |
+
+→ **Details**: [projects/blake_bimetalism/AGENTS.md](../projects/blake_bimetalism/AGENTS.md) · [projects/blake_bimetalism/README.md](../projects/blake_bimetalism/README.md)
+
 ### Project Directory Layout
 
 ```text

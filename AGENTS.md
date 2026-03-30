@@ -9,7 +9,7 @@ This document provides documentation for the Research Project Template system, e
 **Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 **DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
 
-The reproducibility crisis in computational research is fundamentally structural: research artifacts are scattered across disconnected tools—LaTeX editors, Jupyter notebooks, ad-hoc shell scripts—with no enforced mechanism to keep code, data, and manuscript synchronized. `template/` applies the principle of Infrastructure as Code to the research lifecycle, making the manuscript, test suite, and provenance chain version-controlled, deterministically buildable, and independently verifiable. It is built on a Two-Layer Architecture that separates 14 reusable infrastructure subpackages (~150 Python modules, validated by ~3,083 tests) from self-contained project workspaces, connected by a ten-stage DAG-based build pipeline. A Documentation Duality standard equips every directory with both human-readable `README.md` and machine-readable `AGENTS.md` files, while each infrastructure module additionally carries a `SKILL.md`—a structured skill descriptor aligned with the Model Context Protocol—enabling AI agents to locate and invoke module capabilities without hallucinating API signatures. Scalability is demonstrated across three heterogeneous projects achieving 100% pipeline success with zero mock violations. `template/` is open source under the Apache 2.0 License at `github.com/docxology/template`.
+The reproducibility crisis in computational research is fundamentally structural: research artifacts are scattered across disconnected tools—LaTeX editors, Jupyter notebooks, ad-hoc shell scripts—with no enforced mechanism to keep code, data, and manuscript synchronized. `template/` applies the principle of Infrastructure as Code to the research lifecycle, making the manuscript, test suite, and provenance chain version-controlled, deterministically buildable, and independently verifiable. It is built on a Two-Layer Architecture that separates 13 reusable infrastructure subpackages (~150 Python modules, validated by ~3,083 tests) from self-contained project workspaces, connected by a ten-stage DAG-based build pipeline. A Documentation Duality standard equips every directory with both human-readable `README.md` and machine-readable `AGENTS.md` files, while each infrastructure module additionally carries a `SKILL.md`—a structured skill descriptor aligned with the Model Context Protocol—enabling AI agents to locate and invoke module capabilities without hallucinating API signatures. Scalability is demonstrated across three heterogeneous projects achieving 100% pipeline success with zero mock violations. `template/` is open source under the Apache 2.0 License at `github.com/docxology/template`.
 
 ## 📋 Table of Contents
 
@@ -89,7 +89,7 @@ The template now supports **multiple independent projects** within a single repo
 **Active Projects** (under `projects/` today; authoritative list from `discover_projects()`):
 
 - `projects/code_project/` — Optimization research exemplar (numerical methods and convergence)
-- `projects/fep_lean/` — Formal-methods / Lean-oriented manuscript and tooling
+- `projects/blake_bimetalism/` — 18-part manuscript synthesizing Blakean poetics with esoteric finance
 - `projects/template/` — Meta-documentation and template metrics
 
 **Note:** Additional exemplars (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `cognitive_case_diagrams`) live under `projects_archive/` until moved back into `projects/`. Archived projects are not discovered or executed by the pipeline.
@@ -187,7 +187,7 @@ Each directory contains documentation for easy navigation:
 | Directory | AGENTS.md | README.md | Purpose |
 | --------- | --------- | --------- | ------- |
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
-| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | Formal / Lean-oriented project |
+| [`projects/blake_bimetalism/`](projects/blake_bimetalism/) | [AGENTS.md](projects/blake_bimetalism/AGENTS.md) | [README.md](projects/blake_bimetalism/README.md) | 18-part manuscript synthesizing Blakean poetics |
 | [`projects/template/`](projects/template/) | [AGENTS.md](projects/template/AGENTS.md) | [README.md](projects/template/README.md) | Template meta-documentation |
 
 See [`projects/README.md`](projects/README.md) for narrative descriptions. Archived exemplars (e.g. [`projects_archive/traditional_newspaper/`](projects_archive/traditional_newspaper/)) are under [`projects_archive/`](projects_archive/) (not executed until moved into `projects/`). Regenerate [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) after changing `projects/` layout (`uv run python scripts/generate_active_projects_doc.py`).
@@ -798,9 +798,9 @@ output/
 
 ## 🧪 **Advanced Modules**
 
-The template includes advanced modules for scientific package development:
+The template includes 13 advanced infrastructure subpackages for scientific development:
 
-### 🔒 Security & Monitoring (`infrastructure/core/`)
+### 🔒 Core Utilities (`infrastructure/core/`)
 
 Enterprise-grade security and system monitoring.
 
@@ -826,9 +826,9 @@ if quick_health_check():
     status = get_health_status()
 ```
 
-### 🔍 Integrity Verification (`infrastructure/validation/integrity/integrity.py`)
+### 🔍 Validation System (`infrastructure/validation/`)
 
-File integrity and cross-reference validation.
+Comprehensive file integrity, manuscript structures, cross-references, and output validation.
 
 **Key Features:**
 
@@ -845,29 +845,6 @@ from infrastructure.validation.integrity.integrity import verify_output_integrit
 
 report = verify_output_integrity(output_dir)
 print(generate_integrity_report(report))
-```
-
-### 📚 Publishing Tools (`infrastructure/publishing/`)
-
-Academic publishing workflow assistance.
-
-**Key Features:**
-
-- **DOI Validation**: Format and checksum verification
-- **Citation Generation**: BibTeX, APA, MLA formats
-- **Publication Metadata**: Metadata extraction
-- **Submission Preparation**: Checklist and package creation
-- **Academic Profile**: ORCID and repository integration
-- **Platform Integration**: Zenodo, arXiv, GitHub releases
-
-**Usage:**
-
-```python
-from infrastructure.publishing import extract_publication_metadata, generate_citation_bibtex
-
-metadata = extract_publication_metadata(markdown_files)
-bibtex = generate_citation_bibtex(metadata)
-print(bibtex)
 ```
 
 ### 🔬 Scientific Development (`infrastructure/scientific/`)

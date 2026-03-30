@@ -153,7 +153,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.917904853820801,
+      "total_size_mb": 4.9140167236328125,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,15 +163,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8927412033081055
+      "size_mb": 1.890655517578125
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5169448852539062
+      "size_mb": 1.5150537490844727
     },
     "data": {
       "files": 3,
-      "size_mb": 0.011018753051757812
+      "size_mb": 0.011019706726074219
     }
   },
   "summary": {

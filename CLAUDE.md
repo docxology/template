@@ -106,7 +106,7 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `code_project`, `fep_lean`, `template` (run `discover_projects` or `ls projects/` for the current set; see `docs/_generated/active_projects.md`)
+**Active projects:** `code_project`, `template`, and others (run `discover_projects` or `ls projects/` for the current set; see `docs/_generated/active_projects.md`)
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -153,15 +153,19 @@ avg = calculate_average(data)  # Use tested method
 
 ### Infrastructure Modules
 
-- `infrastructure/core/` - Core utilities (logging, config, exceptions, file operations, pipeline)
-- `infrastructure/validation/` - PDF and markdown validation, output validation
-- `infrastructure/rendering/` - Multi-format rendering (PDF, HTML, slides)
+- `infrastructure/config/` - Repository-wide configuration and defaults
+- `infrastructure/core/` - Core utilities (logging, exceptions, file operations, pipeline, telemetry, security)
+- `infrastructure/docker/` - Docker containerization settings and configuration
 - `infrastructure/documentation/` - Figure management, API docs, glossary generation
-- `infrastructure/publishing/` - Academic publishing tools (DOI, citations, Zenodo, arXiv)
 - `infrastructure/llm/` - Local LLM integration (Ollama) for reviews and translations
-- `infrastructure/scientific/` - Scientific computing best practices
-- `infrastructure/reporting/` - Pipeline reporting and error aggregation
 - `infrastructure/project/` - Multi-project discovery and management
+- `infrastructure/publishing/` - Academic publishing tools (DOI, citations, Zenodo, arXiv)
+- `infrastructure/rendering/` - Multi-format rendering (PDF, HTML, slides)
+- `infrastructure/reporting/` - Pipeline reporting and error aggregation
+- `infrastructure/scientific/` - Scientific computing best practices and benchmarking
+- `infrastructure/skills/` - Programmatic AI skill discovery and manifest generation
+- `infrastructure/steganography/` - Cryptographic PDF watermarking and verification
+- `infrastructure/validation/` - PDF, output, and markdown integrity validation
 
 ## Project Structure
 
@@ -170,7 +174,7 @@ avg = calculate_average(data)  # Use tested method
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-**Current active projects:** `code_project`, `fep_lean`, `template`
+**Current active projects:** `code_project`, `blake_bimetalism`, `template`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`
@@ -225,7 +229,7 @@ output/
 
 ### Extended Pipeline (Stages 9-10, Optional)
 
-9. **LLM Scientific Review** - Requires Ollama (executive summary, quality review, methodology review, improvement suggestions)
+1. **LLM Scientific Review** - Requires Ollama (executive summary, quality review, methodology review, improvement suggestions)
 2. **LLM Translations** - Multi-language abstract translations (configure in `config.yaml`)
 
 **Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed.

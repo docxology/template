@@ -275,7 +275,7 @@ graph TB
 Active projects under `projects/` (discovered by `./run.sh`; list may change):
 
 - **`projects/code_project/`** — Optimization research exemplar
-- **`projects/fep_lean/`** — Formal / Lean-oriented manuscript
+- **`projects/blake_bimetalism/`** — 18-part manuscript synthesizing Blakean poetics with esoteric finance
 - **`projects/template/`** — Meta-documentation for the template
 
 **Note:** More exemplars (e.g. `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved into `projects/`. See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for a generated list from `discover_projects()`.
@@ -327,7 +327,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 **Current Active Projects:**
 
 - `code_project/` — Optimization research exemplar
-- `fep_lean/` — Formal / Lean-oriented manuscript
+- `blake_bimetalism/` — 18-part manuscript synthesizing Blakean poetics with esoteric finance
 - `template/` — Meta-documentation
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
@@ -540,7 +540,7 @@ graph TB
     end
 
     subgraph Core["🧠 Core Systems"]
-        INFRASTRUCTURE[Infrastructure Modules\n9 specialized modules\nValidation, rendering, LLM]
+        INFRASTRUCTURE[Infrastructure Modules\n13 specialized modules\nValidation, rendering, LLM]
         BUSINESS_LOGIC[Business Logic\nProject algorithms\n100% test coverage]
         CONFIGURATION[Configuration System\nYAML + environment\nRuntime flexibility]
     end
