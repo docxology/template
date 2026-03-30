@@ -75,24 +75,18 @@ Thumbs.db
 invalid/
 
 # Separate repositories (managed independently)
-projects/cognitive_integrity/
-projects/act_inf_metaanalysis/
-projects/pragmatism_blake/
-projects/cognitive_case_diagrams/
-projects/fep_lean/
-projects/blake_bimetalism/
+projects/*
+!projects/code_project/
+!projects/template/
+!projects/AGENTS.md
+!projects/PAI.md
+!projects/PROJECTS_PARADIGM.md
+!projects/README.md
 
 # Archived projects
 /projects_archive 
 /projects_in_progress
 
-# Scratch project directories (test artifacts, not real projects)
-projects/project1/
-projects/project2/
-projects/test/
-projects/test_project/
-
 # Desloppify
 .desloppify
 /.desloppify
-/projects/blake_bimetalism
