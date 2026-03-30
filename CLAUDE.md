@@ -16,6 +16,7 @@ This is a research project template with a test-driven development workflow, aut
 | All tests | `python3 scripts/01_run_tests.py --project {name}` |
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
 | Install deps | `uv sync` |
+| Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
 
 ## Common Commands
 

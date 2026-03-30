@@ -853,7 +853,11 @@ brew install --cask mactex
 ```bash
 # Using uv (recommended) - installs workspace dependencies
 uv sync
+```
 
+After `uv sync`, the project interpreter is **`.venv/bin/python`** (Python **3.12** per [`.python-version`](.python-version)). VS Code and Cursor pick this up from [`.vscode/settings.json`](.vscode/settings.json); otherwise choose that interpreter manually.
+
+```bash
 # Workspace management
 uv run python scripts/manage_workspace.py status  # Check workspace status
 uv run python scripts/manage_workspace.py add <package> --project <name>  # Add project-specific dependency

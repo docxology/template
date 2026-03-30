@@ -45,8 +45,10 @@ coverage.xml
 *.cover
 .hypothesis/
 
-# IDEs
-.vscode/
+# IDEs — commit shared VS Code defaults; ignore local-only files
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
