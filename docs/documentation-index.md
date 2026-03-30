@@ -23,7 +23,7 @@ This index provides an overview of all documentation files in the Research Proje
 ### 🏗️ **Contributor / Maintainer**
 
 1. **[development/contributing.md](development/contributing.md)** - Contribution guidelines
-2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards
+2. **[rules/AGENTS.md](rules/AGENTS.md)** - Development standards
 3. **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - TDD workflow (Levels 7-9)
 4. **[development/testing/testing-guide.md](development/testing/testing-guide.md)** - Testing requirements
 5. **[development/code-of-conduct.md](development/code-of-conduct.md)** - Community standards
@@ -32,14 +32,14 @@ This index provides an overview of all documentation files in the Research Proje
 
 1. **[operational/troubleshooting/](operational/troubleshooting/)** - Troubleshooting guides
 2. **[reference/faq.md](reference/faq.md)** - Common questions and solutions
-3. **[operational/build/build-system.md](operational/build/build-system.md)** - Build system details
+3. **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and commands
 4. **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance issues
-5. **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md#️-project-packages-missing-from-root-venv--silent-stage-4-failure)** - ⚠️ Silent Stage 4 failure pattern
+5. **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** - ⚠️ Silent Stage 4 failure pattern
 
 ---
 
 > [!IMPORTANT]
-> **Critical Rules for Multi-Project Pipelines (March 2026)**
+> **Critical Rules for Multi-Project Pipelines**
 >
 > 1. **Root Venv Dependency Coverage** — If `projects/<name>/.venv` does NOT exist, every package in that project's `pyproject.toml` must also be in the root `pyproject.toml`. Violation: Stage 4 fails silently in < 1s. Fix: `uv sync` after adding to root deps.
 > 2. **`matplotlib` in Core Deps** — Must be in `[project.dependencies]`, not `[project.optional-dependencies]`. `uv sync` without flags skips optional groups.
@@ -52,25 +52,25 @@ This index provides an overview of all documentation files in the Research Proje
 
 ## 🏗️ **Development Rules**
 
-Development standards are documented in the `.cursorrules/` directory:
+Development standards (formerly in `.cursorrules/`) are documented in the `rules/` directory:
 
-- **[`.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md)** - Overview and navigation guide
-- **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Quick reference and patterns
-- **[`.cursorrules/error_handling.md`](../.cursorrules/error_handling.md)** - Exception handling patterns
-- **[`.cursorrules/security.md`](../.cursorrules/security.md)** - Security standards
-- **[`.cursorrules/python_logging.md`](../.cursorrules/python_logging.md)** - Logging standards
-- **[`.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
-- **[`.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md)** - Testing patterns
-- **[`.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md)** - Documentation writing guide
-- **[`.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md)** - Type annotation patterns
-- **[`.cursorrules/llm_standards.md`](../.cursorrules/llm_standards.md)** - LLM/Ollama integration
-- **[`.cursorrules/code_style.md`](../.cursorrules/code_style.md)** - Code formatting
-- **[`.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md)** - Git workflow
-- **[`.cursorrules/api_design.md`](../.cursorrules/api_design.md)** - API design
-- **[`.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md)** - Manuscript formatting
-- **[`.cursorrules/reporting.md`](../.cursorrules/reporting.md)** - Reporting module standards
-- **[`.cursorrules/refactoring.md`](../.cursorrules/refactoring.md)** - Refactoring standards
-- **[`.cursorrules/folder_structure.md`](../.cursorrules/folder_structure.md)** - Folder structure
+- **[`rules/AGENTS.md`](rules/AGENTS.md)** - Overview and navigation guide
+- **[`rules/README.md`](rules/README.md)** - Quick reference and patterns
+- **[`rules/error_handling.md`](rules/error_handling.md)** - Exception handling patterns
+- **[`rules/security.md`](rules/security.md)** - Security standards
+- **[`rules/python_logging.md`](rules/python_logging.md)** - Logging standards
+- **[`rules/infrastructure_modules.md`](rules/infrastructure_modules.md)** - Infrastructure module development
+- **[`rules/testing_standards.md`](rules/testing_standards.md)** - Testing patterns
+- **[`rules/documentation_standards.md`](rules/documentation_standards.md)** - Documentation writing guide
+- **[`rules/type_hints_standards.md`](rules/type_hints_standards.md)** - Type annotation patterns
+- **[`rules/llm_standards.md`](rules/llm_standards.md)** - LLM/Ollama integration
+- **[`rules/code_style.md`](rules/code_style.md)** - Code formatting
+- **[`rules/git_workflow.md`](rules/git_workflow.md)** - Git workflow
+- **[`rules/api_design.md`](rules/api_design.md)** - API design
+- **[`rules/manuscript_style.md`](rules/manuscript_style.md)** - Manuscript formatting
+- **[`rules/reporting.md`](rules/reporting.md)** - Reporting module standards
+- **[`rules/refactoring.md`](rules/refactoring.md)** - Refactoring standards
+- **[`rules/folder_structure.md`](rules/folder_structure.md)** - Folder structure
 
 ---
 
@@ -78,16 +78,23 @@ Development standards are documented in the `.cursorrules/` directory:
 
 - **[README.md](../README.md)** - Main project overview and quick start
 - **[AGENTS.md](../AGENTS.md)** - System documentation
-- **[CLOUD_DEPLOY.md](../CLOUD_DEPLOY.md)** - **Headless / cloud server deployment guide** ☁️
+- **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** - **Headless / cloud server deployment guide** ☁️
+- **[PAI.md](PAI.md)** - **Personal AI Infrastructure (PAI)** 🤖
+- **[RUN_GUIDE.md](RUN_GUIDE.md)** - **Run guide and pipeline reference** 🚀
+- **[../.github/README.md](../.github/README.md)** - **GitHub**: Actions workflows, Dependabot, issue/PR templates, mirroring CI locally
+- **[_generated/](_generated/README.md)** - Machine-generated snippets; **[_generated/active_projects.md](_generated/active_projects.md)** is the single source of truth for active `projects/` names (do not copy that list into other guides; default path examples to [`projects/code_project/`](../projects/code_project/))
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 
 ### Quick Reference
 
 - **[reference/copypasta.md](reference/copypasta.md)** - Ready-to-use sharing content
+- **[reference/copypasta-diagrams.md](reference/copypasta-diagrams.md)** - Diagram copypasta blocks
+- **[reference/copypasta-outreach.md](reference/copypasta-outreach.md)** - Outreach/social copypasta
 - **[reference/faq.md](reference/faq.md)** - FAQs
 - **[reference/quick-start-cheatsheet.md](reference/quick-start-cheatsheet.md)** - Essential commands
 - **[reference/common-workflows.md](reference/common-workflows.md)** - Step-by-step recipes
 - **[reference/glossary.md](reference/glossary.md)** - Glossary of terms
+- **[reference/api-project-modules.md](reference/api-project-modules.md)** - Project module API reference
 
 ---
 
@@ -110,6 +117,8 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - Levels 7-9 (Advanced)
 - **[guides/extending-and-automation.md](guides/extending-and-automation.md)** - Levels 10-12 (Expert)
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** - New project checklist (all learnings)
+- **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (primary exemplar: [`projects/code_project/`](../projects/code_project/); other active names: [_generated/active_projects.md](_generated/active_projects.md))
+- **[../projects/code_project/README.md](../projects/code_project/README.md)** - Control-positive exemplar under `projects/`
 
 ### Content Authoring
 
@@ -142,7 +151,7 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ## 🧪 **Advanced Modules**
 
-- **[modules/modules-guide.md](modules/modules-guide.md)** - All 10 infrastructure modules
+- **[modules/modules-guide.md](modules/modules-guide.md)** - All 13 infrastructure modules
 - **[reference/api-reference.md](reference/api-reference.md)** - Unified API documentation
 - **[modules/pdf-validation.md](modules/pdf-validation.md)** - PDF validation system
 
@@ -159,12 +168,10 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ## ⚙️ **Operational Guides**
 
-### Build & CI/CD (`operational/build/`)
+### Pipeline & CI/CD
 
-- **[operational/build/build-system.md](operational/build/build-system.md)** - Build pipeline
-- **[operational/build/build-history.md](operational/build/build-history.md)** - Build changelog
-- **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - GitHub Actions
-- **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - uv package manager
+- **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and stage reference
+- **[.github/README.md](../.github/README.md)** - Repository CI/CD and contribution automation
 
 ### Configuration & Performance (`operational/config/`)
 
@@ -188,6 +195,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[operational/troubleshooting/environment-setup.md](operational/troubleshooting/environment-setup.md)** - Environment setup
 - **[operational/troubleshooting/recovery-procedures.md](operational/troubleshooting/recovery-procedures.md)** - Recovery
 - **[operational/troubleshooting/llm-review.md](operational/troubleshooting/llm-review.md)** - LLM review issues
+- **[operational/troubleshooting/llm-diagnostics.md](operational/troubleshooting/llm-diagnostics.md)** - LLM diagnostics
 
 ### Other Operational Guides
 
@@ -230,6 +238,13 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ---
 
+## 🎙️ **Streams & Talks**
+
+- **[streams/README.md](streams/README.md)** - Navigation index for livestream/talk notes
+- **[streams/inferant-stream-018-1.md](streams/inferant-stream-018-1.md)** - InferAnt #018.1 — March 2026 stream on the Zenodo paper
+
+---
+
 ## 📁 **Directory Structure**
 
 ```text
@@ -253,7 +268,9 @@ docs/
 ├── architecture/                       # Architecture documentation
 │   ├── two-layer-architecture.md       # Full architecture guide
 │   ├── thin-orchestrator-summary.md    # Pattern implementation
-│   └── decision-tree.md               # Code placement decisions
+│   ├── decision-tree.md               # Code placement decisions
+│   ├── migration-from-flat.md          # Migration from flat structure
+│   └── testing-strategy.md            # Testing strategy & coverage
 │
 ├── usage/                              # Content authoring & patterns
 │   ├── examples.md, examples-showcase.md
@@ -263,10 +280,6 @@ docs/
 │   └── template-description.md
 │
 ├── operational/                        # Operational workflows
-│   ├── build/                          # Build pipeline & CI/CD
-│   │   ├── build-system.md, build-history.md
-│   │   ├── ci-cd-integration.md
-│   │   └── dependency-management.md
 │   ├── config/                         # Configuration & performance
 │   │   ├── configuration.md
 │   │   ├── checkpoint-resume.md
@@ -280,7 +293,14 @@ docs/
 │   │   ├── common-errors.md, build-tools.md
 │   │   ├── test-failures.md, environment-setup.md
 │   │   ├── recovery-procedures.md
-│   │   └── llm-review.md
+│   │   ├── llm-review.md
+│   │   └── llm-diagnostics.md
+│   ├── build/                         # Build system & CI/CD
+│   │   ├── build-system.md
+│   │   ├── build-performance.md
+│   │   ├── build-history.md
+│   │   ├── ci-cd-integration.md
+│   │   └── dependency-management.md
 │   ├── reporting-guide.md
 │   └── error-handling-guide.md
 │
@@ -326,6 +346,10 @@ docs/
 │   ├── hashing_and_manifests.md
 │   └── secure_execution.md
 │
+├── streams/                            # Livestream & talk notes
+│   ├── README.md
+│   └── inferant-stream-018-1.md        # InferAnt #018.1 — March 2026
+│
 └── audit/                              # Audit reports
     ├── documentation-review-report.md
     ├── documentation-review-summary.md
@@ -336,7 +360,7 @@ docs/
 
 ## 📋 Documentation Maintenance Notes
 
-- All documentation is maintained as evergreen content (no time-sensitive dates).
+- Documentation is intended to be evergreen; when behaviour changes, we may include dated notes so it’s clear which guidance is newer.
 - Each sub-directory has a `README.md` (user-facing) and `AGENTS.md` (technical guide).
 - Documentation is verified for accuracy and completeness on an ongoing basis.
 

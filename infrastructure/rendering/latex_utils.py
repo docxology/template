@@ -7,13 +7,17 @@ import time
 from pathlib import Path
 
 from infrastructure.core.exceptions import CompilationError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
 
 def compile_latex(
-    tex_file: Path, output_dir: Path, compiler: str = "xelatex", timeout: int = 300
+    tex_file: Path | str,
+    output_dir: Path | str | None = None,
+    compiler: str = "xelatex",
+    timeout: int = 300,
+    passes: int = 2,
 ) -> Path:
     """Compile LaTeX file to PDF.
 
@@ -26,10 +30,13 @@ def compile_latex(
     Returns:
         Path to generated PDF
     """
-    if not tex_file.exists():
+    tex_path = Path(tex_file)
+    out_dir = Path(output_dir) if output_dir is not None else tex_path.parent
+
+    if not tex_path.exists():
         raise CompilationError("LaTeX file not found", context={"file": str(tex_file)})
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     # IMPORTANT: -shell-escape is required for XeTeX to properly determine PNG image
     # dimensions. Without this flag, XeTeX cannot read PNG bounding box information
@@ -38,17 +45,16 @@ def compile_latex(
         compiler,
         "-interaction=nonstopmode",
         "-shell-escape",
-        f"-output-directory={output_dir}",
-        str(tex_file),
+        f"-output-directory={out_dir}",
+        str(tex_path),
     ]
 
-    logger.info(f"Compiling {tex_file} with {compiler}")
+    logger.info(f"Compiling {tex_path} with {compiler}")
 
     try:
         start_time = time.time()
 
-        # Run twice for references (first pass generates aux, second resolves references)
-        max_passes = 2
+        max_passes = max(1, int(passes))
         for i in range(max_passes):
             pass_start = time.time()
             logger.debug(f"Pass {i + 1}/{max_passes}...")
@@ -58,7 +64,7 @@ def compile_latex(
                 capture_output=True,
                 text=True,
                 timeout=timeout,
-                cwd=tex_file.parent,  # Run in file directory for imports
+                cwd=tex_path.parent,  # Run in file directory for imports
             )
 
             pass_duration = time.time() - pass_start
@@ -66,10 +72,10 @@ def compile_latex(
 
             # Note: xelatex may return non-zero exit code even when PDF is generated (due to warnings)  # noqa: E501
             # So we check for PDF existence rather than just exit code
-            pdf_file_temp = output_dir / f"{tex_file.stem}.pdf"
+            pdf_file_temp = out_dir / f"{tex_path.stem}.pdf"
             if not pdf_file_temp.exists():
                 # Only raise error if PDF was NOT generated
-                log_file = output_dir / f"{tex_file.stem}.log"
+                log_file = out_dir / f"{tex_path.stem}.log"
                 log_content = log_file.read_text() if log_file.exists() else "No log file"
 
                 # Enhanced error analysis for better troubleshooting
@@ -137,7 +143,7 @@ def compile_latex(
                     suggestions=enhanced_suggestions,
                 )
 
-        pdf_file = output_dir / f"{tex_file.stem}.pdf"
+        pdf_file = out_dir / f"{tex_path.stem}.pdf"
         if not pdf_file.exists():
             raise CompilationError("PDF not generated", context={"expected": str(pdf_file)})
 

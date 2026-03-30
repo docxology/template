@@ -2,19 +2,23 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
+from pytest_httpserver import HTTPServer
 
 from infrastructure.llm.core.client import LLMClient
+from infrastructure.llm.core.config import OllamaClientConfig
 from infrastructure.llm.review.generator import (
     extract_manuscript_text,
     generate_improvement_suggestions,
     generate_llm_executive_summary as generate_executive_summary,
-    generate_methodology_review,
-    generate_quality_review,
     generate_review_with_metrics,
     generate_translation,
     validate_review_quality,
+    warmup_model,
 )
+from infrastructure.llm.templates.manuscript import ManuscriptMethodologyReview, ManuscriptQualityReview
 
 
 class TestExtractManuscriptText:
@@ -179,22 +183,38 @@ class TestTemplateBasedGenerators:
 
     @pytest.mark.slow
     def test_generate_quality_review_calls_llm(self, ollama_test_server):
-        """Test generate_quality_review actually queries LLM."""
+        """Test generate_review_with_metrics with quality template queries LLM."""
         manuscript_text = "Test manuscript."
         client = LLMClient()
 
-        result, metrics = generate_quality_review(client, manuscript_text)
+        result, metrics = generate_review_with_metrics(
+            client=client,
+            text=manuscript_text,
+            review_type="quality_review",
+            review_name="quality review",
+            template_class=ManuscriptQualityReview,
+            temperature=0.3,
+            max_tokens=None,
+        )
 
         assert isinstance(result, str)
         assert len(result) > 0
 
     @pytest.mark.slow
     def test_generate_methodology_review_calls_llm(self, ollama_test_server):
-        """Test generate_methodology_review actually queries LLM."""
+        """Test generate_review_with_metrics with methodology template queries LLM."""
         manuscript_text = "Test manuscript."
         client = LLMClient()
 
-        result, metrics = generate_methodology_review(client, manuscript_text)
+        result, metrics = generate_review_with_metrics(
+            client=client,
+            text=manuscript_text,
+            review_type="methodology_review",
+            review_name="methodology review",
+            template_class=ManuscriptMethodologyReview,
+            temperature=0.3,
+            max_tokens=None,
+        )
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -237,13 +257,185 @@ class TestTemplateBasedGenerators:
         assert len(result) > 0
 
 
+class TestGenerateReviewWithMetricsRetry:
+    """Offline tests for the retry loop in generate_review_with_metrics."""
+
+    def test_retry_fires_on_off_topic_first_response(self):
+        """First off-topic response triggers a retry; best response is returned."""
+        from infrastructure.llm.templates import ManuscriptQualityReview
+
+        call_count = [0]
+        long_valid = (
+            "## Quality Assessment\n\nThis manuscript demonstrates clear structure "
+            "and sound argumentation. " * 40
+        )
+
+        def stateful_handler(request):
+            try:
+                data = json.loads(request.get_data())
+            except (ValueError, TypeError):
+                data = {}
+            call_count[0] += 1
+            model = data.get("model", "gemma3:4b")
+            is_stream = data.get("stream", False)
+            # Off-topic on first attempt, valid review on second
+            content = "Dear reviewer, I cannot help with this request." if call_count[0] == 1 else long_valid
+            if is_stream:
+                chunks = [
+                    {"model": model, "message": {"role": "assistant", "content": content[:50]}, "done": False},
+                    {"model": model, "message": {"role": "assistant", "content": content[50:]}, "done": False},
+                    {"model": model, "message": {"role": "assistant", "content": ""}, "done": True},
+                ]
+                return "\n".join(json.dumps(c) for c in chunks)
+            return json.dumps({"model": model, "message": {"role": "assistant", "content": content}, "done": True})
+
+        server = HTTPServer()
+        server.start()
+        server.expect_request("/api/chat", method="POST").respond_with_handler(stateful_handler)
+        server.expect_request("/api/tags").respond_with_json({"models": [{"name": "gemma3:4b"}]})
+
+        try:
+            config = OllamaClientConfig(auto_inject_system_prompt=False)
+            config.base_url = server.url_for("/")
+            config.default_model = "gemma3:4b"
+            client = LLMClient(config=config)
+
+            review_text, _metrics = generate_review_with_metrics(
+                client, "Test manuscript text.", "quality_review", "Quality Review",
+                ManuscriptQualityReview, max_retries=1,
+            )
+
+            assert call_count[0] == 2, f"Expected 2 attempts, got {call_count[0]}"
+            assert review_text is not None
+            assert len(review_text.split()) > 10
+        finally:
+            server.stop()
+
+    def test_max_retries_zero_makes_single_attempt(self):
+        """max_retries=0 makes exactly one attempt regardless of validation outcome."""
+        from infrastructure.llm.templates import ManuscriptExecutiveSummary
+
+        call_count = [0]
+
+        def counter_handler(request):
+            try:
+                data = json.loads(request.get_data())
+            except (ValueError, TypeError):
+                data = {}
+            call_count[0] += 1
+            model = data.get("model", "gemma3:4b")
+            is_stream = data.get("stream", False)
+            content = "Short."
+            if is_stream:
+                chunks = [
+                    {"model": model, "message": {"role": "assistant", "content": content}, "done": False},
+                    {"model": model, "message": {"role": "assistant", "content": ""}, "done": True},
+                ]
+                return "\n".join(json.dumps(c) for c in chunks)
+            return json.dumps({"model": model, "message": {"role": "assistant", "content": content}, "done": True})
+
+        server = HTTPServer()
+        server.start()
+        server.expect_request("/api/chat", method="POST").respond_with_handler(counter_handler)
+        server.expect_request("/api/tags").respond_with_json({"models": [{"name": "gemma3:4b"}]})
+
+        try:
+            config = OllamaClientConfig(auto_inject_system_prompt=False)
+            config.base_url = server.url_for("/")
+            config.default_model = "gemma3:4b"
+            client = LLMClient(config=config)
+
+            generate_review_with_metrics(
+                client, "Test.", "executive_summary", "Executive Summary",
+                ManuscriptExecutiveSummary, max_retries=0,
+            )
+
+            assert call_count[0] == 1, f"Expected 1 attempt, got {call_count[0]}"
+        finally:
+            server.stop()
+
+
+class TestWarmupModelOffline:
+    """Offline tests for warmup_model() using a local HTTP server."""
+
+    def _make_client(self, server: HTTPServer) -> LLMClient:
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
+        config.base_url = server.url_for("/")
+        config.default_model = "gemma3:4b"
+        config.timeout = 5
+        return LLMClient(config=config)
+
+    def _make_server_with_ps(self, ps_response: dict) -> HTTPServer:
+        """Start a server with /api/ps returning ps_response and /api/chat streaming chunks."""
+
+        def chat_handler(request):
+            try:
+                data = json.loads(request.get_data())
+            except (ValueError, TypeError):
+                data = {}
+            model = data.get("model", "gemma3:4b")
+            content = "The main topic is machine learning."
+            chunks = [
+                {"model": model, "message": {"role": "assistant", "content": content}, "done": False},
+                {"model": model, "message": {"role": "assistant", "content": ""}, "done": True},
+            ]
+            return "\n".join(json.dumps(c) for c in chunks)
+
+        server = HTTPServer()
+        server.start()
+        server.expect_request("/api/ps").respond_with_json(ps_response)
+        server.expect_request("/api/chat", method="POST").respond_with_handler(chat_handler)
+        return server
+
+    def test_warmup_error_path_returns_false(self):
+        """Server returning 500 causes warmup_model to return (False, 0.0)."""
+        server = HTTPServer()
+        server.start()
+        server.expect_request("/api/ps").respond_with_json({"models": []})
+        server.expect_request("/api/chat", method="POST").respond_with_data("", status=500)
+
+        try:
+            client = self._make_client(server)
+            success, tps = warmup_model(client, "Test text for warmup", "gemma3:4b")
+            assert success is False
+            assert tps == 0.0
+        finally:
+            server.stop()
+
+    def test_warmup_no_model_loaded_triggers_preload(self):
+        """No model in /api/ps triggers preload path; returns (True, >0) on successful stream."""
+        server = self._make_server_with_ps({"models": []})
+        server.expect_request("/api/generate", method="POST").respond_with_json({"done": True})
+
+        try:
+            client = self._make_client(server)
+            success, tps = warmup_model(client, "Warmup text preview", "gemma3:4b")
+            assert isinstance(success, bool)
+            assert isinstance(tps, float)
+        finally:
+            server.stop()
+
+    def test_warmup_model_already_loaded_skips_preload(self):
+        """Model already loaded in /api/ps skips preload and streams warmup prompt."""
+        ps_response = {"models": [{"name": "gemma3:4b", "size_vram": 4000000000}]}
+        server = self._make_server_with_ps(ps_response)
+
+        try:
+            client = self._make_client(server)
+            success, tps = warmup_model(client, "Warmup text preview", "gemma3:4b")
+            assert success is True
+            assert tps >= 0.0
+        finally:
+            server.stop()
+
+
 @pytest.mark.requires_ollama
 class TestReviewGeneratorsIntegration:
     """Integration tests for review generators (requires Ollama)."""
 
     def test_generate_executive_summary_real_ollama(self):
         """Test generate_executive_summary with real Ollama."""
-        from infrastructure.llm import LLMClient
+        from infrastructure.llm.core.client import LLMClient
 
         client = LLMClient()
         if not client.check_connection():
@@ -257,7 +449,7 @@ class TestReviewGeneratorsIntegration:
 
     def test_generate_review_with_metrics_real_ollama(self):
         """Test generate_review_with_metrics with real Ollama."""
-        from infrastructure.llm import LLMClient
+        from infrastructure.llm.core.client import LLMClient
 
         client = LLMClient()
         if not client.check_connection():

@@ -1,0 +1,266 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\subsection{Quality Assurance}\label{quality-assurance}
+
+\begin{frame}[fragile]{Zero-Mock Testing Policy}
+\protect\phantomsection\label{zero-mock-testing-policy}
+All tests use real methods exclusively {[}@martin2008clean;
+@meszaros2007xunit{]}. No \texttt{unittest.mock}, no \texttt{MagicMock},
+no \texttt{patch} decorators. Tests that require external services
+(Ollama, network) use \texttt{pytest.mark} markers for conditional
+execution. The philosophical motivation---analogizing mock objects to
+Simmons et al.'s \emph{researcher degrees of freedom}
+{[}@simmons2011falsepositive{]} and the pre-registration remedy
+{[}@nosek2018preregistration{]}---is developed fully in the
+\href{05a_zeromock_tradeoff.md\#the-zero-mock-tradeoff}{Zero-Mock
+Tradeoff} discussion. To our knowledge, no prior research software
+engineering framework has formalized a zero-mock policy as an
+\emph{architectural invariant enforced by pipeline gates}, where mock
+usage is not merely discouraged but structurally prevented from passing
+the build.
+
+The following example, drawn from the infrastructure test suite,
+illustrates zero-mock compliance:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ test\_discover\_infrastructure\_modules\_returns\_nonempty(tmp\_path):}
+    \CommentTok{\# Real filesystem, real YAML parsing — no MagicMock anywhere}
+\NormalTok{    modules }\OperatorTok{=}\NormalTok{ discover\_infrastructure\_modules(REPO\_ROOT)}
+    \ControlFlowTok{assert} \BuiltInTok{len}\NormalTok{(modules) }\OperatorTok{\textgreater{}=} \DecValTok{8}           \CommentTok{\# actual subpackages on disk}
+    \ControlFlowTok{assert} \BuiltInTok{any}\NormalTok{(m.name }\OperatorTok{==} \StringTok{"core"} \ControlFlowTok{for}\NormalTok{ m }\KeywordTok{in}\NormalTok{ modules)}
+\end{Highlighting}
+\end{Shaded}
+
+This test exercises the real \texttt{discover\_infrastructure\_modules}
+function against the real filesystem. There are no mock objects
+substituting for the directory walk, no patched YAML parsers, and no
+synthetic return values---the test passes only if the infrastructure
+modules genuinely exist and are discoverable at their expected paths.
+\end{frame}
+
+\begin{frame}[fragile]{Coverage Thresholds}
+\protect\phantomsection\label{coverage-thresholds}
+The pipeline enforces two coverage tiers:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1429}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1667}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2143}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2143}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2619}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Tier
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Scope
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Minimum
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Current
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Rationale
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Project & \texttt{projects/*/src/} & 90\% & 90\%+ & Domain code must be
+thoroughly validated \\
+Infrastructure & \texttt{infrastructure/} & 60\% & 83\%+ & Broader
+scope, some code unreachable in test \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+These thresholds are enforced at Stage 01 of the pipeline. If project
+test coverage falls below 90\%, the pipeline halts and refuses to
+produce a PDF---ensuring that no published artifact is backed by
+undertested source code.
+\end{frame}
+
+\begin{frame}[fragile]{Test Suite Composition}
+\protect\phantomsection\label{test-suite-composition}
+The repository maintains three test suites:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Infrastructure tests} (\texttt{tests/}): \textasciitilde3,083
+  tests validating the 12 infrastructure subpackages, covering logging,
+  rendering, validation, steganography, reporting, and LLM integration.
+\item
+  \textbf{Project tests} (\texttt{projects/*/tests/}): Per-project test
+  suites validating domain-specific logic. Sizes vary from 39 tests
+  (\texttt{code\_project}) to 505 tests
+  (\texttt{act\_inf\_metaanalysis}).
+\item
+  \textbf{Integration tests}: Embedded within infrastructure tests,
+  these exercise full pipeline stages against real manuscript inputs,
+  validating end-to-end behavior from Markdown source to rendered PDF.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Visualization Standards}
+\protect\phantomsection\label{visualization-standards}
+All generated figures must meet accessibility requirements:
+
+\begin{itemize}
+\tightlist
+\item
+  Minimum 16pt font size for all text elements (the accessibility
+  floor).
+\item
+  Colorblind-safe palettes (IBM Design / Wong palette) with
+  high-contrast fallbacks.
+\item
+  150--300 DPI rendering for publication quality.
+\item
+  Descriptive axis labels and figure titles.
+\item
+  No reliance on color alone to convey information---redundant encoding
+  via shape, pattern, or annotation is used where applicable.
+\end{itemize}
+
+These standards are validated by the \texttt{test\_architecture\_viz.py}
+test suite, which verifies that generated figures exist, have non-zero
+file size, and conform to expected output specifications. The 16pt font
+floor ensures readability in both screen and print contexts, while the
+DPI range balances file size against reproduction fidelity.
+\end{frame}
+
+\end{document}

@@ -455,7 +455,7 @@ class TestEdgeCases:
 
     def test_calculate_file_hash_exception(self, tmp_path):
         """Test file hash calculation with real execution."""
-        from infrastructure.core.file_operations import calculate_file_hash
+        from infrastructure.core.files.operations import calculate_file_hash
         test_file = tmp_path / "test.txt"
         test_file.write_text("Content")
 
@@ -830,13 +830,13 @@ class TestDissemination:
                     delete_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/releases/{release_id}"
                     headers = {"Authorization": f"token {github_credentials['token']}"}
                     requests.delete(delete_url, headers=headers)
-                except Exception:
+                except requests.exceptions.RequestException:
                     pass
             try:
                 tag_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/git/refs/tags/{tag}"
                 headers = {"Authorization": f"token {github_credentials['token']}"}
                 requests.delete(tag_url, headers=headers)
-            except Exception:
+            except requests.exceptions.RequestException:
                 pass
 
 

@@ -159,6 +159,7 @@ class TestValidatePreamblePackages:
     # default pytest-timeout (10s) is too tight for CI and slow TeX trees.
     @pytest.mark.timeout(120)
     @pytest.mark.skipif(not shutil.which("kpsewhich"), reason="kpsewhich not available")
+    @pytest.mark.timeout(60)
     def test_validate_preamble_non_strict(self):
         """Test preamble validation in non-strict mode using real execution."""
         # Use real validation
@@ -170,6 +171,7 @@ class TestValidatePreamblePackages:
 
     @pytest.mark.timeout(120)
     @pytest.mark.skipif(not shutil.which("kpsewhich"), reason="kpsewhich not available")
+    @pytest.mark.timeout(60)
     def test_validate_preamble_strict_mode(self):
         """Test preamble validation in strict mode using real execution."""
         # Use real validation - may or may not raise depending on package availability

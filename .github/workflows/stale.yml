@@ -1,0 +1,58 @@
+name: Stale Issues & PRs
+
+on:
+  schedule:
+    # Run once daily at 01:00 UTC
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Mark and Close Stale Items
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/stale@v9
+        with:
+          # ── Issues ────────────────────────────────────────────────────────
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has
+            had no activity for **60 days**. It will be closed in **14 days**
+            if no further activity occurs.
+
+            If this issue is still relevant, please add a comment or remove the
+            `stale` label to keep it open. Thank you!
+          close-issue-message: >
+            This issue was closed automatically after 14 days of inactivity
+            following the stale label. Feel free to re-open if the issue
+            resurfaces.
+          days-before-issue-stale: 60
+          days-before-issue-close: 14
+          stale-issue-label: "stale"
+          exempt-issue-labels: "pinned,security,in-progress,blocked"
+
+          # ── Pull Requests ─────────────────────────────────────────────────
+          stale-pr-message: >
+            This pull request has been automatically marked as stale because it
+            has had no activity for **30 days**. It will be closed in **14
+            days** if no further activity occurs.
+
+            If this PR is still needed, please push a commit or comment to keep
+            it active.
+          close-pr-message: >
+            This PR was closed automatically after 14 days of inactivity
+            following the stale label.
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+          stale-pr-label: "stale"
+          exempt-pr-labels: "pinned,security,in-progress,blocked,do-not-close"
+
+          # ── Shared ────────────────────────────────────────────────────────
+          # Don't count activity only by the bot itself
+          operations-per-run: 50
+          remove-stale-when-updated: true
+          debug-only: false

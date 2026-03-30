@@ -1,4 +1,4 @@
-"""Tests for infrastructure.validation.figure_validator module.
+"""Tests for infrastructure.validation.content.figure_validator module.
 
 Comprehensive tests for figure validation functionality including
 registry loading, reference detection, and validation reporting.
@@ -7,7 +7,7 @@ registry loading, reference detection, and validation reporting.
 import json
 
 
-from infrastructure.validation.figure_validator import validate_figure_registry
+from infrastructure.validation.content.figure_validator import validate_figure_registry
 
 
 class TestValidateFigureRegistry:

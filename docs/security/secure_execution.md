@@ -4,13 +4,13 @@ The Secure Execution orchestrator (`secure_run.sh`) is an alternative launch poi
 
 ## Verified Multi-Project Results
 
-All three active projects have been verified to render and secure successfully:
+Post-processing is the same for every workspace returned by `discover_projects()`. **Representative row** (control-positive exemplar):
 
 | Project | Pages | Overlays | Barcodes | Metadata | XMP | Manifest |
 |---------|-------|----------|----------|----------|-----|----------|
-| `code_project` | 20 | ✅ | ✅ | ✅ (12 keys) | ✅ | ✅ |
-| `cognitive_case_diagrams` | 77 | ✅ | ✅ | ✅ (12 keys) | ✅ | ✅ |
-| `template` | 5 | ✅ | ✅ | ✅ (12 keys) | ✅ | ✅ |
+| `code_project` | varies by manuscript build | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+**All other active `projects/` names:** [_generated/active_projects.md](../_generated/active_projects.md). Anything under `projects_archive/` or `projects_in_progress/` is not processed until moved into `projects/`.
 
 The `secure_run.sh` script discovers all active projects and processes each one in sequence. Steganographic outputs include:
 
@@ -21,7 +21,7 @@ The `secure_run.sh` script discovers all active projects and processes each one 
 
 If you run `./secure_run.sh` with no arguments, you enter an interactive UI (similar to `./run.sh`).
 
-The UI immediately details your active `secure_config.yaml` parameters and allows you to select which permutation to run (Fast, Core, Full, etc) with Steganography automatically affixed at the end.
+The UI immediately details your active `infrastructure/config/secure_config.yaml` parameters and allows you to select which permutation to run (Fast, Core, Full, etc) with Steganography automatically affixed at the end.
 
 ### Project Selection
 

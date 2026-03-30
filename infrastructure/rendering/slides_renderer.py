@@ -7,22 +7,24 @@ import subprocess
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
 logger = get_logger(__name__)
 
+
 class SlidesRenderer:
     """Handles slide generation (Beamer/Reveal.js)."""
 
     def __init__(self, config: RenderingConfig):
+        """Initialize the slides renderer with configuration."""
         self.config = config
 
     def render(
         self,
         source_file: Path,
-        format: str = "beamer",
+        output_format: str = "beamer",
         manuscript_dir: Path | None = None,
         figures_dir: Path | None = None,
     ) -> Path:
@@ -30,7 +32,7 @@ class SlidesRenderer:
 
         Args:
             source_file: Path to markdown file
-            format: Output format ("beamer" for PDF, "revealjs" for HTML)
+            output_format: Output format ("beamer" for PDF, "revealjs" for HTML)
             manuscript_dir: Directory containing manuscript (for resource paths)
             figures_dir: Directory containing figures (for resource paths)
 
@@ -43,11 +45,11 @@ class SlidesRenderer:
         output_dir = Path(self.config.slides_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        output_ext = "pdf" if format == "beamer" else "html"
+        output_ext = "pdf" if output_format == "beamer" else "html"
         output_file = output_dir / f"{source_file.stem}_slides.{output_ext}"
 
         # For beamer, we need to handle figure paths specially
-        if format == "beamer":
+        if output_format == "beamer":
             return self._render_beamer_with_paths(
                 source_file, output_file, manuscript_dir, figures_dir
             )
@@ -241,6 +243,7 @@ class SlidesRenderer:
             if "/" in path_str or "\\" in path_str:
                 return re.split(r"[/\\]", path_str)[-1]
             else:
+                # No separators — path_str is already a bare filename
                 return path_str
 
         def fix_path(match: re.Match[str]) -> str:

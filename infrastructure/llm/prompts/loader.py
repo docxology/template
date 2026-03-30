@@ -12,9 +12,10 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 class PromptFragmentLoader:
     """Loads prompt fragments from JSON/YAML files with caching.
@@ -93,7 +94,7 @@ class PromptFragmentLoader:
                 f"Invalid JSON in prompt file: {filepath}",
                 context={"error": str(e), "filepath": str(filepath)},
             ) from e
-        except Exception as e:
+        except OSError as e:
             raise LLMTemplateError(
                 f"Failed to load prompt file: {filepath}",
                 context={"error": str(e), "filepath": str(filepath)},

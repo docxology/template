@@ -175,43 +175,48 @@
 </head>
 <body>
 <h1 id="abstract">Abstract</h1>
-<p>This paper presents a comprehensive analysis of gradient descent
-optimization algorithms, constructed not merely as a mathematical
-exercise, but as the representative computational exemplar of the <a
-href="https://github.com/docxology/template">docxology/template</a>
-repository. We implement and evaluate the classical gradient descent
-method with fixed step size for quadratic minimization problems,
-examining convergence behavior across learning rates from <span
-class="math inline">\(\alpha = 0.01\)</span> to <span
-class="math inline">\(\alpha = 0.20\)</span>. Crucially, the
-experimental framework is built entirely atop the template’s nine
-<code>infrastructure</code> subpackages to guarantee absolute
-reproducibility and cryptographic output integrity. The very PDF holding
-these words was deterministically generated via
-<code>infrastructure/rendering/pdf_renderer.py</code> relying on
-<code>code_project/scripts/optimization_analysis.py</code> data.</p>
-<p>The key contributions of this work are dual-natured.
-Methodologically, it demonstrates empirical validation of theoretical
-convergence rates on quadratic objective functions and automated
-complexity analysis. Architecturally, it establishes a rigorously
-enforced development standard: (1) a zero-mock testing policy validated
-by 34 passing tests with 100% coverage (as explicitly asserted in the <a
-href="https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py">test
-suite</a>); (2) automated analysis pipelines generating
-publication-quality, accessible visualizations; and (3) deep integration
-patterns demonstrating how scientific logic strictly couples with the
-core infrastructure (e.g., executing
-<code>infrastructure.scientific.benchmarking</code> directly from
-<code>projects/code_project/scripts/optimization_analysis.py</code>).</p>
-<p>Results confirm that all tested step sizes converge to the analytical
-optimum <span class="math inline">\(x^* = 1.0\)</span> with objective
-value <span class="math inline">\(f(x^*) = -0.5\)</span>. The codebase
-validates the template’s modular <code>tests/</code> infrastructure and
-expansive <a
-href="https://github.com/docxology/template/tree/main/projects/code_project/docs">project
-documentation</a> knowledge base, serving as the master exemplar for
-bridging theoretical algorithm development with production-grade,
-reproducible computational science.</p>
+<p>This paper presents a convergence study of <strong>fixed-step
+gradient descent</strong> on a convex quadratic, framed as the
+computational exemplar of the <a
+href="https://github.com/docxology/template">Research Project
+Template</a>. The implementation lives in
+<code>projects/code_project/src/optimizer.py</code>; experiments and
+figures are orchestrated by
+<code>projects/code_project/scripts/optimization_analysis.py</code> and
+hydrated into the manuscript through
+<code>scripts/z_generate_manuscript_variables.py</code>, so tables and
+prose track <code>output/data/optimization_results.csv</code> after
+every pipeline run.</p>
+<p>We evaluate 6 step sizes from <span class="math inline">\(\alpha =
+0.01\)</span> to <span class="math inline">\(\alpha = 2.5\)</span>,
+spanning conservative, near-optimal, aggressive, and divergent regimes
+for a unit Hessian model. The build chain exercises template
+infrastructure end-to-end: scientific helpers
+(<code>infrastructure.scientific.stability</code>,
+<code>infrastructure.scientific.benchmarking</code>), validation,
+rendering (<code>infrastructure/rendering/pdf_renderer.py</code>), and
+reporting. Accessibility-oriented plotting defaults (colourblind-safe
+palette, 300 dpi exports) are centralized in
+<code>optimization_analysis.py</code>.</p>
+<p>Contributions are <strong>methodological</strong> and
+<strong>architectural</strong>. On the methods side, we relate empirical
+iteration counts and error decay to the scalar contraction factor <span
+class="math inline">\(\rho(\alpha) = |1-\alpha|\)</span> and document
+cases where runs hit <span class="math inline">\(N_{\max} =
+1000\)</span> before meeting the gradient tolerance. On the architecture
+side, we demonstrate a zero-mock test suite on project <code>src/</code>
+(see <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py">test_optimizer.py</a>),
+automated six-figure analysis, and reproducibility metadata
+(configuration hash, artifact counts) injected into Section 6.</p>
+<p><strong>Results (this configuration):</strong> 4 of 6 grid points
+report <code>converged=True</code> in the CSV; non-convergent rows flag
+either slow progress at small <span
+class="math inline">\(\alpha\)</span> under the iteration cap or
+instability when <span class="math inline">\(|1-\alpha| \geq 1\)</span>.
+The analytical minimizer remains <span class="math inline">\(x^\ast =
+1.0\)</span> with <span class="math inline">\(f(x^\ast) = -0.5\)</span>
+for the configured <span class="math inline">\((A,b)\)</span>.</p>
 <p><strong>Keywords:</strong> gradient descent, reproducible research,
 zero-mock testing, scientific infrastructure, pipeline orchestration</p>
 </body>

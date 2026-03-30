@@ -8,7 +8,7 @@ import pytest
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 
 
 class TestFallbackModel:
@@ -17,7 +17,7 @@ class TestFallbackModel:
     def test_fallback_on_connection_error(self, ollama_test_server):
         """Test fallback models on primary connection error."""
         # Configure test server to return failures for specific models
-        config = LLMConfig(
+        config = OllamaClientConfig(
             default_model="primary-model",
             fallback_models=["fallback1", "fallback2"],
             auto_inject_system_prompt=False,
@@ -35,7 +35,7 @@ class TestQueryStructuredJsonParsing:
 
     def test_query_structured_valid_json(self, ollama_test_server):
         """Test query_structured with valid JSON response."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         config.default_model = "gemma3:4b"
         client = LLMClient(config=config)
@@ -48,7 +48,7 @@ class TestQueryStructuredJsonParsing:
 
     def test_query_structured_with_schema(self, ollama_test_server):
         """Test query_structured with schema."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -71,7 +71,7 @@ class TestStreamQuery:
 
     def test_stream_query_basic(self, ollama_test_server):
         """Test basic stream_query functionality."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         config.default_model = "gemma3:4b"
         client = LLMClient(config=config)
@@ -85,7 +85,7 @@ class TestStreamQuery:
 
     def test_stream_query_adds_to_context(self, ollama_test_server):
         """Test stream_query adds full response to context."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -101,7 +101,7 @@ class TestStreamQuery:
 
     def test_stream_query_connection_error(self, ollama_test_server):
         """Test stream_query handles connection errors."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         # Point to a non-existent server to simulate connection error
         config.base_url = "http://nonexistent-server:9999"
         client = LLMClient(config=config)
@@ -115,7 +115,7 @@ class TestGetAvailableModels:
 
     def test_get_available_models_success(self, ollama_test_server):
         """Test successful model list retrieval."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 

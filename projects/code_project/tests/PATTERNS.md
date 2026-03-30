@@ -4,15 +4,9 @@ Testing conventions and patterns for the `code_project` exemplar's zero-mock tes
 
 ## Zero-Mock Enforcement
 
-The following are **strictly forbidden** in all test files:
+The following are **strictly forbidden** anywhere in the `code_project` exemplar:
 
-```python
-# ❌ FORBIDDEN
-from unittest.mock import MagicMock, patch, Mock
-import unittest.mock
-mocker.patch(...)
-type("FakeResult", (), {"converged": True})
-```
+- Any mocking framework usage (including built-in mocking libraries and third-party monkeypatch helpers)\n+- Any test strategy that fakes objects/attributes to avoid executing real code paths\n+- Any “synthetic result objects” created solely to satisfy a type shape without executing the algorithm
 
 Every test must exercise real algorithms with real data.
 

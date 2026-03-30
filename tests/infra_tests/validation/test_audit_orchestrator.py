@@ -7,11 +7,11 @@ Follows No Mocks Policy - all tests use real data and real validation.
 import json
 
 
-from infrastructure.validation.audit_orchestrator import (
+from infrastructure.validation.repo.audit_orchestrator import (
     generate_audit_report,
     run_comprehensive_audit,
 )
-from infrastructure.validation.doc_models import ScanResults
+from infrastructure.validation.docs.models import ScanResults
 
 
 class TestAuditOrchestrator:
@@ -222,7 +222,7 @@ class TestGenerateAuditReport:
 
     def test_report_with_red_flags(self, tmp_path):
         """Test report shows red flags correctly."""
-        from infrastructure.validation.doc_models import LinkIssue
+        from infrastructure.validation.docs.models import LinkIssue
 
         results = ScanResults(scan_date="2024-01-01 12:00:00", total_files=10)
         results.scanned_files = 10
@@ -252,7 +252,7 @@ class TestGenerateAuditReport:
 
     def test_report_with_yellow_flags(self, tmp_path):
         """Test report shows yellow flags correctly."""
-        from infrastructure.validation.doc_models import QualityIssue
+        from infrastructure.validation.docs.models import QualityIssue
 
         results = ScanResults(scan_date="2024-01-01 12:00:00", total_files=5)
         results.scanned_files = 5
@@ -279,7 +279,7 @@ class TestGenerateAuditReport:
 
     def test_report_with_green_flags_shown(self, tmp_path):
         """Test report shows green flags when requested."""
-        from infrastructure.validation.doc_models import QualityIssue
+        from infrastructure.validation.docs.models import QualityIssue
 
         results = ScanResults(scan_date="2024-01-01 12:00:00", total_files=5)
         results.scanned_files = 5
@@ -307,7 +307,7 @@ class TestGenerateAuditReport:
 
     def test_report_json_with_issues(self, tmp_path):
         """Test JSON report format with issues."""
-        from infrastructure.validation.doc_models import LinkIssue
+        from infrastructure.validation.docs.models import LinkIssue
 
         results = ScanResults(scan_date="2024-01-01 12:00:00", total_files=3)
         results.scanned_files = 3
@@ -339,7 +339,7 @@ class TestGenerateAuditReport:
 
     def test_report_json_with_green_flags(self, tmp_path):
         """Test JSON report includes green flags when requested."""
-        from infrastructure.validation.doc_models import QualityIssue
+        from infrastructure.validation.docs.models import QualityIssue
 
         results = ScanResults(scan_date="2024-01-01 12:00:00", total_files=2)
         results.scanned_files = 2
@@ -366,7 +366,7 @@ class TestGenerateAuditReport:
 
     def test_report_many_red_flags_truncated(self, tmp_path):
         """Test report truncates many red flags."""
-        from infrastructure.validation.doc_models import LinkIssue
+        from infrastructure.validation.docs.models import LinkIssue
 
         results = ScanResults(scan_date="2024-01-01 12:00:00", total_files=50)
         results.scanned_files = 50
@@ -397,7 +397,7 @@ class TestGenerateAuditReport:
 
     def test_report_many_yellow_flags_truncated(self, tmp_path):
         """Test report truncates many yellow flags."""
-        from infrastructure.validation.doc_models import QualityIssue
+        from infrastructure.validation.docs.models import QualityIssue
 
         results = ScanResults(scan_date="2024-01-01 12:00:00", total_files=30)
         results.scanned_files = 30
@@ -429,7 +429,7 @@ class TestValidateSingleFile:
 
     def test_validate_file_with_link_issues(self, tmp_path):
         """Test validation detects link issues."""
-        from infrastructure.validation.audit_orchestrator import _validate_single_file
+        from infrastructure.validation.repo.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text("# Test\n\n[Broken](nonexistent.md)")
@@ -454,7 +454,7 @@ class TestValidateSingleFile:
 
     def test_validate_file_with_code_blocks(self, tmp_path):
         """Test validation of code blocks."""
-        from infrastructure.validation.audit_orchestrator import _validate_single_file
+        from infrastructure.validation.repo.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text(
@@ -485,7 +485,7 @@ path = "src/main.py"
 
     def test_validate_file_with_directory_structure(self, tmp_path):
         """Test validation of directory structures."""
-        from infrastructure.validation.audit_orchestrator import _validate_single_file
+        from infrastructure.validation.repo.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text(
@@ -519,7 +519,7 @@ project/
 
     def test_validate_file_with_imports(self, tmp_path):
         """Test validation of Python imports."""
-        from infrastructure.validation.audit_orchestrator import _validate_single_file
+        from infrastructure.validation.repo.audit_orchestrator import _validate_single_file
 
         # Create Python file
         (tmp_path / "mymodule.py").write_text("# module")
@@ -552,7 +552,7 @@ from mymodule import something
 
     def test_validate_file_with_placeholders(self, tmp_path):
         """Test validation of placeholders."""
-        from infrastructure.validation.audit_orchestrator import _validate_single_file
+        from infrastructure.validation.repo.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text(
@@ -581,7 +581,7 @@ Also update {another_placeholder}.
 
     def test_validate_file_all_options(self, tmp_path):
         """Test validation with all options enabled."""
-        from infrastructure.validation.audit_orchestrator import _validate_single_file
+        from infrastructure.validation.repo.audit_orchestrator import _validate_single_file
 
         md_file = tmp_path / "test.md"
         md_file.write_text(
@@ -628,7 +628,7 @@ class TestCalculateStatistics:
 
     def test_calculate_statistics_empty(self):
         """Test statistics calculation with empty results."""
-        from infrastructure.validation.audit_orchestrator import _calculate_statistics
+        from infrastructure.validation.repo.audit_orchestrator import _calculate_statistics
 
         results = ScanResults(scan_date="2024-01-01")
         results.documentation_files = []
@@ -645,8 +645,8 @@ class TestCalculateStatistics:
 
     def test_calculate_statistics_with_data(self):
         """Test statistics calculation with real data."""
-        from infrastructure.validation.audit_orchestrator import _calculate_statistics
-        from infrastructure.validation.doc_models import DocumentationFile, LinkIssue
+        from infrastructure.validation.repo.audit_orchestrator import _calculate_statistics
+        from infrastructure.validation.docs.models import DocumentationFile, LinkIssue
 
         results = ScanResults(scan_date="2024-01-01")
         results.documentation_files = [
@@ -699,13 +699,13 @@ class TestModuleStructure:
 
     def test_module_imports(self):
         """Test module can be imported."""
-        from infrastructure.validation import audit_orchestrator
+        from infrastructure.validation.repo import audit_orchestrator
 
         assert audit_orchestrator is not None
 
     def test_public_functions_exist(self):
         """Test expected public functions exist."""
-        from infrastructure.validation.audit_orchestrator import (
+        from infrastructure.validation.repo.audit_orchestrator import (
             generate_audit_report,
             run_comprehensive_audit,
         )

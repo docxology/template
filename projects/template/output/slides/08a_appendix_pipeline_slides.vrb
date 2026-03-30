@@ -1,0 +1,48 @@
+\frametitle{Appendix: Pipeline Stage Reference}
+\protect\phantomsection\label{appendix-pipeline}
+\begin{table}[h]
+\caption{Pipeline stage reference showing each stage's script, inputs, outputs, and failure handling.}
+\label{tab:pipeline-stages}
+\end{table}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0682}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2727}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1591}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1818}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.3182}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Stage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Script
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Input
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Output
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Failure Mode
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+00 & \texttt{00\_setup\_environment.py} & System environment & Validated
+env, directories & Hard fail \\
+01 & \texttt{01\_run\_tests.py} & \texttt{tests/},
+\texttt{projects/*/tests/} & Coverage JSON, test reports &
+Configurable \\
+02 & \texttt{02\_run\_analysis.py} & \texttt{projects/*/scripts/*.py} &
+Figures, data files & Hard fail \\
+03 & \texttt{03\_render\_pdf.py} & \texttt{manuscript/*.md},
+\texttt{config.yaml} & PDF in \texttt{output/} & Hard fail \\
+04 & \texttt{04\_validate\_output.py} & \texttt{output/} contents &
+Validation report & Warning \\
+05 & \texttt{05\_copy\_outputs.py} & \texttt{output/} artifacts &
+Organized copies & Soft fail \\
+06 & \texttt{06\_llm\_review.py} & Rendered manuscript & Executive
+summary, reviews & Skippable \\
+07 & \texttt{07\_generate\_executive\_report.py} & All stage outputs &
+JSON + Markdown report & Soft fail \\
+\bottomrule\noalign{}
+\end{longtable}
+}

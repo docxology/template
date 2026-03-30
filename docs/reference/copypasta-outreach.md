@@ -56,7 +56,7 @@ Here's a **[research project template](https://github.com/docxology/template)** 
 git clone https://github.com/docxology/template.git
 cd template
 uv sync
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 The template automatically handles LaTeX compilation, figure integration, and generates publication-ready PDFs. Check the **[how to use guide](../core/how-to-use.md)** for step-by-step instructions and the **[architecture guide](../core/architecture.md)** for detailed system design.

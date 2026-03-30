@@ -17,7 +17,7 @@ import os
 import secrets
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -30,6 +30,7 @@ try:
 except ImportError:
     _CRYPTOGRAPHY_AVAILABLE = False
 
+
 def _require_cryptography() -> None:
     """Raise ImportError with guidance if ``cryptography`` is missing."""
     if not _CRYPTOGRAPHY_AVAILABLE:
@@ -38,7 +39,9 @@ def _require_cryptography() -> None:
             "Install it with: pip install cryptography"
         )
 
+
 # ── AES-256-GCM payload encryption ──────────────────────────────────────
+
 
 def encrypt_payload(
     plaintext: str,
@@ -54,14 +57,17 @@ def encrypt_payload(
     Returns:
         Dict with ``ciphertext`` (base64), ``nonce`` (base64), and
         ``key`` (base64) — all strings for easy JSON serialisation.
+
+    Raises:
+        ImportError: If the ``cryptography`` package is not installed.
     """
     _require_cryptography()
 
     if key is None:
-        key = AESGCM.generate_key(bit_length=256)  # type: ignore[attr-defined]
+        key = AESGCM.generate_key(bit_length=256)
 
     nonce = os.urandom(12)  # 96-bit nonce for GCM
-    aesgcm = AESGCM(key)  # type: ignore[attr-defined]
+    aesgcm = AESGCM(key)
     ciphertext = aesgcm.encrypt(nonce, plaintext.encode("utf-8"), None)
 
     result = {
@@ -71,6 +77,7 @@ def encrypt_payload(
     }
     logger.debug(f"Payload encrypted (AES-256-GCM), ciphertext length={len(ciphertext)}")
     return result
+
 
 def decrypt_payload(
     ciphertext_b64: str,
@@ -93,11 +100,13 @@ def decrypt_payload(
     nonce = base64.b64decode(nonce_b64)
     ciphertext = base64.b64decode(ciphertext_b64)
 
-    aesgcm = AESGCM(key)  # type: ignore[attr-defined]
+    aesgcm = AESGCM(key)
     plaintext = aesgcm.decrypt(nonce, ciphertext, None)
-    return plaintext.decode("utf-8")
+    return str(plaintext.decode("utf-8"))
+
 
 # ── HMAC digital fingerprint ────────────────────────────────────────────
+
 
 def generate_fingerprint(
     content: bytes,
@@ -124,7 +133,9 @@ def generate_fingerprint(
 
     return {"fingerprint": fp, "secret": secret}
 
+
 # ── PDF password protection ─────────────────────────────────────────────
+
 
 def apply_pdf_password(
     input_pdf: Path,
@@ -166,9 +177,7 @@ def apply_pdf_password(
 
     # Copy existing metadata
     if reader.metadata:
-        writer.add_metadata(
-            {k: v for k, v in reader.metadata.items() if isinstance(v, str)}
-        )
+        writer.add_metadata({k: v for k, v in reader.metadata.items() if isinstance(v, str)})
 
     writer.encrypt(
         user_password=user_password,
@@ -180,6 +189,7 @@ def apply_pdf_password(
 
     logger.info(f"PDF password protection applied → {output_pdf.name}")
     return output_pdf
+
 
 def generate_document_id() -> str:
     """Generate a unique document identifier (UUID4-style hex token)."""

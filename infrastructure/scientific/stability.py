@@ -14,9 +14,10 @@ from typing import Any, Callable
 
 import numpy as np
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 @dataclass
 class StabilityTest:
@@ -29,6 +30,20 @@ class StabilityTest:
     actual_behavior: str
     stability_score: float
     recommendations: list[str]
+
+
+def _score_result(result: Any) -> tuple[str, float]:
+    """Return (behavior_label, stability_score) for a numeric result."""
+    has_nan = np.isnan(result).any() if hasattr(result, "any") else np.isnan(result)
+    has_inf = np.isinf(result).any() if hasattr(result, "any") else np.isinf(result)
+    if has_nan:
+        return "NaN values detected", 0.0
+    if has_inf:
+        return "Infinite values detected", 0.0
+    if np.abs(result) > 1e10:
+        return "Extremely large values", 0.3
+    return "Numerically stable", 1.0
+
 
 def check_numerical_stability(
     func: Callable[..., Any], test_inputs: list[Any], tolerance: float = 1e-12
@@ -47,23 +62,8 @@ def check_numerical_stability(
 
     for test_input in test_inputs:
         try:
-            # Test function execution
             result = func(test_input)
-
-            # Check for NaN, inf, or extreme values
-            if np.isnan(result).any() if hasattr(result, "any") else np.isnan(result):
-                behavior = "NaN values detected"
-                score = 0.0
-            elif np.isinf(result).any() if hasattr(result, "any") else np.isinf(result):
-                behavior = "Infinite values detected"
-                score = 0.0
-            elif np.abs(result) > 1e10:  # Arbitrary large value threshold
-                behavior = "Extremely large values"
-                score = 0.3
-            else:
-                behavior = "Numerically stable"
-                score = 1.0
-
+            behavior, score = _score_result(result)
             results.append((test_input, result, behavior, score))
 
         except Exception as e:  # noqa: BLE001 — any function failure is a stability event
@@ -83,7 +83,9 @@ def check_numerical_stability(
         recommendations.append("Handle edge cases and invalid inputs gracefully")
 
     return StabilityTest(
-        function_name=getattr(func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func))),
+        function_name=getattr(
+            func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func))
+        ),
         test_name="numerical_stability",
         input_range=(min(test_inputs), max(test_inputs)) if test_inputs else (0, 0),
         expected_behavior="Stable numerical behavior across input range",

@@ -32,7 +32,7 @@ graph TB
     class OUTPUTS output
 ```
 
-## Build Pipeline (8 Stages)
+## Core Pipeline (10-Stage DAG via Python Orchestrator)
 
 | Stage | Name | Purpose |
 |-------|------|---------|
@@ -45,7 +45,7 @@ graph TB
 | 06 | LLM Review | Optional manuscript review |
 | 07 | Report | Executive summary generation |
 
-Run with: `uv run python scripts/execute_pipeline.py --core-only`
+Run with: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 ## Key Principles
 
@@ -63,11 +63,34 @@ Run with: `uv run python scripts/execute_pipeline.py --core-only`
 | Thin orchestrator pattern | [thin-orchestrator-summary.md](../architecture/thin-orchestrator-summary.md) |
 | Code placement decisions | [decision-tree.md](../architecture/decision-tree.md) |
 | Development workflow | [workflow.md](workflow.md) |
-| Build system details | [build-system.md](../operational/build/build-system.md) |
+| Pipeline orchestration | [RUN_GUIDE.md](../RUN_GUIDE.md) |
 | API reference | [api-reference.md](../reference/api-reference.md) |
 
 ## Development Rules
 
-- **[`.cursorrules/AGENTS.md`](../../.cursorrules/AGENTS.md)** — Development standards
-- **[`.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md)** — Infrastructure module development
-- **[`.cursorrules/README.md`](../../.cursorrules/README.md)** — Quick reference and patterns
+- **[`docs/rules/AGENTS.md`](../rules/AGENTS.md)** — Development standards
+- **[`docs/rules/infrastructure_modules.md`](../rules/infrastructure_modules.md)** — Infrastructure module development
+- **[`docs/rules/README.md`](../rules/README.md)** — Quick reference and patterns
+
+---
+
+## Troubleshooting
+
+### Layer Violation
+
+**Symptom**: `ModuleNotFoundError` when infrastructure imports project code
+
+**Solution**: Refactor - infrastructure must not depend on project code. Move shared logic to infrastructure.
+
+### Import Errors
+
+**Symptom**: Scripts fail with import errors
+
+**Solution**:
+- Use `uv run python` for proper environment
+- Ensure conftest.py adds src/ to path
+- Check thin orchestrator pattern: scripts import from src/, not implement
+
+---
+
+**Quick Reference**: [Troubleshooting Guide](../operational/troubleshooting/README.md)

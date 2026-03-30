@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.validation.doc_discovery import (
+from infrastructure.validation.docs.discovery import (
     catalog_agents_readme,
     create_hierarchy,
     find_config_files,

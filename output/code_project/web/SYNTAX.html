@@ -257,12 +257,13 @@ pipeline will flag undefined keys as errors.</p>
 <h2 id="equation-environments">Equation Environments</h2>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Numbered equation with label --&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>\nabla f(x) = Ax - b</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>$$ {#eq:gradient}</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Reference in text --&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>As shown in @eq:gradient, the gradient...</span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>\label{eq:gradient}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>\nabla f(x) = Ax - b</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Reference in text --&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>As shown in Equation \ref{eq:gradient}, the gradient...</span></code></pre></div>
 <p>Pandoc-crossref resolves <code>{#eq:label}</code> and
 <code>@eq:label</code> during rendering. Do <strong>not</strong> use raw
 <code>\label{}</code> / <code>\ref{}</code> — the Markdown filter

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+
 @dataclass
 class PublicationMetadata:
     """Container for publication metadata."""
@@ -21,6 +22,7 @@ class PublicationMetadata:
     repository_url: str | None = None
     citation_count: int = 0
     download_count: int = 0
+
 
 @dataclass
 class CitationStyle:

@@ -8,8 +8,8 @@ real implementations or skip when services are unavailable.
 import pytest
 
 from infrastructure import publishing
-from infrastructure.core.health_check import SystemHealthChecker
-from infrastructure.llm import LLMClient
+from infrastructure.core.runtime.health_check import SystemHealthChecker
+from infrastructure.llm.core.client import LLMClient
 
 
 class TestResearchWorkflow:
@@ -38,7 +38,7 @@ class TestResearchWorkflow:
             assert len(analysis) > 10
             assert "system" in analysis.lower() or "health" in analysis.lower()
 
-        except Exception as e:
+        except (ConnectionError, ImportError, OSError, RuntimeError) as e:
             pytest.skip(f"Service unavailable: {e}")
 
     def test_rendering_metadata_workflow(self, tmp_path):
@@ -124,7 +124,7 @@ class TestModuleInteroperability:
 
     def test_shared_logging(self):
         """Test that all modules use common logging."""
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Create loggers for each module
         lit_logger = get_logger("infrastructure.literature")
@@ -140,11 +140,11 @@ class TestModuleInteroperability:
     def test_configuration_independence(self):
         """Test that module configurations are independent."""
         from infrastructure.literature.core import LiteratureConfig
-        from infrastructure.llm.core.config import LLMConfig
+        from infrastructure.llm.core.config import OllamaClientConfig
         from infrastructure.rendering.config import RenderingConfig
 
         lit_config = LiteratureConfig()
-        llm_config = LLMConfig()
+        llm_config = OllamaClientConfig()
         render_config = RenderingConfig()
 
         # Each has distinct configuration

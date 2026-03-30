@@ -20,8 +20,7 @@ The generic project template implements a **unified test-driven development para
 - **Source code** implements mathematical functionality
 - **Tests** validate all functionality with coverage (60% infra, 90% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `projects/{name}/src/` methods
-- **Documentation** references code and displays generated outputs
-- **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the declarative 10-stage DAG pipeline
 
 ## Workflow Diagram
 
@@ -76,7 +75,7 @@ graph TB
 
 ## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes 8 stages sequentially, ensuring coherence between all components:
+The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes the pipeline stages sequentially, ensuring coherence between all components:
 
 ### 1. Code Validation Phase
 
@@ -139,7 +138,7 @@ flowchart TD
 2. **Implement functionality** - Write code to pass tests
 3. **Validate integration** - Ensure scripts can use the code
 4. **Update documentation** - Reflect changes in markdown
-5. **Run pipeline** - Use `uv run python scripts/execute_pipeline.py --core-only` to validate coherence
+5. **Run pipeline** - Use `uv run python scripts/execute_pipeline.py --project {name} --core-only` to validate coherence
 
 ## Step-by-Step Workflow
 
@@ -152,7 +151,7 @@ uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov
 # Check coverage (must be 100%)
 coverage report
 
-# Make code changes in projects/code_projects/{name}/src/
+# Make code changes in projects/{name}/src/
 # Update corresponding tests
 # Update documentation if needed
 ```
@@ -174,23 +173,16 @@ uv run python -m infrastructure.validation.cli markdown projects/code_project/ma
 ### 3. Integration Phase
 
 ```bash
-# Run the pipeline (all 8 stages)
-uv run python scripts/execute_pipeline.py --core-only
+# Run the core pipeline (no LLM stages)
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu
 ./run.sh
 ```
 
-The pipeline orchestrator executes 8 stages:
+With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (unless disabled), environment setup, infrastructure tests (unless `--skip-infra`), project tests, analysis, PDF rendering, output validation, then copy outputs. That path is driven by scripts **`00`–`05`** (tests use **`01`**, which runs infrastructure + project suites).
 
-- **Stage 00**: Environment setup & validation
-- **Stage 01**: Run tests with coverage (validates `projects/{name}/src/` code works)
-- **Stage 02**: Execute analysis scripts (generates figures and data)
-- **Stage 03**: Render PDFs from markdown (validates references, builds PDFs)
-- **Stage 04**: Validate outputs (checks PDF quality and integrity)
-- **Stage 05**: Copy final deliverables (copies to top-level output/)
-- **Stage 06**: LLM review (optional manuscript review)
-- **Stage 07**: Generate executive report
+**Full** pipeline (for example `./run.sh --pipeline` without `--core-only`) adds LLM review and translations (`06_llm_review.py`) before copy. **`07_generate_executive_report.py`** is for multi-project / executive reporting, not the default single-project stage list.
 
 ## Key Components
 
@@ -274,7 +266,7 @@ uv run python scripts/02_run_analysis.py --project code_project
 uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Build PDF pipeline
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Clean all generated outputs (regeneratable)
 # Pipeline automatically handles cleanup
@@ -331,6 +323,34 @@ All directories under `output/` are disposable and can be safely cleaned.
 2. **Markdown validation errors**: Fix broken links, missing images, or duplicate labels
 3. **Figure generation failures**: Ensure src/ modules work correctly
 4. **PDF build errors**: Check pandoc and LaTeX installation
+
+### Test Import Errors
+
+**Symptom**: `ModuleNotFoundError: No module named 'project.src'`
+
+**Solution**: Ensure tests/conftest.py adds src/ to sys.path:
+```python
+import os, sys
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+SRC = os.path.join(ROOT, "src")
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)
+```
+
+### Coverage Below Threshold
+
+**Symptom**: `CoverageWarning: 85% < 90% required`
+
+**Solution**: Find uncovered lines and add tests:
+```bash
+pytest --cov=src --cov-report=term-missing
+```
+
+### Thin Orchestrator Violation
+
+**Symptom**: Business logic in scripts instead of src/
+
+**Solution**: Move algorithms to src/ modules, scripts only handle I/O and visualization
 
 ### Validation Commands
 

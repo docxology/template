@@ -112,14 +112,6 @@ class TestOutputOrganizer:
         mixed_case_path = Path("File.Json")
         assert organizer.detect_file_type(mixed_case_path) == FileType.JSON
 
-    def test_get_subdirectory(self, organizer):
-        """Test subdirectory retrieval for file types."""
-        assert organizer.get_subdirectory(FileType.PNG) == "png"
-        assert organizer.get_subdirectory(FileType.PDF) == "pdf"
-        assert organizer.get_subdirectory(FileType.CSV) == "csv"
-        assert organizer.get_subdirectory(FileType.HTML) == "html"
-        assert organizer.get_subdirectory(FileType.JSON) == "json"
-        assert organizer.get_subdirectory(FileType.MARKDOWN) == "md"
 
     def test_get_output_path_basic(self, organizer, temp_output_dir):
         """Test basic output path generation."""
@@ -361,17 +353,3 @@ class TestOutputOrganizer:
         assert "combined_pdfs" in summary
         assert summary["combined_pdfs"] == []
 
-    @pytest.mark.parametrize(
-        "file_type,expected_subdir",
-        [
-            (FileType.PNG, "png"),
-            (FileType.PDF, "pdf"),
-            (FileType.CSV, "csv"),
-            (FileType.HTML, "html"),
-            (FileType.JSON, "json"),
-            (FileType.MARKDOWN, "md"),
-        ],
-    )
-    def test_get_subdirectory_parametrized(self, organizer, file_type, expected_subdir):
-        """Test get_subdirectory with parametrized inputs."""
-        assert organizer.get_subdirectory(file_type) == expected_subdir

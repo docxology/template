@@ -5,7 +5,7 @@ infrastructure modules, ensuring graceful degradation and proper error propagati
 """
 
 from infrastructure.scientific import check_numerical_stability
-from infrastructure.validation import integrity
+from infrastructure.validation.integrity import checks as integrity
 
 
 class TestEdgeCasesAndErrorPaths:

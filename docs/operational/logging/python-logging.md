@@ -9,7 +9,7 @@
 ## Quick Start
 
 ```python
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 # Get a logger for your module
 logger = get_logger(__name__)
@@ -40,7 +40,7 @@ export LOG_LEVEL=1  # INFO (default)
 export LOG_LEVEL=2  # WARN
 export LOG_LEVEL=3  # ERROR (least verbose)
 
-LOG_LEVEL=0 uv run python scripts/execute_pipeline.py --core-only
+LOG_LEVEL=0 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 ---
@@ -48,7 +48,7 @@ LOG_LEVEL=0 uv run python scripts/execute_pipeline.py --core-only
 ## Context Managers
 
 ```python
-from infrastructure.core.logging_utils import log_operation, log_timing, log_with_spinner
+from infrastructure.core.logging.logging_utils import log_operation, log_timing, log_with_spinner
 
 # Log operation start and completion
 with log_operation("Processing data", logger):
@@ -69,7 +69,7 @@ with log_with_spinner("Loading model...", logger):
 ## Function Decorators
 
 ```python
-from infrastructure.core.logging_utils import log_function_call
+from infrastructure.core.logging.logging_utils import log_function_call
 
 @log_function_call(logger)
 def process_file(filename: str) -> bool:
@@ -108,7 +108,7 @@ log_success("All files processed", logger)
 ```bash
 # Enable JSON logging
 export STRUCTURED_LOGGING=true
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 Output:

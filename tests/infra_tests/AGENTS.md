@@ -13,6 +13,7 @@ The `tests/infra_tests/` directory contains tests for the reusable infrastructur
 ```text
 tests/infra_tests/
 ├── conftest.py                      # Shared test configuration and fixtures
+├── test_docs_discovery_consistency.py  # docs/ project links + _generated/active_projects.md vs discover_projects()
 ├── _test_helpers.py                 # Test utility functions (underscore = not a test file)
 ├── core/                           # Core utilities tests (24 test files)
 │   ├── test_checkpoint.py          # Checkpoint/resume functionality
@@ -38,7 +39,8 @@ tests/infra_tests/
 │   ├── test_project_logger.py      # Project-specific logging
 │   ├── test_retry.py               # Retry mechanisms
 │   ├── test_script_discovery.py    # Script auto-discovery
-│   └── test_security.py            # Security utilities
+│   ├── test_security.py            # Security utilities
+│   └── test_dag.py                 # Pipeline DAG engine
 ├── documentation/                  # Documentation tools tests (4 test files)
 │   ├── test_figure_manager.py      # Figure registry and numbering
 │   ├── test_glossary_gen.py        # API documentation generation
@@ -104,7 +106,7 @@ tests/infra_tests/
 ├── reporting/                      # Reporting tests (9 test files)
 │   ├── AGENTS.md                   # Reporting test documentation
 │   ├── README.md                   # Quick reference
-│   ├── test_dashboard_generator.py # Dashboard generation
+│   ├── test_dashboard_generator.py # Dashboard system (_dashboard_matplotlib + modules)
 │   ├── test_error_aggregator.py    # Error aggregation
 │   ├── test_executive_reporter.py  # Executive reporting
 │   ├── test_html_templates.py      # HTML template rendering
@@ -113,6 +115,9 @@ tests/infra_tests/
 │   ├── test_output_reporter.py     # Output reporting
 │   ├── test_pipeline_reporter.py   # Pipeline reporting
 │   └── test_test_reporter.py       # Test result reporting
+├── skills/                         # SKILL.md discovery tests (1 test file)
+│   ├── AGENTS.md                   # Skills test documentation
+│   └── test_skill_discovery.py     # Manifest + discover_skills coverage
 ├── scientific/                     # Scientific tools tests (7 test files)
 │   ├── test_benchmarking.py        # Performance benchmarking
 │   ├── test_documentation.py       # Scientific documentation
@@ -560,7 +565,7 @@ def test_custom_config(tmp_path):
 
 **Purpose:** Test pipeline reporting and error aggregation (9 test files)
 
-- **`test_dashboard_generator.py`** - Dashboard generation
+- **`test_dashboard_generator.py`** - Dashboard system (_dashboard_matplotlib + extracted modules)
   - Health-scored visual dashboard creation
   - Multi-metric aggregation
 
@@ -733,7 +738,7 @@ pytest tests/infra_tests/ -m "not requires_latex"
    pytest tests/infra_tests/
    ```
 
-See [docs/testing-with-credentials.md](../../docs/development/testing-with-credentials.md) for detailed setup.
+See [docs/development/testing/testing-with-credentials.md](../../docs/development/testing/testing-with-credentials.md) for detailed setup.
 
 ### Test Cleanup
 
@@ -806,6 +811,7 @@ Current coverage: **83.33%** (exceeds 60% requirement by 39%!)
 | `publishing/` | 9 | 100% | ✅ |
 | `rendering/` | 21 | 91% | ✅ |
 | `reporting/` | 9 | 75% | ✅ |
+| `skills/` | 1 | 87% | ✅ |
 | `scientific/` | 7 | 100% | ✅ |
 | `validation/` | 32 | 100% | ✅ |
 
@@ -1015,5 +1021,5 @@ pytest tests/infra_tests/ --durations=10
 
 - [`README.md`](README.md) - Quick reference guide
 - [`../AGENTS.md`](../AGENTS.md) - Test suite documentation
-- [`../../docs/development/testing-guide.md`](../../docs/development/testing-guide.md) - Testing best practices
+- [`../../docs/development/testing/testing-guide.md`](../../docs/development/testing/testing-guide.md) - Testing best practices
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure module overview

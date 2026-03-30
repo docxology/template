@@ -28,8 +28,8 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, setup_logger, log_header, log_success
-from infrastructure.validation.audit_orchestrator import (
+from infrastructure.core.logging.utils import get_logger, setup_logger, log_header, log_success
+from infrastructure.validation.repo.audit_orchestrator import (
     run_comprehensive_audit,
     generate_audit_report,
 )

@@ -75,6 +75,19 @@ This template provides a **foundation** for research projects with:
 
 ---
 
+## 🔧 Troubleshooting Quick Reference
+
+| Issue | Solution |
+|-------|----------|
+| Project not in menu | Create `manuscript/config.yaml` |
+| Test import errors | Ensure `tests/conftest.py` exists |
+| Stage 4 fails fast | Add project deps to root `pyproject.toml` |
+| Config warnings | Use `project_config:` prefix for custom keys |
+
+**Full troubleshooting**: [Common Errors](../operational/troubleshooting/common-errors.md) | [FAQ](../reference/faq.md)
+
+---
+
 **Transform your research workflow with this professional template! 🚀**
 
 For detailed setup and usage instructions, see **[`../core/how-to-use.md`](../core/how-to-use.md)** for guidance, **[`README.md`](README.md)** for overview, and **[`../core/workflow.md`](../core/workflow.md)** for development process.

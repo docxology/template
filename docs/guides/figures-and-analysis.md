@@ -2,7 +2,7 @@
 
 > **Add figures and automation** to your research project
 
-**Previous**: [Getting Started](../guides/getting-started.md) (Levels 1-3) | **Next**: [Testing and Reproducibility](../guides/testing-and-reproducibility.md) (Levels 7-9)
+**Previous**: [Getting Started](getting-started.md) (Levels 1-3) | **Next**: [Testing and Reproducibility](testing-and-reproducibility.md) (Levels 7-9)
 
 This guide covers **Levels 4-6** of the Research Project Template. for users ready to add custom figures, data analysis, and automated workflows.
 
@@ -20,7 +20,7 @@ By the end of this guide, you'll be able to:
 
 ## 🎯 Prerequisites
 
-- Completed [Getting Started Guide](../guides/getting-started.md)
+- Completed [Getting Started Guide](getting-started.md)
 - Basic Python programming knowledge
 - Understanding of matplotlib or similar visualization library
 - Text editor configured for Python
@@ -112,9 +112,9 @@ def main():
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
     
     # USE projects/{name}/src/ methods for computation - NEVER implement here
-    avg = calculate_average(data)  # From projects/code_projects/{name}/src/example.py
-    max_val = find_maximum(data)   # From projects/code_projects/{name}/src/example.py
-    min_val = find_minimum(data)   # From projects/code_projects/{name}/src/example.py
+    avg = calculate_average(data)  # From projects/code_project/src/example.py
+    max_val = find_maximum(data)   # From projects/code_project/src/example.py
+    min_val = find_minimum(data)   # From projects/code_project/src/example.py
     
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -162,7 +162,7 @@ if __name__ == '__main__':
 If computation logic doesn't exist, add it to `projects/{name}/src/` first:
 
 ```python
-# projects/code_projects/{name}/src/statistics.py
+# projects/code_project/src/statistics.py
 def calculate_variance(values):
     """Calculate sample variance."""
     mean = sum(values) / len(values)
@@ -360,7 +360,7 @@ def test_linear_regression():
 **Step 3: Implement in `projects/{name}/src/`**
 
 ```python
-# projects/code_projects/{name}/src/correlation.py
+# projects/code_project/src/correlation.py
 """Correlation and regression analysis functions."""
 
 def calculate_correlation(x: list[float], y: list[float]) -> float:
@@ -438,7 +438,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.code_project.src.correlation import calculate_correlation, linear_regression  # From projects/{name}/src/
+from projects.code_project.src.correlation import calculate_correlation, linear_regression  # From projects/code_project/src/
 
 def main():
     # Generate sample data
@@ -509,7 +509,7 @@ print('projects/code_project/output/data/analysis_data.csv')
 The pipeline orchestrator (`scripts/execute_pipeline.py`) orchestrates everything:
 
 ```bash
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 **What happens**:
@@ -523,7 +523,7 @@ uv run python scripts/execute_pipeline.py --core-only
 
 **Total**: ~84 seconds (without optional LLM review)
 
-**See [build-system.md](../operational/build/build-system.md) for detailed breakdown.**
+**See [RUN_GUIDE.md](../RUN_GUIDE.md) for pipeline breakdown and stage reference.**
 
 ### Output Directory Structure
 
@@ -557,7 +557,7 @@ output/
 
 ```bash
 # 1. Edit source code
-vim projects/code_projects/{name}/src/my_module.py
+vim projects/{name}/src/my_module.py
 
 # 2. Write tests
 vim projects/code_project/tests/test_my_module.py
@@ -569,24 +569,24 @@ uv run pytest projects/code_project/tests/test_my_module.py --cov=projects.code_
 vim projects/code_project/scripts/my_figure.py
 
 # 5. Run build
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
-# 6. View result (top-level output after stage 5)
+# 6. View result (top-level output after copy outputs)
 open output/code_project/pdf/code_project_combined.pdf
 ```
 
 **Advanced workflow with validation**:
 
 ```bash
-# 1. Full rebuild with validation (recommended - all 8 stages)
-uv run python scripts/execute_pipeline.py --core-only
+# 1. Full rebuild with validation (recommended — core pipeline, ten stages by default)
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
 # Alternative: Manual steps
 # # Pipeline automatically handles cleanup
-# uv run python scripts/execute_pipeline.py --core-only
+# uv run python scripts/execute_pipeline.py --project {name} --core-only
 # uv run python scripts/04_validate_output.py
 ```
 
@@ -655,6 +655,82 @@ def main():
 
 if __name__ == '__main__':
     main()
+```
+
+---
+
+## Troubleshooting
+
+### Figure Generation Fails
+
+**Symptom**: Script runs but no figure appears
+
+**Check**:
+- Ensure output directory exists: `os.makedirs(output_dir, exist_ok=True)`
+- Verify matplotlib backend is set: `matplotlib.use('Agg')`
+- Check file permissions on output directory
+
+**Solution**:
+```python
+import os
+output_dir = 'projects/code_project/output/figures'
+os.makedirs(output_dir, exist_ok=True)  # Create if missing
+fig.savefig(os.path.join(output_dir, 'figure.png'), dpi=300)
+```
+
+### Import Errors in Scripts
+
+**Symptom**: `ModuleNotFoundError: No module named 'projects.code_project.src'`
+
+**Cause**: Script run outside of project context
+
+**Solution**: Use `uv run` to ensure proper Python path:
+```bash
+uv run python projects/code_project/scripts/my_figure.py
+```
+
+### Matplotlib Display Errors
+
+**Symptom**: `RuntimeError: Invalid DISPLAY` or hangs on `plt.show()`
+
+**Solution**:
+```python
+import matplotlib
+matplotlib.use('Agg')  # Must be BEFORE pyplot import
+import matplotlib.pyplot as plt
+```
+
+Also set in environment:
+```bash
+export MPLBACKEND=Agg
+```
+
+### Cross-Reference Shows ?? in PDF
+
+**Symptom**: Figure reference shows as `??` in compiled PDF
+
+**Cause**: Label not registered with FigureManager
+
+**Solution**:
+```python
+from infrastructure.documentation import FigureManager
+fm = FigureManager()
+fm.register_figure(
+    filename="my_figure.png",
+    caption="Description",
+    label="fig:my_figure"  # Use in LaTeX as \ref{fig:my_figure}
+)
+```
+
+### Data File Not Found
+
+**Symptom**: `FileNotFoundError: data.csv`
+
+**Solution**: Use absolute paths with project root:
+```python
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+data_path = PROJECT_ROOT / "data" / "data.csv"
 ```
 
 ---
@@ -738,7 +814,7 @@ with Pool() as pool:
 
 - **[Quick Start Cheatsheet](../reference/quick-start-cheatsheet.md)** - Essential commands
 - **[Glossary](../reference/glossary.md)** - Terms and definitions
-- **[Build System](../operational/build/build-system.md)** - build system reference
+- **[Pipeline Orchestration](../RUN_GUIDE.md)** - pipeline stages and commands
 - **[Examples Showcase](../usage/examples-showcase.md)** - Real-world applications
 - **[Documentation Index](../documentation-index.md)** - reference
 

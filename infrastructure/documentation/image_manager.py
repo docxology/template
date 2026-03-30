@@ -12,9 +12,10 @@ from pathlib import Path
 
 from .figure_manager import FigureManager
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 class ImageManager:
     """Manages image insertion and cross-referencing in markdown files."""
@@ -79,15 +80,13 @@ class ImageManager:
         try:
             _tmp.write_text(content, encoding="utf-8")
             _tmp.replace(markdown_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
         return True
 
-    def _find_insertion_point(
-        self, content: str, section: str | None, position: str
-    ) -> int | None:
+    def _find_insertion_point(self, content: str, section: str | None, position: str) -> int | None:
         """Find insertion point in markdown content.
 
         Args:
@@ -179,7 +178,7 @@ class ImageManager:
         try:
             _tmp.write_text(content, encoding="utf-8")
             _tmp.replace(markdown_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 

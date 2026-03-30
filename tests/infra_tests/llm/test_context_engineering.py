@@ -251,7 +251,7 @@ class TestContextPruningLogging:
         """Test pruning logs detailed information."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Configure logger before creating context
         logger = get_logger("infrastructure.llm.core.context")
@@ -308,7 +308,7 @@ class TestContextOperationsLogging:
         """Test add_message logs operations."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.context")
         logger.setLevel(logging.DEBUG)
@@ -324,7 +324,7 @@ class TestContextOperationsLogging:
         """Test clear logs operation."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.context")
         logger.setLevel(logging.INFO)
@@ -341,7 +341,7 @@ class TestContextOperationsLogging:
         """Test save_state logs operation."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.context")
         logger.setLevel(logging.DEBUG)
@@ -358,7 +358,7 @@ class TestContextOperationsLogging:
         """Test export_context logs operation."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.context")
         logger.setLevel(logging.INFO)

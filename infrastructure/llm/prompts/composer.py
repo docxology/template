@@ -1,4 +1,8 @@
-"""Prompt composer for assembling prompts from fragments and templates."""
+"""Prompt composer for assembling prompts from fragments and templates.
+
+Implementation of fragment building is in _fragment_builders.py.
+This module provides the PromptComposer public API.
+"""
 
 from __future__ import annotations
 
@@ -6,10 +10,12 @@ import re
 from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.llm.prompts._fragment_builders import build_fragment
 from infrastructure.llm.prompts.loader import PromptFragmentLoader
 
 logger = get_logger(__name__)
+
 
 class PromptComposer:
     """Composes prompts from fragments and templates.
@@ -68,41 +74,9 @@ class PromptComposer:
             fragment_values: dict[str, str] = {}
 
             for fragment_key, fragment_ref in fragments.items():
-                if "section_structures.json#" in fragment_ref:
-                    # Load section structure by key from the fragment ref
-                    structure_key = fragment_ref.split("#", 1)[1]
-                    fragment_values[fragment_key] = self._build_section_structure(structure_key)
-                elif "format_requirements" in fragment_ref:
-                    # Build format requirements
-                    headers = template.get("section_config", {}).get("headers", [])
-                    fragment_values[fragment_key] = self._build_format_requirements(headers)
-                elif "content_requirements" in fragment_ref:
-                    fragment_values[fragment_key] = self._build_content_requirements()
-                elif "token_budget_awareness" in fragment_ref:
-                    section_config = template.get("section_config", {})
-                    sections = section_config.get("sections", 2)
-                    total = max_tokens or 1000
-                    section_budgets = {
-                        f"Section{i + 1}": total // sections for i in range(sections)
-                    }
-                    fragment_values[fragment_key] = self._build_token_budget_awareness(
-                        total_tokens=total, section_budgets=section_budgets
-                    )
-                elif "validation_hints" in fragment_ref:
-                    word_count = template.get("variables", {}).get("word_count_range", [100, 200])
-                    required = template.get("variables", {}).get("required_elements", [])
-                    fragment_values[fragment_key] = self._build_validation_hints(
-                        word_count_range=tuple(word_count), required_elements=required
-                    )
-                else:
-                    # Load fragment directly
-                    fragment_data = self.loader.load_fragment(fragment_ref)
-                    if isinstance(fragment_data, dict):
-                        fragment_values[fragment_key] = str(
-                            fragment_data.get("content", fragment_data)
-                        )
-                    else:
-                        fragment_values[fragment_key] = str(fragment_data)
+                fragment_values[fragment_key] = build_fragment(
+                    self.loader, fragment_ref, template, max_tokens
+                )
 
             # Merge template variables
             template_vars = template.get("variables", {})
@@ -175,173 +149,3 @@ class PromptComposer:
             # If retry prompt not found, return base unchanged
             logger.debug(f"Retry prompt {retry_type} not found, returning base prompt")
             return base_prompt
-
-    def _build_format_requirements(self, headers_list: list[str]) -> str:
-        """Build format requirements fragment.
-
-        Args:
-            headers_list: List of required headers
-
-        Returns:
-            Formatted requirements string
-        """
-        format_data = self.loader.load_fragment("format_requirements.json")
-
-        base_template = format_data.get("base_template", "")
-        if not base_template:
-            raise LLMTemplateError(
-                "format_requirements.json missing 'base_template' key",
-                context={"fragment": "format_requirements.json"},
-            )
-
-        headers_text = "\n".join(f"  - {h}" for h in headers_list)
-        result = base_template.replace("${headers_list}", headers_text)
-
-        # Handle section requirements if present
-        if "section_requirements_template" in format_data:
-            section_template = format_data["section_requirements_template"]
-            result = result.replace("${section_requirements_block}", section_template)
-        else:
-            result = result.replace("${section_requirements_block}", "")
-
-        return result
-
-    def _build_content_requirements(self) -> str:
-        """Build content requirements fragment.
-
-        Returns:
-            Formatted content requirements string
-        """
-        content_data = self.loader.load_fragment("content_requirements.json")
-
-        base_template = content_data.get("base_template", "")
-        if not base_template:
-            raise LLMTemplateError(
-                "content_requirements.json missing 'base_template' key",
-                context={"fragment": "content_requirements.json"},
-            )
-
-        no_hallucination = content_data.get("no_hallucination", "")
-        cite_sources = content_data.get("cite_sources", "")
-
-        result = base_template.replace("${no_hallucination_block}", no_hallucination)
-        result = result.replace("${cite_sources_block}", cite_sources)
-
-        return result
-
-    def _build_section_structure(self, structure_key: str) -> str:
-        """Build section structure fragment.
-
-        Args:
-            structure_key: Key in section_structures.json
-
-        Returns:
-            Formatted section structure string
-
-        Raises:
-            LLMTemplateError: If structure key not found
-        """
-        try:
-            structures = self.loader.load_fragment("section_structures.json")
-
-            if structure_key not in structures:
-                raise LLMTemplateError(
-                    f"Section structure '{structure_key}' not found",
-                    context={
-                        "available_keys": (
-                            list(structures.keys()) if isinstance(structures, dict) else []
-                        )
-                    },
-                )
-
-            structure = structures[structure_key]
-            headers = structure.get("headers", [])
-            descriptions = structure.get("descriptions", {})
-
-            lines = ["SECTION STRUCTURE:"]
-            for header in headers:
-                desc = descriptions.get(header, "")
-                lines.append(f"{header}: {desc}")
-
-            return "\n".join(lines)
-
-        except LLMTemplateError:
-            raise
-        except Exception as e:
-            raise LLMTemplateError(
-                f"Failed to build section structure for '{structure_key}'",
-                context={"error": str(e)},
-            ) from e
-
-    def _build_token_budget_awareness(
-        self, total_tokens: int, section_budgets: dict[str, int]
-    ) -> str:
-        """Build token budget awareness fragment.
-
-        Args:
-            total_tokens: Total token budget
-            section_budgets: Dictionary of section name -> token budget
-
-        Returns:
-            Formatted token budget string
-        """
-        budget_data = self.loader.load_fragment("token_budget_awareness.json")
-
-        base_template = budget_data.get("base_template", "")
-        if not base_template:
-            raise LLMTemplateError(
-                "token_budget_awareness.json missing 'base_template' key",
-                context={"fragment": "token_budget_awareness.json"},
-            )
-
-        total_template = budget_data.get("total_tokens_template", "1. Total: ${total_tokens} tokens")
-        section_template = budget_data.get("section_budgets_template", "2. Per section:\n${budgets_list}")
-
-        total_block = total_template.replace("${total_tokens}", str(total_tokens))
-
-        budgets_list = "\n".join(
-            f"  - {name}: {budget} tokens" for name, budget in section_budgets.items()
-        )
-        section_block = section_template.replace("${budgets_list}", budgets_list)
-
-        result = base_template.replace("${total_tokens_block}", total_block)
-        result = result.replace("${section_budgets_block}", section_block)
-
-        return result
-
-    def _build_validation_hints(
-        self, word_count_range: tuple[int, int], required_elements: list[str]
-    ) -> str:
-        """Build validation hints fragment.
-
-        Args:
-            word_count_range: Tuple of (min_words, max_words)
-            required_elements: List of required element names
-
-        Returns:
-            Formatted validation hints string
-        """
-        validation_data = self.loader.load_fragment("validation_hints.json")
-
-        base_template = validation_data.get("base_template", "")
-        if not base_template:
-            raise LLMTemplateError(
-                "validation_hints.json missing 'base_template' key",
-                context={"fragment": "validation_hints.json"},
-            )
-
-        word_template = validation_data.get("word_count_template", "1. Word count: ${min_words}-${max_words}")
-        elements_template = validation_data.get("required_elements_template", "2. Required:\n${elements_list}")
-
-        min_words, max_words = word_count_range
-        word_block = word_template.replace("${min_words}", str(min_words)).replace(
-            "${max_words}", str(max_words)
-        )
-
-        elements_list = "\n".join(f"  - {elem}" for elem in required_elements)
-        elements_block = elements_template.replace("${elements_list}", elements_list)
-
-        result = base_template.replace("${word_count_block}", word_block)
-        result = result.replace("${required_elements_block}", elements_block)
-
-        return result

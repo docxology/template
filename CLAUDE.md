@@ -11,6 +11,7 @@ This is a research project template with a test-driven development workflow, aut
 | Task | Command |
 |------|---------|
 | Interactive menu | `./run.sh` |
+| Interactive secure menu | `./secure_run.sh` |
 | Full pipeline | `./run.sh --pipeline` |
 | Core pipeline (no LLM) | `python3 scripts/execute_pipeline.py --project {name} --core-only` |
 | All tests | `python3 scripts/01_run_tests.py --project {name}` |
@@ -26,14 +27,21 @@ This is a research project template with a test-driven development workflow, aut
 # Interactive menu (recommended)
 ./run.sh
 
+# Interactive secure menu (pipeline + steganography)
+./secure_run.sh
+
 # Full pipeline (10 stages: clean, setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
 
-# Core pipeline only (8 stages: no LLM)
+# Core pipeline only (10-stage DAG: no LLM)
 python3 scripts/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
 ./run.sh --pipeline --resume
+
+# Steganography operations
+./secure_run.sh --project {project_name}
+./secure_run.sh --steganography-only --project {project_name}
 ```
 
 ### Testing
@@ -79,6 +87,10 @@ python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/
 
 # Generate API documentation
 python3 -m infrastructure.documentation.generate_glossary_cli --project {project_name}
+
+# Agent SKILL.md manifest (Cursor / editors)
+uv run python -m infrastructure.skills write
+uv run python -m infrastructure.skills check
 ```
 
 ### Multi-Project Operations
@@ -94,7 +106,7 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `code_project`, `medical_ai`
+**Active projects:** `code_project`, `fep_lean`, `template` (run `discover_projects` or `ls projects/` for the current set; see `docs/_generated/active_projects.md`)
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -158,7 +170,7 @@ avg = calculate_average(data)  # Use tested method
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-**Current active projects:** `code_project`, `medical_ai`
+**Current active projects:** `code_project`, `fep_lean`, `template`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`
@@ -200,7 +212,7 @@ output/
 
 ## Pipeline Stages
 
-### Core Pipeline (8 stages)
+### Core Pipeline (10-stage DAG)
 
 1. **Clean Output Directories** - Remove previous outputs for a fresh run
 2. **Setup Environment** - Validate dependencies, discover projects
@@ -353,7 +365,7 @@ Scripts in `projects/{name}/scripts/` should:
 
 from pathlib import Path
 from projects.my_project.src.analysis import run_analysis
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 

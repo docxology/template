@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 import time
+from functools import partial
 from pathlib import Path
 
 from infrastructure.core.exceptions import PDFValidationError
-from infrastructure.core.logging_utils import (
+from infrastructure.core.logging.utils import (
     get_logger,
     log_substep,
     log_success,
     log_progress,
 )
-from infrastructure.core.config_queries import get_translation_languages, get_review_types
-from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES
+from infrastructure.core.config.queries import get_translation_languages, get_review_types
+from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES, ManuscriptQualityReview, ManuscriptMethodologyReview
 from infrastructure.llm.review.io import (
     save_review_outputs,
     save_single_review,
@@ -26,9 +27,9 @@ from infrastructure.llm.review.generator import (
     create_review_client,
     extract_manuscript_text,
     generate_llm_executive_summary,
-    generate_improvement_suggestions,
-    generate_methodology_review,
     generate_quality_review,
+    generate_methodology_review,
+    generate_improvement_suggestions,
     generate_translation,
     warmup_model,
 )
@@ -42,12 +43,14 @@ REVIEW_GENERATORS = {
     "improvement_suggestions": generate_improvement_suggestions,
 }
 
+
 class ReviewMode:
     """Mode for LLM review execution."""
 
     ALL = "all"  # Run both reviews and translations
     REVIEWS_ONLY = "reviews_only"  # Run only English scientific reviews
     TRANSLATIONS_ONLY = "translations_only"  # Run only translations
+
 
 def run_llm_review_pipeline(
     mode: str = ReviewMode.ALL,
@@ -70,7 +73,9 @@ def run_llm_review_pipeline(
     if repo_root is None:
         repo_root = Path.cwd()
 
-    _project_root = project_dir if project_dir is not None else repo_root / "projects" / project_name
+    _project_root = (
+        project_dir if project_dir is not None else repo_root / "projects" / project_name
+    )
     project_output = _project_root / "output"
 
     # Use project basename for file matching
@@ -78,15 +83,13 @@ def run_llm_review_pipeline(
     pdf_dir = project_output / "pdf"
     project_specific_pdf = pdf_dir / f"{project_basename}_combined.pdf"
 
-    if project_specific_pdf.exists():
-        pdf_path = project_specific_pdf
-    else:
-        pdf_path = project_specific_pdf  # Use expected filename in error message
+    pdf_path = project_specific_pdf  # Always use expected filename; extract_manuscript_text handles missing-file case
 
     output_dir = project_output / "llm"
 
     # Initialize session metrics
-    session_metrics = SessionMetrics(max_input_length=get_max_input_length())
+    max_input_length = get_max_input_length()
+    session_metrics = SessionMetrics(max_input_length=max_input_length)
 
     try:
         # Step 1: Check Ollama availability
@@ -100,7 +103,7 @@ def run_llm_review_pipeline(
 
         # Step 2: Extract manuscript text
         try:
-            text, manuscript_metrics = extract_manuscript_text(pdf_path)
+            text, manuscript_metrics = extract_manuscript_text(pdf_path, max_input_length=max_input_length)
         except PDFValidationError as e:
             logger.error(f"Cannot generate reviews: manuscript PDF is invalid — {e}")
             return 2
@@ -162,7 +165,7 @@ def run_llm_review_pipeline(
                 for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
                     log_progress(i, len(translation_languages), f"Translation: {lang_name}", logger)
-                    response, metrics = generate_translation(client, text, model_name, language_code=lang_code)
+                    response, metrics = generate_translation(client, text, lang_code, model_name)
                     review_name = f"translation_{lang_code}"
                     session_metrics.reviews[review_name] = metrics
                     if response is not None:

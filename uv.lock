@@ -666,28 +666,6 @@ wheels = [
 ]
 
 [[package]]
-name = "desloppify"
-version = "0.9.14"
-source = { git = "https://github.com/peteromallet/desloppify.git#19b9ebebcf449dd7074f30a7bdfdcd327d53cff6" }
-
-[[package]]
-name = "discopy"
-version = "1.2.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "numpy", version = "2.4.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "pillow" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/2b/fe/e596c1e3392b4937e3814bbb0d5068d51ebf21427a5dc1402f26d74e1727/discopy-1.2.2.tar.gz", hash = "sha256:cd88e189a909b01a2072a6919d620e86153efcd701cfb35d06397f760777c2bd", size = 5134165, upload-time = "2025-12-19T08:54:15.184Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/38/3b/9c429807cae6956d9c8bd46497f3e3fce7568a56922af168039c1aff800b/discopy-1.2.2-py3-none-any.whl", hash = "sha256:4ea88180844ba737f1c40ef6fc28dac2e191ec83ac285500cae5c5396f831b2c", size = 566629, upload-time = "2025-12-19T08:54:13.188Z" },
-]
-
-[[package]]
 name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1298,35 +1276,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/47/6d/b57c64e5038a8cf071bce391bb11551657a74558877ac961e7fa905ece27/narwhals-2.15.0.tar.gz", hash = "sha256:a9585975b99d95084268445a1fdd881311fa26ef1caa18020d959d5b2ff9a965", size = 603479, upload-time = "2026-01-06T08:10:13.27Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3d/2e/cf2ffeb386ac3763526151163ad7da9f1b586aac96d2b4f7de1eaebf0c61/narwhals-2.15.0-py3-none-any.whl", hash = "sha256:cbfe21ca19d260d9fd67f995ec75c44592d1f106933b03ddd375df7ac841f9d6", size = 432856, upload-time = "2026-01-06T08:10:11.511Z" },
-]
-
-[[package]]
-name = "networkx"
-version = "3.4.2"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version < '3.11'",
-]
-sdist = { url = "https://files.pythonhosted.org/packages/fd/1d/06475e1cd5264c0b870ea2cc6fdb3e37177c1e565c43f56ff17a10e3937f/networkx-3.4.2.tar.gz", hash = "sha256:307c3669428c5362aab27c8a1260aa8f47c4e91d3891f48be0141738d8d053e1", size = 2151368, upload-time = "2024-10-21T12:39:38.695Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b9/54/dd730b32ea14ea797530a4479b2ed46a6fb250f682a9cfb997e968bf0261/networkx-3.4.2-py3-none-any.whl", hash = "sha256:df5d4365b724cf81b8c6a7312509d0c22386097011ad1abe274afd5e9d3bbc5f", size = 1723263, upload-time = "2024-10-21T12:39:36.247Z" },
-]
-
-[[package]]
-name = "networkx"
-version = "3.6.1"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.14' and sys_platform == 'win32'",
-    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
-    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version >= '3.11' and python_full_version < '3.14' and sys_platform == 'win32'",
-    "python_full_version >= '3.11' and python_full_version < '3.14' and sys_platform == 'emscripten'",
-    "python_full_version >= '3.11' and python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
-sdist = { url = "https://files.pythonhosted.org/packages/6a/51/63fe664f3908c97be9d2e4f1158eb633317598cfa6e1fc14af5383f17512/networkx-3.6.1.tar.gz", hash = "sha256:26b7c357accc0c8cde558ad486283728b65b6a95d85ee1cd66bafab4c8168509", size = 2517025, upload-time = "2025-12-08T17:02:39.908Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/9e/c9/b2622292ea83fbb4ec318f5b9ab867d0a28ab43c5717bb85b0a5f6b3b0a4/networkx-3.6.1-py3-none-any.whl", hash = "sha256:d47fbf302e7d9cbbb9e2555a0d267983d2aa476bac30e90dfbe5669bd57f3762", size = 2068504, upload-time = "2025-12-08T17:02:38.159Z" },
 ]
 
 [[package]]
@@ -2238,23 +2187,15 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pyyaml" },
-    { name = "requests" },
 ]
 
 [package.dev-dependencies]
-cognitive-case-diagrams = [
-    { name = "discopy" },
-    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-]
 dashboard = [
-    { name = "matplotlib" },
     { name = "plotly" },
 ]
 dev = [
     { name = "bandit" },
     { name = "black" },
-    { name = "desloppify", marker = "python_full_version >= '3.11'" },
     { name = "iniconfig" },
     { name = "mypy" },
     { name = "pip-audit" },
@@ -2269,6 +2210,9 @@ dev = [
 dotenv = [
     { name = "python-dotenv" },
 ]
+llm = [
+    { name = "requests" },
+]
 monitoring = [
     { name = "psutil" },
 ]
@@ -2278,8 +2222,6 @@ rendering = [
     { name = "reportlab" },
 ]
 scientific = [
-    { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pandas", version = "3.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "rdflib" },
@@ -2299,22 +2241,13 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.7" },
     { name = "numpy", specifier = ">=1.22" },
     { name = "pyyaml", specifier = ">=6.0" },
-    { name = "requests", specifier = ">=2.31.0" },
 ]
 
 [package.metadata.requires-dev]
-cognitive-case-diagrams = [
-    { name = "discopy", specifier = ">=1.0.0" },
-    { name = "networkx", specifier = ">=3.0" },
-]
-dashboard = [
-    { name = "matplotlib", specifier = ">=3.7" },
-    { name = "plotly", specifier = ">=5.0.0" },
-]
+dashboard = [{ name = "plotly", specifier = ">=5.0.0" }]
 dev = [
     { name = "bandit", specifier = ">=1.7.0" },
     { name = "black", specifier = ">=23.0" },
-    { name = "desloppify", marker = "python_full_version >= '3.11'", git = "https://github.com/peteromallet/desloppify.git" },
     { name = "iniconfig", specifier = ">=2.3.0" },
     { name = "mypy", specifier = ">=1.17.1" },
     { name = "pip-audit", specifier = ">=2.0.0" },
@@ -2327,7 +2260,7 @@ dev = [
     { name = "types-requests", specifier = ">=2.32.4.20260107" },
 ]
 dotenv = [{ name = "python-dotenv", specifier = ">=1.0.0" }]
-llm = []
+llm = [{ name = "requests", specifier = ">=2.31.0" }]
 monitoring = [{ name = "psutil", specifier = ">=5.9.0" }]
 rendering = [
     { name = "pdfplumber", specifier = ">=0.11.0" },
@@ -2335,7 +2268,6 @@ rendering = [
     { name = "reportlab", specifier = ">=4.0.0" },
 ]
 scientific = [
-    { name = "networkx", specifier = ">=3.0" },
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "rdflib", specifier = ">=7.0.0" },
     { name = "scikit-learn", specifier = ">=1.3.0" },

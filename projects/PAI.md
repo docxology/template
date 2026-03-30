@@ -2,12 +2,21 @@
 
 ## 📍 Purpose
 
-This directory contains the **Layer 2** domain-specific research projects. Each subdirectory is a self-contained research environment.
+This directory contains the **Layer 2** domain-specific research projects. Each subdirectory is a self-contained research environment operated upon by shared infrastructure.
+
+## 📊 Active Projects
+
+| Project        | Domain                    | Tests | Coverage | Status |
+|----------------|---------------------------|-------|----------|--------|
+| `code_project` | Optimization research     | 45    | 100%     | ✅ Active |
+| `template`     | Meta-documentation        | 65    | 94.4%    | ✅ Active |
+
+Pipeline execution (2026-03-26): 2/2 projects successful, 140.5s total, 100% success rate.
 
 ## 📂 Structure Per Project
 
 - `src/`: Pure scientific logic and self-contained execution.
-- `tests/`: Zero-Mock test suite guaranteeing 100% testability.
+- `tests/`: Zero-Mock test suite guaranteeing 90%+ coverage.
 - `scripts/`: Thin Orchestrators handling side-effects and coordination.
 - `manuscript/`: Markdown source and configuration.
 - `docs/`: Modular documentation hub.
@@ -18,3 +27,13 @@ This directory contains the **Layer 2** domain-specific research projects. Each 
 - **Isolation**: Projects should not import from each other.
 - **Infrastructure Usage**: Projects can and should import from `infrastructure/`.
 - **Creation**: To create a new project, copy an existing project under `projects/` as a template.
+- **In-Progress**: Projects in `projects_in_progress/` (e.g. `fep_lean`) are not yet pipeline-ready.
+- **Archived**: Projects in `projects_archive/` are preserved but not discovered.
+
+## 🔗 Key References
+
+- [AGENTS.md](AGENTS.md) — Technical documentation for the projects directory
+- [README.md](README.md) — Quick reference and getting started
+- [PROJECTS_PARADIGM.md](PROJECTS_PARADIGM.md) — Standalone project paradigm philosophy
+- [code_project/AGENTS.md](code_project/AGENTS.md) — Master exemplar technical docs
+- [template/AGENTS.md](template/AGENTS.md) — Meta-documentation project docs

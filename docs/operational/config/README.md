@@ -12,5 +12,5 @@
 
 ## See Also
 
-- [Build System](../build/build-system.md) - Build pipeline reference
+- [Pipeline Orchestration](../../RUN_GUIDE.md) - Pipeline reference
 - [Troubleshooting](../troubleshooting/) - Configuration issues

@@ -10,17 +10,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.steganography.config import DocumentMetadata
 
 logger = get_logger(__name__)
+
 
 def inject_pdf_metadata(
     input_pdf: Path,
     output_pdf: Path,
     metadata: dict[str, str],
     xmp_string: str | None = None,
-    attachments: dict[str, bytes | None] = None,
+    attachments: dict[str, bytes] | None = None,
 ) -> Path:
     """Inject metadata into PDF Info dictionary.
 
@@ -67,7 +68,7 @@ def inject_pdf_metadata(
     if xmp_string:
         try:
             xmp_bytes = xmp_string.encode("utf-8")
-            writer.xmp_metadata = xmp_bytes  # type: ignore[assignment]
+            writer.xmp_metadata = xmp_bytes
             logger.debug(f"XMP metadata stream embedded ({len(xmp_bytes)} bytes)")
         except Exception as xmp_err:  # noqa: BLE001 — pypdf exceptions vary by PDF structure
             logger.warning(f"XMP embedding failed (non-fatal): {xmp_err}")
@@ -90,6 +91,7 @@ def inject_pdf_metadata(
         output_pdf.name,
     )
     return output_pdf
+
 
 def build_document_metadata(doc: DocumentMetadata) -> dict[str, str]:
     """Build a metadata dictionary ready for PDF injection.
@@ -133,6 +135,7 @@ def build_document_metadata(doc: DocumentMetadata) -> dict[str, str]:
     logger.debug(f"Built document metadata with {len(meta)} entries")
     return meta
 
+
 def build_xmp_packet(doc: DocumentMetadata) -> str:
     """Build an XMP metadata XML packet.
 
@@ -170,7 +173,7 @@ def build_xmp_packet(doc: DocumentMetadata) -> str:
     hash_xml = ""
     if doc.hashes:
         for algo, digest in doc.hashes.items():
-            hash_xml += f'\n        <steg:hash_{algo}>{digest}</steg:hash_{algo}>'
+            hash_xml += f"\n        <steg:hash_{algo}>{digest}</steg:hash_{algo}>"
 
     xmp = f"""<?xpacket begin="\xef\xbb\xbf" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">

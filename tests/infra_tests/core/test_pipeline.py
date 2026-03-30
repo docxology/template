@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 
 
-from infrastructure.core.checkpoint import CheckpointManager
+from infrastructure.core.runtime.checkpoint import CheckpointManager
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
 
 
@@ -458,7 +458,7 @@ sys.exit(0)
 
     def test_resume_pipeline_valid_checkpoint_skips_completed_stages(self, tmp_path: Path):
         """Resume with a valid checkpoint skips completed stages and runs remaining ones."""
-        from infrastructure.core.checkpoint import StageResult
+        from infrastructure.core.runtime.checkpoint import StageResult
 
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
         executor = self._make_executor(

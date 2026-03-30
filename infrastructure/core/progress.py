@@ -11,15 +11,17 @@ from __future__ import annotations
 import sys
 import time
 
-from infrastructure.core.logging_helpers import format_duration
-from infrastructure.core.eta import (
+from infrastructure.core.logging.helpers import format_duration
+from infrastructure.core.runtime.eta import (
+    ETAEstimate,
     calculate_eta,
     calculate_eta_ema,
     calculate_eta_with_confidence,
 )
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 class ProgressBar:
     """Simple text-based progress bar for terminal output.
@@ -131,6 +133,7 @@ class ProgressBar:
         if self.task:
             logger.info(f"  ✅ Completed: {self.task} ({format_duration(elapsed)})")
 
+
 class LLMProgressTracker:
     """Progress tracker for LLM operations with token-based progress.
 
@@ -235,6 +238,7 @@ class LLMProgressTracker:
             f"({throughput:.1f} tokens/sec)"
         )
 
+
 class SubStageProgress:
     """Track progress across multiple sub-stages within a main stage.
 
@@ -323,14 +327,14 @@ class SubStageProgress:
 
     def get_eta_with_confidence(
         self,
-    ) -> tuple[float | None, float | None, float | None]:
+    ) -> ETAEstimate:
         """Get ETA with confidence intervals.
 
         Returns:
-            Tuple of (realistic_eta, optimistic_eta, pessimistic_eta)
+            ETAEstimate(optimistic, realistic, pessimistic) in seconds.
         """
         if self.current <= 0:
-            return None, None, None
+            return ETAEstimate(None, None, None)
 
         elapsed = time.time() - self.start_time
         return calculate_eta_with_confidence(

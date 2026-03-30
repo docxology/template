@@ -1,10 +1,37 @@
-"""Shared fixtures for steganography tests."""
+"""Shared fixtures and helpers for steganography tests."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 import pytest
+
+
+# ── Optional-dependency helpers ──────────────────────────────────────────────
+
+
+def has_reportlab() -> bool:
+    try:
+        import reportlab  # type: ignore  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
+def has_pypdf() -> bool:
+    try:
+        import pypdf  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
+def has_qrcode() -> bool:
+    try:
+        import qrcode  # type: ignore  # noqa: F401
+        return True
+    except ImportError:
+        return False
 
 
 @pytest.fixture

@@ -13,9 +13,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
+_DOCS_BASE = Path(__file__).parent.parent.parent / "docs"
 
 _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
     "test_failure": {
@@ -26,7 +28,7 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
             "Check test data and fixtures",
             "Review recent code changes",
         ],
-        "documentation": "docs/TESTING_GUIDE.md",
+        "documentation": str(_DOCS_BASE / "TESTING_GUIDE.md"),
     },
     "validation_error": {
         "priority": "high",
@@ -36,7 +38,7 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
             "Verify markdown syntax and references",
             "Ensure all required files are generated",
         ],
-        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+        "documentation": str(_DOCS_BASE / "TROUBLESHOOTING_GUIDE.md"),
     },
     "stage_failure": {
         "priority": "high",
@@ -46,7 +48,7 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
             "Verify input files exist",
             "Review error messages above",
         ],
-        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+        "documentation": str(_DOCS_BASE / "TROUBLESHOOTING_GUIDE.md"),
     },
     "coverage_failure": {
         "priority": "high",
@@ -56,7 +58,7 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
             "Run: uv run pytest --cov=infrastructure --cov-report=term-missing",
             "Review coverage threshold in pyproject.toml",
         ],
-        "documentation": "docs/TESTING_GUIDE.md",
+        "documentation": str(_DOCS_BASE / "TESTING_GUIDE.md"),
     },
     "render_error": {
         "priority": "high",
@@ -66,7 +68,7 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
             "Validate markdown syntax before rendering",
             "Run: python3 -m infrastructure.rendering.latex_package_validator",
         ],
-        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+        "documentation": str(_DOCS_BASE / "TROUBLESHOOTING_GUIDE.md"),
     },
     "dependency_error": {
         "priority": "high",
@@ -76,7 +78,7 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
             "Verify system dependencies (pandoc, latex, etc.) are installed",
             "Review environment variables and PATH settings",
         ],
-        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+        "documentation": str(_DOCS_BASE / "TROUBLESHOOTING_GUIDE.md"),
     },
     "script_error": {
         "priority": "medium",
@@ -86,9 +88,10 @@ _FIX_TEMPLATES: dict[str, dict[str, Any]] = {
             "Run script manually with debug logging: LOG_LEVEL=0 python3 <script>",
             "Verify PYTHONPATH includes project source directories",
         ],
-        "documentation": "docs/TROUBLESHOOTING_GUIDE.md",
+        "documentation": str(_DOCS_BASE / "TROUBLESHOOTING_GUIDE.md"),
     },
 }
+
 
 @dataclass
 class ErrorEntry:
@@ -116,10 +119,12 @@ class ErrorEntry:
             "context": self.context,
         }
 
+
 class ErrorAggregator:
     """Aggregate and categorize errors from pipeline execution."""
 
     def __init__(self):
+        """Initialize empty error aggregator."""
         self.errors: list[ErrorEntry] = []
         self.warnings: list[ErrorEntry] = []
 
@@ -196,13 +201,16 @@ class ErrorAggregator:
         for error_type, errors in error_types.items():
             template = _FIX_TEMPLATES.get(error_type)
             if template:
-                fixes.append({"issue": f"{len(errors)} {error_type.replace('_', ' ')}(s)", **template})
+                fixes.append(
+                    {"issue": f"{len(errors)} {error_type.replace('_', ' ')}(s)", **template}
+                )
             else:
                 fixes.append(
                     {
                         "priority": "medium",
                         "issue": f"{len(errors)} {error_type} error(s)",
-                        "actions": errors[0].suggestions or ["Review error messages", "Check logs for details"],
+                        "actions": errors[0].suggestions
+                        or ["Review error messages", "Check logs for details"],
                     }
                 )
         return fixes
@@ -228,7 +236,7 @@ class ErrorAggregator:
             with open(_tmp, "w") as f:
                 json.dump(summary, f, indent=2)
             _tmp.replace(json_path)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
@@ -239,7 +247,7 @@ class ErrorAggregator:
         try:
             _tmp.write_text(md_content)
             _tmp.replace(md_path)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
@@ -314,6 +322,7 @@ class ErrorAggregator:
 def get_error_aggregator() -> ErrorAggregator:
     """Get global error aggregator instance (lazily initialized)."""
     return ErrorAggregator()
+
 
 def reset_error_aggregator() -> None:
     """Reset global error aggregator (for testing)."""

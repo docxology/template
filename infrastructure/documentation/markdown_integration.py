@@ -13,9 +13,10 @@ from typing import Any
 from .figure_manager import FigureManager
 from .image_manager import ImageManager
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 class MarkdownIntegration:
     """Integrates figures and references into markdown files."""
@@ -129,7 +130,7 @@ class MarkdownIntegration:
         try:
             _tmp.write_text(markdown_content, encoding="utf-8")
             _tmp.replace(output_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
@@ -178,7 +179,7 @@ class MarkdownIntegration:
         try:
             _tmp.write_text(content, encoding="utf-8")
             _tmp.replace(markdown_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 

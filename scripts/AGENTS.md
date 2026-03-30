@@ -32,7 +32,7 @@ The template provides multiple entry points organized by function:
 **Main Entry Point** (`run.sh`):
 
 - Interactive menu with manuscript pipeline operations (0-9)
-- Full pipeline execution (10 stages displayed as [1/10] to [10/10])
+- Full pipeline execution (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 - Non-interactive: `./run.sh [options]` for direct pipeline operations
 - Non-interactive flags: `--pipeline`, `--infra-tests`, `--project-tests`, `--render-pdf`, `--reviews`, `--translations`, `--option`, `--all-projects`
 - **Headless bootstrap**: Detects any non-interactive flag before `log_uv_status`, sets `PIPELINE_MODE=1`, which triggers `ensure_uv()` + `uv sync` if `.venv` is absent
@@ -47,6 +47,7 @@ The template provides multiple entry points organized by function:
 - `check_uv()` — returns 0 if uv is available and functional
 - `ensure_uv()` — **idempotent uv installer**: if uv is absent, downloads via `curl`/`wget` from `https://astral.sh/uv/install.sh`, sources `$HOME/.local/bin/env`, re-checks. Exits 1 on failure.
 - `log_uv_status()` — in `PIPELINE_MODE=1` calls `ensure_uv()` then runs `uv sync` to bootstrap the `.venv`; in interactive mode warns if uv is absent with install hint
+- `ensure_secure_run_environment()` — used by `secure_run.sh`: `ensure_uv` then `uv sync --group steganography` (adds `qrcode`, `python-barcode` on top of default dependency groups).
 - `get_python_cmd()` — resolves `.venv/bin/python3` → root `.venv` → system `python3`
 
 **Secure Entry Point** (`secure_run.sh` + `secure_config.yaml`):
@@ -56,19 +57,21 @@ post-processing to all generated PDFs. Sources `scripts/bash_utils.sh` for loggi
 
 **Stage flow:**
 
-1. `run.sh --pipeline [args]` — executes the standard 10-stage manuscript pipeline
-2. `infrastructure/steganography.SteganographyProcessor` — post-processes every PDF,
-   producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
-   Original PDFs are always left untouched.
+0. **`ensure_secure_run_environment`** (`bash_utils.sh`) — after CLI parse (so `--help` skips this): `ensure_uv` (install uv if absent, same policy as pipeline mode) then `uv sync --group steganography` so the repo `.venv` has default groups plus `qrcode[pil]` and `python-barcode` for QR/Code128 steganography.
+1. `run.sh [args]` — interactive menu or non-interactive pipeline, depending on arguments (not forced to `--pipeline`).
+2. `infrastructure/steganography.SteganographyProcessor` — post-processes PDFs for all
+   discovered active projects by default, or only the explicit `--project` target when
+   provided. Produces a companion `*_steganography.pdf` and a `.hashes.json` integrity
+   manifest. Original PDFs are always left untouched.
 
 **CLI flags:**
 
 | Flag | Description |
 |------|-------------|
-| `--project <name>` | Target a specific project (default: auto-discover first project) |
+| `--project <name>` | Target a specific project (default stego scope: all discovered active projects) |
 | `--steganography-only` | Skip pipeline; re-process existing PDFs only |
-| `--skip-infra` | Pass-through to `run.sh` to skip infrastructure tests |
-| `--core-only` | Pass-through to `run.sh` for core-only pipeline (no LLM) |
+| `--skip-infra` | Pass-through to `run.sh`; applies when used with `--pipeline` |
+| `--core-only` | Pass-through to `run.sh`; applies when used with `--pipeline` |
 | `--help` | Show usage and technique summary |
 
 **Usage:**
@@ -78,10 +81,16 @@ post-processing to all generated PDFs. Sources `scripts/bash_utils.sh` for loggi
 ./secure_run.sh
 
 # Specific project
-./secure_run.sh --project medical_ai
+./secure_run.sh --project code_project
 
 # Re-process existing PDFs without re-running the pipeline
 ./secure_run.sh --steganography-only --project code_project
+
+# Core-only non-interactive pipeline + steganography
+./secure_run.sh --pipeline --core-only
+
+# Multi-project core pipeline + steganography across all active projects
+./secure_run.sh d
 ```
 
 **Output files:**
@@ -102,7 +111,7 @@ projects/{name}/output/pdf/
 - Invisible text layers and document ID fingerprinting
 - Optional AES-256 PDF password protection
 
-**Configuration** (`secure_config.yaml` at repo root):
+**Configuration** (`secure_config.yaml` at `infrastructure/config/`):
 
 The repo-level `secure_config.yaml` provides default steganography settings. Any
 `steganography:` section in a project's `manuscript/config.yaml` overrides these defaults.
@@ -127,8 +136,8 @@ steganography:
 **Key references:**
 
 - [`infrastructure/steganography/`](../infrastructure/steganography/AGENTS.md) — Module implementation
-- [`secure_config.yaml`](../secure_config.yaml) — Top-level steganography configuration
-- [`CLOUD_DEPLOY.md`](../CLOUD_DEPLOY.md) — Headless deployment guide
+- [`secure_config.yaml`](../infrastructure/config/secure_config.yaml) — Top-level steganography configuration
+- [`CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) — Headless deployment guide
 - Sourced by `run.sh`
 
 ### Python Scripts
@@ -260,7 +269,7 @@ Creates multi-project directory structure:
 
 **Core Functionality:**
 
-- Thin orchestrator that coordinates `infrastructure.validation.audit_orchestrator`
+- Thin orchestrator that coordinates `infrastructure.validation.repo.audit_orchestrator`
 - Discovers all markdown files in repository
 - Validates internal/external links and file references
 - Checks code block paths and directory structures
@@ -372,7 +381,7 @@ def main():
 
 #### Multi-Project (`execute_multi_project.py`)
 
-**Purpose:** Execute pipelines across all discovered projects via `infrastructure.core.multi_project.MultiProjectOrchestrator`.
+**Purpose:** Execute pipelines across all discovered projects via `infrastructure.core.pipeline.multi_project.MultiProjectOrchestrator`.
 
 - Runs infrastructure tests once (optional)
 - Runs each project pipeline with infra tests skipped per-project
@@ -572,6 +581,7 @@ scripts/
 ├── 06_llm_review.py            # Entry: LLM review (optional)
 ├── execute_pipeline.py          # Entry: Single-project pipeline
 ├── execute_multi_project.py     # Entry: Multi-project pipeline
+├── generate_active_projects_doc.py  # docs/_generated/active_projects.md
 ├── bash_utils.sh               # Shared utilities
 ├── AGENTS.md                   # This file
 └── README.md                   # Quick reference
@@ -604,8 +614,8 @@ Root entry points work with **ANY** project that follows this structure.
 ## See Also
 
 - [`../README.md`](../README.md) - Quick reference
-- [`../CLOUD_DEPLOY.md`](../CLOUD_DEPLOY.md) - **Headless / cloud server deployment guide** ☁️
-- [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Full pipeline orchestration reference
+- [`../docs/CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) - **Headless / cloud server deployment guide** ☁️
+- [`../docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) - Full pipeline orchestration reference
 - [`../projects/code_project/scripts/`](../projects/code_project/scripts/) - Project scripts example
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

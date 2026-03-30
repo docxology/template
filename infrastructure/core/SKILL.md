@@ -113,20 +113,21 @@ def network_call():
     pass
 ```
 
-## Performance Monitoring (`performance.py`, `performance_monitor.py`)
+## Performance Monitoring (`stage_monitor.py`, `function_profiler.py`)
 
 ```python
-from infrastructure.core import (
-    PerformanceMonitor, get_system_resources, monitor_performance,
-    benchmark_function, profile_memory_usage,
-)
+from infrastructure.core.runtime.function_profiler import CodeProfiler, monitor_performance
+from infrastructure.core.pipeline.stage_monitor import PerformanceMonitor, get_system_resources
 
 resources = get_system_resources()
 monitor = PerformanceMonitor()
 
-@benchmark_function
-def heavy_computation():
+profiler = CodeProfiler()
+def heavy_computation() -> None:
     pass
+
+with profiler.monitor("heavy_computation"):
+    heavy_computation()
 ```
 
 ## Security (`security.py`)
@@ -164,7 +165,7 @@ copy_final_deliverables(source, destination)
 ## Multi-Project Orchestration (`multi_project.py`)
 
 ```python
-from infrastructure.core import MultiProjectOrchestrator, MultiProjectConfig
+from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 config = MultiProjectConfig(projects=["proj_a", "proj_b"])
 orchestrator = MultiProjectOrchestrator(config)
 result = orchestrator.run()

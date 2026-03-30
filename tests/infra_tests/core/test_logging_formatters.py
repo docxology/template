@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import logging
 
-from infrastructure.core.logging_formatters import (
+from infrastructure.core.logging.formatters import (
     JSONFormatter,
     TemplateFormatter,
     EMOJIS,

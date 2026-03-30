@@ -45,10 +45,8 @@ coverage.xml
 *.cover
 .hypothesis/
 
-# IDEs — commit shared VS Code defaults; ignore local-only files
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
+# IDEs
+.vscode/
 .idea/
 *.swp
 *.swo
@@ -81,6 +79,7 @@ projects/cognitive_integrity/
 projects/act_inf_metaanalysis/
 projects/pragmatism_blake/
 projects/cognitive_case_diagrams/
+projects/fep_lean/
 
 # Archived projects
 /projects_archive 
@@ -94,3 +93,5 @@ projects/test_project/
 
 # Desloppify
 .desloppify
+/.desloppify
+/projects/blake_bimetalism

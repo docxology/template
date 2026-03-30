@@ -25,8 +25,8 @@ issues = scan_for_issues(pdf_path)
 **CLI:**
 
 ```bash
-python3 -m infrastructure.validation.cli pdf output/{project}/pdf/
-python3 -m infrastructure.validation.validate_pdf_cli output/{project}/pdf/
+python3 -m infrastructure.validation.cli.main pdf output/{project}/pdf/
+python3 -m infrastructure.validation.cli.pdf output/{project}/pdf/
 ```
 
 ## Markdown Validation (`markdown_validator.py`)
@@ -49,8 +49,8 @@ math_issues = validate_math(md_content)
 **CLI:**
 
 ```bash
-python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/
-python3 -m infrastructure.validation.validate_markdown_cli projects/{name}/manuscript/
+python3 -m infrastructure.validation.cli.main markdown projects/{name}/manuscript/
+python3 -m infrastructure.validation.cli.markdown projects/{name}/manuscript/
 ```
 
 ## Output Integrity (`integrity.py`)
@@ -126,15 +126,15 @@ summary = generate_issue_summary(prioritized)
 Comprehensive scanning of documentation for accuracy, completeness, and quality:
 
 ```python
-from infrastructure.validation.doc_scanner import scan_documentation
-from infrastructure.validation.doc_accuracy import check_accuracy
-from infrastructure.validation.doc_completeness import check_completeness
+from infrastructure.validation.docs.scanner import scan_documentation
+from infrastructure.validation.docs.accuracy import check_accuracy
+from infrastructure.validation.docs.completeness import check_completeness
 ```
 
 ## Repository Scanning (`repo_scanner.py`)
 
 ```python
-from infrastructure.validation.repo_scanner import scan_repository
+from infrastructure.validation.repo.scanner import scan_repository
 results = scan_repository(repo_root)
 ```
 

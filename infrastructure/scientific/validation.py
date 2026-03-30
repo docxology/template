@@ -12,7 +12,7 @@ from __future__ import annotations
 import inspect
 from typing import Any, Callable, TypedDict
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -20,13 +20,14 @@ logger = get_logger(__name__)
 _COVERAGE_THRESHOLD = 0.8
 
 class _ValidationResults(TypedDict):
+    """TypedDict for holding the results of scientific validation."""
     total_tests: int
     passed_tests: int
     failed_tests: int
     accuracy_score: float
     details: list[dict[str, Any]]
 
-def validate_scientific_implementation(func: Callable[..., Any], test_cases: list[tuple[Any, Any]]) -> dict[str, Any]:
+def validate_scientific_implementation(func: Callable[..., Any], test_cases: list[tuple[Any, Any]]) -> _ValidationResults:
     """Validate scientific implementation against known test cases."""
     validation_results: _ValidationResults = {
         "total_tests": len(test_cases),
@@ -81,6 +82,51 @@ def validate_scientific_implementation(func: Callable[..., Any], test_cases: lis
 
     return validation_results
 
+
+def _type_hints_fraction(functions: list[tuple[str, Any]]) -> float:
+    """Return the fraction of functions that have at least one type annotation."""
+    typed = 0
+    for _, func in functions:
+        sig = inspect.signature(func)
+        has_return = sig.return_annotation != inspect.Signature.empty
+        has_params = any(
+            p.annotation != inspect.Parameter.empty for p in sig.parameters.values()
+        )
+        if has_return or has_params:
+            typed += 1
+    return typed / len(functions) if functions else 0.0
+
+
+def _analyze_source_features(module: Any) -> tuple[bool, bool]:
+    """Return (has_error_handling, has_input_validation) from module source text."""
+    try:
+        source_lines = inspect.getsource(module).split("\n")
+    except (OSError, TypeError) as e:
+        logger.debug(f"Could not get source for module {module}: {e}")
+        return False, False
+
+    has_error = any("try:" in line or "except" in line or "raise" in line for line in source_lines)
+    has_validation = any(
+        "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
+        for line in source_lines
+    )
+    return has_error, has_validation
+
+
+def _best_practices_recommendations(validation: dict[str, Any]) -> list[str]:
+    """Return actionable recommendations based on validation scores."""
+    recs: list[str] = []
+    if validation["docstring_coverage"] < _COVERAGE_THRESHOLD:
+        recs.append("Add docstrings to undocumented functions")
+    if validation["type_hints_coverage"] < _COVERAGE_THRESHOLD:
+        recs.append("Add type hints to function parameters and return values")
+    if not validation["error_handling"]:
+        recs.append("Add proper error handling with try/except blocks")
+    if not validation["input_validation"]:
+        recs.append("Add input validation to prevent invalid arguments")
+    return recs
+
+
 def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     """Validate that a module follows scientific computing best practices."""
     validation: dict[str, Any] = {
@@ -93,72 +139,103 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
         "recommendations": [],
     }
 
-    functions = []
-    for name in dir(module):
-        obj = getattr(module, name)
-        if callable(obj) and not name.startswith("_"):
-            functions.append((name, obj))
+    functions = [
+        (name, getattr(module, name))
+        for name in dir(module)
+        if callable(getattr(module, name)) and not name.startswith("_")
+    ]
 
     if not functions:
         return validation
 
-    documented_functions = sum(1 for _, func in functions if inspect.getdoc(func) is not None)
-    validation["docstring_coverage"] = documented_functions / len(functions)
+    validation["docstring_coverage"] = sum(
+        1 for _, func in functions if inspect.getdoc(func) is not None
+    ) / len(functions)
+    validation["type_hints_coverage"] = _type_hints_fraction(functions)
+    validation["error_handling"], validation["input_validation"] = _analyze_source_features(module)
 
-    typed_functions = 0
-    for _, func in functions:
-        sig = inspect.signature(func)
-        has_return_annotation = sig.return_annotation != inspect.Signature.empty
-        has_param_annotations = any(
-            p.annotation != inspect.Parameter.empty for p in sig.parameters.values()
-        )
+    validation["best_practices_score"] = 0.25 * (
+        validation["docstring_coverage"]
+        + validation["type_hints_coverage"]
+        + (1.0 if validation["error_handling"] else 0.0)
+        + (1.0 if validation["input_validation"] else 0.0)
+    )
+    validation["recommendations"] = _best_practices_recommendations(validation)
+    return validation
 
-        if has_return_annotation or has_param_annotations:
-            typed_functions += 1
+def _compliance_docstring_features(func: Callable[..., Any]) -> tuple[bool, bool]:
+    """Return (has_docstring, has_examples) for *func*."""
+    docstring = inspect.getdoc(func)
+    if not docstring:
+        return False, False
+    has_examples = ">>>" in docstring or "Example" in docstring
+    return True, has_examples
 
-    validation["type_hints_coverage"] = typed_functions / len(functions)
 
-    source_lines = []
+def _compliance_signature_features(func: Callable[..., Any]) -> tuple[bool, bool]:
+    """Return (has_type_hints, follows_naming_conventions) for *func*."""
+    sig = inspect.signature(func)
+    has_hints = (
+        any(p.annotation != inspect.Parameter.empty for p in sig.parameters.values())
+        or sig.return_annotation != inspect.Signature.empty
+    )
+    follows_naming = func.__name__.islower() and "_" in func.__name__
+    return has_hints, follows_naming
+
+
+def _compliance_source_features(func: Callable[..., Any]) -> tuple[bool, bool]:
+    """Return (has_error_handling, has_input_validation) from *func* source.
+
+    Returns (False, False) when source is unavailable (C extensions, frozen modules).
+    """
     try:
-        source = inspect.getsource(module)
-        source_lines = source.split("\n")
+        source_lines = inspect.getsource(func).split("\n")
     except (OSError, TypeError) as e:
-        logger.debug(f"Could not get source for module {module}: {e}")
+        logger.debug(f"Could not analyze function compliance for {func}: {e}")
+        return False, False
 
-    has_try_except = any("try:" in line or "except" in line for line in source_lines)
-    has_raise = any("raise" in line for line in source_lines)
-    validation["error_handling"] = has_try_except or has_raise
-
+    has_error = any("try:" in line or "except" in line or "raise" in line for line in source_lines)
     has_validation = any(
         "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
         for line in source_lines
     )
-    validation["input_validation"] = has_validation
+    return has_error, has_validation
 
-    weights = {
-        "docstring_coverage": 0.25,
-        "type_hints_coverage": 0.25,
-        "error_handling": 0.25,
-        "input_validation": 0.25,
-    }
 
-    validation["best_practices_score"] = (
-        validation["docstring_coverage"] * weights["docstring_coverage"]        + validation["type_hints_coverage"] * weights["type_hints_coverage"]        + (1.0 if validation["error_handling"] else 0.0) * weights["error_handling"]
-        + (1.0 if validation["input_validation"] else 0.0) * weights["input_validation"]
+_COMPLIANCE_WEIGHTS: dict[str, float] = {
+    "has_docstring": 0.25,
+    "has_type_hints": 0.20,
+    "has_examples": 0.10,
+    "has_error_handling": 0.15,
+    "has_input_validation": 0.15,
+    "follows_naming_conventions": 0.15,
+}
+
+
+def _compliance_score(compliance: dict[str, Any]) -> float:
+    """Compute weighted compliance score from boolean feature flags."""
+    return sum(
+        weight for key, weight in _COMPLIANCE_WEIGHTS.items() if compliance.get(key)
     )
 
-    if validation["docstring_coverage"] < _COVERAGE_THRESHOLD:
-        validation["recommendations"].append("Add docstrings to undocumented functions")
-    if validation["type_hints_coverage"] < _COVERAGE_THRESHOLD:
-        validation["recommendations"].append(
-            "Add type hints to function parameters and return values"
-        )
 
-    if not validation["error_handling"]:
-        validation["recommendations"].append("Add proper error handling with try/except blocks")
-    if not validation["input_validation"]:
-        validation["recommendations"].append("Add input validation to prevent invalid arguments")
-    return validation
+def _compliance_recommendations(compliance: dict[str, Any]) -> list[str]:
+    """Return actionable recommendations for non-passing compliance checks."""
+    recs: list[str] = []
+    if not compliance["has_docstring"]:
+        recs.append("Add comprehensive docstring with description and parameters")
+    if not compliance["has_type_hints"]:
+        recs.append("Add type hints to parameters and return value")
+    if not compliance["has_examples"]:
+        recs.append("Add usage examples in docstring")
+    if not compliance["has_error_handling"]:
+        recs.append("Add proper error handling for edge cases")
+    if not compliance["has_input_validation"]:
+        recs.append("Add input validation to prevent invalid arguments")
+    if not compliance["follows_naming_conventions"]:
+        recs.append("Use snake_case naming convention for functions")
+    return recs
+
 
 def check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]:
     """Check function compliance with research software standards.
@@ -168,82 +245,19 @@ def check_research_compliance(func: Callable[..., Any]) -> dict[str, Any]:
     and ``has_input_validation`` checks are silently skipped and left False.
     The compliance_score is computed only from the checks that can be evaluated.
     """
-    compliance = {
-        "has_docstring": False,
-        "has_type_hints": False,
-        "has_examples": False,
-        "has_error_handling": False,
-        "has_input_validation": False,
-        "follows_naming_conventions": False,
-        "compliance_score": 0.0,
+    has_docstring, has_examples = _compliance_docstring_features(func)
+    has_type_hints, follows_naming = _compliance_signature_features(func)
+    has_error_handling, has_input_validation = _compliance_source_features(func)
+
+    compliance: dict[str, Any] = {
+        "has_docstring": has_docstring,
+        "has_type_hints": has_type_hints,
+        "has_examples": has_examples,
+        "has_error_handling": has_error_handling,
+        "has_input_validation": has_input_validation,
+        "follows_naming_conventions": follows_naming,
         "recommendations": [],
     }
-
-    docstring = inspect.getdoc(func)
-    if docstring:
-        compliance["has_docstring"] = True
-
-        if ">>>" in docstring or "Example" in docstring:
-            compliance["has_examples"] = True
-
-    signature = inspect.signature(func)
-    has_param_hints = any(
-        p.annotation != inspect.Parameter.empty for p in signature.parameters.values()
-    )
-    has_return_hint = signature.return_annotation != inspect.Signature.empty
-
-    if has_param_hints or has_return_hint:
-        compliance["has_type_hints"] = True
-
-    if func.__name__.islower() and "_" in func.__name__:
-        compliance["follows_naming_conventions"] = True
-
-    try:
-        source = inspect.getsource(func)
-        source_lines = source.split("\n")
-
-        has_validation = any(
-            "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
-            for line in source_lines
-        )
-        compliance["has_input_validation"] = has_validation
-
-        has_error_handling = any(
-            "try:" in line or "except" in line or "raise" in line for line in source_lines
-        )
-        compliance["has_error_handling"] = has_error_handling
-
-    except (OSError, TypeError) as e:
-        logger.debug(f"Could not analyze function compliance for {func}: {e}")
-
-    weights = {
-        "has_docstring": 0.25,
-        "has_type_hints": 0.20,
-        "has_examples": 0.10,
-        "has_error_handling": 0.15,
-        "has_input_validation": 0.15,
-        "follows_naming_conventions": 0.15,
-    }
-
-    score = 0.0
-    for key, weight in weights.items():
-        if compliance[key]:
-            score += weight
-
-    compliance["compliance_score"] = score
-
-    if not compliance["has_docstring"]:
-        compliance["recommendations"].append(            "Add comprehensive docstring with description and parameters"
-        )
-
-    if not compliance["has_type_hints"]:
-        compliance["recommendations"].append("Add type hints to parameters and return value")
-    if not compliance["has_examples"]:
-        compliance["recommendations"].append("Add usage examples in docstring")
-    if not compliance["has_error_handling"]:
-        compliance["recommendations"].append("Add proper error handling for edge cases")
-    if not compliance["has_input_validation"]:
-        compliance["recommendations"].append("Add input validation to prevent invalid arguments")
-    if not compliance["follows_naming_conventions"]:
-        compliance["recommendations"].append("Use snake_case naming convention for functions")
+    compliance["compliance_score"] = _compliance_score(compliance)
+    compliance["recommendations"] = _compliance_recommendations(compliance)
     return compliance

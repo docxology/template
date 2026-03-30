@@ -13,9 +13,10 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 @dataclass
 class FigureMetadata:
@@ -75,6 +76,7 @@ class FigureMetadata:
 
         return cls(**data)
 
+
 class FigureManager:
     """Manages figures with automatic numbering and cross-referencing."""
 
@@ -106,13 +108,18 @@ class FigureManager:
                         fig_id: FigureMetadata.from_dict(fig_data)
                         for fig_id, fig_data in data.items()
                     }
-                    # Update counter
+                    # Update counter from max numeric suffix; default=0 guards against
+                    # non-standard IDs that lack a numeric suffix
                     if self.figures:
                         self.counter = (
                             max(
-                                int(fig.figure_id.split("_")[-1])
-                                for fig in self.figures.values()
-                                if "_" in fig.figure_id and fig.figure_id.split("_")[-1].isdigit()
+                                (
+                                    int(fig.figure_id.split("_")[-1])
+                                    for fig in self.figures.values()
+                                    if "_" in fig.figure_id
+                                    and fig.figure_id.split("_")[-1].isdigit()
+                                ),
+                                default=0,
                             )
                             + 1
                         )
@@ -143,10 +150,11 @@ class FigureManager:
                 logger.error(f"Failed to backup corrupted registry: {backup_error}")
 
     def _save_registry(self) -> None:
-        """Save figure registry to file."""
+        """Save figure registry to file (atomic write to prevent corruption)."""
         data = {fig_id: fig.to_dict() for fig_id, fig in self.figures.items()}
-        with open(self.registry_file, "w") as f:
-            json.dump(data, f, indent=2, default=str)
+        tmp = self.registry_file.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
+        tmp.replace(self.registry_file)
 
     def register_figure(
         self,

@@ -16,7 +16,7 @@ from pathlib import Path
 
 from dataclasses import dataclass, field
 
-from infrastructure.core.logging_utils import get_logger, log_operation
+from infrastructure.core.logging.utils import get_logger, log_operation
 from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig
 
 logger = get_logger(__name__)
@@ -35,6 +35,7 @@ class BarcodeBuildContext:
     source_filename: str = ""
     source_file_size: int = 0
 
+
 class SteganographyProcessor:
     """Orchestrates steganographic PDF post-processing.
 
@@ -47,6 +48,7 @@ class SteganographyProcessor:
     """
 
     def __init__(self, config: SteganographyConfig | None = None):
+        """Initialize steganography processor with configuration."""
         self.config = config or SteganographyConfig()
         self._document_id: str = ""
         self._hashes: dict[str, str] = {}
@@ -86,13 +88,9 @@ class SteganographyProcessor:
             raise FileNotFoundError(f"Input PDF not found: {input_pdf}")
 
         if output_pdf is None:
-            output_pdf = input_pdf.with_stem(
-                input_pdf.stem + self.config.output_suffix
-            )
+            output_pdf = input_pdf.with_stem(input_pdf.stem + self.config.output_suffix)
 
-        logger.info(
-            "╔══ Steganography Processing ═══════════════════════════════╗"
-        )
+        logger.info("╔══ Steganography Processing ═══════════════════════════════╗")
         logger.info(f"║  Input:  {input_pdf.name}")
         logger.info(f"║  Output: {output_pdf.name}")
 
@@ -106,6 +104,7 @@ class SteganographyProcessor:
 
             # 2. Generate document ID
             from infrastructure.steganography.encryption import generate_document_id
+
             self._document_id = generate_document_id()
             logger.info(f"║  Doc-ID: {self._document_id}")
 
@@ -143,9 +142,7 @@ class SteganographyProcessor:
             # Copy working file to final destination
             shutil.copy2(str(working_pdf), str(output_pdf))
             logger.info(f"║  ✓ Steganography PDF written: {output_pdf.name}")
-            logger.info(
-                "╚═══════════════════════════════════════════════════════════╝"
-            )
+            logger.info("╚═══════════════════════════════════════════════════════════╝")
             return output_pdf
 
         finally:
@@ -170,11 +167,9 @@ class SteganographyProcessor:
         """Compute file hashes and store for later use."""
         from infrastructure.steganography.hashing import compute_file_hashes
 
-        self._hashes = compute_file_hashes(
-            pdf_path, algorithms=self.config.hash_algorithms
-        )
+        self._hashes = compute_file_hashes(pdf_path, algorithms=self.config.hash_algorithms)
         for algo, digest in self._hashes.items():
-            logger.info(f"║  {algo.upper()}: {digest[:32] + "…"}")
+            logger.info(f"║  {algo.upper()}: {digest[:32] + '…'}")
 
     def _step_overlays_and_barcodes(
         self,
@@ -202,6 +197,7 @@ class SteganographyProcessor:
         qr_overlay_data = ""
         if self.config.overlays_enabled and self.config.overlay_mode == "qr":
             from infrastructure.steganography.barcodes import build_barcode_payload
+
             qr_overlay_data = self.config.overlay_qr_data or build_barcode_payload(
                 title=ctx.title,
                 hashes=ctx.hashes,
@@ -216,6 +212,7 @@ class SteganographyProcessor:
             if self.config.overlays_enabled and self.config.overlay_mode != "none":
                 if self.config.overlay_mode == "qr":
                     from infrastructure.steganography.overlays import create_qr_overlay
+
                     wm_bytes = create_qr_overlay(
                         page_width,
                         page_height,
@@ -224,6 +221,7 @@ class SteganographyProcessor:
                     )
                 else:  # 'text' (default)
                     from infrastructure.steganography.overlays import create_watermark_overlay
+
                     wm_bytes = create_watermark_overlay(
                         page_width,
                         page_height,
@@ -260,14 +258,8 @@ class SteganographyProcessor:
 
                 # Invisible text layer (first page only)
                 if page_idx == 0:
-                    hidden_data = (
-                        f"STEG_ID:{ctx.document_id}|"
-                        f"TITLE:{ctx.title}|"
-                        f"HASHES:{hash_short}"
-                    )
-                    inv_bytes = create_invisible_text_overlay(
-                        page_width, page_height, hidden_data
-                    )
+                    hidden_data = f"STEG_ID:{ctx.document_id}|TITLE:{ctx.title}|HASHES:{hash_short}"
+                    inv_bytes = create_invisible_text_overlay(page_width, page_height, hidden_data)
                     inv_page = PdfReader(io.BytesIO(inv_bytes)).pages[0]
                     page.merge_page(inv_page)
 
@@ -340,23 +332,17 @@ class SteganographyProcessor:
         )
         meta = build_document_metadata(doc)
         xmp = build_xmp_packet(doc)
-        
+
         manifest_dict = {
             "document_id": self._document_id,
             "hashes": self._hashes,
             "title": title,
-            "steganography_applied": True
+            "steganography_applied": True,
         }
-        attachments = {
-            "stego_manifest.json": json.dumps(manifest_dict, indent=2).encode('utf-8')
-        }
+        attachments = {"stego_manifest.json": json.dumps(manifest_dict, indent=2).encode("utf-8")}
 
         inject_pdf_metadata(
-            working_pdf, 
-            working_pdf, 
-            metadata=meta,
-            xmp_string=xmp,
-            attachments=attachments
+            working_pdf, working_pdf, metadata=meta, xmp_string=xmp, attachments=attachments
         )
         logger.info("║  ✓ Metadata, XMP, and manifest attachment injected")
         return working_pdf
@@ -390,9 +376,11 @@ class SteganographyProcessor:
         )
         logger.info("║  ✓ Hash manifest written")
 
+
 # ── Convenience function ─────────────────────────────────────────────────
 
-def process_pdf(
+
+def embed_steganography(
     input_pdf: Path,
     output_pdf: Path | None = None,
     config: SteganographyConfig | None = None,
@@ -402,6 +390,11 @@ def process_pdf(
     author_emails: list[str] | None = None,
 ) -> Path:
     """Convenience function — create a processor and run it.
+
+    Usage::
+
+        from infrastructure.steganography import embed_steganography
+        embed_steganography(Path("paper.pdf"), title="My Paper")
 
     Args:
         input_pdf: Source PDF.
@@ -426,3 +419,7 @@ def process_pdf(
         keywords=keywords,
         author_emails=author_emails,
     )
+
+
+# Backwards-compatibility alias
+process_pdf = embed_steganography

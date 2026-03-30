@@ -2,13 +2,12 @@
 
 > Build, configuration, logging, troubleshooting, reporting, and error handling guides
 
-**Quick Reference:** [Build System](build/build-system.md) | [Troubleshooting](troubleshooting/) | [Logging](logging/) | [Configuration](config/configuration.md)
+**Quick Reference:** [Pipeline Orchestration](../RUN_GUIDE.md) | [Troubleshooting](troubleshooting/) | [Logging](logging/) | [Configuration](config/configuration.md)
 
 ## Directory Structure
 
 | Sub-directory | Purpose | Key Files |
 |---------------|---------|-----------|
-| [`build/`](build/) | Build pipeline, CI/CD, dependencies | build-system.md, ci-cd-integration.md, dependency-management.md |
 | [`config/`](config/) | Configuration, checkpoints, performance | configuration.md, checkpoint-resume.md, performance-optimization.md |
 | [`logging/`](logging/) | Logging system (Python, Bash, patterns) | README.md (full guide), python-logging.md, bash-logging.md |
 | [`troubleshooting/`](troubleshooting/) | Issue resolution and recovery | README.md (flowchart), common-errors.md, llm-review.md |
@@ -24,8 +23,8 @@
 
 | Need | Go to |
 |------|-------|
-| Build pipeline details | [build/build-system.md](build/build-system.md) |
-| CI/CD setup | [build/ci-cd-integration.md](build/ci-cd-integration.md) |
+| Pipeline stages and commands | [../RUN_GUIDE.md](../RUN_GUIDE.md) |
+| CI/CD automation | [../../.github/README.md](../../.github/README.md) |
 | Fix a build error | [troubleshooting/](troubleshooting/) |
 | Configure logging | [logging/](logging/) |
 | System configuration | [config/configuration.md](config/configuration.md) |

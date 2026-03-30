@@ -1,0 +1,41 @@
+\frametitle{Conclusion}
+\protect\phantomsection\label{conclusion}
+\texttt{template/} demonstrates that high-integrity, reproducible
+research need not be onerous. By embedding provenance, testing, and
+documentation into the architecture itself---rather than layering them
+atop a fragmented workflow---the template transforms ``best practices''
+from aspirational guidelines into enforced invariants
+{[}@wilson2017good; @sandve2013ten; @lamprecht2020towards{]}. The
+Two-Layer Architecture ensures that infrastructure improvements
+propagate to all projects without coupling. The Zero-Mock policy ensures
+that tests
+\href{05a_zeromock_tradeoff.md\#the-zero-mock-tradeoff}{reflect
+reality}. The steganographic provenance layer ensures that published
+artifacts carry their own
+\href{07_security_provenance.md\#security-and-provenance}{authentication}.
+The \href{08f_appendix_matrix.md\#appendix-matrix}{comparative analysis}
+confirms that no existing tool integrates all eleven distinctive
+capabilities---testing enforcement, coverage thresholds, cryptographic
+provenance, steganographic watermarking, multi-project management,
+AI-agent documentation, the agentic skill protocol, interactive TUI,
+Zero-Mock policy, manuscript rendering, and pipeline
+orchestration---within a single enforced pipeline.
+
+The template is not merely a build tool; it is an epistemological
+commitment. It asserts that a research paper is not a static document
+but a build artifact---reproducible, verifiable, and traceable to the
+code that generated it. As Knuth observed, programs should be written
+for humans to read and only incidentally for machines to execute
+{[}@knuth1984literate{]}. We extend this dictum: research manuscripts
+should be \emph{built} for verification and only incidentally for
+reading. In an era of generative AI, AI-native research workspaces, and
+synthetic media---where the boundary between human-authored and
+machine-generated text grows increasingly indeterminate
+{[}@gruenpeter2021research{]}---the provenance chain from source code to
+published PDF is not an administrative convenience. It is the epistemic
+ground on which scientific trust must be rebuilt. That this manuscript
+was itself built, tested, and watermarked by the pipeline it
+describes---its metrics computed from the repository it inhabits, its
+figures rendered by the code it documents---is not a rhetorical device
+but a structural proof: the system works because you are reading its
+output.

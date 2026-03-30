@@ -7,11 +7,13 @@ Technical guide for `projects/code_project/docs/` — the operational rulebook f
 ## Files
 
 | File | Purpose |
-|------|---------|
+| --- | --- |
 | `agent_instructions.md` | Behavioral constraints for AI agents (read-first priority) |
 | `architecture.md` | Thin orchestrator flow: `src/` → `scripts/` → `infrastructure/` |
-| `testing_philosophy.md` | Zero-mock standard and 34-test validation strategy |
+| `testing_philosophy.md` | Zero-mock standard and validate strategy |
 | `rendering_pipeline.md` | Manuscript-to-PDF flow via `infrastructure.rendering` |
+| `style_guide.md` | Core programming principles (Zero-Mock, Documentation Links) |
+| `syntax_guide.md` | Manuscript markdown syntax (Madlibs, Pandoc format, Labels) |
 
 ## Key Conventions
 

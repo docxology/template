@@ -6,15 +6,17 @@ import subprocess
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 
 logger = get_logger(__name__)
+
 
 class WebRenderer:
     """Handles HTML generation."""
 
     def __init__(self, config: RenderingConfig):
+        """Initialize the web renderer with configuration."""
         self.config = config
 
     def render(self, source_file: Path) -> Path:

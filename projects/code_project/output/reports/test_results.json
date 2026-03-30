@@ -1,90 +1,6 @@
 {
-  "timestamp": "2026-03-30T11:19:12.444685",
-  "infrastructure": {
-    "passed": 0,
-    "failed": 1,
-    "skipped": 0,
-    "total": 2901,
-    "warnings": 0,
-    "exit_code": 1,
-    "discovery_count": 2901,
-    "collection_errors": 0,
-    "execution_phases": {},
-    "test_categories": {},
-    "coverage_percent": 12.416941644442435,
-    "failed_tests": [
-      {
-        "test": "tests/infra_tests/llm/test_llm_review.py::TestLLMReviewIntegration::test_generate_review_with_real_llm",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/llm/test_logging.py::TestQueryLogging::test_query_logs_completion",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/llm/test_logging.py::TestQueryLogging::test_query_logs_context_reset",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/llm/test_logging.py::TestQueryStructuredLogging::test_query_structured_logs_start",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/llm/test_logging.py::TestQueryStructuredLogging::test_query_structured_logs_completion",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/llm/test_logging.py::TestLoggingLevels::test_info_logging",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/llm/test_validation.py::TestCompleteValidationEdgeCases::test_validate_complete_with_formatting_issues",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/project/test_discovery.py::TestGetProjectMetadata::test_invalid_config_yaml_handled_gracefully",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/publishing/test_publishing.py::TestComplexityScoring::test_calculate_complexity_score_simple",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/publishing/test_publishing.py::TestComplexityScoring::test_calculate_complexity_score_complex",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/publishing/test_publishing_api_full.py::TestZenodoClient::test_create_deposition_success",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/publishing/test_publishing_api_full.py::TestZenodoClient::test_upload_file_success",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/publishing/test_publishing_api_full.py::TestZenodoClient::test_publish_success",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/infra_tests/publishing/test_publishing_api_full.py::TestPublishingApiIntegration::test_full_workflow",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      }
-    ]
-  },
+  "timestamp": "2026-03-30T05:36:15.749065",
+  "infrastructure": {},
   "project": {
     "passed": 39,
     "failed": 0,
@@ -95,37 +11,36 @@
     "discovery_count": 39,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 10.18,
-      "collection": 10.18,
-      "execution": 10.18
+      "setup": 2.06,
+      "collection": 2.06,
+      "execution": 2.06
     },
     "test_categories": {},
-    "coverage_percent": 96.63865546218487,
+    "coverage_percent": 96.3963963963964,
     "failed_tests": []
   },
   "summary": {
     "total_passed": 39,
-    "total_failed": 1,
+    "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 2940,
-    "all_passed": false,
-    "infrastructure_coverage": 12.416941644442435,
-    "project_coverage": 96.63865546218487
+    "total_tests": 39,
+    "all_passed": true,
+    "project_coverage": 96.3963963963964
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 97.70114942528735,
-      "total_executed": 85,
+      "overall_coverage": 97.59036144578313,
+      "total_executed": 81,
       "total_missing": 2,
       "total_excluded": 0,
-      "total_lines": 87,
+      "total_lines": 83,
       "file_coverage": {
         "projects/code_project/src/optimizer.py": {
-          "coverage_percent": 97.70114942528735,
-          "executed_lines": 85,
+          "coverage_percent": 97.59036144578313,
+          "executed_lines": 81,
           "missing_lines": 2,
           "excluded_lines": 0,
-          "total_lines": 87
+          "total_lines": 83
         }
       }
     }

@@ -32,24 +32,27 @@ and ensuring data integrity across the research project.
 
 **Output validation**:
     output_validator: Pipeline output validation
-    output_statistics: Output statistics collection
+    (output statistics live in infrastructure/reporting/output_reporter.py)
 """
 
 from __future__ import annotations
 
 # Content validators
-from .figure_validator import validate_figure_registry
-from .markdown_validator import (
+from .content import (
+    extract_text_from_pdf,
     find_markdown_files,
+    scan_for_issues,
+    validate_figure_registry,
     validate_images,
     validate_markdown,
     validate_math,
+    validate_pdf_rendering,
     validate_refs,
 )
-from .pdf_validator import extract_text_from_pdf, scan_for_issues, validate_pdf_rendering
 
 # Integrity & links
 from .integrity import (
+    LinkValidator,
     generate_integrity_report,
     verify_academic_standards,
     verify_cross_references,
@@ -57,23 +60,30 @@ from .integrity import (
     verify_file_integrity,
     verify_output_integrity,
 )
-from .link_validator import LinkValidator
 
 # Repository-wide scanning
-from .audit_orchestrator import generate_audit_report, run_comprehensive_audit
-from .issue_categorizer import (
+from .repo import (
     assign_severity,
     categorize_by_type,
     filter_false_positives,
+    generate_audit_report,
     generate_issue_summary,
     group_related_issues,
     is_false_positive,
     prioritize_issues,
+    run_comprehensive_audit,
 )
 
 # Output validation
-from .output_validator import validate_copied_outputs, validate_output_structure
+from .output import (
+    validate_copied_outputs,
+    validate_output_structure,
+)
 
+# The validation package intentionally exports a broad surface because pipeline scripts
+# import a variety of validators from a single entry point rather than from individual
+# submodules. Sibling packages (rendering, documentation) have narrower entry points
+# because their callers use more targeted imports.
 __all__ = [
     # Content validators
     "validate_pdf_rendering",

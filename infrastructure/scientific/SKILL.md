@@ -26,7 +26,7 @@ print(test.is_stable, test.max_deviation, test.condition_number)
 ## Benchmarking (`benchmarking.py`)
 
 ```python
-from infrastructure.scientific import benchmark_function, BenchmarkResult, generate_performance_report
+from infrastructure.scientific import benchmark_function, BenchmarkResult, format_benchmark_report
 
 # Benchmark a function
 result = benchmark_function(
@@ -39,7 +39,7 @@ result = benchmark_function(
 print(result.mean_time, result.std_time, result.min_time, result.max_time)
 
 # Generate performance report
-report = generate_performance_report(results=[result])
+report = format_benchmark_report(results=[result])
 ```
 
 ## Scientific Documentation (`documentation.py`)

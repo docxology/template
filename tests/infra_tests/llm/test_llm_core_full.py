@@ -10,7 +10,7 @@ import requests
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.llm.core.client import LLMClient, ResponseMode
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 
 
 class TestResponseModeDetails:
@@ -82,7 +82,7 @@ class TestContextManagementPure:
 
     def test_context_accumulates(self):
         """Test context accumulates messages."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
 
         client.context.add_message("user", "First message")
@@ -95,7 +95,7 @@ class TestContextManagementPure:
 
     def test_context_preserves_order(self):
         """Test context preserves message order."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
 
         client.context.add_message("user", "First")
@@ -108,7 +108,7 @@ class TestContextManagementPure:
 
     def test_context_reset(self):
         """Test context reset clears messages."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
 
         client.context.add_message("user", "Test")
@@ -119,7 +119,7 @@ class TestContextManagementPure:
 
     def test_context_token_estimation(self):
         """Test context tracks token estimation."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
 
         # Empty context
@@ -135,7 +135,7 @@ class TestLLMClientPropertiesPure:
 
     def test_config_property(self):
         """Test config property."""
-        config = LLMConfig(temperature=0.5)
+        config = OllamaClientConfig(temperature=0.5)
         client = LLMClient(config=config)
 
         assert client.config.temperature == 0.5
@@ -151,7 +151,7 @@ class TestLLMClientPropertiesPure:
 
     def test_config_stored_on_client(self):
         """Test that config values passed to LLMClient are accessible via client.config."""
-        config = LLMConfig(temperature=0.5)
+        config = OllamaClientConfig(temperature=0.5)
         client = LLMClient(config=config)
 
         assert client.config.temperature == 0.5
@@ -162,7 +162,7 @@ class TestSystemPromptManagementPure:
 
     def test_set_system_prompt(self):
         """Test setting system prompt."""
-        config = LLMConfig(system_prompt="Initial prompt", auto_inject_system_prompt=True)
+        config = OllamaClientConfig(system_prompt="Initial prompt", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         client.set_system_prompt("New system prompt")
@@ -174,7 +174,7 @@ class TestSystemPromptManagementPure:
 
     def test_inject_system_prompt_manual(self):
         """Test _inject_system_prompt method manually."""
-        config = LLMConfig(system_prompt="Test prompt", auto_inject_system_prompt=False)
+        config = OllamaClientConfig(system_prompt="Test prompt", auto_inject_system_prompt=False)
         client = LLMClient(config=config)
 
         # Initially no system prompt
@@ -190,7 +190,7 @@ class TestSystemPromptManagementPure:
 
     def test_system_prompt_preserved_on_reset(self):
         """Test system prompt is preserved when auto-inject is on."""
-        config = LLMConfig(system_prompt="Persistent prompt", auto_inject_system_prompt=True)
+        config = OllamaClientConfig(system_prompt="Persistent prompt", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         # Add user message
@@ -210,7 +210,7 @@ class TestLLMCoreEdgeCasesPure:
 
     def test_empty_system_prompt(self):
         """Test handling empty system prompt."""
-        config = LLMConfig(system_prompt="", auto_inject_system_prompt=True)
+        config = OllamaClientConfig(system_prompt="", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         # Empty system prompt still results in a system message (empty content)
@@ -223,7 +223,7 @@ class TestLLMCoreEdgeCasesPure:
     def test_long_system_prompt(self):
         """Test handling long system prompt."""
         long_prompt = "System instruction. " * 100
-        config = LLMConfig(system_prompt=long_prompt, auto_inject_system_prompt=True)
+        config = OllamaClientConfig(system_prompt=long_prompt, auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         messages = client.context.get_messages()
@@ -233,7 +233,7 @@ class TestLLMCoreEdgeCasesPure:
 
     def test_multiple_resets(self):
         """Test multiple reset calls."""
-        config = LLMConfig(system_prompt="Test", auto_inject_system_prompt=True)
+        config = OllamaClientConfig(system_prompt="Test", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         # Multiple resets should be idempotent
@@ -247,7 +247,7 @@ class TestLLMCoreEdgeCasesPure:
 
     def test_config_response_mode_limits(self):
         """Test config response mode token limits."""
-        config = LLMConfig(short_max_tokens=100, long_max_tokens=5000, long_min_tokens=400)
+        config = OllamaClientConfig(short_max_tokens=100, long_max_tokens=5000, long_min_tokens=400)
 
         assert config.short_max_tokens == 100
         assert config.long_max_tokens == 5000
@@ -259,7 +259,7 @@ class TestOptionsConversion:
 
     def test_options_num_ctx(self):
         """Test num_ctx option."""
-        config = LLMConfig(num_ctx=8192)
+        config = OllamaClientConfig(num_ctx=8192)
         opts = GenerationOptions()
 
         ollama_opts = opts.to_ollama_options(config)
@@ -267,7 +267,7 @@ class TestOptionsConversion:
 
     def test_options_override_num_ctx(self):
         """Test num_ctx override."""
-        config = LLMConfig(num_ctx=4096)
+        config = OllamaClientConfig(num_ctx=4096)
         opts = GenerationOptions(num_ctx=16384)
 
         ollama_opts = opts.to_ollama_options(config)
@@ -275,7 +275,7 @@ class TestOptionsConversion:
 
     def test_options_repeat_penalty(self):
         """Test repeat_penalty option."""
-        config = LLMConfig()
+        config = OllamaClientConfig()
         opts = GenerationOptions(repeat_penalty=1.2)
 
         ollama_opts = opts.to_ollama_options(config)
@@ -283,7 +283,7 @@ class TestOptionsConversion:
 
     def test_options_top_k(self):
         """Test top_k option."""
-        config = LLMConfig()
+        config = OllamaClientConfig()
         opts = GenerationOptions(top_k=50)
 
         ollama_opts = opts.to_ollama_options(config)
@@ -344,7 +344,7 @@ class TestLLMQueryModesIntegration:
 
     def test_query_raw(self):
         """Test raw query mode."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
         result = client.query_raw("Complete: Hello")
 
@@ -361,7 +361,7 @@ class TestLLMQueryModesIntegration:
 
     def test_context_maintained(self):
         """Test context is maintained across queries."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
 
         client.query("My name is TestBot.")

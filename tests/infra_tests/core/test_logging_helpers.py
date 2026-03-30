@@ -1,4 +1,4 @@
-"""Tests for infrastructure.core.logging_helpers module.
+"""Tests for infrastructure.core.logging.helpers module.
 
 Comprehensive tests for logging helper functions including
 error formatting and duration formatting.
@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 from infrastructure.core.exceptions import TemplateError
-from infrastructure.core.logging_helpers import format_duration, format_error_with_suggestions
+from infrastructure.core.logging.helpers import format_duration, format_error_with_suggestions
 
 
 class TestFormatErrorWithSuggestions:

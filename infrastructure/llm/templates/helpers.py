@@ -2,16 +2,22 @@
 
 from __future__ import annotations
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 def format_requirements(
     required_headers: list[str],
     markdown_format: bool = True,
     section_requirements: dict[str, str | None] | None = None,
 ) -> str:
-    """Generate format requirements section for prompts."""
+    """Return a FORMAT REQUIREMENTS block for injection into LLM prompts.
+
+    Instructs the model to use markdown headers from ``required_headers`` in
+    order. Pass ``section_requirements`` to add per-section constraints (e.g.,
+    minimum word counts). Omit ``markdown_format=False`` for plain-text outputs.
+    """
     lines = ["FORMAT REQUIREMENTS:"]
 
     if markdown_format:
@@ -27,12 +33,18 @@ def format_requirements(
 
     return "\n".join(lines)
 
+
 def token_budget_awareness(
     total_tokens: int | None = None,
     section_budgets: dict[str, int] | None = None,
     word_targets: dict[str, tuple[int, int]] | None = None,
 ) -> str:
-    """Generate token budget awareness hints for prompts."""
+    """Return a TOKEN BUDGET AWARENESS block for injection into LLM prompts.
+
+    Tells the model how much output to produce. Use ``total_tokens`` for an
+    overall cap, ``section_budgets`` for per-section token allocations, and
+    ``word_targets`` for (min, max) word-count ranges per section.
+    """
     lines = ["TOKEN BUDGET AWARENESS:"]
 
     if total_tokens:
@@ -51,13 +63,20 @@ def token_budget_awareness(
 
     return "\n".join(lines)
 
+
 def content_requirements(
     no_hallucination: bool = True,
     cite_sources: bool = True,
     evidence_based: bool = True,
     no_meta_commentary: bool = True,
 ) -> str:
-    """Generate content quality requirements section."""
+    """Return a CONTENT QUALITY REQUIREMENTS block for injection into LLM prompts.
+
+    Each flag enables one quality constraint: ``no_hallucination`` restricts the
+    model to information in the provided content, ``cite_sources`` requires quoting
+    specific passages, ``evidence_based`` demands reasoned claims, and
+    ``no_meta_commentary`` suppresses AI self-references.
+    """
     lines = ["CONTENT QUALITY REQUIREMENTS:"]
 
     if no_hallucination:
@@ -88,12 +107,18 @@ def content_requirements(
 
     return "\n".join(lines)
 
+
 def section_structure(
     sections: list[str],
     section_descriptions: dict[str, str | None] | None = None,
     required_order: bool = True,
 ) -> str:
-    """Generate section structure requirements."""
+    """Return a SECTION STRUCTURE block for injection into LLM prompts.
+
+    Lists the required sections and optional per-section descriptions. Set
+    ``required_order=False`` if the model may reorder sections; the default
+    enforces exact ordering.
+    """
     lines = ["SECTION STRUCTURE:"]
 
     if required_order:
@@ -109,30 +134,30 @@ def section_structure(
 
     return "\n".join(lines)
 
+
 def validation_hints(
     word_count_range: tuple[int, int] | None = None,
     required_elements: list[str] | None = None,
     format_checks: list[str] | None = None,
 ) -> str:
     """Generate validation hints that inform the model what will be checked."""
-    lines = ["VALIDATION HINTS (what will be checked):"]
-    n = 0
+    sections: list[list[str]] = []
 
     if word_count_range:
         min_words, max_words = word_count_range
-        n += 1
-        lines.append(f"{n}. Word count: Must be between {min_words} and {max_words} words")
+        sections.append([f"Word count: Must be between {min_words} and {max_words} words"])
 
     if required_elements:
-        n += 1
-        lines.append(f"{n}. Required elements:")
-        for element in required_elements:
-            lines.append(f"   - {element}")
+        sections.append(["Required elements:"] + [f"   - {e}" for e in required_elements])
 
     if format_checks:
-        n += 1
-        lines.append(f"{n}. Format compliance checks:")
-        for check in format_checks:
-            lines.append(f"   - {check}")
+        sections.append(
+            ["Format compliance checks:"] + [f"   - {c}" for c in format_checks]
+        )
+
+    lines = ["VALIDATION HINTS (what will be checked):"]
+    for n, section in enumerate(sections, 1):
+        lines.append(f"{n}. {section[0]}")
+        lines.extend(section[1:])
 
     return "\n".join(lines)

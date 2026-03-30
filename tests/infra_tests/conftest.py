@@ -207,7 +207,7 @@ def ensure_ollama_for_tests():
     This fixture runs once per test session and ensures all tests
     marked with @pytest.mark.requires_ollama have a working Ollama instance.
     """
-    from infrastructure.core.logging_utils import get_logger
+    from infrastructure.core.logging.utils import get_logger
     from infrastructure.llm.utils.ollama import (
         ensure_ollama_ready,
         get_model_names,

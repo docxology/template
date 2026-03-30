@@ -21,7 +21,7 @@ print(bibtex)
 # Publish to Zenodo
 doi = publish_to_zenodo(
     metadata,
-    [Path("output/pdf/manuscript.pdf")],
+    [Path("output/{project_name}/pdf/{project_name}_combined.pdf")],
     os.getenv("ZENODO_TOKEN")
 )
 print(f"Published with DOI: {doi}")
@@ -72,11 +72,6 @@ graph TD
     FORMAT --> GITHUB
 
     PREPARE --> METADATA_PROC --> UPLOAD --> TRACK
-
-    classDef metadata fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef citations fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef platforms fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef workflow fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class Metadata metadata
     class Citations citations

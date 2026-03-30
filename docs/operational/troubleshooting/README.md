@@ -2,7 +2,7 @@
 
 > **Systematic approach** to resolving issues and errors
 
-**Quick Reference:** [FAQ](../../reference/faq.md) | [Common Workflows](../../reference/common-workflows.md) | [Build System](../build/build-system.md)
+**Quick Reference:** [FAQ](../../reference/faq.md) | [Common Workflows](../../reference/common-workflows.md) | [Pipeline Orchestration](../../RUN_GUIDE.md)
 
 ## Topic-Specific Guides
 
@@ -95,6 +95,11 @@ uv tree
 | `Coverage below threshold` | [Test Failures](test-failures.md) |
 | `Permission denied` | [Common Errors](common-errors.md) |
 | `No such file` | [Common Errors](common-errors.md) |
+| `Project not discovered` | [Common Errors](common-errors.md) |
+| `Stage 4 fails silently` | [Common Errors](common-errors.md) |
+| `Config warning spam` | [Common Errors](common-errors.md) |
+| `Reference shows ??` | [Common Errors](common-errors.md) |
+| `Figure not found` | [Common Errors](common-errors.md) |
 
 ---
 
@@ -117,7 +122,7 @@ uv tree
 ## See Also
 
 - [FAQ](../../reference/faq.md) - Frequently asked questions
-- [Build System](../build/build-system.md) - Build system details
+- [Build System](../../RUN_GUIDE.md) - Build system details
 - [Common Workflows](../../reference/common-workflows.md) - Workflow troubleshooting
 - [Performance Optimization](../config/performance-optimization.md) - Performance issues
 - [Checkpoint and Resume](../config/checkpoint-resume.md) - Checkpoint system

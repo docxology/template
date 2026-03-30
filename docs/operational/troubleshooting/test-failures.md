@@ -180,4 +180,36 @@ uv run pytest tests/ -n auto
 
 ---
 
+## Mock Policy Violations
+
+**Symptom:** Review feedback flags use of `MagicMock`, `@patch`, or `unittest.mock`
+
+**Root Cause:** Template enforces "no mocks" policy - tests must use real data
+
+**Solutions:**
+
+| Instead of | Use |
+|------------|-----|
+| `MagicMock()` | Real data/fixtures |
+| `@patch('requests.get')` | `pytest-httpserver` |
+| `mocker.patch()` | Temp files/directories |
+| `unittest.mock` | Actual module imports |
+
+**Example - HTTP testing:**
+
+```python
+# ❌ Bad - mocked
+with patch('requests.get') as mock:
+    mock.return_value = Mock(json=lambda: {"result": "ok"})
+    result = fetch_data()
+
+# ✅ Good - real HTTP
+def test_fetch_data(httpserver):
+    httpserver.expect_request("/api").respond_with_json({"result": "ok"})
+    result = fetch_data(httpserver.url_for("/api"))
+    assert result == {"result": "ok"}
+```
+
+---
+
 **Related:** [Environment Setup](environment-setup.md) | [Testing Guide](../../development/testing/testing-guide.md) | [Main Guide](README.md)

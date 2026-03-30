@@ -2,7 +2,7 @@
 
 > **Automated quality checking** for generated PDFs
 
-**Quick Reference:** [Build System](../operational/build/build-system.md) | [Common Workflows](../reference/common-workflows.md#generate-pdf-of-manuscript) | [FAQ](../reference/faq.md)
+**Quick Reference:** [Pipeline Orchestration](../RUN_GUIDE.md) | [Common Workflows](../reference/common-workflows.md#generate-pdf-of-manuscript) | [FAQ](../reference/faq.md)
 
 ## Overview
 
@@ -12,15 +12,15 @@ The PDF validation system automatically scans generated PDFs for rendering issue
 
 Following the **thin orchestrator pattern**, the implementation consists of:
 
-1. **Business Logic** (`infrastructure/validation/pdf_validator.py`): Core validation algorithms
-2. **CLI Interface** (`infrastructure/validation/cli.py`): Command-line interface
+1. **Business Logic** (`infrastructure/validation/content/pdf_validator.py`): Core validation algorithms
+2. **CLI Interface** (`infrastructure/validation/cli/main.py`): Command-line interface
 3. **Orchestrator** (`scripts/04_validate_output.py`): Pipeline integration
 4. **Tests** (`tests/infrastructure/test_validation/`): coverage with data
 5. **Integration** (`scripts/execute_pipeline.py`): Automated validation in build pipeline (Stage 04)
 
 ## Components
 
-### infrastructure/validation/pdf_validator.py
+### infrastructure/validation/content/pdf_validator.py
 
 Core validation module containing all business logic:
 
@@ -33,11 +33,11 @@ Core validation module containing all business logic:
 - `extract_first_n_words(text, n)`: Extract first N words for structure verification
 - `validate_pdf_rendering(pdf_path, n_words)`: validation report
 
-### infrastructure/validation/cli.py
+### infrastructure/validation/cli/main.py
 
 Command-line interface that:
 
-- Imports methods from `infrastructure/validation/pdf_validator.py`
+- Imports methods from `infrastructure/validation/content/pdf_validator.py`
 - Handles command-line arguments
 - Formats and prints validation reports
 - Returns appropriate exit codes:
@@ -69,7 +69,7 @@ The validation is automatically integrated into the pipeline (Stage 4):
 
 ```bash
 # Standard usage (includes validation)
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Or use unified interactive menu
 ./run.sh
@@ -90,12 +90,12 @@ This will:
 ### Sample Output
 
 ```
-🔍 Validating PDF: project_combined.pdf
+🔍 Validating PDF: code_project_combined.pdf
 
 ======================================================================
 📋 PDF VALIDATION REPORT
 ======================================================================
-📄 File: project_combined.pdf
+📄 File: code_project_combined.pdf
 
 ⚠️  Found 11 rendering issue(s):
    • Unresolved references (??): 11
@@ -114,7 +114,7 @@ Conference on Machine Learning, pages 456–467. ICML, 2022...
 
 ### Unit Tests (test_pdf_validator.py)
 
-- ✅ test coverage of `infrastructure/validation/pdf_validator.py`
+- ✅ test coverage of `infrastructure/validation/content/pdf_validator.py`
 - ✅ Tests with PDFs (no mocks)
 - ✅ Tests edge cases and error handling
 - ✅ Validates against actual project PDF when available
@@ -185,8 +185,8 @@ These are automatically managed by `uv` and defined in `pyproject.toml`.
 Following TDD principles:
 
 1. Write tests first in `tests/infrastructure/test_validation/`
-2. Implement business logic in `infrastructure/validation/pdf_validator.py`
-3. Create CLI interface in `infrastructure/validation/cli.py`
+2. Implement business logic in `infrastructure/validation/content/pdf_validator.py`
+3. Create CLI interface in `infrastructure/validation/cli/main.py`
 4. Integrate into build pipeline via `scripts/04_validate_output.py`
 5. Verify test coverage requirements met
 
@@ -211,7 +211,7 @@ Ensure you're running from the repository root:
 
 ```bash
 cd /path/to/template
-uv run python -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/code_project/pdf/code_project_combined.pdf
 ```
 
 ### "PDF file not found"
@@ -219,17 +219,17 @@ uv run python -m infrastructure.validation.cli pdf output/pdf/project_combined.p
 Generate PDFs first:
 
 ```bash
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 Or run the pipeline:
 
 ```bash
 # Standard build with validation
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # With options
-uv run python scripts/execute_pipeline.py --core-only --verbose --log-file build.log
+uv run python scripts/execute_pipeline.py --project {name} --core-only --verbose --log-file build.log
 ```
 
 ### High number of ?? issues

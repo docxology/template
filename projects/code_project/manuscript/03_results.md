@@ -1,6 +1,6 @@
 # Results
 
-This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing [`projects/code_project/scripts/optimization_analysis.py`](https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
+This section presents the experimental results from the gradient descent optimization study, including convergence analysis and performance comparisons. Every table, figure, and quantitative assertion in this section was compiled autonomously by the template's `infrastructure.reporting` subsystem executing the [optimization analysis script](https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py). No manual transcription was permitted.
 
 ## Convergence Analysis
 
@@ -8,32 +8,29 @@ This section presents the experimental results from the gradient descent optimiz
 
 Figure \ref{fig:convergence} illustrates the convergence behavior of gradient descent for different step sizes, starting from the initial point $x_0 = 0$. The algorithm iteratively updates the solution using the rule $x_{k+1} = x_k - \alpha \nabla f(x_k)$.
 
-![Gradient descent convergence trajectories for four step sizes ($\alpha = 0.01, 0.05, 0.1, 0.2$) on the quadratic $f(x) = \frac{1}{2}x^2 - x$. Larger $\alpha$ values reach the analytical minimum $f(x^*) = -0.5$ in fewer iterations, with $\alpha = 0.2$ converging in $\sim$9 iterations versus $\sim$165 for $\alpha = 0.01$.](../output/figures/convergence_plot.png){#fig:convergence}
+![Figure: Gradient descent on $f(x)=\tfrac{1}{2}x^2-x$ for $\alpha \in \{{{CONFIG_STEP_SIZES_CSV}}\}$. Trajectories use `simulate_trajectory()` (same `gradient_descent()` as the table); objectives are clipped for plotting when $\alpha$ is unstable. Reference line: $f(x^\ast)={{RESULT_OPTIMUM_F}}$. Best iteration count in this experiment: {{RESULT_MIN_ITERATIONS}} at $\alpha={{RESULT_BEST_STEP_SIZE}}$.](../output/figures/convergence_plot.png){#fig:convergence}
 
 **Key observations from Figure \ref{fig:convergence}:**
 
-1. **Step size impact**: Larger step sizes ($\alpha = 0.2$) exhibit faster initial progress but may show oscillatory behavior near convergence
-2. **Convergence rate**: All tested step sizes eventually converge to the analytical optimum at $x^* = 1$
-3. **Stability**: Conservative step sizes ($\alpha = 0.01$) demonstrate smooth, monotonic convergence with minimal oscillations
+1. **Step size impact**: Larger step sizes exhibit faster initial progress; $\alpha = {{RESULT_BEST_STEP_SIZE}}$ converges in {{RESULT_MIN_ITERATIONS}} iteration(s)
+2. **Agency categories**: Conservative ($\alpha \leq 0.1$), near-optimal ($0.3 \leq \alpha \leq 1.0$), aggressive ($1 < \alpha < 2$), and divergent ($\alpha \geq 2$)
+3. **Stability boundary**: The critical threshold is $\alpha = 2$ for this unit-Hessian problem; $\alpha < 2$ converges, $\alpha \geq 2$ diverges
 
 ### Step Size Sensitivity Analysis
 
 Figure \ref{fig:step_sensitivity} examines how the choice of step size affects the convergence path and solution quality. The analysis reveals the trade-off between convergence speed and numerical stability.
 
-![Step size sensitivity analysis across 10 values (alpha from 0.005 to 0.4). Left panel: iterations to convergence decrease geometrically with step size on log--log axes. Right panel: all step sizes achieve the optimal objective value of -0.5 from the initial value of 0, confirming robust convergence across the full range.](../output/figures/step_size_sensitivity.png){#fig:step_sensitivity}
+![Figure: Sensitivity sweep (independent dense grid $\alpha \in [0.005,0.4]$) for the same quadratic. Left: log--log iterations vs $\alpha$ (longer runs for small $\alpha$). Right: final $f(x)$ vs $\alpha$ with horizontal lines at $f(x_0)=0$ and $f(x^\ast)={{RESULT_OPTIMUM_F}}$. This panel illustrates the continuous trade-off between stability and speed; it is not limited to the discrete `experiment.step_sizes` grid.](../output/figures/step_size_sensitivity.png){#fig:step_sensitivity}
 
 ## Quantitative Results
 
-The optimization results for different step sizes are synthesized computationally by orchestrating `infrastructure.reporting.pipeline_reporter`, feeding directly into the [output DataFrame `code_project/output/data/optimization_results.csv`](https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv) that acts as the source of truth for Table 1:
+The optimization results for different step sizes are synthesized computationally by orchestrating `infrastructure.reporting.pipeline_reporter`, feeding directly into the [optimization results data](https://github.com/docxology/template/blob/main/projects/code_project/output/data/optimization_results.csv) that acts as the source of truth for Table \ref{tab:opt_results}. Rows follow `experiment.step_sizes` in `config.yaml`; the body rows below are injected at render time from that CSV (`RESULT_TABLE_ROWS` in `scripts/z_generate_manuscript_variables.py`).
 
 | Step Size (α) | Final Solution | Objective Value | Iterations | Converged |
 |---------------|----------------|-----------------|------------|-----------|
-| 0.01          | 0.9999         | -0.5000         | 165        | Yes       |
-| 0.05          | 1.0000         | -0.5000         | 34         | Yes       |
-| 0.10          | 1.0000         | -0.5000         | 17         | Yes       |
-| 0.20          | 1.0000         | -0.5000         | 9          | Yes       |
+{{RESULT_TABLE_ROWS}}
 
-**Table 1:** Optimization results showing solution accuracy and convergence speed for different step sizes.
+: Gradient descent outcomes per configured step size: state at termination, iteration count capped by $N_{\max} = {{CONFIG_MAX_ITERATIONS}}$, and the `converged` flag from `gradient_descent()` using $\|\nabla f\| < {{CONFIG_TOLERANCE}}$. Rows marked "No" either hit the iteration cap before meeting the gradient tolerance (small $\alpha$) or correspond to unstable dynamics when $|1-\alpha| \geq 1$. \label{tab:opt_results}
 
 ## Convergence Rate Analysis
 
@@ -43,23 +40,21 @@ Modern convergence analysis builds on foundational work in gradient methods \cit
 
 Figure \ref{fig:convergence_rate} provides a comparative analysis of convergence rates across different step sizes, validating theoretical predictions against empirical results.
 
-![Convergence rate comparison on logarithmic scale. Each step size exhibits linear convergence in $\log \|x_k - x^*\|$, with slopes corresponding to the contraction factor $\rho = 1 - 2\alpha(1-\alpha)$. The dashed tolerance line at $\varepsilon = 10^{-6}$ marks the convergence criterion.](../output/figures/convergence_rate_comparison.png){#fig:convergence_rate}
+![Figure: Absolute error $|f(x_k)-f(x^\ast)|$ vs iteration (log scale). Colours follow agency categories. Horizontal dashed line: $\varepsilon = {{CONFIG_CONVERGENCE_TOL}}$ from `experiment.convergence_tolerance`, aligned with the plot generated by `generate_convergence_rate_plot()`. Divergent $\alpha$ curves turn upward once numerical blow-up dominates.](../output/figures/convergence_rate_comparison.png){#fig:convergence_rate}
 
-The theoretical convergence rate for our quadratic problem satisfies:
-
+For the scalar problem with $A = 1$ and optimum $x^\ast = b$, one step of gradient descent with fixed $\alpha$ gives
+\begin{equation}
+\label{eq:scalar_linear_update}
+x_{k+1} - x^\ast = (1 - \alpha)(x_k - x^\ast),
+\end{equation}
+so the distance to the minimizer contracts by $\rho(\alpha) = |1 - \alpha|$ per iteration whenever $\rho < 1$. Equivalently, for the objective (which is a translated quadratic in $x$),
 \begin{equation}
 \label{eq:convergence_bound}
-\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - \frac{2\alpha(1 - \alpha)}{1} = 1 - 2\alpha(1 - \alpha)
+|f(x_{k+1}) - f(x^\ast)| \approx \rho(\alpha)^2 \, |f(x_k) - f(x^\ast)|
 \end{equation}
+in the neighbourhood of $x^\ast$ for this model, which explains the straight-line segments on the log--error plot in Figure \ref{fig:convergence_rate} for stable $\alpha$.
 
-For the optimal step size $\alpha = 0.5$, this bound becomes:
-
-\begin{equation}
-\label{eq:optimal_step_convergence}
-\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) = 0.5
-\end{equation}
-
-However, our empirical analysis uses more conservative step sizes ($\alpha \leq 0.2$) to ensure stability.
+Our experimental grid uses $\alpha \in \{{{CONFIG_STEP_SIZES_CSV}}\}$, spanning conservative, near-optimal, aggressive, and divergent regimes for $H = I$.
 
 ### Error Bounds
 
@@ -70,7 +65,7 @@ The error after $k$ iterations is bounded by:
 \|x_k - x^*\| \leq \left(\frac{\kappa - 1}{\kappa + 1}\right)^k \|x_0 - x^*\|
 \end{equation}
 
-where $\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}$ is the condition number. For our test problem with $A = I$, we have $\kappa = 1$, which yields a convergence factor of $\rho = 0$. This reflects the perfectly conditioned nature of the identity-matrix quadratic: a single exact step with optimal step size $\alpha = 1$ would reach the minimum. In practice, our conservative step sizes ($\alpha \leq 0.2$) trade per-iteration progress for stability, resulting in the measured iteration counts shown in Table 1.
+where $\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}$ is the condition number. For our test problem with $A = I$, we have $\kappa = 1$, which yields a linear contraction factor of $\rho = |1 - \alpha|$ in the iterate error (Equation \ref{eq:scalar_linear_update}). Thus $\alpha = 1$ is the exact minimizer step in one update for this quadratic, $\alpha < 1$ gives monotone geometric decay, $1 < \alpha < 2$ yields signed oscillations but still $\rho < 1$, and $\alpha \geq 2$ implies $\rho \geq 1$ (divergence). Table \ref{tab:opt_results} and Figures \ref{fig:convergence}–\ref{fig:convergence_rate} ground these statements in the numbers produced by this repository run.
 
 ### Performance Metrics
 
@@ -83,12 +78,9 @@ k \geq \frac{\log(\epsilon)}{\log(\rho)}
 
 where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor \cite{polyak1964some}.
 
-For our results, the convergence factors are:
+Per-step contraction factors $\rho = |1-\alpha|$ and qualitative iteration demand for small fixed $\epsilon$ (see Equation \ref{eq:iteration_complexity}) are:
 
-- $\alpha = 0.01$: $\rho \approx 0.99$, requiring ~458 iterations for $\epsilon = 10^{-6}$
-- $\alpha = 0.05$: $\rho \approx 0.95$, requiring ~87 iterations for $\epsilon = 10^{-6}$
-- $\alpha = 0.10$: $\rho \approx 0.90$, requiring ~43 iterations for $\epsilon = 10^{-6}$
-- $\alpha = 0.20$: $\rho \approx 0.80$, requiring ~21 iterations for $\epsilon = 10^{-6}$
+{{RESULT_CONVERGENCE_FACTORS}}
 
 ## Performance Analysis
 
@@ -101,12 +93,12 @@ The results show a clear trade-off between step size and convergence speed:
 
 ### Solution Accuracy
 
-All tested step sizes achieved the analytical optimum within numerical precision:
+{{RESULT_NUM_CONVERGED}} of {{CONFIG_NUM_STEP_SIZES}} tested step sizes achieved the analytical optimum within numerical precision:
 
-- Target solution: $x = 1.0000$ (relative error $< 10^{-4}$)
-- Target objective: $f(x) = -0.5000$ (absolute error $< 10^{-6}$)
+- Target solution: $x = {{RESULT_OPTIMUM_X}}$ (relative error $< 10^{-4}$ for converged settings)
+- Target objective: $f(x) = {{RESULT_OPTIMUM_F}}$ (absolute error $< {{CONFIG_CONVERGENCE_TOL}}$ for converged settings)
 
-This confirms that gradient descent with fixed step size reliably solves convex quadratic problems across a wide range of learning rates, consistent with the theoretical convergence guarantees established in Section 2.
+Divergent step sizes ($\alpha \geq 2$) confirm the theoretical instability boundary, demonstrating that gradient descent with fixed step size requires $\alpha < 2/\lambda_{\max}$ for convergence on quadratic objectives.
 
 ## Algorithm Characteristics
 
@@ -128,40 +120,40 @@ This confirms that gradient descent with fixed step size reliably solves convex 
 
 Figure \ref{fig:complexity} provides a visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
 
-![Algorithm performance analysis in four panels: (TL) empirical iteration counts per step size, (TR) solution accuracy as $\log_{10} |f(x) - f(x^*)|$ with the $\varepsilon = 10^{-6}$ tolerance line, (BL) theoretical bound $1/(2\alpha(1-\alpha))$ overlaid on empirical iterations in log scale, (BR) contraction factor $\rho = 1 - 2\alpha(1-\alpha)$ per step size with the optimal $\rho = 0.5$ reference.](../output/figures/algorithm_complexity.png){#fig:complexity}
+![Figure: Four-panel diagnostic from `generate_complexity_visualization()`. Top left: empirical iterations per configured $\alpha$ (bar colours = agency category). Top right: $\log_{10}|f(x)-f(x^\ast)|$ at termination; dashed line at $\log_{10}(\varepsilon)$ for $\varepsilon =$ `experiment.convergence_tolerance` (aligned with `config.yaml`). Bottom left: empirical iterations (solid) vs the smooth proxy $1/(2\alpha(1-\alpha))$ (dashed), log axes—shape comparison, not a tight count prediction for every $\alpha$. Bottom right: $\rho = |1-\alpha|$ (unit Hessian; Equation \ref{eq:scalar_linear_update}); values above 1 mark instability.](../output/figures/algorithm_complexity.png){#fig:complexity}
 
 The algorithm demonstrates efficient performance for small-scale optimization problems:
 
 - **Time complexity**: $O(d)$ per iteration for gradient computation
 - **Space complexity**: $O(d)$ for storing variables and gradients
-- **Convergence**: Typically $< 20$ iterations for this quadratic problem
+- **Convergence**: Fastest at $\alpha = {{RESULT_BEST_STEP_SIZE}}$ ({{RESULT_MIN_ITERATIONS}} iteration), average {{RESULT_AVG_ITERATIONS}} iterations
 - **Scalability**: Memory-efficient implementation suitable for high-dimensional problems
 
 ### Performance Benchmarking
 
 Figure \ref{fig:benchmark} shows how `gradient_descent()` scales with problem dimension by running the optimizer on identity-Hessian quadratics of dimension $d \in \{1, 2, 5, 10, 20, 50\}$.
 
-![Dimensional scaling benchmark. Left: mean execution time ($\mu$s) per `gradient_descent()` call across problem dimensions $d = 1$ to $50$, showing sub-millisecond performance throughout. Right: iterations to convergence remain constant ($\sim$17) for all dimensions because the identity-matrix condition number $\kappa = 1$ is dimension-independent.](../output/figures/performance_benchmark.png){#fig:benchmark}
+![Figure: Dimensional scaling from `generate_benchmark_visualization()`. Dimensions $d \in \{{{CONFIG_BENCHMARK_DIMS}}\}$ with identity Hessian, $\alpha = 0.1$, and gradient tolerance $10^{-10}$ inside the script. Left: mean wall time per call ($\mu$s). Right: iterations to convergence—nearly flat across $d$ because $\kappa = 1$ for every $I_d$ instance, so conditioning does not worsen with dimension in this controlled setup.](../output/figures/performance_benchmark.png){#fig:benchmark}
 
 ### Numerical Stability Analysis
 
-Figure \ref{fig:stability} maps the optimizer's accuracy across a grid of 8 starting points ($x_0 \in [-50, 50]$) and 6 step sizes ($\alpha \in [0.01, 0.4]$), directly exercising `gradient_descent()`, `quadratic_function()`, and `compute_gradient()` across the parameter space.
+Figure \ref{fig:stability} maps the optimizer's accuracy across a grid of {{CONFIG_NUM_STABILITY_STARTS}} starting points ($x_0 \in [-50, 50]$) and {{CONFIG_NUM_STABILITY_STEPS}} step sizes ($\alpha \in [{{CONFIG_STABILITY_MIN_STEP}}, {{CONFIG_STABILITY_MAX_STEP}}]$), directly exercising `gradient_descent()`, `quadratic_function()`, and `compute_gradient()` across the parameter space.
 
-![Numerical stability heatmap: each cell shows $\log_{10} |f(x) - f(x^*)|$ for a (starting point, step size) combination, with 48 total evaluations. All cells achieve errors below $10^{-6}$, confirming uniform stability. The right panel reports the aggregate stability score from `check_numerical_stability()`.](../output/figures/stability_analysis.png){#fig:stability}
+![Numerical stability heatmap: each cell shows $\log_{10} |f(x) - f(x^*)|$ for a (starting point, step size) combination, with {{CONFIG_STABILITY_CELLS}} total evaluations. The right panel reports the aggregate stability score of {{STABILITY_SCORE}} from `check_numerical_stability()`.](../output/figures/stability_analysis.png){#fig:stability}
 
 ### Performance Metrics Summary
 
-**Iteration Statistics:**
+**Iteration statistics (configured grid, including non-converged runs):**
 
-- Minimum iterations: 9 (for $\alpha = 0.2$)
-- Maximum iterations: 165 (for $\alpha = 0.01$)
-- Average convergence: $< 50$ iterations across all test cases
+- Smallest iteration count recorded: {{RESULT_MIN_ITERATIONS}}
+- Largest iteration count recorded: {{RESULT_MAX_ITERATIONS}}
+- Mean iterations across rows in Table \ref{tab:opt_results}: {{RESULT_AVG_ITERATIONS}}
 
 **Numerical Accuracy:**
 
-- Solution precision: $< 10^{-4}$ relative error
-- Objective accuracy: $< 10^{-6}$ absolute error
-- Gradient tolerance: $< 10^{-6}$ achieved in all cases
+- Solution precision: $< 10^{-4}$ relative error (for converged step sizes)
+- Objective accuracy: $< {{CONFIG_CONVERGENCE_TOL}}$ absolute error (for converged step sizes)
+- Gradient tolerance: $< {{CONFIG_CONVERGENCE_TOL}}$ achieved for converged cases
 
 ## Validation
 
@@ -171,10 +163,10 @@ The implementation was validated through the comprehensive `tests/` suite:
 - **Infrastructure tests** covering all underlying mechanisms across `infrastructure.reporting`, `infrastructure.validation`, and `infrastructure.rendering`.
 - **Numerical accuracy** checks verified systematically using PyTest.
 
-All tests pass with 100% branch and statement coverage, ensuring implementation correctness across core logic, convergence detection, and logging pathways without the use of mocks.
+All tests pass with coverage exceeding the 90% threshold, ensuring implementation correctness across core logic, convergence detection, and logging pathways without the use of mocks.
 
 ## Discussion
 
-The experimental results validate the gradient descent implementation and confirm the theoretical convergence predictions from Section 2. The monotonic relationship between step size and iteration count (Table 1) aligns with the convergence factor analysis in Equation \ref{eq:convergence_factor}, while the uniform solution accuracy across all step sizes demonstrates the robustness of the convergence criterion $\|\nabla f(x)\| < \epsilon$. The automated analysis pipeline successfully generated six publication-quality visualizations and structured numerical outputs, validating the template's end-to-end research workflow from algorithmic implementation through automated infrastructure-driven reporting and manuscript integration.
+The experimental results validate the gradient descent implementation and confirm the theoretical convergence predictions from Section 2. The monotonic relationship between step size and iteration count (Table \ref{tab:opt_results}) aligns with the convergence factor analysis in Equation \ref{eq:convergence_factor}, while the uniform solution accuracy across all step sizes demonstrates the robustness of the convergence criterion $\|\nabla f(x)\| < \epsilon$. The automated analysis pipeline successfully generated six publication-quality visualizations and structured numerical outputs, validating the template's end-to-end research workflow from algorithmic implementation through automated infrastructure-driven reporting and manuscript integration.
 
 *As a meta-architectural note: the perfect embedding of these outputs into this document, including all dynamic references (e.g., Figure \ref{fig:stability}), confirms the absolute reliability of the `infrastructure/rendering/pdf_renderer.py` module handling the Pandoc conversion.*

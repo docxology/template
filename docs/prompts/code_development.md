@@ -8,9 +8,9 @@ Develop standards-compliant code for the Research Project Template, ensuring ful
 
 This prompt leverages development standards to create production-ready code:
 
-- [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
+- [`../rules/`](../rules/) directory - All development standards
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Standards compliance
 - [`../core/architecture.md`](../core/architecture.md) - Architecture principles
 
 ## Prompt Template
@@ -46,7 +46,7 @@ IMPLEMENTATION REQUIREMENTS:
 
 ## 2. Code Standards Implementation
 
-### Type Hints ([`../../.cursorrules/type_hints_standards.md`](../../.cursorrules/type_hints_standards.md))
+### Type Hints ([`../rules/type_hints_standards.md`](../rules/type_hints_standards.md))
 ```python
 from typing import List, Dict, Optional, Any, Union
 from pathlib import Path
@@ -72,9 +72,9 @@ def process_data(
     """
 ```
 
-### Error Handling ([`../../.cursorrules/error_handling.md`](../../.cursorrules/error_handling.md))
+### Error Handling ([`../rules/error_handling.md`](../rules/error_handling.md))
 ```python
-from infrastructure.core.exceptions import TemplateError, ValidationError
+from infrastructure.core.runtime.exceptions import TemplateError, ValidationError
 
 class ResearchAlgorithmError(TemplateError):
     """Custom exception for research algorithm failures."""
@@ -100,9 +100,9 @@ def validate_algorithm_input(data: Any) -> None:
         raise ResearchAlgorithmError(f"Validation failed: {e}") from e
 ```
 
-### Logging ([`../../.cursorrules/python_logging.md`](../../.cursorrules/python_logging.md))
+### Logging ([`../rules/python_logging.md`](../rules/python_logging.md))
 ```python
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -129,13 +129,13 @@ def research_algorithm(data: List[float]) -> Dict[str, Any]:
         raise ResearchAlgorithmError(f"Algorithm execution failed: {e}") from e
 ```
 
-### Code Style ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+### Code Style ([`../rules/code_style.md`](../rules/code_style.md))
 - **Formatting**: Black code formatter (line length 88)
 - **Imports**: isort with section separation
 - **Naming**: snake_case for functions/variables, PascalCase for classes
 - **Structure**: Clear function/method organization
 
-### API Design ([`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md))
+### API Design ([`../rules/api_design.md`](../rules/api_design.md))
 ```python
 def analyze_dataset(
     dataset_path: Path,
@@ -159,7 +159,7 @@ def analyze_dataset(
 
 ## 3. Documentation Requirements
 
-### Docstrings ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
+### Docstrings ([`../rules/documentation_standards.md`](../rules/documentation_standards.md))
 - **Google Style**: with Args, Returns, Raises sections
 - **Examples**: Include runnable code examples
 - **Comprehensive**: Cover all parameters, return values, exceptions
@@ -183,7 +183,7 @@ __author__ = "Research Team"
 
 ## 4. Testing Integration
 
-### Test Structure ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+### Test Structure ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 - **No Mocks Policy**: data testing only
 - **Coverage Requirements**: 90% (project) or 60% (infrastructure)
 - **Test Organization**: Clear class/method structure
@@ -294,21 +294,21 @@ projects/research/src/
 ## Standards Compliance Checklist
 
 ### Code Quality Standards
-- [ ] Type hints on all public APIs ([`../../.cursorrules/type_hints_standards.md`](../../.cursorrules/type_hints_standards.md))
-- [ ] Error handling with custom exceptions ([`../../.cursorrules/error_handling.md`](../../.cursorrules/error_handling.md))
-- [ ] Logging using unified system ([`../../.cursorrules/python_logging.md`](../../.cursorrules/python_logging.md))
-- [ ] Code style compliance ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
-- [ ] API design consistency ([`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md))
+- [ ] Type hints on all public APIs ([`../rules/type_hints_standards.md`](../rules/type_hints_standards.md))
+- [ ] Error handling with custom exceptions ([`../rules/error_handling.md`](../rules/error_handling.md))
+- [ ] Logging using unified system ([`../rules/python_logging.md`](../rules/python_logging.md))
+- [ ] Code style compliance ([`../rules/code_style.md`](../rules/code_style.md))
+- [ ] API design consistency ([`../rules/api_design.md`](../rules/api_design.md))
 
 ### Testing Standards
-- [ ] No mocks policy (data only) ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
-- [ ] Coverage requirements met ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
-- [ ] Test organization and structure ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+- [ ] No mocks policy (data only) ([`../rules/testing_standards.md`](../rules/testing_standards.md))
+- [ ] Coverage requirements met ([`../rules/testing_standards.md`](../rules/testing_standards.md))
+- [ ] Test organization and structure ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 
 ### Documentation Standards
-- [ ] AGENTS.md with technical documentation ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
-- [ ] README.md with Mermaid diagrams ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
-- [ ] Cross-references between documents ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
+- [ ] AGENTS.md with technical documentation ([`../rules/documentation_standards.md`](../rules/documentation_standards.md))
+- [ ] README.md with Mermaid diagrams ([`../rules/documentation_standards.md`](../rules/documentation_standards.md))
+- [ ] Cross-references between documents ([`../rules/documentation_standards.md`](../rules/documentation_standards.md))
 
 ### Architecture Standards
 - [ ] Two-layer architecture compliance ([`../../docs/core/architecture.md`](../../docs/core/architecture.md))
@@ -332,8 +332,8 @@ LAYER: project
 
 ## Related Documentation
 
-- [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - development standards overview
+- [`../rules/README.md`](../rules/README.md) - development standards overview
 - [`../core/workflow.md`](../core/workflow.md) - Development workflow guide
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Standards compliance
 - [`../core/architecture.md`](../core/architecture.md) - Architecture principles
 ```

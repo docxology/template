@@ -11,7 +11,7 @@ import requests
 
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 from infrastructure.llm.core.client import LLMClient, ResponseMode
-from infrastructure.llm.core.config import GenerationOptions, LLMConfig
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
 from .._test_helpers import safe_network_test
 
@@ -186,17 +186,17 @@ class TestClientHelperMethods:
     def test_check_connection_returns_bool(self, default_config):
         """Test check_connection returns boolean."""
         # Use non-existent host to ensure it fails quickly
-        config = LLMConfig(base_url="http://localhost:99999", timeout=0.1)
+        config = OllamaClientConfig(base_url="http://localhost:99999", timeout=0.1)
         client = LLMClient(config)
 
         result = client.check_connection()
         assert isinstance(result, bool)
         assert result is False  # Should fail to connect
 
-    def test_check_connection_detailed_returns_tuple(self, default_config):
+    def test_check_connection_with_reason_returns_tuple(self, default_config):
         """Test check_connection_with_reason returns tuple with error message."""
         # Use non-existent host to ensure it fails quickly
-        config = LLMConfig(base_url="http://localhost:99999", timeout=0.1)
+        config = OllamaClientConfig(base_url="http://localhost:99999", timeout=0.1)
         client = LLMClient(config)
 
         is_available, error = client.check_connection_with_reason()
@@ -212,6 +212,7 @@ class TestClientHelperMethods:
 
 
 @pytest.mark.requires_ollama
+@pytest.mark.timeout(180)
 class TestLLMClientWithOllama:
     """Integration tests requiring running Ollama server.
 

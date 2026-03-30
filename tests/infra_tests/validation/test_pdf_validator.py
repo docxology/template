@@ -11,7 +11,7 @@ import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-from infrastructure.validation.pdf_validator import (
+from infrastructure.validation.content.pdf_validator import (
     PDFValidationError,
     extract_first_n_words,
     extract_text_from_pdf,
@@ -178,7 +178,7 @@ def test_extract_first_n_words_empty_text():
 
 def test_decode_pdf_hex_strings_empty_text():
     """Test decoding hex strings with empty text (line 119)."""
-    from infrastructure.validation.pdf_validator import decode_pdf_hex_strings
+    from infrastructure.validation.content.pdf_validator import decode_pdf_hex_strings
 
     result = decode_pdf_hex_strings("")
     assert result == ""
@@ -189,7 +189,7 @@ def test_decode_pdf_hex_strings_empty_text():
 
 def test_decode_pdf_hex_strings_valid():
     """Test decoding valid hex strings."""
-    from infrastructure.validation.pdf_validator import decode_pdf_hex_strings
+    from infrastructure.validation.content.pdf_validator import decode_pdf_hex_strings
 
     # Valid hex: /x41 = 'A', /x42 = 'B'
     text = "Hello/x41/x42World"
@@ -205,7 +205,7 @@ def test_decode_pdf_hex_strings_invalid_hex():
     the max value is 0xFF (255), which is always valid for chr().
     This is defensive code that cannot be triggered with the current regex.
     """
-    from infrastructure.validation.pdf_validator import decode_pdf_hex_strings
+    from infrastructure.validation.content.pdf_validator import decode_pdf_hex_strings
 
     # Test with valid hex that decodes correctly
     text = "Hello/x41/x42World"  # /x41='A', /x42='B'

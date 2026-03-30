@@ -1,0 +1,219 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Reproducibility Certification}
+\protect\phantomsection\label{reproducibility-certification}
+This section provides a machine-verifiable reproducibility certificate
+for the complete study. Every metric below is computed by the analysis
+pipeline and injected into the manuscript at render time ---
+establishing a cryptographic chain of custody from configuration to
+publication.
+
+\begin{block}{Configuration Provenance}
+\protect\phantomsection\label{configuration-provenance}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6111}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.3889}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Property
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Value
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Config hash (SHA-256, truncated) & \texttt{82a75e78f9447329} \\
+Paper version & 2.0 \\
+First author & Research Template Author \\
+Keyword count & optimization algorithms, gradient descent, convergence
+analysis, numerical methods, mathematical programming, reproducible
+research, infrastructure automation \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The configuration hash changes whenever any parameter in
+\texttt{config.yaml} is modified, ensuring that every rendered PDF is
+traceable to a specific configuration state.
+\end{block}
+
+\begin{block}{Generated Artifact Registry}
+\protect\phantomsection\label{generated-artifact-registry}
+The analysis pipeline produced the following artifacts, each validated
+by \texttt{infrastructure.validation.output.validator}:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Category & Count \\
+\midrule\noalign{}
+\endhead
+Publication-quality figures & 7 \\
+Structured data files (CSV/JSON) & 2 \\
+Analysis reports & 6 \\
+\textbf{Total artifacts} & \textbf{15} \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Numerical Validation Summary}
+\protect\phantomsection\label{numerical-validation-summary}
+\begin{block}{Convergence Verification}
+\protect\phantomsection\label{convergence-verification}
+Within the configured grid, \textbf{4} of \textbf{6} runs satisfied
+\texttt{gradient\_descent()} convergence (\texttt{No} indicates whether
+every row in \texttt{optimization\_results.csv} converged).
+
+\begin{itemize}
+\tightlist
+\item
+  Converged step sizes: 0.1, 0.5, 1.0, 1.5
+\item
+  Non-convergent or hit-iteration-cap step sizes: 0.01, 2.5
+\item
+  Smallest recorded iteration count: 1 (at \(\alpha = 1.0\))
+\item
+  Largest recorded iteration count: 1000 (at \(\alpha = 0.01\))
+\item
+  Mean iterations across all rows: 372
+\end{itemize}
+\end{block}
+
+\begin{block}{Numerical Stability}
+\protect\phantomsection\label{numerical-stability}
+Stability score from \texttt{infrastructure.scientific.stability}:
+\textbf{1.00} (out of 1.00)
+
+The stability analysis tested 48 parameter combinations (8 starting
+points \(\times\) 6 step sizes), confirming uniform convergence across
+the entire parameter space.
+\end{block}
+\end{block}
+
+\begin{block}{Madlib Injection Verification}
+\protect\phantomsection\label{madlib-injection-verification}
+This manuscript demonstrates the template's ``madlib'' capability: every
+quantitative claim is injected from computed data at render time. The
+substitution system processed the following variables:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Configuration variables}: Drawn from
+  \texttt{manuscript/config.yaml} (\texttt{experiment:} section)
+\item
+  \textbf{Result variables}: Computed from
+  \texttt{output/data/optimization\_results.csv}
+\item
+  \textbf{Stability variables}: Extracted from
+  \texttt{output/reports/stability\_analysis.json}
+\item
+  \textbf{Provenance variables}: Generated at substitution time
+  (timestamps, hashes, versions)
+\end{itemize}
+
+To verify: modifying any value in \texttt{config.yaml} and re-running
+the pipeline will automatically update every corresponding claim in this
+document. No manual transcription is required or permitted.
+\end{block}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>06_infrastructure_modules</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="infrastructure-module-reference">Infrastructure Module
+Reference</h1>
+<p>This section provides a detailed reference for all 13 infrastructure
+subpackages, documenting their purpose, key classes, public API, and
+integration points within the pipeline. The infrastructure layer
+comprises ~271 Python modules validated by 3,211 tests. Each subpackage
+follows the Documentation Duality standard: every module directory
+contains both an <code>AGENTS.md</code> machine-readable specification
+and a <code>README.md</code> human-readable guide.</p>
+<h2 id="infrastructure.core-28-modules"><code>infrastructure.core</code>
+(28 modules)</h2>
+<p><strong>Purpose</strong>: Foundation utilities providing the bedrock
+services consumed by all other modules and all projects.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logging_utils.py</code></td>
+<td>Structured logger factory (<code>get_logger</code>) with colored
+console output and file rotation</td>
+</tr>
+<tr>
+<td><code>config_loader.py</code></td>
+<td>YAML config parser (<code>load_config</code>) with schema validation
+and default merging</td>
+</tr>
+<tr>
+<td><code>exceptions.py</code></td>
+<td>Exception hierarchy: <code>TemplateError</code> →
+<code>ConfigurationError</code>, <code>ValidationError</code>,
+<code>BuildError</code></td>
+</tr>
+<tr>
+<td><code>environment.py</code></td>
+<td>Environment detection, Python command resolution,
+<code>PYTHONPATH</code> management</td>
+</tr>
+<tr>
+<td><code>progress.py</code></td>
+<td><code>ProgressBar</code> for pipeline stage progress reporting</td>
+</tr>
+<tr>
+<td><code>checkpoint.py</code></td>
+<td><code>CheckpointManager</code> for resumable pipeline execution</td>
+</tr>
+<tr>
+<td><code>health.py</code></td>
+<td><code>SystemHealthChecker</code> for pre-pipeline dependency
+validation</td>
+</tr>
+<tr>
+<td><code>performance.py</code></td>
+<td><code>monitor_performance</code> context manager for timing and
+memory tracking</td>
+</tr>
+<tr>
+<td><code>_optional_deps.py</code></td>
+<td>Lazy loading of optional dependencies (<code>psutil</code>,
+<code>reportlab</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Every module and script imports from
+<code>core</code>. The exception hierarchy is used for pipeline flow
+control—<code>ValidationError</code> triggers stage failure,
+<code>BuildError</code> halts the entire pipeline. The lazy loader in
+<code>_optional_deps.py</code> separates core imports from optional
+subpackages, preventing cascading import failures in environments with
+partial dependency sets.</p>
+<h2
+id="infrastructure.documentation-6-modules"><code>infrastructure.documentation</code>
+(6 modules)</h2>
+<p><strong>Purpose</strong>: Documentation management, figure
+registration, and API glossary generation.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>figure_manager.py</code></td>
+<td><code>FigureManager</code> — maintains a JSON registry of all
+generated figures with captions, labels, and generation metadata</td>
+</tr>
+<tr>
+<td><code>glossary_gen.py</code></td>
+<td><code>generate_glossary</code> — programmatic API glossary
+extraction from Python source files</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Called by project scripts during Stage
+02 to register figures for automated cross-referencing in the
+manuscript. The glossary generator supports the Documentation Duality
+standard by extracting docstrings and function signatures.</p>
+<h2 id="infrastructure.llm-30-modules"><code>infrastructure.llm</code>
+(30 modules)</h2>
+<p><strong>Purpose</strong>: Local LLM integration for automated
+manuscript review, translation, and literature search.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>review.py</code></td>
+<td>Executive summary and quality review generation</td>
+</tr>
+<tr>
+<td><code>translation.py</code></td>
+<td>Abstract translation into configured target languages</td>
+</tr>
+<tr>
+<td><code>client.py</code></td>
+<td>Ollama HTTP client with retry logic and timeout management</td>
+</tr>
+<tr>
+<td><code>literature/</code></td>
+<td>Literature search subpackage with semantic query support</td>
+</tr>
+<tr>
+<td><code>templates/</code></td>
+<td>Prompt templates for structured LLM interactions</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Invoked during Stage 06. Requires a
+running Ollama instance. Gracefully degrades when unavailable. The
+literature search subpackage enables programmatic discovery of related
+work during manuscript preparation.</p>
+<h2
+id="infrastructure.project-2-modules"><code>infrastructure.project</code>
+(2 modules)</h2>
+<p><strong>Purpose</strong>: Project discovery and workspace
+management.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>discovery.py</code></td>
+<td><code>_discover_project</code> — finds valid project directories by
+scanning for <code>manuscript/config.yaml</code></td>
+</tr>
+<tr>
+<td><code>workspace.py</code></td>
+<td>Workspace initialization and cleanup utilities</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Used by
+<code>execute_pipeline.py</code> and <code>run.sh</code> to identify
+which projects can be built. The discovery algorithm enforces the
+Standalone Project Paradigm: a directory is a valid project if and only
+if it contains <code>manuscript/config.yaml</code>.</p>
+<h2
+id="infrastructure.publishing-9-modules"><code>infrastructure.publishing</code>
+(9 modules)</h2>
+<p><strong>Purpose</strong>: Academic publishing metadata and citation
+generation.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>models.py</code></td>
+<td><code>PublicationMetadata</code> dataclass with direct attribute
+access and dynamic <code>getattr</code> fallback</td>
+</tr>
+<tr>
+<td><code>citations.py</code></td>
+<td><code>generate_citation_apa</code>,
+<code>generate_citation_bibtex</code>,
+<code>generate_citation_mla</code></td>
+</tr>
+<tr>
+<td><code>zenodo.py</code></td>
+<td>Zenodo API integration for DOI registration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Used during Stage 02 by analysis
+scripts to extract publishable metadata from results. Citation
+generators produce correctly formatted strings from
+<code>config.yaml</code> metadata.</p>
+<h2
+id="infrastructure.rendering-12-modules"><code>infrastructure.rendering</code>
+(12 modules)</h2>
+<p><strong>Purpose</strong>: Multi-format document rendering (Markdown →
+LaTeX → PDF, HTML reports).</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pandoc.py</code></td>
+<td>Pandoc invocation with custom filters and metadata injection</td>
+</tr>
+<tr>
+<td><code>latex.py</code></td>
+<td>XeLaTeX compilation with auxiliary file management and stale
+<code>.aux</code> cleanup</td>
+</tr>
+<tr>
+<td><code>pdf_builder.py</code></td>
+<td>End-to-end PDF construction orchestrating Pandoc and XeLaTeX</td>
+</tr>
+<tr>
+<td><code>html_report.py</code></td>
+<td>HTML executive report generation</td>
+</tr>
+<tr>
+<td><code>markdown_report.py</code></td>
+<td>Markdown-format report generation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Core of Stage 03. Reads
+<code>manuscript/*.md</code> and <code>config.yaml</code>, produces
+<code>output/&lt;project&gt;.pdf</code>. The auxiliary file cleanup
+resolves a known rendering hazard where stale <code>.aux</code> files
+cause “Division by 0” LaTeX errors.</p>
+<h2
+id="infrastructure.reporting-14-modules"><code>infrastructure.reporting</code>
+(14 modules)</h2>
+<p><strong>Purpose</strong>: Pipeline reporting, test result
+aggregation, and coverage analysis.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>coverage_parser.py</code></td>
+<td>Cascading parse strategies for pytest output:
+<code>_parse_failures_section</code>,
+<code>_parse_failures_verbose</code>,
+<code>_parse_failures_short</code>,
+<code>_parse_failures_timeout</code>,
+<code>_parse_failures_fallback</code></td>
+</tr>
+<tr>
+<td><code>report_generator.py</code></td>
+<td>Executive report generation in JSON and Markdown</td>
+</tr>
+<tr>
+<td><code>statistics.py</code></td>
+<td><code>collect_output_statistics</code> — enumerates output directory
+contents</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Used during Stages 01, 04, and 07 for
+test result parsing, validation reporting, and executive summary
+generation. The cascading parser handles all pytest output formats
+robustly, falling through five strategies to ensure no test failure is
+silently missed.</p>
+<h2
+id="infrastructure.scientific-6-modules"><code>infrastructure.scientific</code>
+(6 modules)</h2>
+<p><strong>Purpose</strong>: Scientific computing utilities for
+numerical analysis and benchmarking.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stability.py</code></td>
+<td><code>check_numerical_stability</code> — tests functions for NaN/Inf
+behavior across input ranges</td>
+</tr>
+<tr>
+<td><code>benchmarking.py</code></td>
+<td><code>benchmark_function</code> — measures execution time and memory
+usage</td>
+</tr>
+<tr>
+<td><code>simulation.py</code></td>
+<td>Scientific simulation framework with parameter sweeps</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Used by <code>code_project</code>’s
+analysis scripts during Stage 02 for algorithm validation. The stability
+checker is critical for ensuring that numerical results are reproducible
+across different floating-point environments.</p>
+<h2
+id="infrastructure.steganography-8-modules"><code>infrastructure.steganography</code>
+(8 modules)</h2>
+<p><strong>Purpose</strong>: Cryptographic watermarking and provenance
+embedding for PDF artifacts.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>metadata.py</code></td>
+<td><code>inject_pdf_metadata</code> — embeds XMP metadata and PDF Info
+dictionary entries</td>
+</tr>
+<tr>
+<td><code>config.py</code></td>
+<td><code>DocumentMetadata</code> dataclass for steganography
+configuration</td>
+</tr>
+<tr>
+<td><code>overlay.py</code></td>
+<td>Alpha-channel text overlay with build timestamp and commit hash</td>
+</tr>
+<tr>
+<td><code>qr.py</code></td>
+<td>QR code generation and injection into PDF pages</td>
+</tr>
+<tr>
+<td><code>hash.py</code></td>
+<td>SHA-256/SHA-512 hash computation for tamper detection</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Invoked by <code>secure_run.sh</code>
+after the main pipeline completes. Reads the rendered PDF and produces a
+steganographically watermarked copy with an accompanying
+<code>.hashes.json</code> manifest.</p>
+<h2
+id="infrastructure.validation-22-modules"><code>infrastructure.validation</code>
+(22 modules)</h2>
+<p><strong>Purpose</strong>: Quality assurance and integrity
+verification for all pipeline artifacts.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pdf_validator.py</code></td>
+<td>PDF structural integrity checking (xref table, trailer, page
+count)</td>
+</tr>
+<tr>
+<td><code>markdown_validator.py</code></td>
+<td>Markdown linting (heading hierarchy, link integrity, orphan
+references)</td>
+</tr>
+<tr>
+<td><code>integrity.py</code></td>
+<td><code>verify_output_integrity</code> — comprehensive output
+directory validation</td>
+</tr>
+<tr>
+<td><code>cli.py</code></td>
+<td>Command-line interface for standalone validation operations</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Core of Stage 04. Validates all
+generated artifacts before they are finalized. The validation module is
+the most module-dense package (22 files), reflecting the breadth of
+integrity checks required across PDF, Markdown, image, and manifest
+formats.</p>
+<h2 id="infrastructure-maturity-summary">Infrastructure Maturity
+Summary</h2>
+<p>The twelve-module architecture achieves 100% Tier 1–2 documentation
+coverage (<code>AGENTS.md</code>, <code>README.md</code>) with Tier-3
+<code>SKILL.md</code> skill descriptors across all 10 active
+subpackages, 83%+ aggregate test coverage (exceeding the 60%
+infrastructure threshold by a wide margin), and zero mock-object
+violations. Every active module exposes a machine-readable skill
+descriptor aligned with the Model Context Protocol <span
+class="citation"
+data-cites="anthropic2024mcp">[@anthropic2024mcp]</span>, making the
+infrastructure layer not merely documented but <em>programmatically
+discoverable</em>—a prerequisite for the agentic research automation
+paradigm described in the <a
+href="03c_documentation.md#documentation-duality-and-ai-collaboration">Documentation
+Duality</a> and <a
+href="05d_ai_collaboration.md#the-ai-collaboration-model">AI
+Collaboration</a> sections. The combination of high coverage, complete
+documentation, and protocol-aligned discoverability positions
+<code>template/</code>’s infrastructure as deployment-ready research
+software rather than a prototype, satisfying the executability and
+metadata quality indicators defined by Garijo et al.’s FAIRsoft
+evaluator <span class="citation"
+data-cites="garijo2024fairsoft">[@garijo2024fairsoft]</span>.</p>
+</body>
+</html>

@@ -1,4 +1,4 @@
-"""Tests for infrastructure.validation.repo_scanner module.
+"""Tests for infrastructure.validation.repo.scanner module.
 
 Comprehensive tests for repository accuracy and completeness scanning.
 """
@@ -7,12 +7,13 @@ import logging
 
 import pytest
 
-from infrastructure.validation import repo_scanner
-from infrastructure.validation.repo_scanner import (
-    AccuracyIssue,
+from infrastructure.validation.repo import scanner as repo_scanner
+from infrastructure.validation.repo._repo_scan_report import build_repo_scan_report
+from infrastructure.validation.docs.models import ScanAccuracyIssue as AccuracyIssue
+from infrastructure.validation.repo.scanner import (
     CompletenessGap,
     RepositoryScanner,
-    ScanResults,
+    RepoScanResults,
 )
 
 
@@ -47,12 +48,19 @@ class TestDataClasses:
         assert gap.severity == "warning"
 
     def test_scan_results_creation(self):
-        """Test ScanResults dataclass."""
-        results = ScanResults()
+        """Test RepoScanResults dataclass."""
+        results = RepoScanResults()
 
         assert results.accuracy_issues == []
         assert results.completeness_gaps == []
         assert results.statistics == {}
+
+    def test_build_repo_scan_report_empty(self) -> None:
+        """Report builder includes title and summary sections."""
+        text = build_repo_scan_report(RepoScanResults())
+        assert "# Repository Accuracy and Completeness Scan Report" in text
+        assert "## Executive Summary" in text
+        assert "## Completeness Gaps" in text
 
 
 class TestRepositoryScanner:
@@ -266,7 +274,7 @@ class TestScanAll:
         with caplog.at_level(logging.INFO):
             results = scanner.scan_all()
 
-        assert isinstance(results, ScanResults)
+        assert isinstance(results, RepoScanResults)
 
         # Check that it logged progress
         assert "REPOSITORY-WIDE ACCURACY AND COMPLETENESS SCAN" in caplog.text

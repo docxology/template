@@ -317,6 +317,16 @@ test_log_stage_progress() {
     test_contains "[3/5] Test Stage 2 (60% complete)" "$output" "log_stage_progress no stage time"
 }
 
+test_ensure_secure_run_environment_defined() {
+    echo "=== Testing ensure_secure_run_environment (defined) ==="
+    test_start "ensure_secure_run_environment is defined in bash_utils.sh"
+    if declare -f ensure_secure_run_environment >/dev/null 2>&1; then
+        test_pass
+    else
+        test_fail "ensure_secure_run_environment not defined"
+    fi
+}
+
 # Run all tests
 main() {
     echo "Running bash_utils.sh tests..."
@@ -359,6 +369,9 @@ main() {
     echo
 
     test_log_stage_progress
+    echo
+
+    test_ensure_secure_run_environment_defined
     echo
 
     # Print summary

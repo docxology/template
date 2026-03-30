@@ -306,6 +306,18 @@ Generated outputs include:
 4. **Build failures**: Check markdown validation output
 5. **Script import errors**: Ensure `projects/{name}/src/` modules exist and are properly tested
 
+### Reference Shows ??
+
+**Symptom**: `\ref{sec:label}` shows `??` in PDF
+
+**Solution**: Check label exists - search for `{#sec:label_name}` in manuscript files
+
+### Figure Path Error
+
+**Symptom**: Figure renders but wrong location
+
+**Solution**: Use relative path `../output/figures/name.png` not absolute paths
+
 ### Validation Errors
 
 The validation system will report:
@@ -332,7 +344,7 @@ This template enforces the **thin orchestrator pattern** where:
 - **`projects/{name}/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`projects/{name}/scripts/`** are lightweight wrappers that import and use `projects/{name}/src/` methods
 - **`projects/{name}/tests/`** ensures coverage of `projects/{name}/src/` functionality
-- **`scripts/execute_pipeline.py`** orchestrates the entire 8-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the entire 10-stage DAG pipeline
 
 ### Script Requirements
 
@@ -369,9 +381,9 @@ The system demonstrates best practices for academic writing while maintaining th
 For more details on architecture and workflow, see:
 
 - **[`../core/architecture.md`](../core/architecture.md)** - System design overview
-- **[`two-layer-architecture.md`](../core/architecture.md)** - two-layer architecture guide
+- **[`../architecture/two-layer-architecture.md`](../architecture/two-layer-architecture.md)** - two-layer architecture guide
 - **[`../core/workflow.md`](../core/workflow.md)** - Development workflow
 
 For manuscript formatting standards, see:
 
-- **[`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md)** - manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)
+- **[`docs/rules/manuscript_style.md`](../rules/manuscript_style.md)** - manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)

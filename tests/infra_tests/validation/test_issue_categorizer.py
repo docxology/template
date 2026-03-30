@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Tests for issue_categorizer module."""
 
-from infrastructure.validation.doc_models import AccuracyIssue, LinkIssue, QualityIssue
-from infrastructure.validation.issue_categorizer import (
+from infrastructure.validation.docs.models import LinkIssue, QualityIssue, ScanAccuracyIssue
+from infrastructure.validation.repo.issue_categorizer import (
     assign_severity,
     categorize_by_type,
     filter_false_positives,
@@ -37,12 +37,12 @@ class TestIssueCategorizer:
                 issue_message="File not found",
                 severity="error",
             ),
-            AccuracyIssue(
+            ScanAccuracyIssue(
+                category="accuracy",
+                severity="warning",
                 file="doc.md",
                 line=1,
-                issue_type="accuracy",
-                issue_message="Inaccurate information",
-                severity="warning",
+                message="Inaccurate information",
             ),
             QualityIssue(
                 file="readme.md",
@@ -76,28 +76,26 @@ class TestIssueCategorizer:
         assert severity == "critical"
 
     def test_assign_severity_error(self):
-        """Test error severity assignment."""
-
-        # Create issue without explicit severity to test content-based logic
-        class TestIssue:
-            def __init__(self):
-                self.issue_message = "Invalid reference"
-
-        error_issue = TestIssue()
-
+        """Explicit severity='error' maps to 'critical' (error is promoted)."""
+        error_issue = QualityIssue(
+            file="test.md",
+            line=1,
+            issue_type="quality",
+            issue_message="Invalid reference in document",
+            severity="error",
+        )
         severity = assign_severity(error_issue)
-        assert severity == "error"
+        assert severity == "critical"
 
     def test_assign_severity_warning(self):
-        """Test warning severity assignment."""
-
-        # Create issue without explicit severity to test content-based logic
-        class TestIssue:
-            def __init__(self):
-                self.issue_message = "Code block path issue"
-
-        warning_issue = TestIssue()
-
+        """Explicit severity='warning' passes through unchanged."""
+        warning_issue = QualityIssue(
+            file="test.md",
+            line=1,
+            issue_type="quality",
+            issue_message="Code block path issue",
+            severity="warning",
+        )
         severity = assign_severity(warning_issue)
         assert severity == "warning"
 
@@ -370,7 +368,7 @@ class TestIssueCategorizer:
 
     def test_issue_text_extraction(self):
         """Test text extraction from different issue types."""
-        from infrastructure.validation.issue_categorizer import _get_issue_text
+        from infrastructure.validation.repo.issue_categorizer import _get_issue_text
 
         # Test LinkIssue
         link_issue = LinkIssue(

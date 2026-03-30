@@ -19,5 +19,6 @@ Technical specification for the security documentation directory.
 
 ## See Also
 
+- [_generated/active_projects.md](../_generated/active_projects.md) — Active `projects/` names (steganography runs per discovery)
 - [guides/new-project-setup.md](../guides/new-project-setup.md) — How security integrates with pipeline
 - [Root AGENTS.md](../../AGENTS.md) — System-level documentation

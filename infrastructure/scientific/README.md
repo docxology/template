@@ -68,10 +68,6 @@ graph TD
     COMPLIANCE --> QUALITY_ASSURANCE
     BOILERPLATE --> RAPID_PROTOTYPING
 
-    classDef module fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef feature fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef usage fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class STABILITY,BENCHMARKING,DOCUMENTATION,VALIDATION,TEMPLATES module
     class NUMERICAL,PERFORMANCE,DOC_GEN,COMPLIANCE,BOILERPLATE feature
     class ALGORITHM_DEV,PERFORMANCE_OPT,PACKAGE_DEV,QUALITY_ASSURANCE,RAPID_PROTOTYPING usage
@@ -100,16 +96,9 @@ graph TD
 - `validate_scientific_implementation()` - implementation check
 - `validate_scientific_best_practices()` - Best practices compliance
 
-**Note**: Additional functions are available in `scientific_dev.py` but are not exported in the module's public API. Import directly from `infrastructure.scientific.scientific_dev` if needed.
-
 ## Usage Notes
 
-The scientific module provides functions that can be called directly from Python. The `scientific_dev.py` module also has a `main()` function for standalone execution:
-
-```bash
-# Run scientific_dev.py directly
-python3 infrastructure/scientific/scientific_dev.py
-```
+The scientific module is a library module. Import functions from `infrastructure.scientific` or from the specific submodules (e.g. `infrastructure.scientific.benchmarking`) when you need narrower dependencies.
 
 ## Testing
 

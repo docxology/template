@@ -20,6 +20,7 @@ from __future__ import annotations
 from infrastructure.scientific.benchmarking import (
     BenchmarkResult,
     benchmark_function,
+    format_benchmark_report,
     generate_performance_report,
 )
 
@@ -55,6 +56,7 @@ __all__ = [
     "check_numerical_stability",
     # Benchmarking
     "benchmark_function",
+    "format_benchmark_report",
     "generate_performance_report",
     # Documentation
     "generate_scientific_documentation",

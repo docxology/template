@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.multi_project import MultiProjectResult
+from infrastructure.core.pipeline.multi_project import MultiProjectResult
 from infrastructure.core.pipeline import PipelineStageResult
 from infrastructure.reporting.multi_project_reporter import (
     _build_summary_dict,

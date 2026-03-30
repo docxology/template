@@ -13,9 +13,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 @dataclass
 class ApiEntry:
@@ -33,6 +34,7 @@ class ApiEntry:
     kind: str  # "function" | "class"
     summary: str
 
+
 def _first_sentence(doc: str | None) -> str:
     if not doc:
         return ""
@@ -44,10 +46,12 @@ def _first_sentence(doc: str | None) -> str:
         first = first[:197] + "..."
     return " ".join(first.split())
 
+
 def _iter_py_files(root: str) -> Iterable[str]:
     for path in Path(root).rglob("*.py"):
         if not path.name.startswith("_") or path.name == "__init__.py":
             yield str(path)
+
 
 def build_api_index(src_dir: str) -> list[ApiEntry]:
     """Scan `src_dir` and collect public functions/classes with summaries.
@@ -90,6 +94,7 @@ def build_api_index(src_dir: str) -> list[ApiEntry]:
     entries.sort(key=lambda e: (e.module, e.name))
     return entries
 
+
 def generate_markdown_table(entries: list[ApiEntry]) -> str:
     """Generate a Markdown table from API entries.
 
@@ -108,6 +113,7 @@ def generate_markdown_table(entries: list[ApiEntry]) -> str:
     for e in entries:
         lines.append(f"| `{e.module}` | `{e.name}` | {e.kind} | {e.summary} |")
     return "\n".join(lines) + "\n"
+
 
 def inject_between_markers(text: str, begin_marker: str, end_marker: str, content: str) -> str:
     """Replace content between begin_marker and end_marker (inclusive markers preserved)."""

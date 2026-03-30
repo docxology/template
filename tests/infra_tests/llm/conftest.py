@@ -2,9 +2,10 @@ import json
 
 import pytest
 from pytest_httpserver import HTTPServer
+import threading
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 
 
 @pytest.fixture
@@ -127,13 +128,18 @@ def ollama_test_server():
     try:
         yield server
     finally:
-        server.stop()
+        # Under heavy load (e.g., coverage runs) server shutdown can occasionally
+        # block long enough to trip the repo-wide pytest-timeout. Make teardown
+        # best-effort and bounded.
+        stopper = threading.Thread(target=server.stop, daemon=True)
+        stopper.start()
+        stopper.join(timeout=2.0)
 
 
 @pytest.fixture
 def test_config(ollama_test_server):
-    """Create a real LLMConfig pointing to test server."""
-    config = LLMConfig(auto_inject_system_prompt=False)
+    """Create a real OllamaClientConfig pointing to test server."""
+    config = OllamaClientConfig(auto_inject_system_prompt=False)
     config.base_url = ollama_test_server.url_for("/")
     config.default_model = "llama3:latest"
     config.fallback_models = ["llama3:8b"]
@@ -148,14 +154,14 @@ def test_client(test_config):
 
 @pytest.fixture
 def default_config():
-    """Create a default LLMConfig for testing with auto_inject disabled."""
-    return LLMConfig(auto_inject_system_prompt=False)
+    """Create a default OllamaClientConfig for testing with auto_inject disabled."""
+    return OllamaClientConfig(auto_inject_system_prompt=False)
 
 
 @pytest.fixture
 def config_with_system_prompt():
-    """Create LLMConfig with custom system prompt."""
-    return LLMConfig(
+    """Create OllamaClientConfig with custom system prompt."""
+    return OllamaClientConfig(
         system_prompt="You are a helpful research assistant.",
         auto_inject_system_prompt=True,
     )
@@ -184,7 +190,7 @@ def clean_llm_env(monkeypatch):
 def patch_llm_client_for_tests(request, ollama_test_server, monkeypatch):
     """Redirect LLMClient to test server via environment variables.
 
-    Sets OLLAMA_HOST to the test server URL so that LLMConfig.from_env()
+    Sets OLLAMA_HOST to the test server URL so that OllamaClientConfig.from_env()
     naturally discovers the test server. No class patching required —
     fully compliant with the zero-mocks policy.
 
@@ -195,7 +201,7 @@ def patch_llm_client_for_tests(request, ollama_test_server, monkeypatch):
     if request.node.get_closest_marker("no_patch_llm_client"):
         return  # Skip — test will use real default config
 
-    # Set environment variables so LLMConfig.from_env() picks up test server
+    # Set environment variables so OllamaClientConfig.from_env() picks up test server
     monkeypatch.setenv("OLLAMA_HOST", ollama_test_server.url_for("/"))
     monkeypatch.setenv("OLLAMA_MODEL", "gemma3:4b")
     # Disable auto system prompt injection for predictable test behavior

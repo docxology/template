@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-03-30T05:39:26.288030",
+  "infrastructure": {},
+  "project": {
+    "passed": 66,
+    "failed": 0,
+    "skipped": 0,
+    "total": 66,
+    "warnings": 2,
+    "exit_code": 0,
+    "discovery_count": 66,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 26.41,
+      "execution": 26.41
+    },
+    "test_categories": {},
+    "coverage_percent": 93.64485981308411,
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 66,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 66,
+    "all_passed": true,
+    "project_coverage": 93.64485981308411
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 93.64485981308411,
+      "total_executed": 501,
+      "total_missing": 34,
+      "total_excluded": 0,
+      "total_lines": 535,
+      "file_coverage": {
+        "projects/template/src/template/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 6,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 6
+        },
+        "projects/template/src/template/architecture_viz.py": {
+          "coverage_percent": 98.5,
+          "executed_lines": 197,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 200
+        },
+        "projects/template/src/template/inject_metrics.py": {
+          "coverage_percent": 87.64044943820225,
+          "executed_lines": 78,
+          "missing_lines": 11,
+          "excluded_lines": 0,
+          "total_lines": 89
+        },
+        "projects/template/src/template/introspection.py": {
+          "coverage_percent": 92.85714285714286,
+          "executed_lines": 143,
+          "missing_lines": 11,
+          "excluded_lines": 0,
+          "total_lines": 154
+        },
+        "projects/template/src/template/metrics.py": {
+          "coverage_percent": 89.53488372093024,
+          "executed_lines": 77,
+          "missing_lines": 9,
+          "excluded_lines": 0,
+          "total_lines": 86
+        }
+      }
+    }
+  }
+}

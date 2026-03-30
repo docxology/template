@@ -3,12 +3,12 @@
 Tests repository scanning functionality comprehensively.
 """
 
-from infrastructure.validation import repo_scanner
-from infrastructure.validation.repo_scanner import (
-    AccuracyIssue,
+from infrastructure.validation.repo import scanner as repo_scanner
+from infrastructure.validation.repo.scanner import (
     CompletenessGap,
     RepositoryScanner,
-    ScanResults,
+    ScanAccuracyIssue,
+    RepoScanResults,
 )
 
 
@@ -17,7 +17,7 @@ class TestDataClasses:
 
     def test_accuracy_issue(self):
         """Test AccuracyIssue dataclass."""
-        issue = AccuracyIssue(
+        issue = ScanAccuracyIssue(
             category="import",
             severity="error",
             file="script.py",
@@ -40,8 +40,8 @@ class TestDataClasses:
         assert gap.severity == "warning"  # default
 
     def test_scan_results(self):
-        """Test ScanResults dataclass."""
-        results = ScanResults()
+        """Test RepoScanResults dataclass."""
+        results = RepoScanResults()
         assert len(results.accuracy_issues) == 0
         assert len(results.completeness_gaps) == 0
         assert len(results.statistics) == 0
@@ -448,7 +448,7 @@ class TestGenerateReport:
         scanner = RepositoryScanner(tmp_path)
 
         scanner.results.accuracy_issues.append(
-            AccuracyIssue(
+            ScanAccuracyIssue(
                 category="import",
                 severity="error",
                 file="script.py",
@@ -478,7 +478,7 @@ class TestGenerateReport:
 
         for i in range(25):
             scanner.results.accuracy_issues.append(
-                AccuracyIssue(
+                ScanAccuracyIssue(
                     category="import",
                     severity="error",
                     file=f"script{i}.py",
@@ -560,7 +560,7 @@ class TestRepositoryScannerIntegration:
         results = scanner.scan_all()
 
         assert results is not None
-        assert isinstance(results, ScanResults)
+        assert isinstance(results, RepoScanResults)
 
     def test_scan_with_repo_utilities(self, tmp_path):
         """Test scanning with repo_utilities directory."""

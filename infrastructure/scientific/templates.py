@@ -8,6 +8,7 @@ Provides templates for new scientific modules and workflows:
 
 from __future__ import annotations
 
+
 def create_scientific_module_template(module_name: str) -> str:
     """Create a template for a new scientific module."""
     template = f'''"""Scientific module: {module_name}.
@@ -61,10 +62,11 @@ def function1(param1: float, param2: int) -> float:
         raise TypeError("param2 must be int")
 
     try:
+        # Type checking is enforced by the function signature; callers must pass correct types.
         result = param1 * param2 + 1.0
         return result
-    except OverflowError:
-        raise ValueError("Computation resulted in overflow")
+    except (OverflowError, FloatingPointError) as e:
+        raise ValueError(f"Numerical failure in function1: {{e}}") from e
 
 def function2(data: List[float], threshold: float = 0.0) -> Tuple[List[float], float]:
     """[Brief description of function2].
@@ -82,21 +84,24 @@ def function2(data: List[float], threshold: float = 0.0) -> Tuple[List[float], f
     Raises:
         ValueError: If data is empty or invalid
     """
-    if not data:
-        raise ValueError("Input data cannot be empty")
+    try:
+        if not data:
+            raise ValueError("Input data cannot be empty")
 
-    # list[float] type annotation enforces element types; no runtime isinstance check needed.
+        # list[float] type annotation enforces element types; no runtime isinstance check needed.
+        filtered_data = [x for x in data if x > threshold]
 
-    filtered_data = [x for x in data if x > threshold]
+        if filtered_data:
+            summary = sum(filtered_data) / len(filtered_data)
+        else:
+            summary = 0.0
 
-    if filtered_data:
-        summary = sum(filtered_data) / len(filtered_data)
-    else:
-        summary = 0.0
-
-    return filtered_data, summary
+        return filtered_data, summary
+    except Exception as e:
+        raise ValueError(f"Failed to process data in function2: {{e}}") from e
 '''
     return template
+
 
 def create_scientific_test_suite(module_name: str) -> str:
     """Create a comprehensive test suite for a scientific module."""
@@ -106,7 +111,6 @@ This test suite provides comprehensive validation for scientific functions
 including numerical stability, performance benchmarking, and correctness verification.
 """
 
-import sys
 import pytest
 import numpy as np
 from pathlib import Path
@@ -115,8 +119,9 @@ from pathlib import Path
 from infrastructure.scientific.stability import check_numerical_stability
 from infrastructure.scientific.benchmarking import benchmark_function
 
-# Import the module to test
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+# Import the module to test.
+# Ensure src/ is on the Python path via pyproject.toml [tool.pytest.ini_options] pythonpath
+# or pytest.ini rather than mutating sys.path at test load time.
 import {module_name}
 
 class TestNumericalStability:
@@ -133,8 +138,8 @@ class TestNumericalStability:
                 try:
                     result = check_numerical_stability(func, test_inputs)
                     assert result.stability_score > 0.8, f"{{func_name}} has poor numerical stability"
-                except Exception as e:  # noqa: BLE001
-                    # Skip functions that can't be tested this way
+                except (TypeError, ValueError):
+                    # Skip functions that don't accept numeric inputs
                     continue
 
 class TestPerformance:
@@ -150,7 +155,7 @@ class TestPerformance:
                 try:
                     result = benchmark_function(func, test_inputs)
                     assert result.execution_time < 1.0, f"{{func_name}} is too slow"
-                except Exception as e:  # noqa: BLE001
+                except (TypeError, ValueError):
                     continue
 
 class TestCorrectness:
@@ -179,6 +184,7 @@ if __name__ == "__main__":
 '''
     return test_content
 
+
 def create_scientific_workflow_template(workflow_name: str) -> str:
     """Create a template for scientific research workflows."""
     template = f'''#!/usr/bin/env python3
@@ -205,9 +211,8 @@ from typing import Any, Dict
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Project imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from infrastructure.core.logging_utils import get_logger
+# Project imports (configure pythonpath in pyproject.toml/pytest.ini, not sys.path mutation)
+from infrastructure.core.logging.utils import get_logger
 from reproducibility import generate_reproducibility_report, save_reproducibility_report
 from integrity import verify_output_integrity
 from quality_checker import analyze_document_quality
@@ -276,28 +281,32 @@ def generate_workflow_report(results: Dict[str, Any], reproducibility_report: An
 
 def main():
     """Main workflow execution function."""
-    setup_workflow_environment()
+    try:
+        setup_workflow_environment()
 
-    # Generate reproducibility report
-    reproducibility_report = generate_reproducibility_report(Path("output"))
+        # Generate reproducibility report
+        reproducibility_report = generate_reproducibility_report(Path("output"))
 
-    # Run main workflow
-    results = run_data_processing()
+        # Run main workflow
+        results = run_data_processing()
 
-    # Validate results
-    if not validate_workflow_results(results):
-        logger.error("Workflow validation failed")
+        # Validate results
+        if not validate_workflow_results(results):
+            logger.error("Workflow validation failed")
+            sys.exit(1)
+
+        # Generate final report
+        report_content = generate_workflow_report(results, reproducibility_report)
+        with open('output/workflow_report.md', 'w') as f:
+            f.write(report_content)
+
+        # Save reproducibility information
+        save_reproducibility_report(reproducibility_report, Path("output/reproducibility_report.json"))
+
+        logger.info("Workflow completed successfully")
+    except Exception as e:
+        logger.error(f"Workflow failed: {{e}}")
         sys.exit(1)
-
-    # Generate final report
-    report_content = generate_workflow_report(results, reproducibility_report)
-    with open('output/workflow_report.md', 'w') as f:
-        f.write(report_content)
-
-    # Save reproducibility information
-    save_reproducibility_report(reproducibility_report, Path("output/reproducibility_report.json"))
-
-    logger.info("Workflow completed successfully")
 
 if __name__ == "__main__":
     main()

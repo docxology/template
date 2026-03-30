@@ -77,10 +77,10 @@ log_resource_usage "PDF Rendering" 125 "memory: 2.1GB"
 
 ```bash
 # Stage logging with ETA and resource monitoring
-log_stage_progress 2 "Project Tests" 10 "$pipeline_start" "$stage_start"
+log_stage_progress 2 "Project Tests" 9 "$pipeline_start" "$stage_start"
 
 # Shows progress percentage, elapsed time, and ETA
-# [2/10] Project Tests (20%)
+# [2/9] Project Tests (22%)
 #   Elapsed: 1m 30s | ETA: 5m 45s
 #   Stage elapsed: 45s
 ```
@@ -132,11 +132,11 @@ Python: Python 3.13.11
 Log file: output/logs/pipeline_20251228_134833.log
 Pipeline started: Sat Dec 28 13:48:33 PST 2025
 
-[1/10] Clean Output Directories (10%)
+[0/9] Clean Output Directories
   Elapsed: 0m 0s | ETA: 0m 0s
 ✓ Output directories cleaned
 
-[2/10] Environment Setup (20%)
+[1/9] Environment Setup (11%)
   Elapsed: 0m 5s | ETA: 0m 40s
 ✓ Environment setup complete
 

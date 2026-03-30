@@ -548,6 +548,24 @@ ensure_uv() {
     fi
 }
 
+# Prepare repo venv for secure_run.sh: uv on PATH, sync default groups + steganography.
+# Steganography QR/barcodes live in [dependency-groups] steganography (not in default-groups).
+ensure_secure_run_environment() {
+    ensure_uv || {
+        log_error "uv is required for secure_run.sh but could not be installed."
+        return 1
+    }
+    log_info "Syncing repository dependencies (default groups + steganography)..."
+    (
+        cd "$REPO_ROOT"
+        uv sync --group steganography
+    ) || {
+        log_error "uv sync --group steganography failed — check pyproject.toml and uv.lock."
+        return 1
+    }
+    log_success "Environment ready (steganography: qrcode, python-barcode)"
+}
+
 # Get Python command with environment awareness
 get_python_cmd() {
     # Returns the command to use for Python execution.

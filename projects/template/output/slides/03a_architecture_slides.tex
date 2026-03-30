@@ -1,0 +1,267 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Methods}
+\protect\phantomsection\label{methods}
+The \texttt{template/} architecture is deliberately bifurcated into a
+globally shared \texttt{infrastructure/} layer and project-specific
+\texttt{projects/} silos. This section describes the four core design
+patterns, the ten-stage DAG pipeline that operationalizes them, and the
+AI collaboration model that distinguishes this system from conventional
+research templates.
+
+\begin{block}{The Two-Layer Architecture}
+\protect\phantomsection\label{the-two-layer-architecture}
+The repository is organized into two strictly separated layers:
+
+\textbf{Infrastructure Layer} (\texttt{infrastructure/}): 12 Python
+subpackages comprising \textasciitilde150 modules and providing reusable
+services. Each subpackage is independently importable, has its own
+\texttt{\_\_init\_\_.py}, \texttt{AGENTS.md}, and \texttt{README.md},
+and exports a well-defined public API. The infrastructure layer knows
+nothing about any specific project---it provides generic capabilities
+(logging, rendering, validation, steganography) that any project may
+consume.
+
+\textbf{Project Layer} (\texttt{projects/}): Self-contained research
+workspaces. Each project directory contains:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Directory & Purpose \\
+\midrule\noalign{}
+\endhead
+\texttt{manuscript/} & Markdown chapters and \texttt{config.yaml} \\
+\texttt{scripts/} & Thin orchestrator scripts (Stage 02) \\
+\texttt{src/} & Project-specific Python modules \\
+\texttt{tests/} & Project-specific test suite \\
+\texttt{data/} & Input datasets and generated data \\
+\texttt{output/} & Pipeline artifacts: PDF, figures, reports, logs \\
+\texttt{docs/} & Project-specific architecture documentation \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The two layers communicate exclusively through Python imports and
+filesystem paths. No project modifies infrastructure code; no
+infrastructure module references a specific project by name (except via
+runtime project discovery).
+\end{block}
+
+\begin{block}{The Standalone Project Paradigm}
+\protect\phantomsection\label{the-standalone-project-paradigm}
+Projects are designed to be completely self-contained. Adding a new
+project requires no changes to the infrastructure layer, no
+modifications to \texttt{pyproject.toml}, and no updates to the pipeline
+orchestrator. A project is automatically discovered if and only if it
+satisfies two conditions:
+
+\begin{enumerate}
+\tightlist
+\item
+  It exists as a subdirectory of \texttt{projects/}.
+\item
+  It contains the file \texttt{manuscript/config.yaml}.
+\end{enumerate}
+
+This paradigm enables horizontal scaling: N researchers can maintain N
+independent projects within a single repository, sharing infrastructure
+without coupling. Each project declares its own testing tolerances,
+manuscript metadata, LLM review preferences, and rendering configuration
+in its \texttt{config.yaml}. The system currently hosts three exemplar
+projects spanning numerical optimization, meta-analysis pipelines, and
+meta-architectural analysis.
+\end{block}
+
+\begin{block}{The Thin Orchestrator Pattern}
+\protect\phantomsection\label{the-thin-orchestrator-pattern}
+All scripts in \texttt{scripts/} (both infrastructure-level and
+project-level) follow the Thin Orchestrator pattern
+{[}@gamma1995design{]}:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{No domain logic}: Scripts contain zero algorithmic
+  implementation. They import functions from \texttt{src/} modules and
+  wire them to infrastructure services.
+\item
+  \textbf{Configuration-driven}: Behavior is parameterized by
+  \texttt{config.yaml}, not by hardcoded values.
+\item
+  \textbf{Stateless}: Scripts read inputs, call functions, write
+  outputs. They maintain no persistent state between invocations.
+\item
+  \textbf{Logged}: Every significant action is logged via
+  \texttt{infrastructure.core.logging.utils.get\_logger}.
+\end{itemize}
+
+This pattern ensures that all testable logic lives in \texttt{src/}
+where it is subject to the Zero-Mock testing policy, while scripts
+remain thin enough to be audited by visual inspection. The separation
+draws on the Mediator pattern from Gamma et al. {[}@gamma1995design{]},
+where scripts mediate between infrastructure services and
+project-specific code without implementing any logic of their own.
+
+To make this concrete, the following contrasts the anti-pattern with the
+correct pattern:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ANTI{-}PATTERN: domain logic embedded in script}
+\KeywordTok{def}\NormalTok{ calculate\_average(data):          }\CommentTok{\# ← never put computation here}
+    \ControlFlowTok{return} \BuiltInTok{sum}\NormalTok{(data) }\OperatorTok{/} \BuiltInTok{len}\NormalTok{(data)}
+
+\NormalTok{result }\OperatorTok{=}\NormalTok{ calculate\_average([}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{])}
+
+\CommentTok{\# CORRECT PATTERN: script imports from src/ and only wires}
+\ImportTok{from}\NormalTok{ projects.my\_project.src.statistics }\ImportTok{import}\NormalTok{ calculate\_average}
+
+\NormalTok{result }\OperatorTok{=}\NormalTok{ calculate\_average([}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{])  }\CommentTok{\# ← scripts wire, never compute}
+\end{Highlighting}
+\end{Shaded}
+
+The critical property is that \texttt{calculate\_average} in the correct
+pattern lives in a testable \texttt{src/} module, is covered by the
+Zero-Mock test suite, and can be independently imported, tested, and
+reused---whereas the anti-pattern buries logic in a script that is
+invisible to coverage tools.
+\end{block}
+\end{frame}
+
+\end{document}

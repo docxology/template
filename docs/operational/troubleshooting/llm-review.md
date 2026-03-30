@@ -2,7 +2,7 @@
 
 > **Specialized troubleshooting** for LLM manuscript review and translation features
 
-**Quick Reference:** [Troubleshooting Guide](README.md) | [LLM Integration](../../../infrastructure/llm/AGENTS.md) | [Run Guide](../../../RUN_GUIDE.md) | [Configuration](../config/configuration.md)
+**Quick Reference:** [Troubleshooting Guide](README.md) | [LLM Integration](../../../infrastructure/llm/AGENTS.md) | [Run Guide](../../RUN_GUIDE.md) | [Configuration](../config/configuration.md)
 
 This guide provides specialized troubleshooting for LLM-powered manuscript review and translation features. For general troubleshooting, see [README.md](README.md).
 
@@ -206,14 +206,14 @@ time ollama run llama3-gradient "Generate a short test response"
 
 **Symptoms:**
 ```
-✗ Manuscript PDF not found: projects/{name}/output/pdf/project_combined.pdf
+✗ Manuscript PDF not found: projects/{name}/output/pdf/{name}_combined.pdf
 ✗ LLM review skipped (no manuscript PDF)
 ```
 
 **Diagnosis:**
 ```bash
 # Check if PDF exists
-ls -la projects/{name}/output/pdf/project_combined.pdf
+ls -la projects/{name}/output/pdf/{name}_combined.pdf
 
 # Check PDF generation
 uv run python scripts/03_render_pdf.py
@@ -227,7 +227,7 @@ uv run python scripts/03_render_pdf.py
    uv run python scripts/03_render_pdf.py
    
    # Or run full pipeline up to PDF stage
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 2. **Verify PDF location:**
@@ -264,7 +264,7 @@ uv run python scripts/03_render_pdf.py
 uv run python -c "
 from pathlib import Path
 import PyPDF2
-with open('projects/{name}/output/pdf/project_combined.pdf', 'rb') as f:
+with open('projects/{name}/output/pdf/{name}_combined.pdf', 'rb') as f:
     reader = PyPDF2.PdfReader(f)
     print(f'Pages: {len(reader.pages)}')
     print(f'Text from first page: {reader.pages[0].extract_text()[:100]}')
@@ -276,8 +276,8 @@ with open('projects/{name}/output/pdf/project_combined.pdf', 'rb') as f:
 1. **Check PDF is not corrupted:**
    ```bash
    # Try opening PDF manually
-   open projects/{name}/output/pdf/project_combined.pdf  # macOS
-   xdg-open projects/{name}/output/pdf/project_combined.pdf  # Linux
+   open projects/{name}/output/pdf/{name}_combined.pdf  # macOS
+   xdg-open projects/{name}/output/pdf/{name}_combined.pdf  # Linux
    ```
 
 2. **Regenerate PDF:**
@@ -504,7 +504,7 @@ uv run python scripts/06_llm_review.py --reviews-only
 **Diagnosis:**
 ```bash
 # Check manuscript size
-wc -c projects/{name}/output/pdf/project_combined.pdf
+wc -c projects/{name}/output/pdf/{name}_combined.pdf
 
 # Check input length limit
 env | grep LLM_MAX_INPUT_LENGTH
@@ -632,13 +632,13 @@ print('Available:', client.check_connection())
 
 ```bash
 # Check PDF exists
-ls -la projects/{name}/output/pdf/project_combined.pdf
+ls -la projects/{name}/output/pdf/{name}_combined.pdf
 
 # Test PDF text extraction
 uv run python -c "
 from pathlib import Path
 import PyPDF2
-pdf_path = Path('projects/{name}/output/pdf/project_combined.pdf')
+pdf_path = Path('projects/{name}/output/pdf/{name}_combined.pdf')
 if pdf_path.exists():
     with open(pdf_path, 'rb') as f:
         reader = PyPDF2.PdfReader(f)
@@ -731,9 +731,9 @@ cat projects/{name}/output/llm/quality_review.md
 
 - [Troubleshooting Guide](README.md) - General troubleshooting
 - [LLM Integration](../../../infrastructure/llm/AGENTS.md) - LLM system documentation
-- [Run Guide](../../../RUN_GUIDE.md) - Pipeline orchestration
+- [Run Guide](../../RUN_GUIDE.md) - Pipeline orchestration
 - [Configuration](../config/configuration.md) - Configuration system
-- [LLM Standards](../../../.cursorrules/llm_standards.md) - LLM development standards
+- [LLM Standards](../../rules/llm_standards.md) - LLM development standards
 
 ---
 

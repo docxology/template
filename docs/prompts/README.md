@@ -99,23 +99,23 @@ When using prompts, provide:
 
 After generation, validate against:
 
-- **Standards compliance** (check against `.cursorrules/`)
+- **Standards compliance** (check against `../rules/`)
 - **Architecture alignment** (two-layer, thin orchestrator)
 - **Testing requirements** (coverage, no mocks)
 - **Documentation completeness** (AGENTS.md, README.md)
 
 ## Key Standards Leveraged
 
-### Development Standards (`.cursorrules/`)
+### Development Standards (`../rules/`)
 
 All prompts reference and require compliance with:
 
 | Standard | Focus | Prompts Using |
 |----------|-------|---------------|
-| [`testing_standards.md`](../../.cursorrules/testing_standards.md) | No mocks, coverage requirements | All prompts |
-| [`code_style.md`](../../.cursorrules/code_style.md) | Black formatting, type hints | Code prompts |
-| [`api_design.md`](../../.cursorrules/api_design.md) | Function signatures, parameters | Code prompts |
-| [`documentation_standards.md`](../../.cursorrules/documentation_standards.md) | AGENTS.md, README.md structure | Documentation prompts |
+| [`testing_standards.md`](../rules/testing_standards.md) | No mocks, coverage requirements | All prompts |
+| [`code_style.md`](../rules/code_style.md) | Black formatting, type hints | Code prompts |
+| [`api_design.md`](../rules/api_design.md) | Function signatures, parameters | Code prompts |
+| [`documentation_standards.md`](../rules/documentation_standards.md) | AGENTS.md, README.md structure | Documentation prompts |
 
 ### Architecture Principles
 
@@ -180,9 +180,9 @@ cat docs/prompts/validation_quality.md
 
 ### Standards Reference
 
-- [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - Development standards overview
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing requirements
-- [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development
+- [`../rules/README.md`](../rules/README.md) - Development standards overview
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Testing requirements
+- [`../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md) - Infrastructure development
 
 ---
 
@@ -196,5 +196,5 @@ ls docs/prompts/
 cat docs/prompts/manuscript_creation.md
 
 # Check standards compliance
-cat .cursorrules/testing_standards.md
+cat ../rules/testing_standards.md
 ```

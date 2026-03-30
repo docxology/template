@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Output Organizer - Unified File Organization System
 
@@ -28,17 +27,15 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
-class FileType(Enum):
-    """
-    Enumeration of supported file types for output organization.
 
-    Each enum value contains:
-    - First element: file extension (lowercase)
-    - Second element: subdirectory name
+class FileType(Enum):
+    """Enumeration of supported file types for output organization.
+
+    Each enum value is a tuple of (extension, subdirectory_name).
     """
 
     PNG = ("png", "png")
@@ -50,24 +47,24 @@ class FileType(Enum):
 
     @property
     def extension(self) -> str:
-        """Get the file extension for this file type."""
+        """File extension string (e.g. '.pdf')."""
         return self.value[0]
 
     @property
     def subdirectory(self) -> str:
-        """Get the subdirectory name for this file type."""
+        """Output subdirectory name (e.g. 'pdf')."""
         return self.value[1]
+
 
 @dataclass
 class OrganizationResult:
-    """
-    Result of file organization operations.
+    """Result of file organization operations.
 
     Attributes:
-        moved_files: Number of files successfully moved
-        skipped_files: Number of files skipped (already in correct location)
-        error_files: Number of files that couldn't be organized
-        created_dirs: Number of directories created
+        moved_files: Number of files successfully moved.
+        skipped_files: Number of files skipped (already in correct location).
+        error_files: Number of files that could not be organized.
+        created_dirs: Number of directories created.
     """
 
     moved_files: int = 0
@@ -75,11 +72,11 @@ class OrganizationResult:
     error_files: int = 0
     created_dirs: int = 0
 
-class OutputOrganizer:
-    """
-    Centralized organizer for executive summary and multi-project outputs.
 
-    This class provides unified methods for organizing output files by type,
+class OutputOrganizer:
+    """Centralized organizer for executive summary and multi-project outputs.
+
+    Provides unified methods for organizing output files by type,
     ensuring consistent directory structure across all reporting modules.
     """
 
@@ -88,14 +85,13 @@ class OutputOrganizer:
         return file_type.subdirectory
 
     def detect_file_type(self, file_path: Path) -> FileType | None:
-        """
-        Detect file type from file extension.
+        """Detect file type from file extension.
 
         Args:
-            file_path: Path to the file to analyze
+            file_path: Path to the file to analyze.
 
         Returns:
-            FileType enum value if extension is supported, None otherwise
+            FileType enum value if extension is supported, None otherwise.
         """
         if not file_path.suffix:
             return None
@@ -109,16 +105,15 @@ class OutputOrganizer:
         return None
 
     def get_output_path(self, file_path: str | Path, output_dir: Path, file_type: FileType) -> Path:
-        """
-        Get the organized output path for a file.
+        """Get the organized output path for a file.
 
         Args:
-            file_path: Original file path or filename
-            output_dir: Base output directory
-            file_type: Type of file being saved
+            file_path: Original file path or filename.
+            output_dir: Base output directory.
+            file_type: Type of file being saved.
 
         Returns:
-            Path to the organized location (output_dir/subdir/filename)
+            Path to the organized location (output_dir/subdir/filename).
         """
         subdirectory = file_type.subdirectory
         filename = file_path.name if isinstance(file_path, Path) else str(file_path)
@@ -126,11 +121,10 @@ class OutputOrganizer:
         return output_dir / subdirectory / filename
 
     def ensure_directory_structure(self, output_dir: Path) -> None:
-        """
-        Ensure all required subdirectories exist in the output directory.
+        """Ensure all required subdirectories exist in the output directory.
 
         Args:
-            output_dir: Base output directory to organize
+            output_dir: Base output directory to organize.
         """
         for file_type in FileType:
             subdirectory = output_dir / file_type.subdirectory
@@ -143,18 +137,17 @@ class OutputOrganizer:
         logger.debug(f"Ensured directory structure in {output_dir}")
 
     def organize_existing_files(self, directory: Path) -> OrganizationResult:
-        """
-        Organize existing files in a directory by moving them to appropriate subdirectories.
+        """Organize existing files in a directory by moving them to appropriate subdirectories.
 
-        This method scans all files in the given directory and moves them to type-specific
-        subdirectories based on their extensions. Files already in correct subdirectories
-        are left untouched.
+        Scans all files in the given directory and moves them to type-specific
+        subdirectories based on their extensions. Files already in correct
+        subdirectories are left untouched.
 
         Args:
-            directory: Directory containing files to organize
+            directory: Directory containing files to organize.
 
         Returns:
-            OrganizationResult with operation statistics
+            OrganizationResult with operation statistics.
         """
         result = OrganizationResult()
 
@@ -215,18 +208,17 @@ class OutputOrganizer:
         return result
 
     def copy_combined_pdfs(self, repo_root: Path, target_dir: Path) -> int:
-        """
-        Copy all combined PDFs from project output directories to the target directory.
+        """Copy all combined PDFs from project output directories to the target directory.
 
-        Searches for files matching the pattern {project_name}_combined.pdf in each
-        project's output directory and copies them to target_dir/combined_pdfs/.
+        Searches for files matching ``{project_name}_combined.pdf`` in each
+        project's output directory and copies them to ``target_dir/combined_pdfs/``.
 
         Args:
-            repo_root: Root directory of the repository (contains projects/ and output/)
-            target_dir: Target directory where combined_pdfs/ subdirectory should be created
+            repo_root: Root directory of the repository (contains projects/ and output/).
+            target_dir: Target directory where combined_pdfs/ subdirectory will be created.
 
         Returns:
-            Number of PDF files copied
+            Number of PDF files copied.
         """
         combined_dir = target_dir / "combined_pdfs"
         combined_dir.mkdir(parents=True, exist_ok=True)
@@ -260,14 +252,13 @@ class OutputOrganizer:
         return copied_count
 
     def get_organized_structure_summary(self, output_dir: Path) -> dict[str, list[str]]:
-        """
-        Get a summary of the organized file structure.
+        """Get a summary of the organized file structure.
 
         Args:
-            output_dir: Base output directory to analyze
+            output_dir: Base output directory to analyze.
 
         Returns:
-            Dictionary mapping subdirectory names to lists of filenames
+            Dictionary mapping subdirectory names to lists of filenames.
         """
         summary = {}
 

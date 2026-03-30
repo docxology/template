@@ -171,7 +171,7 @@ except Exception as e:
         return 1
     fi
 
-    log_info "Discovered ${#PROJECT_LIST[@]} projects: ${PROJECT_LIST[*]}"
+    log_info "Discovered ${#PROJECT_LIST[@]} projects: ${PROJECT_LIST[*]+${PROJECT_LIST[*]}}"
     return 0
 }
 
@@ -272,17 +272,17 @@ display_menu() {
 
     # Orchestration
     echo -e "${BOLD}🚀 ORCHESTRATION${NC}"
-    echo -e "    ${GREEN}7${NC}  Core Pipeline              ${CYAN}Stages 1-7 (no LLM)${NC}"
-    echo -e "    ${GREEN}8${NC}  Full Pipeline              ${CYAN}All 9 stages${NC}"
-    echo -e "    ${GREEN}9${NC}  Full Pipeline (fast)       ${CYAN}Skip infra tests${NC}"
+    echo -e "    ${GREEN}7${NC}  Core Pipeline              ${CYAN}[+infra] [-LLM] Stages 1-7${NC}"
+    echo -e "    ${GREEN}8${NC}  Full Pipeline              ${CYAN}[+infra] [+LLM] All 10 stages${NC}"
+    echo -e "    ${GREEN}9${NC}  Full Pipeline (fast)       ${CYAN}[-infra] [+LLM] Skip infra tests${NC}"
     echo
 
     # Multi-Project Operations
     echo -e "${BOLD}📚 MULTI-PROJECT${NC}"
-    echo -e "    ${GREEN}a${NC}  All projects full          ${CYAN}+infra +LLM +report${NC}"
-    echo -e "    ${GREEN}b${NC}  All projects full (fast)   ${CYAN}-infra +LLM +report${NC}"
-    echo -e "    ${GREEN}c${NC}  All projects core          ${CYAN}+infra -LLM +report${NC}"
-    echo -e "    ${GREEN}d${NC}  All projects core (fast)   ${CYAN}-infra -LLM +report${NC}"
+    echo -e "    ${GREEN}a${NC}  All projects full          ${CYAN}[+infra] [+LLM] [+report]${NC}"
+    echo -e "    ${GREEN}b${NC}  All projects full (fast)   ${CYAN}[-infra] [+LLM] [+report]${NC}"
+    echo -e "    ${GREEN}c${NC}  All projects core          ${CYAN}[+infra] [-LLM] [+report]${NC}"
+    echo -e "    ${GREEN}d${NC}  All projects core (fast)   ${CYAN}[-infra] [-LLM] [+report]${NC}"
     echo
 
     # Project Management
@@ -318,7 +318,7 @@ clean_output_directories() {
 
     # Use Python function that handles multi-project structure correctly
     $(get_python_cmd) -c "
-from infrastructure.core.file_operations import clean_output_directories
+from infrastructure.core.files.operations import clean_output_directories
 from pathlib import Path
 import sys
 
@@ -765,13 +765,19 @@ run_full_pipeline() {
     fi
 
     # Redirect output to log file while preserving terminal output
+    local exit_code=0
     if [[ -n "$PIPELINE_LOG_FILE" ]]; then
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
-        return ${PIPESTATUS[0]}  # Return Python script exit code
+        exit_code=${PIPESTATUS[0]}
     else
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-        return $?
+        exit_code=$?
     fi
+
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only --project "$project_name"
+    fi
+    return $exit_code
 }
 run_core_pipeline_no_llm() {
     local resume_flag="${1:-}"
@@ -793,13 +799,19 @@ run_core_pipeline_no_llm() {
     fi
 
     # Redirect output to log file while preserving terminal output
+    local exit_code=0
     if [[ -n "$PIPELINE_LOG_FILE" ]]; then
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
-        return ${PIPESTATUS[0]}  # Return Python script exit code
+        exit_code=${PIPESTATUS[0]}
     else
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-        return $?
+        exit_code=$?
     fi
+
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only --project "$project_name"
+    fi
+    return $exit_code
 }
 run_all_projects_full() {
     # Setup consolidated multi-project logging
@@ -808,9 +820,12 @@ run_all_projects_full() {
 
     # Use Python orchestrator script for multi-project execution with logging
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py"
+    local exit_code=$?
 
-    # Return the exit code from Python
-    return $?
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only
+    fi
+    return $exit_code
 }
 
 run_all_projects_core() {
@@ -820,9 +835,12 @@ run_all_projects_core() {
 
     # Use Python orchestrator script for multi-project execution with logging
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-llm
+    local exit_code=$?
 
-    # Return the exit code from Python
-    return $?
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only
+    fi
+    return $exit_code
 }
 
 
@@ -862,6 +880,8 @@ show_help() {
     echo -e "${BOLD}CLI FLAGS${NC}"
     echo -e "  ${GREEN}--pipeline${NC}            Full pipeline (9 stages)"
     echo -e "  ${GREEN}--resume${NC}              Resume from checkpoint"
+    echo -e "  ${GREEN}--core-only${NC}           With --pipeline: run core stages only (no LLM)"
+    echo -e "  ${GREEN}--skip-infra${NC}          With --pipeline: skip infrastructure tests"
     echo -e "  ${GREEN}--infra-tests${NC}         Infrastructure tests only"
     echo -e "  ${GREEN}--project-tests${NC}       Project tests only"
     echo -e "  ${GREEN}--render-pdf${NC}          PDF rendering only"
@@ -1068,9 +1088,12 @@ run_all_projects_full_no_infra() {
 
     # Use Python orchestrator script for multi-project execution with logging
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-infra-tests
+    local exit_code=$?
 
-    # Return the exit code from Python
-    return $?
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only
+    fi
+    return $exit_code
 }
 
 run_all_projects_core_no_infra() {
@@ -1080,9 +1103,12 @@ run_all_projects_core_no_infra() {
 
     # Use Python orchestrator script for multi-project execution with logging
     execute_with_logging $(get_python_cmd) "$REPO_ROOT/scripts/execute_multi_project.py" --no-infra-tests --no-llm
+    local exit_code=$?
 
-    # Return the exit code from Python
-    return $?
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only
+    fi
+    return $exit_code
 }
 
 run_full_pipeline_no_infra() {
@@ -1101,13 +1127,19 @@ run_full_pipeline_no_infra() {
     fi
 
     # Redirect output to log file while preserving terminal output
+    local exit_code=0
     if [[ -n "$PIPELINE_LOG_FILE" ]]; then
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
-        return ${PIPESTATUS[0]}  # Return Python script exit code
+        exit_code=${PIPESTATUS[0]}
     else
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-        return $?
+        exit_code=$?
     fi
+
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only --project "$project_name"
+    fi
+    return $exit_code
 }
 
 run_core_pipeline_no_llm_no_infra() {
@@ -1126,13 +1158,19 @@ run_core_pipeline_no_llm_no_infra() {
     fi
 
     # Redirect output to log file while preserving terminal output
+    local exit_code=0
     if [[ -n "$PIPELINE_LOG_FILE" ]]; then
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
-        return ${PIPESTATUS[0]}  # Return Python script exit code
+        exit_code=${PIPESTATUS[0]}
     else
         $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-        return $?
+        exit_code=$?
     fi
+
+    if [[ "${SECURE_RUN_ACTIVE:-0}" == "1" ]] && [[ $exit_code -eq 0 ]]; then
+        bash "$REPO_ROOT/secure_run.sh" --steganography-only --project "$project_name"
+    fi
+    return $exit_code
 }
 
 show_project_info() {
@@ -1176,14 +1214,19 @@ except Exception as e:
     rm -f /tmp/project_list.txt
 
     # Set default project if it exists
-    if [[ " ${PROJECT_LIST[*]} " == *" project "* ]]; then
+    if [[ ${#PROJECT_LIST[@]} -gt 0 ]] && [[ " ${PROJECT_LIST[*]} " == *" project "* ]]; then
         CURRENT_PROJECT="project"
     elif [[ ${#PROJECT_LIST[@]} -gt 0 ]]; then
         CURRENT_PROJECT="${PROJECT_LIST[0]}"
     else
-        log_error "No valid projects found"
+        log_error "No valid projects found in projects/ directory"
+        log_info "Ensure projects have src/ and tests/ subdirectories"
         exit 1
     fi
+
+    # CLI pipeline modifiers (used with --pipeline).
+    local cli_skip_infra="false"
+    local cli_core_only="false"
 
     # Parse command line arguments (now PROJECT_LIST is available)
     while [[ $# -gt 0 ]]; do
@@ -1199,13 +1242,13 @@ except Exception as e:
                     exit 1
                 fi
                 # Validate project exists (but don't exit on validation failure if --help follows)
-                if [[ " ${PROJECT_LIST[*]} " != *" $2 "* ]]; then
+                if [[ ${#PROJECT_LIST[@]} -eq 0 ]] || [[ " ${PROJECT_LIST[*]} " != *" $2 "* ]]; then
                     # Check if --help is coming next
                     if [[ "${3:-}" == "--help" ]] || [[ "${3:-}" == "-h" ]]; then
                         show_help
                         exit 0
                     fi
-                    log_error "Project '$2' not found. Available: ${PROJECT_LIST[*]}"
+                    log_error "Project '$2' not found. Available: ${PROJECT_LIST[*]+${PROJECT_LIST[*]}}"
                     exit 1
                 fi
                 CURRENT_PROJECT="$2"
@@ -1214,6 +1257,16 @@ except Exception as e:
                 ;;
             --all-projects)
                 CURRENT_PROJECT="all"
+                shift
+                continue
+                ;;
+            --skip-infra)
+                cli_skip_infra="true"
+                shift
+                continue
+                ;;
+            --core-only)
+                cli_core_only="true"
                 shift
                 continue
                 ;;
@@ -1243,11 +1296,20 @@ except Exception as e:
                 if [[ "${2:-}" == "--resume" ]]; then
                     shift  # Remove --pipeline
                     shift  # Remove --resume
-                    run_full_pipeline "--resume"
+                    if [[ "$cli_core_only" == "true" ]]; then
+                        run_core_pipeline_no_llm "--resume" "$CURRENT_PROJECT" "$cli_skip_infra"
+                    else
+                        run_full_pipeline "--resume" "$CURRENT_PROJECT" "$cli_skip_infra"
+                    fi
                     exit $?
                 else
-                    run_non_interactive 8
-                    exit $?
+                    if [[ "$cli_core_only" == "true" ]]; then
+                        run_core_pipeline_no_llm "" "$CURRENT_PROJECT" "$cli_skip_infra"
+                        exit $?
+                    else
+                        run_full_pipeline "" "$CURRENT_PROJECT" "$cli_skip_infra"
+                        exit $?
+                    fi
                 fi
                 ;;
             --resume)

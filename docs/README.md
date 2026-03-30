@@ -2,11 +2,13 @@
 
 > **Documentation hub** for the Research Project Template
 
-**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md)
+**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md) | [GitHub / CI](../.github/README.md)
 
 ## Purpose
 
 The `docs/` directory contains project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
+
+Machine-generated snippets (including the authoritative list of active `projects/` workspaces) live under [`_generated/`](_generated/README.md). Human-written pages should link there instead of copying project rosters; concrete examples should use [`projects/code_project/`](../projects/code_project/) as the control-positive layout.
 
 ## Documentation Navigation Map
 
@@ -31,7 +33,7 @@ graph TD
     end
 
     subgraph Operational["⚙️ Operational"]
-        BUILD[operational/build/<br/>Build Pipeline & CI/CD]
+        PIPELINE[RUN_GUIDE.md<br/>Pipeline Orchestration]
         TROUBLESHOOT[operational/troubleshooting/<br/>Fix Issues]
         CONFIG[operational/config/<br/>Settings & Performance]
         LOGGING[operational/logging/<br/>Logging System]
@@ -41,6 +43,7 @@ graph TD
         FAQ[reference/faq.md<br/>Common Questions]
         CHEATSHEET[reference/quick-start-cheatsheet.md<br/>Command Reference]
         API[reference/api-reference.md<br/>Unified API Docs]
+        RULES[rules/AGENTS.md<br/>Development Standards]
     end
 
     README --> DOC_INDEX
@@ -57,11 +60,12 @@ graph TD
 
     ARCH --> WORKFLOW
 
-    BUILD --> TROUBLESHOOT
+    PIPELINE --> TROUBLESHOOT
     TROUBLESHOOT --> CONFIG
 
     FAQ --> CHEATSHEET
     CHEATSHEET --> API
+    API --> RULES
 
     classDef entry fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
     classDef core fill:#fff3e0,stroke:#e65100,stroke-width:2px
@@ -84,7 +88,7 @@ graph TD
 | [`guides/`](guides/) | Skill-level guides (1-12) | getting-started, figures-and-analysis, testing, extending |
 | [`architecture/`](architecture/) | System design | two-layer-architecture.md, thin-orchestrator, decision-tree |
 | [`usage/`](usage/) | Content authoring & patterns | examples, markdown guide, style guide, visualization |
-| [`operational/`](operational/) | Operational workflows | `build/`, `config/`, `logging/`, `troubleshooting/` sub-folders |
+| [`operational/`](operational/) | Operational workflows | `config/`, `logging/`, `troubleshooting/` sub-folders |
 | [`reference/`](reference/) | Reference materials | api-reference, faq, glossary, cheatsheet, workflows |
 | [`modules/`](modules/) | Infrastructure modules | modules-guide, scientific simulation, pdf-validation, `guides/` |
 | [`development/`](development/) | Development & contribution | contributing, security, roadmap, `testing/` sub-folder |
@@ -92,6 +96,8 @@ graph TD
 | [`prompts/`](prompts/) | AI prompt templates (9) | manuscript, code, test, feature, refactoring, assessment |
 | [`security/`](security/) | Security & provenance | steganography, hashing, secure execution |
 | [`audit/`](audit/) | Audit reports | documentation-review, filepath-audit |
+| [`rules/`](rules/) | Project Rules | AGENTS, README, testing, manuscript, etc. |
+| [`streams/`](streams/) | Livestream & talk notes | timestamped session notes tied to releases or papers |
 
 ## Quick Navigation
 

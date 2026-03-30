@@ -11,13 +11,9 @@ from pathlib import Path
 
 import yaml
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
-
-# Re-exports for backward compatibility — implementations moved to _pdf_tex_transforms.py
-from infrastructure.rendering._pdf_tex_transforms import fix_figure_paths as fix_figure_paths  # noqa: F401
-from infrastructure.rendering._pdf_tex_transforms import fix_math_delimiters as fix_math_delimiters  # noqa: F401
 
 
 def extract_preamble(preamble_file: Path) -> str:
@@ -242,3 +238,34 @@ def generate_title_page_body(manuscript_dir: Path) -> str:
     except (OSError, yaml.YAMLError, KeyError, ValueError) as e:
         logger.warning(f"Error reading config.yaml: {e}")
         return ""
+
+
+def parse_missing_latex_package_from_log(log_file: Path) -> str | None:
+    """Parse LaTeX log for missing package errors.
+
+    Args:
+        log_file: Path to LaTeX .log file.
+
+    Returns:
+        Missing package name, or None if not found.
+    """
+    if not log_file.exists():
+        return None
+
+    try:
+        log_content = log_file.read_text(encoding="utf-8", errors="ignore")
+
+        match = re.search(r"File `([^']+\.sty)' not found", log_content)
+        if match:
+            sty_file = match.group(1)
+            return sty_file.replace(".sty", "")
+
+        match = re.search(r"! LaTeX Error: File `?([^'`\s]+\.sty)'? not found", log_content)
+        if match:
+            sty_file = match.group(1)
+            return sty_file.replace(".sty", "")
+
+    except OSError as e:
+        logger.debug("Error parsing log file for package errors: %s", e)
+
+    return None

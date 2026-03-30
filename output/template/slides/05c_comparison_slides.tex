@@ -1,0 +1,176 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Comparison to Existing Tools}
+\protect\phantomsection\label{comparison-to-existing-tools}
+The \href{02_introduction.md\#the-gap}{gap analysis} established that no
+single tool integrates all six cross-cutting concerns. Here we
+synthesize the
+\href{08f_appendix_matrix.md\#appendix-matrix}{fourteen-dimension
+comparison} into three structural insights. First, the landscape
+bifurcates: workflow managers (Snakemake {[}@koster2012snakemake{]},
+Nextflow {[}@ditommaso2017nextflow{]}, CWL {[}@amstutz2016cwl{]})
+provide distributed execution but no manuscript support; publication
+tools (Quarto {[}@allaire2024quarto{]}, Jupyter Book, R Markdown
+{[}@xie2018dynamic{]}, Typst {[}@madje2023typst{]}, Overleaf
+{[}@overleaf2025{]}, Prism {[}@openai2026prism{]}) author documents but
+embed no integrity guarantees; and DVC {[}@iterative2024dvc{]} versions
+artifacts without orchestrating pipelines. \texttt{template/} occupies
+the intersection, sacrificing distributed execution for unified
+enforcement of testing, provenance, and documentation. This positioning
+is complementary---a mature deployment might use Nextflow upstream and
+\texttt{template/} for rendering, testing enforcement, and provenance
+downstream. Typst, with its faster compilation cycle, could serve as an
+alternative rendering backend if a Pandoc writer were contributed.
+
+Second, the eleven capabilities unique to \texttt{template/}---testing
+enforcement, coverage thresholds, steganographic watermarking,
+multi-project management, AI-agent documentation, the agentic skill
+protocol, an interactive TUI, and Zero-Mock policy---are individually
+straightforward; their novelty lies in \emph{co-enforcement} within a
+single pipeline, ensuring that a passing build guarantees documentation
+completeness, provenance embedding, and AI-navigability alongside
+computational correctness. The FAIR4RS principles {[}@barker2022fair4rs;
+@lamprecht2020towards{]} articulate what research software quality
+requires; FAIRsoft {[}@garijo2024fairsoft{]} scores compliance
+observationally; \texttt{template/} operationalizes these standards by
+coupling them to pipeline gates that halt the build if coverage drops
+below 90\% or provenance embedding fails. Cohen et al.'s four pillars of
+research software engineering {[}@cohen2021four{]}---sustainability,
+quality, community, and policy---are operationalized by
+\texttt{template/} through the first two pillars via quality-gated
+automation.
+
+Third, the AI-agent documentation dimension reveals an underserved need.
+Overleaf and Prism provide AI \emph{writing} assistance, but neither
+exposes structured documentation for \emph{external} agents to consume.
+\texttt{template/}'s \texttt{AGENTS.md} + \texttt{SKILL.md} layer
+enables an agent entering the repository to discover capabilities,
+understand API contracts, and invoke modules without prior training
+(\href{03c_documentation.md\#documentation-duality-and-ai-collaboration}{Documentation
+Duality}, \href{05d_ai_collaboration.md\#the-ai-collaboration-model}{AI
+Collaboration}).
+
+\begin{block}{FAIR4RS Evolution (2024--2026)}
+\protect\phantomsection\label{fair4rs-evolution-20242026}
+Since the FAIR4RS principles were published {[}@barker2022fair4rs{]},
+the community has moved toward operationalization. The RDA Virtual
+Plenary 24 (April 2025) featured a two-year retrospective review
+{[}@honeyman2024fair4rs{]} recommending principle amendments---notably
+adding \emph{reproducibility} as an explicit requirement and clarifying
+``domain-relevant standards''---alongside a leadership refresh and
+parallel guidance activities. The ReSA Actionable FAIR4RS Task Force
+(launched December 2024) analyzed the 17 principles into six actionable
+categories (identifiers, metadata for publication/discovery/reuse,
+standards, references, and licenses), with a first draft expected by
+September 2025 {[}@resa2024actionable{]}. Tools for automated FAIR
+assessment have also matured: the F-UJI extension for research software
+evaluation now scores against FRSM-04 through FRSM-17 metrics,
+complementing Garijo et al.'s FAIRsoft evaluator
+{[}@garijo2024fairsoft{]}. \texttt{template/}'s pipeline-enforced
+quality gates---coverage thresholds, documentation completeness checks,
+and provenance embedding---anticipate this operationalization trend by
+implementing FAIR4RS not as a post-hoc assessment but as an
+architectural invariant.
+
+In Gentleman and Temple Lang's terminology {[}@gentleman2007research{]},
+\texttt{template/} is a \emph{research compendium} scaled to the
+repository level---bundling not just one study's code and data but N
+studies, with shared infrastructure, automated testing, and embedded
+provenance. Nüst et al.'s executable research compendium (ERC)
+{[}@nust2017containerization{]} extends this vision with containerized
+reproduction environments; \texttt{template/} complements
+containerization by adding the testing enforcement, multi-project
+management, and provenance embedding layers that ERCs do not address.
+\end{block}
+\end{frame}
+
+\end{document}

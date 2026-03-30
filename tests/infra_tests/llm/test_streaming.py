@@ -8,7 +8,7 @@ import pytest
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 
 
 class TestStreamingBasic:
@@ -16,7 +16,7 @@ class TestStreamingBasic:
 
     def test_stream_query_basic(self, ollama_test_server):
         """Test basic stream_query functionality with real HTTP."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -29,7 +29,7 @@ class TestStreamingBasic:
 
     def test_stream_query_adds_to_context(self, ollama_test_server):
         """Test stream_query adds full response to context."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -46,7 +46,7 @@ class TestStreamingBasic:
 
     def test_stream_short_basic(self, ollama_test_server):
         """Test basic stream_short functionality."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -58,7 +58,7 @@ class TestStreamingBasic:
 
     def test_stream_long_basic(self, ollama_test_server):
         """Test basic stream_long functionality."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -74,7 +74,7 @@ class TestStreamingIntegration:
 
     def test_stream_query_real_ollama(self, ollama_test_server):
         """Test stream_query with real Ollama server simulation."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -91,7 +91,7 @@ class TestStreamingIntegration:
 
     def test_stream_long_real_ollama(self, ollama_test_server):
         """Test stream_long with real Ollama server simulation."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -112,7 +112,7 @@ class TestStreamingContextManagement:
 
     def test_stream_query_maintains_context(self, ollama_test_server):
         """Test that streaming maintains conversation context."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -138,7 +138,7 @@ class TestStreamingWithOptions:
         """Test streaming with temperature option."""
         from infrastructure.llm.core.config import GenerationOptions
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -151,7 +151,7 @@ class TestStreamingWithOptions:
         """Test streaming with max_tokens option."""
         from infrastructure.llm.core.config import GenerationOptions
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -166,7 +166,7 @@ class TestStreamingResponseSaving:
 
     def test_stream_query_saves_response(self, ollama_test_server, tmp_path):
         """Test that stream_query saves response when configured."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -181,7 +181,7 @@ class TestStreamingResponseSaving:
 
     def test_stream_short_saves_response(self, ollama_test_server, tmp_path):
         """Test that stream_short saves response when configured."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -190,7 +190,7 @@ class TestStreamingResponseSaving:
 
     def test_stream_long_saves_response(self, ollama_test_server, tmp_path):
         """Test that stream_long saves response when configured."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 

@@ -1,144 +1,209 @@
-# 📊 Filepath and Reference Audit Report
+# 📊 Comprehensive Filepath and Reference Audit Report
 
-**Generated:** Automated filepath audit
-**Files Scanned:** 257
-**Scan Duration:** 0.87 seconds
-
-> **Note (2026-01-28):** The `active_inference_meta_pragmatic` project referenced in this audit has been archived to `projects_archive/`. Issues related to that project are no longer relevant to the active codebase.
+**Generated:** 2026-03-23 05:53:39
+**Files Scanned:** 833
+**Scan Duration:** 1.43 seconds
 
 ## 📈 Executive Summary
 
-**Total Issues Found:** 329
+**Total Issues Found:** 1934
 
 ### 🚩 Severity Flag Summary
 
-🔴 **Red Flags (Critical):** 86 - Issues requiring immediate attention
-🟡 **Yellow Flags (Warnings):** 0 - Issues that should be reviewed
-🟢 **Green Flags (Exceptions):** 243 - Known exceptions and false positives
+🔴 **Red Flags (Critical):** 48 - Issues requiring immediate attention
+🟡 **Yellow Flags (Warnings):** 320 - Issues that should be reviewed
+🟢 **Green Flags (Exceptions):** 1566 - Known exceptions and false positives
 
-**False Positives Filtered:** 243 (73.9%)
+**False Positives Filtered:** 112 (5.8%)
+
 
 ### Issues by Category
 
-- **Link Issues:** 89 issues
-- **Quality Issues:** 240 issues
+- **Link Issues:** 129 issues
+- **Quality Issues:** 1805 issues
 
 ## 🔴 Red Flags (Critical Issues)
 
-**86 critical issues** requiring immediate attention:
+**48 critical issues** requiring immediate attention:
 
-**projects/active_inference_meta_pragmatic/manuscript/02_introduction.md:50**
-
+**.github/README.md:18**
 - **Type:** broken_anchor
-- **Target:** `#sec:methodology`
-- **Issue:** Anchor 'sec:methodology' not found in file
+- **Target:** `#security--provenance`
+- **Issue:** Anchor 'security--provenance' not found in file
 
-**projects/active_inference_meta_pragmatic/manuscript/02_introduction.md:50**
-
+**AGENTS.md:16**
 - **Type:** broken_anchor
-- **Target:** `#sec:experimental_results`
-- **Issue:** Anchor 'sec:experimental_results' not found in file
+- **Target:** `#-core-architecture`
+- **Issue:** Anchor '-core-architecture' not found in file
 
-**projects/active_inference_meta_pragmatic/manuscript/02_introduction.md:50**
-
+**AGENTS.md:17**
 - **Type:** broken_anchor
-- **Target:** `#sec:discussion`
-- **Issue:** Anchor 'sec:discussion' not found in file
+- **Target:** `#-directory-level-documentation`
+- **Issue:** Anchor '-directory-level-documentation' not found in file
 
-**projects/active_inference_meta_pragmatic/manuscript/02_introduction.md:50**
-
+**AGENTS.md:18**
 - **Type:** broken_anchor
-- **Target:** `#sec:conclusion`
-- **Issue:** Anchor 'sec:conclusion' not found in file
+- **Target:** `#-configuration-system`
+- **Issue:** Anchor '-configuration-system' not found in file
 
-**docs/prompts/AGENTS.md:88**
+**AGENTS.md:19**
+- **Type:** broken_anchor
+- **Target:** `#-rendering-pipeline`
+- **Issue:** Anchor '-rendering-pipeline' not found in file
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/manuscript_style_guide.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/manuscript_style_guide.md
+**AGENTS.md:20**
+- **Type:** broken_anchor
+- **Target:** `#-validation-systems`
+- **Issue:** Anchor '-validation-systems' not found in file
 
-**docs/prompts/AGENTS.md:89**
+**AGENTS.md:21**
+- **Type:** broken_anchor
+- **Target:** `#-testing-framework`
+- **Issue:** Anchor '-testing-framework' not found in file
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/standards_compliance.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/standards_compliance.md
+**AGENTS.md:22**
+- **Type:** broken_anchor
+- **Target:** `#-output-formats`
+- **Issue:** Anchor '-output-formats' not found in file
 
-**docs/prompts/AGENTS.md:90**
+**AGENTS.md:23**
+- **Type:** broken_anchor
+- **Target:** `#-advanced-modules`
+- **Issue:** Anchor '-advanced-modules' not found in file
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/development_workflow.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/development_workflow.md
+**AGENTS.md:24**
+- **Type:** broken_anchor
+- **Target:** `#-troubleshooting`
+- **Issue:** Anchor '-troubleshooting' not found in file
 
-**docs/prompts/AGENTS.md:115**
+**AGENTS.md:25**
+- **Type:** broken_anchor
+- **Target:** `#-maintenance`
+- **Issue:** Anchor '-maintenance' not found in file
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/development_workflow.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/development_workflow.md
+**docs/best-practices/multi-project-management.md:535**
+- **Type:** broken_anchor
+- **Target:** `#️-root-venv-dependency-coverage-critical-rule`
+- **Issue:** Anchor '️-root-venv-dependency-coverage-critical-rule' not found in file
 
-**docs/prompts/AGENTS.md:116**
+**projects/template/manuscript/02_introduction.md:43**
+- **Type:** broken_anchor
+- **Target:** `#comparison-to-existing-tools`
+- **Issue:** Anchor 'comparison-to-existing-tools' not found in file
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/standards_compliance.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/standards_compliance.md
+**projects/template/manuscript/02_introduction.md:75**
+- **Type:** broken_anchor
+- **Target:** `#methods`
+- **Issue:** Anchor 'methods' not found in file
 
-**docs/prompts/AGENTS.md:140**
+**projects/template/manuscript/02_introduction.md:75**
+- **Type:** broken_anchor
+- **Target:** `#quality-assurance`
+- **Issue:** Anchor 'quality-assurance' not found in file
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/testing_expansion_plan.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/testing_expansion_plan.md
+**projects/template/manuscript/02_introduction.md:75**
+- **Type:** broken_anchor
+- **Target:** `#results`
+- **Issue:** Anchor 'results' not found in file
 
-**docs/prompts/AGENTS.md:164**
+**projects/template/manuscript/02_introduction.md:86**
+- **Type:** broken_anchor
+- **Target:** `#methods`
+- **Issue:** Anchor 'methods' not found in file
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/refactor_playbook.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/refactor_playbook.md
+**projects/template/manuscript/02_introduction.md:86**
+- **Type:** broken_anchor
+- **Target:** `#results`
+- **Issue:** Anchor 'results' not found in file
 
-**docs/prompts/AGENTS.md:165**
+**projects/template/manuscript/02_introduction.md:86**
+- **Type:** broken_anchor
+- **Target:** `#the-zero-mock-tradeoff`
+- **Issue:** Anchor 'the-zero-mock-tradeoff' not found in file
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/refactor_hotspots.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/refactor_hotspots.md
+**projects/template/manuscript/02_introduction.md:86**
+- **Type:** broken_anchor
+- **Target:** `#infrastructure-module-reference`
+- **Issue:** Anchor 'infrastructure-module-reference' not found in file
 
-**docs/prompts/AGENTS.md:188**
+*... and 28 more red flags*
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/development_workflow.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/development_workflow.md
+## 🟡 Yellow Flags (Warnings)
 
-**docs/prompts/AGENTS.md:238**
+**320 warnings** that should be reviewed:
+**AGENTS.md:1074**
+- **Type:** code_block_path
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/infrastructure_usage.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/infrastructure_usage.md
+- **Issue:** File path in code block does not exist: scripts/analysis_pipeline.py
 
-**docs/prompts/AGENTS.md:261**
+**README.md:299**
+- **Type:** code_block_path
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/validation_guide.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/validation_guide.md
+- **Issue:** File path in code block does not exist: projects/my_research/{src,tests,manuscript,scripts
 
-**docs/prompts/AGENTS.md:409**
+**docs/RUN_GUIDE.md:25**
+- **Type:** code_block_path
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/AGENTS.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/AGENTS.md
+- **Issue:** File path in code block does not exist: scripts/00-07_*.py
 
-**docs/prompts/AGENTS.md:410**
+**docs/RUN_GUIDE.md:27**
+- **Type:** code_block_path
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/development_workflow.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/development_workflow.md
+- **Issue:** File path in code block does not exist: scripts/*.py
 
-**docs/prompts/AGENTS.md:411**
+**docs/architecture/decision-tree.md:288**
+- **Type:** code_block_path
 
-- **Type:** broken_file
-- **Target:** `../../projects/project/docs/standards_compliance.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/projects/project/docs/standards_compliance.md
+- **Issue:** File path in code block does not exist: scripts/analyze_results.py
 
-**docs/prompts/README.md:109**
+**docs/architecture/decision-tree.md:313**
+- **Type:** code_block_path
 
-- **Type:** broken_file
-- **Target:** `../.cursorrules/testing_standards.md`
-- **Issue:** File does not exist: /Users/4d/Documents/GitHub/template/docs/.cursorrules/testing_standards.md
+- **Issue:** File path in code block does not exist: infrastructure/scientific/data_processing.py
 
-> ... and 66 more red flags (see full audit for details)
+**docs/architecture/decision-tree.md:347**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/analysis.py
+
+**docs/architecture/decision-tree.md:362**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: infrastructure/plots.py
+
+**docs/architecture/decision-tree.md:463**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: infrastructure/test_figure_manager.py
+
+**docs/architecture/two-layer-architecture.md:457**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: infrastructure/validation/new_validator.py
+
+**docs/architecture/two-layer-architecture.md:473**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: infrastructure/test_validation/test_new_validator.py
+
+**docs/best-practices/migration-guide.md:167**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/*
+
+**docs/best-practices/migration-guide.md:270**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/*
+
+**docs/best-practices/migration-guide.md:579**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/*
+
+**docs/best-practices/multi-project-management.md:188**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/*
+
+*... and 305 more yellow flags*

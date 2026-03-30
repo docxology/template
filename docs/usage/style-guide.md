@@ -4,7 +4,7 @@
 
 **Quick Reference:** [Markdown Template Guide](markdown-template-guide.md) | [Image Management](image-management.md) | [Visualization Guide](visualization-guide.md)
 
-This guide provides clear, example-driven formatting patterns for writing research content in `projects/{name}/manuscript/`. For exhaustive rules, see [`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md).
+This guide provides clear, example-driven formatting patterns for writing research content in `projects/{name}/manuscript/`. For exhaustive rules, see [`docs/rules/manuscript_style.md`](../rules/manuscript_style.md).
 
 ## 📖 Table of Contents
 
@@ -334,7 +334,7 @@ The hyperparameters (Table \ref{tab:hyperparameters}) were tuned via grid search
 
 ## Related Documentation
 
-- **[Manuscript Style Reference](../../.cursorrules/manuscript_style.md)** — Exhaustive formatting rules (1000+ lines)
+- **[Manuscript Style Reference](../rules/manuscript_style.md)** — Exhaustive formatting rules (1000+ lines)
 - **[Markdown Template Guide](markdown-template-guide.md)** — Cross-referencing system and build process
 - **[Figures and Analysis Guide](../guides/figures-and-analysis.md)** — Creating figure scripts with the thin orchestrator pattern
 - **[Image Management](image-management.md)** — Programmatic `ImageManager` and `FigureManager` APIs

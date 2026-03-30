@@ -7,13 +7,9 @@ No mocks - tests actual exception behavior and context.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
-
-# Add infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from infrastructure.core.exceptions import (
     BuildError,
@@ -404,7 +400,7 @@ class TestContextPreservation:
                 raise ValueError("Original problem")
             except ValueError as e:
                 new_error = BuildError("Build failed")
-                raise chain_exceptions(new_error, e)
+                raise chain_exceptions(new_error, e) from e
         except BuildError as e:
             assert "Original problem" in e.context["original_error"]
             assert e.context["original_type"] == "ValueError"

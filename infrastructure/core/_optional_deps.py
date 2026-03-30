@@ -8,16 +8,20 @@ Usage:
     if psutil is None:
         return {}
 """
+
 from __future__ import annotations
 
-try:
-    import psutil  # type: ignore[import-untyped]
-except ImportError:
-    psutil = None  # type: ignore[assignment]
+import types as _module_types
 
 try:
-    import numpy as np  # type: ignore[import-untyped]
+    import psutil
 except ImportError:
-    np = None  # type: ignore[assignment]
+    psutil = None
+
+np: _module_types.ModuleType | None = None
+try:
+    import numpy as np  # type: ignore[no-redef]
+except ImportError:
+    np = None  # numpy is optional
 
 __all__ = ["psutil", "np"]

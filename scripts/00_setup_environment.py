@@ -19,19 +19,19 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header
-from infrastructure.core.environment import (
+from infrastructure.core.logging.utils import get_logger, log_success, log_header
+from infrastructure.core.runtime.environment import (
     check_python_version,
     check_dependencies,
     setup_directories,
     verify_source_structure,
     set_environment_variables,
 )
-from infrastructure.core.env_deps import (
+from infrastructure.core.runtime.env_deps import (
     install_missing_packages,
     check_build_tools,
 )
-from infrastructure.core.file_cleanup import clean_coverage_files
+from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
 # Set up logger for this module
 logger = get_logger(__name__)

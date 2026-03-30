@@ -1,0 +1,11 @@
+# Abstract
+
+This paper presents a convergence study of **fixed-step gradient descent** on a convex quadratic, framed as the computational exemplar of the [Research Project Template](https://github.com/docxology/template). The implementation lives in `projects/code_project/src/optimizer.py`; experiments and figures are orchestrated by `projects/code_project/scripts/optimization_analysis.py` and hydrated into the manuscript through `scripts/z_generate_manuscript_variables.py`, so tables and prose track `output/data/optimization_results.csv` after every pipeline run.
+
+We evaluate 6 step sizes from $\alpha = 0.01$ to $\alpha = 2.5$, spanning conservative, near-optimal, aggressive, and divergent regimes for a unit Hessian model. The build chain exercises template infrastructure end-to-end: scientific helpers (`infrastructure.scientific.stability`, `infrastructure.scientific.benchmarking`), validation, rendering (`infrastructure/rendering/pdf_renderer.py`), and reporting. Accessibility-oriented plotting defaults (colourblind-safe palette, 300 dpi exports) are centralized in `optimization_analysis.py`.
+
+Contributions are **methodological** and **architectural**. On the methods side, we relate empirical iteration counts and error decay to the scalar contraction factor $\rho(\alpha) = |1-\alpha|$ and document cases where runs hit $N_{\max} = 1000$ before meeting the gradient tolerance. On the architecture side, we demonstrate a zero-mock test suite on project `src/` (see [test_optimizer.py](https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py)), automated six-figure analysis, and reproducibility metadata (configuration hash, artifact counts) injected into Section 6.
+
+**Results (this configuration):** 4 of 6 grid points report `converged=True` in the CSV; non-convergent rows flag either slow progress at small $\alpha$ under the iteration cap or instability when $|1-\alpha| \geq 1$. The analytical minimizer remains $x^\ast = 1.0$ with $f(x^\ast) = -0.5$ for the configured $(A,b)$.
+
+**Keywords:** gradient descent, reproducible research, zero-mock testing, scientific infrastructure, pipeline orchestration

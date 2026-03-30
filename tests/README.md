@@ -254,7 +254,7 @@ tests/
 **Reporting Module** (`infrastructure/reporting/`)
 
 - `test_executive_reporter.py` - Executive report generation
-- `test_dashboard_generator.py` - Dashboard creation
+- `test_dashboard_generator.py` - Dashboard system (_dashboard_matplotlib + extracted modules)
 - `test_pipeline_reporter.py` - Pipeline reporting
 
 **Scientific Module** (`infrastructure/scientific/`)

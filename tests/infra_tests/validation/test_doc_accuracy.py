@@ -6,7 +6,7 @@ No mocks — uses actual regex parsing.
 
 from __future__ import annotations
 
-from infrastructure.validation.doc_accuracy import extract_headings
+from infrastructure.validation.docs.accuracy import extract_headings
 
 class TestExtractHeadings:
     """Test extract_headings extracts heading anchors from markdown."""

@@ -354,7 +354,7 @@ if args.structured:
 - `infrastructure.llm.templates` - Template system
 
 **Shared Infrastructure:**
-- `infrastructure.core.logging_utils` - Logging integration
+- `infrastructure.core.logging.utils` - Logging integration
 - `infrastructure.core.exceptions` - Error handling
 
 ### Import Structure
@@ -369,7 +369,7 @@ from infrastructure.llm.core.config import LLMConfig, GenerationOptions
 from infrastructure.llm.utils.ollama import select_best_model, is_ollama_running
 
 # Shared infrastructure
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.exceptions import LLMConnectionError
 ```
 
@@ -377,39 +377,11 @@ from infrastructure.core.exceptions import LLMConnectionError
 
 ### CLI Testing
 
-**Command Testing:**
-```python
-def test_query_command(capsys):
-    """Test query command execution."""
-    # Mock LLM client
-    with patch('infrastructure.llm.cli.LLMClient') as mock_client:
-        mock_instance = mock_client.return_value
-        mock_instance.query.return_value = "Test response"
+CLI behavior is tested without mocks, using real command invocations:
 
-        # Execute command
-        args = argparse.Namespace(prompt="test query", short=False, long=False, ...)
-        query_command(args)
-
-        # Verify output
-        captured = capsys.readouterr()
-        assert "Test response" in captured.out
-```
-
-**Error Testing:**
-```python
-def test_connection_failure(capsys):
-    """Test graceful connection failure."""
-    with patch('infrastructure.llm.cli.LLMClient') as mock_client:
-        mock_instance = mock_client.return_value
-        mock_instance.check_connection.return_value = False
-
-        args = argparse.Namespace(prompt="test", ...)
-        with pytest.raises(SystemExit):
-            query_command(args)
-
-        captured = capsys.readouterr()
-        assert "Cannot connect to Ollama" in captured.err
-```
+- **Pure logic tests** cover argument parsing and option wiring.
+- **Subprocess tests** invoke the CLI via `uv run python -m infrastructure.llm.cli ...` and assert on exit codes and stdout/stderr.
+- **Integration tests** that require a running Ollama instance are marked with `@pytest.mark.requires_ollama` and may be skipped in CI when the service is unavailable.
 
 ## Performance Considerations
 
@@ -544,4 +516,4 @@ python3 -m infrastructure.llm.cli query "Generate a Python docstring for this fu
 **System Documentation:**
 - [`../../../AGENTS.md`](../../../AGENTS.md) - LLM module overview
 - [`../../../infrastructure/core/AGENTS.md`](../../../infrastructure/core/AGENTS.md) - Core infrastructure
-- [`../../../docs/operational/llm-review-troubleshooting.md`](../../../docs/operational/llm-review-troubleshooting.md) - LLM troubleshooting guide
+- [`../../../docs/operational/troubleshooting/llm-review.md`](../../../docs/operational/troubleshooting/llm-review.md) - LLM troubleshooting guide

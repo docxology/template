@@ -2,7 +2,7 @@
 
 > **Academic publishing workflow assistance**
 
-**Location:** `infrastructure/publishing/core.py`  
+**Location:** `infrastructure/publishing/` (see `metadata.py`, `citations.py`, `api.py`)
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---

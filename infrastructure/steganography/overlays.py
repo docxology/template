@@ -11,7 +11,7 @@ from __future__ import annotations
 import io
 from dataclasses import dataclass
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -30,7 +30,9 @@ class FooterConfig:
     source_file_size: int = 0
     font_size: int = 5
 
+
 # ── Lazy imports ─────────────────────────────────────────────────────────
+
 
 def _get_reportlab():
     """Lazily import reportlab components."""
@@ -45,7 +47,9 @@ def _get_reportlab():
             "Install it with: pip install reportlab"
         ) from None
 
+
 # ── Public API ───────────────────────────────────────────────────────────
+
 
 def create_watermark_overlay(
     page_width: float,
@@ -97,6 +101,7 @@ def create_watermark_overlay(
     c.save()
 
     return buf.getvalue()
+
 
 def create_qr_overlay(
     page_width: float,
@@ -160,13 +165,14 @@ def create_qr_overlay(
                 preserveAspectRatio=True,
                 mask="auto",
             )
-            y += step
-        x += step
+            y += int(step)
+        x += int(step)
 
     c.restoreState()
     c.save()
 
     return buf.getvalue()
+
 
 def create_footer_overlay(
     page_width: float,
@@ -260,7 +266,9 @@ def create_footer_overlay(
     parts.append(f"ID: {id_short}")
 
     if cfg.source_filename:
-        fn_short = cfg.source_filename[:20] + "…" if len(cfg.source_filename) > 20 else cfg.source_filename
+        fn_short = (
+            cfg.source_filename[:20] + "…" if len(cfg.source_filename) > 20 else cfg.source_filename
+        )
         parts.append(f"Source: {fn_short}")
 
     if cfg.source_file_size:
@@ -285,6 +293,7 @@ def create_footer_overlay(
     c.save()
 
     return buf.getvalue()
+
 
 def create_invisible_text_overlay(
     page_width: float,

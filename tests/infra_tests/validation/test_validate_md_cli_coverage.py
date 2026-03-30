@@ -1,4 +1,4 @@
-"""Comprehensive tests for infrastructure/validation/validate_markdown_cli.py.
+"""Comprehensive tests for infrastructure/validation/cli/markdown.py.
 
 Tests markdown validation CLI functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
@@ -14,13 +14,13 @@ class TestValidateMarkdownCliCore:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         assert validate_markdown_cli is not None
 
     def test_has_main_function(self):
         """Test that module has main function."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         assert hasattr(validate_markdown_cli, "main") or hasattr(
             validate_markdown_cli, "validate_markdown_cli"
@@ -32,7 +32,7 @@ class TestMarkdownValidationCommand:
 
     def test_validate_single_file(self, tmp_path):
         """Test validating a single markdown file using real validation."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         md = tmp_path / "test.md"
         md.write_text("# Title\n\nContent")
@@ -43,7 +43,7 @@ class TestMarkdownValidationCommand:
 
     def test_validate_directory(self, tmp_path):
         """Test validating a directory of markdown files using real validation."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         (tmp_path / "a.md").write_text("# A\n")
         (tmp_path / "b.md").write_text("# B\n")
@@ -66,7 +66,7 @@ class TestMarkdownCliMain:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.validate_markdown_cli",
+                "infrastructure.validation.cli.markdown",
                 str(md),
             ],
             capture_output=True,
@@ -84,7 +84,7 @@ class TestValidateMarkdownCliIntegration:
 
     def test_full_validation_workflow(self, tmp_path):
         """Test complete validation workflow with real execution."""
-        from infrastructure.validation import validate_markdown_cli
+        from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         # Create test markdown
         md = tmp_path / "test.md"

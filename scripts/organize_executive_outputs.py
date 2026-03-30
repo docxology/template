@@ -28,8 +28,10 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success, log_substep
+from infrastructure.core.logging.utils import get_logger, log_header, log_success, log_substep
 from infrastructure.reporting.output_organizer import OutputOrganizer
+
+logger = get_logger(__name__)
 
 
 def organize_executive_summary(repo_root: Path, dry_run: bool = False) -> int:
@@ -174,10 +176,6 @@ Examples:
     )
 
     args = parser.parse_args()
-
-    # Set up logging
-    global logger
-    logger = get_logger(__name__)
 
     # Determine repository root
     script_dir = Path(__file__).parent

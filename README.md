@@ -1,12 +1,14 @@
 # 🚀 Research Project Template
 
 <!-- Badges below are manually updated after each pipeline run. Run `uv run pytest` to get current coverage numbers. -->
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/operational/build-system.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/operational/build-system.md)
-[![Tests](https://img.shields.io/badge/tests-3025%20passing%20(100%25)-brightgreen)](docs/operational/build-system.md)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/RUN_GUIDE.md)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/RUN_GUIDE.md)
+[![Tests](https://img.shields.io/badge/tests-3025%20passing%20(100%25)-brightgreen)](docs/RUN_GUIDE.md)
 [![Documentation](https://img.shields.io/badge/docs-105%2B%20files-blue)](docs/documentation-index.md)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
+> **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
+>
 > **Template Repository** - Click "Use this template" to create a research project with this structure
 
 A system for research and development projects. This template provides a test-driven structure with automated PDF generation, professional documentation, and validated build pipelines.
@@ -55,10 +57,10 @@ flowchart TD
     CONTRIBUTOR --> CS1["🤝 docs/development/contributing.md\nHow to Contribute"]
     CONTRIBUTOR --> CS2["📋 docs/development/code-of-conduct.md\nCommunity Standards"]
     CONTRIBUTOR --> CS3["🗺️ docs/development/roadmap.md\nFuture Plans"]
-    CONTRIBUTOR --> CS4["🧪 docs/development/testing-guide.md\nTesting Framework"]
+    CONTRIBUTOR --> CS4["🧪 docs/development/testing/testing-guide.md\nTesting Framework"]
 
     ADVANCED --> AS1["📚 AGENTS.md\nComplete System Reference"]
-    ADVANCED --> AS2["🔧 docs/operational/build-system.md\nBuild System Details"]
+    ADVANCED --> AS2["🔧 docs/RUN_GUIDE.md\nPipeline Orchestration"]
     ADVANCED --> AS3["📑 docs/documentation-index.md\nAll 50+ Files"]
     ADVANCED --> AS4["🔬 docs/modules/modules-guide.md\nAll 7 Modules"]
 
@@ -99,7 +101,7 @@ flowchart TD
 | 4 | **[docs/usage/markdown-template-guide.md](docs/usage/markdown-template-guide.md)** | Writing and formatting guide |
 | 5 | **[docs/guides/figures-and-analysis.md](docs/guides/figures-and-analysis.md)** | Add figures and automation (Levels 4-6) |
 
-**Advanced topics:** Check **[docs/operational/build-system.md](docs/operational/build-system.md)** and **[docs/modules/pdf-validation.md](docs/modules/pdf-validation.md)**
+**Advanced topics:** Check **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** and **[docs/modules/pdf-validation.md](docs/modules/pdf-validation.md)**
 
 ### 🤝 Contributors - Contributing Code
 
@@ -112,7 +114,7 @@ flowchart TD
 | 3 | **[docs/development/roadmap.md](docs/development/roadmap.md)** | Future plans |
 | 4 | **[docs/development/security.md](docs/development/security.md)** | Security practices |
 
-**Recent improvements:** See **[docs/operational/build-system.md](docs/operational/build-system.md)**
+**Recent improvements:** See **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)**
 
 ### 🔬 Advanced Users - Technical Deep Dive
 
@@ -121,7 +123,7 @@ flowchart TD
 | Step | Document | Purpose |
 |------|---------|---------|
 | 1 | **[AGENTS.md](AGENTS.md)** | System reference |
-| 2 | **[docs/operational/build-system.md](docs/operational/build-system.md)** | Build system reference |
+| 2 | **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** | Pipeline orchestration reference |
 | 3 | **[docs/usage/manuscript-numbering-system.md](docs/usage/manuscript-numbering-system.md)** | Section organization |
 | 4 | **[docs/documentation-index.md](docs/documentation-index.md)** | Documentation index |
 | 5 | **[docs/modules/modules-guide.md](docs/modules/modules-guide.md)** | All 7 modules |
@@ -191,7 +193,7 @@ graph TB
 
     subgraph Development["💻 docs/development/ - Contributing"]
         CONTRIB[contributing.md\nHow to Contribute]
-        TESTING[testing-guide.md\nTesting Framework]
+        TESTING[testing/testing-guide.md\nTesting Framework]
         ROADMAP[roadmap.md\nFuture Plans]
     end
 
@@ -270,12 +272,13 @@ graph TB
 
 ### Example Projects
 
-The template includes two active projects:
+Active projects under `projects/` (discovered by `./run.sh`; list may change):
 
-- **`projects/code_project/`** - Optimization research exemplar (master exemplar)
-- **`projects/medical_ai/`** - Medical AI clinical pipeline (multi-agent governance framework)
+- **`projects/code_project/`** — Optimization research exemplar
+- **`projects/fep_lean/`** — Formal / Lean-oriented manuscript
+- **`projects/template/`** — Meta-documentation for the template
 
-**Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
+**Note:** More exemplars (e.g. `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved into `projects/`. See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for a generated list from `discover_projects()`.
 
 ### Usage
 
@@ -323,8 +326,9 @@ Projects in `projects_archive/` are **preserved but not executed**:
 
 **Current Active Projects:**
 
-- `code_project/` - Optimization research exemplar
-- `medical_ai/` - Medical AI multi-agent clinical governance pipeline
+- `code_project/` — Optimization research exemplar
+- `fep_lean/` — Formal / Lean-oriented manuscript
+- `template/` — Meta-documentation
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
@@ -338,7 +342,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 3. **Install dependencies**: `uv sync`
 4. **Generate your first document**: `uv run scripts/03_render_pdf.py`
 
-> 🖥️ **Running on a headless cloud server?** See **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** — uv is
+> 🖥️ **Running on a headless cloud server?** See **[docs/CLOUD_DEPLOY.md](docs/CLOUD_DEPLOY.md)** — uv is
 > installed automatically when you run `./run.sh --pipeline`.
 
 **📖 Need help?** See **[Getting Started Guide](docs/guides/getting-started.md)** for beginners, **[Quick Start Cheatsheet](docs/reference/quick-start-cheatsheet.md)** for quick reference, or **[How To Use Guide](docs/core/how-to-use.md)** for guidance from basic usage to advanced workflows.
@@ -349,10 +353,10 @@ Projects in `projects_archive/` are **preserved but not executed**:
 # Interactive menu (recommended) - routes to manuscript operations
 ./run.sh
 
-# Or run full 10-stage manuscript pipeline directly (includes optional LLM review)
+# Or run the manuscript pipeline directly (includes optional LLM review)
 ./run.sh --pipeline
 
-# Alternative: Core 8-stage pipeline (no LLM dependencies)
+# Alternative: Core 10-stage declarative DAG pipeline (no LLM dependencies)
 uv run scripts/execute_pipeline.py --core-only
 
 # Run tests with coverage (infrastructure + project)
@@ -364,7 +368,7 @@ open output/pdf/project_combined.pdf
 
 ## 📊 System Health & Metrics
 
-**Current Build Status** (See **[Build System](docs/operational/build-system.md)** for analysis):
+**Current Build Status** (See **[RUN_GUIDE.md](docs/RUN_GUIDE.md)** for pipeline details):
 
 ```mermaid
 graph LR
@@ -398,10 +402,10 @@ graph LR
 
 **Key Metrics:**
 
-- **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements) - [Details](docs/operational/build-system.md#-detailed-performance-analysis)
-- **Build Time**: 84 seconds (with full test suite) - [Performance Analysis](docs/operational/build-system.md#-detailed-performance-analysis)
-- **Tests Passing**: 3025 tests (2569 infrastructure [5 skipped] + 456 project) - [Test Report](docs/operational/build-system.md#-detailed-performance-analysis)
-- **PDFs Generated**: 14 (all sections) - [Output Summary](docs/operational/build-system.md#-generated-files)
+- **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements) - [Pipeline Guide](docs/RUN_GUIDE.md)
+- **Build Time**: 84 seconds (with full test suite) - [Performance Optimization](docs/operational/config/performance-optimization.md)
+- **Tests Passing**: 3025 tests (2569 infrastructure [5 skipped] + 456 project) - [Testing Guide](docs/development/testing/testing-guide.md)
+- **PDFs Generated**: 14 (all sections) - [Pipeline Guide](docs/RUN_GUIDE.md)
 - **Documentation**: 105+ files - [Documentation Index](docs/documentation-index.md)
 
 ## 🎓 Skill-Based Learning Paths
@@ -456,7 +460,7 @@ flowchart LR
 
 **Goal:** Build with test coverage and automation
 
-→ **[docs/guides/testing-and-reproducibility.md](docs/guides/testing-and-reproducibility.md)** | **[docs/core/architecture.md](docs/core/architecture.md)** | **[docs/core/workflow.md](docs/core/workflow.md)** | **[docs/operational/build-system.md](docs/operational/build-system.md)**
+→ **[docs/guides/testing-and-reproducibility.md](docs/guides/testing-and-reproducibility.md)** | **[docs/core/architecture.md](docs/core/architecture.md)** | **[docs/core/workflow.md](docs/core/workflow.md)** | **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)**
 
 ### 🏗️ Path 4: System Architecture (Levels 10-12)
 
@@ -474,7 +478,7 @@ The project follows a **two-layer architecture** with clear separation of concer
 graph TB
     subgraph L1["🔧 Layer 1: Infrastructure (Generic, Reusable)"]
         INFRA[infrastructure/\nGeneric tools\nBuild and validation\n📖 infrastructure/AGENTS.md]
-        INFRA_SCRIPTS[scripts/\nEntry point orchestrators\n8-stage core or 10-stage extended\n📖 scripts/AGENTS.md]
+        INFRA_SCRIPTS[scripts/\nEntry point orchestrators\ncore pipeline or full pipeline\n📖 scripts/AGENTS.md]
         TESTS[tests/\nTest suite\nComprehensive coverage\n📖 tests/AGENTS.md]
     end
 
@@ -774,7 +778,7 @@ Scripts in `projects/{name}/scripts/` demonstrate proper integration with `proje
 
 All source code must meet **test coverage requirements** (90% project, 60% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are validated.
 
-**Current Coverage**: 100% project, 83.33% infrastructure (exceeds requirements by 39%!) - [Test Report](docs/operational/build-system.md#-detailed-performance-analysis)
+**Current Coverage**: 100% project, 83.33% infrastructure (exceeds requirements by 39%!) - [Testing Guide](docs/development/testing/testing-guide.md)
 
 ### Automated Script Execution
 
@@ -788,11 +792,11 @@ Project-specific scripts in the `projects/{name}/scripts/` directory are automat
 
 Manuscript sections are converted to individual PDFs with proper figure integration, and a combined manuscript document is generated with cross-referencing.
 
-**Build Performance**: 53 seconds for regeneration (without optional LLM review) - [Performance Analysis](docs/operational/build-system.md#-detailed-performance-analysis)
+**Build Performance**: 53 seconds for regeneration (without optional LLM review) - [Performance Optimization](docs/operational/config/performance-optimization.md)
 
 ### Build System Validation
 
-**[Build System](docs/operational/build-system.md)** - Reference (status, performance, fixes)
+**[Pipeline Orchestration](docs/RUN_GUIDE.md)** - Reference (stages, flags, entry points)
 
 The build system has been validated:
 
@@ -809,7 +813,7 @@ The utility scripts can be used with any project that follows this structure, ma
 
 ## 🔒 Security & Monitoring
 
-**[Security Guide](docs/development/security.md)** | **[Health Monitoring](infrastructure/core/health_check.py)**
+**[Security Guide](docs/development/security.md)** | **[Health Monitoring](infrastructure/core/runtime/health_check.py)**
 
 The template includes enterprise-grade security features:
 
@@ -822,8 +826,8 @@ The template includes enterprise-grade security features:
 **Usage:**
 
 ```python
-from infrastructure.core.security import validate_llm_input, get_security_validator
-from infrastructure.core.health_check import quick_health_check, get_health_status
+from infrastructure.core.runtime.security import validate_llm_input, get_security_validator
+from infrastructure.core.runtime.health_check import quick_health_check, get_health_status
 
 # Validate LLM input
 sanitized = validate_llm_input(user_prompt)
@@ -872,10 +876,10 @@ pip install -e .
 # Interactive menu (recommended) - routes to manuscript operations
 ./run.sh
 
-# Or run full 10-stage manuscript pipeline directly (displayed as [1/10] to [10/10], includes optional LLM)
+# Or run the manuscript pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 ./run.sh --pipeline
 
-# Alternative: Core 8-stage pipeline (stages 00-05, no LLM dependencies)
+# Alternative: Core 10-stage DAG pipeline (stages 00-05, no LLM dependencies)
 uv run python scripts/execute_pipeline.py --core-only
 
 # Or run stages individually (using generic entry point orchestrators)
@@ -889,9 +893,9 @@ uv run python scripts/05_copy_outputs.py           # Copy final deliverables
 
 **Pipeline Entry Points:**
 
-- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages displayed as [1/10] to [10/10]) with optional LLM review and translations
-- **`./run.sh --pipeline`**: 10 stages displayed as [1/10] to [10/10] - Extended pipeline with optional LLM review and translations
-- **`uv run python scripts/execute_pipeline.py --core-only`**: 8 stages (00-05) - Core pipeline only, no LLM dependencies
+- **`./run.sh`**: Main entry point - Interactive menu or pipeline run (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
+- **`./run.sh --pipeline`**: Same stage display as above; optional LLM stages run when enabled/configured
+- **`uv run python scripts/execute_pipeline.py --core-only`**: 10-stage DAG — Core pipeline only, no LLM dependencies
 
 **See [How To Use Guide](docs/core/how-to-use.md) for setup instructions at all skill levels.**
 
@@ -1063,11 +1067,11 @@ pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 - **Data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
-**Current Status**: 3025 tests passing (2569 infra [5 skipped] + 456 project), 100% project coverage - [Full Analysis](docs/operational/build-system.md#-detailed-performance-analysis)
+**Current Status**: 3025 tests passing (2569 infra [5 skipped] + 456 project), 100% project coverage - [Pipeline Guide](docs/RUN_GUIDE.md)
 
 ## 📤 Output
 
-**[Build System](docs/operational/build-system.md)** | **[PDF validation](docs/modules/pdf-validation.md)**
+**[Pipeline Orchestration](docs/RUN_GUIDE.md)** | **[PDF validation](docs/modules/pdf-validation.md)**
 
 Generated outputs are organized in the `output/` directory:
 
@@ -1096,11 +1100,11 @@ graph TD
 
 **All files in `output/` are disposable and regenerated by the build pipeline.**
 
-**Generation Time**: 53 seconds for rebuild (without optional LLM review) - [Performance Details](docs/operational/build-system.md#-detailed-performance-analysis)
+**Generation Time**: 53 seconds for rebuild (without optional LLM review) - [Performance Optimization](docs/operational/config/performance-optimization.md)
 
 ## 🔍 How It Works
 
-**[Workflow](docs/core/workflow.md)** | **[Architecture](docs/core/architecture.md)** | **[Build System](docs/operational/build-system.md)** | **[Run Guide](RUN_GUIDE.md)**
+**[Workflow](docs/core/workflow.md)** | **[Architecture](docs/core/architecture.md)** | **[Run Guide](docs/RUN_GUIDE.md)**
 
 The template provides **two main entry points** for pipeline operations:
 
@@ -1114,30 +1118,30 @@ The template provides **two main entry points** for pipeline operations:
 
 ### Entry Point 2: Extended Pipeline (`./run.sh --pipeline`)
 
-**10-stage pipeline** (displayed as [1/10] to [10/10]) with optional LLM review:
+**Pipeline** (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9]) with optional LLM review:
 
 ```mermaid
 flowchart TD
-    START([./run.sh --pipeline]) --> STAGE1[Stage 1: Clean Output Directories\n[1/10]]
-    STAGE1 --> STAGE2[Stage 2: Environment Setup\n[2/10]]
-    STAGE2 --> STAGE3[Stage 3: Infrastructure Tests\n[3/10]\n60%+ coverage required]
-    STAGE3 --> STAGE4[Stage 4: Project Tests\n[4/10]\n90%+ coverage required]
-    STAGE4 --> STAGE5[Stage 5: Project Analysis\n[5/10]\nExecute projects/{name}/scripts/]
-    STAGE5 --> STAGE6[Stage 6: PDF Rendering\n[6/10]\nGenerate manuscript PDFs]
-    STAGE6 --> STAGE7[Stage 7: Output Validation\n[7/10]\nQuality checks]
-    STAGE7 --> STAGE8[Stage 8: LLM Scientific Review\n[8/10]\nOptional, requires Ollama]
-    STAGE8 --> STAGE9[Stage 9: LLM Translations\n[9/10]\nOptional, requires Ollama]
-    STAGE9 --> STAGE10[Stage 10: Copy Outputs\n[10/10]\nFinal deliverables]
-    STAGE10 --> SUCCESS[✅ Build\n~84s core + LLM time]
+    START([./run.sh --pipeline]) --> STAGE0[Pre-step: Clean Output Directories\n[0/9]]
+    STAGE0 --> STAGE1[Stage 1: Environment Setup\n[1/9]]
+    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests\n[2/9]\n60%+ coverage required]
+    STAGE2 --> STAGE3[Stage 3: Project Tests\n[3/9]\n90%+ coverage required]
+    STAGE3 --> STAGE4[Stage 4: Project Analysis\n[4/9]\nExecute projects/{name}/scripts/]
+    STAGE4 --> STAGE5[Stage 5: PDF Rendering\n[5/9]\nGenerate manuscript PDFs]
+    STAGE5 --> STAGE6[Stage 6: Output Validation\n[6/9]\nQuality checks]
+    STAGE6 --> STAGE7[Stage 7: LLM Scientific Review\n[7/9]\nOptional, requires Ollama]
+    STAGE7 --> STAGE8[Stage 8: LLM Translations\n[8/9]\nOptional, requires Ollama]
+    STAGE8 --> STAGE9[Stage 9: Copy Outputs\n[9/9]\nFinal deliverables]
+    STAGE9 --> SUCCESS[✅ Build\n~84s core + LLM time]
 
-    STAGE2 -->|Fail| FAIL[❌ Pipeline Failed]
+    STAGE1 -->|Fail| FAIL[❌ Pipeline Failed]
+    STAGE2 -->|Fail| FAIL
     STAGE3 -->|Fail| FAIL
     STAGE4 -->|Fail| FAIL
     STAGE5 -->|Fail| FAIL
     STAGE6 -->|Fail| FAIL
-    STAGE7 -->|Fail| FAIL
-    STAGE8 -->|Skip| STAGE9[Graceful degradation]
-    STAGE9 -->|Skip| SUCCESS[Optional stages skipped]
+    STAGE7 -->|Skip| STAGE8[Graceful degradation]
+    STAGE8 -->|Skip| SUCCESS[Optional stages skipped]
 
     FAIL --> END([Exit with error])
     SUCCESS --> END
@@ -1149,13 +1153,13 @@ flowchart TD
 
     class SUCCESS success
     class FAIL failure
-    class STAGE1,STAGE2,STAGE3,STAGE4,STAGE5,STAGE6,STAGE7,STAGE8,STAGE9,STAGE10 process
-    class STAGE8,STAGE9 optional
+    class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5,STAGE6,STAGE7,STAGE8,STAGE9 process
+    class STAGE7,STAGE8 optional
 ```
 
 ### Entry Point 2: Core Pipeline (`uv run python scripts/execute_pipeline.py --core-only`)
 
-**8-stage core pipeline** (stages 00-05) without LLM dependencies:
+**10-stage declarative pipeline** (stages 00-05) without LLM dependencies:
 
 | Stage | Script | Purpose |
 |-------|--------|---------|
@@ -1168,10 +1172,10 @@ flowchart TD
 
 **Stage Numbering:**
 
-- `./run.sh`: 10 stages displayed as [1/10] to [10/10] in logs (Clean Output Directories through Copy Outputs)
+- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs, with clean shown as [0/9]
 - `execute_pipeline.py --core-only`: Core pipeline stages (no LLM stages)
 
-**See [RUN_GUIDE.md](RUN_GUIDE.md) for pipeline documentation.**
+**See [docs/RUN_GUIDE.md](docs/RUN_GUIDE.md) for pipeline documentation.**
 
 ## 📚 Documentation Index
 
@@ -1195,14 +1199,14 @@ flowchart TD
 
 ### Build System & Quality
 
-- **[docs/operational/build-system.md](docs/operational/build-system.md)** - build system reference (status, performance, fixes)
+- **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** - pipeline reference (stages, flags, entry points)
 - **[docs/modules/pdf-validation.md](docs/modules/pdf-validation.md)** - PDF quality validation system
 
 ### Development & Architecture
 
 - **[docs/architecture/thin-orchestrator-summary.md](docs/architecture/thin-orchestrator-summary.md)** - Thin orchestrator pattern implementation
 - **[docs/usage/markdown-template-guide.md](docs/usage/markdown-template-guide.md)** - Markdown writing and cross-referencing guide
-- **[.cursorrules/manuscript_style.md](.cursorrules/manuscript_style.md)** - Manuscript formatting standards and best practices
+- **[docs/rules/manuscript_style.md](docs/rules/manuscript_style.md)** - Manuscript formatting standards and best practices
 - **[docs/usage/manuscript-numbering-system.md](docs/usage/manuscript-numbering-system.md)** - Section organization system
 
 ### Community & Contribution
@@ -1234,8 +1238,9 @@ flowchart TD
 
 - **[docs/modules/modules-guide.md](docs/modules/modules-guide.md)** - Guide for all modules
 - **[docs/reference/api-reference.md](docs/reference/api-reference.md)** - API documentation for all modules
-- **[infrastructure/validation/integrity.py](infrastructure/validation/integrity.py)** - File integrity and cross-reference validation
-- **[infrastructure/publishing/core.py](infrastructure/publishing/core.py)** - Academic publishing workflow tools
+- **[infrastructure/validation/integrity/integrity.py](infrastructure/validation/integrity/integrity.py)** - File integrity and cross-reference validation
+- **[infrastructure/publishing/metadata.py](infrastructure/publishing/metadata.py)** - Publication metadata extraction utilities
+- **[infrastructure/publishing/api.py](infrastructure/publishing/api.py)** - Publishing API clients (Zenodo/GitHub/arXiv)
 - **[infrastructure/scientific/](infrastructure/scientific/)** - Scientific computing best practices (modular: stability, benchmarking, documentation, validation, templates)
 - **[infrastructure/reporting/](infrastructure/reporting/)** - Pipeline reporting and error aggregation
 
@@ -1250,10 +1255,10 @@ flowchart TD
 
 ### Operational Guides
 
-- **[docs/operational/dependency-management.md](docs/operational/dependency-management.md)** - guide for uv package manager
-- **[docs/operational/performance-optimization.md](docs/operational/performance-optimization.md)** - Build time optimization and caching strategies
-- **[docs/operational/ci-cd-integration.md](docs/operational/ci-cd-integration.md)** - GitHub Actions and CI/CD integration guide
-- **[docs/operational/troubleshooting-guide.md](docs/operational/troubleshooting-guide.md)** - troubleshooting guide
+- **[README.md](README.md)** - `uv` installation and dependency management
+- **[docs/operational/config/performance-optimization.md](docs/operational/config/performance-optimization.md)** - Build time optimization and caching strategies
+- **[.github/README.md](.github/README.md)** - GitHub Actions and CI/CD automation
+- **[docs/operational/troubleshooting/README.md](docs/operational/troubleshooting/README.md)** - troubleshooting entry point
 
 ### Best Practices & Reference
 
@@ -1277,7 +1282,7 @@ We welcome contributions! To contribute:
 
 **Recent Improvements:**
 
-- Build system optimizations - [Details](docs/operational/build-system.md#-historical-fixes)
+   - Build system optimizations - [Performance Optimization](docs/operational/config/performance-optimization.md)
 - Test suite enhancements
 - Simplified directory structure with markdown/ elimination
 
@@ -1313,22 +1318,22 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. <https://doi
 
 ## 🆘 Troubleshooting
 
-**[troubleshooting guide](docs/operational/troubleshooting-guide.md)** | **[FAQ](docs/reference/faq.md)** | **[Build System](docs/operational/build-system.md)**
+**[troubleshooting guide](docs/operational/troubleshooting/README.md)** | **[FAQ](docs/reference/faq.md)** | **[Run Guide](docs/RUN_GUIDE.md)**
 
 ### Common Issues
 
 - **Tests Fail**: Ensure coverage requirements met and all tests pass - [Testing Guide](tests/AGENTS.md)
 - **Scripts Fail**: Check Python dependencies and error handling - [Script Guide](scripts/AGENTS.md)
-- **PDF Generation Fails**: Verify pandoc and xelatex installation - [Build System](docs/operational/build-system.md#troubleshooting)
+- **PDF Generation Fails**: Verify pandoc and xelatex installation - [Build Tools](docs/operational/troubleshooting/build-tools.md)
 - **Coverage Below 100%**: Add tests for uncovered code - [Workflow](docs/core/workflow.md)
-- **Build System Issues**: Check recent fixes - [Build System](docs/operational/build-system.md#-historical-fixes)
+- **Build System Issues**: Check recent fixes - [Run Guide](docs/RUN_GUIDE.md)
 - **PDF Quality Issues**: Run validation - [PDF Validation](docs/modules/pdf-validation.md)
 - **Reference Issues**: Check markdown validation - [Markdown Guide](docs/usage/markdown-template-guide.md)
 
 ### Getting Help
 
 - Check the **[FAQ](docs/reference/faq.md)** for common questions and solutions
-- Review the **[Build System](docs/operational/build-system.md)** for system status
+- Review the **[Run Guide](docs/RUN_GUIDE.md)** for pipeline entry points
 - Review the **[scripts/README.md](scripts/README.md)** for entry point information
 - Review the test output for specific error messages
 - Ensure all required dependencies are installed
@@ -1336,7 +1341,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. <https://doi
 
 ### Debug Resources
 
-- **Build System**: [build-system.md](docs/operational/build-system.md) - reference (performance, status, fixes)
+- **Run Guide**: [RUN_GUIDE.md](docs/RUN_GUIDE.md) - pipeline entry points and flags
 - **PDF Quality**: [pdf-validation.md](docs/modules/pdf-validation.md)
 
 ## 🔄 Migration from Other Projects
@@ -1365,7 +1370,7 @@ The thin orchestrator pattern provides:
 - **Performance**: 84-second build time for regeneration (without optional LLM review)
 - **Reliability**: 3025 tests passing (100% success rate)
 
-**System Status**: ✅ **OPERATIONAL** - [Build System](docs/operational/build-system.md)
+**System Status**: ✅ **OPERATIONAL** - [Run Guide](docs/RUN_GUIDE.md)
 
 ---
 
@@ -1379,10 +1384,10 @@ graph TB
 
     TASK -->|Write documents| WRITE[docs/guides/getting-started.md\ndocs/usage/markdown-template-guide.md]
     TASK -->|Add figures| FIGURES[docs/guides/figures-and-analysis.md\ndocs/usage/visualization-guide.md]
-    TASK -->|Fix issues| FIX[docs/operational/troubleshooting-guide.md\ndocs/reference/faq.md]
+    TASK -->|Fix issues| FIX[docs/operational/troubleshooting/README.md\ndocs/reference/faq.md]
     TASK -->|Understand architecture| ARCH[docs/core/architecture.md\ndocs/architecture/two-layer-architecture.md]
     TASK -->|Configure system| CONFIG[docs/operational/configuration.md\nAGENTS.md#configuration-system]
-    TASK -->|Run pipeline| PIPELINE[RUN_GUIDE.md\ndocs/operational/build-system.md]
+    TASK -->|Run pipeline| PIPELINE[docs/RUN_GUIDE.md]
     TASK -->|Contribute code| CONTRIB[docs/development/contributing.md\n.cursorrules/AGENTS.md]
     TASK -->|Find all docs| INDEX[docs/documentation-index.md\ndocs/AGENTS.md]
 
@@ -1432,7 +1437,7 @@ flowchart TD
 
 1. **New User?** → Start with **[Quick Start](#quick-start)** or **[docs/guides/getting-started.md](docs/guides/getting-started.md)**
 2. **Developer?** → Read **[docs/core/architecture.md](docs/core/architecture.md)** and **[docs/core/workflow.md](docs/core/workflow.md)**
-3. **Need Help?** → Check **[docs/reference/faq.md](docs/reference/faq.md)** or **[docs/operational/troubleshooting-guide.md](docs/operational/troubleshooting-guide.md)**
+3. **Need Help?** → Check **[docs/reference/faq.md](docs/reference/faq.md)** or **[docs/operational/troubleshooting/README.md](docs/operational/troubleshooting/README.md)**
 4. **Explore All Docs?** → Browse **[docs/documentation-index.md](docs/documentation-index.md)**
 
 **📚 Documentation Hub:** All documentation is organized in the **[docs/](docs/)** directory with guides for every aspect of the template.

@@ -1,0 +1,292 @@
+"""Manuscript review templates: executive summary and quality review."""
+
+from __future__ import annotations
+
+from string import Template
+from typing import Any
+
+from infrastructure.core.exceptions import LLMTemplateError
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.llm.templates.base import ResearchTemplate
+from infrastructure.llm.templates.helpers import (
+    content_requirements,
+    format_requirements,
+    section_structure,
+    token_budget_awareness,
+    validation_hints,
+)
+
+logger = get_logger(__name__)
+
+from infrastructure.llm.core._prompt_availability import PROMPT_COMPOSER_AVAILABLE
+
+if PROMPT_COMPOSER_AVAILABLE:
+    from infrastructure.llm.prompts.composer import PromptComposer
+
+
+class ManuscriptExecutiveSummary(ResearchTemplate):
+    """Template for generating executive summary of a manuscript.
+
+    Produces a structured executive summary with 5 key sections,
+    targeting 400-600 words of substantive analysis.
+
+    Uses manuscript-first structure with task instructions at end
+    for better LLM attention to the actual content.
+    """
+
+    template_str = """=== MANUSCRIPT BEGIN ===
+
+${text}
+
+=== MANUSCRIPT END ===
+
+TASK: Write an executive summary of the manuscript above.
+
+${format_requirements}
+
+${section_structure}
+
+${token_budget_awareness}
+
+${content_requirements}
+
+${validation_hints}
+
+Begin your executive summary now:"""
+
+    def render(
+        self,
+        text: str | None = None,
+        max_tokens: int | None = None,
+        **kwargs: Any,
+    ) -> str:
+        """Render template with enhanced constraints.
+
+        Args:
+            text: Manuscript text (required)
+            max_tokens: Optional token budget for response
+            **kwargs: Additional template variables (text can be passed here too)
+        """
+        # Extract from kwargs if not provided as positional arg
+        if text is None:
+            text = kwargs.pop("text", None)
+
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)  # noqa: E501
+        if text is None:
+            raise LLMTemplateError("Missing template variable: text", context={"required": "text"})
+
+        # Try to use new prompt composer if available
+        if PROMPT_COMPOSER_AVAILABLE:
+            try:
+                composer = PromptComposer()
+                return composer.compose_template(
+                    "manuscript_reviews.json#manuscript_executive_summary",
+                    text=text,
+                    max_tokens=max_tokens,
+                    **kwargs,
+                )
+            except Exception as e:  # noqa: BLE001 — prompt composer fallback; any failure falls through to built-in impl
+                logger.debug(f"Failed to use prompt composer, falling back: {e}")
+
+        # Fallback implementation
+        # Define required sections
+        required_headers = [
+            "## Overview",
+            "## Key Contributions",
+            "## Methodology Summary",
+            "## Principal Results",
+            "## Significance and Impact",
+        ]
+
+        section_descriptions = {
+            "## Overview": "Brief introduction to the research topic and objectives (80-120 words)",
+            "## Key Contributions": "Main advances and novel contributions (100-150 words)",
+            "## Methodology Summary": "Approach and methods used (80-120 words)",
+            "## Principal Results": "Key findings and outcomes (100-150 words)",
+            "## Significance and Impact": "Importance and implications (80-120 words)",
+        }
+
+        # Calculate token budgets if max_tokens provided
+        section_budgets = None
+        if max_tokens:
+            # Allocate ~20% per section (5 sections)
+            tokens_per_section = max_tokens // 5
+            section_budgets = {
+                "Overview": tokens_per_section,
+                "Key Contributions": tokens_per_section,
+                "Methodology Summary": tokens_per_section,
+                "Principal Results": tokens_per_section,
+                "Significance and Impact": tokens_per_section,
+            }
+
+        # Build constraint sections
+        format_req = format_requirements(required_headers, markdown_format=True)
+        section_struct = section_structure(
+            required_headers, section_descriptions, required_order=True
+        )
+        token_budget = token_budget_awareness(
+            total_tokens=max_tokens,
+            section_budgets=section_budgets,
+            word_targets={
+                "Overview": (80, 120),
+                "Key Contributions": (100, 150),
+                "Methodology Summary": (80, 120),
+                "Principal Results": (100, 150),
+                "Significance and Impact": (80, 120),
+            },
+        )
+        content_req = content_requirements(
+            no_hallucination=True,
+            cite_sources=True,
+            evidence_based=True,
+            no_meta_commentary=True,
+        )
+        validation = validation_hints(
+            word_count_range=(400, 600),
+            required_elements=[
+                "all 5 section headers",
+                "specific manuscript references",
+            ],
+            format_checks=["word count", "section presence", "content relevance"],
+        )
+
+        # Render base template
+        base_template = Template(self.template_str)
+        return base_template.substitute(
+            text=text,
+            format_requirements=format_req,
+            section_structure=section_struct,
+            token_budget_awareness=token_budget,
+            content_requirements=content_req,
+            validation_hints=validation,
+            **kwargs,
+        )
+
+
+class ManuscriptQualityReview(ResearchTemplate):
+    """Template for reviewing writing quality of a manuscript.
+
+    Produces a detailed quality assessment with scoring rubric,
+    targeting 500-700 words of critical analysis.
+
+    Uses manuscript-first structure with task instructions at end
+    for better LLM attention to the actual content.
+    """
+
+    template_str = """=== MANUSCRIPT BEGIN ===
+
+${text}
+
+=== MANUSCRIPT END ===
+
+TASK: Provide a quality review of the manuscript above.
+
+${format_requirements}
+
+${section_structure}
+
+${token_budget_awareness}
+
+${content_requirements}
+
+${validation_hints}
+
+Begin your quality review now:"""
+
+    def render(
+        self,
+        text: str | None = None,
+        max_tokens: int | None = None,
+        **kwargs: Any,
+    ) -> str:
+        """Render template with enhanced constraints.
+
+        Args:
+            text: Manuscript text (required)
+            max_tokens: Optional token budget for response
+            **kwargs: Additional template variables (text can be passed here too)
+        """
+        # Extract from kwargs if not provided as positional arg
+        if text is None:
+            text = kwargs.pop("text", None)
+
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)  # noqa: E501
+        if text is None:
+            raise LLMTemplateError("Missing template variable: text", context={"required": "text"})
+
+        required_headers = [
+            "## Overall Quality Score",
+            "## Clarity Assessment",
+            "## Structure and Organization",
+            "## Technical Accuracy",
+            "## Readability",
+            "## Specific Issues Found",
+            "## Recommendations",
+        ]
+
+        section_descriptions = {
+            "## Overall Quality Score": "Provide overall score (1-5) with brief justification (50-80 words)",  # noqa: E501
+            "## Clarity Assessment": "Evaluate writing clarity with score and specific examples (80-120 words)",  # noqa: E501
+            "## Structure and Organization": "Assess organization with score and structural observations (80-120 words)",  # noqa: E501
+            "## Technical Accuracy": "Review technical correctness with score and evidence (80-120 words)",  # noqa: E501
+            "## Readability": "Evaluate readability with score and specific issues (60-100 words)",
+            "## Specific Issues Found": "List concrete issues with manuscript references (100-150 words)",  # noqa: E501
+            "## Recommendations": "Provide actionable recommendations (80-120 words)",
+        }
+
+        section_requirements = {
+            "Overall Quality Score": "Must include: **Score: X/5** format where X is 1-5",
+            "All scoring sections": "Each section with 'Assessment' or 'Accuracy' must include **Score: X/5**",  # noqa: E501
+            "Specific Issues Found": "Must quote or reference specific manuscript sections",
+            "Recommendations": "Must be actionable and specific to manuscript content",
+        }
+
+        section_budgets = None
+        if max_tokens:
+            tokens_per_section = max_tokens // 7
+            section_budgets = {
+                section.replace("## ", ""): tokens_per_section for section in required_headers
+            }
+
+        format_req = format_requirements(
+            required_headers,
+            markdown_format=True,
+            section_requirements=section_requirements,
+        )
+        section_struct = section_structure(
+            required_headers, section_descriptions, required_order=True
+        )
+        token_budget = token_budget_awareness(
+            total_tokens=max_tokens, section_budgets=section_budgets
+        )
+        content_req = content_requirements(
+            no_hallucination=True,
+            cite_sources=True,
+            evidence_based=True,
+            no_meta_commentary=True,
+        )
+        validation = validation_hints(
+            word_count_range=(500, 700),
+            required_elements=[
+                "all 7 section headers",
+                "scores in **Score: X/5** format",
+                "specific manuscript references",
+            ],
+            format_checks=[
+                "word count",
+                "section presence",
+                "score format",
+                "content relevance",
+            ],
+        )
+
+        base_template = Template(self.template_str)
+        return base_template.substitute(
+            text=text,
+            format_requirements=format_req,
+            section_structure=section_struct,
+            token_budget_awareness=token_budget,
+            content_requirements=content_req,
+            validation_hints=validation,
+            **kwargs,
+        )

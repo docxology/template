@@ -1,0 +1,18 @@
+[project]
+name = "template-meta-project"
+version = "1.0.0"
+description = "Self-referential study of the Docxology Template infrastructure, architecture, and provenance pipeline."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.10.0",
+    "numpy>=2.0.0",
+    "pyyaml>=6.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+
+[tool.coverage.run]
+source = ["src/template"]

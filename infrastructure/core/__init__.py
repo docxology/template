@@ -5,26 +5,27 @@ appear here. Specialist or rarely-used symbols should be imported directly
 from their submodules:
 
     infrastructure.core.exceptions    — full exception hierarchy
-    infrastructure.core.config_loader — load_config, get_config_as_dict
-    infrastructure.core.environment   — check_python_version, setup_directories
-    infrastructure.core.function_profiler — CodeProfiler, ProfilingMetrics, etc.
-    infrastructure.core.checkpoint    — PipelineCheckpoint, StageResult
+    infrastructure.core.config.loader — load_config, get_config_as_dict
+    infrastructure.core.runtime.environment   — check_python_version, setup_directories
+    infrastructure.core.runtime.function_profiler — CodeProfiler, ProfilingMetrics, etc.
+    infrastructure.core.runtime.checkpoint    — PipelineCheckpoint, StageResult
     infrastructure.core.pipeline      — PipelineConfig, PipelineExecutor
-    infrastructure.core.multi_project — MultiProjectConfig, MultiProjectResult
-    infrastructure.core.health_check  — quick_health_check, get_health_status
+    infrastructure.core.pipeline.multi_project — MultiProjectConfig, MultiProjectResult
+    infrastructure.core.runtime.health_check  — quick_health_check, get_health_status
+    infrastructure.core.telemetry     — TelemetryCollector, TelemetryConfig
 """
 
 from __future__ import annotations
 
 # Checkpoint (used by orchestrator scripts)
-from infrastructure.core.checkpoint import CheckpointManager
+from infrastructure.core.runtime.checkpoint import CheckpointManager
 
 # Health (used by analysis scripts)
-from infrastructure.core.health_check import SystemHealthChecker
+from infrastructure.core.runtime.health_check import SystemHealthChecker
 
 # Logging (primary cross-cutting concern — all callers need these)
-from infrastructure.core.logging_helpers import format_duration
-from infrastructure.core.logging_utils import (
+from infrastructure.core.logging.helpers import format_duration
+from infrastructure.core.logging.utils import (
     get_logger,
     log_operation,
     log_stage,
@@ -32,7 +33,7 @@ from infrastructure.core.logging_utils import (
 )
 
 # Performance (decorator used by analysis scripts)
-from infrastructure.core.function_profiler import monitor_performance
+from infrastructure.core.runtime.function_profiler import monitor_performance
 
 # Progress (used by long-running scripts)
 from infrastructure.core.progress import ProgressBar

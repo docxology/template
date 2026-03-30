@@ -59,7 +59,7 @@ Core Pipeline Scripts:
   6. LLM Translations (requires Ollama)
 
 Orchestration:
-  8. Run Full Pipeline (10 stages: [1/10] to [10/10])
+  8. Run Full Pipeline (9 stages: [1/9] to [9/9], clean shown as [0/9])
 ============================================================
 ```
 
@@ -67,7 +67,7 @@ Orchestration:
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Extended pipeline (10 stages displayed as [1/10] to [10/10], includes LLM)
+./run.sh --pipeline          # Pipeline (9 stages displayed as [1/9] to [9/9], clean shown as [0/9]; includes optional LLM stages)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests       # Run infrastructure tests only
 ./run.sh --project-tests     # Run project tests only
@@ -101,7 +101,7 @@ uv run python scripts/execute_multi_project.py --no-llm
 ```mermaid
 flowchart TD
     subgraph EntryPoints["Entry Points"]
-        RUNSH[./run.sh<br/>Interactive Menu<br/>10-stage pipeline]
+        RUNSH[./run.sh<br/>Interactive Menu<br/>Pipeline]
         PYTHON[execute_pipeline.py<br/>Programmatic<br/>Core pipeline]
         MULTI[execute_multi_project.py<br/>Multi-project<br/>Cross-project execution]
     end
@@ -176,7 +176,7 @@ Additional stages available in the interactive orchestrator:
 
 **Stage Numbering:**
 
-- `./run.sh`: 10 stages displayed as [1/10] to [10/10] in logs (Clean Output Directories, Environment Setup, Infrastructure Tests, Project Tests, Project Analysis, PDF Rendering, Output Validation, Copy Outputs, LLM Scientific Review, LLM Translations)
+- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs, with clean shown as [0/9]
 - `scripts/execute_pipeline.py`: core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 ## Running Individual Stages
@@ -316,7 +316,7 @@ If validation fails, the pipeline starts fresh with a warning.
 
 ```bash
 # Check if checkpoint exists
-uv run python -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
+uv run python -c "from infrastructure.core.runtime.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
 
 # View checkpoint contents
 cat projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json | uv run python -m json.tool
@@ -325,7 +325,7 @@ cat projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json | uv ru
 rm -f projects/{project_name}/output/.checkpoints/pipeline_checkpoint.json
 ```
 
-See [`docs/operational/checkpoint-resume.md`](../docs/operational/checkpoint-resume.md) for documentation.
+See [`docs/operational/config/checkpoint-resume.md`](../docs/operational/config/checkpoint-resume.md) for documentation.
 
 ## Project-Specific Scripts
 
@@ -597,6 +597,10 @@ projects/{name}/scripts/ (Project-Specific)
 
 This follows the thin orchestrator pattern: utilities in source, scripts orchestrate.
 
+## Documentation utilities
+
+- `generate_active_projects_doc.py` — writes `docs/_generated/active_projects.md` from `discover_projects()` (includes policy: link this file from guides; default path examples to `projects/code_project/`). Run after changing `projects/` layout: `uv run python scripts/generate_active_projects_doc.py`.
+
 ## Deploying with Different Project
 
 1. Create new `projects/{name}/` with your research
@@ -609,7 +613,7 @@ Root entry points work with **ANY** project following this structure.
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md) - documentation
-- [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Unified runner guide
+- [`../docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) - Unified runner guide
 - [`projects/code_project/scripts/`](../projects/code_project/scripts/) - Project scripts
 - [`../docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - system documentation

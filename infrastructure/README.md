@@ -6,13 +6,37 @@ Reusable build tools, validation systems, and integration components that suppor
 
 The infrastructure layer provides generic, reusable functionality that can be applied across different research projects. All modules follow the **thin orchestrator pattern** - scripts coordinate business logic implemented in these infrastructure modules.
 
+## Agent skills (`SKILL.md`)
+
+Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (or `@.cursor/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`. When editing under `infrastructure/`, Cursor can apply [`.cursor/rules/infrastructure-skills.mdc`](../.cursor/rules/infrastructure-skills.mdc) (globs `infrastructure/**`) and the always-on [`.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc).
+
+| Path | Frontmatter `name` |
+|------|-------------------|
+| [SKILL.md](SKILL.md) | `infrastructure-overview` |
+| [config/SKILL.md](config/SKILL.md) | `infrastructure-config` |
+| [core/SKILL.md](core/SKILL.md) | `infrastructure-core` |
+| [docker/SKILL.md](docker/SKILL.md) | `infrastructure-docker` |
+| [documentation/SKILL.md](documentation/SKILL.md) | `infrastructure-documentation` |
+| [llm/SKILL.md](llm/SKILL.md) | `infrastructure-llm` |
+| [project/SKILL.md](project/SKILL.md) | `infrastructure-project` |
+| [publishing/SKILL.md](publishing/SKILL.md) | `infrastructure-publishing` |
+| [rendering/SKILL.md](rendering/SKILL.md) | `infrastructure-rendering` |
+| [reporting/SKILL.md](reporting/SKILL.md) | `infrastructure-reporting` |
+| [scientific/SKILL.md](scientific/SKILL.md) | `infrastructure-scientific` |
+| [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` |
+| [steganography/SKILL.md](steganography/SKILL.md) | `infrastructure-steganography` |
+| [core/telemetry/SKILL.md](core/telemetry/SKILL.md) | `telemetry` |
+| [validation/SKILL.md](validation/SKILL.md) | `infrastructure-validation` |
+
+Pair each `SKILL.md` with the matching **`AGENTS.md`** for full API tables.
+
 ## Module Categories
 
 ```mermaid
 graph TD
     subgraph "🔧 Core Infrastructure"
         CORE[core/<br/>Fundamental utilities<br/>Logging, config, progress]
-        EXCEPTIONS[core/exceptions.py<br/>Exception hierarchy<br/>Context preservation]
+        EXCEPTIONS[core/runtime/exceptions.py<br/>Exception hierarchy<br/>Context preservation]
     end
 
     subgraph "📝 Document Processing"
@@ -46,23 +70,20 @@ graph TD
     LLM --> PUBLISHING
     LLM --> SCIENTIFIC
 
-    classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef doc fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef integration fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef build fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class CORE,EXCEPTIONS core
     class DOC,RENDER,VALIDATION doc
     class LLM,PUBLISHING,SCIENTIFIC integration
     class REPORTING build
 ```
 
+Diagrams above are selective. These packages also exist under `infrastructure/`: **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor), **`telemetry/`** (`TelemetryCollector`, per-stage resource + diagnostic reports).
+
 ## Infrastructure Dependencies
 
 ```mermaid
 flowchart TD
     subgraph "📋 Project Scripts"
-        ANALYSIS[analysis_pipeline.py<br/>Data processing & figures]
+        ANALYSIS[analysis_pipeline/pipeline.py<br/>Data processing & figures]
         FIGURES[example_figure.py<br/>Visualization scripts]
     end
 
@@ -95,15 +116,10 @@ flowchart TD
     CORE_MOD --> PUBLISHING_MOD
     CORE_MOD --> REPORTING_MOD
 
-    classDef scripts fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class ANALYSIS,FIGURES scripts
     class CORE_MOD,VALIDATION_MOD,DOCUMENTATION_MOD,RENDERING_MOD,LLM_MOD,PUBLISHING_MOD,REPORTING_MOD infra
     class OUTPUTS output
 ```
-
 
 ## Module Dependency Flow
 
@@ -119,38 +135,38 @@ flowchart TD
     B --> I[Scientific Module]
     B --> J[Reporting Module]
 
-    C --> K[exceptions.py<br/>Base exception classes]
-    C --> L[logging_utils.py<br/>Unified logging system]
-    C --> M[config_loader.py<br/>YAML configuration]
-    C --> N[progress.py<br/>Progress tracking]
-    C --> O[checkpoint.py<br/>Pipeline state]
-    C --> P[retry.py<br/>Exponential backoff]
-    C --> Q[performance.py<br/>Resource monitoring]
-    C --> R[environment.py<br/>Setup validation]
-    C --> S[script_discovery.py<br/>Dynamic discovery]
-    C --> T[file_operations.py<br/>I/O utilities]
+    C --> K[runtime/exceptions.py<br/>Base exception classes]
+    C --> L[logging/logging_utils.py<br/>Unified logging system]
+    C --> M[config/config_loader.py<br/>YAML configuration]
+    C --> N[runtime/progress.py<br/>Progress tracking]
+    C --> O[runtime/checkpoint.py<br/>Pipeline state]
+    C --> P[runtime/retry.py<br/>Exponential backoff]
+    C --> Q[runtime/stage_monitor.py<br/>Resource monitoring]
+    C --> R[runtime/environment.py<br/>Setup validation]
+    C --> S[runtime/script_discovery.py<br/>Dynamic discovery]
+    C --> T[files/file_operations.py<br/>I/O utilities]
 
     D --> U[figure_manager.py<br/>Figure registration]
     D --> V[image_manager.py<br/>Image handling]
     D --> W[markdown_integration.py<br/>Auto-insertion]
     D --> X[glossary_gen.py<br/>API documentation]
 
-    E --> Y[pdf_validator.py<br/>PDF quality checks]
-    E --> Z[markdown_validator.py<br/>Markdown validation]
-    E --> AA[integrity.py<br/>Cross-reference validation]
+    E --> Y[output/pdf_validator.py<br/>PDF quality checks]
+    E --> Z[content/markdown_validator.py<br/>Markdown validation]
+    E --> AA[integrity/integrity.py<br/>Cross-reference validation]
 
-    F --> BB[render_manager.py<br/>Multi-format output]
+    F --> BB[core.py<br/>RenderManager orchestrator]
     F --> CC[latex_utils.py<br/>LaTeX processing]
-    F --> DD[html_generator.py<br/>Web output]
+    F --> DD[web_renderer.py<br/>Web output]
 
-    G --> EE[llm_client.py<br/>Ollama integration]
-    G --> FF[prompt_templates.py<br/>Research templates]
-    G --> GG[conversation.py<br/>Context management]
+    G --> EE[llm/core/client.py<br/>Ollama integration]
+    G --> FF[llm/templates/<br/>Research templates]
+    G --> GG[llm/core/context.py<br/>Context management]
 
-    H --> HH[zenodo_client.py<br/>DOI minting]
-    H --> II[arxiv_client.py<br/>Submission prep]
-    H --> JJ[github_client.py<br/>Release automation]
-    H --> KK[citation_generator.py<br/>BibTeX/APA]
+    H --> HH[api.py<br/>Platform API clients]
+    H --> II[package.py<br/>Submission packaging]
+    H --> JJ[platforms.py<br/>Release automation]
+    H --> KK[citations.py<br/>BibTeX/APA/MLA]
 
     I --> LL[benchmarking.py<br/>Performance analysis]
     I --> MM[validation.py<br/>Scientific standards]
@@ -159,16 +175,6 @@ flowchart TD
     J --> OO[pipeline_reporter.py<br/>Build reports]
     J --> PP[error_aggregator.py<br/>Error categorization]
     J --> QQ[html_templates.py<br/>Visual reports]
-
-    classDef start fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
-    classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef doc fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef validation fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef rendering fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef llm fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-    classDef publishing fill:#f1f8e9,stroke:#33691e,stroke-width:2px
-    classDef scientific fill:#e0f2f1,stroke:#00695c,stroke-width:2px
-    classDef reporting fill:#fff8e1,stroke:#f57f17,stroke-width:2px
 
     class A start
     class C,K,L,M,N,O,P,Q,R,S,T core
@@ -201,10 +207,10 @@ flowchart LR
     end
 
     subgraph Output["📤 Generated Outputs"]
-        PDF[output/pdf/<br/>Manuscript PDFs]
-        FIGURES[output/figures/<br/>Publication plots]
-        REPORTS[output/reports/<br/>Validation reports]
-        HTML[output/web/<br/>HTML versions]
+        PDF[output/{project_name}/pdf/<br/>Manuscript PDFs]
+        FIGURES[output/{project_name}/figures/<br/>Publication plots]
+        REPORTS[output/{project_name}/reports/<br/>Validation reports]
+        HTML[output/{project_name}/web/<br/>HTML versions]
     end
 
     YAML --> CONFIG
@@ -222,31 +228,43 @@ flowchart LR
     REPORT --> REPORTS
     RENDER --> HTML
 
-    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef process fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
     class Input input
     class Processing process
     class Output output
 ```
 
 ### Core Infrastructure
+
 - **[core/](core/)** - Fundamental utilities (logging, configuration, progress tracking)
 - **Exception handling** - Custom exception hierarchy and error handling
 
 ### Document Processing
+
 - **[documentation/](documentation/)** - Figure management and API documentation generation
 - **[rendering/](rendering/)** - Multi-format output generation (PDF, HTML, slides)
 - **[validation/](validation/)** - Quality assurance and content validation
 
 ### External Integrations
+
 - **[llm/](llm/)** - Local Large Language Model integration
 - **[publishing/](publishing/)** - Academic publishing workflows
 - **[scientific/](scientific/)** - Scientific computing utilities
 
 ### Reporting & Quality
+
 - **[reporting/](reporting/)** - Pipeline reporting and error aggregation
+
+### Project Management
+
+- **[project/](project/)** - Multi-project discovery, validation, and lifecycle management
+
+### Security & Integrity
+
+- **[steganography/](steganography/)** - Cryptographic watermarking, PDF metadata injection, and hashing
+
+### Pipeline Telemetry
+
+- **[telemetry/](telemetry/)** - Unified per-stage resource + diagnostic tracking (`TelemetryCollector`)
 
 ## Usage in Projects
 
@@ -293,16 +311,13 @@ flowchart TD
     PROCESS --> LLM
     RENDER --> PUBLISH
 
-    classDef script fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-
     class INIT,CONFIG,PROCESS,VALIDATE,RENDER,REPORT script
     class CORE,DOC,LLM,PUBLISH infra
 ```
 
 ## Testing
 
-Infrastructure modules maintain **83.33% test coverage** (exceeds 60% requirement):
+Infrastructure modules maintain **≥60% test coverage** (typically 80-84% overall):
 
 ```bash
 # Test all infrastructure
@@ -315,16 +330,19 @@ pytest tests/infra_tests/core/ -v
 ## Architecture Principles
 
 ### Thin Orchestrator Pattern
+
 - **Business logic** resides in infrastructure modules
 - **Scripts** provide thin orchestration layer
 - **Clean separation** between reusable code and project-specific logic
 
 ### Data Policy
+
 - **No mock methods** in business logic
 - **computations** with actual data
 - **Deterministic outputs** for reproducibility
 
 ### Validation
+
 - **Quality assurance** for all outputs
 - **Integration testing** across modules
 - **Error handling** with informative messages
@@ -340,12 +358,13 @@ pytest tests/infra_tests/core/ -v
 5. Ensure 60%+ test coverage
 
 ### Module Structure
-```
+
+```text
 infrastructure/new_module/
 ├── __init__.py      # Public API exports
 ├── core.py          # Main functionality
 ├── utils.py         # Helper functions
-├── cli.py           # Command-line interface (if needed)
+├── runtime/cli.py           # Command-line interface (if needed)
 ├── AGENTS.md        # Technical documentation
 └── README.md        # Quick reference
 ```

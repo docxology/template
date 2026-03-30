@@ -1,0 +1,86 @@
+# Default pipeline stage definitions.
+#
+# The executor reads this file (or a project-specific override at
+# projects/{name}/pipeline.yaml) and constructs a topologically-sorted
+# execution plan from the stage list.
+#
+# Each stage has:
+#   name         — human-readable label shown in progress logs
+#   script       — script filename inside scripts/ (or null for built-in functions)
+#   method       — executor method name (for stages that don't use subprocess scripts)
+#   args         — extra CLI arguments passed to the script
+#   allow_skip   — treat exit-code 2 as success (graceful skip)
+#   depends_on   — list of stage names this stage must run after
+#   tags         — list of tags for conditional inclusion (e.g. "llm", "core")
+
+stages:
+
+  - name: Clean Output Directories
+    method: _run_clean_outputs
+    tags: [core, clean]
+
+  - name: Environment Setup
+    script: 00_setup_environment.py
+    depends_on: [Clean Output Directories]
+    tags: [core]
+
+  - name: Infrastructure Tests
+    script: 01_run_tests.py
+    args: [--infra-only, --verbose]
+    depends_on: [Environment Setup]
+    tags: [core, tests]
+
+  - name: Project Tests
+    script: 01_run_tests.py
+    args: [--project-only, --verbose]
+    depends_on: [Environment Setup]
+    tags: [core, tests]
+
+  - name: Project Analysis
+    script: 02_run_analysis.py
+    depends_on: [Project Tests]
+    tags: [core]
+
+  - name: PDF Rendering
+    script: 03_render_pdf.py
+    depends_on: [Project Analysis]
+    tags: [core]
+
+  - name: Output Validation
+    script: 04_validate_output.py
+    depends_on: [PDF Rendering]
+    tags: [core]
+
+  - name: LLM Scientific Review
+    script: 06_llm_review.py
+    args: [--reviews-only]
+    allow_skip: true
+    depends_on: [Output Validation]
+    tags: [llm]
+
+  - name: LLM Translations
+    script: 06_llm_review.py
+    args: [--translations-only]
+    allow_skip: true
+    depends_on: [Output Validation]
+    tags: [llm]
+
+  - name: Copy Outputs
+    script: 05_copy_outputs.py
+    depends_on: [Output Validation]
+    tags: [core]
+
+# ── Telemetry Configuration ──────────────────────────────────────────
+# Unified pipeline telemetry: resource tracking + diagnostic aggregation.
+# Override per-project by adding a telemetry: block in projects/{name}/pipeline.yaml.
+
+telemetry:
+  enabled: true
+  track_resources: true
+  track_diagnostics: true
+  output_formats: [json, text]
+  persist_report: true
+  slow_stage_multiplier: 2.0
+  high_memory_mb: 1024
+  high_cpu_percent: 90.0
+

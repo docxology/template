@@ -45,9 +45,10 @@ function Para(el)
     if not img_src then
       local filename = para_content:match("\\includegraphics%[?[^%]]*%]?{([^}]+)}")
       if filename then
-        -- Clean up filename path
-        local clean_filename = filename:gsub("^%.%./output/figures/", "figures/")
-        clean_filename = clean_filename:gsub("^output/figures/", "figures/")
+        -- Clean up filename path and ensure correct relative path from HTML location
+        local clean_filename = filename:gsub("^%.%./output/figures/", "../figures/")
+        clean_filename = clean_filename:gsub("^output/figures/", "../figures/")
+        clean_filename = clean_filename:gsub("^figures/", "../figures/")
         img_src = clean_filename
         img_html = string.format('<img src="%s" alt="%s" style="max-width: 80%%; height: auto;" class="figure">', 
                                   clean_filename, clean_filename:gsub("%.%w+$", ""))
@@ -175,9 +176,9 @@ function RawInline(elem)
       end
       
       -- Clean up filename path and ensure correct relative path from HTML location
-      local clean_filename = filename:gsub("^%.%./output/figures/", "figures/")
-      clean_filename = clean_filename:gsub("^output/figures/", "figures/")
-      clean_filename = clean_filename:gsub("^figures/", "figures/")
+      local clean_filename = filename:gsub("^%.%./output/figures/", "../figures/")
+      clean_filename = clean_filename:gsub("^output/figures/", "../figures/")
+      clean_filename = clean_filename:gsub("^figures/", "../figures/")
       
       -- Create HTML img tag
       local img_html = string.format('<img src="%s" alt="%s" style="max-width: %s; height: auto;" class="figure">', 
@@ -218,9 +219,9 @@ function RawBlock(elem)
       end
       
       -- Clean up filename path and ensure correct relative path from HTML location
-      local clean_filename = filename:gsub("^%.%./output/figures/", "figures/")
-      clean_filename = clean_filename:gsub("^output/figures/", "figures/")
-      clean_filename = clean_filename:gsub("^figures/", "figures/")
+      local clean_filename = filename:gsub("^%.%./output/figures/", "../figures/")
+      clean_filename = clean_filename:gsub("^output/figures/", "../figures/")
+      clean_filename = clean_filename:gsub("^figures/", "../figures/")
       
       -- Create HTML img tag wrapped in a div
       local img_html = string.format('<div class="figure"><img src="%s" alt="%s" style="max-width: %s; height: auto;"></div>', 

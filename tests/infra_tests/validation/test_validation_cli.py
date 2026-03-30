@@ -1,4 +1,4 @@
-"""Comprehensive tests for infrastructure/validation/cli.py.
+"""Comprehensive tests for infrastructure/validation/cli/main.py.
 
 Tests the CLI interface for validation operations including PDF, markdown,
 and integrity validation commands.
@@ -9,7 +9,7 @@ import logging
 
 import pytest
 
-from infrastructure.validation import cli
+from infrastructure.validation.cli import main as cli
 
 
 class TestValidatePdfCommand:
@@ -88,7 +88,7 @@ class TestValidateMarkdownCommand:
 
     def test_markdown_command_with_problems(self, tmp_path, caplog):
         """Test markdown validation command when there are issues."""
-        from infrastructure.validation import cli
+        from infrastructure.validation.cli import main as cli
 
         # Create markdown with broken image reference
         md_dir = tmp_path / "content"
@@ -192,7 +192,7 @@ class TestMainCli:
         import subprocess
 
         result = subprocess.run(
-            ["python", "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
+            ["python", "-m", "infrastructure.validation.cli.main", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
             timeout=30,
@@ -211,7 +211,7 @@ class TestMainCli:
             [
                 "python",
                 "-m",
-                "infrastructure.validation.cli",
+                "infrastructure.validation.cli.main",
                 "markdown",
                 str(tmp_path),
             ],
@@ -233,7 +233,7 @@ class TestMainCli:
             [
                 "python",
                 "-m",
-                "infrastructure.validation.cli",
+                "infrastructure.validation.cli.main",
                 "integrity",
                 str(tmp_path),
             ],
@@ -250,7 +250,7 @@ class TestMainCli:
         import subprocess
 
         result = subprocess.run(
-            ["python", "-m", "infrastructure.validation.cli"],
+            ["python", "-m", "infrastructure.validation.cli.main"],
             capture_output=True,
             text=True,
             timeout=30,
@@ -267,7 +267,7 @@ class TestMainCli:
         import subprocess
 
         result = subprocess.run(
-            ["python", "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
+            ["python", "-m", "infrastructure.validation.cli.main", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
             timeout=30,
@@ -298,7 +298,7 @@ class TestCliArgumentParsing:
         import subprocess
 
         result = subprocess.run(
-            ["python", "-m", "infrastructure.validation.cli", "pdf", str(pdf_file)],
+            ["python", "-m", "infrastructure.validation.cli.main", "pdf", str(pdf_file)],
             capture_output=True,
             text=True,
             timeout=30,
@@ -326,7 +326,7 @@ class TestCliArgumentParsing:
             [
                 "python",
                 "-m",
-                "infrastructure.validation.cli",
+                "infrastructure.validation.cli.main",
                 "pdf",
                 str(pdf_file),
                 "-v",

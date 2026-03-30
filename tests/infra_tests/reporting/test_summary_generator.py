@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import json
 
-from infrastructure.reporting.suite_summary_generator import (
-    generate_markdown_report,
-    generate_summary_report,
+import pytest
+
+from infrastructure.reporting.markdown_formatter import generate_markdown_report
+from infrastructure.reporting.report_builder import generate_summary_report
+from infrastructure.reporting.result_loaders import (
     load_infrastructure_results,
     load_test_results,
 )
@@ -40,14 +42,14 @@ class TestLoadTestResults:
         result = load_test_results("my_proj", tmp_path)
         assert result == {"passed": 5, "failed": 1}
 
-    def test_returns_empty_dict_on_invalid_json(self, tmp_path):
-        """Returns empty dict when file contains invalid JSON."""
+    def test_raises_on_invalid_json(self, tmp_path):
+        """Raises JSONDecodeError when file contains invalid JSON."""
         project_dir = tmp_path / "projects" / "bad" / "output" / "reports"
         project_dir.mkdir(parents=True)
         (project_dir / "test_results.json").write_text("not json {{{")
 
-        result = load_test_results("bad", tmp_path)
-        assert result == {}
+        with pytest.raises(json.JSONDecodeError):
+            load_test_results("bad", tmp_path)
 
 
 class TestLoadInfrastructureResults:

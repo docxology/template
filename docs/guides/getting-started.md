@@ -79,15 +79,12 @@ uv sync
 ### Step 3: Generate Your First PDF
 
 ```bash
-# Generate everything (runs all 8 pipeline stages)
-uv run python scripts/execute_pipeline.py --core-only
-
-# Or use unified interactive menu
+# Run the unified interactive menu and select Option 8 (Full Pipeline)
 ./run.sh
 
-# Open the result
-open output/project_combined.pdf  # macOS (top-level output/)
-xdg-open output/project_combined.pdf  # Linux
+# Open the result (example project code_project)
+open output/code_project/pdf/code_project_combined.pdf  # macOS
+xdg-open output/code_project/pdf/code_project_combined.pdf  # Linux
 ```
 
 **🎉 Success!** You should see a professional PDF document.
@@ -181,8 +178,8 @@ projects/code_project/manuscript/
 1. **Run pipeline**
 
    ```bash
-   # Runs all 8 stages including cleanup
-   uv run python scripts/execute_pipeline.py --core-only
+   # Core pipeline (ten stages by default: clean through copy outputs)
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    
    # Or use unified interactive menu
    ./run.sh
@@ -191,7 +188,7 @@ projects/code_project/manuscript/
 2. **View the result**
 
    ```bash
-   open output/code_project/pdf/code_project_combined.pdf  # Top-level output (after stage 5)
+   open output/code_project/pdf/code_project_combined.pdf  # After copy outputs: output/{name}/pdf/
    ```
 
 **What You Get**:
@@ -367,7 +364,7 @@ export PROJECT_TITLE="Impact of Machine Learning on Climate Prediction"
 export DOI="10.5281/zenodo.12345678"
 
 # Generate with your metadata
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 #### Method 2: Create .env File
@@ -398,7 +395,7 @@ uv run python scripts/execute_pipeline.py --core-only
 
    ```bash
    source .env
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 **What Gets Updated**:
@@ -493,7 +490,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 4. **Rebuild to see citations**
 
    ```bash
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 ---
@@ -516,7 +513,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 | **Reference shows ??** | Check label spelling matches |
 | **Equation not numbered** | Use `\begin{equation}...\end{equation}` |
 | **Figure not found** | Check path is `../output/figures/` |
-| **PDF won't build** | Run `uv run python scripts/execute_pipeline.py --core-only` (includes cleanup) |
+| **PDF won't build** | Run `uv run python scripts/execute_pipeline.py --project {name} --core-only` (includes cleanup) |
 
 ### Keyboard Shortcuts
 
@@ -547,8 +544,31 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 3. Clean and rebuild:
 
    ```bash
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
+
+### Missing Dependencies
+
+**Problem**: `ModuleNotFoundError: No module named 'matplotlib'`
+
+**Solutions**:
+
+1. Ensure matplotlib is in core dependencies (not optional):
+   ```toml
+   # root pyproject.toml
+   [project]
+   dependencies = ["matplotlib>=3.7"]  # Not in optional-dependencies
+   ```
+2. Run `uv sync` to install
+
+### Project Not Found
+
+**Problem**: Project doesn't appear in menu
+
+**Solutions**:
+
+1. Ensure `manuscript/config.yaml` exists
+2. Check project is in `projects/` (not `projects_archive/`)
 
 ### References Show ??
 
@@ -561,7 +581,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 3. Rebuild (references need multiple passes):
 
    ```bash
-   uv run python scripts/execute_pipeline.py --core-only
+   uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 ### Math Not Rendering
@@ -583,7 +603,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 
 1. Check relative path: `../output/figures/name.png`
 2. Verify file exists: `ls projects/{name}/output/figures/`
-3. Run pipeline (includes script execution): `uv run python scripts/execute_pipeline.py --core-only`
+3. Run pipeline (includes script execution): `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 ---
 
@@ -592,10 +612,10 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 ### If you're ready to
 
 **Add your own figures and data**
-→ Read **[Figures and Analysis Guide](../guides/figures-and-analysis.md)** (Levels 4-6)
+→ Read **[Figures and Analysis Guide](figures-and-analysis.md)** (Levels 4-6)
 
 **Learn test-driven development**
-→ Read **[Testing and Reproducibility Guide](../guides/testing-and-reproducibility.md)** (Levels 7-9)
+→ Read **[Testing and Reproducibility Guide](testing-and-reproducibility.md)** (Levels 7-9)
 
 **Understand the system architecture**
 → Read **[Architecture Guide](../core/architecture.md)**

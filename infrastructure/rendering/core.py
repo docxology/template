@@ -5,7 +5,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 from infrastructure.rendering.slides_renderer import SlidesRenderer
@@ -13,8 +13,10 @@ from infrastructure.rendering.web_renderer import WebRenderer
 
 logger = get_logger(__name__)
 
-# Minimum PDF size in MB; PDFs below this are considered empty/corrupted (matches 1000-byte check in pdf_validator)
+# Minimum PDF size in MB; PDFs below this are considered empty/corrupted
+# (matches 1000-byte check in pdf_validator)
 _MIN_VALID_PDF_MB = 0.001
+
 
 class RenderManager:
     """Orchestrates rendering of all output formats."""
@@ -25,6 +27,7 @@ class RenderManager:
         manuscript_dir: Path | None = None,
         figures_dir: Path | None = None,
     ):
+        """Initialize the render manager with configuration and directories."""
         self.config = config or RenderingConfig.from_env()
         self.manuscript_dir = manuscript_dir
         self.figures_dir = figures_dir
@@ -55,7 +58,7 @@ class RenderManager:
         if not source_file.exists():
             raise TemplateError(f"Source file does not exist: {source_file}")
 
-        outputs = []
+        rendered_paths = []
         format_errors: list[tuple[str, Exception]] = []
 
         # Validate file format
@@ -70,7 +73,7 @@ class RenderManager:
             if source_file.suffix == ".tex":
                 # LaTeX usually means PDF or Poster
                 logger.info(f"Rendering LaTeX file: {source_file.name}")
-                outputs.append(self.pdf_renderer.render(source_file))
+                rendered_paths.append(self.pdf_renderer.render(source_file))
 
             elif source_file.suffix == ".md":
                 # Markdown supports slides and web formats
@@ -79,7 +82,7 @@ class RenderManager:
                 # 1. Beamer slides for presentation
                 try:
                     logger.debug("Rendering Beamer slides...")
-                    outputs.append(self.render_slides(source_file, output_format="beamer"))
+                    rendered_paths.append(self.render_slides(source_file, output_format="beamer"))
                     logger.debug("Beamer slides rendered successfully")
                 except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
                     format_errors.append(("beamer", e))
@@ -116,17 +119,17 @@ class RenderManager:
                 # 2. HTML web version
                 try:
                     logger.debug("Rendering HTML web version...")
-                    outputs.append(self.web_renderer.render(source_file))
+                    rendered_paths.append(self.web_renderer.render(source_file))
                     logger.debug("HTML web version rendered successfully")
                 except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
                     format_errors.append(("html", e))
                     logger.warning(f"Failed to render HTML: {e}")
                     # Continue - some formats may still succeed
 
-            if not outputs:
+            if not rendered_paths:
                 failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)
                 raise TemplateError(
-                    f"No outputs generated for {source_file.name}. "
+                    f"No rendered_paths generated for {source_file.name}. "
                     f"All formats failed: {failed_formats}"
                 )
 
@@ -134,12 +137,12 @@ class RenderManager:
                 failed_names = ", ".join(fmt for fmt, _ in format_errors)
                 logger.warning(
                     f"Partial success for {source_file.name}: "
-                    f"{len(outputs)} format(s) succeeded, "
+                    f"{len(rendered_paths)} format(s) succeeded, "
                     f"{len(format_errors)} failed ({failed_names})"
                 )
 
-            logger.info(f"Successfully rendered {len(outputs)} format(s) for {source_file.name}")
-            return outputs
+            logger.info(f"Successfully rendered {len(rendered_paths)} format(s) for {source_file.name}")
+            return rendered_paths
 
         except TemplateError:
             # Re-raise TemplateError as-is
@@ -153,46 +156,20 @@ class RenderManager:
         return self.pdf_renderer.render_markdown(source_file)
 
     def render_pdf(self, source_file: Path) -> Path:
-        """Render a source file to PDF format.
-
-        Delegates to the PDFRenderer for actual rendering. Supports both LaTeX (.tex)
-        and Markdown (.md) source files.
-
-        Args:
-            source_file: Path to the source file to render. Must be a .tex or .md file.
-
-        Returns:
-            Path to the generated PDF file.
-
-        Raises:
-            RenderingError: If the source file format is unsupported or rendering fails.
-        """
+        """Render a .tex or .md source file to PDF."""
         return self.pdf_renderer.render(source_file)
 
     def render_slides(self, source_file: Path, output_format: str = "beamer") -> Path:
         """Render slides with figure path resolution."""
         return self.slides_renderer.render(
             source_file,
-            format=output_format,
+            output_format=output_format,
             manuscript_dir=self.manuscript_dir,
             figures_dir=self.figures_dir,
         )
 
     def render_web(self, source_file: Path) -> Path:
-        """Render a source file to HTML web format.
-
-        Delegates to the WebRenderer for actual rendering. Converts Markdown files
-        to standalone HTML pages suitable for web viewing.
-
-        Args:
-            source_file: Path to the Markdown source file to render.
-
-        Returns:
-            Path to the generated HTML file.
-
-        Raises:
-            RenderingError: If the source file cannot be read or rendering fails.
-        """
+        """Render a Markdown source file to standalone HTML."""
         return self.web_renderer.render(source_file)
 
     def render_combined_pdf(

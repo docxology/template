@@ -40,33 +40,30 @@ dependencies = [
   "numpy>=1.22",
   "pyyaml>=6.0",
   "matplotlib>=3.7",
-  # requests is required: infrastructure/llm/core/__init__.py unconditionally re-exports
-  # LLMClient which calls the Ollama REST API; any import of infrastructure.llm crashes without it
-  "requests>=2.31.0",
+  # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:
+  # uv sync --group scientific
+  # requests is in the [llm] dep group — install with: uv sync --group llm
 ]
 
-[project.scripts]
-# Development workflow scripts (run with: uv run <script-name>)
-test = "pytest tests/ --cov=infrastructure --cov-report=html --cov-fail-under=70"
-test-infra = "pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=60 --tb=short -m 'not requires_ollama' --ignore=tests/infra_tests/core/test_module_interoperability.py"
-test-project = "pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing --cov-report=html --cov-report=json --cov-fail-under=90 --tb=short"
-lint = "mypy infrastructure/"
-security = "bandit -r infrastructure/"
-format = "black infrastructure/"
-type-check = "mypy --strict infrastructure/"
+
+# NOTE: [project.scripts] removed — entries were shell commands, not Python
+# entrypoint references (PEP 517 violation). Use `uv run pytest ...` or
+# the scripts/ directory for dev workflows.  package = false (line 120) means
+# no console_scripts are installed anyway.
 
 [dependency-groups]
 # Optional scientific computing (used by act_inf_metaanalysis project; not needed for core template)
 scientific = [
   "scipy>=1.10.0",
   "pandas>=2.0.0",
-  "networkx>=3.0",
   "rdflib>=7.0.0",
   "wordcloud>=1.9.0",
   "scikit-learn>=1.3.0",
 ]
-# Optional LLM integration (requires running Ollama server; requests is in core deps)
-llm = []
+# Optional LLM integration (requires running Ollama server and requests HTTP library)
+llm = [
+  "requests>=2.31.0",
+]
 # Optional rendering enhancements (lazily imported in manuscript_overview.py and pdf_validator.py)
 rendering = [
   "reportlab>=4.0.0",
@@ -76,7 +73,6 @@ rendering = [
 # Optional dashboard generation (lazily imported in dashboard_generator.py)
 dashboard = [
   "plotly>=5.0.0",
-  "matplotlib>=3.7",
 ]
 # Optional .env file loading (used in infrastructure/core/credentials.py, gracefully absent)
 dotenv = [
@@ -90,11 +86,6 @@ steganography = [
 # Optional resource monitoring (gracefully absent via try/except in logging_utils.py)
 monitoring = [
   "psutil>=5.9.0",
-]
-# Required for cognitive_case_diagrams project (real DisCoPy methods, not optional)
-cognitive-case-diagrams = [
-  "networkx>=3.0",
-  "discopy>=1.0.0",
 ]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)
 dev = [
@@ -216,27 +207,25 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"infrastructure/core/logging_utils.py" = ["E402"]  # Conditional imports after setup
+"infrastructure/core/logging/*.py" = ["E402"]  # Conditional imports after setup
 "infrastructure/publishing/publish_cli.py" = ["E402"]  # sys.path manipulation before imports
 "infrastructure/rendering/render_all_cli.py" = ["E402"]  # sys.path manipulation before imports
 "scripts/*" = ["E402", "E501"]  # sys.path before imports; docstring line length
 "tests/*" = ["E712", "E402"]  # Allow == True/False assertions; conditional test imports
 "__init__.py" = ["F401"]  # Allow re-exports in __init__ files
 # E501 in docstrings/comments (ruff format handles code structure line length)
-"infrastructure/core/checkpoint.py" = ["E501"]
+"infrastructure/core/runtime/checkpoint.py" = ["E501"]
 "infrastructure/core/errors.py" = ["E501"]
 "infrastructure/core/exceptions.py" = ["E501"]
-"infrastructure/core/file_operations.py" = ["E501"]
-"infrastructure/core/pipeline.py" = ["E501"]
+"infrastructure/core/files/*.py" = ["E501"]
+"infrastructure/core/pipeline/*.py" = ["E501"]
 "infrastructure/llm/*" = ["E501"]
 "infrastructure/project/discovery.py" = ["E501"]
 "infrastructure/publishing/citations.py" = ["E501"]
-"infrastructure/publishing/core.py" = ["E501"]
 "infrastructure/rendering/slides_renderer.py" = ["E501"]
 "infrastructure/reporting/*" = ["E501"]
 "infrastructure/scientific/templates.py" = ["E501"]
-"infrastructure/validation/markdown_validator.py" = ["E501"]
-"infrastructure/validation/output_validator.py" = ["E501"]
+"infrastructure/validation/content/*.py" = ["E501"]
 "projects/*/src/**" = ["E501"]
 
 # ============================================================================

@@ -4,6 +4,13 @@
 
 This document provides documentation for the Research Project Template system, ensuring understanding of all functionality, configuration options, and operational procedures.
 
+### 📄 Publication
+
+**Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
+**DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
+
+The reproducibility crisis in computational research is fundamentally structural: research artifacts are scattered across disconnected tools—LaTeX editors, Jupyter notebooks, ad-hoc shell scripts—with no enforced mechanism to keep code, data, and manuscript synchronized. `template/` applies the principle of Infrastructure as Code to the research lifecycle, making the manuscript, test suite, and provenance chain version-controlled, deterministically buildable, and independently verifiable. It is built on a Two-Layer Architecture that separates 14 reusable infrastructure subpackages (~150 Python modules, validated by ~3,083 tests) from self-contained project workspaces, connected by a ten-stage DAG-based build pipeline. A Documentation Duality standard equips every directory with both human-readable `README.md` and machine-readable `AGENTS.md` files, while each infrastructure module additionally carries a `SKILL.md`—a structured skill descriptor aligned with the Model Context Protocol—enabling AI agents to locate and invoke module capabilities without hallucinating API signatures. Scalability is demonstrated across three heterogeneous projects achieving 100% pipeline success with zero mock violations. `template/` is open source under the Apache 2.0 License at `github.com/docxology/template`.
+
 ## 📋 Table of Contents
 
 1. [Core Architecture](#core-architecture)
@@ -21,13 +28,13 @@ This document provides documentation for the Research Project Template system, e
 
 ### Two-Layer Architecture
 
-**Layer 1: Infrastructure (Generic - Reusable)**
+#### Layer 1: Infrastructure (Generic - Reusable)
 
 - `infrastructure/` - Generic build/validation tools (reusable across projects)
-- `scripts/` - Entry point orchestrators (two pipeline options: 8-stage core or 10-stage extended)
+- `scripts/` - Entry point orchestrators (core pipeline or full pipeline via `./run.sh`)
 - `tests/` - Infrastructure and integration tests
 
-**Layer 2: Projects (Project-Specific - Customizable)**
+#### Layer 2: Projects (Project-Specific - Customizable)
 
 - `projects/{name}/src/` - Research algorithms and analysis (domain-specific per project)
 - `projects/{name}/tests/` - Project test suite
@@ -79,12 +86,13 @@ The template now supports **multiple independent projects** within a single repo
 - Interactive project selection menu
 - Backward compatibility with single-project workflows
 
-**Active Projects:**
+**Active Projects** (under `projects/` today; authoritative list from `discover_projects()`):
 
-- `projects/code_project/` — Optimization research exemplar (master exemplar, numerical methods & convergence)
-- `projects/medical_ai/` — Medical AI pipeline (clinical inference framework)
+- `projects/code_project/` — Optimization research exemplar (numerical methods and convergence)
+- `projects/fep_lean/` — Formal-methods / Lean-oriented manuscript and tooling
+- `projects/template/` — Meta-documentation and template metrics
 
-**Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
+**Note:** Additional exemplars (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `cognitive_case_diagrams`) live under `projects_archive/` until moved back into `projects/`. Archived projects are not discovered or executed by the pipeline.
 
 ## 📂 Project Organization: Active vs Archived
 
@@ -122,7 +130,7 @@ An optional intermediate staging area for projects that are under active develop
 - **NOT executed** by any pipeline scripts
 - Useful for drafting new project scaffolding before promoting to `projects/`
 
-**Current projects in progress:** `act_inf_metaanalysis`, `cognitive_case_diagrams`, `pragmatism_blake`, `template`
+**Current projects in progress:** `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `cognitive_case_diagrams`, `ento_linguistics` (see `projects_in_progress/`; not executed by `./run.sh` until promoted to `projects/`)
 
 **To promote:** Move `projects_in_progress/{name}/` → `projects/{name}/`
 
@@ -130,25 +138,18 @@ An optional intermediate staging area for projects that are under active develop
 
 The template separates **generic infrastructure** from **project-specific code**:
 
-```
+```text
 template/                           # Generic template repository
 ├── infrastructure/                 # Generic build/validation tools (Layer 1)
 │   ├── AGENTS.md
 │   ├── README.md
+│   ├── config/                     # Repository-wide configuration
+│   │   ├── .env.template
+│   │   └── secure_config.yaml
+│   ├── docker/                     # Docker configuration
+│   │   ├── Dockerfile
+│   │   └── docker-compose.yml
 │   └── *.py                        # build_verifier, figure_manager, etc.
-├── scripts/                        # Generic entry point orchestrators
-│   ├── AGENTS.md                   # Entry points: 00-setup, 01-tests, 02-analysis, 03-pdf, 04-validate, 05-copy
-│   ├── README.md
-│   ├── 00_setup_environment.py
-│   ├── 01_run_tests.py
-│   ├── 02_run_analysis.py          # Discovers & executes project/scripts/
-│   ├── 03_render_pdf.py
-│   ├── 04_validate_output.py
-│   ├── 05_copy_outputs.py          # Copies final deliverables
-├── run.sh                          # Main interactive + pipeline entry point
-├── secure_run.sh                   # Secure pipeline: run.sh + steganographic post-processing
-├── secure_config.yaml              # Top-level steganography configuration
-├── tests/                          # Infrastructure tests
 │   ├── AGENTS.md
 │   ├── README.md
 │   └── test_*.py                   # Tests for infrastructure/ modules
@@ -176,7 +177,7 @@ Each directory contains documentation for easy navigation:
 ### Generic Infrastructure (Reusable)
 
 | Directory | AGENTS.md | README.md | Purpose |
-|-----------|-----------|-----------|---------|
+| --------- | --------- | --------- | ------- |
 | [`infrastructure/`](infrastructure/) | [AGENTS.md](infrastructure/AGENTS.md) | [README.md](infrastructure/README.md) | Generic build/validation tools (Layer 1) |
 | [`scripts/`](scripts/) | [AGENTS.md](scripts/AGENTS.md) | [README.md](scripts/README.md) | Generic entry point orchestrators |
 | [`tests/`](tests/) | [AGENTS.md](tests/AGENTS.md) | [README.md](tests/README.md) | Infrastructure test suite |
@@ -184,14 +185,17 @@ Each directory contains documentation for easy navigation:
 ### Project-Specific (Customizable)
 
 | Directory | AGENTS.md | README.md | Purpose |
-|-----------|-----------|-----------|--------|
+| --------- | --------- | --------- | ------- |
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
-| [`projects/medical_ai/`](projects/medical_ai/) | [AGENTS.md](projects/medical_ai/AGENTS.md) | — | Medical AI clinical pipeline |
+| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | Formal / Lean-oriented project |
+| [`projects/template/`](projects/template/) | [AGENTS.md](projects/template/AGENTS.md) | [README.md](projects/template/README.md) | Template meta-documentation |
+
+See [`projects/README.md`](projects/README.md) for narrative descriptions. Archived exemplars (e.g. [`projects_archive/traditional_newspaper/`](projects_archive/traditional_newspaper/)) are under [`projects_archive/`](projects_archive/) (not executed until moved into `projects/`). Regenerate [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) after changing `projects/` layout (`uv run python scripts/generate_active_projects_doc.py`).
 
 ### Documentation Directories
 
 | Directory | AGENTS.md | README.md | Purpose |
-|-----------|-----------|-----------|---------|
+| --------- | --------- | --------- | ------- |
 | [`docs/`](docs/) | [AGENTS.md](docs/AGENTS.md) | [README.md](docs/README.md) | Project documentation hub |
 
 ### Documentation Navigation
@@ -213,20 +217,36 @@ Each directory contains documentation for easy navigation:
 
 ### Directory Structure
 
-```
+```text
 template/                           # Generic Template
 ├── infrastructure/                 # Generic build/validation tools (Layer 1)
 │   ├── AGENTS.md                   # Infrastructure documentation
 │   ├── README.md                   # Quick reference
+│   ├── config/                     # Repository-wide configuration
+│   │   ├── .env.template
+│   │   └── secure_config.yaml
+│   ├── docker/                     # Docker configuration
+│   │   ├── Dockerfile
+│   │   └── docker-compose.yml
 │   ├── build_verifier.py
 │   ├── figure_manager.py
 │   └── ...
+├── docs/                           # Documentation hub
+│   ├── AGENTS.md
+│   ├── README.md
+│   ├── CLOUD_DEPLOY.md
+│   ├── PAI.md
+│   └── RUN_GUIDE.md
+├── .cursor/                        # Editor configuration
+│   ├── .cursorrules
+│   ├── .cursorignore
+│   └── README.md
 ├── scripts/                        # Entry Points (Generic Orchestrators)
 │   ├── AGENTS.md                   # Entry point documentation
 │   ├── README.md                   # Quick reference
-│   ├── 00_setup_environment.py     # Stage 1: Setup Environment (Stage 0 is cleanup)
+│   ├── 00_setup_environment.py     # Stage 1: Setup Environment
 │   ├── 01_run_tests.py             # Stage 2: Test
-│   ├── 02_run_analysis.py          # Stage 3: Analysis (discovers project/scripts/)
+│   ├── 02_run_analysis.py          # Stage 3: Analysis
 │   ├── 03_render_pdf.py            # Stage 4: PDF
 │   ├── 04_validate_output.py       # Stage 5: Validate
 │   ├── 05_copy_outputs.py          # Stage 6: Copy outputs
@@ -237,17 +257,11 @@ template/                           # Generic Template
 ├── projects/                       # Multiple research projects directory
 │   ├── code_project/               # Optimization research exemplar
 │   │   ├── src/                    # Project scientific code (Layer 2)
-│   │   │   └── *.py                # Research algorithms
 │   │   ├── tests/                  # Project Tests
-│   │   │   └── test_*.py
 │   │   ├── scripts/                # Project Analysis Scripts
-│   │   │   └── *.py                # Analysis workflows
 │   │   ├── manuscript/             # Research Manuscript
-│   │   ├── output/                 # Generated Files (disposable)
+│   │   ├── output/                 # Generated Files
 │   │   └── pyproject.toml          # Project configuration
-├── docs/                           # Documentation
-│   ├── AGENTS.md
-│   └── README.md
 └── pyproject.toml                  # Root configuration
 ```
 
@@ -393,49 +407,53 @@ Configuration is read at runtime by `scripts/03_render_pdf.py` and applied to:
 
 The template provides **three entry points** for pipeline execution:
 
-**Main Entry Point (Recommended)**
+#### Main Entry Point (Recommended)
 
 ```bash
 # Routes to manuscript operations
 ./run.sh
 ```
 
-**Manuscript Operations**
+#### Manuscript Operations
 
 ```bash
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: Extended pipeline (10 stages displayed as [1/10] to [10/10]) with optional LLM review
+# Non-interactive: Pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9]) with optional LLM review
 ./run.sh --pipeline
 ```
 
 ### Secure Pipeline (`secure_run.sh`)
 
-A **two-stage wrapper** around the standard pipeline that adds steganographic PDF hardening:
+A **two-stage wrapper** around the standard pipeline that adds steganographic PDF hardening. It provides an interactive text menu identical to `run.sh`, but with options optimized for security, steganographic post-processing, and multi-project execution.
 
-**Stage 1:** Runs `run.sh --pipeline` (full 10-stage manuscript pipeline).
-**Stage 2:** `infrastructure/steganography.SteganographyProcessor` post-processes every PDF,
+**Stage 1:** Runs `run.sh [args]` (interactive or non-interactive depending on flags).
+**Stage 2:** `infrastructure/steganography.SteganographyProcessor` post-processes PDFs for
+all discovered active projects by default, or only the `--project` target when provided,
 producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
 Original PDFs are always left untouched.
 
 ```bash
-# Full secure pipeline (pipeline + steganography)
+# Interactive secure menu (recommended)
 ./secure_run.sh
 
-# Specific project
-./secure_run.sh --project medical_ai
+# Full secure pipeline (pipeline + steganography)
+./secure_run.sh --project code_project
 
 # Re-process existing PDFs only (skip pipeline re-run)
 ./secure_run.sh --steganography-only --project code_project
 
 # Core pipeline only (no LLM) + steganography
-./secure_run.sh --core-only
+./secure_run.sh --pipeline --core-only
+
+# Multi-project core pipeline then steganography for all discovered projects
+./secure_run.sh d
 ```
 
 **Output files:**
 
-```
+```text
 projects/{name}/output/pdf/
 ├── {name}_combined.pdf               # Standard output (untouched)
 ├── {name}_combined_steganography.pdf # Steganographically hardened copy
@@ -446,7 +464,7 @@ projects/{name}/output/pdf/
 metadata/XMP injection, SHA-256/SHA-512 hash manifests, invisible text layers, optional
 AES-256 password encryption.
 
-**Configuration** (`secure_config.yaml` at repo root):
+**Configuration** (`infrastructure/config/secure_config.yaml`):
 
 Controls all steganography settings. Any `steganography:` block in a project's
 `manuscript/config.yaml` overrides these repo-level defaults. Key fields:
@@ -466,26 +484,26 @@ steganography:
 
 **See also:** [`scripts/AGENTS.md`](scripts/AGENTS.md#secure-entry-point) · [`infrastructure/steganography/`](infrastructure/steganography/)
 
-**Entry Point Comparison**
+#### Entry Point Comparison
 
-- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages), includes optional LLM review stages. Stages are displayed as [1/10] to [10/10] in logs.
-- **`./run.sh --pipeline`**: 10 stages, includes optional LLM review stages. Stages are displayed as [1/10] to [10/10] in logs.
+- **`./run.sh`**: Main entry point - Interactive menu or pipeline run. Stages are displayed as [1/9] to [9/9], with an initial clean step shown as [0/9].
+- **`./run.sh --pipeline`**: Non-interactive pipeline execution; same stage display as above. Optional LLM stages run when enabled/configured.
 - **`python3 scripts/execute_pipeline.py --core-only`**: Core pipeline only (no LLM).
 
 ### Pipeline Stages
 
-**Full Pipeline Stages** (displayed as [1/10] to [10/10] in logs):
+**Full Pipeline Stages** (displayed as [1/9] to [9/9] in logs, with an initial clean step shown as [0/9]):
 
-1. **Clean Output Directories** - Clean working and final output directories
-2. **Environment Setup** - Verify system requirements and dependencies
-3. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
-4. **Project Tests** - Run project test suite (90% coverage minimum)
-5. **Project Analysis** - Execute `projects/{name}/scripts/` analysis workflows
-6. **PDF Rendering** - Generate manuscript PDFs and figures
-7. **Output Validation** - Validate all generated outputs
-8. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
-9. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
-10. **Copy Outputs** - Copy final deliverables to root `output/` directory
+- **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
+1. **Environment Setup** - Verify system requirements and dependencies
+2. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
+3. **Project Tests** - Run project test suite (90% coverage minimum)
+4. **Project Analysis** - Execute `projects/{name}/scripts/` analysis workflows
+5. **PDF Rendering** - Generate manuscript PDFs and figures
+6. **Output Validation** - Validate all generated outputs
+7. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
+8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
+9. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
 **Infrastructure Tests Behavior:**
 
@@ -498,7 +516,7 @@ steganography:
 
 **Stage Numbering:**
 
-- `./run.sh`: 10 stages displayed as [1/10] to [10/10] in progress logs
+- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in progress logs, with clean shown as [0/9]
 - `scripts/execute_pipeline.py`: Core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 ### Manual Execution Options
@@ -738,7 +756,7 @@ python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=
 
 ### Generated Files Structure
 
-```
+```text
 output/
 ├── project/                # Project-specific outputs
 │   ├── pdf/                # PDF documents
@@ -782,9 +800,9 @@ output/
 
 The template includes advanced modules for scientific package development:
 
-### 🔒 **Security & Monitoring** (`infrastructure/core/`)
+### 🔒 Security & Monitoring (`infrastructure/core/`)
 
-**Enterprise-grade security and system monitoring**
+Enterprise-grade security and system monitoring.
 
 **Key Features:**
 
@@ -797,8 +815,8 @@ The template includes advanced modules for scientific package development:
 **Usage:**
 
 ```python
-from infrastructure.core.security import validate_llm_input, get_security_validator
-from infrastructure.core.health_check import quick_health_check, get_health_status
+from infrastructure.core.runtime.security import validate_llm_input, get_security_validator
+from infrastructure.core.runtime.health_check import quick_health_check, get_health_status
 
 # Validate LLM input with security checks
 sanitized = validate_llm_input(user_prompt)
@@ -808,9 +826,9 @@ if quick_health_check():
     status = get_health_status()
 ```
 
-### 🔍 **Integrity Verification** (`infrastructure/validation/integrity.py`)
+### 🔍 Integrity Verification (`infrastructure/validation/integrity/integrity.py`)
 
-**File integrity and cross-reference validation**
+File integrity and cross-reference validation.
 
 **Key Features:**
 
@@ -823,15 +841,15 @@ if quick_health_check():
 **Usage:**
 
 ```python
-from infrastructure.validation.integrity import verify_output_integrity, generate_integrity_report
+from infrastructure.validation.integrity.integrity import verify_output_integrity, generate_integrity_report
 
 report = verify_output_integrity(output_dir)
 print(generate_integrity_report(report))
 ```
 
-### 📚 **Publishing Tools** (`infrastructure/publishing/`)
+### 📚 Publishing Tools (`infrastructure/publishing/`)
 
-**Academic publishing workflow assistance**
+Academic publishing workflow assistance.
 
 **Key Features:**
 
@@ -852,9 +870,9 @@ bibtex = generate_citation_bibtex(metadata)
 print(bibtex)
 ```
 
-### 🔬 **Scientific Development** (`infrastructure/scientific/`)
+### 🔬 Scientific Development (`infrastructure/scientific/`)
 
-**Scientific computing best practices and tools**
+Scientific computing best practices and tools.
 
 **Modular Structure:**
 
@@ -881,9 +899,9 @@ stability = check_numerical_stability(your_function, test_inputs)
 benchmark = benchmark_function(your_function, test_inputs)
 ```
 
-### 🤖 **LLM Integration** (`infrastructure/llm/`)
+### 🤖 LLM Integration (`infrastructure/llm/`)
 
-**Local LLM assistance for research workflows**
+Local LLM assistance for research workflows.
 
 **Key Features:**
 
@@ -913,9 +931,9 @@ summary = client.apply_template("summarize_abstract", text=abstract)
 response = client.query("What are the key findings?")
 ```
 
-### 🎨 **Rendering System** (`infrastructure/rendering/`)
+### 🎨 Rendering System (`infrastructure/rendering/`)
 
-**Multi-format output generation from single source**
+Multi-format output generation from single source.
 
 **Key Features:**
 
@@ -938,9 +956,9 @@ html = manager.render_web("manuscript.md")
 all_outputs = manager.render_all("manuscript.md")
 ```
 
-### 🚀 **Publishing Module** (`infrastructure/publishing/`)
+### 🚀 Publishing Module (`infrastructure/publishing/`)
 
-**Automated publishing to academic platforms**
+Automated publishing to academic platforms.
 
 **Module Structure:**
 
@@ -1029,7 +1047,7 @@ python3 -m infrastructure.validation.cli pdf output/{name}/pdf/
 - **LLM Review Issues**: [`docs/operational/troubleshooting/llm-review.md`](docs/operational/troubleshooting/llm-review.md)
 - **Checkpoint/Resume**: [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/checkpoint-resume.md)
 - **Performance Issues**: [`docs/operational/config/performance-optimization.md`](docs/operational/config/performance-optimization.md)
-- **Headless / Cloud Deploy**: [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) ☁️
+- **Headless / Cloud Deploy**: [`docs/CLOUD_DEPLOY.md`](docs/CLOUD_DEPLOY.md) ☁️
 
 ### Common Issues
 
@@ -1172,15 +1190,11 @@ Key log files for debugging:
 3. **Backup Strategy**
 
    ```bash
+   # Clean outputs before backup
+   python3 -c "from pathlib import Path; from infrastructure.core.files.operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
 
-# Clean outputs before backup
-
-python3 -c "from pathlib import Path; from infrastructure.core.file_operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
-
-# Backup source files only
-
+   # Backup source files only
    tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/
-
    ```
 
 ### Adding Features
@@ -1199,7 +1213,7 @@ python3 -c "from pathlib import Path; from infrastructure.core.file_operations i
 - **Performance Monitoring**: Automatic bottleneck detection in pipeline summary
 - **Resource Tracking**: Memory and CPU usage reporting (when enabled)
 
-See [`docs/operational/performance-optimization.md`](docs/operational/performance-optimization.md) for optimization guide.
+See [`docs/operational/config/performance-optimization.md`](docs/operational/config/performance-optimization.md) for optimization guide.
 
 ### Checkpoint and Resume
 
@@ -1222,15 +1236,15 @@ python3 scripts/execute_pipeline.py --project {name} --core-only
 - Graceful handling of corrupted checkpoints
 - Preserves pipeline start time and stage durations
 
-See [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume.md) for documentation.
+See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/checkpoint-resume.md) for documentation.
 
 ## 📚 References
 
 ### Internal Documentation
 
 - [`README.md`](README.md) - Project overview and quick start
-- [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) - **Headless / cloud server deployment** ☁️
-- [`RUN_GUIDE.md`](RUN_GUIDE.md) - Full pipeline orchestration reference
+- [`docs/CLOUD_DEPLOY.md`](docs/CLOUD_DEPLOY.md) - **Headless / cloud server deployment** ☁️
+- [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md) - Full pipeline orchestration reference
 - [`docs/core/how-to-use.md`](docs/core/how-to-use.md) - Usage guide
 - [`docs/core/architecture.md`](docs/core/architecture.md) - System design details
 - [`docs/core/workflow.md`](docs/core/workflow.md) - Development workflow
@@ -1298,7 +1312,7 @@ See [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume
 - ✅ Optional dependency handling (python-dotenv graceful fallback)
 - ✅ Test failure tolerance (MAX_TEST_FAILURES environment variable)
 - ✅ LaTeX path management (BasicTeX/MacTeX support)
-- ✅ Docker containerization (Dockerfile + docker-compose.yml)
+- ✅ Docker containerization (`infrastructure/docker/Dockerfile` + `docker-compose.yml`)
 
 **Modules (v2.1):**
 
@@ -1316,7 +1330,7 @@ See [`docs/operational/checkpoint-resume.md`](docs/operational/checkpoint-resume
 - ✅ Zero mock methods - all tests use data and HTTP calls
 - ✅ All .cursorrules standards implemented
 - ✅ compliance with thin orchestrator pattern
-- ✅ Production-ready build pipeline (8-stage core, 10-stage extended)
+- ✅ Production-ready build pipeline (core pipeline + full pipeline with optional LLM stages)
 - ✅ Reproducible outputs (deterministic with fixed seeds)
 - ✅ Graceful degradation for optional features
 - ✅ Multi-project support (projects/{name}/ structure)

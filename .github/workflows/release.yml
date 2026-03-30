@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag name to create release for (e.g. v3.1.0)"
+        required: true
+
+permissions:
+  contents: write  # Required to create the GitHub Release
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for changelog generation
+
+      - name: Determine tag name
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "name=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate changelog excerpt
+        id: changelog
+        run: |
+          TAG="${{ steps.tag.outputs.name }}"
+          # Extract entries since the previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || echo "")
+          if [ -n "$PREV_TAG" ]; then
+            LOG=$(git log "${PREV_TAG}..${TAG}" --oneline --no-merges | head -50)
+          else
+            LOG=$(git log "${TAG}" --oneline --no-merges | head -50)
+          fi
+          # Write to file to handle multiline safely
+          echo "$LOG" > /tmp/changelog.txt
+          echo "file=/tmp/changelog.txt" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.name }}
+          name: "Research Project Template ${{ steps.tag.outputs.name }}"
+          body_path: ${{ steps.changelog.outputs.file }}
+          draft: false
+          prerelease: ${{ contains(steps.tag.outputs.name, '-rc') || contains(steps.tag.outputs.name, '-beta') || contains(steps.tag.outputs.name, '-alpha') }}
+          generate_release_notes: true  # GitHub's built-in PR-based notes

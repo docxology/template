@@ -6,16 +6,16 @@ Follows No Mocks Policy - all tests use real data and real execution.
 
 from datetime import datetime
 
-from infrastructure.validation.doc_accuracy import extract_headings
-from infrastructure.validation.doc_discovery import (
+from infrastructure.validation.docs.accuracy import extract_headings
+from infrastructure.validation.docs.discovery import (
     analyze_documentation_file,
     catalog_agents_readme,
     find_config_files,
     find_markdown_files,
     find_script_files,
 )
-from infrastructure.validation.doc_scanner import (
-    AccuracyIssue,
+from infrastructure.validation.docs.models import ScanAccuracyIssue as AccuracyIssue
+from infrastructure.validation.docs.scanner import (
     CompletenessGap,
     DocumentationFile,
     DocumentationScanner,

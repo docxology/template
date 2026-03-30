@@ -10,9 +10,10 @@ import logging
 import threading
 import time
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 class StreamHeartbeatMonitor:
     """Monitor heartbeat for streaming LLM operations.
@@ -215,7 +216,7 @@ class StreamHeartbeatMonitor:
             extra["tokens_per_sec"] = tokens_per_sec
 
             # Estimate completion if we have total estimate
-            if self.estimated_total_tokens and tokens_per_sec > 0:
+            if self.estimated_total_tokens is not None and tokens_per_sec > 0:
                 remaining_tokens = self.estimated_total_tokens - self.token_count
                 if remaining_tokens > 0:
                     estimated_remaining_seconds = remaining_tokens / tokens_per_sec

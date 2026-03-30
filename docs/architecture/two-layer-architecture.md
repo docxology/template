@@ -95,17 +95,7 @@ fm.register_figure(
 ```
 projects/{name}/src/
 ├── example.py                 # Basic operations (template example)
-├── simulation.py              # Scientific simulation framework
-├── statistics.py              # Statistical analysis
-├── data_generator.py          # Synthetic data generation
-├── data_processing.py         # Data preprocessing and cleaning
-├── metrics.py                 # Performance metrics
-├── parameters.py              # Parameter management
-├── performance.py             # Convergence and scalability analysis
-├── plots.py                   # Plot implementations
-├── reporting.py               # Report generation
-├── validation.py              # Result validation
-└── visualization.py           # Visualization engine
+├── ...                        # Project-specific modules (names vary by project)
 ```
 
 **Scripts (thin orchestrators):**
@@ -159,7 +149,7 @@ fm.register_figure(
 graph TB
     subgraph L1["LAYER 1: INFRASTRUCTURE<br/>(Build orchestration, validation, document management)"]
         subgraph SCRIPTS["Pipeline Orchestrators"]
-            RUN_ALL[execute_pipeline.py<br/>8-stage pipeline]
+            RUN_ALL[execute_pipeline.py<br/>10-stage DAG pipeline]
             SCRIPT_LIST[scripts/*.py<br/>- 00_setup_environment.py<br/>- 01_run_tests.py<br/>- 02_run_analysis.py<br/>- 03_render_pdf.py<br/>- 04_validate_output.py<br/>- 05_copy_outputs.py]
         end
         
@@ -233,7 +223,7 @@ from project.src.statistics import calculate_descriptive_stats
 
 ```python
 # BAD: Build tools shouldn't depend on project-specific code
-from infrastructure.validation.integrity import verify_output_integrity
+from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
 from project.src.simulation import SimpleSimulation  # ❌ WRONG
 
 # This breaks the abstraction and makes infrastructure project-specific
@@ -279,17 +269,7 @@ project/                       # Project-specific code
 │   ├── AGENTS.md              # Project documentation
 │   ├── README.md              # Quick reference
 │   ├── example.py
-│   ├── simulation.py
-│   ├── statistics.py
-│   ├── data_generator.py
-│   ├── data_processing.py
-│   ├── metrics.py
-│   ├── parameters.py
-│   ├── performance.py
-│   ├── plots.py
-│   ├── reporting.py
-│   ├── validation.py
-│   └── visualization.py
+│   └── ...                    # Project modules (names vary by project)
 ├── scripts/                   # Project orchestrators
 │   ├── example_figure.py
 │   ├── generate_research_figures.py
@@ -336,7 +316,7 @@ projects/{name}/tests/                 # [LAYER 2] Project tests
 
 ```mermaid
 flowchart TD
-    START([User runs:<br/>uv run python scripts/execute_pipeline.py --core-only]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
+    START([User runs:<br/>uv run python scripts/execute_pipeline.py --project {name} --core-only]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
     CLEAN --> STAGE00[STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools]
     
     STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infrastructure/*.py<br/>- Run projects/{name}/tests/*.py<br/>- Run tests/integration/*.py<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]

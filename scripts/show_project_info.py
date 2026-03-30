@@ -19,7 +19,7 @@ repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
 
 from infrastructure.core.exceptions import FileNotFoundError
-from infrastructure.core.logging_utils import get_logger, log_header, log_substep
+from infrastructure.core.logging.utils import get_logger, log_header, log_substep
 
 logger = get_logger(__name__)
 

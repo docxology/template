@@ -20,9 +20,10 @@ Technical guide for `docs/prompts/` — expertly crafted prompt templates ensuri
 
 ## Key Conventions
 
+- **Exemplar tree**: point concrete paths at [`projects/code_project/`](../../projects/code_project/); active names → [_generated/active_projects.md](../_generated/active_projects.md).
 - Each prompt includes context injection, explicit constraints, and verification steps
 - All prompts enforce the thin orchestrator pattern and no-mocks testing policy
-- Prompts reference `.cursorrules/` standards for consistency
+- Prompts reference `../rules/` standards for consistency
 - Copy-paste ready — each prompt is self-contained
 
 ## See Also

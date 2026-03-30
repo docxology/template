@@ -18,7 +18,7 @@ from __future__ import annotations
 
 
 from infrastructure.llm.core.client import LLMClient
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 
 # No mock imports needed - using real HTTP server
 
@@ -30,14 +30,14 @@ class TestQueryLogging:
         """Test query logs start with structured data."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure logger is properly configured for test
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
         logger.propagate = True  # Ensure propagation for caplog
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -66,14 +66,14 @@ class TestQueryLogging:
         """Test query logs completion with metrics."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure logger is properly configured for test
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
         logger.propagate = True  # Ensure propagation for caplog
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -100,7 +100,7 @@ class TestQueryLogging:
         """Test query logs context reset."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure loggers are properly configured for test
         client_logger = get_logger("infrastructure.llm.core.client")
@@ -108,7 +108,7 @@ class TestQueryLogging:
         client_logger.setLevel(logging.INFO)
         context_logger.setLevel(logging.INFO)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -128,13 +128,13 @@ class TestQueryRawLogging:
         """Test query_raw logs the raw context add at DEBUG level."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -148,13 +148,13 @@ class TestQueryRawLogging:
         """Test query_raw triggers an Ollama request."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -171,13 +171,13 @@ class TestQueryShortLogging:
         """Test query_short triggers an Ollama request at DEBUG level."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -188,7 +188,7 @@ class TestQueryShortLogging:
 
     def test_query_short_returns_response(self, ollama_test_server):
         """Test query_short returns a non-empty string response."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -204,13 +204,13 @@ class TestQueryLongLogging:
         """Test query_long triggers an Ollama request at DEBUG level."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -221,7 +221,7 @@ class TestQueryLongLogging:
 
     def test_query_long_returns_response(self, ollama_test_server):
         """Test query_long returns a non-empty string response."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -237,12 +237,12 @@ class TestQueryStructuredLogging:
         """Test query_structured logs start."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -258,12 +258,12 @@ class TestQueryStructuredLogging:
         """Test query_structured logs completion."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -286,7 +286,7 @@ class TestContextLogging:
         """Test context add_message logs."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
         from infrastructure.llm.core.context import ConversationContext
 
         logger = get_logger("infrastructure.llm.core.context")
@@ -306,7 +306,7 @@ class TestContextLogging:
         """Test context clear logs."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
         from infrastructure.llm.core.context import ConversationContext
 
         logger = get_logger("infrastructure.llm.core.context")
@@ -324,7 +324,7 @@ class TestContextLogging:
         """Test context prune logs."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
         from infrastructure.llm.core.context import ConversationContext
 
         logger = get_logger("infrastructure.llm.core.context")
@@ -353,7 +353,7 @@ class TestErrorLogging:
         """Test connection errors are logged when server is unreachable."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure propagation so caplog can capture
         logger = get_logger("infrastructure.llm.core.client")
@@ -361,7 +361,7 @@ class TestErrorLogging:
         logger.propagate = True
 
         # Point client at a port with no server listening to trigger real ConnectionError
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = "http://localhost:1"  # Port 1 refuses connections
         config.fallback_models = []  # No fallbacks to keep test fast
         client = LLMClient(config=config)
@@ -378,7 +378,7 @@ class TestErrorLogging:
         """Test timeout errors are logged when server is unresponsive."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         # Ensure propagation so caplog can capture
         logger = get_logger("infrastructure.llm.core.client")
@@ -386,7 +386,7 @@ class TestErrorLogging:
         logger.propagate = True
 
         # Point client at a non-routable IP with a very short timeout to force real Timeout
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = "http://10.255.255.1"  # Non-routable — never responds
         config.timeout = 0.01  # 10ms — times out before route resolves
         config.fallback_models = []  # No fallbacks to keep test fast
@@ -408,12 +408,12 @@ class TestLoggingLevels:
         """Test DEBUG level logging."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.DEBUG)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 
@@ -427,12 +427,12 @@ class TestLoggingLevels:
         """Test that resetting context generates an INFO log."""
         import logging
 
-        from infrastructure.core.logging_utils import get_logger
+        from infrastructure.core.logging.utils import get_logger
 
         logger = get_logger("infrastructure.llm.core.client")
         logger.setLevel(logging.INFO)
 
-        config = LLMConfig(auto_inject_system_prompt=False)
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
         config.base_url = ollama_test_server.url_for("/")
         client = LLMClient(config=config)
 

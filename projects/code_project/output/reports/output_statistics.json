@@ -3,8 +3,8 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.82",
-      "total_size_bytes": 1907667,
+      "size_mb": "1.89",
+      "total_size_bytes": 1984683,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
@@ -13,12 +13,12 @@
         },
         {
           "name": "_combined_manuscript.log",
-          "size_mb": "0.06",
+          "size_mb": "0.07",
           "path": "pdf/_combined_manuscript.log"
         },
         {
           "name": "_combined_manuscript.tex",
-          "size_mb": "0.05",
+          "size_mb": "0.06",
           "path": "pdf/_combined_manuscript.tex"
         }
       ],
@@ -36,84 +36,84 @@
     },
     "web": {
       "exists": true,
-      "file_count": 8,
-      "size_mb": "0.17",
-      "total_size_bytes": 173276,
+      "file_count": 11,
+      "size_mb": "0.23",
+      "total_size_bytes": 245640,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.07",
+          "size_mb": "0.09",
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
-          "size_mb": "0.03",
+          "size_mb": "0.04",
           "path": "web/_combined_manuscript.md"
         },
         {
           "name": "03_results.html",
-          "size_mb": "0.02",
+          "size_mb": "0.03",
           "path": "web/03_results.html"
         }
       ],
       "extensions": {
         ".md": 1,
-        ".html": 7
+        ".html": 10
       }
     },
     "slides": {
       "exists": true,
-      "file_count": 48,
-      "size_mb": "2.20",
-      "total_size_bytes": 2311132,
+      "file_count": 72,
+      "size_mb": "1.26",
+      "total_size_bytes": 1318727,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "1.56",
+          "size_mb": "0.23",
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "03_results_slides.log",
-          "size_mb": "0.07",
+          "size_mb": "0.10",
           "path": "slides/03_results_slides.log"
         },
         {
-          "name": "02_methodology_slides.log",
-          "size_mb": "0.06",
-          "path": "slides/02_methodology_slides.log"
+          "name": "05_experimental_setup_slides.log",
+          "size_mb": "0.08",
+          "path": "slides/05_experimental_setup_slides.log"
         }
       ],
       "extensions": {
-        ".pdf": 6,
-        ".log": 6,
-        ".toc": 6,
-        ".tex": 6,
-        ".snm": 6,
-        ".aux": 6,
-        ".nav": 6,
-        ".vrb": 6
+        ".pdf": 9,
+        ".log": 9,
+        ".toc": 9,
+        ".tex": 9,
+        ".snm": 9,
+        ".aux": 9,
+        ".vrb": 9,
+        ".nav": 9
       }
     },
     "figures": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "1.53",
-      "total_size_bytes": 1608196,
+      "size_mb": "1.52",
+      "total_size_bytes": 1590632,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
-          "size_mb": "0.35",
+          "size_mb": "0.38",
           "path": "figures/algorithm_complexity.png"
         },
         {
-          "name": "convergence_plot.png",
-          "size_mb": "0.30",
-          "path": "figures/convergence_plot.png"
+          "name": "convergence_rate_comparison.png",
+          "size_mb": "0.29",
+          "path": "figures/convergence_rate_comparison.png"
         },
         {
-          "name": "convergence_rate_comparison.png",
-          "size_mb": "0.28",
-          "path": "figures/convergence_rate_comparison.png"
+          "name": "step_size_sensitivity.png",
+          "size_mb": "0.24",
+          "path": "figures/step_size_sensitivity.png"
         }
       ],
       "extensions": {
@@ -123,10 +123,20 @@
     },
     "data": {
       "exists": true,
-      "file_count": 1,
-      "size_mb": "0.00",
-      "total_size_bytes": 238,
+      "file_count": 3,
+      "size_mb": "0.01",
+      "total_size_bytes": 11554,
       "largest_files": [
+        {
+          "name": "convergence_plot.json",
+          "size_mb": "0.01",
+          "path": "data/convergence_plot.json"
+        },
+        {
+          "name": "manuscript_variables.json",
+          "size_mb": "0.00",
+          "path": "data/manuscript_variables.json"
+        },
         {
           "name": "optimization_results.csv",
           "size_mb": "0.00",
@@ -134,6 +144,7 @@
         }
       ],
       "extensions": {
+        ".json": 2,
         ".csv": 1
       }
     },
@@ -141,7 +152,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.01",
-      "total_size_bytes": 8438,
+      "total_size_bytes": 8307,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -185,7 +196,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2655,
+      "total_size_bytes": 2451,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -198,8 +209,8 @@
       }
     }
   },
-  "total_files": 83,
-  "total_size_mb": 5.733110427856445,
+  "total_files": 112,
+  "total_size_mb": 4.922861099243164,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
@@ -208,91 +219,91 @@
       "path": "pdf/code_project_combined.pdf"
     },
     {
-      "name": "03_results_slides.pdf",
-      "size_mb": "1.56",
-      "category": "slides",
-      "path": "slides/03_results_slides.pdf"
-    },
-    {
       "name": "algorithm_complexity.png",
-      "size_mb": "0.35",
+      "size_mb": "0.38",
       "category": "figures",
       "path": "figures/algorithm_complexity.png"
     },
     {
-      "name": "convergence_plot.png",
-      "size_mb": "0.30",
-      "category": "figures",
-      "path": "figures/convergence_plot.png"
-    },
-    {
       "name": "convergence_rate_comparison.png",
-      "size_mb": "0.28",
+      "size_mb": "0.29",
       "category": "figures",
       "path": "figures/convergence_rate_comparison.png"
     },
     {
-      "name": "index.html",
-      "size_mb": "0.07",
-      "category": "web",
-      "path": "web/index.html"
+      "name": "step_size_sensitivity.png",
+      "size_mb": "0.24",
+      "category": "figures",
+      "path": "figures/step_size_sensitivity.png"
+    },
+    {
+      "name": "03_results_slides.pdf",
+      "size_mb": "0.23",
+      "category": "slides",
+      "path": "slides/03_results_slides.pdf"
     },
     {
       "name": "03_results_slides.log",
-      "size_mb": "0.07",
+      "size_mb": "0.10",
       "category": "slides",
       "path": "slides/03_results_slides.log"
     },
     {
+      "name": "index.html",
+      "size_mb": "0.09",
+      "category": "web",
+      "path": "web/index.html"
+    },
+    {
+      "name": "05_experimental_setup_slides.log",
+      "size_mb": "0.08",
+      "category": "slides",
+      "path": "slides/05_experimental_setup_slides.log"
+    },
+    {
       "name": "_combined_manuscript.log",
-      "size_mb": "0.06",
+      "size_mb": "0.07",
       "category": "pdf",
       "path": "pdf/_combined_manuscript.log"
     },
     {
-      "name": "02_methodology_slides.log",
-      "size_mb": "0.06",
-      "category": "slides",
-      "path": "slides/02_methodology_slides.log"
-    },
-    {
       "name": "_combined_manuscript.tex",
-      "size_mb": "0.05",
+      "size_mb": "0.06",
       "category": "pdf",
       "path": "pdf/_combined_manuscript.tex"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8192930221557617,
-    "web": 0.16524887084960938,
-    "slides": 2.2040672302246094,
-    "figures": 1.5336952209472656,
-    "data": 0.0002269744873046875,
-    "reports": 0.008047103881835938,
+    "pdf": 1.8927412033081055,
+    "web": 0.23426055908203125,
+    "slides": 1.2576360702514648,
+    "figures": 1.5169448852539062,
+    "data": 0.011018753051757812,
+    "reports": 0.007922172546386719,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0025320053100585938
+    "logs": 0.0023374557495117188
   },
   "file_counts_by_type": {
     ".md": 4,
-    ".log": 9,
-    ".aux": 7,
+    ".log": 12,
+    ".aux": 10,
     ".blg": 1,
     ".bib": 1,
-    ".pdf": 7,
-    ".tex": 7,
-    ".toc": 7,
+    ".pdf": 10,
+    ".tex": 10,
+    ".toc": 10,
     ".bbl": 1,
-    ".html": 8,
-    ".snm": 6,
-    ".nav": 6,
-    ".vrb": 6,
+    ".html": 11,
+    ".snm": 9,
+    ".vrb": 9,
+    ".nav": 9,
     ".png": 6,
-    ".json": 6,
+    ".json": 8,
     ".csv": 1
   },
   "pdf_files": 10,
   "figures": 7,
-  "data_files": 1
+  "data_files": 3
 }

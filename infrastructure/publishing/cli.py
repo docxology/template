@@ -9,9 +9,10 @@ import argparse
 import os
 from pathlib import Path
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 from .api import ZenodoClient, ZenodoConfig
+from infrastructure.core.exceptions import PublishingError, UploadError
 from .citations import generate_citation_bibtex
 from .metadata import extract_publication_metadata
 
@@ -58,16 +59,16 @@ def extract_metadata_command(args: argparse.Namespace) -> None:
 
 
 def generate_citation_command(args: argparse.Namespace) -> None:
-    """Generate a formatted citation from manuscript metadata.
+    """Generate a BibTeX citation from manuscript metadata.
 
-    Extracts metadata from manuscript markdown files and generates a citation
-    in the requested format (currently BibTeX only). The citation is printed
+    Extracts metadata from manuscript markdown files and generates a citation.
+    Currently only BibTeX format is implemented. The citation is printed
     to stdout for easy copying or redirection.
 
     Args:
         args: Argparse namespace containing:
             - manuscript_dir (str): Path to directory containing markdown files.
-            - format (str): Citation format ('bibtex', 'apa', or 'mla').
+            - format (str): Citation format (only 'bibtex' is supported).
 
     Returns:
         None. Prints the formatted citation to stdout.
@@ -103,12 +104,13 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
 
     Finds all PDF files in the specified output directory and uploads them
     to Zenodo as a new publication. Requires a valid Zenodo API token either
-    via command-line argument or ZENODO_TOKEN environment variable.
+    via command-line argument or ZENODO_TOKEN / ZENODO_PROD_TOKEN environment variable.
 
     Args:
         args: Argparse namespace containing:
             - output_dir (str): Path to directory containing PDF files to upload.
-            - token (str, optional): Zenodo API token. Falls back to ZENODO_TOKEN env.
+            - token (str, optional): Zenodo API token. Falls back to ZENODO_TOKEN, then
+              ZENODO_PROD_TOKEN (for compatibility with CredentialManager naming).
             - title (str, optional): Publication title. Defaults to 'Research Publication'.
             - authors (str, optional): Comma-separated author names.
             - description (str, optional): Publication description text.
@@ -121,9 +123,13 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         SystemExit: If no token is available, directory does not exist,
             no PDF files are found, or the upload fails.
     """
-    token = args.token or os.getenv("ZENODO_TOKEN")
+    # ZENODO_TOKEN is the simple single-token form used by this CLI command.
+    # For environment-specific tokens, CredentialManager uses ZENODO_PROD_TOKEN /
+    # ZENODO_SANDBOX_TOKEN instead. Fall back to ZENODO_PROD_TOKEN so both naming
+    # conventions work for production use.
+    token = args.token or os.getenv("ZENODO_PROD_TOKEN") or os.getenv("ZENODO_TOKEN")
     if not token:
-        logger.error("ZENODO_TOKEN environment variable not set")
+        logger.error("Set ZENODO_PROD_TOKEN or ZENODO_TOKEN environment variable")
         raise SystemExit(1)
 
     output_dir = Path(args.output_dir)
@@ -163,7 +169,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
             logger.info(f"Uploaded: {pdf.name}")
         doi = client.publish(deposition_id)
         print(f"Published successfully! DOI: {doi}")
-    except Exception as e:
+    except (PublishingError, UploadError) as e:
         logger.error(f"Zenodo upload failed: {e}")
         raise SystemExit(1) from e
 
@@ -196,9 +202,9 @@ def main() -> None:
     cite_parser.add_argument("manuscript_dir", help="Manuscript directory")
     cite_parser.add_argument(
         "--format",
-        choices=["bibtex", "apa", "mla"],
+        choices=["bibtex"],  # Only bibtex is implemented; apa/mla are not yet supported
         default="bibtex",
-        help="Citation format",
+        help="Citation format (only 'bibtex' is currently implemented)",
     )
     cite_parser.set_defaults(func=generate_citation_command)
 

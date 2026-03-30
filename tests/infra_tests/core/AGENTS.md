@@ -446,5 +446,5 @@ pytest tests/infra_tests/core/ --durations=10
 - [`../../../AGENTS.md`](../../../AGENTS.md) - System documentation
 
 **Testing Guidelines:**
-- [`../../../.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) - Testing standards
-- [`../../../docs/development/testing-guide.md`](../../../docs/development/testing-guide.md) - Testing guide
+- [`docs/rules/testing_standards.md`](../../../docs/rules/testing_standards.md) - Testing standards
+- [`docs/development/testing/testing-guide.md`](../../../docs/development/testing/testing-guide.md) - Testing guide

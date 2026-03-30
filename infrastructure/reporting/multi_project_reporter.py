@@ -10,14 +10,16 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.multi_project import MultiProjectResult
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.multi_project import MultiProjectResult
 from infrastructure.reporting.executive_reporter import (
     generate_executive_summary,
     save_executive_summary,
 )
+
 try:
-    from infrastructure.reporting.dashboard_generator import generate_all_dashboards
+    from infrastructure.reporting._dashboard_matplotlib import generate_all_dashboards
+
     _DASHBOARD_AVAILABLE = True
 except ImportError:
     _DASHBOARD_AVAILABLE = False
@@ -112,23 +114,26 @@ def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict
     summary["error_aggregation"] = {
         "total_errors": len(all_errors),
         "errors_by_project": {
-            proj: len(summary["projects"].get(proj, {}).get("errors", []))
-            for proj in project_names
+            proj: len(summary["projects"].get(proj, {}).get("errors", [])) for proj in project_names
         },
     }
 
     if result.failed_projects > 0:
-        summary["recommendations"].append({
-            "priority": "high",
-            "action": "Review failed projects",
-            "details": f"{result.failed_projects} project(s) failed execution",
-        })
+        summary["recommendations"].append(
+            {
+                "priority": "high",
+                "action": "Review failed projects",
+                "details": f"{result.failed_projects} project(s) failed execution",
+            }
+        )
     if summary["performance_analysis"].get("average_duration", 0) > 300:
-        summary["recommendations"].append({
-            "priority": "medium",
-            "action": "Consider performance optimization",
-            "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # noqa: E501
-        })
+        summary["recommendations"].append(
+            {
+                "priority": "medium",
+                "action": "Consider performance optimization",
+                "details": f"Average project execution time: {summary['performance_analysis']['average_duration']:.1f}s",  # noqa: E501
+            }
+        )
 
     return summary
 
@@ -158,7 +163,7 @@ def generate_multi_project_summary_report(
         try:
             _tmp.write_text(json.dumps(summary, indent=2))
             _tmp.replace(json_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
         saved_files["json"] = json_file
@@ -173,7 +178,7 @@ def generate_multi_project_summary_report(
         try:
             _tmp.write_text(_format_multi_project_summary_markdown(summary))
             _tmp.replace(md_file)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
         saved_files["markdown"] = md_file

@@ -422,5 +422,5 @@ print(mock_api.call_args_list)
 - [`../../../AGENTS.md`](../../../AGENTS.md) - System documentation
 
 **Testing Standards:**
-- [`../../../.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) - Testing standards
-- [`../../../docs/development/testing-guide.md`](../../../docs/development/testing-guide.md) - Testing guide
+- [`docs/rules/testing_standards.md`](../../../docs/rules/testing_standards.md) - Testing standards
+- [`docs/development/testing/testing-guide.md`](../../../docs/development/testing/testing-guide.md) - Testing guide

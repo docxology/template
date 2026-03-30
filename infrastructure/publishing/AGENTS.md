@@ -8,15 +8,18 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 
 ### Core Components
 
-**core.py**
-- Publication metadata extraction and management
-- DOI validation and formatting
+**metadata.py**
+- Publication metadata extraction and normalization
+- DOI handling and validation helpers (where applicable)
+
+**citations.py**
 - Citation generation (BibTeX, APA, MLA formats)
-- Publication package creation
-- Submission checklist generation
-- Academic standards compliance
-- Publication metrics and complexity analysis
-- Repository metadata generation
+
+**package.py**
+- Publication package creation (bundling outputs for submission/release)
+
+**platforms.py**
+- Platform-specific publishing helpers (routing and conventions)
 
 **api.py**
 - Zenodo API client with sandbox support
@@ -24,6 +27,9 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 - GitHub release creation and automation
 - DOI minting and archival
 - Metrics tracking and reporting
+
+**cli.py** / **publish_cli.py**
+- CLI entry points for publishing workflows
 
 ## Key Features
 

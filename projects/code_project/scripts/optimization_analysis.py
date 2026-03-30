@@ -14,24 +14,43 @@ Capabilities demonstrated:
 4. Registering figures for automated `infrastructure.rendering` into the PDF
 """
 import functools
+import json
+import logging
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
+import yaml
 
 from optimizer import (OptimizationResult, compute_gradient, gradient_descent,
                        make_quadratic_problem, quadratic_function,
                        simulate_trajectory)
+
+# -------------------------------------------------------------------------------------
+# Logging
+# -------------------------------------------------------------------------------------
+def _setup_fallback_logging() -> logging.Logger:
+    """Configure stdlib logging for standalone (no-infrastructure) runs."""
+    logger = logging.getLogger("code_project.optimization_analysis")
+    if logger.handlers:
+        return logger
+
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter("%(levelname)s: %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    return logger
+
 
 # Infrastructure imports (optional — PYTHONPATH must include repo root)
 try:
     from infrastructure.core import (CheckpointManager, ProgressBar,
                                      SystemHealthChecker, get_logger,
                                      log_success)
-    from infrastructure.core.exceptions import (BuildError,
-                                                ScriptExecutionError,
+    from infrastructure.core.exceptions import (ScriptExecutionError,
                                                 TemplateError, ValidationError)
     from infrastructure.publishing import (generate_citation_apa,
                                            generate_citation_bibtex,
@@ -44,8 +63,16 @@ try:
 
     INFRASTRUCTURE_AVAILABLE = True
 except ImportError as e:
-    print(f"⚠️  Infrastructure modules not available: {e}")
+    _fallback_logger = _setup_fallback_logging()
+    _fallback_logger.warning(f"Infrastructure modules not available: {e}")
     INFRASTRUCTURE_AVAILABLE = False
+
+
+def _get_logger() -> logging.Logger:
+    """Return infrastructure logger if available, otherwise a configured stdlib logger."""
+    if INFRASTRUCTURE_AVAILABLE:
+        return get_logger(__name__)
+    return _setup_fallback_logging()
 
 
 # =============================================================================
@@ -102,7 +129,7 @@ VIZ_CONFIG = {
 project_root = Path(__file__).resolve().parent.parent
 
 
-def apply_visualization_style():
+def apply_visualization_style() -> None:
     """Apply global matplotlib style for publication-quality, accessible figures."""
     plt.rcParams.update({
         # Figure
@@ -142,72 +169,113 @@ def apply_visualization_style():
     })
 
 
-def run_convergence_experiment():
+def _load_experiment_config():
+    """Load experiment parameters from config.yaml."""
+    config_path = project_root / "manuscript" / "config.yaml"
+    if config_path.exists():
+        with open(config_path, "r") as f:
+            config = yaml.safe_load(f)
+        return config.get("experiment", {})
+    return {}
+
+
+def _agency_category(alpha):
+    """Classify a step size into its agency category for H=I quadratic.
+
+    For the quadratic f(x) = 0.5*x^T*x - b^T*x with Hessian H=I,
+    the contraction factor is rho = |1 - alpha|.
+      rho < 1  => converges
+      rho >= 1 => diverges
+    """
+    if alpha < 0.3:
+        return "Conservative", "#2196F3"  # blue
+    elif alpha <= 1.0:
+        return "Near-optimal", "#4CAF50"  # green
+    elif alpha < 2.0:
+        return "Aggressive", "#FF9800"  # amber
+    else:
+        return "Divergent", "#F44336"  # red
+
+
+def _save_figure_data(data, name, output_dir):
+    """Save companion data file alongside a figure."""
+    data_dir = output_dir / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    data_path = data_dir / f"{name}.json"
+    with open(data_path, "w") as f:
+        json.dump(data, f, indent=2, default=str)
+    return data_path
+
+
+def run_convergence_experiment() -> Any:
     """Run gradient descent with different step sizes and track convergence."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = _get_logger()
+    logger.info("Running convergence experiments...")
 
-    if logger:
-        logger.info("Running convergence experiments...")
+    exp_config = _load_experiment_config()
+    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
+    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
+    obj_func, grad_func = make_quadratic_problem(A, b)
 
-    # Define test problem: f(x) = (1/2) x^2 - x, optimum at x = 1
-    obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
-
-    # Different step sizes to test
-    step_sizes = [0.01, 0.05, 0.1, 0.2]
-    initial_point = np.array([0.0])  # Start far from optimum
+    step_sizes = exp_config.get("step_sizes", [0.01, 0.1, 0.5, 1.0, 1.5, 2.5])
+    initial_point = np.array([exp_config.get("initial_point", 0.0)])
+    max_iter = exp_config.get("max_iterations", 1000)
+    tol = exp_config.get("tolerance", 1e-8)
 
     results = {}
 
     for step_size in step_sizes:
-        if logger:
-            logger.info(f"Testing step size: {step_size}")
+        logger.info(f"Testing step size: {step_size}")
 
         result = gradient_descent(
             initial_point=initial_point,
             objective_func=obj_func,
             gradient_func=grad_func,
             step_size=step_size,
-            max_iterations=100,
-            tolerance=1e-8,
+            max_iterations=max_iter,
+            tolerance=tol,
             verbose=False,
         )
 
         results[step_size] = result
-        if logger:
-            logger.info(
-                f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}"
-            )
+        logger.info(
+            f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}"
+        )
     return results
 
 
-def run_convergence_experiment_with_progress(progress_bar):
+def run_convergence_experiment_with_progress(progress_bar: Any) -> Any:
     """Run gradient descent with different step sizes and track convergence with progress bar."""
-    print("Running convergence experiments...")
+    logger = _get_logger()
+    logger.info("Running convergence experiments...")
 
-    # Define test problem: f(x) = (1/2) x^2 - x, optimum at x = 1
-    obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
+    exp_config = _load_experiment_config()
+    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
+    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
+    obj_func, grad_func = make_quadratic_problem(A, b)
 
-    # Different step sizes to test
-    step_sizes = [0.01, 0.05, 0.1, 0.2]
-    initial_point = np.array([0.0])  # Start far from optimum
+    step_sizes = exp_config.get("step_sizes", [0.01, 0.1, 0.5, 1.0, 1.5, 2.5])
+    initial_point = np.array([exp_config.get("initial_point", 0.0)])
+    max_iter = exp_config.get("max_iterations", 1000)
+    tol = exp_config.get("tolerance", 1e-8)
 
     results = {}
 
     for step_size in step_sizes:
-        print(f"Testing step size: {step_size}")
+        logger.info(f"Testing step size: {step_size}")
 
         result = gradient_descent(
             initial_point=initial_point,
             objective_func=obj_func,
             gradient_func=grad_func,
             step_size=step_size,
-            max_iterations=100,
-            tolerance=1e-8,
+            max_iterations=max_iter,
+            tolerance=tol,
             verbose=False,
         )
 
         results[step_size] = result
-        print(
+        logger.info(
             f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}"
         )
 
@@ -218,42 +286,49 @@ def run_convergence_experiment_with_progress(progress_bar):
     return results
 
 
-def generate_convergence_plot(results):
+def generate_convergence_plot(results: Any) -> Any:
     """Generate convergence plot showing objective value vs iteration.
     
-    Uses colorblind-safe palette and accessibility-optimized settings.
+    Uses agency-category colors and handles divergent trajectories.
     """
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
-
-    if logger:
-        logger.info("Generating convergence plot...")
+    logger = _get_logger()
+    logger.info("Generating convergence plot...")
 
     # Create figure with enhanced styling
     fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
-    # Use colorblind-safe palette
-    colors = VIZ_CONFIG["palette"]
-    markers = VIZ_CONFIG["markers"]
     step_sizes = list(results.keys())
+    plot_data = {}
 
-    for i, step_size in enumerate(step_sizes):
+    for step_size in step_sizes:
         result = results[step_size]
+        category, color = _agency_category(step_size)
 
-        # Simulate the trajectory to get intermediate values
-        trajectory = simulate_trajectory(step_size, max_iter=result.iterations + 10)
+        # Limit trajectory length for readability
+        max_plot_iters = min(result.iterations + 5, 50)
+        trajectory = simulate_trajectory(step_size, max_iter=max_plot_iters)
+
+        # Clip extreme values for divergent cases
+        objectives = np.array(trajectory["objectives"], dtype=float)
+        objectives = np.clip(objectives, -10, 100)
 
         ax.plot(
             trajectory["iterations"],
-            trajectory["objectives"],
-            color=colors[i % len(colors)],
+            objectives,
+            color=color,
             linewidth=VIZ_CONFIG["lines"]["linewidth"],
-            label=f"Step size α = {step_size}",
-            marker=markers[i % len(markers)],
+            label=f"α = {step_size} ({category})",
+            marker="o",
             markersize=VIZ_CONFIG["lines"]["markersize"],
             markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
             markerfacecolor="white",
             markevery=max(1, len(trajectory["iterations"]) // 8),
         )
+        plot_data[str(step_size)] = {
+            "category": category,
+            "iterations": trajectory["iterations"],
+            "objectives": [float(o) for o in objectives],
+        }
 
     # Add optimal value reference line
     ax.axhline(
@@ -277,19 +352,7 @@ def generate_convergence_plot(results):
         title="Learning Rate",
         title_fontsize=VIZ_CONFIG["fonts"]["legend"],
     )
-    ax.set_ylim(bottom=-0.6)
-
-    # Add annotation for convergence
-    ax.annotate(
-        "All step sizes converge to optimal x* = 1.0",
-        xy=(0.98, 0.15),
-        xycoords="axes fraction",
-        fontsize=VIZ_CONFIG["fonts"]["annotation"],
-        style="italic",
-        color=VIZ_CONFIG["colors"]["neutral"],
-        ha="right",
-        bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8, edgecolor="none"),
-    )
+    ax.set_ylim(bottom=-0.7, top=10)
 
     plt.tight_layout()
 
@@ -303,8 +366,10 @@ def generate_convergence_plot(results):
     )
     plt.close()
 
-    if logger:
-        logger.info(f"Saved convergence plot to: {plot_path}")
+    # Save companion data
+    _save_figure_data(plot_data, "convergence_plot", project_root / "output")
+
+    logger.info(f"Saved convergence plot to: {plot_path}")
     return plot_path
 
 
@@ -312,12 +377,10 @@ def generate_convergence_plot(results):
 # It delegates to gradient_descent() and returns {"iterations": [...], "objectives": [...]}.
 
 
-def save_optimization_results(results):
+def save_optimization_results(results: Any) -> Any:
     """Save optimization results to CSV file."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
-
-    if logger:
-        logger.info("Saving optimization results...")
+    logger = _get_logger()
+    logger.info("Saving optimization results...")
 
     output_dir = project_root / "output" / "data"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -335,12 +398,11 @@ def save_optimization_results(results):
                 f"{result.iterations},{result.converged},{result.gradient_norm:.2e}\n"
             )
 
-    if logger:
-        logger.info(f"Saved results to: {data_path}")
+    logger.info(f"Saved results to: {data_path}")
     return data_path
 
 
-def generate_step_size_sensitivity_plot(results):
+def generate_step_size_sensitivity_plot(results: Any) -> Any:
     """Generate step size sensitivity analysis with expanded range.
 
     Left: iterations to convergence vs step size (log-x), sweeping α from
@@ -349,10 +411,8 @@ def generate_step_size_sensitivity_plot(results):
     descent from f(x₀)=0 to f(x*)=−0.5, making the solution quality
     genuinely visible rather than zoomed into a trivial band.
     """
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
-
-    if logger:
-        logger.info("Generating step size sensitivity plot...")
+    logger = _get_logger()
+    logger.info("Generating step size sensitivity plot...")
 
     # Sweep a wider range of step sizes for a more informative curve
     sweep_alphas = [0.005, 0.01, 0.02, 0.05, 0.08, 0.1, 0.15, 0.2, 0.3, 0.4]
@@ -455,31 +515,29 @@ def generate_step_size_sensitivity_plot(results):
     )
     plt.close()
 
-    if logger:
-        logger.info(f"Saved step size sensitivity plot to: {plot_path}")
+    logger.info(f"Saved step size sensitivity plot to: {plot_path}")
     return plot_path
 
 
-def generate_convergence_rate_plot(results):
+def generate_convergence_rate_plot(results: Any) -> Any:
     """Generate convergence rate comparison plot.
     
     Uses colorblind-safe palette and accessibility-optimized settings.
     """
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = _get_logger()
+    logger.info("Generating convergence rate comparison plot...")
 
-    if logger:
-        logger.info("Generating convergence rate comparison plot...")
+    exp_config = _load_experiment_config()
+    conv_tol = float(exp_config.get("convergence_tolerance", exp_config.get("tolerance", 1e-8)))
 
     fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
-    # Use colorblind-safe palette
-    colors = VIZ_CONFIG["palette"]
-    markers = VIZ_CONFIG["markers"]
     step_sizes = list(results.keys())
 
-    for i, step_size in enumerate(step_sizes):
-        # Simulate trajectory with more points for rate analysis
-        trajectory = simulate_trajectory(step_size, max_iter=100)
+    for step_size in step_sizes:
+        category, color = _agency_category(step_size)
+        # Limit trajectory to avoid overflow for divergent step sizes
+        trajectory = simulate_trajectory(step_size, max_iter=30)
 
         iterations = trajectory["iterations"]
         objectives = trajectory["objectives"]
@@ -492,10 +550,10 @@ def generate_convergence_rate_plot(results):
         ax.plot(
             iterations[:max_plot_iter],
             errors[:max_plot_iter],
-            color=colors[i % len(colors)],
+            color=color,
             linewidth=VIZ_CONFIG["lines"]["linewidth"],
-            label=f"Step size α = {step_size}",
-            marker=markers[i % len(markers)],
+            label=f"α = {step_size} ({category})",
+            marker="o",
             markersize=VIZ_CONFIG["lines"]["markersize"],
             markerfacecolor="white",
             markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
@@ -515,18 +573,19 @@ def generate_convergence_rate_plot(results):
         title_fontsize=VIZ_CONFIG["fonts"]["legend"],
     )
     ax.set_yscale("log")
-    ax.set_ylim(1e-8, 1e1)
+    ax.set_ylim(1e-12, 1e4)
 
-    # Add convergence threshold annotation
+    # Horizontal reference at manuscript / config convergence tolerance
     ax.axhline(
-        y=1e-6,
+        y=conv_tol,
         color=VIZ_CONFIG["colors"]["neutral"],
         linestyle=":",
         linewidth=2,
         alpha=0.8,
     )
+    tol_str = f"{conv_tol:.0e}".replace("e-0", "e-").replace("e+0", "e+")
     ax.annotate(
-        "Tolerance ε = 10⁻⁶",
+        f"Tolerance ε = {tol_str}",
         xy=(0.85, 0.35),
         xycoords="axes fraction",
         fontsize=VIZ_CONFIG["fonts"]["annotation"],
@@ -544,23 +603,24 @@ def generate_convergence_rate_plot(results):
     )
     plt.close()
 
-    if logger:
-        logger.info(f"Saved convergence rate comparison plot to: {plot_path}")
+    logger.info(f"Saved convergence rate comparison plot to: {plot_path}")
     return plot_path
 
 
-def generate_complexity_visualization(results):
+def generate_complexity_visualization(results: Any) -> Any:
     """Generate algorithm performance analysis with 4 informative panels.
 
     (TL) Empirical iterations bar chart.
     (TR) Solution quality: log₁₀ absolute error from optimum per step size.
-    (BL) Theory vs empirical on log scale.
-    (BR) Contraction factor ρ = 1 − 2α(1−α) per step size.
+    (BL) Empirical iterations vs step size compared to 1/(2α(1−α)) proxy curve.
+    (BR) Per-step error contraction ρ = |1 − α| for the unit Hessian quadratic.
     """
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = _get_logger()
+    logger.info("Generating algorithm complexity visualization...")
 
-    if logger:
-        logger.info("Generating algorithm complexity visualization...")
+    exp_config = _load_experiment_config()
+    conv_tol = float(exp_config.get("convergence_tolerance", exp_config.get("tolerance", 1e-8)))
+    log_tol = float(np.log10(conv_tol))
 
     step_sizes = list(results.keys())
     iterations = [results[step_size].iterations for step_size in step_sizes]
@@ -573,16 +633,16 @@ def generate_complexity_visualization(results):
         err = abs(obj_val - optimal_value)
         log_errors.append(np.log10(max(err, 1e-16)))  # floor at 1e-16
 
-    # Compute theoretical complexity: 1 / (2α(1−α)) and contraction factor
+    # Compute theoretical complexity and contraction factor: ρ = |1 - α|
     theoretical_complexity = []
     contraction_factors = []
     for alpha in step_sizes:
-        if alpha < 1.0:
+        rho = abs(1 - alpha)
+        contraction_factors.append(rho)
+        if rho > 0 and rho < 1:
             theoretical_complexity.append(1.0 / (2 * alpha * (1 - alpha)))
-            contraction_factors.append(1 - 2 * alpha * (1 - alpha))
         else:
             theoretical_complexity.append(float("inf"))
-            contraction_factors.append(1.0)
 
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(13, 10))
     fig.suptitle(
@@ -597,12 +657,13 @@ def generate_complexity_visualization(results):
     success_color = VIZ_CONFIG["colors"]["success"]
     quaternary_color = VIZ_CONFIG["colors"]["quaternary"]
 
-    # (1) Empirical iterations — unchanged
+    # Use agency-category colors for bars
+    bar_colors = [_agency_category(s)[1] for s in step_sizes]
     bars1 = ax1.bar(
         range(len(step_sizes)),
         iterations,
         tick_label=[f"α={s}" for s in step_sizes],
-        color=bar_color,
+        color=bar_colors,
         alpha=0.85,
     )
     ax1.set_xlabel("Step Size", fontsize=11, fontweight="medium")
@@ -621,8 +682,10 @@ def generate_complexity_visualization(results):
         )
 
     # (2) Solution quality: log₁₀ |f(x) − f(x*)|
-    bar_colors_2 = [success_color if le < -6 else theory_color if le < -3 else bar_color
-                    for le in log_errors]
+    bar_colors_2 = [
+        success_color if le < log_tol else theory_color if le < -3 else bar_color
+        for le in log_errors
+    ]
     bars2 = ax2.bar(
         range(len(step_sizes)),
         log_errors,
@@ -630,8 +693,14 @@ def generate_complexity_visualization(results):
         color=bar_colors_2,
         alpha=0.85,
     )
-    ax2.axhline(y=-6, color=VIZ_CONFIG["colors"]["neutral"], linestyle="--",
-                linewidth=1, alpha=0.7, label="ε = 10⁻⁶ tolerance")
+    ax2.axhline(
+        y=log_tol,
+        color=VIZ_CONFIG["colors"]["neutral"],
+        linestyle="--",
+        linewidth=1,
+        alpha=0.7,
+        label=f"ε = {conv_tol:.0e} tolerance",
+    )
     ax2.set_xlabel("Step Size", fontsize=11, fontweight="medium")
     ax2.set_ylabel("log₁₀ |f(x) − f(x*)|")
     ax2.set_title("Solution Accuracy\n(Lower = More Accurate)", fontsize=12, fontweight="bold")
@@ -676,7 +745,7 @@ def generate_complexity_visualization(results):
     ax3.legend(loc="upper right", framealpha=0.95, fontsize=9)
     ax3.grid(True, alpha=0.3)
 
-    # (4) Contraction factor ρ = 1 − 2α(1−α)
+    # (4) Scalar unit-Hessian contraction: |x_{k+1}−x*| / |x_k−x*| = |1−α|
     bars4 = ax4.bar(
         range(len(step_sizes)),
         contraction_factors,
@@ -687,13 +756,13 @@ def generate_complexity_visualization(results):
     ax4.set_xlabel("Step Size", fontsize=11, fontweight="medium")
     ax4.set_ylabel("Contraction Factor ρ", fontsize=11, fontweight="medium")
     ax4.set_title(
-        "Convergence Rate per Iteration\nρ = 1 − 2α(1−α)  (Lower = Faster)",
+        "Error contraction per step (H = I)\nρ = |1 − α|  (smaller ρ ⇒ faster)",
         fontsize=12,
         fontweight="bold",
     )
-    ax4.set_ylim(0, 1.05)
+    ax4.set_ylim(0, max(1.05, max(contraction_factors, default=1.0) * 1.15))
     ax4.axhline(y=0.5, color=VIZ_CONFIG["colors"]["neutral"], linestyle=":",
-                linewidth=1, alpha=0.6, label="ρ = 0.5 (optimal α=0.5)")
+                linewidth=1, alpha=0.6, label="ρ = 0.5 (α = 0.5)")
     ax4.legend(loc="upper right", fontsize=9, framealpha=0.95)
     ax4.grid(True, alpha=0.3, axis="y")
     for bar, val in zip(bars4, contraction_factors):
@@ -716,16 +785,14 @@ def generate_complexity_visualization(results):
     )
     plt.close()
 
-    if logger:
-        logger.info(f"Saved algorithm complexity visualization to: {plot_path}")
+    logger.info(f"Saved algorithm complexity visualization to: {plot_path}")
     return plot_path
 
 
-def run_stability_analysis():
+def run_stability_analysis() -> Any:
     """Assess numerical stability of optimization algorithms."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
-
-    log = logger.info if logger else lambda msg: print(f"INFO: {msg}")
+    logger = _get_logger()
+    log = logger.info
     log("Running numerical stability analysis...")
 
     # Test different input ranges for stability
@@ -791,11 +858,10 @@ def run_stability_analysis():
     return stability_path
 
 
-def run_performance_benchmarking():
+def run_performance_benchmarking() -> Any:
     """Benchmark gradient descent performance."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
-
-    log = logger.info if logger else lambda msg: print(f"INFO: {msg}")
+    logger = _get_logger()
+    log = logger.info
     log("Running performance benchmarking...")
 
     import time as _time
@@ -866,7 +932,7 @@ def run_performance_benchmarking():
     return benchmark_path
 
 
-def generate_stability_visualization(stability_path):
+def generate_stability_visualization(stability_path: Any) -> Any:
     """Generate heatmap of optimizer accuracy across starting points and step sizes.
 
     Runs gradient_descent from multiple starting points with multiple step sizes,
@@ -874,30 +940,43 @@ def generate_stability_visualization(stability_path):
     the package's core functions and reveals how numerical stability varies across
     the parameter space.
     """
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = _get_logger()
 
     if not stability_path:
         return None
 
-    if logger:
-        logger.info("Generating stability visualization...")
+    logger.info("Generating stability visualization...")
 
-    # Sweep starting points and step sizes
-    starting_points = [-50.0, -10.0, -5.0, 0.0, 0.1, 5.0, 10.0, 50.0]
-    step_sizes = [0.01, 0.05, 0.1, 0.2, 0.3, 0.4]
-    optimal_value = -0.5
+    exp_config = _load_experiment_config()
+    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
+    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
+    x_star = np.linalg.solve(A, b)
+    optimal_value = float(0.5 * x_star.T @ A @ x_star - b.T @ x_star)
+
+    starting_points = exp_config.get(
+        "stability_starting_points",
+        [-50.0, -10.0, -5.0, 0.0, 0.1, 5.0, 10.0, 50.0],
+    )
+    step_sizes = exp_config.get(
+        "stability_step_sizes",
+        [0.01, 0.05, 0.1, 0.2, 0.5, 0.9],
+    )
+    max_iter = int(exp_config.get("max_iterations", 500))
+    tol = float(exp_config.get("tolerance", 1e-8))
+
+    obj_func, grad_func = make_quadratic_problem(A, b)
 
     # Build error matrix: rows=starting points, cols=step sizes
     error_matrix = np.zeros((len(starting_points), len(step_sizes)))
     for i, x0 in enumerate(starting_points):
         for j, alpha in enumerate(step_sizes):
             result = gradient_descent(
-                initial_point=np.array([x0]),
-                objective_func=lambda x: quadratic_function(x, np.array([[1.0]]), np.array([1.0])),
-                gradient_func=lambda x: compute_gradient(x, np.array([[1.0]]), np.array([1.0])),
-                step_size=alpha,
-                max_iterations=500,
-                tolerance=1e-12,
+                initial_point=np.array([float(x0)]),
+                objective_func=obj_func,
+                gradient_func=grad_func,
+                step_size=float(alpha),
+                max_iterations=max_iter,
+                tolerance=tol,
             )
             err = abs(result.objective_value - optimal_value)
             error_matrix[i, j] = np.log10(max(err, 1e-16))
@@ -960,29 +1039,28 @@ def generate_stability_visualization(stability_path):
     plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
 
-    if logger:
-        logger.info(f"Saved stability visualization to: {plot_path}")
+    logger.info(f"Saved stability visualization to: {plot_path}")
     return plot_path
 
 
-def generate_benchmark_visualization(benchmark_path):
+def generate_benchmark_visualization(benchmark_path: Any) -> Any:
     """Generate dimensional scaling benchmark by running gradient_descent at d=1..50.
 
     Left: mean execution time (μs) per gradient_descent call vs problem dimension.
     Right: iterations to convergence vs problem dimension.
     Actually exercises the package at multiple dimensionalities.
     """
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = _get_logger()
 
     if not benchmark_path:
         return None
 
-    if logger:
-        logger.info("Generating benchmark visualization...")
+    logger.info("Generating benchmark visualization...")
 
     import time
 
-    dimensions = [1, 2, 5, 10, 20, 50]
+    exp_config = _load_experiment_config()
+    dimensions = exp_config.get("benchmark_dimensions", [1, 2, 5, 10, 20, 50])
     times_us = []
     iter_counts = []
 
@@ -1048,17 +1126,14 @@ def generate_benchmark_visualization(benchmark_path):
     plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
 
-    if logger:
-        logger.info(f"Saved benchmark visualization to: {plot_path}")
+    logger.info(f"Saved benchmark visualization to: {plot_path}")
     return plot_path
 
 
-def generate_analysis_dashboard(results, stability_path=None, benchmark_path=None):
+def generate_analysis_dashboard(results: Any, stability_path: Any = None, benchmark_path: Any = None) -> Any:
     """Generate comprehensive analysis dashboard."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
-
-    if logger:
-        logger.info("Generating analysis dashboard...")
+    logger = _get_logger()
+    logger.info("Generating analysis dashboard...")
 
     try:
         # Ensure output directory structure exists
@@ -1072,8 +1147,7 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
                 project_root, project_name="code_project"
             )
         except (OSError, ValueError, TypeError, KeyError, NameError) as stats_err:
-            if logger:
-                logger.debug(f"Output statistics collection failed (non-fatal): {stats_err}")
+            logger.debug(f"Output statistics collection failed (non-fatal): {stats_err}")
             output_statistics = {}
 
         # Create dashboard HTML
@@ -1156,26 +1230,21 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
         with open(dashboard_path, "w") as f:
             f.write(html_content)
 
-        if logger:
-            logger.info(f"Saved analysis dashboard to: {dashboard_path}")
+        logger.info(f"Saved analysis dashboard to: {dashboard_path}")
         return dashboard_path
 
     except (OSError, ValueError, TypeError, NameError) as e:
-        if logger:
-            logger.warning(f"Failed to generate dashboard: {e}")
+        logger.warning(f"Failed to generate dashboard: {e}")
         return None
     except Exception as e:  # noqa: BLE001 — catch infrastructure-specific exceptions
-        if logger:
-            logger.warning(f"Unexpected error generating dashboard: {e}")
+        logger.warning(f"Unexpected error generating dashboard: {e}")
         return None
 
 
-def validate_generated_outputs():
+def validate_generated_outputs() -> Any:
     """Validate integrity of generated analysis outputs."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
-
-    if logger:
-        logger.info("Validating generated outputs...")
+    logger = _get_logger()
+    logger.info("Validating generated outputs...")
 
     try:
         output_dir = project_root / "output"
@@ -1206,18 +1275,16 @@ def validate_generated_outputs():
         return validation_summary
 
     except ValidationError as e:
-        if logger:
-            logger.warning(f"Output validation failed: {e}")
+        logger.warning(f"Output validation failed: {e}")
         return None
     except (OSError, ValueError, TypeError) as e:
-        if logger:
-            logger.warning(f"Unexpected error during output validation: {e}")
+        logger.warning(f"Unexpected error during output validation: {e}")
         return None
 
 
-def save_validation_report(validation_report):
+def save_validation_report(validation_report: Any) -> Any:
     """Save validation report to file."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = _get_logger()
 
     if not validation_report:
         return None
@@ -1232,19 +1299,17 @@ def save_validation_report(validation_report):
         with open(report_path, "w") as f:
             json.dump(validation_report, f, indent=2, default=str)
 
-        if logger:
-            logger.info(f"Saved validation report to: {report_path}")
+        logger.info(f"Saved validation report to: {report_path}")
         return report_path
 
     except (OSError, json.JSONDecodeError, ValueError, TypeError) as e:
-        if logger:
-            logger.warning(f"Failed to save validation report: {e}")
+        logger.warning(f"Failed to save validation report: {e}")
         return None
 
 
-def register_figure():
+def register_figure() -> None:
     """Register the generated figures for manuscript reference."""
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = _get_logger()
 
     try:
         # Ensure repo root is on path for infrastructure imports
@@ -1305,34 +1370,24 @@ def register_figure():
                 section="Results",
                 generated_by="optimization_analysis.py",
             )
-            if logger:
-                logger.info(f"Registered figure with label: {label}")
+            logger.info(f"Registered figure with label: {label}")
 
     except ImportError as e:
-        if logger:
-            logger.warning(f"Figure manager not available: {e}")
+        logger.warning(f"Figure manager not available: {e}")
     except (OSError, ValueError, TypeError) as e:
-        if logger:
-            logger.warning(f"Failed to register figures: {e}")
+        logger.warning(f"Failed to register figures: {e}")
 
 
-def main():
+def main() -> None:
     """Main analysis function."""
     apply_visualization_style()
-    # Initialize logger (use print as fallback)
-    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    logger = _get_logger()
 
-    def log_info(msg):
-        if logger:
-            logger.info(msg)
-        else:
-            print(f"INFO: {msg}")
+    def log_info(msg: str) -> None:
+        logger.info(msg)
 
-    def log_warning(msg):
-        if logger:
-            logger.warning(msg)
-        else:
-            print(f"WARNING: {msg}")
+    def log_warning(msg: str) -> None:
+        logger.warning(msg)
 
     if INFRASTRUCTURE_AVAILABLE:
         log_success("Starting optimization analysis pipeline", logger=logger)
@@ -1478,19 +1533,17 @@ def main():
             log_info("Optimization analysis pipeline completed successfully")
 
     except ImportError as e:
-        # Handle missing dependencies
-        print(f"ERROR: Import error: {e}")
-        print("Suggestions:")
-        print("  • Install missing dependencies: pip install -r requirements.txt")
-        print("  • Check infrastructure module availability")
+        logger.error(f"Import error: {e}", exc_info=True)
+        logger.error("Suggestions:")
+        logger.error("  - Run from repo root so infrastructure is importable")
+        logger.error("  - Ensure dependencies are installed (use `uv sync`)")
         raise
 
     except FileNotFoundError as e:
-        # Handle missing files
-        print(f"ERROR: File not found: {e}")
-        print("Suggestions:")
-        print("  • Ensure project structure is correct")
-        print("  • Check that source code exists in src/ directory")
+        logger.error(f"File not found: {e}", exc_info=True)
+        logger.error("Suggestions:")
+        logger.error("  - Ensure project structure is correct")
+        logger.error("  - Ensure analysis outputs directory is writable")
         raise
 
     except Exception as e:  # noqa: BLE001 - top-level main handler with isinstance dispatching
@@ -1518,11 +1571,11 @@ def main():
 
         # Handle unexpected errors with context
         error_msg = f"Unexpected error during optimization analysis: {e}"
-        print(f"ERROR: {error_msg}")
-        print("Suggestions:")
-        print("  • Check system requirements and dependencies")
-        print("  • Review error logs for detailed information")
-        print("  • Ensure sufficient disk space and memory")
+        logger.error(error_msg, exc_info=True)
+        logger.error("Suggestions:")
+        logger.error("  - Check system requirements and dependencies")
+        logger.error("  - Review error logs for detailed information")
+        logger.error("  - Ensure sufficient disk space and memory")
         raise
 
 

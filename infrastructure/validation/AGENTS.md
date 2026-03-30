@@ -8,13 +8,13 @@ The Validation module provides quality assurance and validation tools for resear
 
 ### Core Components
 
-**pdf_validator.py**
+**output/pdf_validator.py**
 - PDF text extraction and analysis
 - Rendering issue detection (unresolved references, warnings, errors)
 - Document structure verification
 - First-N-words extraction for preview
 
-**markdown_validator.py**
+**content/markdown_validator.py**
 - Markdown file discovery and collection
 - Manuscript directory discovery at `projects/{name}/manuscript/`
 - Image reference validation
@@ -23,7 +23,7 @@ The Validation module provides quality assurance and validation tools for resear
 - Link and URL integrity checking
 - Section anchor validation
 
-**integrity.py**
+**integrity/integrity.py**
 - File integrity verification (SHA-256 hashing)
 - Cross-reference validation across documents
 - Data consistency checking
@@ -31,14 +31,14 @@ The Validation module provides quality assurance and validation tools for resear
 - Build artifact verification
 - Completeness validation
 
-**audit_orchestrator.py**
+**repo/audit_orchestrator.py**
 - audit coordination across all validation modules
 - Unified audit interface with structured results
 - Project-aware discovery and categorization
 - Multi-format report generation (markdown, JSON)
 - Configurable validation options
 
-**issue_categorizer.py**
+**content/issue_categorizer.py**
 - Intelligent issue categorization by type and severity
 - False positive filtering for common artifacts
 - Issue prioritization and grouping
@@ -47,7 +47,7 @@ The Validation module provides quality assurance and validation tools for resear
 
 ## Function Signatures
 
-### pdf_validator.py
+### output/pdf_validator.py
 
 #### extract_text_from_pdf (function)
 ```python
@@ -125,7 +125,7 @@ def validate_pdf_rendering(
     """
 ```
 
-### markdown_validator.py
+### content/markdown_validator.py
 
 #### find_markdown_files (function)
 ```python
@@ -243,7 +243,7 @@ def find_manuscript_directory(repo_root: str | Path) -> Path:
     """
 ```
 
-### integrity.py
+### integrity/integrity.py
 
 #### IntegrityReport (class)
 ```python
@@ -686,7 +686,7 @@ def validate_figure_registry(registry_path: Path) -> Dict[str, Any]:
     """
 ```
 
-### link_validator.py
+### docs/link_validator.py
 
 #### LinkValidator (class)
 ```python
@@ -1401,7 +1401,7 @@ def main():
 ```python
 from infrastructure.validation import validate_pdf_rendering
 
-report = validate_pdf_rendering(Path("output/pdf/manuscript.pdf"))
+report = validate_pdf_rendering(Path("output/{project_name}/pdf/{project_name}_combined.pdf"))
 # Returns: issues, text preview, document structure validation
 ```
 

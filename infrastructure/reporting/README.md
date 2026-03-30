@@ -30,7 +30,7 @@ graph TD
         PIPELINE_REP[pipeline_reporter.py<br/>Pipeline report generation]
         ERROR_AGG[error_aggregator.py<br/>Error collection & categorization]
         EXEC_REP[executive_reporter.py<br/>Cross-project summaries]
-        DASHBOARD[dashboard_generator.py<br/>Visual dashboards]
+        DASHBOARD[_dashboard_matplotlib.py<br/>Visual dashboards]
         OUTPUT_ORG[output_organizer.py<br/>File organization]
     end
 
@@ -71,10 +71,6 @@ graph TD
     OUTPUT_ORG --> PNG
     OUTPUT_ORG --> PDF
     OUTPUT_ORG --> CSV
-
-    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef module fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class InputSources input
     class ReportingModules module

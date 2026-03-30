@@ -10,16 +10,28 @@ The reporting module provides reporting capabilities for pipeline execution, tes
 
 ```
 infrastructure/reporting/
-├── __init__.py              # Public API exports
-├── output_organizer.py      # Unified file organization system
-├── pipeline_reporter.py     # Pipeline report generation
-├── error_aggregator.py      # Error collection and categorization
-├── html_templates.py        # HTML report templates
-├── executive_reporter.py    # Cross-project metrics and summaries
-├── dashboard_generator.py   # Visual dashboard generation
-├── manuscript_overview.py   # Manuscript PDF page overview generation
-├── README.md                # Quick reference
-└── AGENTS.md                # This file
+├── __init__.py                  # Public API exports
+├── output_organizer.py          # Unified file organization system
+├── pipeline_reporter.py         # Pipeline report generation
+├── error_aggregator.py          # Error collection and categorization
+├── html_templates.py            # HTML report templates
+├── executive_reporter.py        # Cross-project metrics and summaries
+├── _dashboard_matplotlib.py     # Dashboard orchestrator (thin) + Plotly dashboard
+├── _dashboard_charts.py         # Base chart generators + multi-panel dashboard
+├── _dashboard_specialized.py    # Health radar, pipeline efficiency, codebase charts
+├── _dashboard_csv.py            # CSV exports: breakdowns, analysis, recommendations
+├── manuscript_overview.py       # Manuscript PDF page overview generation
+├── coverage_parser.py           # Test coverage data extraction
+├── coverage_reporter.py         # Coverage report generation
+├── multi_project_reporter.py    # Multi-project orchestration
+├── output_reporter.py           # Output statistics reporting
+├── suite_runner.py              # Test suite execution
+├── suite_summary_generator.py   # Suite-level summary generation
+├── test_orchestrator.py         # Test pipeline orchestration
+├── test_pipeline.py             # Test pipeline definitions
+├── SKILL.md                     # Agent skill descriptor (YAML frontmatter)
+├── README.md                    # Quick reference
+└── AGENTS.md                    # This file
 ```
 
 ### Design Principles
@@ -545,7 +557,7 @@ saved_files = save_executive_summary(summary, Path("output/executive_summary"))
 # Returns: {'json': Path(...), 'html': Path(...), 'markdown': Path(...)}
 ```
 
-### Dashboard Generator (`dashboard_generator.py`)
+### Dashboard System (`_dashboard_matplotlib.py` + extracted modules)
 
 Creates visual dashboards and charts for executive reporting.
 

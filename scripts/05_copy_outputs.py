@@ -29,18 +29,18 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header
-from infrastructure.core.file_cleanup import (
+from infrastructure.core.logging.utils import get_logger, log_success, log_header
+from infrastructure.core.files.cleanup import (
     clean_output_directory,
     clean_root_output_directory,
 )
-from infrastructure.core.file_operations import copy_final_deliverables
-from infrastructure.validation.output_validator import (
+from infrastructure.core.files.operations import copy_final_deliverables
+from infrastructure.validation.output.validator import (
     validate_copied_outputs,
     validate_output_structure,
 )
-from infrastructure.reporting.output_reporter import (
-    generate_output_summary,
+from infrastructure.reporting.output_statistics import (
+    log_output_summary,
 )
 
 # Set up logger for this module
@@ -96,7 +96,7 @@ def main() -> int:
         structure_validation = validate_output_structure(output_dir)
 
         # Step 4: Collect comprehensive output statistics
-        from infrastructure.reporting.output_reporter import (
+        from infrastructure.reporting.output_statistics import (
             collect_output_statistics,
             generate_detailed_output_report,
         )
@@ -124,7 +124,7 @@ def main() -> int:
         logger.info(f"Output statistics JSON saved to: {json_file}")
 
         # Step 5: Generate original summary (for backward compatibility)
-        generate_output_summary(output_dir, stats, structure_validation)
+        log_output_summary(output_dir, stats, structure_validation)
 
         # Determine success/failure
         if stats.get("total_files", 0) > 0 and validation_passed:

@@ -8,19 +8,24 @@ from typing import Any
 
 try:
     import requests
+    _requests_available = True
 except ImportError:
     requests = None  # type: ignore[assignment]
+    _requests_available = False
 
+from infrastructure.core.credentials import make_bearer_auth_headers
 from infrastructure.core.exceptions import PublishingError, UploadError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
 #: Default timeout for HTTP requests (seconds)
 REQUEST_TIMEOUT = 30
 
+
 @dataclass
 class ZenodoConfig:
+    """Configuration for Zenodo API client."""
     access_token: str
     sandbox: bool = True
     base_url: str | None = None
@@ -29,15 +34,20 @@ class ZenodoConfig:
     def api_base_url(self) -> str:
         """Return base_url if set, else sandbox or production Zenodo API endpoint."""
         if self.base_url:
-            return self.base_url.rstrip("/")
+            base = self.base_url.rstrip("/")
+            return base if base.endswith("/api") else f"{base}/api"
         return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"
+
 
 class ZenodoClient:
     """Client for Zenodo API."""
 
     def __init__(self, config: ZenodoConfig):
+        """Initialize Zenodo client with configuration."""
+        if not _requests_available:
+            raise ImportError("requests package is required for ZenodoClient")
         self.config = config
-        self.headers = {"Authorization": f"Bearer {config.access_token}"}
+        self.headers = make_bearer_auth_headers(config.access_token)
 
     def create_deposition(self, metadata: dict[str, Any]) -> str:
         """Create a new deposition.
@@ -57,10 +67,14 @@ class ZenodoClient:
         except requests.exceptions.RequestException as e:
             raise PublishingError(f"Failed to create deposition: {e}") from e
 
-    def upload_file(self, bucket: str, file_path: str) -> None:
-        """Upload file to bucket."""
-        filename = Path(file_path).name
-        url = f"{self.config.api_base_url}/files/{bucket}/{filename}"
+    def upload_file(self, deposition_id: str, file_path: str | Path) -> None:
+        """Upload file to deposition."""
+        file_path = Path(file_path)
+        filename = file_path.name
+        # Zenodo uploads go to the deposition "bucket" endpoint:
+        #   PUT {api_base_url}/files/{bucket_id}/{filename}
+        # Tests pass `deposition_id` as a bucket identifier (e.g. "bucket123").
+        url = f"{self.config.api_base_url}/files/{deposition_id}/{filename}"
 
         try:
             with open(file_path, "rb") as f:

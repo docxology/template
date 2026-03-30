@@ -86,11 +86,11 @@ Configuration is managed via `RenderingConfig` or environment variables.
 
 ## Title Page Generation
 
-The combined PDF rendering automatically generates a professional title page from `project/manuscript/config.yaml`.
+The combined PDF rendering automatically generates a professional title page from `projects/{project_name}/manuscript/config.yaml`.
 
 ### Configuration
 
-Edit `project/manuscript/config.yaml` to customize the title page:
+Edit `projects/{project_name}/manuscript/config.yaml` to customize the title page:
 
 ```yaml
 paper:
@@ -800,14 +800,14 @@ output/figures/figure.png     → ../figures/figure.png
 figure.png                    → ../figures/figure.png
 ```
 
-(LaTeX compiles from `output/pdf/` directory, so all paths are relative to that location)
+(LaTeX compiles from `output/{project_name}/pdf/` directory, so all paths are relative to that location)
 
 ### Verification and Path Resolution
 
 Before LaTeX compilation, the renderer:
 - Extracts all `\includegraphics` references
 - Normalizes paths to handle various formats
-- Checks if files exist in `project/output/figures/`
+- Checks if files exist in `output/{project_name}/figures/`
 - Logs the status of each figure
 - Warns about missing figures but continues (graceful degradation)
 
@@ -835,24 +835,24 @@ Found: 13/14 figures
 
 1. **Verify graphicx package is loaded**:
    ```bash
-   grep "usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex
+   grep "usepackage{graphicx}" output/{project_name}/pdf/_combined_manuscript.tex
    ```
    If not found, the rendering system will automatically add it. Check build output for confirmation.
 
 2. **Check figure generation**:
    ```bash
-   ls -la project/output/figures/ | grep -E "\.png|\.pdf|\.jpg"
+   ls -la output/{project_name}/figures/ | grep -E "\.png|\.pdf|\.jpg"
    ```
    Generate missing figures: `python3 scripts/02_run_analysis.py`
 
 3. **Verify references in markdown**:
    ```bash
-   grep -r "includegraphics" project/manuscript/ | head -10
+   grep -r "includegraphics" projects/{project_name}/manuscript/ | head -10
    ```
 
 4. **Check LaTeX compilation log for graphics errors**:
    ```bash
-   tail -150 project/output/pdf/_combined_manuscript.log | grep -A2 -B2 "graphics\|Error\|Warning"
+   tail -150 output/{project_name}/pdf/_combined_manuscript.log | grep -A2 -B2 "graphics\|Error\|Warning"
    ```
    Look for:
    - "File not found" errors
@@ -867,12 +867,12 @@ Found: 13/14 figures
 6. **Check file details**:
    - Filename spelling (case-sensitive on Unix)
    - File format (PNG/PDF/JPG only)
-   - File is readable: `file project/output/figures/your_figure.png`
-   - For Unicode filenames, check encoding: `ls -l project/output/figures/`
+   - File is readable: `file output/{project_name}/figures/your_figure.png`
+   - For Unicode filenames, check encoding: `ls -l output/{project_name}/figures/`
 
 7. **Manually test LaTeX compilation** (advanced):
    ```bash
-   cd project/output/pdf/
+   cd output/{project_name}/pdf/
    xelatex _combined_manuscript.tex
    ```
    Look for graphics-related errors in output

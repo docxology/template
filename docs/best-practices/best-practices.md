@@ -144,12 +144,6 @@ def test_calculate_average():
     data = [1.0, 2.0, 3.0, 4.0]
     result = calculate_average(data)
     assert result == 2.5
-
-# Bad: Mocked behavior
-@patch('module.function')
-def test_calculate_average(mock_func):
-    mock_func.return_value = 2.5
-    # Doesn't test actual behavior
 ```
 
 **Best Practices:**
@@ -260,7 +254,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 
 ```bash
 # Automated validation
-uv run python scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Or validate outputs directly
 uv run python scripts/04_validate_output.py

@@ -75,6 +75,10 @@ projects/code_project/
 │   ├── 02_methodology.md
 │   ├── 03_results.md
 │   ├── 04_conclusion.md
+│   ├── 05_experimental_setup.md
+│   ├── 06_reproducibility.md
+│   ├── 07_scope_and_related_work.md
+│   ├── SYNTAX.md           # Citation/figure syntax reference (supplemental)
 │   ├── config.yaml         # Publication metadata
 │   ├── config.yaml.example # Example configuration
 │   ├── preamble.md         # LaTeX preamble
@@ -149,10 +153,10 @@ The project uses the template's configuration system via `pyproject.toml` and en
 
 ```bash
 # Run project tests
-pytest tests/ -v
+uv run pytest projects/code_project/tests/ -v
 
 # With coverage
-pytest tests/ --cov=src --cov-report=html
+uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 ```
 
 ## API Reference
@@ -370,7 +374,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Logging Standards Compliance**
 
-- **Unified logging**: Uses `infrastructure.core.logging_utils.get_logger(__name__)`
+- **Unified logging**: Uses `infrastructure.core.logging.utils.get_logger(__name__)`
 - **Appropriate levels**: DEBUG, INFO, WARNING, ERROR as appropriate
 - **Context-rich messages**: Includes relevant context in log messages
 
@@ -384,10 +388,10 @@ This project complies with the template's development standards defined in `.cur
 
 ```bash
 # Test coverage verification
-pytest tests/ --cov=src --cov-fail-under=90
+uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
 
 # Type hint verification
-python3 -c "import ast; import inspect; # Type checking logic here"
+uv run python -c "import ast; import inspect; # Type checking logic here"
 
 # Documentation completeness check
 find . -name "*.py" -exec grep -L '"""' {} \;
@@ -448,7 +452,7 @@ except TemplateError as e:
 Infrastructure-backed logging with operation timing:
 
 ```python
-from infrastructure.core.logging_utils import log_operation, log_success
+from infrastructure.core.logging.utils import log_operation, log_success
 
 with log_operation("Running convergence experiments", logger=logger):
     results = run_convergence_experiment()

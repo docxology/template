@@ -40,7 +40,7 @@ Plus:
 1. **Click "Use this template"** on the [GitHub repository](https://github.com/docxology/template)
 2. **Clone your new repository**
 3. **Install dependencies**: `uv sync`
-4. **Generate your first document**: `uv run python scripts/execute_pipeline.py --core-only`
+4. **Generate your first document**: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 That's it! You now have a research project structure.
 
@@ -49,10 +49,10 @@ That's it! You now have a research project structure.
 - ✅ **project structure** with clear organization
 - ✅ **Professional PDF generation** from markdown
 - ✅ **Cross-referencing system** for equations and figures
-- ✅ **Automated testing** framework (2118 tests: 1796 infrastructure [2 skipped] + 320 project, all passing)
-- ✅ **Build pipeline** that validates everything (58-second builds)
-- ✅ **Terminal output logging** - all pipeline output saved to timestamped log files
-- ✅ **25+ guides** for all skill levels
+- ✅ **Automated testing** framework (infrastructure + per-project suites; thresholds in `pyproject.toml`)
+- ✅ **Build pipeline** that validates tests, analysis, PDFs, and outputs before copy
+- ✅ **Terminal output logging** - pipeline logs under `projects/<name>/output/logs/`
+- ✅ **Documentation hub** under `docs/` (see [documentation-index.md](../documentation-index.md))
 
 ## 📖 Guides by Skill Level
 
@@ -250,7 +250,7 @@ Level 10-12: Expert Usage (1-2 months)
 
 ### Build System
 
-- **[Build System](../operational/build/build-system.md)** - reference (status, performance, fixes)
+- **[Pipeline Orchestration](../RUN_GUIDE.md)** - reference (stages, flags, troubleshooting entry points)
 - **[PDF Validation](../modules/pdf-validation.md)** - Quality checks
 
 ### Writing & Formatting
@@ -283,9 +283,9 @@ Level 10-12: Expert Usage (1-2 months)
 ### Advanced Topics
 
 - **[Two-Layer Architecture](../architecture/two-layer-architecture.md)** - architecture guide
-- **[Modules Guide](../modules/modules-guide.md)** - Using all 10 infrastructure modules
-- **[Dependency Management](../operational/build/dependency-management.md)** - uv package manager guide
-- **[CI/CD Integration](../operational/build/ci-cd-integration.md)** - GitHub Actions setup
+- **[Modules Guide](../modules/modules-guide.md)** - Using all 14 infrastructure modules
+- **[Dependency management](../../README.md)** - `uv` usage and install/sync commands
+- **[CI/CD automation](../../.github/README.md)** - GitHub Actions and repository automation
 - **[Performance Optimization](../operational/config/performance-optimization.md)** - Build time optimization
 - **[Migration Guide](../best-practices/migration-guide.md)** - Migrating from other templates
 
@@ -298,7 +298,7 @@ Having issues? Here's where to look:
 3. **[Common Workflows](../reference/common-workflows.md)** - Step-by-step help
 4. **[Quick Start Cheatsheet](../reference/quick-start-cheatsheet.md)** - Quick troubleshooting section
 5. **[Glossary](../reference/glossary.md)** - Term definitions
-6. **[Build System](../operational/build/build-system.md)** - Build system details
+6. **[Pipeline Orchestration](../RUN_GUIDE.md)** - Pipeline stages and execution
 
 **Common Issues**:
 
@@ -327,6 +327,6 @@ Having issues? Here's where to look:
 
 **Ready to start?** Choose your skill level above and dive in!
 
-**System Status**: ✅ All operational | **Build Time**: 84s (without optional LLM review) | **Coverage**: 100%/90% (project), 83.33%/60% (infra) | **Tests**: 2118 passing
+**Verify locally**: run `uv run python scripts/01_run_tests.py --project <name>` and `./run.sh --pipeline` (or `--core-only`) on your machine for timing and coverage numbers.
 
 **Need help?** Start with **[Getting Started Guide](../guides/getting-started.md)** or check the **[FAQ](../reference/faq.md)**

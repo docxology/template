@@ -8,22 +8,25 @@ from typing import Any
 
 import yaml
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
 # Make dotenv optional - only required for credential-based testing
 try:
-    from dotenv import load_dotenv
+    from dotenv import load_dotenv as _load_dotenv
 
     DOTENV_AVAILABLE = True
 except ImportError:
     DOTENV_AVAILABLE = False
+    _load_dotenv = None  # type: ignore[assignment]
 
-    # No-op function if dotenv not available
-    def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore[misc]
-        """No-op fallback when python-dotenv is not installed."""
-        pass
+
+# Platform API base URLs — extracted here so they are easy to override in tests
+# and visible to callers without instantiating CredentialManager.
+_ZENODO_SANDBOX_URL = "https://sandbox.zenodo.org/api"
+_ZENODO_PROD_URL = "https://zenodo.org/api"
+_GITHUB_API_URL = "https://api.github.com"
 
 
 class CredentialManager:
@@ -42,11 +45,12 @@ class CredentialManager:
             env_file: Path to .env file (optional, defaults to .env in root)
             config_file: Path to YAML config file (optional)
         """
-        # Load .env file
-        if env_file and env_file.exists():
-            load_dotenv(env_file)
-        else:
-            load_dotenv()  # Load from default .env if it exists
+        # Load .env file (skipped silently when python-dotenv is not installed)
+        if DOTENV_AVAILABLE and _load_dotenv is not None:
+            if env_file and env_file.exists():
+                _load_dotenv(env_file)
+            else:
+                _load_dotenv()
 
         # Load YAML config if provided
         self.config = {}
@@ -119,9 +123,7 @@ class CredentialManager:
         return {
             "token": token,
             "use_sandbox": use_sandbox,
-            "base_url": (
-                "https://sandbox.zenodo.org/api" if use_sandbox else "https://zenodo.org/api"
-            ),
+            "base_url": _ZENODO_SANDBOX_URL if use_sandbox else _ZENODO_PROD_URL,
         }
 
     def get_github_credentials(self) -> dict[str, Any]:
@@ -133,7 +135,7 @@ class CredentialManager:
         return {
             "token": self._get_credential("GITHUB_TOKEN"),
             "repository": self._get_credential("GITHUB_REPO"),
-            "api_url": "https://api.github.com",
+            "api_url": _GITHUB_API_URL,
         }
 
     def get_arxiv_credentials(self) -> dict[str, Any]:
@@ -162,3 +164,13 @@ class CredentialManager:
         """Check if arXiv credentials are available."""
         creds = self.get_arxiv_credentials()
         return bool(creds.get("enabled", False))
+
+
+def make_bearer_auth_headers(token: str) -> dict[str, str]:
+    """Return Authorization header dict using OAuth2 Bearer scheme."""
+    return {"Authorization": f"Bearer {token}"}
+
+
+def make_token_auth_headers(token: str) -> dict[str, str]:
+    """Return Authorization header dict using GitHub token scheme."""
+    return {"Authorization": f"token {token}"}

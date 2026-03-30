@@ -5,7 +5,7 @@
 **Quick Reference:** [Logging Guide](../../operational/logging/) | [Error Handling Guide](../../operational/error-handling-guide.md)
 
 **For detailed testing standards and patterns, see:**
-- **[Testing Standards](../../../.cursorrules/testing_standards.md)** - testing patterns, coverage requirements, and best practices
+- **[Testing Standards](../../rules/testing_standards.md)** - testing patterns, coverage requirements, and best practices
 - **[Testing and Reproducibility](../../guides/testing-and-reproducibility.md)** - Test-driven development (TDD) workflow guide
 
 ## Quick Start

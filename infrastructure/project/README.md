@@ -9,6 +9,7 @@ The project module enables the template to manage multiple independent research 
 ## Quick Start
 
 ```python
+from pathlib import Path
 from infrastructure.project import discover_projects, validate_project_structure
 
 # Discover all projects
@@ -18,6 +19,10 @@ projects = discover_projects(repo_root)
 # Validate a specific project
 is_valid, message = validate_project_structure(Path("projects/my_research"))
 ```
+
+If your repository uses “program directories” (a top-level folder containing multiple projects),
+use `ProjectInfo.qualified_name` for display/selection. Nested projects will be returned as
+`program/name`.
 
 ## Key Functions
 

@@ -103,12 +103,14 @@ and analyzed using the Generalized Research Template's
 The core algorithm implements the iterative procedure for unconstrained
 optimization. Crucially, the implementation is designed to be highly
 observable, delegating all logging to
-\texttt{infrastructure.core.logging\_utils.ProjectLogger} and executing
-under the hermetic boundaries defined in
-\href{https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py}{\texttt{projects/code\_project/tests/conftest.py}}.
+\texttt{infrastructure.core.logging.utils.ProjectLogger} and executing
+under the hermetic boundaries defined in the
+\href{https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py}{test
+configuration}.
 
-\textbf{Algorithm 1: Gradient Descent (implemented in
-\href{https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py\#L42-L138}{\texttt{projects/code\_project/src/optimizer.py}})}
+\textbf{Algorithm 1: Gradient Descent (implemented in the
+\href{https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py\#L42-L138}{optimizer
+module})}
 
 \begin{quote}
 \textbf{Input:} Initial point \(x_0\), step size \(\alpha\), tolerance
@@ -153,9 +155,9 @@ Rather than writing ad-hoc validation code, the project imports
 This utility subjects the objective function to a barrage of extreme
 inputs (NaN, Inf, \(\pm 10^{10}\)) to calculate a formalized stability
 score. If this score degrades, the
-\href{https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py}{\texttt{scripts/02\_run\_analysis.py}}
-execution deliberately aborts, ensuring the methodology cannot enter
-unrecoverable states.
+\href{https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py}{analysis
+orchestrator} execution deliberately aborts, ensuring the methodology
+cannot enter unrecoverable states.
 \end{block}
 
 \begin{block}{Performance Benchmarking}
@@ -189,19 +191,34 @@ Optimal convergence occurs when
 \protect\phantomsection\label{experimental-setup}
 \begin{block}{Step Size Analysis}
 \protect\phantomsection\label{step-size-analysis}
-We investigate the effect of different step sizes on convergence:
+Step sizes are not chosen ad hoc in the manuscript: they are read from
+\texttt{experiment.step\_sizes} in \texttt{manuscript/config.yaml} and
+passed through \texttt{run\_convergence\_experiment()} in
+\texttt{optimization\_analysis.py}. The active grid for this build is:
 
 \begin{itemize}
 \tightlist
 \item
-  \(\alpha = 0.01\) (conservative)
+  \(\\alpha = 0.01\) (conservative)
 \item
-  \(\alpha = 0.05\) (moderate)
+  \(\\alpha = 0.1\) (conservative)
 \item
-  \(\alpha = 0.10\) (aggressive)
+  \(\\alpha = 0.5\) (near-optimal)
 \item
-  \(\alpha = 0.20\) (very aggressive)
+  \(\\alpha = 1.0\) (near-optimal)
+\item
+  \(\\alpha = 1.5\) (aggressive)
+\item
+  \(\\alpha = 2.5\) (divergent (expected unstable for H = I))
 \end{itemize}
+
+Labels follow the same agency taxonomy used for plot colours
+(\texttt{\_agency\_category} in the analysis script):
+\textbf{conservative} (small \(\alpha\), slow but stable on \(H=I\)),
+\textbf{near-optimal} (including \(\alpha=1\) where the method reaches
+\(x^\ast\) in one step for this quadratic), \textbf{aggressive}
+(\(1 < \alpha < 2\), still linearly contracting in \(|x-x^\ast|\) but
+oscillatory in sign), and \textbf{divergent} (\(|1-\alpha| \geq 1\)).
 \end{block}
 
 \begin{block}{Zero-Mock Testing Methodology}
@@ -227,9 +244,36 @@ infrastructure build phase.
 \item
   \textbf{Coverage Gates}: The
   \href{https://github.com/docxology/template/blob/main/.github/workflows/ci.yml}{GitHub
-  Actions CI workflow} enforces a mandatory 100\% branch and statement
-  coverage gate prior to compiling the manuscript to a PDF.
+  Actions CI workflow} enforces a mandatory ≥90\% statement coverage
+  gate on \texttt{projects/code\_project/src/} prior to treating the
+  project as build-green.
 \end{enumerate}
+\end{block}
+
+\begin{block}{Stopping rule and reporting}
+\protect\phantomsection\label{stopping-rule-and-reporting}
+\texttt{gradient\_descent()} terminates when \(\|\nabla f(x_k)\|\) falls
+below \texttt{experiment.tolerance} or when \(k\) reaches
+\texttt{experiment.max\_iterations}. The boolean \texttt{converged} in
+exported CSV rows distinguishes these outcomes. Downstream,
+\texttt{scripts/z\_generate\_manuscript\_variables.py} aggregates the
+CSV into \texttt{RESULT\_*} placeholders so tables and prose cannot
+drift from the last analysis run.
+\end{block}
+
+\begin{block}{Figure generation contract}
+\protect\phantomsection\label{figure-generation-contract}
+Each figure in \texttt{03\_results.md} maps to a single generator in
+\texttt{optimization\_analysis.py}
+(\texttt{generate\_convergence\_plot},
+\texttt{generate\_step\_size\_sensitivity\_plot},
+\texttt{generate\_convergence\_rate\_plot},
+\texttt{generate\_complexity\_visualization},
+\texttt{generate\_stability\_visualization},
+\texttt{generate\_benchmark\_visualization}). Captions in the markdown
+intentionally name the function and the key parameters (tolerance lines,
+grids, dimensions) so reviewers can navigate from PDF to code without
+inferring hidden defaults.
 \end{block}
 \end{block}
 

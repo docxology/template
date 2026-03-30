@@ -57,7 +57,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 ## Related Documentation
 
 - **[`../reference/api-reference.md`](../reference/api-reference.md)** - API documentation
-- **[`../operational/build/build-system.md`](../operational/build/build-system.md)** - Build system integration
+- **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - Pipeline integration
 - **[`../core/architecture.md`](../core/architecture.md)** - System architecture
 
 ## See Also

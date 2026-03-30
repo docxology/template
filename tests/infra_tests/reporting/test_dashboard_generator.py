@@ -5,7 +5,7 @@ Tests visual dashboard generation in multiple formats (PNG, PDF, HTML).
 
 import pytest
 
-from infrastructure.reporting.dashboard_generator import (
+from infrastructure.reporting._dashboard_matplotlib import (
     create_coverage_chart,
     create_manuscript_size_chart,
     create_output_distribution_chart,

@@ -1,4 +1,4 @@
-"""Tests for infrastructure.core.retry module.
+"""Tests for infrastructure.core.runtime.retry module.
 
 Comprehensive tests for retry decorators and retryable operations.
 """
@@ -7,7 +7,7 @@ import time
 
 import pytest
 
-from infrastructure.core.retry import (
+from infrastructure.core.runtime.retry import (
     RetryableOperation,
     retry_on_transient_failure,
     retry_with_backoff,

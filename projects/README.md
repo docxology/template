@@ -4,13 +4,37 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Active Projects
 
-This directory contains **one active project**, which serves as the **master exemplar**:
+Stand-alone workspaces under `projects/` are discovered by `discover_projects()` and listed in `./run.sh`. Current entries:
 
-### **code_project**: The Template Project of docxology/template/ repository
+### **code_project** — master numerical exemplar
 
-A fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures.
+Optimization study with figures, dashboard, and full manuscript (100% coverage, 45 tests). See [code_project/README.md](code_project/README.md) and [code_project/AGENTS.md](code_project/AGENTS.md).
 
-**Note:** Archived projects are preserved in `projects_archive/` for reference but are not actively executed.
+### **template** — meta-documentation project
+
+Self-referential manuscript and metrics for the repository (94.4% coverage, 65 tests). See [template/README.md](template/README.md) and [template/AGENTS.md](template/AGENTS.md).
+
+### In-progress projects (not yet in `projects/`)
+
+These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready:
+
+- **fep_lean** — formal-methods / Lean-oriented manuscript and tooling
+- **act_inf_metaanalysis** — Active Inference meta-analysis
+- **active_inference** — Active Inference project
+- **biology_textbook** — biology textbook project
+- **cognitive_case_diagrams** — diagram / categorical linguistics
+- **ento_linguistics** — entomological linguistics
+
+### Archived exemplars (not in `projects/`)
+
+These are kept under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them:
+
+- **traditional_newspaper** — multi-folio tabloid layout (`geometry` / `multicol`, masthead figure); see [`projects_archive/traditional_newspaper/README.md`](../projects_archive/traditional_newspaper/README.md)
+- **area_handbook** — corpus-driven handbook-style manuscript (was `projects/area_handbook/`)
+- **density_bioscales** — fluids and composite density scenarios
+- **special_number_proximity** — Diophantine proximity statistics
+
+**Note:** Promote by moving a directory from `projects_archive/` or `projects_in_progress/` into `projects/`.
 
 ## Standalone Project Paradigm
 
@@ -62,19 +86,23 @@ Projects in the `projects_archive/` directory are **preserved but not executed**
 - **NOT executed** by any pipeline scripts
 - **Preserved** for historical reference and potential reactivation
 
+```bash
 # Move project to archive
-
 mv projects/myproject projects_archive/myproject
 
 # Move project back to active
-
 mv projects_archive/myproject projects/myproject
 
 # Project will be automatically discovered on next run.sh execution
+```
 
-| `code_project/` | The master exemplar implementation | ✅ Active |
+| Directory       | Role                      | Tests | Coverage |
+|-----------------|---------------------------|-------|----------|
+| `code_project/` | Master numerical exemplar | 45    | 100%     |
+| `template/`     | Meta-documentation        | 65    | 94.4%    |
 
-**Archived projects** are available in `projects_archive/` for historical reference (e.g., `blake_active_inference`, `cognitive_integrity`, `active_inference_meta_pragmatic`).
+**In-progress projects** live in `projects_in_progress/` (e.g. `fep_lean`, `act_inf_metaanalysis`, `cognitive_case_diagrams`).
+**Archived projects** live in `projects_archive/` (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `medical_ai`, `cognitive_integrity`, `special_number_proximity`).
 
 ```mermaid
 graph TD
@@ -246,7 +274,7 @@ Every project must comply with development standards defined in `.cursorrules/`:
 
 ### ✅ **Logging Standards** (`.cursorrules/python_logging.md`)
 
-- [ ] **Unified logging** via `infrastructure.core.logging_utils.get_logger(__name__)`
+- [ ] **Unified logging** via `infrastructure.core.logging.utils.get_logger(__name__)`
 - [ ] **Appropriate log levels** (DEBUG, INFO, WARNING, ERROR)
 - [ ] **Context-rich messages** for debugging
 
@@ -719,7 +747,7 @@ cat > projects/myproject/scripts/analysis_pipeline.py << 'EOF'
 """Analysis pipeline for my research project."""
 
 from src.example import hello_research
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -756,7 +784,7 @@ vim projects/myproject/tests/test_missing_functionality.py
 
 ```bash
 # Check .cursorrules compliance
-python3 -m infrastructure.validation.cli markdown projects/myproject/manuscript/
+python3 -m infrastructure.validation.cli.main markdown projects/myproject/manuscript/
 
 # Validate type hints
 python3 -c "
@@ -777,10 +805,10 @@ for file in src_files:
 
 ```bash
 # Validate markdown before rendering
-python3 -m infrastructure.validation.cli markdown projects/myproject/manuscript/
+python3 -m infrastructure.validation.cli.main markdown projects/myproject/manuscript/
 
 # Check for missing references or figures
-python3 -m infrastructure.validation.cli integrity projects/myproject/output/
+python3 -m infrastructure.validation.cli.main integrity projects/myproject/output/
 
 # Render with verbose output
 LOG_LEVEL=0 python3 scripts/03_render_pdf.py --project myproject
@@ -815,11 +843,12 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 - **Quality Gates**: 90% coverage, documentation, type safety
 - **Infrastructure Access**: Import from `infrastructure/` modules for shared utilities
 
-### 🎯 **Active Project**
+### 🎯 **Active Projects**
 
-- **code_project**: Active Inference meta-analysis research
+- **code_project**: Optimization research exemplar (100% coverage, 45 tests)
+- **template**: Meta-documentation and repository metrics (94.4% coverage, 65 tests)
 
-**Note:** Archived projects are preserved in `projects_archive/` for reference.
+**Note:** In-progress projects are in `projects_in_progress/`; archived projects are preserved in `projects_archive/`.
 
 ### 🚀 **Workflow**
 

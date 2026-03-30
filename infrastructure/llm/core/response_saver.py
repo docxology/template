@@ -7,9 +7,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 @dataclass
 class ResponseMetadata:
@@ -46,6 +47,7 @@ class ResponseMetadata:
             "error_occurred": self.error_occurred,
             "partial_response": self.partial_response,
         }
+
 
 def save_response(
     response: str,
@@ -127,7 +129,7 @@ Response:
     try:
         _tmp.write_text(content, encoding="utf-8")
         _tmp.replace(output_path)
-    except Exception:
+    except OSError:
         _tmp.unlink(missing_ok=True)
         raise
     logger.info(
@@ -136,6 +138,7 @@ Response:
     )
 
     return output_path
+
 
 def save_streaming_response(
     response: str,

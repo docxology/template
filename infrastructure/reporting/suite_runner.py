@@ -15,9 +15,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.file_cleanup import clean_coverage_files
-from infrastructure.core.logging_utils import get_logger
-from infrastructure.core.logging_progress import log_with_spinner
+from infrastructure.core.files.coverage_cleanup import clean_coverage_files
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.logging.progress import log_with_spinner
 from infrastructure.reporting.coverage_parser import (
     check_test_failures,
     extract_coverage_percentage,
@@ -79,8 +79,8 @@ def _is_internal_stack_line(line: str) -> bool:
     return any(p in line for p in _INTERNAL_STACK_PATTERNS)
 
 
-def _should_print_line(char: str, line: str, quiet: bool) -> bool:
-    """Return True if the current line/dot should be printed to stdout."""
+def _passes_quiet_filter(char: str, line: str, quiet: bool) -> bool:
+    """Return True if the current line/dot passes the quiet-mode output filter."""
     if not quiet:
         return char == "." or not _is_internal_stack_line(line)
     # quiet mode: only print summary lines
@@ -130,7 +130,7 @@ def run_pytest_stream(
                         stdout_buf.append(current_line)
                         recent_lines.append(current_line)
 
-                    if _should_print_line(char, current_line, quiet):
+                    if _passes_quiet_filter(char, current_line, quiet):
                         sys.stdout.write(char if char == "." else current_line)
                         sys.stdout.flush()
 
@@ -195,6 +195,7 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
     exit_code = 1
     stdout_text = ""
     stderr_text = ""
+    coverage_conflict_suppressed = False  # tracks whether a coverage plugin error was suppressed
 
     while retry_count <= max_retries:
         try:
@@ -222,12 +223,13 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
                     clean_coverage_files(config.repo_root)
                     continue
                 else:
+                    # Defer exit_code override — checked against actual failure count below
                     logger.warning(
-                        "Coverage data conflict persisted for %s tests. "
-                        "Tests passed; ignoring coverage plugin error.",
+                        "Coverage data conflict persisted for %s tests; "
+                        "checking for actual test failures before suppressing error.",
                         config.label.lower(),
                     )
-                    exit_code = 0
+                    coverage_conflict_suppressed = True
             break
 
         except subprocess.SubprocessError as e:
@@ -280,8 +282,15 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
         config.max_failures_config_key,
     )
 
+    # Single exit_code mutation point: resolve coverage suppression and halt/warn decisions together
     if exit_code != 0:
-        if should_halt:
+        if coverage_conflict_suppressed and failed_count == 0:
+            logger.warning(
+                "Coverage plugin error for %s but no test failures — ignoring coverage error.",
+                config.label.lower(),
+            )
+            exit_code = 0
+        elif should_halt:
             logger.error(message)
         else:
             logger.warning(message)

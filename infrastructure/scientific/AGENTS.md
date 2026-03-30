@@ -26,7 +26,7 @@ infrastructure/scientific/
 
 **benchmarking.py** (~200 lines)
 - `benchmark_function()` - Performance measurement with memory tracking
-- `generate_performance_report()` - performance analysis
+- `format_benchmark_report()` - performance analysis
 - `BenchmarkResult` dataclass - Benchmark results with timing and memory
 
 **documentation.py** (~120 lines)
@@ -63,7 +63,7 @@ stability = check_numerical_stability(
 ### Performance Benchmarking
 ```python
 # Import from main module (recommended)
-from infrastructure.scientific import benchmark_function, generate_performance_report
+from infrastructure.scientific import benchmark_function, format_benchmark_report
 
 # Or import from specific module
 from infrastructure.scientific.benchmarking import benchmark_function

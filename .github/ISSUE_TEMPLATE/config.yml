@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Ask a Question (Discussions)
+    url: https://github.com/docxology/template/discussions
+    about: Use GitHub Discussions for questions, ideas, and general help before filing an issue.

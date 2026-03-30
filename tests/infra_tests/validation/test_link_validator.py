@@ -7,7 +7,7 @@ All tests use real data and computations - no mocks allowed.
 
 import pytest
 
-from infrastructure.validation.link_validator import LinkValidator, main
+from infrastructure.validation.integrity.link_validator import LinkValidator, main
 
 
 class TestLinkValidator:

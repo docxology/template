@@ -16,7 +16,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 
@@ -27,6 +27,7 @@ class CLIError(Exception):
     """Raised when a CLI command fails with a known error condition."""
 
     def __init__(self, message: str, exit_code: int = 1):
+        """Initialize CLI error with message and exit code."""
         super().__init__(message)
         self.exit_code = exit_code
 
@@ -97,6 +98,7 @@ def check_command(args: argparse.Namespace) -> None:
         print(f"  Default model: {config.default_model}")
         print(f"  Temperature: {config.temperature}")
         print(f"  Max tokens: {config.max_tokens}")
+        raise SystemExit(0)
     else:
         raise CLIError(f"Cannot connect to Ollama at {config.base_url}. Start with: ollama serve")
 
@@ -166,8 +168,8 @@ def template_command(args: argparse.Namespace) -> None:
     print(response)
 
 
-def main() -> None:
-    """Main CLI entry point."""
+def create_parser() -> argparse.ArgumentParser:
+    """Build and return the CLI argument parser."""
     parser = argparse.ArgumentParser(
         description="Query local LLMs via Ollama for research tasks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -229,6 +231,12 @@ Examples:
     )
     template_parser.set_defaults(func=template_command)
 
+    return parser
+
+
+def main() -> None:
+    """Main CLI entry point."""
+    parser = create_parser()
     args = parser.parse_args()
 
     if not hasattr(args, "func"):
@@ -237,6 +245,7 @@ Examples:
 
     try:
         args.func(args)
+        raise SystemExit(0)
     except KeyboardInterrupt as e:
         logger.info("Interrupted")
         raise SystemExit(130) from e

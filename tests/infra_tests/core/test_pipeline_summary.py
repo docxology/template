@@ -7,12 +7,20 @@ import tempfile
 from pathlib import Path
 
 
-from infrastructure.core.file_inventory import FileInventoryEntry
+from infrastructure.core.files.inventory import FileInventoryEntry
 from infrastructure.core.pipeline import PipelineStageResult
-from infrastructure.core.pipeline_summary import (
+from infrastructure.core.pipeline.summary_models import PipelineSummary as PipelineSummaryDirect  # noqa: F401
+from infrastructure.core.pipeline.summary import (
     PipelineSummary,
     PipelineSummaryGenerator,
     generate_pipeline_summary,
+)
+from infrastructure.core.pipeline.summary_helpers import (
+    extract_project_name_from_path,
+    find_base_output_dir,
+    format_stage_result,
+    get_final_log_path,
+    stage_result_to_dict,
 )
 
 
@@ -158,8 +166,7 @@ class TestPipelineSummaryGenerator:
         result = PipelineStageResult(1, "Test Stage", True, 5.2)
         total_duration = 20.0
 
-        generator = PipelineSummaryGenerator()
-        formatted = generator._format_stage_result(result, total_duration, False)
+        formatted = format_stage_result(result, total_duration, False)
 
         assert "✓ Stage 1: Test Stage (5.2s, 26.0%)" in formatted
 
@@ -168,8 +175,7 @@ class TestPipelineSummaryGenerator:
         result = PipelineStageResult(2, "Failed Stage", False, 3.1, exit_code=1)
         total_duration = 20.0
 
-        generator = PipelineSummaryGenerator()
-        formatted = generator._format_stage_result(result, total_duration, False)
+        formatted = format_stage_result(result, total_duration, False)
 
         assert "✗ Stage 2: Failed Stage (3.1s) FAILED" in formatted
 
@@ -178,8 +184,7 @@ class TestPipelineSummaryGenerator:
         result = PipelineStageResult(3, "Skipped", False, 0.0, exit_code=0)
         total_duration = 20.0
 
-        generator = PipelineSummaryGenerator()
-        formatted = generator._format_stage_result(result, total_duration, True)
+        formatted = format_stage_result(result, total_duration, True)
 
         assert "⊘ Stage 3: Skipped (skipped)" in formatted
 
@@ -260,34 +265,28 @@ class TestPipelineSummaryGenerator:
 
     def test_get_final_log_path(self):
         """Test getting final log file path."""
-        generator = PipelineSummaryGenerator()
-
         # Test project log path - use explicit test path that won't resolve to real filesystem
         log_file = Path("/test/projects/myproject/output/logs/pipeline.log")
-        final_path = generator._get_final_log_path(log_file)
+        final_path = get_final_log_path(log_file)
         assert str(final_path) == "output/logs/pipeline.log"
 
         # Test non-project path
         log_file = Path("/tmp/log.txt")
-        final_path = generator._get_final_log_path(log_file)
+        final_path = get_final_log_path(log_file)
         assert final_path == log_file
 
     def test_find_base_output_dir(self):
         """Test finding base output directory from inventory."""
-        generator = PipelineSummaryGenerator()
-
         inventory = [
             FileInventoryEntry(Path("output/pdf/file.pdf"), 1024, "pdf", 0),
             FileInventoryEntry(Path("output/figures/plot.png"), 2048, "figures", 0),
         ]
 
-        base_dir = generator._find_base_output_dir(inventory)
+        base_dir = find_base_output_dir(inventory)
         assert base_dir == Path("output")
 
     def test_extract_project_name_from_path(self):
         """Test extracting project name from output path."""
-        generator = PipelineSummaryGenerator()
-
         test_cases = [
             (Path("projects/myproject/output/"), "myproject"),
             (Path("output/"), None),
@@ -295,15 +294,13 @@ class TestPipelineSummaryGenerator:
         ]
 
         for path, expected in test_cases:
-            result = generator._extract_project_name_from_path(path)
+            result = extract_project_name_from_path(path)
             assert result == expected
 
     def test_stage_result_to_dict(self):
         """Test converting stage result to dictionary."""
-        generator = PipelineSummaryGenerator()
-
         result = PipelineStageResult(1, "Test", True, 5.2)
-        dict_result = generator._stage_result_to_dict(result)
+        dict_result = stage_result_to_dict(result)
 
         assert dict_result["stage_num"] == 1
         assert dict_result["stage_name"] == "Test"
@@ -311,7 +308,7 @@ class TestPipelineSummaryGenerator:
         assert dict_result["duration"] == 5.2
 
         # Test None input
-        assert generator._stage_result_to_dict(None) is None
+        assert stage_result_to_dict(None) is None
 
 
 class TestConvenienceFunction:

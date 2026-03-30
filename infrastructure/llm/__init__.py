@@ -1,6 +1,6 @@
 """LLM Module.
 
-This module provides tools for interacting with Local Large Language Models (Ollama)
+Provides tools for interacting with Local Large Language Models (Ollama)
 for research assistance tasks.
 
 Module Structure:
@@ -17,209 +17,25 @@ CLI Usage:
     python3 -m infrastructure.llm.cli.main check
     python3 -m infrastructure.llm.cli.main models
 
-Direct imports (recommended):
-    from infrastructure.llm.core.client import LLMClient
-    from infrastructure.llm.core.config import OllamaClientConfig, GenerationOptions
-    from infrastructure.llm.templates import get_template
-    from infrastructure.llm.validation import validate_complete
+Usage::
+
+    from infrastructure.llm import LLMClient, OllamaClientConfig, GenerationOptions
+    from infrastructure.llm import get_template, validate_complete, is_off_topic
+    from infrastructure.llm import generate_review_with_metrics
 """
 
-from __future__ import annotations
-
-# Convenience re-exports from submodules (use direct imports for better clarity)
-from infrastructure.llm.core import (
-    ConversationContext,
-    GenerationOptions,
-    LLMClient,
-    OllamaClientConfig,
-    Message,
-    ResponseMode,
-    save_response,
-    save_streaming_response,
-    strip_thinking_tags,
-)
-from infrastructure.llm.core.config import (
-    get_max_input_length,
-    get_review_max_tokens,
-    get_review_timeout,
-)
-from infrastructure.llm.templates import (
-    REVIEW_MIN_WORDS,
-    TRANSLATION_LANGUAGES,
-    ManuscriptExecutiveSummary,
-    ManuscriptImprovementSuggestions,
-    ManuscriptMethodologyReview,
-    ManuscriptQualityReview,
-    ManuscriptTranslationAbstract,
-    PaperSummarization,
-    ResearchTemplate,
-    get_template,
-)
-from infrastructure.llm.utils import (
-    check_model_loaded,
-    ensure_ollama_ready,
-    get_available_models,
-    get_model_info,
-    get_model_names,
-    is_ollama_running,
-    preload_model,
-    select_best_model,
-    select_small_fast_model,
-    start_ollama_server,
-)
-from infrastructure.llm.validation import (
-    CONVERSATIONAL_PATTERNS,
-    OFF_TOPIC_PATTERNS_ANYWHERE,
-    OFF_TOPIC_PATTERNS_START,
-    ON_TOPIC_SIGNALS,
-    calculate_unique_content_ratio,
-    check_format_compliance,
-    clean_repetitive_output,
-    deduplicate_sections,
-    detect_conversational_phrases,
-    detect_repetition,
-    estimate_tokens,
-    extract_structured_sections,
-    has_on_topic_signals,
-    is_off_topic,
-    validate_citations,
-    validate_complete,
-    validate_formatting,
-    validate_json,
-    validate_length,
-    validate_long_response,
-    validate_no_repetition,
-    validate_response_structure,
-    validate_section_completeness,
-    validate_short_response,
-    validate_structure,
-)
-
-# Optional prompt system imports
-try:
-    from infrastructure.llm.prompts import PromptComposer, PromptFragmentLoader
-except ImportError:
-    # Prompt system not available - set to None for optional usage
-    PromptFragmentLoader = None  # type: ignore[assignment]
-    PromptComposer = None  # type: ignore[assignment]
-
-# Review generation modules
-from infrastructure.llm.review import (
-    ManuscriptInputMetrics,
-    ReviewMetrics,
-    SessionMetrics,
-    StreamingMetrics,
-    calculate_format_compliance_summary,
-    calculate_quality_summary,
-    select_and_start_ollama_model,
-    create_review_client,
-    extract_action_items,
-    extract_manuscript_text,
-    generate_improvement_suggestions,
-    generate_llm_executive_summary,
-    generate_methodology_review,
-    generate_quality_review,
-    generate_review_summary,
-    generate_review_with_metrics,
-    generate_translation,
-    get_manuscript_review_system_prompt,
-    save_review_outputs,
-    save_single_review,
-    validate_review_quality,
-    warmup_model,
-)
+from infrastructure.llm.core.client import LLMClient
+from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
+from infrastructure.llm.review.generator import generate_review_with_metrics
+from infrastructure.llm.templates import get_template
+from infrastructure.llm.validation import is_off_topic, validate_complete
 
 __all__ = [
-    # Core client
-    "LLMClient",
-    "ResponseMode",
-    "strip_thinking_tags",
-    # Configuration
-    "OllamaClientConfig",
     "GenerationOptions",
-    # Context management
-    "ConversationContext",
-    "Message",
-    # Templates
-    "ResearchTemplate",
-    "get_template",
-    "PaperSummarization",
-    # Manuscript review templates
-    "ManuscriptExecutiveSummary",
-    "ManuscriptQualityReview",
-    "ManuscriptMethodologyReview",
-    "ManuscriptImprovementSuggestions",
-    "ManuscriptTranslationAbstract",
-    "REVIEW_MIN_WORDS",
-    "TRANSLATION_LANGUAGES",
-    # Validation
-    "validate_json",
-    "validate_length",
-    "estimate_tokens",
-    "validate_short_response",
-    "validate_long_response",
-    "validate_structure",
-    "validate_citations",
-    "validate_formatting",
-    "validate_complete",
-    "validate_no_repetition",
-    "clean_repetitive_output",
-    "detect_repetition",
-    "calculate_unique_content_ratio",
-    "deduplicate_sections",
-    "is_off_topic",
-    "has_on_topic_signals",
-    "detect_conversational_phrases",
-    "check_format_compliance",
-    # Validation patterns (for testing/extension)
-    "OFF_TOPIC_PATTERNS_START",
-    "OFF_TOPIC_PATTERNS_ANYWHERE",
-    "CONVERSATIONAL_PATTERNS",
-    "ON_TOPIC_SIGNALS",
-    # Enhanced validation functions
-    "validate_section_completeness",
-    "extract_structured_sections",
-    "validate_response_structure",
-    # Ollama utilities
-    "is_ollama_running",
-    "start_ollama_server",
-    "get_available_models",
-    "get_model_names",
-    "select_best_model",
-    "select_small_fast_model",
-    "ensure_ollama_ready",
-    "get_model_info",
-    "check_model_loaded",
-    "preload_model",
-    # Prompt system (optional)
-    "PromptFragmentLoader",
-    "PromptComposer",
-    # Review metrics
-    "ReviewMetrics",
-    "ManuscriptInputMetrics",
-    "SessionMetrics",
-    "StreamingMetrics",
-    # Review generation  (estimate_tokens already listed above under validation)
-    "get_manuscript_review_system_prompt",
-    "get_max_input_length",
-    "get_review_timeout",
-    "get_review_max_tokens",
-    "validate_review_quality",
-    "create_review_client",
-    "select_and_start_ollama_model",
-    "warmup_model",
-    "extract_manuscript_text",
+    "LLMClient",
+    "OllamaClientConfig",
     "generate_review_with_metrics",
-    "generate_llm_executive_summary",
-    "generate_quality_review",
-    "generate_methodology_review",
-    "generate_improvement_suggestions",
-    "generate_translation",
-    # Review I/O
-    "extract_action_items",
-    "calculate_format_compliance_summary",
-    "calculate_quality_summary",
-    "save_review_outputs",
-    "save_single_review",
-    "generate_review_summary",
+    "get_template",
+    "is_off_topic",
+    "validate_complete",
 ]

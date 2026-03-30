@@ -8,7 +8,7 @@ Create generic, reusable infrastructure modules that provide domain-independent 
 
 This prompt enforces infrastructure module standards for reusable components:
 
-- [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
+- [`../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md) - Infrastructure development standards
 - [`../core/architecture.md`](../core/architecture.md) - Infrastructure layer architecture
 - [`../architecture/two-layer-architecture.md`](../architecture/two-layer-architecture.md) - Two-layer architecture guide
 
@@ -135,7 +135,7 @@ class ConfigurableProcessor(ABC, Generic[T]):
 # infrastructure/[module_name]/exceptions.py
 """Exception classes for infrastructure module."""
 
-from infrastructure.core.exceptions import TemplateError
+from infrastructure.core.runtime.exceptions import TemplateError
 
 class ModuleError(TemplateError):
     """Base exception for module errors."""
@@ -165,7 +165,7 @@ class ProcessingError(ModuleError):
 from typing import Any, Dict, List, Optional, Union
 from .exceptions import ValidationError, ConfigurationError, ProcessingError
 from .validators import validate_input
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -394,7 +394,6 @@ def validate_configuration(config: Dict[str, Any], schema: Dict[str, Any]) -> No
 """Tests for infrastructure module core functionality."""
 import pytest
 import numpy as np
-from unittest.mock import MagicMock
 
 from infrastructure.[module_name] import GenericProcessor, ModuleError
 from infrastructure.[module_name].exceptions import ValidationError, ConfigurationError
@@ -441,15 +440,13 @@ class TestGenericProcessor:
         # Create test data that should pass validation
         test_data = [1, 2, 3, 4, 5]
 
-        # Mock the internal methods to return predictable results
-        processor._apply_algorithm = MagicMock(return_value=[2, 4, 6, 8, 10])
-        processor._validate_processing_result = MagicMock(return_value=[2, 4, 6, 8, 10])
-        processor._format_output = MagicMock(return_value=[2, 4, 6, 8, 10])
-
+        # Exercise real behavior (no stubbing/patching).
+        # If the processor supports a simple configured transform (e.g., scale),
+        # validate the numeric output directly.
         result = processor.process(test_data)
 
-        assert result == [2, 4, 6, 8, 10]
-        processor._apply_algorithm.assert_called_once_with(test_data, processor.parameters)
+        assert result is not None
+        assert len(result) == len(test_data)
 
     def test_process_invalid_input(self, processor):
         """Test processing with invalid input."""
@@ -685,7 +682,7 @@ class ResearchAnalyzer:
 
 - [`README.md`](README.md) - Quick reference guide
 - [`../../core/architecture.md`](../../docs/core/architecture.md) - Infrastructure layer architecture
-- [`../../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
+- [`../../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md) - Infrastructure development standards
 - [`../validation/AGENTS.md`](../modules/pdf-validation.md) - Validation infrastructure
 
 ```
@@ -704,7 +701,7 @@ class ResearchAnalyzer:
 
 ## Standards Compliance Checklist
 
-### Infrastructure Standards ([`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md))
+### Infrastructure Standards ([`../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md))
 - [ ] Generic focus (domain-independent)
 - [ ] 60% minimum test coverage achieved
 - [ ] Public API with clear `__all__` exports
@@ -712,13 +709,13 @@ class ResearchAnalyzer:
 - [ ] Error handling with custom exceptions
 - [ ] Type hints on all public APIs
 
-### Code Quality Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
+### Code Quality Standards ([`../rules/code_style.md`](../rules/code_style.md))
 - [ ] Black formatting and isort compliance
 - [ ] Google-style docstrings
 - [ ] Unified logging system
 - [ ] Consistent API design
 
-### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+### Testing Standards ([`../rules/testing_standards.md`](../rules/testing_standards.md))
 - [ ] No mocks policy (data only)
 - [ ] Coverage validation (pytest-cov)
 - [ ] Test organization and structure
@@ -744,7 +741,7 @@ REUSABILITY SCOPE: All research projects needing data validation and quality met
 
 ## Related Documentation
 
-- [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
+- [`../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md) - Infrastructure development standards
 - [`../core/architecture.md`](../core/architecture.md) - Infrastructure layer architecture
 - [`../architecture/two-layer-architecture.md`](../architecture/two-layer-architecture.md) - Two-layer architecture guide
 ```

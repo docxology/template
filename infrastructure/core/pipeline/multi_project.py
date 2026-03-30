@@ -1,0 +1,256 @@
+"""Multi-project orchestration system.
+
+This module provides orchestration for running pipelines across multiple projects,
+extracted from the bash run.sh script into testable Python code.
+
+Part of the infrastructure layer (Layer 1) - reusable across all projects.
+"""
+
+from __future__ import annotations
+
+import time
+from dataclasses import dataclass
+from pathlib import Path
+from typing import TYPE_CHECKING, Callable
+
+from infrastructure.core.logging.utils import get_logger, log_operation
+from infrastructure.core.errors import PROJECT_EXCEPTION, PROJECT_FAILED
+from infrastructure.core.pipeline.executor import PipelineConfig, PipelineExecutor, PipelineStageResult
+
+if TYPE_CHECKING:
+    from infrastructure.project.project_info import ProjectInfo
+
+logger = get_logger(__name__)
+
+
+@dataclass
+class MultiProjectConfig:
+    """Configuration for multi-project execution."""
+
+    repo_root: Path
+    projects: list[ProjectInfo]
+    run_infra_tests: bool = True
+    run_llm: bool = True
+    run_executive_report: bool = True
+
+
+@dataclass
+class MultiProjectResult:
+    """Result of multi-project execution."""
+
+    project_results: dict[str, list[PipelineStageResult]]
+    infra_test_duration: float = 0.0
+    total_duration: float = 0.0
+    successful_projects: int = 0
+    failed_projects: int = 0
+
+
+class MultiProjectOrchestrator:
+    """Orchestrate pipeline execution across multiple projects."""
+
+    def __init__(
+        self,
+        config: MultiProjectConfig,
+        on_project_complete: Callable[[str, list[PipelineStageResult], Path], None] | None = None,
+    ):
+        """Initialize multi-project orchestrator.
+
+        Args:
+            config: Multi-project configuration
+            on_project_complete: Optional callback invoked after each project finishes.
+                Receives (project_name, stage_results, output_dir). Use this at the
+                call-site to generate reports without importing reporting modules here.
+        """
+        self.config = config
+        self.on_project_complete = on_project_complete
+
+    def execute_all_projects_full(self) -> MultiProjectResult:
+        """Execute full pipeline for all projects (with infrastructure tests, with LLM).
+
+        Returns:
+            Multi-project execution result
+        """
+        logger.info(f"Executing full pipeline for {len(self.config.projects)} projects")
+
+        return self._execute_multi_project_pipeline(run_infra_tests=True, run_llm=True)
+
+    def execute_all_projects_core(self) -> MultiProjectResult:
+        """Execute core pipeline for all projects (with infrastructure tests, no LLM).
+
+        Returns:
+            Multi-project execution result
+        """
+        logger.info(f"Executing core pipeline for {len(self.config.projects)} projects")
+
+        return self._execute_multi_project_pipeline(run_infra_tests=True, run_llm=False)
+
+    def execute_all_projects_full_no_infra(self) -> MultiProjectResult:
+        """Execute full pipeline for all projects (no infrastructure tests, with LLM).
+
+        Returns:
+            Multi-project execution result
+        """
+        logger.info(f"Executing full pipeline (no infra) for {len(self.config.projects)} projects")
+
+        return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=True)
+
+    def execute_all_projects_core_no_infra(self) -> MultiProjectResult:
+        """Execute core pipeline for all projects (no infrastructure tests, no LLM).
+
+        Returns:
+            Multi-project execution result
+        """
+        logger.info(f"Executing core pipeline (no infra) for {len(self.config.projects)} projects")
+
+        return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=False)
+
+    def _execute_multi_project_pipeline(
+        self, run_infra_tests: bool, run_llm: bool
+    ) -> MultiProjectResult:
+        """Execute pipeline across multiple projects.
+
+        Args:
+            run_infra_tests: Whether to run infrastructure tests once at start
+            run_llm: Whether to include LLM stages
+
+        Returns:
+            Multi-project execution result
+        """
+        start_time = time.time()
+        project_results = {}
+
+        # Run infrastructure tests once at the beginning (if requested)
+        infra_duration = 0.0
+        if run_infra_tests:
+            if not self._run_infrastructure_tests_once():
+                logger.error("Infrastructure tests failed - aborting multi-project execution")
+                return MultiProjectResult(
+                    project_results={},
+                    infra_test_duration=infra_duration,
+                    total_duration=time.time() - start_time,
+                    successful_projects=0,
+                    failed_projects=len(self.config.projects),
+                )
+            infra_duration = time.time() - start_time
+            logger.info(f"✅ Infrastructure tests completed in {infra_duration:.1f}s")
+        else:
+            logger.info("Skipping infrastructure tests (already run or disabled)")
+
+        # Execute pipeline for each project
+        successful_projects = 0
+        failed_projects = 0
+
+        for i, project in enumerate(self.config.projects, 1):
+            # Use qualified_name to include program directory for nested projects
+            # e.g., 'cognitive_integrity/cogsec_multiagent_1_theory' instead of 'cogsec_multiagent_1_theory'  # noqa: E501
+            project_name = project.qualified_name
+            logger.info(f"Project {i}/{len(self.config.projects)}: {project_name}")
+
+            try:
+                with log_operation(f"Pipeline execution for {project_name}"):
+                    # Create pipeline config — derive projects_dir from the project's actual path
+                    # so that projects in projects_in_progress/ or projects_archive/ work correctly.
+                    pipeline_config = PipelineConfig(
+                        project_name=project.name,
+                        repo_root=self.config.repo_root,
+                        projects_dir=project.path.parent.name,  # e.g. 'projects'  # noqa: E501
+                        skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode  # noqa: E501
+                        skip_llm=not run_llm,
+                        total_stages=10 if run_llm else 8,
+                    )
+
+                    # Execute pipeline
+                    executor = PipelineExecutor(pipeline_config)
+                    method = (
+                        executor.execute_full_pipeline
+                        if run_llm
+                        else executor.execute_core_pipeline
+                    )
+                    results = method()
+
+                    project_results[project_name] = results
+
+                    # Notify call-site that this project finished (e.g. for report generation).
+                    # Reporting logic lives at the call-site to avoid a downward dependency
+                    # from core/ into the higher-level reporting/ layer.
+                    if self.on_project_complete is not None:
+                        output_dir = pipeline_config.project_dir / "output"
+                        try:
+                            self.on_project_complete(project_name, results, output_dir)
+                        except Exception as e:  # noqa: BLE001 - callback can raise anything
+                            logger.warning(
+                                f"Project completion callback failed for {project_name}: {e}",
+                                exc_info=True,
+                            )
+
+                    # Check if all stages succeeded
+                    all_success = all(r.success for r in results)
+                    if all_success:
+                        successful_projects += 1
+                        logger.info(f"✅ Project '{project_name}' completed successfully")
+                    else:
+                        failed_projects += 1
+                        logger.error(PROJECT_FAILED.format(project_name=project_name))
+                        # Continue with other projects even if one fails
+
+            except Exception as e:  # noqa: BLE001 - pipeline execution can raise varied exceptions
+                failed_projects += 1
+                logger.error(PROJECT_EXCEPTION.format(project_name=project_name, error=e))
+                project_results[project_name] = []
+
+        # Executive reporting is handled by the dedicated pipeline stage
+        # (07_generate_executive_report.py), which runs as part of the stage executor.
+
+        total_duration = time.time() - start_time
+
+        logger.info(
+            f"Multi-project execution completed: {successful_projects} successful, {failed_projects} failed"  # noqa: E501
+        )
+
+        return MultiProjectResult(
+            project_results=project_results,
+            infra_test_duration=infra_duration,
+            total_duration=total_duration,
+            successful_projects=successful_projects,
+            failed_projects=failed_projects,
+        )
+
+    def _run_infrastructure_tests_once(self) -> bool:
+        """Run infrastructure tests once before all projects.
+
+        Returns:
+            True if infrastructure tests passed, False otherwise
+        """
+        logger.info("Running infrastructure tests once for all projects...")
+
+        try:
+            # Use an existing project name so reports can be written under projects/{name}/output/reports/  # noqa: E501
+            # (the infrastructure test suite itself does not depend on project code).
+            # Use qualified_name for proper nested project path resolution.
+            fallback_project = (
+                self.config.projects[0].qualified_name if self.config.projects else "project"
+            )
+
+            # Create a config just to run infra tests
+            dummy_config = PipelineConfig(
+                project_name=fallback_project,
+                repo_root=self.config.repo_root,
+                skip_infra=False,
+                skip_llm=True,
+            )
+
+            executor = PipelineExecutor(dummy_config)
+
+            # Run only the infrastructure tests stage
+            success = executor.run_infrastructure_tests()
+
+            if success:
+                logger.info("✅ Infrastructure tests passed for all projects")
+                return True
+            else:
+                logger.error("❌ Infrastructure tests failed")
+                return False
+
+        except Exception as e:  # noqa: BLE001 - infra tests can raise varied exceptions
+            logger.error(f"❌ Infrastructure tests failed with exception: {e}")
+            return False

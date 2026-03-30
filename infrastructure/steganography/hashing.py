@@ -13,9 +13,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 def compute_file_hashes(
     file_path: Path,
@@ -47,6 +48,7 @@ def compute_file_hashes(
             logger.warning(f"Unsupported hash algorithm '{algo}' — skipping")
 
     return results
+
 
 def write_hash_manifest(
     pdf_path: Path,
@@ -86,6 +88,7 @@ def write_hash_manifest(
         raise
     logger.info(f"Hash manifest written → {output_path}")
     return output_path
+
 
 def compute_content_hash(content: bytes, algorithm: str = "sha256") -> str:
     """Compute a hash of arbitrary byte content.

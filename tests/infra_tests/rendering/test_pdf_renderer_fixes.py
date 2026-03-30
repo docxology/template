@@ -10,9 +10,13 @@ Follows No Mocks Policy - all tests use real data and real execution.
 
 import unicodedata
 
+import pytest
+
 
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
+from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
+from infrastructure.rendering._pdf_latex_helpers import fix_figure_paths
 
 
 class TestBibliographyProcessing:
@@ -20,14 +24,6 @@ class TestBibliographyProcessing:
 
     def test_process_bibliography_success(self, tmp_path):
         """Test successful bibliography processing."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path),
-            output_dir=str(tmp_path),
-            pdf_dir=str(tmp_path / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         # Create necessary files
         tex_file = tmp_path / "test.tex"
         aux_file = tmp_path / "pdf" / "test.aux"
@@ -40,7 +36,7 @@ class TestBibliographyProcessing:
 
         # Use real bibtex execution - may fail if bibtex not available
         try:
-            result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+            result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # May succeed or fail depending on bibtex availability
             assert isinstance(result, bool)
         except Exception:
@@ -49,30 +45,14 @@ class TestBibliographyProcessing:
 
     def test_process_bibliography_missing_bib_file(self, tmp_path):
         """Test bibliography processing with missing bib file."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path),
-            output_dir=str(tmp_path),
-            pdf_dir=str(tmp_path / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         tex_file = tmp_path / "test.tex"
         bib_file = tmp_path / "missing.bib"
 
-        result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+        result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
         assert result is False
 
     def test_process_bibliography_missing_aux_file(self, tmp_path):
         """Test bibliography processing with missing auxiliary file."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path),
-            output_dir=str(tmp_path),
-            pdf_dir=str(tmp_path / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         tex_file = tmp_path / "test.tex"
         bib_file = tmp_path / "references.bib"
 
@@ -80,19 +60,11 @@ class TestBibliographyProcessing:
         bib_file.write_text("@article{test, title={Test}}")
         (tmp_path / "pdf").mkdir(exist_ok=True)
 
-        result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+        result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
         assert result is False
 
     def test_process_bibliography_bibtex_warning(self, tmp_path):
         """Test bibliography processing handles bibtex warnings gracefully."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path),
-            output_dir=str(tmp_path),
-            pdf_dir=str(tmp_path / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         tex_file = tmp_path / "test.tex"
         aux_file = tmp_path / "pdf" / "test.aux"
         bib_file = tmp_path / "references.bib"
@@ -104,7 +76,7 @@ class TestBibliographyProcessing:
 
         # Use real bibtex execution
         try:
-            result = renderer._process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+            result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
             # May succeed or fail depending on bibtex availability
             assert isinstance(result, bool)
         except Exception:
@@ -117,14 +89,6 @@ class TestFigurePathResolution:
 
     def test_fix_figure_paths_basic(self, tmp_path):
         """Test basic figure path fixing."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path / "manuscript"),
-            output_dir=str(tmp_path / "output"),
-            pdf_dir=str(tmp_path / "output" / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         # Create figure directory and file
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "test.png").write_text("fake image")
@@ -134,7 +98,7 @@ class TestFigurePathResolution:
         \includegraphics[width=0.8\textwidth]{../output/figures/test.png}
         """
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -143,20 +107,12 @@ class TestFigurePathResolution:
 
     def test_fix_figure_paths_with_options(self, tmp_path):
         """Test figure path fixing preserves options."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path / "manuscript"),
-            output_dir=str(tmp_path / "output"),
-            pdf_dir=str(tmp_path / "output" / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "test.png").write_text("fake")
 
         tex_content = r"\includegraphics[width=0.9\textwidth]{../output/figures/test.png}"
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -165,14 +121,6 @@ class TestFigurePathResolution:
 
     def test_fix_figure_paths_unicode_filename(self, tmp_path):
         """Test figure path fixing with Unicode characters in filename."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path / "manuscript"),
-            output_dir=str(tmp_path / "output"),
-            pdf_dir=str(tmp_path / "output" / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         # Create figure with Unicode filename
         (tmp_path / "output" / "figures").mkdir(parents=True)
         unicode_filename = "figure_ñ_test.png"  # Filename with ñ
@@ -180,7 +128,7 @@ class TestFigurePathResolution:
 
         tex_content = f"\\includegraphics{{../output/figures/{unicode_filename}}}"
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -190,19 +138,11 @@ class TestFigurePathResolution:
 
     def test_fix_figure_paths_missing_figure(self, tmp_path):
         """Test figure path fixing handles missing figures gracefully."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path / "manuscript"),
-            output_dir=str(tmp_path / "output"),
-            pdf_dir=str(tmp_path / "output" / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         (tmp_path / "output" / "figures").mkdir(parents=True)
 
         tex_content = r"\includegraphics{../output/figures/missing.png}"
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -211,21 +151,13 @@ class TestFigurePathResolution:
 
     def test_fix_figure_paths_already_correct(self, tmp_path):
         """Test figure paths that are already correct."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path / "manuscript"),
-            output_dir=str(tmp_path / "output"),
-            pdf_dir=str(tmp_path / "output" / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "test.png").write_text("fake")
 
         # Already in correct format
         tex_content = r"\includegraphics{../figures/test.png}"
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -234,14 +166,6 @@ class TestFigurePathResolution:
 
     def test_fix_multiple_figure_paths(self, tmp_path):
         """Test fixing multiple figure paths in content."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path / "manuscript"),
-            output_dir=str(tmp_path / "output"),
-            pdf_dir=str(tmp_path / "output" / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "fig1.png").write_text("fake")
         (tmp_path / "output" / "figures" / "fig2.pdf").write_text("fake")
@@ -254,7 +178,7 @@ class TestFigurePathResolution:
         \includegraphics[width=0.5\textwidth]{../output/figures/fig2.pdf}
         """
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 
@@ -266,6 +190,7 @@ class TestFigurePathResolution:
 class TestCitationProcessing:
     """Test citation processing in rendering pipeline."""
 
+    @pytest.mark.timeout(90)
     def test_render_combined_includes_bibliography(self, tmp_path):
         """Test that render_combined includes bibliography processing."""
         config = RenderingConfig(
@@ -302,14 +227,6 @@ class TestIntegration:
 
     def test_latex_content_with_citations_and_figures(self, tmp_path):
         """Test fixing LaTeX content with both citations and figures."""
-        config = RenderingConfig(
-            manuscript_dir=str(tmp_path / "manuscript"),
-            output_dir=str(tmp_path / "output"),
-            pdf_dir=str(tmp_path / "output" / "pdf"),
-            pandoc_path="pandoc",
-        )
-        renderer = PDFRenderer(config)
-
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "results.png").write_text("fake")
 
@@ -334,7 +251,7 @@ class TestIntegration:
         \end{document}
         """
 
-        fixed = renderer._fix_figure_paths(
+        fixed = fix_figure_paths(
             tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
         )
 

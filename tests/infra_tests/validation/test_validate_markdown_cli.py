@@ -1,9 +1,9 @@
-"""Comprehensive tests for infrastructure/validation/validate_markdown_cli.py.
+"""Comprehensive tests for infrastructure/validation/cli/markdown.py.
 
 Tests the markdown validation CLI script.
 """
 
-from infrastructure.validation import validate_markdown_cli
+from infrastructure.validation.cli import markdown as validate_markdown_cli
 
 
 class TestValidateMarkdownCliImportError:

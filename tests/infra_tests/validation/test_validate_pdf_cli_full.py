@@ -1,4 +1,4 @@
-"""Comprehensive tests for infrastructure/validation/validate_pdf_cli.py.
+"""Comprehensive tests for infrastructure/validation/cli/pdf.py.
 
 Tests PDF validation CLI functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
@@ -17,7 +17,7 @@ class TestValidatePdfCliImport:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         assert validate_pdf_cli is not None
 
@@ -27,7 +27,7 @@ class TestValidatePdfFunction:
 
     def test_validate_pdf_exists(self, tmp_path):
         """Test validating an existing PDF using real PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Create a real PDF
         pdf = tmp_path / "test.pdf"
@@ -41,7 +41,7 @@ class TestValidatePdfFunction:
 
     def test_validate_pdf_not_found(self, tmp_path):
         """Test validating nonexistent PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         if hasattr(validate_pdf_cli, "validate_pdf"):
             result = validate_pdf_cli.validate_pdf(str(tmp_path / "missing.pdf"))
@@ -65,7 +65,7 @@ class TestMainFunction:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.validate_pdf_cli",
+                "infrastructure.validation.cli.pdf",
                 str(pdf),
             ],
             capture_output=True,
@@ -95,7 +95,7 @@ class TestMainFunction:
             [
                 sys.executable,
                 "-m",
-                "infrastructure.validation.validate_pdf_cli",
+                "infrastructure.validation.cli.pdf",
                 str(tmp_path),
             ],
             capture_output=True,
@@ -111,7 +111,7 @@ class TestMainFunction:
         """Test main without arguments via real subprocess."""
         # Run real CLI command via subprocess
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.validation.validate_pdf_cli"],
+            [sys.executable, "-m", "infrastructure.validation.cli.pdf"],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent.parent.parent,
@@ -127,7 +127,7 @@ class TestPdfCliIntegration:
 
     def test_module_structure(self):
         """Test module has expected structure."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.cli import pdf as validate_pdf_cli
 
         # Should have main function
         assert hasattr(validate_pdf_cli, "main") or callable(validate_pdf_cli)

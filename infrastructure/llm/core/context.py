@@ -5,12 +5,29 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from infrastructure.core.exceptions import ContextLimitError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
+
+class MessageDict(TypedDict):
+    """Wire format for a single conversation turn sent to the Ollama chat API."""
+
+    role: str
+    content: str
+
+
+class ContextState(TypedDict):
+    """Shape of the dict produced by ``ConversationContext.save_state``."""
+
+    messages: list[dict[str, Any]]
+    estimated_tokens: int
+    max_tokens: int
+    usage_stats: dict[str, Any]
+
 
 @dataclass
 class Message:
@@ -20,14 +37,16 @@ class Message:
     content: str
     metadata: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> dict[str, Any]:
-        """Convert to dictionary for API."""
-        return {"role": self.role, "content": self.content}
+    def to_dict(self) -> MessageDict:
+        """Convert to wire-format dict for Ollama chat API."""
+        return MessageDict(role=self.role, content=self.content)
+
 
 class ConversationContext:
     """Manages conversation history and token limits."""
 
     def __init__(self, max_tokens: int = 262144):  # Default to 256K for large-context models
+        """Initialize conversation context."""
         self.messages: list[Message] = []
         self.max_tokens = max_tokens
         self.estimated_tokens = 0
@@ -38,20 +57,13 @@ class ConversationContext:
         self._clear_count = 0
 
     def add_message(self, role: str, content: str) -> None:
-        """Add a message to context."""
+        """Append a message; prunes oldest history when token budget is exceeded."""
         # Simple estimation: 1 token ~= 4 chars
         tokens = len(content) // 4
 
         logger.debug(
-            "Adding message to context",
-            extra={
-                "role": role,
-                "content_length": len(content),
-                "tokens_est": tokens,
-                "current_tokens_est": self.estimated_tokens,
-                "max_tokens": self.max_tokens,
-                "messages_before": len(self.messages),
-            },
+            "Adding message to context role=%s len=%d tokens_est=%d total=%d/%d msgs=%d",
+            role, len(content), tokens, self.estimated_tokens, self.max_tokens, len(self.messages),
         )
 
         if self.estimated_tokens + tokens > self.max_tokens:
@@ -62,23 +74,13 @@ class ConversationContext:
         self._total_messages_added += 1
         self._total_tokens_estimated += tokens
 
-    def get_messages(self) -> list[dict[str, Any]]:
-        """Get messages formatted for API."""
+    def get_messages(self) -> list[MessageDict]:
+        """Return messages as list of {'role', 'content'} dicts for Ollama API."""
         return [m.to_dict() for m in self.messages]
 
     def clear(self) -> None:
-        """Clear all messages and reset token count."""
-        messages_before = len(self.messages)
-        tokens_before = self.estimated_tokens
-
-        logger.info(
-            "Clearing context",
-            extra={
-                "messages_cleared": messages_before,
-                "tokens_cleared": tokens_before,
-            },
-        )
-
+        """Discard all messages and reset token estimate; system prompt is not re-added."""
+        logger.debug("Clearing context msgs=%d tokens=%d", len(self.messages), self.estimated_tokens)
         self.messages = []
         self.estimated_tokens = 0
         self._clear_count += 1
@@ -100,12 +102,16 @@ class ConversationContext:
         )
 
         while self.messages and (self.estimated_tokens + new_tokens > self.max_tokens):
-            removed = self.messages.pop(0)
-            # Don't remove system prompt if it's the first message
-            if removed.role == "system" and self.messages:
-                # Put it back and remove next
-                self.messages.insert(0, removed)
-                removed = self.messages.pop(1)
+            # Find the oldest non-system message to prune.
+            # System messages are preserved regardless of position.
+            prune_idx = next(
+                (i for i, m in enumerate(self.messages) if m.role != "system"),
+                None,
+            )
+            if prune_idx is None:
+                # Only system messages remain — nothing left to prune.
+                break
+            removed = self.messages.pop(prune_idx)
 
             removed_tokens = len(removed.content) // 4
             self.estimated_tokens -= removed_tokens
@@ -149,17 +155,8 @@ class ConversationContext:
                 },
             )
 
-    def save_state(self) -> dict[str, Any]:
-        """Save current context state for restoration.
-
-        Returns:
-            Dictionary containing context state
-
-        Example:
-            >>> state = context.save_state()
-            >>> # ... later ...
-            >>> context.restore_state(state)
-        """
+    def save_state(self) -> ContextState:
+        """Save current context state for restoration via ``restore_state``."""
         state = {
             "messages": [asdict(msg) for msg in self.messages],
             "estimated_tokens": self.estimated_tokens,
@@ -177,17 +174,8 @@ class ConversationContext:
 
         return state
 
-    def restore_state(self, state: dict[str, Any]) -> None:
-        """Restore context from saved state.
-
-        Args:
-            state: State dictionary from save_state()
-
-        Example:
-            >>> state = context.save_state()
-            >>> context.clear()
-            >>> context.restore_state(state)
-        """
+    def restore_state(self, state: ContextState) -> None:
+        """Restore context from a ``save_state`` dictionary."""
         logger.info(
             "Restoring context state",
             extra={
@@ -201,14 +189,7 @@ class ConversationContext:
         self.max_tokens = state.get("max_tokens", self.max_tokens)
 
     def export_context(self, path: Path) -> None:
-        """Export context to JSON file.
-
-        Args:
-            path: Path to save context JSON file
-
-        Example:
-            >>> context.export_context(Path("context.json"))
-        """
+        """Export context to a JSON file at *path*."""
         path.parent.mkdir(parents=True, exist_ok=True)
 
         export_data = {
@@ -222,7 +203,7 @@ class ConversationContext:
         try:
             _tmp.write_text(json.dumps(export_data, indent=2), encoding="utf-8")
             _tmp.replace(path)
-        except Exception:
+        except OSError:
             _tmp.unlink(missing_ok=True)
             raise
 
@@ -236,14 +217,7 @@ class ConversationContext:
         )
 
     def import_context(self, path: Path) -> None:
-        """Import context from JSON file.
-
-        Args:
-            path: Path to context JSON file
-
-        Example:
-            >>> context.import_context(Path("context.json"))
-        """
+        """Import context from a JSON file at *path*."""
         import_data = json.loads(path.read_text(encoding="utf-8"))
 
         logger.info(
@@ -257,15 +231,7 @@ class ConversationContext:
         self.restore_state(import_data)
 
     def get_usage_stats(self) -> dict[str, Any]:
-        """Get context usage statistics.
-
-        Returns:
-            Dictionary with usage statistics
-
-        Example:
-            >>> stats = context.get_usage_stats()
-            >>> print(f"Total messages: {stats['total_messages_added']}")
-        """
+        """Return context usage statistics dictionary."""
         usage_percent = (
             (self.estimated_tokens / self.max_tokens * 100) if self.max_tokens > 0 else 0
         )
@@ -285,14 +251,7 @@ class ConversationContext:
         return stats
 
     def _get_health_status(self, usage_percent: float) -> str:
-        """Get health status based on usage percentage.
-
-        Args:
-            usage_percent: Current usage percentage
-
-        Returns:
-            Health status string ("healthy", "warning", "critical")
-        """
+        """Return 'healthy', 'warning', or 'critical' based on usage percentage."""
         if usage_percent < 50:
             return "healthy"
         elif usage_percent < 80:
@@ -301,18 +260,7 @@ class ConversationContext:
             return "critical"
 
     def check_health(self) -> tuple[str, dict[str, Any]]:
-        """Check context health and return status with details.
-
-        Returns:
-            Tuple of (status, details_dict)
-            - status: "healthy", "warning", or "critical"
-            - details: Dictionary with health details
-
-        Example:
-            >>> status, details = context.check_health()
-            >>> if status == "warning":
-            ...     print(f"Context usage: {details['usage_percent']:.1f}%")
-        """
+        """Return ``(status, stats)`` where status is 'healthy', 'warning', or 'critical'."""
         stats = self.get_usage_stats()
         status = stats["health_status"]
 

@@ -15,10 +15,10 @@ from pathlib import Path
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success
+from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
-from infrastructure.core.pipeline_summary import generate_pipeline_summary
-from infrastructure.core.environment import get_python_command, validate_interpreter
+from infrastructure.core.pipeline.summary import generate_pipeline_summary
+from infrastructure.core.runtime.environment import get_python_command, validate_interpreter
 
 logger = get_logger(__name__)
 
@@ -65,7 +65,7 @@ def execute_single_stage(stage: str, project_name: str, repo_root: Path) -> int:
 
     import subprocess
 
-    result = subprocess.run(cmd, cwd=str(repo_root), check=False)
+    result = subprocess.run(cmd, cwd=str(repo_root), check=False, timeout=600)
     return result.returncode
 
 
@@ -124,7 +124,7 @@ def execute_pipeline(
             total_duration=total_duration,
             output_dir=output_dir,
             skip_infra=skip_infra,
-            format="text",
+            output_format="text",
         )
         logger.info(text_summary)
 
@@ -135,7 +135,7 @@ def execute_pipeline(
                 save_pipeline_report,
                 collect_output_statistics,
             )
-            from infrastructure.reporting.output_reporter import generate_log_summary
+            from infrastructure.reporting.log_analysis import generate_log_summary
 
             # Collect output statistics
             output_stats = collect_output_statistics(repo_root, project_name)

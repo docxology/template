@@ -91,43 +91,43 @@
 
 \begin{frame}[fragile]{Abstract}
 \protect\phantomsection\label{abstract}
-This paper presents a comprehensive analysis of gradient descent
-optimization algorithms, constructed not merely as a mathematical
-exercise, but as the representative computational exemplar of the
-\href{https://github.com/docxology/template}{docxology/template}
-repository. We implement and evaluate the classical gradient descent
-method with fixed step size for quadratic minimization problems,
-examining convergence behavior across learning rates from
-\(\alpha = 0.01\) to \(\alpha = 0.20\). Crucially, the experimental
-framework is built entirely atop the template's nine
-\texttt{infrastructure} subpackages to guarantee absolute
-reproducibility and cryptographic output integrity. The very PDF holding
-these words was deterministically generated via
-\texttt{infrastructure/rendering/pdf\_renderer.py} relying on
-\texttt{code\_project/scripts/optimization\_analysis.py} data.
+This paper presents a convergence study of \textbf{fixed-step gradient
+descent} on a convex quadratic, framed as the computational exemplar of
+the \href{https://github.com/docxology/template}{Research Project
+Template}. The implementation lives in
+\texttt{projects/code\_project/src/optimizer.py}; experiments and
+figures are orchestrated by
+\texttt{projects/code\_project/scripts/optimization\_analysis.py} and
+hydrated into the manuscript through
+\texttt{scripts/z\_generate\_manuscript\_variables.py}, so tables and
+prose track \texttt{output/data/optimization\_results.csv} after every
+pipeline run.
 
-The key contributions of this work are dual-natured. Methodologically,
-it demonstrates empirical validation of theoretical convergence rates on
-quadratic objective functions and automated complexity analysis.
-Architecturally, it establishes a rigorously enforced development
-standard: (1) a zero-mock testing policy validated by 34 passing tests
-with 100\% coverage (as explicitly asserted in the
-\href{https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py}{test
-suite}); (2) automated analysis pipelines generating
-publication-quality, accessible visualizations; and (3) deep integration
-patterns demonstrating how scientific logic strictly couples with the
-core infrastructure (e.g., executing
-\texttt{infrastructure.scientific.benchmarking} directly from
-\texttt{projects/code\_project/scripts/optimization\_analysis.py}).
+We evaluate 6 step sizes from \(\alpha = 0.01\) to \(\alpha = 2.5\),
+spanning conservative, near-optimal, aggressive, and divergent regimes
+for a unit Hessian model. The build chain exercises template
+infrastructure end-to-end: scientific helpers
+(\texttt{infrastructure.scientific.stability},
+\texttt{infrastructure.scientific.benchmarking}), validation, rendering
+(\texttt{infrastructure/rendering/pdf\_renderer.py}), and reporting.
+Accessibility-oriented plotting defaults (colourblind-safe palette,
+300\,dpi exports) are centralized in \texttt{optimization\_analysis.py}.
 
-Results confirm that all tested step sizes converge to the analytical
-optimum \(x^* = 1.0\) with objective value \(f(x^*) = -0.5\). The
-codebase validates the template's modular \texttt{tests/} infrastructure
-and expansive
-\href{https://github.com/docxology/template/tree/main/projects/code_project/docs}{project
-documentation} knowledge base, serving as the master exemplar for
-bridging theoretical algorithm development with production-grade,
-reproducible computational science.
+Contributions are \textbf{methodological} and \textbf{architectural}. On
+the methods side, we relate empirical iteration counts and error decay
+to the scalar contraction factor \(\rho(\alpha) = |1-\alpha|\) and
+document cases where runs hit \(N_{\max} = 1000\) before meeting the
+gradient tolerance. On the architecture side, we demonstrate a zero-mock
+test suite on project \texttt{src/} (see
+\href{https://github.com/docxology/template/blob/main/projects/code_project/tests/test_optimizer.py}{test\_optimizer.py}),
+automated six-figure analysis, and reproducibility metadata
+(configuration hash, artifact counts) injected into Section 6.
+
+\textbf{Results (this configuration):} 4 of 6 grid points report
+\texttt{converged=True} in the CSV; non-convergent rows flag either slow
+progress at small \(\alpha\) under the iteration cap or instability when
+\(|1-\alpha| \geq 1\). The analytical minimizer remains \(x^\ast = 1.0\)
+with \(f(x^\ast) = -0.5\) for the configured \((A,b)\).
 
 \textbf{Keywords:} gradient descent, reproducible research, zero-mock
 testing, scientific infrastructure, pipeline orchestration

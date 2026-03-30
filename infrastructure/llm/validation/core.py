@@ -20,11 +20,12 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Any
+from typing import Any, Literal
 
 from infrastructure.core.exceptions import ValidationError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core.config import ResponseMode
+from infrastructure.llm.core.log_preview import preview_for_log
 
 # Import from split modules
 from infrastructure.llm.validation.repetition import deduplicate_sections, detect_repetition
@@ -45,7 +46,11 @@ def validate_json(content: str) -> Any:
     except json.JSONDecodeError as e:
         raise ValidationError(
             "LLM output is not valid JSON",
-            context={"error": str(e), "content": content[:100]},
+            context={
+                "error": str(e),
+                "content_len": len(content),
+                "content_preview": preview_for_log(content, 48),
+            },
         ) from e
 
 
@@ -87,8 +92,11 @@ def validate_long_response(content: str, min_tokens: int = 500) -> bool:
     return True
 
 
-def validate_structure(content: dict[str, Any], schema: dict[str, Any]) -> bool:
-    """Validate structured response against schema."""
+def validate_structure(content: dict[str, Any], schema: dict[str, Any]) -> Literal[True]:
+    """Validate structured response against schema.
+
+    Returns True on success. Raises ValidationError on failure (never returns False).
+    """
     required_keys = schema.get("required", [])
     properties = schema.get("properties", {})
 
@@ -153,10 +161,16 @@ def validate_citations(content: str) -> list[str]:
 
 
 def validate_formatting(content: str) -> bool:
-    """Validate basic formatting quality."""
+    """Validate basic formatting quality of LLM output.
+
+    Uses intentionally lightweight heuristics (not full linguistic analysis):
+    - ``!!!`` / ``???`` catches LLM over-emphasis artifacts common in low-quality responses.
+    - Double spaces catches copy-paste or template interpolation artifacts.
+    These are advisory signals (caller logs a warning); they do not block the pipeline.
+    """
     issues = []
 
-    # Check for excessive punctuation
+    # Check for excessive punctuation (common LLM artifact in low-quality responses)
     if "!!!" in content or "???" in content:
         issues.append("Excessive punctuation detected")
 
@@ -172,42 +186,55 @@ def validate_formatting(content: str) -> bool:
 
 
 def validate_complete(
-    content: str, mode: ResponseMode | str = "standard", schema: dict[str, Any] | None = None
-) -> bool:
+    content: str, mode: ResponseMode = ResponseMode.STANDARD, schema: dict[str, Any] | None = None
+) -> bool:  # True or raises for STRUCTURED/RAW/STANDARD; True or False for SHORT/LONG
     """Validate LLM response content based on the response mode.
 
     Args:
         content: Response text to validate.
-        mode: Expected response mode — short, long, structured, standard, or raw.
-        schema: Required when mode is ``structured``; ignored otherwise.
+        mode: Expected response mode — SHORT, LONG, STRUCTURED, STANDARD, or RAW.
+        schema: Required when mode is ``STRUCTURED``; ignored otherwise.
 
     Returns:
-        True when the content meets the mode's requirements.
+        ``True`` when content passes validation.
+        ``False`` only when ``mode`` is ``SHORT`` or ``LONG`` and content fails
+        the length/format check — callers should not test the return value
+        against ``False`` for other modes.
+        Standard and raw modes always return ``True`` (formatting issues are
+        logged as warnings, not failures).
+        Structured mode always returns ``True`` or raises ``ValidationError``
+        — it never returns ``False``.
 
     Raises:
-        ValidationError: If content is empty, or if mode is ``structured`` and
-            *schema* is None.
+        ValidationError: If content is empty, if mode is ``STRUCTURED`` and
+            *schema* is None, or if structured content fails schema validation.
     """
     if not content or not content.strip():
         raise ValidationError("Empty response")
 
-    # Basic formatting check — result is used for standard/raw modes below
-    formatting_ok = validate_formatting(content)
-    if not formatting_ok:
-        logger.warning("Response has formatting issues")
-
-    # Mode-specific validation
-    if mode in (ResponseMode.SHORT, "short"):
+    # Mode-specific validation. ResponseMode(str, Enum) so == matches both enum
+    # members and plain string equivalents for callers that pass string literals.
+    if mode == ResponseMode.SHORT:
         return validate_short_response(content)
-    elif mode in (ResponseMode.LONG, "long"):
+    elif mode == ResponseMode.LONG:
         return validate_long_response(content)
-    elif mode in (ResponseMode.STRUCTURED, "structured"):
+    elif mode == ResponseMode.STRUCTURED:
         if schema is None:
             raise ValidationError("Structured mode requires a schema")
         data = validate_json(content)
         return validate_structure(data, schema)
+    elif mode == ResponseMode.RAW:
+        # Raw mode is unvalidated — skip all formatting checks
+        return True
+    elif mode != ResponseMode.STANDARD:
+        raise ValueError(
+            f"Unknown mode {mode!r}. Expected one of: short, long, structured, standard, raw."
+        )
 
-    # Standard / raw / unknown: non-empty content passes; formatting issues are warnings only
+    # Standard mode: formatting issues are advisory only
+    formatting_ok = validate_formatting(content)
+    if not formatting_ok:
+        logger.warning("Response has formatting issues")
     return True
 
 

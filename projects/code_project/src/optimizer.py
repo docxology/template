@@ -7,13 +7,12 @@ infrastructure.scientific for stability analysis and benchmarking.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
 from typing import Callable
 
 import numpy as np
 
-from infrastructure.core.logging_utils import get_logger
-
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -28,10 +27,19 @@ class OptimizationResult:
     objective_history: list[float] | None = None
 
 
-def quadratic_function(
-    x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
-) -> float:
-    """Evaluate f(x) = (1/2) x^T A x - b^T x. A defaults to identity, b to ones."""
+def _validate_quadratic_inputs(
+    x: np.ndarray,
+    A: np.ndarray | None,
+    b: np.ndarray | None,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Coerce and validate inputs for quadratic_function and compute_gradient.
+
+    Returns:
+        Tuple (x, A, b) as float64 arrays with defaults applied.
+
+    Raises:
+        ValueError: If A or b shapes are incompatible with x.
+    """
     x = np.asarray(x, dtype=float)
     n = len(x)
 
@@ -49,32 +57,30 @@ def quadratic_function(
         if len(b) != n:
             raise ValueError(f"b must be length {n}, got {len(b)}")
 
+    return x, A, b
+
+
+def quadratic_function(
+    x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
+) -> float:
+    """Evaluate f(x) = (1/2) x^T A x - b^T x. A defaults to identity, b to ones."""
+    x, A, b = _validate_quadratic_inputs(x, A, b)
+
     # f(x) = (1/2) x^T A x - b^T x
     quadratic_term = 0.5 * x.T @ A @ x
     linear_term = b.T @ x
 
-    return quadratic_term - linear_term
+    return float(quadratic_term - linear_term)
 
 
 def compute_gradient(
     x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
 ) -> np.ndarray:
     """Compute ∇f(x) = A x - b for the quadratic objective. A defaults to identity, b to ones."""
-    x = np.asarray(x, dtype=float)
-    n = len(x)
-
-    if A is None:
-        A = np.eye(n)
-    else:
-        A = np.asarray(A, dtype=float)
-
-    if b is None:
-        b = np.ones(n)
-    else:
-        b = np.asarray(b, dtype=float)
+    x, A, b = _validate_quadratic_inputs(x, A, b)
 
     # ∇f(x) = A x - b
-    return A @ x - b
+    return np.asarray(A @ x - b)
 
 
 def gradient_descent(
@@ -130,9 +136,7 @@ def gradient_descent(
 
         if verbose and iteration % 100 == 0:
             obj_val = objective_func(x)
-            logger.info(
-                f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}"
-            )
+            logger.info(f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}")
 
         if grad_norm < tolerance:
             converged = True
@@ -150,11 +154,11 @@ def gradient_descent(
     final_grad_norm = np.linalg.norm(gradient_func(x))
 
     if converged:
-        logger.info(
+        logger.debug(
             f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
         )
     else:
-        logger.warning(
+        logger.debug(
             f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
         )
 
@@ -163,7 +167,7 @@ def gradient_descent(
         objective_value=final_obj_value,
         iterations=iteration,
         converged=converged,
-        gradient_norm=final_grad_norm,
+        gradient_norm=float(final_grad_norm),
         objective_history=objective_history,
     )
 
@@ -242,6 +246,8 @@ def simulate_trajectory(
         verbose=False,
     )
     return {
-        "iterations": list(range(len(result.objective_history))),
-        "objectives": result.objective_history,
+        "iterations": list(range(len(result.objective_history)))
+        if result.objective_history
+        else [],
+        "objectives": result.objective_history if result.objective_history else [],
     }

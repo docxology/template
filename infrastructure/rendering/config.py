@@ -5,9 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 @dataclass
 class RenderingConfig:
@@ -36,7 +37,7 @@ class RenderingConfig:
     web_theme: str = "simple"
 
     @classmethod
-    def from_env(cls, env: dict[str, str | None] = None) -> RenderingConfig:
+    def from_env(cls, env: dict[str, str] | None = None) -> RenderingConfig:
         """Create configuration from environment variables.
 
         Supported environment variables:
@@ -60,6 +61,7 @@ class RenderingConfig:
             RenderingConfig with values from environment or defaults
         """
         import os
+
         config_kwargs: dict[str, Any] = {}
         env_vars = env if env is not None else os.environ
 

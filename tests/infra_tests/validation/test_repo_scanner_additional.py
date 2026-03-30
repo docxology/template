@@ -4,7 +4,7 @@ Tests repository scanning functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
-from infrastructure.validation.repo_scanner import RepositoryScanner
+from infrastructure.validation.repo.scanner import RepositoryScanner
 
 
 class TestRepoScannerAdditional:

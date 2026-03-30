@@ -55,7 +55,7 @@ steganography:
 ./secure_run.sh
 
 # Specific project
-./secure_run.sh --project cognitive_case_diagrams
+./secure_run.sh --project code_project
 
 # Post-process existing PDFs only (skip pipeline)
 ./secure_run.sh --steganography-only

@@ -11,29 +11,36 @@ import functools
 import html
 import re
 from pathlib import Path
-from typing import Any
 
 # SecurityError is a subclass of SecurityViolation (see infrastructure/core/exceptions.py).
 # Both names are valid here; SecurityError is used for backwards compatibility with
 # call sites that catch SecurityError specifically.
-from infrastructure.core.exceptions import SecurityError
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core._validation import normalize_whitespace
+from infrastructure.core.exceptions import SecurityError, SecurityViolation
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.security import get_security_validator
 
 logger = get_logger(__name__)
+
 
 class InputSanitizer:
     """Comprehensive input sanitization for LLM operations."""
 
     def __init__(self) -> None:
-        self.dangerous_patterns = get_security_validator().dangerous_patterns
+        self._dangerous_patterns: list[str] | None = None
 
-    def sanitize_prompt(self, prompt: str, context: dict[str, Any] | None = None) -> str:
+    @property
+    def dangerous_patterns(self) -> list[str]:
+        """Lazy-load dangerous patterns from security validator."""
+        if self._dangerous_patterns is None:
+            self._dangerous_patterns = get_security_validator().dangerous_patterns
+        return self._dangerous_patterns
+
+    def sanitize_prompt(self, prompt: str) -> str:
         """Sanitize LLM prompt for security.
 
         Args:
             prompt: Raw prompt text
-            context: Additional context for validation
 
         Returns:
             Sanitized prompt text
@@ -56,7 +63,7 @@ class InputSanitizer:
     def validate_file_input(
         self, file_path: Path, allowed_extensions: list[str] | None = None
     ) -> None:
-        """Validate file input for security.
+        """Reject LLM-provided file paths that are absolute, traversal-based, missing, or oversized.
 
         Args:
             file_path: Path to file
@@ -80,8 +87,10 @@ class InputSanitizer:
             raise SecurityError("Invalid file path") from e
 
         # Check for directory traversal attempts
-        if ".." in str(file_path) or not resolved.exists():
-            raise SecurityError("Invalid file path")
+        if ".." in str(file_path):
+            raise SecurityError("Directory traversal detected")
+        if not resolved.exists():
+            raise SecurityError("File not found")
 
         # Check file extension
         if allowed_extensions:
@@ -96,26 +105,26 @@ class InputSanitizer:
 
 
     def sanitize_filename(self, filename: str) -> str:
-        """Sanitize filename for safe file operations.
+        """Strip path separators and control characters from an LLM-supplied filename.
+
+        Delegates core sanitization to SecurityValidator to avoid duplicating
+        the same regex patterns; applies an LLM-specific 255-character truncation
+        afterwards.
 
         Args:
             filename: Raw filename
 
         Returns:
             Sanitized filename safe for file operations
+
+        Raises:
+            SecurityError: If filename is empty, not a string, or otherwise invalid
         """
-        if not filename or not isinstance(filename, str):
-            raise SecurityError("Invalid filename")
-
-        filename = re.sub(r"[\/\\]", "_", filename)
-        filename = re.sub(r'[<>:"|?*]', "_", filename)
-        filename = re.sub(r"[\x00-\x1f\x7f-\x9f]", "", filename)
-        filename = filename[:255]
-
-        if not filename.strip():
-            filename = "unnamed_file"
-
-        return filename
+        try:
+            sanitized = get_security_validator().validate_filename(filename)
+        except SecurityViolation as e:
+            raise SecurityError(str(e)) from e
+        return sanitized[:255]
 
     def _remove_control_characters(self, text: str) -> str:
         """Remove control characters from text, preserving newlines, tabs, and spaces."""
@@ -138,12 +147,9 @@ class InputSanitizer:
         return html.escape(text, quote=True)
 
     def _normalize_whitespace(self, text: str) -> str:
-        """Normalize excessive whitespace."""
-        text = re.sub(r" +", " ", text)
-        text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
-        return text.strip()
+        return normalize_whitespace(text)
 
-    def _limit_length(self, text: str, max_length: int = 100000) -> str:
+    def _limit_length(self, text: str, max_length: int = 500000) -> str:
         """Limit text length to prevent resource exhaustion."""
         if len(text) > max_length:
             logger.warning(f"Text truncated from {len(text)} to {max_length} characters")
@@ -154,6 +160,7 @@ class InputSanitizer:
 def get_input_sanitizer() -> InputSanitizer:
     """Get the global input sanitizer instance (lazily initialized)."""
     return InputSanitizer()
+
 
 def sanitize_llm_input(prompt: str) -> str:
     """Convenience function for LLM input sanitization."""

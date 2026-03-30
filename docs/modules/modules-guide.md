@@ -1,6 +1,6 @@
 # 🔬 Modules Guide
 
-> **Guide** to the 10 infrastructure modules
+> **Guide** to the 14 infrastructure modules
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
@@ -20,6 +20,10 @@
 | 📊 **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
 | 🔍 **Project** | Project discovery | Multi-project orchestration | — |
 | 🔒 **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | — |
+| ⚙️ **Config** | Configuration schemas | Secure config, environment templates | — |
+| 🐳 **Docker** | Containerization | Dockerfile, docker-compose | — |
+| 🔍 **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | — |
+| 📡 **Telemetry** | Unified pipeline telemetry | Stage resource metrics, diagnostic aggregation, JSON/text reports | — |
 
 All modules follow the thin orchestrator pattern with test coverage.
 
@@ -30,7 +34,7 @@ All modules follow the thin orchestrator pattern with test coverage.
 ### Integrity Checking
 
 ```python
-from infrastructure.validation.integrity import verify_output_integrity
+from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
 
 report = verify_output_integrity("output/")
 if report.overall_integrity:
@@ -83,7 +87,7 @@ uv run python -m infrastructure.validation.cli integrity output/
 ### Using Multiple Modules Together
 
 ```python
-from infrastructure.validation.integrity import verify_output_integrity
+from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
 from infrastructure.publishing.core import extract_publication_metadata
 
 def comprehensive_validation(output_dir, manuscript_files):
@@ -110,6 +114,8 @@ def comprehensive_validation(output_dir, manuscript_files):
 | Reporting | json, pathlib | 75% |
 | Project | pathlib | 85% |
 | Steganography | PIL/Pillow, qrcode, pypdf | 80% |
+| Skills | pathlib | 85% |
+| Telemetry | psutil, json, pathlib | 84% |
 
 All modules work independently or together with minimal coupling.
 
@@ -127,7 +133,7 @@ All modules work independently or together with minimal coupling.
 
 - **[API Reference](../reference/api-reference.md)** - Full API documentation
 - **[Infrastructure Guide](../../infrastructure/AGENTS.md)** - Module architecture
-- **[Build System](../operational/build/build-system.md)** - Build pipeline integration
+- **[Pipeline Orchestration](../RUN_GUIDE.md)** - Build pipeline integration
 
 ---
 

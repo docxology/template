@@ -1,21 +1,21 @@
 """Tests for infrastructure.llm.config module."""
 
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 
 
 class TestLLMConfig:
-    """Test LLMConfig class."""
+    """Test OllamaClientConfig class."""
 
     def test_config_initialization(self):
         """Test basic config initialization."""
-        config = LLMConfig()
+        config = OllamaClientConfig()
         assert config is not None
         assert config.base_url == "http://localhost:11434"
         assert config.default_model == "gemma3:4b"
 
     def test_config_defaults(self):
         """Test config default values."""
-        config = LLMConfig()
+        config = OllamaClientConfig()
         # Verify reasonable defaults
         assert config.base_url == "http://localhost:11434"
         assert config.default_model == "gemma3:4b"
@@ -25,7 +25,7 @@ class TestLLMConfig:
 
     def test_config_custom_values(self):
         """Test config with custom values."""
-        config = LLMConfig(
+        config = OllamaClientConfig(
             base_url="http://custom:11434",
             default_model="mistral",
             temperature=0.3,
@@ -38,39 +38,39 @@ class TestLLMConfig:
 
     def test_config_fallback_models(self):
         """Test fallback models configuration."""
-        config = LLMConfig()
+        config = OllamaClientConfig()
         assert len(config.fallback_models) > 0
         assert isinstance(config.fallback_models, list)
 
     def test_config_system_prompt(self):
         """Test system prompt configuration."""
-        config = LLMConfig()
+        config = OllamaClientConfig()
         assert "research assistant" in config.system_prompt.lower()
 
     def test_config_temperature_range(self):
         """Test temperature parameter validation."""
         # Valid temperatures
-        config_low = LLMConfig(temperature=0.0)
+        config_low = OllamaClientConfig(temperature=0.0)
         assert config_low.temperature == 0.0
 
-        config_high = LLMConfig(temperature=2.0)
+        config_high = OllamaClientConfig(temperature=2.0)
         assert config_high.temperature == 2.0
 
     def test_config_context_window(self):
         """Test context window configuration."""
-        config = LLMConfig(context_window=8192)
+        config = OllamaClientConfig(context_window=8192)
         assert config.context_window == 8192
 
     def test_config_timeout(self):
         """Test timeout configuration."""
-        config = LLMConfig()
+        config = OllamaClientConfig()
         assert config.timeout > 0
 
-        config_custom = LLMConfig(timeout=30.0)
+        config_custom = OllamaClientConfig(timeout=30.0)
         assert config_custom.timeout == 30.0
 
     def test_config_from_env(self):
         """Test creating config from environment."""
-        config = LLMConfig.from_env()
+        config = OllamaClientConfig.from_env()
         assert config is not None
-        assert isinstance(config, LLMConfig)
+        assert isinstance(config, OllamaClientConfig)

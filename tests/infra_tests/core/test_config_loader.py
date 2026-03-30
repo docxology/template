@@ -10,7 +10,7 @@ import pytest
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.insert(0, ROOT)
 
-from infrastructure.core.config_loader import (
+from infrastructure.core.config.loader import (
     YAML_AVAILABLE,
     ResolvedTestingConfig,
     find_config_file,
@@ -20,8 +20,7 @@ from infrastructure.core.config_loader import (
     load_config,
     validate_config_keys,
 )
-from infrastructure.core.exceptions import InvalidConfigurationError
-from infrastructure.core.config_queries import get_testing_config, get_translation_languages
+from infrastructure.core.config.queries import get_testing_config, get_translation_languages
 
 
 @pytest.fixture
@@ -70,12 +69,11 @@ class TestLoadConfig:
         assert result is None
 
     def test_load_invalid_yaml(self, tmp_path):
-        """Test loading invalid YAML raises InvalidConfigurationError."""
+        """Invalid YAML is logged and load_config returns None (graceful degradation)."""
         config_file = tmp_path / "invalid.yaml"
         config_file.write_text("invalid: yaml: content:")
 
-        with pytest.raises(InvalidConfigurationError):
-            load_config(config_file)
+        assert load_config(config_file) is None
 
     def test_load_empty_file(self, tmp_path):
         """Test loading empty file."""
@@ -394,30 +392,27 @@ class TestGetReviewTypes:
 
     def test_returns_default_when_no_config(self, tmp_path):
         """Test returns default review type when config file doesn't exist."""
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         result = get_review_types(tmp_path)
         assert result == ["executive_summary"]
 
     def test_returns_default_when_config_cant_load(self, tmp_path):
-        """Test returns default review type when config can't be loaded (e.g., handles exception)."""
-        from infrastructure.core.config_queries import get_review_types
+        """When YAML cannot be parsed, load_config returns None and defaults apply."""
+        from infrastructure.core.config.queries import get_review_types
 
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         config_file.write_text("invalid: yaml: [unclosed")
 
-        # get_review_types probably just propagates the exception if it doesn't catch it. 
-        # If it doesn't catch it, we test that it raises. Or if it's supposed to catch it, the test
-        # should just pass. Let's make it raise since it's an InvalidConfigurationError.
-        with pytest.raises(InvalidConfigurationError):
-            get_review_types(tmp_path)
+        result = get_review_types(tmp_path)
+        assert result == ["executive_summary"]
 
     def test_returns_empty_when_reviews_disabled(self, tmp_path):
         """Test returns empty list when reviews are disabled."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {
             "llm": {
@@ -439,7 +434,7 @@ class TestGetReviewTypes:
         """Test returns default review type when no llm section in config."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {"paper": {"title": "Test"}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
@@ -454,7 +449,7 @@ class TestGetReviewTypes:
         """Test returns default review type when no reviews section in config."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {"llm": {"translations": {"enabled": True, "languages": ["zh"]}}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
@@ -469,7 +464,7 @@ class TestGetReviewTypes:
         """Test returns review type list when reviews are enabled."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {
             "llm": {
@@ -491,7 +486,7 @@ class TestGetReviewTypes:
         """Test returns single review type when only one configured."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {"llm": {"reviews": {"enabled": True, "types": ["executive_summary"]}}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
@@ -506,7 +501,7 @@ class TestGetReviewTypes:
         """Test returns default review type when types list is empty."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {"llm": {"reviews": {"enabled": True, "types": []}}}
         config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
@@ -523,12 +518,12 @@ class TestGetReviewTypes:
 
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         # Capture warnings
         with tmp_path.joinpath("test.log").open("w") as log_file:
             handler = logging.StreamHandler(log_file)
-            logger = logging.getLogger("infrastructure.core.config_loader")
+            logger = logging.getLogger("infrastructure.core.config.loader")
             logger.addHandler(handler)
             logger.setLevel(logging.WARNING)
 
@@ -559,7 +554,7 @@ class TestGetReviewTypes:
         """Test returns default review type when all configured types are invalid."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {
             "llm": {
@@ -581,7 +576,7 @@ class TestGetReviewTypes:
         """Test returns default review type when types is not a list."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {
             "llm": {
@@ -603,7 +598,7 @@ class TestGetReviewTypes:
         """Test returns all valid review types when all are configured."""
         import yaml
 
-        from infrastructure.core.config_queries import get_review_types
+        from infrastructure.core.config.queries import get_review_types
 
         config = {
             "llm": {
@@ -644,12 +639,11 @@ class TestErrorHandling:
     """Test error handling in config loading."""
 
     def test_load_config_corrupted_yaml(self, tmp_path):
-        """Test load_config with corrupted YAML."""
+        """Corrupted YAML yields None from load_config."""
         config_path = tmp_path / "corrupted.yaml"
         config_path.write_text("invalid: yaml: content: [unclosed")
 
-        with pytest.raises(InvalidConfigurationError):
-            load_config(config_path)
+        assert load_config(config_path) is None
 
     def test_load_config_permission_denied(self, tmp_path):
         """Test load_config with permission denied."""
@@ -724,7 +718,7 @@ class TestConfigKeyValidation:
         with open(config_file, "w") as f:
             yaml.dump(config, f)
 
-        with caplog.at_level(logging.WARNING, logger="infrastructure.core.config_loader"):
+        with caplog.at_level(logging.WARNING, logger="infrastructure.core.config.loader"):
             result = load_config(config_file)
 
         assert result is not None
@@ -750,7 +744,7 @@ class TestConfigKeyValidation:
         with open(config_file, "w") as f:
             yaml.dump(config, f)
 
-        with caplog.at_level(logging.WARNING, logger="infrastructure.core.config_loader"):
+        with caplog.at_level(logging.WARNING, logger="infrastructure.core.config.loader"):
             result = load_config(config_file)
 
         assert result is not None

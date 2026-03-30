@@ -23,7 +23,7 @@ from .citations import (
     generate_citations_markdown,
 )
 from .metadata import (
-    calculate_metadata_complexity_score,
+    calculate_complexity_score,
     create_academic_profile_data,
     create_repository_metadata,
     extract_publication_metadata,
@@ -44,8 +44,6 @@ from .platforms import (
     prepare_arxiv_submission,
     publish_to_zenodo,
 )
-
-calculate_complexity_score = calculate_metadata_complexity_score
 
 __all__ = [
     # Classes
@@ -70,7 +68,6 @@ __all__ = [
     "validate_publication_readiness",
     "generate_publication_metrics",
     "create_repository_metadata",
-    "calculate_metadata_complexity_score",
     "calculate_complexity_score",
     # Dissemination
     "publish_to_zenodo",

@@ -19,6 +19,20 @@ from infrastructure.project.discovery import (
     validate_project_structure,
 )
 
+def test_project_package_exports_match_docs() -> None:
+    """`infrastructure.project` exports convenience public API."""
+    from infrastructure.project import (  # noqa: WPS433 (import inside test)
+        ProjectInfo as ExportedProjectInfo,
+        discover_projects as exported_discover_projects,
+        get_project_metadata as exported_get_project_metadata,
+        validate_project_structure as exported_validate_project_structure,
+    )
+
+    assert ExportedProjectInfo is ProjectInfo
+    assert exported_discover_projects is discover_projects
+    assert exported_get_project_metadata is get_project_metadata
+    assert exported_validate_project_structure is validate_project_structure
+
 
 # =============================================================================
 # Test Fixtures

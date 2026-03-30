@@ -12,7 +12,7 @@ from __future__ import annotations
 import inspect
 from typing import Any, Callable
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -45,7 +45,9 @@ def generate_scientific_documentation(func: Callable[..., Any]) -> str:
     return_info = ""
     if signature.return_annotation != inspect.Signature.empty:
         # Use getattr fallback: generic return types have no __name__
-        ret_name = getattr(signature.return_annotation, "__name__", str(signature.return_annotation))
+        ret_name = getattr(
+            signature.return_annotation, "__name__", str(signature.return_annotation)
+        )
         return_info = f"Returns: {ret_name}"
 
     if return_info:

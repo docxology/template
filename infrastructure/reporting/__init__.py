@@ -1,12 +1,24 @@
-"""Pipeline reporting module for generating consolidated reports.
+"""Pipeline reporting façade — consolidates five distinct reporting subsystems.
 
-Exports report generators for test results, validation, performance
-metrics, and error summaries from pipeline execution.
+**Subsystem responsibilities (import from these directly for clarity):**
+
+1. **Pipeline execution** — stage results, validation/test/performance report files:
+   ``infrastructure.reporting.pipeline_io``, ``pipeline_report_model``
+2. **Output statistics** — file counts, sizes, output manifest:
+   ``infrastructure.reporting.output_statistics``
+3. **Executive summaries** — cross-project metrics and ProjectMetrics model:
+   ``infrastructure.reporting.executive_reporter``
+4. **Test suite summaries** — markdown test reports, result loading:
+   ``infrastructure.reporting.markdown_formatter``, ``report_builder``, ``result_loaders``
+5. **Error aggregation** — in-process error collector (ErrorAggregator):
+   ``infrastructure.reporting.error_aggregator``
+
+This ``__init__`` re-exports the most commonly used symbols from all five subsystems
+so that ``from infrastructure.reporting import X`` works for the typical caller.
+Prefer importing from the specific submodule when only one subsystem is needed.
 """
 
 from __future__ import annotations
-
-from pathlib import Path  # noqa: F401
 
 # Pipeline stage reporters (used during pipeline execution)
 from .error_aggregator import (
@@ -15,21 +27,21 @@ from .error_aggregator import (
     get_error_aggregator,
     reset_error_aggregator,
 )
-from .pipeline_reporter import (
-    generate_performance_report,
-    generate_pipeline_report,
-    generate_validation_report,
+from .pipeline_io import (
     save_error_summary,
+    save_performance_report,
     save_pipeline_report,
     save_test_results,
+    save_validation_report,
 )
+from .pipeline_report_model import generate_pipeline_report
 
 # Output & statistics reporters (post-pipeline)
-from .output_reporter import (
-    collect_output_statistics,
-    generate_output_summary,
-)
 from .output_organizer import FileType, OutputOrganizer
+from .output_statistics import (
+    collect_output_statistics,
+    log_output_summary,
+)
 
 # Executive & multi-project reporters (cross-project summaries)
 from .executive_reporter import (
@@ -41,19 +53,15 @@ from .executive_reporter import (
 )
 from .multi_project_reporter import generate_multi_project_report, generate_multi_project_summary_report
 
-# Test suite summary generator
-from .suite_summary_generator import (
-    generate_markdown_report,
-    generate_summary_report,
-    load_infrastructure_results,
-    load_test_results,
-    run_test_summary_generation,
-)
+# Test suite summary
+from .markdown_formatter import generate_markdown_report, run_test_summary_generation
+from .report_builder import generate_summary_report
+from .result_loaders import load_infrastructure_results, load_test_results
 
 
-# Optional imports: dashboard_generator requires matplotlib/plotly which may not be installed
+# Optional imports: _dashboard_matplotlib requires matplotlib/plotly which may not be installed
 try:
-    from .dashboard_generator import (
+    from ._dashboard_matplotlib import (
         generate_all_dashboards,
         generate_matplotlib_dashboard,
         generate_plotly_dashboard,
@@ -66,16 +74,16 @@ except ImportError:
 
 __all__ = [
     "generate_pipeline_report",
-    "generate_validation_report",
+    "save_validation_report",
     "save_test_results",
-    "generate_performance_report",
+    "save_performance_report",
     "save_error_summary",
     "save_pipeline_report",
     "ErrorAggregator",
     "ErrorEntry",
     "get_error_aggregator",
     "reset_error_aggregator",
-    "generate_output_summary",
+    "log_output_summary",
     "collect_output_statistics",
     "generate_executive_summary",
     "save_executive_summary",

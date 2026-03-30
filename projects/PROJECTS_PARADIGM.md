@@ -28,8 +28,9 @@ Projects are **architecturally isolated** - each operates as if it were the only
 
 ```mermaid
 graph TD
-        P1[code_project<br/>The Master Exemplar<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
-        P2[your_project<br/>Your Research<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+    subgraph "Project Isolation"
+        P1[code_project<br/>Master Numerical Exemplar<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P2[template<br/>Meta-Documentation<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
 
         P1 -.->|❌ No imports| P2
     end
@@ -40,11 +41,9 @@ graph TD
 
         P1 -->|✅ Import utilities| INFRA
         P2 -->|✅ Import utilities| INFRA
-        P3 -->|✅ Import utilities| INFRA
 
         SCRIPTS -->|✅ Operate on| P1
         SCRIPTS -->|✅ Operate on| P2
-        SCRIPTS -->|✅ Operate on| P3
     end
 ```
 
@@ -59,7 +58,7 @@ graph TD
 from src.term_extraction import TerminologyExtractor
 
 # ✅ ALLOWED: Import from infrastructure
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.figure_manager import FigureManager
 
 # ❌ FORBIDDEN: Import from other projects
@@ -408,7 +407,7 @@ All projects can import from `infrastructure/` for common utilities:
 
 ```python
 # ✅ ALLOWED: All projects can use infrastructure
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.figure_manager import FigureManager
 from infrastructure.validation import validate_pdf_rendering
 from infrastructure.rendering import RenderManager

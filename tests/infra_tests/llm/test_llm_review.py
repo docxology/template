@@ -15,7 +15,6 @@ Following the project's no-mocks policy - all tests use real data and computatio
 from __future__ import annotations
 
 import json
-import os
 import sys
 import tempfile
 from pathlib import Path
@@ -26,7 +25,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "scripts"))
 
 # Import validation functions from infrastructure (now moved there)
-from infrastructure.llm import is_off_topic
+from infrastructure.llm.validation import is_off_topic
 from infrastructure.llm.core.config import get_max_input_length
 
 DEFAULT_MAX_INPUT_LENGTH: int = 500000
@@ -38,56 +37,30 @@ from infrastructure.llm.review.metrics import ManuscriptInputMetrics, ReviewMetr
 class TestGetMaxInputLength:
     """Tests for get_max_input_length() function."""
 
-    def test_default_value(self):
+    def test_default_value(self, monkeypatch):
         """Test default max input length when env var not set."""
-        # Clear the environment variable if set
-        env_backup = os.environ.pop("LLM_MAX_INPUT_LENGTH", None)
-        try:
-            result = get_max_input_length()
-            assert result == DEFAULT_MAX_INPUT_LENGTH
-            assert result == 500000
-        finally:
-            if env_backup is not None:
-                os.environ["LLM_MAX_INPUT_LENGTH"] = env_backup
+        monkeypatch.delenv("LLM_MAX_INPUT_LENGTH", raising=False)
+        result = get_max_input_length()
+        assert result == DEFAULT_MAX_INPUT_LENGTH
+        assert result == 500000
 
-    def test_custom_value(self):
+    def test_custom_value(self, monkeypatch):
         """Test custom max input length from env var."""
-        env_backup = os.environ.get("LLM_MAX_INPUT_LENGTH")
-        try:
-            os.environ["LLM_MAX_INPUT_LENGTH"] = "100000"
-            result = get_max_input_length()
-            assert result == 100000
-        finally:
-            if env_backup is not None:
-                os.environ["LLM_MAX_INPUT_LENGTH"] = env_backup
-            else:
-                os.environ.pop("LLM_MAX_INPUT_LENGTH", None)
+        monkeypatch.setenv("LLM_MAX_INPUT_LENGTH", "100000")
+        result = get_max_input_length()
+        assert result == 100000
 
-    def test_unlimited_value(self):
+    def test_unlimited_value(self, monkeypatch):
         """Test unlimited input (0) from env var."""
-        env_backup = os.environ.get("LLM_MAX_INPUT_LENGTH")
-        try:
-            os.environ["LLM_MAX_INPUT_LENGTH"] = "0"
-            result = get_max_input_length()
-            assert result == 0
-        finally:
-            if env_backup is not None:
-                os.environ["LLM_MAX_INPUT_LENGTH"] = env_backup
-            else:
-                os.environ.pop("LLM_MAX_INPUT_LENGTH", None)
+        monkeypatch.setenv("LLM_MAX_INPUT_LENGTH", "0")
+        result = get_max_input_length()
+        assert result == 0
 
-    def test_invalid_value_uses_default(self):
+    def test_invalid_value_uses_default(self, monkeypatch):
         """Test that invalid env var value falls back to default."""
-        env_backup = os.environ.get("LLM_MAX_INPUT_LENGTH")
-        try:
-            os.environ["LLM_MAX_INPUT_LENGTH"] = "invalid"
-            result = get_max_input_length()
-            assert result == DEFAULT_MAX_INPUT_LENGTH
-        finally:
-            if env_backup is not None:
-                os.environ["LLM_MAX_INPUT_LENGTH"] = env_backup
-            else:
-                os.environ.pop("LLM_MAX_INPUT_LENGTH", None)
+        monkeypatch.setenv("LLM_MAX_INPUT_LENGTH", "invalid")
+        result = get_max_input_length()
+        assert result == DEFAULT_MAX_INPUT_LENGTH
 
 
 class TestReviewMetrics:
@@ -386,18 +359,14 @@ class TestNoTruncationByDefault:
         """Test that default max input length is large (500K chars)."""
         assert DEFAULT_MAX_INPUT_LENGTH == 500000
 
-    def test_large_text_not_truncated_at_default(self):
+    def test_large_text_not_truncated_at_default(self, monkeypatch):
         """Test that text under 500K chars is not truncated."""
         # Simulate 100K character text (typical manuscript)
         large_text = "a" * 100000
 
-        env_backup = os.environ.pop("LLM_MAX_INPUT_LENGTH", None)
-        try:
-            max_length = get_max_input_length()
-            assert len(large_text) < max_length
-        finally:
-            if env_backup is not None:
-                os.environ["LLM_MAX_INPUT_LENGTH"] = env_backup
+        monkeypatch.delenv("LLM_MAX_INPUT_LENGTH", raising=False)
+        max_length = get_max_input_length()
+        assert len(large_text) < max_length
 
 
 class TestModuleImports:
@@ -1000,7 +969,7 @@ class TestLLMReviewIntegration:
     def test_select_and_start_ollama_model(self):
         """Test Ollama model selection and startup."""
         from infrastructure.llm.utils.ollama import (
-            get_available_models,
+            get_available_model_info,
             is_ollama_running,
             select_best_model,
         )
@@ -1008,7 +977,7 @@ class TestLLMReviewIntegration:
         # Since the fixture ensures Ollama is ready, these should all work
         assert is_ollama_running() is True
 
-        models = get_available_models()
+        models = get_available_model_info()
         assert len(models) > 0
 
         model = select_best_model()
@@ -1018,8 +987,8 @@ class TestLLMReviewIntegration:
     def test_generate_review_with_real_llm(self):
         """Test generating a review with real LLM."""
         from infrastructure.llm.core.client import LLMClient
-        from infrastructure.llm.core.config import LLMConfig
-        from infrastructure.llm.review.generator import generate_executive_summary
+        from infrastructure.llm.core.config import OllamaClientConfig
+        from infrastructure.llm.review.generator import generate_llm_executive_summary as generate_executive_summary
         from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
 
         if not is_ollama_running():
@@ -1052,7 +1021,7 @@ class TestLLMReviewIntegration:
                 "=" * 80
             )
 
-        config = LLMConfig.from_env()
+        config = OllamaClientConfig.from_env()
         config.default_model = model
         client = LLMClient(config)
 

@@ -116,19 +116,19 @@ print(f"Mean: {stats.mean}, Std: {stats.std}")
 corr = calculate_correlation(x, y, method="pearson")
 ```
 
-### Performance Analysis (`src/performance.py`)
+### Performance Analysis (example module)
 
 Analyzes convergence, scalability, and efficiency.
 
-**Key Functions:**
-- `analyze_convergence()`: Analyze convergence of sequence
+**Key Functions (illustrative):**
+- `analyze_convergence()`: Analyze convergence of a sequence
 - `analyze_scalability()`: Analyze algorithm scalability
 - `calculate_speedup()`: Calculate speedup
 - `benchmark_comparison()`: Compare methods
 
 **Usage:**
 ```python
-from performance import analyze_convergence, analyze_scalability
+from my_project.src.performance_analysis import analyze_convergence, analyze_scalability
 
 # Analyze convergence
 convergence = analyze_convergence(values, target=0.0)

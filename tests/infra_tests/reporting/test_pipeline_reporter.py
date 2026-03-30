@@ -8,18 +8,18 @@ from typing import Any
 import pytest
 
 from infrastructure.reporting.multi_project_reporter import generate_multi_project_summary_report
-from infrastructure.reporting.pipeline_reporter import (
+from infrastructure.reporting.pipeline_html import generate_html_report
+from infrastructure.reporting.pipeline_io import (
     generate_error_markdown,
-    save_error_summary,
-    generate_html_report,
-    _generate_pipeline_markdown,
-    generate_performance_report,
-    generate_pipeline_report,
+    save_performance_report,
     generate_validation_markdown,
-    generate_validation_report,
+    save_validation_report,
+    save_error_summary,
     save_pipeline_report,
     save_test_results,
 )
+from infrastructure.reporting.pipeline_markdown import _generate_pipeline_markdown
+from infrastructure.reporting.pipeline_report_model import generate_pipeline_report
 
 
 @dataclass
@@ -169,7 +169,7 @@ def test_generate_html_report_includes_test_coverage() -> None:
 
 def test_generate_validation_report_and_markdown(tmp_path: Path) -> None:
     validation_results = {"checks": {"pdf_validation": True, "markdown_validation": False}}
-    generate_validation_report(validation_results, tmp_path)
+    save_validation_report(validation_results, tmp_path)
 
     assert (tmp_path / "validation_report.json").exists()
     assert (tmp_path / "validation_report.md").exists()
@@ -181,7 +181,7 @@ def test_generate_validation_report_and_markdown(tmp_path: Path) -> None:
 
 def test_generate_performance_and_test_reports(tmp_path: Path) -> None:
     perf = {"total_duration": 12.3, "peak_memory_mb": 256}
-    path = generate_performance_report(perf, tmp_path)
+    path = save_performance_report(perf, tmp_path)
     assert path.exists()
 
     test_path = save_test_results({"summary": {}}, tmp_path)
@@ -328,7 +328,7 @@ def test_generate_error_markdown_with_suggestions() -> None:
 
 def test_stage_result_dataclass_fields() -> None:
     """Test StageResult dataclass with all fields."""
-    from infrastructure.core.checkpoint import StageResult
+    from infrastructure.core.runtime.checkpoint import StageResult
 
     stage = StageResult(
         name="test",
@@ -344,8 +344,8 @@ def test_stage_result_dataclass_fields() -> None:
 
 def test_pipeline_report_dataclass_fields() -> None:
     """Test PipelineReport dataclass with all fields."""
-    from infrastructure.reporting.pipeline_reporter import PipelineReport
-    from infrastructure.core.checkpoint import StageResult as ReportingStageResult
+    from infrastructure.reporting.pipeline_report_model import PipelineReport
+    from infrastructure.core.runtime.checkpoint import StageResult as ReportingStageResult
 
     report = PipelineReport(
         timestamp="2025-01-01T00:00:00",

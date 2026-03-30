@@ -14,8 +14,8 @@ from pathlib import Path
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root))
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success
-from infrastructure.core.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.core.logging.utils import get_logger, log_header, log_success
+from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.project.discovery import discover_projects
 
 logger = get_logger(__name__)

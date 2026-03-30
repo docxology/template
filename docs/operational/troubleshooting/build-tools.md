@@ -2,7 +2,7 @@
 
 > **Solutions** for pandoc, LaTeX, and PDF generation issues
 
-**Quick Reference:** [Main Troubleshooting](README.md) | [Environment](environment-setup.md) | [Build System](../build/build-system.md)
+**Quick Reference:** [Main Troubleshooting](README.md) | [Environment](environment-setup.md) | [Pipeline Orchestration](../../RUN_GUIDE.md)
 
 ---
 
@@ -113,7 +113,7 @@ tail -150 projects/{name}/output/pdf/_combined_manuscript.log | grep -A2 -B2 "gr
 1. Generate missing figures: `uv run python scripts/02_run_analysis.py`
 2. Verify graphicx package: `grep "usepackage{graphicx}" projects/{name}/output/pdf/_combined_manuscript.tex`
 3. Fix figure paths: `sed -i 's|{figures/|{../output/figures/|g' projects/{name}/manuscript/*.md`
-4. Run full rebuild: `uv run python scripts/execute_pipeline.py --core-only --clean`
+4. Run full rebuild: `uv run python scripts/execute_pipeline.py --project {name} --core-only --clean`
 
 ---
 
@@ -192,6 +192,29 @@ Ignoring wrong pointing object 0 0 (offset 0)
 ```
 
 Normal - pypdf gracefully handles malformed PDF objects.
+
+---
+
+## Cross-Reference Issues
+
+### References Show ?? in PDF
+
+**Symptom:** Section/figure/equation references display as `??`
+
+**Diagnosis:**
+
+```bash
+# Check labels exist
+grep -r "\\label{" projects/<name>/manuscript/
+
+grep -r "\\ref{" projects/<name>/manuscript/
+```
+
+**Solutions:**
+
+1. Ensure label defined: `\label{sec:name}` after section heading
+2. Check reference matches: `\ref{sec:name}` matches label
+3. Rebuild (multiple passes needed): `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 ---
 
