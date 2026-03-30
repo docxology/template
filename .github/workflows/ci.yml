@@ -143,7 +143,7 @@ jobs:
 
       - name: Upload infrastructure coverage to Codecov
         if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: coverage-infra.xml
           flags: infrastructure
@@ -201,7 +201,7 @@ jobs:
 
       - name: Upload project coverage to Codecov
         if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: coverage-project.xml
           flags: projects
