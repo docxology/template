@@ -1,4 +1,7 @@
-"""Tests for blake_bimetalism/scripts/analyze.py orchestration script."""
+"""
+Tests for the `analyze.py` orchestrator.
+Validates I/O bounds for JSON emission under the Thin Orchestrator pattern.
+"""
 
 from __future__ import annotations
 

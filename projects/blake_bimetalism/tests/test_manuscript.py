@@ -1,4 +1,7 @@
-"""Tests for blake_bimetalism/src/manuscript.py."""
+"""
+Tests for `manuscript.py`.
+Verifies mathematical injection parameters for the 18-chapter compiled LaTeX architecture.
+"""
 
 from __future__ import annotations
 

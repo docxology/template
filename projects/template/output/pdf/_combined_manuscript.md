@@ -413,7 +413,7 @@ All three projects were executed through the full ten-stage DAG pipeline using t
 |---------|--------|----------|-------|----------|
 | `code_project` | 7 | ~40s | 39/39 | 90%+ |
 | `act_inf_metaanalysis` | 7 | ~60s | 505/505 | 90%+ |
-| `template` | 7 | ~25s | 65/65 | 90%+ |
+| `template` | 7 | ~25s | 66/66 | 90%+ |
 
 **Overall success rate**: 100.0% (3/3 projects)
 **Total pipeline duration**: ~125s
@@ -429,8 +429,8 @@ The infrastructure layer is validated by a separate test suite of significant sc
 
 | Metric | Value |
 |--------|-------|
-| Test files | 169+ |
-| Total tests | ~3,152 |
+| Test files | 180+ |
+| Total tests | ~3,211 |
 | Infrastructure coverage threshold | 60% (achieved: 83%+) |
 | Zero-mock violations | 0 |
 | Real filesystem operations | ✓ |
@@ -455,9 +455,9 @@ The introspection module (`template.introspection`) programmatically enumerates 
 | `steganography` | 8 | Metadata injection, QR overlays, hashing |
 | `validation` | 22 | PDF validation, Markdown checking, CLI |
 | (+ config, docker) | — | Configuration, containerization |
-| **Total** | **~190** | |
+| **Total** | **~271** | |
 
-*The ~190 figure includes approximately 13 additional modules in the `config/` and `docker/` subpackages (configuration schemas and containerization utilities) not enumerated individually above.*
+*The ~271 figure includes approximately 13 additional modules in the `config/` and `docker/` subpackages (configuration schemas and containerization utilities) not enumerated individually above.*
 
 All 13 modules have 100% documentation coverage at Tiers 1–2 (`AGENTS.md`, `README.md`); the 10 active subpackages additionally carry `SKILL.md` for Tier-3 agentic skill discovery. This places `template/` among the first research software frameworks to implement an MCP-aligned skill layer [@anthropic2024mcp] across its infrastructure stack.
 
@@ -694,7 +694,7 @@ The template is not merely a build tool; it is an epistemological commitment. It
 
 # Infrastructure Module Reference
 
-This section provides a detailed reference for all 13 infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~190 Python modules validated by 3,152 tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
+This section provides a detailed reference for all 13 infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~271 Python modules validated by 3,211 tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
 
 ## `infrastructure.core` (28 modules)
 

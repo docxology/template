@@ -1,7 +1,8 @@
 """
 Financial and poetics analytical domains for William Blake and Bimetallism.
-Models meta-stability of historical dual-money equilibrium using semantic frequency 
-and simulates Gresham's law dynamics functionally to ensure Zero-Mock adherence.
+Models meta-stability of historical dual-money equilibrium (Newton 1717 vs Hamilton 1792) 
+by quantifying Gresham's Law dynamics as an 'Entropy Gap', simulating the Urzenic fracture.
+Strict adherence to Zero-Mock operations.
 """
 
 from dataclasses import dataclass

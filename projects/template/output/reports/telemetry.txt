@@ -2,25 +2,25 @@
  TELEMETRY REPORT: template
 ========================================================================
 
-Total Duration : 83.1s
+Total Duration : 97.4s
 Total Stages   : 7
 Failed Stages  : 0
 
 Stage                                   Time   Mem MB   CPU%   Status
 ------------------------------------------------------------------------
 Clean Output Directories                0.0s       0   0.0     ✓ OK
-Environment Setup                       1.7s       0   0.0     ✓ OK
-Project Tests                          25.5s       0   0.0     ✓ OK
-Project Analysis                        3.8s       0   0.0     ✓ OK
-PDF Rendering                          51.5s       0   0.0     ✓ OK
-Output Validation                       0.3s       0   0.0     ✓ OK
-Copy Outputs                            0.3s       0   0.0     ✓ OK
+Environment Setup                       3.0s       0   0.0     ✓ OK
+Project Tests                          30.6s       0   0.0     ✓ OK
+Project Analysis                        4.7s       0   0.0     ✓ OK
+PDF Rendering                          58.4s       0   0.0     ✓ OK
+Output Validation                       0.4s       0   0.0     ✓ OK
+Copy Outputs                            0.4s       0   0.0     ✓ OK
 
 Performance Warnings (2):
 ------------------------------------------------------------------------
-  ⚠ [slow_stage] Stage 'Project Tests' took 25.5s (2.0× the average 11.9s)
+  ⚠ [slow_stage] Stage 'Project Tests' took 30.6s (2.0× the average 13.9s)
     → Consider optimizing this stage or running it in parallel
-  ⚠ [slow_stage] Stage 'PDF Rendering' took 51.5s (2.0× the average 11.9s)
+  ⚠ [slow_stage] Stage 'PDF Rendering' took 58.4s (2.0× the average 13.9s)
     → Consider optimizing this stage or running it in parallel
 
 ========================================================================

@@ -1,38 +1,38 @@
 {
-  "timestamp": "2026-03-26T09:03:46.875049",
+  "timestamp": "2026-03-30T05:39:26.288030",
   "infrastructure": {},
   "project": {
-    "passed": 65,
+    "passed": 66,
     "failed": 0,
     "skipped": 0,
-    "total": 65,
-    "warnings": 0,
+    "total": 66,
+    "warnings": 2,
     "exit_code": 0,
-    "discovery_count": 65,
+    "discovery_count": 66,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 21.76,
-      "execution": 21.76
+      "setup": 26.41,
+      "execution": 26.41
     },
     "test_categories": {},
-    "coverage_percent": 94.44444444444444,
+    "coverage_percent": 93.64485981308411,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 65,
+    "total_passed": 66,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 65,
+    "total_tests": 66,
     "all_passed": true,
-    "project_coverage": 94.44444444444444
+    "project_coverage": 93.64485981308411
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 94.44444444444444,
-      "total_executed": 476,
-      "total_missing": 28,
+      "overall_coverage": 93.64485981308411,
+      "total_executed": 501,
+      "total_missing": 34,
       "total_excluded": 0,
-      "total_lines": 504,
+      "total_lines": 535,
       "file_coverage": {
         "projects/template/src/template/__init__.py": {
           "coverage_percent": 100.0,
@@ -49,25 +49,25 @@
           "total_lines": 200
         },
         "projects/template/src/template/inject_metrics.py": {
-          "coverage_percent": 90.32258064516128,
-          "executed_lines": 56,
-          "missing_lines": 6,
-          "excluded_lines": 0,
-          "total_lines": 62
-        },
-        "projects/template/src/template/introspection.py": {
-          "coverage_percent": 92.99363057324841,
-          "executed_lines": 146,
+          "coverage_percent": 87.64044943820225,
+          "executed_lines": 78,
           "missing_lines": 11,
           "excluded_lines": 0,
-          "total_lines": 157
+          "total_lines": 89
+        },
+        "projects/template/src/template/introspection.py": {
+          "coverage_percent": 92.85714285714286,
+          "executed_lines": 143,
+          "missing_lines": 11,
+          "excluded_lines": 0,
+          "total_lines": 154
         },
         "projects/template/src/template/metrics.py": {
-          "coverage_percent": 89.87341772151899,
-          "executed_lines": 71,
-          "missing_lines": 8,
+          "coverage_percent": 89.53488372093024,
+          "executed_lines": 77,
+          "missing_lines": 9,
           "excluded_lines": 0,
-          "total_lines": 79
+          "total_lines": 86
         }
       }
     }

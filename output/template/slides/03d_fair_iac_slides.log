@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  26 MAR 2026 09:04
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  30 MAR 2026 05:39
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -84,7 +84,7 @@ Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \beamer@paperheight=\skip51
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
-Package: geometry 2020/01/02 v5.9 Page Geometry
+Package: geometry 2026/03/07 v6.0 Page Geometry
 
 (/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
@@ -1519,8 +1519,8 @@ L3 programming layer <2026-01-19>
  ) 
 Here is how much of TeX's memory you used:
  29186 strings out of 468168
- 588604 string characters out of 5432816
- 1161781 words of memory out of 5000000
+ 588604 string characters out of 5432815
+ 1161780 words of memory out of 5000000
  57419 multiletter control sequences out of 15000+600000
  628413 words of font info for 54 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

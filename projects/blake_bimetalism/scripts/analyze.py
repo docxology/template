@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
 """
 Thin orchestrator for Blake & Bimetallism project numerical analysis.
-Generates structural outputs corresponding to the meta-stability equations.
+Ingests the Hamiltonian vs. Newtonian bimetallic baselines, calculating the 
+Gresham Entropy Gap and serialization the metrics bridging 18th century finance 
+to 20th century abstraction. Adheres strictly to the Thin Orchestrator Pattern.
 """
-
 import json
 from pathlib import Path
 

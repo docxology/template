@@ -1,32 +1,31 @@
-[2026-03-26 09:03:19,776] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/template/output/logs/pipeline.log
-[2026-03-26 09:03:19,776] [INFO] ✓ Stage 1 completed successfully (0.0s)
-[2026-03-26 09:03:19,776] [INFO] 
-[2026-03-26 09:03:19,777] [INFO] [2/8] Environment Setup (25% complete)
-[2026-03-26 09:03:19,777] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-03-26 09:03:19,777] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-26 09:03:21,463] [INFO] ✓ Stage 2 completed successfully (1.7s)
-[2026-03-26 09:03:21,463] [INFO] 
-[2026-03-26 09:03:21,464] [INFO] [3/8] Project Tests (37% complete)
-[2026-03-26 09:03:21,464] [INFO]   Elapsed: 1s | ETA: 2s
-[2026-03-26 09:03:21,464] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-26 09:03:46,917] [INFO] ✓ Stage 3 completed successfully (25.5s)
-[2026-03-26 09:03:46,917] [INFO] 
-[2026-03-26 09:03:46,917] [INFO] [4/8] Project Analysis (50% complete)
-[2026-03-26 09:03:46,917] [INFO]   Elapsed: 27s | ETA: 27s
-[2026-03-26 09:03:46,917] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-26 09:03:50,730] [INFO] ✓ Stage 4 completed successfully (3.8s)
-[2026-03-26 09:03:50,731] [INFO] 
-[2026-03-26 09:03:50,731] [INFO] [5/8] PDF Rendering (62% complete)
-[2026-03-26 09:03:50,731] [INFO]   Elapsed: 30s | ETA: 18s
-[2026-03-26 09:03:50,731] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-26 09:04:42,244] [INFO] ✓ Stage 5 completed successfully (51.5s)
-[2026-03-26 09:04:42,244] [INFO] 
-[2026-03-26 09:04:42,244] [INFO] [6/8] Output Validation (75% complete)
-[2026-03-26 09:04:42,244] [INFO]   Elapsed: 1m 22s | ETA: 27s
-[2026-03-26 09:04:42,244] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-26 09:04:42,539] [INFO] ✓ Stage 6 completed successfully (0.3s)
-[2026-03-26 09:04:42,539] [INFO] 
-[2026-03-26 09:04:42,539] [INFO] [7/8] Copy Outputs (87% complete)
-[2026-03-26 09:04:42,539] [INFO]   Elapsed: 1m 22s | ETA: 11s
-[2026-03-26 09:04:42,539] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-03-26 09:04:42,878] [INFO] ✓ Stage 7 completed successfully (0.3s)
+[2026-03-30 05:38:52,826] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-30 05:38:52,826] [INFO] 
+[2026-03-30 05:38:52,826] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-30 05:38:52,826] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-30 05:38:52,826] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 05:38:55,785] [INFO] ✓ Stage 2 completed successfully (3.0s)
+[2026-03-30 05:38:55,785] [INFO] 
+[2026-03-30 05:38:55,785] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-30 05:38:55,785] [INFO]   Elapsed: 2s | ETA: 4s
+[2026-03-30 05:38:55,785] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 05:39:26,369] [INFO] ✓ Stage 3 completed successfully (30.6s)
+[2026-03-30 05:39:26,370] [INFO] 
+[2026-03-30 05:39:26,370] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-30 05:39:26,370] [INFO]   Elapsed: 33s | ETA: 33s
+[2026-03-30 05:39:26,370] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 05:39:31,035] [INFO] ✓ Stage 4 completed successfully (4.7s)
+[2026-03-30 05:39:31,035] [INFO] 
+[2026-03-30 05:39:31,035] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-30 05:39:31,035] [INFO]   Elapsed: 38s | ETA: 22s
+[2026-03-30 05:39:31,035] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 05:40:29,387] [INFO] ✓ Stage 5 completed successfully (58.4s)
+[2026-03-30 05:40:29,389] [INFO] 
+[2026-03-30 05:40:29,389] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-30 05:40:29,389] [INFO]   Elapsed: 1m 36s | ETA: 32s
+[2026-03-30 05:40:29,389] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 05:40:29,788] [INFO] ✓ Stage 6 completed successfully (0.4s)
+[2026-03-30 05:40:29,789] [INFO] 
+[2026-03-30 05:40:29,789] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-30 05:40:29,789] [INFO]   Elapsed: 1m 36s | ETA: 13s
+[2026-03-30 05:40:29,789] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 05:40:30,190] [INFO] ✓ Stage 7 completed successfully (0.4s)

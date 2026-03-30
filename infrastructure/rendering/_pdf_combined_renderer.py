@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import unicodedata
+import yaml
 from pathlib import Path
 from typing import TYPE_CHECKING, NamedTuple
 
@@ -90,6 +91,23 @@ def build_pandoc_tex_command(
         "--resource-path=" + str(manuscript_dir),
         "--resource-path=" + str(figures_dir),
     ]
+
+    # Attempt to extract geometry from config.yaml and pass to pandoc
+    config_file = manuscript_dir / "config.yaml"
+    if config_file.exists():
+        try:
+            with open(config_file, "r", encoding="utf-8") as f:
+                yaml_data = yaml.safe_load(f)
+            
+            if yaml_data and isinstance(yaml_data, dict):
+                metadata = yaml_data.get("metadata", {})
+                geometry = metadata.get("geometry")
+                if geometry:
+                    cmd.extend(["-V", f"geometry:{geometry}"])
+                    logger.debug(f"Added geometry to pandoc args: {geometry}")
+        except (OSError, yaml.YAMLError) as e:
+            logger.warning(f"Failed to read geometry from config.yaml: {e}")
+
     return cmd
 
 

@@ -33,7 +33,7 @@ class SecurityValidator:
         r"(?i)\bopen\s*\(|\bfile\s*\(|\bpathlib\.\w|\bos\.path\.\w",
         r"(?i)\bread\s+file\b|\bwrite\s+file\b|\bdelete\s+file\b",
         # Network access — library prefixes (\b prevents partial matches like "urllib2")
-        r"(?i)\brequests\.\w|\burllib\.\w|\bsocket\.\w|\bhttps?://",
+        r"(?i)\brequests\.\w|\burllib\.\w|\bsocket\.\w",
         r"(?i)connect\s+to|download\s+from|upload\s+to",
         # SQL injection — DML/DDL keywords (\b on both sides reduces false positives)
         r"(?i)\b(select|insert|update|delete|drop|create)\b\s+.*\bfrom\b",

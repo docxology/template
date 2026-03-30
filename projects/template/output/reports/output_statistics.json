@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.53",
-      "total_size_bytes": 1600818,
+      "size_mb": "1.54",
+      "total_size_bytes": 1617808,
       "largest_files": [
         {
           "name": "template_combined.pdf",
-          "size_mb": "1.11",
+          "size_mb": "1.13",
           "path": "pdf/template_combined.pdf"
         },
         {
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 168,
-      "size_mb": "3.06",
-      "total_size_bytes": 3206671,
+      "size_mb": "3.07",
+      "total_size_bytes": 3223265,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
-          "size_mb": "0.92",
+          "size_mb": "0.93",
           "path": "slides/04_results_slides.pdf"
         },
         {
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 4,
-      "size_mb": "0.88",
-      "total_size_bytes": 919763,
+      "size_mb": "0.89",
+      "total_size_bytes": 934148,
       "largest_files": [
         {
           "name": "comparative_feature_matrix.png",
@@ -107,12 +107,12 @@
         },
         {
           "name": "architecture_overview.png",
-          "size_mb": "0.23",
+          "size_mb": "0.25",
           "path": "figures/architecture_overview.png"
         },
         {
           "name": "module_inventory.png",
-          "size_mb": "0.17",
+          "size_mb": "0.16",
           "path": "figures/module_inventory.png"
         }
       ],
@@ -124,7 +124,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 3907,
+      "total_size_bytes": 4783,
       "largest_files": [
         {
           "name": "metrics.json",
@@ -183,7 +183,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2603,
+      "total_size_bytes": 2462,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -197,17 +197,17 @@
     }
   },
   "total_files": 211,
-  "total_size_mb": 5.982145309448242,
+  "total_size_mb": 6.028593063354492,
   "largest_files": [
     {
       "name": "template_combined.pdf",
-      "size_mb": "1.11",
+      "size_mb": "1.13",
       "category": "pdf",
       "path": "pdf/template_combined.pdf"
     },
     {
       "name": "04_results_slides.pdf",
-      "size_mb": "0.92",
+      "size_mb": "0.93",
       "category": "slides",
       "path": "slides/04_results_slides.pdf"
     },
@@ -219,7 +219,7 @@
     },
     {
       "name": "architecture_overview.png",
-      "size_mb": "0.23",
+      "size_mb": "0.25",
       "category": "figures",
       "path": "figures/architecture_overview.png"
     },
@@ -231,7 +231,7 @@
     },
     {
       "name": "module_inventory.png",
-      "size_mb": "0.17",
+      "size_mb": "0.16",
       "category": "figures",
       "path": "figures/module_inventory.png"
     },
@@ -262,15 +262,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.5266590118408203,
+    "pdf": 1.5428619384765625,
     "web": 0.5072383880615234,
-    "slides": 3.058119773864746,
-    "figures": 0.8771543502807617,
-    "data": 0.0037260055541992188,
+    "slides": 3.0739450454711914,
+    "figures": 0.8908729553222656,
+    "data": 0.004561424255371094,
     "reports": 0.0067653656005859375,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0024824142456054688
+    "logs": 0.0023479461669921875
   },
   "file_counts_by_type": {
     ".md": 4,

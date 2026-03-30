@@ -1,7 +1,7 @@
 """
 Manuscript builder components for Blake & Bimetallism project.
-Provides utilities for handling markdown serialization and assertions based on 
-the zero-mock quantitative metrics. 
+Provides utilities for handling markdown serialization and assertions across the 
+18-chapter structure, injecting mathematical parameters directly into LaTeX templates.
 """
 
 from typing import Any

@@ -1,12 +1,12 @@
 {
   "project_name": "code_project",
-  "total_duration": 42.92,
+  "total_duration": 44.652,
   "total_stages": 7,
   "stages": [
     {
       "stage_name": "Clean Output Directories",
       "stage_num": 1,
-      "duration": 0.017,
+      "duration": 0.012,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -20,7 +20,7 @@
     {
       "stage_name": "Environment Setup",
       "stage_num": 2,
-      "duration": 2.91,
+      "duration": 1.975,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -34,7 +34,7 @@
     {
       "stage_name": "Project Tests",
       "stage_num": 3,
-      "duration": 6.07,
+      "duration": 6.174,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -48,7 +48,7 @@
     {
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "duration": 2.21,
+      "duration": 2.486,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -62,7 +62,7 @@
     {
       "stage_name": "PDF Rendering",
       "stage_num": 5,
-      "duration": 31.07,
+      "duration": 33.308,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -76,7 +76,7 @@
     {
       "stage_name": "Output Validation",
       "stage_num": 6,
-      "duration": 0.346,
+      "duration": 0.345,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -90,7 +90,7 @@
     {
       "stage_name": "Copy Outputs",
       "stage_num": 7,
-      "duration": 0.294,
+      "duration": 0.347,
       "exit_code": 0,
       "success": true,
       "memory_mb": 0.0,
@@ -106,10 +106,10 @@
     {
       "warning_type": "slow_stage",
       "stage_name": "PDF Rendering",
-      "message": "Stage 'PDF Rendering' took 31.1s (2.0\u00d7 the average 6.1s)",
+      "message": "Stage 'PDF Rendering' took 33.3s (2.0\u00d7 the average 6.4s)",
       "suggestion": "Consider optimizing this stage or running it in parallel",
-      "value": 31.07,
-      "threshold": 12.26
+      "value": 33.31,
+      "threshold": 12.76
     }
   ],
   "system_info": {},

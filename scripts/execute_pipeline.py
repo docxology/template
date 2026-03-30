@@ -124,7 +124,7 @@ def execute_pipeline(
             total_duration=total_duration,
             output_dir=output_dir,
             skip_infra=skip_infra,
-            format="text",
+            output_format="text",
         )
         logger.info(text_summary)
 
