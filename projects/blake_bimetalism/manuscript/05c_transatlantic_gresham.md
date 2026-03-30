@@ -1,0 +1,47 @@
+# Transatlantic Architectures of Monetary Collapse: Britain and America Compared
+
+## The Divergent Ratios and Their Structural Consequences
+
+The British and American bimetallic experiments, though sharing the same architecture—two metals bound by statutory fiat—diverged in ways that illuminate both the generic logic of bimetallic instability and the specific political economies encoded in each nation's monetary regime. A systematic comparison reveals how Gresham's Law operated with identical structural logic but divergent political consequences across the Atlantic.
+
+| Parameter | Britain (1717–1816) | United States (1792–1873) |
+| ----------- | -------------------- | ----------------------- |
+| **Statutory Ratio** | 1:15.21 (Newton, 1717) | 1:15 (Hamilton, 1792); revised to 1:16 (1834) |
+| **Market Reality** | ~1:14.5 (European) | ~1:15.5 (European, post-1792) |
+| **Direction of Drainage** | Silver exported to France/India | Gold exported to Europe (pre-1834); Silver exported (post-1834) |
+| **Central Bank** | Bank of England (1694) | First Bank of US (1791–1811); Second Bank (1816–1836) |
+| **Suspension Event** | Bank Restriction Act, 27 Feb 1797 | Greenback suspension, 1862–1879 |
+| **Demonetization** | Coinage Act 1816 (56 Geo. III c.68) | Fourth Coinage Act, 12 Feb 1873 |
+| **Popular Resistance** | Minimal (no Free Silver equivalent) | Free Silver movement (1873–1900) |
+| **Prophetic Critique** | Blake's *Jerusalem*, *Milton* | Bryan's "Cross of Gold" (1896) |
+
+The table reveals a structural insight: under Hamilton's 15:1 ratio, which *undervalued* gold relative to the European market of approximately 15.5:1, the United States initially experienced the mirror image of Britain's drainage. American gold was exported to Europe where it commanded higher value, while silver accumulated domestically—making silver, paradoxically, the *de facto* American standard through the 1820s [@laughlin1898bimetallism; @officer2001bimetallism]. This is precisely the inverse of Britain's experience under Newton's 15.21:1 ratio, which overvalued gold and drained silver. The 1834 revision to approximately 16:1 reversed this dynamic, deliberately overvaluing gold to attract it into domestic circulation—but at the cost of triggering the same outward silver flight that had devastated British coinage a century earlier [@redish1990evolution].
+
+## Jackson's War on the Bank: The Limits of Institutional Destruction
+
+Andrew Jackson's veto of the Second Bank of the United States in 1832, followed by his executive removal of federal deposits in 1833 and the Bank's ultimate demise in 1836, constitute an episode of resonance for understanding the structural limits of monetary reform. Jackson, the agrarian populist from the frontier, declared the Bank a "monopoly" and a "hydra of corruption" that enriched Eastern financial elites at the expense of the producing classes [@howe2007what; @wilentz2005rise]. Daniel Walker Howe's *What Hath God Wrought* demonstrates that Jackson's Bank War was not merely an economic dispute but a fundamental contest over the meaning of democratic sovereignty in the new republic: who should control the creation of money, and to whose benefit [@howe2007what]?
+
+In Blake's mythological terms, this is Orc's revolutionary assault on the Urizenic institution—the fiery destruction of the centralized architecture of credit. Yet Jackson's destruction of the Bank unleashed a "Free Banking" era of wildcat state-chartered institutions that issued unregulated paper currency—precisely the spectral void of "allegoric riches" that Blake identified as equally catastrophic. Sean Wilentz documents how the period between the Bank's destruction (1836) and the Civil War saw over 1,600 state-chartered banks issuing their own notes, producing a fragmented, unreliable, and frequently fraudulent currency system [@wilentz2005rise].
+
+The Jacksonian paradox recapitulates the Blakean diagnosis with fidelity: destroying the centralized institution does not automatically produce liberation. In classical political economy terms, Jackson dismantled the *federal* monopoly on credit only to democratize the issuance of unbacked paper through state banks—a horizontal proliferation of the same abstracting technology. Without the qualitative vision that transcends both metallic fetishism and paper abstraction, the destruction of one tyranny merely clears the ground for another. Blake understood this with clarity. As he writes in *America A Prophecy*, even after Orc's revolutionary fire has consumed the old order, Urizen descends again:
+
+> "Urizen, who sat / Above all heavens, in thunders wrapp'd, emerg'd his leprous head
+> From out his holy shrine, his tears in deluge piteous
+> Falling into the deep sublime"
+> (*America A Prophecy*, Plates 16–17; Erdman pp. 57–58) [@erdman1988complete; @blake1793america]
+
+Revolution alone is insufficient; the Urizenic principle merely reconstitutes itself in new institutional forms. The destruction of the Bank of England's monopoly or the Second Bank of the United States does not abolish the logic of centralized abstraction—it simply relocates it to the next available institutional architecture.
+
+## The Greenback Suspension: America's Wartime Monetary Swerve
+
+The American Civil War (1861–1865) produced its own swerve into fiat abstraction, paralleling the British Bank Restriction of 1797. In 1862, the United States Treasury began issuing Legal Tender Notes ("Greenbacks")—unbacked paper currency designed to finance the Union war effort. Like the Bank Restriction, the Greenback suspension severed the connection between the circulating medium and any metallic anchor, plunging the economy into a void of fiat abstraction that persisted until the Specie Resumption Act of 1875 restored gold convertibility on **1 January 1879** [@laughlin1898bimetallism; @unger1964greenback].
+
+Irwin Unger's Pulitzer Prize-winning *The Greenback Era* demonstrates that the suspension was far more than a wartime expedient: it catalyzed a reorganization of American political coalitions around the question of what money *is* [@unger1964greenback]. The "soft money" faction—farmers, debtors, Western entrepreneurs—demanded the permanent retention of Greenbacks as an inflationary counterweight to the deflationary gold standard. The "hard money" faction—Eastern bankers, creditors, industrial capitalists—insisted on resumption and gold convertibility. This division prefigured and structurally anticipated the Free Silver movement of the 1880s–1890s.
+
+The structural parallel with Britain is precise: both the 1797 British suspension and the 1862 American suspension were triggered by existential military crises; both produced inflationary spirals that devastated the laboring classes while enriching financial speculators; and both were resolved by a return to metallic standards that imposed deflationary austerity upon the producing classes. In both cases, Blake's prophetic analysis proves structurally correct: the oscillation between the crushing geometry of metallic standards and the void of fiat paper constitutes a false dichotomy—a pendulum swing between two modes of quantification, neither of which addresses the fundamental crisis of human value.
+
+## From Albion to America: The Unfinished Revolution
+
+Blake's *America A Prophecy* concludes not with Orc's triumph but with Urizen's renewed assault—his "icy magazine" poured upon the Atlantic to contain the revolutionary fire for "twelve years" before "France receiv'd the Demon's light" (Plates 16–17; Erdman pp. 57–58) [@erdman1988complete; @blake1793america]. This prophetic temporality—revolution contained but not extinguished, revolutionary energy transmitted across borders—maps with precision onto the transmission of bimetallic crises across the Atlantic. Britain's 1816 demonetization of silver preceded, and structurally anticipated, America's 1873 demonetization. Barry Eichengreen's *Globalizing Capital* traces this convergence as part of a broader "network effect" in which the gold standard spread not through inherent superiority but through the gravitational pull of London's capital markets, which made gold convertibility the price of access to international credit [@eichengreen2019globalizing].
+
+The arc from Newton's 1717 ratio through Hamilton's 1792 ratio, through both nations' suspensions and ultimate demonetizations of silver, traces a single structural trajectory: the global establishment of monometallic quantification over bimetallic generation. Yet the 19th-century gold standard was merely a transitional phase toward a more radical monetary abstraction.

@@ -1,0 +1,19 @@
+
+LOG ANALYSIS: pipeline.log
+============================================================
+
+Total Lines: 20
+
+Message Breakdown:
+  INFO: 11
+  WARNING: 3
+  ERROR: 2
+
+Recent Errors (2):
+  • [2026-03-30 09:35:14,878] [ERROR] ❌ [STAGE_FAILED] ✗ Stage 3 failed
+  • [2026-03-30 09:35:14,879] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 3: Infrastructu
+
+Recent Warnings (3):
+  • [2026-03-30 09:35:14,958] [WARNING] [matplotlib] mkdir -p failed for path /Users/4d/.matplotlib: [Er
+  • [2026-03-30 09:35:14,959] [WARNING] [matplotlib] Matplotlib created a temporary cache directory at /
+  • [2026-03-30 09:35:19,975] [WARNING] [matplotlib.font_manager] Matplotlib is building the font cache;

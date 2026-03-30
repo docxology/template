@@ -1,0 +1,20 @@
+[2026-03-30 09:26:48,834] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/blake_bimetalism/output/logs/pipeline.log
+[2026-03-30 09:26:48,834] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-30 09:26:48,835] [INFO] 
+[2026-03-30 09:26:48,835] [INFO] [2/10] Environment Setup (20% complete)
+[2026-03-30 09:26:48,835] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-30 09:26:48,835] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 09:26:52,778] [INFO] ✓ Stage 2 completed successfully (3.9s)
+[2026-03-30 09:26:52,779] [INFO] 
+[2026-03-30 09:26:52,779] [INFO] [3/10] Infrastructure Tests (30% complete)
+[2026-03-30 09:26:52,779] [INFO]   Elapsed: 3s | ETA: 9s
+[2026-03-30 09:26:52,779] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Test message
+✗ Test message
+  Test message
+⚠ Test message
+[2026-03-30 09:35:14,878] [ERROR] ❌ [STAGE_FAILED] ✗ Stage 3 failed
+[2026-03-30 09:35:14,879] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 3: Infrastructure Tests — Check stage logs for details
+[2026-03-30 09:35:14,958] [WARNING] [matplotlib] mkdir -p failed for path /Users/4d/.matplotlib: [Errno 1] Operation not permitted: '/Users/4d/.matplotlib'
+[2026-03-30 09:35:14,959] [WARNING] [matplotlib] Matplotlib created a temporary cache directory at /var/folders/vc/rgmbpjpj0dbg61vr54xjskc80000gn/T/matplotlib-cyb1hzgc because there was an issue with the default path (/Users/4d/.matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+[2026-03-30 09:35:19,975] [WARNING] [matplotlib.font_manager] Matplotlib is building the font cache; this may take a moment.

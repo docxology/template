@@ -1,0 +1,53 @@
+# Blake and Bimetallism Manuscript Configuration
+# Dense scholarly synthesis mapping mystical-poetic philosophy to financial entropy
+
+paper:
+  title: "The Golden Compass and the Lunar Flux"
+  subtitle: "William Blake, Bimetallic Meta-stability, and the Architecture of Value"
+  version: "4.0"
+  date: ""
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.19335196"
+  journal: "Active Inference Journal"
+  volume: ""
+  pages: ""
+  year: "2026"
+
+keywords:
+  - "William Blake"
+  - "Bimetallism"
+  - "Gresham's Law"
+  - "Monetary Ontology"
+  - "Esoteric Finance"
+  - "Alexander Del Mar"
+  - "Monetary Federalism"
+  - "Relief Etching"
+  - "Fourfold Vision"
+  - "Alchemy of Money"
+
+metadata:
+  license: "CC BY 4.0"
+  language: "en"
+  geometry: "margin=0.5in"
+
+llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary
+      - quality_review
+  translations:
+    enabled: false
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0

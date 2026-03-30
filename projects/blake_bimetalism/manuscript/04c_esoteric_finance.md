@@ -1,0 +1,29 @@
+# Esoteric Finance: Blake and Alexander Del Mar
+
+If William Blake provided the visionary, mythopoetic critique of 18th-century monetary metaphysics, the late 19th-century historian Alexander Del Mar provided its rigorous historiographical counterpart. Del Mar's *History of Monetary Systems* (1895) operates on a fundamental thesis that maps onto Blakean cosmology: that the right to coin money is a sovereign, communal prerogative (a state of Edenic or at least Beulah-like integration) that has been recurrently hijacked throughout history by private, atomizing mercantile interests (Urizen) [@delmar1895history].
+
+## The Sacred Prerogative of Issuance
+
+For Del Mar, the "esoteric" aspect of finance is precisely this hidden historical struggle over the prerogative of issuance. When the state controls the money supply, value is derived from the *societal totality* (the Human Form Divine) and the collective needs of the people. When private banks (such as the Bank of England in 1797) or rigid metallic ratios (Newton in 1717, Liverpool in 1816) assume control, value is transferred to the dead material of the coin itself or the fictional ledger of the private creditor [@clapham1944bank]. Del Mar writes extensively on the sacred, often solar and lunar origins of coinage in antiquity, viewing the bimetallic system not as an economic expedience, but as a degraded remnant of a dualistic religious system representing divine authority. The golden disc and the silver crescent encoded, in the earliest Mesopotamian and Egyptian monetary systems, the solar and lunar principles that governed all legitimate sovereignty—a thesis that reveals the transition from bimetallism to the gold standard not merely as a policy adjustment but as a metaphysical revolution: the displacement of a dualistic, syncretic cosmology by a monistic, reductionist one. This perspective illuminates a *generic* economic principle: every monetary regime encodes a specific theology of value.
+
+## Blake's Jerusalem Plate 10 and the Architecture of Enslavement
+
+Blake recognized this identical usurpation with prophetic clarity. His condemnation of the Bank of England, the Mint, and the gold standard was rooted in his understanding that whoever controls the semiotics of value controls the human soul. Blake's famous declaration:
+
+> "I must Create a System, or be enslav'd by another Mans
+> I will not Reason & Compare: my business is to Create"
+> (*Jerusalem*, Plate 10, lines 20–21; Erdman p. 153) [@erdman1988complete]
+
+is precisely this recognition that the *architecture* of representation determines the freedom or subjugation of human life. The "System" Blake must create is not merely a mythological schema but an entire alternative regime of valuation—one grounded in the irreducible particularity of creative labor rather than the abstract universality of the gold sovereign. When Del Mar catalogs the social consequences of the demonetization of silver—how the contraction of the monetary base enriched the creditor class while plunging the producing classes into deflationary poverty—he is documenting the literal effects of Urizen's "brazen quadrant" upon the British and global economy [@delmar1885history].
+
+## The 1844 Bank Charter Act and the Ledger Migration of Spectral Value
+
+The culmination of this architectural subjugation occurred with the 1844 Bank Charter Act (Peel's Act). The fiercely contested debate between the Banking School and the Currency School was ultimately resolved when Parliament centralized all note issuance under the Bank of England's strict monopoly, tying paper currency to a 100% gold reserve above a fixed fiduciary minimum. The Currency School theorists, acting as the ultimate architects of Urizenic geometry, believed they had finally imprisoned the chaos of economic swerve within the immutable predictability of the gold standard.
+
+However, by focusing on paper notes, Peel's Act paradoxically ignored the explosive growth of bank deposits and ledger credit, which rapidly emerged to comprise 90% of the money supply in late 19th-century Britain. The "fictive" or "spectral value" against which Blake raged did not vanish; rather, the "ghosts" completely migrated out of the physical paper artifact and into the invisible, unregulated abstraction of the bank ledger. This endogenous expansion of invisible credit represents a profound esoteric mutation of the capitalist economy—a system sustained entirely by mathematical promises that periodically collapsed in late-century panics.
+
+## The Convergence of Prophetic and Historiographic Critique
+
+Both Blake and Del Mar understood that the true "alchemy" of money had been stolen from the domain of human creativity. The living, breathing economy of human interaction had been replaced by a spectral, numerical simulation engineered to perpetually enrich the creditor class at the direct expense of the producing masses. Reading Blake through the lens of esoteric finance elevates his poetic epics from obscure mystical allegories into profound critiques of modern central banking and financialized alienation [@poovey2008genres; @baucom2005specters]. Del Mar's key historiographic insight—that the demonetization of silver was a deliberate political act designed to redistribute wealth upward—finds its mythopoetic expression in Blake's *Jerusalem*, where the architects of financial enclosure are exposed as agents of Urizenic tyranny.
+
+By demanding in *Milton* that humanity "Leave counting Gold & diamonds, for Gods eye delights in thee" (Plate 26, line 27; Erdman p. 121) [@erdman1988complete], Blake stands alongside Del Mar as a prophet declaring that the highest sovereign act is not the balancing of a metallic ratio, but the liberation of the human imagination from the ledger. Where Del Mar provides the forensic historiography, Blake provides the visionary horizon: together, they articulate a complete esoteric economics of human liberation.

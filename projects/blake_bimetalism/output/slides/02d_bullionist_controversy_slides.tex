@@ -1,0 +1,199 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{The Bullionist Controversy and the Semiotics of Value}
+\protect\phantomsection\label{the-bullionist-controversy-and-the-semiotics-of-value}
+The aftermath of the 1797 Bank Restriction Act birthed the Bullionist
+Controversy, a political and economic debate that raged throughout the
+early 19th century and culminated in the 1810 Bullion Report presented
+to Parliament. Crucially, this economic debate mapped closely onto the
+semiotic and epistemological battles William Blake was waging in his
+prophetic poetry. The central issue of the Controversy was whether the
+rising price of bullion resulted from the over-issuance of paper money
+(the ``Bullionist'' position), or if the paper money was maintaining its
+value while gold itself was appreciating due to wartime scarcity (the
+``Anti-Bullionist'' position) {[}@fetter1965development{]}.
+
+\begin{block}{The Bullionist Position: Ricardo and the Metallic Anchor}
+\protect\phantomsection\label{the-bullionist-position-ricardo-and-the-metallic-anchor}
+The Bullionists, led by figures like David Ricardo and embodied in the
+1810 Bullion Report, argued that value must refer back to a physical,
+metallic anchor. Ricardo's \emph{The High Price of Bullion} (1810)
+provided the intellectual foundation: the premium on gold bullion over
+the nominal value of banknotes constituted empirical proof that the Bank
+had depreciated the currency through overissuance
+{[}@ricardo1810high{]}. Henry Thornton, in his \emph{Paper Credit of
+Great Britain} (1802), offered a more nuanced but equally comprehensive
+analysis, demonstrating that the Bank's credit expansion operated with
+radical independence from any metallic constraint, introducing systemic
+instability into all commodity prices {[}@thornton1802nature{]}. For the
+Bullionists, the pound sterling was intrinsically tied to a specific
+weight of gold---113 grains of fine gold---and any deviation from this
+anchor was considered a species of national fraud.
+\end{block}
+
+\begin{block}{The Anti-Bullionist Position: The Bank's Directors}
+\protect\phantomsection\label{the-anti-bullionist-position-the-banks-directors}
+The Anti-Bullionists, representing the Bank of England's directors and
+their parliamentary allies, paradoxically argued for a more abstract,
+relational conception of value. They claimed that their paper notes
+represented not a fixed weight of metal, but the ``needs of
+trade''---the aggregate commercial demand of the nation. This was, in
+effect, an early articulation of a fiat money theory: that the state's
+sovereign guarantee was itself sufficient to sustain the purchasing
+power of its currency, regardless of metallic backing
+{[}@fetter1965development{]}. From the perspective of Blakean cosmology,
+this Anti-Bullionist position occupied a sophisticated space: it
+acknowledged the constructed nature of monetary value, but deployed this
+acknowledgment to entrench the oligarchic power of the Bank's governors
+rather than to liberate humanity from quantification.
+\end{block}
+
+\begin{block}{Blake's Refusal: Newton's Mint vs.~Los's Forge}
+\protect\phantomsection\label{blakes-refusal-newtons-mint-vs.-loss-forge}
+In this debate, Blake's position is complex and irreducible to either
+camp; he frames the crisis not as macroeconomic policy, but as a
+political theology pitting \textbf{Newton's Mint} against \textbf{Los's
+Forge}. He was certainly not a Bullionist---he abhorred the ``chimeric
+regime'' of the gold standard and the worship of the ``guinea'' as a
+false idol, declaring in his marginalia to Reynolds that to a miser, ``a
+guinea is more beautiful than the sun'' {[}@blake1808annotations{]}.
+Yet, he was equally critical of the Anti-Bullionist reality: a financial
+oligarchy manipulating abstract paper contracts (``allegoric riches'')
+to extract real labor from the poor. In \emph{Jerusalem}, Blake
+explicitly targets this dual exploitation: ``Shall not the Councellor
+throw his curb / Of Poverty on the laborious? / To fix the price of
+labour; / To invent allegoric riches'' (Plate 27, lines 10--14; Erdman
+p.~170) {[}@erdman1988complete; @sklar2011blake{]}.
+
+Both the Bullionists and the Anti-Bullionists were trapped in
+\emph{Urizenic} logic. One worshipped the atomic, finite particle (the
+gold coin); the other worshipped the algorithmic void of credit
+(fractional reserve banking). Against both, Blake posited Los's Forge:
+the imaginative, artisanal production of eternal forms through immediate
+physical labor. The material toll of this macroeconomic abstraction on
+Los's Forge was substantive. As the Restriction era dragged on, the
+economic pressures of currency instability and inflation severed the
+working classes from the means of artistic production. By 1818,
+overwhelmed by this fiat malaise, Blake virtually ceased printing his
+illuminated books---producing only 14 copies of four titles
+post-1795---and pivoted to commercial graphic art to survive
+{[}@makdisi2003william{]}. The abstract ledgers of Threadneedle Street
+had literally cooled the fires of the prophetic forge.
+
+\begin{block}{The Crisis of Capitalist Semiotics}
+\protect\phantomsection\label{the-crisis-of-capitalist-semiotics}
+Blake's \emph{Fourfold Vision} (detailed in
+\href{03a_urizenic_materialism.md\#urizenic-materialism-and-the-generation-of-allegoric-riches}{the
+subsequent chapter}) entirely circumvents this dichotomy. For Blake,
+true value is not found in the metallic anchor nor in the abstract paper
+calculus, but in the generative, qualitative labor of the human
+imagination. The Bullionist Controversy represented the ultimate crisis
+of capitalist semiotics {[}@fetter1965development{]}---a society arguing
+over whether the \emph{sign} (paper) should be bound to the
+\emph{referent} (gold), while entirely ignoring the \emph{creator} of
+value (the human artist/laborer). As Mary Poovey demonstrates in her
+analysis of ``genres of the credit economy,'' the entire semiotic
+infrastructure of eighteenth-century finance was built upon an
+irresolvable tension between the promise of face value and the reality
+of market value---a tension that Blake's prophetic works expose as
+symptomatic of the deeper spiritual crisis of quantification itself
+{[}@poovey2008genres{]}. The Controversy was eventually decided not by
+intellectual resolution but by legislative force: Peel's Act of 1819
+committed Britain to the resumption of gold convertibility by 1821,
+completing the twenty-four-year arc of the Restriction period and
+setting the stage for the 1816 Coinage Act's ultimate monometallic
+regression.
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

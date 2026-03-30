@@ -1,0 +1,319 @@
+{
+  "timestamp": "2026-03-30T09:35:28.726658",
+  "total_duration": 506.047345161438,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.0054361820220947266,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 3.9428060054779053,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Infrastructure Tests",
+      "exit_code": 1,
+      "duration": 502.099102973938,
+      "timestamp": "",
+      "completed": true,
+      "status": "failed"
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 10,
+        "size_mb": "3.85",
+        "total_size_bytes": 4039150,
+        "largest_files": [
+          {
+            "name": "blake_bimetalism_combined.pdf",
+            "size_mb": "3.46",
+            "path": "pdf/blake_bimetalism_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.14",
+            "path": "pdf/_combined_manuscript.tex"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.12",
+            "path": "pdf/_combined_manuscript.md"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 2,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".pdf": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".bbl": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 20,
+        "size_mb": "0.51",
+        "total_size_bytes": 530247,
+        "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.17",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.12",
+            "path": "web/_combined_manuscript.md"
+          },
+          {
+            "name": "05b_america_prophecy.html",
+            "size_mb": "0.02",
+            "path": "web/05b_america_prophecy.html"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".html": 19
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 126,
+        "size_mb": "3.60",
+        "total_size_bytes": 3776516,
+        "largest_files": [
+          {
+            "name": "04b_coinage_act_1816_slides.pdf",
+            "size_mb": "1.41",
+            "path": "slides/04b_coinage_act_1816_slides.pdf"
+          },
+          {
+            "name": "02b_gresham_entropy_slides.pdf",
+            "size_mb": "0.33",
+            "path": "slides/02b_gresham_entropy_slides.pdf"
+          },
+          {
+            "name": "03b_los_and_fourfold_vision_slides.pdf",
+            "size_mb": "0.25",
+            "path": "slides/03b_los_and_fourfold_vision_slides.pdf"
+          }
+        ],
+        "extensions": {
+          ".aux": 18,
+          ".snm": 18,
+          ".log": 18,
+          ".pdf": 18,
+          ".toc": 18,
+          ".tex": 18,
+          ".nav": 18
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 6,
+        "size_mb": "3.33",
+        "total_size_bytes": 3492446,
+        "largest_files": [
+          {
+            "name": "topological_fracture.png",
+            "size_mb": "1.44",
+            "path": "figures/topological_fracture.png"
+          },
+          {
+            "name": "historic_ratio.png",
+            "size_mb": "0.52",
+            "path": "figures/historic_ratio.png"
+          },
+          {
+            "name": "timeline.png",
+            "size_mb": "0.50",
+            "path": "figures/timeline.png"
+          }
+        ],
+        "extensions": {
+          ".png": 6
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 2,
+        "size_mb": "0.00",
+        "total_size_bytes": 4901,
+        "largest_files": [
+          {
+            "name": "validation_report.json",
+            "size_mb": "0.00",
+            "path": "reports/validation_report.json"
+          },
+          {
+            "name": "validation_report.md",
+            "size_mb": "0.00",
+            "path": "reports/validation_report.md"
+          }
+        ],
+        "extensions": {
+          ".json": 1,
+          ".md": 1
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 1964,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 165,
+    "total_size_mb": 11.296485900878906,
+    "largest_files": [
+      {
+        "name": "blake_bimetalism_combined.pdf",
+        "size_mb": "3.46",
+        "category": "pdf",
+        "path": "pdf/blake_bimetalism_combined.pdf"
+      },
+      {
+        "name": "topological_fracture.png",
+        "size_mb": "1.44",
+        "category": "figures",
+        "path": "figures/topological_fracture.png"
+      },
+      {
+        "name": "04b_coinage_act_1816_slides.pdf",
+        "size_mb": "1.41",
+        "category": "slides",
+        "path": "slides/04b_coinage_act_1816_slides.pdf"
+      },
+      {
+        "name": "historic_ratio.png",
+        "size_mb": "0.52",
+        "category": "figures",
+        "path": "figures/historic_ratio.png"
+      },
+      {
+        "name": "timeline.png",
+        "size_mb": "0.50",
+        "category": "figures",
+        "path": "figures/timeline.png"
+      },
+      {
+        "name": "02b_gresham_entropy_slides.pdf",
+        "size_mb": "0.33",
+        "category": "slides",
+        "path": "slides/02b_gresham_entropy_slides.pdf"
+      },
+      {
+        "name": "03b_los_and_fourfold_vision_slides.pdf",
+        "size_mb": "0.25",
+        "category": "slides",
+        "path": "slides/03b_los_and_fourfold_vision_slides.pdf"
+      },
+      {
+        "name": "index.html",
+        "size_mb": "0.17",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
+        "name": "_combined_manuscript.tex",
+        "size_mb": "0.14",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
+      },
+      {
+        "name": "_combined_manuscript.md",
+        "size_mb": "0.12",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.md"
+      }
+    ],
+    "missing_expected_files": [],
+    "sizes_by_category": {
+      "pdf": 3.8520336151123047,
+      "web": 0.5056829452514648,
+      "slides": 3.6015663146972656,
+      "figures": 3.330656051635742,
+      "data": 0.0,
+      "reports": 0.004673957824707031,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.001873016357421875
+    },
+    "file_counts_by_type": {
+      ".md": 3,
+      ".log": 21,
+      ".aux": 19,
+      ".blg": 1,
+      ".bib": 1,
+      ".pdf": 19,
+      ".tex": 19,
+      ".toc": 19,
+      ".bbl": 1,
+      ".html": 19,
+      ".snm": 18,
+      ".nav": 18,
+      ".png": 6,
+      ".json": 1
+    },
+    "pdf_files": 10,
+    "figures": 6,
+    "data_files": 0,
+    "log_file": {
+      "exists": true,
+      "size": 1964,
+      "path": "/Users/4d/Documents/GitHub/template/projects/blake_bimetalism/output/logs/pipeline.log"
+    }
+  }
+}

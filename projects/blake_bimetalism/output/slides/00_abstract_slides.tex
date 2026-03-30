@@ -1,0 +1,136 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Abstract}
+\protect\phantomsection\label{abstract}
+This manuscript maps the structural collapse of British bimetallism
+(1717--1844) onto the mythopoetic architecture of William Blake's
+prophetic epics, arguing the disintegration of the gold-silver standard
+materially enacted the cosmological fracture Blake dramatized. The
+architecture of this entropy formalized on 21 September 1717, when Isaac
+Newton, Master of the Royal Mint, established the guinea at 21 silver
+shillings---a ratio of 15.21:1 that structurally overvalued gold against
+continental markets. Under Gresham's Law, this metric disparity drove
+English silver to France and the Far East, hollowed out the domestic
+currency, and set the stage for the Bank Restriction crisis of February
+1797. When the Bank of England's physical gold reserves collapsed
+against a ten-fold circulation of paper notes, the British economy
+underwent a systemic \emph{clinamen}---a swerve into the flux of fiat
+abstraction. This groundlessness, extensively debated during the
+Bullionist Controversy, culminated in the 1816 Coinage Act's statutory
+establishment of the gold sovereign and the 1844 Bank Charter Act's
+enclosure of value within the ledger. We trace this entropic trajectory
+across the Atlantic to the American ``Crime of 1873'' and the 1896
+``Cross of Gold'' crusade, revealing a transatlantic monetary framework
+Blake first diagnosed in \emph{America A Prophecy}.
+
+To counter this macro-economic atomization, Blake developed his
+artisanal \emph{Fourfold Vision} as a systematic epistemology designed
+to rescue human valuation from the mechanistic paradigms of capitalist
+quantification. Blake's lifelong opposition to Newtonian ``Single
+Vision'' aligns with his structural critique of the reductive logic of
+monometallism. Where Newton's Mint fixed value within isolated metallic
+quanta, Blake asserted the qualitative depths of imaginative perception.
+His explicit marginalia against gold (``a guinea is more beautiful than
+the sun'' to a miser), his condemnation of ``allegoric riches,'' and his
+defense of Thomas Paine constitute a materialist indictment of the
+commodification of human experience. By analyzing the physical Mint
+alongside Los's spiritual forges as dual engines of socio-metaphysical
+reproduction---the former quantifying labor into universal equivalents,
+the latter transmuting material into the ``Human Form Divine'' through
+relief-etching---this manuscript repositions Blake as a foundational
+critic of financialized alienation. His prophetic stance bridges early
+industrial monetary policy with the Marxist critique of commodity
+fetishism, anticipating contemporary debates over fiat currencies
+unmoored from their human ground.
+\end{frame}
+
+\end{document}

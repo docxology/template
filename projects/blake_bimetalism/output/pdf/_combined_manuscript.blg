@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: _combined_manuscript.aux
+The style file: plainnat.bst
+Illegal, another \bibdata command---line 364 of file _combined_manuscript.aux
+ : \bibdata
+ :         {references}
+I'm skipping whatever remains of this command
+Database file #1: references.bib
+Warning--empty journal in thornton1802nature
+You've used 64 entries,
+            2773 wiz_defined-function locations,
+            906 strings with 12587 characters,
+and the built_in function-call counts, 20102 in all, are:
+= -- 1676
+> -- 677
+< -- 67
++ -- 266
+- -- 202
+* -- 1139
+:= -- 3238
+add.period$ -- 200
+call.type$ -- 64
+change.case$ -- 217
+chr.to.int$ -- 64
+cite$ -- 129
+duplicate$ -- 1234
+empty$ -- 2104
+format.name$ -- 272
+if$ -- 4229
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 95
+newline$ -- 335
+num.names$ -- 258
+pop$ -- 681
+preamble$ -- 1
+purify$ -- 195
+quote$ -- 0
+skip$ -- 806
+stack$ -- 0
+substring$ -- 329
+swap$ -- 75
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 489
+warning$ -- 1
+while$ -- 210
+width$ -- 0
+write$ -- 844
+(There was 1 error message)

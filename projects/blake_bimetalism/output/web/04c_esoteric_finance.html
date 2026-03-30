@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04c_esoteric_finance</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="esoteric-finance-blake-and-alexander-del-mar">Esoteric Finance:
+Blake and Alexander Del Mar</h1>
+<p>If William Blake provided the visionary, mythopoetic critique of
+18th-century monetary metaphysics, the late 19th-century historian
+Alexander Del Mar provided its rigorous historiographical counterpart.
+Del Mar’s <em>History of Monetary Systems</em> (1895) operates on a
+fundamental thesis that maps onto Blakean cosmology: that the right to
+coin money is a sovereign, communal prerogative (a state of Edenic or at
+least Beulah-like integration) that has been recurrently hijacked
+throughout history by private, atomizing mercantile interests (Urizen)
+<span class="citation"
+data-cites="delmar1895history">[@delmar1895history]</span>.</p>
+<h2 id="the-sacred-prerogative-of-issuance">The Sacred Prerogative of
+Issuance</h2>
+<p>For Del Mar, the “esoteric” aspect of finance is precisely this
+hidden historical struggle over the prerogative of issuance. When the
+state controls the money supply, value is derived from the <em>societal
+totality</em> (the Human Form Divine) and the collective needs of the
+people. When private banks (such as the Bank of England in 1797) or
+rigid metallic ratios (Newton in 1717, Liverpool in 1816) assume
+control, value is transferred to the dead material of the coin itself or
+the fictional ledger of the private creditor <span class="citation"
+data-cites="clapham1944bank">[@clapham1944bank]</span>. Del Mar writes
+extensively on the sacred, often solar and lunar origins of coinage in
+antiquity, viewing the bimetallic system not as an economic expedience,
+but as a degraded remnant of a dualistic religious system representing
+divine authority. The golden disc and the silver crescent encoded, in
+the earliest Mesopotamian and Egyptian monetary systems, the solar and
+lunar principles that governed all legitimate sovereignty—a thesis that
+reveals the transition from bimetallism to the gold standard not merely
+as a policy adjustment but as a metaphysical revolution: the
+displacement of a dualistic, syncretic cosmology by a monistic,
+reductionist one. This perspective illuminates a <em>generic</em>
+economic principle: every monetary regime encodes a specific theology of
+value.</p>
+<h2
+id="blakes-jerusalem-plate-10-and-the-architecture-of-enslavement">Blake’s
+Jerusalem Plate 10 and the Architecture of Enslavement</h2>
+<p>Blake recognized this identical usurpation with prophetic clarity.
+His condemnation of the Bank of England, the Mint, and the gold standard
+was rooted in his understanding that whoever controls the semiotics of
+value controls the human soul. Blake’s famous declaration:</p>
+<blockquote>
+<p>“I must Create a System, or be enslav’d by another Mans I will not
+Reason &amp; Compare: my business is to Create” (<em>Jerusalem</em>,
+Plate 10, lines 20–21; Erdman p. 153) <span class="citation"
+data-cites="erdman1988complete">[@erdman1988complete]</span></p>
+</blockquote>
+<p>is precisely this recognition that the <em>architecture</em> of
+representation determines the freedom or subjugation of human life. The
+“System” Blake must create is not merely a mythological schema but an
+entire alternative regime of valuation—one grounded in the irreducible
+particularity of creative labor rather than the abstract universality of
+the gold sovereign. When Del Mar catalogs the social consequences of the
+demonetization of silver—how the contraction of the monetary base
+enriched the creditor class while plunging the producing classes into
+deflationary poverty—he is documenting the literal effects of Urizen’s
+“brazen quadrant” upon the British and global economy <span
+class="citation"
+data-cites="delmar1885history">[@delmar1885history]</span>.</p>
+<h2
+id="the-1844-bank-charter-act-and-the-ledger-migration-of-spectral-value">The
+1844 Bank Charter Act and the Ledger Migration of Spectral Value</h2>
+<p>The culmination of this architectural subjugation occurred with the
+1844 Bank Charter Act (Peel’s Act). The fiercely contested debate
+between the Banking School and the Currency School was ultimately
+resolved when Parliament centralized all note issuance under the Bank of
+England’s strict monopoly, tying paper currency to a 100% gold reserve
+above a fixed fiduciary minimum. The Currency School theorists, acting
+as the ultimate architects of Urizenic geometry, believed they had
+finally imprisoned the chaos of economic swerve within the immutable
+predictability of the gold standard.</p>
+<p>However, by focusing on paper notes, Peel’s Act paradoxically ignored
+the explosive growth of bank deposits and ledger credit, which rapidly
+emerged to comprise 90% of the money supply in late 19th-century
+Britain. The “fictive” or “spectral value” against which Blake raged did
+not vanish; rather, the “ghosts” completely migrated out of the physical
+paper artifact and into the invisible, unregulated abstraction of the
+bank ledger. This endogenous expansion of invisible credit represents a
+profound esoteric mutation of the capitalist economy—a system sustained
+entirely by mathematical promises that periodically collapsed in
+late-century panics.</p>
+<h2 id="the-convergence-of-prophetic-and-historiographic-critique">The
+Convergence of Prophetic and Historiographic Critique</h2>
+<p>Both Blake and Del Mar understood that the true “alchemy” of money
+had been stolen from the domain of human creativity. The living,
+breathing economy of human interaction had been replaced by a spectral,
+numerical simulation engineered to perpetually enrich the creditor class
+at the direct expense of the producing masses. Reading Blake through the
+lens of esoteric finance elevates his poetic epics from obscure mystical
+allegories into profound critiques of modern central banking and
+financialized alienation <span class="citation"
+data-cites="poovey2008genres baucom2005specters">[@poovey2008genres;
+@baucom2005specters]</span>. Del Mar’s key historiographic insight—that
+the demonetization of silver was a deliberate political act designed to
+redistribute wealth upward—finds its mythopoetic expression in Blake’s
+<em>Jerusalem</em>, where the architects of financial enclosure are
+exposed as agents of Urizenic tyranny.</p>
+<p>By demanding in <em>Milton</em> that humanity “Leave counting Gold
+&amp; diamonds, for Gods eye delights in thee” (Plate 26, line 27;
+Erdman p. 121) <span class="citation"
+data-cites="erdman1988complete">[@erdman1988complete]</span>, Blake
+stands alongside Del Mar as a prophet declaring that the highest
+sovereign act is not the balancing of a metallic ratio, but the
+liberation of the human imagination from the ledger. Where Del Mar
+provides the forensic historiography, Blake provides the visionary
+horizon: together, they articulate a complete esoteric economics of
+human liberation.</p>
+</body>
+</html>

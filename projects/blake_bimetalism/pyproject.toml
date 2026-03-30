@@ -1,0 +1,54 @@
+# Blake and Bimetallism — Interdisciplinary Manuscript Project
+# Inherits workspace settings from root pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blake_bimetalism"
+version = "1.0.0"
+description = "William Blake and Bimetallism: Meta-stability and Nonduality in Poetics and Finance"
+authors = [
+    {name = "Daniel Friedman", email = "daniel@activeinference.institute"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib>=3.7.0",
+    "networkx>=3.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-timeout>=2.1.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+timeout = 10
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml
