@@ -45,6 +45,8 @@ from .platforms import (
     publish_to_zenodo,
 )
 
+calculate_complexity_score = calculate_metadata_complexity_score
+
 __all__ = [
     # Classes
     "PublicationMetadata",
@@ -69,6 +71,7 @@ __all__ = [
     "generate_publication_metrics",
     "create_repository_metadata",
     "calculate_metadata_complexity_score",
+    "calculate_complexity_score",
     # Dissemination
     "publish_to_zenodo",
     "prepare_arxiv_submission",

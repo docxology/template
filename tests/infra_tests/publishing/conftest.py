@@ -10,8 +10,8 @@ def zenodo_test_server():
     server = HTTPServer()
     server.start()
 
-    # Mock deposition creation endpoint
-    server.expect_request("/api/deposit/depositions", method="POST").respond_with_json(
+    # Mock deposition creation endpoint (client uses api_base_url + /deposit/depositions)
+    server.expect_request("/deposit/depositions", method="POST").respond_with_json(
         {
             "id": 12345,
             "links": {
@@ -29,7 +29,7 @@ def zenodo_test_server():
     )
 
     # Mock file upload endpoint for test.pdf
-    server.expect_request("/api/files/bucket123/test.pdf", method="PUT").respond_with_json(
+    server.expect_request("/files/bucket123/test.pdf", method="PUT").respond_with_json(
         {
             "key": "test.pdf",
             "mimetype": "application/pdf",
@@ -40,7 +40,7 @@ def zenodo_test_server():
     )
 
     # Mock file upload endpoint for paper.pdf (used in full workflow test)
-    server.expect_request("/api/files/bucket123/paper.pdf", method="PUT").respond_with_json(
+    server.expect_request("/files/bucket123/paper.pdf", method="PUT").respond_with_json(
         {
             "key": "paper.pdf",
             "mimetype": "application/pdf",
@@ -52,7 +52,7 @@ def zenodo_test_server():
 
     # Mock publish endpoint
     server.expect_request(
-        "/api/deposit/depositions/12345/actions/publish", method="POST"
+        "/deposit/depositions/12345/actions/publish", method="POST"
     ).respond_with_json(
         {
             "doi": "10.5281/zenodo.12345",

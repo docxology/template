@@ -110,6 +110,8 @@ dev = [
     "types-requests>=2.32.4.20260107",
     "types-pyyaml>=6.0.12.20250915",
     "black>=23.0",
+    # Code-health scanner (Python 3.11+ only; template still supports 3.10 for projects)
+    "desloppify @ git+https://github.com/peteromallet/desloppify.git; python_version >= '3.11'",
 ]
 
 [tool.uv]

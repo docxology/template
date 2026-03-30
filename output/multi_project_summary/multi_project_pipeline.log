@@ -876,3 +876,1805 @@ Directory structure:
 [2026-03-22 14:06:25] [INFO]   • JSON: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
 [2026-03-22 14:06:25] [INFO]   • MARKDOWN: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
 [2026-03-22 14:06:25] [INFO] 🎉 All projects completed successfully!
+
+======================================================================
+[2026-03-30 06:46:01] Multi-Project Pipeline Started
+======================================================================
+[2026-03-30 06:46:01] [INFO] Found 3 projects: blake_bimetalism, code_project, cognitive_case_diagrams
+[2026-03-30 06:46:01] [INFO] Executing core pipeline (no infra) for 3 projects
+[2026-03-30 06:46:01] [INFO] Skipping infrastructure tests (already run or disabled)
+[2026-03-30 06:46:01] [INFO] Project 1/3: blake_bimetalism
+[2026-03-30 06:46:01] [INFO] Starting: Pipeline execution for blake_bimetalism
+[2026-03-30 06:46:01] [INFO] Executing core pipeline for project 'blake_bimetalism'
+[2026-03-30 06:46:01] [INFO] 
+[2026-03-30 06:46:01] [INFO] [1/8] Clean Output Directories (12% complete)
+[2026-03-30 06:46:01] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-30 06:46:01] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:01] [INFO] Cleaning output directories...
+[2026-03-30 06:46:01] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-30 06:46:01] [INFO] Root output directory cleaned
+[2026-03-30 06:46:01] [INFO]   Cleaning projects/blake_bimetalism/output/...
+[2026-03-30 06:46:01] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-30 06:46:01] [INFO] Cleaned projects/blake_bimetalism/output/ (recreated subdirectories)
+[2026-03-30 06:46:01] [INFO]   Cleaning output/blake_bimetalism/...
+[2026-03-30 06:46:01] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-30 06:46:01] [INFO] Cleaned output/blake_bimetalism/ (recreated subdirectories)
+[2026-03-30 06:46:01] [INFO] Output directories cleaned for project 'blake_bimetalism' - fresh start
+[2026-03-30 06:46:01] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/blake_bimetalism/output/logs/pipeline.log
+[2026-03-30 06:46:01] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-30 06:46:01] [INFO] 
+[2026-03-30 06:46:01] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-30 06:46:01] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-30 06:46:01] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:01] [INFO] 
+[2026-03-30 06:46:01] [INFO] ==================================================
+[2026-03-30 06:46:01] [INFO] STAGE 00: Environment Setup (Project: blake_bimetalism)
+[2026-03-30 06:46:01] [INFO] ==================================================
+[2026-03-30 06:46:01] [INFO] Cleaning coverage database files...
+[2026-03-30 06:46:04] [INFO] Removed coverage files: .coverage.project, coverage_project.json
+[2026-03-30 06:46:04] [INFO] Coverage database cleanup completed
+[2026-03-30 06:46:04] [INFO] Python 3.12.11 available
+[2026-03-30 06:46:04] [INFO] Checking for uv package manager...
+[2026-03-30 06:46:04] [INFO] Workspace dependencies synced successfully with uv
+[2026-03-30 06:46:04] [INFO] All 2 build tools available
+[2026-03-30 06:46:04] [INFO] All 22 directories ready
+[2026-03-30 06:46:04] [INFO] All 4 required directories present
+[2026-03-30 06:46:04] [INFO] Discovering available projects...
+[2026-03-30 06:46:04] [INFO] Discovered 3 valid project(s):
+[2026-03-30 06:46:04] [INFO]   → blake_bimetalism: src, tests, scripts, manuscript
+[2026-03-30 06:46:04] [INFO]     Setting up: blake_bimetalism
+[2026-03-30 06:46:04] [INFO]     code_project: src, tests, scripts, manuscript
+[2026-03-30 06:46:04] [INFO]     cognitive_case_diagrams: src, tests, scripts, manuscript
+[2026-03-30 06:46:04] [INFO] Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)
+[2026-03-30 06:46:04] [INFO] 
+[2026-03-30 06:46:04] [INFO] ==================================================
+[2026-03-30 06:46:04] [INFO] Setup Summary
+[2026-03-30 06:46:04] [INFO] ==================================================
+[2026-03-30 06:46:04] [INFO] ✅ PASS: Python version
+[2026-03-30 06:46:04] [INFO] ✅ PASS: Dependencies
+[2026-03-30 06:46:04] [INFO] ✅ PASS: Build tools
+[2026-03-30 06:46:04] [INFO] ✅ PASS: Directory structure
+[2026-03-30 06:46:04] [INFO] ✅ PASS: Source structure
+[2026-03-30 06:46:04] [INFO] ✅ PASS: Project discovery
+[2026-03-30 06:46:04] [INFO] ✅ PASS: Environment variables
+[2026-03-30 06:46:04] [INFO] 
+✅ Environment setup complete - ready to proceed
+[2026-03-30 06:46:04] [INFO] ✓ Stage 2 completed successfully (3.4s)
+[2026-03-30 06:46:04] [INFO] 
+[2026-03-30 06:46:04] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-30 06:46:04] [INFO]   Elapsed: 3s | ETA: 5s
+[2026-03-30 06:46:04] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:05] [INFO] 
+[2026-03-30 06:46:05] [INFO] ==================================================
+[2026-03-30 06:46:05] [INFO] STAGE 01: Run Tests (Project: blake_bimetalism)
+[2026-03-30 06:46:05] [INFO] ==================================================
+[2026-03-30 06:46:05] [INFO] 
+[2026-03-30 06:46:05] [INFO] ==================================================
+[2026-03-30 06:46:05] [INFO] Phase 1/1: Project Tests (blake_bimetalism) (Only)
+[2026-03-30 06:46:05] [INFO] ==================================================
+[2026-03-30 06:46:05] [INFO] Cleaning coverage database files...
+[2026-03-30 06:46:07] [INFO] Coverage database cleanup completed
+[2026-03-30 06:46:07] [INFO] 
+  Running project tests for 'blake_bimetalism' (90% coverage threshold)...
+[2026-03-30 06:46:07] [INFO] Test path: /Users/4d/Documents/GitHub/template/projects/blake_bimetalism/tests
+[2026-03-30 06:46:07] [INFO] Coverage target: projects/blake_bimetalism/src (90% minimum)
+[2026-03-30 06:46:07] [INFO] 
+  Discovering project 'blake_bimetalism' tests...
+[2026-03-30 06:46:08] [INFO] Discovered 0 project 'blake_bimetalism' tests
+Running project tests for 'blake_bimetalism'
+============================= test session starts ==============================
+.......platform darwin -- Python 3.12.11, pytest-9.0.2, pluggy-1.6.0 -- /Users/4d/Documents/GitHub/template/.venv/bin/python3
+.cachedir: .pytest_cache
+rootdir: /Users/4d/Documents/GitHub/template/projects/blake_bimetalism
+.configfile: pyproject.toml
+........plugins: timeout-2.4.0, asyncio-1.3.0, pytest_httpserver-1.1.3, cov-7.0.0
+.timeout: 10.0s
+timeout method: signal
+timeout func_only: False
+.asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+...collecting ... collected 0 items / 1 error
+
+==================================== ERRORS ====================================
+.___________________ ERROR collecting tests/test_analysis.py ____________________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/blake_bimetalism/tests/test_analysis.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/blake_bimetalism/tests/test_analysis.py:9: in <module>
+...    from projects.blake_bimetalism.src.analysis import (
+...E   ModuleNotFoundError: No module named 'projects.blake_bimetalism.src.analysis'
+=========================== short test summary info ============================
+.ERROR projects/blake_bimetalism/tests/test_analysis.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+.=============================== 1 error in 0.11s ===============================
+[2026-03-30 06:46:09] [INFO] Running project tests for 'blake_bimetalism'
+[2026-03-30 06:46:10] [WARNING] No project coverage percentage found
+[2026-03-30 06:46:10] [WARNING] Project: All tests passed
+[2026-03-30 06:46:10] [INFO] Project test suite completed in 4.6s
+[2026-03-30 06:46:10] [INFO] Project tests passed
+[2026-03-30 06:46:10] [INFO] Test report saved: /Users/4d/Documents/GitHub/template/projects/blake_bimetalism/output/reports/test_results.json
+[2026-03-30 06:46:10] [INFO] Test summary saved: /Users/4d/Documents/GitHub/template/projects/blake_bimetalism/output/reports/test_results.md
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] ==================================================
+[2026-03-30 06:46:10] [INFO] Test Execution Summary
+[2026-03-30 06:46:10] [INFO] ==================================================
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] Infrastructure Results:
+[2026-03-30 06:46:10] [INFO]   ⏭ Skipped (not run in this execution)
+[2026-03-30 06:46:10] [INFO]   📊 Coverage: N/A (tests not executed)
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] Project Results:
+[2026-03-30 06:46:10] [INFO]   ✓ Passed: 0
+[2026-03-30 06:46:10] [INFO]   📊 Coverage: ❌ 0.0% (significantly below 90.0% threshold by 90.0%)
+[2026-03-30 06:46:10] [INFO]     📊 Project coverage is 90.0% below threshold
+[2026-03-30 06:46:10] [INFO]       • Run with --cov-report=json to enable file-level coverage suggestions
+[2026-03-30 06:46:10] [INFO]       • Target: Reach 90.0% coverage minimum
+[2026-03-30 06:46:10] [INFO]       • Run: pytest --cov-report=html && open htmlcov/index.html
+[2026-03-30 06:46:10] [INFO]   ⏱ Duration: 0s
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] ================================================================
+[2026-03-30 06:46:10] [INFO] Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)
+[2026-03-30 06:46:10] [INFO] Project:       ✓ PASSED (0/0 tests, 0.0% coverage)
+[2026-03-30 06:46:10] [INFO] ----------------------------------------------------------------
+[2026-03-30 06:46:10] [INFO] Total:         ✓ PASSED (0/0 tests)
+[2026-03-30 06:46:10] [INFO] Coverage:      Infrastructure: N/A | Project: 0.0%
+[2026-03-30 06:46:10] [INFO] Duration:      0s
+[2026-03-30 06:46:10] [INFO] ================================================================
+[2026-03-30 06:46:10] [INFO] All tests passed - ready for analysis
+[2026-03-30 06:46:10] [INFO] ✓ Stage 3 completed successfully (5.1s)
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-30 06:46:10] [INFO]   Elapsed: 8s | ETA: 8s
+[2026-03-30 06:46:10] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] ==================================================
+[2026-03-30 06:46:10] [INFO] STAGE 02: Run Analysis (Project: blake_bimetalism)
+[2026-03-30 06:46:10] [INFO] ==================================================
+[2026-03-30 06:46:10] [INFO] [STAGE-02] Discovering analysis scripts in projects/blake_bimetalism/...
+[2026-03-30 06:46:10] [INFO] Found: generate_figures.py (project: blake_bimetalism)
+[2026-03-30 06:46:10] [INFO] [STAGE-02] Executing analysis pipeline...
+[2026-03-30 06:46:10] [INFO]   [1/1] blake_bimetalism/generate_figures.py
+[2026-03-30 06:46:10] [INFO] 
+  Running: blake_bimetalism/generate_figures.py
+[2026-03-30 06:46:10] [INFO] Starting: Execute generate_figures.py
+Traceback (most recent call last):
+  File "/Users/4d/Documents/GitHub/template/projects/blake_bimetalism/scripts/generate_figures.py", line 8, in <module>
+    from infrastructure.core.logging.utils import get_logger
+ModuleNotFoundError: No module named 'infrastructure.core.logging.utils'
+[2026-03-30 06:46:10] [INFO] Completed: Execute generate_figures.py (0.1s)
+[2026-03-30 06:46:10] [ERROR] Script failed: generate_figures.py (exit code: 1)
+[2026-03-30 06:46:10] [INFO]   Troubleshooting:
+[2026-03-30 06:46:10] [INFO]     - Run script manually: python3 /Users/4d/Documents/GitHub/template/projects/blake_bimetalism/scripts/generate_figures.py
+[2026-03-30 06:46:10] [INFO]     - Check script syntax: python3 -m py_compile /Users/4d/Documents/GitHub/template/projects/blake_bimetalism/scripts/generate_figures.py
+[2026-03-30 06:46:10] [INFO]     - Verify dependencies: Check imports in generate_figures.py
+[2026-03-30 06:46:10] [INFO]     - Review script logs above for specific error details
+[2026-03-30 06:46:10] [INFO]     ✅ Completed in 0s
+[2026-03-30 06:46:10] [INFO]   Progress: 1/1 (100%) - Elapsed: 0s | ETA: 0s
+[2026-03-30 06:46:10] [ERROR] 
+1 script(s) failed:
+[2026-03-30 06:46:10] [ERROR]   Failed: generate_figures.py
+[2026-03-30 06:46:10] [INFO] 
+  Troubleshooting:
+[2026-03-30 06:46:10] [INFO]     - Review error messages above for each failed script
+[2026-03-30 06:46:10] [INFO]     - Run scripts individually to isolate issues
+[2026-03-30 06:46:10] [INFO]     - Check script dependencies and imports
+[2026-03-30 06:46:10] [INFO]     - Verify input data files exist if required
+[2026-03-30 06:46:10] [ERROR] 
+Analysis failed - fix issues and try again
+[2026-03-30 06:46:10] [ERROR] ❌ [STAGE_FAILED] ✗ Stage 4 failed
+[2026-03-30 06:46:10] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 4: Project Analysis — Check stage logs for details
+[2026-03-30 06:46:10] [ERROR] ❌ [PROJECT_FAILED] Project 'blake_bimetalism' failed — Check project logs for details
+[2026-03-30 06:46:10] [INFO] Completed: Pipeline execution for blake_bimetalism (8.9s)
+[2026-03-30 06:46:10] [INFO] Project 2/3: code_project
+[2026-03-30 06:46:10] [INFO] Starting: Pipeline execution for code_project
+[2026-03-30 06:46:10] [INFO] Executing core pipeline for project 'code_project'
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] [1/8] Clean Output Directories (12% complete)
+[2026-03-30 06:46:10] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-30 06:46:10] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:10] [INFO] Cleaning output directories...
+[2026-03-30 06:46:10] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-30 06:46:10] [INFO] Root output directory cleaned
+[2026-03-30 06:46:10] [INFO]   Cleaning projects/code_project/output/...
+[2026-03-30 06:46:10] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-30 06:46:10] [INFO] Cleaned projects/code_project/output/ (recreated subdirectories)
+[2026-03-30 06:46:10] [INFO]   Cleaning output/code_project/...
+[2026-03-30 06:46:10] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-30 06:46:10] [INFO] Cleaned output/code_project/ (recreated subdirectories)
+[2026-03-30 06:46:10] [INFO] Output directories cleaned for project 'code_project' - fresh start
+[2026-03-30 06:46:10] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log
+[2026-03-30 06:46:10] [INFO] ✓ Stage 1 completed successfully (0.1s)
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-30 06:46:10] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-30 06:46:10] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:10] [INFO] 
+[2026-03-30 06:46:10] [INFO] ==================================================
+[2026-03-30 06:46:10] [INFO] STAGE 00: Environment Setup (Project: code_project)
+[2026-03-30 06:46:10] [INFO] ==================================================
+[2026-03-30 06:46:10] [INFO] Cleaning coverage database files...
+[2026-03-30 06:46:12] [INFO] Coverage database cleanup completed
+[2026-03-30 06:46:12] [INFO] Python 3.12.11 available
+[2026-03-30 06:46:12] [INFO] Checking for uv package manager...
+[2026-03-30 06:46:12] [INFO] Workspace dependencies synced successfully with uv
+[2026-03-30 06:46:12] [INFO] All 2 build tools available
+[2026-03-30 06:46:12] [INFO] All 22 directories ready
+[2026-03-30 06:46:12] [INFO] All 4 required directories present
+[2026-03-30 06:46:12] [INFO] Discovering available projects...
+[2026-03-30 06:46:12] [INFO] Discovered 3 valid project(s):
+[2026-03-30 06:46:12] [INFO]     blake_bimetalism: src, tests, scripts, manuscript
+[2026-03-30 06:46:12] [INFO]   → code_project: src, tests, scripts, manuscript
+[2026-03-30 06:46:12] [INFO]     Setting up: code_project
+[2026-03-30 06:46:12] [INFO]     cognitive_case_diagrams: src, tests, scripts, manuscript
+[2026-03-30 06:46:12] [INFO] Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)
+[2026-03-30 06:46:12] [INFO] 
+[2026-03-30 06:46:12] [INFO] ==================================================
+[2026-03-30 06:46:12] [INFO] Setup Summary
+[2026-03-30 06:46:12] [INFO] ==================================================
+[2026-03-30 06:46:12] [INFO] ✅ PASS: Python version
+[2026-03-30 06:46:12] [INFO] ✅ PASS: Dependencies
+[2026-03-30 06:46:12] [INFO] ✅ PASS: Build tools
+[2026-03-30 06:46:12] [INFO] ✅ PASS: Directory structure
+[2026-03-30 06:46:12] [INFO] ✅ PASS: Source structure
+[2026-03-30 06:46:12] [INFO] ✅ PASS: Project discovery
+[2026-03-30 06:46:12] [INFO] ✅ PASS: Environment variables
+[2026-03-30 06:46:12] [INFO] 
+✅ Environment setup complete - ready to proceed
+[2026-03-30 06:46:12] [INFO] ✓ Stage 2 completed successfully (2.3s)
+[2026-03-30 06:46:12] [INFO] 
+[2026-03-30 06:46:12] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-30 06:46:12] [INFO]   Elapsed: 2s | ETA: 3s
+[2026-03-30 06:46:12] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:13] [INFO] 
+[2026-03-30 06:46:13] [INFO] ==================================================
+[2026-03-30 06:46:13] [INFO] STAGE 01: Run Tests (Project: code_project)
+[2026-03-30 06:46:13] [INFO] ==================================================
+[2026-03-30 06:46:13] [INFO] 
+[2026-03-30 06:46:13] [INFO] ==================================================
+[2026-03-30 06:46:13] [INFO] Phase 1/1: Project Tests (code_project) (Only)
+[2026-03-30 06:46:13] [INFO] ==================================================
+[2026-03-30 06:46:13] [INFO] Cleaning coverage database files...
+[2026-03-30 06:46:15] [INFO] Coverage database cleanup completed
+[2026-03-30 06:46:15] [INFO] 
+  Running project tests for 'code_project' (90% coverage threshold)...
+[2026-03-30 06:46:15] [INFO] Test path: /Users/4d/Documents/GitHub/template/projects/code_project/tests
+[2026-03-30 06:46:15] [INFO] Coverage target: projects/code_project/src (90% minimum)
+[2026-03-30 06:46:15] [INFO] 
+  Discovering project 'code_project' tests...
+[2026-03-30 06:46:17] [INFO] Discovered 39 project 'code_project' tests
+Running project tests for 'code_project'
+============================= test session starts ==============================
+.......platform darwin -- Python 3.12.11, pytest-9.0.2, pluggy-1.6.0 -- /Users/4d/Documents/GitHub/template/.venv/bin/python3
+.cachedir: .pytest_cache
+rootdir: /Users/4d/Documents/GitHub/template/projects/code_project
+.configfile: pyproject.toml
+........plugins: timeout-2.4.0, asyncio-1.3.0, pytest_httpserver-1.1.3, cov-7.0.0
+.asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+...collecting ... collected 39 items
+
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_simple_quadratic PASSED [  2%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_multidimensional_quadratic PASSED [  5%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_default_parameters PASSED [  7%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_dimension_mismatch_A PASSED [ 10%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_dimension_mismatch_b PASSED [ 12%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_zero_input PASSED [ 15%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_large_input PASSED [ 17%]
+.projects/code_project/tests/test_optimizer.py::TestQuadraticFunction::test_negative_input PASSED [ 20%]
+.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_simple_gradient PASSED [ 23%]
+.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_multidimensional_gradient PASSED [ 25%]
+.projects/code_project/tests/test_optimizer.py::TestComputeGradient::test_default_gradient PASSED [ 28%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_convergence_to_optimum PASSED [ 30%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_max_iterations_reached PASSED [ 33%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_already_converged PASSED [ 35%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_multidimensional_convergence PASSED [ 38%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_parameter_validation PASSED [ 41%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_invalid_initial_point PASSED [ 43%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_gradient_descent_performance PASSED [ 46%]
+.projects/code_project/tests/test_optimizer.py::TestGradientDescent::test_numerical_stability PASSED [ 48%]
+.projects/code_project/tests/test_optimizer.py::TestOptimizationResult::test_result_creation PASSED [ 51%]
+.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarks::test_gradient_descent_timing PASSED [ 53%]
+.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarks::test_function_evaluation_speed PASSED [ 56%]
+.projects/code_project/tests/test_optimizer.py::TestStabilityAnalysis::test_stability_analysis_execution PASSED [ 58%]
+.projects/code_project/tests/test_optimizer.py::TestStabilityAnalysis::test_stability_visualization PASSED [ 61%]
+.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarking::test_performance_benchmarking_execution PASSED [ 64%]
+.projects/code_project/tests/test_optimizer.py::TestPerformanceBenchmarking::test_performance_visualization PASSED [ 66%]
+.projects/code_project/tests/test_optimizer.py::TestAnalysisDashboard::test_dashboard_generation PASSED [ 69%]
+.projects/code_project/tests/test_optimizer.py::TestAnalysisDashboard::test_dashboard_with_analysis_data PASSED [ 71%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_returns_callable_pair PASSED [ 74%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_objective_matches_quadratic_function PASSED [ 76%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_gradient_matches_compute_gradient PASSED [ 79%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_usable_with_gradient_descent PASSED [ 82%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_with_default_params PASSED [ 84%]
+.projects/code_project/tests/test_optimizer.py::TestMakeQuadraticProblem::test_factory_multidimensional PASSED [ 87%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_returns_dict_with_expected_keys PASSED [ 89%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_objectives_decrease_toward_optimum PASSED [ 92%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_iterations_and_objectives_same_length PASSED [ 94%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_iterations_are_sequential PASSED [ 97%]
+.projects/code_project/tests/test_optimizer.py::TestSimulateTrajectory::test_default_params_produce_valid_trajectory PASSED [100%]
+
+================================ tests coverage ================================
+..______________ coverage: platform darwin, python 3.12.11-final-0 _______________
+
+Name                                     Stmts   Miss Branch BrPart   Cover   Missing
+-------------------------------------------------------------------------------------
+..projects/code_project/src/optimizer.py      87      2     32      2  96.64%   132-133, 231->234
+-------------------------------------------------------------------------------------
+.TOTAL                                       87      2     32      2  96.64%
+Coverage HTML written to dir htmlcov
+.Coverage JSON written to file coverage_project.json
+..Required test coverage of 90% reached. Total coverage: 96.64%
+.============================== 39 passed in 2.47s ==============================
+[2026-03-30 06:46:20] [INFO] Running project tests for 'code_project'
+[2026-03-30 06:46:20] [INFO] ✓ Found coverage: 96.6%
+[2026-03-30 06:46:20] [INFO] Project test suite completed in 7.1s
+[2026-03-30 06:46:20] [INFO] Project tests passed
+[2026-03-30 06:46:20] [INFO] Test report saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/test_results.json
+[2026-03-30 06:46:20] [INFO] Test summary saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/test_results.md
+[2026-03-30 06:46:20] [INFO] 
+[2026-03-30 06:46:20] [INFO] ==================================================
+[2026-03-30 06:46:20] [INFO] Test Execution Summary
+[2026-03-30 06:46:20] [INFO] ==================================================
+[2026-03-30 06:46:20] [INFO] 
+[2026-03-30 06:46:20] [INFO] Infrastructure Results:
+[2026-03-30 06:46:20] [INFO]   ⏭ Skipped (not run in this execution)
+[2026-03-30 06:46:20] [INFO]   📊 Coverage: N/A (tests not executed)
+[2026-03-30 06:46:20] [INFO] 
+[2026-03-30 06:46:20] [INFO] Project Results:
+[2026-03-30 06:46:20] [INFO]   ✓ Passed: 39
+[2026-03-30 06:46:20] [INFO]   📊 Coverage: ✓ 96.6% (meets 90.0% threshold)
+[2026-03-30 06:46:20] [INFO]   ⏱ Duration: 7s
+[2026-03-30 06:46:20] [INFO] 
+[2026-03-30 06:46:20] [INFO] ================================================================
+[2026-03-30 06:46:20] [INFO] Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)
+[2026-03-30 06:46:20] [INFO] Project:       ✓ PASSED (39/39 tests, 96.6% coverage)
+[2026-03-30 06:46:20] [INFO] ----------------------------------------------------------------
+[2026-03-30 06:46:20] [INFO] Total:         ✓ PASSED (39/39 tests)
+[2026-03-30 06:46:20] [INFO] Coverage:      Infrastructure: N/A | Project: 96.6%
+[2026-03-30 06:46:20] [INFO] Duration:      7s
+[2026-03-30 06:46:20] [INFO] ================================================================
+[2026-03-30 06:46:20] [INFO] All tests passed - ready for analysis
+[2026-03-30 06:46:20] [INFO] ✓ Stage 3 completed successfully (7.5s)
+[2026-03-30 06:46:20] [INFO] 
+[2026-03-30 06:46:20] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-30 06:46:20] [INFO]   Elapsed: 9s | ETA: 9s
+[2026-03-30 06:46:20] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:20] [INFO] 
+[2026-03-30 06:46:20] [INFO] ==================================================
+[2026-03-30 06:46:20] [INFO] STAGE 02: Run Analysis (Project: code_project)
+[2026-03-30 06:46:20] [INFO] ==================================================
+[2026-03-30 06:46:20] [INFO] [STAGE-02] Discovering analysis scripts in projects/code_project/...
+[2026-03-30 06:46:20] [INFO] Found: generate_api_docs.py (project: code_project)
+[2026-03-30 06:46:20] [INFO] Found: optimization_analysis.py (project: code_project)
+[2026-03-30 06:46:20] [INFO] [STAGE-02] Executing analysis pipeline...
+[2026-03-30 06:46:20] [INFO]   [1/2] code_project/generate_api_docs.py
+[2026-03-30 06:46:20] [INFO] 
+  Running: code_project/generate_api_docs.py
+[2026-03-30 06:46:20] [INFO] Starting: Execute generate_api_docs.py
+[2026-03-30 06:46:20] [INFO]     ✅ Completed in 0s
+[2026-03-30 06:46:20] [INFO]   [2/2] code_project/optimization_analysis.py
+[2026-03-30 06:46:20] [INFO] 
+  Running: code_project/optimization_analysis.py
+[2026-03-30 06:46:20] [INFO] Starting: Execute optimization_analysis.py
+[2026-03-30 06:46:20] [INFO] Starting optimization analysis pipeline
+[2026-03-30 06:46:20] [INFO] Project root: /Users/4d/Documents/GitHub/template/projects/code_project
+[2026-03-30 06:46:20] [INFO] Running system health check...
+[2026-03-30 06:46:20] [INFO] System health check passed
+[2026-03-30 06:46:20] [INFO] Checkpoint manager initialized
+[2026-03-30 06:46:20] [INFO] Performance monitoring available
+[2026-03-30 06:46:20] [INFO] Running convergence experiments...
+Running convergence experiments...
+Testing step size: 0.01
+[2026-03-30 06:46:20] [WARNING] Gradient descent did not converge within 100 iterations, final f(x)=-0.433010
+  Step sizes [███████░░░░░░░░░░░░░░░░░░░░░░░] 1/4 (25%) ETA: 0s  Converged: False, Final value: -0.4330
+Testing step size: 0.05
+[2026-03-30 06:46:20] [WARNING] Gradient descent did not converge within 100 iterations, final f(x)=-0.499982
+  Converged: False, Final value: -0.5000
+Testing step size: 0.1
+[2026-03-30 06:46:20] [WARNING] Gradient descent did not converge within 100 iterations, final f(x)=-0.500000
+  Converged: False, Final value: -0.5000
+Testing step size: 0.2
+[2026-03-30 06:46:20] [INFO] Gradient descent converged in 83 iterations, final f(x)=-0.500000
+  Step sizes [███████░░░░░░░░░░░░░░░░░░░░░░░] 1/4 (25%) ETA: 0s
+  Converged: True, Final value: -0.5000
+[2026-03-30 06:46:20] [INFO]   ✅ Completed: Step sizes (0s)
+[2026-03-30 06:46:20] [INFO] Generating traditional analysis outputs...
+[2026-03-30 06:46:20] [INFO] Generating convergence plot...
+[2026-03-30 06:46:20] [WARNING] Gradient descent did not converge within 110 iterations, final f(x)=-0.445209
+[2026-03-30 06:46:20] [WARNING] Gradient descent did not converge within 110 iterations, final f(x)=-0.499994
+[2026-03-30 06:46:20] [WARNING] Gradient descent did not converge within 110 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:20] [INFO] Gradient descent converged in 83 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Saved convergence plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_plot.png
+[2026-03-30 06:46:21] [INFO] Generating step size sensitivity plot...
+[2026-03-30 06:46:21] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.496673
+[2026-03-30 06:46:21] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.499978
+[2026-03-30 06:46:21] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Gradient descent converged in 360 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Gradient descent converged in 221 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Gradient descent converged in 175 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Gradient descent converged in 114 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Gradient descent converged in 83 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Gradient descent converged in 52 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Gradient descent converged in 37 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Saved step size sensitivity plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/step_size_sensitivity.png
+[2026-03-30 06:46:21] [INFO] Generating convergence rate comparison plot...
+[2026-03-30 06:46:21] [WARNING] Gradient descent did not converge within 100 iterations, final f(x)=-0.433010
+[2026-03-30 06:46:21] [WARNING] Gradient descent did not converge within 100 iterations, final f(x)=-0.499982
+[2026-03-30 06:46:21] [WARNING] Gradient descent did not converge within 100 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Gradient descent converged in 83 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:21] [INFO] Saved convergence rate comparison plot to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_rate_comparison.png
+[2026-03-30 06:46:21] [INFO] Generating algorithm complexity visualization...
+[2026-03-30 06:46:22] [INFO] Saved algorithm complexity visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/algorithm_complexity.png
+[2026-03-30 06:46:22] [INFO] Saving optimization results...
+[2026-03-30 06:46:22] [INFO] Saved results to: /Users/4d/Documents/GitHub/template/projects/code_project/output/data/optimization_results.csv
+[2026-03-30 06:46:22] [INFO] Running scientific analysis...
+[2026-03-30 06:46:22] [INFO] Numerical stability analysis...
+[2026-03-30 06:46:22] [INFO] Running numerical stability analysis...
+[2026-03-30 06:46:22] [INFO] Stability analysis complete - Score: 1.00
+[2026-03-30 06:46:22] [INFO] Saved stability report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/stability_analysis.json
+[2026-03-30 06:46:22] [INFO] Performance benchmarking...
+[2026-03-30 06:46:22] [INFO] Running performance benchmarking...
+[2026-03-30 06:46:22] [INFO] Performance benchmarking complete - Avg time: 0.000002s
+[2026-03-30 06:46:22] [INFO] Saved benchmark report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/performance_benchmark.json
+[2026-03-30 06:46:22] [INFO] Generating scientific visualizations...
+[2026-03-30 06:46:22] [INFO] Generating stability visualization...
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.443856
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 300 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 142 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 89 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 62 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.497388
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 286 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 135 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 85 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 59 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.499223
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 280 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 132 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 83 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 58 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.499978
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 263 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 124 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 78 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 55 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.499983
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 262 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 124 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 78 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 54 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.499655
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 276 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 131 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 82 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 57 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.498252
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 284 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 134 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 84 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 59 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.448173
+[2026-03-30 06:46:22] [WARNING] Gradient descent did not converge within 500 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 300 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 142 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 89 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 62 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Saved stability visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/stability_analysis.png
+[2026-03-30 06:46:22] [INFO] Generating benchmark visualization...
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 219 iterations, final f(x)=-0.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 222 iterations, final f(x)=-1.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 227 iterations, final f(x)=-2.500000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 230 iterations, final f(x)=-5.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 233 iterations, final f(x)=-10.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Gradient descent converged in 238 iterations, final f(x)=-25.000000
+[2026-03-30 06:46:22] [INFO] Saved benchmark visualization to: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/performance_benchmark.png
+[2026-03-30 06:46:22] [INFO] Generating analysis dashboard...
+[2026-03-30 06:46:22] [INFO] Generating analysis dashboard...
+[2026-03-30 06:46:22] [INFO] Saved analysis dashboard to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/analysis_dashboard.html
+[2026-03-30 06:46:22] [INFO] Registered figure with label: fig:convergence
+[2026-03-30 06:46:22] [INFO] Registered figure with label: fig:step_sensitivity
+[2026-03-30 06:46:22] [INFO] Registered figure with label: fig:convergence_rate
+[2026-03-30 06:46:22] [INFO] Registered figure with label: fig:complexity
+[2026-03-30 06:46:22] [INFO] Registered figure with label: fig:stability
+[2026-03-30 06:46:22] [INFO] Registered figure with label: fig:benchmark
+[2026-03-30 06:46:22] [INFO] Validating generated outputs...
+[2026-03-30 06:46:22] [INFO] Validating generated outputs...
+[2026-03-30 06:46:22] [INFO] Integrity check complete: 6/6 files passed
+[2026-03-30 06:46:22] [INFO] Output integrity validation passed
+[2026-03-30 06:46:22] [INFO] Saved validation report to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_validation.json
+[2026-03-30 06:46:22] [INFO] Generating publishing materials...
+[2026-03-30 06:46:22] [INFO] Publishing materials saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/citations
+[2026-03-30 06:46:22] [INFO] Publishing integration demonstration...
+[2026-03-30 06:46:22] [INFO] Publishing interfaces available: Zenodo, arXiv, GitHub releases
+[2026-03-30 06:46:22] [INFO] Publication metadata extracted and formatted
+[2026-03-30 06:46:22] [INFO] Pipeline completed with infrastructure support
+[2026-03-30 06:46:22] [INFO] Generated convergence plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_plot.png
+[2026-03-30 06:46:22] [INFO] Generated sensitivity plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/step_size_sensitivity.png
+[2026-03-30 06:46:22] [INFO] Generated rate comparison plot: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/convergence_rate_comparison.png
+[2026-03-30 06:46:22] [INFO] Generated complexity visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/algorithm_complexity.png
+[2026-03-30 06:46:22] [INFO] Generated data: /Users/4d/Documents/GitHub/template/projects/code_project/output/data/optimization_results.csv
+[2026-03-30 06:46:22] [INFO] Generated stability report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/stability_analysis.json
+[2026-03-30 06:46:22] [INFO] Generated benchmark report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/performance_benchmark.json
+[2026-03-30 06:46:22] [INFO] Generated stability visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/stability_analysis.png
+[2026-03-30 06:46:22] [INFO] Generated benchmark visualization: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures/performance_benchmark.png
+[2026-03-30 06:46:22] [INFO] Generated analysis dashboard: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/analysis_dashboard.html
+[2026-03-30 06:46:22] [INFO] Generated validation report: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_validation.json
+[2026-03-30 06:46:22] [INFO] Generated publishing materials and citations
+[2026-03-30 06:46:22] [INFO] Optimization analysis pipeline completed successfully
+[2026-03-30 06:46:22] [INFO] Completed: Execute optimization_analysis.py (2.2s)
+[2026-03-30 06:46:22] [INFO]     ✅ Completed in 2s
+[2026-03-30 06:46:22] [INFO]   Progress: 2/2 (100%) - Elapsed: 2s | ETA: 0s
+[2026-03-30 06:46:22] [INFO] Analysis scripts completed: 2/2 (code_project/generate_api_docs.py, code_project/optimization_analysis.py)
+[2026-03-30 06:46:22] [INFO] [STAGE-02] Verifying analysis outputs for projects/code_project/...
+[2026-03-30 06:46:22] [INFO] Output directory has 7 file(s): figures
+[2026-03-30 06:46:22] [INFO] Output directory has 1 file(s): data
+[2026-03-30 06:46:22] [INFO] Analysis complete - ready for PDF rendering
+[2026-03-30 06:46:22] [INFO] ✓ Stage 4 completed successfully (2.5s)
+[2026-03-30 06:46:22] [INFO] 
+[2026-03-30 06:46:22] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-03-30 06:46:22] [INFO]   Elapsed: 12s | ETA: 7s
+[2026-03-30 06:46:22] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:46:22] [INFO] 
+[2026-03-30 06:46:22] [INFO] ==================================================
+[2026-03-30 06:46:22] [INFO] STAGE 03: Render PDF (Project: code_project)
+[2026-03-30 06:46:22] [INFO] ==================================================
+[2026-03-30 06:46:22] [INFO] Executing PDF rendering pipeline for project 'code_project'...
+[2026-03-30 06:46:22] [INFO] Running pre-flight LaTeX package validation...
+[2026-03-30 06:46:22] [INFO] Validating 12 required and 11 optional LaTeX packages...
+[2026-03-30 06:46:25] [INFO] ✓ All LaTeX packages available
+[2026-03-30 06:46:25] [INFO] Verifying figures from analysis stage...
+[2026-03-30 06:46:25] [INFO] Found 6 figure(s) in figures/
+[2026-03-30 06:46:25] [INFO]   Found figures: algorithm_complexity.png, convergence_plot.png, convergence_rate_comparison.png
+[2026-03-30 06:46:25] [INFO]   ... and 3 more
+[2026-03-30 06:46:25] [INFO] Discovered 6 manuscript file(s):
+[2026-03-30 06:46:25] [INFO]   Main sections (5):
+[2026-03-30 06:46:25] [INFO]     • 00_abstract.md
+[2026-03-30 06:46:25] [INFO]     • 01_introduction.md
+[2026-03-30 06:46:25] [INFO]     • 02_methodology.md
+[2026-03-30 06:46:25] [INFO]     • 03_results.md
+[2026-03-30 06:46:25] [INFO]     • 04_conclusion.md
+[2026-03-30 06:46:25] [INFO]   Supplemental (1):
+[2026-03-30 06:46:25] [INFO]     • SYNTAX.md
+[2026-03-30 06:46:25] [INFO] 
+============================================================
+[2026-03-30 06:46:25] [INFO] MANUSCRIPT COMPOSITION - Project: code_project
+[2026-03-30 06:46:25] [INFO] ============================================================
+[2026-03-30 06:46:25] [INFO] Markdown sections (6):
+[2026-03-30 06:46:25] [INFO]   • 00_abstract.md                           (   2.2 KB)
+[2026-03-30 06:46:25] [INFO]   • 01_introduction.md                       (   3.8 KB)
+[2026-03-30 06:46:25] [INFO]   • 02_methodology.md                        (   4.7 KB)
+[2026-03-30 06:46:25] [INFO]   • 03_results.md                            (  11.4 KB)
+[2026-03-30 06:46:25] [INFO]   • 04_conclusion.md                         (   4.4 KB)
+[2026-03-30 06:46:25] [INFO]   • SYNTAX.md                                (   3.1 KB)
+[2026-03-30 06:46:25] [INFO]   Total markdown:                          (  29.7 KB)
+[2026-03-30 06:46:25] [INFO] ============================================================
+
+[2026-03-30 06:46:25] [INFO] Initialized RenderManager from infrastructure.rendering
+[2026-03-30 06:46:25] [INFO]   [1/6] 00_abstract.md
+[2026-03-30 06:46:25] [INFO] Rendering Markdown file: 00_abstract.md
+[2026-03-30 06:46:25] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/00_abstract.md
+[2026-03-30 06:46:26] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/00_abstract_slides.tex with xelatex
+[2026-03-30 06:46:28] [INFO] LaTeX compilation completed in 2.54s
+[2026-03-30 06:46:28] [INFO] Generated beamer slides: 00_abstract_slides.pdf
+[2026-03-30 06:46:28] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/00_abstract.md
+[2026-03-30 06:46:28] [INFO] Successfully rendered 2 format(s) for 00_abstract.md
+[2026-03-30 06:46:28] [INFO] Generated: 00_abstract_slides.pdf
+[2026-03-30 06:46:28] [INFO] Generated: 00_abstract.html
+[2026-03-30 06:46:28] [INFO]     ✅ Completed in 3s
+[2026-03-30 06:46:28] [INFO]   [2/6] 01_introduction.md
+[2026-03-30 06:46:28] [INFO] Rendering Markdown file: 01_introduction.md
+[2026-03-30 06:46:28] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/01_introduction.md
+[2026-03-30 06:46:28] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/01_introduction_slides.tex with xelatex
+[2026-03-30 06:46:31] [INFO] LaTeX compilation completed in 2.31s
+[2026-03-30 06:46:31] [INFO] Generated beamer slides: 01_introduction_slides.pdf
+[2026-03-30 06:46:31] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/01_introduction.md
+[2026-03-30 06:46:31] [INFO] Successfully rendered 2 format(s) for 01_introduction.md
+[2026-03-30 06:46:31] [INFO] Generated: 01_introduction_slides.pdf
+[2026-03-30 06:46:31] [INFO] Generated: 01_introduction.html
+[2026-03-30 06:46:31] [INFO]     ✅ Completed in 2s
+[2026-03-30 06:46:31] [INFO]   [3/6] 02_methodology.md
+[2026-03-30 06:46:31] [INFO] Rendering Markdown file: 02_methodology.md
+[2026-03-30 06:46:31] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/02_methodology.md
+[2026-03-30 06:46:31] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/02_methodology_slides.tex with xelatex
+[2026-03-30 06:46:33] [INFO] LaTeX compilation completed in 2.28s
+[2026-03-30 06:46:33] [INFO] Generated beamer slides: 02_methodology_slides.pdf
+[2026-03-30 06:46:33] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/02_methodology.md
+[2026-03-30 06:46:33] [INFO] Successfully rendered 2 format(s) for 02_methodology.md
+[2026-03-30 06:46:33] [INFO] Generated: 02_methodology_slides.pdf
+[2026-03-30 06:46:33] [INFO] Generated: 02_methodology.html
+[2026-03-30 06:46:33] [INFO]     ✅ Completed in 2s
+[2026-03-30 06:46:33] [INFO]   [4/6] 03_results.md
+[2026-03-30 06:46:33] [INFO] Rendering Markdown file: 03_results.md
+[2026-03-30 06:46:33] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/03_results.md
+[2026-03-30 06:46:33] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_results_slides.tex with xelatex
+[2026-03-30 06:46:41] [INFO] LaTeX compilation completed in 7.47s
+[2026-03-30 06:46:41] [INFO] Generated beamer slides: 03_results_slides.pdf
+[2026-03-30 06:46:41] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/03_results.md
+[2026-03-30 06:46:41] [INFO] Successfully rendered 2 format(s) for 03_results.md
+[2026-03-30 06:46:41] [INFO] Generated: 03_results_slides.pdf
+[2026-03-30 06:46:41] [INFO] Generated: 03_results.html
+[2026-03-30 06:46:41] [INFO]     ✅ Completed in 8s
+[2026-03-30 06:46:41] [INFO]   [5/6] 04_conclusion.md
+[2026-03-30 06:46:41] [INFO] Rendering Markdown file: 04_conclusion.md
+[2026-03-30 06:46:41] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/04_conclusion.md
+[2026-03-30 06:46:41] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/04_conclusion_slides.tex with xelatex
+[2026-03-30 06:46:43] [INFO] LaTeX compilation completed in 2.18s
+[2026-03-30 06:46:43] [INFO] Generated beamer slides: 04_conclusion_slides.pdf
+[2026-03-30 06:46:43] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/04_conclusion.md
+[2026-03-30 06:46:43] [INFO] Successfully rendered 2 format(s) for 04_conclusion.md
+[2026-03-30 06:46:43] [INFO] Generated: 04_conclusion_slides.pdf
+[2026-03-30 06:46:43] [INFO] Generated: 04_conclusion.html
+[2026-03-30 06:46:43] [INFO]     ✅ Completed in 2s
+[2026-03-30 06:46:43] [INFO]   [6/6] SYNTAX.md
+[2026-03-30 06:46:43] [INFO] Rendering Markdown file: SYNTAX.md
+[2026-03-30 06:46:43] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/SYNTAX.md
+[2026-03-30 06:46:44] [INFO] Compiling /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/SYNTAX_slides.tex with xelatex
+[2026-03-30 06:46:46] [INFO] LaTeX compilation completed in 2.39s
+[2026-03-30 06:46:46] [INFO] Generated beamer slides: SYNTAX_slides.pdf
+[2026-03-30 06:46:46] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/SYNTAX.md
+[2026-03-30 06:46:46] [INFO] Successfully rendered 2 format(s) for SYNTAX.md
+[2026-03-30 06:46:46] [INFO] Generated: SYNTAX_slides.pdf
+[2026-03-30 06:46:46] [INFO] Generated: SYNTAX.html
+[2026-03-30 06:46:46] [INFO]     ✅ Completed in 2s
+[2026-03-30 06:46:46] [INFO] 
+============================================================
+[2026-03-30 06:46:46] [INFO] Generating combined PDF manuscript...
+[2026-03-30 06:46:46] [INFO] Rendering combined PDF from 6 files...
+[2026-03-30 06:46:46] [INFO] 
+============================================================
+[2026-03-30 06:46:46] [INFO] COMBINED MANUSCRIPT RENDERING
+[2026-03-30 06:46:46] [INFO] ============================================================
+[2026-03-30 06:46:46] [INFO] Combining 6 section(s):
+[2026-03-30 06:46:46] [INFO]   [ 1/6] 00_abstract.md                           (   2.2 KB)
+[2026-03-30 06:46:46] [INFO]   [ 2/6] 01_introduction.md                       (   3.8 KB)
+[2026-03-30 06:46:46] [INFO]   [ 3/6] 02_methodology.md                        (   4.7 KB)
+[2026-03-30 06:46:46] [INFO]   [ 4/6] 03_results.md                            (  11.4 KB)
+[2026-03-30 06:46:46] [INFO]   [ 5/6] 04_conclusion.md                         (   4.4 KB)
+[2026-03-30 06:46:46] [INFO]   [ 6/6] SYNTAX.md                                (   3.1 KB)
+[2026-03-30 06:46:46] [INFO]   Total input size:                                (  29.7 KB)
+[2026-03-30 06:46:46] [INFO] ============================================================
+
+[2026-03-30 06:46:46] [INFO] Converting combined markdown to LaTeX...
+[2026-03-30 06:46:47] [INFO] ✓ Disabled lmodern package to prevent XeLaTeX font conflicts
+[2026-03-30 06:46:47] [INFO] Fixed 6 figure path(s)
+[2026-03-30 06:46:47] [INFO] ✓ Extracted preamble from preamble.md
+[2026-03-30 06:46:47] [INFO] ✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}
+[2026-03-30 06:46:47] [INFO] ✓ Inserted \bibliography{references} before \end{document}
+[2026-03-30 06:46:47] [INFO] ✓ Inserted early \bibdata hook for .aux buffer safety
+[2026-03-30 06:46:47] [INFO] Verifying 6 figure reference(s)...
+[2026-03-30 06:46:47] [INFO]   Found: 6/6 figures
+[2026-03-30 06:46:47] [INFO] Rendering combined manuscript to PDF: code_project_combined.pdf
+[2026-03-30 06:46:47] [INFO]   Source files: 6
+[2026-03-30 06:46:47] [INFO]   Bibliography: references.bib
+[2026-03-30 06:46:47] [INFO]   LaTeX compilation pass 1/4...
+[2026-03-30 06:46:50] [INFO]   Bibliography processing...
+[2026-03-30 06:46:50] [INFO] Processing bibliography with bibtex...
+[2026-03-30 06:47:01] [INFO] 
+Successfully combined 6 sections
+[2026-03-30 06:47:01] [INFO]    Output: code_project_combined.pdf
+[2026-03-30 06:47:01] [INFO]    Size: 1678.3 KB (1.64 MB)
+[2026-03-30 06:47:01] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/pdf
+[2026-03-30 06:47:01] [INFO]    Duration: 14.82 seconds
+[2026-03-30 06:47:01] [INFO] ✅ Generated combined PDF: code_project_combined.pdf
+[2026-03-30 06:47:01] [INFO] 
+============================================================
+[2026-03-30 06:47:01] [INFO] Generating combined HTML manuscript...
+[2026-03-30 06:47:01] [INFO] Rendering combined HTML from 6 files...
+[2026-03-30 06:47:01] [INFO] 
+============================================================
+[2026-03-30 06:47:01] [INFO] COMBINED HTML RENDERING
+[2026-03-30 06:47:01] [INFO] ============================================================
+[2026-03-30 06:47:01] [INFO] Combining 6 section(s):
+[2026-03-30 06:47:01] [INFO]   [ 1/6] 00_abstract.md                           (   2.2 KB)
+[2026-03-30 06:47:01] [INFO]   [ 2/6] 01_introduction.md                       (   3.8 KB)
+[2026-03-30 06:47:01] [INFO]   [ 3/6] 02_methodology.md                        (   4.7 KB)
+[2026-03-30 06:47:01] [INFO]   [ 4/6] 03_results.md                            (  11.4 KB)
+[2026-03-30 06:47:01] [INFO]   [ 5/6] 04_conclusion.md                         (   4.4 KB)
+[2026-03-30 06:47:01] [INFO]   [ 6/6] SYNTAX.md                                (   3.1 KB)
+[2026-03-30 06:47:01] [INFO]   Total input size:                                (  29.7 KB)
+[2026-03-30 06:47:01] [INFO] ============================================================
+
+[2026-03-30 06:47:01] [INFO] Converting combined markdown to HTML...
+[2026-03-30 06:47:02] [INFO] ✓ Embedded CSS styling in index.html
+[2026-03-30 06:47:02] [INFO] ✅ Generated combined HTML: index.html
+[2026-03-30 06:47:02] [INFO] 
+Rendering Summary:
+[2026-03-30 06:47:02] [INFO]   Individual files processed: 6
+[2026-03-30 06:47:02] [INFO]   Markdown files: 6
+[2026-03-30 06:47:02] [INFO] 
+============================================================
+[2026-03-30 06:47:02] [INFO] RENDERING RESULTS SUMMARY
+[2026-03-30 06:47:02] [INFO] ============================================================
+[2026-03-30 06:47:02] [INFO] Project: code_project
+[2026-03-30 06:47:02] [INFO] 
+📕 Combined Manuscript PDF:
+[2026-03-30 06:47:02] [INFO]    code_project_combined.pdf                  1678.3 KB
+[2026-03-30 06:47:02] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/pdf/code_project_combined.pdf
+[2026-03-30 06:47:02] [INFO] 
+🌐 Combined Manuscript HTML:
+[2026-03-30 06:47:02] [INFO]    index.html                                   67.1 KB
+[2026-03-30 06:47:02] [INFO]    Location: /Users/4d/Documents/GitHub/template/projects/code_project/output/web/index.html
+[2026-03-30 06:47:02] [INFO] 
+🌐 Web Outputs (6):
+[2026-03-30 06:47:02] [INFO]    00_abstract.html                              6.3 KB
+[2026-03-30 06:47:02] [INFO]    01_introduction.html                          8.6 KB
+[2026-03-30 06:47:02] [INFO]    02_methodology.html                          10.3 KB
+[2026-03-30 06:47:02] [INFO]    03_results.html                              22.1 KB
+[2026-03-30 06:47:02] [INFO]    04_conclusion.html                            9.2 KB
+[2026-03-30 06:47:02] [INFO]    SYNTAX.html                                  15.9 KB
+[2026-03-30 06:47:02] [INFO] 
+📊 Presentation Slides (6):
+[2026-03-30 06:47:02] [INFO]    00_abstract_slides.pdf                       17.8 KB
+[2026-03-30 06:47:02] [INFO]    01_introduction_slides.pdf                   29.8 KB
+[2026-03-30 06:47:02] [INFO]    02_methodology_slides.pdf                    40.3 KB
+[2026-03-30 06:47:02] [INFO]    03_results_slides.pdf                      1595.5 KB
+[2026-03-30 06:47:02] [INFO]    04_conclusion_slides.pdf                     27.9 KB
+[2026-03-30 06:47:02] [INFO]    SYNTAX_slides.pdf                            34.8 KB
+[2026-03-30 06:47:02] [INFO] 
+📦 Total Output Size: 1745.4 KB (1.70 MB)
+[2026-03-30 06:47:02] [INFO] ============================================================
+
+[2026-03-30 06:47:02] [INFO] PDF rendering pipeline completed
+[2026-03-30 06:47:02] [INFO] Verifying PDF outputs...
+[2026-03-30 06:47:02] [INFO] Generated 1 PDF file(s)
+[2026-03-30 06:47:02] [INFO]   📕 code_project_combined.pdf (1.64 MB) ✓
+[2026-03-30 06:47:02] [INFO] 
+✅ Bibliography file found and will be processed
+[2026-03-30 06:47:02] [INFO] 
+✅ Combined manuscript PDF successfully generated!
+[2026-03-30 06:47:02] [INFO]   File size: 1.64 MB
+[2026-03-30 06:47:02] [INFO]   Valid PDFs: 1/1
+[2026-03-30 06:47:02] [INFO] PDF rendering complete - ready for validation
+[2026-03-30 06:47:02] [INFO] ✓ Stage 5 completed successfully (39.8s)
+[2026-03-30 06:47:02] [INFO] 
+[2026-03-30 06:47:02] [INFO] [6/8] Output Validation (75% complete)
+[2026-03-30 06:47:02] [INFO]   Elapsed: 52s | ETA: 17s
+[2026-03-30 06:47:02] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:47:02] [INFO] 
+[2026-03-30 06:47:02] [INFO] ==================================================
+[2026-03-30 06:47:02] [INFO] STAGE 04: Validate Output (Project: code_project)
+[2026-03-30 06:47:02] [INFO] ==================================================
+[2026-03-30 06:47:02] [INFO]   [1/2] Running PDF validation...
+[2026-03-30 06:47:02] [INFO] 
+  Validating PDF files...
+[2026-03-30 06:47:02] [INFO] PDF valid: code_project_combined.pdf (1718564 bytes)
+[2026-03-30 06:47:02] [INFO]   [1/2] PDF validation: ✅ PASSED
+[2026-03-30 06:47:02] [INFO]   [2/2] Running Markdown validation...
+[2026-03-30 06:47:02] [INFO] 
+  Validating markdown files...
+[2026-03-30 06:47:02] [INFO] Found 9 markdown file(s)
+[2026-03-30 06:47:02] [INFO] Running markdown validation...
+[2026-03-30 06:47:02] [INFO]   Found 9 validation note(s):
+[2026-03-30 06:47:02] [INFO]     • Non-informative link text for https://github.com/docxology/template in projects/code_project/manuscript/00_abstract.md; replace with descriptive text
+[2026-03-30 06:47:02] [INFO]     • Non-informative link text for https://github.com/docxology/template in projects/code_project/manuscript/01_introduction.md; replace with descriptive text
+[2026-03-30 06:47:02] [INFO]     • Non-informative link text for https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py in projects/code_project/manuscript/02_methodology.md; replace with descriptive text
+[2026-03-30 06:47:02] [INFO]     • Non-informative link text for https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138 in projects/code_project/manuscript/02_methodology.md; replace with descriptive text
+[2026-03-30 06:47:02] [INFO]     • Non-informative link text for https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py in projects/code_project/manuscript/02_methodology.md; replace with descriptive text
+[2026-03-30 06:47:02] [INFO]     ... and 4 more
+[2026-03-30 06:47:02] [INFO]   (Markdown validation notes are non-critical)
+[2026-03-30 06:47:02] [INFO]   [2/2] Markdown validation: ✅ PASSED
+[2026-03-30 06:47:02] [INFO] 
+  Verifying output structure...
+[2026-03-30 06:47:02] [INFO] Output structure is valid
+[2026-03-30 06:47:02] [INFO] 
+  Validating figure registry...
+[2026-03-30 06:47:02] [INFO] Figure registry loaded: 6 figure(s)
+[2026-03-30 06:47:02] [INFO] All 6 figure references verified
+[2026-03-30 06:47:02] [INFO] 
+  Generating validation report...
+[2026-03-30 06:47:02] [INFO] Validation reports saved: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/validation_report.json, /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/validation_report.md
+[2026-03-30 06:47:02] [INFO] 
+============================================================
+[2026-03-30 06:47:02] [INFO] VALIDATION SUMMARY
+[2026-03-30 06:47:02] [INFO] ============================================================
+[2026-03-30 06:47:02] [INFO] Project: code_project
+[2026-03-30 06:47:02] [INFO] Timestamp: 2026-03-30 06:47:02
+[2026-03-30 06:47:02] [INFO] 
+[2026-03-30 06:47:02] [INFO] Individual Check Results:
+[2026-03-30 06:47:02] [INFO]   ✅ PASS: PDF validation
+[2026-03-30 06:47:02] [INFO]   ✅ PASS: Markdown validation
+[2026-03-30 06:47:02] [INFO]   ✅ PASS: Output structure
+[2026-03-30 06:47:02] [INFO]   ✅ PASS: Figure registry
+[2026-03-30 06:47:02] [INFO] 
+[2026-03-30 06:47:02] [INFO] Output Structure Status:
+[2026-03-30 06:47:02] [INFO]   ✅ Output directory structure is valid
+[2026-03-30 06:47:02] [INFO] 
+[2026-03-30 06:47:02] [INFO] ============================================================
+[2026-03-30 06:47:02] [INFO] ✅ VALIDATION COMPLETE - All checks passed!
+[2026-03-30 06:47:02] [INFO]   → Pipeline can proceed to next stage
+[2026-03-30 06:47:03] [INFO] ✓ Stage 6 completed successfully (0.4s)
+[2026-03-30 06:47:03] [INFO] 
+[2026-03-30 06:47:03] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-03-30 06:47:03] [INFO]   Elapsed: 52s | ETA: 7s
+[2026-03-30 06:47:03] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:47:03] [INFO] Running output copying...
+[2026-03-30 06:47:03] [INFO] 
+[2026-03-30 06:47:03] [INFO] ==================================================
+[2026-03-30 06:47:03] [INFO] STAGE 05: Copy Outputs (Project: code_project)
+[2026-03-30 06:47:03] [INFO] ==================================================
+[2026-03-30 06:47:03] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-30 06:47:03] [INFO] Root output directory cleaned
+[2026-03-30 06:47:03] [INFO] Cleaning output directory...
+[2026-03-30 06:47:03] [INFO] Output directory cleaned
+[2026-03-30 06:47:03] [INFO] Copying all outputs for project 'code_project'...
+[2026-03-30 06:47:03] [INFO] Recursively copied project/output/ directory
+[2026-03-30 06:47:03] [INFO]   pdf/: 10 file(s)
+[2026-03-30 06:47:03] [INFO]   web/: 8 file(s)
+[2026-03-30 06:47:03] [INFO]   slides/: 48 file(s)
+[2026-03-30 06:47:03] [INFO]   figures/: 7 file(s)
+[2026-03-30 06:47:03] [INFO]   data/: 1 file(s)
+[2026-03-30 06:47:03] [INFO]   reports/: 8 file(s)
+[2026-03-30 06:47:03] [INFO]   simulations/: 0 file(s)
+[2026-03-30 06:47:03] [INFO]   llm/: 0 file(s)
+[2026-03-30 06:47:03] [INFO]   Found 1 log file(s) in logs/
+[2026-03-30 06:47:03] [INFO]   logs/: 1 file(s)
+[2026-03-30 06:47:03] [INFO] Copied combined PDF to root (1.64 MB)
+[2026-03-30 06:47:03] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/code_project/code_project_combined.pdf (1,718,564 bytes)
+[2026-03-30 06:47:03] [INFO] Validating copied outputs...
+[2026-03-30 06:47:03] [INFO] Combined PDF valid (1.64 MB)
+[2026-03-30 06:47:03] [INFO] pdf/ valid (10 files, 1.82 MB)
+[2026-03-30 06:47:03] [INFO] web/ valid (8 files, 0.17 MB)
+[2026-03-30 06:47:03] [INFO] slides/ valid (48 files, 2.20 MB)
+[2026-03-30 06:47:03] [INFO] figures/ valid (7 files, 1.53 MB)
+[2026-03-30 06:47:03] [INFO] data/ valid (1 files, 0.00 MB)
+[2026-03-30 06:47:03] [INFO] reports/ valid (8 files, 0.01 MB)
+[2026-03-30 06:47:03] [INFO] logs/ valid (1 files, 0.00 MB)
+[2026-03-30 06:47:03] [INFO] 
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: /Users/4d/Documents/GitHub/template/output/code_project
+
+Total Files: 83
+Total Size: 5.73 MB
+
+Files by Category:
+  • pdf: 10 files (1.82 MB)
+  • web: 8 files (0.17 MB)
+  • slides: 48 files (2.20 MB)
+  • figures: 7 files (1.53 MB)
+  • data: 1 files (0.00 MB)
+  • reports: 8 files (0.01 MB)
+  • logs: 1 files (0.00 MB)
+
+Largest Files:
+  • code_project_combined.pdf: 1.64 MB (pdf)
+  • 03_results_slides.pdf: 1.56 MB (slides)
+  • algorithm_complexity.png: 0.35 MB (figures)
+  • convergence_plot.png: 0.30 MB (figures)
+  • convergence_rate_comparison.png: 0.28 MB (figures)
+
+File Types:
+  • .log: 9 file(s)
+  • .html: 8 file(s)
+  • .aux: 7 file(s)
+  • .pdf: 7 file(s)
+  • .tex: 7 file(s)
+  • .toc: 7 file(s)
+  • .snm: 6 file(s)
+  • .nav: 6 file(s)
+  • .vrb: 6 file(s)
+  • .png: 6 file(s)
+
+[2026-03-30 06:47:03] [INFO] Detailed output statistics saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_statistics.txt
+[2026-03-30 06:47:03] [INFO] Output statistics JSON saved to: /Users/4d/Documents/GitHub/template/projects/code_project/output/reports/output_statistics.json
+[2026-03-30 06:47:03] [INFO] 
+============================================================
+[2026-03-30 06:47:03] [INFO] Output Copying Summary
+[2026-03-30 06:47:03] [INFO] ============================================================
+[2026-03-30 06:47:03] [INFO] 
+Output directory: /Users/4d/Documents/GitHub/template/output/code_project
+[2026-03-30 06:47:03] [INFO] 
+Files copied by directory:
+[2026-03-30 06:47:03] [INFO]   • PDF files: 10
+[2026-03-30 06:47:03] [INFO]   • Web files: 8
+[2026-03-30 06:47:03] [INFO]   • Slides files: 48
+[2026-03-30 06:47:03] [INFO]   • Figures: 7
+[2026-03-30 06:47:03] [INFO]   • Data files: 1
+[2026-03-30 06:47:03] [INFO]   • Reports: 8
+[2026-03-30 06:47:03] [INFO]   • Simulations: 0
+[2026-03-30 06:47:03] [INFO]   • LLM reviews: 0
+[2026-03-30 06:47:03] [INFO]   • Log files: 1
+[2026-03-30 06:47:03] [INFO]   • Combined PDF (root): 1
+[2026-03-30 06:47:03] [INFO] 
+  Total files copied: 83
+[2026-03-30 06:47:03] [INFO] 
+Directory structure:
+[2026-03-30 06:47:03] [INFO]   ✓ project_combined_pdf: 1.64 MB
+[2026-03-30 06:47:03] [INFO]   ✓ pdf: 10 files, 1.82 MB
+[2026-03-30 06:47:03] [INFO]   ✓ web: 8 files, 0.17 MB
+[2026-03-30 06:47:03] [INFO]   ✓ slides: 48 files, 2.2 MB
+[2026-03-30 06:47:03] [INFO]   ✓ figures: 7 files, 1.53 MB
+[2026-03-30 06:47:03] [INFO]   ✓ data: 1 files, 0.0 MB
+[2026-03-30 06:47:03] [INFO]   ✓ reports: 8 files, 0.01 MB
+[2026-03-30 06:47:03] [INFO]   ✓ simulations: 0 files, 0.0 MB
+[2026-03-30 06:47:03] [INFO]   ✓ llm: 0 files, 0.0 MB
+[2026-03-30 06:47:03] [INFO]   ✓ logs: 1 files, 0.0 MB
+[2026-03-30 06:47:03] [INFO] 
+[2026-03-30 06:47:03] [INFO] 
+✅ Output copying complete - all project outputs ready!
+[2026-03-30 06:47:03] [INFO] ✓ Stage 7 completed successfully (0.3s)
+[2026-03-30 06:47:03] [INFO] ✅ Project 'code_project' completed successfully
+[2026-03-30 06:47:03] [INFO] Completed: Pipeline execution for code_project (52.8s)
+[2026-03-30 06:47:03] [INFO] Project 3/3: cognitive_case_diagrams
+[2026-03-30 06:47:03] [INFO] Starting: Pipeline execution for cognitive_case_diagrams
+[2026-03-30 06:47:03] [INFO] Executing core pipeline for project 'cognitive_case_diagrams'
+[2026-03-30 06:47:03] [INFO] 
+[2026-03-30 06:47:03] [INFO] [1/8] Clean Output Directories (12% complete)
+[2026-03-30 06:47:03] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-30 06:47:03] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:47:03] [INFO] Cleaning output directories...
+[2026-03-30 06:47:03] [INFO] Cleaning root-level directories from output/ directory...
+[2026-03-30 06:47:03] [INFO] Root output directory cleaned
+[2026-03-30 06:47:03] [INFO]   Cleaning projects/cognitive_case_diagrams/output/...
+[2026-03-30 06:47:03] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-30 06:47:03] [INFO] Cleaned projects/cognitive_case_diagrams/output/ (recreated subdirectories)
+[2026-03-30 06:47:03] [INFO]   Cleaning output/cognitive_case_diagrams/...
+[2026-03-30 06:47:03] [INFO]   Archived 1 log file(s) to logs/archive/
+[2026-03-30 06:47:03] [INFO] Cleaned output/cognitive_case_diagrams/ (recreated subdirectories)
+[2026-03-30 06:47:03] [INFO] Output directories cleaned for project 'cognitive_case_diagrams' - fresh start
+[2026-03-30 06:47:03] [INFO] Recreated pipeline log file: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/logs/pipeline.log
+[2026-03-30 06:47:03] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-03-30 06:47:03] [INFO] 
+[2026-03-30 06:47:03] [INFO] [2/8] Environment Setup (25% complete)
+[2026-03-30 06:47:03] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-03-30 06:47:03] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:47:03] [INFO] 
+[2026-03-30 06:47:03] [INFO] ==================================================
+[2026-03-30 06:47:03] [INFO] STAGE 00: Environment Setup (Project: cognitive_case_diagrams)
+[2026-03-30 06:47:03] [INFO] ==================================================
+[2026-03-30 06:47:03] [INFO] Cleaning coverage database files...
+[2026-03-30 06:47:06] [INFO] Removed coverage files: .coverage.project, coverage_project.json
+[2026-03-30 06:47:06] [INFO] Coverage database cleanup completed
+[2026-03-30 06:47:06] [INFO] Python 3.12.11 available
+[2026-03-30 06:47:06] [INFO] Checking for uv package manager...
+[2026-03-30 06:47:06] [INFO] Workspace dependencies synced successfully with uv
+[2026-03-30 06:47:06] [INFO] All 2 build tools available
+[2026-03-30 06:47:06] [INFO] All 22 directories ready
+[2026-03-30 06:47:06] [INFO] All 4 required directories present
+[2026-03-30 06:47:06] [INFO] Discovering available projects...
+[2026-03-30 06:47:06] [INFO] Discovered 3 valid project(s):
+[2026-03-30 06:47:06] [INFO]     blake_bimetalism: src, tests, scripts, manuscript
+[2026-03-30 06:47:06] [INFO]     code_project: src, tests, scripts, manuscript
+[2026-03-30 06:47:06] [INFO]   → cognitive_case_diagrams: src, tests, scripts, manuscript
+[2026-03-30 06:47:06] [INFO]     Setting up: cognitive_case_diagrams
+[2026-03-30 06:47:06] [INFO] Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)
+[2026-03-30 06:47:06] [INFO] 
+[2026-03-30 06:47:06] [INFO] ==================================================
+[2026-03-30 06:47:06] [INFO] Setup Summary
+[2026-03-30 06:47:06] [INFO] ==================================================
+[2026-03-30 06:47:06] [INFO] ✅ PASS: Python version
+[2026-03-30 06:47:06] [INFO] ✅ PASS: Dependencies
+[2026-03-30 06:47:06] [INFO] ✅ PASS: Build tools
+[2026-03-30 06:47:06] [INFO] ✅ PASS: Directory structure
+[2026-03-30 06:47:06] [INFO] ✅ PASS: Source structure
+[2026-03-30 06:47:06] [INFO] ✅ PASS: Project discovery
+[2026-03-30 06:47:06] [INFO] ✅ PASS: Environment variables
+[2026-03-30 06:47:06] [INFO] 
+✅ Environment setup complete - ready to proceed
+[2026-03-30 06:47:06] [INFO] ✓ Stage 2 completed successfully (3.5s)
+[2026-03-30 06:47:06] [INFO] 
+[2026-03-30 06:47:06] [INFO] [3/8] Project Tests (37% complete)
+[2026-03-30 06:47:06] [INFO]   Elapsed: 3s | ETA: 5s
+[2026-03-30 06:47:06] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:47:07] [INFO] 
+[2026-03-30 06:47:07] [INFO] ==================================================
+[2026-03-30 06:47:07] [INFO] STAGE 01: Run Tests (Project: cognitive_case_diagrams)
+[2026-03-30 06:47:07] [INFO] ==================================================
+[2026-03-30 06:47:07] [INFO] 
+[2026-03-30 06:47:07] [INFO] ==================================================
+[2026-03-30 06:47:07] [INFO] Phase 1/1: Project Tests (cognitive_case_diagrams) (Only)
+[2026-03-30 06:47:07] [INFO] ==================================================
+[2026-03-30 06:47:07] [INFO] Cleaning coverage database files...
+[2026-03-30 06:47:09] [INFO] Coverage database cleanup completed
+[2026-03-30 06:47:09] [INFO] 
+  Running project tests for 'cognitive_case_diagrams' (90% coverage threshold)...
+[2026-03-30 06:47:09] [INFO] Test path: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests
+[2026-03-30 06:47:09] [INFO] Coverage target: projects/cognitive_case_diagrams/src (90% minimum)
+[2026-03-30 06:47:09] [INFO] 
+  Discovering project 'cognitive_case_diagrams' tests...
+[2026-03-30 06:47:11] [INFO] Discovered 535 project 'cognitive_case_diagrams' tests
+Running project tests for 'cognitive_case_diagrams'
+============================= test session starts ==============================
+.......platform darwin -- Python 3.12.11, pytest-9.0.2, pluggy-1.6.0 -- /Users/4d/Documents/GitHub/template/.venv/bin/python3
+.cachedir: .pytest_cache
+rootdir: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams
+.configfile: pyproject.toml
+........plugins: timeout-2.4.0, asyncio-1.3.0, pytest_httpserver-1.1.3, cov-7.0.0
+.asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+...collecting ... collected 535 items / 15 errors / 4 skipped
+
+==================================== ERRORS ====================================
+.______________ ERROR collecting tests/test_diagrams_generator.py _______________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_diagrams_generator.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_diagrams_generator.py:20: in <module>
+..    from src.visualization.category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+._____ ERROR collecting tests/test_visualization_active_inference_plots.py ______
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_active_inference_plots.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_active_inference_plots.py:15: in <module>
+..    from src.visualization.active_inference_plots import plot_belief_distribution
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.________ ERROR collecting tests/test_visualization_category_diagrams.py ________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_category_diagrams.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_category_diagrams.py:20: in <module>
+..    from src.visualization.category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.________ ERROR collecting tests/test_visualization_complexity_plots.py _________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_complexity_plots.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_complexity_plots.py:12: in <module>
+..    from src.visualization.complexity_plots import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.___________ ERROR collecting tests/test_visualization_daif_plots.py ____________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_daif_plots.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_daif_plots.py:13: in <module>
+..    from src.visualization.daif_plots import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.________ ERROR collecting tests/test_visualization_enriched_diagrams.py ________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_enriched_diagrams.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_enriched_diagrams.py:15: in <module>
+..    from src.visualization.enriched_diagrams import render_enriched_heatmap
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.__________ ERROR collecting tests/test_visualization_fluid_s_plots.py __________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_fluid_s_plots.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_fluid_s_plots.py:15: in <module>
+..    from src.visualization.fluid_s_plots import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.________ ERROR collecting tests/test_visualization_functor_diagrams.py _________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_functor_diagrams.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_functor_diagrams.py:13: in <module>
+..    from src.visualization.functor_diagrams import render_functor_diagram
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.__________ ERROR collecting tests/test_visualization_plot_modules.py ___________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_plot_modules.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_plot_modules.py:24: in <module>
+..    from src.visualization.active_inference_plots import plot_belief_distribution
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.__________ ERROR collecting tests/test_visualization_quantum_plots.py __________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_quantum_plots.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_quantum_plots.py:15: in <module>
+..    from src.visualization.quantum_plots import plot_povm_probabilities
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+._________ ERROR collecting tests/test_visualization_security_plots.py __________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_security_plots.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_security_plots.py:14: in <module>
+..    from src.visualization.security_plots import plot_type_violations
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+._________ ERROR collecting tests/test_visualization_string_diagrams.py _________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_string_diagrams.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_string_diagrams.py:20: in <module>
+..    from src.visualization.string_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+._____________ ERROR collecting tests/test_visualization_styles.py ______________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_styles.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_styles.py:12: in <module>
+..    from src.visualization.complexity_plots import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+._______ ERROR collecting tests/test_visualization_syntactic_coverage.py ________
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_syntactic_coverage.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_syntactic_coverage.py:15: in <module>
+..    from src.visualization.syntactic_sentence_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+.___ ERROR collecting tests/test_visualization_syntactic_sentence_diagrams.py ___
+..ImportError while importing test module '/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/tests/test_visualization_syntactic_sentence_diagrams.py'.
+.Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+........../../../miniforge3/lib/python3.12/importlib/__init__.py:90: in import_module
+.    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.projects/cognitive_case_diagrams/tests/test_visualization_syntactic_sentence_diagrams.py:19: in <module>
+..    from src.visualization.syntactic_sentence_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/__init__.py:18: in <module>
+.    from .category_diagrams import (
+.projects/cognitive_case_diagrams/src/visualization/category_diagrams.py:13: in <module>
+    import networkx as nx
+E   ModuleNotFoundError: No module named 'networkx'
+=========================== short test summary info ============================
+.ERROR projects/cognitive_case_diagrams/tests/test_diagrams_generator.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_active_inference_plots.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_category_diagrams.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_complexity_plots.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_daif_plots.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_enriched_diagrams.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_fluid_s_plots.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_functor_diagrams.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_plot_modules.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_quantum_plots.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_security_plots.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_string_diagrams.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_styles.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_syntactic_coverage.py
+.ERROR projects/cognitive_case_diagrams/tests/test_visualization_syntactic_sentence_diagrams.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 15 errors during collection !!!!!!!!!!!!!!!!!!!
+.======================== 4 skipped, 15 errors in 0.52s =========================
+[2026-03-30 06:47:13] [INFO] Running project tests for 'cognitive_case_diagrams'
+[2026-03-30 06:47:14] [WARNING] No project coverage percentage found
+[2026-03-30 06:47:14] [WARNING] Project: All tests passed
+[2026-03-30 06:47:14] [INFO] Project test suite completed in 7.2s
+[2026-03-30 06:47:14] [INFO] Project tests passed
+[2026-03-30 06:47:14] [INFO] Test report saved: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/reports/test_results.json
+[2026-03-30 06:47:14] [INFO] Test summary saved: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/reports/test_results.md
+[2026-03-30 06:47:14] [INFO] 
+[2026-03-30 06:47:14] [INFO] ==================================================
+[2026-03-30 06:47:14] [INFO] Test Execution Summary
+[2026-03-30 06:47:14] [INFO] ==================================================
+[2026-03-30 06:47:14] [INFO] 
+[2026-03-30 06:47:14] [INFO] Infrastructure Results:
+[2026-03-30 06:47:14] [INFO]   ⏭ Skipped (not run in this execution)
+[2026-03-30 06:47:14] [INFO]   📊 Coverage: N/A (tests not executed)
+[2026-03-30 06:47:14] [INFO] 
+[2026-03-30 06:47:14] [INFO] Project Results:
+[2026-03-30 06:47:14] [INFO]   ✓ Passed: 0
+[2026-03-30 06:47:14] [INFO]   ⚠ Skipped: 4
+[2026-03-30 06:47:14] [INFO]   📊 Coverage: ❌ 0.0% (significantly below 90.0% threshold by 90.0%)
+[2026-03-30 06:47:14] [INFO]     📊 Project coverage is 90.0% below threshold
+[2026-03-30 06:47:14] [INFO]       • Run with --cov-report=json to enable file-level coverage suggestions
+[2026-03-30 06:47:14] [INFO]       • Target: Reach 90.0% coverage minimum
+[2026-03-30 06:47:14] [INFO]       • Run: pytest --cov-report=html && open htmlcov/index.html
+[2026-03-30 06:47:14] [INFO]   ⏱ Duration: 1s
+[2026-03-30 06:47:14] [INFO] 
+[2026-03-30 06:47:14] [INFO] ================================================================
+[2026-03-30 06:47:14] [INFO] Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)
+[2026-03-30 06:47:14] [INFO] Project:       ✓ PASSED (0/4 tests, 0.0% coverage)
+[2026-03-30 06:47:14] [INFO] ----------------------------------------------------------------
+[2026-03-30 06:47:14] [INFO] Total:         ✓ PASSED (0/4 tests)
+[2026-03-30 06:47:14] [INFO] Coverage:      Infrastructure: N/A | Project: 0.0%
+[2026-03-30 06:47:14] [INFO] Duration:      1s
+[2026-03-30 06:47:14] [INFO] ================================================================
+[2026-03-30 06:47:14] [INFO] All tests passed - ready for analysis
+[2026-03-30 06:47:14] [INFO] ✓ Stage 3 completed successfully (7.7s)
+[2026-03-30 06:47:14] [INFO] 
+[2026-03-30 06:47:14] [INFO] [4/8] Project Analysis (50% complete)
+[2026-03-30 06:47:14] [INFO]   Elapsed: 11s | ETA: 11s
+[2026-03-30 06:47:14] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-03-30 06:47:14] [INFO] 
+[2026-03-30 06:47:14] [INFO] ==================================================
+[2026-03-30 06:47:14] [INFO] STAGE 02: Run Analysis (Project: cognitive_case_diagrams)
+[2026-03-30 06:47:14] [INFO] ==================================================
+[2026-03-30 06:47:14] [INFO] [STAGE-02] Discovering analysis scripts in projects/cognitive_case_diagrams/...
+[2026-03-30 06:47:14] [INFO] Found: 05_inject_variables.py (project: cognitive_case_diagrams)
+[2026-03-30 06:47:14] [INFO] Found: generate_category_figures.py (project: cognitive_case_diagrams)
+[2026-03-30 06:47:14] [INFO] Found: generate_cognitive_figures.py (project: cognitive_case_diagrams)
+[2026-03-30 06:47:14] [INFO] Found: generate_diagrams.py (project: cognitive_case_diagrams)
+[2026-03-30 06:47:14] [INFO] Found: generate_discopy_figures.py (project: cognitive_case_diagrams)
+[2026-03-30 06:47:14] [INFO] Found: generate_quantum_figures.py (project: cognitive_case_diagrams)
+[2026-03-30 06:47:14] [INFO] Found: generate_syntactic_figures.py (project: cognitive_case_diagrams)
+[2026-03-30 06:47:14] [INFO] [STAGE-02] Executing analysis pipeline...
+[2026-03-30 06:47:14] [INFO]   [1/7] cognitive_case_diagrams/05_inject_variables.py
+[2026-03-30 06:47:14] [INFO] 
+  Running: cognitive_case_diagrams/05_inject_variables.py
+[2026-03-30 06:47:14] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/.venv
+[2026-03-30 06:47:14] [INFO] Starting: Execute 05_inject_variables.py
+Traceback (most recent call last):
+  File "/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/scripts/05_inject_variables.py", line 31, in <module>
+    from infrastructure.core.logging.utils import get_logger, log_success, log_header
+ModuleNotFoundError: No module named 'infrastructure.core.logging.utils'
+[2026-03-30 06:47:15] [INFO] Completed: Execute 05_inject_variables.py (0.3s)
+[2026-03-30 06:47:15] [ERROR] Script failed: 05_inject_variables.py (exit code: 1)
+[2026-03-30 06:47:15] [INFO]   Troubleshooting:
+[2026-03-30 06:47:15] [INFO]     - Run script manually: python3 /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/scripts/05_inject_variables.py
+[2026-03-30 06:47:15] [INFO]     - Check script syntax: python3 -m py_compile /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/scripts/05_inject_variables.py
+[2026-03-30 06:47:15] [INFO]     - Verify dependencies: Check imports in 05_inject_variables.py
+[2026-03-30 06:47:15] [INFO]     - Review script logs above for specific error details
+[2026-03-30 06:47:15] [INFO]     ✅ Completed in 0s
+[2026-03-30 06:47:15] [INFO]   [2/7] cognitive_case_diagrams/generate_category_figures.py
+[2026-03-30 06:47:15] [INFO] 
+  Running: cognitive_case_diagrams/generate_category_figures.py
+[2026-03-30 06:47:15] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/.venv
+[2026-03-30 06:47:15] [INFO] Starting: Execute generate_category_figures.py
+2026-03-30 06:47:15,847 [INFO] src.case_systems.case_category: Created standard 8-case category with 8 morphisms
+2026-03-30 06:47:15,950 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:15,974 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,012 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,201 [INFO] src.visualization.category_diagrams: Saved case category figure to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/case_category_standard.png
+2026-03-30 06:47:16,201 [INFO] generate_category_figures:   ✓ case_category_standard.png
+2026-03-30 06:47:16,202 [INFO] src.case_systems.case_category: Created minimal transitive case category
+2026-03-30 06:47:16,225 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,244 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,265 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,401 [INFO] src.visualization.category_diagrams: Saved case category figure to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/case_category_minimal.png
+2026-03-30 06:47:16,402 [INFO] generate_category_figures:   ✓ case_category_minimal.png
+2026-03-30 06:47:16,502 [INFO] src.visualization.category_diagrams: Saved composition triangle to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/composition_triangle.png
+2026-03-30 06:47:16,502 [INFO] generate_category_figures:   ✓ composition_triangle.png
+2026-03-30 06:47:16,679 [INFO] src.visualization.category_diagrams: Saved alignment comparison to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/alignment_comparison.png
+2026-03-30 06:47:16,679 [INFO] generate_category_figures:   ✓ alignment_comparison.png
+2026-03-30 06:47:16,679 [INFO] src.case_systems.functor: Created accusative-to-ergative functor
+2026-03-30 06:47:16,819 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,852 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,859 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,914 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,967 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:16,990 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:17,255 [INFO] src.visualization.functor_diagrams: Saved functor diagram to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/functor_alignment.png
+2026-03-30 06:47:17,256 [INFO] generate_category_figures:   ✓ functor_alignment.png
+2026-03-30 06:47:17,256 [INFO] generate_category_figures: Generated 5 category figures
+[2026-03-30 06:47:17] [INFO] Completed: Execute generate_category_figures.py (2.3s)
+[2026-03-30 06:47:17] [INFO]     ✅ Completed in 2s
+[2026-03-30 06:47:17] [INFO]   Progress: 2/7 (28%) - Elapsed: 2s | ETA: 6s
+[2026-03-30 06:47:17] [INFO]   [3/7] cognitive_case_diagrams/generate_cognitive_figures.py
+[2026-03-30 06:47:17] [INFO] 
+  Running: cognitive_case_diagrams/generate_cognitive_figures.py
+[2026-03-30 06:47:17] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/.venv
+[2026-03-30 06:47:17] [INFO] Starting: Execute generate_cognitive_figures.py
+2026-03-30 06:47:17,964 [INFO] src.visualization.active_inference_plots: Saved belief distribution plot to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/active_inference_belief.png
+2026-03-30 06:47:17,964 [INFO] generate_cognitive_figures:   ✓ active_inference_belief.png
+2026-03-30 06:47:17,964 [INFO] src.case_systems.fluid_s: FluidSFunctor 'Fluid-S (vol)' created: volition=volitional, p=1.00
+2026-03-30 06:47:17,964 [INFO] src.case_systems.fluid_s: FluidSFunctor 'Fluid-S (non-vol)' created: volition=non_volitional, p=1.00
+2026-03-30 06:47:17,964 [INFO] src.case_systems.fluid_s: Created Bats Fluid-S functor pair
+2026-03-30 06:47:18,081 [INFO] matplotlib.mathtext: Substituting symbol U from STIXNonUnicode
+2026-03-30 06:47:18,083 [INFO] matplotlib.mathtext: Substituting symbol L from STIXNonUnicode
+2026-03-30 06:47:18,325 [INFO] matplotlib.mathtext: Substituting symbol U from STIXNonUnicode
+2026-03-30 06:47:18,325 [INFO] matplotlib.mathtext: Substituting symbol L from STIXNonUnicode
+2026-03-30 06:47:18,651 [INFO] src.visualization.fluid_s_plots: Saved Fluid-S volition landscape to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/fluid_s_volition_landscape.png
+2026-03-30 06:47:18,651 [INFO] generate_cognitive_figures:   ✓ fluid_s_volition_landscape.png
+2026-03-30 06:47:18,652 [INFO] src.cognitive.belief_updating: Step 1/6: H=1.2877, most_likely=NOM
+2026-03-30 06:47:18,653 [INFO] src.cognitive.belief_updating: Step 2/6: H=0.8313, most_likely=NOM
+2026-03-30 06:47:18,653 [INFO] src.cognitive.belief_updating: Step 3/6: H=0.3021, most_likely=NOM
+2026-03-30 06:47:18,653 [INFO] src.cognitive.belief_updating: Step 4/6: H=0.0888, most_likely=NOM
+2026-03-30 06:47:18,653 [INFO] src.cognitive.belief_updating: Step 5/6: H=0.0165, most_likely=NOM
+2026-03-30 06:47:18,653 [INFO] src.cognitive.belief_updating: Step 6/6: H=0.0020, most_likely=NOM
+2026-03-30 06:47:18,926 [INFO] src.visualization.daif_plots: Saved DAIF belief trajectory to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/daif_belief_trajectory.png
+2026-03-30 06:47:18,927 [INFO] src.daif.inference: DAIF converged at iteration 1 (ΔF=1.57e-07)
+2026-03-30 06:47:18,927 [INFO] src.daif.inference: DAIF converged at iteration 1 (ΔF=6.30e-08)
+2026-03-30 06:47:18,927 [INFO] src.daif.inference: DAIF converged at iteration 1 (ΔF=1.07e-08)
+2026-03-30 06:47:18,955 [INFO] matplotlib.mathtext: Substituting symbol E from STIXNonUnicode
+2026-03-30 06:47:18,971 [INFO] matplotlib.mathtext: Substituting symbol E from STIXNonUnicode
+2026-03-30 06:47:19,068 [INFO] matplotlib.mathtext: Substituting symbol E from STIXNonUnicode
+2026-03-30 06:47:19,100 [INFO] matplotlib.mathtext: Substituting symbol E from STIXNonUnicode
+2026-03-30 06:47:19,213 [INFO] src.visualization.daif_plots: Saved DAIF FE convergence to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/daif_free_energy_convergence.png
+2026-03-30 06:47:19,465 [INFO] src.visualization.daif_plots: Saved DAIF ERP predictions to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/daif_erp_predictions.png
+2026-03-30 06:47:19,465 [INFO] generate_cognitive_figures:   ✓ daif_belief_trajectory.png
+2026-03-30 06:47:19,465 [INFO] generate_cognitive_figures:   ✓ daif_free_energy_convergence.png
+2026-03-30 06:47:19,465 [INFO] generate_cognitive_figures:   ✓ daif_erp_predictions.png
+2026-03-30 06:47:19,465 [INFO] generate_cognitive_figures: Generated 5 cognitive figures
+[2026-03-30 06:47:19] [INFO] Completed: Execute generate_cognitive_figures.py (2.1s)
+[2026-03-30 06:47:19] [INFO]     ✅ Completed in 2s
+[2026-03-30 06:47:19] [INFO]   [4/7] cognitive_case_diagrams/generate_diagrams.py
+[2026-03-30 06:47:19] [INFO] 
+  Running: cognitive_case_diagrams/generate_diagrams.py
+[2026-03-30 06:47:19] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/.venv
+[2026-03-30 06:47:19] [INFO] Starting: Execute generate_diagrams.py
+2026-03-30 06:47:19,793 [INFO] generate_diagrams: ============================================================
+2026-03-30 06:47:19,793 [INFO] generate_diagrams: Cognitive Case Diagrams — Figure Generation Pipeline
+2026-03-30 06:47:19,793 [INFO] generate_diagrams: ============================================================
+2026-03-30 06:47:19,793 [INFO] generate_diagrams: [category]
+2026-03-30 06:47:19,886 [INFO] src.case_systems.case_category: Created standard 8-case category with 8 morphisms
+2026-03-30 06:47:19,950 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:19,965 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:19,989 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,117 [INFO] src.visualization.category_diagrams: Saved case category figure to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/case_category_standard.png
+2026-03-30 06:47:20,117 [INFO] generate_category_figures:   ✓ case_category_standard.png
+2026-03-30 06:47:20,117 [INFO] src.case_systems.case_category: Created minimal transitive case category
+2026-03-30 06:47:20,131 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,142 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,159 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,265 [INFO] src.visualization.category_diagrams: Saved case category figure to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/case_category_minimal.png
+2026-03-30 06:47:20,265 [INFO] generate_category_figures:   ✓ case_category_minimal.png
+2026-03-30 06:47:20,339 [INFO] src.visualization.category_diagrams: Saved composition triangle to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/composition_triangle.png
+2026-03-30 06:47:20,339 [INFO] generate_category_figures:   ✓ composition_triangle.png
+2026-03-30 06:47:20,520 [INFO] src.visualization.category_diagrams: Saved alignment comparison to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/alignment_comparison.png
+2026-03-30 06:47:20,520 [INFO] generate_category_figures:   ✓ alignment_comparison.png
+2026-03-30 06:47:20,520 [INFO] src.case_systems.functor: Created accusative-to-ergative functor
+2026-03-30 06:47:20,564 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,592 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,597 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,632 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,660 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,680 [INFO] matplotlib.mathtext: Substituting symbol C from STIXNonUnicode
+2026-03-30 06:47:20,893 [INFO] src.visualization.functor_diagrams: Saved functor diagram to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/functor_alignment.png
+2026-03-30 06:47:20,893 [INFO] generate_category_figures:   ✓ functor_alignment.png
+2026-03-30 06:47:20,893 [INFO] generate_diagrams:   → 5 figure(s) generated
+2026-03-30 06:47:20,893 [INFO] generate_diagrams: [discopy]
+2026-03-30 06:47:20,895 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+/Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/.venv/lib/python3.12/site-packages/discopy/drawing/backend.py:560: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+2026-03-30 06:47:20,916 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy transitive to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_transitive.png
+2026-03-30 06:47:20,916 [INFO] generate_discopy_figures:   ✓ discopy_transitive.png
+2026-03-30 06:47:20,917 [INFO] src.diagrams.string_diagram: Created composition diagram: words (3 boxes) → contracted (5 boxes)
+2026-03-30 06:47:20,950 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy composition to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_composition.png
+2026-03-30 06:47:20,950 [INFO] generate_discopy_figures:   ✓ discopy_composition.png
+2026-03-30 06:47:20,951 [INFO] src.diagrams.string_diagram: Created DisCoPy snake equation diagrams
+2026-03-30 06:47:20,974 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy snake equations to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_snake.png
+2026-03-30 06:47:20,974 [INFO] generate_discopy_figures:   ✓ discopy_snake.png
+2026-03-30 06:47:20,974 [INFO] src.diagrams.string_diagram: Created DisCoPy passive diagram: Bob is chased by Alice
+2026-03-30 06:47:20,993 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy passive to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_passive.png
+2026-03-30 06:47:20,993 [INFO] generate_discopy_figures:   ✓ discopy_passive.png
+2026-03-30 06:47:20,993 [INFO] src.diagrams.string_diagram: Created DisCoPy intransitive diagram: Bob runs
+2026-03-30 06:47:20,994 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:20,995 [INFO] src.diagrams.string_diagram: Created DisCoPy passive diagram: Bob is chased by Alice
+2026-03-30 06:47:21,042 [INFO] src.visualization.discopy_diagrams: Saved sentence progression to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_sentence_progression.png
+2026-03-30 06:47:21,042 [INFO] generate_discopy_figures:   ✓ discopy_sentence_progression.png
+2026-03-30 06:47:21,042 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:21,043 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alicia persequitur Robertum
+2026-03-30 06:47:21,044 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Arisu-ga ou Bobu-wo
+2026-03-30 06:47:21,044 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice kovaliyor Bob-u
+2026-03-30 06:47:21,045 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice-k jazartzen_du Bob
+2026-03-30 06:47:21,046 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice piicha_karti_hai Bob-ko
+2026-03-30 06:47:21,046 [INFO] src.diagrams.string_diagram: Created multilingual diagrams for 6 languages
+2026-03-30 06:47:21,097 [INFO] src.visualization.discopy_diagrams: Saved multilingual diagrams to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_multilingual.png
+2026-03-30 06:47:21,098 [INFO] generate_discopy_figures:   ✓ discopy_multilingual.png
+2026-03-30 06:47:21,126 [INFO] src.visualization.discopy_diagrams: Saved ditransitive diagram to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_ditransitive.png
+2026-03-30 06:47:21,126 [INFO] generate_discopy_figures:   ✓ discopy_ditransitive.png
+2026-03-30 06:47:21,127 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:21,127 [INFO] src.diagrams.string_diagram: Created DisCoPy intransitive diagram: Bob runs
+2026-03-30 06:47:21,180 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy discourse to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_discocirc_discourse.png
+2026-03-30 06:47:21,180 [INFO] generate_discopy_figures:   ✓ discopy_discocirc_discourse.png
+2026-03-30 06:47:21,181 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:21,181 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Bob catches Alice
+2026-03-30 06:47:21,182 [INFO] src.diagrams.string_diagram: Created DisCoPy intransitive diagram: Alice escapes
+2026-03-30 06:47:21,229 [INFO] src.visualization.discopy_diagrams: Saved three-sentence discourse to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_three_sentence_discourse.png
+2026-03-30 06:47:21,229 [INFO] generate_discopy_figures:   ✓ discopy_three_sentence_discourse.png
+2026-03-30 06:47:21,241 [INFO] src.diagrams.complexity_examples: Built 10 complexity example sentences
+2026-03-30 06:47:21,241 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Intransitive': 3 boxes (2 words, 1 cups, 0 caps), normal_form=True
+2026-03-30 06:47:21,241 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Transitive': 5 boxes (3 words, 2 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,244 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Ditransitive': 7 boxes (4 words, 3 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,249 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adj+Trans (5w)': 7 boxes (4 words, 3 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,252 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adv+Trans (5w)': 7 boxes (4 words, 3 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,262 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adj+Adv+Trans (6w)': 9 boxes (5 words, 4 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,269 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adv+Ditrans (6w)': 9 boxes (5 words, 4 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,277 [INFO] src.diagrams.complexity_metrics: Analyzed diagram '2Adj+Trans (6w)': 9 boxes (5 words, 4 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,284 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'RelCl+Ditrans+Adv (9w)': 9 boxes (5 words, 4 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,300 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adj+Adv+Ditrans (8w)': 11 boxes (6 words, 5 cups, 0 caps), normal_form=False
+2026-03-30 06:47:21,301 [INFO] src.diagrams.complexity_metrics: Compared 10 diagrams: box counts range [3, 11]
+2026-03-30 06:47:21,480 [INFO] src.visualization.complexity_plots: Saved complexity comparison plot to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/complexity_comparison.png
+2026-03-30 06:47:21,481 [INFO] generate_discopy_figures:   ✓ complexity_comparison.png
+2026-03-30 06:47:21,481 [INFO] generate_diagrams:   → 10 figure(s) generated
+2026-03-30 06:47:21,481 [INFO] generate_diagrams: [cognitive]
+2026-03-30 06:47:21,586 [INFO] src.visualization.active_inference_plots: Saved belief distribution plot to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/active_inference_belief.png
+2026-03-30 06:47:21,586 [INFO] generate_cognitive_figures:   ✓ active_inference_belief.png
+2026-03-30 06:47:21,586 [INFO] src.case_systems.fluid_s: FluidSFunctor 'Fluid-S (vol)' created: volition=volitional, p=1.00
+2026-03-30 06:47:21,586 [INFO] src.case_systems.fluid_s: FluidSFunctor 'Fluid-S (non-vol)' created: volition=non_volitional, p=1.00
+2026-03-30 06:47:21,586 [INFO] src.case_systems.fluid_s: Created Bats Fluid-S functor pair
+2026-03-30 06:47:21,625 [INFO] matplotlib.mathtext: Substituting symbol U from STIXNonUnicode
+2026-03-30 06:47:21,626 [INFO] matplotlib.mathtext: Substituting symbol L from STIXNonUnicode
+2026-03-30 06:47:21,829 [INFO] matplotlib.mathtext: Substituting symbol U from STIXNonUnicode
+2026-03-30 06:47:21,830 [INFO] matplotlib.mathtext: Substituting symbol L from STIXNonUnicode
+2026-03-30 06:47:22,114 [INFO] src.visualization.fluid_s_plots: Saved Fluid-S volition landscape to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/fluid_s_volition_landscape.png
+2026-03-30 06:47:22,114 [INFO] generate_cognitive_figures:   ✓ fluid_s_volition_landscape.png
+2026-03-30 06:47:22,115 [INFO] src.cognitive.belief_updating: Step 1/6: H=1.2877, most_likely=NOM
+2026-03-30 06:47:22,115 [INFO] src.cognitive.belief_updating: Step 2/6: H=0.8313, most_likely=NOM
+2026-03-30 06:47:22,115 [INFO] src.cognitive.belief_updating: Step 3/6: H=0.3021, most_likely=NOM
+2026-03-30 06:47:22,115 [INFO] src.cognitive.belief_updating: Step 4/6: H=0.0888, most_likely=NOM
+2026-03-30 06:47:22,115 [INFO] src.cognitive.belief_updating: Step 5/6: H=0.0165, most_likely=NOM
+2026-03-30 06:47:22,115 [INFO] src.cognitive.belief_updating: Step 6/6: H=0.0020, most_likely=NOM
+2026-03-30 06:47:22,365 [INFO] src.visualization.daif_plots: Saved DAIF belief trajectory to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/daif_belief_trajectory.png
+2026-03-30 06:47:22,366 [INFO] src.daif.inference: DAIF converged at iteration 1 (ΔF=1.57e-07)
+2026-03-30 06:47:22,366 [INFO] src.daif.inference: DAIF converged at iteration 1 (ΔF=6.30e-08)
+2026-03-30 06:47:22,366 [INFO] src.daif.inference: DAIF converged at iteration 1 (ΔF=1.07e-08)
+2026-03-30 06:47:22,398 [INFO] matplotlib.mathtext: Substituting symbol E from STIXNonUnicode
+2026-03-30 06:47:22,418 [INFO] matplotlib.mathtext: Substituting symbol E from STIXNonUnicode
+2026-03-30 06:47:22,496 [INFO] matplotlib.mathtext: Substituting symbol E from STIXNonUnicode
+2026-03-30 06:47:22,525 [INFO] matplotlib.mathtext: Substituting symbol E from STIXNonUnicode
+2026-03-30 06:47:22,667 [INFO] src.visualization.daif_plots: Saved DAIF FE convergence to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/daif_free_energy_convergence.png
+2026-03-30 06:47:22,909 [INFO] src.visualization.daif_plots: Saved DAIF ERP predictions to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/daif_erp_predictions.png
+2026-03-30 06:47:22,909 [INFO] generate_cognitive_figures:   ✓ daif_belief_trajectory.png
+2026-03-30 06:47:22,909 [INFO] generate_cognitive_figures:   ✓ daif_free_energy_convergence.png
+2026-03-30 06:47:22,909 [INFO] generate_cognitive_figures:   ✓ daif_erp_predictions.png
+2026-03-30 06:47:22,909 [INFO] generate_diagrams:   → 5 figure(s) generated
+2026-03-30 06:47:22,909 [INFO] generate_diagrams: [quantum]
+2026-03-30 06:47:22,910 [INFO] src.quantum.quantum_case: POVM validated: 8 elements, dimension 8
+2026-03-30 06:47:23,023 [INFO] src.visualization.quantum_plots: Saved POVM plot to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/quantum_povm_probabilities.png
+2026-03-30 06:47:23,023 [INFO] generate_quantum_figures:   ✓ quantum_povm_probabilities.png
+2026-03-30 06:47:23,138 [INFO] src.visualization.security_plots: Saved type violation plot to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/security_type_violations.png
+2026-03-30 06:47:23,138 [INFO] generate_quantum_figures:   ✓ security_type_violations.png
+2026-03-30 06:47:23,138 [INFO] generate_diagrams:   → 2 figure(s) generated
+2026-03-30 06:47:23,138 [INFO] generate_diagrams: [syntactic]
+2026-03-30 06:47:23,539 [INFO] src.visualization.syntactic_sentence_diagrams: Saved syntactic case panel to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/syntactic_case_panel.png
+2026-03-30 06:47:23,539 [INFO] generate_syntactic_figures:   ✓ syntactic_case_panel.png
+2026-03-30 06:47:23,539 [INFO] generate_diagrams:   → 1 figure(s) generated
+2026-03-30 06:47:23,540 [INFO] generate_diagrams: [strings]
+2026-03-30 06:47:23,608 [INFO] src.visualization.string_diagrams: Saved DisCoCat sentence to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/string_diagram_discocat.png
+2026-03-30 06:47:23,609 [INFO] generate_diagrams:   ✓ string_diagram_discocat.png
+2026-03-30 06:47:23,698 [INFO] src.visualization.string_diagrams: Saved discourse diagram to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discourse_string_diagram.png
+2026-03-30 06:47:23,698 [INFO] generate_diagrams:   ✓ discourse_string_diagram.png
+2026-03-30 06:47:23,698 [INFO] src.enriched_cat.enriched: Validated enriched category Standard8CaseEnriched with 8 roles
+2026-03-30 06:47:23,968 [INFO] src.visualization.enriched_diagrams: Saved enriched heatmap to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/enriched_hom_matrix.png
+2026-03-30 06:47:23,968 [INFO] src.enriched_cat.enriched: Categorical magnitude of Standard8CaseEnriched: 2.496078
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ enriched_hom_matrix.png + enriched_magnitude.txt
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   → 4 figure(s) generated
+2026-03-30 06:47:23,968 [INFO] generate_diagrams: ============================================================
+2026-03-30 06:47:23,968 [INFO] generate_diagrams: Total: 27 figure(s) → /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ case_category_standard.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ case_category_minimal.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ composition_triangle.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ alignment_comparison.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ functor_alignment.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_transitive.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_composition.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_snake.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_passive.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_sentence_progression.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_multilingual.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_ditransitive.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_discocirc_discourse.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discopy_three_sentence_discourse.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ complexity_comparison.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ active_inference_belief.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ fluid_s_volition_landscape.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ daif_belief_trajectory.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ daif_free_energy_convergence.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ daif_erp_predictions.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ quantum_povm_probabilities.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ security_type_violations.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ syntactic_case_panel.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ string_diagram_discocat.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ discourse_string_diagram.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ enriched_hom_matrix.png
+2026-03-30 06:47:23,968 [INFO] generate_diagrams:   ✓ enriched_magnitude.txt
+2026-03-30 06:47:23,968 [INFO] generate_diagrams: ============================================================
+[2026-03-30 06:47:24] [INFO] Completed: Execute generate_diagrams.py (4.5s)
+[2026-03-30 06:47:24] [INFO]     ✅ Completed in 4s
+[2026-03-30 06:47:24] [INFO]   Progress: 4/7 (57%) - Elapsed: 9s | ETA: 6s
+[2026-03-30 06:47:24] [INFO]   [5/7] cognitive_case_diagrams/generate_discopy_figures.py
+[2026-03-30 06:47:24] [INFO] 
+  Running: cognitive_case_diagrams/generate_discopy_figures.py
+[2026-03-30 06:47:24] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/.venv
+[2026-03-30 06:47:24] [INFO] Starting: Execute generate_discopy_figures.py
+2026-03-30 06:47:24,423 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:24,450 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy transitive to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_transitive.png
+2026-03-30 06:47:24,451 [INFO] generate_discopy_figures:   ✓ discopy_transitive.png
+2026-03-30 06:47:24,451 [INFO] src.diagrams.string_diagram: Created composition diagram: words (3 boxes) → contracted (5 boxes)
+2026-03-30 06:47:24,485 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy composition to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_composition.png
+2026-03-30 06:47:24,485 [INFO] generate_discopy_figures:   ✓ discopy_composition.png
+2026-03-30 06:47:24,486 [INFO] src.diagrams.string_diagram: Created DisCoPy snake equation diagrams
+2026-03-30 06:47:24,508 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy snake equations to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_snake.png
+2026-03-30 06:47:24,508 [INFO] generate_discopy_figures:   ✓ discopy_snake.png
+2026-03-30 06:47:24,509 [INFO] src.diagrams.string_diagram: Created DisCoPy passive diagram: Bob is chased by Alice
+2026-03-30 06:47:24,528 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy passive to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_passive.png
+2026-03-30 06:47:24,528 [INFO] generate_discopy_figures:   ✓ discopy_passive.png
+2026-03-30 06:47:24,528 [INFO] src.diagrams.string_diagram: Created DisCoPy intransitive diagram: Bob runs
+2026-03-30 06:47:24,529 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:24,529 [INFO] src.diagrams.string_diagram: Created DisCoPy passive diagram: Bob is chased by Alice
+2026-03-30 06:47:24,574 [INFO] src.visualization.discopy_diagrams: Saved sentence progression to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_sentence_progression.png
+2026-03-30 06:47:24,574 [INFO] generate_discopy_figures:   ✓ discopy_sentence_progression.png
+2026-03-30 06:47:24,575 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:24,576 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alicia persequitur Robertum
+2026-03-30 06:47:24,576 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Arisu-ga ou Bobu-wo
+2026-03-30 06:47:24,577 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice kovaliyor Bob-u
+2026-03-30 06:47:24,577 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice-k jazartzen_du Bob
+2026-03-30 06:47:24,579 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice piicha_karti_hai Bob-ko
+2026-03-30 06:47:24,579 [INFO] src.diagrams.string_diagram: Created multilingual diagrams for 6 languages
+2026-03-30 06:47:24,642 [INFO] src.visualization.discopy_diagrams: Saved multilingual diagrams to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_multilingual.png
+2026-03-30 06:47:24,642 [INFO] generate_discopy_figures:   ✓ discopy_multilingual.png
+2026-03-30 06:47:24,669 [INFO] src.visualization.discopy_diagrams: Saved ditransitive diagram to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_ditransitive.png
+2026-03-30 06:47:24,669 [INFO] generate_discopy_figures:   ✓ discopy_ditransitive.png
+2026-03-30 06:47:24,670 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:24,670 [INFO] src.diagrams.string_diagram: Created DisCoPy intransitive diagram: Bob runs
+2026-03-30 06:47:24,703 [INFO] src.visualization.discopy_diagrams: Saved DisCoPy discourse to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_discocirc_discourse.png
+2026-03-30 06:47:24,703 [INFO] generate_discopy_figures:   ✓ discopy_discocirc_discourse.png
+2026-03-30 06:47:24,704 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Alice chases Bob
+2026-03-30 06:47:24,705 [INFO] src.diagrams.string_diagram: Created DisCoPy transitive diagram: Bob catches Alice
+2026-03-30 06:47:24,705 [INFO] src.diagrams.string_diagram: Created DisCoPy intransitive diagram: Alice escapes
+2026-03-30 06:47:24,752 [INFO] src.visualization.discopy_diagrams: Saved three-sentence discourse to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/discopy_three_sentence_discourse.png
+2026-03-30 06:47:24,752 [INFO] generate_discopy_figures:   ✓ discopy_three_sentence_discourse.png
+2026-03-30 06:47:24,765 [INFO] src.diagrams.complexity_examples: Built 10 complexity example sentences
+2026-03-30 06:47:24,765 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Intransitive': 3 boxes (2 words, 1 cups, 0 caps), normal_form=True
+2026-03-30 06:47:24,765 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Transitive': 5 boxes (3 words, 2 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,768 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Ditransitive': 7 boxes (4 words, 3 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,773 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adj+Trans (5w)': 7 boxes (4 words, 3 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,776 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adv+Trans (5w)': 7 boxes (4 words, 3 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,785 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adj+Adv+Trans (6w)': 9 boxes (5 words, 4 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,792 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adv+Ditrans (6w)': 9 boxes (5 words, 4 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,800 [INFO] src.diagrams.complexity_metrics: Analyzed diagram '2Adj+Trans (6w)': 9 boxes (5 words, 4 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,807 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'RelCl+Ditrans+Adv (9w)': 9 boxes (5 words, 4 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,821 [INFO] src.diagrams.complexity_metrics: Analyzed diagram 'Adj+Adv+Ditrans (8w)': 11 boxes (6 words, 5 cups, 0 caps), normal_form=False
+2026-03-30 06:47:24,822 [INFO] src.diagrams.complexity_metrics: Compared 10 diagrams: box counts range [3, 11]
+2026-03-30 06:47:25,006 [INFO] src.visualization.complexity_plots: Saved complexity comparison plot to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/complexity_comparison.png
+2026-03-30 06:47:25,007 [INFO] generate_discopy_figures:   ✓ complexity_comparison.png
+2026-03-30 06:47:25,007 [INFO] generate_discopy_figures: Generated 10 DisCoPy figures
+[2026-03-30 06:47:25] [INFO] Completed: Execute generate_discopy_figures.py (1.0s)
+[2026-03-30 06:47:25] [INFO]     ✅ Completed in 0s
+[2026-03-30 06:47:25] [INFO]   [6/7] cognitive_case_diagrams/generate_quantum_figures.py
+[2026-03-30 06:47:25] [INFO] 
+  Running: cognitive_case_diagrams/generate_quantum_figures.py
+[2026-03-30 06:47:25] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/.venv
+[2026-03-30 06:47:25] [INFO] Starting: Execute generate_quantum_figures.py
+2026-03-30 06:47:25,423 [INFO] src.quantum.quantum_case: POVM validated: 8 elements, dimension 8
+2026-03-30 06:47:25,544 [INFO] src.visualization.quantum_plots: Saved POVM plot to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/quantum_povm_probabilities.png
+2026-03-30 06:47:25,544 [INFO] generate_quantum_figures:   ✓ quantum_povm_probabilities.png
+2026-03-30 06:47:25,657 [INFO] src.visualization.security_plots: Saved type violation plot to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/security_type_violations.png
+2026-03-30 06:47:25,657 [INFO] generate_quantum_figures:   ✓ security_type_violations.png
+2026-03-30 06:47:25,657 [INFO] generate_quantum_figures: Generated 2 quantum/security figures
+[2026-03-30 06:47:25] [INFO] Completed: Execute generate_quantum_figures.py (0.6s)
+[2026-03-30 06:47:25] [INFO]     ✅ Completed in 0s
+[2026-03-30 06:47:25] [INFO]   Progress: 6/7 (85%) - Elapsed: 10s | ETA: 5s
+[2026-03-30 06:47:25] [INFO]   [7/7] cognitive_case_diagrams/generate_syntactic_figures.py
+[2026-03-30 06:47:25] [INFO] 
+  Running: cognitive_case_diagrams/generate_syntactic_figures.py
+[2026-03-30 06:47:25] [INFO]   Using project-local venv: /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/.venv
+[2026-03-30 06:47:25] [INFO] Starting: Execute generate_syntactic_figures.py
+2026-03-30 06:47:26,465 [INFO] src.visualization.syntactic_sentence_diagrams: Saved syntactic case panel to /Users/4d/Documents/GitHub/template/projects/cognitive_case_diagrams/output/figures/syntactic_case_panel.png
+2026-03-30 06:47:26,465 [INFO] generate_syntactic_figures:   ✓ syntactic_case_panel.png
+2026-03-30 06:47:26,465 [INFO] generate_syntactic_figures: Generated 1 syntactic figure(s)
+[2026-03-30 06:47:26] [INFO] Completed: Execute generate_syntactic_figures.py (0.8s)
+[2026-03-30 06:47:26] [INFO]     ✅ Completed in 0s
+[2026-03-30 06:47:26] [INFO]   Progress: 7/7 (100%) - Elapsed: 11s | ETA: 0s
+[2026-03-30 06:47:26] [INFO] Analysis scripts completed: 6/7 (cognitive_case_diagrams/generate_category_figures.py, cognitive_case_diagrams/generate_cognitive_figures.py, cognitive_case_diagrams/generate_diagrams.py, cognitive_case_diagrams/generate_discopy_figures.py, cognitive_case_diagrams/generate_quantum_figures.py, cognitive_case_diagrams/generate_syntactic_figures.py)
+[2026-03-30 06:47:26] [ERROR] 
+1 script(s) failed:
+[2026-03-30 06:47:26] [ERROR]   Failed: 05_inject_variables.py
+[2026-03-30 06:47:26] [INFO] 
+  Troubleshooting:
+[2026-03-30 06:47:26] [INFO]     - Review error messages above for each failed script
+[2026-03-30 06:47:26] [INFO]     - Run scripts individually to isolate issues
+[2026-03-30 06:47:26] [INFO]     - Check script dependencies and imports
+[2026-03-30 06:47:26] [INFO]     - Verify input data files exist if required
+[2026-03-30 06:47:26] [ERROR] 
+Analysis failed - fix issues and try again
+[2026-03-30 06:47:26] [ERROR] ❌ [STAGE_FAILED] ✗ Stage 4 failed
+[2026-03-30 06:47:26] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 4: Project Analysis — Check stage logs for details
+[2026-03-30 06:47:26] [ERROR] ❌ [PROJECT_FAILED] Project 'cognitive_case_diagrams' failed — Check project logs for details
+[2026-03-30 06:47:26] [INFO] Completed: Pipeline execution for cognitive_case_diagrams (23.2s)
+[2026-03-30 06:47:26] [INFO] Multi-project execution completed: 1 successful, 2 failed
+[2026-03-30 06:47:26] [INFO] 
+[2026-03-30 06:47:26] [INFO] ==================================================
+[2026-03-30 06:47:26] [INFO] MULTI-PROJECT EXECUTION RESULTS
+[2026-03-30 06:47:26] [INFO] ==================================================
+[2026-03-30 06:47:26] [INFO] Operation: multi-project core execution (no infra)
+[2026-03-30 06:47:26] [INFO] Total Projects: 3
+[2026-03-30 06:47:26] [INFO] Successful: 1
+[2026-03-30 06:47:26] [INFO] Failed: 2
+[2026-03-30 06:47:26] [INFO] Success Rate: 33.3%
+[2026-03-30 06:47:26] [INFO] Total Duration: 85.0s
+[2026-03-30 06:47:26] [INFO] Average per Project: 28.3s
+[2026-03-30 06:47:26] [INFO] Project Status:
+[2026-03-30 06:47:26] [INFO]   ❌ blake_bimetalism: 4 stages, 8.9s
+[2026-03-30 06:47:26] [INFO]   ✅ code_project: 7 stages, 52.8s
+[2026-03-30 06:47:26] [INFO]   ❌ cognitive_case_diagrams: 4 stages, 23.2s
+[2026-03-30 06:47:26] [INFO] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-03-30 06:47:26] [INFO] Multi-project summary saved: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
+[2026-03-30 06:47:26] [INFO] Multi-project summary reports generated:
+[2026-03-30 06:47:26] [INFO]   • JSON: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.json
+[2026-03-30 06:47:26] [INFO]   • MARKDOWN: /Users/4d/Documents/GitHub/template/output/multi_project_summary/multi_project_summary.md
+[2026-03-30 06:47:26] [ERROR] ❌ Some projects failed
+[2026-03-30 06:47:26] [ERROR]    Failed projects:
+[2026-03-30 06:47:26] [ERROR]      - blake_bimetalism
+[2026-03-30 06:47:26] [ERROR]      - cognitive_case_diagrams

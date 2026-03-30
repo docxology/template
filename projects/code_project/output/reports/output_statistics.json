@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.83",
-      "total_size_bytes": 1915442,
+      "size_mb": "1.82",
+      "total_size_bytes": 1907667,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
-          "size_mb": "1.65",
+          "size_mb": "1.64",
           "path": "pdf/code_project_combined.pdf"
         },
         {
@@ -64,12 +64,12 @@
     "slides": {
       "exists": true,
       "file_count": 48,
-      "size_mb": "2.21",
-      "total_size_bytes": 2319088,
+      "size_mb": "2.20",
+      "total_size_bytes": 2311132,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "1.57",
+          "size_mb": "1.56",
           "path": "slides/03_results_slides.pdf"
         },
         {
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "1.54",
-      "total_size_bytes": 1615577,
+      "size_mb": "1.53",
+      "total_size_bytes": 1608196,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -141,7 +141,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.01",
-      "total_size_bytes": 8437,
+      "total_size_bytes": 8438,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -199,17 +199,17 @@
     }
   },
   "total_files": 83,
-  "total_size_mb": 5.75515079498291,
+  "total_size_mb": 5.733110427856445,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
-      "size_mb": "1.65",
+      "size_mb": "1.64",
       "category": "pdf",
       "path": "pdf/code_project_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "1.57",
+      "size_mb": "1.56",
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
@@ -264,12 +264,12 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8267078399658203,
+    "pdf": 1.8192930221557617,
     "web": 0.16524887084960938,
-    "slides": 2.2116546630859375,
-    "figures": 1.5407342910766602,
+    "slides": 2.2040672302246094,
+    "figures": 1.5336952209472656,
     "data": 0.0002269744873046875,
-    "reports": 0.008046150207519531,
+    "reports": 0.008047103881835938,
     "simulations": 0.0,
     "llm": 0.0,
     "logs": 0.0025320053100585938

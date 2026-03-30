@@ -704,6 +704,10 @@ def generate_llm_executive_summary(
         max_tokens=None,
     )
 
+
+# Historical name used by tests and older call sites
+generate_executive_summary = generate_llm_executive_summary
+
 def generate_quality_review(
     client: LLMClient, text: str, model_name: str = "", temperature: float = 0.3
 ) -> tuple[str, ReviewMetrics]:

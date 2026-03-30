@@ -325,7 +325,7 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
                     metadata["authors"] = [
                         author.get("name", "Unknown") for author in config_data["authors"]
                     ]
-            except (OSError, ValueError, AttributeError) as e:
+            except (OSError, ValueError, AttributeError, _yaml.YAMLError) as e:
                 logger.warning(f"Failed to parse {config_path}: {e}")
 
     return metadata

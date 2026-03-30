@@ -159,6 +159,7 @@ class LLMClient:
         model_name = model or self.config.default_model
 
         if reset_context:
+            logger.info("Resetting context")
             self.context.clear()
             self._system_prompt_injected = False
             if self.config.auto_inject_system_prompt:
@@ -397,7 +398,7 @@ class LLMClient:
         """
         model_name = model or self.config.default_model
 
-        logger.debug("Starting structured query (JSON) model=%s", model_name)
+        logger.info("Starting structured query (JSON) model=%s", model_name)
 
         # Configure for JSON output
         struct_options = options or GenerationOptions()
@@ -432,9 +433,19 @@ class LLMClient:
         self.context.add_message("user", instruction + prompt)
         self.context.add_message("assistant", response_text)
 
+        def _log_structured_complete() -> None:
+            logger.info(
+                "Structured query completed",
+                extra={
+                    "model": model_name,
+                    "generation_time_seconds": generation_time,
+                },
+            )
+
         # Parse and validate JSON response
         try:
             parsed = cast(dict[str, Any], json.loads(response_text))
+            _log_structured_complete()
             return parsed
         except json.JSONDecodeError as e:
             # Try to extract JSON if wrapped
@@ -451,6 +462,7 @@ class LLMClient:
                             "original_length": len(response_text),
                         },
                     )
+                    _log_structured_complete()
                     return parsed
                 except json.JSONDecodeError as e:
                     logger.error(

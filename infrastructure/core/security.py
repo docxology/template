@@ -12,7 +12,6 @@ API style note:
 
 from __future__ import annotations
 
-import functools
 import re
 import threading
 import time

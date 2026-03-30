@@ -155,6 +155,9 @@ class TestValidatePackages:
 class TestValidatePreamblePackages:
     """Test validate_preamble_packages function using real execution."""
 
+    # validate_preamble_packages runs kpsewhich for many packages (5s cap each);
+    # default pytest-timeout (10s) is too tight for CI and slow TeX trees.
+    @pytest.mark.timeout(120)
     @pytest.mark.skipif(not shutil.which("kpsewhich"), reason="kpsewhich not available")
     def test_validate_preamble_non_strict(self):
         """Test preamble validation in non-strict mode using real execution."""
@@ -165,6 +168,7 @@ class TestValidatePreamblePackages:
         assert len(result.required_packages) > 0
         assert len(result.optional_packages) >= 0
 
+    @pytest.mark.timeout(120)
     @pytest.mark.skipif(not shutil.which("kpsewhich"), reason="kpsewhich not available")
     def test_validate_preamble_strict_mode(self):
         """Test preamble validation in strict mode using real execution."""
@@ -178,6 +182,10 @@ class TestValidatePreamblePackages:
             # If exception raised, some packages missing - that's valid
             pass
 
+    @pytest.mark.skipif(
+        shutil.which("kpsewhich") is not None,
+        reason="Without kpsewhich only; when present, non-strict preamble is covered elsewhere",
+    )
     def test_validate_preamble_no_kpsewhich(self):
         """Test preamble validation when kpsewhich not available."""
         # Should handle gracefully when kpsewhich not found

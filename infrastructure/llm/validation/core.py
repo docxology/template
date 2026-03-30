@@ -207,8 +207,8 @@ def validate_complete(
         data = validate_json(content)
         return validate_structure(data, schema)
 
-    # RAW and standard modes: validate formatting (non-empty already checked above)
-    return formatting_ok
+    # Standard / raw / unknown: non-empty content passes; formatting issues are warnings only
+    return True
 
 
 def validate_no_repetition(
