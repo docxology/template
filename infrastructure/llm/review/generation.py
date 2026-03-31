@@ -157,7 +157,7 @@ def _stream_with_heartbeat(
         tokens_generated = 0
         start_gen_time = time.time()
         try:
-            for chunk in client.stream_query(prompt, options=options):
+            for chunk in client.stream_query(prompt, options=options, sanitize=False):
                 response_chunks.append(chunk)
                 tokens_generated += len(chunk.split())
                 progress.set(tokens_generated)
@@ -177,7 +177,7 @@ def _stream_with_heartbeat(
             f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}"
         )
         try:
-            return client.query(prompt, options=options)
+            return client.query(prompt, options=options, sanitize=False)
         except Exception as block_err:
             raise block_err from e
 

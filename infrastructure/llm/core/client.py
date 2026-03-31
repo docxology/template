@@ -128,6 +128,7 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         model: str | None = None,
         reset_context: bool = False,
         options: GenerationOptions | None = None,
+        sanitize: bool = True,
     ) -> str:
         """Send a query to the LLM with context management.
 
@@ -136,6 +137,11 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
             model: Model to use (overrides config)
             reset_context: Whether to clear conversation history
             options: Per-query generation options
+            sanitize: Whether to apply input sanitization (default True).
+                Set to False for trusted internal content (e.g. manuscript
+                review prompts built from local PDF text) where the
+                dangerous-pattern check would false-positive on legitimate
+                technical references like ``open()`` or ``pathlib``.
 
         Returns:
             Generated text response
@@ -156,7 +162,8 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
             if self.config.auto_inject_system_prompt:
                 self._inject_system_prompt()
 
-        prompt = sanitize_llm_input(prompt)
+        if sanitize:
+            prompt = sanitize_llm_input(prompt)
         self.context.add_message("user", prompt)
 
         try:
@@ -297,6 +304,7 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         save_path: Path | None = None,
         log_progress: bool = True,
         retries: int = 1,
+        sanitize: bool = True,
     ) -> Iterator[str]:
         """Stream response from LLM with comprehensive logging and error recovery.
 
@@ -311,6 +319,8 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
             save_path: Path to save response (auto-generated if None and save_response=True)
             log_progress: Whether to log streaming progress (DEBUG level)
             retries: Number of retry attempts on transient failures
+            sanitize: Whether to apply input sanitization (default True).
+                Set to False for trusted internal content.
 
         Yields:
             Response text chunks
@@ -321,7 +331,8 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         """
         from infrastructure.llm.core._stream_impl import stream_query_impl
 
-        prompt = sanitize_llm_input(prompt)
+        if sanitize:
+            prompt = sanitize_llm_input(prompt)
         yield from stream_query_impl(
             config=self.config,
             context=self.context,

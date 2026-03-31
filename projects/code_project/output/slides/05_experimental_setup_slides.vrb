@@ -67,11 +67,11 @@ to isolate algorithmic scaling from problem conditioning effects.
 \item
   \textbf{Python}: 3.12.11
 \item
-  \textbf{NumPy}: 1.26.4
+  \textbf{NumPy}: 2.4.1
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-03-30T21:55:37Z
+  \textbf{Generated}: 2026-03-31T14:11:04Z
 \end{itemize}
 \end{block}
 

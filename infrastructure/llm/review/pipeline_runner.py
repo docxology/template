@@ -149,9 +149,13 @@ def run_llm_review_pipeline(
                     logger.warning(f"  Skipping unknown review type: {review_type}")
                     continue
                 response, metrics = generator(client, text, model_name)
+                session_metrics.reviews[review_type] = metrics
+
+                if response is None:
+                    logger.warning(f"  ⚠️  {review_type} returned no content — skipping save")
+                    continue
 
                 reviews[review_type] = response
-                session_metrics.reviews[review_type] = metrics
                 save_single_review(review_type, response, output_dir, model_name, metrics)
 
         # Translations

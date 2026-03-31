@@ -24,7 +24,7 @@
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.89,
+            "size_mb": 1.9,
             "readable": true,
             "optional": false
           },
@@ -90,7 +90,7 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.89",
+          "size_mb": "1.90",
           "largest_file": "code_project_combined.pdf"
         },
         "web": {
@@ -153,7 +153,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.9140167236328125,
+      "total_size_mb": 4.928257942199707,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,15 +163,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.890655517578125
+      "size_mb": 1.8975439071655273
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5150537490844727
+      "size_mb": 1.5224990844726562
     },
     "data": {
       "files": 3,
-      "size_mb": 0.011019706726074219
+      "size_mb": 0.011018753051757812
     }
   },
   "summary": {

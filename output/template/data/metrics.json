@@ -6,12 +6,12 @@
   "infra_test_file_count": 180,
   "infra_test_count": 3211,
   "infra_test_count_approx": "3,211",
-  "all_projects_test_count": 118,
+  "all_projects_test_count": 119,
   "docs_file_count": 152,
   "docs_subdir_count": 15,
   "infrastructure_version": "2.0.0",
-  "project_blake_bimetalism_test_count": "13",
-  "project_blake_bimetalism_test_file_count": "3",
+  "project_blake_bimetalism_test_count": "14",
+  "project_blake_bimetalism_test_file_count": "4",
   "project_blake_bimetalism_chapter_count": "19",
   "project_blake_bimetalism_script_count": "2",
   "project_blake_bimetalism_src_module_count": "11",
@@ -38,8 +38,8 @@
   "project_cognitive_case_diagrams_test_file_count": "47",
   "project_ento_linguistics_test_count": "1014",
   "project_ento_linguistics_test_file_count": "38",
-  "project_fep_lean_test_count": "154",
-  "project_fep_lean_test_file_count": "9",
+  "project_fep_lean_test_count": "0",
+  "project_fep_lean_test_file_count": "0",
   "module_config_python_file_count": 0,
   "module_core_python_file_count": 71,
   "module_docker_python_file_count": 0,
@@ -80,5 +80,5 @@
   "module_steganography_has_readme_md": "true",
   "module_validation_has_readme_md": "true",
   "module_inventory_table": "| Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |\n|--------|:-----------:|:-------------:|:-------------:|-------------|\n| `config` | 0 | ✓ | ✓ | Configuration schemas |\n| `core` | 71 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |\n| `docker` | 0 | ✓ | ✓ | Containerisation |\n| `documentation` | 6 | ✓ | ✓ | `FigureManager`, `generate_glossary` |\n| `llm` | 53 | ✓ | ✓ | LLM review, literature search, translation |\n| `project` | 5 | ✓ | ✓ | `discover_projects`, workspace management |\n| `publishing` | 14 | ✓ | ✓ | Citation generation (APA, BibTeX, MLA), Zenodo |\n| `rendering` | 27 | ✓ | ✓ | PDF rendering, Pandoc filters, HTML reports |\n| `reporting` | 40 | ✓ | ✓ | Coverage parsing, executive reports |\n| `scientific` | 6 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |\n| `skills` | 4 | ✓ | ✓ | — |\n| `steganography` | 10 | ✓ | ✓ | Metadata injection, QR overlays, hashing |\n| `validation` | 35 | ✓ | ✓ | PDF validation, Markdown checking, CLI |",
-  "generated_at": "2026-03-30T21:56:51Z"
+  "generated_at": "2026-03-31T14:12:17Z"
 }
