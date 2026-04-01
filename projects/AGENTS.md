@@ -61,12 +61,13 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[code_project<br/>Optimization Exemplar<br/>100% coverage · 45 tests]
-        P2[template<br/>Meta-Documentation<br/>94.4% coverage · 65 tests]
+        P1[code_project<br/>Optimization Exemplar<br/>~96% coverage · 39 tests]
+        P2[template<br/>Meta-Documentation<br/>~93% coverage · 66 tests]
+        P3[blake_bimetalism<br/>18-chapter manuscript<br/>~96% coverage · 20 tests]
     end
 
     subgraph InProgress["In-Progress Projects (projects_in_progress/)"]
-        IP1[fep_lean<br/>In Progress - NOT Discovered]
+        IP1[fep_lean_and_others<br/>NOT Discovered until promoted]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
@@ -82,6 +83,7 @@ graph TD
 
     P1 -->|Discovered| DISCOVER
     P2 -->|Discovered| DISCOVER
+    P3 -->|Discovered| DISCOVER
     IP1 -.->|NOT Scanned| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
     A2 -.->|NOT Scanned| DISCOVER
@@ -90,6 +92,7 @@ graph TD
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
     PIPELINE -->|Executes| P2
+    PIPELINE -->|Executes| P3
 ```
 
 ### Project Lifecycle
@@ -571,9 +574,12 @@ All projects in this directory comply with the template's development standards 
 
 #### Testing Standards Results
 
-- **code_project**: 100% coverage (45 tests), all data-driven ✅
-- **template**: 94.4% coverage (65 tests), all data-driven ✅
-- **Combined**: 110 tests across 2 projects, all use data, no mocks detected ✅
+- **code_project**: ~96% coverage (39 tests), all data-driven ✅
+- **template**: ~93% coverage (66 tests), all data-driven ✅
+- **blake_bimetalism**: ~96% coverage (20 tests), all data-driven ✅
+- **Combined**: 125 tests across 3 active projects, all use data, no mocks detected ✅
+
+Authoritative project names: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate with `uv run python scripts/generate_active_projects_doc.py` after layout changes).
 
 #### Documentation Standards Results
 
@@ -592,8 +598,8 @@ All projects in this directory comply with the template's development standards 
 #### Pipeline Integration Results
 
 - **Import errors**: Fixed in `infrastructure/validation/output_validator.py` ✅
-- **Figure generation**: Both projects generate and register figures correctly ✅
-- **Manuscript integration**: All equations and figures properly referenced ✅
+- **Figure generation**: Active projects generate and register figures where applicable ✅
+- **Manuscript integration**: Equations and figures referenced per project manuscript ✅
 
 ```bash
 # Compliance verification commands (all pass):

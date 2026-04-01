@@ -24,7 +24,7 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 └── workflows/
     ├── AGENTS.md                # CI/CD workflow documentation
     ├── README.md                # Quick reference
-    ├── ci.yml                   # Main CI/CD pipeline (7 jobs)
+    ├── ci.yml                   # Main CI/CD pipeline (8 jobs)
     ├── stale.yml                # Auto-label and close stale issues/PRs
     └── release.yml              # Create GitHub Releases on version tags
 ```
@@ -77,6 +77,7 @@ required_status_checks:
     - "Project Tests (ubuntu-latest, Python 3.10)"
     - "Project Tests (ubuntu-latest, Python 3.11)"
     - "Project Tests (ubuntu-latest, Python 3.12)"
+    - "fep_lean (real gauss + lake)"
     - "Validate Manuscripts"
     - "Security Scan"
     - "Performance Check"
@@ -97,7 +98,7 @@ uvx ruff check infrastructure/ projects/*/src/ --fix
 uvx ruff format infrastructure/ projects/*/src/
 # Run tests locally (mirror CI)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/*/tests/ --cov=projects --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
+uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ --cov=projects --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
 # Security scan locally
 uv run pip-audit
 uv run bandit -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress

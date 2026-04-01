@@ -12,7 +12,7 @@ import subprocess
 import unicodedata
 import yaml
 from pathlib import Path
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_helpers import (
@@ -44,13 +44,78 @@ class CombinedMarkdownResult(NamedTuple):
     content: str
     mermaid_blocks_removed: int
     fig_paths_fixed: int
+    manuscript_vars_substitutions: int
 
 
-def preprocess_combined_markdown(combined_content: str) -> CombinedMarkdownResult:
-    """Strip Mermaid fences and normalise figure paths in combined markdown.
+_PLACEHOLDER_RE = re.compile(r"\{\{([^}]+)\}\}")
+
+
+def flatten_manuscript_vars(data: Any, prefix: str = "") -> dict[str, str]:
+    """Flatten nested YAML mapping to dotted keys with string values (for {{key}} substitution)."""
+    flat: dict[str, str] = {}
+    if isinstance(data, dict):
+        for k, v in data.items():
+            key = f"{prefix}.{k}" if prefix else str(k)
+            if isinstance(v, dict):
+                flat.update(flatten_manuscript_vars(v, key))
+            elif isinstance(v, list):
+                flat[key] = ", ".join(str(x) for x in v)
+            elif isinstance(v, bool):
+                flat[key] = str(v).lower()
+            elif v is None:
+                flat[key] = ""
+            else:
+                flat[key] = str(v)
+    return flat
+
+
+def substitute_manuscript_var_placeholders(
+    content: str, flat: dict[str, str]
+) -> tuple[str, int]:
+    """Replace ``{{name}}`` placeholders using flattened manuscript_vars.
+
+    Handles ``{{maturity.*}}`` and ``{{verify.*}}`` summaries. Unknown keys are left unchanged.
+    """
+    maturity_summary = (
+        f"{flat.get('maturity.real', '?')} real, "
+        f"{flat.get('maturity.partial', '?')} partial, "
+        f"{flat.get('maturity.aspirational', '?')} aspirational"
+    )
+    verify_parts = [f"{k}={flat[k]}" for k in sorted(flat) if k.startswith("verify.")]
+    verify_summary = "; ".join(verify_parts) if verify_parts else "(no verify metrics in manuscript_vars)"
+
+    n_subs = 0
+
+    def repl(match: re.Match[str]) -> str:
+        nonlocal n_subs
+        key = match.group(1).strip()
+        if key == "maturity.*":
+            n_subs += 1
+            return maturity_summary
+        if key == "verify.*":
+            n_subs += 1
+            return verify_summary
+        if key in flat:
+            n_subs += 1
+            return flat[key]
+        return match.group(0)
+
+    out = _PLACEHOLDER_RE.sub(repl, content)
+    return out, n_subs
+
+
+def preprocess_combined_markdown(
+    combined_content: str,
+    manuscript_dir: Path | None = None,
+) -> CombinedMarkdownResult:
+    """Strip Mermaid fences, normalise figure paths, optional ``manuscript_vars.yaml`` substitution.
+
+    If ``manuscript_dir/manuscript_vars.yaml`` exists, ``{{dotted.key}}`` placeholders in the
+    combined markdown are replaced with string values from the flattened YAML tree. Special
+    keys ``{{maturity.*}}`` and ``{{verify.*}}`` expand to short summaries.
 
     Returns:
-        CombinedMarkdownResult with processed content and counts of removals/fixes.
+        CombinedMarkdownResult with processed content and counts of removals/fixes/substitutions.
     """
     content, n_mermaid = _MERMAID_RE.subn("", combined_content)
     if n_mermaid:
@@ -67,7 +132,32 @@ def preprocess_combined_markdown(combined_content: str) -> CombinedMarkdownResul
     if n_fig_paths:
         logger.info(f"✓ Normalised {n_fig_paths} figure path(s) to ../figures/ in combined markdown")
 
-    return CombinedMarkdownResult(content, n_mermaid, n_fig_paths)
+    n_vars = 0
+    if manuscript_dir is not None:
+        vars_path = manuscript_dir / "manuscript_vars.yaml"
+        if vars_path.is_file():
+            try:
+                raw = yaml.safe_load(vars_path.read_text(encoding="utf-8"))
+            except (OSError, yaml.YAMLError) as e:
+                logger.warning("Could not load manuscript_vars.yaml for placeholder substitution: %s", e)
+            else:
+                if raw is None:
+                    raw = {}
+                if isinstance(raw, dict):
+                    flat = flatten_manuscript_vars(raw)
+                    content, n_vars = substitute_manuscript_var_placeholders(content, flat)
+                    if n_vars:
+                        logger.info(
+                            "✓ Substituted %s manuscript_vars placeholder(s) from %s",
+                            n_vars,
+                            vars_path.name,
+                        )
+                else:
+                    logger.warning(
+                        "manuscript_vars.yaml root must be a mapping; skipping placeholder substitution"
+                    )
+
+    return CombinedMarkdownResult(content, n_mermaid, n_fig_paths, n_vars)
 
 
 def build_pandoc_tex_command(
@@ -235,16 +325,26 @@ def inject_latex_preamble(
 
 
 def inject_bibliography(tex_content: str, bib_exists: bool) -> str:
-    """Insert \\bibliography{references} before \\end{document} if needed."""
-    if bib_exists and "\\bibliography{" not in tex_content:
+    """Ensure bibliography starts on a new page; insert \\bibliography if missing."""
+    bib_marker = "\\bibliography{"
+    if bib_exists and bib_marker in tex_content:
+        idx = tex_content.find(bib_marker)
+        before = tex_content[max(0, idx - 80) : idx]
+        if "\\clearpage" not in before:
+            tex_content = tex_content[:idx] + "\\clearpage\n\n" + tex_content[idx:]
+            logger.info("✓ Inserted \\clearpage before \\bibliography{...}")
+        return tex_content
+    if bib_exists and bib_marker not in tex_content:
         end_doc_idx = tex_content.rfind("\\end{document}")
         if end_doc_idx > 0:
             tex_content = (
                 tex_content[:end_doc_idx]
-                + "\n\n\\bibliography{references}\n"
+                + "\n\n\\clearpage\n\n\\bibliography{references}\n"
                 + tex_content[end_doc_idx:]
             )
-            logger.info("✓ Inserted \\bibliography{references} before \\end{document}")
+            logger.info(
+                "✓ Inserted \\clearpage and \\bibliography{references} before \\end{document}"
+            )
         else:
             logger.warning("⚠️  Could not find \\end{document} to insert bibliography")
     return tex_content

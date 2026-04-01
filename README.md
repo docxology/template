@@ -78,7 +78,7 @@ flowchart TD
 **Goal:** Write documents and generate PDFs without programming
 
 | Step | Document | Purpose |
-|------|---------|---------|
+| --- | --- | --- |
 | 1 | **[Quick Start](#quick-start)** | Get running in 5 minutes |
 | 2 | **[docs/guides/getting-started.md](docs/guides/getting-started.md)** | Beginner's guide (Levels 1-3) |
 | 3 | **[docs/reference/quick-start-cheatsheet.md](docs/reference/quick-start-cheatsheet.md)** | One-page command reference |
@@ -94,7 +94,7 @@ flowchart TD
 **Goal:** Generate figures, add data analysis, and automate workflows
 
 | Step | Document | Purpose |
-|------|---------|---------|
+| --- | --- | --- |
 | 1 | **[docs/core/architecture.md](docs/core/architecture.md)** | System design overview |
 | 2 | **[docs/architecture/thin-orchestrator-summary.md](docs/architecture/thin-orchestrator-summary.md)** | Core architecture pattern |
 | 3 | **[docs/core/workflow.md](docs/core/workflow.md)** | Development process |
@@ -108,7 +108,7 @@ flowchart TD
 **Goal:** Improve the template for everyone
 
 | Step | Document | Purpose |
-|------|---------|---------|
+| --- | --- | --- |
 | 1 | **[docs/development/contributing.md](docs/development/contributing.md)** | How to contribute |
 | 2 | **[docs/development/code-of-conduct.md](docs/development/code-of-conduct.md)** | Community standards |
 | 3 | **[docs/development/roadmap.md](docs/development/roadmap.md)** | Future plans |
@@ -121,7 +121,7 @@ flowchart TD
 **Goal:** Understand system internals and additional features
 
 | Step | Document | Purpose |
-|------|---------|---------|
+| --- | --- | --- |
 | 1 | **[AGENTS.md](AGENTS.md)** | System reference |
 | 2 | **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** | Pipeline orchestration reference |
 | 3 | **[docs/usage/manuscript-numbering-system.md](docs/usage/manuscript-numbering-system.md)** | Section organization |
@@ -357,7 +357,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 ./run.sh --pipeline
 
 # Alternative: Core 10-stage declarative DAG pipeline (no LLM dependencies)
-uv run scripts/execute_pipeline.py --core-only
+uv run python scripts/execute_pipeline.py --core-only
 
 # Run tests with coverage (infrastructure + project)
 uv run scripts/01_run_tests.py
@@ -723,7 +723,7 @@ flowchart TD
 **Directory Overview with Documentation Links:**
 
 | Directory | Purpose | Documentation |
-|-----------|---------|---------------|
+| --- | --- | --- |
 | **`infrastructure/`** | Generic build/validation tools (Layer 1) | [infrastructure/AGENTS.md](infrastructure/AGENTS.md) |
 | **`scripts/`** | Entry point orchestrators | [scripts/AGENTS.md](scripts/AGENTS.md) |
 | **`tests/`** | Infrastructure test suite | [tests/AGENTS.md](tests/AGENTS.md) |
@@ -879,7 +879,7 @@ pip install -e .
 # Or run the manuscript pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 ./run.sh --pipeline
 
-# Alternative: Core 10-stage DAG pipeline (stages 00-05, no LLM dependencies)
+# Alternative: Core 10-stage DAG pipeline (scripts 00-05, no LLM dependencies)
 uv run python scripts/execute_pipeline.py --core-only
 
 # Or run stages individually (using generic entry point orchestrators)
@@ -1159,10 +1159,10 @@ flowchart TD
 
 ### Entry Point 2: Core Pipeline (`uv run python scripts/execute_pipeline.py --core-only`)
 
-**10-stage declarative pipeline** (stages 00-05) without LLM dependencies:
+**10-stage declarative pipeline** (scripts 00-05) without LLM dependencies:
 
 | Stage | Script | Purpose |
-|-------|--------|---------|
+| --- | --- | --- |
 | 00 | `00_setup_environment.py` | Environment setup & validation |
 | 01 | `01_run_tests.py` | Run test suite (infrastructure + project) |
 | 02 | `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
@@ -1282,7 +1282,7 @@ We welcome contributions! To contribute:
 
 **Recent Improvements:**
 
-   - Build system optimizations - [Performance Optimization](docs/operational/config/performance-optimization.md)
+- Build system optimizations - [Performance Optimization](docs/operational/config/performance-optimization.md)
 - Test suite enhancements
 - Simplified directory structure with markdown/ elimination
 

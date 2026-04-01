@@ -192,6 +192,7 @@ jobs:
           PYTHONPATH: .
         run: >-
           uv run pytest projects/*/tests/
+          --ignore=projects/fep_lean/tests/
           --cov=projects/code_project/src
           --cov-report=term-missing
           --cov-report=xml:coverage-project.xml
@@ -209,6 +210,74 @@ jobs:
           fail_ci_if_error: false
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 4b — fep_lean (real math-inc gauss + elan lake/lean; excluded from matrix above)
+# ─────────────────────────────────────────────────────────────────────────────
+  fep-lean:
+    name: fep_lean (real gauss + lake)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: [verify-no-mocks]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync dependencies (dev + optional test groups)
+        run: uv sync --group rendering --group monitoring
+
+      - name: Install elan (lean + lake)
+        run: |
+          set -euxo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Pin Lean toolchain and warm Lake build
+        working-directory: projects/fep_lean/lean
+        run: |
+          set -euxo pipefail
+          TOOLCHAIN=$(tr -d '[:space:]' < lean-toolchain)
+          elan override set "$TOOLCHAIN"
+          lean --version
+          lake --version
+          lake build
+
+      - name: Install Open Gauss CLI
+        timeout-minutes: 25
+        env:
+          OPEN_GAUSS_AUTO_ATTACH: "0"
+        run: |
+          set -euxo pipefail
+          export PATH="$HOME/.local/bin:$PATH"
+          git clone --depth 1 https://github.com/math-inc/OpenGauss.git "$RUNNER_TEMP/OpenGauss"
+          cd "$RUNNER_TEMP/OpenGauss"
+          ./scripts/install.sh --plain --noninteractive --skip-system-packages
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          command -v gauss
+          gauss doctor
+
+      - name: Run fep_lean tests (real gauss doctor + lake build)
+        env:
+          COVERAGE_FILE: .coverage.fep_lean
+          PYTHONPATH: .
+        run: >-
+          uv run pytest projects/fep_lean/tests/
+          --timeout=900
+          --cov=projects/fep_lean/src
+          --cov-report=term-missing
+          --cov-fail-under=90
+          --durations=10
+          -m "not requires_ollama"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 5 — Validate Manuscripts

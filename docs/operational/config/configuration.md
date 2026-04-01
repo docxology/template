@@ -138,6 +138,19 @@ def risky_operation():
 
 ## Module-Specific Configuration
 
+### fep_lean (optional Open Gauss CLI)
+
+Used by `projects/fep_lean/src/gauss_cli.py` and `projects/fep_lean/src/orchestrator.py`:
+
+| Variable | Default | Description |
+| -------- | ------- | ----------- |
+| `FEP_LEAN_REQUIRE_GAUSS` | (unset) | If truthy, pipeline validation fails when `gauss` is missing or `gauss doctor` fails |
+| `FEP_LEAN_GAUSS_WORKFLOWS` | (unset) | If truthy, analysis runs `lake build` in `projects/fep_lean/lean/` |
+| `FEP_LEAN_TEST_GAUSS_DOCTOR` | (unset) | If set, enables an opt-in pytest that runs a real `gauss doctor` |
+| `GAUSS_HOME` | `~/.gauss` | Writable directory checked for math-inc tooling layout |
+
+Project-local reference: [projects/fep_lean/docs/opengauss.md](../../../projects/fep_lean/docs/opengauss.md).
+
 ### Literature Search
 
 

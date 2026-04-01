@@ -50,6 +50,12 @@
 
 set -euo pipefail
 
+# Bypass macOS sandbox restrictions on ~/.matplotlib and ~/.cache/uv
+export MPLCONFIGDIR="${TMPDIR:-/tmp}/matplotlib_cache"
+mkdir -p "$MPLCONFIGDIR"
+export UV_CACHE_DIR="${TMPDIR:-/tmp}/uv_cache"
+mkdir -p "$UV_CACHE_DIR"
+
 # ============================================================================
 # Bash Version Check
 # ============================================================================
@@ -266,15 +272,16 @@ display_menu() {
     echo -e "    ${GREEN}2${NC}  Run Analysis               ${CYAN}02_run_analysis.py${NC}"
     echo -e "    ${GREEN}3${NC}  Render PDF                 ${CYAN}03_render_pdf.py${NC}"
     echo -e "    ${GREEN}4${NC}  Validate Output            ${CYAN}04_validate_output.py${NC}"
-    echo -e "    ${GREEN}5${NC}  LLM Review                 ${CYAN}06_llm_review.py${NC} ${YELLOW}⚡${NC}"
-    echo -e "    ${GREEN}6${NC}  LLM Translations           ${CYAN}06_llm_review.py${NC} ${YELLOW}⚡${NC}"
+    echo -e "    ${GREEN}5${NC}  Copy Outputs               ${CYAN}05_copy_outputs.py${NC}"
+    echo -e "    ${GREEN}6${NC}  LLM Review                 ${CYAN}06_llm_review.py${NC} ${YELLOW}⚡${NC}"
+    echo -e "    ${GREEN}7${NC}  LLM Translations           ${CYAN}06_llm_review.py${NC} ${YELLOW}⚡${NC}"
     echo
 
     # Orchestration
     echo -e "${BOLD}🚀 ORCHESTRATION${NC}"
-    echo -e "    ${GREEN}7${NC}  Core Pipeline              ${CYAN}[+infra] [-LLM] Stages 1-7${NC}"
-    echo -e "    ${GREEN}8${NC}  Full Pipeline              ${CYAN}[+infra] [+LLM] All 10 stages${NC}"
-    echo -e "    ${GREEN}9${NC}  Full Pipeline (fast)       ${CYAN}[-infra] [+LLM] Skip infra tests${NC}"
+    echo -e "    ${GREEN}8${NC}  Core Pipeline              ${CYAN}[+infra] [-LLM] Core stages${NC}"
+    echo -e "    ${GREEN}9${NC}  Full Pipeline              ${CYAN}[+infra] [+LLM] All 10 stages${NC}"
+    echo -e "    ${GREEN}f${NC}  Full Pipeline (fast)       ${CYAN}[-infra] [+LLM] Skip infra tests${NC}"
     echo
 
     # Multi-Project Operations
@@ -299,7 +306,7 @@ display_menu() {
     echo -e "  ${CYAN}Python${NC} $py_version  │  ${CYAN}Ollama${NC} $ollama_status  │  ${CYAN}Logs${NC} projects/*/output/logs/"
     echo -e "${BLUE}────────────────────────────────────────────────────────────────${NC}"
     echo
-    echo -e "${CYAN}💡 Tip:${NC} Chain commands: ${GREEN}345${NC} = analyze → render → validate"
+    echo -e "${CYAN}💡 Tip:${NC} Chain commands: ${GREEN}234${NC} = analyze → render → validate"
 }
 
 # ============================================================================
@@ -892,20 +899,20 @@ show_help() {
     echo -e "${BOLD}MENU OPTIONS${NC}"
     echo -e "  ${CYAN}Individual Stages:${NC}"
     echo "    0  Setup Environment       4  Validate Output"
-    echo "    1  Run Tests               5  LLM Review"
-    echo "    2  Run Analysis            6  LLM Translations"
-    echo "    3  Render PDF"
+    echo "    1  Run Tests               5  Copy Outputs"
+    echo "    2  Run Analysis            6  LLM Review"
+    echo "    3  Render PDF              7  LLM Translations"
     echo
     echo -e "  ${CYAN}Orchestration:${NC}"
-    echo "    7  Core Pipeline (no LLM)  9  Full Pipeline (fast)"
-    echo "    8  Full Pipeline (all)"
+    echo "    8  Core Pipeline (no LLM)  f  Full Pipeline (fast)"
+    echo "    9  Full Pipeline (all)"
     echo
     echo -e "  ${CYAN}Multi-Project:${NC}"
     echo "    a  All full (+infra +LLM)  c  All core (+infra -LLM)"
     echo "    b  All full (-infra +LLM)  d  All core (-infra -LLM)"
     echo
     echo -e "${BOLD}CHAINING${NC}"
-    echo -e "  Enter digits together: ${GREEN}345${NC} = analyze → render → validate"
+    echo -e "  Enter digits together: ${GREEN}234${NC} = analyze → render → validate"
     echo -e "  Or comma-separated:    ${GREEN}3,4,5${NC}"
     echo
     echo -e "${BOLD}LOG LOCATIONS${NC}"
@@ -916,8 +923,8 @@ show_help() {
     echo "  $0                      Interactive mode"
     echo "  $0 --pipeline           Full pipeline, current project"
     echo "  $0 --pipeline --resume  Resume from checkpoint"
-    echo "  $0 8                    Full pipeline (shorthand)"
-    echo "  $0 345                  Chain: analyze → render → validate"
+    echo "  $0 9                    Full pipeline (shorthand)"
+    echo "  $0 234                  Chain: analyze → render → validate"
     echo
 }
 
@@ -1022,28 +1029,32 @@ handle_menu_choice() {
             exit_code=$?
             ;;
         5)
-            run_llm_scientific_review
+            run_copy_outputs_standalone
             exit_code=$?
             ;;
         6)
-            run_llm_translations
+            run_llm_scientific_review
             exit_code=$?
             ;;
         7)
-            run_core_pipeline_no_llm
+            run_llm_translations
             exit_code=$?
             ;;
         8)
-            run_full_pipeline
+            run_core_pipeline_no_llm
             exit_code=$?
             ;;
         9)
+            run_full_pipeline
+            exit_code=$?
+            ;;
+        f|F)
             run_full_pipeline_no_infra
             exit_code=$?
             ;;
         *)
             log_error "Invalid option: $choice"
-            log_info "Valid options: 0-9, a-d, p, i, q"
+            log_info "Valid options: 0-9, f, a-d, p, i, q"
             exit_code=1
             ;;
     esac
@@ -1059,11 +1070,12 @@ handle_menu_choice() {
         2) op_name="Analysis" ;;
         3) op_name="PDF Rendering" ;;
         4) op_name="Validation" ;;
-        5) op_name="LLM Review" ;;
-        6) op_name="LLM Translations" ;;
-        7) op_name="Core Pipeline" ;;
-        8) op_name="Full Pipeline" ;;
-        9) op_name="Full Pipeline (fast)" ;;
+        5) op_name="Copy Outputs" ;;
+        6) op_name="LLM Review" ;;
+        7) op_name="LLM Translations" ;;
+        8) op_name="Core Pipeline" ;;
+        9) op_name="Full Pipeline" ;;
+        f|F) op_name="Full Pipeline (fast)" ;;
         *) op_name="Operation" ;;
     esac
 
@@ -1339,7 +1351,7 @@ except Exception as e:
     while true; do
         display_menu
 
-        echo -n "Select option [0-9, p, i]: "
+        echo -n "Select option [0-9, f, p, i]: "
         read -r choice
 
         local exit_code=0

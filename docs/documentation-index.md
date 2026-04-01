@@ -175,7 +175,8 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ### Configuration & Performance (`operational/config/`)
 
-- **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system
+- **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars)
+- **[opengauss.md](opengauss.md)** - Open Gauss naming note → `projects/fep_lean/docs/opengauss.md`
 - **[operational/config/checkpoint-resume.md](operational/config/checkpoint-resume.md)** - Checkpoint system
 - **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance tuning
 

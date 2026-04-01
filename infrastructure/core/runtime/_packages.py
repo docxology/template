@@ -67,6 +67,8 @@ def set_environment_variables(repo_root: Path) -> bool:
     Returns:
         True if environment variables set successfully, False otherwise
     """
+    import tempfile
+    
     # Set matplotlib backend for headless operation
     os.environ["MPLBACKEND"] = "Agg"
 
@@ -75,9 +77,13 @@ def set_environment_variables(repo_root: Path) -> bool:
 
     # Set project root in environment
     os.environ["PROJECT_ROOT"] = str(repo_root)
+    
+    # Set cache dirs to temporary directories to bypass macOS sandbox restrictions
+    os.environ.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
+    os.environ.setdefault("UV_CACHE_DIR", os.path.join(tempfile.gettempdir(), "uv_cache"))
 
     log_success(
-        "Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT)", logger
+        "Environment variables configured (MPLBACKEND, PYTHONIOENCODING, PROJECT_ROOT, MPLCONFIGDIR, UV_CACHE_DIR)", logger
     )
     return True
 

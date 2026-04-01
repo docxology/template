@@ -10,7 +10,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 .github/workflows/
 ├── AGENTS.md       # This technical documentation
 ├── README.md       # Quick reference
-├── ci.yml          # Main CI/CD pipeline (7 jobs)
+├── ci.yml          # Main CI/CD pipeline (8 jobs)
 ├── stale.yml       # Auto-label and close stale issues/PRs
 └── release.yml     # Create GitHub Releases on version tags
 ```
@@ -37,8 +37,9 @@ lint
  └── verify-no-mocks
       ├── test-infra  (matrix: ubuntu+macos × 3.10/3.11/3.12)
       │    └── [codecov upload — 3.12/ubuntu only]
-      ├── test-project (matrix: ubuntu+macos × 3.10/3.11/3.12)
+      ├── test-project (matrix: ubuntu+macos × 3.10/3.11/3.12; ignores projects/fep_lean/tests/)
       │    └── [codecov upload — 3.12/ubuntu only]
+      ├── fep-lean (ubuntu-only: real gauss + elan lake/lean)
       └── validate
       └── security
            └── (parallel with validate)
@@ -73,8 +74,16 @@ test-infra + test-project
 - **Matrix:** Same as `test-infra` (6 combinations)
 - **Coverage threshold:** 90% (`--cov-fail-under=90`) — enforces the project quality standard
 - **Coverage file:** `.coverage.project` (isolated)
-- **Scope:** `projects/*/tests/` — auto-discovers all active projects
+- **Scope:** `projects/*/tests/` with `--ignore=projects/fep_lean/tests/` (fep_lean requires real `gauss` / `lake` / `lean`, not installed on macOS matrix runners)
 - **Codecov upload:** On Python 3.12 / ubuntu-latest only
+
+#### 4b. fep_lean — real Open Gauss + Lake (`fep-lean`)
+
+- **Runner:** `ubuntu-latest` / Python 3.12 only
+- **Depends on:** `verify-no-mocks`
+- **Toolchain:** elan + `projects/fep_lean/lean/lean-toolchain`, `lake build` warm-up
+- **Open Gauss:** clone [math-inc/OpenGauss](https://github.com/math-inc/OpenGauss), `./scripts/install.sh --plain --noninteractive --skip-system-packages`, `gauss doctor`
+- **Tests:** `uv run pytest projects/fep_lean/tests/ --timeout=900 --cov=projects/fep_lean/src --cov-fail-under=90`
 
 #### 5. Validate Manuscripts (`validate`)
 
@@ -106,6 +115,7 @@ test-infra + test-project
 | No-mocks policy | zero mock usage | `verify-no-mocks` job |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
 | Project coverage | ≥ 90% | `test-project` job |
+| fep_lean coverage | ≥ 90% | `fep-lean` job |
 | Bandit MEDIUM+ | zero findings | `security` job |
 | Import time | ≤ 5 seconds total | `performance` job |
 
@@ -150,9 +160,17 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
   --cov-fail-under=60 \
   -m "not requires_ollama"
 
-# Reproduce project tests locally
+# Reproduce project tests locally (matrix job ignores fep_lean)
 COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
+  --ignore=projects/fep_lean/tests/ \
   --cov=projects/code_project/src \
+  --cov-fail-under=90 \
+  -m "not requires_ollama"
+
+# fep_lean only — requires gauss, lake, lean on PATH (see projects/fep_lean/tests/AGENTS.md)
+COVERAGE_FILE=.coverage.fep_lean uv run pytest projects/fep_lean/tests/ \
+  --timeout=900 \
+  --cov=projects/fep_lean/src \
   --cov-fail-under=90 \
   -m "not requires_ollama"
 

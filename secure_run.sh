@@ -22,6 +22,12 @@
 
 set -euo pipefail
 
+# Bypass macOS sandbox restrictions on ~/.matplotlib and ~/.cache/uv
+export MPLCONFIGDIR="${TMPDIR:-/tmp}/matplotlib_cache"
+mkdir -p "$MPLCONFIGDIR"
+export UV_CACHE_DIR="${TMPDIR:-/tmp}/uv_cache"
+mkdir -p "$UV_CACHE_DIR"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/scripts/bash_utils.sh"
 

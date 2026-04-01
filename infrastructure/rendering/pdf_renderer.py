@@ -182,9 +182,11 @@ class PDFRenderer:
             f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
         )
 
-        # Step 1: Preprocess markdown (Mermaid stripping + figure path normalization)
-        combined_content, _, n_fig_paths = preprocess_combined_markdown(combined_content)
-        if n_fig_paths:
+        # Step 1: Preprocess markdown (Mermaid, figure paths, optional manuscript_vars.yaml)
+        combined_content, n_mermaid, n_fig_paths, n_vars = preprocess_combined_markdown(
+            combined_content, manuscript_dir=manuscript_dir
+        )
+        if n_fig_paths or n_mermaid or n_vars:
             combined_md.write_text(combined_content, encoding="utf-8")
 
         # Step 2: Pre-validate markdown for common issues

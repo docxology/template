@@ -91,6 +91,7 @@ The template now supports **multiple independent projects** within a single repo
 - `projects/code_project/` — Optimization research exemplar (numerical methods and convergence)
 - `projects/blake_bimetalism/` — 18-part manuscript synthesizing Blakean poetics with esoteric finance
 - `projects/template/` — Meta-documentation and template metrics
+- `projects/fep_lean/` — FEP / Active Inference Lean catalogue, optional math-inc Open Gauss CLI, template analysis pipeline
 
 **Note:** Additional exemplars (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `cognitive_case_diagrams`) live under `projects_archive/` until moved back into `projects/`. Archived projects are not discovered or executed by the pipeline.
 
@@ -189,6 +190,7 @@ Each directory contains documentation for easy navigation:
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
 | [`projects/blake_bimetalism/`](projects/blake_bimetalism/) | [AGENTS.md](projects/blake_bimetalism/AGENTS.md) | [README.md](projects/blake_bimetalism/README.md) | 18-part manuscript synthesizing Blakean poetics |
 | [`projects/template/`](projects/template/) | [AGENTS.md](projects/template/AGENTS.md) | [README.md](projects/template/README.md) | Template meta-documentation |
+| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | FEP Lean catalogue and figures; optional `gauss` CLI |
 
 See [`projects/README.md`](projects/README.md) for narrative descriptions. Archived exemplars (e.g. [`projects_archive/traditional_newspaper/`](projects_archive/traditional_newspaper/)) are under [`projects_archive/`](projects_archive/) (not executed until moved into `projects/`). Regenerate [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) after changing `projects/` layout (`uv run python scripts/generate_active_projects_doc.py`).
 
@@ -507,7 +509,7 @@ steganography:
 
 **Infrastructure Tests Behavior:**
 
-- **Single project mode**: Infrastructure tests run as stage 3 (may be skipped with `--skip-infra`)
+- **Single project mode**: Infrastructure tests run as stage 2 (may be skipped with `--skip-infra`)
 - **Multi-project mode** (`--all-projects`): Infrastructure tests run **once** for all projects at the start, then are **skipped** for individual project executions to avoid redundant testing. This is shown in logs as "Running infrastructure tests once for all projects..." followed by "Skipping stage: Infrastructure Tests" for each project.
 
 **Multi-Project Executive Reporting** (`--all-projects` mode only):

@@ -9,7 +9,7 @@ This is a research project template with a test-driven development workflow, aut
 ## Quick Reference
 
 | Task | Command |
-|------|---------|
+| --- | --- |
 | Interactive menu | `./run.sh` |
 | Interactive secure menu | `./secure_run.sh` |
 | Full pipeline | `./run.sh --pipeline` |
@@ -113,13 +113,13 @@ python3 -c "from infrastructure.project.discovery import discover_projects; from
 
 ### Two-Layer System
 
-**Layer 1: Infrastructure (Generic, Reusable)**
+#### Layer 1: Infrastructure (Generic, Reusable)
 
 - `infrastructure/` - Generic build and validation tools
 - `scripts/` - Entry point orchestrators (00-07)
 - `tests/` - Infrastructure test suite
 
-**Layer 2: Projects (Domain-Specific)**
+#### Layer 2: Projects (Domain-Specific)
 
 - `projects/{name}/src/` - Project-specific algorithms and code
 - `projects/{name}/tests/` - Project test suite
@@ -181,7 +181,7 @@ To reactivate: `mv projects_archive/{name}/ projects/{name}/`
 
 ### Standard Project Layout
 
-```
+```text
 projects/{project_name}/
 ├── src/                    # Project-specific code (100% test coverage target)
 │   ├── __init__.py
@@ -203,7 +203,7 @@ projects/{project_name}/
 
 ### Output Organization
 
-```
+```text
 output/
 ├── {project_name}/         # Project-specific outputs
 │   ├── pdf/               # Individual + combined PDFs
@@ -216,21 +216,18 @@ output/
 
 ## Pipeline Stages
 
-### Core Pipeline (10-stage DAG)
+### Full Pipeline (10-stage DAG)
 
-1. **Clean Output Directories** - Remove previous outputs for a fresh run
-2. **Setup Environment** - Validate dependencies, discover projects
-3. **Infrastructure Tests** - Run infrastructure test suite (may be skipped)
-4. **Project Tests** - Project test suite (90% coverage minimum)
-5. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
-6. **Render PDF** - Convert markdown to professional PDFs
-7. **Validate Output** - Quality checks on PDFs and content
-8. **Copy Outputs** - Copy final deliverables to `output/<name>/`
-
-### Extended Pipeline (Stages 9-10, Optional)
-
-1. **LLM Scientific Review** - Requires Ollama (executive summary, quality review, methodology review, improvement suggestions)
-2. **LLM Translations** - Multi-language abstract translations (configure in `config.yaml`)
+0. **Clean Output Directories** - Remove previous outputs for a fresh run
+1. **Setup Environment** - Validate dependencies, discover projects
+2. **Infrastructure Tests** - Run infrastructure test suite (may be skipped)
+3. **Project Tests** - Project test suite (90% coverage minimum)
+4. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
+5. **Render PDF** - Convert markdown to professional PDFs
+6. **Validate Output** - Quality checks on PDFs and content
+7. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
+8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
+9. **Copy Outputs** - Copy final deliverables to `output/<name>/`
 
 **Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed.
 

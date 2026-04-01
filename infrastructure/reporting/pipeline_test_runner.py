@@ -121,7 +121,9 @@ def run_infrastructure_tests(
     if not include_ollama_tests:
         cmd.extend(["-m", "not requires_ollama"])
 
+    import tempfile
     env = os.environ.copy()
+    env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     cov_datafile_supported = check_cov_datafile_support()
     if cov_datafile_supported:
         cmd.append("--cov-datafile=.coverage.infra")
@@ -211,7 +213,9 @@ def run_project_tests(
         f"--cov-config={project_cov_config}",
     ]
 
+    import tempfile
     env = os.environ.copy()
+    env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     pythonpath_parts = [str(repo_root), str(project_root)]
     if env.get("PYTHONPATH"):
         pythonpath_parts.append(env["PYTHONPATH"])

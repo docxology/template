@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.53",
-      "total_size_bytes": 1603664,
+      "total_size_bytes": 1603665,
       "largest_files": [
         {
           "name": "template_combined.pdf",
@@ -65,7 +65,7 @@
       "exists": true,
       "file_count": 168,
       "size_mb": "3.06",
-      "total_size_bytes": 3209136,
+      "total_size_bytes": 3209139,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
@@ -124,7 +124,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 4553,
+      "total_size_bytes": 4554,
       "largest_files": [
         {
           "name": "metrics.json",
@@ -197,7 +197,7 @@
     }
   },
   "total_files": 211,
-  "total_size_mb": 5.988597869873047,
+  "total_size_mb": 5.988602638244629,
   "largest_files": [
     {
       "name": "template_combined.pdf",
@@ -262,11 +262,11 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.5293731689453125,
+    "pdf": 1.529374122619629,
     "web": 0.5072383880615234,
-    "slides": 3.0604705810546875,
+    "slides": 3.0604734420776367,
     "figures": 0.8780603408813477,
-    "data": 0.004342079162597656,
+    "data": 0.0043430328369140625,
     "reports": 0.0067653656005859375,
     "simulations": 0.0,
     "llm": 0.0,

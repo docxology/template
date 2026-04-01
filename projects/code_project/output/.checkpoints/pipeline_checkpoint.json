@@ -1,64 +1,32 @@
 {
-  "pipeline_start_time": 1774966253.056967,
-  "last_stage_completed": 7,
+  "pipeline_start_time": 1775006371.623893,
+  "last_stage_completed": 3,
   "stage_results": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.0202181339263916,
-      "timestamp": "2026-03-31 07:11:47",
+      "duration": 0.31702613830566406,
+      "timestamp": "2026-03-31 18:24:28",
       "completed": true,
       "status": ""
     },
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 1.4682459831237793,
-      "timestamp": "2026-03-31 07:11:47",
+      "duration": 47.979970932006836,
+      "timestamp": "2026-03-31 18:24:28",
       "completed": true,
       "status": ""
     },
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 7.029489994049072,
-      "timestamp": "2026-03-31 07:11:47",
-      "completed": true,
-      "status": ""
-    },
-    {
-      "name": "Project Analysis",
-      "exit_code": 0,
-      "duration": 3.0106780529022217,
-      "timestamp": "2026-03-31 07:11:47",
-      "completed": true,
-      "status": ""
-    },
-    {
-      "name": "PDF Rendering",
-      "exit_code": 0,
-      "duration": 42.403486251831055,
-      "timestamp": "2026-03-31 07:11:47",
-      "completed": true,
-      "status": ""
-    },
-    {
-      "name": "Output Validation",
-      "exit_code": 0,
-      "duration": 0.582036018371582,
-      "timestamp": "2026-03-31 07:11:47",
-      "completed": true,
-      "status": ""
-    },
-    {
-      "name": "Copy Outputs",
-      "exit_code": 0,
-      "duration": 0.4054441452026367,
-      "timestamp": "2026-03-31 07:11:47",
+      "duration": 248.1445460319519,
+      "timestamp": "2026-03-31 18:24:28",
       "completed": true,
       "status": ""
     }
   ],
   "total_stages": 8,
-  "checkpoint_time": 1774966307.984069
+  "checkpoint_time": 1775006668.0736609
 }

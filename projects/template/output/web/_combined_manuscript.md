@@ -422,8 +422,8 @@ The infrastructure layer is validated by a separate test suite of significant sc
 
 | Metric | Value |
 |--------|-------|
-| Test files | 180+ |
-| Total tests | ~3,211 |
+| Test files | 181+ |
+| Total tests | ~3,214 |
 | Infrastructure coverage threshold | 60% (achieved: 83%+) |
 | Zero-mock violations | 0 |
 | Real filesystem operations | ✓ |
@@ -466,7 +466,7 @@ The three-tier [skill protocol](03c_documentation.md#agentic-skill-architecture)
 | PAI (`PAI.md`) | 1 (infrastructure-level) | — |
 | Human (`README.md`) | 13+ per-directory | 100% |
 
-This four-layer coverage creates 13 fully described, MCP-mappable tool endpoints that a sufficiently capable agent could invoke without any source-code access. The aggregate documentation footprint (152+ files) represents a deliberate engineering investment: each documentation file is not commentary but a specification, enforcing architectural constraints through structured natural language [@lau2025aicoding].
+This four-layer coverage creates 13 fully described, MCP-mappable tool endpoints that a sufficiently capable agent could invoke without any source-code access. The aggregate documentation footprint (153+ files) represents a deliberate engineering investment: each documentation file is not commentary but a specification, enforcing architectural constraints through structured natural language [@lau2025aicoding].
 
 ## Pipeline Stage Execution
 
@@ -681,7 +681,7 @@ The template is not merely a build tool; it is an epistemological commitment. It
 
 # Infrastructure Module Reference
 
-This section provides a detailed reference for all 13 infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~271 Python modules validated by 3,211 tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
+This section provides a detailed reference for all 13 infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~271 Python modules validated by 3,214 tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
 
 ## `infrastructure.core` (28 modules)
 

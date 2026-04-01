@@ -61,7 +61,8 @@ def validate_markdown_command(args: argparse.Namespace) -> None:
         raise SystemExit(1)
 
     logger.info(f"Validating Markdown in: {md_dir}")
-    problems, exit_code = validate_markdown(str(md_dir), str(repo_root))
+    strict = bool(getattr(args, "strict", False))
+    problems, exit_code = validate_markdown(str(md_dir), str(repo_root), strict=strict)
 
     if problems:
         for problem in problems:
@@ -164,6 +165,11 @@ def main() -> None:
     md_parser = subparsers.add_parser("markdown", help="Validate Markdown files")
     md_parser.add_argument("markdown_dir", help="Path to markdown directory")
     md_parser.add_argument("--repo-root", help="Repository root directory")
+    md_parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit non-zero when any ERROR-severity markdown issue is found",
+    )
     md_parser.set_defaults(func=validate_markdown_command)
 
     # Integrity verification
