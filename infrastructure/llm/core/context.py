@@ -80,7 +80,7 @@ class ConversationContext:
 
     def clear(self) -> None:
         """Discard all messages and reset token estimate; system prompt is not re-added."""
-        logger.debug("Clearing context msgs=%d tokens=%d", len(self.messages), self.estimated_tokens)
+        logger.info("Clearing context msgs=%d tokens=%d", len(self.messages), self.estimated_tokens)
         self.messages = []
         self.estimated_tokens = 0
         self._clear_count += 1

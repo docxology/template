@@ -11,7 +11,14 @@ from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.llm.prompts._fragment_builders import build_fragment
+from infrastructure.llm.prompts._fragment_builders import (
+    build_content_requirements,
+    build_format_requirements,
+    build_fragment,
+    build_section_structure,
+    build_token_budget_awareness,
+    build_validation_hints,
+)
 from infrastructure.llm.prompts.loader import PromptFragmentLoader
 
 logger = get_logger(__name__)
@@ -149,3 +156,35 @@ class PromptComposer:
             # If retry prompt not found, return base unchanged
             logger.debug(f"Retry prompt {retry_type} not found, returning base prompt")
             return base_prompt
+
+    def _build_format_requirements(self, headers_list: list[str]) -> str:
+        """Backward-compatible wrapper for format requirements assembly."""
+        return build_format_requirements(self.loader, headers_list)
+
+    def _build_content_requirements(self) -> str:
+        """Backward-compatible wrapper for content requirements assembly."""
+        return build_content_requirements(self.loader)
+
+    def _build_section_structure(self, structure_key: str) -> str:
+        """Backward-compatible wrapper for section structure assembly."""
+        return build_section_structure(self.loader, structure_key)
+
+    def _build_token_budget_awareness(
+        self, total_tokens: int, section_budgets: dict[str, int]
+    ) -> str:
+        """Backward-compatible wrapper for token budget assembly."""
+        return build_token_budget_awareness(
+            self.loader,
+            total_tokens=total_tokens,
+            section_budgets=section_budgets,
+        )
+
+    def _build_validation_hints(
+        self, word_count_range: tuple[int, int], required_elements: list[str]
+    ) -> str:
+        """Backward-compatible wrapper for validation hints assembly."""
+        return build_validation_hints(
+            self.loader,
+            word_count_range=word_count_range,
+            required_elements=required_elements,
+        )

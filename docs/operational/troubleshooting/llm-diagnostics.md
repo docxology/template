@@ -14,6 +14,9 @@ For common issues and solutions, see [llm-review.md](llm-review.md). This docume
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `OLLAMA_HOST` | `http://localhost:11434` | Ollama server URL |
+| `OLLAMA_MODEL` | `gemma3:4b` | Default model used by the review workflow |
+| `OLLAMA_AUTO_START` | `true` | Allow the review workflow to start Ollama automatically |
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max characters to send to LLM (0 = unlimited) |
 | `LLM_REVIEW_TIMEOUT` | `300` | Timeout per review in seconds |
 | `LLM_LONG_MAX_TOKENS` | `16384` | Maximum tokens per review response |
@@ -33,7 +36,7 @@ export LLM_REVIEW_TIMEOUT=600
 export LLM_MAX_INPUT_LENGTH=100000
 
 # Run with custom settings
-uv run python scripts/06_llm_review.py --reviews-only
+uv run python scripts/06_llm_review.py --project code_project --reviews-only
 ```
 
 ---
@@ -53,7 +56,7 @@ ollama list
 ollama ps
 
 # Test model directly
-ollama run llama3-gradient "Test query"
+ollama run gemma3:4b "Test query"
 ```
 
 ### Check LLM Review System
@@ -71,6 +74,16 @@ from infrastructure.llm.core.client import LLMClient
 client = LLMClient()
 print('Available:', client.check_connection())
 "
+```
+
+### Run Tests
+
+```bash
+# Fake Ollama HTTP coverage
+uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
+
+# Real-daemon smoke coverage
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 ```
 
 ### Check PDF and Text Extraction
@@ -126,12 +139,12 @@ cat llm_review.log | grep -i error
 ### Model Selection
 
 **For speed:**
-- Use smaller models: `gemma2:2b`, `gemma3:4b`
+- Use smaller models: `smollm2`, `gemma2:2b`
 - Faster response times
 - Lower memory usage
 
 **For quality:**
-- Use larger models: `llama3-gradient`, `llama3.1`
+- Use larger models: `gemma3:4b`, `llama3-gradient`
 - Better review quality
 - Larger context windows
 

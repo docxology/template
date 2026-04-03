@@ -13,6 +13,11 @@ import time
 from pathlib import Path
 from typing import Any, TypedDict
 
+from infrastructure.core._optional_deps import psutil
+from infrastructure.core.logging.utils import get_logger
+
+logger = get_logger(__name__)
+
 
 class CheckResult(TypedDict, total=False):
     status: str
@@ -28,10 +33,7 @@ class HealthStatus(TypedDict):
     checks: dict[str, CheckResult]
     summary: dict[str, Any]
 
-from infrastructure.core._optional_deps import psutil
-from infrastructure.core.logging.utils import get_logger
 
-logger = get_logger(__name__)
 
 CRITICAL_RESOURCE_THRESHOLD = 95.0
 

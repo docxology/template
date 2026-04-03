@@ -1,0 +1,168 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{FAIR Alignment and Research Infrastructure as
+Code}
+\protect\phantomsection\label{fair-alignment-and-research-infrastructure-as-code}
+The template's design aligns with both the original FAIR principles
+{[}@wilkinson2016fair{]} and the FAIR for Research Software (FAIR4RS)
+principles {[}@barker2022fair4rs{]} at the repository level. FAIR4RS
+recognizes that software has requirements distinct from
+data---executability, composability, and dependency management---and the
+template addresses each.
+
+\begin{block}{Principle-by-Principle Alignment}
+\protect\phantomsection\label{principle-by-principle-alignment}
+\textbf{Findability.} Outputs are \emph{Findable} through standardized
+directory structures, manifest files, and machine-readable metadata
+embedded in PDFs. Every project's \texttt{config.yaml} provides
+structured metadata (title, authors, DOIs, keywords) in a format
+parseable by both Pandoc and external indexing services. The
+\texttt{metrics.json} output provides a machine-readable inventory of
+all generated artifacts, their locations, and their provenance hashes.
+
+\textbf{Accessibility.} Outputs are \emph{Accessible} via open-source
+distribution on GitHub, with metadata embedded in the artifact itself
+rather than in a separate registry. The steganographic layer embeds
+provenance information directly in the PDF---including SHA-256 content
+hashes, build timestamps, and QR-encoded metadata---ensuring
+accessibility even when the PDF circulates outside the repository.
+
+\textbf{Interoperability.} \emph{Interoperability} is achieved through
+standard formats (PDF, JSON, BibTeX, YAML) and well-defined module APIs
+that enable cross-project composition. The Pandoc rendering pipeline
+accepts any Markdown-with-LaTeX input conforming to the template's
+section numbering conventions, allowing seamless migration of
+manuscripts from other Pandoc-based workflows.
+
+\textbf{Reusability.} \emph{Reusability} is ensured by the Standalone
+Project Paradigm---any project can be extracted and reused
+independently---and by the Documentation Duality standard, which
+satisfies FAIRsoft's inspectability and documentation quality indicators
+{[}@garijo2024fairsoft{]}. The pipeline's automated testing and coverage
+enforcement directly operationalize the FAIR4RS executability
+requirement: software that cannot pass its own test suite cannot produce
+publishable output.
+\end{block}
+
+\begin{block}{Infrastructure as Code for Research}
+\protect\phantomsection\label{infrastructure-as-code-for-research}
+At a higher level of abstraction, \texttt{template/} applies the DevOps
+principle of \emph{Infrastructure as Code} (IaC) to the research
+lifecycle. In production software engineering, IaC means that server
+configuration is version-controlled, automatically provisioned, and
+independently reproducible {[}@wilson2017good{]}. \texttt{template/}
+extends this principle to the research manuscript: the document is not
+authored in a word processor and emailed to collaborators, but
+\emph{built} from version-controlled Markdown sources, \emph{tested}
+against formal coverage thresholds, and \emph{deployed} to a
+provenance-embedded PDF.
+
+Every component of the research pipeline---the test suite, the analysis
+scripts, the rendering configuration, and the steganographic
+watermark---is specified in code, committed to git, and reproducible
+from a clean checkout. This deterministic build property means that any
+researcher can clone the repository, run
+\texttt{./run.sh\ -\/-pipeline}, and produce a byte-for-byte identical
+manuscript (modulo timestamps in the steganographic metadata).
+
+Software Heritage {[}@cosmo2020softwareheritage{]} provides persistent
+SWHIDs (Software Hash Identifiers) for source code snapshots, enabling
+stable citation of any specific version of \texttt{template/} as a
+discrete software artifact---closing the loop from research
+infrastructure to citable scientific contribution. Combined with Zenodo
+DOI registration (supported by \texttt{infrastructure.publishing}), this
+creates a dual-identifier citation chain: SWHID for source provenance,
+DOI for publication metadata {[}@katz2021software{]}.
+\end{block}
+\end{frame}
+
+\end{document}

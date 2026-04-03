@@ -13,7 +13,7 @@ test suite for the LLM module with **88%+ coverage** following the **No Mocks Po
 def test_query_fallback_on_connection_error(ollama_test_server):
     """Test fallback models on primary connection error."""
     # Configure test server to return failures for specific models
-    config = LLMConfig(
+    config = OllamaClientConfig(
         default_model="primary-model",
         fallback_models=["fallback1", "fallback2"],
         auto_inject_system_prompt=False
@@ -59,7 +59,8 @@ def test_query_fallback_on_connection_error(ollama_test_server):
 
 ```
 tests/infra_tests/llm/
-├── conftest.py              # Shared fixtures
+├── conftest.py              # Shared fixtures; patches OLLAMA_HOST to pytest_httpserver by default
+├── real_ollama_client.py    # build_real_small_llm_client() for real localhost:11434 + small model
 ├── test_cli.py              # CLI command tests (13 tests)
 ├── test_config.py           # Configuration tests (38 tests)
 ├── test_context.py          # Context management tests (4 tests)
@@ -80,7 +81,7 @@ Tests that verify business logic without network access:
 
 | File | Tests | What's Tested |
 |------|-------|---------------|
-| `test_config.py` | 38 | LLMConfig, GenerationOptions, environment loading |
+| `test_config.py` | 38 | OllamaClientConfig, GenerationOptions, environment loading |
 | `test_context.py` | 4 | ConversationContext, token management, message handling |
 | `test_validation.py` | 51 | OutputValidator, JSON parsing, structure validation |
 | `test_templates.py` | 4 | Template rendering, variable substitution |
@@ -89,7 +90,10 @@ Tests that verify business logic without network access:
 
 ### 2. Integration Tests (Require Ollama)
 
-Tests marked with `@pytest.mark.requires_ollama` that require a running Ollama server:
+There are two integration layers:
+
+- `ollama_test_server` powers deterministic HTTP coverage without a local daemon.
+- `@pytest.mark.requires_ollama` exercises a real local Ollama daemon as a smoke check.
 
 | File | Tests | What's Tested |
 |------|-------|---------------|
@@ -100,20 +104,20 @@ Tests marked with `@pytest.mark.requires_ollama` that require a running Ollama s
 ## Running Tests
 
 ```bash
-# All LLM tests (requires Ollama for full suite)
-pytest tests/infra_tests/llm/ -v
+# Deterministic suite (fake Ollama HTTP server)
+uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
 
-# Pure logic tests only (fast, no Ollama)
-pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
+# Real-daemon smoke tests
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 
-# All tests (Ollama will be auto-started; tests FAIL if unavailable)
-pytest tests/infra_tests/llm/ -m requires_ollama -v
+# Full LLM suite
+uv run pytest tests/infra_tests/llm/ -v
 
 # With coverage
-pytest tests/infra_tests/llm/ --cov=infrastructure/llm --cov-report=term-missing
+uv run pytest tests/infra_tests/llm/ --cov=infrastructure/llm --cov-report=term-missing
 
 # Quick summary
-pytest tests/infra_tests/llm/ -q
+uv run pytest tests/infra_tests/llm/ -q
 ```
 
 ## Key Fixtures (conftest.py)
@@ -123,12 +127,12 @@ pytest tests/infra_tests/llm/ -q
 ```python
 @pytest.fixture
 def default_config():
-    """LLMConfig with auto-discovered model from Ollama.
-    Falls back to 'llama3' if Ollama not available."""
+    """OllamaClientConfig with auto-discovered model from Ollama.
+    Falls back to the configured default if Ollama is not available."""
 
 @pytest.fixture
 def config_with_system_prompt():
-    """LLMConfig with auto_inject_system_prompt=True."""
+    """OllamaClientConfig with auto_inject_system_prompt=True."""
 
 @pytest.fixture
 def generation_options():
@@ -175,6 +179,10 @@ Tests use the `ensure_ollama_for_tests` session fixture which:
 - Automatically starts Ollama if not running
 - Verifies Ollama has at least one model installed
 - Provides detailed error messages with troubleshooting steps
+
+The real-daemon path is intentionally a smoke layer: it verifies `/api/tags`,
+model discovery, connection checks, and representative query/streaming paths
+without attempting to fully certify every Ollama deployment state.
 
 ```python
 @pytest.mark.requires_ollama
@@ -268,7 +276,7 @@ LLM integration tests are **skipped** during automated pipeline runs for speed:
 
 ```bash
 # In run.sh (option 8 / --pipeline)
-pytest tests/infra_tests/ -m "not requires_ollama" ...
+uv run pytest tests/infra_tests/ -m "not requires_ollama" ...
 ```
 
 ### Manual Testing
@@ -280,7 +288,7 @@ Run integration tests separately when needed:
 ollama serve
 
 # Run integration tests
-pytest tests/infra_tests/llm/ -m requires_ollama -v
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 ```
 
 ## Troubleshooting

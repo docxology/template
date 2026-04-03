@@ -28,9 +28,9 @@ infrastructure/llm/core/
 class LLMClient:
     """Main interface for LLM queries and interactions."""
 
-    def __init__(self, config: Optional[LLMConfig] = None):
+    def __init__(self, config: Optional[OllamaClientConfig] = None):
         """Initialize with configuration."""
-        self.config = config or LLMConfig.from_env()
+        self.config = config or OllamaClientConfig.from_env()
         self.context = ConversationContext()
         self._check_connection()
 ```
@@ -89,16 +89,16 @@ def strip_thinking_tags(response: str) -> str:
     """
 ```
 
-### LLMConfig (`config.py`)
+### OllamaClientConfig (`config.py`)
 
 **Configuration management for LLM operations:**
 
 #### Configuration Classes
 
-**LLMConfig - Main Configuration:**
+**OllamaClientConfig - Main Configuration:**
 ```python
 @dataclass
-class LLMConfig:
+class OllamaClientConfig:
     """Configuration for LLM client."""
 
     # Connection settings
@@ -123,7 +123,7 @@ class LLMConfig:
     seed: Optional[int] = None
 
     @classmethod
-    def from_env(cls) -> LLMConfig:
+    def from_env(cls) -> OllamaClientConfig:
         """Create configuration from environment variables."""
 ```
 
@@ -143,7 +143,7 @@ class GenerationOptions:
     repeat_penalty: float = 1.1
     num_ctx: int = None
 
-    def to_ollama_options(self, config: LLMConfig) -> dict:
+    def to_ollama_options(self, config: OllamaClientConfig) -> dict:
         """Convert to Ollama API format."""
 ```
 
@@ -277,7 +277,7 @@ def _get_max_tokens_for_mode(self, mode: ResponseMode, options: GenerationOption
 ```python
 def test_llm_client_initialization():
     """Test LLMClient initialization with config."""
-    config = LLMConfig(base_url="http://test:11434", default_model="test-model")
+    config = OllamaClientConfig(base_url="http://test:11434", default_model="test-model")
     client = LLMClient(config)
 
     assert client.config.base_url == "http://test:11434"
@@ -304,7 +304,7 @@ def test_generation_options_conversion():
         format_json=True
     )
 
-    ollama_opts = options.to_ollama_options(LLMConfig())
+    ollama_opts = options.to_ollama_options(OllamaClientConfig())
     assert ollama_opts["temperature"] == 0.8
     assert ollama_opts["num_predict"] == 1000
     assert ollama_opts["top_p"] == 0.9
@@ -420,7 +420,7 @@ export LLM_TEMPERATURE="0.7"
 
 **Full Configuration:**
 ```python
-config = LLMConfig(
+config = OllamaClientConfig(
     base_url="http://localhost:11434",
     default_model="gemma3:4b",
     temperature=0.7,
@@ -439,7 +439,7 @@ config = LLMConfig(
 
 **Academic Writing Configuration:**
 ```python
-academic_config = LLMConfig(
+academic_config = OllamaClientConfig(
     system_prompt="""You are an expert academic writer specializing in research manuscripts.
     Provide clear, precise, and well-structured responses following academic conventions.
     Use formal language and provide citations when discussing research methods.""",

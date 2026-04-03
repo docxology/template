@@ -203,7 +203,7 @@ dashboard_files = generate_all_dashboards(summary, Path("output/executive_summar
 print(f"Generated {len(dashboard_files)} dashboard and data files")
 ```
 
-### Multi-Project Reporting (NEW)
+### Multi-Project Reporting
 
 ```python
 from infrastructure.reporting import generate_multi_project_report
@@ -257,14 +257,14 @@ saved_files = generate_validation_report(validation_results, Path("output/report
 - `generate_executive_summary()` - Generate cross-project metrics and summary
 - `save_executive_summary()` - Save executive summary in multiple formats
 - `collect_project_metrics()` - Collect all metrics for a single project
-- `calculate_project_health_score()` - Calculate project health score (NEW)
+- `calculate_project_health_score()` - Calculate project health score
 - `ProjectMetrics` - project metrics dataclass
-- `ExecutiveSummary` - Executive summary dataclass with health scores (ENHANCED)
+- `ExecutiveSummary` - Executive summary dataclass with health scores
 
 ### Multi-Project Orchestration
 
-- `generate_multi_project_report()` - executive reporting workflow (NEW)
-- `generate_csv_data_tables()` - Export metrics as CSV tables (NEW)
+- `generate_multi_project_report()` - executive reporting workflow
+- `generate_csv_data_tables()` - Export metrics as CSV tables
 
 ### Dashboard Generation
 
@@ -311,7 +311,7 @@ Reports are saved to `project/output/reports/` by default.
 - **CSV Data Export**: Machine-readable data tables for further analysis
 - **Workflow Orchestration**: `generate_multi_project_report()` handles the entire reporting pipeline
 
-### Manuscript Overview Generation (NEW)
+### Manuscript Overview Generation
 
 **Visual manuscript previews** for executive reporting. Automatically extracts all pages from each project's manuscript PDF and arranges them as thumbnails in a 4-column grid layout.
 

@@ -34,9 +34,9 @@ from infrastructure.llm.templates.research import (
     SummarizeAbstract,
 )
 
-logger = get_logger(__name__)
-
 from infrastructure.llm.core._prompt_availability import PROMPT_COMPOSER_AVAILABLE  # noqa: F401
+
+logger = get_logger(__name__)
 
 
 # Registry of available templates

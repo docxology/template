@@ -59,7 +59,12 @@ def _tally_log_level_counts(log_file: Path) -> dict[str, Any]:
     return stats
 
 
-def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str:
+def _collect_log_statistics(log_file: Path) -> dict[str, Any]:
+    """Backward-compatible wrapper for the legacy helper name."""
+    return _tally_log_level_counts(log_file)
+
+
+def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str | None:
     """Generate summary report from log file.
 
     Args:
@@ -72,7 +77,10 @@ def generate_log_summary(log_file: Path, output_file: Path | None = None) -> str
     Raises:
         OSError: If the log file cannot be read.
     """
-    stats = _tally_log_level_counts(log_file)
+    try:
+        stats = _tally_log_level_counts(log_file)
+    except FileNotFoundError:
+        return None
 
     lines = [
         "",

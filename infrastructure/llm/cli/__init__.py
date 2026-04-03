@@ -1,5 +1,5 @@
 """Command-line interface for LLM operations.
 
 CLI module - main entry point is in main.py.
-Can be run as: python3 -m infrastructure.llm.cli
+Can be run as: uv run python -m infrastructure.llm.cli
 """

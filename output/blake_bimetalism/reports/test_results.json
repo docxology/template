@@ -1,0 +1,118 @@
+{
+  "timestamp": "2026-04-03T08:39:53.435715",
+  "infrastructure": {},
+  "project": {
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "total": 20,
+    "warnings": 6,
+    "exit_code": 0,
+    "discovery_count": 20,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 4.04,
+      "collection": 4.04,
+      "execution": 4.04
+    },
+    "test_categories": {},
+    "coverage_percent": 94.7867298578199,
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 20,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 20,
+    "all_passed": true,
+    "project_coverage": 94.7867298578199
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 95.3125,
+      "total_executed": 366,
+      "total_missing": 18,
+      "total_excluded": 0,
+      "total_lines": 384,
+      "file_coverage": {
+        "projects/blake_bimetalism/src/analysis.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 23,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 23
+        },
+        "projects/blake_bimetalism/src/figures.py": {
+          "coverage_percent": 0.0,
+          "executed_lines": 0,
+          "missing_lines": 6,
+          "excluded_lines": 0,
+          "total_lines": 6
+        },
+        "projects/blake_bimetalism/src/manuscript.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 11,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 11
+        },
+        "projects/blake_bimetalism/src/viz/core.py": {
+          "coverage_percent": 72.72727272727273,
+          "executed_lines": 32,
+          "missing_lines": 12,
+          "excluded_lines": 0,
+          "total_lines": 44
+        },
+        "projects/blake_bimetalism/src/viz/fourfold.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 32,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 32
+        },
+        "projects/blake_bimetalism/src/viz/fracture.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 35,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 35
+        },
+        "projects/blake_bimetalism/src/viz/gsr_contemporary.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 53,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 53
+        },
+        "projects/blake_bimetalism/src/viz/harmonograph.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 42,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 42
+        },
+        "projects/blake_bimetalism/src/viz/historic_ratio.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 40,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 40
+        },
+        "projects/blake_bimetalism/src/viz/historic_reserves.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 49,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 49
+        },
+        "projects/blake_bimetalism/src/viz/timeline.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 49,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 49
+        }
+      }
+    }
+  }
+}

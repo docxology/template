@@ -16,12 +16,12 @@ from infrastructure.llm.templates.helpers import (
     validation_hints,
 )
 
-logger = get_logger(__name__)
-
 from infrastructure.llm.core._prompt_availability import PROMPT_COMPOSER_AVAILABLE
 
 if PROMPT_COMPOSER_AVAILABLE:
     from infrastructure.llm.prompts.composer import PromptComposer
+
+logger = get_logger(__name__)
 
 
 class ManuscriptExecutiveSummary(ResearchTemplate):

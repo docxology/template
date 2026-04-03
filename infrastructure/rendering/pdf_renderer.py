@@ -234,3 +234,7 @@ class PDFRenderer:
             bib_exists=bib_exists,
             source_files=source_files,
         )
+
+    def _combine_markdown_files(self, source_files: list[Path]) -> str:
+        """Backward-compatible wrapper for combined markdown generation."""
+        return combine_manuscript_markdown_sections(source_files)

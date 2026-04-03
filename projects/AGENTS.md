@@ -398,7 +398,7 @@ def test_term_extraction_real_data():
 @pytest.mark.requires_ollama
 def test_llm_integration_real_http(ollama_test_server):
     """Test LLM integration with HTTP server."""
-    config = LLMConfig(base_url=ollama_test_server.url_for("/"))
+    config = OllamaClientConfig(base_url=ollama_test_server.url_for("/"))
     client = LLMClient(config)
     response = client.query("test prompt")  # HTTP request
     assert "response" in response.lower()

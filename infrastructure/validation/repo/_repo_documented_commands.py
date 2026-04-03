@@ -11,6 +11,25 @@ from infrastructure.validation.docs.models import ScanAccuracyIssue
 logger = get_logger(__name__)
 
 
+def _candidate_script_paths(repo_root: Path, script_ref: str) -> list[Path]:
+    """Return likely filesystem locations for ``script_ref``."""
+    ref_path = Path(script_ref)
+    candidates = [repo_root / ref_path]
+
+    if ref_path.name:
+        candidates.append(repo_root / "scripts" / ref_path.name)
+        candidates.append(repo_root / "repo_utilities" / ref_path.name)
+        if ref_path.name in {"run.sh", "secure_run.sh"}:
+            candidates.append(repo_root / ref_path.name)
+
+        projects_dir = repo_root / "projects"
+        if projects_dir.is_dir():
+            for project_scripts in projects_dir.glob("*/scripts"):
+                candidates.append(project_scripts / ref_path.name)
+
+    return list(dict.fromkeys(candidates))
+
+
 def check_documented_commands(
     repo_root: Path,
     src_modules: set[str],
@@ -42,9 +61,8 @@ def check_documented_commands(
 
                 script_path = repo_root / script_ref
                 if not script_path.exists():
-                    for script_dir in ("scripts", "repo_utilities"):
-                        alt_path = repo_root / script_dir / Path(script_ref).name
-                        if alt_path.exists():
+                    for candidate in _candidate_script_paths(repo_root, script_ref):
+                        if candidate.exists():
                             break
                     else:
                         if (
@@ -54,11 +72,7 @@ def check_documented_commands(
                         ):
                             continue
 
-                        if (
-                            script_ref.endswith(".sh")
-                            or "scripts/" in script_ref
-                            or "repo_utilities/" in script_ref
-                        ):
+                        if script_ref.endswith(".sh") or "scripts/" in script_ref:
                             line_num = content[: match.start()].count("\n") + 1
                             issues.append(
                                 ScanAccuracyIssue(

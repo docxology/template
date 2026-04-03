@@ -11,13 +11,11 @@ Standards and patterns for integrating with the LLM infrastructure module (`infr
 ```
 infrastructure/llm/
 ├── __init__.py           # Public API exports
-├── config.py             # LLMConfig, GenerationOptions
-├── core.py               # LLMClient main class
-├── context.py            # ConversationContext management
-├── templates.py          # ResearchTemplate system
-├── validation.py         # OutputValidator
-├── ollama_utils.py       # Model discovery utilities
-├── cli.py                # Command-line interface
+├── core/                 # LLMClient, configuration, and context
+├── templates/            # ResearchTemplate system
+├── validation/           # OutputValidator
+├── utils/ollama.py       # Model discovery and Ollama helpers
+├── cli/main.py           # Command-line interface
 ├── AGENTS.md             # Detailed documentation
 └── README.md             # Quick reference
 ```
@@ -27,7 +25,7 @@ infrastructure/llm/
 | Class | Purpose | Import |
 |-------|---------|--------|
 | `LLMClient` | Main interface for queries | `from infrastructure.llm import LLMClient` |
-| `LLMConfig` | Configuration management | `from infrastructure.llm import LLMConfig` |
+| `OllamaClientConfig` | Configuration management | `from infrastructure.llm import OllamaClientConfig` |
 | `GenerationOptions` | Per-query generation control | `from infrastructure.llm import GenerationOptions` |
 | `OutputValidator` | Response validation | `from infrastructure.llm import OutputValidator` |
 
@@ -36,10 +34,10 @@ infrastructure/llm/
 ### Environment-Based Configuration
 
 ```python
-from infrastructure.llm import LLMConfig, LLMClient
+from infrastructure.llm import OllamaClientConfig, LLMClient
 
 # Load from environment (recommended)
-config = LLMConfig.from_env()
+config = OllamaClientConfig.from_env()
 client = LLMClient(config)
 ```
 
@@ -48,7 +46,7 @@ client = LLMClient(config)
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `OLLAMA_HOST` | `http://localhost:11434` | Ollama server URL |
-| `OLLAMA_MODEL` | `qwen3:4b` | Default model (128K context, fast) |
+| `OLLAMA_MODEL` | `gemma3:4b` | Default model (quality-oriented local default) |
 | `LLM_TEMPERATURE` | `0.7` | Generation temperature |
 | `LLM_MAX_TOKENS` | `2048` | Max tokens per response |
 | `LLM_SEED` | `None` | Seed for reproducibility |
@@ -58,9 +56,9 @@ client = LLMClient(config)
 
 ```python
 # Custom configuration
-config = LLMConfig(
+config = OllamaClientConfig(
     base_url="http://localhost:11434",
-    default_model="qwen3:4b",
+    default_model="gemma3:4b",
     temperature=0.7,
     max_tokens=2048,
     seed=42,
@@ -136,7 +134,7 @@ opts = GenerationOptions(
 ### Options Precedence
 
 1. Per-query `GenerationOptions` (highest priority)
-2. `LLMConfig` defaults
+2. `OllamaClientConfig` defaults
 3. Environment variables (via `from_env()`)
 
 ## Validation Patterns
@@ -252,10 +250,10 @@ if not is_compliant:
 ### Review Generation
 
 ```python
-from infrastructure.llm import LLMClient, LLMConfig, GenerationOptions
+from infrastructure.llm import LLMClient, OllamaClientConfig, GenerationOptions
 
 # Initialize client
-config = LLMConfig.from_env()
+config = OllamaClientConfig.from_env()
 client = LLMClient(config)
 
 # Generation options for reviews
@@ -380,7 +378,7 @@ except ValidationError as e:
 ### Connection Checking
 
 ```python
-from infrastructure.llm import is_ollama_running, select_best_model
+from infrastructure.llm import is_ollama_running, select_best_model, OllamaClientConfig
 
 # Check before starting
 if not is_ollama_running():
@@ -390,10 +388,10 @@ if not is_ollama_running():
 # Select best available model
 model = select_best_model()
 if not model:
-    print("No Ollama models found - pull with: ollama pull qwen3:4b")
+    print("No Ollama models found - pull with: ollama pull gemma3:4b")
     sys.exit(1)
 
-config = LLMConfig(default_model=model)
+config = OllamaClientConfig(default_model=model)
 ```
 
 ## Testing Standards
@@ -414,7 +412,7 @@ import pytest
 def test_config_from_env(clean_llm_env):
     """Test configuration loading."""
     os.environ["OLLAMA_HOST"] = "http://test:11434"
-    config = LLMConfig.from_env()
+    config = OllamaClientConfig.from_env()
     assert config.base_url == "http://test:11434"
 
 # Integration test (requires Ollama)
@@ -435,16 +433,16 @@ class TestLLMIntegration:
 
 ```bash
 # Pure logic tests only (fast, no Ollama required)
-pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
+uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
 
 # All tests (requires running Ollama)
-pytest tests/infra_tests/llm/ -v
+uv run pytest tests/infra_tests/llm/ -v
 
 # Integration tests only
-pytest tests/infra_tests/llm/ -m requires_ollama -v
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 
 # With coverage
-pytest tests/infra_tests/llm/ --cov=infrastructure/llm --cov-report=html
+uv run pytest tests/infra_tests/llm/ --cov=infrastructure/llm --cov-report=html
 ```
 
 ## Streaming Patterns
@@ -701,7 +699,7 @@ The validation system uses minimum word counts to ensure substantive reviews:
 
 ```python
 # Use environment configuration
-config = LLMConfig.from_env()
+config = OllamaClientConfig.from_env()
 
 # Use GenerationOptions for per-query control
 opts = GenerationOptions(temperature=0.0, seed=42)
@@ -736,7 +734,7 @@ if not is_valid:
     pass  # BAD - should retry or handle
 
 # Don't hardcode model names unnecessarily
-config = LLMConfig(default_model="some-model")  # Use env vars or from_env() instead
+config = OllamaClientConfig(default_model="some-model")  # Use env vars or from_env() instead
 ```
 
 ## Checklist

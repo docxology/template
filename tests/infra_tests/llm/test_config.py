@@ -3,7 +3,7 @@
 from infrastructure.llm.core.config import OllamaClientConfig
 
 
-class TestLLMConfig:
+class TestOllamaClientConfig:
     """Test OllamaClientConfig class."""
 
     def test_config_initialization(self):

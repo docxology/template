@@ -26,10 +26,10 @@ try:
         collect_symbols,  # noqa: F401 — re-exported for tests
         find_manuscript_directory,
         find_markdown_files,  # noqa: F401 — re-exported for tests
-        validate_images,  # noqa: F401 — re-exported for tests
-        validate_markdown,
-        validate_math,  # noqa: F401 — re-exported for tests
-        validate_refs,  # noqa: F401 — re-exported for tests
+        validate_images as _validate_images,
+        validate_markdown as _validate_markdown,
+        validate_math as _validate_math,
+        validate_refs as _validate_refs,
     )
 except ImportError as e:
     # Store error for main() function to handle
@@ -42,6 +42,26 @@ else:
 def _repo_root() -> str:
     """Get repository root path (for testing)."""
     return str(repo_root)
+
+
+def validate_images(md_paths: list[str], repo_root_path: str) -> list[str]:
+    """Return human-readable image validation issues for CLI callers."""
+    return [issue.message.replace("referenced ", "") for issue in _validate_images(md_paths, repo_root_path)]
+
+
+def validate_refs(
+    md_paths: list[str],
+    repo_root_path: str,
+    labels: set[str],
+    anchors: set[str],
+) -> list[str]:
+    """Return human-readable reference validation issues for CLI callers."""
+    return [issue.message for issue in _validate_refs(md_paths, repo_root_path, labels, anchors)]
+
+
+def validate_math(md_paths: list[str], repo_root_path: str) -> list[str]:
+    """Return human-readable math validation issues for CLI callers."""
+    return [issue.message for issue in _validate_math(md_paths, repo_root_path)]
 
 
 def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
@@ -72,7 +92,7 @@ def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
             manuscript_dir = find_manuscript_directory(repo_root)
 
         # Run validation
-        problems, exit_code = validate_markdown(manuscript_dir, repo_root, strict=strict)
+        problems, exit_code = _validate_markdown(manuscript_dir, repo_root, strict=strict)
 
         # Print results
         if problems:

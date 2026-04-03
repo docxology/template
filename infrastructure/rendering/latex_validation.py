@@ -33,14 +33,14 @@ class ValidationReport:
         lines = ["LaTeX Package Validation Report", "=" * 50]
 
         if self.all_required_available:
-            lines.append("All required packages available")
+            lines.append("✅ All required packages available")
         else:
-            lines.append(f"Missing {len(self.missing_required)} required package(s)")
+            lines.append(f"❌ Missing {len(self.missing_required)} required package(s)")
             for pkg in self.missing_required:
                 lines.append(f"  - {pkg}")
 
         if self.missing_optional:
-            lines.append(f"\nMissing {len(self.missing_optional)} optional package(s):")
+            lines.append(f"\n⚠️ Missing {len(self.missing_optional)} optional package(s):")
             for pkg in self.missing_optional:
                 lines.append(f"  - {pkg}")
 

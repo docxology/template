@@ -139,9 +139,9 @@ def build_analysis_script_cmd_and_env(
     env.setdefault("MPLBACKEND", "Agg")
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     env["PYTHONPATH"] = os.pathsep.join([
+        str(project_root / "src"),
         str(repo_root),
         str(repo_root / "infrastructure"),
-        str(project_root / "src"),
     ])
     env["PROJECT_DIR"] = str(project_root)
     env.pop("VIRTUAL_ENV", None)

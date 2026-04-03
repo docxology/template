@@ -45,6 +45,7 @@ class RepositoryScanner:
         self.repo_root = repo_root.resolve()
         self.results = RepoScanResults()
         self.src_modules: set[str] = set()
+        self.repo_modules: set[str] = set()
         self.script_files: list[Path] = []
         self.test_files: list[Path] = []
         self.documented_modules: set[str] = set()
@@ -88,46 +89,101 @@ class RepositoryScanner:
 
     def _discover_structure(self) -> None:
         """Discover repository structure."""
-        src_dir = self.repo_root / "src"
-        if src_dir.exists():
-            for py_file in src_dir.glob("*.py"):
-                if py_file.name != "__init__.py":
-                    self.src_modules.add(py_file.stem)
+        self.src_modules.clear()
+        self.repo_modules.clear()
+        self.script_files.clear()
+        self.test_files.clear()
 
-        for script_dir in [
-            self.repo_root / "scripts",
-            self.repo_root / "repo_utilities",
-        ]:
-            if script_dir.exists():
-                for py_file in script_dir.glob("*.py"):
-                    if py_file.name != "__init__.py":
-                        self.script_files.append(py_file)
+        module_roots = [self.repo_root / "infrastructure"]
+        root_src = self.repo_root / "src"
+        if root_src.exists():
+            module_roots.append(root_src)
 
-        tests_dir = self.repo_root / "tests"
-        if tests_dir.exists():
-            for test_file in tests_dir.glob("test_*.py"):
-                self.test_files.append(test_file)
+        projects_dir = self.repo_root / "projects"
+        if projects_dir.is_dir():
+            for project_src in projects_dir.glob("*/src"):
+                if project_src.is_dir():
+                    module_roots.append(project_src)
 
+        for module_root in module_roots:
+            for py_file in module_root.rglob("*.py"):
+                if py_file.name == "__init__.py":
+                    continue
+                module_name = self._module_name(py_file)
+                self.repo_modules.add(module_name)
+                self.src_modules.add(py_file.stem)
+
+        self._discover_scripts()
+        self._discover_tests()
         self._find_documented_modules()
 
-        logger.info(f"Found {len(self.src_modules)} src/ modules")
+        logger.info(f"Found {len(self.repo_modules)} repository modules")
         logger.info(f"Found {len(self.script_files)} script files")
         logger.info(f"Found {len(self.test_files)} test files")
         logger.info(f"Found {len(self.documented_modules)} documented modules")
 
+    def _discover_scripts(self) -> None:
+        """Discover runnable scripts across the repository."""
+        script_roots = [self.repo_root / "scripts"]
+        projects_dir = self.repo_root / "projects"
+        if projects_dir.is_dir():
+            script_roots.extend(projects_dir.glob("*/scripts"))
+
+        for script_root in script_roots:
+            if not script_root.is_dir():
+                continue
+            for pattern in ("*.py", "*.sh"):
+                for script in script_root.glob(pattern):
+                    if script.name != "__init__.py":
+                        self.script_files.append(script)
+
+        for entry_point in (self.repo_root / "run.sh", self.repo_root / "secure_run.sh"):
+            if entry_point.exists():
+                self.script_files.append(entry_point)
+
+    def _discover_tests(self) -> None:
+        """Discover test files across the repository."""
+        tests_roots = [self.repo_root / "tests"]
+        projects_dir = self.repo_root / "projects"
+        if projects_dir.is_dir():
+            tests_roots.extend(projects_dir.glob("*/tests"))
+
+        for tests_root in tests_roots:
+            if not tests_root.is_dir():
+                continue
+            for test_file in tests_root.rglob("test_*.py"):
+                self.test_files.append(test_file)
+
+    def _module_name(self, file_path: Path) -> str:
+        """Convert a Python file path into a dotted module name."""
+        relative_path = file_path.relative_to(self.repo_root).with_suffix("")
+        return ".".join(relative_path.parts)
+
+    def _is_local_import(self, module_name: str) -> bool:
+        """Return True when ``module_name`` points to repository code."""
+        return (
+            module_name.startswith("infrastructure.")
+            or module_name.startswith("projects.")
+            or module_name.startswith("src.")
+            or module_name in self.src_modules
+        )
+
     def _find_documented_modules(self) -> None:
         """Find modules mentioned in documentation."""
-        docs_dirs = [
-            self.repo_root / "docs",
+        docs_targets = [
             self.repo_root,
-            self.repo_root / "src",
+            self.repo_root / "docs",
+            self.repo_root / "infrastructure",
+            self.repo_root / "projects",
             self.repo_root / "scripts",
         ]
 
-        for docs_dir in docs_dirs:
-            if not docs_dir.exists():
+        for docs_target in docs_targets:
+            if not docs_target.exists():
                 continue
-            for md_file in docs_dir.rglob("*.md"):
+
+            md_files = [docs_target] if docs_target.is_file() else list(docs_target.rglob("*.md"))
+            for md_file in md_files:
                 try:
                     content = md_file.read_text(encoding="utf-8")
                     for module in self.src_modules:
@@ -141,22 +197,21 @@ class RepositoryScanner:
         issues: list[ScanAccuracyIssue] = []
 
         for script in self.script_files:
+            if script.suffix != ".py":
+                continue
             try:
                 imports = extract_imports(script)
                 for imp in imports:
-                    if imp.startswith("src.") or imp in self.src_modules:
-                        module_name = imp.replace("src.", "")
-                        if module_name in self.src_modules:
-                            if not self._verify_import(script, module_name, imports[imp]):
-                                issues.append(
-                                    ScanAccuracyIssue(
-                                        category="import",
-                                        severity="error",
-                                        file=str(script.relative_to(self.repo_root)),
-                                        message=f"Import verification failed for {imp}",
-                                        details=f"Functions/classes: {imports[imp]}",
-                                    )
-                                )
+                    if self._is_local_import(imp) and not self._verify_import(script, imp, imports[imp]):
+                        issues.append(
+                            ScanAccuracyIssue(
+                                category="import",
+                                severity="error",
+                                file=str(script.relative_to(self.repo_root)),
+                                message=f"Import verification failed for {imp}",
+                                details=f"Functions/classes: {imports[imp]}",
+                            )
+                        )
             except (OSError, UnicodeDecodeError, SyntaxError) as e:
                 issues.append(
                     ScanAccuracyIssue(
@@ -195,8 +250,10 @@ class RepositoryScanner:
         """Check completeness."""
         gaps = []
 
-        for module in self.src_modules:
-            if module not in self.documented_modules:
+        documented = self.documented_modules
+        for module in self.repo_modules:
+            module_stem = module.split(".")[-1]
+            if module_stem not in documented:
                 gaps.append(
                     CompletenessGap(
                         category="documentation",
@@ -209,11 +266,12 @@ class RepositoryScanner:
         tested_modules = set()
         for test_file in self.test_files:
             test_name = test_file.stem.replace("test_", "")
-            if test_name in self.src_modules:
+            if any(test_name == module.split(".")[-1] for module in self.repo_modules):
                 tested_modules.add(test_name)
 
-        for module in self.src_modules:
-            if module not in tested_modules:
+        for module in self.repo_modules:
+            module_stem = module.split(".")[-1]
+            if module_stem not in tested_modules:
                 gaps.append(
                     CompletenessGap(
                         category="testing",
@@ -226,10 +284,12 @@ class RepositoryScanner:
         documented_scripts = set()
         doc_locations = [
             self.repo_root / "README.md",
+            self.repo_root / "AGENTS.md",
+            self.repo_root / "infrastructure" / "README.md",
+            self.repo_root / "infrastructure" / "AGENTS.md",
             self.repo_root / "scripts" / "README.md",
-            self.repo_root / "repo_utilities" / "README.md",
-            self.repo_root / "repo_utilities" / "AGENTS.md",
             self.repo_root / "docs" / "DOCUMENTATION_INDEX.md",
+            self.repo_root / "projects" / "README.md",
         ]
         for md_file in doc_locations:
             if md_file.exists():
@@ -294,10 +354,17 @@ class RepositoryScanner:
         """Check configuration accuracy."""
         issues = []
 
-        config_path = self.repo_root / "project" / "manuscript" / "config.yaml"
-        example_path = self.repo_root / "project" / "manuscript" / "config.yaml.example"
+        config_files = sorted(
+            path
+            for path in self.repo_root.glob("**/manuscript/config.yaml")
+            if "output" not in path.parts and "site-packages" not in path.parts
+        )
 
-        if config_path.exists() and example_path.exists():
+        for config_path in config_files:
+            example_path = config_path.with_name("config.yaml.example")
+            if not example_path.exists():
+                continue
+
             try:
                 with open(config_path, encoding="utf-8") as f:
                     config = yaml.safe_load(f)
@@ -309,7 +376,7 @@ class RepositoryScanner:
                         ScanAccuracyIssue(
                             category="configuration",
                             severity="warning",
-                            file="project/manuscript/config.yaml",
+                            file=str(config_path.relative_to(self.repo_root)),
                             message="Config structure may not match example",
                         )
                     )
@@ -318,7 +385,7 @@ class RepositoryScanner:
                     ScanAccuracyIssue(
                         category="configuration",
                         severity="warning",
-                        file="project/manuscript/config.yaml",
+                        file=str(config_path.relative_to(self.repo_root)),
                         message=f"Could not parse config: {e}",
                     )
                 )
@@ -341,18 +408,14 @@ class RepositoryScanner:
         issues = []
 
         for script in self.script_files:
-            if script.name.startswith("_"):
+            if script.name.startswith("_") or script.suffix != ".py":
                 continue
 
             try:
                 content = script.read_text(encoding="utf-8")
                 imports = extract_imports(script)
 
-                has_src_import = False
-                for imp in imports:
-                    if imp in self.src_modules or "src" in imp.lower():
-                        has_src_import = True
-                        break
+                has_repo_import = any(self._is_local_import(imp) for imp in imports)
 
                 business_logic_patterns = [
                     r'def\s+\w+\([^)]*\):\s*\n\s*"""[^"]*algorithm',
@@ -363,7 +426,7 @@ class RepositoryScanner:
                     if re.search(pattern, content, re.MULTILINE):
                         break
 
-                if not has_src_import and script.parent.name == "scripts":
+                if not has_repo_import and script.parent.name == "scripts":
                     issues.append(
                         ScanAccuracyIssue(
                             category="architecture",

@@ -85,6 +85,11 @@ python3 -m infrastructure.validation.cli markdown projects/{project_name}/manusc
 # Validate PDFs
 python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/
 
+# Local Ollama workflow
+ollama serve
+ollama pull gemma3:4b
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
+
 # Generate API documentation
 python3 -m infrastructure.documentation.generate_glossary_cli --project {project_name}
 
@@ -106,7 +111,8 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `code_project`, `template`, and others (run `discover_projects` or `ls projects/` for the current set; see `docs/_generated/active_projects.md`)
+**Active projects:** `code_project`, `blake_bimetalism`, `template` (run `discover_projects` or `ls projects/` for the current set; see `docs/_generated/active_projects.md`)
+**In-progress projects:** `fep_lean`, `aii-org`, `cognitive_case_diagrams`, and others in `projects_in_progress/`
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -172,9 +178,11 @@ avg = calculate_average(data)  # Use tested method
 ### Active vs Archived Projects
 
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
+- **`projects_in_progress/`** - In-progress projects (scaffolding, not executed)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
 **Current active projects:** `code_project`, `blake_bimetalism`, `template`
+**Current in-progress projects:** `fep_lean`, `aii-org`, `cognitive_case_diagrams`, `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `ento_linguistics`
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`

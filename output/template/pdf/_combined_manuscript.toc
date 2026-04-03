@@ -1,0 +1,97 @@
+\contentsline {section}{\numberline {1}Abstract}{4}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Research Tools as Epistemic Infrastructure}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Related Work}{5}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Workflow Managers}{5}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Literate Programming and Publication Tools}{6}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Containerization and Environment Capture}{6}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Best-Practice Frameworks and Data Standards}{6}{subsubsection.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.5}The Gap}{7}{subsubsection.2.2.5}%
+\contentsline {subsubsection}{\numberline {2.2.6}Summary: Gaps Left by Existing Tools}{7}{subsubsection.2.2.6}%
+\contentsline {subsection}{\numberline {2.3}\texttt {template/}: An Integrated Solution}{7}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Scope and Contributions}{8}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Paper Organization}{9}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Methods}{10}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The Two-Layer Architecture}{10}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}The Standalone Project Paradigm}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}The Thin Orchestrator Pattern}{10}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}The Ten-Stage DAG Pipeline}{12}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Stage 00: Environment Setup (\texttt {00\_setup\_environment.py})}{12}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Stage 01: Test Execution (\texttt {01\_run\_tests.py})}{12}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Stage 02: Analysis Execution (\texttt {02\_run\_analysis.py})}{12}{subsubsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.4}Stage 03: PDF Rendering (\texttt {03\_render\_pdf.py})}{12}{subsubsection.3.4.4}%
+\contentsline {subsubsection}{\numberline {3.4.5}Stage 04: Output Validation (\texttt {04\_validate\_output.py})}{12}{subsubsection.3.4.5}%
+\contentsline {subsubsection}{\numberline {3.4.6}Stage 05: Output Organization (\texttt {05\_copy\_outputs.py})}{12}{subsubsection.3.4.6}%
+\contentsline {subsubsection}{\numberline {3.4.7}Stage 06: LLM Review (\texttt {06\_llm\_review.py})}{12}{subsubsection.3.4.7}%
+\contentsline {subsubsection}{\numberline {3.4.8}Stage 07: Executive Report (\texttt {07\_generate\_executive\_report.py})}{13}{subsubsection.3.4.8}%
+\contentsline {subsection}{\numberline {3.5}The Interactive Orchestrators}{13}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}\texttt {run.sh}: The Standard Orchestrator}{13}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}\texttt {secure\_run.sh}: The Steganographic Superset}{13}{subsubsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.6}Documentation Duality and AI Collaboration}{14}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Agentic Skill Architecture}{14}{subsection.3.7}%
+\contentsline {subsubsection}{\numberline {3.7.1}The Three-Tier Skill Protocol}{14}{subsubsection.3.7.1}%
+\contentsline {subsubsection}{\numberline {3.7.2}Module Skill Coverage}{15}{subsubsection.3.7.2}%
+\contentsline {subsubsection}{\numberline {3.7.3}MCP Server Mapping}{15}{subsubsection.3.7.3}%
+\contentsline {subsection}{\numberline {3.8}FAIR Alignment and Research Infrastructure as Code}{16}{subsection.3.8}%
+\contentsline {subsubsection}{\numberline {3.8.1}Principle-by-Principle Alignment}{16}{subsubsection.3.8.1}%
+\contentsline {subsubsection}{\numberline {3.8.2}Infrastructure as Code for Research}{16}{subsubsection.3.8.2}%
+\contentsline {subsection}{\numberline {3.9}Quality Assurance}{17}{subsection.3.9}%
+\contentsline {subsubsection}{\numberline {3.9.1}Zero-Mock Testing Policy}{17}{subsubsection.3.9.1}%
+\contentsline {subsubsection}{\numberline {3.9.2}Coverage Thresholds}{17}{subsubsection.3.9.2}%
+\contentsline {subsubsection}{\numberline {3.9.3}Test Suite Composition}{17}{subsubsection.3.9.3}%
+\contentsline {subsubsection}{\numberline {3.9.4}Visualization Standards}{17}{subsubsection.3.9.4}%
+\contentsline {section}{\numberline {4}Results}{19}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Multi-Project Pipeline Execution}{19}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Infrastructure Test Suite}{19}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Infrastructure Module Inventory}{19}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Agentic Skill Documentation Coverage}{20}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Pipeline Stage Execution}{20}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Steganographic Performance}{21}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Self-Referential Analysis}{21}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Comparative Feature Analysis}{23}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Test Quality Metrics}{23}{subsection.4.9}%
+\contentsline {section}{\numberline {5}Discussion}{25}{section.5}%
+\contentsline {subsection}{\numberline {5.1}The Zero-Mock Tradeoff}{25}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}When Mocks Are Not the Problem}{25}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Practical Implementation}{25}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Scalability: From 1 to N Projects}{26}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Multi-Project Orchestration}{26}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Scaling Metrics}{26}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Comparison to Existing Tools}{27}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}FAIR4RS Evolution (2024--2026)}{27}{subsubsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.4}The AI Collaboration Model}{28}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}The Learning Curve}{28}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Limitations}{28}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Future Directions}{30}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Conclusion}{30}{subsection.5.8}%
+\contentsline {section}{\numberline {6}Infrastructure Module Reference}{32}{section.6}%
+\contentsline {subsection}{\numberline {6.1}\texttt {infrastructure.core} (28 modules)}{32}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}\texttt {infrastructure.documentation} (6 modules)}{32}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}\texttt {infrastructure.llm} (30 modules)}{33}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}\texttt {infrastructure.project} (2 modules)}{33}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}\texttt {infrastructure.publishing} (9 modules)}{33}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}\texttt {infrastructure.rendering} (12 modules)}{34}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}\texttt {infrastructure.reporting} (14 modules)}{34}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}\texttt {infrastructure.scientific} (6 modules)}{35}{subsection.6.8}%
+\contentsline {subsection}{\numberline {6.9}\texttt {infrastructure.steganography} (8 modules)}{35}{subsection.6.9}%
+\contentsline {subsection}{\numberline {6.10}\texttt {infrastructure.validation} (22 modules)}{35}{subsection.6.10}%
+\contentsline {subsection}{\numberline {6.11}Infrastructure Maturity Summary}{36}{subsection.6.11}%
+\contentsline {section}{\numberline {7}Security and Provenance}{37}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Threat Model}{37}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Steganographic Layers}{37}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}Layer 1: PDF Metadata Injection}{37}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}Layer 2: Cryptographic Hashing}{37}{subsubsection.7.2.2}%
+\contentsline {subsubsection}{\numberline {7.2.3}Layer 3: Alpha-Channel Text Overlay}{37}{subsubsection.7.2.3}%
+\contentsline {subsubsection}{\numberline {7.2.4}Layer 4: QR Code Injection}{38}{subsubsection.7.2.4}%
+\contentsline {subsection}{\numberline {7.3}The \texttt {secure\_run.sh} Orchestrator}{38}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Tamper Detection}{38}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Limitations}{38}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Relationship to Software Supply Chain Integrity}{39}{subsection.7.6}%
+\contentsline {subsection}{\numberline {7.7}Relationship to FAIR and Formal Provenance Standards}{39}{subsection.7.7}%
+\contentsline {section}{\numberline {8}Appendices}{40}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Appendix: Pipeline Stage Reference}{40}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Appendix: Configuration Reference}{41}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Appendix: Repository Directory Structure}{42}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Appendix: Exemplar Project Summary}{43}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Appendix: Documentation Inventory}{44}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Appendix: Comparative Tool Matrix}{45}{subsection.8.6}%

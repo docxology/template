@@ -132,6 +132,8 @@ def create_github_release(
     assets: list[Path],
     token: str,
     repo: str,
+    *,
+    base_url: str = "https://api.github.com",
 ) -> str:
     """Create a GitHub release with attached assets.
 
@@ -163,7 +165,7 @@ def create_github_release(
     }
 
     # Create release
-    url = f"https://api.github.com/repos/{repo}/releases"
+    url = f"{base_url}/repos/{repo}/releases"
     payload = {
         "tag_name": tag_name,
         "name": release_name,

@@ -99,6 +99,7 @@ graph TD
 
     subgraph "Layer 2 · Active Project Workspaces"
         Projects --> CP["code_project/ ← Master exemplar (100% cov · 45 tests)"]
+        Projects --> BB["blake_bimetalism/ ← 18-part digital humanities manuscript"]
         Projects --> TP["template/ ← Meta-documentation (94.4% cov · 65 tests)"]
         Projects --> Dots["your_project/ ← Drop in; auto-discovered"]
     end

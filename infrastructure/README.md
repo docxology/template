@@ -11,7 +11,7 @@ The infrastructure layer provides generic, reusable functionality that can be ap
 Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (or `@.cursor/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`. When editing under `infrastructure/`, Cursor can apply [`.cursor/rules/infrastructure-skills.mdc`](../.cursor/rules/infrastructure-skills.mdc) (globs `infrastructure/**`) and the always-on [`.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc).
 
 | Path | Frontmatter `name` |
-|------|-------------------|
+| ------ | ------------------- |
 | [SKILL.md](SKILL.md) | `infrastructure-overview` |
 | [config/SKILL.md](config/SKILL.md) | `infrastructure-config` |
 | [core/SKILL.md](core/SKILL.md) | `infrastructure-core` |
@@ -36,7 +36,7 @@ Pair each `SKILL.md` with the matching **`AGENTS.md`** for full API tables.
 graph TD
     subgraph "🔧 Core Infrastructure"
         CORE[core/<br/>Fundamental utilities<br/>Logging, config, progress]
-        EXCEPTIONS[core/runtime/exceptions.py<br/>Exception hierarchy<br/>Context preservation]
+        EXCEPTIONS[core/exceptions.py<br/>Exception hierarchy<br/>Context preservation]
     end
 
     subgraph "📝 Document Processing"
@@ -76,14 +76,14 @@ graph TD
     class REPORTING build
 ```
 
-Diagrams above are selective. These packages also exist under `infrastructure/`: **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor), **`telemetry/`** (`TelemetryCollector`, per-stage resource + diagnostic reports).
+Diagrams above are selective. These packages also exist under `infrastructure/` (or nested): **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor), **`core/telemetry/`** (`TelemetryCollector`, per-stage resource + diagnostic reports).
 
 ## Infrastructure Dependencies
 
 ```mermaid
 flowchart TD
     subgraph "📋 Project Scripts"
-        ANALYSIS[analysis_pipeline/pipeline.py<br/>Data processing & figures]
+        ANALYSIS[scripts/02_run_analysis.py<br/>Data processing & figures]
         FIGURES[example_figure.py<br/>Visualization scripts]
     end
 
@@ -135,16 +135,16 @@ flowchart TD
     B --> I[Scientific Module]
     B --> J[Reporting Module]
 
-    C --> K[runtime/exceptions.py<br/>Base exception classes]
-    C --> L[logging/logging_utils.py<br/>Unified logging system]
-    C --> M[config/config_loader.py<br/>YAML configuration]
-    C --> N[runtime/progress.py<br/>Progress tracking]
+    C --> K[exceptions.py<br/>Base exception classes]
+    C --> L[logging/utils.py<br/>Unified logging system]
+    C --> M[config/loader.py<br/>YAML configuration]
+    C --> N[progress.py<br/>Progress tracking]
     C --> O[runtime/checkpoint.py<br/>Pipeline state]
     C --> P[runtime/retry.py<br/>Exponential backoff]
-    C --> Q[runtime/stage_monitor.py<br/>Resource monitoring]
+    C --> Q[pipeline/stage_monitor.py<br/>Resource monitoring]
     C --> R[runtime/environment.py<br/>Setup validation]
-    C --> S[runtime/script_discovery.py<br/>Dynamic discovery]
-    C --> T[files/file_operations.py<br/>I/O utilities]
+    C --> S[script_discovery.py<br/>Dynamic discovery]
+    C --> T[files/operations.py<br/>I/O utilities]
 
     D --> U[figure_manager.py<br/>Figure registration]
     D --> V[image_manager.py<br/>Image handling]
@@ -153,7 +153,7 @@ flowchart TD
 
     E --> Y[output/pdf_validator.py<br/>PDF quality checks]
     E --> Z[content/markdown_validator.py<br/>Markdown validation]
-    E --> AA[integrity/integrity.py<br/>Cross-reference validation]
+    E --> AA[integrity/checks.py<br/>Cross-reference validation]
 
     F --> BB[core.py<br/>RenderManager orchestrator]
     F --> CC[latex_utils.py<br/>LaTeX processing]
@@ -264,7 +264,7 @@ flowchart LR
 
 ### Pipeline Telemetry
 
-- **[telemetry/](telemetry/)** - Unified per-stage resource + diagnostic tracking (`TelemetryCollector`)
+- **[core/telemetry/](core/telemetry/)** - Unified per-stage resource + diagnostic tracking (`TelemetryCollector`)
 
 ## Usage in Projects
 
@@ -364,7 +364,7 @@ infrastructure/new_module/
 ├── __init__.py      # Public API exports
 ├── core.py          # Main functionality
 ├── utils.py         # Helper functions
-├── runtime/cli.py           # Command-line interface (if needed)
+├── cli.py                   # Command-line interface (if needed)
 ├── AGENTS.md        # Technical documentation
 └── README.md        # Quick reference
 ```

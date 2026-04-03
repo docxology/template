@@ -117,6 +117,66 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
     return False
 
 
+def pull_ollama_model(
+    model_name: str,
+    *,
+    timeout: float | None = 900.0,
+) -> tuple[bool, str | None]:
+    """Run ``ollama pull <model_name>`` via subprocess.
+
+    Used by test harnesses to ensure a small model exists before integration tests.
+
+    Args:
+        model_name: Model tag to pull (e.g. ``smollm2``).
+        timeout: Seconds for the pull subprocess, or ``None`` for no limit (not recommended).
+
+    Returns:
+        ``(True, None)`` on success, ``(False, error_message)`` on failure.
+    """
+    ollama_bin = shutil.which("ollama")
+    if not ollama_bin:
+        msg = "ollama CLI not found in PATH"
+        logger.error(msg)
+        return False, msg
+
+    argv = [ollama_bin, "pull", model_name]
+    logger.info("Running: %s", " ".join(argv))
+
+    try:
+        result = subprocess.run(  # nosec B603 — fixed argv, ollama_bin from shutil.which
+            argv,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        msg = f"ollama pull {model_name!r} timed out after {timeout}s"
+        logger.error(msg)
+        return False, msg
+    except FileNotFoundError:
+        msg = "ollama binary disappeared between which() and run()"
+        logger.error(msg)
+        return False, msg
+    except OSError as e:
+        msg = f"ollama pull failed: {e}"
+        logger.error(msg)
+        return False, msg
+
+    if result.returncode == 0:
+        logger.info("✓ Pulled model %s", model_name)
+        return True, None
+
+    err_tail = (result.stderr or result.stdout or "").strip()
+    if len(err_tail) > 500:
+        err_tail = err_tail[-500:]
+    msg = f"ollama pull {model_name!r} exited {result.returncode}"
+    if err_tail:
+        msg = f"{msg}: {err_tail}"
+    logger.error(msg)
+    return False, msg
+
+
 def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bool = True) -> bool:
     """Ensure Ollama server is running and has models available."""
     # Import here to avoid circular dependency
@@ -144,7 +204,8 @@ def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bo
     models = get_model_names(base_url)
     if not models:
         logger.warning("No Ollama models available")
-        logger.info("Install a model with: ollama pull llama3-gradient")
+        logger.info("Install a model with: ollama pull smollm2   # small, fast tests")
+        logger.info("Or: ollama pull llama3-gradient")
         logger.info("Recommended models:")
         logger.info("  - llama3-gradient:latest (4.7GB, 256K context)")
         logger.info("  - llama3.1:latest (4.7GB, 128K context)")

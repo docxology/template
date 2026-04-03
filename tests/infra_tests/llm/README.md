@@ -7,14 +7,14 @@ test suite for local LLM integration (91%+ coverage).
 ### Run LLM Tests
 
 ```bash
-# All LLM tests (requires Ollama)
-pytest tests/infra_tests/llm/ -v
+# Deterministic suite backed by the local HTTP test server
+uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
 
-# Skip network tests
-pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
+# Real-daemon smoke tests (requires Ollama running locally)
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 
-# Only integration tests
-pytest tests/infra_tests/llm/ -m requires_ollama -v
+# Full LLM test suite
+uv run pytest tests/infra_tests/llm/ -v
 ```
 
 ## Test Categories
@@ -43,10 +43,18 @@ pytest tests/infra_tests/llm/ -m requires_ollama -v
 ## Test Philosophy
 
 - **Pure logic tests** - Configuration and validation without network
-- **Integration tests** - Full LLM interactions (requires Ollama)
+- **Deterministic integration tests** - Full LLM behavior against `ollama_test_server`
+- **Real-daemon smoke tests** - Marked with `@pytest.mark.requires_ollama`
 - **No mocks** - Real LLM responses when possible
 - **Loud failures** - Tests FAIL when Ollama unavailable (auto-start attempted)
 - **Auto-start** - Ollama server is automatically started for tests
+
+### Local Ollama Expectations
+
+- `tests/infra_tests/llm/conftest.py` provides `ollama_test_server` for **fake** Ollama-compatible HTTP coverage (contract tests only).
+- `tests/conftest.py` provides `ensure_ollama_for_tests` and an autouse hook for `@pytest.mark.requires_ollama` (real daemon; may run `ollama pull smollm2` unless `OLLAMA_SKIP_TEST_MODEL_PULL=1`).
+- `real_ollama_client.py` builds `LLMClient` instances aimed at `http://localhost:11434` with a preloaded small model (avoids patched `OLLAMA_HOST`).
+- The real-daemon layer checks `/api/tags`, model discovery, queries, streaming, and preload behavior.
 
 ## See Also
 

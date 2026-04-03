@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02b_gresham_entropy</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="greshams-law-and-the-fracture-of-mythopoetic-alchemy">Gresham’s
+Law and the Fracture of Mythopoetic Alchemy</h1>
+<p>When international silver values fluctuated against the enforced
+Newtonian mint ratio of 1717, they triggered the mechanical arbitrage of
+Gresham’s Law: “bad money drives out good” <span class="citation"
+data-cites="thornton1802nature">[@thornton1802nature]</span>. Because
+gold was systematically overvalued within the English Channel—Newton’s
+guinea priced at 21 shillings domestically while equivalent gold
+commanded only 20s 9d in Spain or Portugal—bullion merchants melted
+full-weight silver coins and shipped the raw bullion to France, India,
+and China, where its elemental weight commanded significantly higher
+purchasing power <span class="citation"
+data-cites="quinn1996competing">[@quinn1996competing]</span>. An
+engineered mathematical disparity hollowed out the domestic money
+supply.</p>
+<h2
+id="veldes-mathematical-formalization-of-transatlantic-bimetallic-instability">Velde’s
+Mathematical Formalization of Transatlantic Bimetallic Instability</h2>
+<p>To formalize this entropic decay, modern economic historians such as
+François Velde define the bimetallic equilibrium via the relationship
+between the statutory Mint Ratio (<span
+class="math inline">\(M\)</span>) and the global commodity Market Ratio
+(<span class="math inline">\(R\)</span>), bounded by transaction and
+melting costs (<span class="math inline">\(c\)</span>) <span
+class="citation"
+data-cites="velde2005bimetallism">[@velde2005bimetallism]</span>. The
+condition for a functional, meta-stable bimetallic circulation is
+expressed mathematically as:</p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:bimetallic_bounds}
+M - c &lt; R &lt; M + c
+\end{equation}\]</span></p>
+<p>When the international market ratio of silver to gold climbs beyond
+the domestic limit erected by the state (<span class="math inline">\(R
+&gt; M + c\)</span>), silver becomes undervalued at the mint.
+Arbitrageurs mathematically optimize their portfolios by melting down
+full-weight silver coins—the “Lunar Flux”—and exporting the bullion to
+France, India, or the Far East, where its elemental weight commands a
+higher purchasing power. The East India Company played a central role in
+this drainage, trading English silver in Asia where it commanded premium
+value amid regional gold scarcity; by 1730, these asymmetric flows had
+delivered 15.5 tonnes of gold into the Bank of England’s vaults while
+emptying the kingdom of circulating silver <span class="citation"
+data-cites="quinn2007recoinage">[@quinn2007recoinage]</span>. This
+arbitrage drained the physical economy of its circulating medium,
+leaving behind only clipped, worn, or counterfeit silver, alongside the
+static, hoarded gold.</p>
+<h2 id="del-mars-historiographic-reading-of-the-bimetallic-marriage">Del
+Mar’s Historiographic Reading of the Bimetallic Marriage</h2>
+<p>However, analyzing this financial collapse exclusively through
+quantitative arithmetic obscures its ontological
+implications—implications that William Blake recognized implicitly. The
+19th-century monetary historian Alexander Del Mar later framed this
+dual-standard through a structural lens that resonates with Blakean
+mythology. In his historiographies of money, Del Mar casts monetary
+equilibrium not as a natural fact of intrinsic metallic value, but as an
+artifact of state numerary authority—a socio-political synthesis where
+circulating tokens maintain equilibrium in the monetary firmament under
+the sovereign prerogative of the state <span class="citation"
+data-cites="delmar1895history">[@delmar1895history]</span>. Analyzing
+money as a legal and numerical mechanism rather than a pure commodity
+unmasks the bimetallic pairing as a representation of sovereign decree
+rather than intrinsic divine right. Marc Flandreau extends this
+historiography, characterizing classical bimetallism as a form of
+economic alchemy conjuring stabilizing stasis from the metaphysical
+chaos of global trade by binding two independent metallic volatilities
+into a single legal fiction <span class="citation"
+data-cites="flandreau1996bimetallism">[@flandreau1996bimetallism]</span>.</p>
+<h2
+id="the-thermodynamic-decay-from-bimetallic-generation-to-monometallic-ulro">The
+Thermodynamic Decay from Bimetallic Generation to Monometallic Ulro</h2>
+<p>London’s legally entrenched overvaluation of gold severed this
+alchemical harmony <span class="citation"
+data-cites="quinn1996competing">[@quinn1996competing]</span>.
+Bimetallism was, inherently, a <em>Twofold Generative</em> tension (see
+the Fourfold Vision): an unstable but vitalizing socio-economic
+synthesis of the Solar (Gold/Love/Authority) and the Lunar
+(Silver/Wisdom/Circulation). The bullion merchants—driven by the
+atomizing, Epicurean <em>clinamen</em> of profit and private
+self-interest—melted down the lunar element to hoard the solar. That
+rapacity maps onto the Erdman-Urizen reading of empire and war finance
+established in our Introduction <span class="citation"
+data-cites="erdman1954prophet">[@erdman1954prophet]</span>.</p>
+<p>For Blake, this is the very definition of the state of
+<em>Generation</em> decaying into <em>Ulro</em> (the void). Production
+and exchange were no longer aimed at sustaining human community or
+fulfilling human needs, but were captured by the paper-led churn of
+arbitrage. In <em>Jerusalem</em> Plate 27 Blake names the fixing of
+labour and the invention of “allegoric riches” (see <a
+href="#sec-allegoric-riches">§ The fixing of labour and allegoric
+riches</a>) <span class="citation"
+data-cites="erdman1988complete sklar2011blake">[@erdman1988complete;
+@sklar2011blake]</span>—precisely the moment when the living economy of
+human exchange is seized by the arithmetic of financial extraction. The
+bimetallic synthesis fractured under Gresham friction because it was a
+catastrophic clash between living, dual commodity interaction and the
+dead, reductionist geometry of the fixed Mint Ratio. Single Vision
+attempted, and failed, to bind generative duality. This drove the entire
+system toward monometallic isolation (as detailed in the discussion of
+the 1816 Coinage Act). Gresham’s law, in this mythopoetic register, is
+not merely a law of economics, but a law of spiritual thermodynamics:
+the inevitable degradation of meaning when human relationships are
+mediated exclusively by rigid, monistic metrics.</p>
+<figure id="fig-alchemy">
+<embed src="../output/figures/alchemical_bimetallism_dark.pdf" />
+<figcaption aria-hidden="true">Procedural Alchemy of Bimetallic Vectors
+— Parametric Degeneration of Bimetallic Orbit. This procedurally
+generated 5000-point Harmonograph maps the historical vectors of Solar
+Gold (the central, tight attractor) and Lunar Silver (the wider,
+sweeping orbit of the 1.5 ratio) locked in meta-stable Twofold
+Generation. Mathematical harmony holds until the Velde stability ellipse
+threshold is breached (<span class="math inline">\(R &gt; M +
+c\)</span>). At the 1816 singular boundary, Gresham’s arbitrage escape
+velocity is crossed: the Solar Gold vector collapses inward to a static
+geometric dot at the Urizen pole (Single Vision / The Gold Standard with
+4-layer glow rings), while the Lunar Silver vector violently breaks
+orbit toward the Los pole, escaping tangentially into chaotic
+space—modeling the physical demonetization of silver under the Coinage
+Act (56 Geo. III c.68) and the total eradication of the bimetallic
+generative synthesis. Includes the parametric equation <span
+class="math inline">\(xg = \sin(1.1t)e^{0.018t}, xs =
+\sin(1.5t+\pi/4)e^{0.025t} \cdot 1.5\)</span>.</figcaption>
+</figure>
+</body>
+</html>

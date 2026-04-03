@@ -47,7 +47,7 @@ def validate_publication_readiness(
 
     # Check for section headings (e.g. "# Abstract", "## Introduction") rather than
     # bare substring matching to avoid false positives from body text mentions.
-    _heading_re = re.compile(r"^#{1,3}\s+", re.MULTILINE)
+    _heading_re = re.compile(r"^\s*#{1,3}\s+", re.MULTILINE)
     headings_lower = {
         m.string[m.end():m.end() + 60].split("\n")[0].strip().lower()
         for m in _heading_re.finditer(all_content)

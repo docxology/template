@@ -249,14 +249,13 @@ class TestScannerVerificationMethods:
     """Test scanner verification methods (covers lines 944-979)."""
 
     def test_run_link_checker_no_script(self, tmp_path):
-        """Test _run_link_checker when script doesn't exist (lines 946-959)."""
+        """Test _run_link_checker uses the in-process audit."""
         scanner = DocumentationScanner(tmp_path)
 
-        # No check_documentation_links.py exists
         result = scanner._run_link_checker()
 
-        # Should return error result
-        assert result.get("success") is False or "error" in result
+        assert result["success"] is True
+        assert result["exit_code"] == 0
 
     def test_validate_markdown_syntax(self, tmp_path):
         """Test that scanner has verification capabilities."""

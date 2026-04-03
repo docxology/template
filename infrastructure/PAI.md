@@ -23,7 +23,7 @@ Every infrastructure subpackage ships a **`SKILL.md`** at its root with YAML fro
 - **scientific**: Benchmarking, stability, templates.
 - **skills**: `discover_skills`, `.cursor/skill_manifest.json`, `python -m infrastructure.skills` (write/check/list-json).
 - **steganography**: Post-render PDF hardening (overlays, hashes, optional encryption).
-- **telemetry**: Unified per-stage resource + diagnostic tracking (`TelemetryCollector`; JSON/text reports in `output/reports/`).
+- **core/telemetry**: Unified per-stage resource + diagnostic tracking (`TelemetryCollector`; JSON/text reports in `output/reports/`).
 
 ## 🤖 Agent Guidelines
 

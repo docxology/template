@@ -11,14 +11,18 @@ The utils module provides helper functions for LLM operations, including Ollama 
 ```python
 from infrastructure.llm.utils import (
     is_ollama_running,
+    ensure_ollama_ready,
     select_best_model,
-    check_ollama_health
+    get_model_names,
+    check_model_loaded,
+    preload_model,
 )
 
 # Check Ollama status
 if is_ollama_running():
+    models = get_model_names()
     model = select_best_model()
-    print(f"Using model: {model}")
+    print(f"Using model: {model} from {models}")
 ```
 
 ## Key Functions
@@ -28,19 +32,16 @@ if is_ollama_running():
 ```python
 from infrastructure.llm.utils.ollama import (
     is_ollama_running,
-    get_ollama_host,
-    check_ollama_health
+    ensure_ollama_ready,
 )
 
 # Check if Ollama is running
 if is_ollama_running():
     print("Ollama is available")
 
-# Get configured host
-host = get_ollama_host()  # Default: http://localhost:11434
-
-# Health check
-is_healthy, message = check_ollama_health()
+# Ensure the daemon is ready and has at least one model installed
+if ensure_ollama_ready(auto_start=False):
+    print("Ollama is ready")
 ```
 
 ### Model Selection
@@ -48,7 +49,7 @@ is_healthy, message = check_ollama_health()
 ```python
 from infrastructure.llm.utils.ollama import (
     select_best_model,
-    list_available_models,
+    get_model_names,
     get_model_info
 )
 
@@ -57,8 +58,8 @@ best_model = select_best_model()
 # Returns: "gemma3:4b" or similar
 
 # List all available models
-models = list_available_models()
-# Returns: ["gemma3:4b", "llama3.2:3b", ...]
+models = get_model_names()
+# Returns: ["smollm2", "gemma2:2b", "gemma3:4b", ...]
 
 # Get model details
 info = get_model_info("gemma3:4b")
@@ -68,24 +69,16 @@ info = get_model_info("gemma3:4b")
 ### Heartbeat Monitoring
 
 ```python
-from infrastructure.llm.utils.heartbeat import (
-    start_heartbeat,
-    stop_heartbeat,
-    is_heartbeat_active
+from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
+
+monitor = StreamHeartbeatMonitor(
+    operation_name="review",
+    timeout_seconds=300.0,
+    heartbeat_interval=30.0,
 )
 
-# Start monitoring
-start_heartbeat(
-    interval=30,  # seconds
-    callback=lambda: print("Ollama is alive")
-)
-
-# Check status
-if is_heartbeat_active():
+with monitor:
     print("Heartbeat monitoring active")
-
-# Stop monitoring
-stop_heartbeat()
 ```
 
 ## Common Usage Patterns
@@ -95,18 +88,18 @@ stop_heartbeat()
 ```python
 from infrastructure.llm.utils.ollama import (
     is_ollama_running,
-    wait_for_ollama,
-    get_ollama_host
+    ensure_ollama_ready,
 )
 
 # Wait for Ollama to start
 if not is_ollama_running():
     print("Waiting for Ollama to start...")
-    wait_for_ollama(timeout=60)
+    ensure_ollama_ready(auto_start=True)
 
-# Use configured host
-host = get_ollama_host()
-client = LLMClient(host=host)
+# Use the configured host from OllamaClientConfig.from_env()
+from infrastructure.llm.core.config import OllamaClientConfig
+from infrastructure.llm.core.client import LLMClient
+client = LLMClient(OllamaClientConfig.from_env())
 ```
 
 ### Model Fallback
@@ -116,7 +109,7 @@ from infrastructure.llm.utils.ollama import select_best_model
 
 # Try preferred model, fallback to best available
 preferred = "gemma3:4b"
-available = list_available_models()
+available = get_model_names()
 
 if preferred in available:
     model = preferred
@@ -128,21 +121,20 @@ else:
 ### Health Monitoring
 
 ```python
-from infrastructure.llm.utils.heartbeat import HeartbeatMonitor
+from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
 
 # Create monitor
-monitor = HeartbeatMonitor(
-    check_interval=30,
-    failure_threshold=3
+monitor = StreamHeartbeatMonitor(
+    operation_name="translation",
+    timeout_seconds=600,
 )
 
 # Start monitoring
-monitor.start()
+monitor.start_monitoring()
 
 # Check health
-if monitor.is_healthy():
-    # Proceed with LLM operations
-    response = llm_client.query("test")
+monitor.update_token_received()
+monitor.stop_monitoring()
 ```
 
 ## Configuration
@@ -162,14 +154,11 @@ export LLM_HEARTBEAT_TIMEOUT=5
 ### Programmatic Configuration
 
 ```python
-from infrastructure.llm.utils.ollama import configure_ollama
+from infrastructure.llm.core.config import OllamaClientConfig
 
 # Configure connection
-configure_ollama(
-    host="http://localhost:11434",
-    timeout=30,
-    retry_attempts=3
-)
+config = OllamaClientConfig.from_env()
+print(config.base_url)
 ```
 
 ## Error Handling
@@ -179,13 +168,12 @@ configure_ollama(
 ```python
 from infrastructure.llm.utils.ollama import (
     is_ollama_running,
-    OllamaConnectionError
 )
 
 try:
     if not is_ollama_running():
-        raise OllamaConnectionError("Ollama not running")
-except OllamaConnectionError as e:
+        raise RuntimeError("Ollama not running")
+except RuntimeError as e:
     print(f"Connection error: {e}")
     # Handle error...
 ```
@@ -222,7 +210,9 @@ def setup_llm():
         return None
     
     model = select_best_model()
-    return LLMClient(model=model)
+    from infrastructure.llm.core.client import LLMClient
+    from infrastructure.llm.core.config import OllamaClientConfig
+    return LLMClient(OllamaClientConfig(default_model=model))
 ```
 
 ## Architecture

@@ -43,3 +43,45 @@ def save_partial_if_needed(
         logger.info(f"Saved partial response ({chunk_count} chunks) {context}")
         return True
     return partial_saved
+
+
+def try_save_partial(
+    full_response: list[str],
+    save_response: bool,
+    partial_saved: bool,
+    save_streaming_state_fn: Callable[..., bool],
+    save_path: str | None,
+    model_name: str,
+    prompt: str,
+    chunk_count: int,
+    start_time: float,
+    context: str,
+    skip_if_already_saved: bool = True,
+) -> bool:
+    """Backward-compatible wrapper for the legacy streaming helper signature."""
+
+    def save_fn(
+        full_response: list[str],
+        chunk_count: int,
+        *,
+        is_error: bool = False,
+    ) -> bool:
+        return save_streaming_state_fn(
+            full_response,
+            save_path,
+            model_name,
+            prompt,
+            chunk_count,
+            start_time,
+            is_error=is_error,
+        )
+
+    return save_partial_if_needed(
+        full_response=full_response,
+        save_response=save_response,
+        partial_saved=partial_saved,
+        save_fn=save_fn,
+        chunk_count=chunk_count,
+        context=context,
+        skip_if_already_saved=skip_if_already_saved,
+    )

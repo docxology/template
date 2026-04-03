@@ -145,6 +145,37 @@ def preprocess_combined_markdown(
                     raw = {}
                 if isinstance(raw, dict):
                     flat = flatten_manuscript_vars(raw)
+                    
+                    # Augment with synthetic variables if present
+                    if isinstance(raw.get("topics"), dict):
+                        topics_dict = raw["topics"]
+                        flat["total_topics"] = str(len(topics_dict))
+                        # Build synthetic topic data dynamically
+                        for topic_id, topic_data in topics_dict.items():
+                            if isinstance(topic_data, dict):
+                                # lean_chars derived from lean_sketch
+                                sketch = topic_data.get("lean_sketch", "")
+                                flat[f"topics.{topic_id}.lean_chars"] = str(len(sketch))
+                                
+                                # Update maturity display string and icon based on mathlib_status
+                                ml_status = topic_data.get("mathlib_status", "")
+                                if ml_status == "real":
+                                    flat[f"topics.{topic_id}.maturity"] = "real"
+                                    flat[f"topics.{topic_id}.maturity_icon"] = "✅"
+                                elif ml_status == "partial":
+                                    flat[f"topics.{topic_id}.maturity"] = "partial"
+                                    flat[f"topics.{topic_id}.maturity_icon"] = "⚠️"
+                                elif ml_status == "aspirational":
+                                    flat[f"topics.{topic_id}.maturity"] = "aspirational"
+                                    flat[f"topics.{topic_id}.maturity_icon"] = "○"
+
+                    if isinstance(raw.get("areas"), dict):
+                        areas_dict = raw["areas"]
+                        flat["total_areas"] = str(len(areas_dict))
+                        # Alias areas.X -> areas.X.count
+                        for area_name, count in areas_dict.items():
+                            flat[f"areas.{area_name}.count"] = str(count)
+
                     content, n_vars = substitute_manuscript_var_placeholders(content, flat)
                     if n_vars:
                         logger.info(

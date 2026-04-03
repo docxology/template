@@ -63,4 +63,10 @@ class StreamingMetrics:
     last_chunk_time: float = 0.0  # Time of last chunk
 
 # estimate_tokens imported from infrastructure.llm.validation.core
-__all__ = ["ReviewMetrics", "StreamingMetrics", "estimate_tokens"]
+__all__ = [
+    "ManuscriptInputMetrics",
+    "ReviewMetrics",
+    "SessionMetrics",
+    "StreamingMetrics",
+    "estimate_tokens",
+]

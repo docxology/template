@@ -23,17 +23,17 @@ llm/
 ## LLM Client (`core/client.py`)
 
 ```python
-from infrastructure.llm import LLMClient, LLMConfig, GenerationOptions, ResponseMode
+from infrastructure.llm import LLMClient, OllamaClientConfig, GenerationOptions
 
 # Initialize with defaults
 client = LLMClient()
 
 # Custom configuration
-config = LLMConfig(model="gemma3:4b", temperature=0.7)
+config = OllamaClientConfig(default_model="gemma3:4b", temperature=0.7)
 client = LLMClient(config)
 
 # Generate a response
-response = client.generate("Summarize this paper...", options=GenerationOptions(
+response = client.query("Summarize this paper...", options=GenerationOptions(
     max_tokens=2000,
     temperature=0.3,
 ))
@@ -118,7 +118,7 @@ save_review_outputs(output_dir, executive=executive, quality=quality,
 ```python
 from infrastructure.llm import (
     is_ollama_running, start_ollama_server, ensure_ollama_ready,
-    get_available_models, get_model_names, select_best_model,
+    get_model_names, select_best_model,
     select_small_fast_model, preload_model, check_model_loaded,
 )
 
@@ -145,11 +145,11 @@ prompt = composer.compose(task="review", context=manuscript_text)
 
 ```bash
 # Query the LLM
-python3 -m infrastructure.llm.cli.main query "What is machine learning?"
+uv run python -m infrastructure.llm.cli.main query "What is machine learning?"
 
 # Check Ollama status
-python3 -m infrastructure.llm.cli.main check
+uv run python -m infrastructure.llm.cli.main check
 
 # List available models
-python3 -m infrastructure.llm.cli.main models
+uv run python -m infrastructure.llm.cli.main models
 ```

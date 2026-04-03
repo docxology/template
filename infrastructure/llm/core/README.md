@@ -9,17 +9,17 @@ The LLM core provides the fundamental interface for interacting with Large Langu
 ## Key Components
 
 - **LLMClient**: Main interface for LLM queries and conversations
-- **LLMConfig**: Configuration management for model settings
+- **OllamaClientConfig**: Configuration management for model settings
 - **ConversationContext**: Multi-turn conversation management
 - **Response Processing**: Streaming, structured responses, and validation
 
 ## Quick Start
 
 ```python
-from infrastructure.llm.core import LLMClient
+from infrastructure.llm.core import LLMClient, OllamaClientConfig
 
 # Basic usage
-client = LLMClient()
+client = LLMClient(OllamaClientConfig.from_env())
 response = client.query("Explain quantum computing")
 
 # Structured response
@@ -40,9 +40,9 @@ export LLM_SYSTEM_PROMPT="You are a helpful assistant"  # System prompt
 
 ### Programmatic Configuration
 ```python
-from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.config import OllamaClientConfig
 
-config = LLMConfig(
+config = OllamaClientConfig(
     base_url="http://localhost:11434",
     default_model="gemma3:4b",
     temperature=0.7,
@@ -124,12 +124,14 @@ except Exception as e:
 
 ### Automatic Model Selection
 ```python
-# Auto-select best available model
-config = LLMConfig.from_env()  # Uses environment or defaults
-client = LLMClient(config)
+from infrastructure.llm.utils.ollama import select_best_model
 
-# Client automatically selects from available models
-# Priority: llama3-gradient > llama3.1 > llama2 > gemma3 > mistral
+# Start from the configured default, then override with the best available model
+config = OllamaClientConfig.from_env()
+best_model = select_best_model()
+if best_model:
+    config = config.with_overrides(default_model=best_model)
+client = LLMClient(config)
 ```
 
 ### Health Checking
@@ -137,21 +139,20 @@ client = LLMClient(config)
 # Check server availability
 is_running = client.check_connection()
 
-# Detailed health information
-from infrastructure.llm.utils.ollama import check_ollama_health
-health = check_ollama_health()
-print(f"Server healthy: {health['healthy']}")
+# Basic daemon check
+from infrastructure.llm.utils.ollama import is_ollama_running
+print(f"Ollama running: {is_ollama_running()}")
 ```
 
 ## Testing
 
 ```bash
 # Test core functionality (no Ollama required)
-pytest tests/infra_tests/llm/test_config.py -v
-pytest tests/infra_tests/llm/test_context.py -v
+uv run pytest tests/infra_tests/llm/test_config.py -v
+uv run pytest tests/infra_tests/llm/test_context.py -v
 
 # Test with Ollama (requires running server)
-pytest tests/infra_tests/llm/test_core.py -m requires_ollama -v
+uv run pytest tests/infra_tests/llm/test_core.py -m requires_ollama -v
 ```
 
 ## Performance Considerations

@@ -16,7 +16,7 @@ This module follows the **thin orchestrator pattern**:
 ```mermaid
 classDiagram
     class RenderManager {
-        +render_all(source)
+        +render_all(source) -> list[Path]
         +render_pdf(source)
         +render_slides(source)
     }
@@ -165,7 +165,7 @@ class RenderManager:
             figures_dir: Figures directory path (optional)
         """
 
-    def render_all(self, source_path: Path) -> Dict[str, Path]:
+    def render_all(self, source_path: Path) -> list[Path]:
         """Render to all supported formats.
 
         Args:

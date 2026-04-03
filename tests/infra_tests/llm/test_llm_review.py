@@ -956,6 +956,7 @@ class TestValidateReviewQualityWithFormatCompliance:
 
 # Integration tests that require Ollama
 @pytest.mark.requires_ollama
+@pytest.mark.timeout(180)
 class TestLLMReviewIntegration:
     """Integration tests requiring Ollama server."""
 
@@ -986,10 +987,8 @@ class TestLLMReviewIntegration:
 
     def test_generate_review_with_real_llm(self):
         """Test generating a review with real LLM."""
-        from infrastructure.llm.core.client import LLMClient
-        from infrastructure.llm.core.config import OllamaClientConfig
         from infrastructure.llm.review.generator import generate_llm_executive_summary as generate_executive_summary
-        from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
+        from infrastructure.llm.utils.ollama import is_ollama_running, preload_model, select_small_fast_model
 
         if not is_ollama_running():
             pytest.fail(
@@ -1005,7 +1004,7 @@ class TestLLMReviewIntegration:
                 "=" * 80
             )
 
-        model = select_best_model()
+        model = select_small_fast_model()
         if not model:
             pytest.fail(
                 "\n" + "=" * 80 + "\n"
@@ -1014,19 +1013,27 @@ class TestLLMReviewIntegration:
                 "This test requires at least one Ollama model to be installed.\n"
                 "The ensure_ollama_for_tests fixture should have verified models are available.\n\n"
                 "Install a model:\n"
-                "  ollama pull llama3-gradient    # Recommended (4.7GB, 256K context)\n"
-                "  ollama pull llama3.1:latest     # Alternative (4.7GB, 128K context)\n"
+                "  ollama pull smollm2            # Small/fast for tests\n"
                 "  ollama pull gemma2:2b          # Small/fast option (2B params)\n\n"
                 "Verify models: ollama list\n"
                 "=" * 80
             )
 
-        config = OllamaClientConfig.from_env()
-        config.default_model = model
-        client = LLMClient(config)
+        ok, err = preload_model(model, timeout=10.0, retries=0)
+        if not ok:
+            pytest.fail(f"Ollama model {model!r} failed to preload: {err}")
 
-        # Use a short test text
-        client = LLMClient()
+        from infrastructure.llm.core.client import LLMClient
+        from infrastructure.llm.core.config import OllamaClientConfig
+
+        client = LLMClient(
+            OllamaClientConfig(
+                base_url="http://localhost:11434",
+                default_model=model,
+                timeout=60.0,
+                auto_inject_system_prompt=True,
+            )
+        )
         test_text = "This is a brief manuscript to test actual LLM functionality."
         response, metrics = generate_executive_summary(client, test_text, model_name=model)
 

@@ -1,0 +1,278 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{The 1797 Bank Restriction and the Suspension of Metallic
+Reality}
+\protect\phantomsection\label{sec-bank-restriction-1797}
+The meta-stable tension of Twofold bimetallism finally shattered under
+the geopolitical pressures of the French Revolutionary Wars. By the late
+1790s, Britain was facing a multidimensional crisis of liquidity,
+sovereignty, and national survival. Panic swept the countryside as
+rumors of French invasion---dramatically realized by the Battle of
+Fishguard (22--24 February 1797), the last foreign invasion force to
+land on British soil---prompted local farmers and mercantilists to storm
+the provincial banks, demanding hard gold for their paper notes. These
+localized runs cascaded into Threadneedle Street.
+
+By the end of February 1797, the Bank of England's gold reserves had
+dwindled to critical levels---roughly £1.1 million against total note
+circulation of just over £10.8 million, meaning the face value of paper
+in circulation was nearly twice the actual bullion held
+{[}@clapham1944bank{]}. The Bank's reserves had declined by £622,000
+since 1 January alone, a depletion rate that threatened institutional
+collapse within days. Fearing a dissolution of the imperial treasury,
+the Privy Council issued its emergency order on 26 February 1797
+(Saturday evening, with notification reaching the Bank by Sunday
+morning), which was formalized by Parliament as the Bank Restriction Act
+(37 Geo. III c.45), receiving Royal Assent on 3 May 1797
+{[}@fetter1965development{]}. This legislation legally suspended the
+convertibility of Bank of England notes into gold specie. The physical,
+elemental anchor of British wealth was severed overnight; the state was
+now legally empowered to print value \emph{ex nihilo}
+{[}@ricardo1810high{]}.
+
+\begin{block}{The Atomic Swerve: Fiat Currency and Forgery's Media
+Ecology}
+\protect\phantomsection\label{the-atomic-swerve-fiat-currency-and-forgerys-media-ecology}
+This suspension unleashed an era of unbacked, proliferating paper
+currency that persisted until 1821. In the schema of Blakean and
+Epicurean philosophy, the 1797 suspension represents the historical
+manifestation of the atomic \emph{clinamen}---the swerve of value away
+from metal. Unmoored from its metallic gravity, value swerved wildly.
+Threadneedle Street flooded the economy with low-denomination £1 and £2
+notes to replace hoarded gold, relying on crude mass-printing that was
+trivially easy to counterfeit.
+
+As Saree Makdisi argues, this deluge radically reshaped London's ``media
+ecology'' {[}@makdisi2003william{]}. Paper money ceased to be an elite
+mercantile instrument and became a ubiquitous social contagion among the
+poor. When Blake writes of ``mind-forg'd manacles'' in \emph{London}
+(1794), he is diagnosing the very ideological enclosure that William
+Pitt's paper-funded war machine would soon legally enforce: the working
+classes were trading their labor for ``allegoric riches,'' paper claims
+that promised value while systematically stripping it away through
+inflation.
+
+Crucially, Blake's philosophical hatred of this ``spectral value''
+crystallized through documented, artisanal confrontation with the Bank.
+On 5 April 1797---mere weeks after the suspension---William Blake joined
+18 prominent London engravers in signing a formal certificate endorsing
+Alexander Tilloch's revolutionary ``stereotype'' method for producing
+forge-proof banknotes. (Though occasionally conflated with the
+commercial ``writing engraver'' W.S. Blake, the poet's presence among
+his guild peers on this petition is established in the primary record
+preserved in G.E. Bentley Jr.'s \emph{Blake Records}
+{[}@bentley2004records{]}). The historical irony is profound: the
+visionary who most despised ``allegoric riches'' sought to protect them
+from forgery, not out of love for the Bank, but through an artisan's
+commitment to high-fidelity, irreproducible craft. The Bank's
+Directorate rejected Tilloch's solution. The immediate consequence of
+this Urizenic choice was a precipitous spike in counterfeiting, which
+the state answered with mass hangings. For Blake, the Bank's paper money
+was not merely an economic abstraction; its defense literally demanded
+human sacrifice. The poorest of London were executed to protect the
+Bank's groundless, easily forged monopoly {[}@baucom2005specters;
+@erdman1954prophet; @crosby2011blake{]}.
+
+Blake had prophetically dramatized precisely this dissolution of
+metallic anchor in \emph{Europe A Prophecy} (1794), etched just three
+years before the Restriction. In that poem, Enitharmon---the emanation
+of Los, Blake's spirit of sensuous beauty and deceptive
+repose---commands an eighteen-hundred-year ``golden night'' of spiritual
+slumber: ``Now comes the night of Enitharmon's joy! / Who shall I call?
+Who shall I send? / That Woman, lovely Woman! may have dominion?''
+(Plate 5, lines 1--3; Erdman p.~63) {[}@erdman1988complete{]}. This
+``golden night'' is Blake's image for the enchantment of material
+seeming---a false golden age sustained not by authentic metallic
+substance but by the seductive illusion of value. When Enitharmon's
+night shatters at the poem's climax with the trumpet of revolution, the
+parallel to the Restriction is exact: the ``golden'' currency regime
+collapses, revealing that its supposed solidity was always an
+enchantment sustained by sovereign fiat rather than intrinsic worth.
+
+Henry Thornton's landmark \emph{An Enquiry into the Nature and Effects
+of the Paper Credit of Great Britain} (1802) documented this credit
+crisis with analytical precision, demonstrating how the expansion of
+paper credit operated independently of any metallic constraint and
+thereby introduced radical instability into the pricing of commodities
+{[}@thornton1802nature{]}. The everyday economy, once rooted in the
+physical weight of the harvest and the hand, metamorphosed into a
+circulation of purely relational symbols. It became a linguistic rather
+than a substantive economy---a highly effective iteration of Urizenic
+abstraction.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={The Flight of Credit --- Bank of England Note Issuance vs.~Physical Gold Reserves (1790--1821). Top panel: visualizes the profound ontological gap emerging during the Bank Restriction period---skyrocketing issuance of fictional paper credit (``allegoric riches,'' £M) against drained physical gold reserves (£M). Vertical dashed lines mark the catastrophic date of 26 February 1797 (Privy Council suspended specie payments with reserves at roughly £1.1 million), the 1816 Coinage Act, and Peel's 1821 Resumption. The ``uncovered credit gap'' is shaded between notes and reserves. Bottom panel: the reserve coverage ratio plummets from \textasciitilde80\% before suspension to a nadir of \textasciitilde6.7\% in 1813, establishing the fiat void. Data derived from scholarly estimates of the restriction era {[}@clapham1944bank; @tooke1838history{]}.}]{../output/figures/historic_reserves_dark.pdf}}
+\caption{The Flight of Credit --- Bank of England Note Issuance
+vs.~Physical Gold Reserves (1790--1821). Top panel: visualizes the
+profound ontological gap emerging during the Bank Restriction
+period---skyrocketing issuance of fictional paper credit (``allegoric
+riches,'' £M) against drained physical gold reserves (£M). Vertical
+dashed lines mark the catastrophic date of 26 February 1797 (Privy
+Council suspended specie payments with reserves at roughly £1.1
+million), the 1816 Coinage Act, and Peel's 1821 Resumption. The
+``uncovered credit gap'' is shaded between notes and reserves. Bottom
+panel: the reserve coverage ratio plummets from \textasciitilde80\%
+before suspension to a nadir of \textasciitilde6.7\% in 1813,
+establishing the fiat void. Data derived from scholarly estimates of the
+restriction era {[}@clapham1944bank;
+@tooke1838history{]}.}\label{fig-historic-reserves}
+\end{figure}
+\end{block}
+
+\begin{block}{Blake's \emph{Vala} and the Ontology of Paper Credit: The
+Paper Epic}
+\protect\phantomsection\label{blakes-vala-and-the-ontology-of-paper-credit-the-paper-epic}
+Simultaneous to this financial \emph{clinamen}, William Blake commenced
+organizing and writing his first sweeping epic prophecy, \emph{Vala, or
+The Four Zoas} (1797--1807). Surrounded by the chaos of unbacked paper
+abstraction in London, Blake articulated the nightmare of the
+fragmented, alienated psyche corresponding to a fragmented, alienated
+social body. The suspension of specie was not merely a fiscal mechanism
+for Blake; it was a plunge into the depth of \textbf{Ulro}---the void of
+single vision and spiritual death. Rather than entering the dream-like
+poetic rest of Beulah, the economy sank into spectral abstraction, where
+value became entirely disembodied from both Generative labor and
+tangible reality. It was the Epicurean universe---ungrounded,
+atomized---realized as policy. Patrick Brantlinger argues that the
+establishment of the national debt and the proliferation of paper credit
+effectively conjured ``fictions of state,'' turning the British empire
+into an entity sustained entirely by future promises rather than
+substantive present reality {[}@brantlinger1996fictions;
+@tooke1838history{]}. Ian Baucom extends this critique in his study of
+finance capital and the Atlantic slave trade, demonstrating how this era
+of British credit relied on an epistemology of ``spectral value,''
+wherein human life itself became fully fungible and exchangeable on
+international ledgers {[}@baucom2005specters{]}. It was the total
+atomization of social value into swerving, groundless paper contracts,
+fractional reserve banking, and what Blake elsewhere termed ``allegoric
+riches'' (Plate 27, \emph{Jerusalem}) {[}@makdisi2003william;
+@erdman1988complete{]}.
+
+The Bank Restriction Act essentially created an environment where
+private mercantile debt was transmuted into a public burden, tearing at
+the fabric of social cohesion. As gold disappeared from
+circulation---either hoarded domestically or shipped abroad---the
+everyday citizen was forced to navigate the precarity of
+small-denomination paper notes and degraded silver tokens. David
+Ricardo's influential pamphlet \emph{The High Price of Bullion, a Proof
+of the Depreciation of Bank Notes} (1810) crystallized the mounting
+intellectual case against the Bank's profligacy, insisting that the
+rising price of gold bullion was empirical proof of the depreciation of
+paper---not, as the Bank's directors claimed, merely a symptom of
+wartime scarcity {[}@ricardo1810high{]}. The resulting Bullionist
+Controversy (explored in \hyperlink{sec-bullionist-controversy}{§ The
+Bullionist Controversy}) demanded a radical prophetic intervention to
+restore meaning and value, while simultaneously setting the stage for
+Urizen's eventual, systemic re-assertion of numerical containment in
+1816. The period of Restriction (1797--1821) thus served as the chaotic
+\emph{Ulro} out of which the repressive order of the Gold Standard would
+be forged.
+\end{block}
+\end{frame}
+
+\end{document}

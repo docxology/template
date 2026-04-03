@@ -26,6 +26,7 @@ from __future__ import annotations
 
 from infrastructure.llm.utils.models import (
     DEFAULT_MODEL_PREFERENCES,
+    SMALL_FAST_MODEL_PREFERENCES,
     check_model_loaded,
     get_available_model_info,
     get_model_info,
@@ -33,15 +34,18 @@ from infrastructure.llm.utils.models import (
     preload_model,
     select_best_model,
     select_small_fast_model,
+    small_fast_preference_matches,
 )
 from infrastructure.llm.utils.server import (
     ensure_ollama_ready,
     is_ollama_running,
+    pull_ollama_model,
     start_ollama_server,
 )
 
 __all__ = [
     "DEFAULT_MODEL_PREFERENCES",
+    "SMALL_FAST_MODEL_PREFERENCES",
     "check_model_loaded",
     "ensure_ollama_ready",
     "get_available_model_info",
@@ -49,7 +53,9 @@ __all__ = [
     "get_model_names",
     "is_ollama_running",
     "preload_model",
+    "pull_ollama_model",
     "select_best_model",
     "select_small_fast_model",
+    "small_fast_preference_matches",
     "start_ollama_server",
 ]

@@ -390,6 +390,12 @@ class TestCompleteValidationEdgeCases:
         result = validate_complete(content, mode="unknown_mode")
         assert result is True
 
+    def test_validate_complete_raw_mode(self):
+        """Test raw mode returns True without any validation checks."""
+        content = "Any content here!!!  even with bad formatting???"
+        result = validate_complete(content, mode="raw")
+        assert result is True
+
 
 class TestCitationValidationEdgeCases:
     """Test edge cases for citation validation."""

@@ -2,18 +2,17 @@
 """Comprehensive documentation scan and improvement analysis.
 
 This script performs a systematic 7-phase documentation scan:
-1. Discovery and Inventory
-2. Accuracy Verification
-3. Completeness Analysis
-4. Quality Assessment
-5. Intelligent Improvements
-6. Verification and Validation
+1. Discovery and inventory
+2. Accuracy verification
+3. Completeness analysis
+4. Quality assessment
+5. Improvements
+6. Verification and validation
 7. Reporting
 """
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from collections import defaultdict
 from datetime import datetime
@@ -39,8 +38,40 @@ from infrastructure.validation.docs.models import (
 from infrastructure.validation.docs.quality import run_quality_phase
 from infrastructure.validation.docs._docs_scan_report import build_documentation_scan_report
 
+class AccuracyIssue(ScanAccuracyIssue):
+    """Backward-compatible wrapper around :class:`ScanAccuracyIssue`."""
+
+    def __init__(
+        self,
+        file: str,
+        line: int,
+        issue_type: str,
+        issue_message: str,
+        severity: str = "warning",
+        details: str = "",
+    ) -> None:
+        super().__init__(
+            category=issue_type,
+            severity=severity,
+            file=file,
+            line=line,
+            message=issue_message,
+            details=details,
+        )
+
+    @property
+    def issue_type(self) -> str:
+        """Compatibility alias for the legacy field name."""
+        return self.category
+
+    @property
+    def issue_message(self) -> str:
+        """Compatibility alias for the legacy field name."""
+        return self.message
+
 __all__ = [
     "DocumentationScanner",
+    "AccuracyIssue",
     "ScanAccuracyIssue",
     "CompletenessGap",
     "DocumentationFile",
@@ -196,25 +227,17 @@ class DocumentationScanner:
         return improvements
 
     def _run_link_checker(self) -> dict[str, Any]:
-        """Run the existing link checker."""
+        """Run the repository link checker in-process."""
         try:
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    str(self.repo_root / "repo_utilities" / "check_documentation_links.py"),
-                ],
-                capture_output=True,
-                text=True,
-                cwd=self.repo_root,
-                timeout=300,
-            )
+            from infrastructure.validation.integrity.check_links import run_link_audit
+
+            exit_code = run_link_audit(self.repo_root)
             return {
-                "success": result.returncode == 0,
-                "output": result.stdout,
-                "errors": result.stderr,
+                "success": exit_code == 0,
+                "exit_code": exit_code,
             }
         except Exception as e:  # noqa: BLE001
-            logger.warning(f"Link checker subprocess failed: {e}")
+            logger.warning(f"Link checker failed: {e}")
             return {"success": False, "error": str(e)}
 
     def _validate_markdown_syntax(self) -> dict[str, Any]:

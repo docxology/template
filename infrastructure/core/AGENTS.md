@@ -8,13 +8,13 @@ The Core module provides fundamental foundation utilities used across the entire
 
 ### Core Components
 
-**runtime/exceptions.py**
+**exceptions.py**
 - Base exception hierarchy (TemplateError and subclasses)
 - Context preservation with exception chaining
 - Module-specific exceptions (Literature, LLM, Rendering, Publishing)
 - Exception utility functions for context formatting
 
-**logging/logging_utils.py**
+**logging/utils.py**
 - Unified Python logging with consistent formatting
 - Environment-based configuration (LOG_LEVEL 0-3)
 - Context managers for operation tracking and timing
@@ -22,7 +22,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Integration with bash logging.sh format
 - Emoji support for TTY output
 
-**config/config_loader.py**
+**config/loader.py**
 - YAML configuration file loading
 - Environment variable support with priority
 - Author and metadata formatting
@@ -37,7 +37,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - **Optional dependency**: `python-dotenv` (graceful fallback if not installed)
 - Supports credential access from multiple sources
 
-**runtime/progress.py**
+**progress.py**
 - Progress bar utilities for long-running operations
 - Sub-stage progress tracking
 - Visual progress indicators
@@ -52,7 +52,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Transient failure handling
 - Retryable operation wrappers
 
-**runtime/stage_monitor.py**
+**pipeline/stage_monitor.py**
 - Stage-level performance monitoring and resource tracking
 - Timing, memory, CPU, and IO metrics (psutil optional)
 
@@ -60,7 +60,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Function-level profiling utilities
 - Decorators/context managers for targeted profiling
 
-**runtime/security.py**
+**security.py**
 - Security utilities and input sanitization
 - Security event monitoring
 - Rate limiting and health checks
@@ -70,7 +70,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Component status checking
 - Health status reporting
 
-**runtime/cli.py**
+**cli.py**
 - Command-line interface utilities
 - CLI argument parsing and validation
 
@@ -78,7 +78,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Configuration CLI commands
 - Config file management from command line
 
-**runtime/menu.py**
+**menu.py**
 - Interactive menu system
 - Menu-driven user interfaces
 
@@ -100,12 +100,12 @@ The Core module provides fundamental foundation utilities used across the entire
 - Build tool verification
 - Directory structure setup
 
-**runtime/script_discovery.py**
+**script_discovery.py**
 - Script discovery and execution
 - Analysis script finding
 - Orchestrator script discovery
 
-**files/file_operations.py**
+**files/operations.py**
 - File management utilities
 - Output directory cleanup
 - Final deliverable copying
@@ -167,7 +167,7 @@ The Core module provides fundamental foundation utilities used across the entire
 
 ## Function Signatures
 
-### runtime/exceptions.py
+### exceptions.py
 
 #### TemplateError (class)
 ```python
@@ -509,7 +509,7 @@ def chain_exceptions(
     """
 ```
 
-### logging/logging_utils.py
+### logging/utils.py
 
 #### get_log_level_from_env (function)
 ```python
@@ -742,7 +742,7 @@ def log_resource_usage(
     """
 ```
 
-### config/config_loader.py
+### config/loader.py
 
 #### load_config (function)
 ```python
@@ -919,7 +919,7 @@ def validate_credentials(
     """
 ```
 
-### runtime/progress.py
+### progress.py
 
 #### ProgressBar (class)
 ```python
@@ -1160,7 +1160,7 @@ class RetryableOperation:
         """
 ```
 
-### runtime/stage_monitor.py
+### pipeline/stage_monitor.py
 
 #### PerformanceMonitor (class)
 ```python
@@ -1274,7 +1274,7 @@ def setup_environment(
     """
 ```
 
-### runtime/script_discovery.py
+### script_discovery.py
 
 #### discover_analysis_scripts (function)
 ```python
@@ -1315,7 +1315,7 @@ def validate_script(script_path: Path) -> Dict[str, Any]:
     """
 ```
 
-### files/file_operations.py
+### files/operations.py
 
 #### clean_output_directory (function)
 ```python
@@ -1711,7 +1711,7 @@ def get_health_metrics() -> Dict[str, Any]:
     """
 ```
 
-### runtime/security.py
+### security.py
 
 #### SecurityValidator (class)
 ```python
@@ -2239,7 +2239,7 @@ def has_arxiv_credentials(self) -> bool:
     """Check if arXiv credentials are available."""
 ```
 
-### runtime/progress.py
+### progress.py
 
 #### ProgressBar (class)
 ```python
@@ -2612,7 +2612,7 @@ def retry(self, exception: Exception) -> None:
     """
 ```
 
-### runtime/stage_monitor.py
+### pipeline/stage_monitor.py
 
 #### ResourceUsage (class)
 ```python
@@ -3042,7 +3042,7 @@ def validate_directory_structure(repo_root: Path, project_name: str = "project")
     """
 ```
 
-### runtime/script_discovery.py
+### script_discovery.py
 
 #### discover_analysis_scripts (function)
 ```python
@@ -3089,7 +3089,7 @@ def verify_analysis_outputs(repo_root: Path) -> bool:
     """
 ```
 
-### files/file_operations.py
+### files/operations.py
 
 #### clean_output_directory (function)
 ```python
@@ -3271,7 +3271,7 @@ class MultiProjectOrchestrator:
         """
 ```
 
-### runtime/security.py
+### security.py
 
 #### SecurityValidator (class)
 ```python
@@ -3445,7 +3445,7 @@ def get_health_metrics() -> Dict[str, Any]:
     """Get health metrics."""
 ```
 
-### runtime/cli.py
+### cli.py
 
 #### create_parser (function)
 ```python
@@ -3536,7 +3536,7 @@ def handle_discover_command(args: argparse.Namespace) -> int:
 
 This module provides CLI commands for configuration management. See `cli.py` for integration.
 
-### runtime/menu.py
+### menu.py
 
 This module provides interactive menu system utilities for menu-driven user interfaces.
 
@@ -3554,7 +3554,7 @@ This module provides progress logging utilities that integrate progress tracking
 
 ### runtime/function_profiler.py
 
-This module provides function-level profiling utilities (cProfile/tracemalloc) and benchmarking helpers. See `stage_monitor.py` for stage-level resource monitoring.
+This module provides function-level profiling utilities (cProfile/tracemalloc) and benchmarking helpers. See `pipeline/stage_monitor.py` for stage-level resource monitoring.
 
 ### pipeline/pipeline_summary.py
 

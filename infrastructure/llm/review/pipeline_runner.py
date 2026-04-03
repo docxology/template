@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import time
-from functools import partial
 from pathlib import Path
 
 from infrastructure.core.exceptions import PDFValidationError
@@ -14,7 +13,7 @@ from infrastructure.core.logging.utils import (
     log_progress,
 )
 from infrastructure.core.config.queries import get_translation_languages, get_review_types
-from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES, ManuscriptQualityReview, ManuscriptMethodologyReview
+from infrastructure.llm.templates.manuscript import TRANSLATION_LANGUAGES
 from infrastructure.llm.review.io import (
     save_review_outputs,
     save_single_review,

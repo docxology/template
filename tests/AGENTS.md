@@ -1,3 +1,37 @@
+# tests/ - Repository Test Documentation
+
+## Purpose
+
+The `tests/` directory contains repository-wide tests for infrastructure, integrations, and behavioral contracts that cross module boundaries.
+
+## Standards
+
+- Use real data and real execution paths.
+- Do not use mocks, stubs, or monkeypatching.
+- Prefer subprocess calls for CLI behavior.
+- Use temporary files and directories for filesystem behavior.
+- Use HTTP test servers for HTTP behavior.
+
+## Current Subtrees
+
+- `tests/infra_tests/` - infrastructure module coverage
+- `tests/integration/` - end-to-end and orchestration coverage
+
+## Coverage Expectations
+
+- Infrastructure code is held to the repository coverage floor in `tests/infra_tests/`.
+- Integration tests should confirm the pipeline and shell entry points remain wired correctly.
+
+## Documentation Expectations
+
+- Keep `README.md` files aligned with the live test tree.
+- Keep per-folder `AGENTS.md` files accurate and specific to the folder they document.
+
+## See Also
+
+- [`README.md`](README.md)
+- [`infra_tests/AGENTS.md`](infra_tests/AGENTS.md)
+- [`integration/AGENTS.md`](integration/AGENTS.md)
 # tests/ - Test Suite
 
 ## Purpose
@@ -81,7 +115,7 @@ def ollama_test_server():
     server.stop()
 
 def test_llm_query(ollama_test_server):
-    config = LLMConfig(base_url=ollama_test_server.url_for("/"))
+    config = OllamaClientConfig(base_url=ollama_test_server.url_for("/"))
     client = LLMClient(config)
     response = client.query("test")  # HTTP request
     assert "Test response" in response

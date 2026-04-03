@@ -70,6 +70,25 @@ class TestRepositoryScannerCheckCode:
         # Should complete without error
         assert scanner.results is not None
 
+    def test_check_code_accuracy_with_project_imports(self, tmp_path):
+        """Test code accuracy checking with project-local imports."""
+        project_src = tmp_path / "projects" / "example_project" / "src"
+        project_src.mkdir(parents=True)
+        (project_src / "optimizer.py").write_text("def optimize():\n    return 1\n")
+
+        project_scripts = tmp_path / "projects" / "example_project" / "scripts"
+        project_scripts.mkdir(parents=True)
+        (project_scripts / "run.py").write_text(
+            "from projects.example_project.src.optimizer import optimize\nprint(optimize())"
+        )
+
+        scanner = RepositoryScanner(tmp_path)
+        scanner._discover_structure()
+        scanner._check_code_accuracy()
+
+        import_issues = [i for i in scanner.results.accuracy_issues if i.category == "import"]
+        assert import_issues == []
+
 
 class TestRepositoryScannerCompleteness:
     """Test completeness checking."""

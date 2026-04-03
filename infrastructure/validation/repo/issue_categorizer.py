@@ -10,12 +10,6 @@ from __future__ import annotations
 import re
 from typing import Any, Union
 
-# Issue type string constants for _get_issue_type return values
-ISSUE_TYPE_LINK = "link_issue"
-ISSUE_TYPE_COMPLETENESS = "completeness_gap"
-ISSUE_TYPE_QUALITY = "quality_issue"
-ISSUE_TYPE_UNKNOWN = "unknown"
-
 from infrastructure.validation.docs.models import (
     CompletenessGap,
     LinkIssue,
@@ -36,6 +30,14 @@ from infrastructure.validation.repo.known_exceptions import (
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
+# Issue type string constants for _get_issue_type return values
+ISSUE_TYPE_LINK = "link_issue"
+ISSUE_TYPE_COMPLETENESS = "completeness_gap"
+ISSUE_TYPE_QUALITY = "quality_issue"
+ISSUE_TYPE_UNKNOWN = "unknown"
+
+
 
 # Type alias for any issue type in the validation system
 ValidationIssue = Union[LinkIssue, ScanAccuracyIssue, CompletenessGap, QualityIssue]

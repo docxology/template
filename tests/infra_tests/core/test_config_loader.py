@@ -220,7 +220,7 @@ class TestGetConfigAsDict:
         assert result == {"PROJECT_TITLE": "Test"}
 
 
-class TestGetConfigAsDict:
+class TestGetConfigAsDictRespectExisting:
     """Test get_config_as_dict respect_existing behaviour."""
 
     def test_respects_existing_env_vars(self, tmp_path, sample_config, monkeypatch):

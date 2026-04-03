@@ -1,0 +1,17 @@
+{
+  "project_name": "blake_bimetalism",
+  "total_events": 1,
+  "errors": 0,
+  "warnings": 1,
+  "events": [
+    {
+      "severity": "WARNING",
+      "category": "MARKDOWN_MATH",
+      "message": "Use equation environment instead of $$",
+      "file_path": "projects/blake_bimetalism/manuscript/06_discussion.md",
+      "line_number": null,
+      "fix_suggestion": "Replace $$...$$ with \\begin{equation}...\\end{equation}",
+      "context": {}
+    }
+  ]
+}

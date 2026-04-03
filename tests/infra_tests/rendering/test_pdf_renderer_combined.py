@@ -14,10 +14,10 @@ import pytest
 import yaml
 
 from infrastructure.rendering._pdf_latex_helpers import (
-    fix_figure_paths,
     generate_title_page_body,
     generate_title_page_preamble,
 )
+from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 

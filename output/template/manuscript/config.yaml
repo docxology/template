@@ -1,0 +1,54 @@
+# Template Meta-Project Configuration
+# Self-referential study documenting the template/ architecture.
+
+paper:
+  title: "A \\texttt{template/} approach to Reproducible Generative Research"
+  version: "1.0"
+  subtitle: "Architecture and Ergonomics from Configuration through Publication"
+  date: "2026-03-20"
+
+authors:
+  - name: "Daniel Ari Friedman"
+    orcid: "0000-0001-6232-9096"
+    email: "daniel@activeinference.institute"
+    affiliation: "Active Inference Institute"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.19139090"
+  journal: "Zenodo"
+  volume: "1"
+  pages: "1-N"
+  year: "2026"
+
+keywords:
+  - "reproducible research"
+  - "infrastructure-as-code"
+  - "steganography"
+  - "cryptographic provenance"
+  - "LaTeX rendering"
+  - "modular infrastructure"
+  - "publication integrity"
+  - "zero-mock testing"
+  - "thin orchestrator"
+  - "two-layer architecture"
+  - "FAIR4RS"
+  - "research software engineering"
+
+metadata:
+  license: "Apache License 2.0"
+  language: "en"
+
+llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary
+      - quality_review
+  translations:
+    enabled: false
+
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 3
+  max_project_test_failures: 0

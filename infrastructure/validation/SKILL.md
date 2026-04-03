@@ -19,7 +19,7 @@ results = validate_pdf_rendering(pdf_path)
 text = extract_text_from_pdf(pdf_path)
 
 # Scan for rendering issues
-issues = scan_for_issues(pdf_path)
+issues = scan_for_issues(text)
 ```
 
 **CLI:**
@@ -32,18 +32,29 @@ python3 -m infrastructure.validation.cli.pdf output/{project}/pdf/
 ## Markdown Validation (`markdown_validator.py`)
 
 ```python
-from infrastructure.validation import (
-    validate_markdown, find_markdown_files,
-    validate_images, validate_refs, validate_math,
+from pathlib import Path
+
+from infrastructure.validation.content.markdown_validator import (
+    collect_symbols,
+    find_markdown_files,
+    validate_images,
+    validate_markdown,
+    validate_math,
+    validate_refs,
 )
 
+repo_root = Path(".")
+manuscript_dir = repo_root / "projects" / "project" / "manuscript"
+md_files = find_markdown_files(manuscript_dir)
+labels, anchors = collect_symbols(md_files)
+
 # Validate all markdown in a directory
-results = validate_markdown(manuscript_dir)
+problems, exit_code = validate_markdown(manuscript_dir, repo_root)
 
 # Individual checks
-image_issues = validate_images(md_content, base_path)
-ref_issues = validate_refs(md_content)
-math_issues = validate_math(md_content)
+image_issues = validate_images(md_files, repo_root)
+ref_issues = validate_refs(md_files, repo_root, labels, anchors)
+math_issues = validate_math(md_files, repo_root)
 ```
 
 **CLI:**

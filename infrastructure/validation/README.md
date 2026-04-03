@@ -13,11 +13,11 @@ graph TD
     end
 
     subgraph ValidationModules["Validation Modules"]
-        PDF_VAL[content/output/output/pdf_validator.py<br/>PDF rendering validation]
+        PDF_VAL[content/pdf_validator.py<br/>PDF rendering validation]
         MD_VAL[content/content/content/markdown_validator.py<br/>Markdown structure validation]
         INTEGRITY_MOD[integrity/checks.py<br/>File integrity verification]
         DOC_SCAN[docs/scanner.py<br/>Documentation quality scanning]
-        LINK_VAL[integrity/docs/docs/link_validator.py<br/>Link and reference validation]
+        LINK_VAL[integrity/link_validator.py<br/>Link and reference validation]
     end
 
     subgraph ValidationPipeline["Validation Pipeline"]

@@ -182,6 +182,33 @@ def select_best_model(
     return first
 
 
+# Ordered list for ``select_small_fast_model`` and test harness checks (keep in sync).
+SMALL_FAST_MODEL_PREFERENCES: list[str] = [
+    "smollm2",
+    "gemma2:2b",
+    "gemma3:4b",
+    "llama2:latest",
+    "mistral:latest",
+]
+
+
+def small_fast_preference_matches(available: list[str]) -> bool:
+    """True if some installed model matches a small-fast preference (not only a generic fallback).
+
+    Uses the same matching rules as :func:`select_best_model` for
+    :data:`SMALL_FAST_MODEL_PREFERENCES`.
+    """
+    if not available:
+        return False
+    for pref in SMALL_FAST_MODEL_PREFERENCES:
+        if pref in available:
+            return True
+        for model in available:
+            if pref in model or model.startswith(pref.split(":")[0]):
+                return True
+    return False
+
+
 def select_small_fast_model(base_url: str = "http://localhost:11434") -> str | None:
     """Select a small, fast model for testing.
 
@@ -193,14 +220,7 @@ def select_small_fast_model(base_url: str = "http://localhost:11434") -> str | N
     Returns:
         Model name to use, or None if no models available
     """
-    fast_preferences = [
-        "smollm2",
-        "gemma2:2b",
-        "gemma3:4b",
-        "llama2:latest",
-        "mistral:latest",
-    ]
-    return select_best_model(fast_preferences, base_url)
+    return select_best_model(SMALL_FAST_MODEL_PREFERENCES, base_url)
 
 
 def get_model_info(

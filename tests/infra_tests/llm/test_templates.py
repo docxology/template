@@ -154,6 +154,50 @@ def test_render_missing_var():
         tmpl.render()  # Missing 'text'
 
 
+class TestAllRegisteredTemplates:
+    """Parametrised tests that every entry in TEMPLATES works end-to-end."""
+
+    _ALL_KEYS = [
+        "summarize_abstract",
+        "literature_review",
+        "code_doc",
+        "data_interpret",
+        "paper_summarization",
+        "manuscript_executive_summary",
+        "manuscript_quality_review",
+        "manuscript_methodology_review",
+        "manuscript_improvement_suggestions",
+        "manuscript_translation_abstract",
+        "literature_review_synthesis",
+        "science_communication_narrative",
+        "comparative_analysis",
+        "research_gap_identification",
+        "citation_network_analysis",
+    ]
+
+    @pytest.mark.parametrize("key", _ALL_KEYS)
+    def test_template_instantiates(self, key: str) -> None:
+        from infrastructure.llm.templates import get_template, ResearchTemplate
+        t = get_template(key)
+        assert isinstance(t, ResearchTemplate)
+
+    @pytest.mark.parametrize("key", _ALL_KEYS)
+    def test_template_has_non_empty_str(self, key: str) -> None:
+        from infrastructure.llm.templates import TEMPLATES
+        t = TEMPLATES[key]()
+        assert t.template_str, f"{key} has an empty template_str"
+
+    def test_all_keys_present_in_registry(self) -> None:
+        from infrastructure.llm.templates import TEMPLATES
+        for key in self._ALL_KEYS:
+            assert key in TEMPLATES, f"Key '{key}' missing from TEMPLATES registry"
+
+    def test_registry_contains_no_extra_unknown_classes(self) -> None:
+        from infrastructure.llm.templates import TEMPLATES, ResearchTemplate
+        for name, cls in TEMPLATES.items():
+            assert issubclass(cls, ResearchTemplate), f"{name} is not a ResearchTemplate subclass"
+
+
 class TestResearchTemplateBase:
     """Test the ResearchTemplate base class directly."""
 

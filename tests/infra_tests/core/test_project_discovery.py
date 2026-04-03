@@ -8,12 +8,10 @@ Follows No Mocks Policy - all tests use real data and real execution.
 from pathlib import Path
 
 
-from infrastructure.project.discovery import (
-    ProjectInfo,
-    discover_projects,
-    get_project_metadata,
-    validate_project_structure,
-)
+from infrastructure.project.project_info import ProjectInfo
+from infrastructure.project.metadata import get_project_metadata
+from infrastructure.project.validation import validate_project_structure
+from infrastructure.project.discovery import discover_projects
 
 
 class TestValidateProjectStructure:

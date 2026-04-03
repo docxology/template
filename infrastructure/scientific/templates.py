@@ -122,6 +122,11 @@ from infrastructure.scientific.benchmarking import benchmark_function
 # Import the module to test.
 # Ensure src/ is on the Python path via pyproject.toml [tool.pytest.ini_options] pythonpath
 # or pytest.ini rather than mutating sys.path at test load time.
+# If a standalone run needs it, use Path(__file__) to locate the repo root.
+# sys.path is intentionally left untouched in generated tests.
+# repo_root = Path(__file__).resolve().parents[2]
+# if str(repo_root) not in sys.path:
+#     sys.path.insert(0, str(repo_root))
 import {module_name}
 
 class TestNumericalStability:

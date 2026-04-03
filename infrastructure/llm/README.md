@@ -12,7 +12,17 @@ ollama serve
 ollama pull gemma3:4b
 
 # Run manuscript review
-python3 scripts/06_llm_review.py --review manuscript.md
+uv run python scripts/06_llm_review.py --project code_project --reviews-only
+```
+
+The local LLM workflow assumes a running Ollama daemon on `http://localhost:11434`.
+If you are starting from a fresh machine, the canonical sequence is:
+
+```bash
+ollama serve
+ollama pull gemma3:4b
+curl http://localhost:11434/api/tags
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 ```
 
 ## Features
@@ -107,6 +117,7 @@ export OLLAMA_MODEL="llama3-gradient"  # Best quality, slower
 # Model selection
 export OLLAMA_MODEL="gemma3:4b"        # Override default model
 export OLLAMA_HOST="http://localhost:11434"  # Ollama server URL
+export OLLAMA_AUTO_START="true"        # Allow the review workflow to start Ollama if needed
 
 # Generation parameters
 export LLM_TEMPERATURE="0.7"           # Response creativity (0.0-1.0)
@@ -148,12 +159,18 @@ prompt = composer.compose_prompt('manuscript_reviews', {
 ## Testing
 
 ```bash
-# Run all LLM tests
-pytest tests/infra_tests/llm/ -v
+# Run the deterministic suite (fake Ollama HTTP server)
+uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
 
-# Skip Ollama-dependent tests
-pytest tests/infra_tests/llm/ -m "not requires_ollama" -v
+# Run the real-daemon smoke tests
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 ```
+
+`tests/infra_tests/llm/conftest.py` provides `ollama_test_server` for deterministic
+HTTP coverage (Ollama-compatible API, not the real daemon). Tests marked with
+`@pytest.mark.requires_ollama` use `ensure_ollama_for_tests` from `tests/conftest.py`,
+which can **auto-pull** `smollm2` (or `OLLAMA_TEST_PULL_MODEL`) when no small/fast
+preference model is present—unless `OLLAMA_SKIP_TEST_MODEL_PULL=1`. See `tests/README.md`.
 
 ## See Also
 

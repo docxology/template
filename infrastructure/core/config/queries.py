@@ -12,6 +12,10 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from infrastructure.core.config.loader import ResolvedTestingConfig
+
 logger = get_logger(__name__)
 
 

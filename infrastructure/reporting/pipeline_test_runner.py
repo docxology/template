@@ -217,6 +217,10 @@ def run_project_tests(
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     pythonpath_parts = [str(repo_root), str(project_root)]
+    # Include project src/ so subpackage imports resolve when running from repo root
+    project_src = project_root / "src"
+    if project_src.exists():
+        pythonpath_parts.append(str(project_src))
     if env.get("PYTHONPATH"):
         pythonpath_parts.append(env["PYTHONPATH"])
     env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)

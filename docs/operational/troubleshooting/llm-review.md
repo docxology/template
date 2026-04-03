@@ -17,6 +17,15 @@ The LLM review system uses local Ollama LLMs to:
 - `infrastructure/llm/` - LLM client and utilities
 - Ollama server - Local LLM runtime
 
+## Canonical Local Setup
+
+```bash
+ollama serve
+ollama pull gemma3:4b
+curl http://localhost:11434/api/tags
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
+```
+
 ## Quick Diagnosis
 
 ### Check Ollama Status
@@ -29,7 +38,7 @@ curl http://localhost:11434/api/tags
 ollama list
 
 # Test Ollama directly
-ollama run llama3-gradient "Hello"
+ollama run gemma3:4b "Hello"
 ```
 
 ### Check LLM Review Script
@@ -70,15 +79,7 @@ brew services list | grep ollama  # macOS
 
 1. **Start Ollama server:**
    ```bash
-   # Start in foreground (for testing)
    ollama serve
-   
-   # Start in background (macOS/Linux)
-   ollama serve &
-   
-   # Start as service (Linux with systemd)
-   sudo systemctl start ollama
-   sudo systemctl enable ollama  # Auto-start on boot
    ```
 
 2. **Verify Ollama is accessible:**
@@ -121,11 +122,11 @@ uv run python -c "from infrastructure.llm.utils.ollama import DEFAULT_MODEL_PREF
 
 1. **Install a recommended model:**
    ```bash
-   # Preferred models (in order of preference)
-   ollama pull llama3-gradient:latest  # Large context (256K), recommended
-   ollama pull llama3.1:latest         # Good balance
-   ollama pull llama2:latest            # Widely available
-   ollama pull gemma2:2b                # Fast, small
+   # Preferred models for local review workflows
+   ollama pull gemma3:4b                # Default configured model
+   ollama pull gemma2:2b                # Faster smoke-test choice
+   ollama pull smollm2                  # Fastest functional tests
+   ollama pull llama3-gradient:latest   # Higher-quality, slower option
    ```
 
 2. **Verify model installation:**
@@ -138,9 +139,9 @@ uv run python -c "from infrastructure.llm.utils.ollama import DEFAULT_MODEL_PREF
    ```
 
 3. **Check model preferences:**
-   - System prefers models in this order: `llama3-gradient`, `llama3.1`, `llama2`, `gemma2:2b`
-   - If you have a different model, it will still work but may not be auto-selected
-   - You can manually specify model via environment variable (if supported)
+   - The code defaults to `gemma3:4b`.
+   - Faster smoke tests prefer `smollm2` or `gemma2:2b` when available.
+   - `OLLAMA_MODEL` overrides the default for local runs.
 
 **Prevention:**
 - Document model requirements in setup instructions

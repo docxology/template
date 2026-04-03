@@ -36,27 +36,27 @@ with log_operation("Processing", logger):
 ```mermaid
 graph TD
     subgraph Foundation["Foundation Layer"]
-        EXCEPTIONS[runtime/runtime/exceptions.py<br/>Exception hierarchy<br/>Context preservation]
-        LOGGING[logging/logging/logging_utils.py<br/>Unified logging<br/>Environment configuration]
-        CONFIG[config/config/config_loader.py<br/>YAML + env loading<br/>Metadata formatting]
+        EXCEPTIONS[exceptions.py<br/>Exception hierarchy<br/>Context preservation]
+        LOGGING[logging/utils.py<br/>Unified logging<br/>Environment configuration]
+        CONFIG[config/loader.py<br/>YAML + env loading<br/>Metadata formatting]
     end
 
     subgraph Utilities["Utility Layer"]
-        PROGRESS[runtime/runtime/progress.py<br/>Progress tracking<br/>Visual indicators]
-        CHECKPOINT[runtime/runtime/checkpoint.py<br/>Pipeline state<br/>Resume capability]
-        RETRY[runtime/runtime/retry.py<br/>Retry logic<br/>Exponential backoff]
-        PERFORMANCE[runtime/runtime/stage_monitor.py<br/>Resource monitoring<br/>System metrics]
+        PROGRESS[progress.py<br/>Progress tracking<br/>Visual indicators]
+        CHECKPOINT[runtime/checkpoint.py<br/>Pipeline state<br/>Resume capability]
+        RETRY[runtime/retry.py<br/>Retry logic<br/>Exponential backoff]
+        PERFORMANCE[pipeline/stage_monitor.py<br/>Resource monitoring<br/>System metrics]
     end
 
     subgraph Operations["Operations Layer"]
-        ENVIRONMENT[runtime/runtime/environment.py<br/>System validation<br/>Dependency checking]
-        SCRIPTS[runtime/runtime/script_discovery.py<br/>Script finding<br/>Execution coordination]
-        FILES[files/files/file_operations.py<br/>File management<br/>Output handling]
+        ENVIRONMENT[runtime/environment.py<br/>System validation<br/>Dependency checking]
+        SCRIPTS[script_discovery.py<br/>Script finding<br/>Execution coordination]
+        FILES[files/operations.py<br/>File management<br/>Output handling]
     end
 
     subgraph Security["Security Layer"]
-        SECURITY[runtime/runtime/security.py<br/>Input validation<br/>Rate limiting<br/>Threat detection]
-        HEALTH[runtime/runtime/health_check.py<br/>System monitoring<br/>Component status]
+        SECURITY[security.py<br/>Input validation<br/>Rate limiting<br/>Threat detection]
+        HEALTH[runtime/health_check.py<br/>System monitoring<br/>Component status]
     end
 
     EXCEPTIONS --> LOGGING
@@ -183,18 +183,18 @@ flowchart TD
 
 | Module | Purpose | Key Classes/Functions |
 |--------|---------|----------------------|
-| **runtime/exceptions.py** | Exception hierarchy with context preservation | `TemplateError`, `ValidationError`, `BuildError`, `raise_with_context()`, `chain_exceptions()` |
-| **logging/logging_utils.py** | Unified logging system with environment config | `get_logger()`, `setup_logger()`, `log_operation()`, `log_timing()`, `log_function_call()` |
-| **config/config_loader.py** | YAML config loading with environment overrides | `load_config()`, `get_config_as_dict()`, `get_config_as_env_vars()`, `find_config_file()` |
+| **exceptions.py** | Exception hierarchy with context preservation | `TemplateError`, `ValidationError`, `BuildError`, `raise_with_context()`, `chain_exceptions()` |
+| **logging/utils.py** | Unified logging system with environment config | `get_logger()`, `setup_logger()`, `log_operation()`, `log_timing()`, `log_function_call()` |
+| **config/loader.py** | YAML config loading with environment overrides | `load_config()`, `get_config_as_dict()`, `get_config_as_env_vars()`, `find_config_file()` |
 | **runtime/health_check.py** | System health monitoring and component status | `SystemHealthChecker`, `get_health_api()`, `quick_health_check()`, `get_health_status()` |
-| **runtime/security.py** | Input validation and security monitoring | `SecurityValidator`, `get_security_headers()`, `RateLimiter`, `validate_llm_input()` |
-| **runtime/progress.py** | Progress tracking with visual indicators | `ProgressBar`, `LLMProgressTracker`, `SubStageProgress` |
+| **security.py** | Input validation and security monitoring | `SecurityValidator`, `get_security_headers()`, `RateLimiter`, `validate_llm_input()` |
+| **progress.py** | Progress tracking with visual indicators | `ProgressBar`, `LLMProgressTracker`, `SubStageProgress` |
 | **runtime/checkpoint.py** | Pipeline state management for resume capability | `CheckpointManager`, `PipelineCheckpoint`, `StageResult` |
 | **runtime/retry.py** | Exponential backoff retry logic | `retry_with_backoff()`, `RetryableOperation` |
-| **runtime/stage_monitor.py** | Resource monitoring and performance metrics | `PerformanceMonitor`, `ResourceUsage`, `StagePerformanceTracker` |
+| **pipeline/stage_monitor.py** | Resource monitoring and performance metrics | `PerformanceMonitor`, `ResourceUsage`, `StagePerformanceTracker` |
 | **runtime/environment.py** | System validation and dependency checking | `check_python_version()`, `check_dependencies()`, `setup_directories()` |
-| **runtime/script_discovery.py** | Dynamic script finding and execution coordination | `discover_analysis_scripts()`, `discover_orchestrators()` |
-| **files/file_operations.py** | File management and output handling | `clean_output_directory()`, `copy_final_deliverables()` |
+| **script_discovery.py** | Dynamic script finding and execution coordination | `discover_analysis_scripts()`, `discover_orchestrators()` |
+| **files/operations.py** | File management and output handling | `clean_output_directory()`, `copy_final_deliverables()` |
 | **config/credentials.py** | Credential management from multiple sources | `CredentialManager` |
 | **logging/logging_progress.py** | Advanced progress logging utilities | `calculate_eta()`, `log_with_spinner()`, `StreamingProgress` |
 | **logging/logging_formatters.py** | Specialized logging formatters | `JSONFormatter`, `TemplateFormatter` |
@@ -206,27 +206,27 @@ flowchart TD
 ```mermaid
 graph TD
     subgraph Base["Foundation Dependencies"]
-        EXCEPTIONS[runtime/runtime/exceptions.py<br/>All modules depend on this]
+        EXCEPTIONS[exceptions.py<br/>All modules depend on this]
     end
 
     subgraph Infrastructure["Infrastructure Layer"]
-        LOGGING[logging/logging/logging_utils.py<br/>Most modules use this]
-        CONFIG[config/config/config_loader.py<br/>Config-dependent modules]
-        SECURITY[runtime/runtime/security.py<br/>Input validation]
-        HEALTH[runtime/runtime/health_check.py<br/>System monitoring]
+        LOGGING[logging/utils.py<br/>Most modules use this]
+        CONFIG[config/loader.py<br/>Config-dependent modules]
+        SECURITY[security.py<br/>Input validation]
+        HEALTH[runtime/health_check.py<br/>System monitoring]
     end
 
     subgraph Utilities["Utility Layer"]
-        PROGRESS[runtime/runtime/progress.py<br/>Progress tracking]
-        CHECKPOINT[runtime/runtime/checkpoint.py<br/>State management]
-        RETRY[runtime/runtime/retry.py<br/>Error recovery]
-        PERFORMANCE[runtime/runtime/stage_monitor.py<br/>Resource monitoring]
+        PROGRESS[progress.py<br/>Progress tracking]
+        CHECKPOINT[runtime/checkpoint.py<br/>State management]
+        RETRY[runtime/retry.py<br/>Error recovery]
+        PERFORMANCE[pipeline/stage_monitor.py<br/>Resource monitoring]
     end
 
     subgraph Operations["Operations Layer"]
-        ENVIRONMENT[runtime/runtime/environment.py<br/>System setup]
-        SCRIPTS[runtime/runtime/script_discovery.py<br/>Script coordination]
-        FILES[files/files/file_operations.py<br/>File handling]
+        ENVIRONMENT[runtime/environment.py<br/>System setup]
+        SCRIPTS[script_discovery.py<br/>Script coordination]
+        FILES[files/operations.py<br/>File handling]
     end
 
     EXCEPTIONS --> LOGGING

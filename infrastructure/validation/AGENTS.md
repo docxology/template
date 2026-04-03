@@ -23,7 +23,7 @@ The Validation module provides quality assurance and validation tools for resear
 - Link and URL integrity checking
 - Section anchor validation
 
-**integrity/integrity.py**
+**integrity/checks.py**
 - File integrity verification (SHA-256 hashing)
 - Cross-reference validation across documents
 - Data consistency checking
@@ -38,7 +38,7 @@ The Validation module provides quality assurance and validation tools for resear
 - Multi-format report generation (markdown, JSON)
 - Configurable validation options
 
-**content/issue_categorizer.py**
+**repo/issue_categorizer.py**
 - Intelligent issue categorization by type and severity
 - False positive filtering for common artifacts
 - Issue prioritization and grouping
@@ -158,7 +158,7 @@ def collect_symbols(md_paths: List[str]) -> Tuple[Set[str], Set[str]]:
 def validate_images(
     md_paths: List[str],
     repo_root: str | Path
-) -> List[str]:
+) -> List[DiagnosticEvent]:
     """Validate that all image references in markdown files exist.
 
     Args:
@@ -166,7 +166,7 @@ def validate_images(
         repo_root: Repository root directory
 
     Returns:
-        List of validation error messages
+        List of diagnostic events
     """
 ```
 
@@ -174,20 +174,18 @@ def validate_images(
 ```python
 def validate_refs(
     md_paths: List[str],
-    labels: Set[str],
-    anchors: Set[str],
     repo_root: str | Path
-) -> List[str]:
+) -> List[DiagnosticEvent]:
     """Validate cross-references in markdown files.
 
     Args:
         md_paths: List of markdown file paths
+        repo_root: Repository root directory
         labels: Set of available labels
         anchors: Set of available anchors
-        repo_root: Repository root directory
 
     Returns:
-        List of validation error messages
+        List of diagnostic events
     """
 ```
 
@@ -196,7 +194,7 @@ def validate_refs(
 def validate_math(
     md_paths: List[str],
     repo_root: str | Path
-) -> List[str]:
+) -> List[DiagnosticEvent]:
     """Validate mathematical equations in markdown files.
 
     Args:
@@ -204,7 +202,7 @@ def validate_math(
         repo_root: Repository root directory
 
     Returns:
-        List of validation error messages
+        List of diagnostic events
     """
 ```
 
@@ -214,7 +212,7 @@ def validate_markdown(
     markdown_dir: str | Path,
     repo_root: str | Path,
     strict: bool = False
-) -> Tuple[List[str], int]:
+) -> Tuple[List[DiagnosticEvent], int]:
     """markdown validation for research manuscripts.
 
     Args:
@@ -223,7 +221,7 @@ def validate_markdown(
         strict: Enable strict validation mode (default: False)
 
     Returns:
-        Tuple of (error_messages, exit_code)
+        Tuple of (diagnostic_events, exit_code)
     """
 ```
 
@@ -243,7 +241,7 @@ def find_manuscript_directory(repo_root: str | Path) -> Path:
     """
 ```
 
-### integrity/integrity.py
+### integrity/checks.py
 
 #### IntegrityReport (class)
 ```python
@@ -552,7 +550,7 @@ def _repo_root() -> str:
 
 #### find_markdown_files (function)
 ```python
-def find_markdown_files(directory: str) -> list:
+def find_markdown_files(directory: str) -> list[str]:
     """Find all markdown files in directory.
 
     Args:
@@ -565,7 +563,7 @@ def find_markdown_files(directory: str) -> list:
 
 #### collect_symbols (function)
 ```python
-def collect_symbols(md_files: list) -> tuple:
+def collect_symbols(md_files: list[str]) -> tuple[set[str], set[str]]:
     """Collect symbols from markdown files.
 
     Args:
@@ -578,7 +576,7 @@ def collect_symbols(md_files: list) -> tuple:
 
 #### validate_images (function)
 ```python
-def validate_images(md_files: list, repo_root_str: str) -> list:
+def validate_images(md_files: list[str], repo_root_str: str) -> list[str]:
     """Validate image references in markdown files.
 
     Args:
@@ -592,14 +590,19 @@ def validate_images(md_files: list, repo_root_str: str) -> list:
 
 #### validate_refs (function)
 ```python
-def validate_refs(md_files: list, labels: dict, anchors: dict, repo_root_str: str) -> list:
+def validate_refs(
+    md_files: list[str],
+    repo_root_str: str,
+    labels: set[str],
+    anchors: set[str],
+) -> list[str]:
     """Validate cross-references in markdown files.
 
     Args:
         md_files: List of markdown file paths
-        labels: Dictionary of available labels
-        anchors: Dictionary of available anchors
         repo_root_str: Repository root directory
+        labels: Set of available labels
+        anchors: Set of available anchors
 
     Returns:
         List of validation error messages
@@ -608,7 +611,7 @@ def validate_refs(md_files: list, labels: dict, anchors: dict, repo_root_str: st
 
 #### validate_math (function)
 ```python
-def validate_math(md_files: list, repo_root_str: str) -> list:
+def validate_math(md_files: list[str], repo_root_str: str) -> list[str]:
     """Validate mathematical equations in markdown files.
 
     Args:
@@ -711,18 +714,29 @@ def main() -> int:
     """
 ```
 
-### repo_scanner.py
+### repo/models.py
 
-#### AccuracyIssue (class)
+#### RepoScanResults (class)
 ```python
 @dataclass
-class AccuracyIssue:
-    """Represents an accuracy issue found during scanning."""
-    file: Path
-    line: int
-    issue_type: str
-    description: str
-    severity: str = "medium"
+class RepoScanResults:
+    """Container for repository scan results."""
+    accuracy_issues: List[ScanAccuracyIssue] = field(default_factory=list)
+    completeness_gaps: List[CompletenessGap] = field(default_factory=list)
+    statistics: Dict[str, Any] = field(default_factory=dict)
+```
+
+#### ScanAccuracyIssue (class)
+```python
+@dataclass(init=False)
+class ScanAccuracyIssue:
+    """Accuracy issue found during repository-wide scanning."""
+    category: str
+    severity: str
+    file: str
+    line: int = 0
+    message: str = ""
+    details: str = ""
 ```
 
 #### CompletenessGap (class)
@@ -736,16 +750,7 @@ class CompletenessGap:
     affected_files: List[Path] = field(default_factory=list)
 ```
 
-#### ScanResults (class)
-```python
-@dataclass
-class ScanResults:
-    """Results of repository scanning."""
-    accuracy_issues: List[AccuracyIssue] = field(default_factory=list)
-    completeness_gaps: List[CompletenessGap] = field(default_factory=list)
-    scanned_files: int = 0
-    scan_duration: float = 0.0
-```
+### repo/scanner.py
 
 #### RepositoryScanner (class)
 ```python
@@ -893,7 +898,7 @@ def run_quality_phase(md_files: List[Path], repo_root: Path) -> Tuple[Dict, List
     """
 ```
 
-### doc_models.py
+### docs/models.py
 
 #### DocumentationFile (class)
 ```python
@@ -917,15 +922,17 @@ class LinkIssue:
     issue_type: str
 ```
 
-#### AccuracyIssue (class)
+#### ScanAccuracyIssue (class)
 ```python
 @dataclass
-class AccuracyIssue:
+class ScanAccuracyIssue:
     """Represents an accuracy issue."""
-    file: Path
-    issue_type: str
-    description: str
+    category: str
     severity: str
+    file: str
+    line: int = 0
+    message: str = ""
+    details: str = ""
 ```
 
 #### CompletenessGap (class)
@@ -1264,7 +1271,7 @@ def extract_script_name(command: str) -> Optional[str]:
 
 #### verify_commands (function)
 ```python
-def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue]:
+def verify_commands(md_files: List[Path], repo_root: Path) -> List[ScanAccuracyIssue]:
     """Verify commands in documentation.
 
     Args:
@@ -1278,7 +1285,7 @@ def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue
 
 #### check_file_paths (function)
 ```python
-def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue]:
+def check_file_paths(md_files: List[Path], repo_root: Path) -> List[ScanAccuracyIssue]:
     """Check file paths in documentation.
 
     Args:
@@ -1292,7 +1299,10 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssu
 
 #### validate_config_options (function)
 ```python
-def validate_config_options(md_files: List[Path], config_files: Dict[str, Path]) -> List[AccuracyIssue]:
+def validate_config_options(
+    md_files: List[Path],
+    config_files: Dict[str, Path],
+) -> List[ScanAccuracyIssue]:
     """Validate configuration options in documentation.
 
     Args:
@@ -1306,7 +1316,7 @@ def validate_config_options(md_files: List[Path], config_files: Dict[str, Path])
 
 #### check_terminology (function)
 ```python
-def check_terminology(md_files: List[Path]) -> List[AccuracyIssue]:
+def check_terminology(md_files: List[Path]) -> List[ScanAccuracyIssue]:
     """Check terminology consistency.
 
     Args:
@@ -1319,7 +1329,11 @@ def check_terminology(md_files: List[Path]) -> List[AccuracyIssue]:
 
 #### run_accuracy_phase (function)
 ```python
-def run_accuracy_phase(md_files: List[Path], repo_root: Path, config_files: Dict[str, Path]) -> Tuple[Dict, List[AccuracyIssue]]:
+def run_accuracy_phase(
+    md_files: List[Path],
+    repo_root: Path,
+    config_files: Dict[str, Path],
+) -> Tuple[Dict, List[ScanAccuracyIssue]]:
     """Run accuracy assessment phase.
 
     Args:
@@ -1413,7 +1427,7 @@ from infrastructure.validation import validate_markdown, find_manuscript_directo
 manuscript_dir = find_manuscript_directory(Path("."))
 # Returns projects/{name}/manuscript/ directory
 
-problems, exit_code = validate_markdown("manuscript/", ".")
+problems, exit_code = validate_markdown(str(manuscript_dir), ".")
 # Validates images, references, equations, links
 ```
 

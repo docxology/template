@@ -30,6 +30,7 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Publishing tools** for academic dissemination
 - ✅ **Scientific development** best practices
 - ✅ **Reporting** with error aggregation and performance metrics
+- ✅ **Local Ollama workflow** documented in `infrastructure/llm/README.md` and `docs/operational/troubleshooting/llm-review.md`
 
 ## 🗺️ Choose Your Path
 
@@ -278,7 +279,7 @@ Active projects under `projects/` (discovered by `./run.sh`; list may change):
 - **`projects/blake_bimetalism/`** — 18-part manuscript synthesizing Blakean poetics with esoteric finance
 - **`projects/template/`** — Meta-documentation for the template
 
-**Note:** More exemplars (e.g. `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved into `projects/`. See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for a generated list from `discover_projects()`.
+**Note:** More exemplars (e.g. `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved into `projects/`. Projects under active development (e.g. `fep_lean`, `aii-org`, `cognitive_case_diagrams`) live under `projects_in_progress/`. See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for a generated list from `discover_projects()`.
 
 ### Usage
 
@@ -332,6 +333,18 @@ Projects in `projects_archive/` are **preserved but not executed**:
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
+
+#### 🔧 **In-Progress Projects (`projects_in_progress/`)**
+
+Projects in `projects_in_progress/` are **under active development** but not yet pipeline-ready:
+
+- **NOT discovered** by infrastructure
+- **NOT executed** by pipeline scripts
+- Useful for scaffolding before promoting to `projects/`
+
+**Current In-Progress Projects:** `fep_lean`, `aii-org`, `cognitive_case_diagrams`, `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `ento_linguistics`
+
+**To promote:** `mv projects_in_progress/{name}/ projects/{name}/`
 
 ## 🚀 Quick Start {#quick-start}
 
@@ -1238,7 +1251,7 @@ flowchart TD
 
 - **[docs/modules/modules-guide.md](docs/modules/modules-guide.md)** - Guide for all modules
 - **[docs/reference/api-reference.md](docs/reference/api-reference.md)** - API documentation for all modules
-- **[infrastructure/validation/integrity/integrity.py](infrastructure/validation/integrity/integrity.py)** - File integrity and cross-reference validation
+- **[infrastructure/validation/integrity/checks.py](infrastructure/validation/integrity/checks.py)** - File integrity and cross-reference validation
 - **[infrastructure/publishing/metadata.py](infrastructure/publishing/metadata.py)** - Publication metadata extraction utilities
 - **[infrastructure/publishing/api.py](infrastructure/publishing/api.py)** - Publishing API clients (Zenodo/GitHub/arXiv)
 - **[infrastructure/scientific/](infrastructure/scientific/)** - Scientific computing best practices (modular: stability, benchmarking, documentation, validation, templates)

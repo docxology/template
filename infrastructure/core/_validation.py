@@ -49,6 +49,7 @@ class SecurityValidator:
     def __init__(self) -> None:
         # Maximum sizes for different input types
         self.limits = {
+            "prompt_length": 100000,
             "filename_length": 255,  # Max filename length
             "path_length": 4096,  # Max path length
             "content_size": 50 * 1024 * 1024,  # 50MB max content size

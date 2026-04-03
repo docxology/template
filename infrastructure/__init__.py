@@ -17,7 +17,7 @@ Modules:
     project: Multi-project management and discovery
     skills: SKILL.md discovery and Cursor manifest (.cursor/skill_manifest.json); see skills/SKILL.md
     steganography: Optional secure PDF post-processing (overlays, barcodes, hashing)
-    telemetry: Unified pipeline telemetry (stage resource metrics + diagnostic aggregation, JSON/text reports)
+    core.telemetry: Unified pipeline telemetry (stage resource metrics + diagnostic aggregation, JSON/text reports)
 
 Each subpackage includes SKILL.md (YAML frontmatter) for agent-oriented discovery in Cursor, Claude Code, and similar tools; start at infrastructure/SKILL.md.
 

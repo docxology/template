@@ -14,6 +14,7 @@
 | ❌ **Errors** | [common-errors.md](common-errors.md) | Error message quick reference |
 | 🔄 **Recovery** | [recovery-procedures.md](recovery-procedures.md) | Reset, backup, recovery |
 | 🤖 **LLM** | [llm-review.md](llm-review.md) | LLM manuscript review issues |
+| 🧭 **LLM Diagnostics** | [llm-diagnostics.md](llm-diagnostics.md) | Environment variables, model selection, and local Ollama checks |
 
 ---
 

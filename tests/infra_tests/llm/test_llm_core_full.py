@@ -12,6 +12,18 @@ from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 
+from .real_ollama_client import build_real_small_llm_client
+
+
+def _ready_small_model_client(
+    auto_inject_system_prompt: bool = True,
+) -> LLMClient:
+    """Return a client configured for a preloaded small Ollama model (real daemon)."""
+    return build_real_small_llm_client(
+        auto_inject_system_prompt=auto_inject_system_prompt,
+        timeout=20.0,
+    )
+
 
 class TestResponseModeDetails:
     """Test ResponseMode enum details."""
@@ -312,7 +324,7 @@ class TestLLMQueryModesIntegration:
 
     def test_query_short(self):
         """Test short query mode."""
-        client = LLMClient()
+        client = _ready_small_model_client()
         result = client.query_short("What is 2+2? Answer briefly.")
 
         assert result is not None
@@ -322,7 +334,7 @@ class TestLLMQueryModesIntegration:
     @pytest.mark.timeout(180)  # Extended timeout for network-dependent test
     def test_query_long(self):
         """Test long query mode."""
-        client = LLMClient()
+        client = _ready_small_model_client()
         try:
             result = client.query_long("Explain what Python is in detail.")
 
@@ -344,8 +356,7 @@ class TestLLMQueryModesIntegration:
 
     def test_query_raw(self):
         """Test raw query mode."""
-        config = OllamaClientConfig(auto_inject_system_prompt=False)
-        client = LLMClient(config=config)
+        client = _ready_small_model_client(auto_inject_system_prompt=False)
         result = client.query_raw("Complete: Hello")
 
         assert result is not None
@@ -353,7 +364,7 @@ class TestLLMQueryModesIntegration:
 
     def test_query_with_options(self):
         """Test query with generation options."""
-        client = LLMClient()
+        client = _ready_small_model_client()
         opts = GenerationOptions(temperature=0.0, max_tokens=50)
 
         result = client.query("Say 'test'", options=opts)
@@ -361,8 +372,7 @@ class TestLLMQueryModesIntegration:
 
     def test_context_maintained(self):
         """Test context is maintained across queries."""
-        config = OllamaClientConfig(auto_inject_system_prompt=False)
-        client = LLMClient(config=config)
+        client = _ready_small_model_client(auto_inject_system_prompt=False)
 
         client.query("My name is TestBot.")
         response = client.query("What is my name?")

@@ -16,7 +16,7 @@ from pathlib import Path
 # Both names are valid here; SecurityError is used for backwards compatibility with
 # call sites that catch SecurityError specifically.
 from infrastructure.core._validation import normalize_whitespace
-from infrastructure.core.exceptions import SecurityError, SecurityViolation
+from infrastructure.core.exceptions import SecurityError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.security import get_security_validator
 
@@ -107,9 +107,9 @@ class InputSanitizer:
     def sanitize_filename(self, filename: str) -> str:
         """Strip path separators and control characters from an LLM-supplied filename.
 
-        Delegates core sanitization to SecurityValidator to avoid duplicating
-        the same regex patterns; applies an LLM-specific 255-character truncation
-        afterwards.
+        Applies the same character scrubbing as ``SecurityValidator`` but trims
+        long names instead of rejecting them so callers can safely persist model
+        output without losing the whole request.
 
         Args:
             filename: Raw filename
@@ -120,10 +120,15 @@ class InputSanitizer:
         Raises:
             SecurityError: If filename is empty, not a string, or otherwise invalid
         """
-        try:
-            sanitized = get_security_validator().validate_filename(filename)
-        except SecurityViolation as e:
-            raise SecurityError(str(e)) from e
+        if not isinstance(filename, str) or not filename:
+            raise SecurityError("Invalid filename")
+
+        sanitized = re.sub(r'[<>:"|?*\x00-\x1f\x7f-\x9f]', "_", filename)
+        sanitized = re.sub(r"[\/\\]", "_", sanitized)
+
+        if not sanitized.strip():
+            sanitized = "unnamed_file"
+
         return sanitized[:255]
 
     def _remove_control_characters(self, text: str) -> str:

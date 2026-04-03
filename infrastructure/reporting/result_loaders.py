@@ -58,8 +58,9 @@ def load_test_results(
             overrides ``repo_root / 'projects' / project_name``.
 
     Note:
-        OSError and json.JSONDecodeError are caught and logged as warnings;
-        returns ``{}`` rather than raising.
+        OSError is caught and logged as a warning; malformed JSON is allowed
+        to raise ``json.JSONDecodeError`` so callers can fail fast on corrupted
+        result files.
     """
     root = repo_root or Path.cwd()
     _base = project_dir if project_dir is not None else root / "projects" / project_name
@@ -69,7 +70,7 @@ def load_test_results(
         try:
             with open(results_file, "r") as f:
                 data = json.load(f)
-        except (OSError, json.JSONDecodeError) as e:
+        except OSError as e:
             logger.warning(f"Could not load results from {results_file}: {e}")
             return {}
         # Extract project results from the nested structure

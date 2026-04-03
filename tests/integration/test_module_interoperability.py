@@ -6,10 +6,13 @@ real implementations or skip when services are unavailable.
 """
 
 import pytest
+import requests
 
 from infrastructure import publishing
 from infrastructure.core.runtime.health_check import SystemHealthChecker
 from infrastructure.llm.core.client import LLMClient
+from infrastructure.llm.core.config import OllamaClientConfig
+from infrastructure.llm.utils.ollama import preload_model, select_small_fast_model
 
 
 class TestResearchWorkflow:
@@ -21,14 +24,28 @@ class TestResearchWorkflow:
 
         Tests integration between system monitoring and LLM analysis.
         """
-        # Test with real implementations - skip if services unavailable
+        model_name = select_small_fast_model()
+        if not model_name:
+            pytest.fail("No Ollama model after ensure_ollama_for_tests (misconfiguration).")
+
+        ok, err = preload_model(model_name, timeout=10.0, retries=0)
+        if not ok:
+            pytest.fail(f"Ollama model {model_name!r} failed to preload: {err}")
+
+        # ensure_ollama_for_tests already validated the daemon; skip only on transient transport/runtime issues
         try:
             # Get system health status
             checker = SystemHealthChecker()
             health_status = checker.get_health_status()
 
             # Use LLM to analyze health status
-            llm = LLMClient()
+            llm = LLMClient(
+                OllamaClientConfig(
+                    base_url="http://localhost:11434",
+                    default_model=model_name,
+                    timeout=15.0,
+                )
+            )
             analysis_prompt = (
                 f"Analyze this system health status and provide recommendations: {health_status}"
             )
@@ -38,8 +55,14 @@ class TestResearchWorkflow:
             assert len(analysis) > 10
             assert "system" in analysis.lower() or "health" in analysis.lower()
 
-        except (ConnectionError, ImportError, OSError, RuntimeError) as e:
-            pytest.skip(f"Service unavailable: {e}")
+        except (
+            ConnectionError,
+            ImportError,
+            OSError,
+            RuntimeError,
+            requests.exceptions.RequestException,
+        ) as e:
+            pytest.skip(f"Transient error after healthy Ollama ensure: {e}")
 
     def test_rendering_metadata_workflow(self, tmp_path):
         """Test rendering metadata -> publishing metadata workflow.

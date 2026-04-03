@@ -35,7 +35,7 @@ class LinkIssue:
 
 
 
-@dataclass
+@dataclass(init=False)
 class ScanAccuracyIssue:
     """Accuracy issue found during repository-wide scanning (repo_scanner)."""
 
@@ -45,6 +45,34 @@ class ScanAccuracyIssue:
     line: int = 0
     message: str = ""
     details: str = ""
+
+    def __init__(
+        self,
+        category: str | None = None,
+        severity: str = "error",
+        file: str = "",
+        line: int = 0,
+        message: str = "",
+        details: str = "",
+        issue_type: str | None = None,
+        issue_message: str | None = None,
+    ) -> None:
+        self.category = category if category is not None else (issue_type or "")
+        self.severity = severity
+        self.file = file
+        self.line = line
+        self.message = message if message else (issue_message or "")
+        self.details = details
+
+    @property
+    def issue_type(self) -> str:
+        """Backward-compatible alias for the legacy field name."""
+        return self.category
+
+    @property
+    def issue_message(self) -> str:
+        """Backward-compatible alias for the legacy field name."""
+        return self.message
 
 @dataclass
 class CompletenessGap:

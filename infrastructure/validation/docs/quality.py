@@ -48,13 +48,26 @@ def assess_clarity(
     return issues
 
 
+_IMPERATIVE_VERBS: frozenset[str] = frozenset([
+    "run", "execute", "install", "use", "configure", "create", "set",
+    "add", "remove", "check", "verify", "update", "open", "close",
+    "edit", "delete", "build", "deploy", "test", "start", "stop",
+    "copy", "move", "rename", "make", "write", "read", "load", "save",
+    "enable", "disable", "restart", "connect", "specify", "define",
+    "provide", "pass", "import", "export", "generate", "select",
+    "ensure", "include", "exclude", "replace", "modify", "review",
+])
+
+
 def assess_actionability(
     content: str, md_file: Path, lines: list[str], repo_root: Path
 ) -> list[QualityIssue]:
-    """Assess whether instructions in the document are actionable.
+    """Assess whether list-item instructions in the document are actionable.
 
-    Checks for imperative language and clear directives that guide the reader
-    toward concrete actions.  Currently a stub returning no issues.
+    Scans bulleted and numbered list items outside code blocks and checks
+    whether each item begins with an imperative verb.  Items that start with
+    a non-imperative word (e.g. passive constructs like "The user should …")
+    are flagged as potentially non-actionable.
 
     Args:
         content: Full file content as a string.
@@ -63,21 +76,68 @@ def assess_actionability(
         repo_root: Repository root used to compute relative file paths in issues.
 
     Returns:
-        List of QualityIssue instances (currently always empty).
+        List of QualityIssue instances describing non-actionable list items.
     """
-    issues: list[Any] = []
-    # Check for imperative verbs in instructions
-    # This is a simplified check
+    issues: list[QualityIssue] = []
+    file_key = str(md_file.relative_to(repo_root))
+    in_code_block = False
+
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            continue
+        if in_code_block:
+            continue
+
+        # Match bulleted or numbered list items
+        is_bullet = stripped.startswith(("- ", "* ", "+ "))
+        is_numbered = (
+            len(stripped) > 2
+            and stripped[0].isdigit()
+            and len(stripped) > 1
+            and stripped[1] in ".)"
+        )
+        if not (is_bullet or is_numbered):
+            continue
+
+        # Extract text after the list marker
+        if is_bullet:
+            item_text = stripped[2:].strip()
+        else:
+            item_text = stripped[stripped.index(stripped[1]) + 1:].strip()
+
+        if not item_text or item_text.startswith("`"):
+            # Inline code command — always actionable
+            continue
+
+        first_word = item_text.split()[0].lower().rstrip(".,:")
+        if first_word not in _IMPERATIVE_VERBS:
+            issues.append(
+                QualityIssue(
+                    file=file_key,
+                    line=i,
+                    issue_type="actionability",
+                    issue_message=(
+                        f"List item may lack an imperative directive "
+                        f"(starts with '{first_word}')"
+                    ),
+                    severity="info",
+                )
+            )
+
     return issues
 
 
 def assess_maintainability(
     content: str, md_file: Path, lines: list[str], repo_root: Path
 ) -> list[QualityIssue]:
-    """Assess maintainability of the document (duplication, organisation).
+    """Assess maintainability of the document by detecting duplicate lines.
 
-    Checks for duplicate content blocks and poor structural organisation that
-    would make the document difficult to keep up to date.  Currently a stub.
+    Flags non-blank, non-heading lines that appear three or more times in the
+    same file.  Repeated lines suggest copy-pasted content that should be
+    consolidated or extracted to a shared reference.
 
     Args:
         content: Full file content as a string.
@@ -86,11 +146,43 @@ def assess_maintainability(
         repo_root: Repository root used to compute relative file paths in issues.
 
     Returns:
-        List of QualityIssue instances (currently always empty).
+        List of QualityIssue instances describing repeated lines.
     """
-    issues: list[Any] = []
-    # Check for duplicate content
-    # This could be enhanced
+    issues: list[QualityIssue] = []
+    file_key = str(md_file.relative_to(repo_root))
+
+    first_occurrence: dict[str, int] = {}
+    line_counts: dict[str, int] = {}
+    in_code_block = False
+
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+
+        if stripped.startswith("```"):
+            in_code_block = not in_code_block
+            continue
+        if in_code_block or not stripped or stripped.startswith("#"):
+            continue
+
+        if stripped not in first_occurrence:
+            first_occurrence[stripped] = i
+        line_counts[stripped] = line_counts.get(stripped, 0) + 1
+
+    for line_text, count in line_counts.items():
+        if count >= 3:
+            preview = line_text[:60] + ("…" if len(line_text) > 60 else "")
+            issues.append(
+                QualityIssue(
+                    file=file_key,
+                    line=first_occurrence[line_text],
+                    issue_type="maintainability",
+                    issue_message=(
+                        f"Line repeated {count} times — consider consolidating: '{preview}'"
+                    ),
+                    severity="info",
+                )
+            )
+
     return issues
 
 

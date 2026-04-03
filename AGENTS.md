@@ -91,9 +91,8 @@ The template now supports **multiple independent projects** within a single repo
 - `projects/code_project/` — Optimization research exemplar (numerical methods and convergence)
 - `projects/blake_bimetalism/` — 18-part manuscript synthesizing Blakean poetics with esoteric finance
 - `projects/template/` — Meta-documentation and template metrics
-- `projects/fep_lean/` — FEP / Active Inference Lean catalogue, optional math-inc Open Gauss CLI, template analysis pipeline
 
-**Note:** Additional exemplars (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `cognitive_case_diagrams`) live under `projects_archive/` until moved back into `projects/`. Archived projects are not discovered or executed by the pipeline.
+**Note:** Additional exemplars (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`) live under `projects_archive/` until moved back into `projects/`. Projects under active development (e.g. `fep_lean`, `cognitive_case_diagrams`, `aii-org`) live under `projects_in_progress/`. Neither archived nor in-progress projects are discovered or executed by the pipeline.
 
 ## 📂 Project Organization: Active vs Archived
 
@@ -131,7 +130,7 @@ An optional intermediate staging area for projects that are under active develop
 - **NOT executed** by any pipeline scripts
 - Useful for drafting new project scaffolding before promoting to `projects/`
 
-**Current projects in progress:** `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `cognitive_case_diagrams`, `ento_linguistics` (see `projects_in_progress/`; not executed by `./run.sh` until promoted to `projects/`)
+**Current projects in progress:** `act_inf_metaanalysis`, `active_inference`, `aii-org`, `biology_textbook`, `cognitive_case_diagrams`, `ento_linguistics`, `fep_lean` (see `projects_in_progress/`; not executed by `./run.sh` until promoted to `projects/`)
 
 **To promote:** Move `projects_in_progress/{name}/` → `projects/{name}/`
 
@@ -144,30 +143,37 @@ template/                           # Generic template repository
 ├── infrastructure/                 # Generic build/validation tools (Layer 1)
 │   ├── AGENTS.md
 │   ├── README.md
+│   ├── SKILL.md                    # AI skill descriptor (MCP-aligned)
 │   ├── config/                     # Repository-wide configuration
 │   │   ├── .env.template
 │   │   └── secure_config.yaml
 │   ├── docker/                     # Docker configuration
 │   │   ├── Dockerfile
 │   │   └── docker-compose.yml
-│   └── *.py                        # build_verifier, figure_manager, etc.
+│   └── {core,documentation,...}/   # 13 subpackages (~150 Python modules)
+├── scripts/                        # Entry point orchestrators (00–07)
 │   ├── AGENTS.md
 │   ├── README.md
-│   └── test_*.py                   # Tests for infrastructure/ modules
-├── projects/                      # Multiple research projects directory
-│   ├── README.md                  # Multi-project guide
-│   ├── code_project/              # Optimization research exemplar (master exemplar)
-│   │   ├── src/                   # Project-specific scientific code
-│   │   │   └── *.py
-│   │   ├── tests/                 # Project tests
-│   │   │   └── test_*.py
-│   │   ├── scripts/               # Project analysis scripts
-│   │   │   └── *.py
-│   │   ├── manuscript/            # Research manuscript markdown
-│   │   ├── output/                # Working outputs (generated during pipeline)
+│   └── *.py                        # Pipeline stage scripts
+├── tests/                          # Infrastructure test suite
+│   ├── AGENTS.md
+│   ├── README.md
+│   └── infra_tests/test_*.py       # Tests for infrastructure/ modules
+├── projects/                       # Multiple research projects directory
+│   ├── README.md                   # Multi-project guide
+│   ├── code_project/               # Optimization research exemplar (master exemplar)
+│   │   ├── src/                    # Project-specific scientific code
+│   │   ├── tests/                  # Project tests
+│   │   ├── scripts/                # Project analysis scripts
+│   │   ├── manuscript/             # Research manuscript markdown
+│   │   ├── output/                 # Working outputs (generated during pipeline)
 │   │   └── pyproject.toml
+│   ├── blake_bimetalism/           # 18-part Blakean poetics manuscript
+│   └── template/                   # Meta-documentation project
+├── projects_in_progress/           # Staging area (not executed)
+├── projects_archive/               # Retired projects (preserved, not executed)
 └── output/                         # Final deliverables (organized by project)
-    ├── code_project/              # Project outputs
+    ├── code_project/               # Project outputs
     └── ...
 ```
 
@@ -190,7 +196,14 @@ Each directory contains documentation for easy navigation:
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
 | [`projects/blake_bimetalism/`](projects/blake_bimetalism/) | [AGENTS.md](projects/blake_bimetalism/AGENTS.md) | [README.md](projects/blake_bimetalism/README.md) | 18-part manuscript synthesizing Blakean poetics |
 | [`projects/template/`](projects/template/) | [AGENTS.md](projects/template/AGENTS.md) | [README.md](projects/template/README.md) | Template meta-documentation |
-| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | FEP Lean catalogue and figures; optional `gauss` CLI |
+
+**In-progress projects** (under `projects_in_progress/`, not executed by pipeline):
+
+| Directory | Purpose |
+| --------- | ------- |
+| `projects_in_progress/fep_lean/` | FEP / Active Inference Lean catalogue; optional `gauss` CLI |
+| `projects_in_progress/aii-org/` | Active Inference Institute organisational project |
+| `projects_in_progress/cognitive_case_diagrams/` | Cognitive case diagrams research |
 
 See [`projects/README.md`](projects/README.md) for narrative descriptions. Archived exemplars (e.g. [`projects_archive/traditional_newspaper/`](projects_archive/traditional_newspaper/)) are under [`projects_archive/`](projects_archive/) (not executed until moved into `projects/`). Regenerate [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) after changing `projects/` layout (`uv run python scripts/generate_active_projects_doc.py`).
 
@@ -426,6 +439,15 @@ The template provides **three entry points** for pipeline execution:
 ./run.sh --pipeline
 ```
 
+LLM review stages use the local Ollama workflow documented in
+`infrastructure/llm/README.md`. Canonical smoke commands:
+
+```bash
+ollama serve
+ollama pull gemma3:4b
+uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
+```
+
 ### Secure Pipeline (`secure_run.sh`)
 
 A **two-stage wrapper** around the standard pipeline that adds steganographic PDF hardening. It provides an interactive text menu identical to `run.sh`, but with options optimized for security, steganographic post-processing, and multi-project execution.
@@ -651,7 +673,7 @@ with patch('requests.post') as mock_post:
 # AFTER (HTTP)
 def test_api_call(ollama_test_server):
     # ollama_test_server fixture provides HTTP server
-    config = LLMConfig(base_url=ollama_test_server.url_for("/"))
+    config = OllamaClientConfig(base_url=ollama_test_server.url_for("/"))
     client = LLMClient(config)
     response = client.query("test")  # HTTP request
     assert "response" in response.lower()
@@ -1276,7 +1298,7 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 
 **All systems confirmed functional with exemplar projects:**
 
-- ✅ **Multi-project pipeline**: Core pipeline (7 stages) + executive reporting
+- ✅ **Multi-project pipeline**: 10-stage DAG pipeline (clean + stages 1–9) + executive reporting
 - ✅ **Test coverage excellence**: All active projects meet coverage requirements
 - ✅ **Publication-quality outputs**: Professional PDFs, cross-referenced manuscripts, automated figures
 - ✅ **Mathematical rigor**: Advanced equations, theorem proofs, convergence analysis

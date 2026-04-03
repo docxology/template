@@ -24,6 +24,7 @@ from infrastructure.rendering.manuscript_discovery import (
     verify_figures_exist,
 )
 from infrastructure.rendering.latex_package_validator import validate_preamble_packages
+from infrastructure.rendering.latex_validation import ValidationReport
 
 # Re-exports for backwards compatibility
 from infrastructure.rendering._pipeline_summary import (  # noqa: F401
@@ -71,26 +72,34 @@ def _run_override_script(project_root: Path, override_script: Path) -> int:
         return 1
 
 
-def _validate_latex_packages() -> int:
+def _validate_latex_packages(report: ValidationReport | None = None) -> int:
     """Run pre-flight LaTeX package validation.
 
-    Returns 0 if validation passed (or could not run), 1 if required packages
-    are missing.
+    Args:
+        report: Pre-built ValidationReport to evaluate.  If None the function
+            calls validate_preamble_packages() to obtain one at runtime.
+            Passing a report directly makes the function testable with real
+            dataclass instances without requiring a LaTeX installation.
+
+    Returns:
+        0 if validation passed (or could not run), 1 if required packages
+        are missing.
     """
     logger.info("Running pre-flight LaTeX package validation...")
     try:
-        package_report = validate_preamble_packages(strict=False)
-        if not package_report.all_required_available:
+        if report is None:
+            report = validate_preamble_packages(strict=False)
+        if not report.all_required_available:
             logger.error("❌ Missing required LaTeX packages!")
-            logger.error(f"   Missing: {', '.join(package_report.missing_required)}")
-            logger.error(f"   Install: sudo tlmgr install {' '.join(package_report.missing_required)}")
+            logger.error(f"   Missing: {', '.join(report.missing_required)}")
+            logger.error(f"   Install: sudo tlmgr install {' '.join(report.missing_required)}")
             return 1
-        if package_report.missing_optional:
-            logger.warning(f"⚠️  Missing {len(package_report.missing_optional)} optional package(s):")
-            for pkg in package_report.missing_optional:
+        if report.missing_optional:
+            logger.warning(f"⚠️  Missing {len(report.missing_optional)} optional package(s):")
+            for pkg in report.missing_optional:
                 logger.warning(f"   - {pkg}")
             logger.warning("   PDF will render with reduced functionality")
-            logger.info(f"   To install: sudo tlmgr install {' '.join(package_report.missing_optional)}")
+            logger.info(f"   To install: sudo tlmgr install {' '.join(report.missing_optional)}")
         else:
             logger.info("✓ All LaTeX packages available")
     except ValidationError as e:

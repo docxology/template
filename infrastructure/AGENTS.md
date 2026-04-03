@@ -13,17 +13,22 @@ Each subpackage has a `SKILL.md` file (YAML frontmatter) for agent skill discove
 infrastructure/
 ├── SKILL.md        # Top-level infrastructure skill
 ├── core/           # Foundation utilities
-│   ├── runtime/exceptions.py       # Exception hierarchy with context
-│   ├── logging/logging_utils.py    # Unified Python logging
-│   ├── config/config_loader.py    # Configuration management
+│   ├── exceptions.py       # Exception hierarchy with context
+│   ├── logging/utils.py    # Unified Python logging
+│   ├── config/loader.py           # Configuration management
 │   ├── pipeline/pipeline.py         # Pipeline execution system
 │   ├── pipeline/multi_project.py    # Multi-project orchestration
 │   ├── runtime/checkpoint.py       # Pipeline state persistence
 │   ├── runtime/retry.py            # Exponential backoff retries
 │   ├── runtime/function_profiler.py # Function-level performance profiling
-│   ├── runtime/security.py         # Security & rate limiting
+│   ├── security.py         # Security & rate limiting
 │   ├── runtime/environment.py      # Environment setup & validation
-│   ├── files/file_operations.py  # File I/O utilities
+│   ├── files/operations.py  # File I/O utilities
+│   ├── telemetry/          # Unified pipeline telemetry
+│   │   ├── config.py            # TelemetryConfig dataclass (YAML-configurable)
+│   │   ├── models.py            # StageTelemetry, PipelineTelemetry dataclasses
+│   │   ├── collector.py         # TelemetryCollector lifecycle (start/end stage, finalize)
+│   │   └── SKILL.md, AGENTS.md, README.md
 │   └── SKILL.md, AGENTS.md, README.md
 ├── config/         # Repository configuration templates
 │   ├── .env.template        # Example environment variables
@@ -36,16 +41,16 @@ infrastructure/
 ├── skills/         # SKILL.md discovery; .cursor/skill_manifest.json generation
 │   ├── __init__.py
 │   ├── discovery.py
-│   ├── runtime/cli.py
+│   ├── cli.py
 │   ├── __main__.py
 │   └── SKILL.md, AGENTS.md, README.md
 ├── validation/     # Quality & validation tools
 │   ├── output/pdf_validator.py      # PDF rendering validation
 │   ├── content/markdown_validator.py # Markdown structure validation
-│   ├── integrity/integrity.py          # File integrity & cross-references
+│   ├── integrity/checks.py            # File integrity & cross-references
 │   ├── repo/audit_orchestrator.py # Comprehensive audit coordination
-│   ├── repo_scanner.py       # Repository-wide scanning
-│   ├── runtime/cli.py                # CLI for validation tools
+│   ├── repo/scanner.py      # Repository-wide scanning
+│   ├── cli/main.py          # CLI for validation tools
 │   └── SKILL.md, AGENTS.md, README.md
 ├── documentation/  # Documentation & figure management
 │   ├── figure_manager.py       # Automatic figure numbering
@@ -75,7 +80,7 @@ infrastructure/
 │   ├── slides_renderer.py   # Beamer/Reveal.js slides
 │   ├── web_renderer.py      # HTML generation
 │   ├── latex_utils.py       # LaTeX utilities
-│   ├── runtime/cli.py               # CLI for rendering
+│   ├── cli.py               # CLI for rendering
 │   └── SKILL.md, AGENTS.md, README.md
 ├── publishing/     # Academic publishing & dissemination
 │   ├── api.py               # Platform API clients (Zenodo)
@@ -83,7 +88,7 @@ infrastructure/
 │   ├── metadata.py          # Metadata extraction/normalization
 │   ├── package.py           # Submission/release packaging
 │   ├── platforms.py         # Platform routing and helpers
-│   ├── runtime/cli.py               # CLI entry point
+│   ├── cli.py               # CLI entry point
 │   ├── publish_cli.py       # Publishing-oriented CLI wrapper
 │   └── SKILL.md, AGENTS.md, README.md
 ├── reporting/      # Pipeline reporting & error aggregation
@@ -104,18 +109,13 @@ infrastructure/
     ├── hashing.py           # SHA-256 integrity manifests
     ├── encryption.py        # AES-256 PDF encryption
     └── SKILL.md, AGENTS.md, README.md
-├── telemetry/      # Unified pipeline telemetry
-│   ├── config.py            # TelemetryConfig dataclass (YAML-configurable)
-│   ├── models.py            # StageTelemetry, PipelineTelemetry dataclasses
-│   ├── collector.py         # TelemetryCollector lifecycle (start/end stage, finalize)
-│   └── SKILL.md, AGENTS.md, README.md
 ```
 
 ## Function Signatures
 
 ### Core Module
 
-#### runtime/exceptions.py
+#### exceptions.py
 
 - `class TemplateError(Exception):`
 - `class ConfigurationError(TemplateError):`
@@ -138,7 +138,7 @@ infrastructure/
 - `def format_file_context(file_path, line=None) -> dict:`
 - `def chain_exceptions(new_exception, original) -> TemplateError:`
 
-#### logging/logging_utils.py
+#### logging/utils.py
 
 - `class ProjectLogger:`
 - `def get_project_logger(name: str, level: Optional[int] = None) -> ProjectLogger:`
@@ -159,7 +159,7 @@ infrastructure/
 - `def log_stage_with_eta(stage_name: str, current: int, total: int, ...) -> None:`
 - `def log_resource_usage(logger: Optional[logging.Logger] = None) -> None:`
 
-#### config/config_loader.py
+#### config/loader.py
 
 - `def load_config(config_path: Path | str) -> Optional[Dict[str, Any]]:`
 - `def find_config_file(repo_root: Path | str) -> Optional[Path]:`
@@ -178,7 +178,7 @@ infrastructure/
 - `def load_checkpoint(checkpoint_dir: Path) -> Optional[PipelineCheckpoint]:`
 - `def validate_checkpoint(checkpoint: PipelineCheckpoint) -> bool:`
 
-#### files/file_operations.py
+#### files/operations.py
 
 - `def clean_output_directory(output_dir: Path, project_name: str) -> None:`
 - `def copy_final_deliverables(output_dir: Path, final_dir: Path, project_name: str) -> None:`
@@ -204,13 +204,15 @@ infrastructure/
 
 #### content/markdown_validator.py
 
-- `def validate_markdown(manuscript_dir: Path) -> dict:`
-- `def find_markdown_files(directory: Path) -> List[Path]:`
-- `def validate_images(md_content: str, base_path: Path) -> List[str]:`
-- `def validate_refs(md_content: str) -> List[str]:`
-- `def validate_math(md_content: str) -> List[str]:`
+- `def validate_markdown(markdown_dir: str | Path, repo_root: str | Path, strict: bool = False) -> tuple[list[DiagnosticEvent], int]:`
+- `def find_manuscript_directory(repo_root: str | Path) -> Path:`
+- `def find_markdown_files(markdown_dir: str | Path) -> list[str]:`
+- `def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:`
+- `def validate_images(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]:`
+- `def validate_refs(md_paths: list[str], repo_root: str | Path, labels: set[str], anchors: set[str]) -> list[DiagnosticEvent]:`
+- `def validate_math(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]:`
 
-#### integrity/integrity.py
+#### integrity/checks.py
 
 - `def verify_output_integrity(output_dir: Path) -> dict:`
 - `def verify_file_integrity(file_path: Path) -> bool:`
@@ -251,13 +253,13 @@ infrastructure/
 - `class RenderManager:`
 - `def render_pdf(self, manuscript_dir: Path, output_dir: Path, ...) -> Path:`
 - `def render_html(self, manuscript_dir: Path, output_dir: Path) -> Path:`
-- `def render_all(self, manuscript_dir: Path, output_dir: Path) -> Dict[str, Path]:`
+- `def render_all(self, source_file: Path) -> list[Path]:`
 
 ### LLM Module
 
 #### core.py
 
-- `class LLMConfig:`
+- `class OllamaClientConfig:`
 - `class LLMClient:`
 - `def query(self, prompt: str, options: Optional[GenerationOptions] = None) -> str:`
 - `def apply_template(self, template_name: str, **kwargs) -> str:`
@@ -359,7 +361,7 @@ infrastructure/
 - Each module has:
   - `__init__.py` - Public API exports
   - `core.py` - Core business logic (100% tested)
-  - `runtime/cli.py` - Command-line interface (optional)
+  - `cli.py` - Command-line interface (optional)
   - `config.py` - Configuration management (optional)
   - `AGENTS.md` - Detailed documentation
   - `README.md` - Quick reference
@@ -371,23 +373,23 @@ infrastructure/
 
 **Foundation utilities used by all other modules.**
 
-- `runtime/exceptions.py` - Exception hierarchy with context preservation
+- `exceptions.py` - Exception hierarchy with context preservation
   - `TemplateError` - Base exception
   - Module-specific exceptions (LLM, Rendering, Publishing)
   - Context utilities and exception chaining
 
-- `logging/logging_utils.py` - Unified Python logging system
+- `logging/utils.py` - Unified Python logging system
   - Environment-based configuration (LOG_LEVEL 0-3)
   - Context managers for operation tracking
   - Decorators for function logging
   - TTY-aware color output
 
-- `config/config_loader.py` - Configuration management
+- `config/loader.py` - Configuration management
   - YAML configuration file loading
   - Environment variable integration
   - Author and metadata formatting
 
-- `runtime/progress.py` - Progress tracking utilities
+- `progress.py` - Progress tracking utilities
   - `ProgressBar` - Visual progress indicators
   - `SubStageProgress` - Nested progress tracking
 
@@ -408,11 +410,11 @@ infrastructure/
   - Build tool verification
   - Directory structure setup
 
-- `runtime/script_discovery.py` - Script discovery and execution
+- `script_discovery.py` - Script discovery and execution
   - `discover_analysis_scripts` - Find project scripts
   - `discover_orchestrators` - Find orchestrator scripts
 
-- `files/file_operations.py` - File management utilities
+- `files/operations.py` - File management utilities
   - `clean_output_directory` - Cleanup operations
   - `copy_final_deliverables` - Output copying
 
@@ -441,7 +443,7 @@ from infrastructure.core.runtime.function_profiler import CodeProfiler
   - Mathematical equation validation
   - Link integrity checking
 
-- `integrity/integrity.py` - File integrity & cross-reference validation
+- `integrity/checks.py` - File integrity & cross-reference validation
   - SHA-256 hash verification
   - Cross-reference validation
   - Data consistency checking

@@ -227,9 +227,11 @@ def validate_complete(
         # Raw mode is unvalidated — skip all formatting checks
         return True
     elif mode != ResponseMode.STANDARD:
-        raise ValueError(
-            f"Unknown mode {mode!r}. Expected one of: short, long, structured, standard, raw."
+        logger.warning(
+            "Unknown response mode %r; treating as standard for validation",
+            mode,
         )
+        mode = ResponseMode.STANDARD
 
     # Standard mode: formatting issues are advisory only
     formatting_ok = validate_formatting(content)

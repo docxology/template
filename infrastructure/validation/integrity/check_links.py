@@ -751,10 +751,8 @@ def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tup
         return False, f"Error resolving path: {e}"
 
 
-def main() -> int:
-    """Main function to check all documentation links and references comprehensively."""
-    # Go up from infrastructure/validation/check_links.py to repo root
-    repo_root = Path(__file__).parent.parent.parent
+def run_link_audit(repo_root: Path) -> int:
+    """Run the comprehensive link and reference audit for ``repo_root``."""
     md_files = find_all_markdown_files(str(repo_root))
 
     logger.info(f"Found {len(md_files)} markdown files")
@@ -870,6 +868,13 @@ def main() -> int:
 
     # Generate comprehensive report
     return generate_comprehensive_report(cast(dict[str, list[LinkCheckResult]], issues), len(md_files))
+
+
+def main() -> int:
+    """Main function to check all documentation links and references comprehensively."""
+    # Go up from infrastructure/validation/check_links.py to repo root
+    repo_root = Path(__file__).parent.parent.parent
+    return run_link_audit(repo_root)
 
 def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], total_files: int) -> int:
     """Generate a comprehensive validation report."""

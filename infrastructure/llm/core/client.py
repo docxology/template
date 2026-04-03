@@ -14,8 +14,6 @@ import time as time_module
 from pathlib import Path
 from typing import Any, Callable, Iterator, TypeVar
 
-_T = TypeVar("_T")
-
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core._connection import _ConnectionMixin
@@ -24,6 +22,8 @@ from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
 from infrastructure.llm.core.sanitization import sanitize_llm_input
 from infrastructure.llm.templates import get_template
+
+_T = TypeVar("_T")
 
 logger = get_logger(__name__)
 

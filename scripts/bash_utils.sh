@@ -569,11 +569,11 @@ ensure_secure_run_environment() {
 # Get Python command with environment awareness
 get_python_cmd() {
     # Returns the command to use for Python execution.
-    # Checks for project-specific .venv first, then root .venv to prevent
-    # escaping to global python when run.sh is executed directly.
-    if [[ -n "${CURRENT_PROJECT:-}" ]] && [[ -f "$REPO_ROOT/projects/$CURRENT_PROJECT/.venv/bin/python3" ]]; then
-        echo "$REPO_ROOT/projects/$CURRENT_PROJECT/.venv/bin/python3"
-    elif [[ -f "$REPO_ROOT/.venv/bin/python3" ]]; then
+    # Always uses the root .venv because pipeline scripts depend on
+    # infrastructure packages (PyYAML, etc.) that only exist at the root level.
+    # Project-level .venvs contain only project-specific deps and are insufficient
+    # for running infrastructure/ code.
+    if [[ -f "$REPO_ROOT/.venv/bin/python3" ]]; then
         echo "$REPO_ROOT/.venv/bin/python3"
     else
         echo "python3"

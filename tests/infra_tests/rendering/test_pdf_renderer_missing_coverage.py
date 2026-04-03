@@ -19,12 +19,12 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
     extract_preamble,
-    fix_figure_paths,
-    fix_math_delimiters,
     generate_title_page_body,
     generate_title_page_preamble,
     parse_missing_latex_package_from_log,
 )
+from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
+from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
 from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer

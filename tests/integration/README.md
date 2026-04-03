@@ -1,50 +1,40 @@
 # tests/integration/ - Integration Test Suite
 
-Cross-module integration tests validating system workflows.
+Integration tests validate the repository-level wiring between scripts, infrastructure modules, and output handling.
 
-## Quick Start
-
-### Run Integration Tests
+## Run
 
 ```bash
-# All integration tests
-pytest tests/integration/ -v
-
-# With verbose output
-pytest tests/integration/ -vs
-
-# Specific test categories
-pytest tests/integration/test_module_interoperability.py -v  # Cross-module tests
-pytest tests/integration/test_output_copying.py -v           # File handling tests
-pytest tests/integration/test_run_sh.py -v                   # Script orchestration tests
-pytest tests/integration/test_executive_report_generation.py -v   # Executive reporting
-pytest tests/integration/test_bash_utils.sh                  # Bash utilities (run directly)
+uv run pytest tests/integration/ -v
+uv run pytest tests/integration/test_execute_pipeline_cli.py -v
+uv run pytest tests/integration/test_run_sh.py -v
+uv run pytest tests/integration/test_full_pipeline.py -v
 ```
 
-## Test Coverage
+## Current Files
 
-### Core Integration Tests
-- `test_module_interoperability.py` - Cross-module functionality validation
-- `test_output_copying.py` - File handling and output management
-- `test_figure_equation_citation.py` - Figure/equation/citation handling
-- `test_edge_cases_and_error_paths.py` - Edge cases and error handling
+- `conftest.py`
+- `test_bash_utils.sh`
+- `test_edge_cases_and_error_paths.py`
+- `test_environment_setup.py`
+- `test_execute_pipeline_cli.py`
+- `test_executive_report_generation.py`
+- `test_figure_equation_citation.py`
+- `test_full_pipeline.py`
+- `test_logging.py`
+- `test_module_interoperability.py`
+- `test_output_copying.py`
+- `test_run_sh.py`
 
-### Script and Build System Tests
-- `test_run_sh.py` - Script orchestration and project discovery
-- `test_executive_report_generation.py` - Executive report generation (Stage 10)
-- `test_logging.py` - Bash logging integration tests
-- `test_bash_utils.sh` - Bash utility function validation
+## Focus
 
-## Purpose
-
-Integration tests validate that multiple components work together correctly, including:
-
-- Module interactions and data flow
-- File I/O coordination
-- End-to-end workflow completion
-- Error handling across boundaries
+- shell entry points
+- pipeline orchestration
+- output copying
+- cross-module behavior
+- end-to-end pipeline flow
 
 ## See Also
 
-- [`AGENTS.md`](AGENTS.md) - documentation
-- [`../../tests/README.md`](../../tests/README.md) - Test suite overview
+- [`AGENTS.md`](AGENTS.md)
+- [`../../README.md`](../../README.md)

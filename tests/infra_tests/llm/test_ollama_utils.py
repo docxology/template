@@ -15,6 +15,7 @@ from infrastructure.llm.utils.ollama import (
     get_model_names,
     is_ollama_running,
     preload_model,
+    pull_ollama_model,
     select_best_model,
     select_small_fast_model,
 )
@@ -361,7 +362,7 @@ class TestPreloadModel:
             pytest.skip("No models available")
 
         model_name = models[0]
-        success, error = preload_model(model_name, timeout=60.0)
+        success, error = preload_model(model_name, timeout=5.0, retries=0)
 
         # Should either succeed or fail gracefully
         assert isinstance(success, bool)
@@ -380,11 +381,116 @@ class TestPreloadModel:
         model_name = models[0]
 
         # Preload once
-        success1, error1 = preload_model(model_name, timeout=60.0)
+        success1, error1 = preload_model(model_name, timeout=5.0, retries=0)
         if not success1:
             pytest.skip(f"Could not preload model {model_name}: {error1}")
 
         # Preload again - should detect it's already loaded
-        success2, error2 = preload_model(model_name, check_loaded_first=True, timeout=60.0)
+        success2, error2 = preload_model(model_name, check_loaded_first=True, timeout=5.0, retries=0)
         assert success2 is True
         assert error2 is None
+
+
+class TestSmallFastPreferenceMatches:
+    """Unit tests for small_fast_preference_matches (no daemon)."""
+
+    def test_matches_smollm2(self):
+        from infrastructure.llm.utils.models import small_fast_preference_matches
+
+        assert small_fast_preference_matches(["smollm2"]) is True
+        assert small_fast_preference_matches(["registry/smollm2:latest"]) is True
+
+    def test_matches_gemma_prefix(self):
+        from infrastructure.llm.utils.models import small_fast_preference_matches
+
+        assert small_fast_preference_matches(["gemma2:2b"]) is True
+
+    def test_no_match_only_large(self):
+        from infrastructure.llm.utils.models import small_fast_preference_matches
+
+        assert small_fast_preference_matches(["llama3:70b"]) is False
+        assert small_fast_preference_matches([]) is False
+
+
+class TestPullOllamaModel:
+    """Unit tests for pull_ollama_model (monkeypatched; no network)."""
+
+    def test_pull_returns_false_when_ollama_missing(self, monkeypatch):
+        monkeypatch.setattr("infrastructure.llm.utils.server.shutil.which", lambda _: None)
+
+        ok, err = pull_ollama_model("smollm2", timeout=1.0)
+        assert ok is False
+        assert err is not None
+        assert "PATH" in err
+
+    def test_pull_success_on_zero_exit(self, monkeypatch):
+        import subprocess
+
+        monkeypatch.setattr("infrastructure.llm.utils.server.shutil.which", lambda _: "/bin/ollama")
+
+        def fake_run(cmd, **kwargs):
+            assert cmd == ["/bin/ollama", "pull", "smollm2"]
+            assert kwargs.get("timeout") == 5.0
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+
+        monkeypatch.setattr("infrastructure.llm.utils.server.subprocess.run", fake_run)
+        ok, err = pull_ollama_model("smollm2", timeout=5.0)
+        assert ok is True
+        assert err is None
+
+    def test_pull_failure_on_nonzero_exit(self, monkeypatch):
+        import subprocess
+
+        monkeypatch.setattr("infrastructure.llm.utils.server.shutil.which", lambda _: "/bin/ollama")
+
+        def fake_run(cmd, **kwargs):
+            return subprocess.CompletedProcess(cmd, 1, "", "network error")
+
+        monkeypatch.setattr("infrastructure.llm.utils.server.subprocess.run", fake_run)
+        ok, err = pull_ollama_model("smollm2", timeout=5.0)
+        assert ok is False
+        assert err is not None
+        assert "network error" in err
+
+    def test_pull_timeout(self, monkeypatch):
+        import subprocess
+
+        monkeypatch.setattr("infrastructure.llm.utils.server.shutil.which", lambda _: "/bin/ollama")
+
+        def boom(*_a, **_kw):
+            raise subprocess.TimeoutExpired("ollama", 1.0)
+
+        monkeypatch.setattr("infrastructure.llm.utils.server.subprocess.run", boom)
+        ok, err = pull_ollama_model("smollm2", timeout=1.0)
+        assert ok is False
+        assert err is not None
+        assert "timed out" in err.lower()
+
+
+@pytest.mark.requires_ollama
+class TestRealOllamaSmoke:
+    """Explicit smoke coverage for a real local Ollama daemon."""
+
+    @pytest.fixture(autouse=True)
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure the real Ollama daemon is available for smoke checks."""
+        pass
+
+    def test_real_local_ollama_smoke(self):
+        """Validate the daemon, model listing, and preload path end to end."""
+        assert is_ollama_running() is True
+
+        models = get_model_names()
+        assert models, "Expected at least one locally installed Ollama model"
+
+        selected_model = select_best_model()
+        assert selected_model is not None
+        assert isinstance(selected_model, str)
+
+        is_loaded, loaded_model = check_model_loaded(selected_model)
+        assert isinstance(is_loaded, bool)
+        assert loaded_model is None or isinstance(loaded_model, str)
+
+        success, error = preload_model(selected_model, timeout=5.0, retries=0)
+        assert isinstance(success, bool)
+        assert error is None or isinstance(error, str)

@@ -25,7 +25,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 | `validation/` | PDF/Markdown/output validation, link checking, audits | `validate_pdf_rendering`, `validate_markdown`, `verify_output_integrity` |
 | `rendering/` | Multi-format output (PDF, HTML, slides) | `RenderManager`, `RenderingConfig` |
 | `documentation/` | Figure/image management, markdown integration, glossary | `FigureManager`, `ImageManager`, `MarkdownIntegration` |
-| `llm/` | Local LLM integration via Ollama | `LLMClient`, `LLMConfig`, `OutputValidator` |
+| `llm/` | Local LLM integration via Ollama | `LLMClient`, `OllamaClientConfig`, `OutputValidator` |
 | `publishing/` | Academic publishing (DOI, citations, Zenodo, arXiv) | `publish_to_zenodo`, `generate_citation_bibtex` |
 | `reporting/` | Pipeline reports, error aggregation, dashboards | `generate_pipeline_report`, `get_error_aggregator` |
 | `scientific/` | Benchmarking, numerical stability, scientific templates | `benchmark_function`, `check_numerical_stability` |

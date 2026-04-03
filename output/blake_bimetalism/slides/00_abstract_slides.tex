@@ -1,0 +1,124 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Abstract: Visionary Epistemology and the Bimetallic
+Fracture}
+\protect\phantomsection\label{abstract-visionary-epistemology-and-the-bimetallic-fracture}
+This manuscript overlays the history of British and American bimetallism
+with the mythopoetic architecture of William Blake's prophetic corpus,
+reading the disintegration of the gold--silver standard as a material
+enactment of the catastrophic cosmological fracture Blake dramatized. We
+trace this trajectory from the Newtonian \emph{golden compass} of rigid,
+atomistic metrology, identifying the 1717 Mint ratio (1:15.21) not
+merely as a failed economic policy but as the operationalization of
+``Newton's sleep''---a cognitive pathology of pathologically rigid
+priors that crushed variable sensory evidence of silver's circulation.
+This Urizenic enclosure unleashed Gresham's entropy, draining silver and
+hollowing out domestic coinage, leading to the 1797 Bank Restriction and
+the subsequent 1816 codification of a golden ``Single Vision''. This
+entropic pattern resonated transatlantically, reflecting the
+revolutionary rupture Blake experienced in \emph{America a Prophecy}
+(1793). The American metallic monetary arc resembeled the British
+descent into the ``Ulro'' of fiat abstraction: from Alexander Hamilton's
+initial 15:1 bimetallic synthesis through the metallic enclosure of the
+``Crime of 1873,'' and culminating in William Jennings Bryan's
+resistance to the ``Cross of Gold'' (1896). Against the ``chimeric
+measurement'' of the Bank of England and modern fiat systems, which rely
+on the arithmetic of compounding imperial debt, Blake's fourfold view
+provides a scaffold and vocabulary for resisting the totalizing
+enclosure of value. We reconstruct Blake's prophetic economics as a
+sustained phenomenological account and analogy of financialized
+alienation. Ultimately, this manuscript bridges early industrial
+commodity fetishism, William Blake's etching, and the contemporary
+(2020--2026) monetary environment.
+\end{frame}
+
+\end{document}

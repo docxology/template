@@ -10,6 +10,8 @@ import pytest
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 
+from .real_ollama_client import build_real_small_llm_client
+
 
 class TestResponseMode:
     """Test ResponseMode enum."""
@@ -311,7 +313,7 @@ class TestLLMClientQueryIntegration:
 
     def test_query_basic(self):
         """Test basic query to Ollama."""
-        client = LLMClient()
+        client = build_real_small_llm_client(timeout=30.0)
         response = client.query("Say 'hello' and nothing else.")
 
         assert response is not None
@@ -333,7 +335,7 @@ class TestLLMClientQueryIntegration:
 
     def test_apply_template(self):
         """Test applying a template."""
-        client = LLMClient()
+        client = build_real_small_llm_client(timeout=30.0)
         result = client.apply_template(
             "summarize_abstract", text="This is a test abstract about machine learning."
         )

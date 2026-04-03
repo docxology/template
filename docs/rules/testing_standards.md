@@ -96,7 +96,7 @@ For modules requiring external services (LLM, Publishing APIs):
 # ✅ GOOD: Pure logic test (no network needed)
 def test_config_from_env(clean_llm_env):
     os.environ["OLLAMA_HOST"] = "http://test:11434"
-    config = LLMConfig.from_env()
+    config = OllamaClientConfig.from_env()
     assert config.base_url == "http://test:11434"
 
 # ✅ GOOD: Integration test with marker

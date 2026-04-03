@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_methodology</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="methodology">Methodology</h1>
+<p>This section describes the implementation methodology, explicitly
+detailing how the optimization algorithms are constructed, validated,
+and analyzed using the Generalized Research Template’s
+<code>infrastructure</code> and <code>tests</code> ecosystems.</p>
+<h2 id="algorithm-implementation">Algorithm Implementation</h2>
+<h3 id="gradient-descent-algorithm">Gradient Descent Algorithm</h3>
+<p>The core algorithm implements the iterative procedure for
+unconstrained optimization. Crucially, the implementation is designed to
+be highly observable, delegating all logging to
+<code>infrastructure.core.logging.utils.ProjectLogger</code> and
+executing under the hermetic boundaries defined in the <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py">test
+configuration</a>.</p>
+<p><strong>Algorithm 1: Gradient Descent (implemented in the <a
+href="https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138">optimizer
+module</a>)</strong></p>
+<blockquote>
+<p><strong>Input:</strong> Initial point <span
+class="math inline">\(x_0\)</span>, step size <span
+class="math inline">\(\alpha\)</span>, tolerance <span
+class="math inline">\(\epsilon\)</span>, max iterations <span
+class="math inline">\(N_{\max}\)</span></p>
+<ol type="1">
+<li>Initialize <span class="math inline">\(k \leftarrow 0\)</span></li>
+<li><strong>While</strong> <span class="math inline">\(k &lt;
+N_{\max}\)</span> <strong>do:</strong>
+<ul>
+<li>Compute gradient <span class="math inline">\(g_k = \nabla
+f(x_k)\)</span></li>
+<li><strong>If</strong> <span class="math inline">\(\|g_k\|_2 &lt;
+\epsilon\)</span> <strong>then return</strong> <span
+class="math inline">\(x_k\)</span> <em>(converged)</em></li>
+<li>Update: <span class="math inline">\(x_{k+1} \leftarrow x_k - \alpha
+\cdot g_k\)</span></li>
+<li><span class="math inline">\(k \leftarrow k + 1\)</span></li>
+</ul></li>
+<li><strong>Return</strong> <span class="math inline">\(x_k\)</span>
+<em>(max iterations reached)</em></li>
+</ol>
+</blockquote>
+<h2 id="infrastructure-integration">Infrastructure Integration</h2>
+<p>The methodology explicitly bridges theoretical mathematics with
+production-grade validation through the
+<code>infrastructure.scientific</code> module.</p>
+<h3 id="numerical-stability-analysis">Numerical Stability Analysis</h3>
+<p>Rather than writing ad-hoc validation code, the project imports
+<code>infrastructure.scientific.stability.check_numerical_stability</code>.
+This utility subjects the objective function to a barrage of extreme
+inputs (NaN, Inf, <span class="math inline">\(\pm 10^{10}\)</span>) to
+calculate a formalized stability score. If this score degrades, the <a
+href="https://github.com/docxology/template/blob/main/scripts/02_run_analysis.py">analysis
+orchestrator</a> execution deliberately aborts, ensuring the methodology
+cannot enter unrecoverable states.</p>
+<h3 id="performance-benchmarking">Performance Benchmarking</h3>
+<p>Computational complexity is evaluated not just theoretically, but
+empirically via <a
+href="https://github.com/docxology/template/blob/main/infrastructure/scientific/benchmarking.py"><code>infrastructure.scientific.benchmarking.benchmark_function</code></a>.
+This module captures high-resolution execution timings and memory
+footprints across dimensionality sweeps, guaranteeing that the <span
+class="math inline">\(O(n)\)</span> space-time complexity predictions
+hold true on the host architecture.</p>
+<h2 id="convergence-analysis">Convergence Analysis</h2>
+<p>For quadratic functions <span class="math inline">\(f(x) =
+\frac{1}{2}x^T A x - b^T x\)</span> where <span
+class="math inline">\(A\)</span> is positive definite, the convergence
+factor becomes :</p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:convergence_factor}
+\rho = \frac{|\lambda_{\max} - \alpha\lambda_{\min}|}{|\lambda_{\min} +
+\alpha\lambda_{\max}|}
+\end{equation}\]</span></p>
+<p>Optimal convergence occurs when <span class="math inline">\(\alpha =
+\frac{2}{\lambda_{\min} + \lambda_{\max}}\)</span>, yielding <span
+class="math inline">\(\rho = \frac{\kappa - 1}{\kappa + 1}\)</span>.</p>
+<h2 id="experimental-setup">Experimental Setup</h2>
+<h3 id="step-size-analysis">Step Size Analysis</h3>
+<p>Step sizes are not chosen ad hoc in the manuscript: they are read
+from <code>experiment.step_sizes</code> in
+<code>manuscript/config.yaml</code> and passed through
+<code>run_convergence_experiment()</code> in
+<code>optimization_analysis.py</code>. The active grid for this build
+is:</p>
+<ul>
+<li><span class="math inline">\(\\alpha = 0.01\)</span>
+(conservative)</li>
+<li><span class="math inline">\(\\alpha = 0.1\)</span>
+(conservative)</li>
+<li><span class="math inline">\(\\alpha = 0.5\)</span>
+(near-optimal)</li>
+<li><span class="math inline">\(\\alpha = 1.0\)</span>
+(near-optimal)</li>
+<li><span class="math inline">\(\\alpha = 1.5\)</span> (aggressive)</li>
+<li><span class="math inline">\(\\alpha = 2.5\)</span> (divergent
+(expected unstable for H = I))</li>
+</ul>
+<p>Labels follow the same agency taxonomy used for plot colours
+(<code>_agency_category</code> in the analysis script):
+<strong>conservative</strong> (small <span
+class="math inline">\(\alpha\)</span>, slow but stable on <span
+class="math inline">\(H=I\)</span>), <strong>near-optimal</strong>
+(including <span class="math inline">\(\alpha=1\)</span> where the
+method reaches <span class="math inline">\(x^\ast\)</span> in one step
+for this quadratic), <strong>aggressive</strong> (<span
+class="math inline">\(1 &lt; \alpha &lt; 2\)</span>, still linearly
+contracting in <span class="math inline">\(|x-x^\ast|\)</span> but
+oscillatory in sign), and <strong>divergent</strong> (<span
+class="math inline">\(|1-\alpha| \geq 1\)</span>).</p>
+<h3 id="zero-mock-testing-methodology">Zero-Mock Testing
+Methodology</h3>
+<p>The most critical aspect of the project’s methodology is its
+validation framework. The project is governed by a strict Zero-Mock
+testing policy, evaluated actively by executing
+<code>uv run pytest projects/code_project/tests/</code> during the
+infrastructure build phase.</p>
+<ol type="1">
+<li><strong>Integration Testing</strong>: The
+<code>tests/integration/</code> battery ensures that the optimization
+algorithm, the analysis pipeline, and the
+<code>infrastructure.rendering</code> components operate flawlessly
+together without simulated data.</li>
+<li><strong>Infrastructure Validation</strong>: The
+<code>tests/infra_tests/</code> suite confirms that the underlying
+modules (e.g., <code>pipeline_reporter.py</code>,
+<code>doc_discovery.py</code>) behave deterministically.</li>
+<li><strong>Coverage Gates</strong>: The <a
+href="https://github.com/docxology/template/blob/main/.github/workflows/ci.yml">GitHub
+Actions CI workflow</a> enforces a mandatory ≥90% statement coverage
+gate on <code>projects/code_project/src/</code> prior to treating the
+project as build-green.</li>
+</ol>
+<h3 id="stopping-rule-and-reporting">Stopping rule and reporting</h3>
+<p><code>gradient_descent()</code> terminates when <span
+class="math inline">\(\|\nabla f(x_k)\|\)</span> falls below
+<code>experiment.tolerance</code> or when <span
+class="math inline">\(k\)</span> reaches
+<code>experiment.max_iterations</code>. The boolean
+<code>converged</code> in exported CSV rows distinguishes these
+outcomes. Downstream,
+<code>scripts/z_generate_manuscript_variables.py</code> aggregates the
+CSV into <code>RESULT_*</code> placeholders so tables and prose cannot
+drift from the last analysis run.</p>
+<h3 id="figure-generation-contract">Figure generation contract</h3>
+<p>Each figure in <code>03_results.md</code> maps to a single generator
+in <code>optimization_analysis.py</code>
+(<code>generate_convergence_plot</code>,
+<code>generate_step_size_sensitivity_plot</code>,
+<code>generate_convergence_rate_plot</code>,
+<code>generate_complexity_visualization</code>,
+<code>generate_stability_visualization</code>,
+<code>generate_benchmark_visualization</code>). Captions in the markdown
+intentionally name the function and the key parameters (tolerance lines,
+grids, dimensions) so reviewers can navigate from PDF to code without
+inferring hidden defaults.</p>
+<h2 id="analysis-pipeline-latex-integration">Analysis Pipeline &amp;
+LaTeX Integration</h2>
+<p>The automated analysis script leverages
+<code>infrastructure.core.progress.PipelineProgress</code> to
+orchestrate experiments, collect convergence trajectories, and generate
+publication-quality visualizations seamlessly.</p>
+<p>The research template supports advanced LaTeX customization through
+the <code>preamble.md</code> configuration. This is ingested directly by
+<code>infrastructure.rendering.latex_utils.py</code> and
+<code>pdf_renderer.py</code>, automatically linking compiled PGF plots
+and BibTeX citations. This automated approach ensures an unbreakable
+chain of custody from raw algorithmic execution to the final rendered
+manuscript.</p>
+</body>
+</html>

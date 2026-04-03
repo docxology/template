@@ -379,7 +379,7 @@ python3 -m pytest tests/infra_tests/test_project_discovery.py -v
 ## See Also
 
 - [`infrastructure/core/script_discovery.py`](../core/script_discovery.py) - Analysis script discovery
-- [`infrastructure/core/file_operations.py`](../core/file_operations.py) - File operations with project support
+- [`infrastructure/core/files/operations.py`](../core/files/operations.py) - File operations with project support
 - [`scripts/AGENTS.md`](../../scripts/AGENTS.md) - Generic entry point orchestrators
 - [`AGENTS.md`](../../AGENTS.md) - system documentation
 

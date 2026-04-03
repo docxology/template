@@ -4,11 +4,11 @@ Thin orchestrator wrapping infrastructure.llm module functionality.
 Provides command-line access to LLM queries and utilities.
 
 Usage:
-    python3 -m infrastructure.llm.cli query "What is machine learning?"
-    python3 -m infrastructure.llm.cli query --short "Summarize X"
-    python3 -m infrastructure.llm.cli query --long "Explain X in detail"
-    python3 -m infrastructure.llm.cli check
-    python3 -m infrastructure.llm.cli models
+    uv run python -m infrastructure.llm.cli query "What is machine learning?"
+    uv run python -m infrastructure.llm.cli query --short "Summarize X"
+    uv run python -m infrastructure.llm.cli query --long "Explain X in detail"
+    uv run python -m infrastructure.llm.cli check
+    uv run python -m infrastructure.llm.cli models
 """
 
 from __future__ import annotations

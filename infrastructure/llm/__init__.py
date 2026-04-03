@@ -1,21 +1,20 @@
-"""LLM Module.
+"""LLM module.
 
-Provides tools for interacting with Local Large Language Models (Ollama)
-for research assistance tasks.
+Provides the package surface for local Ollama-backed research workflows.
 
-Module Structure:
-- core/ - Core LLM functionality (client, config, context)
-- templates/ - Prompt templates for research tasks
-- validation/ - Output validation and quality checks
-- review/ - Manuscript review generation system
-- utils/ - Utility functions (Ollama management)
-- cli/ - Command-line interface
-- prompts/ - Prompt fragment system
+Module structure:
+- core/ - client, config, and context helpers
+- templates/ - prompt templates for repeatable tasks
+- validation/ - output validation helpers
+- review/ - manuscript review generation
+- utils/ - Ollama server and model utilities
+- cli/ - command-line interface
+- prompts/ - prompt fragments
 
-CLI Usage:
-    python3 -m infrastructure.llm.cli.main query "What is machine learning?"
-    python3 -m infrastructure.llm.cli.main check
-    python3 -m infrastructure.llm.cli.main models
+CLI usage:
+    uv run python -m infrastructure.llm.cli query "What is machine learning?"
+    uv run python -m infrastructure.llm.cli check
+    uv run python -m infrastructure.llm.cli models
 
 Usage::
 

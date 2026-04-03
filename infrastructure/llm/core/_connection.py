@@ -29,7 +29,7 @@ from infrastructure.llm.core.config import GenerationOptions
 if TYPE_CHECKING:
     from infrastructure.llm.core.config import OllamaClientConfig
 
-logger = get_logger(__name__)
+logger = get_logger("infrastructure.llm.core.client")
 
 
 class _ConnectionMixin:

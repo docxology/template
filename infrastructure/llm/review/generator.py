@@ -38,6 +38,29 @@ from infrastructure.llm.templates.manuscript import (
 
 from infrastructure.llm.review.metrics import ReviewMetrics
 
+# Re-exports from quality.py — all public names that external code imports from generator.
+from infrastructure.llm.review.quality import (  # noqa: F401
+    ReviewType,
+    ReviewQualityDetails,
+    validate_review_quality,
+)
+
+# Re-exports from ollama_setup.py — all public names that external code imports from generator.
+from infrastructure.llm.review.ollama_setup import (  # noqa: F401
+    get_manuscript_review_system_prompt,
+    create_review_client,
+    select_and_start_ollama_model,
+    warmup_model,
+)
+
+# Re-exports from generation.py — core generation logic.
+from infrastructure.llm.review.generation import (  # noqa: F401
+    extract_manuscript_text,
+    generate_review_with_metrics,
+    generate_translation,
+)
+
+
 # Registry mapping review_type → (review_name, template_class, default_temperature).
 # Add new review types here; the _make_review_fn factory generates the public entry points.
 _REVIEW_REGISTRY: dict[str, tuple[str, type[ResearchTemplate], float]] = {
@@ -81,27 +104,7 @@ def _make_review_fn(review_type: str) -> Callable[[LLMClient, str, str, float], 
     return _review_fn
 
 
-# Re-exports from quality.py — all public names that external code imports from generator.
-from infrastructure.llm.review.quality import (  # noqa: F401
-    ReviewType,
-    ReviewQualityDetails,
-    validate_review_quality,
-)
 
-# Re-exports from ollama_setup.py — all public names that external code imports from generator.
-from infrastructure.llm.review.ollama_setup import (  # noqa: F401
-    get_manuscript_review_system_prompt,
-    create_review_client,
-    select_and_start_ollama_model,
-    warmup_model,
-)
-
-# Re-exports from generation.py — core generation logic.
-from infrastructure.llm.review.generation import (  # noqa: F401
-    extract_manuscript_text,
-    generate_review_with_metrics,
-    generate_translation,
-)
 
 
 # Named public API entry points — generated from _REVIEW_REGISTRY to eliminate duplication.

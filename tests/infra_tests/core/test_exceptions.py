@@ -407,6 +407,96 @@ class TestContextPreservation:
             assert isinstance(e.__cause__, ValueError)
 
 
+class TestDomainExceptions:
+    """Test domain-specific exceptions from _exceptions_domains.py."""
+
+    def test_literature_search_error(self):
+        from infrastructure.core.exceptions import LiteratureSearchError
+        err = LiteratureSearchError("search failed")
+        assert isinstance(err, TemplateError)
+
+    def test_api_rate_limit_is_literature_search(self):
+        from infrastructure.core.exceptions import APIRateLimitError, LiteratureSearchError
+        err = APIRateLimitError("rate limited")
+        assert isinstance(err, LiteratureSearchError)
+        assert isinstance(err, TemplateError)
+
+    def test_invalid_query_is_literature_search(self):
+        from infrastructure.core.exceptions import InvalidQueryError, LiteratureSearchError
+        err = InvalidQueryError("bad query")
+        assert isinstance(err, LiteratureSearchError)
+
+    def test_llm_error(self):
+        from infrastructure.core.exceptions import LLMError
+        err = LLMError("llm failure")
+        assert isinstance(err, TemplateError)
+
+    def test_llm_connection_error_is_llm(self):
+        from infrastructure.core.exceptions import LLMConnectionError, LLMError
+        err = LLMConnectionError("cannot connect")
+        assert isinstance(err, LLMError)
+
+    def test_llm_template_error_is_llm(self):
+        from infrastructure.core.exceptions import LLMTemplateError, LLMError
+        err = LLMTemplateError("template missing var", context={"required": "text"})
+        assert isinstance(err, LLMError)
+        assert err.context["required"] == "text"
+
+    def test_context_limit_error_is_llm(self):
+        from infrastructure.core.exceptions import ContextLimitError, LLMError
+        err = ContextLimitError("token limit exceeded")
+        assert isinstance(err, LLMError)
+
+    def test_security_violation(self):
+        from infrastructure.core.exceptions import SecurityViolation
+        err = SecurityViolation("constraint violated")
+        assert isinstance(err, TemplateError)
+
+    def test_security_error_is_security_violation(self):
+        from infrastructure.core.exceptions import SecurityError, SecurityViolation
+        err = SecurityError("sanitization failed")
+        assert isinstance(err, SecurityViolation)
+        assert isinstance(err, TemplateError)
+
+    def test_rendering_error(self):
+        from infrastructure.core.exceptions import RenderingError
+        err = RenderingError("render failed")
+        assert isinstance(err, TemplateError)
+
+    def test_format_error_is_rendering(self):
+        from infrastructure.core.exceptions import FormatError, RenderingError
+        err = FormatError("unsupported format")
+        assert isinstance(err, RenderingError)
+
+    def test_template_rendering_error_is_rendering(self):
+        from infrastructure.core.exceptions import TemplateRenderingError, RenderingError
+        err = TemplateRenderingError("template render failed")
+        assert isinstance(err, RenderingError)
+
+    def test_publishing_error(self):
+        from infrastructure.core.exceptions import PublishingError
+        err = PublishingError("publish failed")
+        assert isinstance(err, TemplateError)
+
+    def test_upload_error_is_publishing(self):
+        from infrastructure.core.exceptions import UploadError, PublishingError
+        err = UploadError("upload timed out")
+        assert isinstance(err, PublishingError)
+
+    def test_metadata_error_is_publishing(self):
+        from infrastructure.core.exceptions import MetadataError, PublishingError
+        err = MetadataError("bad doi")
+        assert isinstance(err, PublishingError)
+
+    def test_domain_exceptions_catchable_as_template_error(self):
+        from infrastructure.core.exceptions import (
+            LLMConnectionError, SecurityViolation, RenderingError, PublishingError
+        )
+        for exc in [LLMConnectionError("x"), SecurityViolation("x"), RenderingError("x"), PublishingError("x")]:
+            with pytest.raises(TemplateError):
+                raise exc
+
+
 class TestRealWorldUsagePatterns:
     """Test real-world usage patterns."""
 

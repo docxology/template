@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 
 from infrastructure.rendering._pdf_combined_renderer import (
     flatten_manuscript_vars,

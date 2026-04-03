@@ -18,6 +18,7 @@ from __future__ import annotations
 import functools
 
 # Re-export from submodules for backwards compatibility
+from infrastructure.core.exceptions import SecurityViolation  # noqa: F401
 from infrastructure.core._rate_limiting import (  # noqa: F401
     RateLimiter,
     SecurityMonitor,

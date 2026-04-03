@@ -435,11 +435,9 @@ class TestReviewGeneratorsIntegration:
 
     def test_generate_executive_summary_real_ollama(self):
         """Test generate_executive_summary with real Ollama."""
-        from infrastructure.llm.core.client import LLMClient
+        from .real_ollama_client import build_real_small_llm_client
 
-        client = LLMClient()
-        if not client.check_connection():
-            pytest.skip("Ollama server is not available")
+        client = build_real_small_llm_client(timeout=60.0)
 
         manuscript_text = "This is a test manuscript about machine learning and AI."
         result, metrics = generate_executive_summary(client, manuscript_text)
@@ -449,11 +447,9 @@ class TestReviewGeneratorsIntegration:
 
     def test_generate_review_with_metrics_real_ollama(self):
         """Test generate_review_with_metrics with real Ollama."""
-        from infrastructure.llm.core.client import LLMClient
+        from .real_ollama_client import build_real_small_llm_client
 
-        client = LLMClient()
-        if not client.check_connection():
-            pytest.skip("Ollama server is not available")
+        client = build_real_small_llm_client(timeout=60.0)
 
         manuscript_text = "Test manuscript about optimization algorithms."
         from infrastructure.llm.templates import ManuscriptExecutiveSummary
