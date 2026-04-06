@@ -207,17 +207,18 @@ This checks:
 
 ### Glossary Generation
 
-Glossary generation is integrated into the build pipeline (Stage 03) or can be run manually:
+Glossary generation is **not** a fixed numbered pipeline stage in the root `scripts/` DAG; run it **manually** when needed (see [modules guide](../modules/modules-guide.md#documentation-generation)):
 
 ```bash
-uv run python -m infrastructure.documentation.generate_glossary_cli
+uv run python -m infrastructure.documentation.generate_glossary_cli \
+  projects/code_project/src/ projects/code_project/manuscript/98_symbols_glossary.md
 ```
 
 This:
 
-- Scans `projects/{name}/src/` for public APIs
-- Generates markdown table
-- Updates `98_symbols_glossary.md` automatically
+- Scans the given `src/` tree for public APIs
+- Generates a markdown table
+- Injects it into the target manuscript file (created if missing)
 
 ## Build Process
 
@@ -228,10 +229,9 @@ The pipeline orchestrator (`scripts/execute_pipeline.py`):
 1. **Runs tests** with coverage requirements (90% project, 60% infra)
 2. **Executes scripts** to generate figures and data (validating projects/{name}/src/ integration)
 3. **Validates manuscript** for references and images
-4. **Generates glossary** from source code
-5. **Builds individual PDFs** for each manuscript file
-6. **Creates combined PDF** with all sections
-7. **Exports LaTeX** source files
+4. **Builds individual PDFs** for each manuscript file
+5. **Creates combined PDF** with all sections
+6. **Exports LaTeX** source files
 
 ### Output Files
 

@@ -408,8 +408,8 @@ uv run pytest projects/my_project/tests/ --cov=projects/my_project/src
 # Run build
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
-# Verify outputs
-ls -la output/pdf/
+# Verify outputs (exemplar layout)
+ls -la output/code_project/pdf/
 ```
 
 ## Common Migration Challenges

@@ -15,8 +15,8 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 1. **Business Logic** (`infrastructure/validation/content/pdf_validator.py`): Core validation algorithms
 2. **CLI Interface** (`infrastructure/validation/cli/main.py`): Command-line interface
 3. **Orchestrator** (`scripts/04_validate_output.py`): Pipeline integration
-4. **Tests** (`tests/infrastructure/test_validation/`): coverage with data
-5. **Integration** (`scripts/execute_pipeline.py`): Automated validation in build pipeline (Stage 04)
+4. **Tests** ([`tests/infra_tests/validation/test_pdf_validator.py`](../../tests/infra_tests/validation/test_pdf_validator.py)): coverage with data
+5. **Integration** (`scripts/execute_pipeline.py`): validation stage after render (see [RUN_GUIDE.md](../RUN_GUIDE.md); script `04_validate_output.py` maps to pipeline “validate”)
 
 ## Components
 
@@ -50,14 +50,14 @@ Command-line interface that:
 #### Standalone Validation
 
 ```bash
-# Validate default combined PDF (via pipeline orchestrator)
-uv run python scripts/04_validate_output.py
+# Validate outputs for one project (PDFs, markdown, integrity under projects/{name}/output/)
+uv run python scripts/04_validate_output.py --project code_project
 
-# Validate specific PDF using CLI
-uv run python -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
+# Validate a specific PDF using CLI
+uv run python -m infrastructure.validation.cli pdf output/code_project/pdf/code_project_combined.pdf
 
 # Validate with verbose output
-uv run python -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf --verbose
+uv run python -m infrastructure.validation.cli pdf output/code_project/pdf/code_project_combined.pdf --verbose
 
 # Validate markdown files
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
@@ -65,27 +65,19 @@ uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscri
 
 #### Automated Validation
 
-The validation is automatically integrated into the pipeline (Stage 4):
+The core pipeline runs validation after PDF render via `04_validate_output.py`:
 
 ```bash
-# Standard usage (includes validation)
+# Full core pipeline (includes validation after render)
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
-# Or use unified interactive menu
+# Or use the interactive menu
 ./run.sh
-
-# Run only validation stage (skip other stages)
-uv run python scripts/04_validate_output.py
 ```
 
-This will:
+`04_validate_output.py` alone does **not** clean or re-render; it checks existing artifacts under `projects/{name}/output/` (and related paths) for the given `--project`.
 
-1. Clean output directory
-2. Regenerate all PDFs
-3. **Validate PDF output quality** (unless `--skip-validation` is used)
-4. Report any issues found
-
-**Note**: Use `--skip-validation` to skip the validation step for faster iteration during development. Always run full validation before final builds.
+**Note**: For a full pipeline run, use `--skip-validation` only when iterating quickly; run validation before release builds.
 
 ### Sample Output
 
@@ -130,14 +122,11 @@ Conference on Machine Learning, pages 456–467. ICML, 2022...
 Run tests:
 
 ```bash
-# Run PDF validator tests
-uv run pytest tests/test_pdf_validator.py -v
+uv run pytest tests/infra_tests/validation/test_pdf_validator.py -v
 
-# Run with coverage
-uv run pytest tests/test_pdf_validator.py --cov=pdf_validator --cov-report=term-missing
-
-# Run integration tests
-uv run pytest tests/test_pdf_validator.py -v
+uv run pytest tests/infra_tests/validation/test_pdf_validator.py \
+  --cov=infrastructure.validation.content.pdf_validator \
+  --cov-report=term-missing
 ```
 
 ## Common Issues Detected
@@ -184,7 +173,7 @@ These are automatically managed by `uv` and defined in `pyproject.toml`.
 
 Following TDD principles:
 
-1. Write tests first in `tests/infrastructure/test_validation/`
+1. Write tests first in `tests/infra_tests/validation/`
 2. Implement business logic in `infrastructure/validation/content/pdf_validator.py`
 3. Create CLI interface in `infrastructure/validation/cli/main.py`
 4. Integrate into build pipeline via `scripts/04_validate_output.py`
@@ -200,7 +189,7 @@ Potential improvements:
 - [ ] Verify equation numbering sequence
 - [ ] Generate diff reports between PDF versions
 - [ ] HTML report generation with highlighted issues
-- [ ] Integration with CI/CD pipelines
+- [x] Integration with CI/CD pipelines (markdown validation + tests in GitHub Actions)
 - [ ] Configurable issue severity levels
 
 ## Troubleshooting
@@ -240,7 +229,7 @@ This typically indicates:
 2. Missing label definitions
 3. Bibliography not properly processed
 
-Check the compilation logs in `output/pdf/*_compile.log` for detailed LaTeX warnings.
+Check compilation logs under `projects/{name}/output/pdf/` or `output/{name}/pdf/` (e.g. `*_compile.log` or `.log` next to the TeX build) for detailed LaTeX warnings.
 
 ## References
 

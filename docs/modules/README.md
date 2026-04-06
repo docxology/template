@@ -20,12 +20,18 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 | Module | Guide | Focus |
 |--------|-------|-------|
+| Core | [`guides/core-module.md`](guides/core-module.md) | Logging, config, exceptions, pipeline |
+| Documentation | [`guides/documentation-module.md`](guides/documentation-module.md) | Figure management, API glossary |
 | Integrity | [`guides/integrity-module.md`](guides/integrity-module.md) | File integrity, cross-reference validation |
 | LLM | [`guides/llm-module.md`](guides/llm-module.md) | Ollama integration, research templates |
+| Project | [`guides/project-module.md`](guides/project-module.md) | Multi-project discovery, validation |
 | Publishing | [`guides/publishing-module.md`](guides/publishing-module.md) | DOI validation, citation generation |
 | Rendering | [`guides/rendering-module.md`](guides/rendering-module.md) | PDF, slides, web output |
 | Reporting | [`guides/reporting-module.md`](guides/reporting-module.md) | Pipeline reports, error aggregation |
 | Scientific | [`guides/scientific-module.md`](guides/scientific-module.md) | Numerical stability, benchmarking |
+| Skills | [`guides/skills-module.md`](guides/skills-module.md) | SKILL.md discovery, manifest generation |
+| Steganography | [`guides/steganography-module.md`](guides/steganography-module.md) | PDF watermarking, provenance |
+| Validation | [`guides/validation-module.md`](guides/validation-module.md) | PDF/Markdown validation, auditing |
 
 ## Quick Navigation
 
@@ -43,16 +49,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 ## Available Modules
 
-1. **Core** - Shared utilities (logging, config, exceptions)
-2. **Documentation** - Doc generation (figure management, API glossary)
-3. **Validation** - Output verification and cross-reference validation
-4. **Publishing** - Academic publishing workflows (DOI, citations)
-5. **Scientific** - Research best practices (numerical stability, benchmarking)
-6. **LLM Integration** - Local LLM assistance for research
-7. **Rendering** - Multi-format output generation (PDF, slides, web)
-8. **Reporting** - Pipeline reporting and error aggregation
-9. **Project** - Project discovery and multi-project orchestration
-10. **Steganography** - Provenance and watermarking (alpha-channel overlays, QR barcodes, PDF metadata)
+Same **14** named areas as [modules-guide.md](modules-guide.md): **Core**, **Documentation**, **Validation**, **Publishing**, **Scientific**, **LLM**, **Rendering**, **Reporting**, **Project**, **Steganography**, **Config**, **Docker**, **Skills** (SKILL.md manifest), **Telemetry** (under `core/telemetry/`). Per-module deep dives: [guides/](guides/).
 
 ## Related Documentation
 

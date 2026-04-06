@@ -82,7 +82,9 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[PAI.md](PAI.md)** - **Personal AI Infrastructure (PAI)** 🤖
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - **Run guide and pipeline reference** 🚀
 - **[../.github/README.md](../.github/README.md)** - **GitHub**: Actions workflows, Dependabot, issue/PR templates, mirroring CI locally
-- **[_generated/](_generated/README.md)** - Machine-generated snippets; **[_generated/active_projects.md](_generated/active_projects.md)** is the single source of truth for active `projects/` names (do not copy that list into other guides; default path examples to [`projects/code_project/`](../projects/code_project/))
+- **[_generated/](_generated/README.md)** · **[_generated/AGENTS.md](_generated/AGENTS.md)** — machine-generated snippets; **[_generated/active_projects.md](_generated/active_projects.md)** is the single source of truth for active `projects/` names (do not copy that list into other guides; default path examples to [`projects/code_project/`](../projects/code_project/))
+- **Agent skills manifest** - [`.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc) (editor rule); machine list [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json). Regenerate: `uv run python -m infrastructure.skills write` · validate: `uv run python -m infrastructure.skills check`
+- **[opengauss.md](opengauss.md)** - Disambiguation: math-inc Open Gauss CLI (`gauss`) vs Huawei DBMS; detail under [`projects/fep_lean/docs/opengauss.md`](../projects/fep_lean/docs/opengauss.md)
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 
 ### Quick Reference
@@ -118,6 +120,9 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[guides/extending-and-automation.md](guides/extending-and-automation.md)** - Levels 10-12 (Expert)
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** - New project checklist (all learnings)
 - **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (primary exemplar: [`projects/code_project/`](../projects/code_project/); other active names: [_generated/active_projects.md](_generated/active_projects.md))
+- **[guides/llm-integration-guide.md](guides/llm-integration-guide.md)** - AI-assisted research with Ollama
+- **[guides/publishing-guide.md](guides/publishing-guide.md)** - Publishing workflow (DOI, Zenodo, arXiv, citations)
+- **[guides/secure-research-guide.md](guides/secure-research-guide.md)** - PDF watermarking, provenance, and integrity
 - **[../projects/code_project/README.md](../projects/code_project/README.md)** - Control-positive exemplar under `projects/`
 
 ### Content Authoring
@@ -157,12 +162,18 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ### Per-Module Guides (`modules/guides/`)
 
+- **[modules/guides/core-module.md](modules/guides/core-module.md)**
+- **[modules/guides/documentation-module.md](modules/guides/documentation-module.md)**
 - **[modules/guides/integrity-module.md](modules/guides/integrity-module.md)**
 - **[modules/guides/llm-module.md](modules/guides/llm-module.md)**
+- **[modules/guides/project-module.md](modules/guides/project-module.md)**
 - **[modules/guides/publishing-module.md](modules/guides/publishing-module.md)**
 - **[modules/guides/rendering-module.md](modules/guides/rendering-module.md)**
 - **[modules/guides/reporting-module.md](modules/guides/reporting-module.md)**
 - **[modules/guides/scientific-module.md](modules/guides/scientific-module.md)**
+- **[modules/guides/skills-module.md](modules/guides/skills-module.md)**
+- **[modules/guides/steganography-module.md](modules/guides/steganography-module.md)**
+- **[modules/guides/validation-module.md](modules/guides/validation-module.md)**
 
 ---
 
@@ -175,8 +186,8 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ### Configuration & Performance (`operational/config/`)
 
-- **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars)
-- **[opengauss.md](opengauss.md)** - Open Gauss naming note → `projects/fep_lean/docs/opengauss.md`
+- **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars; paths under `projects/fep_lean/`)
+- **[opengauss.md](opengauss.md)** - Open Gauss naming note → [`projects/fep_lean/docs/opengauss.md`](../projects/fep_lean/docs/opengauss.md)
 - **[operational/config/checkpoint-resume.md](operational/config/checkpoint-resume.md)** - Checkpoint system
 - **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance tuning
 
@@ -209,7 +220,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[best-practices/best-practices.md](best-practices/best-practices.md)** - Consolidated best practices
 - **[best-practices/version-control.md](best-practices/version-control.md)** - Git workflows
-- **[best-practices/multi-project-management.md](best-practices/multi-project-management.md)** - Multi-project setup
+- **[best-practices/multi-project-management.md](best-practices/multi-project-management.md)** - Multi-project setup (roster → [_generated/active_projects.md](_generated/active_projects.md); optional per-project docs e.g. [`projects/cognitive_case_diagrams/docs/`](../projects/cognitive_case_diagrams/docs/))
 - **[best-practices/migration-guide.md](best-practices/migration-guide.md)** - Migration from other templates
 - **[best-practices/backup-recovery.md](best-practices/backup-recovery.md)** - Backup strategies
 
@@ -253,6 +264,12 @@ docs/
 ├── README.md                           # Docs entry point
 ├── AGENTS.md                           # Documentation hub guide
 ├── documentation-index.md              # This index
+├── CLOUD_DEPLOY.md                     # Headless / cloud deployment
+├── PAI.md                              # PAI context for agents
+├── RUN_GUIDE.md                        # Pipeline orchestration reference
+├── opengauss.md                        # Open Gauss (gauss CLI) disambiguation
+├── rules/                              # Development standards (AGENTS, README, topic guides)
+├── _generated/                         # Generated snippets; active_projects.md roster
 │
 ├── core/                               # Essential documentation
 │   ├── how-to-use.md                   # Usage guide (12 levels)
@@ -316,7 +333,7 @@ docs/
 │   ├── modules-guide.md
 │   ├── scientific-simulation-guide.md
 │   ├── pdf-validation.md
-│   └── guides/ (6 per-module guides)
+│   └── guides/ (12 per-module guides)
 │
 ├── development/                        # Development & contribution
 │   ├── contributing.md, code-of-conduct.md
@@ -333,7 +350,7 @@ docs/
 │   ├── migration-guide.md
 │   └── backup-recovery.md
 │
-├── prompts/                            # AI prompt templates (9)
+├── prompts/                            # AI prompt templates (9 + README/AGENTS hubs)
 │   ├── manuscript_creation.md, code_development.md
 │   ├── test_creation.md, feature_addition.md
 │   ├── refactoring.md, documentation_creation.md
@@ -354,7 +371,8 @@ docs/
 └── audit/                              # Audit reports
     ├── documentation-review-report.md
     ├── documentation-review-summary.md
-    └── filepath-audit-report.md
+    ├── filepath-audit-report.md        # Typical output from audit tooling
+    └── FILEPATH_AUDIT_REPORT.md       # Point-in-time snapshot (historical); prefer filepath-audit-report.md for fresh runs
 ```
 
 ---

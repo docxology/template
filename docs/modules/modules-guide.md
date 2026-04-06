@@ -1,8 +1,10 @@
 # 🔬 Modules Guide
 
-> **Guide** to the 14 infrastructure modules
+> **Guide** to Layer-1 infrastructure modules
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
+
+**Counting:** The overview table lists **14** named areas (including Skills and Telemetry as first-class). Other docs may say *13 subpackages* when telemetry is treated as part of `core/`—same tree, different grouping. See [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) for the authoritative layout.
 
 ---
 
@@ -10,19 +12,19 @@
 
 | Module | Purpose | Key Features | Guide |
 |--------|---------|--------------|-------|
-| ⚙️ **Core** | Shared utilities | Logging, config, exceptions | — |
-| 📄 **Documentation** | Doc generation | Figure management, API glossary | — |
-| ✅ **Validation** | Output verification | File integrity, cross-reference validation | [Details](guides/integrity-module.md) |
+| ⚙️ **Core** | Shared utilities | Logging, config, exceptions | [Details](guides/core-module.md) |
+| 📄 **Documentation** | Doc generation | Figure management, API glossary | [Details](guides/documentation-module.md) |
+| ✅ **Validation** | Output verification | File integrity, cross-reference validation | [Details](guides/validation-module.md) |
 | 📚 **Publishing** | Academic workflows | DOI validation, citation generation | [Details](guides/publishing-module.md) |
 | 🔬 **Scientific** | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |
 | 🤖 **LLM** | Local LLM & literature | Ollama integration, templates, literature search | [Details](guides/llm-module.md) |
 | 🎨 **Rendering** | Multi-format output | PDF, slides, web, poster | [Details](guides/rendering-module.md) |
 | 📊 **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
-| 🔍 **Project** | Project discovery | Multi-project orchestration | — |
-| 🔒 **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | — |
+| 🔍 **Project** | Project discovery | Multi-project orchestration | [Details](guides/project-module.md) |
+| 🔒 **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | [Details](guides/steganography-module.md) |
 | ⚙️ **Config** | Configuration schemas | Secure config, environment templates | — |
 | 🐳 **Docker** | Containerization | Dockerfile, docker-compose | — |
-| 🔍 **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | — |
+| 🔍 **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | [Details](guides/skills-module.md) |
 | 📡 **Telemetry** | Unified pipeline telemetry | Stage resource metrics, diagnostic aggregation, JSON/text reports | — |
 
 All modules follow the thin orchestrator pattern with test coverage.
@@ -34,21 +36,26 @@ All modules follow the thin orchestrator pattern with test coverage.
 ### Integrity Checking
 
 ```python
-from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
+from pathlib import Path
 
-report = verify_output_integrity("output/")
+from infrastructure.validation.integrity import verify_output_integrity
+
+report = verify_output_integrity(Path("output"))
 if report.overall_integrity:
-    print("✅ All checks passed")
+    print("All checks passed")
 ```
 
 ### Documentation Generation
 
 ```python
-from infrastructure.documentation.glossary_gen import generate_glossary
+from infrastructure.documentation.glossary_gen import build_api_index, generate_markdown_table
 
-glossary = generate_glossary("projects/code_project/src/")
-print(f"Generated {len(glossary)} entries")
+entries = build_api_index("projects/code_project/src/")
+table_md = generate_markdown_table(entries)
+print(f"API entries: {len(entries)}")
 ```
+
+CLI: `uv run python -m infrastructure.documentation.generate_glossary_cli projects/code_project/src/ projects/code_project/manuscript/98_symbols_glossary.md` (second path is the markdown file to inject into; created if missing).
 
 ### LLM Assistance
 
@@ -73,11 +80,11 @@ pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
 ## Integration with Build Pipeline
 
 ```bash
-# Automatic build verification
-uv run python scripts/04_validate_output.py
+# Validate outputs for a project (after render / copy)
+uv run python scripts/04_validate_output.py --project code_project
 
-# Manual verification
-uv run python -m infrastructure.validation.cli integrity output/
+# Manual integrity check on final deliverables tree
+uv run python -m infrastructure.validation.cli integrity output/code_project/
 ```
 
 ---
@@ -87,15 +94,18 @@ uv run python -m infrastructure.validation.cli integrity output/
 ### Using Multiple Modules Together
 
 ```python
-from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
-from infrastructure.publishing.core import extract_publication_metadata
+from pathlib import Path
 
-def comprehensive_validation(output_dir, manuscript_files):
+from infrastructure.publishing import extract_publication_metadata
+from infrastructure.validation.integrity import verify_output_integrity
+
+
+def comprehensive_validation(output_dir: Path, manuscript_files: list[Path]) -> dict:
     """Run validation suite."""
-    results = {}
-    results['integrity'] = verify_output_integrity(output_dir)
-    results['publishing'] = extract_publication_metadata(manuscript_files)
-    return results
+    return {
+        "integrity": verify_output_integrity(output_dir),
+        "publishing": extract_publication_metadata(manuscript_files),
+    }
 ```
 
 ---

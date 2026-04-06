@@ -33,7 +33,7 @@ version-controlled, pipeline-enforced repository. Our contributions are:
 \item
   An empirical evaluation of the system across three heterogeneous
   exemplar projects (\texttt{code\_project},
-  \texttt{act\_inf\_metaanalysis}, \texttt{template}), demonstrating
+  \texttt{cognitive\_case\_diagrams}, \texttt{template}), demonstrating
   scalability, coverage metrics, and pipeline timing.
 \item
   A security analysis of the steganographic provenance layer, including

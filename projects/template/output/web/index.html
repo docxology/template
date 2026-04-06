@@ -591,49 +591,53 @@ class="toc-section-number">5.8</span> Conclusion</a></li>
 id="toc-infrastructure-module-reference"><span
 class="toc-section-number">6</span> Infrastructure Module Reference</a>
 <ul>
-<li><a href="#infrastructure.core-28-modules"
-id="toc-infrastructure.core-28-modules"><span
+<li><a href="#infrastructure.core-71-modules"
+id="toc-infrastructure.core-71-modules"><span
 class="toc-section-number">6.1</span> <code>infrastructure.core</code>
-(28 modules)</a></li>
+(71 modules)</a></li>
 <li><a href="#infrastructure.documentation-6-modules"
 id="toc-infrastructure.documentation-6-modules"><span
 class="toc-section-number">6.2</span>
 <code>infrastructure.documentation</code> (6 modules)</a></li>
-<li><a href="#infrastructure.llm-30-modules"
-id="toc-infrastructure.llm-30-modules"><span
+<li><a href="#infrastructure.llm-53-modules"
+id="toc-infrastructure.llm-53-modules"><span
 class="toc-section-number">6.3</span> <code>infrastructure.llm</code>
-(30 modules)</a></li>
-<li><a href="#infrastructure.project-2-modules"
-id="toc-infrastructure.project-2-modules"><span
+(53 modules)</a></li>
+<li><a href="#infrastructure.project-5-modules"
+id="toc-infrastructure.project-5-modules"><span
 class="toc-section-number">6.4</span>
-<code>infrastructure.project</code> (2 modules)</a></li>
-<li><a href="#infrastructure.publishing-9-modules"
-id="toc-infrastructure.publishing-9-modules"><span
+<code>infrastructure.project</code> (5 modules)</a></li>
+<li><a href="#infrastructure.publishing-14-modules"
+id="toc-infrastructure.publishing-14-modules"><span
 class="toc-section-number">6.5</span>
-<code>infrastructure.publishing</code> (9 modules)</a></li>
-<li><a href="#infrastructure.rendering-12-modules"
-id="toc-infrastructure.rendering-12-modules"><span
+<code>infrastructure.publishing</code> (14 modules)</a></li>
+<li><a href="#infrastructure.rendering-27-modules"
+id="toc-infrastructure.rendering-27-modules"><span
 class="toc-section-number">6.6</span>
-<code>infrastructure.rendering</code> (12 modules)</a></li>
-<li><a href="#infrastructure.reporting-14-modules"
-id="toc-infrastructure.reporting-14-modules"><span
+<code>infrastructure.rendering</code> (27 modules)</a></li>
+<li><a href="#infrastructure.reporting-40-modules"
+id="toc-infrastructure.reporting-40-modules"><span
 class="toc-section-number">6.7</span>
-<code>infrastructure.reporting</code> (14 modules)</a></li>
+<code>infrastructure.reporting</code> (40 modules)</a></li>
 <li><a href="#infrastructure.scientific-6-modules"
 id="toc-infrastructure.scientific-6-modules"><span
 class="toc-section-number">6.8</span>
 <code>infrastructure.scientific</code> (6 modules)</a></li>
-<li><a href="#infrastructure.steganography-8-modules"
-id="toc-infrastructure.steganography-8-modules"><span
+<li><a href="#infrastructure.steganography-10-modules"
+id="toc-infrastructure.steganography-10-modules"><span
 class="toc-section-number">6.9</span>
-<code>infrastructure.steganography</code> (8 modules)</a></li>
-<li><a href="#infrastructure.validation-22-modules"
-id="toc-infrastructure.validation-22-modules"><span
+<code>infrastructure.steganography</code> (10 modules)</a></li>
+<li><a href="#infrastructure.validation-35-modules"
+id="toc-infrastructure.validation-35-modules"><span
 class="toc-section-number">6.10</span>
-<code>infrastructure.validation</code> (22 modules)</a></li>
+<code>infrastructure.validation</code> (35 modules)</a></li>
+<li><a href="#infrastructure.skills-4-modules"
+id="toc-infrastructure.skills-4-modules"><span
+class="toc-section-number">6.11</span>
+<code>infrastructure.skills</code> (4 modules)</a></li>
 <li><a href="#infrastructure-maturity-summary"
 id="toc-infrastructure-maturity-summary"><span
-class="toc-section-number">6.11</span> Infrastructure Maturity
+class="toc-section-number">6.12</span> Infrastructure Maturity
 Summary</a></li>
 </ul></li>
 <li><a href="#security-and-provenance"
@@ -722,8 +726,8 @@ cross-cutting quality standards as architectural invariants.
 to the research lifecycle, making the manuscript, test suite, and
 provenance chain version-controlled, deterministically buildable, and
 independently verifiable. It is built on a Two-Layer Architecture that
-separates 14 reusable infrastructure subpackages (~150 Python modules,
-validated by ~3,083 tests) from self-contained project workspaces,
+separates 13 reusable infrastructure subpackages (~271 Python modules,
+validated by ~6,026 tests) from self-contained project workspaces,
 connected by an ten-stage DAG-based build pipeline progressing from
 environment sanitization through test execution (with a Zero-Mock
 testing policy enforcing 90% project-level and 60% infrastructure-level
@@ -739,22 +743,23 @@ Protocol—enabling AI agents to locate and invoke module capabilities
 without hallucinating API signatures.</p>
 <p>Scalability is demonstrated across three heterogeneous projects—a
 gradient descent study (<code>code_project</code>, 39 tests), a
-meta-analysis pipeline (<code>act_inf_metaanalysis</code>, 505 tests),
-and this self-referential architectural analysis (<code>template</code>,
-65 tests)—achieving 100% pipeline success with zero mock violations. The
-fact that these words, these metrics, and the figures accompanying them
-were generated by the very pipeline they describe is itself a
-demonstration of the system’s self-productive capacity: the manuscript
-is not merely <em>about</em> <code>template/</code> but <em>of</em> it,
-rendered through the same ten-stage DAG pipeline, validated by the same
-test suite, and watermarked by the same steganographic layer documented
-herein. A comparative feature analysis against nine peer tools across
-fourteen dimensions confirms that <code>template/</code> uniquely
-integrates all eleven distinctive capabilities—testing enforcement,
-coverage thresholds, cryptographic provenance, steganographic
-watermarking, multi-project management, AI-agent documentation, agentic
-skill protocol, interactive TUI, Zero-Mock policy, manuscript rendering,
-and pipeline orchestration—within a single enforced pipeline.
+compositional case modeling study (<code>cognitive_case_diagrams</code>,
+814 tests), and this self-referential architectural analysis
+(<code>template</code>, 66 tests)—achieving 100% pipeline success with
+zero mock violations. The fact that these words, these metrics, and the
+figures accompanying them were generated by the very pipeline they
+describe is itself a demonstration of the system’s self-productive
+capacity: the manuscript is not merely <em>about</em>
+<code>template/</code> but <em>of</em> it, rendered through the same
+ten-stage DAG pipeline, validated by the same test suite, and
+watermarked by the same steganographic layer documented herein. A
+comparative feature analysis against nine peer tools across fourteen
+dimensions confirms that <code>template/</code> uniquely integrates all
+fourteen distinctive capabilities—testing enforcement, coverage
+thresholds, cryptographic provenance, steganographic watermarking,
+multi-project management, AI-agent documentation, agentic skill
+protocol, interactive TUI, Zero-Mock policy, manuscript rendering, and
+pipeline orchestration—within a single enforced pipeline.
 <code>template/</code> is open source under the Apache 2.0 License at
 <code>github.com/docxology/template</code>, and is presented as a work
 in progress.</p>
@@ -1071,7 +1076,7 @@ pillars:</p>
 <li><p><strong>Ergonomic Modularity</strong>: A Two-Layer Architecture
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
-scripts, data). 12 infrastructure subpackages comprising ~150 Python
+scripts, data). 13 infrastructure subpackages comprising ~271 Python
 modules provide reusable services; projects consume them without
 modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: A Zero-Mock testing policy
@@ -1079,7 +1084,7 @@ where pipeline advancement is contingent on test passage. Infrastructure
 tests must achieve 60% coverage; project tests must achieve 90%. All
 tests use real filesystem operations, real subprocess calls, and real
 network connections—no mock objects, no fake services, no synthetic test
-doubles. ~3,083 infrastructure tests and 708+ project tests enforce this
+doubles. ~6,026 infrastructure tests and 919+ project tests enforce this
 standard.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -1150,8 +1155,8 @@ dimensions, demonstrating that <code>template/</code> uniquely
 integrates all eleven distinctive capabilities.</li>
 <li>An empirical evaluation of the system across three heterogeneous
 exemplar projects (<code>code_project</code>,
-<code>act_inf_metaanalysis</code>, <code>template</code>), demonstrating
-scalability, coverage metrics, and pipeline timing.</li>
+<code>cognitive_case_diagrams</code>, <code>template</code>),
+demonstrating scalability, coverage metrics, and pipeline timing.</li>
 <li>A security analysis of the steganographic provenance layer,
 including a formal threat model and tamper-detection capabilities
 aligned with the W3C PROV data model <span class="citation"
@@ -1172,7 +1177,7 @@ href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Discussion</a>
 addresses the Zero-Mock tradeoff, scalability implications, a detailed
 tool comparison, and future directions. The <a
 href="06_infrastructure_modules.md#infrastructure-module-reference">Infrastructure
-Module Reference</a> provides detailed documentation for all twelve
+Module Reference</a> provides detailed documentation for all 13
 subpackages. <a
 href="07_security_provenance.md#security-and-provenance">Security and
 Provenance</a> describes the steganographic and cryptographic integrity
@@ -1192,7 +1197,7 @@ this system from conventional research templates.</p>
 class="header-section-number">3.1</span> The Two-Layer Architecture</h2>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
-12 Python subpackages comprising ~150 modules and providing reusable
+13 Python subpackages comprising ~271 modules and providing reusable
 services. Each subpackage is independently importable, has its own
 <code>__init__.py</code>, <code>AGENTS.md</code>, and
 <code>README.md</code>, and exports a well-defined public API. The
@@ -1338,7 +1343,7 @@ test failures (typically 0).</li>
 </ul>
 <p>The stage generates coverage JSON files for downstream reporting and
 saves test results in both JSON and Markdown formats. The infrastructure
-test suite alone contains nearly 3,000 tests across 160+ test files.</p>
+test suite alone contains ~6,026 tests across 346+ test files.</p>
 <h3 data-number="3.4.3"
 id="stage-02-analysis-execution-02_run_analysis.py"><span
 class="header-section-number">3.4.3</span> Stage 02: Analysis Execution
@@ -1778,14 +1783,14 @@ source code.</p>
 class="header-section-number">3.9.3</span> Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
-<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~3,083
-tests validating the 12 infrastructure subpackages, covering logging,
+<li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~6,026
+tests validating the 13 infrastructure subpackages, covering logging,
 rendering, validation, steganography, reporting, and LLM
 integration.</li>
 <li><strong>Project tests</strong> (<code>projects/*/tests/</code>):
 Per-project test suites validating domain-specific logic. Sizes vary
-from 39 tests (<code>code_project</code>) to 505 tests
-(<code>act_inf_metaanalysis</code>).</li>
+from 39 tests (<code>code_project</code>) to 814 tests
+(<code>cognitive_case_diagrams</code>).</li>
 <li><strong>Integration tests</strong>: Embedded within infrastructure
 tests, these exercise full pipeline stages against real manuscript
 inputs, validating end-to-end behavior from Markdown source to rendered
@@ -1843,10 +1848,10 @@ tests and LLM review to isolate project-level performance.</p>
 <td>90%+</td>
 </tr>
 <tr>
-<td><code>act_inf_metaanalysis</code></td>
+<td><code>cognitive_case_diagrams</code></td>
 <td>7</td>
 <td>~60s</td>
-<td>505/505</td>
+<td>814/814</td>
 <td>90%+</td>
 </tr>
 <tr>
@@ -1865,11 +1870,11 @@ project</strong>: ~42s</p>
 scripts use fixed random seeds. Figures are representative; actual
 duration scales with system load, test suite size, and manuscript
 complexity.</em></p>
-<p>The <code>act_inf_metaanalysis</code> project, with its 505 tests and
-programmatically generated figures, represents the most computationally
-intensive exemplar—yet completes in under one minute, confirming that
-the Zero-Mock policy’s real-method overhead remains tractable at this
-scale.</p>
+<p>The <code>cognitive_case_diagrams</code> project, with its 814 tests
+and programmatically generated figures, represents the most
+computationally intensive exemplar—yet completes in under one minute,
+confirming that the Zero-Mock policy’s real-method overhead remains
+tractable at this scale.</p>
 <h2 data-number="4.2" id="infrastructure-test-suite"><span
 class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
 <p>The infrastructure layer is validated by a separate test suite of
@@ -1888,7 +1893,7 @@ significant scale:</p>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~6,025</td>
+<td>~6,026</td>
 </tr>
 <tr>
 <td>Infrastructure coverage threshold</td>
@@ -1908,10 +1913,10 @@ significant scale:</p>
 </tr>
 </tbody>
 </table>
-<p>This test suite exercises all twelve infrastructure modules,
-including the rendering pipeline (Pandoc/XeLaTeX integration),
-steganographic operations (alpha-channel overlay, QR injection), and LLM
-client interactions (real HTTP calls to Ollama).</p>
+<p>This test suite exercises all 13 infrastructure modules, including
+the rendering pipeline (Pandoc/XeLaTeX integration), steganographic
+operations (alpha-channel overlay, QR injection), and LLM client
+interactions (real HTTP calls to Ollama).</p>
 <h2 data-number="4.3" id="infrastructure-module-inventory"><span
 class="header-section-number">4.3</span> Infrastructure Module
 Inventory</h2>
@@ -1919,82 +1924,118 @@ Inventory</h2>
 programmatically enumerates the infrastructure layer, confirming the
 following module distribution:</p>
 <table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 20%" />
+</colgroup>
 <thead>
 <tr>
 <th>Module</th>
 <th style="text-align: center;">Python Files</th>
+<th style="text-align: center;">Has AGENTS.md</th>
+<th style="text-align: center;">Has README.md</th>
 <th>Key Exports</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td><code>config</code></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Configuration schemas</td>
+</tr>
+<tr>
 <td><code>core</code></td>
-<td style="text-align: center;">28</td>
+<td style="text-align: center;">71</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
 <code>TemplateError</code></td>
 </tr>
 <tr>
+<td><code>docker</code></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Containerisation</td>
+</tr>
+<tr>
 <td><code>documentation</code></td>
 <td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td><code>FigureManager</code>, <code>generate_glossary</code></td>
 </tr>
 <tr>
 <td><code>llm</code></td>
-<td style="text-align: center;">30</td>
+<td style="text-align: center;">53</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>LLM review, literature search, translation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">9</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>Citation generation (APA, BibTeX, MLA), Zenodo</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">12</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>PDF rendering, Pandoc filters, HTML reports</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">14</td>
+<td style="text-align: center;">40</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>Coverage parsing, executive reports</td>
 </tr>
 <tr>
 <td><code>scientific</code></td>
 <td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td><code>check_numerical_stability</code>,
 <code>benchmark_function</code></td>
 </tr>
 <tr>
+<td><code>skills</code></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>—</td>
+</tr>
+<tr>
 <td><code>steganography</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>Metadata injection, QR overlays, hashing</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">22</td>
+<td style="text-align: center;">35</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>PDF validation, Markdown checking, CLI</td>
-</tr>
-<tr>
-<td>(+ config, docker)</td>
-<td style="text-align: center;">—</td>
-<td>Configuration, containerization</td>
-</tr>
-<tr>
-<td><strong>Total</strong></td>
-<td style="text-align: center;"><strong>~271</strong></td>
-<td></td>
 </tr>
 </tbody>
 </table>
-<p><em>The ~271 figure includes approximately 13 additional modules in
-the <code>config/</code> and <code>docker/</code> subpackages
-(configuration schemas and containerization utilities) not enumerated
-individually above.</em></p>
 <p>All 13 modules have 100% documentation coverage at Tiers 1–2
 (<code>AGENTS.md</code>, <code>README.md</code>); the 10 active
 subpackages additionally carry <code>SKILL.md</code> for Tier-3 agentic
@@ -2048,7 +2089,7 @@ modules:</p>
 </table>
 <p>This four-layer coverage creates 13 fully described, MCP-mappable
 tool endpoints that a sufficiently capable agent could invoke without
-any source-code access. The aggregate documentation footprint (153+
+any source-code access. The aggregate documentation footprint (160+
 files) represents a deliberate engineering investment: each
 documentation file is not commentary but a specification, enforcing
 architectural constraints through structured natural language <span
@@ -2161,7 +2202,7 @@ three project PDFs:</p>
 <td style="text-align: center;">&lt; 1.5s</td>
 </tr>
 <tr>
-<td><code>act_inf_metaanalysis</code></td>
+<td><code>cognitive_case_diagrams</code></td>
 <td style="text-align: center;">~80</td>
 <td style="text-align: center;">&lt; 0.3s</td>
 <td style="text-align: center;">&lt; 0.05s</td>
@@ -2208,7 +2249,7 @@ Assurance</a> section. In this way, the manuscript does not merely
 <p><img src="figures/architecture_overview.png"
 alt="Two-Layer Architecture Overview" /> <strong>Figure 1</strong>:
 Two-Layer Architecture separating the generic, reusable infrastructure
-layer (12 subpackages, upper panel) from domain-specific project
+layer (13 subpackages, upper panel) from domain-specific project
 workspaces (lower panel), connected by the ten-stage DAG pipeline. Each
 module box displays its Python file count and a documentation badge (A =
 <code>AGENTS.md</code>, R = <code>README.md</code>, S =
@@ -2253,10 +2294,10 @@ absent. The <code>template/</code> column is outlined in blue.
 Capabilities are grouped into <em>Core Pipeline</em> (rows 1–2),
 <em>Quality &amp; Security</em> (rows 3–8), and <em>Ecosystem</em> (rows
 9–14). <code>template/</code> is, to our knowledge, the only open-source
-system that integrates all twelve unique capabilities (pipeline
-orchestration through zero-mock policy, plus optional containerization)
-within a single cohesive architecture. Snakemake, Nextflow, and CWL
-provide superior distributed execution support not yet in
+system that integrates all fourteen capabilities (pipeline orchestration
+through zero-mock policy, plus optional containerization) within a
+single cohesive architecture. Snakemake, Nextflow, and CWL provide
+superior distributed execution support not yet in
 <code>template/</code>.</p>
 <p>¹ Nextflow 25.04.0: data-lineage provenance tracking at build level,
 not document level. ² DVC: content-addressed artifact versioning via
@@ -2293,7 +2334,7 @@ testing policy</a> is <code>template/</code>’s most distinctive design
 decision. By prohibiting all mock objects, we gain confidence that tests
 exercise real code paths—a pytest run against the template genuinely
 invokes <code>pandoc</code>, writes to disk, and parses real YAML. The
-cost is test duration: the full infrastructure test suite (~3,083 tests)
+cost is test duration: the full infrastructure test suite (~6,026 tests)
 takes 2–4 minutes, compared to sub-second execution typical of
 heavily-mocked suites.</p>
 <p>We argue this tradeoff is strongly favorable for research software.
@@ -2381,18 +2422,19 @@ example paper with gradient descent, 39 tests, 90%+ coverage.
 Demonstrates the minimal viable project footprint: a single
 <code>src/</code> module, a single script, and a compact
 manuscript.</li>
-<li><strong><code>act_inf_metaanalysis</code></strong>: Active inference
-meta-analysis pipeline, 505 tests, 90%+ coverage, spanning evidence
-synthesis, bibliometric analysis, and citation-weighted knowledge
-graphs. Demonstrates the template’s capacity for computationally
-intensive, data-heavy research workflows with large test suites.</li>
+<li><strong><code>cognitive_case_diagrams</code></strong>: Compositional
+approaches to linguistic case for cognitive modeling, 814 tests, 90%+
+coverage, spanning enriched category theory, DisCoPy renderers, and
+categorical grammar diagrams. Demonstrates the template’s capacity for
+computationally intensive, diagram-heavy research workflows with large
+test suites.</li>
 <li><strong><code>template</code></strong>: This self-referential
-architectural analysis, 65 tests, 90%+ coverage. Demonstrates the
+architectural analysis, 66 tests, 90%+ coverage. Demonstrates the
 system’s ability to analyze and document itself—a unique stress test of
 the Two-Layer Architecture’s reflexive capability.</li>
 </ul>
 <p>These projects share no code with each other. They share only the
-infrastructure layer—14 modules, ~150 Python files—which provides
+infrastructure layer—13 modules, ~271 Python files—which provides
 logging, rendering, validation, steganography, and reporting services
 identically to each project. This validates the Two-Layer Architecture’s
 claim that infrastructure and project concerns can be cleanly
@@ -2416,7 +2458,8 @@ class="header-section-number">5.2.2</span> Scaling Metrics</h3>
 <tr>
 <th>Metric</th>
 <th style="text-align: center;"><code>code_project</code></th>
-<th style="text-align: center;"><code>act_inf_metaanalysis</code></th>
+<th
+style="text-align: center;"><code>cognitive_case_diagrams</code></th>
 <th style="text-align: center;"><code>template</code></th>
 </tr>
 </thead>
@@ -2424,43 +2467,43 @@ class="header-section-number">5.2.2</span> Scaling Metrics</h3>
 <tr>
 <td>Source modules</td>
 <td style="text-align: center;">1</td>
-<td style="text-align: center;">12+</td>
-<td style="text-align: center;">5</td>
+<td style="text-align: center;">39</td>
+<td style="text-align: center;">4</td>
 </tr>
 <tr>
 <td>Test files</td>
 <td style="text-align: center;">1</td>
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">4</td>
+<td style="text-align: center;">47</td>
+<td style="text-align: center;">3</td>
 </tr>
 <tr>
 <td>Test count</td>
 <td style="text-align: center;">39</td>
-<td style="text-align: center;">505</td>
-<td style="text-align: center;">65</td>
+<td style="text-align: center;">814</td>
+<td style="text-align: center;">66</td>
 </tr>
 <tr>
 <td>Manuscript chapters</td>
 <td style="text-align: center;">8</td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">18</td>
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">21</td>
 </tr>
 <tr>
 <td>Analysis scripts</td>
-<td style="text-align: center;">1</td>
 <td style="text-align: center;">3</td>
+<td style="text-align: center;">8</td>
 <td style="text-align: center;">2</td>
 </tr>
 <tr>
 <td>Figures (auto-generated)</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">10+</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">27</td>
 <td style="text-align: center;">4</td>
 </tr>
 </tbody>
 </table>
 <p>The infrastructure overhead per project is constant regardless of
-project size: the same 14 modules, the same 9 pipeline stages, the same
+project size: the same 13 modules, the same 8 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.</p>
 <hr />
@@ -2603,10 +2646,10 @@ protocol-aligned tool inventories to navigate unfamiliar codebases. An
 OpenHands-class agent navigating <code>template/</code> reads
 <code>CLAUDE.md</code> for global constraints, scans
 <code>AGENTS.md</code> for module surfaces, and invokes capabilities via
-<code>SKILL.md</code> without hallucinating function signatures. All 12
+<code>SKILL.md</code> without hallucinating function signatures. All 13
 infrastructure modules carry <code>AGENTS.md</code> and
-<code>README.md</code>; the 10 active subpackages additionally carry
-<code>SKILL.md</code>, ensuring no documentation blind spots.</p>
+<code>README.md</code>; all additionally carry <code>SKILL.md</code>,
+ensuring no documentation blind spots.</p>
 <p>This three-tier model is, to our knowledge, novel in the research
 software engineering literature. The scale of the
 investment—approximately 170 documentation files across
@@ -2801,13 +2844,13 @@ Reference</h1>
 <p>This section provides a detailed reference for all 13 infrastructure
 subpackages, documenting their purpose, key classes, public API, and
 integration points within the pipeline. The infrastructure layer
-comprises ~271 Python modules validated by 6,025 tests. Each subpackage
+comprises ~271 Python modules validated by 6,026 tests. Each subpackage
 follows the Documentation Duality standard: every module directory
 contains both an <code>AGENTS.md</code> machine-readable specification
 and a <code>README.md</code> human-readable guide.</p>
-<h2 data-number="6.1" id="infrastructure.core-28-modules"><span
+<h2 data-number="6.1" id="infrastructure.core-71-modules"><span
 class="header-section-number">6.1</span>
-<code>infrastructure.core</code> (28 modules)</h2>
+<code>infrastructure.core</code> (71 modules)</h2>
 <p><strong>Purpose</strong>: Foundation utilities providing the bedrock
 services consumed by all other modules and all projects.</p>
 <p><strong>Key Components</strong>:</p>
@@ -2910,9 +2953,9 @@ extraction from Python source files</td>
 02 to register figures for automated cross-referencing in the
 manuscript. The glossary generator supports the Documentation Duality
 standard by extracting docstrings and function signatures.</p>
-<h2 data-number="6.3" id="infrastructure.llm-30-modules"><span
+<h2 data-number="6.3" id="infrastructure.llm-53-modules"><span
 class="header-section-number">6.3</span> <code>infrastructure.llm</code>
-(30 modules)</h2>
+(53 modules)</h2>
 <p><strong>Purpose</strong>: Local LLM integration for automated
 manuscript review, translation, and literature search.</p>
 <p><strong>Key Components</strong>:</p>
@@ -2954,9 +2997,9 @@ manuscript review, translation, and literature search.</p>
 running Ollama instance. Gracefully degrades when unavailable. The
 literature search subpackage enables programmatic discovery of related
 work during manuscript preparation.</p>
-<h2 data-number="6.4" id="infrastructure.project-2-modules"><span
+<h2 data-number="6.4" id="infrastructure.project-5-modules"><span
 class="header-section-number">6.4</span>
-<code>infrastructure.project</code> (2 modules)</h2>
+<code>infrastructure.project</code> (5 modules)</h2>
 <p><strong>Purpose</strong>: Project discovery and workspace
 management.</p>
 <p><strong>Key Components</strong>:</p>
@@ -2988,9 +3031,9 @@ scanning for <code>manuscript/config.yaml</code></td>
 which projects can be built. The discovery algorithm enforces the
 Standalone Project Paradigm: a directory is a valid project if and only
 if it contains <code>manuscript/config.yaml</code>.</p>
-<h2 data-number="6.5" id="infrastructure.publishing-9-modules"><span
+<h2 data-number="6.5" id="infrastructure.publishing-14-modules"><span
 class="header-section-number">6.5</span>
-<code>infrastructure.publishing</code> (9 modules)</h2>
+<code>infrastructure.publishing</code> (14 modules)</h2>
 <p><strong>Purpose</strong>: Academic publishing metadata and citation
 generation.</p>
 <p><strong>Key Components</strong>:</p>
@@ -3027,9 +3070,9 @@ access and dynamic <code>getattr</code> fallback</td>
 scripts to extract publishable metadata from results. Citation
 generators produce correctly formatted strings from
 <code>config.yaml</code> metadata.</p>
-<h2 data-number="6.6" id="infrastructure.rendering-12-modules"><span
+<h2 data-number="6.6" id="infrastructure.rendering-27-modules"><span
 class="header-section-number">6.6</span>
-<code>infrastructure.rendering</code> (12 modules)</h2>
+<code>infrastructure.rendering</code> (27 modules)</h2>
 <p><strong>Purpose</strong>: Multi-format document rendering (Markdown →
 LaTeX → PDF, HTML reports).</p>
 <p><strong>Key Components</strong>:</p>
@@ -3073,9 +3116,9 @@ LaTeX → PDF, HTML reports).</p>
 <code>output/&lt;project&gt;.pdf</code>. The auxiliary file cleanup
 resolves a known rendering hazard where stale <code>.aux</code> files
 cause “Division by 0” LaTeX errors.</p>
-<h2 data-number="6.7" id="infrastructure.reporting-14-modules"><span
+<h2 data-number="6.7" id="infrastructure.reporting-40-modules"><span
 class="header-section-number">6.7</span>
-<code>infrastructure.reporting</code> (14 modules)</h2>
+<code>infrastructure.reporting</code> (40 modules)</h2>
 <p><strong>Purpose</strong>: Pipeline reporting, test result
 aggregation, and coverage analysis.</p>
 <p><strong>Key Components</strong>:</p>
@@ -3154,9 +3197,9 @@ usage</td>
 analysis scripts during Stage 02 for algorithm validation. The stability
 checker is critical for ensuring that numerical results are reproducible
 across different floating-point environments.</p>
-<h2 data-number="6.9" id="infrastructure.steganography-8-modules"><span
+<h2 data-number="6.9" id="infrastructure.steganography-10-modules"><span
 class="header-section-number">6.9</span>
-<code>infrastructure.steganography</code> (8 modules)</h2>
+<code>infrastructure.steganography</code> (10 modules)</h2>
 <p><strong>Purpose</strong>: Cryptographic watermarking and provenance
 embedding for PDF artifacts.</p>
 <p><strong>Key Components</strong>:</p>
@@ -3200,9 +3243,9 @@ configuration</td>
 after the main pipeline completes. Reads the rendered PDF and produces a
 steganographically watermarked copy with an accompanying
 <code>.hashes.json</code> manifest.</p>
-<h2 data-number="6.10" id="infrastructure.validation-22-modules"><span
+<h2 data-number="6.10" id="infrastructure.validation-35-modules"><span
 class="header-section-number">6.10</span>
-<code>infrastructure.validation</code> (22 modules)</h2>
+<code>infrastructure.validation</code> (35 modules)</h2>
 <p><strong>Purpose</strong>: Quality assurance and integrity
 verification for all pipeline artifacts.</p>
 <p><strong>Key Components</strong>:</p>
@@ -3241,13 +3284,49 @@ directory validation</td>
 </table>
 <p><strong>Integration</strong>: Core of Stage 04. Validates all
 generated artifacts before they are finalized. The validation module is
-the most module-dense package (22 files), reflecting the breadth of
+the most module-dense package (35 files), reflecting the breadth of
 integrity checks required across PDF, Markdown, image, and manifest
 formats.</p>
-<h2 data-number="6.11" id="infrastructure-maturity-summary"><span
-class="header-section-number">6.11</span> Infrastructure Maturity
+<h2 data-number="6.11" id="infrastructure.skills-4-modules"><span
+class="header-section-number">6.11</span>
+<code>infrastructure.skills</code> (4 modules)</h2>
+<p><strong>Purpose</strong>: Programmatic discovery and manifest
+generation for AI-agent skill descriptors.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>discovery.py</code></td>
+<td><code>discover_skills</code> — scans <code>SKILL.md</code> files
+across infrastructure modules and generates a unified skill
+manifest</td>
+</tr>
+<tr>
+<td><code>cli.py</code></td>
+<td>Command-line interface for writing and validating skill
+manifests</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Maintains
+<code>.cursor/skill_manifest.json</code> for IDE-level agent discovery.
+The skill manifest aggregates all <code>SKILL.md</code> frontmatter into
+a single JSON index, enabling editors and AI coding assistants to locate
+module capabilities without traversing the directory tree.</p>
+<h2 data-number="6.12" id="infrastructure-maturity-summary"><span
+class="header-section-number">6.12</span> Infrastructure Maturity
 Summary</h2>
-<p>The twelve-module architecture achieves 100% Tier 1–2 documentation
+<p>The 13-module architecture achieves 100% Tier 1–2 documentation
 coverage (<code>AGENTS.md</code>, <code>README.md</code>) with Tier-3
 <code>SKILL.md</code> skill descriptors across all 10 active
 subpackages, 83%+ aggregate test coverage (exceeding the 60%
@@ -3640,18 +3719,19 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="
 class="header-section-number">8.3</span> Appendix: Repository Directory
 Structure</h2>
 <pre class="text"><code>template/
-├── infrastructure/           # Layer 1: Shared services (~150 .py files)
-│   ├── core/                 # 28 files — logging, config, exceptions
-│   ├── documentation/        # 6 files — figure management, glossary
-│   ├── llm/                  # 30 files — Ollama integration, literature
-│   ├── project/              # 2 files — project discovery
-│   ├── publishing/           # 9 files — citation generation, Zenodo
-│   ├── rendering/            # 12 files — Pandoc + XeLaTeX + reports
-│   ├── reporting/            # 14 files — coverage parsing, reports
-│   ├── scientific/           # 6 files — stability, benchmarking
-│   ├── steganography/        # 8 files — watermarking, hashing
-│   ├── validation/           # 22 files — PDF + Markdown validation
-│   ├── config/               # Configuration
+├── infrastructure/           # Layer 1: Shared services (~271 .py files)
+│   ├── core/                 # Logging, config, exceptions, pipeline
+│   ├── documentation/        # Figure management, glossary
+│   ├── llm/                  # Ollama integration, literature search
+│   ├── project/              # Project discovery, workspace management
+│   ├── publishing/           # Citation generation, Zenodo
+│   ├── rendering/            # Pandoc + XeLaTeX + reports
+│   ├── reporting/            # Coverage parsing, executive reports
+│   ├── scientific/           # Stability, benchmarking
+│   ├── skills/               # Skill manifest discovery
+│   ├── steganography/        # Watermarking, hashing
+│   ├── validation/           # PDF + Markdown validation
+│   ├── config/               # Configuration templates
 │   └── docker/               # Containerization
 ├── scripts/                  # Pipeline orchestration
 │   ├── 00_setup_environment.py
@@ -3665,11 +3745,11 @@ Structure</h2>
 │   └── execute_pipeline.py
 ├── projects/                 # Layer 2: Research workspaces
 │   ├── code_project/         # Gradient descent exemplar
-│   ├── act_inf_metaanalysis/ # Meta-analysis pipeline
-│   └── biology_textbook/     # Domain content exemplar (when populated)
-├── projects_in_progress/     # Work-in-progress (template, etc.)
-├── tests/                    # Infrastructure test suite (160+ files, ~3,050 tests)
-├── docs/                     # Repository documentation (90+ files, 12 subdirectories)
+│   ├── cognitive_case_diagrams/ # Compositional case modeling
+│   └── template/             # Self-referential meta-analysis
+├── projects_in_progress/     # Work-in-progress (not pipeline-discovered)
+├── tests/                    # Infrastructure test suite (346+ files, ~6,026 tests)
+├── docs/                     # Repository documentation (160+ files, 15 subdirectories)
 ├── run.sh                    # Interactive TUI orchestrator
 ├── secure_run.sh             # Steganographic pipeline wrapper
 ├── AGENTS.md                 # System-level AI agent documentation
@@ -3712,20 +3792,21 @@ Summary</h2>
 <td style="text-align: center;">~20</td>
 </tr>
 <tr>
-<td><code>act_inf_metaanalysis</code></td>
+<td><code>cognitive_case_diagrams</code></td>
 <td>Active</td>
-<td>Active inference meta-analysis</td>
-<td style="text-align: center;">Multiple modules</td>
-<td style="text-align: center;">505</td>
+<td>Compositional case modeling</td>
+<td style="text-align: center;">39 modules</td>
+<td style="text-align: center;">814</td>
 <td style="text-align: center;">90%+</td>
-<td style="text-align: center;">~80</td>
+<td style="text-align: center;">~60</td>
 </tr>
 <tr>
 <td><code>template</code></td>
-<td>In-progress</td>
+<td>Active</td>
 <td>Meta-architecture</td>
-<td style="text-align: center;"><code>introspection.py</code></td>
-<td style="text-align: center;">65</td>
+<td style="text-align: center;"><code>introspection.py</code>,
+<code>metrics.py</code></td>
+<td style="text-align: center;">66</td>
 <td style="text-align: center;">90%+</td>
 <td style="text-align: center;">~30</td>
 </tr>
@@ -3791,7 +3872,7 @@ infrastructure module</td>
 <code>architecture/</code> (system design), <code>usage/</code> (content
 authoring), <code>operational/</code> (build, config, logging,
 troubleshooting), <code>reference/</code> (API, FAQ, glossary),
-<code>modules/</code> (12 infrastructure modules),
+<code>modules/</code> (13 infrastructure modules),
 <code>development/</code> (contributing, testing),
 <code>best-practices/</code> (version control, migration),
 <code>prompts/</code> (9 AI prompt templates), <code>security/</code>

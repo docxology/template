@@ -159,9 +159,9 @@ discover_markdown_modules() {
 Glossary generation simplified:
 
 ```bash
-# Run glossary generation (writes directly to manuscript/98_symbols_glossary.md)
-# This is now integrated into the build pipeline (Stage 03) or can be run manually:
-# uv run python -m infrastructure.documentation.generate_glossary_cli
+# Run glossary generation (example: code_project)
+uv run python infrastructure/documentation/generate_glossary_cli.py \
+  projects/code_project/src/ projects/code_project/manuscript/98_symbols_glossary.md
 ```
 
 **Effect:** Generates glossary directly in `manuscript/98_symbols_glossary.md` - no intermediate files or copy steps needed.
@@ -209,8 +209,7 @@ Glossary generation simplified:
 **Current status:**
 
 ```markdown
-**Note:** This glossary is auto-generated from src/ by the infrastructure documentation module (integrated into build pipeline Stage 03 or run manually via `uv run python -m infrastructure.documentation.generate_glossary_cli`)
-and written directly to manuscript/98_symbols_glossary.md during the build process.
+**Note:** This glossary is auto-generated from `src/` via `infrastructure/documentation/generate_glossary_cli.py` (see [`docs/modules/modules-guide.md`](../modules/modules-guide.md)); run manually with explicit `src/` and glossary markdown paths per project.
 ```
 
 ---
@@ -296,7 +295,7 @@ The `markdown/` directory was a temporary staging area that is no longer needed.
 **Current workflow:**
 
 ```
-generate_glossary.py → manuscript/98_symbols_glossary.md
+generate_glossary_cli.py → manuscript/98_symbols_glossary.md
                            ↓ (include)
                        Combined PDF
 ```

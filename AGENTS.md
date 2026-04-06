@@ -9,7 +9,7 @@ This document provides documentation for the Research Project Template system, e
 **Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 **DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
 
-The reproducibility crisis in computational research is fundamentally structural: research artifacts are scattered across disconnected tools—LaTeX editors, Jupyter notebooks, ad-hoc shell scripts—with no enforced mechanism to keep code, data, and manuscript synchronized. `template/` applies the principle of Infrastructure as Code to the research lifecycle, making the manuscript, test suite, and provenance chain version-controlled, deterministically buildable, and independently verifiable. It is built on a Two-Layer Architecture that separates 13 reusable infrastructure subpackages (~150 Python modules, validated by ~3,083 tests) from self-contained project workspaces, connected by a ten-stage DAG-based build pipeline. A Documentation Duality standard equips every directory with both human-readable `README.md` and machine-readable `AGENTS.md` files, while each infrastructure module additionally carries a `SKILL.md`—a structured skill descriptor aligned with the Model Context Protocol—enabling AI agents to locate and invoke module capabilities without hallucinating API signatures. Scalability is demonstrated across three heterogeneous projects achieving 100% pipeline success with zero mock violations. `template/` is open source under the Apache 2.0 License at `github.com/docxology/template`.
+The reproducibility crisis in computational research is fundamentally structural: research artifacts are scattered across disconnected tools—LaTeX editors, Jupyter notebooks, ad-hoc shell scripts—with no enforced mechanism to keep code, data, and manuscript synchronized. `template/` applies the principle of Infrastructure as Code to the research lifecycle, making the manuscript, test suite, and provenance chain version-controlled, deterministically buildable, and independently verifiable. It is built on a Two-Layer Architecture that separates 13 reusable infrastructure subpackages (~271 Python modules, validated by ~6,026 tests) from self-contained project workspaces, connected by a ten-stage DAG-based build pipeline. A Documentation Duality standard equips every directory with both human-readable `README.md` and machine-readable `AGENTS.md` files, while each infrastructure module additionally carries a `SKILL.md`—a structured skill descriptor aligned with the Model Context Protocol—enabling AI agents to locate and invoke module capabilities without hallucinating API signatures. Scalability is demonstrated across three heterogeneous projects achieving 100% pipeline success with zero mock violations. `template/` is open source under the Apache 2.0 License at `github.com/docxology/template`.
 
 ## 📋 Table of Contents
 
@@ -86,13 +86,14 @@ The template now supports **multiple independent projects** within a single repo
 - Interactive project selection menu
 - Backward compatibility with single-project workflows
 
-**Active Projects** (under `projects/` today; authoritative list from `discover_projects()`):
+**Active Projects** (under `projects/`; authoritative slugs only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)):
 
-- `projects/code_project/` — Optimization research exemplar (numerical methods and convergence)
-- `projects/blake_bimetalism/` — 18-part manuscript synthesizing Blakean poetics with esoteric finance
+- `projects/code_project/` — Optimization research exemplar (numerical methods and convergence); default for concrete paths in docs
+- `projects/cognitive_case_diagrams/` — *Compositional Approaches to Linguistic Case for Cognitive Modeling* (case / diagrams / categorial grammar; see project `manuscript/config.yaml`)
 - `projects/template/` — Meta-documentation and template metrics
+- `projects/fep_lean/` — FEP / Active Inference Lean catalogue (OpenGauss `gauss` CLI, Hermes via OpenRouter, SQLite sessions)
 
-**Note:** Additional exemplars (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`) live under `projects_archive/` until moved back into `projects/`. Projects under active development (e.g. `fep_lean`, `cognitive_case_diagrams`, `aii-org`) live under `projects_in_progress/`. Neither archived nor in-progress projects are discovered or executed by the pipeline.
+**Note:** Additional exemplars (e.g. `blake_bimetalism`, `traditional_newspaper`, `area_handbook`, `density_bioscales`) live under [`projects_archive/`](projects_archive/) until moved back into `projects/`. Work-in-progress trees (e.g. `aii-org`) live under [`projects_in_progress/`](projects_in_progress/). Neither archived nor in-progress projects are discovered or executed by the pipeline until promoted to `projects/`.
 
 ## 📂 Project Organization: Active vs Archived
 
@@ -130,7 +131,7 @@ An optional intermediate staging area for projects that are under active develop
 - **NOT executed** by any pipeline scripts
 - Useful for drafting new project scaffolding before promoting to `projects/`
 
-**Current projects in progress:** `act_inf_metaanalysis`, `active_inference`, `aii-org`, `biology_textbook`, `cognitive_case_diagrams`, `ento_linguistics`, `fep_lean` (see `projects_in_progress/`; not executed by `./run.sh` until promoted to `projects/`)
+**Current projects in progress:** `act_inf_metaanalysis`, `active_inference`, `aii-org`, `biology_textbook`, `ento_linguistics` (see `projects_in_progress/`; not executed by `./run.sh` until promoted to `projects/`)
 
 **To promote:** Move `projects_in_progress/{name}/` → `projects/{name}/`
 
@@ -150,7 +151,7 @@ template/                           # Generic template repository
 │   ├── docker/                     # Docker configuration
 │   │   ├── Dockerfile
 │   │   └── docker-compose.yml
-│   └── {core,documentation,...}/   # 13 subpackages (~150 Python modules)
+│   └── {core,documentation,...}/   # 13 subpackages (~271 Python modules)
 ├── scripts/                        # Entry point orchestrators (00–07)
 │   ├── AGENTS.md
 │   ├── README.md
@@ -168,7 +169,8 @@ template/                           # Generic template repository
 │   │   ├── manuscript/             # Research manuscript markdown
 │   │   ├── output/                 # Working outputs (generated during pipeline)
 │   │   └── pyproject.toml
-│   ├── blake_bimetalism/           # 18-part Blakean poetics manuscript
+│   ├── cognitive_case_diagrams/    # Compositional case modeling manuscript (config.yaml title)
+│   ├── fep_lean/                    # FEP / Active Inference Lean catalogue (OpenGauss + Hermes)
 │   └── template/                   # Meta-documentation project
 ├── projects_in_progress/           # Staging area (not executed)
 ├── projects_archive/               # Retired projects (preserved, not executed)
@@ -194,16 +196,17 @@ Each directory contains documentation for easy navigation:
 | Directory | AGENTS.md | README.md | Purpose |
 | --------- | --------- | --------- | ------- |
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
-| [`projects/blake_bimetalism/`](projects/blake_bimetalism/) | [AGENTS.md](projects/blake_bimetalism/AGENTS.md) | [README.md](projects/blake_bimetalism/README.md) | 18-part manuscript synthesizing Blakean poetics |
+| [`projects/cognitive_case_diagrams/`](projects/cognitive_case_diagrams/) | [AGENTS.md](projects/cognitive_case_diagrams/AGENTS.md) | [README.md](projects/cognitive_case_diagrams/README.md) | *Compositional Approaches to Linguistic Case for Cognitive Modeling* |
 | [`projects/template/`](projects/template/) | [AGENTS.md](projects/template/AGENTS.md) | [README.md](projects/template/README.md) | Template meta-documentation |
+| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | FEP / Active Inference Lean catalogue; math-inc `gauss` CLI + Hermes |
 
 **In-progress projects** (under `projects_in_progress/`, not executed by pipeline):
 
 | Directory | Purpose |
 | --------- | ------- |
-| `projects_in_progress/fep_lean/` | FEP / Active Inference Lean catalogue; optional `gauss` CLI |
 | `projects_in_progress/aii-org/` | Active Inference Institute organisational project |
-| `projects_in_progress/cognitive_case_diagrams/` | Cognitive case diagrams research |
+
+Archived exemplars (e.g. [`projects_archive/blake_bimetalism/`](projects_archive/blake_bimetalism/)) are preserved under [`projects_archive/`](projects_archive/).
 
 See [`projects/README.md`](projects/README.md) for narrative descriptions. Archived exemplars (e.g. [`projects_archive/traditional_newspaper/`](projects_archive/traditional_newspaper/)) are under [`projects_archive/`](projects_archive/) (not executed until moved into `projects/`). Regenerate [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) after changing `projects/` layout (`uv run python scripts/generate_active_projects_doc.py`).
 

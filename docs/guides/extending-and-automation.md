@@ -314,11 +314,41 @@ if __name__ == '__main__':
     main()
 ```
 
+**Note**: The template ships with a production CI configuration at [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) with 8 jobs: lint, verify-no-mocks, test-infra (matrix), test-project (matrix), validate manuscripts, security scan, and performance check. Study it as a reference for your own CI setup.
+
 ---
 
 ## Level 12: Research Workflow Integration
 
 **Goal**: Integrate with research tools and workflows
+
+### LLM-Assisted Review
+
+Use local LLMs for automated manuscript review and translation:
+
+```bash
+# Ensure Ollama is running with a model
+ollama serve && ollama pull gemma3:4b
+
+# Run pipeline with LLM review
+./run.sh --pipeline  # Stage 06 generates reviews automatically
+```
+
+See the [LLM Integration Guide](llm-integration-guide.md) for programmatic usage.
+
+### Publishing and DOI
+
+Generate citations, mint DOIs, and publish to Zenodo:
+
+```python
+from infrastructure.publishing import generate_citation_bibtex, extract_publication_metadata
+from pathlib import Path
+
+metadata = extract_publication_metadata(Path("projects/code_project/manuscript/config.yaml"))
+print(generate_citation_bibtex(metadata))
+```
+
+See the [Publishing Guide](publishing-guide.md) for the full workflow.
 
 ### Literature Review Integration
 

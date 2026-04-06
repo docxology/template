@@ -14,9 +14,13 @@ Optimization study with figures, dashboard, and full manuscript (~96% coverage, 
 
 Self-referential manuscript and metrics for the repository (~93% coverage, 66 tests). See [template/README.md](template/README.md) and [template/AGENTS.md](template/AGENTS.md).
 
-### **blake_bimetalism** — Blake / monetary history manuscript
+### **cognitive_case_diagrams** — case diagrams / categorial grammar
 
-18-chapter scholarly manuscript with programmatic figures (~96% coverage, 20 tests). See [blake_bimetalism/README.md](blake_bimetalism/README.md) and [blake_bimetalism/AGENTS.md](blake_bimetalism/AGENTS.md).
+Manuscript and code for cognitive case diagrams; large data-only test suite. See [cognitive_case_diagrams/README.md](cognitive_case_diagrams/README.md) and [cognitive_case_diagrams/AGENTS.md](cognitive_case_diagrams/AGENTS.md).
+
+### **fep_lean** — FEP / Lean catalogue
+
+Fifty-topic `config/topics.yaml`, Hermes (OpenRouter), math-inc [OpenGauss](https://github.com/math-inc/OpenGauss) `gauss` CLI checks, and `lake env lean` verification. See [fep_lean/README.md](fep_lean/README.md) and [fep_lean/AGENTS.md](fep_lean/AGENTS.md).
 
 The authoritative list of names under `projects/` is [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (from `discover_projects()`).
 
@@ -24,17 +28,16 @@ The authoritative list of names under `projects/` is [`docs/_generated/active_pr
 
 These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready:
 
-- **fep_lean** — FEP / Lean catalogue (`config/topics.yaml`), optional [OpenGauss](https://github.com/math-inc/OpenGauss) `gauss doctor` checks
 - **act_inf_metaanalysis** — Active Inference meta-analysis
 - **active_inference** — Active Inference project
 - **biology_textbook** — biology textbook project
-- **cognitive_case_diagrams** — diagram / categorical linguistics
 - **ento_linguistics** — entomological linguistics
 
 ### Archived exemplars (not in `projects/`)
 
 These are kept under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them:
 
+- **blake_bimetalism** — Blake / monetary history manuscript; see [`projects_archive/blake_bimetalism/README.md`](../projects_archive/blake_bimetalism/README.md)
 - **traditional_newspaper** — multi-folio tabloid layout (`geometry` / `multicol`, masthead figure); see [`projects_archive/traditional_newspaper/README.md`](../projects_archive/traditional_newspaper/README.md)
 - **area_handbook** — corpus-driven handbook-style manuscript (was `projects/area_handbook/`)
 - **density_bioscales** — fluids and composite density scenarios
@@ -104,11 +107,12 @@ mv projects_archive/myproject projects/myproject
 
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
-| `code_project/`      | Master numerical exemplar | 39    | ~96%     |
-| `template/`          | Meta-documentation        | 66    | ~93%     |
-| `blake_bimetalism/`  | Long-form manuscript      | 20    | ~96%     |
+| `code_project/`               | Master numerical exemplar      | 39    | ~96%     |
+| `template/`                   | Meta-documentation             | 66    | ~93%     |
+| `cognitive_case_diagrams/`    | Case diagrams / grammar        | large | ≥90% `src/` |
+| `fep_lean/`                   | FEP / Lean catalogue           | ~180  | ≥89% `src/` |
 
-**In-progress projects** live in `projects_in_progress/` (e.g. `fep_lean`, `act_inf_metaanalysis`, `cognitive_case_diagrams`).
+**In-progress projects** live in `projects_in_progress/` (e.g. `act_inf_metaanalysis`).
 **Archived projects** live in `projects_archive/` (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `medical_ai`, `cognitive_integrity`, `special_number_proximity`).
 
 ```mermaid

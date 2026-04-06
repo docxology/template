@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-04-03T08:40:57.099533",
+  "timestamp": "2026-04-05T19:02:25.963124",
   "infrastructure": {},
   "project": {
     "passed": 39,
     "failed": 0,
     "skipped": 0,
     "total": 39,
-    "warnings": 6,
+    "warnings": 14,
     "exit_code": 0,
     "discovery_count": 39,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 2.24,
-      "collection": 2.24,
-      "execution": 2.24
+      "setup": 2.73,
+      "collection": 2.73,
+      "execution": 2.73
     },
     "test_categories": {},
     "coverage_percent": 96.3963963963964,

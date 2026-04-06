@@ -1,6 +1,6 @@
-# 🧠 PAI.md — Personal AI Infrastructure Context
+# PAI.md — Personal AI Infrastructure Context
 
-## 🆔 Identity
+## Identity
 
 - **System**: Research Project Template
 - **Role**: Standardized Research Execution Environment
@@ -10,7 +10,7 @@
 
 ---
 
-## 📍 Purpose
+## Purpose
 
 This repository is the **canonical template** for all research projects in the Personal AI
 Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly environment for:
@@ -24,7 +24,7 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 template/
@@ -50,14 +50,14 @@ template/
 ├── projects_archive/      # Archived projects (not executed by default)
 ├── projects_in_progress/ # WIP (not discovered until moved under projects/)
 ├── tests/                 # Infrastructure tests
-├── CLOUD_DEPLOY.md        # ☁️ Headless cloud server guide
+├── CLOUD_DEPLOY.md        # Headless cloud server guide
 ├── infrastructure/docker/Dockerfile             # Container specification
 └── infrastructure/docker/docker-compose.yml     # Multi-service orchestration
 ```
 
 ---
 
-## 🛠️ Usage for Agents
+## Usage for Agents
 
 ### Discover
 
@@ -73,7 +73,7 @@ projects = discover_projects(repo_root)
 ./run.sh --pipeline
 
 # Core pipeline (no LLM stages)
-uv run scripts/execute_pipeline.py --project code_project --core-only
+uv run python scripts/execute_pipeline.py --project code_project --core-only
 
 # Specific project
 ./run.sh --project code_project --pipeline
@@ -86,7 +86,7 @@ uv run scripts/execute_pipeline.py --project code_project --core-only
 
 ```bash
 # Always run tests before changes
-uv run scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py --project code_project
 
 # Validate markdown (exemplar path)
 uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
@@ -102,7 +102,7 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -115,7 +115,7 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 
 ---
 
-## 🔗 Architecture Linkage
+## Architecture Linkage
 
 | Layer | Location | Purpose |
 |-------|----------|---------|
@@ -126,7 +126,7 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 
 ---
 
-## ⚠️ Constraints
+## Constraints
 
 - **No Legacy** — Legacy methods are actively removed.
 - **Real Tests** — No mocks allowed. Verified by `scripts/verify_no_mocks.py`.
@@ -137,10 +137,10 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 
 ---
 
-## 📚 Key References
+## Key References
 
 - [`AGENTS.md`](AGENTS.md) — Full system documentation
-- [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) — Headless cloud deployment guide ☁️
+- [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) — Headless cloud deployment guide
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Pipeline orchestration reference
 - [`docs/documentation-index.md`](documentation-index.md) — Full docs hub
 - [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification

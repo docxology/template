@@ -419,5 +419,5 @@ For issues or questions:
 ## See Also
 
 - [tests/AGENTS.md](../../../tests/AGENTS.md) - Test suite documentation
-- [tests/infrastructure/AGENTS.md](../../../infrastructure/AGENTS.md) - Infrastructure test details
+- [tests/infra_tests/AGENTS.md](../../../tests/infra_tests/AGENTS.md) - Infrastructure test suite layout
 - [AGENTS.md](../AGENTS.md) - System documentation

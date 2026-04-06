@@ -201,10 +201,10 @@ tests and LLM review to isolate project-level performance.</p>
 <td>90%+</td>
 </tr>
 <tr>
-<td><code>act_inf_metaanalysis</code></td>
+<td><code>cognitive_case_diagrams</code></td>
 <td>7</td>
 <td>~60s</td>
-<td>505/505</td>
+<td>814/814</td>
 <td>90%+</td>
 </tr>
 <tr>
@@ -223,11 +223,11 @@ project</strong>: ~42s</p>
 scripts use fixed random seeds. Figures are representative; actual
 duration scales with system load, test suite size, and manuscript
 complexity.</em></p>
-<p>The <code>act_inf_metaanalysis</code> project, with its 505 tests and
-programmatically generated figures, represents the most computationally
-intensive exemplar—yet completes in under one minute, confirming that
-the Zero-Mock policy’s real-method overhead remains tractable at this
-scale.</p>
+<p>The <code>cognitive_case_diagrams</code> project, with its 814 tests
+and programmatically generated figures, represents the most
+computationally intensive exemplar—yet completes in under one minute,
+confirming that the Zero-Mock policy’s real-method overhead remains
+tractable at this scale.</p>
 <h2 id="infrastructure-test-suite">Infrastructure Test Suite</h2>
 <p>The infrastructure layer is validated by a separate test suite of
 significant scale:</p>
@@ -245,7 +245,7 @@ significant scale:</p>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~6,025</td>
+<td>~6,026</td>
 </tr>
 <tr>
 <td>Infrastructure coverage threshold</td>
@@ -265,92 +265,128 @@ significant scale:</p>
 </tr>
 </tbody>
 </table>
-<p>This test suite exercises all twelve infrastructure modules,
-including the rendering pipeline (Pandoc/XeLaTeX integration),
-steganographic operations (alpha-channel overlay, QR injection), and LLM
-client interactions (real HTTP calls to Ollama).</p>
+<p>This test suite exercises all 13 infrastructure modules, including
+the rendering pipeline (Pandoc/XeLaTeX integration), steganographic
+operations (alpha-channel overlay, QR injection), and LLM client
+interactions (real HTTP calls to Ollama).</p>
 <h2 id="infrastructure-module-inventory">Infrastructure Module
 Inventory</h2>
 <p>The introspection module (<code>template.introspection</code>)
 programmatically enumerates the infrastructure layer, confirming the
 following module distribution:</p>
 <table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 20%" />
+</colgroup>
 <thead>
 <tr>
 <th>Module</th>
 <th style="text-align: center;">Python Files</th>
+<th style="text-align: center;">Has AGENTS.md</th>
+<th style="text-align: center;">Has README.md</th>
 <th>Key Exports</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td><code>config</code></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Configuration schemas</td>
+</tr>
+<tr>
 <td><code>core</code></td>
-<td style="text-align: center;">28</td>
+<td style="text-align: center;">71</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
 <code>TemplateError</code></td>
 </tr>
 <tr>
+<td><code>docker</code></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>Containerisation</td>
+</tr>
+<tr>
 <td><code>documentation</code></td>
 <td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td><code>FigureManager</code>, <code>generate_glossary</code></td>
 </tr>
 <tr>
 <td><code>llm</code></td>
-<td style="text-align: center;">30</td>
+<td style="text-align: center;">53</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>LLM review, literature search, translation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">9</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>Citation generation (APA, BibTeX, MLA), Zenodo</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">12</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>PDF rendering, Pandoc filters, HTML reports</td>
 </tr>
 <tr>
 <td><code>reporting</code></td>
-<td style="text-align: center;">14</td>
+<td style="text-align: center;">40</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>Coverage parsing, executive reports</td>
 </tr>
 <tr>
 <td><code>scientific</code></td>
 <td style="text-align: center;">6</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td><code>check_numerical_stability</code>,
 <code>benchmark_function</code></td>
 </tr>
 <tr>
+<td><code>skills</code></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td>—</td>
+</tr>
+<tr>
 <td><code>steganography</code></td>
-<td style="text-align: center;">8</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>Metadata injection, QR overlays, hashing</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">22</td>
+<td style="text-align: center;">35</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 <td>PDF validation, Markdown checking, CLI</td>
-</tr>
-<tr>
-<td>(+ config, docker)</td>
-<td style="text-align: center;">—</td>
-<td>Configuration, containerization</td>
-</tr>
-<tr>
-<td><strong>Total</strong></td>
-<td style="text-align: center;"><strong>~271</strong></td>
-<td></td>
 </tr>
 </tbody>
 </table>
-<p><em>The ~271 figure includes approximately 13 additional modules in
-the <code>config/</code> and <code>docker/</code> subpackages
-(configuration schemas and containerization utilities) not enumerated
-individually above.</em></p>
 <p>All 13 modules have 100% documentation coverage at Tiers 1–2
 (<code>AGENTS.md</code>, <code>README.md</code>); the 10 active
 subpackages additionally carry <code>SKILL.md</code> for Tier-3 agentic
@@ -403,7 +439,7 @@ modules:</p>
 </table>
 <p>This four-layer coverage creates 13 fully described, MCP-mappable
 tool endpoints that a sufficiently capable agent could invoke without
-any source-code access. The aggregate documentation footprint (153+
+any source-code access. The aggregate documentation footprint (160+
 files) represents a deliberate engineering investment: each
 documentation file is not commentary but a specification, enforcing
 architectural constraints through structured natural language <span
@@ -514,7 +550,7 @@ three project PDFs:</p>
 <td style="text-align: center;">&lt; 1.5s</td>
 </tr>
 <tr>
-<td><code>act_inf_metaanalysis</code></td>
+<td><code>cognitive_case_diagrams</code></td>
 <td style="text-align: center;">~80</td>
 <td style="text-align: center;">&lt; 0.3s</td>
 <td style="text-align: center;">&lt; 0.05s</td>
@@ -560,7 +596,7 @@ Assurance</a> section. In this way, the manuscript does not merely
 <p><img src="figures/architecture_overview.png"
 alt="Two-Layer Architecture Overview" /> <strong>Figure 1</strong>:
 Two-Layer Architecture separating the generic, reusable infrastructure
-layer (12 subpackages, upper panel) from domain-specific project
+layer (13 subpackages, upper panel) from domain-specific project
 workspaces (lower panel), connected by the ten-stage DAG pipeline. Each
 module box displays its Python file count and a documentation badge (A =
 <code>AGENTS.md</code>, R = <code>README.md</code>, S =
@@ -603,10 +639,10 @@ absent. The <code>template/</code> column is outlined in blue.
 Capabilities are grouped into <em>Core Pipeline</em> (rows 1–2),
 <em>Quality &amp; Security</em> (rows 3–8), and <em>Ecosystem</em> (rows
 9–14). <code>template/</code> is, to our knowledge, the only open-source
-system that integrates all twelve unique capabilities (pipeline
-orchestration through zero-mock policy, plus optional containerization)
-within a single cohesive architecture. Snakemake, Nextflow, and CWL
-provide superior distributed execution support not yet in
+system that integrates all fourteen capabilities (pipeline orchestration
+through zero-mock policy, plus optional containerization) within a
+single cohesive architecture. Snakemake, Nextflow, and CWL provide
+superior distributed execution support not yet in
 <code>template/</code>.</p>
 <p>¹ Nextflow 25.04.0: data-lineage provenance tracking at build level,
 not document level. ² DVC: content-addressed artifact versioning via

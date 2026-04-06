@@ -31,11 +31,11 @@ manager = RenderManager()
 # Render all formats from markdown
 outputs = manager.render_all(Path("manuscript/main.md"))
 
-# Outputs include:
-# - PDF: output/pdf/main.pdf
-# - Slides: output/slides/main_beamer.pdf, output/slides/main_revealjs.html
-# - Web: output/web/main.html
-# - Poster: output/posters/main_poster.pdf
+# Outputs are written under the project output tree, e.g.:
+# - PDF: projects/{name}/output/pdf/
+# - Slides: projects/{name}/output/slides/
+# - Web: projects/{name}/output/web/
+# Final copy stage may mirror to output/{name}/ (see RUN_GUIDE)
 ```
 
 ### Render Specific Format

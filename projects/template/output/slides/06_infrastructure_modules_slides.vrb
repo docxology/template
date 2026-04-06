@@ -3,13 +3,13 @@
 This section provides a detailed reference for all 13 infrastructure
 subpackages, documenting their purpose, key classes, public API, and
 integration points within the pipeline. The infrastructure layer
-comprises \textasciitilde271 Python modules validated by 6,025 tests.
+comprises \textasciitilde271 Python modules validated by 6,026 tests.
 Each subpackage follows the Documentation Duality standard: every module
 directory contains both an \texttt{AGENTS.md} machine-readable
 specification and a \texttt{README.md} human-readable guide.
 
-\begin{block}{\texttt{infrastructure.core} (28 modules)}
-\protect\phantomsection\label{infrastructure.core-28-modules}
+\begin{block}{\texttt{infrastructure.core} (71 modules)}
+\protect\phantomsection\label{infrastructure.core-71-modules}
 \textbf{Purpose}: Foundation utilities providing the bedrock services
 consumed by all other modules and all projects.
 
@@ -93,8 +93,8 @@ glossary generator supports the Documentation Duality standard by
 extracting docstrings and function signatures.
 \end{block}
 
-\begin{block}{\texttt{infrastructure.llm} (30 modules)}
-\protect\phantomsection\label{infrastructure.llm-30-modules}
+\begin{block}{\texttt{infrastructure.llm} (53 modules)}
+\protect\phantomsection\label{infrastructure.llm-53-modules}
 \textbf{Purpose}: Local LLM integration for automated manuscript review,
 translation, and literature search.
 
@@ -131,8 +131,8 @@ subpackage enables programmatic discovery of related work during
 manuscript preparation.
 \end{block}
 
-\begin{block}{\texttt{infrastructure.project} (2 modules)}
-\protect\phantomsection\label{infrastructure.project-2-modules}
+\begin{block}{\texttt{infrastructure.project} (5 modules)}
+\protect\phantomsection\label{infrastructure.project-5-modules}
 \textbf{Purpose}: Project discovery and workspace management.
 
 \textbf{Key Components}:
@@ -164,8 +164,8 @@ valid project if and only if it contains
 \texttt{manuscript/config.yaml}.
 \end{block}
 
-\begin{block}{\texttt{infrastructure.publishing} (9 modules)}
-\protect\phantomsection\label{infrastructure.publishing-9-modules}
+\begin{block}{\texttt{infrastructure.publishing} (14 modules)}
+\protect\phantomsection\label{infrastructure.publishing-14-modules}
 \textbf{Purpose}: Academic publishing metadata and citation generation.
 
 \textbf{Key Components}:
@@ -196,8 +196,8 @@ extract publishable metadata from results. Citation generators produce
 correctly formatted strings from \texttt{config.yaml} metadata.
 \end{block}
 
-\begin{block}{\texttt{infrastructure.rendering} (12 modules)}
-\protect\phantomsection\label{infrastructure.rendering-12-modules}
+\begin{block}{\texttt{infrastructure.rendering} (27 modules)}
+\protect\phantomsection\label{infrastructure.rendering-27-modules}
 \textbf{Purpose}: Multi-format document rendering (Markdown → LaTeX →
 PDF, HTML reports).
 
@@ -234,8 +234,8 @@ cleanup resolves a known rendering hazard where stale \texttt{.aux}
 files cause ``Division by 0'' LaTeX errors.
 \end{block}
 
-\begin{block}{\texttt{infrastructure.reporting} (14 modules)}
-\protect\phantomsection\label{infrastructure.reporting-14-modules}
+\begin{block}{\texttt{infrastructure.reporting} (40 modules)}
+\protect\phantomsection\label{infrastructure.reporting-40-modules}
 \textbf{Purpose}: Pipeline reporting, test result aggregation, and
 coverage analysis.
 
@@ -307,8 +307,8 @@ critical for ensuring that numerical results are reproducible across
 different floating-point environments.
 \end{block}
 
-\begin{block}{\texttt{infrastructure.steganography} (8 modules)}
-\protect\phantomsection\label{infrastructure.steganography-8-modules}
+\begin{block}{\texttt{infrastructure.steganography} (10 modules)}
+\protect\phantomsection\label{infrastructure.steganography-10-modules}
 \textbf{Purpose}: Cryptographic watermarking and provenance embedding
 for PDF artifacts.
 
@@ -345,8 +345,8 @@ steganographically watermarked copy with an accompanying
 \texttt{.hashes.json} manifest.
 \end{block}
 
-\begin{block}{\texttt{infrastructure.validation} (22 modules)}
-\protect\phantomsection\label{infrastructure.validation-22-modules}
+\begin{block}{\texttt{infrastructure.validation} (35 modules)}
+\protect\phantomsection\label{infrastructure.validation-35-modules}
 \textbf{Purpose}: Quality assurance and integrity verification for all
 pipeline artifacts.
 
@@ -378,13 +378,48 @@ operations \\
 
 \textbf{Integration}: Core of Stage 04. Validates all generated
 artifacts before they are finalized. The validation module is the most
-module-dense package (22 files), reflecting the breadth of integrity
+module-dense package (35 files), reflecting the breadth of integrity
 checks required across PDF, Markdown, image, and manifest formats.
+\end{block}
+
+\begin{block}{\texttt{infrastructure.skills} (4 modules)}
+\protect\phantomsection\label{infrastructure.skills-4-modules}
+\textbf{Purpose}: Programmatic discovery and manifest generation for
+AI-agent skill descriptors.
+
+\textbf{Key Components}:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Component
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Purpose
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\texttt{discovery.py} & \texttt{discover\_skills} --- scans
+\texttt{SKILL.md} files across infrastructure modules and generates a
+unified skill manifest \\
+\texttt{cli.py} & Command-line interface for writing and validating
+skill manifests \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+\textbf{Integration}: Maintains \texttt{.cursor/skill\_manifest.json}
+for IDE-level agent discovery. The skill manifest aggregates all
+\texttt{SKILL.md} frontmatter into a single JSON index, enabling editors
+and AI coding assistants to locate module capabilities without
+traversing the directory tree.
 \end{block}
 
 \begin{block}{Infrastructure Maturity Summary}
 \protect\phantomsection\label{infrastructure-maturity-summary}
-The twelve-module architecture achieves 100\% Tier 1--2 documentation
+The 13-module architecture achieves 100\% Tier 1--2 documentation
 coverage (\texttt{AGENTS.md}, \texttt{README.md}) with Tier-3
 \texttt{SKILL.md} skill descriptors across all 10 active subpackages,
 83\%+ aggregate test coverage (exceeding the 60\% infrastructure

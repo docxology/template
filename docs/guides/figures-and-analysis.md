@@ -613,8 +613,8 @@ uv run python projects/code_project/scripts/statistics_figure.py
 
 # 3. Build specific sections
 echo "Building results section..."
-pandoc manuscript/04_experimental_results.md \
-    -o output/pdf/04_experimental_results.pdf \
+pandoc projects/code_project/manuscript/04_experimental_results.md \
+    -o projects/code_project/output/pdf/04_experimental_results.pdf \
     --pdf-engine=xelatex
 
 echo "Custom build!"
@@ -788,6 +788,33 @@ with Pool() as pool:
 5. ✅ **Set random seeds** - Make results reproducible
 6. ✅ **Save both figures and data** - Enable verification
 7. ✅ **Print output paths** - Build system needs them
+
+### Infrastructure Tools for Figures
+
+The infrastructure layer provides utilities that automate figure management:
+
+```python
+from infrastructure.documentation import FigureManager, FigureMetadata
+
+# Register figures for automatic numbering and cross-referencing
+manager = FigureManager()
+manager.register(FigureMetadata(
+    label="fig:convergence",
+    caption="Gradient descent convergence analysis",
+    path="output/figures/convergence.png",
+))
+```
+
+For performance measurement of your analysis code:
+
+```python
+from infrastructure.scientific import benchmark_function
+
+result = benchmark_function(my_analysis_func, test_inputs=[data1, data2], iterations=50)
+print(f"Average execution time: {result.execution_time:.4f}s")
+```
+
+See the [Documentation Module Guide](../modules/guides/documentation-module.md) and [Scientific Module Guide](../modules/guides/scientific-module.md) for full API details.
 
 ---
 

@@ -19,7 +19,7 @@ Eighteen-file manuscript documenting the `template/` architecture, pipeline, sec
    - `05c_comparison.md` — Comparison to existing tools, FAIR4RS 2024-2026 update
    - `05d_ai_collaboration.md` — AI collaboration model, learning curve, limitations
    - `05e_future_conclusion.md` — 10 future directions and conclusion
-6. **Infrastructure Modules** (`06_infrastructure_modules.md`) — All 12 subpackages with key exports and integration points
+6. **Infrastructure Modules** (`06_infrastructure_modules.md`) — All infrastructure subpackages with key exports and integration points
 7. **Security & Provenance** (`07_security_provenance.md`) — Steganographic layers, threat model, tamper detection, FAIR alignment
 8. **Appendices** (3 files)
    - `08a_pipeline_config.md` — Pipeline reference, configuration schema

@@ -4,11 +4,11 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "1.89",
-      "total_size_bytes": 1986460,
+      "total_size_bytes": 1982107,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
-          "size_mb": "1.65",
+          "size_mb": "1.64",
           "path": "pdf/code_project_combined.pdf"
         },
         {
@@ -65,7 +65,7 @@
       "exists": true,
       "file_count": 72,
       "size_mb": "1.26",
-      "total_size_bytes": 1318866,
+      "total_size_bytes": 1318723,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 7,
-      "size_mb": "1.52",
-      "total_size_bytes": 1592597,
+      "size_mb": "1.51",
+      "total_size_bytes": 1587611,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -152,7 +152,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.01",
-      "total_size_bytes": 8307,
+      "total_size_bytes": 8305,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -196,7 +196,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2451,
+      "total_size_bytes": 2460,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -210,11 +210,11 @@
     }
   },
   "total_files": 112,
-  "total_size_mb": 4.926562309265137,
+  "total_size_mb": 4.9175262451171875,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
-      "size_mb": "1.65",
+      "size_mb": "1.64",
       "category": "pdf",
       "path": "pdf/code_project_combined.pdf"
     },
@@ -275,15 +275,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8944358825683594,
+    "pdf": 1.890284538269043,
     "web": 0.23426055908203125,
-    "slides": 1.2577686309814453,
-    "figures": 1.5188188552856445,
+    "slides": 1.2576322555541992,
+    "figures": 1.514063835144043,
     "data": 0.011018753051757812,
-    "reports": 0.007922172546386719,
+    "reports": 0.007920265197753906,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0023374557495117188
+    "logs": 0.002346038818359375
   },
   "file_counts_by_type": {
     ".md": 4,

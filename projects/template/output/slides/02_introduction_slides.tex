@@ -353,8 +353,8 @@ pipeline-enforced system with version-controlled infrastructure
   \textbf{Ergonomic Modularity}: A Two-Layer Architecture cleanly
   separates globally shared infrastructure (logging, rendering,
   validation, steganography) from project-specific logic (manuscripts,
-  scripts, data). 12 infrastructure subpackages comprising
-  \textasciitilde150 Python modules provide reusable services; projects
+  scripts, data). 13 infrastructure subpackages comprising
+  \textasciitilde271 Python modules provide reusable services; projects
   consume them without modification.
 \item
   \textbf{Execution Integrity}: A Zero-Mock testing policy where
@@ -362,7 +362,7 @@ pipeline-enforced system with version-controlled infrastructure
   tests must achieve 60\% coverage; project tests must achieve 90\%. All
   tests use real filesystem operations, real subprocess calls, and real
   network connections---no mock objects, no fake services, no synthetic
-  test doubles. \textasciitilde3,083 infrastructure tests and 708+
+  test doubles. \textasciitilde6,026 infrastructure tests and 919+
   project tests enforce this standard.
 \item
   \textbf{Automated Provenance}: Steganographic watermarking and
@@ -437,7 +437,7 @@ version-controlled, pipeline-enforced repository. Our contributions are:
 \item
   An empirical evaluation of the system across three heterogeneous
   exemplar projects (\texttt{code\_project},
-  \texttt{act\_inf\_metaanalysis}, \texttt{template}), demonstrating
+  \texttt{cognitive\_case\_diagrams}, \texttt{template}), demonstrating
   scalability, coverage metrics, and pipeline timing.
 \item
   A security analysis of the steganographic provenance layer, including
@@ -461,7 +461,7 @@ and steganographic benchmarks. The
 addresses the Zero-Mock tradeoff, scalability implications, a detailed
 tool comparison, and future directions. The
 \href{06_infrastructure_modules.md\#infrastructure-module-reference}{Infrastructure
-Module Reference} provides detailed documentation for all twelve
+Module Reference} provides detailed documentation for all 13
 subpackages.
 \href{07_security_provenance.md\#security-and-provenance}{Security and
 Provenance} describes the steganographic and cryptographic integrity

@@ -31,8 +31,8 @@ These thresholds are enforced at Stage 01 of the pipeline. If project test cover
 
 The repository maintains three test suites:
 
-- **Infrastructure tests** (`tests/`): ~3,083 tests validating the 12 infrastructure subpackages, covering logging, rendering, validation, steganography, reporting, and LLM integration.
-- **Project tests** (`projects/*/tests/`): Per-project test suites validating domain-specific logic. Sizes vary from 39 tests (`code_project`) to 505 tests (`act_inf_metaanalysis`).
+- **Infrastructure tests** (`tests/`): ~6,026 tests validating the 13 infrastructure subpackages, covering logging, rendering, validation, steganography, reporting, and LLM integration.
+- **Project tests** (`projects/*/tests/`): Per-project test suites validating domain-specific logic. Sizes vary from 39 tests (`code_project`) to 814 tests (`cognitive_case_diagrams`).
 - **Integration tests**: Embedded within infrastructure tests, these exercise full pipeline stages against real manuscript inputs, validating end-to-end behavior from Markdown source to rendered PDF.
 
 ### Visualization Standards

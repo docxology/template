@@ -10,7 +10,10 @@ from typing import Any, Iterator, Sequence
 import yaml
 
 # Roots (relative to repository root) searched recursively for **/SKILL.md
-DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = ("infrastructure",)
+DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
+    "infrastructure",
+    "projects/cognitive_case_diagrams/src",
+)
 
 _MANIFEST_VERSION = 1
 

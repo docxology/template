@@ -4,18 +4,22 @@
 
 This guide provides documentation for the scientific simulation, analysis, reporting, validation, visualization, and image management system integrated into the research template.
 
+**Repository layout:** The snippets below use **illustrative** module names (`simulation.py`, `parameters.py`, …) at a generic `src/` root. In this template, domain code lives under **`projects/{name}/src/`** (see [`projects/code_project/`](../../projects/code_project/)), thin orchestration in **`projects/{name}/scripts/`**, and reusable numerics or benchmarking helpers in **[`infrastructure/scientific/`](../../infrastructure/scientific/)** and **[`docs/modules/guides/scientific-module.md`](guides/scientific-module.md)**.
+
 ## Architecture
 
 The system follows the **thin orchestrator pattern**:
 
-- **Business Logic**: All algorithms, simulations, and analysis in `src/` modules
-- **Thin Orchestrators**: Scripts in `scripts/` import and use `src/` methods
-- **100% Test Coverage**: All `src/` modules tested
-- **Automated Integration**: Figures automatically inserted with captions and references
+- **Business Logic**: Algorithms and simulations in `projects/{name}/src/` (not the repo root)
+- **Thin Orchestrators**: `projects/{name}/scripts/` import and call `src/` methods
+- **Test coverage**: Project suites target ≥90% on `projects/{name}/src/` (see repository standards)
+- **Automated Integration**: Figures registered and embedded per project manuscript workflow
 
-## Core Modules
+## Illustrative project modules (conceptual `src/`)
 
-### Simulation Framework (`src/simulation.py`)
+The following sections show **patterns** you might implement under `projects/{name}/src/`. They are not a guarantee that every file exists in every project.
+
+### Simulation Framework (`src/simulation.py` — example)
 
 Provides a robust simulation engine with reproducibility, checkpointing, and result serialization.
 

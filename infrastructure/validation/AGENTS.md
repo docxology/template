@@ -8,7 +8,7 @@ The Validation module provides quality assurance and validation tools for resear
 
 ### Core Components
 
-**output/pdf_validator.py**
+**content/pdf_validator.py**
 - PDF text extraction and analysis
 - Rendering issue detection (unresolved references, warnings, errors)
 - Document structure verification
@@ -47,7 +47,7 @@ The Validation module provides quality assurance and validation tools for resear
 
 ## Function Signatures
 
-### output/pdf_validator.py
+### content/pdf_validator.py
 
 #### extract_text_from_pdf (function)
 ```python

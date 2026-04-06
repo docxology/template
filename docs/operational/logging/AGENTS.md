@@ -20,4 +20,4 @@ Logging standards and operational patterns across bash + Python:
 ### See also
 
 - [`docs/rules/python_logging.md`](../../rules/python_logging.md)
-- [`infrastructure/core/logging/logging_utils.py`](../../../infrastructure/core/logging/logging_utils.py)
+- [`infrastructure/core/logging/utils.py`](../../../infrastructure/core/logging/utils.py)

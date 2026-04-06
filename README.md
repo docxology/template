@@ -3,8 +3,8 @@
 <!-- Badges below are manually updated after each pipeline run. Run `uv run pytest` to get current coverage numbers. -->
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/RUN_GUIDE.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/RUN_GUIDE.md)
-[![Tests](https://img.shields.io/badge/tests-3025%20passing%20(100%25)-brightgreen)](docs/RUN_GUIDE.md)
-[![Documentation](https://img.shields.io/badge/docs-105%2B%20files-blue)](docs/documentation-index.md)
+[![Tests](https://img.shields.io/badge/tests-6026%2B%20passing%20(100%25)-brightgreen)](docs/RUN_GUIDE.md)
+[![Documentation](https://img.shields.io/badge/docs-154%2B%20files-blue)](docs/documentation-index.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
@@ -273,13 +273,14 @@ graph TB
 
 ### Example Projects
 
-Active projects under `projects/` (discovered by `./run.sh`; list may change):
+Active projects under `projects/` (discovered by `./run.sh`; authoritative slugs → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)):
 
-- **`projects/code_project/`** — Optimization research exemplar
-- **`projects/blake_bimetalism/`** — 18-part manuscript synthesizing Blakean poetics with esoteric finance
+- **`projects/code_project/`** — Optimization research exemplar (default path in docs)
+- **`projects/cognitive_case_diagrams/`** — Case diagrams and categorial grammar manuscript
 - **`projects/template/`** — Meta-documentation for the template
+- **`projects/fep_lean/`** — FEP / Lean catalogue, Hermes, and Open Gauss `gauss` CLI integration
 
-**Note:** More exemplars (e.g. `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved into `projects/`. Projects under active development (e.g. `fep_lean`, `aii-org`, `cognitive_case_diagrams`) live under `projects_in_progress/`. See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for a generated list from `discover_projects()`.
+**Note:** More exemplars (e.g. `blake_bimetalism`, `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved into `projects/`. Work-in-progress trees (e.g. `aii-org`) live under `projects_in_progress/` until promoted.
 
 ### Usage
 
@@ -325,11 +326,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 - **NOT listed** in menus
 - **Available** for historical reference
 
-**Current Active Projects:**
-
-- `code_project/` — Optimization research exemplar
-- `blake_bimetalism/` — 18-part manuscript synthesizing Blakean poetics with esoteric finance
-- `template/` — Meta-documentation
+**Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`).
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
@@ -342,7 +339,7 @@ Projects in `projects_in_progress/` are **under active development** but not yet
 - **NOT executed** by pipeline scripts
 - Useful for scaffolding before promoting to `projects/`
 
-**Current In-Progress Projects:** `fep_lean`, `aii-org`, `cognitive_case_diagrams`, `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `ento_linguistics`
+**Current in-progress projects:** `aii-org`, `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `ento_linguistics` (see `projects_in_progress/`)
 
 **To promote:** `mv projects_in_progress/{name}/ projects/{name}/`
 

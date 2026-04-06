@@ -459,8 +459,8 @@ If you need to, reconsider:
 Choose based on WHAT you're testing, not WHERE:
 
 ```python
-# Infrastructure code → tests/infrastructure/
-# tests/infrastructure/test_figure_manager.py
+# Infrastructure code → tests/infra_tests/
+# tests/infra_tests/documentation/test_figure_manager.py
 def test_figure_numbering():
     fm = FigureManager()
     fm.register_figure(filename="a.png", caption="Figure A", label="fig:a")
@@ -491,7 +491,7 @@ def test_script_execution():
 | **Reusable** | Across all projects | Project-specific |
 | **Examples** | PDF generation, figure mgmt | Simulation, statistics |
 | **Dependencies** | Other infrastructure | Infrastructure + other scientific |
-| **Testing** | `tests/infrastructure/` | `projects/{name}/tests/` |
+| **Testing** | `tests/infra_tests/` | `projects/{name}/tests/` |
 | **Scripts** | `scripts/*.py` | `scripts/*.py` |
 
 ---

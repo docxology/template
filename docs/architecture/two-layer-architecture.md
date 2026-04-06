@@ -13,7 +13,7 @@ This research template implements a clear two-layer architecture separating gene
 | **Scope** | Works with any project | Specific to this research |
 | **Test Coverage** | 60% minimum (currently 83.33% - exceeds stretch goal!) | 90% minimum (currently 100% - coverage!) |
 | **Scripts** | `scripts/` (root, generic orchestrators) | `projects/{name}/scripts/` (project orchestrators) |
-| **Tests** | `tests/infrastructure/` (root level) | `projects/{name}/tests/` (project-specific) |
+| **Tests** | `tests/infra_tests/` (root level) | `projects/{name}/tests/` (project-specific) |
 | **Imports** | `from infrastructure.module import` | `from project.src.module import` |
 | **Dependencies** | No project dependencies | Can import from infrastructure |
 | **Examples** | PDF generation, validation, figure management | Algorithms, simulations, analysis |
@@ -40,7 +40,7 @@ This research template implements a clear two-layer architecture separating gene
 infrastructure/
 ├── core/                      # Core utilities
 │   ├── exceptions.py         # Exception hierarchy
-│   ├── logging_utils.py      # Unified logging
+│   ├── logging/utils.py      # Unified logging
 │   └── config_loader.py      # Configuration management
 ├── validation/                # Validation tools
 │   ├── pdf_validator.py      # PDF rendering quality
@@ -242,8 +242,8 @@ infrastructure/                # Root level - generic tools
 ├── README.md                  # Quick reference
 ├── core/                      # Core utilities
 │   ├── exceptions.py
-│   ├── logging_utils.py
-│   └── config_loader.py
+│   ├── logging/utils.py
+│   └── config/loader.py
 ├── validation/                # Validation tools
 │   ├── pdf_validator.py
 │   ├── markdown_validator.py
@@ -319,7 +319,7 @@ flowchart TD
     START([User runs:<br/>uv run python scripts/execute_pipeline.py --project {name} --core-only]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
     CLEAN --> STAGE00[STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools]
     
-    STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infrastructure/*.py<br/>- Run projects/{name}/tests/*.py<br/>- Run tests/integration/*.py<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
+    STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infra_tests/<br/>- Run projects/{name}/tests/<br/>- Run tests/integration/<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
     
     PHASE1 --> PHASE2[PHASE 2: LAYER 2<br/>Project Execution<br/>- Run projects/{name}/scripts/*.py<br/>- Generate figures<br/>- Process data<br/>- Create outputs<br/>Report: [LAYER-2-PROJECT] Running]
     
@@ -471,7 +471,7 @@ flowchart TD
 3. **Write tests:**
 
    ```bash
-   vim tests/infrastructure/test_validation/test_new_validator.py
+   vim tests/infra_tests/validation/test_pdf_validator.py
    ```
 
 4. **Document usage:**
@@ -486,7 +486,7 @@ flowchart TD
 
 ## Testing Strategy
 
-### Infrastructure Tests (tests/infrastructure/)
+### Infrastructure Tests (`tests/infra_tests/`)
 
 - Verify build orchestration works
 - Test validation logic
@@ -497,7 +497,7 @@ flowchart TD
 **Command:**
 
 ```bash
-pytest tests/infrastructure/ --cov=infrastructure
+pytest tests/infra_tests/ --cov=infrastructure
 ```
 
 ### [LAYER 2] Project Tests (projects/{name}/tests/)

@@ -469,7 +469,7 @@ pillars:</p>
 <li><p><strong>Ergonomic Modularity</strong>: A Two-Layer Architecture
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
-scripts, data). 12 infrastructure subpackages comprising ~150 Python
+scripts, data). 13 infrastructure subpackages comprising ~271 Python
 modules provide reusable services; projects consume them without
 modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: A Zero-Mock testing policy
@@ -477,7 +477,7 @@ where pipeline advancement is contingent on test passage. Infrastructure
 tests must achieve 60% coverage; project tests must achieve 90%. All
 tests use real filesystem operations, real subprocess calls, and real
 network connections—no mock objects, no fake services, no synthetic test
-doubles. ~3,083 infrastructure tests and 708+ project tests enforce this
+doubles. ~6,026 infrastructure tests and 919+ project tests enforce this
 standard.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -547,8 +547,8 @@ dimensions, demonstrating that <code>template/</code> uniquely
 integrates all eleven distinctive capabilities.</li>
 <li>An empirical evaluation of the system across three heterogeneous
 exemplar projects (<code>code_project</code>,
-<code>act_inf_metaanalysis</code>, <code>template</code>), demonstrating
-scalability, coverage metrics, and pipeline timing.</li>
+<code>cognitive_case_diagrams</code>, <code>template</code>),
+demonstrating scalability, coverage metrics, and pipeline timing.</li>
 <li>A security analysis of the steganographic provenance layer,
 including a formal threat model and tamper-detection capabilities
 aligned with the W3C PROV data model <span class="citation"
@@ -568,7 +568,7 @@ href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Discussion</a>
 addresses the Zero-Mock tradeoff, scalability implications, a detailed
 tool comparison, and future directions. The <a
 href="06_infrastructure_modules.md#infrastructure-module-reference">Infrastructure
-Module Reference</a> provides detailed documentation for all twelve
+Module Reference</a> provides detailed documentation for all 13
 subpackages. <a
 href="07_security_provenance.md#security-and-provenance">Security and
 Provenance</a> describes the steganographic and cryptographic integrity

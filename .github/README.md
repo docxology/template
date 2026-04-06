@@ -98,19 +98,21 @@ graph TD
     end
 
     subgraph "Layer 2 · Active Project Workspaces"
-        Projects --> CP["code_project/ ← Master exemplar (100% cov · 45 tests)"]
-        Projects --> BB["blake_bimetalism/ ← 18-part digital humanities manuscript"]
-        Projects --> TP["template/ ← Meta-documentation (94.4% cov · 65 tests)"]
-        Projects --> Dots["your_project/ ← Drop in; auto-discovered"]
+        Projects --> CP["code_project/ ← Master numerical exemplar"]
+        Projects --> CCD["cognitive_case_diagrams/ ← Case diagrams manuscript"]
+        Projects --> TP["template/ ← Meta-documentation"]
+        Projects --> Dots["More under projects/ ← Auto-discovered"]
     end
 ```
+
+Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Archived exemplars (for example `blake_bimetalism`) live under [`projects_archive/`](../projects_archive/).
 
 ### Directory Reference
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
 | `infrastructure/` | Permanent | 13 subpackages (+ hub `SKILL.md`); see [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) |
-| `projects/` | Permanent | **Active** projects — discovered and executed by pipeline |
+| `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
 | `scripts/` | Permanent | 8 generic pipeline stage scripts (Stages 00–07) |
@@ -153,18 +155,15 @@ graph TD
 
 → **Details**: [projects/template/AGENTS.md](../projects/template/AGENTS.md) · [projects/template/README.md](../projects/template/README.md)
 
-### `blake_bimetalism` — Digital Humanities Synthesis
+### `cognitive_case_diagrams` — Cognitive Case Diagrams
 
-> **`projects/blake_bimetalism/`** is an 18-part scholarly manuscript synthesizing William Blake's poetic critique with historical 18th-century bimetallism.
+> **`projects/cognitive_case_diagrams/`** is an active manuscript project (categorial grammar, case diagrams, and related chapters).
 
-| Feature | Implementation |
-| --- | --- |
-| Data-driven manuscript | 18 markdown chapters injected with script-generated esoteric metrics |
-| Custom visualization suite | Module-based plotting logic in `src/viz/` |
-| Rigorous testing | Zero-Mock validation of pipeline stages and semantic generation |
-| Cryptographic signing | Validated and steganographically watermarked as a final artifact |
+→ **Details**: [projects/cognitive_case_diagrams/AGENTS.md](../projects/cognitive_case_diagrams/AGENTS.md) · [projects/cognitive_case_diagrams/README.md](../projects/cognitive_case_diagrams/README.md)
 
-→ **Details**: [projects/blake_bimetalism/AGENTS.md](../projects/blake_bimetalism/AGENTS.md) · [projects/blake_bimetalism/README.md](../projects/blake_bimetalism/README.md)
+### Archived exemplars
+
+Retired or sample projects are kept under [`projects_archive/`](../projects_archive/) (not executed by `./run.sh` until moved back into `projects/`). Example: **blake_bimetalism** (digital humanities manuscript) — [projects_archive/blake_bimetalism/AGENTS.md](../projects_archive/blake_bimetalism/AGENTS.md).
 
 ### Project Directory Layout
 
@@ -633,7 +632,7 @@ Documentation review reports and filepath audits.
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| [`ci.yml`](workflows/ci.yml) | push · PR · weekly · manual | Full 7-job quality gate |
+| [`ci.yml`](workflows/ci.yml) | push · PR · weekly · manual | 8 CI jobs (`fep-lean` runs only if `projects/fep_lean/lean/lean-toolchain` exists) |
 | [`stale.yml`](workflows/stale.yml) | Daily 01:00 UTC | Close inactive issues/PRs |
 | [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual | GitHub Release with changelog |
 
@@ -644,6 +643,7 @@ graph TD
     L[Job 1: Lint & Type Check] --> VNM[Job 2: Verify No Mocks]
     VNM --> TI[Job 3: Infra Tests]
     VNM --> TP[Job 4: Project Tests]
+    VNM --> FL[Job 4b: fep_lean optional]
     L --> VM[Job 5: Validate Manuscript]
     L --> SS[Job 6: Security Scan]
     TI --> PC[Job 7: Performance Check]
@@ -693,6 +693,7 @@ Required status checks:
   Infra Tests (ubuntu-latest, Python 3.10/3.11/3.12)
   Project Tests (ubuntu-latest, Python 3.10/3.11/3.12)
   Validate Manuscripts · Security Scan · Performance Check
+  # Optional: fep_lean (real gauss + lake) — only when that job runs (skipped if fep_lean not in projects/)
 
 Require PR review before merging: 1 approver
 ```

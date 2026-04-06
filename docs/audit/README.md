@@ -12,7 +12,8 @@ Reports here are **historical snapshots**: file paths and line numbers refer to 
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`filepath-audit-report.md`](filepath-audit-report.md) | Filepath and reference audit report | Developers |
+| [`filepath-audit-report.md`](filepath-audit-report.md) | Filepath and reference audit report (typical fresh output from tooling) | Developers |
+| [`FILEPATH_AUDIT_REPORT.md`](FILEPATH_AUDIT_REPORT.md) | Historical snapshot from a dated scan; same family as above, not regenerated in place | Developers |
 | [`documentation-review-report.md`](documentation-review-report.md) | Documentation completeness review report | All users |
 | [`documentation-review-summary.md`](documentation-review-summary.md) | Documentation review executive summary | All users |
 

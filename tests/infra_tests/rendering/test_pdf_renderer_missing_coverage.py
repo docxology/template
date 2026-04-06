@@ -631,10 +631,12 @@ class TestModuleLevel:
 
         # Verify extracted module functions are importable
         from infrastructure.rendering._pdf_latex_pipeline import process_bibliography
-        from infrastructure.rendering._pdf_latex_helpers import (
-            extract_preamble,
+        from infrastructure.rendering._pdf_tex_transforms import (
             fix_figure_paths,
             fix_math_delimiters,
+        )
+        from infrastructure.rendering._pdf_latex_helpers import (
+            extract_preamble,
             check_latex_log_for_graphics_errors,
             generate_title_page_preamble,
             generate_title_page_body,

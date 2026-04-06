@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Skill manifest
 
-This repository enumerates every agent `SKILL.md` under `infrastructure/` in `.cursor/skill_manifest.json` (sibling of this `rules/` folder): each entry has `name`, `description`, `path`, and `cursor_at` (use as `@path` in Cursor).
+This repository enumerates agent `SKILL.md` files under `infrastructure/` and `projects/cognitive_case_diagrams/src/` in `.cursor/skill_manifest.json` (sibling of this `rules/` folder): each entry has `name`, `description`, `path`, and `cursor_at` (use as `@path` in Cursor).
 
 After adding, renaming, or editing skill frontmatter, regenerate:
 

@@ -77,6 +77,8 @@ invalid/
 # Separate repositories (managed independently)
 projects/*
 !projects/code_project/
+!projects/fep_lean/
+!projects/fep_lean/**
 !projects/template/
 !projects/AGENTS.md
 !projects/PAI.md
@@ -90,3 +92,4 @@ projects/*
 # Desloppify
 .desloppify
 /.desloppify
+/projects/fep_lean

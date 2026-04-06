@@ -3,18 +3,19 @@
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{template/}
-\NormalTok{├── infrastructure/           \# Layer 1: Shared services (\textasciitilde{}150 .py files)}
-\NormalTok{│   ├── core/                 \# 28 files — logging, config, exceptions}
-\NormalTok{│   ├── documentation/        \# 6 files — figure management, glossary}
-\NormalTok{│   ├── llm/                  \# 30 files — Ollama integration, literature}
-\NormalTok{│   ├── project/              \# 2 files — project discovery}
-\NormalTok{│   ├── publishing/           \# 9 files — citation generation, Zenodo}
-\NormalTok{│   ├── rendering/            \# 12 files — Pandoc + XeLaTeX + reports}
-\NormalTok{│   ├── reporting/            \# 14 files — coverage parsing, reports}
-\NormalTok{│   ├── scientific/           \# 6 files — stability, benchmarking}
-\NormalTok{│   ├── steganography/        \# 8 files — watermarking, hashing}
-\NormalTok{│   ├── validation/           \# 22 files — PDF + Markdown validation}
-\NormalTok{│   ├── config/               \# Configuration}
+\NormalTok{├── infrastructure/           \# Layer 1: Shared services (\textasciitilde{}271 .py files)}
+\NormalTok{│   ├── core/                 \# Logging, config, exceptions, pipeline}
+\NormalTok{│   ├── documentation/        \# Figure management, glossary}
+\NormalTok{│   ├── llm/                  \# Ollama integration, literature search}
+\NormalTok{│   ├── project/              \# Project discovery, workspace management}
+\NormalTok{│   ├── publishing/           \# Citation generation, Zenodo}
+\NormalTok{│   ├── rendering/            \# Pandoc + XeLaTeX + reports}
+\NormalTok{│   ├── reporting/            \# Coverage parsing, executive reports}
+\NormalTok{│   ├── scientific/           \# Stability, benchmarking}
+\NormalTok{│   ├── skills/               \# Skill manifest discovery}
+\NormalTok{│   ├── steganography/        \# Watermarking, hashing}
+\NormalTok{│   ├── validation/           \# PDF + Markdown validation}
+\NormalTok{│   ├── config/               \# Configuration templates}
 \NormalTok{│   └── docker/               \# Containerization}
 \NormalTok{├── scripts/                  \# Pipeline orchestration}
 \NormalTok{│   ├── 00\_setup\_environment.py}
@@ -28,11 +29,11 @@
 \NormalTok{│   └── execute\_pipeline.py}
 \NormalTok{├── projects/                 \# Layer 2: Research workspaces}
 \NormalTok{│   ├── code\_project/         \# Gradient descent exemplar}
-\NormalTok{│   ├── act\_inf\_metaanalysis/ \# Meta{-}analysis pipeline}
-\NormalTok{│   └── biology\_textbook/     \# Domain content exemplar (when populated)}
-\NormalTok{├── projects\_in\_progress/     \# Work{-}in{-}progress (template, etc.)}
-\NormalTok{├── tests/                    \# Infrastructure test suite (160+ files, \textasciitilde{}3,050 tests)}
-\NormalTok{├── docs/                     \# Repository documentation (90+ files, 12 subdirectories)}
+\NormalTok{│   ├── cognitive\_case\_diagrams/ \# Compositional case modeling}
+\NormalTok{│   └── template/             \# Self{-}referential meta{-}analysis}
+\NormalTok{├── projects\_in\_progress/     \# Work{-}in{-}progress (not pipeline{-}discovered)}
+\NormalTok{├── tests/                    \# Infrastructure test suite (346+ files, \textasciitilde{}6,026 tests)}
+\NormalTok{├── docs/                     \# Repository documentation (160+ files, 15 subdirectories)}
 \NormalTok{├── run.sh                    \# Interactive TUI orchestrator}
 \NormalTok{├── secure\_run.sh             \# Steganographic pipeline wrapper}
 \NormalTok{├── AGENTS.md                 \# System{-}level AI agent documentation}

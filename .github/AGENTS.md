@@ -29,7 +29,7 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 ├── workflows/
 │   ├── AGENTS.md                # CI/CD workflow documentation
 │   ├── README.md                # Quick reference
-│   ├── ci.yml                   # Main CI/CD pipeline (7 jobs)
+│   ├── ci.yml                   # Main CI/CD pipeline (8 jobs; fep-lean conditional)
 │   ├── stale.yml                # Auto-label and close stale issues/PRs
 │   └── release.yml              # Create GitHub Releases on version tags
 ```
@@ -49,9 +49,12 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 | 2 | `verify-no-mocks` | lint | 3.12 | ubuntu |
 | 3 | `test-infra` — 60% coverage | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
 | 4 | `test-project` — 90% coverage | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
+| 4b | `fep-lean` — Lean/Lake + Open Gauss (`gauss`) | verify-no-mocks | 3.12 | ubuntu |
 | 5 | `validate` — manuscript markdown | lint | 3.12 | ubuntu |
 | 6 | `security` — pip-audit + bandit | lint | 3.12 | ubuntu |
 | 7 | `performance` — import ≤ 5 s | test-infra + test-project | 3.12 | ubuntu |
+
+`fep-lean` runs only when `projects/fep_lean/lean/lean-toolchain` exists (skipped otherwise). It exercises the real `gauss` CLI and Lake under `projects/fep_lean/`.
 
 Coverage is uploaded to **Codecov** after each test job (3.12/ubuntu-latest only).
 
@@ -98,7 +101,8 @@ required_status_checks:
     - "Project Tests (ubuntu-latest, Python 3.10)"
     - "Project Tests (ubuntu-latest, Python 3.11)"
     - "Project Tests (ubuntu-latest, Python 3.12)"
-    - "fep_lean (real gauss + lake)"  # Only when fep_lean is promoted to projects/
+    # Optional: add when projects/fep_lean exists (job is skipped if lean-toolchain missing)
+    # - "fep_lean (real gauss + lake)"
     - "Validate Manuscripts"
     - "Security Scan"
     - "Performance Check"

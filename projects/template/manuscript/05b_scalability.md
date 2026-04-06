@@ -4,11 +4,11 @@ The Standalone Project Paradigm enables horizontal scaling: adding a new project
 
 We have validated this scaling model with three heterogeneous projects:
 
-- **`code_project`**: Numerical optimization example paper with gradient descent, 39 tests, 90%+ coverage. Demonstrates the minimal viable project footprint: a single `src/` module, a single script, and a compact manuscript.
-- **`act_inf_metaanalysis`**: Active inference meta-analysis pipeline, 505 tests, 90%+ coverage, spanning evidence synthesis, bibliometric analysis, and citation-weighted knowledge graphs. Demonstrates the template's capacity for computationally intensive, data-heavy research workflows with large test suites.
-- **`template`**: This self-referential architectural analysis, 65 tests, 90%+ coverage. Demonstrates the system's ability to analyze and document itself—a unique stress test of the Two-Layer Architecture's reflexive capability.
+- **`code_project`**: Numerical optimization example paper with gradient descent, ${project_code_project_test_count} tests, 90%+ coverage. Demonstrates the minimal viable project footprint: a single `src/` module, a single script, and a compact manuscript.
+- **`cognitive_case_diagrams`**: Compositional approaches to linguistic case for cognitive modeling, ${project_cognitive_case_diagrams_test_count} tests, 90%+ coverage, spanning enriched category theory, DisCoPy renderers, and categorical grammar diagrams. Demonstrates the template's capacity for computationally intensive, diagram-heavy research workflows with large test suites.
+- **`template`**: This self-referential architectural analysis, ${project_template_test_count} tests, 90%+ coverage. Demonstrates the system's ability to analyze and document itself—a unique stress test of the Two-Layer Architecture's reflexive capability.
 
-These projects share no code with each other. They share only the infrastructure layer---14 modules, ~150 Python files---which provides logging, rendering, validation, steganography, and reporting services identically to each project. This validates the Two-Layer Architecture's claim that infrastructure and project concerns can be cleanly separated.
+These projects share no code with each other. They share only the infrastructure layer---${module_count} modules, ~${total_infra_python_files} Python files---which provides logging, rendering, validation, steganography, and reporting services identically to each project. This validates the Two-Layer Architecture's claim that infrastructure and project concerns can be cleanly separated.
 
 ### Multi-Project Orchestration
 
@@ -16,13 +16,13 @@ When the `--all-projects` flag is passed to `run.sh`, the pipeline executes each
 
 ### Scaling Metrics
 
-| Metric | `code_project` | `act_inf_metaanalysis` | `template` |
-|--------|:--------------:|:----------------------:|:----------:|
-| Source modules | 1 | 12+ | 5 |
-| Test files | 1 | 9 | 4 |
-| Test count | 39 | 505 | 65 |
-| Manuscript chapters | 8 | 14 | 18 |
-| Analysis scripts | 1 | 3 | 2 |
-| Figures (auto-generated) | 3 | 10+ | 4 |
+| Metric | `code_project` | `cognitive_case_diagrams` | `template` |
+|--------|:--------------:|:------------------------:|:----------:|
+| Source modules | ${project_code_project_src_module_count} | ${project_cognitive_case_diagrams_src_module_count} | ${project_template_src_module_count} |
+| Test files | ${project_code_project_test_file_count} | ${project_cognitive_case_diagrams_test_file_count} | ${project_template_test_file_count} |
+| Test count | ${project_code_project_test_count} | ${project_cognitive_case_diagrams_test_count} | ${project_template_test_count} |
+| Manuscript chapters | ${project_code_project_chapter_count} | ${project_cognitive_case_diagrams_chapter_count} | ${project_template_chapter_count} |
+| Analysis scripts | ${project_code_project_script_count} | ${project_cognitive_case_diagrams_script_count} | ${project_template_script_count} |
+| Figures (auto-generated) | ${project_code_project_figure_count} | ${project_cognitive_case_diagrams_figure_count} | ${project_template_figure_count} |
 
-The infrastructure overhead per project is constant regardless of project size: the same 14 modules, the same 9 pipeline stages, the same rendering and validation logic. This O(1) infrastructure cost is the architectural payoff of the Two-Layer separation.
+The infrastructure overhead per project is constant regardless of project size: the same ${module_count} modules, the same ${stage_count} pipeline stages, the same rendering and validation logic. This O(1) infrastructure cost is the architectural payoff of the Two-Layer separation.

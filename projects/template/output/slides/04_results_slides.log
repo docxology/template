@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  3 APR 2026 08:42
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  5 APR 2026 19:09
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1576,12 +1576,12 @@ _slides.nav)
 
 (/Users/4d/Documents/GitHub/template/projects/template/output/slides/04_results
 _slides.vrb
-Overfull \hbox (5.8644pt too wide) in alignment at lines 16--20
+Overfull \hbox (23.11064pt too wide) in alignment at lines 16--20
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (5.8644pt too wide) in alignment at lines 20--26
+Overfull \hbox (23.11064pt too wide) in alignment at lines 20--26
  [] [] [] [] [] 
  []
 
@@ -1592,77 +1592,234 @@ x-text;!
 Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
 x-text;!
 
-Overfull \hbox (112.23502pt too wide) in alignment at lines 79--83
- [] [] [] 
+Overfull \hbox (1.75278pt too wide) in paragraph at lines 87--88
+[]\TU/lmss/m/n/10.95 Module  
  []
 
 
-Overfull \hbox (112.23502pt too wide) in alignment at lines 83--102
- [] [] [] 
+Overfull \hbox (1.55936pt too wide) in paragraph at lines 93--94
+ \TU/lmss/m/n/10.95 README.md 
  []
 
 
-Overfull \hbox (7.1411pt too wide) in paragraph at lines 160--161
+Overfull \hbox (2.08127pt too wide) in paragraph at lines 99--99
+[]|\TU/lmtt/m/n/10.95 config|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (9.1962pt too wide) in paragraph at lines 99--100
+[]|\TU/lmss/m/n/10.95 Configuration 
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (6.3492pt too wide) in paragraph at lines 100--102
+[]|\TU/lmtt/m/n/10.95 get_logger\TU/lmss/m/n/10.95 , 
+ []
+
+
+Overfull \hbox (12.09795pt too wide) in paragraph at lines 100--102
+\TU/lmtt/m/n/10.95 load_config\TU/lmss/m/n/10.95 , 
+ []
+
+
+Overfull \hbox (22.0734pt too wide) in paragraph at lines 100--102
+\TU/lmtt/m/n/10.95 TemplateError|  
+ []
+
+
+Overfull \hbox (2.08127pt too wide) in paragraph at lines 102--102
+[]|\TU/lmtt/m/n/10.95 docker|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (21.36165pt too wide) in paragraph at lines 102--103
+[]|\TU/lmss/m/n/10.95 Containerisation|  
+ []
+
+
+Overfull \hbox (42.32251pt too wide) in paragraph at lines 103--103
+[]|\TU/lmtt/m/n/10.95 documentation|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (23.59544pt too wide) in paragraph at lines 103--105
+[]|\TU/lmtt/m/n/10.95 FigureManager\TU/lmss/m/n/10.95 , 
+ []
+
+
+Overfull \hbox (45.06839pt too wide) in paragraph at lines 103--105
+\TU/lmtt/m/n/10.95 generate_glossary|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (7.83002pt too wide) in paragraph at lines 107--107
+[]|\TU/lmtt/m/n/10.95 project|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (46.59044pt too wide) in paragraph at lines 107--109
+[]|\TU/lmtt/m/n/10.95 discover_projects\TU/lmss/m/n/10.95 , 
+ []
+
+
+Overfull \hbox (25.07626pt too wide) in paragraph at lines 109--109
+[]|\TU/lmtt/m/n/10.95 publishing|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (19.32751pt too wide) in paragraph at lines 111--111
+[]|\TU/lmtt/m/n/10.95 rendering|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (19.32751pt too wide) in paragraph at lines 113--113
+[]|\TU/lmtt/m/n/10.95 reporting|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (25.07626pt too wide) in paragraph at lines 114--114
+[]|\TU/lmtt/m/n/10.95 scientific|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (92.58041pt too wide) in paragraph at lines 114--116
+[]|\TU/lmtt/m/n/10.95 check_numerical_stability\TU/lmss/m/n/10.95 , 
+ []
+
+
+Overfull \hbox (50.81714pt too wide) in paragraph at lines 114--116
+\TU/lmtt/m/n/10.95 benchmark_function|  
+ []
+
+
+Overfull \hbox (2.08127pt too wide) in paragraph at lines 116--116
+[]|\TU/lmtt/m/n/10.95 skills|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (42.32251pt too wide) in paragraph at lines 117--117
+[]|\TU/lmtt/m/n/10.95 steganography|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (25.07626pt too wide) in paragraph at lines 119--119
+[]|\TU/lmtt/m/n/10.95 validation|  
+ []
+
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ✓ (U+2713) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+Overfull \hbox (7.1411pt too wide) in paragraph at lines 175--176
 []\TU/lmss/m/n/10.95 Stage  
  []
 
 
-Overfull \hbox (58.2391pt too wide) in paragraph at lines 170--170
+Overfull \hbox (58.2391pt too wide) in paragraph at lines 185--185
 []|\TU/lmtt/m/n/10.95 00_setup_environment.py|  
  []
 
 
-Overfull \hbox (12.24911pt too wide) in paragraph at lines 172--172
+Overfull \hbox (12.24911pt too wide) in paragraph at lines 187--187
 []|\TU/lmtt/m/n/10.95 01_run_tests.py|  
  []
 
 
-Overfull \hbox (29.49536pt too wide) in paragraph at lines 174--174
+Overfull \hbox (29.49536pt too wide) in paragraph at lines 189--189
 []|\TU/lmtt/m/n/10.95 02_run_analysis.py|  
  []
 
 
-Overfull \hbox (17.99786pt too wide) in paragraph at lines 175--175
+Overfull \hbox (17.99786pt too wide) in paragraph at lines 190--190
 []|\TU/lmtt/m/n/10.95 03_render_pdf.py|  
  []
 
 
-Overfull \hbox (46.74161pt too wide) in paragraph at lines 176--176
+Overfull \hbox (46.74161pt too wide) in paragraph at lines 191--191
 []|\TU/lmtt/m/n/10.95 04_validate_output.py|  
  []
 
 
-Overfull \hbox (29.49536pt too wide) in paragraph at lines 178--178
+Overfull \hbox (29.49536pt too wide) in paragraph at lines 193--193
 []|\TU/lmtt/m/n/10.95 05_copy_outputs.py|  
  []
 
 
-Overfull \hbox (17.99786pt too wide) in paragraph at lines 179--179
+Overfull \hbox (17.99786pt too wide) in paragraph at lines 194--194
 []|\TU/lmtt/m/n/10.95 06_llm_review.py|  
  []
 
 
-Overfull \hbox (104.22908pt too wide) in paragraph at lines 180--180
+Overfull \hbox (104.22908pt too wide) in paragraph at lines 195--195
 []|\TU/lmtt/m/n/10.95 07_generate_executive_report.py|  
  []
 
 
-Overfull \hbox (4.5876pt too wide) in paragraph at lines 207--208
+Overfull \hbox (4.5876pt too wide) in paragraph at lines 222--223
  []\TU/lmss/m/n/10.95 Metadata 
  []
 
 
-Overfull \hbox (33.69295pt too wide) in paragraph at lines 219--219
+Overfull \hbox (33.69295pt too wide) in paragraph at lines 234--234
 []|\TU/lmtt/m/n/10.95 code_project|  
  []
 
 
-Overfull \hbox (79.68294pt too wide) in paragraph at lines 222--222
-[]|\TU/lmtt/m/n/10.95 act_inf_metaanalysis|  
+Overfull \hbox (96.92918pt too wide) in paragraph at lines 237--237
+[]|\TU/lmtt/m/n/10.95 cognitive_case_diagrams|  
  []
 
 
-Overfull \hbox (10.69795pt too wide) in paragraph at lines 225--225
+Overfull \hbox (10.69795pt too wide) in paragraph at lines 240--240
 []|\TU/lmtt/m/n/10.95 template|  
  []
 
@@ -1679,27 +1836,27 @@ ext;!
 Missing character: There is no ◐ (U+25D0) in font [lmsans10-bold]:mapping=tex-t
 ext;!
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 324.
+(Font)              scaled to size 7.8961pt on input line 339.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 324.
+(Font)              scaled to size 5.64008pt on input line 339.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
-24.
+39.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 324.
+(Font)              scaled to size 11.28131pt on input line 339.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 324.
+(Font)              scaled to size 7.89691pt on input line 339.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 324.
+(Font)              scaled to size 5.64066pt on input line 339.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 324.
+(Font)              scaled to size 11.27914pt on input line 339.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 324.
+(Font)              scaled to size 7.8954pt on input line 339.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 324.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 324
+(Font)              scaled to size 5.63957pt on input line 339.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 339
 .
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1708,7 +1865,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 324
+LaTeX Font Info:    Trying to load font information for U+msb on input line 339
 .
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1717,7 +1874,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ))
-Overfull \vbox (3319.6641pt too high) detected at line 458
+Overfull \vbox (3739.34361pt too high) detected at line 473
  []
 
 [1
@@ -1741,11 +1898,11 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 31039 strings out of 468168
- 625571 string characters out of 5432815
- 1281008 words of memory out of 5000000
- 59208 multiletter control sequences out of 15000+600000
- 631256 words of font info for 72 fonts, out of 8000000 for 9000
+ 31035 strings out of 468168
+ 625490 string characters out of 5432815
+ 1300040 words of memory out of 5000000
+ 59206 multiletter control sequences out of 15000+600000
+ 631248 words of font info for 71 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1082b,641s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

@@ -76,8 +76,8 @@ sudo tlmgr install multirow cleveref doi newunicodechar bm subcaption
 **Diagnosis:**
 
 ```bash
-# Check LaTeX log
-tail -20 output/pdf/_combined_manuscript.log
+# Check LaTeX log (use your project name)
+tail -20 projects/{name}/output/pdf/_combined_manuscript.log
 
 # Common causes:
 # - Missing \end{document}
@@ -85,8 +85,8 @@ tail -20 output/pdf/_combined_manuscript.log
 # - Malformed figure environments
 
 # Check generated LaTeX file
-head -50 output/pdf/_combined_manuscript.tex
-tail -20 output/pdf/_combined_manuscript.tex
+head -50 projects/{name}/output/pdf/_combined_manuscript.tex
+tail -20 projects/{name}/output/pdf/_combined_manuscript.tex
 ```
 
 ---
@@ -124,9 +124,9 @@ tail -150 projects/{name}/output/pdf/_combined_manuscript.log | grep -A2 -B2 "gr
 **Diagnosis:**
 
 ```bash
-ls -lh output/pdf/*.pdf | grep "0.0"
-grep "Fatal error" output/pdf/_combined_manuscript.log
-grep "Emergency stop" output/pdf/_combined_manuscript.log
+ls -lh projects/{name}/output/pdf/*.pdf | grep "0.0"
+grep "Fatal error" projects/{name}/output/pdf/_combined_manuscript.log
+grep "Emergency stop" projects/{name}/output/pdf/_combined_manuscript.log
 ```
 
 ---

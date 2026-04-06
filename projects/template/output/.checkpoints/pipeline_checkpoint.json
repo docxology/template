@@ -1,64 +1,64 @@
 {
-  "pipeline_start_time": 1775230896.974519,
+  "pipeline_start_time": 1775441290.56321,
   "last_stage_completed": 7,
   "stage_results": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.028847932815551758,
-      "timestamp": "2026-04-03 08:43:06",
+      "duration": 0.14808988571166992,
+      "timestamp": "2026-04-05 19:11:28",
       "completed": true,
       "status": ""
     },
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 1.4257638454437256,
-      "timestamp": "2026-04-03 08:43:06",
+      "duration": 4.701608896255493,
+      "timestamp": "2026-04-05 19:11:28",
       "completed": true,
       "status": ""
     },
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 23.408153772354126,
-      "timestamp": "2026-04-03 08:43:06",
+      "duration": 8.286224842071533,
+      "timestamp": "2026-04-05 19:11:28",
       "completed": true,
       "status": ""
     },
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 3.7209560871124268,
-      "timestamp": "2026-04-03 08:43:06",
+      "duration": 16.47581195831299,
+      "timestamp": "2026-04-05 19:11:28",
       "completed": true,
       "status": ""
     },
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 60.320103883743286,
-      "timestamp": "2026-04-03 08:43:06",
+      "duration": 167.33426117897034,
+      "timestamp": "2026-04-05 19:11:28",
       "completed": true,
       "status": ""
     },
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.4540729522705078,
-      "timestamp": "2026-04-03 08:43:06",
+      "duration": 0.4592301845550537,
+      "timestamp": "2026-04-05 19:11:28",
       "completed": true,
       "status": ""
     },
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.35642290115356445,
-      "timestamp": "2026-04-03 08:43:06",
+      "duration": 0.4997262954711914,
+      "timestamp": "2026-04-05 19:11:28",
       "completed": true,
       "status": ""
     }
   ],
   "total_stages": 8,
-  "checkpoint_time": 1775230986.692466
+  "checkpoint_time": 1775441488.6197069
 }

@@ -111,12 +111,13 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
     projects_in_progress_dir = repo_root / "projects_in_progress"
     project_metrics: dict[str, dict[str, int | str]] = {}
 
-    # Also count test *functions* (not just files) for finer granularity
-    all_project_dirs = sorted(
-        list(projects_dir.iterdir()) + list(projects_in_progress_dir.iterdir())
-        if projects_in_progress_dir.is_dir()
-        else list(projects_dir.iterdir())
-    )
+    # Also count test *functions* (not just files) for finer granularity.
+    # Process projects_in_progress/ first so that projects/ entries take
+    # precedence when both contain a directory with the same name.
+    all_project_dirs: list[Path] = []
+    if projects_in_progress_dir.is_dir():
+        all_project_dirs.extend(sorted(projects_in_progress_dir.iterdir()))
+    all_project_dirs.extend(sorted(projects_dir.iterdir()))
 
     for project_dir in all_project_dirs:
         if not project_dir.is_dir():
@@ -165,6 +166,8 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         "infra_test_count": infra_test_count,
         "infra_test_count_approx": format_count(infra_test_count),
         "all_projects_test_count": all_projects_test_count,
+        "total_test_count": infra_test_count + all_projects_test_count,
+        "total_test_count_approx": format_count(infra_test_count + all_projects_test_count),
         "docs_file_count": docs_file_count,
         "docs_subdir_count": docs_subdir_count,
         "infrastructure_version": report.infrastructure_version,

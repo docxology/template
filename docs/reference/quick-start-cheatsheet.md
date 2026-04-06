@@ -45,8 +45,8 @@ uv run python scripts/02_run_analysis.py --project code_project
 uv run python scripts/03_render_pdf.py --project code_project
 uv run python scripts/04_validate_output.py --project code_project
 
-# Validate PDFs
-uv run python -m infrastructure.validation.cli pdf output/pdf/
+# Validate PDFs (after copy stage or use project working tree)
+uv run python -m infrastructure.validation.cli pdf output/code_project/pdf/code_project_combined.pdf
 ```
 
 ## 📁 Directory Structure Quick Reference

@@ -14,32 +14,32 @@ Machine-generated snippets (including the authoritative list of active `projects
 
 ```mermaid
 graph TD
-    subgraph EntryPoints["📖 Entry Points"]
+    subgraph EntryPoints["Entry points"]
         README[README.md<br/>Project Overview]
         DOC_INDEX[documentation-index.md<br/>Full Index]
         HOW_TO[core/how-to-use.md<br/>Usage Guide<br/>12 Skill Levels]
     end
 
-    subgraph CoreDocs["📚 Core Documentation"]
+    subgraph CoreDocs["Core documentation"]
         ARCH[core/architecture.md<br/>System Design]
         WORKFLOW[core/workflow.md<br/>Development Process]
     end
 
-    subgraph SkillLevels["🎓 Skill-Based Learning"]
+    subgraph SkillLevels["Skill-based learning"]
         L1[guides/getting-started.md<br/>Levels 1-3: Beginner]
         L2[guides/figures-and-analysis.md<br/>Levels 4-6: Intermediate]
         L3[guides/testing-and-reproducibility.md<br/>Levels 7-9: Advanced]
         L4[guides/extending-and-automation.md<br/>Levels 10-12: Expert]
     end
 
-    subgraph Operational["⚙️ Operational"]
+    subgraph Operational["Operational"]
         PIPELINE[RUN_GUIDE.md<br/>Pipeline Orchestration]
         TROUBLESHOOT[operational/troubleshooting/<br/>Fix Issues]
-        CONFIG[operational/config/<br/>Settings & Performance]
+        CONFIG[operational/config/<br/>Settings and Performance]
         LOGGING[operational/logging/<br/>Logging System]
     end
 
-    subgraph Reference["📑 Reference"]
+    subgraph Reference["Reference"]
         FAQ[reference/faq.md<br/>Common Questions]
         CHEATSHEET[reference/quick-start-cheatsheet.md<br/>Command Reference]
         API[reference/api-reference.md<br/>Unified API Docs]
@@ -66,18 +66,6 @@ graph TD
     FAQ --> CHEATSHEET
     CHEATSHEET --> API
     API --> RULES
-
-    classDef entry fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
-    classDef core fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef skill fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef operational fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef reference fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-
-    class EntryPoints entry
-    class CoreDocs core
-    class SkillLevels skill
-    class Operational operational
-    class Reference reference
 ```
 
 ## Directory Structure
@@ -93,11 +81,12 @@ graph TD
 | [`modules/`](modules/) | Infrastructure modules | modules-guide, scientific simulation, pdf-validation, `guides/` |
 | [`development/`](development/) | Development & contribution | contributing, security, roadmap, `testing/` sub-folder |
 | [`best-practices/`](best-practices/) | Best practices | version-control, migration, multi-project, backup-recovery |
-| [`prompts/`](prompts/) | AI prompt templates (9) | manuscript, code, test, feature, refactoring, assessment |
+| [`prompts/`](prompts/) | AI prompt templates (9 + README/AGENTS) | manuscript, code, test, feature, refactoring, assessment |
 | [`security/`](security/) | Security & provenance | steganography, hashing, secure execution |
 | [`audit/`](audit/) | Audit reports | documentation-review, filepath-audit |
 | [`rules/`](rules/) | Project Rules | AGENTS, README, testing, manuscript, etc. |
 | [`streams/`](streams/) | Livestream & talk notes | timestamped session notes tied to releases or papers |
+| [`_generated/`](_generated/) | Generated snippets | `AGENTS.md`, `active_projects.md` (discover_projects roster) |
 
 ## Quick Navigation
 
@@ -140,3 +129,5 @@ graph TD
 - [`documentation-index.md`](documentation-index.md) - Full file index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
+- Agent skills: [`../.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc), [`../.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — `uv run python -m infrastructure.skills write` / `check`
+- Active `projects/` beyond the [`../projects/code_project/`](../projects/code_project/) exemplar may ship a local docs tree (e.g. [`../projects/cognitive_case_diagrams/docs/`](../projects/cognitive_case_diagrams/docs/)); authoritative slugs remain in [`_generated/active_projects.md`](_generated/active_projects.md)

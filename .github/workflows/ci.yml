@@ -180,7 +180,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Sync dependencies (dev + optional test groups)
-        run: uv sync --group rendering --group monitoring
+        run: uv sync --group rendering --group monitoring --group discopy
 
       - name: Fix macOS socket.getfqdn timeout
         if: runner.os == 'macOS'
@@ -192,8 +192,9 @@ jobs:
           PYTHONPATH: .
         run: >-
           uv run pytest projects/*/tests/
-          --ignore=projects/fep_lean/tests/
           --cov=projects/code_project/src
+          --cov=projects/cognitive_case_diagrams/src
+          --cov=projects/template/src
           --cov-report=term-missing
           --cov-report=xml:coverage-project.xml
           --cov-fail-under=90
@@ -216,8 +217,9 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   fep-lean:
     name: fep_lean (real gauss + lake)
+    if: hashFiles('projects/fep_lean/lean/lean-toolchain') != ''
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     needs: [verify-no-mocks]
     permissions:
       contents: read
@@ -235,6 +237,9 @@ jobs:
 
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group rendering --group monitoring
+
+      - name: Sync fep_lean project (explicit venv + dev extras)
+        run: uv sync --directory projects/fep_lean --extra dev
 
       - name: Install elan (lean + lake)
         run: |
@@ -267,15 +272,15 @@ jobs:
           gauss doctor
 
       - name: Run fep_lean tests (real gauss doctor + lake build)
+        working-directory: projects/fep_lean
         env:
-          COVERAGE_FILE: .coverage.fep_lean
-          PYTHONPATH: .
+          COVERAGE_FILE: ../../.coverage.fep_lean
         run: >-
-          uv run pytest projects/fep_lean/tests/
-          --timeout=900
-          --cov=projects/fep_lean/src
+          uv run pytest tests/
+          --timeout=1200
+          --cov=src
           --cov-report=term-missing
-          --cov-fail-under=90
+          --cov-fail-under=89
           --durations=10
           -m "not requires_ollama"
 

@@ -45,7 +45,7 @@
           "figures": {
             "exists": true,
             "files": 7,
-            "size_mb": 1.52,
+            "size_mb": 1.51,
             "readable": true,
             "optional": false
           },
@@ -108,7 +108,7 @@
         "figures": {
           "exists": true,
           "file_count": 7,
-          "size_mb": "1.52",
+          "size_mb": "1.51",
           "largest_file": "algorithm_complexity.png"
         },
         "data": {
@@ -153,7 +153,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.921606063842773,
+      "total_size_mb": 4.912568092346191,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,11 +163,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8944358825683594
+      "size_mb": 1.890284538269043
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5188188552856445
+      "size_mb": 1.514063835144043
     },
     "data": {
       "files": 3,

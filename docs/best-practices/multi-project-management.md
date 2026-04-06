@@ -33,6 +33,8 @@ The repository uses three sibling directories to manage projects at different st
 - Use `projects_in_progress/` while actively writing; move to `projects/` only when ready for a full pipeline render.
 - Use `projects_archive/` for completed or low-priority projects so they do not increase pipeline runtime.
 
+**Authoritative roster:** [`docs/_generated/active_projects.md`](../_generated/active_projects.md) from `discover_projects()`. Default path examples in docs use [`projects/code_project/`](../../projects/code_project/); an active project may also maintain its own reference hub (for example [`projects/cognitive_case_diagrams/docs/`](../../projects/cognitive_case_diagrams/docs/)).
+
 **Moving a project:**
 
 ```bash

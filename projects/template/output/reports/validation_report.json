@@ -24,7 +24,7 @@
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.53,
+            "size_mb": 1.54,
             "readable": true,
             "optional": false
           },
@@ -38,7 +38,7 @@
           "slides": {
             "exists": true,
             "files": 168,
-            "size_mb": 3.06,
+            "size_mb": 3.07,
             "readable": true,
             "optional": false
           },
@@ -90,7 +90,7 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.53",
+          "size_mb": "1.54",
           "largest_file": "template_combined.pdf"
         },
         "web": {
@@ -102,7 +102,7 @@
         "slides": {
           "exists": true,
           "file_count": 168,
-          "size_mb": "3.06",
+          "size_mb": "3.07",
           "largest_file": "04_results_slides.pdf"
         },
         "figures": {
@@ -153,7 +153,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 5.9832611083984375,
+      "total_size_mb": 6.016565322875977,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,15 +163,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.5292463302612305
+      "size_mb": 1.543839454650879
     },
     "figures": {
       "files": 4,
-      "size_mb": 0.8779115676879883
+      "size_mb": 0.8822460174560547
     },
     "data": {
       "files": 1,
-      "size_mb": 0.004345893859863281
+      "size_mb": 0.004153251647949219
     }
   },
   "summary": {

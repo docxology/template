@@ -8,7 +8,7 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 
 - `validator.py` - output validation
 - `pipeline.py` - pipeline output validation
-- `no_mock_enforcer.py` - mock-usage checks
+- `no_mock_enforcer.py` - mock-usage checks (line-based scan; one-line `"""..."""` / `'''...'''` docstrings are skipped so policy docs can name forbidden APIs)
 
 ## See Also
 

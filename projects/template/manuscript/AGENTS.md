@@ -36,7 +36,7 @@ Self-referential publication describing the `template/` architecture, published 
 
 ## Key Metrics
 
-- 3 exemplar projects: `code_project` (39 tests), `act_inf_metaanalysis` (505 tests), `template` (65 tests)
+- 3 exemplar projects: `code_project` (${project_code_project_test_count} tests), `cognitive_case_diagrams` (${project_cognitive_case_diagrams_test_count} tests), `template` (${project_template_test_count} tests)
 - ${module_count} infrastructure modules, ~${total_infra_python_files} Python files, ~${infra_test_count_approx} infrastructure tests
 - 9 pipeline stages (Stages 00–07 plus clean step)
 - 100% Documentation Duality coverage (all modules have both `AGENTS.md` and `README.md`)

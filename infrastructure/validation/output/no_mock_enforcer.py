@@ -65,6 +65,12 @@ def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
                     if not any(fw in line_str for fw in mock_frameworks):
                         continue
 
+                    # One-line docstrings often mention forbidden names; do not treat as code.
+                    if (line_str.startswith('"""') and line_str.endswith('"""')) or (
+                        line_str.startswith("'''") and line_str.endswith("'''")
+                    ):
+                        continue
+
                     if "def " in line_str or any(sp in line_str for sp in skip_patterns):
                         continue
 

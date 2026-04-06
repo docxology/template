@@ -13,7 +13,7 @@ This ensures information is available while also providing fast lookup.
 
 ### AGENTS.md - Guide
 
-**Purpose**:, detailed documentation for understanding and working with the code.
+**Purpose**: Detailed documentation for understanding and working with the code.
 
 **Audience**: Developers who need deep understanding, AI agents seeking implementation details.
 

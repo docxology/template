@@ -59,3 +59,17 @@ class TestValidateNoMocks:
 
         result = validate_no_mocks(tests_dir, tmp_path)
         assert isinstance(result, list)
+
+    def test_one_line_docstring_mentioning_forbidden_names_ok(self, tmp_path):
+        """Docstrings may document the policy without counting as violations."""
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        # Build the forbidden token without embedding it verbatim in this file (verify_no_mocks scans sources).
+        mock_ctor = "Magic" + "Mock" + "("
+        (tests_dir / "test_docs_only.py").write_text(
+            f'"""Describes why {mock_ctor} is forbidden in tests."""\n\n'
+            "def test_real():\n    assert 2 == 2\n"
+        )
+
+        violations = validate_no_mocks(tests_dir, tmp_path)
+        assert violations == []

@@ -10,8 +10,10 @@ This directory contains the **Layer 2** domain-specific research projects. Each 
 |----------------|---------------------------|-------|----------|--------|
 | `code_project` | Optimization research     | 45    | 100%     | ✅ Active |
 | `template`     | Meta-documentation        | 65    | 94.4%    | ✅ Active |
+| `cognitive_case_diagrams` | Case / diagrams    | large | ≥90% `src/` | ✅ Active |
+| `fep_lean`     | FEP / Lean catalogue      | ~180  | ≥89% `src/` | ✅ Active |
 
-Pipeline execution (2026-03-26): 2/2 projects successful, 140.5s total, 100% success rate.
+Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md).
 
 ## 📂 Structure Per Project
 
@@ -27,7 +29,7 @@ Pipeline execution (2026-03-26): 2/2 projects successful, 140.5s total, 100% suc
 - **Isolation**: Projects should not import from each other.
 - **Infrastructure Usage**: Projects can and should import from `infrastructure/`.
 - **Creation**: To create a new project, copy an existing project under `projects/` as a template.
-- **In-Progress**: Projects in `projects_in_progress/` (e.g. `fep_lean`) are not yet pipeline-ready.
+- **In-Progress**: Projects in `projects_in_progress/` are not yet discovered by the pipeline until moved under `projects/`.
 - **Archived**: Projects in `projects_archive/` are preserved but not discovered.
 
 ## 🔗 Key References

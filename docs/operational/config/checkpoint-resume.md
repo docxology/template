@@ -250,7 +250,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 ## See Also
 
-- [`infrastructure/core/pipeline/checkpoint.py`](../../../infrastructure/core/pipeline/checkpoint.py) - Implementation
+- [`infrastructure/core/runtime/checkpoint.py`](../../../infrastructure/core/runtime/checkpoint.py) - Implementation
 - [`../../scripts/execute_pipeline.py`](../../../scripts/execute_pipeline.py) - Resume integration
 - [Troubleshooting](../troubleshooting/) - Troubleshooting guide
 

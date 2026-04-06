@@ -176,12 +176,12 @@ Reference</h1>
 <p>This section provides a detailed reference for all 13 infrastructure
 subpackages, documenting their purpose, key classes, public API, and
 integration points within the pipeline. The infrastructure layer
-comprises ~271 Python modules validated by 6,025 tests. Each subpackage
+comprises ~271 Python modules validated by 6,026 tests. Each subpackage
 follows the Documentation Duality standard: every module directory
 contains both an <code>AGENTS.md</code> machine-readable specification
 and a <code>README.md</code> human-readable guide.</p>
-<h2 id="infrastructure.core-28-modules"><code>infrastructure.core</code>
-(28 modules)</h2>
+<h2 id="infrastructure.core-71-modules"><code>infrastructure.core</code>
+(71 modules)</h2>
 <p><strong>Purpose</strong>: Foundation utilities providing the bedrock
 services consumed by all other modules and all projects.</p>
 <p><strong>Key Components</strong>:</p>
@@ -284,8 +284,8 @@ extraction from Python source files</td>
 02 to register figures for automated cross-referencing in the
 manuscript. The glossary generator supports the Documentation Duality
 standard by extracting docstrings and function signatures.</p>
-<h2 id="infrastructure.llm-30-modules"><code>infrastructure.llm</code>
-(30 modules)</h2>
+<h2 id="infrastructure.llm-53-modules"><code>infrastructure.llm</code>
+(53 modules)</h2>
 <p><strong>Purpose</strong>: Local LLM integration for automated
 manuscript review, translation, and literature search.</p>
 <p><strong>Key Components</strong>:</p>
@@ -328,8 +328,8 @@ running Ollama instance. Gracefully degrades when unavailable. The
 literature search subpackage enables programmatic discovery of related
 work during manuscript preparation.</p>
 <h2
-id="infrastructure.project-2-modules"><code>infrastructure.project</code>
-(2 modules)</h2>
+id="infrastructure.project-5-modules"><code>infrastructure.project</code>
+(5 modules)</h2>
 <p><strong>Purpose</strong>: Project discovery and workspace
 management.</p>
 <p><strong>Key Components</strong>:</p>
@@ -362,8 +362,8 @@ which projects can be built. The discovery algorithm enforces the
 Standalone Project Paradigm: a directory is a valid project if and only
 if it contains <code>manuscript/config.yaml</code>.</p>
 <h2
-id="infrastructure.publishing-9-modules"><code>infrastructure.publishing</code>
-(9 modules)</h2>
+id="infrastructure.publishing-14-modules"><code>infrastructure.publishing</code>
+(14 modules)</h2>
 <p><strong>Purpose</strong>: Academic publishing metadata and citation
 generation.</p>
 <p><strong>Key Components</strong>:</p>
@@ -401,8 +401,8 @@ scripts to extract publishable metadata from results. Citation
 generators produce correctly formatted strings from
 <code>config.yaml</code> metadata.</p>
 <h2
-id="infrastructure.rendering-12-modules"><code>infrastructure.rendering</code>
-(12 modules)</h2>
+id="infrastructure.rendering-27-modules"><code>infrastructure.rendering</code>
+(27 modules)</h2>
 <p><strong>Purpose</strong>: Multi-format document rendering (Markdown →
 LaTeX → PDF, HTML reports).</p>
 <p><strong>Key Components</strong>:</p>
@@ -447,8 +447,8 @@ LaTeX → PDF, HTML reports).</p>
 resolves a known rendering hazard where stale <code>.aux</code> files
 cause “Division by 0” LaTeX errors.</p>
 <h2
-id="infrastructure.reporting-14-modules"><code>infrastructure.reporting</code>
-(14 modules)</h2>
+id="infrastructure.reporting-40-modules"><code>infrastructure.reporting</code>
+(40 modules)</h2>
 <p><strong>Purpose</strong>: Pipeline reporting, test result
 aggregation, and coverage analysis.</p>
 <p><strong>Key Components</strong>:</p>
@@ -528,8 +528,8 @@ analysis scripts during Stage 02 for algorithm validation. The stability
 checker is critical for ensuring that numerical results are reproducible
 across different floating-point environments.</p>
 <h2
-id="infrastructure.steganography-8-modules"><code>infrastructure.steganography</code>
-(8 modules)</h2>
+id="infrastructure.steganography-10-modules"><code>infrastructure.steganography</code>
+(10 modules)</h2>
 <p><strong>Purpose</strong>: Cryptographic watermarking and provenance
 embedding for PDF artifacts.</p>
 <p><strong>Key Components</strong>:</p>
@@ -574,8 +574,8 @@ after the main pipeline completes. Reads the rendered PDF and produces a
 steganographically watermarked copy with an accompanying
 <code>.hashes.json</code> manifest.</p>
 <h2
-id="infrastructure.validation-22-modules"><code>infrastructure.validation</code>
-(22 modules)</h2>
+id="infrastructure.validation-35-modules"><code>infrastructure.validation</code>
+(35 modules)</h2>
 <p><strong>Purpose</strong>: Quality assurance and integrity
 verification for all pipeline artifacts.</p>
 <p><strong>Key Components</strong>:</p>
@@ -614,12 +614,48 @@ directory validation</td>
 </table>
 <p><strong>Integration</strong>: Core of Stage 04. Validates all
 generated artifacts before they are finalized. The validation module is
-the most module-dense package (22 files), reflecting the breadth of
+the most module-dense package (35 files), reflecting the breadth of
 integrity checks required across PDF, Markdown, image, and manifest
 formats.</p>
+<h2
+id="infrastructure.skills-4-modules"><code>infrastructure.skills</code>
+(4 modules)</h2>
+<p><strong>Purpose</strong>: Programmatic discovery and manifest
+generation for AI-agent skill descriptors.</p>
+<p><strong>Key Components</strong>:</p>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>discovery.py</code></td>
+<td><code>discover_skills</code> — scans <code>SKILL.md</code> files
+across infrastructure modules and generates a unified skill
+manifest</td>
+</tr>
+<tr>
+<td><code>cli.py</code></td>
+<td>Command-line interface for writing and validating skill
+manifests</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integration</strong>: Maintains
+<code>.cursor/skill_manifest.json</code> for IDE-level agent discovery.
+The skill manifest aggregates all <code>SKILL.md</code> frontmatter into
+a single JSON index, enabling editors and AI coding assistants to locate
+module capabilities without traversing the directory tree.</p>
 <h2 id="infrastructure-maturity-summary">Infrastructure Maturity
 Summary</h2>
-<p>The twelve-module architecture achieves 100% Tier 1–2 documentation
+<p>The 13-module architecture achieves 100% Tier 1–2 documentation
 coverage (<code>AGENTS.md</code>, <code>README.md</code>) with Tier-3
 <code>SKILL.md</code> skill descriptors across all 10 active
 subpackages, 83%+ aggregate test coverage (exceeding the 60%

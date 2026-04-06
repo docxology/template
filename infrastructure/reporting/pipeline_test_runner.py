@@ -110,7 +110,14 @@ def run_infrastructure_tests(
     logger.info(f"Test path: {repo_root / 'tests' / 'infra_tests'}")
     logger.info("Coverage target: infrastructure (60% minimum)")
 
-    cmd = get_python_command() + [
+    root_venv = repo_root / ".venv"
+    if root_venv.is_dir():
+        python_exe = str(root_venv / "Scripts" / "python.exe" if os.name == 'nt' else root_venv / "bin" / "python")
+        cmd = [python_exe]
+    else:
+        cmd = get_python_command()
+
+    cmd += [
         "-m",
         "pytest",
         str(repo_root / "tests" / "infra_tests"),
@@ -206,7 +213,14 @@ def run_project_tests(
     logger.info(f"Coverage target: projects/{project_name}/src ({project_threshold}% minimum)")
 
     project_cov_config = project_root / "pyproject.toml"
-    cmd = get_python_command() + [
+    project_venv = project_root / ".venv"
+    if project_venv.is_dir():
+        python_exe = str(project_venv / "Scripts" / "python.exe" if os.name == 'nt' else project_venv / "bin" / "python")
+        cmd = [python_exe]
+    else:
+        cmd = get_python_command()
+
+    cmd += [
         "-m", "pytest",
         f"projects/{project_name}/tests",
         f"--cov=projects/{project_name}/src",

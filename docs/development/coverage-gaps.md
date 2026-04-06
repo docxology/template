@@ -50,7 +50,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Test ETA calculations
    - **Test File**: `tests/infra_tests/core/test_progress.py` (created)
 
-3. **`infrastructure/core/pipeline/checkpoint.py` (39.24%)**
+3. **`infrastructure/core/runtime/checkpoint.py` (39.24%)**
    - **Status**: Pipeline checkpoint system for resume capability
    - **Gap**: Checkpoint validation and error handling untested
    - **Improvement Plan**:
@@ -151,7 +151,7 @@ Track coverage improvements over time:
 4. ⏳ Expand remaining low-coverage modules:
    - `infrastructure/core/runtime/retry.py` (22.22%) - Tests exist but may need expansion
    - `infrastructure/core/pipeline/progress.py` (18.09%) - Tests exist but may need expansion
-   - `infrastructure/core/pipeline/checkpoint.py` (39.24%) - Tests exist but may need expansion
+   - `infrastructure/core/runtime/checkpoint.py` (39.24%) - Tests exist but may need expansion
 5. ⏳ Expand build_verifier tests
 6. ⏳ Add integration tests for checkpoint/resume
 7. ⏳ Document testing patterns and best practices

@@ -2,7 +2,7 @@
 
 This section provides a detailed reference for all ${module_count} infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~${total_infra_python_files} Python modules validated by ${infra_test_count_approx} tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
 
-## `infrastructure.core` (28 modules)
+## `infrastructure.core` (${module_core_python_file_count} modules)
 
 **Purpose**: Foundation utilities providing the bedrock services consumed by all other modules and all projects.
 
@@ -35,7 +35,7 @@ This section provides a detailed reference for all ${module_count} infrastructur
 
 **Integration**: Called by project scripts during Stage 02 to register figures for automated cross-referencing in the manuscript. The glossary generator supports the Documentation Duality standard by extracting docstrings and function signatures.
 
-## `infrastructure.llm` (30 modules)
+## `infrastructure.llm` (${module_llm_python_file_count} modules)
 
 **Purpose**: Local LLM integration for automated manuscript review, translation, and literature search.
 
@@ -51,7 +51,7 @@ This section provides a detailed reference for all ${module_count} infrastructur
 
 **Integration**: Invoked during Stage 06. Requires a running Ollama instance. Gracefully degrades when unavailable. The literature search subpackage enables programmatic discovery of related work during manuscript preparation.
 
-## `infrastructure.project` (2 modules)
+## `infrastructure.project` (${module_project_python_file_count} modules)
 
 **Purpose**: Project discovery and workspace management.
 
@@ -64,7 +64,7 @@ This section provides a detailed reference for all ${module_count} infrastructur
 
 **Integration**: Used by `execute_pipeline.py` and `run.sh` to identify which projects can be built. The discovery algorithm enforces the Standalone Project Paradigm: a directory is a valid project if and only if it contains `manuscript/config.yaml`.
 
-## `infrastructure.publishing` (9 modules)
+## `infrastructure.publishing` (${module_publishing_python_file_count} modules)
 
 **Purpose**: Academic publishing metadata and citation generation.
 
@@ -78,7 +78,7 @@ This section provides a detailed reference for all ${module_count} infrastructur
 
 **Integration**: Used during Stage 02 by analysis scripts to extract publishable metadata from results. Citation generators produce correctly formatted strings from `config.yaml` metadata.
 
-## `infrastructure.rendering` (12 modules)
+## `infrastructure.rendering` (${module_rendering_python_file_count} modules)
 
 **Purpose**: Multi-format document rendering (Markdown → LaTeX → PDF, HTML reports).
 
@@ -94,7 +94,7 @@ This section provides a detailed reference for all ${module_count} infrastructur
 
 **Integration**: Core of Stage 03. Reads `manuscript/*.md` and `config.yaml`, produces `output/<project>.pdf`. The auxiliary file cleanup resolves a known rendering hazard where stale `.aux` files cause "Division by 0" LaTeX errors.
 
-## `infrastructure.reporting` (14 modules)
+## `infrastructure.reporting` (${module_reporting_python_file_count} modules)
 
 **Purpose**: Pipeline reporting, test result aggregation, and coverage analysis.
 
@@ -122,7 +122,7 @@ This section provides a detailed reference for all ${module_count} infrastructur
 
 **Integration**: Used by `code_project`'s analysis scripts during Stage 02 for algorithm validation. The stability checker is critical for ensuring that numerical results are reproducible across different floating-point environments.
 
-## `infrastructure.steganography` (8 modules)
+## `infrastructure.steganography` (${module_steganography_python_file_count} modules)
 
 **Purpose**: Cryptographic watermarking and provenance embedding for PDF artifacts.
 
@@ -138,7 +138,7 @@ This section provides a detailed reference for all ${module_count} infrastructur
 
 **Integration**: Invoked by `secure_run.sh` after the main pipeline completes. Reads the rendered PDF and produces a steganographically watermarked copy with an accompanying `.hashes.json` manifest.
 
-## `infrastructure.validation` (22 modules)
+## `infrastructure.validation` (${module_validation_python_file_count} modules)
 
 **Purpose**: Quality assurance and integrity verification for all pipeline artifacts.
 
@@ -151,8 +151,21 @@ This section provides a detailed reference for all ${module_count} infrastructur
 | `integrity.py` | `verify_output_integrity` — comprehensive output directory validation |
 | `cli.py` | Command-line interface for standalone validation operations |
 
-**Integration**: Core of Stage 04. Validates all generated artifacts before they are finalized. The validation module is the most module-dense package (22 files), reflecting the breadth of integrity checks required across PDF, Markdown, image, and manifest formats.
+**Integration**: Core of Stage 04. Validates all generated artifacts before they are finalized. The validation module is the most module-dense package (${module_validation_python_file_count} files), reflecting the breadth of integrity checks required across PDF, Markdown, image, and manifest formats.
+
+## `infrastructure.skills` (${module_skills_python_file_count} modules)
+
+**Purpose**: Programmatic discovery and manifest generation for AI-agent skill descriptors.
+
+**Key Components**:
+
+| Component | Purpose |
+|-----------|---------|
+| `discovery.py` | `discover_skills` — scans `SKILL.md` files across infrastructure modules and generates a unified skill manifest |
+| `cli.py` | Command-line interface for writing and validating skill manifests |
+
+**Integration**: Maintains `.cursor/skill_manifest.json` for IDE-level agent discovery. The skill manifest aggregates all `SKILL.md` frontmatter into a single JSON index, enabling editors and AI coding assistants to locate module capabilities without traversing the directory tree.
 
 ## Infrastructure Maturity Summary
 
-The twelve-module architecture achieves 100% Tier 1–2 documentation coverage (`AGENTS.md`, `README.md`) with Tier-3 `SKILL.md` skill descriptors across all 10 active subpackages, 83%+ aggregate test coverage (exceeding the 60% infrastructure threshold by a wide margin), and zero mock-object violations. Every active module exposes a machine-readable skill descriptor aligned with the Model Context Protocol [@anthropic2024mcp], making the infrastructure layer not merely documented but *programmatically discoverable*—a prerequisite for the agentic research automation paradigm described in the [Documentation Duality](03c_documentation.md#documentation-duality-and-ai-collaboration) and [AI Collaboration](05d_ai_collaboration.md#the-ai-collaboration-model) sections. The combination of high coverage, complete documentation, and protocol-aligned discoverability positions `template/`'s infrastructure as deployment-ready research software rather than a prototype, satisfying the executability and metadata quality indicators defined by Garijo et al.'s FAIRsoft evaluator [@garijo2024fairsoft].
+The ${module_count}-module architecture achieves 100% Tier 1–2 documentation coverage (`AGENTS.md`, `README.md`) with Tier-3 `SKILL.md` skill descriptors across all 10 active subpackages, 83%+ aggregate test coverage (exceeding the 60% infrastructure threshold by a wide margin), and zero mock-object violations. Every active module exposes a machine-readable skill descriptor aligned with the Model Context Protocol [@anthropic2024mcp], making the infrastructure layer not merely documented but *programmatically discoverable*—a prerequisite for the agentic research automation paradigm described in the [Documentation Duality](03c_documentation.md#documentation-duality-and-ai-collaboration) and [AI Collaboration](05d_ai_collaboration.md#the-ai-collaboration-model) sections. The combination of high coverage, complete documentation, and protocol-aligned discoverability positions `template/`'s infrastructure as deployment-ready research software rather than a prototype, satisfying the executability and metadata quality indicators defined by Garijo et al.'s FAIRsoft evaluator [@garijo2024fairsoft].

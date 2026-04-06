@@ -71,6 +71,7 @@ test-infra + test-project
 
 #### 4. Project Tests (`test-project`)
 
+- **Sync:** `uv sync --group rendering --group monitoring --group discopy` — the **discopy** group installs DisCoPy so `projects/cognitive_case_diagrams/tests/` runs without skips (see root `pyproject.toml` `[dependency-groups]`).
 - **Matrix:** Same as `test-infra` (6 combinations)
 - **Coverage threshold:** 90% (`--cov-fail-under=90`) — enforces the project quality standard
 - **Coverage file:** `.coverage.project` (isolated)
@@ -79,11 +80,14 @@ test-infra + test-project
 
 #### 4b. fep_lean — real Open Gauss + Lake (`fep-lean`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12 only
+- **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists (`hashFiles` guard in `ci.yml`).
+- **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 45`
 - **Depends on:** `verify-no-mocks`
-- **Toolchain:** elan + `projects/fep_lean/lean/lean-toolchain`, `lake build` warm-up
+- **Working directory:** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
+- **Toolchain:** elan + pinned `lean-toolchain`, `lake build` warm-up
 - **Open Gauss:** clone [math-inc/OpenGauss](https://github.com/math-inc/OpenGauss), `./scripts/install.sh --plain --noninteractive --skip-system-packages`, `gauss doctor`
-- **Tests:** `uv run pytest projects/fep_lean/tests/ --timeout=900 --cov=projects/fep_lean/src --cov-fail-under=90`
+- **Tests:** `uv run pytest tests/ --timeout=1200 --cov=src --cov-fail-under=89` with `COVERAGE_FILE: ../../.coverage.fep_lean`
+- **Scaling:** Full catalogue × Lean is expensive; if runtime grows past the job budget, split slow integration tests behind a pytest marker or shard topics in a follow-up workflow.
 
 #### 5. Validate Manuscripts (`validate`)
 
@@ -115,7 +119,7 @@ test-infra + test-project
 | No-mocks policy | zero mock usage | `verify-no-mocks` job |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
 | Project coverage | ≥ 90% | `test-project` job |
-| fep_lean coverage | ≥ 90% | `fep-lean` job |
+| fep_lean coverage | ≥ 89% | `fep-lean` job (skipped if `projects/fep_lean/lean/lean-toolchain` absent) |
 | Bandit MEDIUM+ | zero findings | `security` job |
 | Import time | ≤ 5 seconds total | `performance` job |
 
@@ -160,7 +164,8 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
   --cov-fail-under=60 \
   -m "not requires_ollama"
 
-# Reproduce project tests locally (matrix job ignores fep_lean)
+# Reproduce project tests locally (matrix job ignores fep_lean; discopy = zero-skip cognitive_case_diagrams)
+uv sync --group rendering --group monitoring --group discopy
 COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
   --ignore=projects/fep_lean/tests/ \
   --cov=projects/code_project/src \

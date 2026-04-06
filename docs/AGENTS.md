@@ -14,10 +14,10 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `usage/` | Content authoring, formatting, visualization patterns |
 | `operational/` | Build, config, logging, troubleshooting, reporting |
 | `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
-| `modules/` | Infrastructure module guides (13 modules) |
+| `modules/` | Infrastructure module guides (14 documented areas; see [modules/modules-guide.md](modules/modules-guide.md)) |
 | `development/` | Contributing, testing, security, roadmap |
 | `best-practices/` | Best practices, version control, migration |
-| `prompts/` | AI prompt templates (9 expert prompts) |
+| `prompts/` | AI prompt templates (9 copy-paste templates; see [prompts/AGENTS.md](prompts/AGENTS.md)) |
 | `audit/` | Audit reports and findings |
 | `security/` | Security documentation and policies |
 | `rules/` | Development standards and guidelines (formerly .cursorrules) |

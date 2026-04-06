@@ -37,20 +37,21 @@ Link to any relevant issues using 'Closes #123' syntax.
 
 ## 🛠️ Pipeline Stages Affected
 
-Select all stages modified or requiring verification:
+Select stages that changed or need verification (matches `./run.sh` / [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md); script numbers are `scripts/NN_*.py`):
 
-| Stage | Path | Role |
+| Stage | Primary path | Role |
 | :--- | :--- | :--- |
-| [ ] **01_clean** | `infrastructure/core/file_cleanup.py` | Directory cleanup |
-| [ ] **02_setup** | `scripts/00_setup_environment.py` | Env verification |
-| [ ] **03_infra_test** | `tests/infra_tests/` | Shared capabilities |
-| [ ] **04_project_test** | `projects/*/tests/` | Domain logic |
-| [ ] **05_analysis** | `projects/*/scripts/` | Scientific workflows |
-| [ ] **06_render** | `projects/*/manuscript/` | PDF generation |
-| [ ] **07_validate** | `infrastructure/validation/` | QA gates |
-| [ ] **08_llm** | `scripts/06_llm_review.py` | AI evaluation |
-| [ ] **09_report** | `scripts/07_generate_executive_report.py` | Multi-project reporting |
-| [ ] **10_copy** | `scripts/05_copy_outputs.py` | Delivery |
+| [ ] **0 — Clean** | `infrastructure/core/files/cleanup.py`, `infrastructure/core/pipeline/` | Pre-step output cleanup |
+| [ ] **1 — Setup** | `scripts/00_setup_environment.py` | Env verification |
+| [ ] **2 — Infra tests** | `scripts/01_run_tests.py`, `tests/infra_tests/` | Infrastructure suite |
+| [ ] **3 — Project tests** | `scripts/01_run_tests.py`, `projects/*/tests/` | Project suite |
+| [ ] **4 — Analysis** | `scripts/02_run_analysis.py`, `projects/*/scripts/` | Analysis scripts |
+| [ ] **5 — Render** | `scripts/03_render_pdf.py` | PDF / multi-format render |
+| [ ] **6 — Validate** | `scripts/04_validate_output.py`, `infrastructure/validation/` | Output QA |
+| [ ] **7 — LLM review** | `scripts/06_llm_review.py` | Reviews (Ollama) |
+| [ ] **8 — LLM translations** | `scripts/06_llm_review.py` | Translations (Ollama) |
+| [ ] **9 — Copy** | `scripts/05_copy_outputs.py` | Deliverables → `output/` |
+| [ ] **Executive report** | `scripts/07_generate_executive_report.py` | Multi-project summary |
 
 ---
 

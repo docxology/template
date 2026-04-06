@@ -19,7 +19,7 @@ Project & Stages & Duration & Tests & Coverage \\
 \midrule\noalign{}
 \endhead
 \texttt{code\_project} & 7 & \textasciitilde40s & 39/39 & 90\%+ \\
-\texttt{act\_inf\_metaanalysis} & 7 & \textasciitilde60s & 505/505 &
+\texttt{cognitive\_case\_diagrams} & 7 & \textasciitilde60s & 814/814 &
 90\%+ \\
 \texttt{template} & 7 & \textasciitilde25s & 66/66 & 90\%+ \\
 \bottomrule\noalign{}
@@ -35,7 +35,7 @@ scripts use fixed random seeds. Figures are representative; actual
 duration scales with system load, test suite size, and manuscript
 complexity.}
 
-The \texttt{act\_inf\_metaanalysis} project, with its 505 tests and
+The \texttt{cognitive\_case\_diagrams} project, with its 814 tests and
 programmatically generated figures, represents the most computationally
 intensive exemplar---yet completes in under one minute, confirming that
 the Zero-Mock policy's real-method overhead remains tractable at this
@@ -54,7 +54,7 @@ Metric & Value \\
 \midrule\noalign{}
 \endhead
 Test files & 346+ \\
-Total tests & \textasciitilde6,025 \\
+Total tests & \textasciitilde6,026 \\
 Infrastructure coverage threshold & 60\% (achieved: 83\%+) \\
 Zero-mock violations & 0 \\
 Real filesystem operations & ✓ \\
@@ -63,8 +63,8 @@ Real subprocess invocations & ✓ \\
 \end{longtable}
 }
 
-This test suite exercises all twelve infrastructure modules, including
-the rendering pipeline (Pandoc/XeLaTeX integration), steganographic
+This test suite exercises all 13 infrastructure modules, including the
+rendering pipeline (Pandoc/XeLaTeX integration), steganographic
 operations (alpha-channel overlay, QR injection), and LLM client
 interactions (real HTTP calls to Ollama).
 \end{block}
@@ -76,36 +76,51 @@ programmatically enumerates the infrastructure layer, confirming the
 following module distribution:
 
 {\def\LTcaptype{none} % do not increment counter
-\begin{longtable}[]{@{}lcl@{}}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1250}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2031}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2344}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2344}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2031}}@{}}
 \toprule\noalign{}
-Module & Python Files & Key Exports \\
+\begin{minipage}[b]{\linewidth}\raggedright
+Module
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Python Files
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Has AGENTS.md
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Has README.md
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Key Exports
+\end{minipage} \\
 \midrule\noalign{}
 \endhead
-\texttt{core} & 28 & \texttt{get\_logger}, \texttt{load\_config},
-\texttt{TemplateError} \\
-\texttt{documentation} & 6 & \texttt{FigureManager},
+\texttt{config} & 0 & ✓ & ✓ & Configuration schemas \\
+\texttt{core} & 71 & ✓ & ✓ & \texttt{get\_logger},
+\texttt{load\_config}, \texttt{TemplateError} \\
+\texttt{docker} & 0 & ✓ & ✓ & Containerisation \\
+\texttt{documentation} & 6 & ✓ & ✓ & \texttt{FigureManager},
 \texttt{generate\_glossary} \\
-\texttt{llm} & 30 & LLM review, literature search, translation \\
-\texttt{project} & 2 & \texttt{discover\_projects}, workspace
+\texttt{llm} & 53 & ✓ & ✓ & LLM review, literature search,
+translation \\
+\texttt{project} & 5 & ✓ & ✓ & \texttt{discover\_projects}, workspace
 management \\
-\texttt{publishing} & 9 & Citation generation (APA, BibTeX, MLA),
-Zenodo \\
-\texttt{rendering} & 12 & PDF rendering, Pandoc filters, HTML reports \\
-\texttt{reporting} & 14 & Coverage parsing, executive reports \\
-\texttt{scientific} & 6 & \texttt{check\_numerical\_stability},
+\texttt{publishing} & 14 & ✓ & ✓ & Citation generation (APA, BibTeX,
+MLA), Zenodo \\
+\texttt{rendering} & 27 & ✓ & ✓ & PDF rendering, Pandoc filters, HTML
+reports \\
+\texttt{reporting} & 40 & ✓ & ✓ & Coverage parsing, executive reports \\
+\texttt{scientific} & 6 & ✓ & ✓ & \texttt{check\_numerical\_stability},
 \texttt{benchmark\_function} \\
-\texttt{steganography} & 8 & Metadata injection, QR overlays, hashing \\
-\texttt{validation} & 22 & PDF validation, Markdown checking, CLI \\
-(+ config, docker) & --- & Configuration, containerization \\
-\textbf{Total} & \textbf{\textasciitilde271} & \\
+\texttt{skills} & 4 & ✓ & ✓ & --- \\
+\texttt{steganography} & 10 & ✓ & ✓ & Metadata injection, QR overlays,
+hashing \\
+\texttt{validation} & 35 & ✓ & ✓ & PDF validation, Markdown checking,
+CLI \\
 \bottomrule\noalign{}
 \end{longtable}
 }
-
-\emph{The \textasciitilde271 figure includes approximately 13 additional
-modules in the \texttt{config/} and \texttt{docker/} subpackages
-(configuration schemas and containerization utilities) not enumerated
-individually above.}
 
 All 13 modules have 100\% documentation coverage at Tiers 1--2
 (\texttt{AGENTS.md}, \texttt{README.md}); the 10 active subpackages
@@ -138,7 +153,7 @@ Human (\texttt{README.md}) & 13+ per-directory & 100\% \\
 
 This four-layer coverage creates 13 fully described, MCP-mappable tool
 endpoints that a sufficiently capable agent could invoke without any
-source-code access. The aggregate documentation footprint (153+ files)
+source-code access. The aggregate documentation footprint (160+ files)
 represents a deliberate engineering investment: each documentation file
 is not commentary but a specification, enforcing architectural
 constraints through structured natural language {[}@lau2025aicoding{]}.
@@ -219,9 +234,9 @@ Total
 \texttt{code\_project} & \textasciitilde20 & \textless{} 0.3s &
 \textless{} 0.05s & \textless{} 0.8s & \textless{} 0.4s & \textless{}
 1.5s \\
-\texttt{act\_inf\_metaanalysis} & \textasciitilde80 & \textless{} 0.3s &
-\textless{} 0.05s & \textless{} 2.0s & \textless{} 0.4s & \textless{}
-2.8s \\
+\texttt{cognitive\_case\_diagrams} & \textasciitilde80 & \textless{}
+0.3s & \textless{} 0.05s & \textless{} 2.0s & \textless{} 0.4s &
+\textless{} 2.8s \\
 \texttt{template} & \textasciitilde30 & \textless{} 0.3s & \textless{}
 0.05s & \textless{} 0.9s & \textless{} 0.4s & \textless{} 1.6s \\
 \bottomrule\noalign{}
@@ -258,7 +273,7 @@ this way, the manuscript does not merely \emph{describe} but
 
 \pandocbounded{\includegraphics[keepaspectratio,alt={Two-Layer Architecture Overview}]{../figures/architecture_overview.png}}
 \textbf{Figure 1}: Two-Layer Architecture separating the generic,
-reusable infrastructure layer (12 subpackages, upper panel) from
+reusable infrastructure layer (13 subpackages, upper panel) from
 domain-specific project workspaces (lower panel), connected by the
 ten-stage DAG pipeline. Each module box displays its Python file count
 and a documentation badge (A = \texttt{AGENTS.md}, R =
@@ -302,7 +317,7 @@ tools). Colour scale: green \textbf{✓} = full native support; yellow
 \texttt{template/} column is outlined in blue. Capabilities are grouped
 into \emph{Core Pipeline} (rows 1--2), \emph{Quality \& Security} (rows
 3--8), and \emph{Ecosystem} (rows 9--14). \texttt{template/} is, to our
-knowledge, the only open-source system that integrates all twelve unique
+knowledge, the only open-source system that integrates all fourteen
 capabilities (pipeline orchestration through zero-mock policy, plus
 optional containerization) within a single cohesive architecture.
 Snakemake, Nextflow, and CWL provide superior distributed execution

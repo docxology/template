@@ -614,7 +614,33 @@ with open('output/environment.json', 'w') as f:
     json.dump(env_info, f, indent=2)
 ```
 
-**See [infrastructure/validation/integrity/checks.py](../../infrastructure/validation/integrity/checks.py) for integrity verification tools.**
+### Automated Integrity Verification
+
+Use the infrastructure validation module to verify output integrity programmatically:
+
+```python
+from infrastructure.validation import verify_output_integrity
+from pathlib import Path
+
+report = verify_output_integrity(Path("output/code_project"))
+if report.overall_integrity:
+    print("All integrity checks passed")
+else:
+    for issue in report.issues:
+        print(f"  Issue: {issue}")
+```
+
+See the [Validation Module Guide](../modules/guides/validation-module.md) for full integrity checking capabilities.
+
+### Cryptographic Provenance
+
+For publication-grade provenance, the steganography module embeds SHA-256 hashes and watermarks directly into your PDFs:
+
+```bash
+./secure_run.sh --project code_project
+```
+
+This creates a tamper-detectable PDF with embedded provenance metadata. See the [Secure Research Guide](secure-research-guide.md) for details.
 
 ---
 

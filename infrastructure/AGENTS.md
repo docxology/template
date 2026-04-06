@@ -45,7 +45,7 @@ infrastructure/
 │   ├── __main__.py
 │   └── SKILL.md, AGENTS.md, README.md
 ├── validation/     # Quality & validation tools
-│   ├── output/pdf_validator.py      # PDF rendering validation
+│   ├── content/pdf_validator.py      # PDF rendering validation
 │   ├── content/markdown_validator.py # Markdown structure validation
 │   ├── integrity/checks.py            # File integrity & cross-references
 │   ├── repo/audit_orchestrator.py # Comprehensive audit coordination
@@ -196,11 +196,11 @@ infrastructure/
 
 ### Validation Module
 
-#### output/pdf_validator.py
+#### content/pdf_validator.py
 
 - `def validate_pdf_rendering(pdf_path: Path) -> dict:`
 - `def extract_text_from_pdf(pdf_path: Path) -> str:`
-- `def scan_for_issues(pdf_path: Path) -> List[dict]:`
+- `def scan_for_issues(text: str) -> dict[str, int]:`
 
 #### content/markdown_validator.py
 
@@ -432,7 +432,7 @@ from infrastructure.core.runtime.function_profiler import CodeProfiler
 
 **Quality assurance and validation tools.**
 
-- `output/pdf_validator.py` - PDF rendering validation
+- `content/pdf_validator.py` - PDF rendering validation
   - Text extraction and analysis
   - Issue detection (unresolved references, warnings)
   - Document structure verification

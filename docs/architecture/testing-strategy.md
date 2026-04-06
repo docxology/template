@@ -8,7 +8,7 @@ This document describes how tests are structured and run across both layers of t
 
 ---
 
-## Infrastructure Tests (`tests/infrastructure/`)
+## Infrastructure Tests (`tests/infra_tests/`)
 
 - Verify build orchestration works
 - Test validation logic
@@ -19,7 +19,7 @@ This document describes how tests are structured and run across both layers of t
 **Command:**
 
 ```bash
-pytest tests/infrastructure/ --cov=infrastructure
+pytest tests/infra_tests/ --cov=infrastructure
 ```
 
 ## Project Tests (`projects/{name}/tests/`)

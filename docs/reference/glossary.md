@@ -139,7 +139,7 @@ Auto-generated API reference from `src/` code. Updated automatically during buil
 
 **File**: `manuscript/98_symbols_glossary.md`
 
-**Generation**: `uv run python -m infrastructure.documentation.generate_glossary_cli` (or integrated into build pipeline Stage 03)
+**Generation**: `uv run python infrastructure/documentation/generate_glossary_cli.py projects/code_project/src/ projects/code_project/manuscript/98_symbols_glossary.md` (or your project’s paths; see [`docs/modules/modules-guide.md`](../modules/modules-guide.md))
 
 ### Guard Clause
 
@@ -168,7 +168,7 @@ Running matplotlib without display server using `MPLBACKEND=Agg`. Required for C
 
 Single PDF file generated for each manuscript section. Allows focused review of specific sections.
 
-**Location**: `output/pdf/01_abstract.pdf`, `output/pdf/02_introduction.pdf`, etc.
+**Location**: `projects/{name}/output/pdf/*.pdf` while building; after copy, `output/{name}/pdf/*.pdf` (see [`docs/RUN_GUIDE.md`](../RUN_GUIDE.md))
 
 **See**: [PDF Generation](#pdf-generation)
 

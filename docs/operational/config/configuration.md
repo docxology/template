@@ -140,7 +140,7 @@ def risky_operation():
 
 ### fep_lean (optional Open Gauss CLI)
 
-Used by `projects/fep_lean/src/gauss_cli.py` and `projects/fep_lean/src/orchestrator.py`:
+`fep_lean` lives under **`projects/fep_lean/`** (discovered by `./run.sh` when present). Used by `projects/fep_lean/src/gauss/cli.py` and related orchestration modules:
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |

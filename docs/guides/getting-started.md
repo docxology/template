@@ -372,7 +372,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 1. **Copy template**
 
    ```bash
-   cp .env.template .env
+   cp infrastructure/config/.env.template .env
    ```
 
 2. **Edit .env**

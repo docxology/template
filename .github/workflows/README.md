@@ -8,7 +8,7 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 | File | Trigger | Purpose |
 |---|---|---|
-| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | Full 7-job quality gate pipeline |
+| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | 8-job pipeline (`fep-lean` conditional on `projects/fep_lean/lean/lean-toolchain`) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
 
@@ -21,10 +21,11 @@ lint (Ruff + mypy)
  └── verify-no-mocks
       ├── test-infra  · ubuntu+macos × 3.10/3.11/3.12 · ≥60% coverage
       ├── test-project · ubuntu+macos × 3.10/3.11/3.12 · ≥90% coverage
-      ├── validate    · manuscript markdown + project imports
-      └── security    · pip-audit + bandit MEDIUM+
+      ├── fep-lean     · ubuntu only, if projects/fep_lean present — Lean/Lake + gauss
+      ├── validate     · manuscript markdown + project imports
+      └── security     · pip-audit + bandit MEDIUM+
 test-infra + test-project
- └── performance     · total import time ≤ 5 s
+ └── performance      · total import time ≤ 5 s
 ```
 
 ### Quality Gates

@@ -14,6 +14,9 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 | `extending-and-automation.md` | Levels 10-12 | Expert users extending the template |
 | `new-project-setup.md` | All levels | Complete setup checklist with pitfalls |
 | `new-project-one-shot-prompt.md` | All levels | LLM one-shot scaffold; primary exemplar `projects/code_project/`; active names in `_generated/active_projects.md` |
+| `llm-integration-guide.md` | Levels 11-12 | AI-assisted research: Ollama setup, LLM review, templates, programmatic usage |
+| `publishing-guide.md` | Levels 11-12 | Academic publishing: DOI, Zenodo, arXiv, citations (BibTeX/APA/MLA) |
+| `secure-research-guide.md` | Level 11 | PDF steganography: watermarks, QR codes, SHA-256 hashing, provenance |
 
 ## Key Conventions
 

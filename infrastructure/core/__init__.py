@@ -38,9 +38,14 @@ from infrastructure.core.runtime.function_profiler import monitor_performance
 # Progress (used by long-running scripts)
 from infrastructure.core.progress import ProgressBar
 
+# Exceptions (commonly imported via core)
+from infrastructure.core.exceptions import TemplateError
+
 __all__ = [
     # Checkpoint
     "CheckpointManager",
+    # Exceptions
+    "TemplateError",
     # Health
     "SystemHealthChecker",
     # Logging

@@ -66,7 +66,7 @@ Module names and contents vary by project; the list below is **illustrative**, n
 
 ## Infrastructure Core Module Inventory
 
-> Auto-generated module inventory for `infrastructure/core/` (26 modules).
+> Module inventory for `infrastructure/core/`.
 
 | Module | Description |
 |--------|-------------|
@@ -100,159 +100,128 @@ For detailed class and function signatures for each core module, see [Infrastruc
 
 ---
 
-## Module: example
+## Module: core
 
-### Functions
+The core module provides foundational utilities used across all infrastructure modules. See [Core Module Guide](../modules/guides/core-module.md) for detailed usage.
 
-#### `add_numbers(a: float, b: float) -> float`
+### Key Exports
 
-Add two numbers together.
+| Symbol | Type | Import Path |
+|--------|------|-------------|
+| `get_logger` | Function | `infrastructure.core` |
+| `log_operation` | Function | `infrastructure.core` |
+| `log_stage` | Function | `infrastructure.core` |
+| `log_success` | Function | `infrastructure.core` |
+| `format_duration` | Function | `infrastructure.core` |
+| `TemplateError` | Exception | `infrastructure.core` |
+| `CheckpointManager` | Class | `infrastructure.core` |
+| `SystemHealthChecker` | Class | `infrastructure.core` |
+| `monitor_performance` | Decorator | `infrastructure.core` |
+| `ProgressBar` | Class | `infrastructure.core` |
 
-**Parameters:**
+### Subpackages
 
-- `a` (float): First number
-- `b` (float): Second number
-
-**Returns:**
-
-- `float`: Sum of a and b
-
-**Example:**
-
-```python
-from example import add_numbers
-result = add_numbers(3.5, 2.5)  # Returns 6.0
-```
-
----
-
-#### `multiply_numbers(a: float, b: float) -> float`
-
-Multiply two numbers together.
-
-**Parameters:**
-
-- `a` (float): First number
-- `b` (float): Second number
-
-**Returns:**
-
-- `float`: Product of a and b
-
-**Example:**
-
-```python
-from example import multiply_numbers
-result = multiply_numbers(3.0, 4.0)  # Returns 12.0
-```
+| Subpackage | Purpose | Key Symbols |
+|------------|---------|-------------|
+| `core.config` | YAML config loading | `load_config`, `get_config_as_dict` |
+| `core.exceptions` | Exception hierarchy | `TemplateError`, `BuildError`, `ValidationError` |
+| `core.logging` | Structured logging | `get_logger`, `ProjectLogger` |
+| `core.pipeline` | Pipeline execution | `PipelineConfig`, `PipelineExecutor` |
+| `core.runtime` | Checkpoints, profiling | `CheckpointManager`, `CodeProfiler` |
+| `core.telemetry` | Stage resource metrics | `TelemetryCollector`, `TelemetryConfig` |
+| `core.files` | File operations | `clean_coverage_files`, `copy_final_deliverables` |
 
 ---
 
-#### `calculate_average(numbers: List[float]) -> Optional[float]`
+## Module: llm
 
-Calculate the average of a list of numbers.
+Local LLM integration via Ollama for manuscript review and literature search. See [LLM Module Guide](../modules/guides/llm-module.md).
 
-**Parameters:**
+### Key Exports
 
-- `numbers` (List[float]): List of numbers to average
-
-**Returns:**
-
-- `Optional[float]`: Average of the numbers, or None if list is empty
-
-**Example:**
-
-```python
-from example import calculate_average
-result = calculate_average([1.0, 2.0, 3.0, 4.0])  # Returns 2.5
-result = calculate_average([])  # Returns None
-```
+| Symbol | Type | Import Path |
+|--------|------|-------------|
+| `LLMClient` | Class | `infrastructure.llm` |
+| `OllamaClientConfig` | Dataclass | `infrastructure.llm` |
+| `GenerationOptions` | Dataclass | `infrastructure.llm` |
+| `generate_review` | Function | `infrastructure.llm` |
+| `ReviewResult` | Dataclass | `infrastructure.llm` |
+| `ReviewConfig` | Dataclass | `infrastructure.llm` |
+| `ReviewMode` | Enum | `infrastructure.llm` |
 
 ---
 
-#### `find_maximum(numbers: List[float]) -> Optional[float]`
+## Module: rendering
 
-Find the maximum value in a list of numbers.
+Multi-format output generation. See [Rendering Module Guide](../modules/guides/rendering-module.md).
 
-**Parameters:**
+### Key Exports
 
-- `numbers` (List[float]): List of numbers to search
-
-**Returns:**
-
-- `Optional[float]`: Maximum value, or None if list is empty
-
-**Example:**
-
-```python
-from example import find_maximum
-result = find_maximum([1.0, 5.0, 3.0, 2.0])  # Returns 5.0
-```
+| Symbol | Type | Import Path |
+|--------|------|-------------|
+| `RenderManager` | Class | `infrastructure.rendering` |
+| `RenderingConfig` | Dataclass | `infrastructure.rendering` |
+| `execute_render_pipeline` | Function | `infrastructure.rendering.pipeline` |
 
 ---
 
-#### `find_minimum(numbers: List[float]) -> Optional[float]`
+## Module: reporting
 
-Find the minimum value in a list of numbers.
+Pipeline reporting and executive summaries. See [Reporting Module Guide](../modules/guides/reporting-module.md).
 
-**Parameters:**
+### Key Exports
 
-- `numbers` (List[float]): List of numbers to search
-
-**Returns:**
-
-- `Optional[float]`: Minimum value, or None if list is empty
-
-**Example:**
-
-```python
-from example import find_minimum
-result = find_minimum([1.0, 5.0, 3.0, 2.0])  # Returns 1.0
-```
+| Symbol | Type | Import Path |
+|--------|------|-------------|
+| `generate_pipeline_report` | Function | `infrastructure.reporting` |
+| `ErrorAggregator` | Class | `infrastructure.reporting` |
+| `OutputOrganizer` | Class | `infrastructure.reporting` |
+| `execute_test_pipeline` | Function | `infrastructure.reporting` |
 
 ---
 
-#### `is_even(number: int) -> bool`
+## Module: project
 
-Check if a number is even.
+Multi-project discovery and management. See [Project Module Guide](../modules/guides/project-module.md).
 
-**Parameters:**
+### Key Exports
 
-- `number` (int): Integer to check
-
-**Returns:**
-
-- `bool`: True if number is even, False otherwise
-
-**Example:**
-
-```python
-from example import is_even
-result = is_even(4)  # Returns True
-result = is_even(5)  # Returns False
-```
+| Symbol | Type | Import Path |
+|--------|------|-------------|
+| `ProjectInfo` | Dataclass | `infrastructure.project` |
+| `discover_projects` | Function | `infrastructure.project` |
+| `get_project_metadata` | Function | `infrastructure.project` |
+| `validate_project_structure` | Function | `infrastructure.project` |
 
 ---
 
-#### `is_odd(number: int) -> bool`
+## Module: skills
 
-Check if a number is odd.
+Agent skill discovery and manifest generation. See [Skills Module Guide](../modules/guides/skills-module.md).
 
-**Parameters:**
+### Key Exports
 
-- `number` (int): Integer to check
+| Symbol | Type | Import Path |
+|--------|------|-------------|
+| `SkillDescriptor` | Dataclass | `infrastructure.skills` |
+| `discover_skills` | Function | `infrastructure.skills` |
+| `write_skill_manifest` | Function | `infrastructure.skills` |
+| `manifest_matches_discovery` | Function | `infrastructure.skills` |
 
-**Returns:**
+---
 
-- `bool`: True if number is odd, False otherwise
+## Module: steganography
 
-**Example:**
+Cryptographic watermarking and provenance embedding. See [Steganography Module Guide](../modules/guides/steganography-module.md).
 
-```python
-from example import is_odd
-result = is_odd(5)  # Returns True
-result = is_odd(4)  # Returns False
-```
+### Key Exports
+
+| Symbol | Type | Import Path |
+|--------|------|-------------|
+| `SteganographyConfig` | Dataclass | `infrastructure.steganography` |
+| `SteganographyProcessor` | Class | `infrastructure.steganography` |
+| `embed_steganography` | Function | `infrastructure.steganography` |
+| `process_pdf` | Function | `infrastructure.steganography` |
 
 ---
 
@@ -371,7 +340,7 @@ Extract text content from PDF file.
 ```python
 from pathlib import Path
 from infrastructure.validation import extract_text_from_pdf
-text = extract_text_from_pdf(Path("output/pdf/document.pdf"))
+text = extract_text_from_pdf(Path("output/code_project/pdf/code_project_combined.pdf"))
 ```
 
 ---
@@ -420,7 +389,9 @@ Extract the first N words from text, preserving punctuation.
 **Example:**
 
 ```python
-from infrastructure.validation import extract_text_from_pdf, extract_first_n_words
+from infrastructure.validation import extract_text_from_pdf
+from infrastructure.validation.content.pdf_validator import extract_first_n_words
+
 text = extract_text_from_pdf(pdf_path)
 preview = extract_first_n_words(text, n=100)
 print(preview)
@@ -454,7 +425,7 @@ Perform validation of PDF rendering.
 ```python
 from pathlib import Path
 from infrastructure.validation import validate_pdf_rendering
-report = validate_pdf_rendering(Path("output/pdf/document.pdf"))
+report = validate_pdf_rendering(Path("output/code_project/pdf/code_project_combined.pdf"))
 if report['summary']['has_issues']:
     print("PDF has issues:", report['issues'])
 ```
@@ -712,88 +683,6 @@ Benchmark function performance across multiple inputs.
 from infrastructure.scientific import benchmark_function
 result = benchmark_function(my_func, test_inputs, iterations=50)
 print(f"Execution Time: {result.execution_time:.4f}s")
-```
-
----
-
-## Module: data_generator
-
-Synthetic data generation with configurable distributions.
-
-### Functions
-
-#### `generate_synthetic_data(n_samples: int, n_features: int = 1, distribution: str = "normal", seed: Optional[int] = None, **kwargs) -> np.ndarray`
-
-Generate synthetic data with specified distribution.
-
-**Parameters:**
-
-- `n_samples` (int): Number of samples
-- `n_features` (int): Number of features (default: 1)
-- `distribution` (str): Distribution type (normal, uniform, exponential, poisson, beta)
-- `seed` (Optional[int]): Random seed
-- `**kwargs`: Distribution-specific parameters
-
-**Returns:**
-
-- `np.ndarray`: Array of generated data
-
-**Example:**
-
-```python
-from data_generator import generate_synthetic_data
-data = generate_synthetic_data(100, n_features=2, distribution="normal", mean=0.0, std=1.0)
-```
-
----
-
-## Module: statistics
-
-Statistical analysis including descriptive statistics, hypothesis testing, and correlation analysis.
-
-### Functions
-
-#### `calculate_descriptive_stats(data: np.ndarray) -> DescriptiveStats`
-
-Calculate descriptive statistics for a dataset.
-
-**Returns:**
-
-- `DescriptiveStats`: Object with mean, std, median, min, max, quartiles, count
-
-**Example:**
-
-```python
-from statistics import calculate_descriptive_stats
-stats = calculate_descriptive_stats(data)
-print(f"Mean: {stats.mean}, Std: {stats.std}")
-```
-
----
-
-## Module: visualization
-
-Publication-quality figure generation with consistent styling.
-
-### Classes
-
-#### `VisualizationEngine`
-
-Engine for generating publication-quality figures.
-
-**Methods:**
-
-- `create_figure(nrows, ncols, figsize, **kwargs)` - Create figure with subplots
-- `save_figure(figure, filename, formats, dpi)` - Save figure in multiple formats
-- `apply_publication_style(ax, title, xlabel, ylabel, grid, legend)` - Apply styling
-
-**Example:**
-
-```python
-from visualization import VisualizationEngine
-engine = VisualizationEngine(style="publication", output_dir="output/figures")
-fig, ax = engine.create_figure()
-engine.save_figure(fig, "my_figure", formats=["png", "pdf"])
 ```
 
 ---

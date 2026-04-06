@@ -111,8 +111,8 @@ python3 scripts/execute_multi_project.py --no-llm
 python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** `code_project`, `blake_bimetalism`, `template` (run `discover_projects` or `ls projects/` for the current set; see `docs/_generated/active_projects.md`)
-**In-progress projects:** `fep_lean`, `aii-org`, `cognitive_case_diagrams`, and others in `projects_in_progress/`
+**Active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`). Default path examples → [`projects/code_project/`](projects/code_project/); FEP / Lean catalogue → [`projects/fep_lean/`](projects/fep_lean/).
+**In-progress projects:** `aii-org` and others in [`projects_in_progress/`](projects_in_progress/) (not discovered until moved under `projects/`)
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
 ## Architecture
@@ -181,8 +181,8 @@ avg = calculate_average(data)  # Use tested method
 - **`projects_in_progress/`** - In-progress projects (scaffolding, not executed)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-**Current active projects:** `code_project`, `blake_bimetalism`, `template`
-**Current in-progress projects:** `fep_lean`, `aii-org`, `cognitive_case_diagrams`, `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `ento_linguistics`
+**Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (do not hard-code names in docs).
+**Current in-progress projects:** See [`projects_in_progress/`](projects_in_progress/) (e.g. `aii-org`, `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `ento_linguistics`)
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`

@@ -9,8 +9,8 @@
 
 | Project | Status | Domain | src/ Modules | Tests | Coverage | Pages |
 |---------|--------|--------|:-----------:|:-----:|:--------:|:-----:|
-| `code_project` | Active | Numerical optimization | `optimizer.py` | 39 | 90%+ | ~20 |
-| `act_inf_metaanalysis` | Active | Active inference meta-analysis | Multiple modules | 505 | 90%+ | ~80 |
-| `template` | In-progress | Meta-architecture | `introspection.py` | 65 | 90%+ | ~30 |
+| `code_project` | Active | Numerical optimization | `optimizer.py` | ${project_code_project_test_count} | 90%+ | ~20 |
+| `cognitive_case_diagrams` | Active | Compositional case modeling | ${project_cognitive_case_diagrams_src_module_count} modules | ${project_cognitive_case_diagrams_test_count} | 90%+ | ~60 |
+| `template` | Active | Meta-architecture | `introspection.py`, `metrics.py` | ${project_template_test_count} | 90%+ | ~30 |
 
 Active projects reside in `projects/` and are discovered automatically by the pipeline. In-progress projects reside in `projects_in_progress/` and are excluded from automated multi-project runs until promoted.

@@ -2,7 +2,7 @@
 
 ## Unified Logging System
 
-All Python scripts use `infrastructure/core/logging/logging_utils.py`.
+All Python scripts use `infrastructure/core/logging/utils.py`.
 
 ### Import Pattern
 

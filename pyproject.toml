@@ -43,6 +43,7 @@ dependencies = [
   # scipy, scikit-learn, wordcloud, rdflib are in [scientific] optional group — install with:
   # uv sync --group scientific
   # requests is in the [llm] dep group — install with: uv sync --group llm
+  "networkx>=3.4.2",
 ]
 
 
@@ -86,6 +87,10 @@ steganography = [
 # Optional resource monitoring (gracefully absent via try/except in logging_utils.py)
 monitoring = [
   "psutil>=5.9.0",
+]
+# DisCoPy (projects/cognitive_case_diagrams string diagrams; not in default-groups)
+discopy = [
+  "discopy>=1.0.0",
 ]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)
 dev = [

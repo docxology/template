@@ -63,7 +63,7 @@ graph TD
     subgraph Active["Active Projects (projects/)"]
         P1[code_project<br/>Optimization Exemplar<br/>~96% coverage · 39 tests]
         P2[template<br/>Meta-Documentation<br/>~93% coverage · 66 tests]
-        P3[blake_bimetalism<br/>18-chapter manuscript<br/>~96% coverage · 20 tests]
+        P3[cognitive_case_diagrams<br/>Case diagrams manuscript<br/>large suite · data only]
     end
 
     subgraph InProgress["In-Progress Projects (projects_in_progress/)"]
@@ -576,8 +576,8 @@ All projects in this directory comply with the template's development standards 
 
 - **code_project**: ~96% coverage (39 tests), all data-driven ✅
 - **template**: ~93% coverage (66 tests), all data-driven ✅
-- **blake_bimetalism**: ~96% coverage (20 tests), all data-driven ✅
-- **Combined**: 125 tests across 3 active projects, all use data, no mocks detected ✅
+- **cognitive_case_diagrams**: large suite (`pytest --collect-only` in project dir), data-driven ✅
+- **Combined**: all active projects under `discover_projects()`, no mocks policy ✅
 
 Authoritative project names: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate with `uv run python scripts/generate_active_projects_doc.py` after layout changes).
 
