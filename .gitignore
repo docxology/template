@@ -89,7 +89,7 @@ projects/*
 /projects_archive 
 /projects_in_progress
 
-# Desloppify
-.desloppify
-/.desloppify
+# Desloppify (ignore local state; track config.json for shared exclude patterns)
+.desloppify/*
+!.desloppify/config.json
 /projects/fep_lean
