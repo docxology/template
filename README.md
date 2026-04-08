@@ -2,7 +2,7 @@
 
 <!-- Badges below are manually updated after each pipeline run. Run `uv run pytest` to get current coverage numbers. -->
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/RUN_GUIDE.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/RUN_GUIDE.md)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20%7C%20~76%25%20infra-brightgreen)](docs/RUN_GUIDE.md)
 [![Tests](https://img.shields.io/badge/tests-6026%2B%20passing%20(100%25)-brightgreen)](docs/RUN_GUIDE.md)
 [![Documentation](https://img.shields.io/badge/docs-154%2B%20files-blue)](docs/documentation-index.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
@@ -384,7 +384,7 @@ open output/pdf/project_combined.pdf
 graph LR
     subgraph Status["✅ System Status"]
         TESTS[Tests: 3025 passing\n2569 infra [5 skipped] + 456 project\n100% success rate]
-        COV[Coverage: 100% project\n83.33% infra\nExceeds requirements]
+        COV[Coverage: 100% project\n~76% infra\nExceeds 60% gate]
         BUILD[Build Time: 53s\nOptimal performance\n(without LLM review)]
         PDFS[PDFs: 14/14 generated\nAll sections]
     end
@@ -412,7 +412,7 @@ graph LR
 
 **Key Metrics:**
 
-- **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements) - [Pipeline Guide](docs/RUN_GUIDE.md)
+- **Test Coverage**: 100% project, ~76% infrastructure line aggregate (≥60% gate; re-measure) - [Pipeline Guide](docs/RUN_GUIDE.md)
 - **Build Time**: 84 seconds (with full test suite) - [Performance Optimization](docs/operational/config/performance-optimization.md)
 - **Tests Passing**: 3025 tests (2569 infrastructure [5 skipped] + 456 project) - [Testing Guide](docs/development/testing/testing-guide.md)
 - **PDFs Generated**: 14 (all sections) - [Pipeline Guide](docs/RUN_GUIDE.md)
@@ -788,7 +788,7 @@ Scripts in `projects/{name}/scripts/` demonstrate proper integration with `proje
 
 All source code must meet **test coverage requirements** (90% project, 60% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are validated.
 
-**Current Coverage**: 100% project, 83.33% infrastructure (exceeds requirements by 39%!) - [Testing Guide](docs/development/testing/testing-guide.md)
+**Current Coverage**: 100% project, ~76% infrastructure line aggregate when `tests/infra_tests/llm/` is skipped (≥60% gate)—[Testing Guide](docs/development/testing/testing-guide.md), [infrastructure/README.md](infrastructure/README.md#testing)
 
 ### Automated Script Execution
 
@@ -1066,7 +1066,7 @@ pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 
 **Test Requirements (Infrastructure Layer - Layer 1):**
 
-- **60% minimum coverage**: Currently achieving 83.33% (exceeds stretch goal!)
+- **60% minimum coverage**: Gate enforced in CI; typical line aggregate ~76% when skipping long `llm/` tests (re-measure with `uv run pytest tests/infra_tests/ --ignore=tests/infra_tests/llm --cov=infrastructure --cov-report=term --cov-fail-under=0`)
 - **No mocks**: All tests use data and computations
 - **Deterministic**: Fixed RNG seeds for reproducible results
 - **Integration testing**: Cross-module interaction validation

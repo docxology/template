@@ -1,4 +1,4 @@
-# tests/ - Repository Test Documentation
+# tests/
 
 ## Purpose
 
@@ -32,11 +32,10 @@ The `tests/` directory contains repository-wide tests for infrastructure, integr
 - [`README.md`](README.md)
 - [`infra_tests/AGENTS.md`](infra_tests/AGENTS.md)
 - [`integration/AGENTS.md`](integration/AGENTS.md)
-# tests/ - Test Suite
 
-## Purpose
+## Coverage and role
 
-The `tests/` directory ensures **test coverage** for all modules (90% project minimum, 60% infrastructure minimum). Tests validate that core business logic works correctly using data and computations.
+The `tests/` tree enforces **90% minimum** coverage on `projects/{name}/src/` and **60% minimum** on `infrastructure/` via `tests/infra_tests/`. Tests validate behavior with real data, subprocesses, files, and HTTP test servers—not mocks.
 
 ## Testing Philosophy
 
@@ -168,7 +167,7 @@ For modules requiring external services (LLM, Literature, Publishing):
 ### Coverage Requirements
 
 - All projects/{name}/src/ modules must meet 90% minimum coverage (currently 100% - coverage!)
-- Infrastructure modules must meet 60% minimum coverage (currently 83.33% - exceeds stretch goal!)
+- Infrastructure modules must meet 60% minimum coverage (**≥60%** gate; typical line aggregate **~76%** when skipping `tests/infra_tests/llm/`—re-measure)
 - Tests must pass before PDF generation proceeds
 - Coverage validated by `pyproject.toml` configuration (`[tool.coverage.*]` sections)
 - No code ships without tests
@@ -278,51 +277,14 @@ tests/
 
 ## conftest.py
 
-Configures test environment:
+[`conftest.py`](conftest.py) configures pytest for the whole tree. Summary (see file for full source):
 
-```python
-"""Pytest configuration for template tests."""
-import os
-import sys
-from pathlib import Path
-
-import pytest
-
-# Force headless backend for matplotlib in tests
-os.environ.setdefault("MPLBACKEND", "Agg")
-
-# Add paths for imports
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
-# Remove tests/ directory from path if present to prevent shadowing
-TESTS_DIR = os.path.join(ROOT, "tests")
-if TESTS_DIR in sys.path:
-    sys.path.remove(TESTS_DIR)
-
-# Add ROOT to path so we can import infrastructure as a package
-# Ensure ROOT is FIRST in path to avoid shadowing by tests/infra_tests
-if ROOT in sys.path:
-    sys.path.remove(ROOT)
-sys.path.insert(0, ROOT)
-
-# CRITICAL: Import and cache the real infrastructure module NOW
-import infrastructure as _real_infra
-sys.modules["infrastructure"] = _real_infra
-
-# Add projects/*/src/ to path for project modules (active projects only)
-# Projects are discovered dynamically from the projects/ directory.
-active_projects = []
-projects_dir = os.path.join(ROOT, "projects")
-if os.path.exists(projects_dir):
-    for item in os.listdir(projects_dir):
-        item_path = os.path.join(projects_dir, item)
-        if os.path.isdir(item_path) and not item.startswith((".", "_")):
-            active_projects.append(item)
-for project_name in active_projects:
-    project_src = os.path.join(ROOT, "projects", project_name, "src")
-    if os.path.exists(project_src) and project_src not in sys.path:
-        sys.path.insert(0, project_src)
-```
+- Sets `MPLBACKEND=Agg` for headless matplotlib.
+- Puts the repository root first on `sys.path`, removes `tests/` from the path to avoid shadowing, and **pins** `sys.modules["infrastructure"]` and `sys.modules["infrastructure.core"]` to the real packages before collection.
+- Adds optional root `src/` if present.
+- Adds `projects/<name>/src/` for each top-level active project, and **nested** `projects/<program>/<subproject>/src/` when a project folder contains subfolders with their own `src/` (program-grouped layout).
+- Registers markers (`requires_zenodo`, `requires_github`, `requires_arxiv`, `requires_latex`, `requires_network`, `requires_credentials`).
+- Session fixtures for credentials (`credential_manager`, `zenodo_credentials`, `github_credentials`, `arxiv_credentials`), `skip_if_no_latex`, Ollama session setup (`ensure_ollama_for_tests`, autouse hook for `requires_ollama`), and test-project cleanup.
 
 This allows tests to import directly:
 
@@ -370,9 +332,15 @@ Test project-specific code in `projects/{name}/tests/`:
 Test cross-module interactions in `tests/integration/`:
 
 - `test_edge_cases_and_error_paths.py` - Edge cases and error handling
+- `test_environment_setup.py` - Environment setup stage behavior
+- `test_execute_pipeline_cli.py` - `execute_pipeline` CLI wiring
+- `test_executive_report_generation.py` - Multi-project executive reporting
 - `test_figure_equation_citation.py` - Figure/equation/citation handling
+- `test_full_pipeline.py` - End-to-end pipeline smoke checks
+- `test_logging.py` - Bash logging integration
 - `test_module_interoperability.py` - Cross-module integration validation (no mocks policy)
 - `test_output_copying.py` - Output file handling and copying
+- `test_run_sh.py` - `run.sh` orchestration
 
 ## Running Tests
 
@@ -424,7 +392,7 @@ pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html --cov-
 ### Coverage Snapshot (latest)
 
 - code_project: **100%** (exceeds 90% target!)
-- Infrastructure: **83.33%** (exceeds 60% target by 39%!)
+- Infrastructure: **~76%** line aggregate when `llm/` tests skipped (exceeds 60% gate; re-measure)
 - Total tests: **2150+** (infrastructure + project)
 
 Skip Ollama-dependent suites when needed:
@@ -516,20 +484,20 @@ def test_with_temp_file(tmp_path):
 def test_double(input, expected):
     """Test doubling with multiple inputs."""
     assert double(input) == expected
+```
 
 ### Network Resilience
-For integration tests that depend on external services (like Ollama) that might be offline, use the `safe_network_test` context manager from `tests.infrastructure._test_helpers`:
+
+For integration tests that depend on external services (like Ollama) that might be offline, use the `safe_network_test` context manager from [`tests/infra_tests/_test_helpers.py`](infra_tests/_test_helpers.py) (imported as `from .._test_helpers import safe_network_test` from tests under `tests/infra_tests/`).
 
 ```python
-from tests.infrastructure._test_helpers import safe_network_test
+from .._test_helpers import safe_network_test
 
 def test_integration(client):
     with safe_network_test("Service Name"):
         response = client.query("test")
         assert response
 ```
-
-```text
 
 ## Test Coverage Details
 
@@ -539,7 +507,7 @@ def test_integration(client):
 - **code_project**: **100%** (Target: 90%+) ✅ Exceeds requirement!
 - test coverage ensures research code reliability
 
-**Infrastructure Modules** (`infrastructure/`): **83.33%** (Target: 60%+)
+**Infrastructure Modules** (`infrastructure/`): **~76%** line aggregate typical (Target: **≥60%**; re-measure)
 - Exceeds the 60% minimum requirement by 39%!
 - Exceeded stretch goal of 75% by 8%
 - Core modules have higher coverage

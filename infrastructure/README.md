@@ -172,7 +172,7 @@ flowchart TD
     I --> MM[validation.py<br/>Scientific standards]
     I --> NN[templates.py<br/>Research workflows]
 
-    J --> OO[pipeline_reporter.py<br/>Build reports]
+    J --> OO[pipeline_io.py / report_builder.py<br/>Build reports]
     J --> PP[error_aggregator.py<br/>Error categorization]
     J --> QQ[html_templates.py<br/>Visual reports]
 
@@ -317,14 +317,11 @@ flowchart TD
 
 ## Testing
 
-Infrastructure modules maintain **≥60% test coverage** (typically 80-84% overall):
+Infrastructure modules enforce **≥60%** line coverage on `infrastructure/`. A full `tests/infra_tests/` run can take a long time (including optional LLM integration tests). For a faster aggregate, skip the `llm/` tree; a representative local run reported **75.77%** total line coverage on `infrastructure/` (`TOTAL` row; **~76%** when rounded).
 
 ```bash
-# Test all infrastructure
-pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
-
-# Test specific module
-pytest tests/infra_tests/core/ -v
+uv run pytest tests/infra_tests/ --ignore=tests/infra_tests/llm --cov=infrastructure --cov-report=term-missing --cov-fail-under=0
+uv run pytest tests/infra_tests/core/ -v
 ```
 
 ## Architecture Principles

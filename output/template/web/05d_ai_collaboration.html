@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05d_ai_collaboration</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h2 id="the-ai-collaboration-model">The AI Collaboration Model</h2>
+<p>The <a
+href="03c_documentation.md#documentation-duality-and-ai-collaboration">Documentation
+Duality</a> standard and three-tier skill architecture represent an
+empirical bet: that structured, machine-readable documentation
+measurably improves AI agent performance in research codebases. This
+section reports our key observations.</p>
+<p>The documentation investment creates a positive feedback loop: as
+agents produce higher-quality outputs from structured context,
+developers maintain that documentation, which in turn improves future
+interactions <span class="citation"
+data-cites="lau2025aicoding">[@lau2025aicoding]</span>. We observed this
+concretely during <code>template/</code> development—each module’s
+<code>SKILL.md</code> was refined through iterative AI-assisted
+generation, serving as both input prompt and output validator.</p>
+<p>The <code>SKILL.md</code> layer, with its MCP-aligned YAML
+frontmatter <span class="citation"
+data-cites="anthropic2024mcp">[@anthropic2024mcp]</span>, provides a
+critical bridge to the agentic software paradigm. Lu et al.’s AI
+Scientist <span class="citation"
+data-cites="lu2024aiscientist">[@lu2024aiscientist]</span> demonstrates
+end-to-end autonomous research; Wang et al.’s OpenHands <span
+class="citation"
+data-cites="wang2024opendevin">[@wang2024opendevin]</span> achieved 53%
+on SWE-Bench Verified <span class="citation"
+data-cites="jimenez2024swebench">[@jimenez2024swebench]</span>—the first
+open-source system to exceed 50%. These systems require structured,
+protocol-aligned tool inventories to navigate unfamiliar codebases. An
+OpenHands-class agent navigating <code>template/</code> reads
+<code>CLAUDE.md</code> for global constraints, scans
+<code>AGENTS.md</code> for module surfaces, and invokes capabilities via
+<code>SKILL.md</code> without hallucinating function signatures. All 13
+infrastructure modules carry <code>AGENTS.md</code> and
+<code>README.md</code>; all additionally carry <code>SKILL.md</code>,
+ensuring no documentation blind spots.</p>
+<p>This three-tier model is, to our knowledge, novel in the research
+software engineering literature. The scale of the
+investment—approximately 170 documentation files across
+<code>docs/</code>, <code>AGENTS.md</code>/<code>README.md</code> pairs,
+and per-module skill descriptors—represents a deliberate commitment to
+machine-readable context that reduces hallucination surface area.</p>
+<h2 id="the-learning-curve">The Learning Curve</h2>
+<p>The Thin Orchestrator pattern imposes a cognitive overhead on
+researchers accustomed to writing monolithic scripts. The requirement to
+factor all logic into <code>src/</code> modules and use scripts only as
+stateless wiring introduces an additional layer of indirection. We
+mitigate this through:</p>
+<ol type="1">
+<li><strong>Template examples</strong>: The <code>code_project</code>
+serves as a fully worked exemplar with comprehensive comments.</li>
+<li><strong>Documentation Duality</strong>: Every directory has both
+<code>README.md</code> (for humans) and <code>AGENTS.md</code> (for AI
+collaborators), reducing the cost of navigation.</li>
+<li><strong>Interactive orchestrator</strong>: <code>run.sh</code>
+provides a TUI menu that abstracts pipeline complexity.</li>
+<li><strong>Skill-level documentation</strong>: The
+<code>docs/guides/</code> directory provides four progressive guides
+(Levels 1–3 Beginner, 4–6 Intermediate, 7–9 Advanced, 10–12 Expert)
+alongside a comprehensive new-project setup checklist.</li>
+</ol>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li><strong>LaTeX dependency</strong>: The rendering pipeline requires a
+full TeX distribution (TeX Live or MiKTeX), which is a 4–6 GB install.
+This is the largest single dependency and is a barrier for researchers
+without system-level package management access.</li>
+<li><strong>Python-centric</strong>: The infrastructure layer is
+Python-only. Projects in other languages can use the rendering and
+steganography stages but cannot leverage the <code>scientific</code> or
+<code>validation</code> modules.</li>
+<li><strong>Single-machine</strong>: The pipeline runs locally.
+Distributed execution (e.g., across a compute cluster) is not natively
+supported, a gap where Snakemake, Nextflow, and CWL have clear
+superiority.</li>
+<li><strong>Steganographic robustness</strong>: Alpha-channel overlays
+are stripped by aggressive PDF optimization tools (e.g.,
+<code>qpdf --optimize</code>). QR codes are visible and removable. The
+current system provides <em>tamper detection</em> (via SHA-256 hashing)
+but not <em>non-repudiation</em> in the cryptographic sense—it lacks
+private-key digital signatures. An attacker with access to the source
+code could reproduce the watermark without having run the original
+pipeline.</li>
+<li><strong>Test duration</strong>: The Zero-Mock policy increases test
+execution time from sub-second (mocked) to multi-minute (real) for the
+full infrastructure suite. This is acceptable for research workflows but
+may not suit continuous deployment scenarios.</li>
+<li><strong>AI-native writing tools</strong>: <code>template/</code>
+does not include an integrated AI writing assistant comparable to
+Overleaf’s Copilot features or OpenAI Prism’s GPT-5.2 context-aware
+editing. The <code>infrastructure.llm</code> module provides LLM review
+as a pipeline stage but not as an interactive writing environment.</li>
+</ul>
+</body>
+</html>

@@ -36,7 +36,7 @@ Chains: hashing → overlays → barcodes → metadata → encryption → manife
 ## Integration Points
 
 - **`infrastructure/__init__.py`** — lazy import under try/except
-- **`infrastructure/core/config_loader.py`** — `SteganographyConfigYAML` TypedDict in `ManuscriptConfig`
+- **`infrastructure/core/config/loader.py`** — loads `ManuscriptConfig` including `SteganographyConfigYAML` (`infrastructure/core/config/schema.py`)
 - **`secure_run.sh`** — shell entry point wrapping `run.sh` + steganography post-processing
 - **`config.yaml`** — `steganography:` section with per-technique booleans
 

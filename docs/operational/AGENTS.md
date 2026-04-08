@@ -12,23 +12,28 @@ docs/operational/
 ├── README.md                       # Quick reference
 ├── reporting-guide.md              # Reporting system guide
 ├── error-handling-guide.md         # Error handling patterns
-├── config/                         # Configuration & performance
+├── build/                          # Build system, CI/CD docs, dependencies (+ README, AGENTS)
+│   ├── build-system.md
+│   ├── build-performance.md
+│   ├── build-history.md
+│   ├── ci-cd-integration.md
+│   └── dependency-management.md
+├── config/                         # Configuration & performance (+ README, AGENTS)
 │   ├── configuration.md
 │   ├── checkpoint-resume.md
 │   └── performance-optimization.md
-├── logging/                        # Logging system guides
-│   ├── README.md (comprehensive guide)
+├── logging/                        # Logging system guides (+ README, AGENTS)
 │   ├── python-logging.md
 │   ├── bash-logging.md
 │   └── logging-patterns.md
-└── troubleshooting/                # Troubleshooting guides
-    ├── README.md (flowchart + systematic approach)
+└── troubleshooting/                # Troubleshooting guides (+ README, AGENTS)
     ├── common-errors.md
     ├── build-tools.md
     ├── test-failures.md
     ├── environment-setup.md
     ├── recovery-procedures.md
-    └── llm-review.md
+    ├── llm-review.md
+    └── llm-diagnostics.md
 ```
 
 ## Key Conventions
@@ -36,6 +41,7 @@ docs/operational/
 - **Project paths in commands**: use `--project code_project` in examples unless documenting placeholders; active names → [_generated/active_projects.md](../_generated/active_projects.md).
 - **Pipeline orchestration** → `docs/RUN_GUIDE.md` (stages, flags, common invocations)
 - **CI/CD automation** → `.github/` (workflows and repository automation docs)
+- **Build / CI docs** → `build/` (see also [`.github/README.md`](../../.github/README.md))
 - **Config files** → `config/` sub-folder (settings, checkpoints, perf)
 - **Logging** → `logging/README.md` is the comprehensive entry point
 - **Troubleshooting** → `troubleshooting/README.md` has the diagnostic flowchart

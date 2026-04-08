@@ -32,25 +32,19 @@ graph TB
     class OUTPUTS output
 ```
 
-## Core Pipeline (10-Stage DAG via Python Orchestrator)
+## Core pipeline (orchestrated DAG)
 
-| Stage | Name | Purpose |
-|-------|------|---------|
-| 00 | Setup | Environment validation |
-| 01 | Tests | Run test suite (90% project, 60% infra coverage) |
-| 02 | Analysis | Execute generation scripts |
-| 03 | Render | PDF generation via pandoc/LaTeX |
-| 04 | Validate | Output integrity checks |
-| 05 | Copy | Consolidate deliverables |
-| 06 | LLM Review | Optional manuscript review |
-| 07 | Report | Executive summary generation |
+- **`./run.sh` progress UI:** **Clean** is shown as **[0/9]**; the following **nine** steps are **[1/9]–[9/9]** (through copy outputs). Optional LLM stages run when enabled in full pipeline mode.
+- **`scripts/execute_pipeline.py --core-only`:** Runs **clean** plus the script chain (setup, tests, analysis, render, validate, copy—see stage keys in that file) without LLM steps. Full pipeline adds optional LLM and executive-report stages.
 
-Run with: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
+Authoritative stage names, flags (`--skip-infra`, `--resume`), and menu mapping: **[RUN_GUIDE.md](../RUN_GUIDE.md)**.
+
+Run core path: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 ## Key Principles
 
-1. **Single Source of Truth** — `src/` is the authoritative implementation
-2. **Thin Orchestrators** — Scripts import `src/` methods, never duplicate logic
+1. **Single Source of Truth** — `infrastructure/` and `projects/{name}/src/` hold business logic
+2. **Thin Orchestrators** — Root and project `scripts/` import those modules; they do not reimplement algorithms
 3. **Test-Driven** — Tests validate before implementation
 4. **Reproducible** — Deterministic RNG, fixed seeds, headless plotting
 5. **Automated Validation** — All components checked for coherence

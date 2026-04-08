@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-04-08T05:47:49.160788",
+  "total_projects": 3,
+  "successful_projects": 2,
+  "failed_projects": 1,
+  "total_duration": 358.95931696891785,
+  "infra_test_duration": 0.0,
+  "projects": {
+    "code_project": {
+      "success": true,
+      "duration": 49.68720507621765,
+      "stages_completed": 7,
+      "errors": []
+    },
+    "fep_lean": {
+      "success": false,
+      "duration": 240.47414684295654,
+      "stages_completed": 3,
+      "errors": []
+    },
+    "template": {
+      "success": true,
+      "duration": 68.769287109375,
+      "stages_completed": 7,
+      "errors": []
+    }
+  },
+  "performance_analysis": {
+    "slowest_project": "fep_lean",
+    "fastest_project": "code_project",
+    "average_duration": 119.64354634284973,
+    "total_pipeline_time": 358.9306390285492
+  },
+  "error_aggregation": {
+    "total_errors": 0,
+    "errors_by_project": {
+      "code_project": 0,
+      "fep_lean": 0,
+      "template": 0
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Review failed projects",
+      "details": "1 project(s) failed execution"
+    }
+  ]
+}

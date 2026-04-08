@@ -27,11 +27,12 @@ graph TD
     end
 
     subgraph ReportingModules["Reporting Modules"]
-        PIPELINE_REP[pipeline_reporter.py<br/>Pipeline report generation]
+        PIPELINE_REP[pipeline_report_model.py<br/>pipeline_io.py]
         ERROR_AGG[error_aggregator.py<br/>Error collection & categorization]
         EXEC_REP[executive_reporter.py<br/>Cross-project summaries]
         DASHBOARD[_dashboard_matplotlib.py<br/>Visual dashboards]
         OUTPUT_ORG[output_organizer.py<br/>File organization]
+        OUTPUT_STATS[output_statistics.py<br/>Output stats & logging]
     end
 
     subgraph OutputFormats["Output Formats"]
@@ -48,6 +49,7 @@ graph TD
     VALIDATION --> PIPELINE_REP
     ERRORS --> ERROR_AGG
     PROJECTS --> EXEC_REP
+    PROJECTS --> OUTPUT_STATS
 
     PIPELINE_REP --> JSON
     PIPELINE_REP --> HTML
@@ -222,49 +224,50 @@ for fmt, path in files.items():
     print(f"  {fmt}: {path.name}")
 ```
 
-### Generate Validation Report
+### Save Validation Report
 
 ```python
-from infrastructure.reporting import generate_validation_report
+from pathlib import Path
+from infrastructure.reporting import save_validation_report
 
 validation_results = {
-    'checks': {
-        'pdf_validation': True,
-        'markdown_validation': True,
-        'output_structure': False,
+    "checks": {
+        "pdf_validation": True,
+        "markdown_validation": True,
+        "output_structure": False,
     },
-    'recommendations': [
-        {'priority': 'high', 'issue': 'Missing output directories', 'action': '...'},
+    "recommendations": [
+        {"priority": "high", "issue": "Missing output directories", "action": "..."},
     ],
 }
 
-saved_files = generate_validation_report(validation_results, Path("output/reports"))
+saved_files = save_validation_report(validation_results, Path("output/reports"))
 ```
 
 ## Module Functions
 
-### Pipeline Reporting
+### Pipeline reporting (`pipeline_report_model`, `pipeline_io`)
 
-- `generate_pipeline_report()` - Create consolidated pipeline report
-- `save_pipeline_report()` - Save report in multiple formats (JSON, HTML, Markdown)
-- `generate_test_report()` - Generate test results report
-- `generate_validation_report()` - Generate validation report
-- `generate_performance_report()` - Generate performance metrics report
-- `generate_error_summary()` - Generate error summary report
+- `generate_pipeline_report()` — build `PipelineReport` from stage dicts
+- `save_pipeline_report()` — write JSON, HTML, Markdown
+- `save_test_results()` — write `test_results.json`
+- `save_validation_report()` — write `validation_report.json` and `.md`
+- `save_performance_report()` — write `performance_report.json`
+- `save_error_summary()` — write `error_summary.json` and `.md` from a list of error dicts
 
-### Executive Reporting
+### Executive reporting (`executive_reporter` and `_executive_*`)
 
-- `generate_executive_summary()` - Generate cross-project metrics and summary
-- `save_executive_summary()` - Save executive summary in multiple formats
-- `collect_project_metrics()` - Collect all metrics for a single project
-- `calculate_project_health_score()` - Calculate project health score
-- `ProjectMetrics` - project metrics dataclass
-- `ExecutiveSummary` - Executive summary dataclass with health scores
+- `generate_executive_summary()` — cross-project metrics and summary
+- `save_executive_summary()` — JSON, HTML, Markdown
+- `collect_project_metrics()` — metrics for one project
+- `ProjectMetrics`, `ExecutiveSummary` — dataclasses
 
-### Multi-Project Orchestration
+Health scoring and CSV table helpers live in `executive_reporter` / `_dashboard_csv.py` (used by `generate_all_dashboards`, not all re-exported from `infrastructure.reporting`).
 
-- `generate_multi_project_report()` - executive reporting workflow
-- `generate_csv_data_tables()` - Export metrics as CSV tables
+### Multi-project orchestration
+
+- `generate_multi_project_report()` — full executive workflow
+- `generate_multi_project_summary_report()` — lighter-weight summary paths
 
 ### Dashboard Generation
 
@@ -316,11 +319,10 @@ Reports are saved to `project/output/reports/` by default.
 **Visual manuscript previews** for executive reporting. Automatically extracts all pages from each project's manuscript PDF and arranges them as thumbnails in a 4-column grid layout.
 
 ```python
-from infrastructure.reporting import generate_all_manuscript_overviews
+from pathlib import Path
+from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews
 
-# Generate manuscript overviews for all projects
-overview_files = generate_all_manuscript_overviews(summary, output_dir, repo_root)
-# Creates: manuscript_overview_{project_name}.png/pdf for each project
+overview_files = generate_all_manuscript_overviews(summary, output_dir, Path("."))
 ```
 
 **Features:**

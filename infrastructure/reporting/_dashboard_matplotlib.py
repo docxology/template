@@ -5,7 +5,7 @@ Chart generators, specialized visualizations, and CSV exports are delegated
 to extracted submodules:
 
   - ``_dashboard_charts``       — base chart functions + multi-panel dashboard
-  - ``_dashboard_specialized``  — health radar, pipeline efficiency, codebase complexity, etc.
+  - ``_dashboard_specialized``  — re-exports ``_dashboard_specialized_*`` (health, projects, pipeline, outputs, codebase)
   - ``_dashboard_csv``          — CSV export: project breakdowns, comparative analysis, recommendations
 
 The Plotly interactive dashboard generator lives in this module because it

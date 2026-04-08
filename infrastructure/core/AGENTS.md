@@ -30,7 +30,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Environment variable export
 - Translation language configuration
 
-**config/credentials.py**
+**credentials.py** (`infrastructure/core/credentials.py`, not under `config/`)
 - Credential management from .env and YAML config files
 - Environment variable loading
 - YAML configuration with environment variable substitution
@@ -164,6 +164,10 @@ The Core module provides fundamental foundation utilities used across the entire
 - `StageTelemetry` — per-stage timing, resource usage, diagnostic counts
 - `PipelineTelemetry` — full pipeline report with warnings and system info
 - `PerformanceWarning` — individual anomaly record
+
+### Source of truth
+
+Long signature blocks below are historical reference; they can drift. For **current** types and behavior, read the Python modules (and [`runtime/AGENTS.md`](runtime/AGENTS.md), [`pipeline/AGENTS.md`](pipeline/AGENTS.md), [`telemetry/AGENTS.md`](telemetry/AGENTS.md), [`logging/AGENTS.md`](logging/AGENTS.md) where present). `progress`, `runtime/checkpoint`, and `runtime/retry` are summarized concisely inline; avoid duplicating full class listings elsewhere in this file.
 
 ## Function Signatures
 
@@ -863,302 +867,29 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
     """
 ```
 
-### config/credentials.py
+### credentials.py
 
-#### load_credentials (function)
-```python
-def load_credentials(
-    config_path: Optional[Path] = None,
-    env_file: Optional[str] = None,
-    required_keys: Optional[List[str]] = None
-) -> Dict[str, Any]:
-    """Load credentials from environment variables and config files.
-
-    Args:
-        config_path: Path to YAML config file (optional)
-        env_file: Path to .env file (optional)
-        required_keys: List of required credential keys
-
-    Returns:
-        Dictionary of loaded credentials
-
-    Raises:
-        MissingCredentialsError: If required credentials are missing
-        InvalidCredentialsError: If credentials are invalid
-    """
-```
-
-#### get_credential (function)
-```python
-def get_credential(key: str, default: Optional[str] = None) -> Optional[str]:
-    """Get a single credential by key.
-
-    Args:
-        key: Credential key to retrieve
-        default: Default value if key not found
-
-    Returns:
-        Credential value or default
-    """
-```
-
-#### validate_credentials (function)
-```python
-def validate_credentials(
-    credentials: Dict[str, Any],
-    required_keys: List[str]
-) -> bool:
-    """Validate that required credentials are present.
-
-    Args:
-        credentials: Credentials dictionary to validate
-        required_keys: List of required credential keys
-
-    Returns:
-        True if all required credentials are present
-    """
-```
+`CredentialManager` loads optional `.env` (via `python-dotenv` when installed) and optional YAML with `${VAR}` substitution. Public methods: `get_zenodo_credentials`, `get_github_credentials`, `get_arxiv_credentials`, `has_*_credentials`. Module helpers: `make_bearer_auth_headers`, `make_token_auth_headers`.
 
 ### progress.py
 
-#### ProgressBar (class)
-```python
-class ProgressBar:
-    """Visual progress indicator for long-running operations.
-
-    Provides a progress bar with percentage completion, ETA, and customizable formatting.
-    """
-
-    def __init__(
-        self,
-        total: int,
-        description: str = "",
-        width: int = 50,
-        show_eta: bool = True,
-        logger: Optional[logging.Logger] = None
-    ) -> None:
-        """Initialize progress bar.
-
-        Args:
-            total: Total number of items to process
-            description: Description of the operation
-            width: Width of the progress bar in characters
-            show_eta: Whether to show estimated time of arrival
-            logger: Logger instance for output
-        """
-
-    def update(self, increment: int = 1) -> None:
-        """Update progress by specified increment.
-
-        Args:
-            increment: Number of items completed
-        """
-
-    def finish(self) -> None:
-        """Mark progress as and finalize display."""
-```
-
-#### SubStageProgress (class)
-```python
-class SubStageProgress:
-    """Progress tracking for nested operations with substages.
-
-    Manages progress through multiple substages within a larger operation.
-    """
-
-    def __init__(
-        self,
-        total_stages: int,
-        stage_names: List[str],
-        logger: Optional[logging.Logger] = None
-    ) -> None:
-        """Initialize substage progress tracker.
-
-        Args:
-            total_stages: Total number of substages
-            stage_names: Names of each substage
-            logger: Logger instance for output
-        """
-
-    def start_stage(self, stage_index: int) -> None:
-        """Start a specific substage.
-
-        Args:
-            stage_index: Index of the stage to start (0-based)
-        """
-
-    def update_progress(self, completed: int, total: int) -> None:
-        """Update progress within current substage.
-
-        Args:
-            completed: Number of items completed in current stage
-            total: Total number of items in current stage
-        """
-
-    def finish_stage(self) -> None:
-        """Mark current substage as."""
-```
+Authoritative API: [`progress.py`](progress.py) — `ProgressBar` (`task`, `update(value, force=...)`, `finish`), `LLMProgressTracker`, `SubStageProgress` (`start_substage`, `complete_substage`, ETA helpers).
 
 ### runtime/checkpoint.py
 
-#### PipelineCheckpoint (class)
-```python
-class PipelineCheckpoint:
-    """Data structure for pipeline checkpoint state.
+Authoritative API: [`runtime/checkpoint.py`](runtime/checkpoint.py).
 
-    Contains information about completed stages, timing, and pipeline state.
-    """
-
-    def __init__(
-        self,
-        pipeline_name: str,
-        start_time: float,
-        completed_stages: List[str],
-        stage_results: Dict[str, Any],
-        current_stage: Optional[str] = None
-    ) -> None:
-        """Initialize pipeline checkpoint.
-
-        Args:
-            pipeline_name: Name of the pipeline
-            start_time: Pipeline start timestamp
-            completed_stages: List of completed stage names
-            stage_results: Results from completed stages
-            current_stage: Currently executing stage (if any)
-        """
-```
-
-#### CheckpointManager (class)
-```python
-class CheckpointManager:
-    """Manages pipeline checkpoint save/load operations.
-
-    Provides functionality to save and restore pipeline execution state.
-    """
-
-    def __init__(self, checkpoint_dir: Path) -> None:
-        """Initialize checkpoint manager.
-
-        Args:
-            checkpoint_dir: Directory to store checkpoint files
-        """
-
-    def save_checkpoint(self, checkpoint: PipelineCheckpoint) -> Path:
-        """Save pipeline checkpoint to file.
-
-        Args:
-            checkpoint: Checkpoint data to save
-
-        Returns:
-            Path to saved checkpoint file
-        """
-
-    def load_checkpoint(self, pipeline_name: str) -> Optional[PipelineCheckpoint]:
-        """Load most recent checkpoint for pipeline.
-
-        Args:
-            pipeline_name: Name of the pipeline
-
-        Returns:
-            Most recent checkpoint or None if not found
-        """
-
-    def list_checkpoints(self, pipeline_name: str) -> List[Path]:
-        """List all checkpoint files for a pipeline.
-
-        Args:
-            pipeline_name: Name of the pipeline
-
-        Returns:
-            List of checkpoint file paths
-        """
-
-    def cleanup_old_checkpoints(
-        self,
-        pipeline_name: str,
-        keep_recent: int = 5
-    ) -> None:
-        """Clean up old checkpoint files, keeping only recent ones.
-
-        Args:
-            pipeline_name: Name of the pipeline
-            keep_recent: Number of recent checkpoints to keep
-        """
-```
+- `StageResult` — per-stage `name`, `exit_code`, `duration`, `timestamp`, `completed`, `status`.
+- `PipelineCheckpoint` — `pipeline_start_time`, `last_stage_completed`, `stage_results`, `total_stages`, `checkpoint_time`; `to_dict()` / `from_dict()`.
+- `CheckpointManager` — resolves `checkpoint_dir` from an explicit path, from `project_dir/output/.checkpoints`, or from `repo_root/projects/{project_name}/output/.checkpoints`; JSON file `pipeline_checkpoint.json`; `save_checkpoint`, `load_checkpoint`, `clear_checkpoint`, `checkpoint_exists`, `validate_checkpoint`.
 
 ### runtime/retry.py
 
-#### retry_with_backoff (function)
-```python
-def retry_with_backoff(
-    func: Callable,
-    max_attempts: int = 3,
-    initial_delay: float = 1.0,
-    backoff_factor: float = 2.0,
-    max_delay: float = 60.0,
-    exceptions_to_retry: Tuple[type, ...] = (Exception,),
-    logger: Optional[logging.Logger] = None
-) -> Any:
-    """Execute function with exponential backoff retry logic.
+Authoritative API: [`runtime/retry.py`](runtime/retry.py).
 
-    Args:
-        func: Function to execute
-        max_attempts: Maximum number of retry attempts
-        initial_delay: Initial delay between retries (seconds)
-        backoff_factor: Factor by which delay increases each retry
-        max_delay: Maximum delay between retries (seconds)
-        exceptions_to_retry: Tuple of exception types to retry on
-        logger: Logger instance for retry messages
-
-    Returns:
-        Result of successful function execution
-
-    Raises:
-        Last exception encountered if all retries exhausted
-    """
-```
-
-#### RetryableOperation (class)
-```python
-class RetryableOperation:
-    """Wrapper for operations that should be retried with backoff.
-
-    Provides a class-based interface for retryable operations.
-    """
-
-    def __init__(
-        self,
-        operation: Callable,
-        max_attempts: int = 3,
-        initial_delay: float = 1.0,
-        backoff_factor: float = 2.0,
-        max_delay: float = 60.0,
-        exceptions_to_retry: Tuple[type, ...] = (Exception,),
-        logger: Optional[logging.Logger] = None
-    ) -> None:
-        """Initialize retryable operation.
-
-        Args:
-            operation: Operation function to wrap
-            max_attempts: Maximum number of retry attempts
-            initial_delay: Initial delay between retries (seconds)
-            backoff_factor: Factor by which delay increases each retry
-            max_delay: Maximum delay between retries (seconds)
-            exceptions_to_retry: Tuple of exception types to retry on
-            logger: Logger instance for retry messages
-        """
-
-    def execute(self, *args, **kwargs) -> Any:
-        """Execute the operation with retry logic.
-
-        Args:
-            *args: Positional arguments for operation
-            **kwargs: Keyword arguments for operation
-
-        Returns:
-            Result of successful operation execution
-        """
-```
+- `retry_with_backoff(...)` — **decorator factory** (`max_attempts`, `initial_delay`, `max_delay`, `exponential_base`, `jitter`, `exceptions`, `on_retry`).
+- `retry_on_transient_failure` — shorthand using `TRANSIENT_EXCEPTIONS` (`ConnectionError`, `TimeoutError`, `OSError`) and capped `max_delay`.
+- `RetryableOperation` — context manager / iterator for manual per-attempt control; `succeed()`, `retry(exception)`.
 
 ### pipeline/stage_monitor.py
 
@@ -1595,13 +1326,16 @@ logger = get_logger(__name__)
 logger.info("Starting operation")
 
 # Setup custom logger with file output
+from infrastructure.core.logging.utils import setup_logger
+
 logger = setup_logger("my_module", log_file="logs/my_module.log")
 logger.debug("Debug message")
 ```
 
 ### Exception Handling
 ```python
-from infrastructure.core import raise_with_context, TemplateError
+from infrastructure.core import TemplateError
+from infrastructure.core.exceptions import raise_with_context
 
 try:
     # Some operation
@@ -1618,12 +1352,11 @@ except Exception as e:
 
 ### Configuration Management
 ```python
-from infrastructure.core import load_config, get_config_as_env_vars
+from pathlib import Path
 
-# Load from file
-config = load_config("config.yaml")
+from infrastructure.core.config.loader import load_config, get_config_as_env_vars
 
-# Get as environment variables
+config = load_config(Path("projects/my_project/manuscript/config.yaml"))
 env_vars = get_config_as_env_vars(Path("."))
 for key, value in env_vars.items():
     os.environ[key] = value
@@ -1631,29 +1364,32 @@ for key, value in env_vars.items():
 
 ### Pipeline Execution
 ```python
-from infrastructure.core import PipelineExecutor
+from pathlib import Path
 
-# Execute single project pipeline
-executor = PipelineExecutor(Path("."), "my_project")
-results = executor.execute_pipeline()
+from infrastructure.core.pipeline.executor import PipelineExecutor
+from infrastructure.core.pipeline.types import PipelineConfig
 
-# Execute with resume capability
-results = executor.execute_pipeline(resume=True)
+config = PipelineConfig(project_name="my_project", repo_root=Path("."), skip_llm=True)
+executor = PipelineExecutor(config)
+results = executor.execute_core_pipeline()
 ```
 
 ### Multi-Project Orchestration
 ```python
-from infrastructure.core.pipeline.multi_project import MultiProjectOrchestrator
+from pathlib import Path
 
-# Execute multiple projects
-orchestrator = MultiProjectOrchestrator(
-    Path("."),
-    ["project1", "project2", "project3"]
+from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.project.discovery import discover_projects
+
+projects = discover_projects(Path("."))
+mp_config = MultiProjectConfig(
+    repo_root=Path("."),
+    projects=projects,
+    run_infra_tests=True,
+    run_llm=False,
 )
-results = orchestrator.execute_all_projects(core_only=True)
-
-# Generate executive report
-reports = orchestrator.generate_executive_report(Path("output/executive"))
+orchestrator = MultiProjectOrchestrator(mp_config)
+result = orchestrator.execute_all_projects_core()
 ```
 
 ### runtime/health_check.py
@@ -2114,502 +1850,6 @@ def benchmark_function(
 ```python
 def main():
     """Main function for config CLI."""
-```
-
-### config/credentials.py
-
-#### CredentialManager (class)
-```python
-class CredentialManager:
-    """Manage credentials from .env and YAML config files.
-
-    Supports loading credentials from:
-    - Environment variables directly
-    - .env files
-    - YAML configuration files with environment variable substitution
-    """
-
-    def __init__(self, env_file: Optional[Path] = None,
-                 config_file: Optional[Path] = None):
-        """Initialize credential manager.
-
-        Args:
-            env_file: Path to .env file (optional, defaults to .env in root)
-            config_file: Path to YAML config file (optional)
-        """
-```
-
-#### get_zenodo_credentials (method)
-```python
-def get_zenodo_credentials(self, use_sandbox: bool = True) -> Dict[str, str]:
-    """Get Zenodo API credentials.
-
-    Args:
-        use_sandbox: Whether to use sandbox environment (default: True)
-
-    Returns:
-        Dictionary with token and environment info
-    """
-```
-
-#### get_github_credentials (method)
-```python
-def get_github_credentials(self) -> Dict[str, str]:
-    """Get GitHub API credentials.
-
-    Returns:
-        Dictionary with token and repository info
-    """
-```
-
-#### get_arxiv_credentials (method)
-```python
-def get_arxiv_credentials(self) -> Dict[str, Optional[str]]:
-    """Get arXiv SWORD API credentials (optional).
-
-    Returns:
-        Dictionary with username and password (may be None)
-    """
-```
-
-#### has_zenodo_credentials (method)
-```python
-def has_zenodo_credentials(self, use_sandbox: bool = True) -> bool:
-    """Check if Zenodo credentials are available."""
-```
-
-#### has_github_credentials (method)
-```python
-def has_github_credentials(self) -> bool:
-    """Check if GitHub credentials are available."""
-```
-
-#### has_arxiv_credentials (method)
-```python
-def has_arxiv_credentials(self) -> bool:
-    """Check if arXiv credentials are available."""
-```
-```python
-def get_zenodo_credentials(self, use_sandbox: bool = True) -> Dict[str, str]:
-    """Get Zenodo API credentials.
-
-    Args:
-        use_sandbox: Whether to use sandbox environment (default: True)
-
-    Returns:
-        Dictionary with token and environment info
-    """
-```
-
-#### get_github_credentials (method)
-```python
-def get_github_credentials(self) -> Dict[str, str]:
-    """Get GitHub API credentials.
-
-    Returns:
-        Dictionary with token and repository info
-    """
-```
-
-#### get_arxiv_credentials (method)
-```python
-def get_arxiv_credentials(self) -> Dict[str, Optional[str]]:
-    """Get arXiv SWORD API credentials (optional).
-
-    Returns:
-        Dictionary with username and password (may be None)
-    """
-```
-
-#### has_zenodo_credentials (method)
-```python
-def has_zenodo_credentials(self, use_sandbox: bool = True) -> bool:
-    """Check if Zenodo credentials are available."""
-```
-
-#### has_github_credentials (method)
-```python
-def has_github_credentials(self) -> bool:
-    """Check if GitHub credentials are available."""
-```
-
-#### has_arxiv_credentials (method)
-```python
-def has_arxiv_credentials(self) -> bool:
-    """Check if arXiv credentials are available."""
-```
-
-### progress.py
-
-#### ProgressBar (class)
-```python
-class ProgressBar:
-    """Simple text-based progress bar for terminal output.
-
-    Provides visual progress indication with percentage and optional ETA.
-    Supports both item-based and token-based progress tracking.
-
-    Example:
-        >>> bar = ProgressBar(total=100, task="Processing files")
-        >>> for i in range(100):
-        ...     bar.update(i + 1)
-        >>> bar.finish()
-    """
-
-    def __init__(
-        self,
-        total: int,
-        task: str = "",
-        width: int = 30,
-        show_eta: bool = True,
-        update_interval: float = 0.1,
-        use_ema: bool = True
-    ):
-        """Initialize progress bar.
-
-        Args:
-            total: Total number of items to process
-            task: Task description
-            width: Width of progress bar in characters
-            show_eta: Whether to show ETA
-            update_interval: Minimum time between updates (seconds)
-            use_ema: Whether to use exponential moving average for ETA
-        """
-```
-
-#### update (method)
-```python
-def update(self, value: int, force: bool = False) -> None:
-    """Update progress bar.
-
-    Args:
-        value: Current progress value
-        force: Force update even if interval hasn't passed
-    """
-```
-
-#### finish (method)
-```python
-def finish(self) -> None:
-    """Finish progress bar and print final status."""
-```
-
-#### LLMProgressTracker (class)
-```python
-class LLMProgressTracker:
-    """Progress tracker for LLM operations with token-based progress.
-
-    Tracks token generation progress, throughput, and provides real-time updates.
-
-    Example:
-        >>> tracker = LLMProgressTracker(total_tokens=1000, task="Generating review")
-        >>> for chunk in llm_stream:
-        ...     tokens = estimate_tokens(chunk)
-        ...     tracker.update_tokens(tokens)
-        >>> tracker.finish()
-    """
-
-    def __init__(
-        self,
-        total_tokens: Optional[int] = None,
-        task: str = "LLM Generation",
-        show_throughput: bool = True
-    ):
-        """Initialize LLM progress tracker.
-
-        Args:
-            total_tokens: Total expected tokens (None for unknown)
-            task: Task description
-            show_throughput: Whether to show tokens/sec throughput
-        """
-```
-
-#### update_tokens (method)
-```python
-def update_tokens(self, tokens: int) -> None:
-    """Update token count.
-
-    Args:
-        tokens: Number of tokens generated in this chunk
-    """
-```
-
-#### finish (method)
-```python
-def finish(self) -> None:
-    """Finish tracking and display final stats."""
-```
-
-#### SubStageProgress (class)
-```python
-class SubStageProgress:
-    """Track progress across multiple sub-stages within a main stage.
-
-    Useful for operations with multiple steps (e.g., rendering multiple files).
-    Uses EMA for improved ETA accuracy.
-
-    Example:
-        >>> progress = SubStageProgress(total=5, stage_name="Rendering PDFs")
-        >>> for i, file in enumerate(files):
-        ...     progress.start_substage(i + 1, file.name)
-        ...     render_file(file)
-        ...     progress.complete_substage()
-    """
-
-    def __init__(self, total: int, stage_name: str = "", use_ema: bool = True):
-        """Initialize sub-stage progress tracker.
-
-        Args:
-            total: Total number of sub-stages
-            stage_name: Name of the main stage
-            use_ema: Whether to use exponential moving average for ETA (default: True)
-        """
-```
-
-#### start_substage (method)
-```python
-def start_substage(self, substage_num: int, substage_name: str = "") -> None:
-    """Start a new sub-stage.
-
-    Args:
-        substage_num: Sub-stage number (1-based)
-        substage_name: Name of the sub-stage
-    """
-```
-
-#### complete_substage (method)
-```python
-def complete_substage(self) -> None:
-    """Mark current sub-stage as."""
-```
-
-#### get_eta (method)
-```python
-def get_eta(self) -> Optional[float]:
-    """Get estimated time remaining.
-
-    Returns:
-        Estimated seconds remaining, or None if cannot calculate
-    """
-```
-
-#### get_eta_with_confidence (method)
-```python
-def get_eta_with_confidence(self) -> tuple[Optional[float], Optional[float], Optional[float]]:
-    """Get ETA with confidence intervals.
-
-    Returns:
-        Tuple of (realistic_eta, optimistic_eta, pessimistic_eta)
-    """
-```
-
-#### log_progress (method)
-```python
-def log_progress(self) -> None:
-    """Log current progress with ETA."""
-```
-
-### runtime/checkpoint.py
-
-#### StageResult (class)
-```python
-@dataclass
-class StageResult:
-    """Result of a pipeline stage execution."""
-    name: str
-    exit_code: int
-    duration: float
-    timestamp: str
-    completed: bool = True
-```
-
-#### PipelineCheckpoint (class)
-```python
-@dataclass
-class PipelineCheckpoint:
-    """Pipeline checkpoint state."""
-    pipeline_start_time: float
-    last_stage_completed: int
-    stage_results: list[StageResult]
-    total_stages: int
-    checkpoint_time: float
-
-    def to_dict(self) -> dict[str, Any]:
-        """Convert checkpoint to dictionary for serialization."""
-
-    @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> 'PipelineCheckpoint':
-        """Create checkpoint from dictionary."""
-```
-
-#### CheckpointManager (class)
-```python
-class CheckpointManager:
-    """Manages pipeline checkpoints for resume capability."""
-
-    def __init__(self, checkpoint_dir: Optional[Path] = None):
-        """Initialize checkpoint manager.
-
-        Args:
-            checkpoint_dir: Directory for checkpoint files (default: projects/{name}/output/.checkpoints)
-        """
-```
-
-#### save_checkpoint (method)
-```python
-def save_checkpoint(
-    self,
-    pipeline_start_time: float,
-    last_stage_completed: int,
-    stage_results: list[StageResult],
-    total_stages: int
-) -> None:
-    """Save pipeline checkpoint.
-
-    Args:
-        pipeline_start_time: Pipeline start timestamp
-        last_stage_completed: Last successfully completed stage number
-        stage_results: List of stage results
-        total_stages: Total number of stages
-    """
-```
-
-#### load_checkpoint (method)
-```python
-def load_checkpoint(self) -> Optional[PipelineCheckpoint]:
-    """Load pipeline checkpoint.
-
-    Returns:
-        PipelineCheckpoint if found and valid, None otherwise
-    """
-```
-
-#### clear_checkpoint (method)
-```python
-def clear_checkpoint(self) -> None:
-    """Clear saved checkpoint."""
-```
-
-#### checkpoint_exists (method)
-```python
-def checkpoint_exists(self) -> bool:
-    """Check if checkpoint exists.
-
-    Returns:
-        True if checkpoint file exists and is valid
-    """
-```
-
-#### validate_checkpoint (method)
-```python
-def validate_checkpoint(self) -> Tuple[bool, Optional[str]]:
-    """Validate checkpoint integrity and consistency.
-
-    Returns:
-        Tuple of (is_valid, error_message)
-        is_valid: True if checkpoint is valid and can be used
-        error_message: None if valid, error description if invalid
-    """
-```
-
-### runtime/retry.py
-
-#### retry_with_backoff (function)
-```python
-def retry_with_backoff(
-    max_attempts: int = 3,
-    initial_delay: float = 1.0,
-    max_delay: float = 60.0,
-    exponential_base: float = 2.0,
-    jitter: bool = True,
-    exceptions: Tuple[Type[Exception], ...] = (Exception,),
-    on_retry: Optional[Callable[[int, Exception], None]] = None
-) -> Callable[[Callable[..., T]], Callable[..., T]]:
-    """Decorator to retry a function with exponential backoff.
-
-    Args:
-        max_attempts: Maximum number of attempts (default: 3)
-        initial_delay: Initial delay in seconds (default: 1.0)
-        max_delay: Maximum delay in seconds (default: 60.0)
-        exponential_base: Base for exponential backoff (default: 2.0)
-        jitter: Add random jitter to prevent thundering herd (default: True)
-        exceptions: Tuple of exception types to catch and retry (default: Exception)
-        on_retry: Optional callback function(attempt_num, exception) called before retry
-
-    Returns:
-        Decorator function
-    """
-```
-
-#### retry_on_transient_failure (function)
-```python
-def retry_on_transient_failure(
-    max_attempts: int = 3,
-    initial_delay: float = 1.0
-) -> Callable[[Callable[..., T]], Callable[..., T]]:
-    """Decorator for retrying on common transient failures.
-
-    Args:
-        max_attempts: Maximum number of attempts (default: 3)
-        initial_delay: Initial delay in seconds (default: 1.0)
-
-    Returns:
-        Decorator function
-    """
-```
-
-#### RetryableOperation (class)
-```python
-class RetryableOperation:
-    """Context manager for retryable operations with manual control.
-
-    Useful when you need more control over retry logic than a decorator provides.
-
-    Example:
-        >>> with RetryableOperation(max_attempts=3) as op:
-        ...     for attempt in op:
-        ...         try:
-        ...             result = risky_operation()
-        ...             op.succeed(result)
-        ...         except TransientError as e:
-        ...             op.retry(e)
-    """
-
-    def __init__(
-        self,
-        max_attempts: int = 3,
-        initial_delay: float = 1.0,
-        max_delay: float = 60.0,
-        exponential_base: float = 2.0
-    ):
-        """Initialize retryable operation.
-
-        Args:
-            max_attempts: Maximum number of attempts
-            initial_delay: Initial delay in seconds
-            max_delay: Maximum delay in seconds
-            exponential_base: Base for exponential backoff
-        """
-```
-
-#### succeed (method)
-```python
-def succeed(self, result: Any = None) -> None:
-    """Mark operation as successful.
-
-    Args:
-        result: Result value to store
-    """
-```
-
-#### retry (method)
-```python
-def retry(self, exception: Exception) -> None:
-    """Retry operation after delay.
-
-    Args:
-        exception: Exception that triggered the retry
-    """
 ```
 
 ### pipeline/stage_monitor.py
@@ -3271,336 +2511,22 @@ class MultiProjectOrchestrator:
         """
 ```
 
-### security.py
-
-#### SecurityValidator (class)
-```python
-class SecurityValidator:
-    """Validates and sanitizes input for security."""
-    
-    def validate_llm_input(self, prompt: str) -> str:
-        """Validate and sanitize LLM input.
-        
-        Args:
-            prompt: Input prompt to validate
-            
-        Returns:
-            Sanitized prompt string
-        """
-```
-
-#### SecurityHeaders (class)
-```python
-class SecurityHeaders:
-    """Manages HTTP security headers."""
-    
-    def get_headers(self) -> Dict[str, str]:
-        """Get security headers dictionary."""
-```
-
-#### RateLimiter (class)
-```python
-class RateLimiter:
-    """Rate limiting for API requests."""
-    
-    def check_rate_limit(self, identifier: str) -> bool:
-        """Check if request is within rate limit.
-        
-        Args:
-            identifier: Request identifier
-            
-        Returns:
-            True if within limit, False otherwise
-        """
-```
-
-#### SecurityMonitor (class)
-```python
-class SecurityMonitor:
-    """Monitors security events and violations."""
-    
-    def log_event(self, event_type: str, details: Dict[str, Any]) -> None:
-        """Log a security event.
-        
-        Args:
-            event_type: Type of security event
-            details: Event details
-        """
-```
-
-#### SecurityViolation (class)
-```python
-class SecurityViolation(Exception):
-    """Raised when a security violation is detected."""
-    pass
-```
-
-#### get_security_validator (function)
-```python
-def get_security_validator() -> SecurityValidator:
-    """Get security validator instance."""
-```
-
-#### get_security_headers (function)
-```python
-def get_security_headers() -> Dict[str, str]:
-    """Get security headers dictionary."""
-```
-
-#### get_rate_limiter (function)
-```python
-def get_rate_limiter() -> RateLimiter:
-    """Get rate limiter instance."""
-```
-
-#### get_security_monitor (function)
-```python
-def get_security_monitor() -> SecurityMonitor:
-    """Get security monitor instance."""
-```
-
-#### validate_llm_input (function)
-```python
-def validate_llm_input(prompt: str) -> str:
-    """Validate and sanitize LLM input.
-    
-    Args:
-        prompt: Input prompt to validate
-        
-    Returns:
-        Sanitized prompt string
-    """
-```
-
-#### rate_limit (decorator)
-```python
-@rate_limit(max_requests: int = 100, window_seconds: int = 60)
-def api_function():
-    """Rate-limited function decorator."""
-    pass
-```
-
-### runtime/health_check.py
-
-#### SystemHealthChecker (class)
-```python
-class SystemHealthChecker:
-    """Checks system health and component status."""
-    
-    def check_health(self) -> Dict[str, Any]:
-        """Perform health check.
-        
-        Returns:
-            Health status dictionary
-        """
-    
-    def check_component(self, component: str) -> Dict[str, Any]:
-        """Check health of specific component.
-        
-        Args:
-            component: Component name to check
-            
-        Returns:
-            Component health status
-        """
-```
-
-#### HealthCheckAPI (class)
-```python
-class HealthCheckAPI:
-    """API for health check operations."""
-    
-    def get_status(self) -> Dict[str, Any]:
-        """Get overall system status."""
-    
-    def get_metrics(self) -> Dict[str, Any]:
-        """Get health metrics."""
-```
-
-#### get_health_api (function)
-```python
-def get_health_api() -> HealthCheckAPI:
-    """Get health check API instance."""
-```
-
-#### quick_health_check (function)
-```python
-def quick_health_check() -> bool:
-    """Perform quick health check.
-    
-    Returns:
-        True if system is healthy, False otherwise
-    """
-```
-
-#### get_health_status (function)
-```python
-def get_health_status() -> Dict[str, Any]:
-    """Get current health status."""
-```
-
-#### get_health_metrics (function)
-```python
-def get_health_metrics() -> Dict[str, Any]:
-    """Get health metrics."""
-```
-
-### cli.py
-
-#### create_parser (function)
-```python
-def create_parser() -> argparse.ArgumentParser:
-    """Create command-line argument parser.
-    
-    Returns:
-        Configured argument parser
-    """
-```
-
-#### main (function)
-```python
-def main() -> int:
-    """Main CLI entry point.
-    
-    Returns:
-        Exit code (0 for success, non-zero for error)
-    """
-```
-
-#### handle_pipeline_command (function)
-```python
-def handle_pipeline_command(args: argparse.Namespace) -> int:
-    """Handle pipeline command.
-    
-    Args:
-        args: Parsed command arguments
-        
-    Returns:
-        Exit code
-    """
-```
-
-#### handle_multi_project_command (function)
-```python
-def handle_multi_project_command(args: argparse.Namespace) -> int:
-    """Handle multi-project command.
-    
-    Args:
-        args: Parsed command arguments
-        
-    Returns:
-        Exit code
-    """
-```
-
-#### handle_inventory_command (function)
-```python
-def handle_inventory_command(args: argparse.Namespace) -> int:
-    """Handle inventory command.
-    
-    Args:
-        args: Parsed command arguments
-        
-    Returns:
-        Exit code
-    """
-```
-
-#### handle_summary_command (function)
-```python
-def handle_summary_command(args: argparse.Namespace) -> int:
-    """Handle summary command.
-    
-    Args:
-        args: Parsed command arguments
-        
-    Returns:
-        Exit code
-    """
-```
-
-#### handle_discover_command (function)
-```python
-def handle_discover_command(args: argparse.Namespace) -> int:
-    """Handle discover command.
-    
-    Args:
-        args: Parsed command arguments
-        
-    Returns:
-        Exit code
-    """
-```
-
-### config/config_cli.py
-
-This module provides CLI commands for configuration management. See `cli.py` for integration.
-
-### menu.py
-
-This module provides interactive menu system utilities for menu-driven user interfaces.
-
-### logging/logging_formatters.py
-
-This module provides logging formatter utilities and custom log format definitions.
-
-### logging/logging_helpers.py
-
-This module provides additional logging helper functions beyond those in `logging_utils.py`.
-
-### logging/logging_progress.py
-
-This module provides progress logging utilities that integrate progress tracking with logging.
-
-### runtime/function_profiler.py
-
-This module provides function-level profiling utilities (cProfile/tracemalloc) and benchmarking helpers. See `pipeline/stage_monitor.py` for stage-level resource monitoring.
-
-### pipeline/pipeline_summary.py
-
-#### generate_pipeline_summary (function)
-```python
-def generate_pipeline_summary(
-    stage_results: List[StageResult],
-    total_duration: float,
-    output_dir: Path,
-    format: str = "text"
-) -> str:
-    """Generate pipeline execution summary.
-
-    Args:
-        stage_results: List of stage execution results
-        total_duration: Total pipeline duration in seconds
-        output_dir: Output directory path
-        format: Output format ('text' or 'json')
-
-    Returns:
-        Formatted summary string
-    """
-```
-
 ## Key Features
 
 ### Exception Handling
 ```python
-from infrastructure.core import (
-    TemplateError,
-    raise_with_context,
-    chain_exceptions
-)
+from infrastructure.core import TemplateError
+from infrastructure.core.exceptions import chain_exceptions
 
 try:
     risky_operation()
 except ValueError as e:
-    raise chain_exceptions(
-        TemplateError("Operation failed"),
-        e
-    )
+    raise chain_exceptions(TemplateError("Operation failed"), e)
 ```
 
 ### Logging
 ```python
-from infrastructure.core import get_logger, log_operation, log_timing
+from infrastructure.core.logging.utils import get_logger, log_operation, log_timing
 
 logger = get_logger(__name__)
 logger.info("Starting process")
@@ -3614,27 +2540,30 @@ with log_timing("Algorithm execution", logger):
 
 ### Configuration
 ```python
-from infrastructure.core import load_config, get_config_as_dict, get_translation_languages, find_config_file
+from pathlib import Path
 
-config = load_config(Path("projects/{project_name}/manuscript/config.yaml"))
-env_dict = get_config_as_dict(Path("."))  # Loads from projects/{project_name}/manuscript/config.yaml
-config_path = find_config_file(Path("."))  # Returns projects/{project_name}/manuscript/config.yaml if found
+from infrastructure.core.config.loader import (
+    load_config,
+    get_config_as_dict,
+    get_translation_languages,
+    find_config_file,
+)
+
+config = load_config(Path("projects/code_project/manuscript/config.yaml"))
+env_dict = get_config_as_dict(Path("."))
+config_path = find_config_file(Path("."))
 languages = get_translation_languages(Path("."))
 ```
 
 ### Credential Management
 ```python
+from pathlib import Path
+
 from infrastructure.core.credentials import CredentialManager
 
-# Initialize with optional .env and YAML config files
-# Note: python-dotenv is optional - system works without it
-manager = CredentialManager(
-    env_file=Path(".env"),
-    config_file=Path("config.yaml")
-)
-
-# Get credentials from environment or config
-api_key = manager.get("API_KEY", default="default_key")
+manager = CredentialManager(env_file=Path(".env"), config_file=Path("config.yaml"))
+zenodo = manager.get_zenodo_credentials(use_sandbox=True)
+github = manager.get_github_credentials()
 ```
 
 **Optional Dependency**: The `CredentialManager` uses `python-dotenv` for `.env` file support, but gracefully falls back if not installed. Install with:
@@ -3646,129 +2575,135 @@ uv add python-dotenv
 
 ### Progress Tracking
 ```python
-from infrastructure.core import ProgressBar, SubStageProgress
+from infrastructure.core import ProgressBar
 
-with ProgressBar(total=100, desc="Processing") as pbar:
-    for i in range(100):
-        pbar.update(1)
+bar = ProgressBar(total=100, task="Processing")
+for i in range(1, 101):
+    bar.update(i)
+bar.finish()
 ```
 
 ### Checkpoint Management
 ```python
-from infrastructure.core import CheckpointManager, StageResult
+from infrastructure.core import CheckpointManager
+from infrastructure.core.runtime.checkpoint import StageResult
 
-checkpoint = CheckpointManager()
-if checkpoint.checkpoint_exists():
-    state = checkpoint.load_checkpoint()
-else:
-    # Run pipeline stages
-    checkpoint.save_checkpoint(stage_results)
+cm = CheckpointManager(project_name="code_project", repo_root=Path("."))
+if cm.checkpoint_exists():
+    state = cm.load_checkpoint()
+# … after stages …
+cm.save_checkpoint(
+    pipeline_start_time=start,
+    last_stage_completed=n,
+    stage_results=[StageResult(name="tests", exit_code=0, duration=1.0)],
+    total_stages=10,
+)
 ```
 
 ### Retry Logic
 ```python
-from infrastructure.core import retry_with_backoff
+from infrastructure.core.runtime.retry import retry_with_backoff
 
-@retry_with_backoff(max_attempts=3, base_delay=1.0)
+@retry_with_backoff(max_attempts=3, initial_delay=1.0)
 def risky_operation():
-    # Operation that may fail
-    pass
+    ...
 ```
 
-### Performance Monitoring
+### Performance monitoring
 ```python
-from infrastructure.core import PerformanceMonitor, get_system_resources
+from infrastructure.core.runtime.function_profiler import monitor_performance
 
-with PerformanceMonitor() as monitor:
-    # Your code here
-    pass
-
-resources = get_system_resources()
-print(f"CPU: {resources.cpu_percent}%, Memory: {resources.memory_percent}%")
+with monitor_performance("heavy_step"):
+    ...
 ```
 
-### Environment Setup
+### Environment setup
 ```python
-from infrastructure.core import check_python_version, check_dependencies, setup_directories
+from pathlib import Path
 
-check_python_version(min_version=(3, 8))
-check_dependencies(["pandas", "numpy"])
-setup_directories(["output", "output/figures"])
+from infrastructure.core.runtime.environment import (
+    check_python_version,
+    check_dependencies,
+    setup_directories,
+)
+
+check_python_version()
+check_dependencies(["numpy"])
+setup_directories(Path("."), "code_project")
 ```
 
-### Script Discovery
+### Script discovery
 ```python
-from infrastructure.core import discover_analysis_scripts, discover_orchestrators
+from pathlib import Path
 
-scripts = discover_analysis_scripts(Path("projects/project/scripts"))
-orchestrators = discover_orchestrators(Path("scripts"))
+from infrastructure.core.script_discovery import discover_analysis_scripts, discover_orchestrators
+
+scripts = discover_analysis_scripts(Path("."), "code_project")
+orchestrators = discover_orchestrators(Path("."))
 ```
 
-### File Operations
+### File operations
 ```python
-from infrastructure.core import clean_output_directory, copy_final_deliverables
+from pathlib import Path
 
-clean_output_directory(Path("output"))
-copy_final_deliverables(Path("projects/project/output"), Path("output/project"))
+from infrastructure.core.files.cleanup import clean_output_directory
+from infrastructure.core.files.operations import copy_final_deliverables
+
+clean_output_directory(Path("output/code_project"))
+copy_final_deliverables(Path("projects/code_project"), Path("output/code_project"), "code_project")
 ```
 
-### File Inventory
+### File inventory
 ```python
-from infrastructure.core import FileInventoryManager
+from pathlib import Path
 
-manager = FileInventoryManager(Path("projects/project/output"))
+from infrastructure.core.files.inventory import FileInventoryManager
+
+manager = FileInventoryManager(Path("projects/code_project/output"))
 if manager.collect_files():
     manager.generate_inventory_output()
 ```
 
-### Pipeline Execution
+### Pipeline execution
 ```python
-from infrastructure.core import PipelineExecutor, PipelineConfig
+from pathlib import Path
 
-config = PipelineConfig(
-    project_name="my_project",
-    repo_root=Path("."),
-    skip_infra=False,
-    skip_llm=True
-)
+from infrastructure.core.pipeline.executor import PipelineExecutor
+from infrastructure.core.pipeline.types import PipelineConfig
 
+config = PipelineConfig(project_name="my_project", repo_root=Path("."), skip_llm=True)
 executor = PipelineExecutor(config)
 results = executor.execute_core_pipeline()
-
-for result in results:
-    print(f"{result.name}: {result.exit_code} ({result.duration:.1f}s)")
+for r in results:
+    print(f"{r.stage_name}: exit {r.exit_code} ({r.duration:.1f}s)")
 ```
 
-### Multi-Project Orchestration
+### Multi-project orchestration
 ```python
+from pathlib import Path
+
 from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
 from infrastructure.project.discovery import discover_projects
 
 projects = discover_projects(Path("."))
-config = MultiProjectConfig(
-    repo_root=Path("."),
-    projects=projects,
-    run_infra_tests=True,
-    run_llm=False
-)
-
-orchestrator = MultiProjectOrchestrator(config)
-result = orchestrator.execute_all_projects_core()
-
-print(f"Successful: {result.successful_projects}, Failed: {result.failed_projects}")
+mp = MultiProjectConfig(repo_root=Path("."), projects=projects, run_llm=False)
+result = MultiProjectOrchestrator(mp).execute_all_projects_core()
+print(result.successful_projects, result.failed_projects)
 ```
 
-### Pipeline Summary
+### Pipeline summary
 ```python
-from infrastructure.core import generate_pipeline_summary
+from pathlib import Path
 
-summary = generate_pipeline_summary(
+from infrastructure.core.pipeline.summary import generate_pipeline_summary
+
+text = generate_pipeline_summary(
     stage_results=results,
     total_duration=123.45,
-    output_dir=Path("output"),
-    format="text"
+    output_dir=Path("output/code_project"),
+    output_format="text",
 )
-print(summary)
+print(text)
 ```
 
 ## Testing
@@ -3843,10 +2778,9 @@ Core module is imported by all other infrastructure modules for:
 **Issue**: Progress bars don't appear or update.
 
 **Solutions**:
-- Verify `tqdm` is installed (required dependency)
-- Check if output is redirected (progress bars need TTY)
-- Ensure `update()` is called with correct increment
-- Use context manager (`with ProgressBar(...)`) for proper cleanup
+- `ProgressBar` writes to stderr; ensure the terminal is interactive when expecting live updates
+- Call `update(value)` with the current absolute progress value, then `finish()`
+- Throttling uses `update_interval`; pass `force=True` to bypass
 
 ### Checkpoint Corruption
 

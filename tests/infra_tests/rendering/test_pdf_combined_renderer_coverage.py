@@ -204,6 +204,19 @@ class TestPreprocessCombinedMarkdown:
         result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
         assert "2" in result.content
 
+    def test_manuscript_vars_partial_topic_uses_orange_diamond_icon(self, tmp_path):
+        vars_data = {
+            "topics": {
+                "fep-099": {"lean_sketch": "x", "mathlib_status": "partial"},
+            }
+        }
+        vars_file = tmp_path / "manuscript_vars.yaml"
+        vars_file.write_text(yaml.dump(vars_data))
+
+        content = "Icon: {{topics.fep-099.maturity_icon}}"
+        result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
+        assert "🔶" in result.content
+
     def test_manuscript_vars_with_areas(self, tmp_path):
         vars_data = {"areas": {"math": 5, "physics": 3}}
         vars_file = tmp_path / "manuscript_vars.yaml"
@@ -212,6 +225,17 @@ class TestPreprocessCombinedMarkdown:
         content = "Total areas: {{total_areas}}"
         result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
         assert "2" in result.content
+
+    def test_manuscript_vars_areas_count_alias_matches_area_int(self, tmp_path):
+        """areas.{Name}.count must equal stringified areas.{Name} for PDF placeholders."""
+        vars_data = {"areas": {"FEP": 12, "ActiveInference": 7}}
+        vars_file = tmp_path / "manuscript_vars.yaml"
+        vars_file.write_text(yaml.dump(vars_data))
+
+        content = "FEP {{areas.FEP}} == {{areas.FEP.count}}, AI {{areas.ActiveInference}} == {{areas.ActiveInference.count}}"
+        result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
+        assert "FEP 12 == 12" in result.content
+        assert "AI 7 == 7" in result.content
 
     def test_manuscript_vars_missing_file(self, tmp_path):
         content = "No vars: {{title}}"

@@ -641,7 +641,7 @@ python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=
 **Coverage Requirements**:
 
 - 90% minimum for projects/{name}/src/ (currently achieving 100%)
-- 60% minimum for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
+- 60% minimum for infrastructure/ (**≥60%** gate; typical line aggregate **~76%** when skipping `tests/infra_tests/llm/`—re-measure via [infrastructure/README.md](infrastructure/README.md#testing))
 - All tests must pass before PDF generation
 - No mock methods (data analysis only)
 

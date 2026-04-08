@@ -7,68 +7,76 @@ description: Skill for the reporting infrastructure module providing pipeline re
 
 Pipeline reporting, error aggregation, and executive dashboard generation.
 
-## Pipeline Reports (`pipeline_reporter.py`)
+Public API is defined in [`__init__.py`](__init__.py). Prefer submodule imports when using only one subsystem (see docstring there).
+
+## Pipeline reports (`pipeline_report_model.py`, `pipeline_io.py`)
 
 ```python
+from pathlib import Path
 from infrastructure.reporting import (
-    generate_pipeline_report, generate_test_report,
-    generate_validation_report, generate_performance_report,
-    generate_error_summary, save_pipeline_report,
+    generate_pipeline_report,
+    save_pipeline_report,
+    save_test_results,
+    save_validation_report,
+    save_performance_report,
+    save_error_summary,
 )
 
-# Generate comprehensive pipeline report
 report = generate_pipeline_report(
-    test_results=test_data,
-    validation_results=validation_data,
-    performance_metrics=perf_data,
-    errors=error_list,
+    stage_results=[{"name": "setup", "exit_code": 0, "duration": 1.0}],
+    total_duration=1.0,
+    repo_root=Path("."),
+    test_results={"summary": {"total_tests": 10, "total_passed": 10}},
 )
+saved = save_pipeline_report(report, Path("output/reports"))
 
-# Save report to file
-save_pipeline_report(report, output_dir)
-
-# Individual report sections
-test_report = generate_test_report(test_data)
-validation_report = generate_validation_report(validation_data)
-performance_report = generate_performance_report(perf_data)
-error_summary = generate_error_summary(error_list)
+save_test_results(test_results_dict, Path("output/reports"))
+save_validation_report(validation_results_dict, Path("output/reports"))
+save_performance_report(performance_metrics_dict, Path("output/reports"))
+save_error_summary([{"type": "stage_failure", "message": "..."}], Path("output/reports"))
 ```
 
-## Error Aggregation (`error_aggregator.py`)
+Markdown/HTML for the pipeline report are assembled inside `save_pipeline_report` via `pipeline_markdown.py` and `pipeline_html.py`.
+
+## Error aggregation (`error_aggregator.py`)
 
 ```python
 from infrastructure.reporting import (
-    ErrorAggregator, ErrorEntry,
-    get_error_aggregator, reset_error_aggregator,
+    ErrorAggregator,
+    get_error_aggregator,
+    reset_error_aggregator,
 )
 
-# Singleton aggregator
 aggregator = get_error_aggregator()
-aggregator.add(ErrorEntry(stage="rendering", message="Missing figure"))
-aggregator.add(ErrorEntry(stage="validation", message="Broken link"))
-
-# Get summary
-summary = aggregator.summarize()
+aggregator.add_error(
+    error_type="validation_error",
+    message="Broken link",
+    stage="validation",
+    suggestions=["Check markdown refs"],
+)
+summary = aggregator.get_summary()
+aggregator.save_report(Path("output/reports"))
 reset_error_aggregator()
 ```
 
-## Executive Summaries (`executive_reporter.py`)
+## Executive summaries (`executive_reporter.py`)
 
 ```python
+from pathlib import Path
 from infrastructure.reporting import (
-    generate_executive_summary, save_executive_summary,
-    collect_project_metrics, ProjectMetrics, ExecutiveSummary,
+    generate_executive_summary,
+    save_executive_summary,
+    collect_project_metrics,
+    ProjectMetrics,
+    ExecutiveSummary,
 )
 
-# Generate cross-project executive summary
-summary = generate_executive_summary(repo_root, project_names)
-files = save_executive_summary(summary, output_dir)
-
-# Collect metrics for a single project
-metrics = collect_project_metrics(project_path)
+summary = generate_executive_summary(Path("."), ["code_project"])
+paths = save_executive_summary(summary, Path("output/executive_summary"))
+metrics = collect_project_metrics(Path("."), "code_project")
 ```
 
-## Dashboard Generation (`_dashboard_matplotlib.py`)
+## Dashboard generation (`_dashboard_matplotlib.py` and `_dashboard_*.py`)
 
 ```python
 from infrastructure.reporting import (
@@ -77,63 +85,72 @@ from infrastructure.reporting import (
     generate_plotly_dashboard,
 )
 
-# Generate all dashboard formats (PNG, PDF, HTML)
-files = generate_all_dashboards(executive_summary, output_dir)
-
-# Individual dashboard types
-generate_matplotlib_dashboard(summary, output_dir)
-generate_plotly_dashboard(summary, output_dir)
+# Optional: requires matplotlib (and plotly for HTML); see DASHBOARD_AVAILABLE
+files = generate_all_dashboards(summary, Path("output/executive_summary"))
 ```
 
-## Test Reporting (`test_reporter.py`)
+## Test suite summaries (`report_builder.py`, `markdown_formatter.py`, `result_loaders.py`)
 
 ```python
-from infrastructure.reporting import parse_pytest_output, save_test_report
+from infrastructure.reporting import (
+    generate_summary_report,
+    generate_markdown_report,
+    load_test_results,
+    load_infrastructure_results,
+    run_test_summary_generation,
+)
 
-# Parse pytest output into structured data
-results = parse_pytest_output(pytest_output_text)
-save_test_report(results, output_path)
+# generate_markdown_report(data) expects a test-suite summary dict, not PipelineReport
 ```
 
-## Output Reporting (`output_reporter.py`)
+## Output statistics (`output_statistics.py`)
 
 ```python
-from infrastructure.reporting import collect_output_statistics, generate_output_summary
+from pathlib import Path
+from infrastructure.reporting import collect_output_statistics, log_output_summary
 
-stats = collect_output_statistics(output_dir)
-summary = generate_output_summary(stats)
+stats = collect_output_statistics(Path("output/code_project"))
+log_output_summary(Path("output/code_project"), stats)
 ```
 
-## Multi-Project Reports
+## Multi-project reports (`multi_project_reporter.py`)
 
 ```python
-from infrastructure.reporting import generate_multi_project_report
+from pathlib import Path
+from infrastructure.reporting import (
+    generate_multi_project_report,
+    generate_multi_project_summary_report,
+)
 
-# Full workflow: executive summary + dashboards + CSV exports
 files = generate_multi_project_report(
-    repo_root=Path("."),
-    project_names=["project_a", "project_b"],
-    output_dir=Path("output/executive_summary"),
+    Path("."),
+    ["code_project", "template"],
+    Path("output/executive_summary"),
 )
 ```
 
-## Test Summary Generation (`suite_summary_generator.py`)
+## Manuscript overview (`manuscript_overview.py`)
 
 ```python
-from infrastructure.reporting.suite_summary_generator import run_test_summary_generation
-run_test_summary_generation()
+from pathlib import Path
+from infrastructure.reporting.manuscript_overview import (
+    generate_manuscript_overview,
+    generate_all_manuscript_overviews,
+)
+
+generate_manuscript_overview(
+    pdf_path=Path("output/code_project/pdf/code_project_combined.pdf"),
+    output_dir=Path("output/executive_summary"),
+    project_name="code_project",
+)
+# Used by dashboard generation:
+generate_all_manuscript_overviews(summary, output_dir, Path("."))
 ```
 
-## Manuscript Overview (`manuscript_overview.py`)
+## Coverage helpers (`coverage_parser.py`, `coverage_reporter.py`, …)
 
-```python
-from infrastructure.reporting.manuscript_overview import generate_manuscript_overview
-overview = generate_manuscript_overview(project_path)
-```
-
-## Coverage Parsing (`coverage_parser.py`)
+Import from the specific module when needed, for example:
 
 ```python
 from infrastructure.reporting.coverage_parser import parse_coverage_report
-coverage = parse_coverage_report(coverage_output)
 ```

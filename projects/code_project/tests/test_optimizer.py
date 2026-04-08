@@ -662,7 +662,7 @@ class TestMakeQuadraticProblem:
             tolerance=1e-8,
         )
         assert result.converged
-        np.testing.assert_allclose(result.optimal_point if hasattr(result, 'optimal_point') else result.solution, [1.0], atol=1e-5)
+        np.testing.assert_allclose(result.solution, [1.0], atol=1e-5)
 
     def test_factory_with_default_params(self):
         """Factory with None params uses quadratic_function defaults."""

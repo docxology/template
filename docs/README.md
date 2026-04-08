@@ -76,7 +76,7 @@ graph TD
 | [`guides/`](guides/) | Skill-level guides (1-12) | getting-started, figures-and-analysis, testing, extending |
 | [`architecture/`](architecture/) | System design | two-layer-architecture.md, thin-orchestrator, decision-tree |
 | [`usage/`](usage/) | Content authoring & patterns | examples, markdown guide, style guide, visualization |
-| [`operational/`](operational/) | Operational workflows | `config/`, `logging/`, `troubleshooting/` sub-folders |
+| [`operational/`](operational/) | Operational workflows | `config/`, `logging/`, `troubleshooting/`, [`build/`](operational/build/) |
 | [`reference/`](reference/) | Reference materials | api-reference, faq, glossary, cheatsheet, workflows |
 | [`modules/`](modules/) | Infrastructure modules | modules-guide, scientific simulation, pdf-validation, `guides/` |
 | [`development/`](development/) | Development & contribution | contributing, security, roadmap, `testing/` sub-folder |
@@ -130,4 +130,4 @@ graph TD
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - Agent skills: [`../.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc), [`../.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — `uv run python -m infrastructure.skills write` / `check`
-- Active `projects/` beyond the [`../projects/code_project/`](../projects/code_project/) exemplar may ship a local docs tree (e.g. [`../projects/cognitive_case_diagrams/docs/`](../projects/cognitive_case_diagrams/docs/)); authoritative slugs remain in [`_generated/active_projects.md`](_generated/active_projects.md)
+- Active `projects/` beyond the [`../projects/code_project/`](../projects/code_project/) exemplar may ship a local docs tree (e.g. [`../projects/template/docs/`](../projects/template/docs/)); authoritative slugs remain in [`_generated/active_projects.md`](_generated/active_projects.md)

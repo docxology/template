@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **100% Test Coverage**: 45 tests covering edge cases, stability analysis, and performance benchmarks
+- **100% Test Coverage**: 39 tests covering edge cases, stability analysis, and performance benchmarks
 - **Deterministic Algorithms**: Reproducible results with fixed random seeds
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -45,6 +45,18 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 - **Context Manager Performance Monitoring**: Proper resource usage tracking with detailed metrics
 - **Progress Bars**: Visual progress indicators for long-running optimization experiments
 
+## Infrastructure Features Not Exercised
+
+This exemplar deliberately omits certain infrastructure modules that require external services or are not relevant to public research:
+
+- **LLM Review & Translations** (`infrastructure/llm/`): Requires a running Ollama server. The pipeline stages exist but are skipped in `--core-only` mode.
+- **Steganography** (`infrastructure/steganography/`): Designed for confidential manuscript watermarking and encryption — not needed for public research exemplars.
+- **Publishing Platforms** (`infrastructure/publishing/platforms/`): Zenodo and arXiv uploads require API credentials. Citation generation (APA, BibTeX, MLA) IS exercised.
+- **Docker** (`infrastructure/docker/`): Container orchestration for multi-environment testing — not needed for single-environment local development.
+- **Scientific Templates** (`infrastructure/scientific/templates/`): Scaffolding for new scientific modules — code_project itself IS the template.
+
+All omitted modules are fully implemented in `infrastructure/` and available for extension. See each module's `AGENTS.md` for usage.
+
 ## Directory Structure
 
 ```
@@ -66,7 +78,7 @@ projects/code_project/
 │   └── README.md          # Quick reference
 ├── docs/                   # Agent-facing documentation hub
 │   ├── architecture.md    # Script-to-infrastructure flow
-│   ├── testing_philosophy.md  # Zero-mock 34-test strategy
+│   ├── testing_philosophy.md  # Zero-mock 39-test strategy
 │   ├── rendering_pipeline.md  # Manuscript-to-PDF pipeline
 │   └── agent_instructions.md  # AI rules for this exemplar
 ├── manuscript/             # Research content
@@ -347,7 +359,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: Achieves 100% test coverage with 45 tests (exceeds 90% requirement)
+- **90%+ coverage**: Achieves 96%+ test coverage with 39 tests (exceeds 90% requirement)
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes

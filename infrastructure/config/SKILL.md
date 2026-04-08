@@ -22,7 +22,7 @@ Repo-scoped configuration defaults used by infrastructure modules.
 
 ## Integration Points
 
-- Referenced by `infrastructure/core/config_loader.py`
+- Referenced by `infrastructure/core/config/loader.py`
 - Project-level overrides in `projects/{name}/manuscript/config.yaml`
 
 ## See Also

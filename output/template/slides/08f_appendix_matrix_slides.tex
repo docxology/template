@@ -1,0 +1,189 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+\newpage
+\end{frame}
+
+\begin{frame}[fragile]{Appendix: Comparative Tool Matrix}
+\protect\phantomsection\label{appendix-matrix}
+\textbf{Symbol key} (applies to all cells): \textbf{Y} = full native
+support · \textbf{\textasciitilde{}} = partial or plugin-based ·
+\textbf{N} = absent. See also
+\href{04_results.md\#comparative-feature-analysis}{Figure 4} for a
+colour-coded heatmap rendering of this table.
+
+\begin{table}[h]
+\caption{Comparative feature matrix (14 capabilities $\times$ 10 tools). Y~=~full native support, \textasciitilde~=~partial or plugin-based, N~=~absent.}
+\label{tab:comparative-matrix}
+\end{table}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1324}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0956}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0882}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0882}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0662}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0735}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1029}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0882}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0515}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1103}}
+  >{\centering\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1029}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Capability
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\texttt{template/}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Snakemake 9
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Nextflow 25
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+CWL 1.2
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Quarto 1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Jupyter Book 2
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+R Markdown
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+DVC 3
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Overleaf (2025)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+OpenAI Prism
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Pipeline orchestration & Y & Y & Y & Y & \textasciitilde{} & N & N & Y &
+N & N \\
+Manuscript rendering & Y & N & N & N & Y & Y & Y & N & Y & Y \\
+Testing enforcement & Y & N & N & N & N & N & N & N & N & N \\
+Coverage thresholds & Y & N & N & N & N & N & N & N & N & N \\
+Cryptographic provenance & Y & N & \textasciitilde¹ & N & N & N & N &
+\textasciitilde² & N & N \\
+Steganographic watermarking & Y & N & N & N & N & N & N & N & N & N \\
+Multi-project management & Y & N & N & N & N & N & N & N &
+\textasciitilde{} & \textasciitilde{} \\
+AI-agent documentation & Y & N & N & N & N & N & N & N &
+\textasciitilde{} & \textasciitilde{} \\
+Agentic skill protocol (SKILL.md / MCP) & Y & N & N & N & N & N & N & N
+& N & N \\
+Interactive TUI & Y & N & N & N & N & N & N & N & N & N \\
+Zero-mock policy & Y & N & N & N & N & N & N & N & N & N \\
+Container support & N & Y & Y & Y & N & N & N & N & N & N \\
+Distributed execution & N & Y & Y & Y & N & N & N & \textasciitilde³ & N
+& N \\
+Multi-language (R/Julia) & N & Y & N & Y & Y & Y & Y & Y & N & N \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+¹ Nextflow 25.04.0 introduced data-lineage provenance tracking
+(build-level, not document-level). ² DVC provides content-addressed
+versioning for data artifacts via its object store. ³ DVC integrates
+with remote storage (S3, GCS, Azure) but does not natively orchestrate
+distributed compute. ⁴ Overleaf and OpenAI Prism are collaborative cloud
+LaTeX/AI writing environments; their AI features (GPT-5.2 for Prism,
+Overleaf Labs AI for Overleaf) are partial/early-stage as of 2025--2026.
+\end{frame}
+
+\end{document}

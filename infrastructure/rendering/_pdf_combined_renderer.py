@@ -164,7 +164,7 @@ def preprocess_combined_markdown(
                                     flat[f"topics.{topic_id}.maturity_icon"] = "✅"
                                 elif ml_status == "partial":
                                     flat[f"topics.{topic_id}.maturity"] = "partial"
-                                    flat[f"topics.{topic_id}.maturity_icon"] = "⚠️"
+                                    flat[f"topics.{topic_id}.maturity_icon"] = "🔶"
                                 elif ml_status == "aspirational":
                                     flat[f"topics.{topic_id}.maturity"] = "aspirational"
                                     flat[f"topics.{topic_id}.maturity_icon"] = "○"

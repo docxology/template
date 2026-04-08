@@ -17,7 +17,13 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class OptimizationResult:
-    """Result container from gradient_descent."""
+    """Result container from gradient_descent.
+
+    All fields are always populated by ``gradient_descent()``.
+    ``objective_history`` contains the objective value after each iteration
+    (including the initial point); it defaults to ``None`` only so the
+    dataclass can be constructed manually in tests without supplying it.
+    """
 
     solution: np.ndarray
     objective_value: float

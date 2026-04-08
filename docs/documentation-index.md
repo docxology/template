@@ -156,7 +156,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ## 🧪 **Advanced Modules**
 
-- **[modules/modules-guide.md](modules/modules-guide.md)** - All 13 infrastructure modules
+- **[modules/modules-guide.md](modules/modules-guide.md)** - Infrastructure modules overview (**14** named areas in Layer 1; some older text says *13 subpackages* when telemetry is folded into `core/`—see that guide)
 - **[reference/api-reference.md](reference/api-reference.md)** - Unified API documentation
 - **[modules/pdf-validation.md](modules/pdf-validation.md)** - PDF validation system
 
@@ -183,6 +183,15 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and stage reference
 - **[.github/README.md](../.github/README.md)** - Repository CI/CD and contribution automation
+
+### Build & dependency docs (`operational/build/`)
+
+- **[operational/build/README.md](operational/build/README.md)** - Index
+- **[operational/build/build-system.md](operational/build/build-system.md)** - Build system
+- **[operational/build/build-performance.md](operational/build/build-performance.md)** - Build performance
+- **[operational/build/build-history.md](operational/build/build-history.md)** - Build history
+- **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - CI/CD integration
+- **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - Dependency management
 
 ### Configuration & Performance (`operational/config/`)
 
@@ -220,7 +229,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[best-practices/best-practices.md](best-practices/best-practices.md)** - Consolidated best practices
 - **[best-practices/version-control.md](best-practices/version-control.md)** - Git workflows
-- **[best-practices/multi-project-management.md](best-practices/multi-project-management.md)** - Multi-project setup (roster → [_generated/active_projects.md](_generated/active_projects.md); optional per-project docs e.g. [`projects/cognitive_case_diagrams/docs/`](../projects/cognitive_case_diagrams/docs/))
+- **[best-practices/multi-project-management.md](best-practices/multi-project-management.md)** - Multi-project setup (roster → [_generated/active_projects.md](_generated/active_projects.md); optional per-project docs e.g. [`projects/template/docs/`](../projects/template/docs/))
 - **[best-practices/migration-guide.md](best-practices/migration-guide.md)** - Migration from other templates
 - **[best-practices/backup-recovery.md](best-practices/backup-recovery.md)** - Backup strategies
 
@@ -268,7 +277,7 @@ docs/
 ├── PAI.md                              # PAI context for agents
 ├── RUN_GUIDE.md                        # Pipeline orchestration reference
 ├── opengauss.md                        # Open Gauss (gauss CLI) disambiguation
-├── rules/                              # Development standards (AGENTS, README, topic guides)
+├── rules/                              # Development standards (AGENTS, README, 15 topic *.md)
 ├── _generated/                         # Generated snippets; active_projects.md roster
 │
 ├── core/                               # Essential documentation
@@ -276,14 +285,18 @@ docs/
 │   ├── architecture.md                 # System design overview
 │   └── workflow.md                     # Development workflow
 │
-├── guides/                             # Skill-level guides
+├── guides/                             # Skill-level guides (+ README, AGENTS)
 │   ├── getting-started.md              # Levels 1-3
 │   ├── figures-and-analysis.md         # Levels 4-6
 │   ├── testing-and-reproducibility.md  # Levels 7-9
 │   ├── extending-and-automation.md     # Levels 10-12
-│   └── new-project-setup.md            # Setup checklist + pitfalls
+│   ├── new-project-setup.md            # Setup checklist + pitfalls
+│   ├── new-project-one-shot-prompt.md
+│   ├── llm-integration-guide.md
+│   ├── publishing-guide.md
+│   └── secure-research-guide.md
 │
-├── architecture/                       # Architecture documentation
+├── architecture/                       # Architecture documentation (+ README, AGENTS)
 │   ├── two-layer-architecture.md       # Full architecture guide
 │   ├── thin-orchestrator-summary.md    # Pattern implementation
 │   ├── decision-tree.md               # Code placement decisions
@@ -306,14 +319,14 @@ docs/
 │   │   ├── README.md (comprehensive guide)
 │   │   ├── python-logging.md, bash-logging.md
 │   │   └── logging-patterns.md
-│   ├── troubleshooting/                # Troubleshooting guides
+│   ├── troubleshooting/                # Troubleshooting guides (+ README, AGENTS)
 │   │   ├── README.md (flowchart)
 │   │   ├── common-errors.md, build-tools.md
 │   │   ├── test-failures.md, environment-setup.md
 │   │   ├── recovery-procedures.md
 │   │   ├── llm-review.md
 │   │   └── llm-diagnostics.md
-│   ├── build/                         # Build system & CI/CD
+│   ├── build/                         # Build system & CI/CD (see also ../.github/README.md)
 │   │   ├── build-system.md
 │   │   ├── build-performance.md
 │   │   ├── build-history.md
@@ -322,24 +335,25 @@ docs/
 │   ├── reporting-guide.md
 │   └── error-handling-guide.md
 │
-├── reference/                          # Reference materials
+├── reference/                          # Reference materials (+ README, AGENTS)
 │   ├── api-reference.md (unified)
+│   ├── api-project-modules.md
 │   ├── glossary.md, faq.md
 │   ├── quick-start-cheatsheet.md
 │   ├── common-workflows.md
-│   └── copypasta.md
+│   └── copypasta.md, copypasta-diagrams.md, copypasta-outreach.md
 │
-├── modules/                            # Infrastructure modules
+├── modules/                            # Infrastructure modules (+ README, AGENTS)
 │   ├── modules-guide.md
 │   ├── scientific-simulation-guide.md
 │   ├── pdf-validation.md
 │   └── guides/ (12 per-module guides)
 │
-├── development/                        # Development & contribution
+├── development/                        # Development & contribution (+ README, AGENTS)
 │   ├── contributing.md, code-of-conduct.md
 │   ├── security.md, roadmap.md
 │   ├── coverage-gaps.md
-│   └── testing/
+│   └── testing/                        # (+ README, AGENTS)
 │       ├── testing-guide.md
 │       └── testing-with-credentials.md
 │
@@ -368,11 +382,11 @@ docs/
 │   ├── README.md
 │   └── inferant-stream-018-1.md        # InferAnt #018.1 — March 2026
 │
-└── audit/                              # Audit reports
+└── audit/                              # Audit reports (+ README, AGENTS)
     ├── documentation-review-report.md
     ├── documentation-review-summary.md
-    ├── filepath-audit-report.md        # Typical output from audit tooling
-    └── FILEPATH_AUDIT_REPORT.md       # Point-in-time snapshot (historical); prefer filepath-audit-report.md for fresh runs
+    ├── filepath-audit-report.md        # e.g. `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md`
+    └── FILEPATH_AUDIT_REPORT.md       # Default `--output` from scripts/audit_filepaths.py unless overridden
 ```
 
 ---

@@ -5,31 +5,28 @@ Foundation utilities: exceptions, logging, and configuration.
 ## Quick Start
 
 ```python
-from infrastructure.core import (
-    get_logger,
-    TemplateError,
-    load_config,
-    log_operation
-)
+from pathlib import Path
 
-# Logging
+from infrastructure.core import TemplateError, get_logger
+from infrastructure.core.config.loader import get_config_as_dict, load_config
+from infrastructure.core.logging.utils import log_operation
+
 logger = get_logger(__name__)
 logger.info("Starting analysis")
 
-# Exception handling
 try:
     result = operation()
 except Exception as e:
     raise TemplateError("Operation failed") from e
 
-# Configuration
-config = load_config(Path("config.yaml"))
+config = load_config(Path("projects/code_project/manuscript/config.yaml"))
 env_vars = get_config_as_dict(Path("."))
 
-# Operation tracking
 with log_operation("Processing", logger):
     process_data()
 ```
+
+Re-exported names are limited; see `infrastructure/core/__init__.py` and import from submodules for everything else.
 
 ## Architecture Overview
 

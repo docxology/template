@@ -58,7 +58,7 @@ Labels follow the same agency taxonomy used for plot colours (`_agency_category`
 The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/code_project/tests/` during the infrastructure build phase.
 
 1. **Integration Testing**: The `tests/integration/` battery ensures that the optimization algorithm, the analysis pipeline, and the `infrastructure.rendering` components operate flawlessly together without simulated data.
-2. **Infrastructure Validation**: The `tests/infra_tests/` suite confirms that the underlying modules (e.g., `pipeline_reporter.py`, `doc_discovery.py`) behave deterministically.
+2. **Infrastructure Validation**: The `tests/infra_tests/` suite exercises `infrastructure` modules (for example `infrastructure.reporting.pipeline_io`, `infrastructure.validation`) so reporting and validation paths stay deterministic.
 3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/code_project/src/` prior to treating the project as build-green.
 
 ### Stopping rule and reporting

@@ -311,7 +311,7 @@ If answer is "for our specific problem":
        pass
 
 If answer is "any research could use this":
-└─ Infrastructure layer (infrastructure/scientific/data_processing.py)
+└─ Infrastructure layer (infrastructure/scientific/validation.py)
    def normalize_data(raw_data):
        pass
 
@@ -360,13 +360,8 @@ def custom_algorithm(data):
 ### ❌ Wrong: Duplicate Code Across Layers
 
 ```python
-# BAD: infrastructure/plots.py
-def plot_convergence(data):
-    pass
-
-# BAD: projects/{name}/src/plots.py
-def plot_convergence(data):  # ❌ Duplicate!
-    pass
+# BAD: Same plotting API implemented twice — e.g. plot_convergence in
+# infrastructure/scientific/benchmarking.py and again under projects/{name}/src/.
 ```
 
 **Problem:** Maintenance nightmare, inconsistency

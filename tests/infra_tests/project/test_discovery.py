@@ -18,7 +18,7 @@ from infrastructure.project.discovery import discover_projects, get_default_proj
 
 def test_project_package_exports_match_docs() -> None:
     """`infrastructure.project` exports convenience public API."""
-    from infrastructure.project import (  # noqa: WPS433 (import inside test)
+    from infrastructure.project import (
         ProjectInfo as ExportedProjectInfo,
         discover_projects as exported_discover_projects,
         get_project_metadata as exported_get_project_metadata,

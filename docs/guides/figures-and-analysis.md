@@ -52,10 +52,10 @@ By the end of this guide, you'll be able to:
 └────────┬────────┘
          │ import
          ↓
-┌─────────────────┐
-│  projects/{name}/scripts/│  ← Thin orchestrators
-│  my_figure.py   │  ← Visualization only
-└─────────────────┘
+┌──────────────────────────┐
+│ projects/{name}/scripts/ │  ← Thin orchestrators
+│ my_figure.py             │  ← Visualization only
+└──────────────────────────┘
          │ generate
          ↓
 ┌─────────────────┐
@@ -596,28 +596,20 @@ For specific workflows, create custom scripts:
 
 ```bash
 #!/bin/bash
-# custom_build.sh
+# custom_build.sh — example using real paths in projects/code_project/
 
-set -e  # Exit on error
+set -e
 
 echo "Running custom build pipeline..."
 
-# 1. Run specific tests
-echo "Testing analysis module..."
-uv run pytest projects/code_project/tests/test_correlation.py --cov=projects.code_project.src.correlation
+uv run pytest projects/code_project/tests/test_optimizer.py \
+  --cov=projects/code_project/src --cov-report=term
 
-# 2. Generate specific figures
-echo "Generating figures..."
-uv run python projects/code_project/scripts/correlation_analysis.py
-uv run python projects/code_project/scripts/statistics_figure.py
+uv run python projects/code_project/scripts/optimization_analysis.py
 
-# 3. Build specific sections
-echo "Building results section..."
-pandoc projects/code_project/manuscript/04_experimental_results.md \
-    -o projects/code_project/output/pdf/04_experimental_results.pdf \
-    --pdf-engine=xelatex
+uv run python scripts/03_render_pdf.py --project code_project
 
-echo "Custom build!"
+echo "Custom build complete."
 ```
 
 ### Batch Processing Multiple Datasets

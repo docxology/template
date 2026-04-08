@@ -43,45 +43,30 @@ By the end of this guide, you'll be able to:
 **Create specialized project types**:
 
 ```bash
-# Create custom project structure
-mkdir -p custom_projects/machine_learning
-mkdir -p custom_projects/simulation
-mkdir -p custom_projects/data_science
-
-# Copy and adapt base structure
-cp -r src tests scripts custom_projects/machine_learning/
+# Prefer a real project tree under projects/{name}/ (discovered by ./run.sh).
+# Scaffold from the exemplar layout:
+mkdir -p projects/my_research/src projects/my_research/tests projects/my_research/scripts projects/my_research/manuscript
+cp projects/code_project/manuscript/config.yaml projects/my_research/manuscript/
 ```
 
 ### Custom Build Pipelines
 
-**Create specialized build script**:
+**Create specialized build script** (example aligned with this repo; save under `projects/{name}/scripts/` if project-specific):
 
 ```bash
 #!/bin/bash
-# custom_projects/machine_learning/ml_build.sh
-
 set -e
 
-echo "ML Project Build Pipeline"
+echo "Project build pipeline (exemplar: code_project)"
 
-# 1. Run ML-specific tests
-pytest tests/ --cov=src --cov-report=html \
-    --markers="ml"  # Only ML tests
+uv run pytest projects/code_project/tests/ \
+  --cov=projects/code_project/src --cov-report=html
 
-# 2. Train models
-uv run python scripts/train_models.py
+uv run python projects/code_project/scripts/optimization_analysis.py
 
-# 3. Evaluate models
-uv run python scripts/evaluate_models.py
+uv run python scripts/execute_pipeline.py --project code_project --core-only
 
-# 4. Generate model cards
-uv run python scripts/generate_model_cards.py
-
-# 5. Build documentation
-pandoc docs/*.md -o output/ml_docs.pdf \
-    --template=templates/ml_template.tex
-
-echo "ML build!"
+echo "Build complete."
 ```
 
 ### Integration with External Tools
@@ -89,51 +74,37 @@ echo "ML build!"
 **Example: External simulation tool**:
 
 ```python
-# custom_projects/machine_learning/scripts/external_simulation.py
 #!/usr/bin/env python3
-"""Integrate external simulation tool."""
-import subprocess
+"""Thin orchestrator sketch: subprocess for an external binary; computation in src/."""
+
+from __future__ import annotations
+
 import json
-import os
+import subprocess
+from pathlib import Path
 
-from custom_projects.machine_learning.src.analysis import process_simulation_results  # From custom_projects/machine_learning/src/
 
-def run_external_tool(config_file):
-    """Run external simulation tool."""
-    
-    # Prepare configuration
-    with open(config_file, 'r') as f:
-        config = json.load(f)
-    
-    # Run external tool
-    result = subprocess.run(
-        ['external_simulator', '--config', config_file, '--output', 'raw_results.json'],
+def run_external_tool(config_file: Path, raw_out: Path) -> dict:
+    subprocess.run(
+        ["external_simulator", "--config", str(config_file), "--output", str(raw_out)],
         capture_output=True,
         text=True,
-        check=True
+        check=True,
     )
-    
-    # Load raw results
-    with open('raw_results.json', 'r') as f:
-        raw_data = json.load(f)
-    
-    # Use src/ methods for analysis
-    processed = process_simulation_results(raw_data)
-    
-    # Generate visualization
-    create_simulation_plots(processed)
-    
-    return processed
+    with open(raw_out, encoding="utf-8") as f:
+        return json.load(f)
 
-def main():
-    configs = ['config1.json', 'config2.json', 'config3.json']
-    
-    for config in configs:
-        print(f"Running simulation: {config}")
-        results = run_external_tool(config)
-        save_results(results, config)
 
-if __name__ == '__main__':
+def main() -> None:
+    # Implement domain analysis in projects/{name}/src/; import it here.
+    # config_file = Path("…")  # your inputs
+    # raw_out = Path("…")
+    # data = run_external_tool(config_file, raw_out)
+    # processed = your_src_module.process(data)
+    pass
+
+
+if __name__ == "__main__":
     main()
 ```
 

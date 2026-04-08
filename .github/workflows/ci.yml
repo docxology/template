@@ -53,13 +53,19 @@ jobs:
         run: uv sync
 
       - name: Ruff lint
-        run: uvx ruff check infrastructure/ projects/*/src/
+        run: |
+          uvx ruff check infrastructure/ projects/*/src/
+          uvx ruff check scripts/ tests/
 
       - name: Ruff format check
-        run: uvx ruff format --check infrastructure/ projects/*/src/
+        run: |
+          uvx ruff format --check infrastructure/ projects/*/src/
+          uvx ruff format --check scripts/ tests/
 
       - name: Type checking
-        run: uv run mypy infrastructure/ projects/*/src/
+        run: |
+          uv run mypy infrastructure/ projects/*/src/
+          uv run mypy scripts/ tests/
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 2 — No-Mocks Policy Verification

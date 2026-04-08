@@ -1,0 +1,14 @@
+\beamer@slide {methodology}{1}
+\beamer@slide {algorithm-implementation}{1}
+\beamer@slide {gradient-descent-algorithm}{1}
+\beamer@slide {infrastructure-integration}{1}
+\beamer@slide {numerical-stability-analysis}{1}
+\beamer@slide {performance-benchmarking}{1}
+\beamer@slide {convergence-analysis}{1}
+\beamer@slide {eq:convergence_factor}{1}
+\beamer@slide {experimental-setup}{1}
+\beamer@slide {step-size-analysis}{1}
+\beamer@slide {zero-mock-testing-methodology}{1}
+\beamer@slide {stopping-rule-and-reporting}{1}
+\beamer@slide {figure-generation-contract}{1}
+\beamer@slide {analysis-pipeline-latex-integration}{1}

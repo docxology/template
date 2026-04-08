@@ -215,8 +215,8 @@ ignore = [
 "infrastructure/core/logging/*.py" = ["E402"]  # Conditional imports after setup
 "infrastructure/publishing/publish_cli.py" = ["E402"]  # sys.path manipulation before imports
 "infrastructure/rendering/render_all_cli.py" = ["E402"]  # sys.path manipulation before imports
-"scripts/*" = ["E402", "E501"]  # sys.path before imports; docstring line length
-"tests/*" = ["E712", "E402"]  # Allow == True/False assertions; conditional test imports
+"scripts/**" = ["E402", "E501"]  # sys.path before imports; long help/docstrings in CLIs
+"tests/**" = ["E712", "E402", "E501"]  # assertions; conditional imports; long strings/assert messages
 "__init__.py" = ["F401"]  # Allow re-exports in __init__ files
 # E501 in docstrings/comments (ruff format handles code structure line length)
 "infrastructure/core/runtime/checkpoint.py" = ["E501"]

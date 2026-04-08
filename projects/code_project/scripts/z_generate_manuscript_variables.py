@@ -208,10 +208,17 @@ def generate_variables() -> dict[str, str]:
             obj = float(r["objective_value"])
             iters = int(r["iterations"])
             conv = "Yes" if r["converged"] == "True" else "No"
+            # Format divergent cases readably
+            if not np.isfinite(obj) or abs(sol) > 1e15:
+                sol_str = "diverged"
+                obj_str = "$\\infty$"
+            else:
+                sol_str = f"{sol:.4f}"
+                obj_str = f"{obj:.4f}"
             table_rows.append(
                 f"| {float(r['step_size']):.2f}          "
-                f"| {sol:.4f}         "
-                f"| {obj:.4f}          "
+                f"| {sol_str:<14} "
+                f"| {obj_str:<15} "
                 f"| {iters:<10} "
                 f"| {conv:<9} |"
             )

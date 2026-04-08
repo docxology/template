@@ -8,6 +8,7 @@
 
 | Sub-directory | Purpose | Key Files |
 |---------------|---------|-----------|
+| [`build/`](build/) | Build system, CI/CD integration, dependencies | build-system.md, ci-cd-integration.md, dependency-management.md |
 | [`config/`](config/) | Configuration, checkpoints, performance | configuration.md, checkpoint-resume.md, performance-optimization.md |
 | [`logging/`](logging/) | Logging system (Python, Bash, patterns) | README.md (full guide), python-logging.md, bash-logging.md |
 | [`troubleshooting/`](troubleshooting/) | Issue resolution and recovery | README.md (flowchart), common-errors.md, llm-review.md |

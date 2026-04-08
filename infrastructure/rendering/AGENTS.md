@@ -75,6 +75,10 @@ Configuration is managed via `RenderingConfig` or environment variables.
 | `pandoc_path` | Path to pandoc | `pandoc` |
 | `output_dir` | Root output directory | `output` |
 
+## Internal combined-PDF pipeline
+
+Combined manuscript PDFs (multi-file markdown, preamble, BibTeX, figure path fixes) are orchestrated by `pdf_renderer.py` with helpers such as `_pdf_combined_renderer.py`, `_pdf_markdown_combine.py`, `_pdf_latex_pipeline.py`, and `_pdf_latex_bibliography.py`. Prefer calling `RenderManager.render_combined_pdf` or the project pipeline over importing `_pdf_*` directly.
+
 ## Supported Formats
 
 1. **PDF**: High-quality typesetting via LaTeX.
@@ -166,13 +170,13 @@ class RenderManager:
         """
 
     def render_all(self, source_path: Path) -> list[Path]:
-        """Render to all supported formats.
+        """Render to all supported formats for a single source file.
 
         Args:
-            source_path: Path to source manuscript
+            source_path: Path to source manuscript (``.tex`` or ``.md``)
 
         Returns:
-            Dictionary mapping format names to output paths
+            List of paths to generated output files (may be partial if some formats fail)
         """
 
     def render_pdf(self, source_path: Path) -> Path:

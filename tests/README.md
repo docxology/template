@@ -38,6 +38,7 @@ tests/
 │   ├── test_execute_pipeline_cli.py
 │   ├── test_executive_report_generation.py
 │   ├── test_figure_equation_citation.py
+│   ├── test_full_pipeline.py
 │   ├── test_logging.py
 │   ├── test_module_interoperability.py
 │   ├── test_output_copying.py

@@ -1,0 +1,278 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.11, pytest-8.4.2, pluggy-1.6.0 -- /Users/4d/miniforge3/bin/python3
+cachedir: .pytest_cache
+metadata: {'Python': '3.12.11', 'Platform': 'macOS-26.4-arm64-arm-64bit', 'Packages': {'pytest': '8.4.2', 'pluggy': '1.6.0'}, 'Plugins': {'mock': '3.15.1', 'asyncio': '1.2.0', 'anyio': '4.11.0', 'html': '4.1.1', 'xdist': '3.8.0', 'json-report': '1.5.0', 'timeout': '2.4.0', 'metadata': '3.1.1', 'Faker': '37.8.0', 'hypothesis': '6.138.15', 'cov': '6.2.1', 'pytest_httpserver': '1.1.3', 'benchmark': '5.1.0'}}
+hypothesis profile 'default'
+benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: /Users/4d/Documents/GitHub/template/projects/fep_lean
+configfile: pyproject.toml
+plugins: mock-3.15.1, asyncio-1.2.0, anyio-4.11.0, html-4.1.1, xdist-3.8.0, json-report-1.5.0, timeout-2.4.0, metadata-3.1.1, Faker-37.8.0, hypothesis-6.138.15, cov-6.2.1, pytest_httpserver-1.1.3, benchmark-5.1.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+timeout: 900.0s
+timeout method: thread
+timeout func_only: False
+collecting ... collected 221 items
+
+tests/test_catalogue_sketches_compile.py::test_all_catalogue_sketches_compile_no_sorry FAILED [  0%]
+tests/test_environment_checks.py::test_run_validation_all_ok_on_project PASSED [  0%]
+tests/test_environment_sad_paths.py::test_lean_subprocess_env_mkdir_error PASSED [  1%]
+tests/test_environment_sad_paths.py::test_find_toolchain_elan_unreadable PASSED [  1%]
+tests/test_environment_sad_paths.py::test_check_lean_cli_not_found PASSED [  2%]
+tests/test_environment_sad_paths.py::test_check_lean_cli_exit_error PASSED [  2%]
+tests/test_environment_sad_paths.py::test_check_lean_cli_sandbox_proxy PASSED [  3%]
+tests/test_environment_sad_paths.py::test_check_mathlib_built_error PASSED [  3%]
+tests/test_environment_sad_paths.py::test_check_dot_gauss_writable_error PASSED [  4%]
+tests/test_environment_sad_paths.py::test_check_topics_yaml_errors PASSED [  4%]
+tests/test_environment_sad_paths.py::test_check_dirs_errors PASSED       [  4%]
+tests/test_environment_sad_paths.py::test_check_lean_workspace_errors PASSED [  5%]
+tests/test_environment_sad_paths.py::test_check_manuscript_config_errors PASSED [  5%]
+tests/test_environment_sad_paths.py::test_check_scripts_tests_errors PASSED [  6%]
+tests/test_environment_sad_paths.py::test_check_references_bib_missing PASSED [  6%]
+tests/test_environment_sad_paths.py::test_check_output_writable_errors PASSED [  7%]
+tests/test_environment_sad_paths.py::test_lean_subprocess_env_sets_elan_home PASSED [  7%]
+tests/test_environment_sad_paths.py::test_check_mathlib_built_with_oleans PASSED [  8%]
+tests/test_environment_sad_paths.py::test_check_python_numpy_matplotlib PASSED [  8%]
+tests/test_environment_sad_paths.py::test_check_catalogue_import_real PASSED [  9%]
+tests/test_environment_sad_paths.py::test_check_catalogue_import_missing_yaml PASSED [  9%]
+tests/test_environment_sad_paths.py::test_check_dot_gauss_writable_success PASSED [  9%]
+tests/test_environment_sad_paths.py::test_check_topics_yaml_valid PASSED [ 10%]
+tests/test_environment_sad_paths.py::test_find_toolchain_lean_with_toolchain_file PASSED [ 10%]
+tests/test_fep_topics.py::test_catalogue_loads_50_topics PASSED          [ 11%]
+tests/test_fep_topics.py::test_summary_totals_match_manual_rollups PASSED [ 11%]
+tests/test_fep_topics.py::test_topic_lean_chars_non_negative PASSED      [ 12%]
+tests/test_fep_topics.py::test_unknown_yaml_raises_or_empty PASSED       [ 12%]
+tests/test_fep_topics.py::test_from_yaml_default_path PASSED             [ 13%]
+tests/test_fep_topics.py::test_all_topics_mathlib_real PASSED            [ 13%]
+tests/test_figure_generation.py::test_write_all_catalogue_figures PASSED [ 14%]
+tests/test_gauss_cli.py::test_workflows_enabled_false PASSED             [ 14%]
+tests/test_gauss_cli.py::test_workflows_enabled_true PASSED              [ 14%]
+tests/test_gauss_cli.py::test_gauss_doctor_real PASSED                   [ 15%]
+tests/test_gauss_cli.py::test_gauss_doctor_real_without_project_root PASSED [ 15%]
+tests/test_gauss_cli_sad_paths.py::test_require_gauss_from_env PASSED    [ 16%]
+tests/test_gauss_cli_sad_paths.py::test_workflows_enabled PASSED         [ 16%]
+tests/test_gauss_cli_sad_paths.py::test_check_gauss_cli_missing_not_required PASSED [ 17%]
+tests/test_gauss_cli_sad_paths.py::test_check_gauss_cli_missing_required PASSED [ 17%]
+tests/test_gauss_cli_sad_paths.py::test_check_gauss_cli_exit_error PASSED [ 18%]
+tests/test_gauss_cli_sad_paths.py::test_check_gauss_cli_fallback_path PASSED [ 18%]
+tests/test_gauss_cli_sad_paths.py::test_check_gauss_cli_ok PASSED        [ 19%]
+tests/test_gauss_runner.py::test_runner_instantiates PASSED              [ 19%]
+tests/test_gauss_runner.py::test_run_topic_returns_result PASSED         [ 19%]
+tests/test_gauss_runner.py::test_run_topic_creates_sqlite_session PASSED [ 20%]
+tests/test_gauss_runner.py::test_run_topic_no_api_key_hermes_skipped PASSED [ 20%]
+tests/test_gauss_runner.py::test_run_topics_batch_returns_all PASSED     [ 21%]
+tests/test_gauss_runner.py::test_run_topics_batch_max_topics PASSED      [ 21%]
+tests/test_gauss_runner.py::test_topic_run_result_as_dict PASSED         [ 22%]
+tests/test_gauss_runner.py::test_run_topic_with_real_hermes SKIPPED      [ 22%]
+tests/test_gauss_runner_branches.py::test_run_topic_no_refined_sketch PASSED [ 23%]
+tests/test_gauss_runner_branches.py::test_run_topic_with_reasoning_turn PASSED [ 23%]
+tests/test_gauss_runner_branches.py::test_run_topics_batch_catches_runner_exception PASSED [ 23%]
+tests/test_hermes_comprehensive.py::TestLoadGaussDotenv::test_loads_keys_from_dotenv PASSED [ 24%]
+tests/test_hermes_comprehensive.py::TestLoadGaussDotenv::test_does_not_overwrite_existing_env PASSED [ 24%]
+tests/test_hermes_comprehensive.py::TestLoadGaussDotenv::test_handles_missing_dotenv PASSED [ 25%]
+tests/test_hermes_comprehensive.py::TestLoadGaussDotenv::test_handles_comments_and_blank_lines PASSED [ 25%]
+tests/test_hermes_comprehensive.py::TestLoadGaussDotenv::test_strips_quotes_from_values PASSED [ 26%]
+tests/test_hermes_comprehensive.py::TestLoadGaussDotenv::test_handles_read_error PASSED [ 26%]
+tests/test_hermes_comprehensive.py::TestKeyAffinityValidation::test_anthropic_key_to_openrouter_disables PASSED [ 27%]
+tests/test_hermes_comprehensive.py::TestKeyAffinityValidation::test_openrouter_key_to_anthropic_disables PASSED [ 27%]
+tests/test_hermes_comprehensive.py::TestKeyAffinityValidation::test_correct_key_stays_enabled PASSED [ 28%]
+tests/test_hermes_comprehensive.py::TestCallAPI::test_call_api_http_error SKIPPED [ 28%]
+tests/test_hermes_comprehensive.py::TestCallAPI::test_call_api_url_error SKIPPED [ 28%]
+tests/test_hermes_comprehensive.py::TestTextExtraction::test_extract_lean_block_standard PASSED [ 29%]
+tests/test_hermes_comprehensive.py::TestTextExtraction::test_extract_lean_block_fallback PASSED [ 29%]
+tests/test_hermes_comprehensive.py::TestTextExtraction::test_extract_lean_block_none PASSED [ 30%]
+tests/test_hermes_comprehensive.py::TestTextExtraction::test_extract_explanation PASSED [ 30%]
+tests/test_hermes_comprehensive.py::TestTextExtraction::test_extract_explanation_headers_skipped PASSED [ 31%]
+tests/test_hermes_comprehensive.py::TestHermesConfigMisc::test_is_reasoning_model PASSED [ 31%]
+tests/test_hermes_comprehensive.py::TestHermesConfigMisc::test_effective_max_tokens PASSED [ 32%]
+tests/test_hermes_comprehensive.py::TestHermesConfigMisc::test_effective_timeout PASSED [ 32%]
+tests/test_hermes_comprehensive.py::TestHermesConfigMisc::test_hermes_result_as_dict PASSED [ 33%]
+tests/test_hermes_comprehensive.py::TestHermesConfigMisc::test_build_model_chain_openrouter PASSED [ 33%]
+tests/test_hermes_comprehensive.py::TestHermesConfigMisc::test_build_model_chain_non_openrouter PASSED [ 33%]
+tests/test_hermes_comprehensive.py::TestFromSettingsEdgeCases::test_malformed_settings_yaml PASSED [ 34%]
+tests/test_hermes_comprehensive.py::TestFromSettingsEdgeCases::test_api_key_anthropic_fallback PASSED [ 34%]
+tests/test_hermes_comprehensive.py::TestFromSettingsEdgeCases::test_api_key_openai_fallback PASSED [ 35%]
+tests/test_hermes_comprehensive.py::TestFromSettingsEdgeCases::test_api_key_from_settings_yaml PASSED [ 35%]
+tests/test_hermes_comprehensive.py::TestFromSettingsEdgeCases::test_no_api_key_anywhere PASSED [ 36%]
+tests/test_hermes_comprehensive.py::TestIsLiveProperty::test_is_live_enabled_with_key PASSED [ 36%]
+tests/test_hermes_comprehensive.py::TestIsLiveProperty::test_is_live_enabled_no_key PASSED [ 37%]
+tests/test_hermes_comprehensive.py::TestIsLiveProperty::test_is_live_disabled_with_key PASSED [ 37%]
+tests/test_hermes_comprehensive.py::TestIsLiveProperty::test_is_live_disabled_no_key PASSED [ 38%]
+tests/test_hermes_comprehensive.py::TestParseResponse::test_empty_choices PASSED [ 38%]
+tests/test_hermes_comprehensive.py::TestParseResponse::test_missing_choices_key PASSED [ 38%]
+tests/test_hermes_comprehensive.py::TestParseResponse::test_valid_response_with_lean_block PASSED [ 39%]
+tests/test_hermes_comprehensive.py::TestParseResponse::test_think_tags_extracted_as_reasoning PASSED [ 39%]
+tests/test_hermes_comprehensive.py::TestParseResponse::test_reasoning_field_direct PASSED [ 40%]
+tests/test_hermes_comprehensive.py::TestParseResponse::test_empty_content_returns_failure PASSED [ 40%]
+tests/test_hermes_explainer.py::test_hermes_config_defaults PASSED       [ 41%]
+tests/test_hermes_explainer.py::test_hermes_config_from_settings FAILED  [ 41%]
+tests/test_hermes_explainer.py::test_hermes_config_env_override PASSED   [ 42%]
+tests/test_hermes_explainer.py::test_hermes_config_is_reasoning_model PASSED [ 42%]
+tests/test_hermes_explainer.py::test_hermes_config_effective_tokens_reasoning PASSED [ 42%]
+tests/test_hermes_explainer.py::test_extract_lean_block_success PASSED   [ 43%]
+tests/test_hermes_explainer.py::test_extract_lean_block_missing PASSED   [ 43%]
+tests/test_hermes_explainer.py::test_extract_explanation_strips_code PASSED [ 44%]
+tests/test_hermes_explainer.py::test_fep_system_prompt_non_empty PASSED  [ 44%]
+tests/test_hermes_explainer.py::test_hermes_explainer_disabled_returns_failure PASSED [ 45%]
+tests/test_hermes_explainer.py::test_hermes_explainer_no_key_returns_failure PASSED [ 45%]
+tests/test_hermes_explainer.py::test_hermes_result_as_dict PASSED        [ 46%]
+tests/test_hermes_explainer.py::test_hermes_explain_topic_real_api_call SKIPPED [ 46%]
+tests/test_lean_verifier.py::test_verifier_instantiates PASSED           [ 47%]
+tests/test_lean_verifier.py::test_verifier_sketches_dir_created PASSED   [ 47%]
+tests/test_lean_verifier.py::test_check_lake_available_returns_bool PASSED [ 47%]
+tests/test_lean_verifier.py::test_lean_version_returns_none_or_str PASSED [ 48%]
+tests/test_lean_verifier.py::test_check_mathlib_built_returns_tuple PASSED [ 48%]
+tests/test_lean_verifier.py::test_check_mathlib_built_message_is_informative PASSED [ 49%]
+tests/test_lean_verifier.py::test_verify_result_compiles_clean PASSED    [ 49%]
+tests/test_lean_verifier.py::test_verify_result_with_sorry PASSED        [ 50%]
+tests/test_lean_verifier.py::test_verify_result_compile_error PASSED     [ 50%]
+tests/test_lean_verifier.py::test_verify_result_skipped PASSED           [ 51%]
+tests/test_lean_verifier.py::test_wrap_lean_code_adds_import_when_missing PASSED [ 51%]
+tests/test_lean_verifier.py::test_wrap_lean_code_preserves_existing_imports PASSED [ 52%]
+tests/test_lean_verifier.py::test_wrap_lean_code_single_import_not_wrapped PASSED [ 52%]
+tests/test_lean_verifier.py::test_verify_sketch_skipped_when_lake_missing SKIPPED [ 52%]
+tests/test_lean_verifier.py::test_verify_sketch_returns_result_even_with_bad_sketch PASSED [ 53%]
+tests/test_lean_verifier.py::test_verify_sketch_with_lake_trivial PASSED [ 53%]
+tests/test_lean_verifier.py::test_verify_sketch_with_lake_and_mathlib_sorry PASSED [ 54%]
+tests/test_lean_verifier.py::test_verify_batch_returns_one_per_item PASSED [ 54%]
+tests/test_lean_verifier.py::test_verify_batch_empty_input PASSED        [ 55%]
+tests/test_lean_verifier.py::test_subprocess_env_has_elan_home PASSED    [ 55%]
+tests/test_lean_verifier.py::test_find_exe_lake_returns_str_or_none PASSED [ 56%]
+tests/test_lean_verifier.py::test_find_exe_lean_returns_str_or_none PASSED [ 56%]
+tests/test_lean_verifier_sad_paths.py::test_ensure_elan_home_oserror PASSED [ 57%]
+tests/test_lean_verifier_sad_paths.py::test_direct_toolchain_bin_oserrors PASSED [ 57%]
+tests/test_lean_verifier_sad_paths.py::test_find_exe_explicit_env PASSED [ 57%]
+tests/test_lean_verifier_sad_paths.py::test_find_exe_elan_proxy PASSED   [ 58%]
+tests/test_lean_verifier_sad_paths.py::test_lean_verifier_init_defaults PASSED [ 58%]
+tests/test_lean_verifier_sad_paths.py::test_check_lake_available_oserror PASSED [ 59%]
+tests/test_lean_verifier_sad_paths.py::test_lean_version_not_found PASSED [ 59%]
+tests/test_lean_verifier_sad_paths.py::test_lean_version_sandbox_errors PASSED [ 60%]
+tests/test_lean_verifier_sad_paths.py::test_lean_version_oserror PASSED  [ 60%]
+tests/test_lean_verifier_sad_paths.py::test_check_mathlib_built_sad_paths PASSED [ 61%]
+tests/test_lean_verifier_sad_paths.py::test_verify_sketch_lake_not_found PASSED [ 61%]
+tests/test_lean_verifier_sad_paths.py::test_verify_sketch_lean_dir_not_found PASSED [ 61%]
+tests/test_lean_verifier_sad_paths.py::test_verify_sketch_lakefile_not_found PASSED [ 62%]
+tests/test_lean_verifier_sad_paths.py::test_verify_sketch_subprocess_timeout PASSED [ 62%]
+tests/test_lean_verifier_sad_paths.py::test_verify_sketch_oserror PASSED [ 63%]
+tests/test_lean_verifier_sad_paths.py::test_verify_sketch_unlink_oserror PASSED [ 63%]
+tests/test_manuscript_artifacts.py::test_build_manuscript_vars_shape PASSED [ 64%]
+tests/test_manuscript_artifacts.py::test_build_full_topic_lean_catalogue_markdown_matches_topics PASSED [ 64%]
+tests/test_manuscript_artifacts.py::test_write_full_topic_lean_catalogue_markdown_roundtrip PASSED [ 65%]
+tests/test_manuscript_artifacts.py::test_verify_block_from_manifest_missing PASSED [ 65%]
+tests/test_manuscript_artifacts.py::test_verify_block_from_manifest_invalid_json PASSED [ 66%]
+tests/test_manuscript_artifacts.py::test_verify_block_from_manifest_topics_fallback PASSED [ 66%]
+tests/test_manuscript_artifacts.py::test_latest_verification_manifest_newest PASSED [ 66%]
+tests/test_manuscript_artifacts.py::test_verify_block_from_manifest_json PASSED [ 67%]
+tests/test_manuscript_artifacts.py::test_write_manuscript_vars_roundtrip PASSED [ 67%]
+tests/test_open_gauss_client.py::test_create_session_returns_string PASSED [ 68%]
+tests/test_open_gauss_client.py::test_update_session_stores_turns PASSED [ 68%]
+tests/test_open_gauss_client.py::test_close_session_writes_status PASSED [ 69%]
+tests/test_open_gauss_client.py::test_export_session_not_found_raises PASSED [ 69%]
+tests/test_open_gauss_client.py::test_set_refined_sketch PASSED          [ 70%]
+tests/test_open_gauss_client.py::test_export_all_sessions_source_filter PASSED [ 70%]
+tests/test_open_gauss_client.py::test_write_artifact_creates_file PASSED [ 71%]
+tests/test_open_gauss_client.py::test_write_bulk_jsonl PASSED            [ 71%]
+tests/test_open_gauss_client.py::test_log_event_writes_to_db_and_file PASSED [ 71%]
+tests/test_open_gauss_client.py::test_get_stats PASSED                   [ 72%]
+tests/test_open_gauss_client.py::test_context_manager PASSED             [ 72%]
+tests/test_orchestrator.py::test_project_root_default PASSED             [ 73%]
+tests/test_orchestrator.py::test_project_root_uses_project_dir PASSED    [ 73%]
+tests/test_orchestrator.py::test_run_single_topic_unknown PASSED         [ 74%]
+tests/test_orchestrator.py::test_run_single_topic_ok SKIPPED (Live t...) [ 74%]
+tests/test_orchestrator.py::test_run_pipeline_writes_outputs PASSED      [ 75%]
+tests/test_orchestrator.py::test_run_pipeline_area_filter_fep PASSED     [ 75%]
+tests/test_orchestrator_exceptions.py::test_run_pipeline_orchestrator_exceptions PASSED [ 76%]
+tests/test_orchestrator_sad_paths.py::test_run_single_topic_unknown PASSED [ 76%]
+tests/test_orchestrator_sad_paths.py::test_run_single_topic_interactive_err PASSED [ 76%]
+tests/test_orchestrator_sad_paths.py::test_run_pipeline_no_catalogue PASSED [ 77%]
+tests/test_orchestrator_sad_paths.py::test_run_single_topic_pipeline_run PASSED [ 77%]
+tests/test_orchestrator_sad_paths.py::test_run_pipeline_interactive PASSED [ 78%]
+tests/test_pipeline.py::test_pipeline_instantiates PASSED                [ 78%]
+tests/test_pipeline.py::test_pipeline_run_catalogue_only PASSED          [ 79%]
+tests/test_pipeline.py::test_pipeline_run_result_fields PASSED           [ 79%]
+tests/test_pipeline.py::test_step_result_dataclass PASSED                [ 80%]
+tests/test_pipeline.py::test_pipeline_steps_alias PASSED                 [ 80%]
+tests/test_pipeline.py::test_pipeline_area_filter PASSED                 [ 80%]
+tests/test_pipeline.py::test_pipeline_topic_filter PASSED                [ 81%]
+tests/test_pipeline.py::test_pipeline_gauss_sessions_skipped_without_key PASSED [ 81%]
+tests/test_pipeline.py::test_pipeline_run_dir_created PASSED             [ 82%]
+tests/test_pipeline.py::test_pipeline_report_files_written PASSED        [ 82%]
+tests/test_pipeline.py::test_pipeline_stats_shape PASSED                 [ 83%]
+tests/test_pipeline.py::test_pipeline_full_hermes_single_topic PASSED    [ 83%]
+tests/test_pipeline.py::TestPipelineResultProperties::test_hermes_count PASSED [ 84%]
+tests/test_pipeline.py::TestPipelineResultProperties::test_lean_verified_count PASSED [ 84%]
+tests/test_pipeline.py::TestPipelineResultProperties::test_lean_compile_ok_no_sorry PASSED [ 85%]
+tests/test_pipeline.py::TestPipelineResultProperties::test_topics_ok_from_results PASSED [ 85%]
+tests/test_pipeline.py::TestPipelineResultProperties::test_topics_ok_fallback_to_catalogue_stage PASSED [ 85%]
+tests/test_pipeline.py::TestPipelineResultProperties::test_topics_ok_no_data PASSED [ 86%]
+tests/test_pipeline.py::TestPipelineResultProperties::test_stats_shape_and_values PASSED [ 86%]
+tests/test_pipeline.py::TestPipelineResultProperties::test_stats_gauss_not_ran PASSED [ 87%]
+tests/test_pipeline_exceptions.py::test_pipeline_missing_catalogue PASSED [ 87%]
+tests/test_pipeline_exceptions.py::test_pipeline_validation_warning PASSED [ 88%]
+tests/test_pipeline_exceptions.py::test_pipeline_gauss_skips PASSED      [ 88%]
+tests/test_preflight.py::test_run_version_missing_binary PASSED          [ 89%]
+tests/test_preflight.py::test_run_preflight_returns_zero_or_one PASSED   [ 89%]
+tests/test_preflight.py::test_run_preflight_require_gauss_when_missing SKIPPED [ 90%]
+tests/test_preflight.py::test_run_version_with_real_binary PASSED        [ 90%]
+tests/test_preflight.py::test_run_preflight_gauss_required_missing SKIPPED [ 90%]
+tests/test_preflight.py::test_preflight_main_cli_smoke PASSED            [ 91%]
+tests/test_reporter.py::test_reporter_instantiates PASSED                [ 91%]
+tests/test_reporter.py::test_generate_returns_report_paths PASSED        [ 92%]
+tests/test_reporter.py::test_all_report_files_created PASSED             [ 92%]
+tests/test_reporter.py::test_index_md_contains_status PASSED             [ 93%]
+tests/test_reporter.py::test_index_md_pipeline_stages_table PASSED       [ 93%]
+tests/test_reporter.py::test_summary_json_is_valid_json PASSED           [ 94%]
+tests/test_reporter.py::test_hermes_report_md_structure PASSED           [ 94%]
+tests/test_reporter.py::test_lean_report_md_structure PASSED             [ 95%]
+tests/test_reporter.py::test_validation_md_has_checks PASSED             [ 95%]
+tests/test_reporter.py::test_report_paths_as_dict PASSED                 [ 95%]
+tests/test_reporter.py::test_reporter_with_real_pipeline_result PASSED   [ 96%]
+tests/test_reporter.py::test_reporter_rich_gauss_and_lean_logs PASSED    [ 96%]
+tests/test_subpackage_imports.py::test_root_package_init_importable PASSED [ 97%]
+tests/test_subpackage_imports.py::test_catalogue_imports PASSED          [ 97%]
+tests/test_subpackage_imports.py::test_verification_imports PASSED       [ 98%]
+tests/test_subpackage_imports.py::test_gauss_imports PASSED              [ 98%]
+tests/test_subpackage_imports.py::test_llm_imports PASSED                [ 99%]
+tests/test_subpackage_imports.py::test_output_imports PASSED             [ 99%]
+tests/test_subpackage_imports.py::test_pipeline_imports PASSED           [100%]
+
+=================================== FAILURES ===================================
+_________________ test_all_catalogue_sketches_compile_no_sorry _________________
+tests/test_catalogue_sketches_compile.py:45: in test_all_catalogue_sketches_compile_no_sorry
+    assert not failures, "compile failures:\n" + "\n".join(failures)
+E   AssertionError: compile failures:
+E     fep-001: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-001_k6w7aqlm.lean:10:2: error:
+E     fep-002: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-002_ea26uyrs.lean:10:14: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-002_ea26uyrs.lean:10:35: error:
+E     fep-005: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-005_m4ms58w3.lean:6:7: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-005_m4ms58w3.lean:9:39: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-005_m4ms58w3.lean:9:39: error:
+E     fep-006: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-006_yutt3py3.lean:10:2: error:
+E     fep-007: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-007_646e2n1o.lean:11:16: error:
+E     fep-008: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-008_ugw1lrl4.lean:10:5: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-008_ugw1lrl4.lean:15:5: error:
+E     fep-009: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-009_ymufngqo.lean:10:2: error:
+E     fep-011: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-011_xpycm5wu.lean:12:18: error:
+E     fep-012: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-012_vbbf_cwz.lean:10:11: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-012_vbbf_cwz.lean:15:10: error:
+E     fep-014: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-014_ddmirtll.lean:22:14: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-014_ddmirtll.lean:22:35: error:
+E     fep-015: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-015_r5n2jlx9.lean:10:2: error:
+E     fep-017: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-017_gelt_adx.lean:10:2: error:
+E     fep-019: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-019_150uzba1.lean:10:2: error:
+E     fep-022: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-022_b4smhm0e.lean:10:2: error:
+E     fep-023: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-023__n079dlw.lean:9:26: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-023__n079dlw.lean:12:26: error:
+E     fep-024: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-024_7ndmuyut.lean:10:14: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-024_7ndmuyut.lean:10:35: error:
+E     fep-027: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-027_p1iir4gu.lean:11:14: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-027_p1iir4gu.lean:11:35: error:
+E     fep-028: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-028_zexwv78p.lean:8:86: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-028_zexwv78p.lean:12:83: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-028_zexwv78p.lean:21:6: error:
+E     fep-031: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-031_7spy2cnp.lean:10:2: error:
+E     fep-035: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-035_ats8acco.lean:13:15: error:
+E     fep-036: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-036_l40h49te.lean:10:8: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-036_l40h49te.lean:11:17: error:
+E     fep-037: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-037_bec3pcrw.lean:7:33: error:
+E     fep-039: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-039_v4pjdtga.lean:10:14: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-039_v4pjdtga.lean:10:35: error:
+E     fep-042: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-042_m_9hx9hi.lean:10:2: error:
+E   assert not ['fep-001: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-001_k6w7aqlm.lean:10:2: error:', 'fep-002: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-002_ea26uyrs.lean:10:14: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-002_ea26uyrs.lean:10:35: error:', 'fep-005: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-005_m4ms58w3.lean:6:7: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-005_m4ms58w3.lean:9:39: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-005_m4ms58w3.lean:9:39: error:', 'fep-006: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-006_yutt3py3.lean:10:2: error:', 'fep-007: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-007_646e2n1o.lean:11:16: error:', 'fep-008: /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-008_ugw1lrl4.lean:10:5: error:; /Users/4d/Documents/GitHub/template/projects/fep_lean/lean/FepSketches/_verify_fep-008_ugw1lrl4.lean:15:5: error:', ...]
+_______________________ test_hermes_config_from_settings _______________________
+tests/test_hermes_explainer.py:50: in test_hermes_config_from_settings
+    assert cfg.model == "test-model"
+E   AssertionError: assert 'nvidia/nemot...20b-a12b:free' == 'test-model'
+E     
+E     - test-model
+E     + nvidia/nemotron-3-super-120b-a12b:free
+=========================== short test summary info ============================
+FAILED tests/test_catalogue_sketches_compile.py::test_all_catalogue_sketches_compile_no_sorry
+FAILED tests/test_hermes_explainer.py::test_hermes_config_from_settings - Ass...
+============= 2 failed, 211 passed, 8 skipped in 250.82s (0:04:10) =============

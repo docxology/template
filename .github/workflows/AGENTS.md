@@ -53,7 +53,7 @@ test-infra + test-project
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Tools:** `uvx ruff check`, `uvx ruff format --check`, `uv run mypy`
-- **Scope:** `infrastructure/` and `projects/*/src/`
+- **Scope:** `infrastructure/`, `projects/*/src/`, `scripts/`, `tests/` (Ruff per-file rules in `pyproject.toml` apply)
 
 #### 2. Verify No Mocks Policy (`verify-no-mocks`)
 

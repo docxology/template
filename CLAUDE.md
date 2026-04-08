@@ -254,7 +254,7 @@ output/
 
 ### Coverage Requirements
 
-- **Infrastructure**: 60% minimum (currently 83.33%)
+- **Infrastructure**: 60% minimum enforced; line aggregate **~76%** when skipping `tests/infra_tests/llm/` (re-measure with `uv run pytest tests/infra_tests/ --ignore=tests/infra_tests/llm --cov=infrastructure --cov-report=term --cov-fail-under=0`)
 - **Projects**: 90% minimum (currently varies by project)
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducibility

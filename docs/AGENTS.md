@@ -12,7 +12,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `guides/` | Skill-level guides (Levels 1-12) + new project setup checklist |
 | `architecture/` | System design, two-layer architecture, thin orchestrator |
 | `usage/` | Content authoring, formatting, visualization patterns |
-| `operational/` | Build, config, logging, troubleshooting, reporting |
+| `operational/` | Build (`operational/build/`), config, logging, troubleshooting, reporting |
 | `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
 | `modules/` | Infrastructure module guides (14 documented areas; see [modules/modules-guide.md](modules/modules-guide.md)) |
 | `development/` | Contributing, testing, security, roadmap |

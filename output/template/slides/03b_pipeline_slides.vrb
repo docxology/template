@@ -1,0 +1,35 @@
+\frametitle{The Interactive Orchestrators}
+\protect\phantomsection\label{the-interactive-orchestrators}
+\begin{block}{\texttt{run.sh}: The Standard Orchestrator}
+\protect\phantomsection\label{run.sh-the-standard-orchestrator}
+The primary user interface is \texttt{run.sh}, a Bash TUI (text user
+interface) that presents an interactive menu for pipeline execution.
+Features include:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Project selection}: Execute a single project or all discovered
+  projects.
+\item
+  \textbf{Mode selection}: Fast (skip infra tests + LLM), Core (skip LLM
+  only), Full (all stages).
+\item
+  \textbf{Non-interactive mode}:
+  \texttt{./run.sh\ -\/-pipeline\ -\/-project\ all\ -\/-core-only} for
+  CI/CD integration.
+\item
+  \textbf{Real-time progress}: Stage timing and status indicators.
+\end{itemize}
+\end{block}
+
+\begin{block}{\texttt{secure\_run.sh}: The Steganographic Superset}
+\protect\phantomsection\label{secure_run.sh-the-steganographic-superset}
+The \texttt{secure\_run.sh} orchestrator is a strict superset of
+\texttt{run.sh}: it executes the standard ten-stage DAG pipeline and
+then appends steganographic post-processing. For each rendered PDF, it
+applies metadata injection, cryptographic hashing, alpha-channel text
+overlay, and QR code injection, producing a provenance-embedded output
+alongside the original. It supports the same project selection and mode
+flags as \texttt{run.sh}.
+\end{block}

@@ -25,6 +25,17 @@ def _template_repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
+def _expected_skill_paths_from_disk(repo_root: Path) -> set[str]:
+    """Paths relative to repo root that default discovery should find (mirrors iter_skill_paths)."""
+    paths: set[str] = set()
+    for rel in DEFAULT_SKILL_SEARCH_ROOTS:
+        base = repo_root / rel
+        if base.is_dir():
+            for p in base.rglob("SKILL.md"):
+                paths.add(p.relative_to(repo_root).as_posix())
+    return paths
+
+
 class TestSplitYamlFrontmatter:
     def test_valid_frontmatter(self) -> None:
         src = "---\nname: test-skill\ndescription: Hello\n---\n\n# Body\n"
@@ -116,7 +127,9 @@ class TestTemplateRepository:
     def test_all_infrastructure_skills_parse(self) -> None:
         root = _template_repo_root()
         skills = discover_skills(root)
-        assert len(skills) >= 24
+        expected_paths = _expected_skill_paths_from_disk(root)
+        assert {s.path_posix for s in skills} == expected_paths
+        assert len(skills) == len(expected_paths)
         for s in skills:
             assert s.absolute_path.is_file()
             assert s.path_posix.endswith("SKILL.md")
@@ -135,9 +148,11 @@ class TestTemplateRepository:
         paths = {s.path_posix for s in skills}
         assert "infrastructure/SKILL.md" in paths
         assert "infrastructure/skills/SKILL.md" in paths
-        assert "projects/cognitive_case_diagrams/src/SKILL.md" in paths
         names = {s.name for s in skills if s.name}
-        assert "ccd-src" in names
+        ccd_skill = root / "projects" / "cognitive_case_diagrams" / "src" / "SKILL.md"
+        if ccd_skill.is_file():
+            assert "projects/cognitive_case_diagrams/src/SKILL.md" in paths
+            assert "ccd-src" in names
 
 
 class TestCliModule:

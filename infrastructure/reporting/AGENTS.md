@@ -10,29 +10,61 @@ The reporting module provides reporting capabilities for pipeline execution, tes
 
 ```
 infrastructure/reporting/
-├── __init__.py                  # Public API exports
-├── output_organizer.py          # Unified file organization system
-├── pipeline_reporter.py         # Pipeline report generation
+├── __init__.py                  # Public façade — re-exports (see below)
+├── pipeline_report_model.py     # PipelineReport, generate_pipeline_report
+├── pipeline_io.py               # save_pipeline_report, save_* helpers, atomic writes
+├── pipeline_markdown.py         # Pipeline report Markdown (used by pipeline_io)
+├── pipeline_html.py             # Pipeline report HTML (used by pipeline_io)
 ├── error_aggregator.py          # Error collection and categorization
-├── html_templates.py            # HTML report templates
-├── executive_reporter.py        # Cross-project metrics and summaries
-├── _dashboard_matplotlib.py     # Dashboard orchestrator (thin) + Plotly dashboard
-├── _dashboard_charts.py         # Base chart generators + multi-panel dashboard
-├── _dashboard_specialized.py    # Health radar, pipeline efficiency, codebase charts
-├── _dashboard_csv.py            # CSV exports: breakdowns, analysis, recommendations
-├── manuscript_overview.py       # Manuscript PDF page overview generation
-├── coverage_parser.py           # Test coverage data extraction
-├── coverage_reporter.py         # Coverage report generation
-├── multi_project_reporter.py    # Multi-project orchestration
-├── output_reporter.py           # Output statistics reporting
-├── suite_runner.py              # Test suite execution
-├── suite_summary_generator.py   # Suite-level summary generation
-├── test_orchestrator.py         # Test pipeline orchestration
-├── test_pipeline.py             # Test pipeline definitions
-├── SKILL.md                     # Agent skill descriptor (YAML frontmatter)
-├── README.md                    # Quick reference
+├── output_organizer.py          # Unified file organization
+├── output_statistics.py         # collect_output_statistics, log_output_summary
+├── executive_reporter.py      # Re-exports _executive_* implementation
+├── _executive_models.py         # ProjectMetrics, ExecutiveSummary, …
+├── _executive_collectors.py     # collect_* metrics from disk
+├── _executive_analysis.py       # Aggregates and comparative tables
+├── _executive_health.py         # Health scores and recommendations
+├── _executive_renderers.py      # generate/save executive summary
+├── _executive_report_formats.py # Markdown/HTML serialisation
+├── multi_project_reporter.py    # generate_multi_project_report, summary report
+├── report_builder.py            # Test suite summary generation
+├── report_generator.py          # Report generation helpers
+├── markdown_formatter.py        # Test markdown reports, run_test_summary_generation
+├── result_loaders.py            # load_test_results, load_infrastructure_results
+├── html_templates.py            # HTML fragments for reports
+├── manuscript_overview.py       # PDF page grids for executive dashboards
+├── coverage_parser.py           # Coverage data extraction
+├── coverage_json_parser.py
+├── coverage_reporter.py
+├── coverage_analysis.py
+├── suite_runner.py              # Test suite subprocess helpers
+├── pipeline_test_runner.py
+├── pytest_output_parser.py
+├── log_analysis.py
+├── _dashboard_matplotlib.py     # Dashboard orchestration (+ optional Plotly)
+├── _dashboard_charts.py
+├── _dashboard_specialized.py    # Re-exports domain split below
+├── _dashboard_specialized_health.py
+├── _dashboard_specialized_projects.py
+├── _dashboard_specialized_pipeline.py
+├── _dashboard_specialized_outputs.py
+├── _dashboard_specialized_codebase.py
+├── _dashboard_constants.py
+├── _dashboard_csv.py
+├── _csv_comparative.py
+├── _csv_project_breakdown.py
+├── _csv_tables.py
+├── page_grid.py
+├── page_rendering.py
+├── SKILL.md
+├── README.md
 └── AGENTS.md                    # This file
 ```
+
+### Public façade (`__init__.py`)
+
+Re-exported symbols include: `generate_pipeline_report`, `save_pipeline_report`, `save_validation_report`, `save_test_results`, `save_performance_report`, `save_error_summary`, `ErrorAggregator`, `ErrorEntry`, `get_error_aggregator`, `reset_error_aggregator`, `log_output_summary`, `collect_output_statistics`, `generate_executive_summary`, `save_executive_summary`, `collect_project_metrics`, `ProjectMetrics`, `ExecutiveSummary`, `generate_multi_project_report`, `generate_multi_project_summary_report`, `OutputOrganizer`, `FileType`, `generate_summary_report`, `generate_markdown_report`, `load_test_results`, `load_infrastructure_results`, `run_test_summary_generation`, and (optional) `generate_all_dashboards`, `generate_matplotlib_dashboard`, `generate_plotly_dashboard`, `DASHBOARD_AVAILABLE`.
+
+Prefer importing from the specific submodule when only one subsystem is needed (see docstring in `__init__.py`).
 
 ### Design Principles
 
@@ -160,104 +192,18 @@ python3 scripts/organize_executive_outputs.py --executive-only
 
 ## Core Components
 
-### Pipeline Reporter (`pipeline_reporter.py`)
+### Pipeline reports (`pipeline_report_model.py`, `pipeline_io.py`)
 
-Generates consolidated reports from pipeline execution data.
+`generate_pipeline_report()` builds a `PipelineReport` from stage result dicts (see `pipeline_report_model.py` for keyword-only optional blobs: test, validation, performance, errors, output stats).
 
-#### Key Functions
+`save_pipeline_report()` writes `pipeline_report.{json,html,md}` using `pipeline_markdown.py` and `pipeline_html.py` internally (not separate public `generate_*` calls for pipeline HTML/Markdown).
 
-**`generate_pipeline_report()`**
+Additional writers in `pipeline_io.py`:
 
-```python
-def generate_pipeline_report(
-    stage_results: List[Dict[str, Any]],
-    total_duration: float,
-    repo_root: Path,
-    test_results: Optional[Dict[str, Any]] = None,
-    validation_results: Optional[Dict[str, Any]] = None,
-    performance_metrics: Optional[Dict[str, Any]] = None,
-    error_summary: Optional[Dict[str, Any]] = None,
-    output_statistics: Optional[Dict[str, Any]] = None,
-    project_name: Optional[str] = None,
-) -> PipelineReport:
-    """Generate consolidated pipeline report.
-    
-    Args:
-        stage_results: List of stage result dictionaries
-        total_duration: Total pipeline execution time
-        repo_root: Repository root path
-        test_results: Test execution results (optional)
-        validation_results: Validation results (optional)
-        performance_metrics: Performance metrics (optional)
-        error_summary: Error summary (optional)
-        output_statistics: Output file statistics (optional)
-        project_name: Project name for log file lookup (optional)
-        
-    Returns:
-        PipelineReport instance
-    """
-```
-
-- Creates a `PipelineReport` dataclass from stage results
-- Includes test results, validation results, performance metrics
-- Supports error summaries and output statistics
-
-**`save_pipeline_report()`**
-
-```python
-def save_pipeline_report(
-    report: PipelineReport,
-    output_dir: Path
-) -> Dict[str, Path]:
-    """Save pipeline report in multiple formats.
-    
-    Args:
-        report: PipelineReport instance
-        output_dir: Directory to save reports
-        
-    Returns:
-        Dictionary mapping format ('json', 'html', 'markdown') to file path
-    """
-```
-
-- Saves reports in multiple formats (JSON, HTML, Markdown)
-- Returns dictionary mapping format to file path
-- Creates output directory if needed
-
-**`generate_markdown_report()`**
-
-```python
-def generate_markdown_report(report: PipelineReport) -> str:
-    """Generate human-readable Markdown report.
-    
-    Args:
-        report: PipelineReport instance
-        
-    Returns:
-        Markdown-formatted report string
-    """
-```
-
-- Generates human-readable Markdown report
-- Includes summary statistics, stage details, recommendations
-
-**`generate_html_report()`**
-
-```python
-def generate_html_report(report: PipelineReport) -> str:
-    """Generate styled HTML report.
-    
-    Args:
-        report: PipelineReport instance
-        
-    Returns:
-        HTML-formatted report string
-    """
-```
-
-- Generates styled HTML report
-- Includes visual indicators (status badges, summary cards)
-- Responsive design for browser viewing
+- `save_test_results(test_results, output_dir) -> Path`
+- `save_validation_report(validation_results, output_dir) -> Dict[str, Path]`
+- `save_performance_report(performance_metrics, output_dir) -> Path`
+- `save_error_summary(errors: list[dict], output_dir) -> dict` (summary dict; also writes JSON/MD)
 
 #### Usage Example
 
@@ -286,6 +232,10 @@ report = generate_pipeline_report(
 saved_files = save_pipeline_report(report, Path("output/reports"))
 # Returns: {'json': Path(...), 'html': Path(...), 'markdown': Path(...)}
 ```
+
+### Test suite summaries (`report_builder.py`, `markdown_formatter.py`, `result_loaders.py`)
+
+Re-exported from `infrastructure.reporting`: `generate_summary_report`, `generate_markdown_report` (expects a **test-suite summary dict**, not `PipelineReport`), `load_test_results`, `load_infrastructure_results`, `run_test_summary_generation`.
 
 ### Error Aggregator (`error_aggregator.py`)
 

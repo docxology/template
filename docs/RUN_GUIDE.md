@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (Interactive TUI)
-2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core 10-stage DAG pipeline without LLM features
+2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core pipeline DAG (clean + script stages through copy outputs) without LLM features; details under **Entry Point 2** below
 
 ## 🏗️ Thin Orchestration Architecture
 
@@ -304,7 +304,7 @@ Executes the full pipeline but skips infrastructure tests.
 For programmatic access or CI/CD integration, use the Python orchestrator:
 
 ```bash
-# Core pipeline (10-stage DAG) - Python orchestrator
+# Core pipeline (clean + stage scripts; no LLM) - Python orchestrator
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 

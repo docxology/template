@@ -346,7 +346,7 @@ from infrastructure.core.config.loader import load_config  # ✅ Utility
 
 - **90%+ coverage**: All active projects achieve required coverage thresholds
 - **data only**: All tests use computations, no mocks
-- **Infrastructure Code**: 60% minimum (currently achieved: 83.33%)
+- **Infrastructure Code**: 60% minimum (**≥60%** gate; typical line aggregate **~76%** when skipping `tests/infra_tests/llm/`—re-measure)
 
 **Coverage Verification:**
 

@@ -92,13 +92,15 @@ infrastructure/
 │   ├── publish_cli.py       # Publishing-oriented CLI wrapper
 │   └── SKILL.md, AGENTS.md, README.md
 ├── reporting/      # Pipeline reporting & error aggregation
-│   ├── pipeline_reporter.py  # Pipeline report generation
-│   ├── error_aggregator.py   # Error collection & categorization
-│   ├── executive_reporter.py # Cross-project summaries
-│   ├── _dashboard_matplotlib.py # Dashboard orchestrator + re-exports
-│   ├── _dashboard_charts.py     # Base chart generators
-│   ├── _dashboard_specialized.py # Health, pipeline, codebase charts
-│   ├── _dashboard_csv.py        # CSV data exports
+│   ├── pipeline_report_model.py # PipelineReport, generate_pipeline_report
+│   ├── pipeline_io.py           # save_pipeline_report, save_* writers
+│   ├── error_aggregator.py      # Error collection & categorization
+│   ├── executive_reporter.py  # Cross-project summaries (re-exports _executive_*)
+│   ├── multi_project_reporter.py
+│   ├── output_statistics.py
+│   ├── report_builder.py, markdown_formatter.py, result_loaders.py
+│   ├── _dashboard_matplotlib.py # Dashboard orchestrator (+ optional Plotly)
+│   ├── _dashboard_charts.py, _dashboard_specialized.py, _dashboard_csv.py
 │   └── SKILL.md, AGENTS.md, README.md
 └── steganography/  # Secure PDF post-processing
     ├── core.py              # Steganography orchestration
@@ -226,12 +228,12 @@ infrastructure/
 - `def run_comprehensive_audit(project_path: Path) -> dict:`
 - `def generate_audit_report(audit_results: dict) -> str:`
 
-#### content/issue_categorizer.py
+#### repo/issue_categorizer.py
 
-- `def categorize_by_type(issues: List) -> dict:`
-- `def assign_severity(issues: List) -> List:`
-- `def filter_false_positives(issues: List) -> List:`
-- `def prioritize_issues(issues: List) -> List:`
+- `def categorize_by_type(issues: list[ValidationIssue]) -> dict[str, list[ValidationIssue]]:`
+- `def assign_severity(issue: ValidationIssue) -> str:`
+- `def filter_false_positives(issues: list[ValidationIssue]) -> list[ValidationIssue]:`
+- `def prioritize_issues(issues: list[ValidationIssue]) -> list[ValidationIssue]:`
 
 ### Rendering Module
 
@@ -309,21 +311,28 @@ infrastructure/
 
 ### Reporting Module
 
-#### pipeline_reporter.py
+#### pipeline_report_model.py
 
-- `def generate_pipeline_report(checkpoint_dir: Path, output_dir: Path) -> Path:`
-- `def generate_stage_report(stage_name: str, duration: float, ...) -> str:`
+- `def generate_pipeline_report(stage_results, total_duration, repo_root, *, ...) -> PipelineReport:`
+
+#### pipeline_io.py
+
+- `def save_pipeline_report(report, output_dir, formats=None) -> dict[str, Path]:`
+- `def save_test_results(test_results, output_dir) -> Path:`
+- `def save_validation_report(validation_results, output_dir) -> dict[str, Path]:`
+- `def save_performance_report(performance_metrics, output_dir) -> Path:`
+- `def save_error_summary(errors, output_dir) -> dict[str, Any]:`
 
 #### error_aggregator.py
 
-- `def aggregate_errors(log_files: List[Path]) -> ErrorSummary:`
-- `def categorize_errors(error_messages: List[str]) -> Dict[str, List[str]]:`
-- `def generate_error_report(errors: ErrorSummary, output_dir: Path) -> Path:`
+- `class ErrorAggregator` with `add_error`, `get_summary`, `get_actionable_fixes`, `save_report`
 
-#### executive_reporter.py
+#### executive_reporter.py / multi_project_reporter.py
 
-- `def generate_executive_report(project_dirs: List[Path], output_dir: Path) -> Path:`
-- `def aggregate_project_metrics(project_dirs: List[Path]) -> Dict[str, Any]:`
+- `def generate_executive_summary(repo_root, project_names) -> ExecutiveSummary:`
+- `def save_executive_summary(summary, output_dir) -> dict[str, Path]:`
+- `def collect_project_metrics(repo_root, project_name) -> ProjectMetrics:`
+- `def generate_multi_project_report(repo_root, project_names, output_dir) -> dict[str, Path]:`
 
 ### Documentation Module
 
@@ -346,7 +355,7 @@ infrastructure/
 
 - **Layer 1 (infrastructure/)**: Generic, reusable tools for any project
 - All code is domain-independent
-- 60%+ test coverage required (currently 83.33%)
+- 60%+ test coverage required (see **Testing** below for a measured aggregate)
 - Can be copied to other projects
 
 ### 2. Thin Orchestrator Pattern
@@ -373,7 +382,7 @@ infrastructure/
 
 **Foundation utilities used by all other modules.**
 
-- `exceptions.py` - Exception hierarchy with context preservation
+- `exceptions.py` - Exception hierarchy with context preservation (re-exports from `_exceptions_core.py`, `_exceptions_domains.py`; message constants in `errors.py`)
   - `TemplateError` - Base exception
   - Module-specific exceptions (LLM, Rendering, Publishing)
   - Context utilities and exception chaining
@@ -421,12 +430,12 @@ infrastructure/
 **Usage:**
 
 ```python
-from infrastructure.core import (
-    get_logger, TemplateError, load_config,
-    CheckpointManager, ProgressBar
-)
-from infrastructure.core.runtime.function_profiler import CodeProfiler
+from infrastructure.core import get_logger, TemplateError, CheckpointManager, ProgressBar
+from infrastructure.core.config.loader import load_config
+from infrastructure.core.runtime.function_profiler import monitor_performance
 ```
+
+Narrow symbols are re-exported from `infrastructure.core` (see `core/__init__.py`). Import other APIs from their submodules (e.g. `infrastructure.core.pipeline.pipeline`).
 
 ### Validation Module (`validation/`)
 
@@ -553,42 +562,44 @@ Features:
 
 **Key Functions:**
 
-- `generate_pipeline_report` - Main pipeline report generation
-- `generate_test_report` - Test results reporting
-- `generate_validation_report` - Validation results reporting
-- `get_error_aggregator` - Error collection and categorization
-- `generate_output_summary` - Output file statistics
+- `generate_pipeline_report` / `save_pipeline_report` — pipeline execution report
+- `save_test_results`, `save_validation_report`, `save_performance_report`, `save_error_summary` — stage artifacts to disk
+- `get_error_aggregator` — in-process error collection
+- `collect_output_statistics`, `log_output_summary` — output dir stats
+- `generate_multi_project_report` — executive workflow
 
 **Usage:**
 
 ```python
+from pathlib import Path
 from infrastructure.reporting import (
     generate_pipeline_report,
     save_pipeline_report,
+    save_validation_report,
     get_error_aggregator,
-    generate_test_report,
-    generate_validation_report,
-    generate_multi_project_report
+    generate_multi_project_report,
 )
 
-# Generate pipeline report
 report = generate_pipeline_report(
-    stage_results=[...],
-    total_duration=60.5,
+    stage_results=[{"name": "setup", "exit_code": 0, "duration": 1.0}],
+    total_duration=1.0,
     repo_root=Path("."),
 )
-saved_files = save_pipeline_report(report, Path("output/reports"))
+save_pipeline_report(report, Path("output/reports"))
+save_validation_report({"checks": {"pdf_validation": True}}, Path("output/reports"))
 
-# Generate multi-project executive report
-exec_report = generate_multi_project_report(
-    repo_root=Path("."),
-    project_names=["code_project"],
-    output_dir=Path("output/executive_summary")
+generate_multi_project_report(
+    Path("."),
+    ["code_project"],
+    Path("output/executive_summary"),
 )
 
-# Aggregate errors
 aggregator = get_error_aggregator()
-aggregator.add_error("test_failure", "Test failed", stage="tests")
+aggregator.add_error(
+    error_type="test_failure",
+    message="Test failed",
+    stage="tests",
+)
 aggregator.save_report(Path("output/reports"))
 ```
 
@@ -655,7 +666,7 @@ python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOK
 
 ### 5. Testing
 
-- 83.33% test coverage overall (60% minimum required)
+- Aggregate line coverage is typically well above 60% (see **Testing** for a measured example)
 - Real data analysis, no mocks
 - Integration tests for module interoperability
 - CI/CD compatible
@@ -792,13 +803,13 @@ pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 ### Coverage Status
 
-Infrastructure test coverage: **83.33%** overall (exceeds 60% minimum).
-
-Run coverage report:
+Infrastructure line coverage is enforced at **≥60%** in CI. A local aggregate (excluding long-running `tests/infra_tests/llm/` integration tests) reported **TOTAL 75.77%** line coverage on `infrastructure/` (same command below; round to **~76%** when citing loosely):
 
 ```bash
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
+uv run pytest tests/infra_tests/ --ignore=tests/infra_tests/llm --cov=infrastructure --cov-report=term-missing --cov-fail-under=0
 ```
+
+Include `llm/` for a full run when Ollama (or stubs) are available; the numeric total will differ.
 
 ## Troubleshooting
 
@@ -833,7 +844,7 @@ If configuration isn't loading:
 3. **Reusability** - Modules can be used independently
 4. **Scalability** - Easy to add modules without cluttering core
 5. **Documentation** - Each module documented
-6. **Testing** - Real data testing with 83.33% coverage
+6. **Testing** - Real data testing with a ≥60% infrastructure coverage gate
 7. **Flexibility** - Use individual modules or pipeline
 
 ## Future Enhancements

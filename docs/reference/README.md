@@ -13,11 +13,14 @@ The `reference/` directory contains quick reference materials, API documentation
 | File | Purpose | Audience |
 |------|---------|----------|
 | [`api-reference.md`](api-reference.md) | API documentation | Developers |
+| [`api-project-modules.md`](api-project-modules.md) | Project (Layer 2) module API | Developers |
 | [`glossary.md`](glossary.md) | Terms and definitions | All users |
 | [`faq.md`](faq.md) | Frequently asked questions | All users |
 | [`quick-start-cheatsheet.md`](quick-start-cheatsheet.md) | Essential commands reference | All users |
 | [`common-workflows.md`](common-workflows.md) | Step-by-step workflow recipes | All users |
 | [`copypasta.md`](copypasta.md) | Ready-to-use sharing content | All users |
+| [`copypasta-diagrams.md`](copypasta-diagrams.md) | Diagram blocks for reuse | All users |
+| [`copypasta-outreach.md`](copypasta-outreach.md) | Outreach / social copy | All users |
 
 ## Quick Navigation
 
