@@ -16,6 +16,8 @@ from __future__ import annotations
 import shutil
 import subprocess  # nosec B404 — used only for fixed-list Popen (no shell=True)
 import time
+from collections.abc import Callable
+from subprocess import CompletedProcess
 
 try:
     import requests
@@ -30,6 +32,7 @@ except ImportError:
     _requests_available = False
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.llm.utils.models import get_model_names
 
 logger = get_logger(__name__)
 
@@ -121,6 +124,8 @@ def pull_ollama_model(
     model_name: str,
     *,
     timeout: float | None = 900.0,
+    which: Callable[..., str | None] | None = None,
+    run: Callable[..., CompletedProcess[str]] | None = None,
 ) -> tuple[bool, str | None]:
     """Run ``ollama pull <model_name>`` via subprocess.
 
@@ -129,11 +134,18 @@ def pull_ollama_model(
     Args:
         model_name: Model tag to pull (e.g. ``smollm2``).
         timeout: Seconds for the pull subprocess, or ``None`` for no limit (not recommended).
+        which: Optional resolver for the ``ollama`` executable (defaults to :func:`shutil.which`).
+            Intended for tests that point at a real stub script without patching imports.
+        run: Optional subprocess runner (defaults to :func:`subprocess.run`). Use only when
+            injecting a test double is unavoidable; prefer a real executable via ``which``.
 
     Returns:
         ``(True, None)`` on success, ``(False, error_message)`` on failure.
     """
-    ollama_bin = shutil.which("ollama")
+    which_fn = which or shutil.which
+    run_fn = run if run is not None else subprocess.run
+
+    ollama_bin = which_fn("ollama")
     if not ollama_bin:
         msg = "ollama CLI not found in PATH"
         logger.error(msg)
@@ -143,7 +155,7 @@ def pull_ollama_model(
     logger.info("Running: %s", " ".join(argv))
 
     try:
-        result = subprocess.run(  # nosec B603 — fixed argv, ollama_bin from shutil.which
+        result = run_fn(  # nosec B603 — fixed argv, ollama_bin from which_fn
             argv,
             capture_output=True,
             text=True,
@@ -179,9 +191,6 @@ def pull_ollama_model(
 
 def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bool = True) -> bool:
     """Ensure Ollama server is running and has models available."""
-    # Import here to avoid circular dependency
-    from infrastructure.llm.utils.models import get_model_names
-
     # Check if running
     if not is_ollama_running(base_url):
         if auto_start:

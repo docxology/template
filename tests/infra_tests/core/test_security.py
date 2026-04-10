@@ -36,24 +36,24 @@ from infrastructure.llm.core.sanitization import sanitize_llm_input
 class TestSecurityValidator:
     """Tests for SecurityValidator class."""
 
-    def test_validate_llm_input_valid_prompt(self):
+    def test_sanitize_llm_input_valid_prompt(self):
         """Test sanitization of a normal prompt."""
         prompt = "Write a Python function to calculate the factorial of a number."
         result = sanitize_llm_input(prompt)
         assert isinstance(result, str)
         assert len(result) > 0
 
-    def test_validate_llm_input_empty_prompt(self):
+    def test_sanitize_llm_input_empty_prompt(self):
         """Test sanitization of empty prompt."""
         result = sanitize_llm_input("")
         assert result == ""
 
-    def test_validate_llm_input_non_string_raises(self):
+    def test_sanitize_llm_input_non_string_raises(self):
         """Test that non-string input raises SecurityError."""
         with pytest.raises(SecurityError, match="Prompt must be a string"):
             sanitize_llm_input(123)  # type: ignore
 
-    def test_validate_llm_input_too_long_truncates(self):
+    def test_sanitize_llm_input_too_long_truncates(self):
         """Test that overly long input is truncated rather than rejected."""
         long_prompt = "x" * 600000  # Exceeds 500000 limit
         result = sanitize_llm_input(long_prompt)
@@ -83,19 +83,19 @@ class TestSecurityValidator:
             "\\include{malicious}",
         ],
     )
-    def test_validate_llm_input_dangerous_patterns(self, dangerous_input: str):
+    def test_sanitize_llm_input_dangerous_patterns(self, dangerous_input: str):
         """Test that dangerous patterns are detected and rejected."""
         with pytest.raises(SecurityError, match="Dangerous content detected in input"):
             sanitize_llm_input(dangerous_input)
 
-    def test_validate_llm_input_sanitizes_html(self):
+    def test_sanitize_llm_input_sanitizes_html(self):
         """Test that HTML entities are escaped."""
         prompt = "Use <tag> and &amp; in text"
         result = sanitize_llm_input(prompt)
         assert "&lt;tag&gt;" in result
         assert "&amp;amp;" in result
 
-    def test_validate_llm_input_normalizes_whitespace(self):
+    def test_sanitize_llm_input_normalizes_whitespace(self):
         """Test that excessive whitespace is normalized."""
         prompt = "Hello    world\n\n\n\n\nTest"
         result = sanitize_llm_input(prompt)

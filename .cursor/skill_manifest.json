@@ -99,49 +99,49 @@
     },
     {
       "name": "ccd-case-systems",
-      "description": "Linguistic case formally typed as an analytic category — CaseRole, Morphism, AlignmentFunctor, MonoidalFunctor, Topos Sheaf Logic predictors, Natural Transformations. Crucial for §4-5 core topology, §7 DAIF alignment, and §9b adversarial injection formal verification.",
+      "description": "Linguistic case formally typed as an analytic category — CaseRole, Morphism, AlignmentFunctor, MonoidalFunctor, Natural Transformations. Crucial for §2 core topology, downstream §7c DAIF alignment, and §9b adversarial injection formal verification.",
       "path": "projects/cognitive_case_diagrams/src/case_systems/SKILL.md",
       "cursor_at": "projects/cognitive_case_diagrams/src/case_systems/SKILL.md"
     },
     {
       "name": "ccd-cognitive",
-      "description": "Scalar active inference on case diagrams — beliefs, variational free energy, belief updates, prediction error, EFE, N400/P600 proxies. Use for §14; use src.daif for distributional returns and full ERP pipeline (§16).",
+      "description": "Scalar active inference on case diagrams — beliefs, variational free energy, belief updates, prediction error, EFE, N400/P600 proxies. Use for §7; use src.daif for distributional returns and full ERP pipeline (§7c).",
       "path": "projects/cognitive_case_diagrams/src/cognitive/SKILL.md",
       "cursor_at": "projects/cognitive_case_diagrams/src/cognitive/SKILL.md"
     },
     {
       "name": "ccd-daif",
-      "description": "Distributional Active Inference — push-forward returns, quantile/IQN updates, VMP/Bethe FE, distributional case assignment, policy G(π), ERP profiles, convergence metrics. Use for manuscript §16 and quantitative DAIF results.",
+      "description": "Distributional Active Inference — push-forward returns, quantile/IQN updates, VMP/Bethe FE, distributional case assignment, policy G(π), ERP profiles, convergence metrics. Use for manuscript §7c and quantitative DAIF results.",
       "path": "projects/cognitive_case_diagrams/src/daif/SKILL.md",
       "cursor_at": "projects/cognitive_case_diagrams/src/daif/SKILL.md"
     },
     {
       "name": "ccd-diagrams",
-      "description": "DisCoCat/DisCoCirc-style string diagrams, quantum homology bounds, architectural prompt security, complexity metrics, ditransitive constructions. Use for §03 pregroups, §05b magnitude homology, §09 complexity, and §09b cognitive security.",
+      "description": "DisCoCat/DisCoCirc-style string diagrams, complexity metrics, ditransitive constructions, discourse-level prompt scanning. Use for manuscript §3–§4c (and cross-links to §5b magnitude homology metrics, §9b protocol-level checks where `Discourse` is used).",
       "path": "projects/cognitive_case_diagrams/src/diagrams/SKILL.md",
       "cursor_at": "projects/cognitive_case_diagrams/src/diagrams/SKILL.md"
     },
     {
       "name": "ccd-enriched-cat",
-      "description": "[0,1]-enriched categories, standard proximity matrix, categorical magnitude helpers. Use for §11–12 distributional proximity and enrichment that feeds cognitive/security modules.",
+      "description": "[0,1]-enriched categories, standard proximity matrix, categorical magnitude helpers. Use for §5 distributional proximity and enrichment that feeds cognitive/security modules.",
       "path": "projects/cognitive_case_diagrams/src/enriched_cat/SKILL.md",
       "cursor_at": "projects/cognitive_case_diagrams/src/enriched_cat/SKILL.md"
     },
     {
       "name": "ccd-quantum",
-      "description": "POVM-based quantum case assignment — CasePOVM, case probabilities, crisp/graded/fluid-S POVM factories, semantic state helpers. Use for §17–18 and §18 quantum semantics.",
+      "description": "POVM-based quantum case assignment — CasePOVM, case probabilities, crisp/graded/fluid-S POVM factories, semantic state helpers. Use for §8 and §8b quantum semantics.",
       "path": "projects/cognitive_case_diagrams/src/quantum/SKILL.md",
       "cursor_at": "projects/cognitive_case_diagrams/src/quantum/SKILL.md"
     },
     {
       "name": "ccd-security",
-      "description": "Cognitive security — type violations, CaseFrameValidator, injection scoring, topological robustness, semantic integrity. Use for §20 adversarial and type-checking narratives.",
+      "description": "Cognitive security — type violations, CaseFrameValidator, injection scoring, topological robustness, semantic integrity. Use for §9b adversarial and type-checking narratives.",
       "path": "projects/cognitive_case_diagrams/src/security/SKILL.md",
       "cursor_at": "projects/cognitive_case_diagrams/src/security/SKILL.md"
     },
     {
       "name": "ccd-topos-theory",
-      "description": "Geometric theories, classifying toposes, Morita checks, theory builders. Use for §13 topos-theoretic semantics and bridges between syntactic/semantic theories.",
+      "description": "Geometric theories, classifying toposes, Morita checks, theory builders. Use for §6 topos-theoretic semantics and bridges between syntactic/semantic theories.",
       "path": "projects/cognitive_case_diagrams/src/topos_theory/SKILL.md",
       "cursor_at": "projects/cognitive_case_diagrams/src/topos_theory/SKILL.md"
     },

@@ -1,0 +1,173 @@
+{
+  "timestamp": "2026-04-09T13:26:20.658765",
+  "total_duration": 3.8964149951934814,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.03163290023803711,
+      "timestamp": "",
+      "completed": true,
+      "status": "passed"
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 1,
+      "duration": 3.8647820949554443,
+      "timestamp": "",
+      "completed": true,
+      "status": "failed"
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "web": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "data": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 2,
+        "size_mb": "0.00",
+        "total_size_bytes": 2244,
+        "largest_files": [
+          {
+            "name": "telemetry.json",
+            "size_mb": "0.00",
+            "path": "reports/telemetry.json"
+          },
+          {
+            "name": "telemetry.txt",
+            "size_mb": "0.00",
+            "path": "reports/telemetry.txt"
+          }
+        ],
+        "extensions": {
+          ".txt": 1,
+          ".json": 1
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 624,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
+      }
+    },
+    "total_files": 3,
+    "total_size_mb": 0.002735137939453125,
+    "largest_files": [
+      {
+        "name": "telemetry.json",
+        "size_mb": "0.00",
+        "category": "reports",
+        "path": "reports/telemetry.json"
+      },
+      {
+        "name": "telemetry.txt",
+        "size_mb": "0.00",
+        "category": "reports",
+        "path": "reports/telemetry.txt"
+      },
+      {
+        "name": "pipeline.log",
+        "size_mb": "0.00",
+        "category": "logs",
+        "path": "logs/pipeline.log"
+      }
+    ],
+    "missing_expected_files": [
+      "code_project_combined.pdf"
+    ],
+    "sizes_by_category": {
+      "pdf": 0.0,
+      "web": 0.0,
+      "slides": 0.0,
+      "figures": 0.0,
+      "data": 0.0,
+      "reports": 0.002140045166015625,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.0005950927734375
+    },
+    "file_counts_by_type": {
+      ".txt": 1,
+      ".json": 1,
+      ".log": 1
+    },
+    "pdf_files": 0,
+    "figures": 0,
+    "data_files": 0,
+    "log_file": {
+      "exists": true,
+      "size": 624,
+      "path": "/Users/4d/Documents/GitHub/template/projects/code_project/output/logs/pipeline.log"
+    }
+  }
+}

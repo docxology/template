@@ -26,6 +26,10 @@ curl http://localhost:11434/api/tags
 uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 ```
 
+## Deterministic tests (no daemon)
+
+Default CI and local runs exclude `@pytest.mark.requires_ollama`. Those tests drive a local **pytest_httpserver** stub (see [`tests/infra_tests/llm/conftest.py`](../../../tests/infra_tests/llm/conftest.py), [`tests/infra_tests/llm/ollama_stub_server.py`](../../../tests/infra_tests/llm/ollama_stub_server.py), and [`tests/infra_tests/llm/README.md`](../../../tests/infra_tests/llm/README.md)). Failures there indicate HTTP contract or client regressions, not Ollama installation.
+
 ## Quick Diagnosis
 
 ### Check Ollama Status

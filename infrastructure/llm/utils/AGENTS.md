@@ -43,7 +43,7 @@ from infrastructure.llm.utils.ollama import (
 )
 ```
 
-### Server helpers
+### Server helpers (`server.py`)
 
 ```python
 def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float = 2.0) -> bool:
@@ -51,6 +51,15 @@ def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float =
 
 def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool:
     """Start `ollama serve` and wait for readiness."""
+
+def pull_ollama_model(
+    model_name: str,
+    *,
+    timeout: float | None = 900.0,
+    which=None,
+    run=None,
+) -> tuple[bool, str | None]:
+    """Run ``ollama pull``. Optional ``which`` (like :func:`shutil.which`) and ``run`` (like :func:`subprocess.run`) support tests that use real stub executables instead of patching."""
 
 def ensure_ollama_ready(base_url: str = "http://localhost:11434", auto_start: bool = True) -> bool:
     """Ensure the daemon is reachable and at least one model is installed."""

@@ -7,7 +7,7 @@ This thin orchestrator coordinates the output copying stage:
 3. Copies combined PDF to root for convenient access
 4. Validates all expected files were copied
 
-Stage 5 of the pipeline orchestration - copies all project outputs to
+Stage 05 of the pipeline orchestration - copies all project outputs to
 the top-level output/ directory for easy access.
 
 Complete project outputs copied:
@@ -19,6 +19,10 @@ Complete project outputs copied:
 - Reports (reports/ directory - all markdown/analysis files)
 - Simulations (simulations/ directory - all simulation outputs and checkpoints)
 - LLM reviews (llm/ directory - LLM-generated manuscript reviews)
+
+Exit codes:
+    0: Copy completed and post-copy validation passed
+    1: Copy failed or post-copy validation found missing critical files
 """
 
 from __future__ import annotations

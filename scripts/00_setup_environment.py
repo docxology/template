@@ -7,7 +7,11 @@ This thin orchestrator prepares the environment for the complete project pipelin
 3. Configures environment variables
 4. Validates build tools availability
 
-Stage 1 of the pipeline orchestration.
+Stage 00 of the pipeline orchestration.
+
+Exit codes:
+    0: Setup succeeded (environment ready for downstream stages)
+    1: Setup failed (missing Python version, dependencies, or build tools)
 """
 
 from __future__ import annotations

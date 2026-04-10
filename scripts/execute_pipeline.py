@@ -11,9 +11,13 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-# Add repo root to Python path
-repo_root = Path(__file__).parent.parent
-sys.path.insert(0, str(repo_root))
+# Bootstrap: put repo root on sys.path so `infrastructure` is importable when
+# this script is invoked directly (`python scripts/execute_pipeline.py`). The
+# equivalent idempotent helper `scripts.ensure_repo_root_on_path()` is available
+# to callers that already have the `scripts` package on sys.path.
+repo_root = Path(__file__).resolve().parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor

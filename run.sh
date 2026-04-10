@@ -56,6 +56,9 @@ mkdir -p "$MPLCONFIGDIR"
 export UV_CACHE_DIR="${TMPDIR:-/tmp}/uv_cache"
 mkdir -p "$UV_CACHE_DIR"
 
+# Ensure Lean 4 + Hermes/OpenGauss are fully enabled by default
+export FEP_LEAN_GAUSS_WORKFLOWS="${FEP_LEAN_GAUSS_WORKFLOWS:-1}"
+
 # ============================================================================
 # Bash Version Check
 # ============================================================================
@@ -98,7 +101,8 @@ check_bash_compatibility || true
 # before any Python code is executed. This enables headless cloud bootstrap.
 # Flags that imply a pipeline run (not just interactive menu or --help):
 _PIPELINE_FLAGS=(--pipeline --infra-tests --project-tests --render-pdf
-                 --reviews --translations --option --all-projects)
+                 --reviews --translations --option --all-projects
+                 --no-lean-workflows)
 for _arg in "$@"; do
     for _flag in "${_PIPELINE_FLAGS[@]}"; do
         if [[ "$_arg" == "$_flag" ]]; then
@@ -735,22 +739,6 @@ run_llm_review() {
 # Full Pipeline Execution
 # ============================================================================
 
-generate_pipeline_reports() {
-    local project_name="${1:-$CURRENT_PROJECT}"
-    local total_duration="${2:-0}"
-
-    log_info "Generating pipeline reports..."
-
-    # Run the dedicated Python script
-    if $(get_python_cmd) "$REPO_ROOT/scripts/generate_pipeline_reports.py" --project "$project_name" --total-duration "$total_duration"; then
-        log_success "Pipeline reports generated successfully"
-        return 0
-    else
-        log_warning "Failed to generate pipeline reports"
-        return 1
-    fi
-}
-
 run_full_pipeline() {
     local resume_flag="${1:-}"
     local project_name="${2:-$CURRENT_PROJECT}"
@@ -894,6 +882,7 @@ show_help() {
     echo -e "  ${GREEN}--render-pdf${NC}          PDF rendering only"
     echo -e "  ${GREEN}--reviews${NC}             LLM scientific review"
     echo -e "  ${GREEN}--translations${NC}        LLM translations"
+    echo -e "  ${GREEN}--no-lean-workflows${NC}   fep_lean: disable real Lean 4 + Hermes LLM"
     echo -e "  ${GREEN}--help, -h${NC}            This help message"
     echo
     echo -e "${BOLD}MENU OPTIONS${NC}"
@@ -920,11 +909,15 @@ show_help() {
     echo -e "  Multi-project:   ${CYAN}output/multi_project_summary/multi_project_pipeline.log${NC}"
     echo
     echo -e "${BOLD}EXAMPLES${NC}"
-    echo "  $0                      Interactive mode"
-    echo "  $0 --pipeline           Full pipeline, current project"
-    echo "  $0 --pipeline --resume  Resume from checkpoint"
-    echo "  $0 9                    Full pipeline (shorthand)"
-    echo "  $0 234                  Chain: analyze → render → validate"
+    echo "  $0                                     Interactive mode"
+    echo "  $0 --pipeline                          Full pipeline, current project"
+    echo "  $0 --pipeline --resume                 Resume from checkpoint"
+    echo "  $0 9                                   Full pipeline (shorthand)"
+    echo "  $0 234                                 Chain: analyze → render → validate"
+    echo "  $0 --project fep_lean --no-lean-workflows --pipeline"
+    echo "                                         fep_lean full pipeline, offline-safe (no Lean/Hermes)"
+    echo "  $0 --project fep_lean --no-lean-workflows 2"
+    echo "                                         fep_lean analysis only, offline-safe"
     echo
 }
 
@@ -1279,6 +1272,13 @@ except Exception as e:
                 ;;
             --core-only)
                 cli_core_only="true"
+                shift
+                continue
+                ;;
+            --no-lean-workflows)
+                # Disable real Lean 4 + Hermes/OpenRouter for fep_lean project.
+                export FEP_LEAN_GAUSS_WORKFLOWS=0
+                log_info "FEP_LEAN_GAUSS_WORKFLOWS=0: Lean 4 + Hermes LLM disabled for fep_lean"
                 shift
                 continue
                 ;;

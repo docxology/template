@@ -64,10 +64,11 @@ graph TD
         P1[code_project<br/>Optimization Exemplar<br/>~96% coverage · 39 tests]
         P2[template<br/>Meta-Documentation<br/>~93% coverage · 66 tests]
         P3[cognitive_case_diagrams<br/>Case diagrams manuscript<br/>large suite · data only]
+        P4[fep_lean<br/>FEP / Lean catalogue<br/>large suite · data only]
     end
 
     subgraph InProgress["In-Progress Projects (projects_in_progress/)"]
-        IP1[fep_lean_and_others<br/>NOT Discovered until promoted]
+        IP1[aii_org_and_others<br/>NOT Discovered until promoted]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
@@ -84,6 +85,7 @@ graph TD
     P1 -->|Discovered| DISCOVER
     P2 -->|Discovered| DISCOVER
     P3 -->|Discovered| DISCOVER
+    P4 -->|Discovered| DISCOVER
     IP1 -.->|NOT Scanned| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
     A2 -.->|NOT Scanned| DISCOVER
@@ -93,6 +95,7 @@ graph TD
     PIPELINE -->|Executes| P1
     PIPELINE -->|Executes| P2
     PIPELINE -->|Executes| P3
+    PIPELINE -->|Executes| P4
 ```
 
 ### Project Lifecycle

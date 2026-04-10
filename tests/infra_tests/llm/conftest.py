@@ -1,119 +1,21 @@
-import json
+import threading
 
 import pytest
 from pytest_httpserver import HTTPServer
-import threading
 
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import OllamaClientConfig
 
+from tests.infra_tests.llm.ollama_stub_server import build_chat_handler
+
 
 @pytest.fixture
 def ollama_test_server():
-    """Local HTTP test server mimicking Ollama API endpoints."""
+    """Local HTTP test server mimicking Ollama API endpoints (real HTTP, no mocks)."""
     server = HTTPServer()
     server.start()
 
-    # Mock /api/chat endpoint (what the client actually uses)
-    def handle_chat_request(request):
-        """Handle chat requests, supporting both streaming and non-streaming."""
-
-        # Parse the request JSON
-        try:
-            # Try different ways to access request data
-            if hasattr(request, "body") and request.body:
-                request_data = json.loads(request.body)
-            elif hasattr(request, "get_data") and callable(request.get_data):
-                request_data = json.loads(request.get_data())
-            elif hasattr(request, "data") and request.data:
-                request_data = json.loads(request.data)
-            else:
-                raise ValueError("Cannot access request body")
-
-            is_stream = request_data.get("stream", False)
-            model = request_data.get("model", "gemma3:4b")
-            messages = request_data.get("messages", [])
-            format_type = request_data.get("format")  # Check for JSON format
-        except (ValueError, KeyError, TypeError):
-            # Fallback when request body cannot be parsed
-            is_stream = False
-            model = "gemma3:4b"
-            messages = []
-            format_type = None
-
-        # Handle model-specific responses for fallback testing
-        if model == "primary-model":
-            # Simulate connection failure for primary model
-            return "", 500  # Return empty response with 500 status
-        elif model == "fallback1":
-            # Simulate connection failure for first fallback
-            return "", 500
-        elif model == "fallback2":
-            # Success for second fallback
-            pass  # Continue with normal response
-
-        # Check for special test cases based on prompt content
-        prompt_text = ""
-        if messages and len(messages) > 0:
-            # Get the last user message
-            for msg in reversed(messages):
-                if msg.get("role") == "user":
-                    prompt_text = msg.get("content", "")
-                    break
-
-        # Handle structured JSON test cases
-        if "invalid json content" in prompt_text:
-            # Return invalid JSON wrapped in text
-            response_content = "Some text { invalid json content } more text"
-        elif "no json response" in prompt_text:
-            # Return response with no JSON
-            response_content = "This is just plain text with no JSON structure"
-        elif format_type == "json" or "test structured" in prompt_text.lower():
-            # Return valid JSON for structured tests (check format field or prompt content)
-            response_content = '{"key": "value", "number": 42}'
-        else:
-            response_content = "Test response"
-
-        if is_stream:
-            # Return streaming response as JSON lines (one JSON object per line)
-            streaming_chunks = [
-                {
-                    "model": model,
-                    "created_at": "2024-01-01T00:00:00Z",
-                    "message": {"role": "assistant", "content": response_content[:10]},
-                    "done": False,
-                },
-                {
-                    "model": model,
-                    "created_at": "2024-01-01T00:00:01Z",
-                    "message": {"role": "assistant", "content": response_content[10:]},
-                    "done": False,
-                },
-                {
-                    "model": model,
-                    "created_at": "2024-01-01T00:00:02Z",
-                    "message": {"role": "assistant", "content": ""},
-                    "done": True,
-                },
-            ]
-
-            response_lines = []
-            for chunk in streaming_chunks:
-                response_lines.append(json.dumps(chunk))
-
-            return "\n".join(response_lines)
-        else:
-            # Return regular response
-            return json.dumps(
-                {
-                    "model": model,
-                    "created_at": "2024-01-01T00:00:00Z",
-                    "message": {"role": "assistant", "content": response_content},
-                    "done": True,
-                }
-            )
-
-    server.expect_request("/api/chat", method="POST").respond_with_handler(handle_chat_request)
+    server.expect_request("/api/chat", method="POST").respond_with_handler(build_chat_handler())
 
     # Mock /api/tags endpoint (model list)
     server.expect_request("/api/tags").respond_with_json(

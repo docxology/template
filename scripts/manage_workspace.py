@@ -24,8 +24,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Add root to path for infrastructure imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Bootstrap: put repo root on sys.path so `infrastructure` is importable when
+# this script is invoked directly. See scripts/__init__.py for the idempotent
+# helper available to callers that already import the `scripts` package.
+_repo_root = Path(__file__).resolve().parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header
 

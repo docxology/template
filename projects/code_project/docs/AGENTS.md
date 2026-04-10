@@ -8,12 +8,14 @@ Technical guide for `projects/code_project/docs/` — the operational rulebook f
 
 | File | Purpose |
 | --- | --- |
+| `README.md` | Quick navigation and table of contents |
+| `AGENTS.md` | This index (technical overview of `docs/`) |
 | `agent_instructions.md` | Behavioral constraints for AI agents (read-first priority) |
 | `architecture.md` | Thin orchestrator flow: `src/` → `scripts/` → `infrastructure/` |
-| `testing_philosophy.md` | Zero-mock standard and validate strategy |
+| `testing_philosophy.md` | Zero-mock policy; **39** collected tests; ≥90% coverage gate on `src/` |
 | `rendering_pipeline.md` | Manuscript-to-PDF flow via `infrastructure.rendering` |
-| `style_guide.md` | Core programming principles (Zero-Mock, Documentation Links) |
-| `syntax_guide.md` | Manuscript markdown syntax (Madlibs, Pandoc format, Labels) |
+| `style_guide.md` | Core programming principles (Zero-Mock, documentation links) |
+| `syntax_guide.md` | Manuscript markdown syntax (Madlibs, Pandoc format, labels) |
 
 ## Key Conventions
 
@@ -25,12 +27,14 @@ Technical guide for `projects/code_project/docs/` — the operational rulebook f
 ## Reading Order
 
 1. `agent_instructions.md` — Operational constraints (start here)
-2. `architecture.md` — Understand modular boundaries
-3. `testing_philosophy.md` — Understand test requirements before writing code
-4. `rendering_pipeline.md` — Understand how manuscript becomes PDF
+2. `architecture.md` — Modular boundaries
+3. `testing_philosophy.md` — Test requirements before writing code
+4. `rendering_pipeline.md` — How manuscript becomes PDF
+5. `style_guide.md` / `syntax_guide.md` — Code and manuscript conventions
 
 ## See Also
 
+- [README.md](README.md) — Quick reference (mirrors file list with audience hints)
 - [../AGENTS.md](../AGENTS.md) — Project-level technical documentation
-- [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — RASP protocol for manuscript editing
+- [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory: variables, SYNTAX, workflow
 - [../../AGENTS.md](../../AGENTS.md) — Root template documentation

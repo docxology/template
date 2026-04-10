@@ -9,14 +9,14 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
 1. **`infrastructure/` Layer**: The code delegates all tracking, performance benchmarking, stability validation, and PDF rendering to the 9-module infrastructure cluster (located at the repository root).
-2. **`tests/` Integrity**: An uncompromising zero-mock testing policy validated by a 45-test CI suite (`projects/code_project/tests/`) operating at 100% statement and branch coverage.
+2. **`tests/` Integrity**: A zero-mock suite (`projects/code_project/tests/`, **39** collected tests) with **≥90%** coverage on `projects/code_project/src/` (typically ~96% line/branch with the current tests).
 3. **`docs/` Orchestration**: Adherence to the Rigorous Agentic Scientific Protocol (RASP) ensuring total documentation-to-code parity (`projects/code_project/docs/`).
 
 ## Manuscript Structure
 
 The `manuscript/` directory contains the raw markdown files that the renderer (`infrastructure/rendering/pdf_renderer.py`) transforms into the final academic PDF. These files are designed as a meta-narrative to demonstrate exactly how the repository executes:
 
-- `00_abstract.md`: Overview of the 34-test exemplar strategy.
+- `00_abstract.md`: Abstract; build variables and CSV-backed prose via `scripts/z_generate_manuscript_variables.py`.
 - `01_introduction.md`: Introduction of the infrastructure pillars bridging to CI/CD files.
 - `02_methodology.md`: Mathematical methods mapping to specific python script execution lines.
 - `03_results.md`: Convergence analysis built via `infrastructure.reporting`, pointing back at itself.
@@ -38,7 +38,7 @@ graph TD
     end
 
     subgraph "Template Ecosystem"
-        Tests["tests/ (34 tests, 100% coverage)"]:::docs
+        Tests["tests/ (39 tests, ~96% src)"]:::docs
         Config["config.yaml & preamble.md"]:::docs
         
         subgraph "`infrastructure/`"
@@ -56,7 +56,7 @@ graph TD
     Reporting -->|Formats| Manuscript
     Manuscript -->|Compiled with| Config
     Config -->|Sent to| Rendering
-    Rendering -->|Produces| PDF["output/pdf/code_project_combined.pdf"]:::project
+    Rendering -->|Produces| PDF["output/code_project/pdf/code_project_combined.pdf"]:::project
 ```
 
 ## Quick Start
@@ -64,14 +64,12 @@ graph TD
 Experience the automated pipeline directly:
 
 ```bash
-# Execute the algorithm and generate all results/visualizations
-python3 scripts/optimization_analysis.py
+# From repository root
+uv run python projects/code_project/scripts/optimization_analysis.py
 
-# Render the manuscript locally (utilizes infrastructure.rendering)
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py --project code_project
 
-# View the generated result
-open ../output/pdf/code_project_combined.pdf
+open output/code_project/pdf/code_project_combined.pdf
 ```
 
 ## AI Agent Directives

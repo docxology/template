@@ -758,10 +758,13 @@ config = OllamaClientConfig(default_model="some-model")  # Use env vars or from_
 ### For Testing
 
 - [ ] Pure logic tests without network
-- [ ] Integration tests marked `@pytest.mark.requires_ollama`
-- [ ] No mocks or patches
-- [ ] Clean environment fixtures
-- [ ] Coverage for all validation paths
+- [ ] Deterministic HTTP via `pytest_httpserver` (`tests/infra_tests/llm/conftest.py`, `ollama_stub_server.py`); default pytest selection uses `-m "not requires_ollama"`
+- [ ] Integration tests marked `@pytest.mark.requires_ollama` for a real local daemon
+- [ ] No `MagicMock` / `unittest.mock.patch`; use real subprocesses, real stub scripts (e.g. `pull_ollama_model(..., which=...)`, shell stubs in `tmp_path`), or environment-only control
+- [ ] Clean environment fixtures where isolation matters
+- [ ] Coverage for validation paths that are user-facing
+
+**Logging:** avoid emitting raw prompts or full manuscript text at INFO; keep detailed content at DEBUG or behind explicit diagnostics (see [python_logging.md](python_logging.md)). Input hygiene lives in `infrastructure/llm/core/sanitization.py`; post-hoc checks in `infrastructure/llm/validation/`.
 
 ## See Also
 
@@ -774,8 +777,8 @@ config = OllamaClientConfig(default_model="some-model")  # Use env vars or from_
 
 ---
 
-**Version**: 1.1.0  
-**Last Updated**: 2025-12-02  
-**Status**: (includes translation feature)  
+**Version**: 1.2.0  
+**Last Updated**: 2026-04-08  
+**Status**: (includes translation feature; testing guidance aligned with pytest_httpserver suite)  
 **Maintainer**: Template Team
 

@@ -133,12 +133,13 @@ with profiler.monitor("heavy_computation"):
 ## Security (`security.py`)
 
 ```python
-from infrastructure.core import (
-    SecurityValidator, RateLimiter, validate_llm_input, rate_limit,
-)
+from infrastructure.core.security import SecurityValidator, RateLimiter, rate_limit
+from infrastructure.llm.core.sanitization import sanitize_llm_input
 
 validator = SecurityValidator()
 validator.validate_input(user_text)
+
+sanitized = sanitize_llm_input(user_text)
 
 @rate_limit(calls=10, period=60)
 def api_call():

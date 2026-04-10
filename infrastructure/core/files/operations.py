@@ -167,7 +167,7 @@ def copy_final_deliverables(
     # Recursively copy entire project/output/ directory
     try:
         logger.debug(f"Recursively copying: {project_output} → {output_dir}")
-        shutil.copytree(project_output, output_dir, dirs_exist_ok=True)
+        shutil.copytree(project_output, output_dir, dirs_exist_ok=True, symlinks=True, ignore_dangling_symlinks=True)
         log_success("Recursively copied project/output/ directory", logger)
     except (OSError, shutil.Error) as e:
         msg = f"Failed to copy project output directory: {e}"

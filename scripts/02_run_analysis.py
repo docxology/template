@@ -12,12 +12,16 @@ This thin orchestrator coordinates the analysis and figure generation stage:
 - Does NOT implement analysis logic
 - Delegates to project-specific scripts
 
-Stage 3 of the pipeline orchestration.
+Stage 02 of the pipeline orchestration.
 
 Architecture:
     This is a generic entry point (Layer 1 - Infrastructure).
     It discovers and executes project-specific scripts from project/scripts/
     without knowing their implementation details. Follows thin orchestrator pattern.
+
+Exit codes:
+    0: All discovered analysis scripts completed successfully
+    1: At least one analysis script failed or the project has no scripts/ directory
 """
 
 from __future__ import annotations

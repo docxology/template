@@ -1,0 +1,13 @@
+
+LOG ANALYSIS: pipeline.log
+============================================================
+
+Total Lines: 7
+
+Message Breakdown:
+  INFO: 5
+  ERROR: 2
+
+Recent Errors (2):
+  • [2026-04-09 13:26:20,358] [ERROR] ❌ [STAGE_FAILED] ✗ Stage 2 failed
+  • [2026-04-09 13:26:20,359] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 2: Environment 

@@ -210,7 +210,7 @@ infrastructure/core/
     environment.py         # check_python_version, setup_directories
     function_profiler.py   # CodeProfiler, monitor_performance
     health_check.py        # SystemHealthChecker, quick_health_check
-  security.py              # SecurityValidator, RateLimiter, validate_llm_input
+  security.py              # SecurityValidator, RateLimiter, SecurityMonitor, get_security_headers
   telemetry.py             # TelemetryCollector, TelemetryConfig
 ```
 

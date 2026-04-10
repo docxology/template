@@ -130,4 +130,4 @@ graph TD
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - Agent skills: [`../.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc), [`../.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — `uv run python -m infrastructure.skills write` / `check`
-- Active `projects/` beyond the [`../projects/code_project/`](../projects/code_project/) exemplar may ship a local docs tree (e.g. [`../projects/cognitive_case_diagrams/docs/`](../projects/cognitive_case_diagrams/docs/)); authoritative slugs remain in [`_generated/active_projects.md`](_generated/active_projects.md)
+- Active `projects/` beyond the [`../projects/code_project/`](../projects/code_project/) exemplar may ship a local docs tree (e.g. [`../projects/fep_lean/docs/`](../projects/fep_lean/docs/)); authoritative slugs remain in [`_generated/active_projects.md`](_generated/active_projects.md)

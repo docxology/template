@@ -102,8 +102,14 @@ def render_chapter(source_md: Path, metrics: dict[str, Any], output_dir: Path) -
 
     rendered = Template(source_text).safe_substitute(metrics)
 
-    # Warn about any unresolved tokens that remain
-    remaining = re.findall(r"\$\{([^}]+)\}", rendered)
+    # Warn about any unresolved tokens that remain.
+    #
+    # The regex must mirror ``string.Template``'s own ``idpattern``
+    # (identifier-shaped names), otherwise LaTeX math expressions like
+    # ``${(\beta \circ \alpha)}`` — which ``safe_substitute`` correctly
+    # leaves untouched because ``(`` is not a valid identifier start —
+    # would be falsely flagged as unresolved placeholders.
+    remaining = re.findall(r"\$\{([_a-zA-Z][_a-zA-Z0-9]*)\}", rendered)
     if remaining:
         logger.warning(
             f"{source_md.name}: {len(remaining)} unresolved token(s): "
@@ -190,7 +196,10 @@ def validate_all_resolved(output_dir: Path) -> list[str]:
         return [f"Output directory not found: {output_dir}"]
 
     issues: list[str] = []
-    token_pattern = re.compile(r"\$\{([^}]+)\}")
+    # Match only tokens that ``string.Template`` would actually substitute:
+    # identifier-shaped names per its default ``idpattern``. This prevents
+    # false positives on LaTeX math like ``${(\beta \circ \alpha)}``.
+    token_pattern = re.compile(r"\$\{([_a-zA-Z][_a-zA-Z0-9]*)\}")
 
     for md_file in sorted(output_dir.glob("*.md")):
         if not _CHAPTER_PATTERN.match(md_file.name):

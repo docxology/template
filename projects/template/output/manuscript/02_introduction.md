@@ -64,7 +64,7 @@ No existing system addresses all six concerns within a single enforced pipeline.
 
 1. **Ergonomic Modularity**: A Two-Layer Architecture cleanly separates globally shared infrastructure (logging, rendering, validation, steganography) from project-specific logic (manuscripts, scripts, data). 13 infrastructure subpackages comprising ~271 Python modules provide reusable services; projects consume them without modification.
 
-2. **Execution Integrity**: A Zero-Mock testing policy where pipeline advancement is contingent on test passage. Infrastructure tests must achieve 60% coverage; project tests must achieve 90%. All tests use real filesystem operations, real subprocess calls, and real network connections---no mock objects, no fake services, no synthetic test doubles. ~6,026 infrastructure tests and 919+ project tests enforce this standard.
+2. **Execution Integrity**: A Zero-Mock testing policy where pipeline advancement is contingent on test passage. Infrastructure tests must achieve 60% coverage; project tests must achieve 90%. All tests use real filesystem operations, real subprocess calls, and real network connections---no mock objects, no fake services, no synthetic test doubles. ~6,021 infrastructure tests and 1258+ project tests enforce this standard.
 
 3. **Automated Provenance**: Steganographic watermarking and cryptographic hashing are integrated directly into the rendering pipeline. Every generated PDF carries a SHA-256 fingerprint, an alpha-channel text overlay encoding the build timestamp and commit hash, and optionally a QR code linking to the repository. Provenance is not asserted by policy; it is enforced by architecture.
 

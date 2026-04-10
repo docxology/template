@@ -128,6 +128,21 @@ class TestTrySavePartial:
         )
         assert result is False
 
+    def test_no_save_when_save_response_disabled(self):
+        result = try_save_partial(
+            full_response=["data"],
+            save_response=False,
+            partial_saved=False,
+            save_streaming_state_fn=lambda *a, **kw: True,
+            save_path=None,
+            model_name="m",
+            prompt="p",
+            chunk_count=1,
+            start_time=0.0,
+            context="c",
+        )
+        assert result is False
+
 
 class TestTimeoutWarningFraction:
     def test_constant_value(self):

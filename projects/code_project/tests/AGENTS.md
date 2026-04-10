@@ -9,14 +9,16 @@ The `tests/` directory contains tests for the optimization algorithms in `src/`.
 - **Real data testing**: No mocks, all tests use actual mathematical computations
 - **Numerical accuracy**: Tests verify mathematical correctness and convergence
 - **Edge case coverage**: Tests handle boundary conditions and error cases
-- **Deterministic results**: Fixed seeds ensure reproducible test outcomes
+- **Deterministic results**: Prefer fixed inputs; document or bound any random draws (see Best Practices)
 
 ## Directory Structure
 
 ```text
 tests/
 ├── __init__.py
-├── test_optimizer.py          # optimizer tests
+├── conftest.py               # PYTHONPATH, MPLBACKEND
+├── test_optimizer.py         # All project tests (39 collected)
+├── PATTERNS.md               # Parametrization notes
 ├── AGENTS.md                 # This technical documentation
 └── README.md                 # Quick reference
 ```
@@ -73,14 +75,14 @@ Tests use hardcoded parameters for consistency:
 
 - **Numerical tolerances**: `atol=1e-4`, `rtol=1e-6` for floating-point comparisons
 - **Optimization parameters**: Fixed step sizes, iteration limits, convergence tolerances
-- **Random seeds**: Not used (deterministic algorithms)
+- **Random draws**: Rare; where used (e.g. timing on large random vectors), keep assertions tolerant and avoid relying on exact RNG streams unless seeded explicitly
 - **Test data**: Simple, well-conditioned matrices and vectors
 
 ## Testing Philosophy
 
 ### Zero-Mock Policy
 
-As a core tenet of the Generalized Research Template, all tests in this exemplar enforce a strict **Zero-Mock Policy**. All validation relies on deterministic, pure computations without any mocked objects or faked side-effects. This is verified automatically in the `pyproject.toml` directives.
+As a core tenet of the Generalized Research Template, all tests in this exemplar enforce a strict **Zero-Mock Policy**. Validation uses real algorithms and data paths—no mocked objects or faked side-effects. Coverage expectations are enforced via `pyproject.toml`.
 
 - ✅ **Mathematical correctness**: Tests verify actual mathematical results
 - ✅ **Integration validation**: Tests validate function pipelines
@@ -207,7 +209,7 @@ pytest tests/ --cov=../src --cov-report=term-missing
 
 ## Best Practices
 
-- **Deterministic tests**: No random number generation in tests
+- **Deterministic tests**: Prefer fixed inputs; if random arrays are used for scale/timing checks, do not assert exact bitwise results
 - **Numerical stability**: Use appropriate tolerances for floating-point comparisons
 - **Comprehensive coverage**: Test all code paths including error conditions
 - **Clear assertions**: Use descriptive assertion messages

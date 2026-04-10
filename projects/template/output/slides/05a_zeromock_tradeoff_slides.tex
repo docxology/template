@@ -98,7 +98,7 @@ policy} is \texttt{template/}'s most distinctive design decision. By
 prohibiting all mock objects, we gain confidence that tests exercise
 real code paths---a pytest run against the template genuinely invokes
 \texttt{pandoc}, writes to disk, and parses real YAML. The cost is test
-duration: the full infrastructure test suite (\textasciitilde6,026
+duration: the full infrastructure test suite (\textasciitilde6,021
 tests) takes 2--4 minutes, compared to sub-second execution typical of
 heavily-mocked suites.
 

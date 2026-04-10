@@ -9,7 +9,7 @@ All three projects were executed through the full ten-stage DAG pipeline using t
 | Project | Stages | Duration | Tests | Coverage |
 |---------|--------|----------|-------|----------|
 | `code_project` | 7 | ~40s | 39/39 | 90%+ |
-| `cognitive_case_diagrams` | 7 | ~60s | 814/814 | 90%+ |
+| `cognitive_case_diagrams` | 7 | ~60s | 912/912 | 90%+ |
 | `template` | 7 | ~25s | 66/66 | 90%+ |
 
 **Overall success rate**: 100.0% (3/3 projects)
@@ -18,7 +18,7 @@ All three projects were executed through the full ten-stage DAG pipeline using t
 
 *Timing measured on Apple M-series hardware with SSD; analysis scripts use fixed random seeds. Figures are representative; actual duration scales with system load, test suite size, and manuscript complexity.*
 
-The `cognitive_case_diagrams` project, with its 814 tests and programmatically generated figures, represents the most computationally intensive exemplar—yet completes in under one minute, confirming that the Zero-Mock policy's real-method overhead remains tractable at this scale.
+The `cognitive_case_diagrams` project, with its 912 tests and programmatically generated figures, represents the most computationally intensive exemplar—yet completes in under one minute, confirming that the Zero-Mock policy's real-method overhead remains tractable at this scale.
 
 ## Infrastructure Test Suite
 
@@ -27,7 +27,7 @@ The infrastructure layer is validated by a separate test suite of significant sc
 | Metric | Value |
 |--------|-------|
 | Test files | 346+ |
-| Total tests | ~6,026 |
+| Total tests | ~6,021 |
 | Infrastructure coverage threshold | 60% (achieved: 83%+) |
 | Zero-mock violations | 0 |
 | Real filesystem operations | ✓ |
@@ -69,7 +69,7 @@ The three-tier [skill protocol](03c_documentation.md#agentic-skill-architecture)
 | PAI (`PAI.md`) | 1 (infrastructure-level) | — |
 | Human (`README.md`) | 13+ per-directory | 100% |
 
-This four-layer coverage creates 13 fully described, MCP-mappable tool endpoints that a sufficiently capable agent could invoke without any source-code access. The aggregate documentation footprint (160+ files) represents a deliberate engineering investment: each documentation file is not commentary but a specification, enforcing architectural constraints through structured natural language [@lau2025aicoding].
+This four-layer coverage creates 13 fully described, MCP-mappable tool endpoints that a sufficiently capable agent could invoke without any source-code access. The aggregate documentation footprint (163+ files) represents a deliberate engineering investment: each documentation file is not commentary but a specification, enforcing architectural constraints through structured natural language [@lau2025aicoding].
 
 ## Pipeline Stage Execution
 

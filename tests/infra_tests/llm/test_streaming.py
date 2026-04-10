@@ -11,6 +11,27 @@ from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import OllamaClientConfig
 
 
+class TestStreamingStubEdgeCases:
+    """Exercise optional stub-server stream shapes (see ``ollama_stub_server``)."""
+
+    def test_stream_query_empty_stream_completes(self, ollama_test_server):
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
+        config.base_url = ollama_test_server.url_for("/")
+        client = LLMClient(config=config)
+
+        chunks = list(client.stream_query("__OLLAMA_HTTP_EMPTY_STREAM__"))
+        assert chunks == []
+
+    def test_stream_query_malformed_line_then_valid_chunks(self, ollama_test_server):
+        config = OllamaClientConfig(auto_inject_system_prompt=False)
+        config.base_url = ollama_test_server.url_for("/")
+        client = LLMClient(config=config)
+
+        chunks = list(client.stream_query("__OLLAMA_HTTP_BAD_NDJSON_LINE__"))
+        full = "".join(chunks)
+        assert "Test response" in full
+
+
 class TestStreamingBasic:
     """Test basic streaming functionality."""
 

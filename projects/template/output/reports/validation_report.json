@@ -3,28 +3,28 @@
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
-    "Output structure": false,
+    "Output structure": true,
     "Figure registry": true
   },
   "figure_issues": [],
   "output_statistics": {
     "detailed_validation": {
       "structure": {
-        "valid": false,
+        "valid": true,
         "issues": [],
         "missing_files": [],
         "suspicious_sizes": [],
         "warnings": [],
         "directory_structure": {
           "project_combined_pdf": {
-            "exists": false,
-            "size_mb": 0.0,
-            "readable": false
+            "exists": true,
+            "size_mb": 1.13,
+            "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.54,
+            "size_mb": 1.55,
             "readable": true,
             "optional": false
           },
@@ -38,14 +38,14 @@
           "slides": {
             "exists": true,
             "files": 168,
-            "size_mb": 3.07,
+            "size_mb": 3.08,
             "readable": true,
             "optional": false
           },
           "figures": {
             "exists": true,
             "files": 4,
-            "size_mb": 0.88,
+            "size_mb": 0.89,
             "readable": true,
             "optional": false
           },
@@ -90,7 +90,7 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.54",
+          "size_mb": "1.55",
           "largest_file": "template_combined.pdf"
         },
         "web": {
@@ -102,13 +102,13 @@
         "slides": {
           "exists": true,
           "file_count": 168,
-          "size_mb": "3.07",
+          "size_mb": "3.08",
           "largest_file": "04_results_slides.pdf"
         },
         "figures": {
           "exists": true,
           "file_count": 4,
-          "size_mb": "0.88",
+          "size_mb": "0.89",
           "largest_file": "comparative_feature_matrix.png"
         },
         "data": {
@@ -153,7 +153,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 6.016565322875977,
+      "total_size_mb": 6.032271385192871,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,30 +163,23 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.543839454650879
+      "size_mb": 1.5491619110107422
     },
     "figures": {
       "files": 4,
-      "size_mb": 0.8822460174560547
+      "size_mb": 0.8873605728149414
     },
     "data": {
       "files": 1,
-      "size_mb": 0.004153251647949219
+      "size_mb": 0.00438690185546875
     }
   },
   "summary": {
     "total_checks": 4,
-    "passed": 3,
-    "failed": 1,
+    "passed": 4,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "high",
-      "issue": "Missing output directories",
-      "action": "Ensure all analysis scripts completed successfully",
-      "file": "projects/template/output/"
-    }
-  ]
+  "recommendations": []
 }

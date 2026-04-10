@@ -11,9 +11,13 @@ uv run python projects/code_project/scripts/optimization_analysis.py
 # Run tests
 uv run pytest projects/code_project/tests/ -v
 
-# View generated outputs
-ls -la output/
+# View final deliverables (after scripts/05_copy_outputs.py)
+ls -la output/code_project/
 ```
+
+## Dependencies
+
+Run `uv sync` at the **repository root**; that environment is what CI and `./run.sh` use. [`pyproject.toml`](pyproject.toml) in this directory configures pytest/coverage for `projects/code_project/tests/` and records the same scientific stack for isolated runs. Root [`pyproject.toml`](../../pyproject.toml) has `[tool.uv.workspace]` with `members = []`, so this folder is not installed as a separate workspace package.
 
 ## Key Features
 
@@ -86,7 +90,7 @@ graph TD
 
 ✅ **Fully compliant** with template development standards:
 
-- **Testing**: 100% coverage (45 tests), real data only, no mocks
+- **Testing**: ~96% coverage on `src/` (39 tests), real data only, no mocks
 - **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
 - **Code Quality**: Black formatting, descriptive naming, proper imports

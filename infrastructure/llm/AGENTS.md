@@ -80,15 +80,18 @@ Common variables:
 
 ## Testing
 
-Use real code paths and the repository’s no-mocks policy.
+Use real code paths and the repository’s no-mocks policy (`MagicMock` / `unittest.mock.patch` are not used in this suite).
 
-- Deterministic tests should exercise config loading, prompt helpers, validators, and utility functions.
-- Real-daemon smoke tests should use `@pytest.mark.requires_ollama`.
-- CLI tests should invoke the module with `uv run python -m infrastructure.llm.cli ...` when end-to-end behavior matters.
+- **Deterministic HTTP:** [`tests/infra_tests/llm/conftest.py`](../../tests/infra_tests/llm/conftest.py) starts `pytest_httpserver` and, by default, points `OLLAMA_HOST` at it (`patch_llm_client_for_tests`). POST `/api/chat` behavior lives in [`tests/infra_tests/llm/ollama_stub_server.py`](../../tests/infra_tests/llm/ollama_stub_server.py).
+- **Subprocess helpers:** [`utils/server.py`](utils/server.py) `pull_ollama_model` accepts optional `which` / `run` so tests can use real stub scripts instead of patching imports.
+- **Real daemon:** mark tests with `@pytest.mark.requires_ollama` for local Ollama smoke checks.
+- **CLI:** invoke with `uv run python -m infrastructure.llm.cli ...` when end-to-end behavior matters.
 
-Run the relevant suite with:
+There is no separate `cov-fail-under` for `infrastructure.llm` alone in `pyproject.toml`; the whole infrastructure gate applies. Re-measure the LLM package with:
 
 ```bash
+uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" \
+  --cov=infrastructure.llm --cov-report=term-missing --cov-fail-under=0
 uv run pytest tests/infra_tests/llm/ -v
 uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 ```

@@ -2,9 +2,9 @@
 
 Comprehensive tests covering functionality, edge cases, and numerical accuracy.
 
-> **Template Exemplar Note**: This module strictly enforces the template's Zero-Mock
-> policy and is designed to guarantee the 100% coverage requirement defined in
-> `pyproject.toml`.
+> **Template Exemplar Note**: This module enforces the Zero-Mock policy and targets
+> high coverage on `src/` (≥90% gate in `pyproject.toml`; typically ~96% with the
+> current suite).
 """
 
 import functools

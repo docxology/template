@@ -10,9 +10,12 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# Add repo root to Python path
-repo_root = Path(__file__).parent.parent
-sys.path.insert(0, str(repo_root))
+# Bootstrap: put repo root on sys.path so `infrastructure` is importable when
+# this script is invoked directly. See scripts/__init__.py for the idempotent
+# helper available to callers that already import the `scripts` package.
+repo_root = Path(__file__).resolve().parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator

@@ -7,7 +7,11 @@ This thin orchestrator coordinates the validation stage:
 3. Verifies file integrity
 4. Generates validation report
 
-Stage 5 of the pipeline orchestration.
+Stage 04 of the pipeline orchestration.
+
+Exit codes:
+    0: All critical validations passed (PDFs present, markdown well-formed)
+    1: At least one critical validation failed
 """
 
 from __future__ import annotations

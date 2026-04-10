@@ -12,6 +12,10 @@ from infrastructure.core.files.operations import (
     calculate_file_hash,
     copy_final_deliverables,
 )
+from infrastructure.core.files.pdf_locator import (
+    find_combined_pdf,
+    find_last_output_segment_index,
+)
 
 __all__ = [
     "CopyStats",
@@ -20,4 +24,6 @@ __all__ = [
     "calculate_file_hash",
     "clean_output_directories",
     "copy_final_deliverables",
+    "find_combined_pdf",
+    "find_last_output_segment_index",
 ]

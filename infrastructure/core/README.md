@@ -187,7 +187,7 @@ flowchart TD
 | **logging/utils.py** | Unified logging system with environment config | `get_logger()`, `setup_logger()`, `log_operation()`, `log_timing()`, `log_function_call()` |
 | **config/loader.py** | YAML config loading with environment overrides | `load_config()`, `get_config_as_dict()`, `get_config_as_env_vars()`, `find_config_file()` |
 | **runtime/health_check.py** | System health monitoring and component status | `SystemHealthChecker`, `get_health_api()`, `quick_health_check()`, `get_health_status()` |
-| **security.py** | Input validation and security monitoring | `SecurityValidator`, `get_security_headers()`, `RateLimiter`, `validate_llm_input()` |
+| **security.py** | Input validation and security monitoring | `SecurityValidator`, `get_security_headers()`, `get_cors_headers()`, `RateLimiter`, `SecurityMonitor` |
 | **progress.py** | Progress tracking with visual indicators | `ProgressBar`, `LLMProgressTracker`, `SubStageProgress` |
 | **runtime/checkpoint.py** | Pipeline state management for resume capability | `CheckpointManager`, `PipelineCheckpoint`, `StageResult` |
 | **runtime/retry.py** | Exponential backoff retry logic | `retry_with_backoff()`, `RetryableOperation` |

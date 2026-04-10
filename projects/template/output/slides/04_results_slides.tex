@@ -133,7 +133,7 @@ Project & Stages & Duration & Tests & Coverage \\
 \midrule\noalign{}
 \endhead
 \texttt{code\_project} & 7 & \textasciitilde40s & 39/39 & 90\%+ \\
-\texttt{cognitive\_case\_diagrams} & 7 & \textasciitilde60s & 814/814 &
+\texttt{cognitive\_case\_diagrams} & 7 & \textasciitilde60s & 912/912 &
 90\%+ \\
 \texttt{template} & 7 & \textasciitilde25s & 66/66 & 90\%+ \\
 \bottomrule\noalign{}
@@ -149,7 +149,7 @@ scripts use fixed random seeds. Figures are representative; actual
 duration scales with system load, test suite size, and manuscript
 complexity.}
 
-The \texttt{cognitive\_case\_diagrams} project, with its 814 tests and
+The \texttt{cognitive\_case\_diagrams} project, with its 912 tests and
 programmatically generated figures, represents the most computationally
 intensive exemplar---yet completes in under one minute, confirming that
 the Zero-Mock policy's real-method overhead remains tractable at this
@@ -168,7 +168,7 @@ Metric & Value \\
 \midrule\noalign{}
 \endhead
 Test files & 346+ \\
-Total tests & \textasciitilde6,026 \\
+Total tests & \textasciitilde6,021 \\
 Infrastructure coverage threshold & 60\% (achieved: 83\%+) \\
 Zero-mock violations & 0 \\
 Real filesystem operations & ✓ \\
@@ -267,7 +267,7 @@ Human (\texttt{README.md}) & 13+ per-directory & 100\% \\
 
 This four-layer coverage creates 13 fully described, MCP-mappable tool
 endpoints that a sufficiently capable agent could invoke without any
-source-code access. The aggregate documentation footprint (160+ files)
+source-code access. The aggregate documentation footprint (163+ files)
 represents a deliberate engineering investment: each documentation file
 is not commentary but a specification, enforcing architectural
 constraints through structured natural language {[}@lau2025aicoding{]}.

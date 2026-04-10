@@ -836,11 +836,12 @@ The template includes enterprise-grade security features:
 **Usage:**
 
 ```python
-from infrastructure.core.runtime.security import validate_llm_input, get_security_validator
+from infrastructure.llm.core.sanitization import sanitize_llm_input
+from infrastructure.core.security import get_security_validator
 from infrastructure.core.runtime.health_check import quick_health_check, get_health_status
 
 # Validate LLM input
-sanitized = validate_llm_input(user_prompt)
+sanitized = sanitize_llm_input(user_prompt)
 
 # Check system health
 if quick_health_check():

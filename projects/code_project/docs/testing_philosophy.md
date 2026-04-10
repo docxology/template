@@ -6,7 +6,7 @@ The Generalized Research Template strictly forbids mocking in scientific/mathema
 
 The `code_project` implements a robust validation suite (`tests/`) that strictly adheres to these standards:
 
-- **100% Test Coverage**: Enforced via `pyproject.toml`, ensuring no logic escapes validation. The `code_project` currently sustains a 45-test suite over the `optimizer.py` and reporting scripts.
+- **Coverage gate**: `projects/code_project/pyproject.toml` enforces ≥90% on `src/` during pytest runs. The suite currently collects **39** tests covering `optimizer.py` and, via imports, thin orchestration in `scripts/optimization_analysis.py`.
 - **Pure Computations**: Every test computes real gradients and performs actual gradient descent iterations.
 - **Integration without Mocks**: Infrastructure integrations (like performance tracking) are tested via dependency injection, not mocks.
 

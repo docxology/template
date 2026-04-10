@@ -11,6 +11,10 @@ Stage 01 of the pipeline orchestration.
 
 Note: For separate infrastructure/project test runs, use ./run.sh which
 provides an interactive menu with options 1 (infrastructure) and 2 (project).
+
+Exit codes:
+    0: All required tests passed
+    1: Project tests failed (infrastructure failures are logged but non-fatal)
 """
 
 from __future__ import annotations

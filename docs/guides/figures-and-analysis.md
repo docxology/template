@@ -79,10 +79,10 @@ By the end of this guide, you'll be able to:
 The template includes example scripts:
 
 ```bash
-# Generate basic example figure
-uv run python projects/code_project/scripts/example_figure.py
+# Run exemplar analysis script (figures + data under project output/)
+uv run python projects/code_project/scripts/optimization_analysis.py
 
-# Generate research-quality figures
+# Or run all project scripts via the pipeline stage
 uv run python scripts/02_run_analysis.py --project code_project
 ```
 
@@ -612,10 +612,11 @@ uv run python projects/code_project/scripts/correlation_analysis.py
 uv run python projects/code_project/scripts/statistics_figure.py
 
 # 3. Build specific sections
+# NOTE: paths below are illustrative — substitute your actual manuscript section.
 echo "Building results section..."
 pandoc projects/code_project/manuscript/04_experimental_results.md \
     -o projects/code_project/output/pdf/04_experimental_results.pdf \
-    --pdf-engine=xelatex
+    --pdf-engine=xelatex  # example output path
 
 echo "Custom build!"
 ```

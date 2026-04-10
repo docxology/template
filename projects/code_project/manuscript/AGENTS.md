@@ -1,58 +1,50 @@
 ---
-title: "Agentic Protocol: Code Project Exemplar"
-type: "system_prompt"
-version: "2.0"
+title: "Manuscript directory: code_project"
+type: "manuscript_guide"
+version: "2.1"
 ---
 
-## `code_project` AI Instructions
+# Manuscript (`projects/code_project/manuscript/`)
 
-This document defines the strict behavioral standards for any AI agent interacting with the `code_project` directory. This project is the **master exemplar** for the Generalized Research Template.
+Repository-wide agent rules for this exemplar live in [`../docs/agent_instructions.md`](../docs/agent_instructions.md). This file covers **manuscript-specific** editing and how these files connect to the build.
 
-## 1. Project Identity
+## Contents
 
-This is not an isolated python script; it is a heavily-integrated, production-grade optimization study explicitly acting as a self-referential exemplar. As you modify it, you must maintain a "show, not tell" meta-narrative linking the scientific prose directly to the physical files operating inside the codebase.
+| File / pattern | Role |
+| --- | --- |
+| `00_abstract.md` … `07_scope_and_related_work.md` | Section sources combined by the renderer |
+| `SYNTAX.md` | Citation, figure, and cross-reference syntax |
+| `config.yaml`, `config.yaml.example` | Paper metadata and pipeline options |
+| `preamble.md` | LaTeX preamble shared by PDF output |
+| `references.bib` | Bibliography |
 
-* **Primary Objective**: To demonstrate how a theoretical mathematical algorithm (Gradient Descent) is implemented, validated, and published using the `infrastructure`, `tests`, and `docs` layers of the repository.
-* **Operating Principle**: Do not invent parallel systems. You must utilize the existing repository infrastructure.
+Variable placeholders (e.g. `{{CONFIG_*}}`, `{{RESULT_*}}`) are filled from pipeline data; see [`../scripts/z_generate_manuscript_variables.py`](../scripts/z_generate_manuscript_variables.py) and generated JSON under `projects/code_project/output/data/`.
 
-## 2. The Zero-Mock Testing Policy
+## RASP conventions (short)
 
-This is the most critical constraint in the repository.
+1. Avoid boilerplate closers such as “In summary” / “In conclusion” at the end of sections unless the section genuinely needs them.
+2. Figures and numbers in `03_results.md` must match what `scripts/optimization_analysis.py` writes (paths under `projects/code_project/output/figures/` and related CSV/JSON).
+3. When referencing template code, prefer concrete paths or URLs (e.g. [`infrastructure/core`](https://github.com/docxology/template/tree/main/infrastructure/core)) over vague module dotted paths alone.
 
-1. **NO MOCKS**: You are strictly forbidden from using `unittest.mock` or generating synthetic "fake" data to bypass tests.
-2. **Real Execution Only**: All tests in `tests/` must execute the actual scientific logic against real configurations.
-3. **≥90% Coverage Gate**: The CI pipeline will reject any push that drops statement coverage below 90%. If you write a line of code, you must execute it with a test.
-4. **Hermetic Boundaries**: Execution must be contained by the fixtures in `tests/conftest.py`.
+## Infrastructure coupling (scripts, not `src/`)
 
-## 3. Infrastructure Coupling
+Orchestrators under `projects/code_project/scripts/` should use `infrastructure.core.logging.utils.get_logger(__name__)` (same pattern as `optimization_analysis.py`). Scientific checks should go through `infrastructure.scientific` helpers where applicable.
 
-When modifying python logic in `scripts/`, you must route functionality through the `infrastructure` modules:
+## Workflow when changing behavior and prose
 
-* **Logging**: Use `infrastructure.core.logging.utils.ProjectLogger`. NEVER use print().
-* **Validation**: Use `infrastructure.scientific.stability.check_numerical_stability` instead of manual NaN checks.
-* **Benchmarking**: Use `infrastructure.scientific.benchmarking.benchmark_function` instead of manual `time.time()` tracking.
-* **Configuration**: Rely on `infrastructure.core.config.loader.load_config()`.
+1. Update the mathematical or experimental description in `02_methodology.md` / `05_experimental_setup.md` as needed.
+2. Add or extend tests in `projects/code_project/tests/test_optimizer.py` (there is no separate `tests/integration/` tree in this project).
+3. Regenerate analysis outputs, then refresh manuscript sections that cite numbers or figure filenames.
+4. From the **repository root**:
 
-## 4. Manuscript & Rendering (RASP Standard)
+```bash
+uv run python projects/code_project/scripts/optimization_analysis.py
+uv run python scripts/03_render_pdf.py --project code_project
+```
 
-This project strictly adheres to the Rigorous Agentic Scientific Protocol (RASP) for documentation.
+Final deliverables appear under `output/code_project/` after `scripts/05_copy_outputs.py` (working files remain under `projects/code_project/output/` during the run).
 
-1. **No Extraneous Summaries**: Do not add "In summary" or "In conclusion" to the ends of markdown sections.
-2. **LaTeX Integration**: Assume the manuscript files (`00_abstract.md`, etc.) are pre-processed by `preamble.md` and `config.yaml` before pandoc conversion.
-3. **Visualization Coupling**: If you change a visualization in `scripts/optimization_analysis.py`, you MUST update the corresponding caption in `03_results.md` to reflect the exact data shown.
-4. **Self-Referential Linking**: Whenever discussing a framework component in the text, link directly to its physical location, e.g., `[infrastructure core modules](https://github.com/docxology/template/tree/main/infrastructure/core)`.
+## See also
 
-## 5. Development Workflow
-
-If tasked to add a new algorithm or feature, follow this exact sequence:
-
-1. Read the relevant `infrastructure` code first (`view_file`).
-2. Update the mathematical model in `02_methodology.md`.
-3. Write the failing test in `tests/integration/` demonstrating the requirement.
-4. Implement the logic in `scripts/`, utilizing `infrastructure.scientific`.
-5. Execute `pytest` locally to verify zero-mock success.
-6. Regenerate visualizations via `python3 scripts/optimization_analysis.py`.
-7. Update `03_results.md`, `04_conclusion.md`, and (if scope or citations change) `07_scope_and_related_work.md`.
-8. Re-render the manuscript via `python3 scripts/03_render_pdf.py` to ensure pandoc compatibility.
-
-**Failure to adhere to these protocol standards will result in immediate rejection by the infrastructure validation gates.**
+- [`README.md`](README.md) — Quick orientation
+- [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Manuscript → PDF flow

@@ -8,12 +8,16 @@ This thin orchestrator coordinates the executive reporting stage:
 4. Creates visual dashboards (PNG/PDF/HTML)
 5. Saves reports to output/executive_summary/
 
-Stage 10 of the pipeline orchestration (optional, multi-project only).
+Stage 07 of the pipeline orchestration (optional, multi-project only).
 
 Architecture:
     This is a generic entry point orchestrator (Layer 1 - Infrastructure).
     It coordinates executive reporting without implementing business logic.
     Follows thin orchestrator pattern - all logic in infrastructure modules.
+
+Exit codes:
+    0: Executive report generated (or gracefully no-op'd in single-project mode)
+    1: Executive report generation failed
 """
 
 from __future__ import annotations

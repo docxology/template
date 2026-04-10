@@ -43,7 +43,7 @@ branch = true
 omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
 
 [tool.coverage.report]
-# Zero-mock exemplar demands 100% coverage, though baseline templates tolerate 90%
+# ≥90% on src/ is the enforced gate; this exemplar usually lands ~96% line/branch
 fail_under = 90
 show_missing = true
 precision = 2

@@ -6,88 +6,47 @@ The `infrastructure/llm/core/` directory contains the fundamental components of 
 
 ## Directory Structure
 
-```
+```text
 infrastructure/llm/core/
-├── AGENTS.md               # This technical documentation
-├── __init__.py            # Package exports
-├── client.py              # Main LLMClient class and query methods
-├── config.py              # Configuration management and options
-└── context.py             # Conversation context and message handling
+├── AGENTS.md
+├── __init__.py           # Re-exports LLMClient, ResponseMode
+├── client.py             # LLMClient class (composition root)
+├── _connection.py        # _ConnectionMixin — HTTP, retries, generate_response, stream entry
+├── _structured_queries.py # _StructuredQueryMixin — query_structured, JSON parsing
+├── _stream_impl.py       # stream_query_impl — requests streaming, metrics, partial save hooks
+├── _stream_helpers.py    # save_partial_if_needed, try_save_partial, TIMEOUT_WARNING_FRACTION
+├── response_saver.py     # Persist streaming / blocking responses to disk
+├── sanitization.py       # sanitize_llm_input
+├── config.py             # OllamaClientConfig, GenerationOptions, ResponseMode
+├── context.py            # ConversationContext
+├── log_preview.py        # Safe log previews for prompts
+├── _prompt_availability.py
+└── _text_utils.py
 ```
 
 ## Key Components
 
-### LLMClient (`client.py`)
+### `LLMClient` (`client.py` + mixins)
 
-**Main interface for interacting with Large Language Models:**
+The public class is declared as:
 
-#### Core Functionality
-
-**Client Initialization:**
 ```python
-class LLMClient:
-    """Main interface for LLM queries and interactions."""
-
-    def __init__(self, config: Optional[OllamaClientConfig] = None):
-        """Initialize with configuration."""
-        self.config = config or OllamaClientConfig.from_env()
-        self.context = ConversationContext()
-        self._check_connection()
+class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
+    ...
 ```
 
-**Query Methods:**
-```python
-def query(self, prompt: str, options: Optional[GenerationOptions] = None) -> str:
-    """Standard conversational query with context management."""
+Authoritative method and parameter lists (including streaming-only kwargs such as
+`save_response`, `save_path`, `retries`) live in the docstring of `LLMClient` in
+[`client.py`](client.py) and in [`_connection.py`](_connection.py) /
+[`_structured_queries.py`](_structured_queries.py) / [`_stream_impl.py`](_stream_impl.py).
 
-def query_short(self, prompt: str, options: Optional[GenerationOptions] = None) -> str:
-    """Short response query (< 150 tokens)."""
+**Error model:** connection and transport failures surface as
+`LLMConnectionError` from `infrastructure.core.exceptions` after retries where
+implemented. Streaming malformed NDJSON lines are logged at WARNING and skipped
+(see `_stream_impl.py`).
 
-def query_long(self, prompt: str, options: Optional[GenerationOptions] = None) -> str:
-    """Long response query (> 500 tokens)."""
-
-def query_structured(self, prompt: str, schema: dict,
-                    options: Optional[GenerationOptions] = None) -> dict:
-    """JSON-structured response with schema validation."""
-```
-
-**Streaming Support:**
-```python
-def stream_query(self, prompt: str, options: Optional[GenerationOptions] = None) -> Iterator[str]:
-    """Stream response in real-time."""
-
-def stream_short(self, prompt: str, options: Optional[GenerationOptions] = None) -> Iterator[str]:
-    """Stream short responses."""
-
-def stream_long(self, prompt: str, options: Optional[GenerationOptions] = None) -> Iterator[str]:
-    """Stream long responses."""
-```
-
-**Context Management:**
-```python
-def set_system_prompt(self, prompt: str):
-    """Set new system prompt and reset context."""
-
-def reset(self):
-    """Reset conversation context."""
-
-def _inject_system_prompt(self, messages: List[dict]) -> List[dict]:
-    """Inject system prompt into message list."""
-```
-
-#### Response Processing
-
-**Thinking Tag Handling:**
-```python
-def strip_thinking_tags(response: str) -> str:
-    """Remove thinking/reasoning tags from LLM responses.
-
-    Handles various thinking tag formats:
-    - <thinking>...</thinking>
-    - <reasoning>...</reasoning>
-    - <thought>...</thought>
-    """
-```
+**Thinking tags:** `strip_thinking_tags` and related helpers are defined next to
+the client implementation in [`client.py`](client.py).
 
 ### OllamaClientConfig (`config.py`)
 

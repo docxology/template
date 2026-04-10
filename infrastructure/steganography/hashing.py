@@ -83,7 +83,7 @@ def write_hash_manifest(
     try:
         _tmp.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
         _tmp.replace(output_path)
-    except Exception:
+    except Exception:  # noqa: BLE001 — atomic-write cleanup; any failure must unlink the temp file before re-raising to the caller
         _tmp.unlink(missing_ok=True)
         raise
     logger.info(f"Hash manifest written → {output_path}")

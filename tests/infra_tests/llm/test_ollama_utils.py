@@ -4,6 +4,8 @@ Tests Ollama utility functions for model discovery and server management.
 These tests run against a real Ollama installation when available.
 """
 
+from pathlib import Path
+
 import pytest
 
 from infrastructure.llm.utils.ollama import (
@@ -412,56 +414,51 @@ class TestSmallFastPreferenceMatches:
         assert small_fast_preference_matches([]) is False
 
 
+def _ollama_stub(tmp_path: Path, sh_body: str) -> Path:
+    """Write a POSIX ``ollama`` stub script and return its path."""
+    exe = tmp_path / "ollama"
+    exe.write_text("#!/bin/sh\nset -e\n" + sh_body)
+    exe.chmod(0o755)
+    return exe
+
+
 class TestPullOllamaModel:
-    """Unit tests for pull_ollama_model (monkeypatched; no network)."""
+    """``pull_ollama_model`` with real stub scripts and injectable ``which`` (no import patching)."""
 
-    def test_pull_returns_false_when_ollama_missing(self, monkeypatch):
-        monkeypatch.setattr("infrastructure.llm.utils.server.shutil.which", lambda _: None)
-
-        ok, err = pull_ollama_model("smollm2", timeout=1.0)
+    def test_pull_returns_false_when_ollama_missing(self):
+        ok, err = pull_ollama_model("smollm2", timeout=1.0, which=lambda _cmd: None)
         assert ok is False
         assert err is not None
         assert "PATH" in err
 
-    def test_pull_success_on_zero_exit(self, monkeypatch):
-        import subprocess
-
-        monkeypatch.setattr("infrastructure.llm.utils.server.shutil.which", lambda _: "/bin/ollama")
-
-        def fake_run(cmd, **kwargs):
-            assert cmd == ["/bin/ollama", "pull", "smollm2"]
-            assert kwargs.get("timeout") == 5.0
-            return subprocess.CompletedProcess(cmd, 0, "", "")
-
-        monkeypatch.setattr("infrastructure.llm.utils.server.subprocess.run", fake_run)
-        ok, err = pull_ollama_model("smollm2", timeout=5.0)
+    def test_pull_success_on_zero_exit(self, tmp_path):
+        stub = _ollama_stub(tmp_path, 'test "$1" = pull && test "$2" = smollm2\nexit 0\n')
+        ok, err = pull_ollama_model(
+            "smollm2",
+            timeout=5.0,
+            which=lambda cmd: str(stub) if cmd == "ollama" else None,
+        )
         assert ok is True
         assert err is None
 
-    def test_pull_failure_on_nonzero_exit(self, monkeypatch):
-        import subprocess
-
-        monkeypatch.setattr("infrastructure.llm.utils.server.shutil.which", lambda _: "/bin/ollama")
-
-        def fake_run(cmd, **kwargs):
-            return subprocess.CompletedProcess(cmd, 1, "", "network error")
-
-        monkeypatch.setattr("infrastructure.llm.utils.server.subprocess.run", fake_run)
-        ok, err = pull_ollama_model("smollm2", timeout=5.0)
+    def test_pull_failure_on_nonzero_exit(self, tmp_path):
+        stub = _ollama_stub(tmp_path, 'echo network error >&2\nexit 1\n')
+        ok, err = pull_ollama_model(
+            "smollm2",
+            timeout=5.0,
+            which=lambda cmd: str(stub) if cmd == "ollama" else None,
+        )
         assert ok is False
         assert err is not None
         assert "network error" in err
 
-    def test_pull_timeout(self, monkeypatch):
-        import subprocess
-
-        monkeypatch.setattr("infrastructure.llm.utils.server.shutil.which", lambda _: "/bin/ollama")
-
-        def boom(*_a, **_kw):
-            raise subprocess.TimeoutExpired("ollama", 1.0)
-
-        monkeypatch.setattr("infrastructure.llm.utils.server.subprocess.run", boom)
-        ok, err = pull_ollama_model("smollm2", timeout=1.0)
+    def test_pull_timeout(self, tmp_path):
+        stub = _ollama_stub(tmp_path, "sleep 30\nexit 0\n")
+        ok, err = pull_ollama_model(
+            "smollm2",
+            timeout=0.3,
+            which=lambda cmd: str(stub) if cmd == "ollama" else None,
+        )
         assert ok is False
         assert err is not None
         assert "timed out" in err.lower()

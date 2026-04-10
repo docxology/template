@@ -6,6 +6,8 @@
 
 For common issues and solutions, see [llm-review.md](llm-review.md). This document covers environment variables, diagnostic commands, and performance optimization.
 
+Default pytest runs for `tests/infra_tests/llm/` use HTTP stubs, not your daemon; see the “Deterministic tests” section in [llm-review.md](llm-review.md).
+
 ---
 
 ## Environment Variables

@@ -18,11 +18,9 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `execute_multi_project.py` - multi-project pipeline runner
 - `audit_filepaths.py` - repository filepath audit
 - `generate_active_projects_doc.py` - derived project inventory documentation
-- `generate_pipeline_reports.py` - pipeline report helper
-- `generate_test_summary.py` - test summary helper
 - `organize_executive_outputs.py` - executive output organizer
 - `manage_workspace.py` - workspace helper
-- `show_project_info.py` - project metadata helper
+- `show_project_info.py` - project metadata helper (used by `run.sh` interactive menu)
 - `verify_no_mocks.py` - mock-usage checker
 
 ## Stage Mapping

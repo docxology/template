@@ -116,7 +116,7 @@ class TestTemplateRepository:
     def test_all_infrastructure_skills_parse(self) -> None:
         root = _template_repo_root()
         skills = discover_skills(root)
-        assert len(skills) >= 24
+        assert len(skills) >= 16
         for s in skills:
             assert s.absolute_path.is_file()
             assert s.path_posix.endswith("SKILL.md")

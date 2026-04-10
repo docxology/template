@@ -8,7 +8,11 @@ infrastructure rendering module:
 3. Validates generated outputs
 4. Reports rendering results
 
-Stage 3 of the pipeline orchestration.
+Stage 03 of the pipeline orchestration.
+
+Exit codes:
+    0: PDF/web/slides rendering completed for all manuscript sections
+    1: Rendering pipeline failed (missing LaTeX, pandoc, or source files)
 """
 
 from __future__ import annotations

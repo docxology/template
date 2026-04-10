@@ -9,6 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, TypedDict
 
+from infrastructure.core.files.pdf_locator import find_combined_pdf as _find_combined_pdf
 from infrastructure.core.logging.utils import get_logger, log_success
 
 
@@ -37,51 +38,6 @@ class ValidationResultDict(TypedDict):
     recommendations: list[Any]
 
 logger = get_logger(__name__)
-
-
-def _find_combined_pdf(output_dir: Path, project_name: str) -> tuple[Path, float] | None:
-    """Locate the combined PDF for a project, checking three locations.
-
-    Search order:
-    1. ``output_dir/{project_name}_combined.pdf`` (root, post-copy)
-    2. ``output_dir/pdf/{project_name}_combined.pdf`` (original generation location)
-    3. ``projects/{project_name}/output/pdf/{project_name}_combined.pdf`` (source, pre-copy)
-
-    Returns:
-        Tuple of (path, size_mb) if found, or None if not found in any location.
-    """
-    filename = f"{project_name}_combined.pdf"
-
-    # 1. Root directory (after copy outputs stage)
-    root_pdf = output_dir / filename
-    if root_pdf.exists() and root_pdf.stat().st_size > 0:
-        return root_pdf, root_pdf.stat().st_size / (1024 * 1024)
-
-    # 2. pdf/ subdirectory (original generation location)
-    pdf_dir = output_dir / "pdf"
-    if pdf_dir.exists():
-        pdf_in_dir = pdf_dir / filename
-        if pdf_in_dir.exists() and pdf_in_dir.stat().st_size > 0:
-            return pdf_in_dir, pdf_in_dir.stat().st_size / (1024 * 1024)
-
-    # 3. Source project directory (for Stage 6 validation before copy)
-    path_parts = output_dir.parts
-    if "output" in path_parts:
-        # Use rindex (last occurrence) so a parent dir named 'output' doesn't corrupt the path.
-        output_idx = len(path_parts) - 1 - path_parts[::-1].index("output")
-        repo_root = Path(*path_parts[:output_idx])
-        qualified_path = "/".join(path_parts[output_idx + 1:])
-        source_pdf_dir = repo_root / "projects" / qualified_path / "output" / "pdf"
-    else:
-        source_pdf_dir = output_dir.parent.parent / "projects" / project_name / "output" / "pdf"
-
-    logger.debug("PDF not found in output directory, checking source: %s", source_pdf_dir.parent)
-    if source_pdf_dir.exists():
-        source_pdf = source_pdf_dir / filename
-        if source_pdf.exists() and source_pdf.stat().st_size > 0:
-            return source_pdf, source_pdf.stat().st_size / (1024 * 1024)
-
-    return None
 
 
 def validate_copied_outputs(output_dir: Path) -> bool:
@@ -411,11 +367,15 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
         return result
 
     # Check combined PDF using shared location logic
-    project_name = (
-        output_dir.name
-        if output_dir.parent.name == "output" and output_dir.name != "output"
-        else None
-    )
+    path_parts = output_dir.parts
+    if output_dir.name == "output" and len(path_parts) >= 3 and path_parts[-3] == "projects":
+        # Handle source project directory (e.g. projects/{name}/output)
+        project_name = output_dir.parent.name
+    elif output_dir.parent.name == "output" and output_dir.name != "output":
+        # Handle copied root directory (e.g. output/{name})
+        project_name = output_dir.name
+    else:
+        project_name = None
 
     combined_pdf_found = False
     pdf_file = None

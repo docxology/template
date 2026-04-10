@@ -42,6 +42,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+coverage.json
 *.cover
 .hypothesis/
 
@@ -93,3 +94,4 @@ projects/*
 .desloppify
 /.desloppify
 /projects/fep_lean
+/.claude

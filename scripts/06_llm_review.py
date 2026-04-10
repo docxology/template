@@ -9,13 +9,19 @@ This thin orchestrator coordinates the LLM review stage:
 5. Validates review quality and retries if needed
 6. Saves all reviews to output/llm/ with detailed metrics
 
-Stage 8/9 of the pipeline orchestration - uses local Ollama LLM for
-manuscript analysis and review generation.
+Stage 06 of the pipeline orchestration (reviews and translations) - uses
+local Ollama LLM for manuscript analysis and review generation.
 
 CLI Usage:
 - python3 scripts/06_llm_review.py                # Run both reviews and translations
 - python3 scripts/06_llm_review.py --reviews-only # Run only English scientific reviews
 - python3 scripts/06_llm_review.py --translations-only # Run only translations
+
+Exit codes:
+    0: LLM review/translation completed successfully
+    1: LLM pipeline failed hard (configuration error, unrecoverable runtime error)
+    2: LLM stage skipped gracefully (Ollama unavailable, no model installed) — callers
+       should treat this as a non-fatal soft-skip rather than a failure
 """
 
 from __future__ import annotations

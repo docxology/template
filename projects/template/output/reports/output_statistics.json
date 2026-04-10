@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.54",
-      "total_size_bytes": 1618833,
+      "size_mb": "1.55",
+      "total_size_bytes": 1624414,
       "largest_files": [
         {
           "name": "template_combined.pdf",
-          "size_mb": "1.12",
+          "size_mb": "1.13",
           "path": "pdf/template_combined.pdf"
         },
         {
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 23,
       "size_mb": "0.51",
-      "total_size_bytes": 537432,
+      "total_size_bytes": 537435,
       "largest_files": [
         {
           "name": "index.html",
@@ -64,8 +64,8 @@
     "slides": {
       "exists": true,
       "file_count": 168,
-      "size_mb": "3.07",
-      "total_size_bytes": 3220315,
+      "size_mb": "3.08",
+      "total_size_bytes": 3225600,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
@@ -97,8 +97,8 @@
     "figures": {
       "exists": true,
       "file_count": 4,
-      "size_mb": "0.88",
-      "total_size_bytes": 925102,
+      "size_mb": "0.89",
+      "total_size_bytes": 930465,
       "largest_files": [
         {
           "name": "comparative_feature_matrix.png",
@@ -107,7 +107,7 @@
         },
         {
           "name": "architecture_overview.png",
-          "size_mb": "0.24",
+          "size_mb": "0.25",
           "path": "figures/architecture_overview.png"
         },
         {
@@ -124,7 +124,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 4355,
+      "total_size_bytes": 4600,
       "largest_files": [
         {
           "name": "metrics.json",
@@ -140,7 +140,7 @@
       "exists": true,
       "file_count": 4,
       "size_mb": "0.01",
-      "total_size_bytes": 5509,
+      "total_size_bytes": 5307,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -183,7 +183,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2465,
+      "total_size_bytes": 2455,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -197,11 +197,11 @@
     }
   },
   "total_files": 211,
-  "total_size_mb": 6.021510124206543,
+  "total_size_mb": 6.037021636962891,
   "largest_files": [
     {
       "name": "template_combined.pdf",
-      "size_mb": "1.12",
+      "size_mb": "1.13",
       "category": "pdf",
       "path": "pdf/template_combined.pdf"
     },
@@ -219,7 +219,7 @@
     },
     {
       "name": "architecture_overview.png",
-      "size_mb": "0.24",
+      "size_mb": "0.25",
       "category": "figures",
       "path": "figures/architecture_overview.png"
     },
@@ -262,15 +262,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.543839454650879,
-    "web": 0.5125350952148438,
-    "slides": 3.071131706237793,
-    "figures": 0.8822460174560547,
-    "data": 0.004153251647949219,
-    "reports": 0.005253791809082031,
+    "pdf": 1.5491619110107422,
+    "web": 0.512537956237793,
+    "slides": 3.076171875,
+    "figures": 0.8873605728149414,
+    "data": 0.00438690185546875,
+    "reports": 0.005061149597167969,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0023508071899414062
+    "logs": 0.0023412704467773438
   },
   "file_counts_by_type": {
     ".md": 4,

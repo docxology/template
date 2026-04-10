@@ -2,23 +2,18 @@
  TELEMETRY REPORT: code_project
 ========================================================================
 
-Total Duration : 91.6s
-Total Stages   : 7
-Failed Stages  : 0
+Total Duration : 3.9s
+Total Stages   : 2
+Failed Stages  : 1
 
 Stage                                   Time   Mem MB   CPU%   Status
 ------------------------------------------------------------------------
 Clean Output Directories                0.0s       0   0.0     ✓ OK
-Environment Setup                       3.7s       0   0.0     ✓ OK
-Project Tests                           8.1s       0   0.0     ✓ OK
-Project Analysis                        4.3s       0   0.0     ✓ OK
-PDF Rendering                          74.0s       0   0.0     ✓ OK
-Output Validation                       0.5s       0   0.0     ✓ OK
-Copy Outputs                            0.9s       0   0.0     ✓ OK
+Environment Setup                       3.9s       0   0.0   ✗ FAIL
 
 Performance Warnings (1):
 ------------------------------------------------------------------------
-  ⚠ [slow_stage] Stage 'PDF Rendering' took 74.0s (2.0× the average 13.1s)
+  ⚠ [slow_stage] Stage 'Environment Setup' took 3.9s (2.0× the average 0.0s)
     → Consider optimizing this stage or running it in parallel
 
 ========================================================================

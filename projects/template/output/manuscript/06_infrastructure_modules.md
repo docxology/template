@@ -1,6 +1,6 @@
 # Infrastructure Module Reference
 
-This section provides a detailed reference for all 13 infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~271 Python modules validated by 6,026 tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
+This section provides a detailed reference for all 13 infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~271 Python modules validated by 6,021 tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
 
 ## `infrastructure.core` (71 modules)
 

@@ -1,7 +1,8 @@
 """Numerical optimization utilities.
 
-Implements gradient descent and supporting utilities. Integrates with
-infrastructure.scientific for stability analysis and benchmarking.
+Implements gradient descent and helpers for the quadratic exemplar. This
+package does not import `infrastructure.*`; stability and benchmarking run in
+`projects/code_project/scripts/` and tests.
 """
 
 from __future__ import annotations

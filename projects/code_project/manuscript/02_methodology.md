@@ -6,7 +6,7 @@ This section describes the implementation methodology, explicitly detailing how 
 
 ### Gradient Descent Algorithm
 
-The core algorithm implements the iterative procedure for unconstrained optimization. Crucially, the implementation is designed to be highly observable, delegating all logging to `infrastructure.core.logging.utils.ProjectLogger` and executing under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
+The core algorithm implements the iterative procedure for unconstrained optimization. The [`optimizer` module](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py) uses the standard-library `logging` logger for optional verbose diagnostics; the [analysis orchestrator](https://github.com/docxology/template/blob/main/projects/code_project/scripts/optimization_analysis.py) uses `infrastructure.core.logging.utils.get_logger`. Tests run under the hermetic boundaries defined in the [test configuration](https://github.com/docxology/template/blob/main/projects/code_project/tests/conftest.py).
 
 **Algorithm 1: Gradient Descent (implemented in the [optimizer module](https://github.com/docxology/template/blob/main/projects/code_project/src/optimizer.py#L42-L138))**
 
@@ -57,8 +57,8 @@ Labels follow the same agency taxonomy used for plot colours (`_agency_category`
 
 The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/code_project/tests/` during the infrastructure build phase.
 
-1. **Integration Testing**: The `tests/integration/` battery ensures that the optimization algorithm, the analysis pipeline, and the `infrastructure.rendering` components operate flawlessly together without simulated data.
-2. **Infrastructure Validation**: The `tests/infra_tests/` suite confirms that the underlying modules (e.g., `pipeline_reporter.py`, `doc_discovery.py`) behave deterministically.
+1. **Project tests**: `projects/code_project/tests/test_optimizer.py` holds **39** collected tests that exercise `src/optimizer.py` and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks.
+2. **Infrastructure validation**: The repository-level `tests/infra_tests/` suite validates shared template modules (e.g. pipeline and discovery helpers) independently of this project’s manuscript.
 3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/code_project/src/` prior to treating the project as build-green.
 
 ### Stopping rule and reporting

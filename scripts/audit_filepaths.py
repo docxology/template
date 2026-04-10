@@ -8,7 +8,7 @@ Usage:
     python scripts/audit_filepaths.py [--output OUTPUT_FILE] [--format FORMAT] [--verbose]
 
 Options:
-    --output OUTPUT_FILE    Save report to specified file (default: docs/audit/FILEPATH_AUDIT_REPORT.md)
+    --output OUTPUT_FILE    Save report to specified file (default: docs/audit/filepath-audit-report.md)
     --format FORMAT         Output format: 'markdown' or 'json' (default: markdown)
     --verbose              Show detailed progress information
     --project PROJECT      Audit specific project only (default: all projects)
@@ -55,7 +55,7 @@ Examples:
         "--output",
         "-o",
         type=Path,
-        default=Path("docs/audit/FILEPATH_AUDIT_REPORT.md"),
+        default=Path("docs/audit/filepath-audit-report.md"),
         help="Output file for the audit report",
     )
 

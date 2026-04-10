@@ -1799,22 +1799,6 @@ def get_security_monitor() -> SecurityMonitor:
     """
 ```
 
-#### validate_llm_input (function)
-```python
-def validate_llm_input(prompt: str) -> str:
-    """Validate LLM input for security.
-
-    Args:
-        prompt: Input prompt to validate
-
-    Returns:
-        Sanitized prompt
-
-    Raises:
-        SecurityViolation: If input contains security threats
-    """
-```
-
 #### rate_limit (function)
 ```python
 @rate_limit(max_requests=100, window_seconds=60)
@@ -3276,26 +3260,17 @@ class MultiProjectOrchestrator:
 #### SecurityValidator (class)
 ```python
 class SecurityValidator:
-    """Validates and sanitizes input for security."""
-    
-    def validate_llm_input(self, prompt: str) -> str:
-        """Validate and sanitize LLM input.
-        
-        Args:
-            prompt: Input prompt to validate
-            
-        Returns:
-            Sanitized prompt string
-        """
+    """Validates and sanitizes input for security.
+
+    LLM-specific prompt sanitization lives in
+    ``infrastructure.llm.core.sanitization.sanitize_llm_input``.
+    """
 ```
 
-#### SecurityHeaders (class)
+#### get_security_headers (function)
 ```python
-class SecurityHeaders:
-    """Manages HTTP security headers."""
-    
-    def get_headers(self) -> Dict[str, str]:
-        """Get security headers dictionary."""
+def get_security_headers() -> dict[str, str]:
+    """Return comprehensive HTTP security headers."""
 ```
 
 #### RateLimiter (class)
@@ -3357,19 +3332,6 @@ def get_rate_limiter() -> RateLimiter:
 ```python
 def get_security_monitor() -> SecurityMonitor:
     """Get security monitor instance."""
-```
-
-#### validate_llm_input (function)
-```python
-def validate_llm_input(prompt: str) -> str:
-    """Validate and sanitize LLM input.
-    
-    Args:
-        prompt: Input prompt to validate
-        
-    Returns:
-        Sanitized prompt string
-    """
 ```
 
 #### rate_limit (decorator)
