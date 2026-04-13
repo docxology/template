@@ -4,7 +4,7 @@
 
 ```text
 template/
-├── infrastructure/           # Layer 1: Shared services (~271 .py files)
+├── infrastructure/           # Layer 1: Shared services (~276 .py files)
 │   ├── core/                 # Logging, config, exceptions, pipeline
 │   ├── documentation/        # Figure management, glossary
 │   ├── llm/                  # Ollama integration, literature search
@@ -33,7 +33,7 @@ template/
 │   ├── cognitive_case_diagrams/ # Compositional case modeling
 │   └── template/             # Self-referential meta-analysis
 ├── projects_in_progress/     # Work-in-progress (not pipeline-discovered)
-├── tests/                    # Infrastructure test suite (346+ files, ~6,021 tests)
+├── tests/                    # Infrastructure test suite (347+ files, ~6,036 tests)
 ├── docs/                     # Repository documentation (163+ files, 15 subdirectories)
 ├── run.sh                    # Interactive TUI orchestrator
 ├── secure_run.sh             # Steganographic pipeline wrapper

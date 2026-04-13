@@ -1,14 +1,15 @@
-# docs/_generated — machine-generated snippets
+# docs/_generated — technical guide
 
 ## Purpose
 
-This directory holds **generated** Markdown (and similar) consumed by human-written docs. Do not edit generated files by hand; run the documented generators instead.
+This directory holds **generator output** (`active_projects.md`) plus **maintainer-written** index files (`README.md`, this `AGENTS.md`). Only `active_projects.md` is overwritten by automation; do not edit that file by hand.
 
 ## Files
 
-| File | Generator |
-|------|-----------|
-| [`active_projects.md`](active_projects.md) | `uv run python scripts/generate_active_projects_doc.py` |
+| File | Source |
+| --- | --- |
+| [`active_projects.md`](active_projects.md) | **Generated** — `uv run python scripts/generate_active_projects_doc.py` |
+| [`README.md`](README.md), `AGENTS.md` | **Maintainer** — policy and linking conventions |
 
 ## Conventions
 

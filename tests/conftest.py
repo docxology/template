@@ -93,6 +93,17 @@ def pytest_configure(config):
     )
 
 
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+    """Extend pytest-timeout for real Ollama calls (global default is 10s; streaming often exceeds it)."""
+    ollama_timeout = pytest.mark.timeout(180)
+    for item in items:
+        if item.get_closest_marker("requires_ollama") is None:
+            continue
+        if item.get_closest_marker("timeout") is not None:
+            continue
+        item.add_marker(ollama_timeout)
+
+
 # ============================================================================
 # Credential Fixtures
 # ============================================================================

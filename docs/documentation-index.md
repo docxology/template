@@ -1,10 +1,10 @@
-# 📚 Documentation Index
+# Documentation index
 
-This index provides an overview of all documentation files in the Research Project Template, organized by category and purpose.
+This index lists documentation files in the Research Project Template by category.
 
-## 🎯 **Quick Start by Persona**
+## Quick start by persona
 
-### 👤 **New User / Content Creator**
+### New user / content creator
 
 1. **[README.md](../README.md)** - Project overview
 2. **[guides/getting-started.md](guides/getting-started.md)** - Write your first document (Levels 1-3)
@@ -12,7 +12,7 @@ This index provides an overview of all documentation files in the Research Proje
 4. **[reference/common-workflows.md](reference/common-workflows.md)** - Step-by-step recipes
 5. **[reference/faq.md](reference/faq.md)** - Common questions
 
-### 👨‍💻 **Developer / Researcher**
+### Developer / researcher
 
 1. **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 2. **[guides/figures-and-analysis.md](guides/figures-and-analysis.md)** - Figures and automation (Levels 4-6)
@@ -20,7 +20,7 @@ This index provides an overview of all documentation files in the Research Proje
 4. **[architecture/thin-orchestrator-summary.md](architecture/thin-orchestrator-summary.md)** - Pattern implementation
 5. **[core/workflow.md](core/workflow.md)** - Development process
 
-### 🏗️ **Contributor / Maintainer**
+### Contributor / maintainer
 
 1. **[development/contributing.md](development/contributing.md)** - Contribution guidelines
 2. **[rules/AGENTS.md](rules/AGENTS.md)** - Development standards
@@ -28,13 +28,13 @@ This index provides an overview of all documentation files in the Research Proje
 4. **[development/testing/testing-guide.md](development/testing/testing-guide.md)** - Testing requirements
 5. **[development/code-of-conduct.md](development/code-of-conduct.md)** - Community standards
 
-### 🔍 **Troubleshooter**
+### Troubleshooter
 
 1. **[operational/troubleshooting/](operational/troubleshooting/)** - Troubleshooting guides
 2. **[reference/faq.md](reference/faq.md)** - Common questions and solutions
 3. **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and commands
 4. **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance issues
-5. **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** - ⚠️ Silent Stage 4 failure pattern
+5. **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** — Silent Stage 4 failure pattern
 
 ---
 
@@ -46,11 +46,11 @@ This index provides an overview of all documentation files in the Research Proje
 > 3. **`project_config:` Namespace** — Project-specific `config.yaml` keys that aren't in the `ManuscriptConfig` schema cause WARNING spam. Nest them under `project_config:` to suppress warnings.
 > 4. **Idempotency** — Analysis scripts must skip network calls when output data files already exist.
 >
-> Details: [docs/AGENTS.md](AGENTS.md) | [guides/new-project-setup.md](guides/new-project-setup.md#pitfall-6-project-specific-packages-absent-from-root-venv--silent-stage-4-failure)
+> Details: [docs/AGENTS.md](AGENTS.md) | [guides/new-project-setup.md](guides/new-project-setup.md#pitfall-6-root-venv)
 
 ---
 
-## 🏗️ **Development Rules**
+## Development rules
 
 Development standards (formerly in `.cursorrules/`) are documented in the `rules/` directory:
 
@@ -74,15 +74,16 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 🎯 **Core Documentation**
+## Core documentation
 
 - **[README.md](../README.md)** - Main project overview and quick start
-- **[AGENTS.md](../AGENTS.md)** - System documentation
-- **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** - **Headless / cloud server deployment guide** ☁️
-- **[PAI.md](PAI.md)** - **Personal AI Infrastructure (PAI)** 🤖
-- **[RUN_GUIDE.md](RUN_GUIDE.md)** - **Run guide and pipeline reference** 🚀
+- **[Documentation hub (`docs/AGENTS.md`)](AGENTS.md)**
+- **[Repository system (`AGENTS.md` at repo root)](../AGENTS.md)**
+- **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** - Headless / cloud server deployment
+- **[PAI.md](PAI.md)** - Personal AI Infrastructure (PAI) context
+- **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration reference
 - **[../.github/README.md](../.github/README.md)** - **GitHub**: Actions workflows, Dependabot, issue/PR templates, mirroring CI locally
-- **[_generated/](_generated/README.md)** · **[_generated/AGENTS.md](_generated/AGENTS.md)** — machine-generated snippets; **[_generated/active_projects.md](_generated/active_projects.md)** is the single source of truth for active `projects/` names (do not copy that list into other guides; default path examples to [`projects/code_project/`](../projects/code_project/))
+- **[_generated/](_generated/README.md)** — folder policy; **[_generated/AGENTS.md](_generated/AGENTS.md)** — technical notes for this directory (hand-maintained). **Only** **[_generated/active_projects.md](_generated/active_projects.md)** is produced by `generate_active_projects_doc.py`; it is the single source of truth for active `projects/` names (do not copy that roster elsewhere; default path examples to [`projects/code_project/`](../projects/code_project/))
 - **Agent skills manifest** - [`.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc) (editor rule); machine list [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json). Regenerate: `uv run python -m infrastructure.skills write` · validate: `uv run python -m infrastructure.skills check`
 - **[opengauss.md](opengauss.md)** - Disambiguation: math-inc Open Gauss CLI (`gauss`) vs Huawei DBMS; detail under [`projects/fep_lean/docs/opengauss.md`](../projects/fep_lean/docs/opengauss.md)
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
@@ -100,7 +101,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 🏗️ **Architecture & Design**
+## Architecture and design
 
 - **[core/architecture.md](core/architecture.md)** - System design overview
 - **[architecture/two-layer-architecture.md](architecture/two-layer-architecture.md)** - Two-layer architecture guide
@@ -110,7 +111,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 📝 **Usage Guides**
+## Usage guides
 
 ### Skill-Level Guides
 
@@ -142,7 +143,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 🔧 **Development & Maintenance**
+## Development and maintenance
 
 - **[development/contributing.md](development/contributing.md)** - Contribution guidelines
 - **[development/code-of-conduct.md](development/code-of-conduct.md)** - Community standards
@@ -154,9 +155,9 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 🧪 **Advanced Modules**
+## Advanced modules
 
-- **[modules/modules-guide.md](modules/modules-guide.md)** - All 13 infrastructure modules
+- **[modules/modules-guide.md](modules/modules-guide.md)** - **14** named infrastructure areas (same tree as *13 subpackages* when telemetry is folded into `core/` — see the counting note in that file)
 - **[reference/api-reference.md](reference/api-reference.md)** - Unified API documentation
 - **[modules/pdf-validation.md](modules/pdf-validation.md)** - PDF validation system
 
@@ -177,7 +178,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## ⚙️ **Operational Guides**
+## Operational guides
 
 ### Pipeline & CI/CD
 
@@ -225,7 +226,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 📚 **Reference Materials**
+## Reference materials
 
 - **[best-practices/best-practices.md](best-practices/best-practices.md)** - Consolidated best practices
 - **[best-practices/version-control.md](best-practices/version-control.md)** - Git workflows
@@ -235,7 +236,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 🔒 **Security & Provenance**
+## Security and provenance
 
 - **[security/README.md](security/README.md)** - Security overview
 - **[security/steganography.md](security/steganography.md)** - Alpha-channel watermarking and QR codes
@@ -244,7 +245,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 🤖 **AI Prompt Templates**
+## AI prompt templates
 
 - **[prompts/README.md](prompts/README.md)** - Navigation guide
 - **[prompts/manuscript_creation.md](prompts/manuscript_creation.md)** - Manuscript creation
@@ -259,14 +260,14 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ---
 
-## 🎙️ **Streams & Talks**
+## Streams and talks
 
 - **[streams/README.md](streams/README.md)** - Navigation index for livestream/talk notes
 - **[streams/inferant-stream-018-1.md](streams/inferant-stream-018-1.md)** - InferAnt #018.1 — March 2026 stream on the Zenodo paper
 
 ---
 
-## 📁 **Directory Structure**
+## Directory structure
 
 ```text
 docs/
@@ -278,7 +279,7 @@ docs/
 ├── RUN_GUIDE.md                        # Pipeline orchestration reference
 ├── opengauss.md                        # Open Gauss (gauss CLI) disambiguation
 ├── rules/                              # Development standards (AGENTS, README, topic guides)
-├── _generated/                         # Generated snippets; active_projects.md roster
+├── _generated/                         # active_projects.md (generated); README + AGENTS (maintainer)
 │
 ├── core/                               # Essential documentation
 │   ├── how-to-use.md                   # Usage guide (12 levels)
@@ -386,7 +387,7 @@ docs/
 
 ---
 
-## 📋 Documentation Maintenance Notes
+## Documentation maintenance notes
 
 - Documentation is intended to be evergreen; when behaviour changes, we may include dated notes so it’s clear which guidance is newer.
 - Each sub-directory has a `README.md` (user-facing) and `AGENTS.md` (technical guide).

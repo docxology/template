@@ -1,10 +1,11 @@
 # Generated documentation snippets
 
-Files here are produced by repository scripts so human-written docs stay aligned with code and layout.
+This directory mixes **one script-generated file** with **maintainer-written** hub files (`README.md`, `AGENTS.md`).
 
-| File | Generator |
-|------|-----------|
-| [active_projects.md](active_projects.md) | `uv run python scripts/generate_active_projects_doc.py` |
+| File | Source |
+|------|--------|
+| [active_projects.md](active_projects.md) | **Generated** — `uv run python scripts/generate_active_projects_doc.py` |
+| `README.md`, `AGENTS.md` | **Maintainer** — policy and conventions for linking to generated content |
 
 ## Policy
 

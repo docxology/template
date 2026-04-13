@@ -13,11 +13,15 @@ This is a research project template with a test-driven development workflow, aut
 | Interactive menu | `./run.sh` |
 | Interactive secure menu | `./secure_run.sh` |
 | Full pipeline | `./run.sh --pipeline` |
-| Core pipeline (no LLM) | `python3 scripts/execute_pipeline.py --project {name} --core-only` |
-| All tests | `python3 scripts/01_run_tests.py --project {name}` |
+| Core pipeline (no LLM) | `uv run python scripts/execute_pipeline.py --project {name} --core-only` |
+| All tests | `uv run python scripts/01_run_tests.py --project {name}` |
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
 | Install deps | `uv sync` |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
+
+### CI mirror (GitHub Actions)
+
+Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Job names, matrix (Ubuntu/macOS × Python 3.10–3.12), coverage floors (infra 60%, project 90%), and local reproduction commands: [`.github/AGENTS.md`](.github/AGENTS.md).
 
 ## Common Commands
 
@@ -33,8 +37,8 @@ This is a research project template with a test-driven development workflow, aut
 # Full pipeline (10 stages: clean, setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
 
-# Core pipeline only (10-stage DAG: no LLM)
-python3 scripts/execute_pipeline.py --project {project_name} --core-only
+# Core pipeline only (8 DAG stages in default pipeline.yaml; LLM-tagged stages excluded)
+uv run python scripts/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
 ./run.sh --pipeline --resume
@@ -48,7 +52,7 @@ python3 scripts/execute_pipeline.py --project {project_name} --core-only
 
 ```bash
 # Run all tests (infrastructure + project)
-python3 scripts/01_run_tests.py --project {project_name}
+uv run python scripts/01_run_tests.py --project {project_name}
 
 # Infrastructure tests only (60% coverage minimum)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
@@ -80,10 +84,10 @@ uv run mypy infrastructure/ projects/code_project/src/
 uv run bandit -r infrastructure/
 
 # Validate markdown
-python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
 
 # Validate PDFs
-python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/
+uv run python -m infrastructure.validation.cli pdf output/{project_name}/pdf/
 
 # Local Ollama workflow
 ollama serve
@@ -91,7 +95,7 @@ ollama pull gemma3:4b
 uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 
 # Generate API documentation
-python3 -m infrastructure.documentation.generate_glossary_cli --project {project_name}
+uv run python -m infrastructure.documentation.generate_glossary_cli --project {project_name}
 
 # Agent SKILL.md manifest (Cursor / editors)
 uv run python -m infrastructure.skills write
@@ -105,10 +109,10 @@ uv run python -m infrastructure.skills check
 ./run.sh --all-projects --pipeline
 
 # Run all projects with core pipeline only
-python3 scripts/execute_multi_project.py --no-llm
+uv run python scripts/execute_multi_project.py --no-llm
 
 # List available projects
-python3 -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
+uv run python -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
 **Active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`). Default path examples → [`projects/code_project/`](projects/code_project/); FEP / Lean catalogue → [`projects/fep_lean/`](projects/fep_lean/).
@@ -263,7 +267,7 @@ output/
 
 ```bash
 # All tests
-python3 scripts/01_run_tests.py --project {project_name}
+uv run python scripts/01_run_tests.py --project {project_name}
 
 # With coverage report
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
@@ -464,38 +468,39 @@ pytest --cov=infrastructure --cov-report=term-missing
 **PDF Generation Fails**: Validate LaTeX packages
 
 ```bash
-python3 -m infrastructure.rendering.latex_package_validator
+uv run python -m infrastructure.rendering.latex_package_validator
 sudo tlmgr install multirow cleveref doi newunicodechar
 ```
 
 **Import Errors**: Ensure project structure correct
 
 ```bash
-python3 -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import {module}"
+uv run python -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import {module}"
 ```
 
 **Markdown Validation Errors**: Check image paths and references
 
 ```bash
-python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 ```
 
 ### Debug Mode
 
 ```bash
 export LOG_LEVEL=0  # Enable debug logging
-python3 scripts/03_render_pdf.py --project {name}
+uv run python scripts/03_render_pdf.py --project {name}
 ```
 
 ## Documentation Resources
 
 - **README.md** - Project overview and quick start
 - **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
+- **.github/README.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates
 - **RUN_GUIDE.md** - Pipeline execution documentation
 - **docs/core/architecture.md** - Detailed architecture guide
 - **docs/core/workflow.md** - Development workflow details
 - **docs/core/how-to-use.md** - Usage guide (12 skill levels)
-- **docs/documentation-index.md** - Index of all 89+ documentation files
+- **docs/documentation-index.md** - Documentation inventory (authoritative file list)
 
 ## Important Notes
 

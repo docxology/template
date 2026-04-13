@@ -65,13 +65,13 @@
 \contentsline {subsection}{\numberline {5.7}Future Directions}{30}{subsection.5.7}%
 \contentsline {subsection}{\numberline {5.8}Conclusion}{30}{subsection.5.8}%
 \contentsline {section}{\numberline {6}Infrastructure Module Reference}{32}{section.6}%
-\contentsline {subsection}{\numberline {6.1}\texttt {infrastructure.core} (71 modules)}{32}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.1}\texttt {infrastructure.core} (72 modules)}{32}{subsection.6.1}%
 \contentsline {subsection}{\numberline {6.2}\texttt {infrastructure.documentation} (6 modules)}{32}{subsection.6.2}%
 \contentsline {subsection}{\numberline {6.3}\texttt {infrastructure.llm} (53 modules)}{33}{subsection.6.3}%
 \contentsline {subsection}{\numberline {6.4}\texttt {infrastructure.project} (5 modules)}{33}{subsection.6.4}%
 \contentsline {subsection}{\numberline {6.5}\texttt {infrastructure.publishing} (14 modules)}{33}{subsection.6.5}%
 \contentsline {subsection}{\numberline {6.6}\texttt {infrastructure.rendering} (27 modules)}{34}{subsection.6.6}%
-\contentsline {subsection}{\numberline {6.7}\texttt {infrastructure.reporting} (40 modules)}{34}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.7}\texttt {infrastructure.reporting} (44 modules)}{34}{subsection.6.7}%
 \contentsline {subsection}{\numberline {6.8}\texttt {infrastructure.scientific} (6 modules)}{35}{subsection.6.8}%
 \contentsline {subsection}{\numberline {6.9}\texttt {infrastructure.steganography} (10 modules)}{35}{subsection.6.9}%
 \contentsline {subsection}{\numberline {6.10}\texttt {infrastructure.validation} (35 modules)}{35}{subsection.6.10}%

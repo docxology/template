@@ -1,15 +1,17 @@
 # 🚀 Research Project Template
 
-<!-- Badges below are manually updated after each pipeline run. Run `uv run pytest` to get current coverage numbers. -->
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/RUN_GUIDE.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/RUN_GUIDE.md)
-[![Tests](https://img.shields.io/badge/tests-6026%2B%20passing%20(100%25)-brightgreen)](docs/RUN_GUIDE.md)
-[![Documentation](https://img.shields.io/badge/docs-154%2B%20files-blue)](docs/documentation-index.md)
+<!-- Badges are qualitative; measured coverage and test counts drift — use `uv run pytest` and CI for ground truth. See docs/RUN_GUIDE.md. -->
+[![Build](https://img.shields.io/badge/build-docs%20%26%20CI-blue)](docs/RUN_GUIDE.md)
+[![Coverage](https://img.shields.io/badge/coverage-see%20RUN__GUIDE%20%26%20CI-blue)](docs/RUN_GUIDE.md)
+[![Tests](https://img.shields.io/badge/tests-pytest%20%28infra%20%2B%20project%29-blue)](docs/RUN_GUIDE.md)
+[![Documentation](https://img.shields.io/badge/docs-documentation--index-lightgrey)](docs/documentation-index.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
 >
 > **Template Repository** - Click "Use this template" to create a research project with this structure
+
+**Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) (overview) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
 
 A system for research and development projects. This template provides a test-driven structure with automated PDF generation, professional documentation, and validated build pipelines.
 
@@ -366,8 +368,8 @@ Projects in `projects_in_progress/` are **under active development** but not yet
 # Or run the manuscript pipeline directly (includes optional LLM review)
 ./run.sh --pipeline
 
-# Alternative: Core 10-stage declarative DAG pipeline (no LLM dependencies)
-uv run python scripts/execute_pipeline.py --core-only
+# Alternative: Core pipeline — 8 DAG stages in default pipeline.yaml (LLM stages omitted; requires --project)
+uv run python scripts/execute_pipeline.py --project code_project --core-only
 
 # Run tests with coverage (infrastructure + project)
 uv run scripts/01_run_tests.py
@@ -383,7 +385,7 @@ open output/pdf/project_combined.pdf
 ```mermaid
 graph LR
     subgraph Status["✅ System Status"]
-        TESTS[Tests: 3025 passing\n2569 infra [5 skipped] + 456 project\n100% success rate]
+        TESTS[Tests: 6000+ passing\nfull tests/ suite\n(run pytest for current totals)]
         COV[Coverage: 100% project\n83.33% infra\nExceeds requirements]
         BUILD[Build Time: 53s\nOptimal performance\n(without LLM review)]
         PDFS[PDFs: 14/14 generated\nAll sections]
@@ -414,7 +416,7 @@ graph LR
 
 - **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements) - [Pipeline Guide](docs/RUN_GUIDE.md)
 - **Build Time**: 84 seconds (with full test suite) - [Performance Optimization](docs/operational/config/performance-optimization.md)
-- **Tests Passing**: 3025 tests (2569 infrastructure [5 skipped] + 456 project) - [Testing Guide](docs/development/testing/testing-guide.md)
+- **Tests Passing**: full `tests/` suite (6000+ tests; run `uv run pytest tests/ -q` for exact counts) — [Testing Guide](docs/development/testing/testing-guide.md)
 - **PDFs Generated**: 14 (all sections) - [Pipeline Guide](docs/RUN_GUIDE.md)
 - **Documentation**: 105+ files - [Documentation Index](docs/documentation-index.md)
 
@@ -536,7 +538,7 @@ graph TB
 graph TB
     subgraph Entry["🚀 Entry Points"]
         RUNSH[./run.sh\nInteractive menu\nFull pipeline control]
-        RUNALL[uv run python scripts/execute_pipeline.py --core-only\nProgrammatic\nCore pipeline]
+        RUNALL[uv run python scripts/execute_pipeline.py\n--project code_project --core-only]
         INDIVIDUAL[Individual Scripts\nscripts/00-05_*.py\nStage-specific execution]
     end
 
@@ -890,8 +892,8 @@ pip install -e .
 # Or run the manuscript pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
 ./run.sh --pipeline
 
-# Alternative: Core 10-stage DAG pipeline (scripts 00-05, no LLM dependencies)
-uv run python scripts/execute_pipeline.py --core-only
+# Alternative: Core pipeline (8 DAG stages; no LLM-tagged stages)
+uv run python scripts/execute_pipeline.py --project code_project --core-only
 
 # Or run stages individually (using generic entry point orchestrators)
 uv run python scripts/00_setup_environment.py      # Setup environment
@@ -904,9 +906,9 @@ uv run python scripts/05_copy_outputs.py           # Copy final deliverables
 
 **Pipeline Entry Points:**
 
-- **`./run.sh`**: Main entry point - Interactive menu or pipeline run (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9])
-- **`./run.sh --pipeline`**: Same stage display as above; optional LLM stages run when enabled/configured
-- **`uv run python scripts/execute_pipeline.py --core-only`**: 10-stage DAG — Core pipeline only, no LLM dependencies
+- **`./run.sh`**: Main entry point — interactive menu or pipeline run (bash progress: `[0/9]` clean + `[1/9]`–`[9/9]`; default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) has **10** named DAG stages)
+- **`./run.sh --pipeline`**: Full DAG; LLM stages may skip if Ollama is unavailable
+- **`uv run python scripts/execute_pipeline.py --project {name} --core-only`**: Core DAG — **8** stages (LLM-tagged stages excluded); no LLM dependencies
 
 **See [How To Use Guide](docs/core/how-to-use.md) for setup instructions at all skill levels.**
 
@@ -1078,7 +1080,7 @@ pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 - **Data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
-**Current Status**: 3025 tests passing (2569 infra [5 skipped] + 456 project), 100% project coverage - [Pipeline Guide](docs/RUN_GUIDE.md)
+**Current Status**: full `tests/` suite green in CI — run `uv run pytest tests/` locally for counts — [Pipeline Guide](docs/RUN_GUIDE.md)
 
 ## 📤 Output
 
@@ -1168,23 +1170,24 @@ flowchart TD
     class STAGE7,STAGE8 optional
 ```
 
-### Entry Point 2: Core Pipeline (`uv run python scripts/execute_pipeline.py --core-only`)
+### Entry Point 2: Core Pipeline (`uv run python scripts/execute_pipeline.py --project {name} --core-only`)
 
-**10-stage declarative pipeline** (scripts 00-05) without LLM dependencies:
+**Core DAG** — **8** stages in the default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) when LLM-tagged stages are excluded (clean → copy). Script files map to stages as follows (thin orchestrators):
 
-| Stage | Script | Purpose |
-| --- | --- | --- |
-| 00 | `00_setup_environment.py` | Environment setup & validation |
-| 01 | `01_run_tests.py` | Run test suite (infrastructure + project) |
-| 02 | `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
-| 03 | `03_render_pdf.py` | PDF rendering orchestration |
-| 04 | `04_validate_output.py` | Output validation & reporting |
-| 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
+| Script | Role in core path |
+| --- | --- |
+| `00_setup_environment.py` | Environment setup & validation |
+| `01_run_tests.py` | Infrastructure + project tests |
+| `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
+| `03_render_pdf.py` | PDF rendering orchestration |
+| `04_validate_output.py` | Output validation & reporting |
+| `05_copy_outputs.py` | Copy final deliverables to `output/` |
 
-**Stage Numbering:**
+**Stage numbering:**
 
-- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs, with clean shown as [0/9]
-- `execute_pipeline.py --core-only`: Core pipeline stages (no LLM stages)
+- **`./run.sh`**: bash logs `[0/9]` for clean, then `[1/9]`–`[9/9]` for nine tracked steps (see [`run.sh`](run.sh) `STAGE_NAMES`).
+- **Full DAG**: **10** named stages in default `pipeline.yaml` (includes two LLM stages before copy).
+- **`--core-only`**: executor runs the core DAG (**8** stages); no LLM-tagged stages.
 
 **See [docs/RUN_GUIDE.md](docs/RUN_GUIDE.md) for pipeline documentation.**
 
@@ -1192,7 +1195,8 @@ flowchart TD
 
 ### Core Documentation (Essential Reading)
 
-- **[AGENTS.md](AGENTS.md)** - System reference - Everything you need to know
+- **[AGENTS.md](AGENTS.md)** — System reference (repository root)
+- **[docs/AGENTS.md](docs/AGENTS.md)** — Documentation hub (`docs/`)
 - **[docs/core/how-to-use.md](docs/core/how-to-use.md)** - usage guide from basic to advanced (12 skill levels)
 - **[docs/core/architecture.md](docs/core/architecture.md)** - System design and architecture overview
 - **[docs/core/workflow.md](docs/core/workflow.md)** - Development workflow and best practices
@@ -1379,7 +1383,7 @@ The thin orchestrator pattern provides:
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
 - **Performance**: 84-second build time for regeneration (without optional LLM review)
-- **Reliability**: 3025 tests passing (100% success rate)
+- **Reliability**: large `tests/` suite with CI gating (run `uv run pytest tests/` for current totals)
 
 **System Status**: ✅ **OPERATIONAL** - [Run Guide](docs/RUN_GUIDE.md)
 

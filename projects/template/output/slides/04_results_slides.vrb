@@ -19,7 +19,7 @@ Project & Stages & Duration & Tests & Coverage \\
 \midrule\noalign{}
 \endhead
 \texttt{code\_project} & 7 & \textasciitilde40s & 39/39 & 90\%+ \\
-\texttt{cognitive\_case\_diagrams} & 7 & \textasciitilde60s & 912/912 &
+\texttt{cognitive\_case\_diagrams} & 7 & \textasciitilde60s & 922/922 &
 90\%+ \\
 \texttt{template} & 7 & \textasciitilde25s & 66/66 & 90\%+ \\
 \bottomrule\noalign{}
@@ -35,7 +35,7 @@ scripts use fixed random seeds. Figures are representative; actual
 duration scales with system load, test suite size, and manuscript
 complexity.}
 
-The \texttt{cognitive\_case\_diagrams} project, with its 912 tests and
+The \texttt{cognitive\_case\_diagrams} project, with its 922 tests and
 programmatically generated figures, represents the most computationally
 intensive exemplar---yet completes in under one minute, confirming that
 the Zero-Mock policy's real-method overhead remains tractable at this
@@ -53,8 +53,8 @@ significant scale:
 Metric & Value \\
 \midrule\noalign{}
 \endhead
-Test files & 346+ \\
-Total tests & \textasciitilde6,021 \\
+Test files & 347+ \\
+Total tests & \textasciitilde6,036 \\
 Infrastructure coverage threshold & 60\% (achieved: 83\%+) \\
 Zero-mock violations & 0 \\
 Real filesystem operations & ✓ \\
@@ -97,7 +97,7 @@ Key Exports
 \midrule\noalign{}
 \endhead
 \texttt{config} & 0 & ✓ & ✓ & Configuration schemas \\
-\texttt{core} & 71 & ✓ & ✓ & \texttt{get\_logger},
+\texttt{core} & 72 & ✓ & ✓ & \texttt{get\_logger},
 \texttt{load\_config}, \texttt{TemplateError} \\
 \texttt{docker} & 0 & ✓ & ✓ & Containerisation \\
 \texttt{documentation} & 6 & ✓ & ✓ & \texttt{FigureManager},
@@ -110,7 +110,7 @@ management \\
 MLA), Zenodo \\
 \texttt{rendering} & 27 & ✓ & ✓ & PDF rendering, Pandoc filters, HTML
 reports \\
-\texttt{reporting} & 40 & ✓ & ✓ & Coverage parsing, executive reports \\
+\texttt{reporting} & 44 & ✓ & ✓ & Coverage parsing, executive reports \\
 \texttt{scientific} & 6 & ✓ & ✓ & \texttt{check\_numerical\_stability},
 \texttt{benchmark\_function} \\
 \texttt{skills} & 4 & ✓ & ✓ & --- \\

@@ -16,16 +16,18 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 ### Job Graph
 
+`validate` and `security` depend on **`lint` only** (parallel with the `verify-no-mocks` branch). See [`AGENTS.md`](AGENTS.md) for full detail.
+
 ```
 lint (Ruff + mypy)
- └── verify-no-mocks
-      ├── test-infra  · ubuntu+macos × 3.10/3.11/3.12 · ≥60% coverage
-      ├── test-project · ubuntu+macos × 3.10/3.11/3.12 · ≥90% coverage
-      ├── fep-lean     · ubuntu only, if projects/fep_lean present — Lean/Lake + gauss
-      ├── validate     · manuscript markdown + project imports
-      └── security     · pip-audit + bandit MEDIUM+
-test-infra + test-project
- └── performance      · total import time ≤ 5 s
+ ├── verify-no-mocks
+ │    ├── test-infra   · ubuntu+macos × 3.10/3.11/3.12 · ≥60% coverage
+ │    ├── test-project · ubuntu+macos × 3.10/3.11/3.12 · ≥90% coverage
+ │    └── fep-lean     · ubuntu only, if lean-toolchain present — real gauss + lake
+ ├── validate         · manuscript markdown + project imports (needs: lint)
+ └── security          · pip-audit + bandit MEDIUM+ (needs: lint)
+
+test-infra + test-project → performance (import time ≤ 5 s)
 ```
 
 ### Quality Gates

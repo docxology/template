@@ -227,6 +227,8 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 
 **Fix**: Replace emoji characters with text labels in matplotlib figures. DejaVu Sans does not include emoji glyphs.
 
+<a id="pitfall-6-root-venv"></a>
+
 ### Pitfall 6: Project-specific packages absent from root venv → silent Stage 4 failure
 
 **Symptom**: `❌ project_name: 4 stages, 7.7s` — Stage 4 (Analysis) fails in under 1 second. No import error appears in the console because it is swallowed by subprocess capture.

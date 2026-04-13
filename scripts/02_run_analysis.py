@@ -47,6 +47,7 @@ from infrastructure.core.script_discovery import (
     discover_analysis_scripts,
     verify_analysis_outputs,
 )
+from infrastructure.core.analysis_timeout import parse_analysis_script_timeout_sec
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -75,13 +76,26 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     if project_venv.is_dir():
         logger.info(f"  Using project-local venv: {project_venv}")
 
+    timeout_sec = parse_analysis_script_timeout_sec()
+    if timeout_sec is None:
+        logger.info(
+            "  Analysis script timeout: unlimited (set ANALYSIS_SCRIPT_TIMEOUT_SEC=0, none, or unlimited)"
+        )
+    else:
+        logger.debug("  Analysis script timeout: %.0fs", timeout_sec)
+
     try:
         with log_operation(f"Execute {script_path.name}", logger):
             # When using project-local venv, run from repo_root but let uv
             # handle the venv via --directory. Otherwise run from repo_root
             # as before.
             result = subprocess.run(  # nosec B603
-                cmd, cwd=str(repo_root), capture_output=False, check=False, env=env, timeout=1800
+                cmd,
+                cwd=str(repo_root),
+                capture_output=False,
+                check=False,
+                env=env,
+                timeout=timeout_sec,
             )
 
         if result.returncode != 0:

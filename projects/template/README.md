@@ -12,7 +12,7 @@ The Template Project serves as a live demonstration of the pipeline's capabiliti
 
 ### Key Features Demonstrated
 
-- **Comprehensive Manuscript**: 21 modular chapters (~13,500 words) documenting the Two-Layer Architecture, ten-stage DAG pipeline, 13 infrastructure modules, and steganographic provenance layer.
+- **Comprehensive Manuscript**: 21 modular chapters (~13,500 words) documenting the Two-Layer Architecture, default ten-stage DAG pipeline ([`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml)), 14 named infrastructure areas (see [docs/modules/modules-guide.md](../../docs/modules/modules-guide.md)), and steganographic provenance layer.
 - **Dynamic Introspection**: Architecture visualizations (Figure 1-4) are generated at render-time by scanning the live `template/` repository infrastructure.
 
 ## Quick Start

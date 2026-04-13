@@ -5,7 +5,7 @@
 - **System**: Research Project Template
 - **Role**: Standardized Research Execution Environment
 - **Type**: Core Infrastructure / Skill
-- **Version**: Pipeline v2.1 (full pipeline shown as [1/9]..[9/9] with clean shown as [0/9]; core pipeline available without LLM)
+- **Version**: Default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) defines a **10-stage** DAG (including LLM stages); `--core-only` runs **8** stages (LLM-tagged stages excluded). `run.sh` progress lines use `[0/9]` for clean plus `[1/9]`–`[9/9]` for nine tracked steps — see [`RUN_GUIDE.md`](RUN_GUIDE.md).
 - **Signposting**: This repository is a PAI “template” node; it is intended to be self-describing via `AGENTS.md` and `docs/`.
 
 ---
@@ -19,7 +19,7 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 2. **Thin Orchestration** — Scripts coordinate; all business logic lives in src/ modules.
 3. **Multi-Project Support** — Multiple independent research projects in a single repo.
 4. **Zero-Mock Testing** — Absolute prohibition on mocks; tests use real execution only.
-5. **Agent-Friendly Documentation** — Full `AGENTS.md` / `README.md` / `PAI.md` coverage at every level.
+5. **Agent-Friendly Documentation** — Each documented directory carries `README.md` and `AGENTS.md` where the tree policy requires it; PAI-oriented context lives in root-adjacent `PAI.md` files (e.g. this file, [`../infrastructure/PAI.md`](../infrastructure/PAI.md), [`../scripts/PAI.md`](../scripts/PAI.md), [`../tests/PAI.md`](../tests/PAI.md), [`../projects/PAI.md`](../projects/PAI.md)), not in every subdirectory.
 6. **Headless Cloud Deployment** — `./run.sh --pipeline` bootstraps uv automatically on any server.
 
 ---
@@ -50,7 +50,7 @@ template/
 ├── projects_archive/      # Archived projects (not executed by default)
 ├── projects_in_progress/ # WIP (not discovered until moved under projects/)
 ├── tests/                 # Infrastructure tests
-├── CLOUD_DEPLOY.md        # Headless cloud server guide
+├── docs/CLOUD_DEPLOY.md   # Headless cloud server guide
 ├── infrastructure/docker/Dockerfile             # Container specification
 └── infrastructure/docker/docker-compose.yml     # Multi-service orchestration
 ```
@@ -139,9 +139,10 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 
 ## Key References
 
-- [`AGENTS.md`](AGENTS.md) — Full system documentation
+- [`AGENTS.md`](AGENTS.md) — Documentation hub (`docs/`)
+- [`../AGENTS.md`](../AGENTS.md) — Repository system reference (root)
 - [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) — Headless cloud deployment guide
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Pipeline orchestration reference
-- [`docs/documentation-index.md`](documentation-index.md) — Full docs hub
+- [`documentation-index.md`](documentation-index.md) — Full docs index
 - [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
 - [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration

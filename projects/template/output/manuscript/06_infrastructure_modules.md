@@ -1,8 +1,8 @@
 # Infrastructure Module Reference
 
-This section provides a detailed reference for all 13 infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~271 Python modules validated by 6,021 tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
+This section provides a detailed reference for all 13 infrastructure subpackages, documenting their purpose, key classes, public API, and integration points within the pipeline. The infrastructure layer comprises ~276 Python modules validated by 6,036 tests. Each subpackage follows the Documentation Duality standard: every module directory contains both an `AGENTS.md` machine-readable specification and a `README.md` human-readable guide.
 
-## `infrastructure.core` (71 modules)
+## `infrastructure.core` (72 modules)
 
 **Purpose**: Foundation utilities providing the bedrock services consumed by all other modules and all projects.
 
@@ -94,7 +94,7 @@ This section provides a detailed reference for all 13 infrastructure subpackages
 
 **Integration**: Core of Stage 03. Reads `manuscript/*.md` and `config.yaml`, produces `output/<project>.pdf`. The auxiliary file cleanup resolves a known rendering hazard where stale `.aux` files cause "Division by 0" LaTeX errors.
 
-## `infrastructure.reporting` (40 modules)
+## `infrastructure.reporting` (44 modules)
 
 **Purpose**: Pipeline reporting, test result aggregation, and coverage analysis.
 

@@ -56,7 +56,8 @@ mkdir -p "$MPLCONFIGDIR"
 export UV_CACHE_DIR="${TMPDIR:-/tmp}/uv_cache"
 mkdir -p "$UV_CACHE_DIR"
 
-# Ensure Lean 4 + Hermes/OpenGauss are fully enabled by default
+# fep_lean: `projects/fep_lean/scripts/01_fep_*.py` defaults workflows off when env is unset;
+# interactive runs through this script opt in unless FEP_LEAN_GAUSS_WORKFLOWS is already set.
 export FEP_LEAN_GAUSS_WORKFLOWS="${FEP_LEAN_GAUSS_WORKFLOWS:-1}"
 
 # ============================================================================

@@ -5,10 +5,10 @@ The Standalone Project Paradigm enables horizontal scaling: adding a new project
 We have validated this scaling model with three heterogeneous projects:
 
 - **`code_project`**: Numerical optimization example paper with gradient descent, 39 tests, 90%+ coverage. Demonstrates the minimal viable project footprint: a single `src/` module, a single script, and a compact manuscript.
-- **`cognitive_case_diagrams`**: Compositional approaches to linguistic case for cognitive modeling, 912 tests, 90%+ coverage, spanning enriched category theory, DisCoPy renderers, and categorical grammar diagrams. Demonstrates the template's capacity for computationally intensive, diagram-heavy research workflows with large test suites.
+- **`cognitive_case_diagrams`**: Compositional approaches to linguistic case for cognitive modeling, 922 tests, 90%+ coverage, spanning enriched category theory, DisCoPy renderers, and categorical grammar diagrams. Demonstrates the template's capacity for computationally intensive, diagram-heavy research workflows with large test suites.
 - **`template`**: This self-referential architectural analysis, 66 tests, 90%+ coverage. Demonstrates the system's ability to analyze and document itself—a unique stress test of the Two-Layer Architecture's reflexive capability.
 
-These projects share no code with each other. They share only the infrastructure layer---13 modules, ~271 Python files---which provides logging, rendering, validation, steganography, and reporting services identically to each project. This validates the Two-Layer Architecture's claim that infrastructure and project concerns can be cleanly separated.
+These projects share no code with each other. They share only the infrastructure layer---13 modules, ~276 Python files---which provides logging, rendering, validation, steganography, and reporting services identically to each project. This validates the Two-Layer Architecture's claim that infrastructure and project concerns can be cleanly separated.
 
 ### Multi-Project Orchestration
 
@@ -20,7 +20,7 @@ When the `--all-projects` flag is passed to `run.sh`, the pipeline executes each
 |--------|:--------------:|:------------------------:|:----------:|
 | Source modules | 1 | 39 | 4 |
 | Test files | 1 | 49 | 3 |
-| Test count | 39 | 912 | 66 |
+| Test count | 39 | 922 | 66 |
 | Manuscript chapters | 8 | 24 | 21 |
 | Analysis scripts | 3 | 7 | 2 |
 | Figures (auto-generated) | 6 | 27 | 4 |

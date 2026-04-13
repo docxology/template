@@ -1,65 +1,31 @@
-[2026-04-09 13:26:16,493] [INFO] ✓ Stage 1 completed successfully (0.0s)
-[2026-04-09 13:26:16,493] [INFO] 
-[2026-04-09 13:26:16,494] [INFO] [2/10] Environment Setup (20% complete)
-[2026-04-09 13:26:16,494] [INFO]   Elapsed: 0s | ETA: 0s
-[2026-04-09 13:26:16,494] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[2026-04-09 13:26:20,358] [ERROR] ❌ [STAGE_FAILED] ✗ Stage 2 failed
-[2026-04-09 13:26:20,359] [ERROR] ❌ [PIPELINE_STAGE_FAILED] Pipeline failed at stage 2: Environment Setup — Check stage logs for details
-
-======================================================================
-[2026-04-09 13:36:23] Starting: PDF Rendering
-======================================================================
-[2026-04-09 13:36:23] [INFO] 
-[2026-04-09 13:36:23] [INFO] ==================================================
-[2026-04-09 13:36:23] [INFO] Pipeline: code_project
-[2026-04-09 13:36:23] [INFO] ==================================================
-[2026-04-09 13:36:23] [INFO] Executing stage 'render_pdf' for project 'code_project': /Users/4d/Documents/GitHub/template/.venv/bin/python3 /Users/4d/Documents/GitHub/template/scripts/03_render_pdf.py --project code_project
-[2026-04-09 13:36:23] [INFO] 
-[2026-04-09 13:36:23] [INFO] ==================================================
-[2026-04-09 13:36:23] [INFO] STAGE 03: Render PDF (Project: code_project)
-[2026-04-09 13:36:23] [INFO] ==================================================
-[2026-04-09 13:36:23] [INFO] Executing PDF rendering pipeline for project 'code_project'...
-[2026-04-09 13:36:23] [INFO] Running pre-flight LaTeX package validation...
-[2026-04-09 13:36:23] [INFO] Validating 12 required and 11 optional LaTeX packages...
-[2026-04-09 13:36:24] [INFO] ✓ All LaTeX packages available
-[2026-04-09 13:36:24] [INFO] Verifying figures from analysis stage...
-[2026-04-09 13:36:24] [WARNING] ⚠️  Figures directory exists but is empty: /Users/4d/Documents/GitHub/template/projects/code_project/output/figures
-[2026-04-09 13:36:24] [WARNING]   ⚠️  No figures found - will render PDF with missing figures
-[2026-04-09 13:36:24] [INFO] Discovered 9 manuscript file(s):
-[2026-04-09 13:36:24] [INFO]   Main sections (8):
-[2026-04-09 13:36:24] [INFO]     • 00_abstract.md
-[2026-04-09 13:36:24] [INFO]     • 01_introduction.md
-[2026-04-09 13:36:24] [INFO]     • 02_methodology.md
-[2026-04-09 13:36:24] [INFO]     • 03_results.md
-[2026-04-09 13:36:24] [INFO]     • 04_conclusion.md
-[2026-04-09 13:36:24] [INFO]     • 05_experimental_setup.md
-[2026-04-09 13:36:24] [INFO]     • 06_reproducibility.md
-[2026-04-09 13:36:24] [INFO]     • 07_scope_and_related_work.md
-[2026-04-09 13:36:24] [INFO]   Supplemental (1):
-[2026-04-09 13:36:24] [INFO]     • SYNTAX.md
-[2026-04-09 13:36:24] [INFO] 
-============================================================
-[2026-04-09 13:36:24] [INFO] MANUSCRIPT COMPOSITION (9 files)
-[2026-04-09 13:36:24] [INFO] ============================================================
-[2026-04-09 13:36:24] [INFO] Markdown sections (9):
-[2026-04-09 13:36:24] [INFO]   • 00_abstract.md                           (   2.3 KB)
-[2026-04-09 13:36:24] [INFO]   • 01_introduction.md                       (   5.1 KB)
-[2026-04-09 13:36:24] [INFO]   • 02_methodology.md                        (   6.3 KB)
-[2026-04-09 13:36:24] [INFO]   • 03_results.md                            (  13.0 KB)
-[2026-04-09 13:36:24] [INFO]   • 04_conclusion.md                         (   4.3 KB)
-[2026-04-09 13:36:24] [INFO]   • 05_experimental_setup.md                 (   3.2 KB)
-[2026-04-09 13:36:24] [INFO]   • 06_reproducibility.md                    (   3.2 KB)
-[2026-04-09 13:36:24] [INFO]   • 07_scope_and_related_work.md             (   2.8 KB)
-[2026-04-09 13:36:24] [INFO]   • SYNTAX.md                                (   3.2 KB)
-[2026-04-09 13:36:24] [INFO]   Total markdown:                          (  43.4 KB)
-[2026-04-09 13:36:24] [INFO] ============================================================
-
-[2026-04-09 13:36:24] [INFO] Initialized RenderManager from infrastructure.rendering
-[2026-04-09 13:36:24] [INFO]   [1/9] 00_abstract.md
-[2026-04-09 13:36:24] [INFO] Rendering Markdown file: 00_abstract.md
-[2026-04-09 13:36:24] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/00_abstract.md
-[2026-04-09 13:36:24] [WARNING] Failed to render Beamer slides: [Errno 2] No such file or directory: 'pandoc'
-[2026-04-09 13:36:24] [WARNING]   Continuing with other formats...
-[2026-04-09 13:36:24] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/projects/code_project/manuscript/00_abstract.md
-[2026-04-09 13:36:24] [WARNING] Failed to render HTML: [Errno 2] No such file or directory: 'pandoc'
-[2026-04-09 13:36:24] [ERROR] Render pipeline error: No rendered_paths generated for 00_abstract.md. All formats failed: beamer: [Errno 2] No such file or directory: 'pandoc', html: [Errno 2] No such file or directory: 'pandoc'
+[2026-04-12 12:53:14,414] [INFO] ✓ Stage 1 completed successfully (0.0s)
+[2026-04-12 12:53:14,414] [INFO] 
+[2026-04-12 12:53:14,414] [INFO] [2/8] Environment Setup (25% complete)
+[2026-04-12 12:53:14,414] [INFO]   Elapsed: 0s | ETA: 0s
+[2026-04-12 12:53:14,414] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-12 12:53:18,186] [INFO] ✓ Stage 2 completed successfully (3.8s)
+[2026-04-12 12:53:18,186] [INFO] 
+[2026-04-12 12:53:18,186] [INFO] [3/8] Project Tests (37% complete)
+[2026-04-12 12:53:18,187] [INFO]   Elapsed: 3s | ETA: 6s
+[2026-04-12 12:53:18,187] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-12 12:53:31,274] [INFO] ✓ Stage 3 completed successfully (13.1s)
+[2026-04-12 12:53:31,276] [INFO] 
+[2026-04-12 12:53:31,276] [INFO] [4/8] Project Analysis (50% complete)
+[2026-04-12 12:53:31,276] [INFO]   Elapsed: 16s | ETA: 16s
+[2026-04-12 12:53:31,276] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-12 12:53:37,140] [INFO] ✓ Stage 4 completed successfully (5.9s)
+[2026-04-12 12:53:37,141] [INFO] 
+[2026-04-12 12:53:37,141] [INFO] [5/8] PDF Rendering (62% complete)
+[2026-04-12 12:53:37,141] [INFO]   Elapsed: 22s | ETA: 13s
+[2026-04-12 12:53:37,142] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-12 12:54:08,958] [INFO] ✓ Stage 5 completed successfully (31.8s)
+[2026-04-12 12:54:08,965] [INFO] 
+[2026-04-12 12:54:08,965] [INFO] [6/8] Output Validation (75% complete)
+[2026-04-12 12:54:08,965] [INFO]   Elapsed: 54s | ETA: 18s
+[2026-04-12 12:54:08,965] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-12 12:54:09,375] [INFO] ✓ Stage 6 completed successfully (0.4s)
+[2026-04-12 12:54:09,377] [INFO] 
+[2026-04-12 12:54:09,377] [INFO] [7/8] Copy Outputs (87% complete)
+[2026-04-12 12:54:09,377] [INFO]   Elapsed: 54s | ETA: 7s
+[2026-04-12 12:54:09,377] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-12 12:54:09,673] [INFO] ✓ Stage 7 completed successfully (0.3s)

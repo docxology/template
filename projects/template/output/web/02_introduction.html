@@ -469,7 +469,7 @@ pillars:</p>
 <li><p><strong>Ergonomic Modularity</strong>: A Two-Layer Architecture
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
-scripts, data). 13 infrastructure subpackages comprising ~271 Python
+scripts, data). 13 infrastructure subpackages comprising ~276 Python
 modules provide reusable services; projects consume them without
 modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: A Zero-Mock testing policy
@@ -477,7 +477,7 @@ where pipeline advancement is contingent on test passage. Infrastructure
 tests must achieve 60% coverage; project tests must achieve 90%. All
 tests use real filesystem operations, real subprocess calls, and real
 network connections—no mock objects, no fake services, no synthetic test
-doubles. ~6,021 infrastructure tests and 1258+ project tests enforce
+doubles. ~6,036 infrastructure tests and 1271+ project tests enforce
 this standard.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the

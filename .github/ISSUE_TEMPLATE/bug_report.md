@@ -43,6 +43,7 @@ assignees: ""
 |---|---|
 | OS | <!-- e.g. macOS 14, Ubuntu 22.04 --> |
 | Python | <!-- e.g. 3.10 / 3.11 / 3.12 --> |
+| uv | <!-- output of `uv --version` (this repo expects uv) --> |
 | Template version | <!-- e.g. v3.0.0 or git SHA --> |
 | Active project | <!-- e.g. code_project / medical_ai / custom --> |
 | Pipeline stage | <!-- e.g. 01_run_tests / 03_render_pdf / run.sh --pipeline --> |

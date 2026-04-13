@@ -1,4 +1,6 @@
-# .github/dependabot.yml
+# Dependabot — repository root only (`/`).
+# - github-actions: weekly Monday 09:00 UTC; group `actions-minor` (minor+patch); max 5 open PRs.
+# - pip: same schedule; reads root pyproject.toml / lockfile (uv-compatible); groups `dev-tools` and `scientific-core`.
 version: 2
 updates:
   # ───────────────────────────────────────────

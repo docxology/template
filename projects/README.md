@@ -24,6 +24,10 @@ Fifty-topic `config/topics.yaml`, Hermes (OpenRouter), math-inc [OpenGauss](http
 
 The authoritative list of names under `projects/` is [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (from `discover_projects()`).
 
+### **_test_project** — pipeline fixture stub
+
+Reserved directory with only `output/` for infrastructure tests that need a project-shaped path. It is **not** a real project: no `src/` or `tests/`, so `discover_projects()` skips it. See [_test_project/README.md](_test_project/README.md).
+
 ### In-progress projects (not yet in `projects/`)
 
 These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready:

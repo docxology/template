@@ -54,7 +54,7 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 | 6 | `security` — pip-audit + bandit | lint | 3.12 | ubuntu |
 | 7 | `performance` — import ≤ 5 s | test-infra + test-project | 3.12 | ubuntu |
 
-`fep-lean` runs only when `projects/fep_lean/lean/lean-toolchain` exists (skipped otherwise). It exercises the real `gauss` CLI and Lake under `projects/fep_lean/`.
+**Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (real gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when `hashFiles('projects/fep_lean/lean/lean-toolchain') != ''` (otherwise skipped). It exercises the real `gauss` CLI and Lake under `projects/fep_lean/`.
 
 Coverage is uploaded to **Codecov** after each test job (3.12/ubuntu-latest only).
 
@@ -70,11 +70,7 @@ Triggered by `v*.*.*` tag pushes. Generates a commit-based changelog and creates
 
 ## Dependabot (`dependabot.yml`)
 
-Automated weekly dependency updates for GitHub Actions and Python (pip/uv), with:
-
-- **PR limit:** 5 open PRs per ecosystem
-- **Labels:** `dependencies`, `automated`, ecosystem-specific label
-- **Grouped updates:** dev-tools (pytest, mypy, ruff…) and scientific-core (numpy, scipy…) batched separately
+[`dependabot.yml`](dependabot.yml) at the repository root: **GitHub Actions** (`package-ecosystem: github-actions`, `directory: /`) and **Python** (`package-ecosystem: pip`, `directory: /`) both read the root **`pyproject.toml`** / lockfile — compatible with **uv**. Weekly **Monday 09:00 UTC**, max **5** open PRs per ecosystem. Groups: **`actions-minor`** (Actions minor/patch), **`dev-tools`** and **`scientific-core`** (Python).
 
 ## Quality Gates
 
@@ -91,17 +87,20 @@ Automated weekly dependency updates for GitHub Actions and Python (pip/uv), with
 
 ## Branch Protection (Recommended)
 
+Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). Matrix jobs expand to **Infra Tests (`<os>`, Python `<ver>`)** and **Project Tests (`<os>`, Python `<ver>`)** — require the combinations you care about (e.g. ubuntu-latest × 3.10/3.11/3.12), or use GitHub rulesets that treat required checks flexibly.
+
 ```yaml
 required_status_checks:
   contexts:
     - "Lint & Type Check"
+    - "Verify No Mocks Policy"
     - "Infra Tests (ubuntu-latest, Python 3.10)"
     - "Infra Tests (ubuntu-latest, Python 3.11)"
     - "Infra Tests (ubuntu-latest, Python 3.12)"
     - "Project Tests (ubuntu-latest, Python 3.10)"
     - "Project Tests (ubuntu-latest, Python 3.11)"
     - "Project Tests (ubuntu-latest, Python 3.12)"
-    # Optional: add when projects/fep_lean exists (job is skipped if lean-toolchain missing)
+    # Optional: only when fep_lean job runs (skipped if no lean-toolchain file)
     # - "fep_lean (real gauss + lake)"
     - "Validate Manuscripts"
     - "Security Scan"

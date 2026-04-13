@@ -14,7 +14,7 @@ Executes pytest with coverage measurement against both infrastructure tests (`te
 - `max_project_test_failures`: Maximum permitted project test failures (typically 0).
 - Coverage thresholds: 60% infrastructure, 90% project.
 
-The stage generates coverage JSON files for downstream reporting and saves test results in both JSON and Markdown formats. The infrastructure test suite alone contains ~6,021 tests across 346+ test files.
+The stage generates coverage JSON files for downstream reporting and saves test results in both JSON and Markdown formats. The infrastructure test suite alone contains ~6,036 tests across 347+ test files.
 
 ### Stage 02: Analysis Execution (`02_run_analysis.py`)
 

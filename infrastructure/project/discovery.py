@@ -105,6 +105,34 @@ def discover_projects(
     return projects
 
 
+def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
+    """Return the directory for *project_name*, preferring ``projects/`` over ``projects_in_progress/``.
+
+    Use this when a tool should find a work-in-progress tree (for example COGANT) that has not
+    been moved into ``projects/`` yet. If ``projects/<project_name>`` exists, that path wins;
+    otherwise ``projects_in_progress/<project_name>`` is used when present.
+
+    If neither directory exists, returns ``projects/<project_name>`` so callers get a stable
+    path for error messages.
+
+    Args:
+        repo_root: Repository root (directory containing ``infrastructure/``).
+        project_name: Final path segment (e.g. ``\"cogant\"``).
+
+    Returns:
+        Absolute resolved path to the project directory.
+    """
+    if isinstance(repo_root, str):
+        repo_root = Path(repo_root)
+    primary = repo_root / "projects" / project_name
+    if primary.is_dir():
+        return primary.resolve()
+    wip = repo_root / "projects_in_progress" / project_name
+    if wip.is_dir():
+        return wip.resolve()
+    return primary
+
+
 def _discover_nested_projects(program_dir: Path, program_name: str) -> list[ProjectInfo]:
     """Discover projects nested within a program directory.
 

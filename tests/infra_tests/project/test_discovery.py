@@ -14,7 +14,7 @@ import pytest
 from infrastructure.project.project_info import ProjectInfo
 from infrastructure.project.metadata import get_project_metadata
 from infrastructure.project.validation import validate_project_structure
-from infrastructure.project.discovery import discover_projects, get_default_project
+from infrastructure.project.discovery import discover_projects, get_default_project, resolve_project_root
 
 def test_project_package_exports_match_docs() -> None:
     """`infrastructure.project` exports convenience public API."""
@@ -22,12 +22,14 @@ def test_project_package_exports_match_docs() -> None:
         ProjectInfo as ExportedProjectInfo,
         discover_projects as exported_discover_projects,
         get_project_metadata as exported_get_project_metadata,
+        resolve_project_root as exported_resolve_project_root,
         validate_project_structure as exported_validate_project_structure,
     )
 
     assert ExportedProjectInfo is ProjectInfo
     assert exported_discover_projects is discover_projects
     assert exported_get_project_metadata is get_project_metadata
+    assert exported_resolve_project_root is resolve_project_root
     assert exported_validate_project_structure is validate_project_structure
 
 
@@ -1280,3 +1282,28 @@ authors:
         assert "Jean-Pierre Lefevre" in metadata["authors"]
         assert "Maria Garcia" in metadata["authors"]
         assert "Chen Wei" in metadata["authors"]
+
+
+def test_resolve_project_root_prefers_projects_over_wip(tmp_path: Path) -> None:
+    """Active ``projects/<name>`` wins when both exist."""
+    (tmp_path / "projects" / "demo" / "src").mkdir(parents=True)
+    (tmp_path / "projects" / "demo" / "tests").mkdir()
+    (tmp_path / "projects" / "demo" / "src" / "__init__.py").write_text("")
+    (tmp_path / "projects" / "demo" / "tests" / "__init__.py").write_text("")
+    wip_demo = tmp_path / "projects_in_progress" / "demo"
+    wip_demo.mkdir(parents=True)
+    (wip_demo / "marker.txt").write_text("wip")
+
+    resolved = resolve_project_root(tmp_path, "demo")
+    assert resolved == (tmp_path / "projects" / "demo").resolve()
+    assert not (resolved / "marker.txt").exists()
+
+
+def test_resolve_project_root_falls_back_to_projects_in_progress(tmp_path: Path) -> None:
+    """When not under ``projects/``, use ``projects_in_progress/<name>``."""
+    wip = tmp_path / "projects_in_progress" / "staged"
+    (wip / "manuscript").mkdir(parents=True)
+    (wip / "manuscript" / "config.yaml").write_text("paper:\n  title: T\n")
+
+    resolved = resolve_project_root(tmp_path, "staged")
+    assert resolved == wip.resolve()

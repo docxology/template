@@ -2,6 +2,11 @@
 
 This module provides functions for discovering scripts in the project
 and verifying their outputs.
+
+Stage 02 executes each discovered script under a subprocess timeout configured by
+``ANALYSIS_SCRIPT_TIMEOUT_SEC`` (see :mod:`infrastructure.core.analysis_timeout`).
+The default is **7200** seconds (2 hours) per script; set a higher value or
+``0``/``unlimited`` for no limit on very long Hermes or Lean batches.
 """
 
 from __future__ import annotations

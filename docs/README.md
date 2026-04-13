@@ -34,6 +34,7 @@ graph TD
 
     subgraph Operational["Operational"]
         PIPELINE[RUN_GUIDE.md<br/>Pipeline Orchestration]
+        BUILD[operational/build/<br/>uv, CI/CD]
         TROUBLESHOOT[operational/troubleshooting/<br/>Fix Issues]
         CONFIG[operational/config/<br/>Settings and Performance]
         LOGGING[operational/logging/<br/>Logging System]
@@ -60,7 +61,8 @@ graph TD
 
     ARCH --> WORKFLOW
 
-    PIPELINE --> TROUBLESHOOT
+    PIPELINE --> BUILD
+    BUILD --> TROUBLESHOOT
     TROUBLESHOOT --> CONFIG
 
     FAQ --> CHEATSHEET
@@ -76,7 +78,7 @@ graph TD
 | [`guides/`](guides/) | Skill-level guides (1-12) | getting-started, figures-and-analysis, testing, extending |
 | [`architecture/`](architecture/) | System design | two-layer-architecture.md, thin-orchestrator, decision-tree |
 | [`usage/`](usage/) | Content authoring & patterns | examples, markdown guide, style guide, visualization |
-| [`operational/`](operational/) | Operational workflows | `config/`, `logging/`, `troubleshooting/` sub-folders |
+| [`operational/`](operational/) | Operational workflows | `build/`, `config/`, `logging/`, `troubleshooting/` |
 | [`reference/`](reference/) | Reference materials | api-reference, faq, glossary, cheatsheet, workflows |
 | [`modules/`](modules/) | Infrastructure modules | modules-guide, scientific simulation, pdf-validation, `guides/` |
 | [`development/`](development/) | Development & contribution | contributing, security, roadmap, `testing/` sub-folder |
@@ -125,9 +127,9 @@ graph TD
 
 ## See Also
 
-- [`AGENTS.md`](AGENTS.md) - Documentation hub guide
+- [`AGENTS.md`](AGENTS.md) — Documentation hub (`docs/`)
+- [`../AGENTS.md`](../AGENTS.md) — Repository system reference (root)
 - [`documentation-index.md`](documentation-index.md) - Full file index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
-- [`../AGENTS.md`](../AGENTS.md) - System documentation
 - Agent skills: [`../.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc), [`../.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — `uv run python -m infrastructure.skills write` / `check`
 - Active `projects/` beyond the [`../projects/code_project/`](../projects/code_project/) exemplar may ship a local docs tree (e.g. [`../projects/fep_lean/docs/`](../projects/fep_lean/docs/)); authoritative slugs remain in [`_generated/active_projects.md`](_generated/active_projects.md)

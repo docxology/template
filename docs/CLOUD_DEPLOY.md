@@ -129,7 +129,7 @@ falling back to the root `.venv`, then to system `python3`.
 
 ## 6. Running the Pipeline (Non-Interactive)
 
-### Full pipeline (9 stages with an initial clean step, including optional LLM review)
+### Full pipeline (default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **10** DAG stages; LLM stages may skip with exit code 2 if Ollama is unavailable)
 
 ```bash
 ./run.sh --pipeline
@@ -155,13 +155,15 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 ### Individual stages
 
+Use `--project code_project` (or your active project name; see [_generated/active_projects.md](_generated/active_projects.md)):
+
 ```bash
-uv run scripts/00_setup_environment.py
-uv run scripts/01_run_tests.py
-uv run scripts/02_run_analysis.py
-uv run scripts/03_render_pdf.py
-uv run scripts/04_validate_output.py
-uv run scripts/05_copy_outputs.py
+uv run scripts/00_setup_environment.py --project code_project
+uv run scripts/01_run_tests.py --project code_project
+uv run scripts/02_run_analysis.py --project code_project
+uv run scripts/03_render_pdf.py --project code_project
+uv run scripts/04_validate_output.py --project code_project
+uv run scripts/05_copy_outputs.py --project code_project
 ```
 
 ---
@@ -324,9 +326,11 @@ uv run scripts/00_setup_environment.py
 
 ## See Also
 
-- [`RUN_GUIDE.md`](RUN_GUIDE.md) — Full pipeline orchestration reference
+- [`RUN_GUIDE.md`](RUN_GUIDE.md) — Pipeline stages and entry points
+- [`../infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) — Default DAG (10 stages; `--core-only` excludes LLM-tagged stages → 8)
 - [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
 - [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration
 - [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — CI reference
-- [`AGENTS.md`](AGENTS.md) — Complete system reference
-- [`operational/troubleshooting/`](operational/troubleshooting/) — Detailed troubleshooting
+- [`AGENTS.md`](AGENTS.md) — Documentation hub (`docs/`)
+- [`../AGENTS.md`](../AGENTS.md) — Repository system reference
+- [`operational/troubleshooting/`](operational/troubleshooting/) — Troubleshooting

@@ -1,5 +1,7 @@
 # Documentation Review Report
 
+> **Snapshot:** Findings below reflect the 2026-03-10 review. Later edits (module counts, pipeline stage wording, test totals) may supersede specific numbers in this file; use [`docs/modules/modules-guide.md`](../modules/modules-guide.md), [`docs/RUN_GUIDE.md`](../RUN_GUIDE.md), and the live `tests/` suite as ground truth.
+
 **Date**: Generated during v0.6.0 repo-wide documentation review (2026-03-10)
 **Scope**: All documentation files (AGENTS.md, README.md, and related .md files)
 **Review Type**: Completeness, Accuracy, Consistency, Redundancy, Technical Correctness
@@ -23,7 +25,7 @@ This report documents findings from a comprehensive review of all documentation 
 **All expected documentation files are present:**
 
 - **Root Level**: AGENTS.md, README.md, CLAUDE.md ✅
-- **Infrastructure Layer**: All 13 modules have AGENTS.md and README.md ✅
+- **Infrastructure Layer**: All infrastructure subpackages documented (AGENTS.md / README.md pattern); see [docs/modules/modules-guide.md](../modules/modules-guide.md) for **14** named areas vs **13** subpackage grouping ✅
 - **Scripts**: AGENTS.md and README.md present ✅
 - **Tests**: AGENTS.md and README.md present ✅
 - **Projects**: All active projects have complete documentation ✅

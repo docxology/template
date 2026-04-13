@@ -12,6 +12,13 @@ docs/operational/
 ├── README.md                       # Quick reference
 ├── reporting-guide.md              # Reporting system guide
 ├── error-handling-guide.md         # Error handling patterns
+├── build/                          # Build system, dependencies, CI/CD
+│   ├── README.md
+│   ├── build-system.md
+│   ├── dependency-management.md
+│   ├── ci-cd-integration.md
+│   ├── build-performance.md
+│   └── build-history.md
 ├── config/                         # Configuration & performance
 │   ├── configuration.md
 │   ├── checkpoint-resume.md
@@ -35,6 +42,7 @@ docs/operational/
 
 - **Project paths in commands**: use `--project code_project` in examples unless documenting placeholders; active names → [_generated/active_projects.md](../_generated/active_projects.md).
 - **Pipeline orchestration** → `docs/RUN_GUIDE.md` (stages, flags, common invocations)
+- **Build / dependencies / CI patterns** → `docs/operational/build/` (`build-system.md`, `dependency-management.md`, `ci-cd-integration.md`)
 - **CI/CD automation** → `.github/` (workflows and repository automation docs)
 - **Config files** → `config/` sub-folder (settings, checkpoints, perf)
 - **Logging** → `logging/README.md` is the comprehensive entry point

@@ -4,8 +4,8 @@
 
 The Research Project Template provides **two main entry points** for pipeline operations:
 
-1. **`run.sh`** - Main entry point for manuscript pipeline operations (Interactive TUI)
-2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core 10-stage DAG pipeline without LLM features
+1. **`run.sh`** - Main entry point for manuscript pipeline operations (interactive menu and flags)
+2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged stages removed**; the full default graph has **10** stages including LLM review and translations
 
 ## 🏗️ Thin Orchestration Architecture
 
@@ -153,23 +153,20 @@ uv run scripts/execute_multi_project.py
 ### Manuscript Menu
 
 ```text
-============================================================
-  Manuscript Pipeline - Main Menu
-============================================================
-
-⚙️  CORE STAGES
-    0  Setup Environment
-    1  Run Tests (infra + project)
-    2  Run Analysis Scripts
-    3  Render PDF
-    4  Validate Output
-    5  LLM Scientific Review
-    6  LLM Translations
+⚙️  INDIVIDUAL STAGES
+    0  Setup Environment          00_setup_environment.py
+    1  Run Tests                  01_run_tests.py
+    2  Run Analysis               02_run_analysis.py
+    3  Render PDF                 03_render_pdf.py
+    4  Validate Output            04_validate_output.py
+    5  Copy Outputs               05_copy_outputs.py
+    6  LLM Review                 06_llm_review.py
+    7  LLM Translations           06_llm_review.py
 
 🚀 ORCHESTRATION
-    7  Core Pipeline              [+infra] [-LLM] Stages [1/9]..[9/9] (no LLM stages)
-    8  Full Pipeline              [+infra] [+LLM] Stages [1/9]..[9/9] + optional LLM stages
-    9  Full Pipeline (fast)       [-infra] [+LLM] Skip infra tests
+    8  Core Pipeline              [+infra] [-LLM] Core stages
+    9  Full Pipeline              [+infra] [+LLM] All 10 stages
+    f  Full Pipeline (fast)       [-infra] [+LLM] Skip infra tests
 
 📚 MULTI-PROJECT
     a  All projects full          [+infra] [+LLM] [+report]
@@ -177,12 +174,12 @@ uv run scripts/execute_multi_project.py
     c  All projects core          [+infra] [-LLM] [+report]
     d  All projects core (fast)   [-infra] [-LLM] [+report]
 
-🔧 PROJECT MANAGEMENT
-    p  Change Active Project      [Current: <project_name>]
-    i  Show Project Info
+📁 PROJECT
+    p  Change Active Project      i  Show Project Info
     q  Quit
-============================================================
 ```
+
+Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in `run.sh` (see `STAGE_NAMES` in [`run.sh`](../run.sh)). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) (10 named stages, including clean and both LLM steps).
 
 ### Manuscript Menu Options
 
@@ -235,7 +232,11 @@ Validates build quality with reporting.
 - Checks figure integrity
 - Generates validation reports (JSON, Markdown)
 
-#### Option 5: LLM Review
+#### Option 5: Copy Outputs
+
+Copies final deliverables into the repo-level `output/{name}/` tree (and related publishing outputs per project settings).
+
+#### Option 6: LLM Review
 
 Generates AI-powered manuscript reviews using local Ollama LLM.
 
@@ -246,7 +247,7 @@ Generates AI-powered manuscript reviews using local Ollama LLM.
 
 **Requires**: Running Ollama server with at least one model installed. Skips gracefully if unavailable.
 
-#### Option 6: LLM Translations
+#### Option 7: LLM Translations
 
 Generates multi-language technical abstract translations.
 
@@ -256,36 +257,29 @@ Generates multi-language technical abstract translations.
 
 **Requires**: Running Ollama server and translation configuration in `config.yaml`.
 
-#### Option 7: Run Core Pipeline
+#### Menu `8`: Core Pipeline
 
-Executes the core pipeline (stages 0-6) without LLM features.
+Runs `execute_pipeline.py` with **`--core-only`** (default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** stages, no LLM-tagged steps).
 
-- Runs all core stages: Setup → Tests → Analysis → PDF → Validate
 - Stops on first failure with clear error messages
 - Suitable for CI/CD environments
 
-#### Option 8: Run Full Pipeline
+#### Menu `9`: Full Pipeline
 
-Executes the full pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9]):
+Runs the **full** default DAG (**10** stages in `pipeline.yaml`, including clean, both LLM stages, and copy).
 
-- All core stages (setup → tests → analysis → PDF → validate → copy)
-- LLM review and translations (optional, requires Ollama)
-- Automatic checkpointing and resume capability
+- LLM stages are optional at runtime (exit code 2 skip) if Ollama is unavailable
+- Bash progress lines use `[0/9]` for clean, then `[1/9]`–`[9/9]` for the nine entries in `STAGE_NAMES` in [`run.sh`](../run.sh) (see menu block above)
 
-**Note**: The pipeline stages are displayed as [1/9] to [9/9] in progress logs. Clean Output Directories is displayed as a pre-step ([0/9]).
+#### Menu `f`: Full Pipeline (fast)
 
-#### Option 9: Run Full Pipeline (skip infrastructure tests)
-
-Executes the full pipeline but skips infrastructure tests.
-
-- Useful for multi-project execution where infrastructure tests may have already passed
-- Runs project tests only to save time in development workflows
+Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast path in `run.sh`).
 
 ### Manuscript Non-Interactive Mode
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Run pipeline (9 stages displayed as [1/9] to [9/9], clean shown as [0/9], includes optional LLM stages)
+./run.sh --pipeline          # Full DAG (10 stages in pipeline.yaml; bash shows [0/9] clean + [1/9]–[9/9] tracked steps)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests        # Run infrastructure tests only
 ./run.sh --project-tests      # Run project tests only
@@ -304,14 +298,14 @@ Executes the full pipeline but skips infrastructure tests.
 For programmatic access or CI/CD integration, use the Python orchestrator:
 
 ```bash
-# Core pipeline (10-stage DAG) - Python orchestrator
+# Core pipeline (8 DAG stages in default pipeline.yaml — excludes LLM-tagged stages)
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
 **Features**:
 
-- Eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF rendering, validation, copy outputs). Omit infrastructure tests with `--skip-infra` (seven stages).
-- No LLM stages (uses scripts through `05_copy_outputs.py` for the main path; `06`/`07` are optional add-ons for LLM and multi-project reporting)
+- **Eight** DAG stages by default: clean → setup → infrastructure tests → project tests → analysis → PDF → validation → copy. Omit infrastructure tests with `--skip-infra` (**seven** stages).
+- No LLM-tagged stages (`06_llm_review.py` / `07_generate_executive_report.py` are not part of `--core-only`; `07` is for multi-project executive reporting)
 - No LLM dependencies required for `--core-only`
 - Suitable for automated environments
 - Checkpoint/resume support: `uv run python scripts/execute_pipeline.py --project {name} --core-only --resume`
@@ -336,20 +330,15 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 | Entry Point | Pipeline Stages | LLM Support | Use Case |
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
-| `./run.sh --pipeline` | Full 10 stages | Optional | Manuscript pipeline with LLM |
-| `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Core stages | None | Core pipeline, CI/CD automation |
+| `./run.sh --pipeline` | Full DAG (**10** stages in default `pipeline.yaml`) | Optional | Manuscript pipeline with LLM stages present in the graph |
+| `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Core DAG (**8** stages; LLM stages omitted) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
 
 ### Interactive Mode
 
 ```bash
-# Main dispatcher
-./run.sh
-
-# Direct access to manuscript operations
-./run.sh
-
+./run.sh   # main dispatcher (project menu + pipeline options)
 ```
 
 ### Non-Interactive Mode
@@ -475,12 +464,12 @@ ollama pull llama3-gradient
 
 ## See Also
 
-- [`scripts/README.md`](../scripts/README.md) - Stage orchestrators documentation
-- [`scripts/AGENTS.md`](../scripts/AGENTS.md) - scripts documentation
-- [`AGENTS.md`](AGENTS.md) - system documentation
-- [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) - **Headless / cloud server deployment guide** ⭐
-- [`core/workflow.md`](core/workflow.md) - Development workflow
-- [`RUN_GUIDE.md`](RUN_GUIDE.md) - Pipeline orchestration reference (this document)
+- [`scripts/README.md`](../scripts/README.md) — Stage orchestrators
+- [`scripts/AGENTS.md`](../scripts/AGENTS.md) — `scripts/` technical guide
+- [`AGENTS.md`](AGENTS.md) — Documentation hub (`docs/`)
+- [`../AGENTS.md`](../AGENTS.md) — Repository system reference
+- [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) — Headless / cloud server deployment
+- [`core/workflow.md`](core/workflow.md) — Development workflow
 
 ---
 

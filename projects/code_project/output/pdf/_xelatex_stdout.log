@@ -1,0 +1,537 @@
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex)
+ \write18 enabled.
+entering extended mode
+(./_combined_manuscript.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/size10.clo))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/xetex.def)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math-xetex.s
+ty (/usr/local/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty)
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/fix-cm.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/unicode-math/unicode-math-table.t
+ex))) (/usr/local/texlive/2026/texmf-dist/tex/latex/upquote/upquote.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/textcomp.sty))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype-xetex.def)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/microtype.cfg))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/parskip/parskip.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+(/usr/local/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/calc.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/footnotehyper/footnotehyper.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/trig.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/natbib/natbib.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2026/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(/usr/local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty)) (/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/url/url.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2026/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/hyperref/hxetex.def
+(/usr/local/texlive/2026/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+
+(/usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+))) (/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/xurl/xurl.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amscls/amsthm.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
+(/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/float/float.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/xspace.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/relsize/relsize.sty))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstpatch.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/lstmisc.sty)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/listings/listings.cfg))
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+(/usr/local/texlive/2026/texmf-dist/tex/latex/siunitx/siunitx.sty
+(/usr/local/texlive/2026/texmf-dist/tex/latex/translations/translations.sty)
+
+Package siunitx Warning: Option "binary-units" has been removed in this
+(siunitx)                release.
+
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/cleveref/cleveref.sty)
+==> First Aid for cleveref.sty applied!
+(./_combined_manuscript.aux)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
+)
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/translations/translations-basic-d
+ictionary-english.trsl)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg)
+(./_combined_manuscript.toc [1] [2]) [3]
+Underfull \hbox (badness 6445) in paragraph at lines 168--179
+\TU/lmr/m/n/10 by \TU/lmtt/m/n/10 projects/code_project/scripts/optimization_an
+alysis.py \TU/lmr/m/n/10 and hydrated into the
+
+Underfull \hbox (badness 1337) in paragraph at lines 180--189
+\TU/lmr/m/n/10 plate infrastructure end-to-end: scientific helpers (\TU/lmtt/m/
+n/10 infrastructure.scientific.stability\TU/lmr/m/n/10 ,
+
+Overfull \hbox (89.46939pt too wide) in paragraph at lines 180--189
+\TU/lmtt/m/n/10 infrastructure.scientific.benchmarking\TU/lmr/m/n/10 ), validat
+ion, rendering (\TU/lmtt/m/n/10 infrastructure/rendering/pdf_renderer.py\TU/lmr
+/m/n/10 ),
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.203 \(
+        |1-\alpha| \geq 1\). The analytical minimizer remains \(x^\ast = 1.0\)
+[4]
+Underfull \hbox (badness 1521) in paragraph at lines 234--240
+\TU/lmtt/m/n/10 validation\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 scientific\TU/lmr/m/
+n/10 , \TU/lmtt/m/n/10 rendering\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 reporting\TU/l
+mr/m/n/10 , \TU/lmtt/m/n/10 documentation\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 llm\T
+U/lmr/m/n/10 , \TU/lmtt/m/n/10 publishing\TU/lmr/m/n/10 ,
+
+Overfull \hbox (133.30373pt too wide) in paragraph at lines 277--282
+[]\TU/lmr/bx/n/10 Scientific Utilities\TU/lmr/m/n/10 : Utilizing \TU/lmtt/m/n/1
+0 infrastructure.scientific.stability \TU/lmr/m/n/10 and \TU/lmtt/m/n/10 infras
+tructure.scientific.benchmarking
+
+Overfull \hbox (35.49373pt too wide) in paragraph at lines 282--287
+[]\TU/lmr/bx/n/10 Hermetic Validation\TU/lmr/m/n/10 : Deploying \TU/lmtt/m/n/10
+ infrastructure.validation \TU/lmr/m/n/10 components (\TU/lmtt/m/n/10 markdown_
+validator\TU/lmr/m/n/10 ,
+[5]
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.366 choices (\(
+                 \alpha \geq 2\) in 1D) visible in both plots and CSV rows
+
+Overfull \hbox (27.62532pt too wide) in paragraph at lines 360--369
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][][][] []
+[6]
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.402 \(
+        \epsilon\), max iterations \(N_{\max}\)
+
+Overfull \hbox (165.52737pt too wide) in paragraph at lines 439--447
+\TU/lmr/m/n/10 Rather than writing ad-hoc validation code, the project imports 
+\TU/lmtt/m/n/10 infrastructure.scientific.stability.check_numerical_stability\T
+U/lmr/m/n/10 .
+
+Overfull \hbox (216.88739pt too wide) in paragraph at lines 450--456
+\TU/lmr/m/n/10 Computational complexity is evaluated not just theoretically, bu
+t empirically via [][]\TU/lmtt/m/n/10 infrastructure.scientific.benchmarking.be
+nchmark_function[][]\TU/lmr/m/n/10 .
+[7]
+Overfull \hbox (60.03539pt too wide) in paragraph at lines 476--480
+\TU/lmtt/m/n/10 manuscript/config.yaml \TU/lmr/m/n/10 and passed through \TU/lm
+tt/m/n/10 run_convergence_experiment() \TU/lmr/m/n/10 in \TU/lmtt/m/n/10 optimi
+zation_analysis.py\TU/lmr/m/n/10 .
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.499 ...} (small \(\alpha), slow but stable on \(
+                                                  H=I\)),
+Missing character: There is no ≥ (U+2265) in font [lmroman10-regular]:mapping=t
+ex-text;!
+[8]
+Underfull \hbox (badness 1127) in paragraph at lines 550--561
+\TU/lmr/m/n/10 Each figure in \TU/lmtt/m/n/10 03_results.md \TU/lmr/m/n/10 maps
+ to a single generator in \TU/lmtt/m/n/10 optimization_analysis.py
+
+Overfull \hbox (57.04938pt too wide) in paragraph at lines 550--561
+\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 generate_convergence_plot\TU/lmr/m/n/10 , \TU/l
+mtt/m/n/10 generate_step_size_sensitivity_plot\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 
+generate_convergence_rate_plot\TU/lmr/m/n/10 ,
+
+Overfull \hbox (94.40938pt too wide) in paragraph at lines 550--561
+\TU/lmtt/m/n/10 generate_complexity_visualization\TU/lmr/m/n/10 , \TU/lmtt/m/n/
+10 generate_stability_visualization\TU/lmr/m/n/10 , \TU/lmtt/m/n/10 generate_be
+nchmark_visualization\TU/lmr/m/n/10 ).
+
+Underfull \hbox (badness 1297) in paragraph at lines 570--577
+[]\TU/lmr/m/n/10 The research template supports advanced LaTeX customization th
+rough the \TU/lmtt/m/n/10 preamble.md
+[9]
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.608 \(\alpha=1.0\).}
+                      \label{fig:convergence}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.608 \(\alpha=1.0\).}
+                      \label{fig:convergence}
+[10]
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.646 grid.}
+            \label{fig:step_sensitivity}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.646 grid.}
+            \label{fig:step_sensitivity}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.646 grid.}
+            \label{fig:step_sensitivity}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.646 grid.}
+            \label{fig:step_sensitivity}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.646 grid.}
+            \label{fig:step_sensitivity}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.646 grid.}
+            \label{fig:step_sensitivity}
+
+Underfull \hbox (badness 1552) in paragraph at lines 646--646
+[]\TU/lmr/m/n/10 Figure 2: []Figure: Sensitivity sweep (independent dense grid 
+$[] [] [][][][][][][] [][][][]$) for the
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.674 ...alpha| \geq 1\). \label{tab:opt_results}}
+                                                  \tabularnewline
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.674 ...alpha| \geq 1\). \label{tab:opt_results}}
+                                                  \tabularnewline
+
+Underfull \hbox (badness 2799) in paragraph at lines 674--674
+\TU/lmr/m/n/10 state at termination, iteration count capped by $[][] []
+
+Underfull \hbox (badness 3108) in paragraph at lines 674--674
+\TU/lmr/m/n/10 ing $[][][][] [] [][][]$. Rows marked “No” either hit the
+
+Underfull \hbox (badness 3049) in paragraph at lines 674--674
+\TU/lmr/m/n/10 iteration cap before meeting the gradient tolerance (small
+Missing character: There is no α (U+03B1) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no α (U+03B1) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+Overfull \hbox (821.17511pt too wide) in paragraph at lines 711--712
+\TU/lmr/m/n/10 1233840596906177455240913358131801868905057899753059079921866755
+5409910008960556039568852130152776011678834551589497989620754880563800936176875
+2272295676536457470613583575384064.0000|  
+[11]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.736 dominates.}
+                 \label{fig:convergence_rate}
+! Missing $ inserted.
+<inserted text> 
+                $
+l.736 dominates.}
+                 \label{fig:convergence_rate}
+
+Underfull \hbox (badness 5847) in paragraph at lines 736--736
+\TU/lmr/m/n/10 aligned with the plot generated by \TU/lmtt/m/n/10 generate_conv
+ergence_rate_plot()\TU/lmr/m/n/10 . Divergent
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.740 ...th fixed \(\alpha) gives \begin{equation}
+                                                  
+! You can't use `\eqno' in math mode.
+\veqno ->\@kernel@eqno 
+                       \aftergroup \ignorespaces 
+l.743 \end{equation}
+                     so the distance to the minimizer contracts by
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.743 \end{equation}
+                     so the distance to the minimizer contracts by
+
+! LaTeX Error: \begin{document} ended by \end{equation}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.743 \end{equation}
+                     so the distance to the minimizer contracts by
+! Missing $ inserted.
+<inserted text> 
+                $
+l.743 \end{equation}
+                     so the distance to the minimizer contracts by
+! Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.743 \end{equation}
+                     so the distance to the minimizer contracts by
+! Missing $ inserted.
+<inserted text> 
+                $
+l.752 
+      
+[12] [13] [14]
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.906 instability.}
+                   \label{fig:complexity}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.906 instability.}
+                   \label{fig:complexity}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.906 instability.}
+                   \label{fig:complexity}
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.906 instability.}
+                   \label{fig:complexity}
+[15] [16]
+Overfull \hbox (3.39876pt too wide) in paragraph at lines 1008--1013
+[]\TU/lmr/bx/n/10 Infrastructure tests \TU/lmr/m/n/10 covering all underlying m
+echanisms across \TU/lmtt/m/n/10 infrastructure.reporting\TU/lmr/m/n/10 ,
+[17]
+Underfull \hbox (badness 1028) in paragraph at lines 1040--1041
+\TU/lmr/m/it/10 including all dynamic references (e.g., Figure [][]6[][]), conf
+irms the absolute reliability of the
+[18]
+Missing character: There is no ≥ (U+2265) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+Underfull \hbox (badness 10000) in paragraph at lines 1106--1111
+[]\TU/lmr/bx/n/10 Reporting & Integrity\TU/lmr/m/n/10 : \TU/lmtt/m/n/10 infrast
+ructure.reporting.pipeline_reporter \TU/lmr/m/n/10 and
+
+Underfull \hbox (badness 10000) in paragraph at lines 1106--1111
+\TU/lmtt/m/n/10 infrastructure.validation.output.validator \TU/lmr/m/n/10 assur
+ing CSV/JSON configurations
+
+Overfull \hbox (88.36372pt too wide) in paragraph at lines 1111--1116
+[]\TU/lmr/bx/n/10 Visual Cryptography\TU/lmr/m/n/10 : Publication-ready graphic
+s compiled by \TU/lmtt/m/n/10 infrastructure.rendering.pdf_renderer.py
+[19]
+Overfull \hbox (32.11711pt too wide) in paragraph at lines 1173--1176
+[]\TU/lmr/bx/n/10 Agentic Generation Systems\TU/lmr/m/n/10 : Extending validati
+on tools built over \TU/lmtt/m/n/10 infrastructure.validation
+[20] [21]
+Underfull \hbox (badness 10000) in paragraph at lines 1279--1284
+[]\TU/lmtt/m/n/10 optimization_analysis.py \TU/lmr/m/n/10 — writes \TU/lmtt/m/n
+/10 output/data/optimization_results.csv\TU/lmr/m/n/10 ,
+
+Overfull \hbox (125.79428pt too wide) in paragraph at lines 1284--1289
+[]\TU/lmtt/m/n/10 z_generate_manuscript_variables.py \TU/lmr/m/n/10 — reads the
+ CSV and YAML, emits \TU/lmtt/m/n/10 output/data/manuscript_variables.json\TU/l
+mr/m/n/10 ,
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1316 C
+        onvergence rate & Same trajectories as above; tolerance line uses
+
+Overfull \hbox (78.12378pt too wide) in paragraph at lines 1314--1316
+[][][][][][][][][][][][][][][][][][]$  
+[22]
+Overfull \hbox (100.8874pt too wide) in paragraph at lines 1373--1375
+\TU/lmr/m/n/10 The analysis pipeline produced the following artifacts, each val
+idated by \TU/lmtt/m/n/10 infrastructure.validation.output.validator\TU/lmr/m/n
+/10 : 
+[23] [24]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1485 
+       
+
+Underfull \hbox (badness 10000) in paragraph at lines 1478--1485
+\TU/lmr/m/n/10 gent $[][][] [][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][] []
+
+Overfull \hbox (15.5304pt too wide) in paragraph at lines 1489--1498
+\TU/lmr/m/n/10 tion is procedural: configuration in \TU/lmtt/m/n/10 manuscript/
+config.yaml \TU/lmr/m/n/10 drives \TU/lmtt/m/n/10 run_convergence_experiment()\
+TU/lmr/m/n/10 ,
+
+Overfull \hbox (28.90828pt too wide) in paragraph at lines 1489--1498
+\TU/lmr/m/n/10 figures, CSV exports, and \TU/lmtt/m/n/10 {{RESULT_*}} \TU/lmr/m
+/n/10 substitution (\TU/lmtt/m/n/10 scripts/z_generate_manuscript_variables.py\
+TU/lmr/m/n/10 )
+
+! LaTeX Error: Command \item invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1512 \item
+            
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1513   \textbf
+                {Global optimization}: Convexity is assumed; no basin-hopping
+
+Overfull \hbox (91.26051pt too wide) in paragraph at lines 1510--1513
+[]\TU/lmr/bx/n/10 Step-size policy\TU/lmr/m/n/10 : Only constant $[][][][][][][
+][][][][][][][][][][][][] [][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][]
+
+Underfull \hbox (badness 10000) in paragraph at lines 1510--1513
+
+[25] [26]
+
+LaTeX Font Warning: Font shape `TU/lmtt/bx/it' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/sl' tried instead on input line 1620.
+
+
+[27] [28] (./_combined_manuscript.bbl) [29] (./_combined_manuscript.aux) )
+(see the transcript file for additional information)
+Output written on _combined_manuscript.pdf (29 pages).
+Transcript written on _combined_manuscript.log.

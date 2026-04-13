@@ -14,8 +14,17 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.project.discovery import resolve_project_root
 
 logger = get_logger(__name__)
+
+
+def _manuscript_dir_for_verify(project_root: Path) -> Path:
+    """Prefer ``output/manuscript`` when populated (injected copy), else ``manuscript``."""
+    injected = project_root / "output" / "manuscript"
+    if injected.exists() and any(injected.glob("*.md")):
+        return injected
+    return project_root / "manuscript"
 
 
 def generate_rendering_summary(project_name: str = "project") -> dict[str, Any]:
@@ -25,7 +34,7 @@ def generate_rendering_summary(project_name: str = "project") -> dict[str, Any]:
         Dictionary with rendering statistics and file information
     """
     repo_root = Path(__file__).parent.parent.parent
-    project_root = repo_root / "projects" / project_name
+    project_root = resolve_project_root(repo_root, project_name)
     output_dir = project_root / "output"
 
     summary: dict[str, Any] = {
@@ -158,9 +167,9 @@ def verify_pdf_outputs(project_name: str = "project") -> bool:
     logger.info("Verifying PDF outputs...")
 
     repo_root = Path(__file__).parent.parent.parent
-    project_root = repo_root / "projects" / project_name
+    project_root = resolve_project_root(repo_root, project_name)
     pdf_dir = project_root / "output" / "pdf"
-    manuscript_dir = project_root / "manuscript"
+    manuscript_dir = _manuscript_dir_for_verify(project_root)
 
     if not pdf_dir.exists():
         logger.error("PDF output directory not found")

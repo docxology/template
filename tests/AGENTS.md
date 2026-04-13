@@ -425,7 +425,7 @@ pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html --cov-
 
 - code_project: **100%** (exceeds 90% target!)
 - Infrastructure: **83.33%** (exceeds 60% target by 39%!)
-- Total tests: **2150+** (infrastructure + project)
+- Total tests: **~6060+** collected from `tests/` and `tests/integration/` (`uv run pytest --collect-only`); add project suites under `projects/*/tests/` separately
 
 Skip Ollama-dependent suites when needed:
 
@@ -437,7 +437,7 @@ pytest tests/ -m "not requires_ollama"
 
 Tests use pytest markers to indicate dependencies:
 
-- `requires_ollama`: tests that need a running Ollama service
+- `requires_ollama`: tests that need a running Ollama service (collection hook adds `pytest.mark.timeout(180)` unless the test sets its own `timeout` marker; see `conftest.py`)
 - `requires_zenodo`: tests that need Zenodo API credentials
 - `requires_github`: tests that need GitHub API credentials  
 - `requires_arxiv`: tests that need arXiv API credentials (optional)

@@ -3,7 +3,7 @@
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{template/}
-\NormalTok{├── infrastructure/           \# Layer 1: Shared services (\textasciitilde{}271 .py files)}
+\NormalTok{├── infrastructure/           \# Layer 1: Shared services (\textasciitilde{}276 .py files)}
 \NormalTok{│   ├── core/                 \# Logging, config, exceptions, pipeline}
 \NormalTok{│   ├── documentation/        \# Figure management, glossary}
 \NormalTok{│   ├── llm/                  \# Ollama integration, literature search}
@@ -32,7 +32,7 @@
 \NormalTok{│   ├── cognitive\_case\_diagrams/ \# Compositional case modeling}
 \NormalTok{│   └── template/             \# Self{-}referential meta{-}analysis}
 \NormalTok{├── projects\_in\_progress/     \# Work{-}in{-}progress (not pipeline{-}discovered)}
-\NormalTok{├── tests/                    \# Infrastructure test suite (346+ files, \textasciitilde{}6,021 tests)}
+\NormalTok{├── tests/                    \# Infrastructure test suite (347+ files, \textasciitilde{}6,036 tests)}
 \NormalTok{├── docs/                     \# Repository documentation (163+ files, 15 subdirectories)}
 \NormalTok{├── run.sh                    \# Interactive TUI orchestrator}
 \NormalTok{├── secure\_run.sh             \# Steganographic pipeline wrapper}

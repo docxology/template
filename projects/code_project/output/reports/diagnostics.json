@@ -1,0 +1,17 @@
+{
+  "project_name": "code_project",
+  "total_events": 1,
+  "errors": 0,
+  "warnings": 1,
+  "events": [
+    {
+      "severity": "WARNING",
+      "category": "MARKDOWN_LINK",
+      "message": "Non-informative link text for https://github.com/docxology/template/tree/main/infrastructure/core",
+      "file_path": "projects/code_project/manuscript/AGENTS.md",
+      "line_number": null,
+      "fix_suggestion": "Replace '`infrastructure/core`' with descriptive text about the link destination.",
+      "context": {}
+    }
+  ]
+}

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05_experimental_setup</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="experimental-setup">Experimental Setup</h1>
+<p>This section details the complete experimental configuration used to
+generate the results in this study. Every parameter value below is
+injected programmatically from <code>config.yaml</code> and the analysis
+pipeline — no value is hardcoded in the manuscript source.</p>
+<h2 id="problem-definition">Problem Definition</h2>
+<p>The optimization target is the quadratic objective function:</p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:quadratic_objective}
+f(x) = \frac{1}{2} x^T A x - b^T x
+\end{equation}\]</span></p>
+<p>with <span class="math inline">\(A = [[1.0]]\)</span> and <span
+class="math inline">\(b = [1.0]\)</span>, yielding the analytical
+optimum at <span class="math inline">\(x^* = 1.0\)</span> with <span
+class="math inline">\(f(x^*) = -0.5\)</span>.</p>
+<h2 id="parameter-space">Parameter Space</h2>
+<p>The experiment systematically varies the gradient descent step size
+across 6 values:</p>
+<ul>
+<li><span class="math inline">\(\\alpha = 0.01\)</span>
+(conservative)</li>
+<li><span class="math inline">\(\\alpha = 0.1\)</span>
+(conservative)</li>
+<li><span class="math inline">\(\\alpha = 0.5\)</span>
+(near-optimal)</li>
+<li><span class="math inline">\(\\alpha = 1.0\)</span>
+(near-optimal)</li>
+<li><span class="math inline">\(\\alpha = 1.5\)</span> (aggressive)</li>
+<li><span class="math inline">\(\\alpha = 2.5\)</span> (divergent
+(expected unstable for H = I))</li>
+</ul>
+<p>All runs start from the initial point <span class="math inline">\(x_0
+= 0.0\)</span> and use a convergence tolerance of <span
+class="math inline">\(\|{\nabla f}\| &lt; 10^{-8}\)</span> with a
+maximum iteration limit of <span class="math inline">\(N_{\max} =
+1000\)</span>.</p>
+<h2 id="numerical-stability-grid">Numerical Stability Grid</h2>
+<p>To validate robustness, the optimizer is exercised across a grid of 8
+starting points and 6 step sizes, producing 48 total evaluations. This
+comprehensive sweep confirms that convergence is not an artifact of a
+narrow parameter choice.</p>
+<h2 id="dimensional-scaling">Dimensional Scaling</h2>
+<p>Performance benchmarking spans problem dimensions <span
+class="math inline">\(d \in \{1, 2, 5, 10, 20, 50\}\)</span>, from the
+scalar case (<span class="math inline">\(d = 1\)</span>) to moderate
+dimensionality (<span class="math inline">\(d = 50\)</span>), using
+identity-Hessian quadratics to isolate algorithmic scaling from problem
+conditioning effects.</p>
+<h2 id="computational-environment">Computational Environment</h2>
+<ul>
+<li><strong>Python</strong>: 3.12.11</li>
+<li><strong>NumPy</strong>: 2.4.2</li>
+<li><strong>Platform</strong>: Darwin arm64</li>
+<li><strong>Generated</strong>: 2026-04-12T19:53:37Z</li>
+</ul>
+<h2 id="pipeline-ordering">Pipeline ordering</h2>
+<p>Typical <code>code_project</code> analysis order (see
+<code>scripts/02_run_analysis.py</code> discovery) is:</p>
+<ol type="1">
+<li><code>optimization_analysis.py</code> — writes
+<code>output/data/optimization_results.csv</code>,
+<code>output/figures/*.png</code>, and JSON reports under
+<code>output/reports/</code>.</li>
+<li><code>z_generate_manuscript_variables.py</code> — reads the CSV and
+YAML, emits <code>output/data/manuscript_variables.json</code>, and
+writes substituted copies to <code>output/manuscript/</code> for
+rendering.</li>
+<li><code>generate_api_docs.py</code> — refreshes API markdown consumed
+by documentation targets.</li>
+</ol>
+<p>PDF compilation then reads from <code>output/manuscript/</code> so
+that figure paths and numeric tables match the analysis that just
+completed.</p>
+<h2 id="relation-to-figures">Relation to figures</h2>
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th>Figure (Section 3)</th>
+<th>Primary inputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Convergence trajectories</td>
+<td><code>experiment.step_sizes</code>, <code>initial_point</code>,
+<code>tolerance</code>, <code>max_iterations</code></td>
+</tr>
+<tr>
+<td>Step-size sensitivity</td>
+<td>Dense <span class="math inline">\(\alpha\)</span> sweep internal to
+<code>generate_step_size_sensitivity_plot()</code></td>
+</tr>
+<tr>
+<td>Convergence rate</td>
+<td>Same trajectories as above; tolerance line uses
+<code>convergence_tolerance</code></td>
+</tr>
+<tr>
+<td>Complexity quad panel</td>
+<td>One bar chart per row of <code>optimization_results.csv</code></td>
+</tr>
+<tr>
+<td>Stability heatmap</td>
+<td><code>stability_starting_points</code> <span
+class="math inline">\(\times\)</span>
+<code>stability_step_sizes</code></td>
+</tr>
+<tr>
+<td>Dimensional benchmark</td>
+<td><code>benchmark_dimensions</code>, fixed <span
+class="math inline">\(\alpha=0.1\)</span>, internal tol <span
+class="math inline">\(10^{-10}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>This table is descriptive documentation only; it is not executed as
+code during the build.</p>
+</body>
+</html>

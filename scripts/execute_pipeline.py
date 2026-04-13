@@ -69,6 +69,9 @@ def execute_single_stage(stage: str, project_name: str, repo_root: Path) -> int:
 
     import subprocess
 
+    # Outer safety cap for the whole stage process (30 min). Per-script limits inside
+    # scripts/02_run_analysis.py use ANALYSIS_SCRIPT_TIMEOUT_SEC / analysis_timeout
+    # (default 7200 s per discovered script) — a different layer.
     result = subprocess.run(cmd, cwd=str(repo_root), check=False, timeout=1800)
     return result.returncode
 

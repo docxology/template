@@ -1,0 +1,85 @@
+# Code Project Configuration - Optimization Research Exemplar
+# Comprehensive research project demonstrating advanced optimization algorithms
+# This file serves as a meta-artifact linking the prose of the manuscript to the execution
+# layer. It is directly read by `infrastructure/core/config_loader.py`.
+
+# Consumed by: `infrastructure/rendering/pdf_renderer.py` and `infrastructure/reporting/pipeline_summary.py`
+paper:
+  # RASP Standard: Title must be descriptive and objective
+  title: "Convergence Analysis of Gradient Descent Optimization"
+  subtitle: "Theoretical Bounds and Empirical Performance in Quadratic Minimization"
+  version: "2.0"
+  date: "" # Auto-generated via `infrastructure/validation/output_validator.py` if empty
+
+# Consumed by: `infrastructure/publishing/extract_publication_metadata.py`
+authors:
+  - name: "Research Template Author"
+    orcid: "0000-0000-0000-1234"
+    email: "author@research-template.org"
+    affiliation: "Research Template Institute"
+    corresponding: true
+  - name: "Co-Author"
+    orcid: "0000-0000-0000-5678"
+    email: "coauthor@research-template.org"
+    affiliation: "Department of Computational Mathematics"
+
+# Consumed by: `infrastructure/publishing/publish_to_zenodo.py`
+publication:
+  doi: "10.5281/zenodo.12345678" # Checked by validation gates
+  journal: "Journal of Optimization Methods"
+  volume: "15"
+  pages: "1-25"
+  year: "2026"
+
+keywords:
+  - "optimization algorithms"
+  - "gradient descent"
+  - "convergence analysis"
+  - "numerical methods"
+  - "mathematical programming"
+  - "reproducible research"
+  - "infrastructure automation"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+# Consumed by: `infrastructure/llm/client.py` and `infrastructure/llm/agent.py`
+# See projects/code_project/docs/ for details
+llm:
+  reviews:
+    # Explicitly enabled for this exemplar to demonstrate AI-aided analysis
+    enabled: true
+    types:
+      - executive_summary
+      - quality_review
+      - methodology_review
+  translations:
+    enabled: true
+    languages:
+      - zh
+
+# Consumed by: `infrastructure/reporting/pipeline_reporter.py` and CI/CD gates
+# ZERO-MOCK TOLERANCE: Any failure blocks manuscript rendering
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
+
+# Experimental parameters — read by optimization_analysis.py and generate_manuscript_variables.py
+experiment:
+  # Agency categories:
+  #   Conservative (slow convergence):  α = 0.01, 0.1
+  #   Near-optimal (fast convergence):  α = 0.5, 1.0  (α=1.0 converges in 1 step for H=I)
+  #   Aggressive/Oscillating:           α = 1.5  (|1-α|=0.5, converges with oscillation)
+  #   Divergent:                         α = 2.5  (|1-α|=1.5 > 1, diverges)
+  step_sizes: [0.01, 0.1, 0.5, 1.0, 1.5, 2.5]
+  initial_point: 0.0
+  max_iterations: 1000
+  tolerance: 1.0e-8
+  convergence_tolerance: 1.0e-8
+  quadratic_A: [[1.0]]
+  quadratic_b: [1.0]
+  stability_starting_points: [-50.0, -10.0, -5.0, 0.0, 0.1, 5.0, 10.0, 50.0]
+  stability_step_sizes: [0.01, 0.05, 0.1, 0.2, 0.5, 0.9]
+  benchmark_dimensions: [1, 2, 5, 10, 20, 50]

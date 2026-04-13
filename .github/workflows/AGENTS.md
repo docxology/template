@@ -32,19 +32,18 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 
 ### Job Graph
 
+`validate` and `security` depend on **`lint` only** (they run in parallel with the `verify-no-mocks` subtree). `test-infra`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
+
 ```
 lint
- └── verify-no-mocks
-      ├── test-infra  (matrix: ubuntu+macos × 3.10/3.11/3.12)
-      │    └── [codecov upload — 3.12/ubuntu only]
-      ├── test-project (matrix: ubuntu+macos × 3.10/3.11/3.12; ignores projects/fep_lean/tests/)
-      │    └── [codecov upload — 3.12/ubuntu only]
-      ├── fep-lean (ubuntu-only: real gauss + elan lake/lean)
-      └── validate
-      └── security
-           └── (parallel with validate)
-test-infra + test-project
- └── performance
+ ├── verify-no-mocks
+ │    ├── test-infra   (matrix: ubuntu+macos × 3.10/3.11/3.12) → codecov on 3.12/ubuntu only
+ │    ├── test-project (same matrix; ignores projects/fep_lean/tests/)
+ │    └── fep-lean     (ubuntu-only; skipped if no lean-toolchain)
+ ├── validate        (needs: lint)
+ └── security          (needs: lint)
+
+test-infra + test-project → performance
 ```
 
 ### Job Details

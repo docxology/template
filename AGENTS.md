@@ -9,7 +9,16 @@ This document provides documentation for the Research Project Template system, e
 **Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 **DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
 
-The reproducibility crisis in computational research is fundamentally structural: research artifacts are scattered across disconnected tools—LaTeX editors, Jupyter notebooks, ad-hoc shell scripts—with no enforced mechanism to keep code, data, and manuscript synchronized. `template/` applies the principle of Infrastructure as Code to the research lifecycle, making the manuscript, test suite, and provenance chain version-controlled, deterministically buildable, and independently verifiable. It is built on a Two-Layer Architecture that separates 13 reusable infrastructure subpackages (~271 Python modules, validated by ~6,026 tests) from self-contained project workspaces, connected by a ten-stage DAG-based build pipeline. A Documentation Duality standard equips every directory with both human-readable `README.md` and machine-readable `AGENTS.md` files, while each infrastructure module additionally carries a `SKILL.md`—a structured skill descriptor aligned with the Model Context Protocol—enabling AI agents to locate and invoke module capabilities without hallucinating API signatures. Scalability is demonstrated across three heterogeneous projects achieving 100% pipeline success with zero mock violations. `template/` is open source under the Apache 2.0 License at `github.com/docxology/template`.
+`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, and provenance, built through a ten-stage DAG. **Layer 1** (`infrastructure/`, ~277 Python files) is separated from **Layer 2** (self-contained projects under `projects/`). Each directory carries `README.md` + `AGENTS.md`; infrastructure modules add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
+
+### Documentation map
+
+| Entry | Role |
+| --- | --- |
+| [`README.md`](README.md) | Human onboarding, badges, quick paths |
+| [`CLAUDE.md`](CLAUDE.md) | Claude Code: commands, architecture, constraints |
+| [`.github/README.md`](.github/README.md) | GitHub: CI overview, templates, Dependabot |
+| [`.github/AGENTS.md`](.github/AGENTS.md) | Actions job names, coverage gates, branch protection hints |
 
 ## 📋 Table of Contents
 
@@ -151,7 +160,7 @@ template/                           # Generic template repository
 │   ├── docker/                     # Docker configuration
 │   │   ├── Dockerfile
 │   │   └── docker-compose.yml
-│   └── {core,documentation,...}/   # 13 subpackages (~271 Python modules)
+│   └── {core,documentation,...}/   # 13 subpackages (~277 Python files)
 ├── scripts/                        # Entry point orchestrators (00–07)
 │   ├── AGENTS.md
 │   ├── README.md
@@ -162,6 +171,7 @@ template/                           # Generic template repository
 │   └── infra_tests/test_*.py       # Tests for infrastructure/ modules
 ├── projects/                       # Multiple research projects directory
 │   ├── README.md                   # Multi-project guide
+│   ├── _test_project/              # Stub: output/ only; not discovered (see _test_project/AGENTS.md)
 │   ├── code_project/               # Optimization research exemplar (master exemplar)
 │   │   ├── src/                    # Project-specific scientific code
 │   │   ├── tests/                  # Project tests
@@ -195,7 +205,8 @@ Each directory contains documentation for easy navigation:
 
 | Directory | AGENTS.md | README.md | Purpose |
 | --------- | --------- | --------- | ------- |
-| [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | — | Optimization research exemplar |
+| [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | [README.md](projects/code_project/README.md) | Optimization research exemplar |
+| [`projects/_test_project/`](projects/_test_project/) | [AGENTS.md](projects/_test_project/AGENTS.md) | [README.md](projects/_test_project/README.md) | Pipeline fixture stub (`output/` only); not discovered |
 | [`projects/cognitive_case_diagrams/`](projects/cognitive_case_diagrams/) | [AGENTS.md](projects/cognitive_case_diagrams/AGENTS.md) | [README.md](projects/cognitive_case_diagrams/README.md) | *Compositional Approaches to Linguistic Case for Cognitive Modeling* |
 | [`projects/template/`](projects/template/) | [AGENTS.md](projects/template/AGENTS.md) | [README.md](projects/template/README.md) | Template meta-documentation |
 | [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | FEP / Active Inference Lean catalogue; math-inc `gauss` CLI + Hermes |
@@ -513,9 +524,9 @@ steganography:
 
 #### Entry Point Comparison
 
-- **`./run.sh`**: Main entry point - Interactive menu or pipeline run. Stages are displayed as [1/9] to [9/9], with an initial clean step shown as [0/9].
-- **`./run.sh --pipeline`**: Non-interactive pipeline execution; same stage display as above. Optional LLM stages run when enabled/configured.
-- **`python3 scripts/execute_pipeline.py --core-only`**: Core pipeline only (no LLM).
+- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Bash progress: `[0/9]` clean, then `[1/9]`–`[9/9]` for nine tracked steps (see `run.sh` `STAGE_NAMES`).
+- **`./run.sh --pipeline`**: Non-interactive full DAG; optional LLM stages may skip if Ollama is unavailable.
+- **`uv run python scripts/execute_pipeline.py --project {name} --core-only`**: Core DAG only — **8** stages in default [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) (LLM-tagged stages excluded); no LLM dependencies.
 
 ### Pipeline Stages
 
@@ -541,10 +552,10 @@ steganography:
 
 - **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards (generated after all projects, not as a numbered stage)
 
-**Stage Numbering:**
+**Stage numbering:**
 
-- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in progress logs, with clean shown as [0/9]
-- `scripts/execute_pipeline.py`: Core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
+- **`./run.sh`**: `[0/9]` clean, then `[1/9]`–`[9/9]` for tracked steps (see `run.sh`).
+- **Default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)**: **10** named DAG stages (including clean and both LLM stages); **`--core-only`** runs **8** stages (excludes LLM-tagged stages).
 
 ### Manual Execution Options
 
@@ -1302,7 +1313,7 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 
 **All systems confirmed functional with exemplar projects:**
 
-- ✅ **Multi-project pipeline**: 10-stage DAG pipeline (clean + stages 1–9) + executive reporting
+- ✅ **Multi-project pipeline**: default **10**-stage DAG in `pipeline.yaml` (including LLM stages) + optional executive reporting for `--all-projects`
 - ✅ **Test coverage excellence**: All active projects meet coverage requirements
 - ✅ **Publication-quality outputs**: Professional PDFs, cross-referenced manuscripts, automated figures
 - ✅ **Mathematical rigor**: Advanced equations, theorem proofs, convergence analysis

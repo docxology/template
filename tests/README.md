@@ -58,6 +58,7 @@ Session setup lives in [`conftest.py`](conftest.py) as `ensure_ollama_for_tests`
 - **Default**: if the daemon is up but no “small/fast” preference model is installed (see `SMALL_FAST_MODEL_PREFERENCES` in `infrastructure.llm.utils.models`), the harness runs `ollama pull` for **`OLLAMA_TEST_PULL_MODEL`** (default `smollm2`). First pull needs network and can take several minutes; override timeout with **`OLLAMA_TEST_PULL_TIMEOUT`** (seconds; default `900`, or `none` for no limit).
 - **Air-gapped / pre-seeded images**: set **`OLLAMA_SKIP_TEST_MODEL_PULL=1`** to skip auto-pull. You must still have at least one installed model; without a small/fast preference model, some tests may skip or use slower fallbacks.
 - **LLM HTTP fakes**: `tests/infra_tests/llm/conftest.py` points `OLLAMA_HOST` at `pytest_httpserver` for most tests. That is **not** the Ollama daemon—only contract testing for the HTTP client. Real-daemon tests use an explicit `OllamaClientConfig` with default `base_url` or [`tests/infra_tests/llm/real_ollama_client.py`](infra_tests/llm/real_ollama_client.py).
+- **Per-test timeout**: the repo default `pytest-timeout` is 10s; [`conftest.py`](conftest.py) adds `@pytest.mark.timeout(180)` to any collected test that already has `requires_ollama`, so streaming completions are not cut off. Override with an explicit `@pytest.mark.timeout(...)` on the test.
 
 Skip all Ollama-tied tests: `pytest -m 'not requires_ollama'`.
 

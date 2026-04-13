@@ -25,6 +25,7 @@ from infrastructure.rendering.manuscript_discovery import (
 )
 from infrastructure.rendering.latex_package_validator import validate_preamble_packages
 from infrastructure.rendering.latex_validation import ValidationReport
+from infrastructure.project.discovery import resolve_project_root
 
 # Re-exports for backwards compatibility
 from infrastructure.rendering._pipeline_summary import (  # noqa: F401
@@ -233,7 +234,10 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
     """
     logger.info(f"Executing PDF rendering pipeline for project '{project_name}'...")
     repo_root = Path(__file__).parent.parent.parent
-    project_root = repo_root / "projects" / project_name
+    project_root = resolve_project_root(repo_root, project_name)
+    if not project_root.is_dir():
+        logger.error(f"Project directory not found: {project_root}")
+        return 1
     reporter = DiagnosticReporter(
         project_name=project_name,
         output_dir=project_root / "output",

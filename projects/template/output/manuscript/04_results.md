@@ -9,7 +9,7 @@ All three projects were executed through the full ten-stage DAG pipeline using t
 | Project | Stages | Duration | Tests | Coverage |
 |---------|--------|----------|-------|----------|
 | `code_project` | 7 | ~40s | 39/39 | 90%+ |
-| `cognitive_case_diagrams` | 7 | ~60s | 912/912 | 90%+ |
+| `cognitive_case_diagrams` | 7 | ~60s | 922/922 | 90%+ |
 | `template` | 7 | ~25s | 66/66 | 90%+ |
 
 **Overall success rate**: 100.0% (3/3 projects)
@@ -18,7 +18,7 @@ All three projects were executed through the full ten-stage DAG pipeline using t
 
 *Timing measured on Apple M-series hardware with SSD; analysis scripts use fixed random seeds. Figures are representative; actual duration scales with system load, test suite size, and manuscript complexity.*
 
-The `cognitive_case_diagrams` project, with its 912 tests and programmatically generated figures, represents the most computationally intensive exemplar—yet completes in under one minute, confirming that the Zero-Mock policy's real-method overhead remains tractable at this scale.
+The `cognitive_case_diagrams` project, with its 922 tests and programmatically generated figures, represents the most computationally intensive exemplar—yet completes in under one minute, confirming that the Zero-Mock policy's real-method overhead remains tractable at this scale.
 
 ## Infrastructure Test Suite
 
@@ -26,8 +26,8 @@ The infrastructure layer is validated by a separate test suite of significant sc
 
 | Metric | Value |
 |--------|-------|
-| Test files | 346+ |
-| Total tests | ~6,021 |
+| Test files | 347+ |
+| Total tests | ~6,036 |
 | Infrastructure coverage threshold | 60% (achieved: 83%+) |
 | Zero-mock violations | 0 |
 | Real filesystem operations | ✓ |
@@ -42,14 +42,14 @@ The introspection module (`template.introspection`) programmatically enumerates 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
 | `config` | 0 | ✓ | ✓ | Configuration schemas |
-| `core` | 71 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 72 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation |
 | `documentation` | 6 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
 | `llm` | 53 | ✓ | ✓ | LLM review, literature search, translation |
 | `project` | 5 | ✓ | ✓ | `discover_projects`, workspace management |
 | `publishing` | 14 | ✓ | ✓ | Citation generation (APA, BibTeX, MLA), Zenodo |
 | `rendering` | 27 | ✓ | ✓ | PDF rendering, Pandoc filters, HTML reports |
-| `reporting` | 40 | ✓ | ✓ | Coverage parsing, executive reports |
+| `reporting` | 44 | ✓ | ✓ | Coverage parsing, executive reports |
 | `scientific` | 6 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
 | `skills` | 4 | ✓ | ✓ | — |
 | `steganography` | 10 | ✓ | ✓ | Metadata injection, QR overlays, hashing |

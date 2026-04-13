@@ -157,6 +157,10 @@ projects/{name}/
 │   └── reports/            # Analysis reports
 ```
 
+### Stub directory (not discovered)
+
+[`projects/_test_project/`](_test_project/) contains only `output/` for validation tests that reference a fixed project name. It does **not** satisfy the required `src/` + `tests/` layout and is omitted from `discover_projects()`. See [`_test_project/AGENTS.md`](_test_project/AGENTS.md).
+
 ## Infrastructure Compliance
 
 Projects are **operated upon** by infrastructure modules while maintaining independence:

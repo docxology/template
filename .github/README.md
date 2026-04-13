@@ -85,10 +85,10 @@ graph TD
     Root["/ (Repository Root)"] --> Infra["infrastructure/ (Layer 1 — Shared)"]
     Root --> Scripts["scripts/ (Pipeline Stage Scripts)"]
     Root --> Projects["projects/ (Layer 2 — Project Workspaces)"]
-    Root --> Docs["docs/ (Documentation Hub — 90+ files)"]
+    Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 13 infrastructure subpackages · ~150 Python modules"
+    subgraph "Layer 1 · 13 subpackages under infrastructure/ · 14 named areas in docs (see docs/modules/modules-guide.md)"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -111,13 +111,13 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
-| `infrastructure/` | Permanent | 13 subpackages (+ hub `SKILL.md`); see [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) |
+| `infrastructure/` | Permanent | 13 top-level subpackages under `infrastructure/` (+ hub `SKILL.md`); module count as **14 named areas** in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
 | `scripts/` | Permanent | 8 generic pipeline stage scripts (Stages 00–07) |
 | `output/` | Disposable | Final PDFs, dashboards, reports — cleaned on each run |
-| `docs/` | Permanent | 90+ documentation files across 13 subdirectories |
+| `docs/` | Permanent | Large documentation hub — inventory in [`docs/documentation-index.md`](../docs/documentation-index.md) (counts vary; do not rely on a single “N files” figure across READMEs) |
 | `tests/` | Permanent | Infrastructure-level test suite (≥ 60% coverage gate) |
 
 > **Key invariant:** All domain logic lives in `projects/{name}/src/`. Scripts are **thin orchestrators** — they import and call, never implement. See [docs/architecture/thin-orchestrator-summary.md](../docs/architecture/thin-orchestrator-summary.md).
@@ -160,6 +160,12 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 > **`projects/cognitive_case_diagrams/`** is an active manuscript project (categorial grammar, case diagrams, and related chapters).
 
 → **Details**: [projects/cognitive_case_diagrams/AGENTS.md](../projects/cognitive_case_diagrams/AGENTS.md) · [projects/cognitive_case_diagrams/README.md](../projects/cognitive_case_diagrams/README.md)
+
+### `fep_lean` — FEP / Lean catalogue
+
+> **`projects/fep_lean/`** — Free Energy Principle / Active Inference topics with Lean 4 sketches, Hermes (OpenRouter), and math-inc Open Gauss (`gauss`) when workflows are enabled.
+
+→ **Details**: [projects/fep_lean/AGENTS.md](../projects/fep_lean/AGENTS.md) · [projects/fep_lean/README.md](../projects/fep_lean/README.md)
 
 ### Archived exemplars
 
@@ -269,16 +275,16 @@ flowchart TD
     end
 
     subgraph Processing["⚙️ 10-Stage DAG Pipeline"]
-        STAGE0[00 Clean\nRemove old outputs]
-        STAGE1[01 Setup\nEnvironment validation]
-        STAGE2[02 Infra Tests\nCoverage verification]
-        STAGE3[03 Project Tests\nCoverage verification]
-        STAGE4[04 Analysis\nScript execution]
-        STAGE5[05 Render\nPDF generation]
-        STAGE6[06 Validate\nQuality checks]
-        STAGE7[07 LLM Reviews\nAI Scientific Review]
-        STAGE8[08 LLM Translations\nMulti-lang generation]
-        STAGE9[09 Copy Outputs\nDistribution]
+        STAGE0["Stage 0 — Clean\n(built-in / executor)"]
+        STAGE1["Stage 1 — Setup\n00_setup_environment.py"]
+        STAGE2["Stage 2 — Infra tests\n01_run_tests.py --infra-only"]
+        STAGE3["Stage 3 — Project tests\n01_run_tests.py --project-only"]
+        STAGE4["Stage 4 — Analysis\n02_run_analysis.py"]
+        STAGE5["Stage 5 — Render PDF\n03_render_pdf.py"]
+        STAGE6["Stage 6 — Validate\n04_validate_output.py"]
+        STAGE7["Stage 7 — LLM reviews\n06_llm_review.py --reviews-only"]
+        STAGE8["Stage 8 — LLM translations\n06_llm_review.py --translations-only"]
+        STAGE9["Stage 9 — Copy outputs\n05_copy_outputs.py"]
     end
 
     subgraph Output["📤 Generated Outputs"]
@@ -316,6 +322,8 @@ flowchart TD
     class Processing process
     class Output output
 ```
+
+Stage indices **0–9** are pipeline positions; they **do not** match `scripts/NN_*.py` numeric prefixes (e.g. stage 2 uses `01_run_tests.py`). The table below is authoritative.
 
 | Stage | Script | Failure Mode |
 | --- | --- | :---: |
@@ -446,7 +454,7 @@ graph TD
     class Operate operate
 ```
 
-The `docs/` directory contains **90+ files** across **13 subdirectories**. Every subdirectory has its own `README.md` and `AGENTS.md`. Start at [**docs/README.md**](../docs/README.md) or [**docs/documentation-index.md**](../docs/documentation-index.md).
+The `docs/` directory spans many files across **13 subdirectories** — see [**docs/documentation-index.md**](../docs/documentation-index.md) for the live inventory. Every subdirectory has its own `README.md` and `AGENTS.md`. Start at [**docs/README.md**](../docs/README.md).
 
 ### 📂 Core (`docs/core/`)
 
@@ -619,7 +627,7 @@ Documentation review reports and filepath audits.
 | File | Purpose |
 | --- | --- |
 | [docs/README.md](../docs/README.md) | Documentation hub index and navigation |
-| [docs/documentation-index.md](../docs/documentation-index.md) | Full inventory of all 90+ documentation files |
+| [docs/documentation-index.md](../docs/documentation-index.md) | Full inventory of documentation files (authoritative count) |
 | [docs/RUN_GUIDE.md](../docs/RUN_GUIDE.md) | Complete run guide: modes, flags, troubleshooting |
 | [docs/CLOUD_DEPLOY.md](../docs/CLOUD_DEPLOY.md) | Cloud deployment guide (AWS, GCP, Azure, Docker) |
 | [docs/PAI.md](../docs/PAI.md) | Personal AI Infrastructure integration guide |

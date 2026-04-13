@@ -1274,6 +1274,10 @@ def setup_environment(
     """
 ```
 
+### analysis_timeout.py
+
+- ``parse_analysis_script_timeout_sec(environ=None) -> float | None`` — resolves ``ANALYSIS_SCRIPT_TIMEOUT_SEC`` for Stage 02 ``subprocess.run`` (default ``7200.0`` seconds = 2 hours; ``0`` / ``none`` / ``unlimited`` / ``inf`` → ``None``, no per-script timeout).
+
 ### script_discovery.py
 
 #### discover_analysis_scripts (function)

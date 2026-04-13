@@ -11,6 +11,7 @@ The `infrastructure/project/` module provides project discovery, validation, and
 **Core Functions:**
 
 - `discover_projects(repo_root, projects_dir="projects")` - Find all valid projects in the active projects directory
+- `resolve_project_root(repo_root, project_name)` - Resolve `projects/<name>` if present, else `projects_in_progress/<name>` (used by PDF rendering for WIP trees)
 - `validate_project_structure(project_dir)` - Validate required directories exist
 - `get_project_metadata(project_dir)` - Extract configuration from pyproject.toml and config.yaml
 
