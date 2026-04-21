@@ -252,18 +252,17 @@ class HermesConfig:
     def effective_timeout(self) -> int        # reasoning_timeout_s if reasoning model
 ```
 
-**Model fallback chain** (OpenRouter free tier, tried in order):
+**Model fallback chain** (`_FREE_MODEL_CHAIN` in `src/llm/hermes.py`; tried in order, primary first):
 
 ```
-1. moonshotai/kimi-k2.6                     (primary, Moonshot Kimi K2.6, 262K ctx)
-2. moonshotai/kimi-k2-thinking              (extended-thinking fallback)
+1. moonshotai/kimi-k2.6                     (primary, Moonshot Kimi K2.6, 262K ctx; member of _REASONING_MODELS)
+2. moonshotai/kimi-k2-thinking              (extended-thinking K2 variant)
 3. qwen/qwen3-next-80b-a3b-instruct:free    (fast instruct fallback)
-4. z-ai/glm-5.1                             (ZhipuAI GLM-5.1, demoted from primary)
+4. z-ai/glm-5.1                             (ZhipuAI GLM-5.1, demoted from primary; in _REASONING_MODELS)
 5. openai/gpt-oss-120b:free                 (OpenAI 120B distilled)
-6. nvidia/nemotron-3-super-120b-a12b:free   (reasoning model fallback)
-4. openai/gpt-oss-120b:free
-5. nousresearch/hermes-3-llama-3.1-405b:free
-6. arcee-ai/trinity-large-preview:free
+6. nvidia/nemotron-3-super-120b-a12b:free   (reasoning model fallback; in _REASONING_MODELS)
+7. nousresearch/hermes-3-llama-3.1-405b:free (NL-strong, 8 req/min limit)
+8. arcee-ai/trinity-large-preview:free      (reasoning-focused)
 ```
 
 **Config priority** (highest → lowest):

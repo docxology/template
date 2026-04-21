@@ -252,13 +252,13 @@ When `FEP_LEAN_GAUSS_WORKFLOWS` is **truthy** (or `FEP_LEAN_LIVE_TESTS=1`), `01_
 Runtime objects the pipeline, tests, and docs all reference by name.
 
 ### `HermesConfig`
-Configuration dataclass for the Hermes LLM explainer. Defined in [`src/llm/hermes.py:145`](../src/llm/hermes.py#L145). Fields include `model` (primary model slug, defaults to `moonshotai/kimi-k2.6`), `base_url` (`https://openrouter.ai/api/v1`), `api_key`, `max_tokens` (16384), `timeout_s` (150, **wall-clock** — see `_make_request`), `reasoning_max_tokens` (65536), `reasoning_timeout_s` (300, wall-clock), `enabled`, `cache_ttl_hours` (24.0), and `fallback_models`. Loaded via `HermesConfig.from_settings(project_root)` which reads `config/settings.yaml` and environment variables (including `OPENROUTER_API_KEY` from `~/.gauss/.env`).
+Configuration dataclass for the Hermes LLM explainer. Defined in [`src/llm/hermes.py:173`](../src/llm/hermes.py#L173). Fields include `model` (primary model slug, defaults to `moonshotai/kimi-k2.6`), `base_url` (`https://openrouter.ai/api/v1`), `api_key`, `max_tokens` (16384), `timeout_s` (150, **wall-clock** — see `_make_request`), `reasoning_max_tokens` (65536), `reasoning_timeout_s` (300, wall-clock), `enabled`, `cache_ttl_hours` (24.0), and `fallback_models`. Loaded via `HermesConfig.from_settings(project_root)` which reads `config/settings.yaml` and environment variables (including `OPENROUTER_API_KEY` from `~/.gauss/.env`).
 
 ### `HermesExplainer`
-Main LLM client class that wraps OpenRouter chat-completions calls using `urllib` (no `requests` dependency). Defined in [`src/llm/hermes.py:361`](../src/llm/hermes.py#L361). Sends a 2-message prompt (system persona + user task) and parses response into an explanation plus refined Lean 4 sketch (extracted from the first fenced ``lean`` code block). On 4xx/5xx or transient failure, walks the [fallback chain](#fallback-chain).
+Main LLM client class that wraps OpenRouter chat-completions calls using `urllib` (no `requests` dependency). Defined in [`src/llm/hermes.py:389`](../src/llm/hermes.py#L389). Sends a 2-message prompt (system persona + user task) and parses response into an explanation plus refined Lean 4 sketch (extracted from the first fenced ``lean`` code block). On 4xx/5xx or transient failure, walks the [fallback chain](#fallback-chain).
 
 ### `HermesResult`
-Dataclass for a Hermes LLM response. Defined in [`src/llm/hermes.py:332`](../src/llm/hermes.py#L332). Fields: `success`, `model_used`, `explanation`, `refined_lean_sketch`, `reasoning`, `tokens_used`, `duration_s`, `error`, `topic_id`, `cache_hit`. `.as_dict()` serializes with reasoning truncated to 2000 chars for storage.
+Dataclass for a Hermes LLM response. Defined in [`src/llm/hermes.py:360`](../src/llm/hermes.py#L360). Fields: `success`, `model_used`, `explanation`, `refined_lean_sketch`, `reasoning`, `tokens_used`, `duration_s`, `error`, `topic_id`, `cache_hit`. `.as_dict()` serializes with reasoning truncated to 2000 chars for storage.
 
 ### `GaussRunner`
 Orchestrates per-topic Hermes + `LeanVerifier` + SQLite workflow. Defined in [`src/gauss/runner.py:98`](../src/gauss/runner.py#L98). Constructs one OpenGauss session per topic, invokes Hermes for explanation and sketch refinement, calls `LeanVerifier` to compile the refined sketch, and persists artifacts via `OpenGaussClient`.
@@ -288,7 +288,7 @@ Per-stage result dataclass. Fields: `status` (`ok` / `skipped` / `error`), `dura
 LLM API aggregator used by `HermesExplainer`. Base URL: `https://openrouter.ai/api/v1`. Accepts multiple model providers behind a single OpenAI-compatible chat-completions surface. Requires `OPENROUTER_API_KEY`; optional `HTTP-Referer` and `X-Title` headers identify the project.
 
 ### fallback chain
-A 6-model ordered list tried in sequence when the primary model fails with 429 or transient error on OpenRouter. Configurable via `HermesConfig.fallback_models`; empty list falls back to the built-in `_FREE_MODEL_CHAIN`. Anthropic `base_url` ignores the chain.
+An 8-model ordered list (primary first, then 7 fallbacks) tried in sequence when the active model fails with 429 or transient error on OpenRouter. Configurable via `HermesConfig.fallback_models` (which lists the 7 fallbacks only — the primary `HermesConfig.model` is prepended automatically); empty list falls back to the built-in `_FREE_MODEL_CHAIN`. Anthropic `base_url` ignores the chain.
 
 ### `moonshotai/kimi-k2.6`
 Primary Hermes model slug in the default configuration (default `HermesConfig.model`). Moonshot Kimi K2.6, 262K context, member of `_REASONING_MODELS` (so it gets `reasoning_max_tokens` instead of the 16K instruct budget). Overridable via `HERMES_MODEL` env var or `config/settings.yaml`.

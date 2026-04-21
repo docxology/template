@@ -7,7 +7,7 @@
 > - **Hermes API**: **50 / 50** topics succeeded (100%) — order of 10³ tokens/topic (copy from `summary.json` for audit-grade figures)
 > - **Lean compilation**: **50 / 50** on the shipped catalogue when the verify sweep is green (`scripts/03_lean_verify_only.py`); pins in `lean/lean-toolchain` and `lean/lakefile.lean`
 > - **Total wall time**: order of tens of minutes end-to-end with live Hermes (varies by machine and API)
-> - **Primary model**: `moonshotai/kimi-k2.6` (Moonshot Kimi K2.6, 262K context) with a 6-model fallback chain that includes `z-ai/glm-5.1` as a demoted entry
+> - **Primary model**: `moonshotai/kimi-k2.6` (Moonshot Kimi K2.6, 262K context) with an 8-model fallback chain (primary + 7 fallbacks in `_FREE_MODEL_CHAIN`) that includes `z-ai/glm-5.1` as a demoted entry
 >
 > Reproduce aggregates from `output/reports/run_*/summary.json` and `verification_manifest.json`. Runs without an API key still produce manuscript artefacts; Hermes rows show `hermes_success=0`.
 
@@ -243,12 +243,12 @@ Dominated by:
 - Validation: usually seconds; slower if `gauss doctor` or Mathlib checks are cold
 - Catalogue load: negligible
 
-**Baseline** — measured macOS run with pinned Mathlib tag, `moonshotai/kimi-k2.6` primary model, `FEP_LEAN_PREFETCH=1`:
+**Baseline** — measured macOS run with pinned Mathlib tag, `moonshotai/kimi-k2.6` primary model (a reasoning model — see [hermes.md §"Reasoning models and tokens"](hermes.md#reasoning-models-and-tokens)), `FEP_LEAN_PREFETCH=1`:
 
-| Phase | Observed |
-|-------|----------|
-| Full `01_fep_catalogue_and_figures.py` end-to-end | **~21 min** (1260 s) |
-| 50-topic Hermes HTTP (avg ~1500 tok/topic) | ~12 min (prefetch-overlapped with Lean) |
+| Phase | Observed (order-of-magnitude) |
+|-------|-------------------------------|
+| Full `01_fep_catalogue_and_figures.py` end-to-end | **~30–60 min** (provider/queue-dependent for the reasoning model; prior `z-ai/glm-5.1` runs landed ~21 min — current measured value lives in `manuscript_vars.yaml::verify.duration_min`) |
+| 50-topic Hermes HTTP (avg ~1500 prompt tok/topic + reasoning trace) | dominant share of total, prefetch-overlapped with Lean |
 | 50-topic Lean pass (serial `lake env lean`) | ~262 s (avg 5.2 s/topic) |
 | Manuscript Artifacts (2-thread pool, 9 figures) | < 30 s |
 | Validation (13 checks) | single-digit seconds when warm |

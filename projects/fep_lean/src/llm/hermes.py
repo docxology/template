@@ -939,6 +939,50 @@ def restore_lean_structure(refined: str, original: str) -> str:
                 result_lines[insert_at:insert_at] = [""] + missing_opens
             result = "\n".join(result_lines)
 
+    # ── 5.6. Restore `variable` declarations from original that Hermes dropped ──
+    # 10 of 50 catalogue topics declare a shared section variable such as
+    #   variable {α : Type*} [MeasurableSpace α]
+    # When Hermes drops this line, Lean 4.29's autobound_implicit re-binds α at
+    # each theorem call site and auto-includes the typeclass; theorems that don't
+    # use the typeclass then trigger `linter.unusedSectionVars`, which is a
+    # hard error under the pinned toolchain → lake env lean exits non-zero →
+    # compiles=False (this was the lone refined-fail in run_20260420_131713 on
+    # fep-042). Mirrors step 5.5 for `open`: only restore declarations that
+    # appear in the original; never invent new ones.
+    orig_variable_stmts = [l.rstrip() for l in orig_lines if l.strip().startswith("variable ")]
+    if orig_variable_stmts:
+        result_lines = result.splitlines()
+        existing_vars: set[str] = {l.strip() for l in result_lines if l.strip().startswith("variable ")}
+        missing_vars = [l for l in orig_variable_stmts if l.strip() not in existing_vars]
+        if missing_vars:
+            log.info(
+                "restore_lean_structure: re-injecting %d `variable` declaration(s) dropped by Hermes",
+                len(missing_vars),
+            )
+            ns_idx = next(
+                (i for i, l in enumerate(result_lines) if re.match(r"^\s*namespace\s+\w+", l)),
+                None,
+            )
+            if ns_idx is not None:
+                # Insert immediately after any opens we just restored: walk
+                # forward from ns_idx until we find the first non-blank,
+                # non-`open` line, and insert there with a trailing blank.
+                insert_at = ns_idx + 1
+                while insert_at < len(result_lines) and (
+                    not result_lines[insert_at].strip()
+                    or result_lines[insert_at].strip().startswith("open ")
+                ):
+                    insert_at += 1
+                result_lines[insert_at:insert_at] = missing_vars + [""]
+            else:
+                last_import = max(
+                    (i for i, l in enumerate(result_lines) if l.strip().startswith("import ")),
+                    default=-1,
+                )
+                insert_at = last_import + 1
+                result_lines[insert_at:insert_at] = [""] + missing_vars
+            result = "\n".join(result_lines)
+
     # ── 6. Remove theorem blocks Hermes added beyond the original set ─────────
     orig_theorem_names: set[str] = set(re.findall(r"\btheorem[^\S\n]+(\w+)", original))
     if orig_theorem_names:

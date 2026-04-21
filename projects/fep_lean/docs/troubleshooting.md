@@ -232,6 +232,8 @@ uv run python scripts/01_fep_catalogue_and_figures.py
 
 **Fix already in tree**: `_make_request` in [`src/llm/hermes.py`](../src/llm/hermes.py) runs the blocking `urlopen + read` inside a worker thread and `join`s with `timeout=timeout`. If the worker is still alive at the deadline, it raises a transient `HermesAPIError("Wall-clock timeout after Ns …")` and the chain advances to the next model. Reasoning models (`Kimi K2.x`, `GLM-5.1`, `DeepSeek-R1`, `o1/o3`, `Nemotron-3-super`) are listed in `_REASONING_MODELS` so they get `reasoning_max_tokens` (65 536) and `reasoning_timeout_s` (300 s) instead of the instruct budgets.
 
+A complementary post-processing fix lives in `restore_lean_structure` step 5.6: when Hermes drops a `variable {α : Type*} [MeasurableSpace α]`-style declaration, the function re-injects it inside the namespace so Lean 4.29's `linter.unusedSectionVars` does not turn an otherwise-clean refined sketch into a hard compile error (regression first observed on **fep-042**). See [hermes.md §"Step 5.6 — `variable`-Declaration Restoration"](hermes.md#step-56-variable-declaration-restoration) for details and the dedicated test.
+
 **If you still see hangs**:
 
 1. Check `pipeline.log` for `Wall-clock timeout after Ns` lines — they show which model exhausted the budget.

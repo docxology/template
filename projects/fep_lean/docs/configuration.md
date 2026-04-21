@@ -121,7 +121,7 @@ Matches the shipped [`config/settings.yaml`](../config/settings.yaml) `hermes:` 
 | `reasoning_max_tokens` | int | `65536` | Budget for reasoning-style models (R1, o1, o3) |
 | `reasoning_timeout_s` | int | `300` | Timeout for reasoning-style models (seconds) |
 
-**Default fallback chain** (matches `_FREE_MODEL_CHAIN` in `src/llm/hermes.py`):
+**Default fallback chain** (matches `config/settings.yaml::hermes.fallback_models` and the in-code `_FREE_MODEL_CHAIN` in `src/llm/hermes.py`; the primary `hermes.model` is **not** repeated in `fallback_models`):
 
 ```yaml
 hermes:
@@ -132,8 +132,6 @@ hermes:
     - "z-ai/glm-5.1"
     - "openai/gpt-oss-120b:free"
     - "nvidia/nemotron-3-super-120b-a12b:free"
-    - "qwen/qwen3-next-80b-a3b-instruct:free"
-    - "openai/gpt-oss-120b:free"
     - "nousresearch/hermes-3-llama-3.1-405b:free"
     - "arcee-ai/trinity-large-preview:free"
   max_tokens: 16384

@@ -107,7 +107,7 @@ Wall-clock for a full 50-topic run is dominated by OpenRouter latency whenever H
 
 | Metric | Verified Orchestrator Profile |
 |--------|----------------------------------|
-| Total duration | ~21 minutes for 50 topics with live Hermes, bounded by a 30-minute CI orchestrator limit |
+| Total duration | ~{{verify.duration_min}} minutes for 50 topics with live Hermes (`{{hermes.primary_model}}`, run `{{verify.run_id}}`); reasoning models dominate wall-clock and are provider/queue dependent. The `ANALYSIS_SCRIPT_TIMEOUT_SEC` per-script cap defaults to 7200 s (2 h); set `0` for unlimited. |
 | Mean time per topic | ~25 s, dominated by OpenRouter LLM reasoning plus the isolated `lake env lean` compilation |
 | Compiler latency | ~1–2 s per sketch with narrow Mathlib4 imports; substantially longer with a blanket `import Mathlib` |
 | Hermes success share | 0/N when Hermes is skipped or every call fails; up to N/N with a valid key and successful responses (N is the number of topics processed) |

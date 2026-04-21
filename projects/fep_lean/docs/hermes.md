@@ -17,7 +17,7 @@ Both are stored in the OpenGauss SQLite session and in the per-topic artifact JS
 >
 > - **50 / 50 topics succeeded** (100% Hermes HTTP success) on the primary model.
 > - **Average token usage**: order of **10³ tokens / topic** (prompt + completion; `HermesResult.tokens_used`).
-> - **Retries were rare** — the 6-model fallback chain was exercised on < 2 % of topics across
+> - **Retries were rare** — the 8-model fallback chain (primary + 7 fallbacks) was exercised on < 2 % of topics across
 >   sample end-to-end runs; `HERMES_429_MAX_RETRIES=2` was sufficient.
 > - **Lean downstream**: **50 / 50** on the shipped catalogue when the verifier sweep is green — see [`pipeline.md`](pipeline.md#timing) for end-to-end timing.
 
@@ -90,7 +90,6 @@ _FREE_MODEL_CHAIN = [
     "z-ai/glm-5.1",
     "openai/gpt-oss-120b:free",
     "nvidia/nemotron-3-super-120b-a12b:free",
-    "openai/gpt-oss-120b:free",
     "nousresearch/hermes-3-llama-3.1-405b:free",
     "arcee-ai/trinity-large-preview:free",
 ]
@@ -113,8 +112,12 @@ _FREE_MODEL_CHAIN = [
 Anthropic-direct endpoints (`api.anthropic.com` in `base_url`) skip the chain entirely — a single
 model is tried.
 
-**Reasoning models** (DeepSeek-R1, o1, o3, Nemotron) get extended `reasoning_max_tokens` (65536) and
-`reasoning_timeout_s` (300s) automatically via `HermesConfig.is_reasoning_model()`.
+### Reasoning models and tokens {#reasoning-models-and-tokens}
+
+**Reasoning models** (Kimi K2.x, GLM-5.1, DeepSeek-R1, o1, o3, Nemotron) get extended
+`reasoning_max_tokens` (65536) and `reasoning_timeout_s` (300s) automatically via
+`HermesConfig.is_reasoning_model()`. The list lives in `_REASONING_MODELS`
+(`src/llm/hermes.py`); add new reasoning slugs there to opt them into the larger budgets.
 
 ---
 
@@ -434,6 +437,10 @@ If `original` contains a `namespace fepNNN` block and the refined output dropped
 
 `open MeasureTheory`, `open Finset`, `open Real`, and similar directives are occasionally stripped by Hermes. Step 5.5 collects all `open X` lines present in `original` and absent from `refined`, and re-inserts them immediately before the first `theorem` or `def` line. This is the critical fix for fep-001, fep-014, fep-027 (MeasureTheory namespace), and several Finset-dependent topics.
 
+### Step 5.6 — `variable`-Declaration Restoration
+
+10 of 50 catalogue topics declare a shared section variable such as `variable {α : Type*} [MeasurableSpace α]`. When Hermes drops this line, Lean 4.29's `autobound_implicit` re-binds `α` per call site and auto-includes the typeclass; theorems that don't use the typeclass then trigger `linter.unusedSectionVars`, which is a hard error under the pinned toolchain (the lone refined-fail in the prior batch on **fep-042**). Step 5.6 mirrors step 5.5: it collects every `variable …` line present in `original` and missing from `refined`, then re-inserts each one inside the namespace, immediately after any restored `open` lines. Covered by `tests/test_hermes_explainer.py::test_restore_lean_structure_preserves_variable_declarations`.
+
 ### Step 6 — `_strip_extra_theorems`
 
 ```python
@@ -451,10 +458,11 @@ After `_strip_extra_theorems`, if **none** of the original theorem names survive
 | Mechanism | Topics |
 |-----------|--------|
 | Open-statement restore (Step 5.5) | fep-001, fep-014, fep-027 + Finset topics |
+| Variable-declaration restore (Step 5.6) | fep-042 (`MeasurableSpace α`) and 9 other topics that declare `variable …` |
 | Completeness fallback (Step 7) | fep-005, fep-029, fep-031, fep-038, fep-039 |
 | Garbage detection (Step 0) | none in run_20260419_130508 |
 
-Covered by `tests/test_hermes_explainer.py` (38 tests including `test_restore_lean_structure_*`).
+Covered by `tests/test_hermes_explainer.py` (40 tests including `test_restore_lean_structure_*`, with 13 dedicated to `restore_lean_structure` covering each step).
 
 ---
 

@@ -1,6 +1,6 @@
 # Lean4 and Mathlib4 Context — fep_lean
 
-**Last Updated**: 2026-04-14 (aligned with canonical_facts.md)
+**Last Updated**: 2026-04-20 (aligned with canonical_facts.md)
 
 ## What is Lean4?
 
@@ -29,7 +29,7 @@ Sketches exist in three shapes; keep them aligned when you change proof text.
 | [`lean/FepSketches/fep_all.lean`](../lean/FepSketches/fep_all.lean) | **Generated** Lake aggregate: each topic is wrapped in `namespace fep_fepNNN ... end fep_fepNNN` over a single hoisted `import Mathlib` for whole-workspace `lake build`. Regenerate with `uv run python scripts/_maint_build_fep_all_lean.py` after any `SKETCHES` edit (CI sorry-gates this file and [`Basic.lean`](../lean/FepSketches/Basic.lean); the file itself is gitignored). |
 | [`scripts/_maint_build_fep_all_lean.py`](../scripts/_maint_build_fep_all_lean.py) | **Generator** for `lean/FepSketches/fep_all.lean` and the matching `Basic.lean` stub. Reads `SKETCHES` (single source of truth) and emits the aggregate; safe to re-run any time. |
 | [`tests/test_catalogue_sketches_ssot.py`](../tests/test_catalogue_sketches_ssot.py) | Asserts every `topics.yaml` `lean_sketch` equals `SKETCHES[id]` (fast drift check, no `lake` required). |
-| `lean/FepSketches/_verify_*.lean` | **Transient** verifier outputs — do not edit; safe to delete (see [`lean/FepSketches/AGENTS.md`](../lean/FepSketches/AGENTS.md)). |
+| `lean/FepSketches/_verify_*.lean` | **Transient** verifier outputs from `LeanVerifier` — do not edit; safe to delete (regenerated per topic compile, gitignored). |
 
 ---
 
