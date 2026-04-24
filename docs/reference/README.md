@@ -21,6 +21,7 @@ The `reference/` directory contains quick reference materials, API documentation
 | [`copypasta.md`](copypasta.md) | Ready-to-use sharing content | All users |
 | [`copypasta-diagrams.md`](copypasta-diagrams.md) | Diagram copypasta blocks | All users |
 | [`copypasta-outreach.md`](copypasta-outreach.md) | Outreach / social copypasta | All users |
+| [`opengauss-naming.md`](opengauss-naming.md) | math-inc `gauss` CLI vs Huawei OpenGauss DBMS | Developers, agents |
 
 ## Quick Navigation
 

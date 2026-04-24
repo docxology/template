@@ -1,5 +1,7 @@
 # Documentation Review Report
 
+> **As of 2026-04-24:** This file is a historical snapshot. Module counts, pipeline wording, and test totals may be stale. Prefer [`docs/modules/modules-guide.md`](../modules/modules-guide.md), [`docs/RUN_GUIDE.md`](../RUN_GUIDE.md), [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md), and the live `tests/` suite as ground truth. Regenerate [`filepath-audit-report.md`](filepath-audit-report.md) with `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md`.
+
 > **Snapshot:** Findings below reflect the 2026-03-10 review. Later edits (module counts, pipeline stage wording, test totals) may supersede specific numbers in this file; use [`docs/modules/modules-guide.md`](../modules/modules-guide.md), [`docs/RUN_GUIDE.md`](../RUN_GUIDE.md), and the live `tests/` suite as ground truth.
 
 **Date**: Generated during v0.6.0 repo-wide documentation review (2026-03-10)

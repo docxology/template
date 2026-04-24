@@ -17,6 +17,7 @@ Technical guide for `docs/reference/` — API docs, glossary, FAQ, workflows, an
 | `copypasta.md` | Ready-to-use content for sharing the template |
 | `copypasta-diagrams.md` | Diagram copypasta blocks |
 | `copypasta-outreach.md` | Outreach / social copypasta |
+| `opengauss-naming.md` | math-inc Open Gauss CLI vs Huawei DBMS (disambiguation) |
 
 ## Key Conventions
 

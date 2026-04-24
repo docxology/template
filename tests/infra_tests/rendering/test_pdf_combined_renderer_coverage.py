@@ -295,11 +295,13 @@ class TestPostprocessLatex:
         result = postprocess_latex(tex)
         assert "hidelinks" not in result
         assert "colorlinks=true" in result
+        assert "urlcolor=blue" in result
 
     def test_replaces_hidelinks_with_newline(self):
         tex = "\\hypersetup{\n  hidelinks,\n  pdfborder={0 0 0}}"
         result = postprocess_latex(tex)
         assert "colorlinks=true" in result
+        assert "urlcolor=blue" in result
 
     def test_no_hidelinks_unchanged(self):
         tex = "\\hypersetup{colorlinks=true}"

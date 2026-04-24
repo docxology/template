@@ -2,7 +2,7 @@
 
 ## Overview
 
-Technical guide for `docs/prompts/` — expertly crafted prompt templates ensuring compliance with Research Project Template standards.
+Technical guide for `docs/prompts/` — prompt templates aligned with Research Project Template standards.
 
 ## Files
 

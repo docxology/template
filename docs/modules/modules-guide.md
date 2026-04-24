@@ -1,6 +1,6 @@
-# 🔬 Modules Guide
+# Modules Guide
 
-> **Guide** to Layer-1 infrastructure modules
+Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
@@ -12,20 +12,20 @@
 
 | Module | Purpose | Key Features | Guide |
 |--------|---------|--------------|-------|
-| ⚙️ **Core** | Shared utilities | Logging, config, exceptions | [Details](guides/core-module.md) |
-| 📄 **Documentation** | Doc generation | Figure management, API glossary | [Details](guides/documentation-module.md) |
-| ✅ **Validation** | Output verification | File integrity, cross-reference validation | [Details](guides/validation-module.md) |
-| 📚 **Publishing** | Academic workflows | DOI validation, citation generation | [Details](guides/publishing-module.md) |
-| 🔬 **Scientific** | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |
-| 🤖 **LLM** | Local LLM & literature | Ollama integration, templates, literature search | [Details](guides/llm-module.md) |
-| 🎨 **Rendering** | Multi-format output | PDF, slides, web, poster | [Details](guides/rendering-module.md) |
-| 📊 **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
-| 🔍 **Project** | Project discovery | Multi-project orchestration | [Details](guides/project-module.md) |
-| 🔒 **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | [Details](guides/steganography-module.md) |
-| ⚙️ **Config** | Configuration schemas | Secure config, environment templates | [Details](guides/config-module.md) |
-| 🐳 **Docker** | Containerization | Dockerfile, docker-compose | [Details](guides/docker-module.md) |
-| 🔍 **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | [Details](guides/skills-module.md) |
-| 📡 **Telemetry** | Unified pipeline telemetry | Stage resource metrics, diagnostic aggregation, JSON/text reports | — |
+| **Core** | Shared utilities | Logging, config, exceptions | [Details](guides/core-module.md) |
+| **Documentation** | Doc generation | Figure management, API glossary | [Details](guides/documentation-module.md) |
+| **Validation** | Output verification | File integrity, cross-reference validation | [Details](guides/validation-module.md) |
+| **Publishing** | Academic workflows | DOI validation, citation generation | [Details](guides/publishing-module.md) |
+| **Scientific** | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |
+| **LLM** | Local LLM & literature | Ollama integration, templates, literature search | [Details](guides/llm-module.md) |
+| **Rendering** | Multi-format output | PDF, slides, web, poster | [Details](guides/rendering-module.md) |
+| **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
+| **Project** | Project discovery | Multi-project orchestration | [Details](guides/project-module.md) |
+| **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | [Details](guides/steganography-module.md) |
+| **Config** | Configuration schemas | Secure config, environment templates | [Details](guides/config-module.md) |
+| **Docker** | Containerization | Dockerfile, docker-compose | [Details](guides/docker-module.md) |
+| **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | [Details](guides/skills-module.md) |
+| **Telemetry** | Unified pipeline telemetry | Stage resource metrics, diagnostic aggregation, JSON/text reports | — |
 
 All modules follow the thin orchestrator pattern with test coverage.
 

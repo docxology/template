@@ -87,7 +87,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[../.github/README.md](../.github/README.md)** - **GitHub**: Actions workflows, Dependabot, issue/PR templates, mirroring CI locally
 - **[_generated/](_generated/README.md)** — folder policy; **[_generated/AGENTS.md](_generated/AGENTS.md)** — technical notes for this directory (hand-maintained). **Only** **[_generated/active_projects.md](_generated/active_projects.md)** is produced by `generate_active_projects_doc.py`; it is the single source of truth for active `projects/` names (do not copy that roster elsewhere; default path examples to [`projects/code_project/`](../projects/code_project/))
 - **Agent skills manifest** — `uv run python -m infrastructure.skills write` (default output: `.cursor/skill_manifest.json`) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
-- **Open Gauss naming** — [`projects/fep_lean/docs/opengauss.md`](../projects/fep_lean/docs/opengauss.md) (math-inc Open Gauss CLI `gauss` vs Huawei DBMS)
+- **Open Gauss naming** — [reference/opengauss-naming.md](reference/opengauss-naming.md) (math-inc `gauss` CLI vs Huawei DBMS; does not require `fep_lean` on disk)
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 
 ### Quick Reference
@@ -99,6 +99,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[reference/quick-start-cheatsheet.md](reference/quick-start-cheatsheet.md)** - Essential commands
 - **[reference/common-workflows.md](reference/common-workflows.md)** - Step-by-step recipes
 - **[reference/glossary.md](reference/glossary.md)** - Glossary of terms
+- **[reference/opengauss-naming.md](reference/opengauss-naming.md)** - math-inc `gauss` CLI vs Huawei DBMS
 - **[reference/api-project-modules.md](reference/api-project-modules.md)** - Project module API reference
 
 ---
@@ -202,7 +203,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 ### Configuration & Performance (`operational/config/`)
 
 - **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars; paths under `projects/fep_lean/`)
-- **[projects/fep_lean/docs/opengauss.md](../projects/fep_lean/docs/opengauss.md)** - Open Gauss naming (`gauss` CLI vs Huawei DBMS) — same target as the Open Gauss entry near line 90; listed twice intentionally (theme list + file table)
+- **[reference/opengauss-naming.md](reference/opengauss-naming.md)** - Open Gauss naming (`gauss` CLI vs Huawei DBMS) — same page as the Open Gauss entry near line 90; listed twice intentionally (theme list + file table)
 - **[operational/config/checkpoint-resume.md](operational/config/checkpoint-resume.md)** - Checkpoint system
 - **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance tuning
 

@@ -1,12 +1,12 @@
 # docs/prompts/ - AI Prompt Templates
 
-> **Expert Prompt Templates** for creating compliant, tested, and well-documented work using the Research Project Template
+> Prompt templates for compliant, tested, and documented work with the Research Project Template
 
 **Quick Reference:** [AGENTS.md](AGENTS.md) | [Manuscript Creation](manuscript_creation.md) | [Code Development](code_development.md)
 
 ## Purpose
 
-This directory contains expertly crafted prompt templates that leverage the extensive project documentation to guide AI assistants and developers in creating work that complies with the template's standards and best practices.
+This directory contains copy-paste prompt templates that reference project documentation so AI assistants and developers can produce work aligned with the template's standards.
 
 ## Prompt Categories
 

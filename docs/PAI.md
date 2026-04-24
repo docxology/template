@@ -26,6 +26,8 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ## Architecture
 
+**Counting note:** the tree below lists **13** `infrastructure/*` subdirectories at the top level. The docs also describe **14** named areas when **Telemetry** is counted as first-class and **Skills** is separate—same codebase, different grouping. See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md).
+
 ```
 template/
 ├── infrastructure/        # Generic reusable tools (Layer 1); 13 subpackages

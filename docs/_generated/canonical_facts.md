@@ -1,20 +1,17 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-04-20 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `pytest` discovery suite, `fep_lean` collection (see commands below).
+**Generated from live repo state on 2026-04-24 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `pytest` discovery suite; `fep_lean` counts below are from the last full `projects/fep_lean` tree measurement (see commands).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
 ## Project Roster
 
-**Active projects** (from `infrastructure.project.discovery.discover_projects(Path("."))` and [`active_projects.md`](active_projects.md)):
-
-- code_project
-- cognitive_case_diagrams
-- fep_lean
+**Active projects** — authoritative list: [`active_projects.md`](active_projects.md) (from `discover_projects()`). This checkout: `code_project` only.
 
 **In-progress projects** (`projects_in_progress/`):
 
 - act_inf_metaanalysis
+- biology_textbook
 - cogant
 - cognitive_integrity
 - template
@@ -53,7 +50,7 @@ See `infrastructure/AGENTS.md` for module-specific function signatures and entry
 uv run pytest tests/infra_tests/project/test_discovery.py -q
 ```
 
-Result: 57 passed in 0.15s (real data, no mocks).
+Result: 57 passed in ~0.22s (real data, no mocks).
 
 Coverage gates (enforced in CI):
 

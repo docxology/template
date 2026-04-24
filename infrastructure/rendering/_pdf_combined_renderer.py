@@ -311,17 +311,17 @@ def postprocess_latex(tex_content: str) -> str:
             rewritten_count,
         )
 
-    # Fix hidelinks → colorlinks
+    # Fix hidelinks → colorlinks (URLs distinct from in-doc links for non-color-only cue)
     if "hidelinks" in tex_content:
         tex_content = tex_content.replace(
             "hidelinks,",
-            "colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,",
+            "colorlinks=true,linkcolor=red,urlcolor=blue,citecolor=red,anchorcolor=red,",
         )
         tex_content = tex_content.replace(
             "  hidelinks,\n",
-            "  colorlinks=true,\n  linkcolor=red,\n  urlcolor=red,\n  citecolor=red,\n",
+            "  colorlinks=true,\n  linkcolor=red,\n  urlcolor=blue,\n  citecolor=red,\n",
         )
-        logger.info("✓ Patched hidelinks → colorlinks=true with red link colours")
+        logger.info("✓ Patched hidelinks → colorlinks=true (red links/cites, blue URLs)")
 
     # Fix broken math delimiters
     try:

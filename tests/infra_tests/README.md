@@ -26,7 +26,7 @@ Floor: **60%** (currently ~83%). Coverage is measured over `infrastructure/` onl
 | `steganography/` | `infrastructure/steganography/` — watermarking, encryption | ~14 |
 | `validation/` | `infrastructure/validation/` — docs scanning, links, repo scanning, integrity | ~56 |
 
-Two top-level files (`test_docs_discovery_consistency.py`, `test_documentation_index_invariants.py`) test cross-module documentation invariants.
+Top-level files outside subfolders include `test_docs_discovery_consistency.py`, `test_documentation_index_invariants.py` (documentation invariants), and `test_cogant_coverage_table_check.py` (parses the COGANT staging `check_coverage_table.py` helper for manuscript Table 9 vs `coverage report`).
 
 ## File Naming Convention
 

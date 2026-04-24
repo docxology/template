@@ -149,7 +149,7 @@ When present under **`projects/fep_lean/`**, it is discovered like any other act
 | `FEP_LEAN_TEST_GAUSS_DOCTOR` | (unset) | If set, enables an opt-in pytest that runs a real `gauss doctor` |
 | `GAUSS_HOME` | `~/.gauss` | Writable directory checked for math-inc tooling layout |
 
-Project-local reference: [`projects/fep_lean/docs/opengauss.md`](../../../projects/fep_lean/docs/opengauss.md).
+Name disambiguation (always available): [`docs/reference/opengauss-naming.md`](../../reference/opengauss-naming.md). When `projects/fep_lean/` is checked out, see also `projects/fep_lean/AGENTS.md` and `projects/fep_lean/src/gauss/`.
 
 ### Literature Search
 

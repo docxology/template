@@ -7,7 +7,7 @@ The Research Project Template provides **two main entry points** for pipeline op
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (interactive menu and flags)
 2. **`uv run python scripts/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged stages removed**; the full default graph has **10** stages including LLM review and translations
 
-## 🏗️ Thin Orchestration Architecture
+## Thin Orchestration Architecture
 
 The Research Project Template follows a **thin orchestrator pattern** where all business logic resides in `infrastructure/` and `projects/{name}/src/` modules, while entry points and scripts act as lightweight coordinators.
 
@@ -77,15 +77,15 @@ graph TD
 
 ### Benefits
 
-✅ **Separation of Concerns**: Clear boundaries between orchestration and computation
-✅ **Reusability**: Infrastructure modules work across all projects
-✅ **Testability**: Business logic isolated and thoroughly tested
-✅ **Maintainability**: Changes to algorithms don't affect orchestration
-✅ **Extensibility**: New projects inherit infrastructure
+- **Separation of concerns** — clear boundaries between orchestration and computation
+- **Reusability** — infrastructure modules work across all projects
+- **Testability** — business logic isolated and thoroughly tested
+- **Maintainability** — changes to algorithms do not affect orchestration
+- **Extensibility** — new projects inherit infrastructure
 
 ### Examples
 
-**✅ CORRECT: Thin Orchestrator Pattern**
+**Correct: thin orchestrator pattern**
 
 ```python
 # scripts/03_render_pdf.py (orchestrator)
@@ -97,7 +97,7 @@ def run_render_pipeline():
     return validate_output(pdf)  # Orchestrate validation
 ```
 
-**❌ INCORRECT: Violates Architecture**
+**Incorrect: violates architecture**
 
 ```python
 # scripts/03_render_pdf.py (WRONG - implements logic)
@@ -112,7 +112,7 @@ def render_pdf_to_tex(content):
     return '\n'.join(tex_lines)
 ```
 
-## 🔀 Multi-Project Support
+## Multi-Project Support
 
 The template now supports **multiple research projects** in a single repository. You can:
 
@@ -153,7 +153,7 @@ uv run scripts/execute_multi_project.py
 ### Manuscript Menu
 
 ```text
-⚙️  INDIVIDUAL STAGES
+INDIVIDUAL STAGES
     0  Setup Environment          00_setup_environment.py
     1  Run Tests                  01_run_tests.py
     2  Run Analysis               02_run_analysis.py
@@ -163,21 +163,23 @@ uv run scripts/execute_multi_project.py
     6  LLM Review                 06_llm_review.py
     7  LLM Translations           06_llm_review.py
 
-🚀 ORCHESTRATION
+ORCHESTRATION
     8  Core Pipeline              [+infra] [-LLM] Core stages
     9  Full Pipeline              [+infra] [+LLM] All 10 stages
     f  Full Pipeline (fast)       [-infra] [+LLM] Skip infra tests
 
-📚 MULTI-PROJECT
+MULTI-PROJECT
     a  All projects full          [+infra] [+LLM] [+report]
     b  All projects full (fast)   [-infra] [+LLM] [+report]
     c  All projects core          [+infra] [-LLM] [+report]
     d  All projects core (fast)   [-infra] [-LLM] [+report]
 
-📁 PROJECT
+PROJECT
     p  Change Active Project      i  Show Project Info
     q  Quit
 ```
+
+The interactive `run.sh` menu may add decorative characters to these headings; the keys and script names are as above.
 
 Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in `run.sh` (see `STAGE_NAMES` in [`run.sh`](../run.sh)). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) (10 named stages, including clean and both LLM steps).
 
@@ -500,5 +502,5 @@ export MPLBACKEND=Agg
 ./run.sh --pipeline
 ```
 
-> 📖 **Full guide:** See [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) for system prerequisites,
+> **Full guide:** see [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) for system prerequisites,
 > optional dependency groups, Docker alternative, Ollama setup, and troubleshooting.

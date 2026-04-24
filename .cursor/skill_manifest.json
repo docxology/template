@@ -3,7 +3,7 @@
   "skills": [
     {
       "name": "gauss-open-gauss-cli",
-      "description": "Open Gauss in this workspace is the math-inc/OpenGauss gauss CLI for Lean session tooling—not Huawei OpenGauss DBMS. Entry docs projects/fep_lean/AGENTS.md; Hermes + SQLite pipeline lives under projects/fep_lean/src/gauss/.",
+      "description": "Open Gauss in this workspace is the math-inc/OpenGauss gauss CLI for Lean session tooling—not Huawei OpenGauss DBMS. See docs/reference/opengauss-naming.md; when projects/fep_lean exists, see projects/fep_lean/AGENTS.md and projects/fep_lean/src/gauss/.",
       "path": ".cursor/skills/gauss/SKILL.md",
       "cursor_at": ".cursor/skills/gauss/SKILL.md"
     },

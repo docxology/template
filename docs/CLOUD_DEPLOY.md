@@ -73,10 +73,14 @@ uv --version
 
 ## 3. Clone the Repository
 
+Use your fork or mirror URL if you are not using the upstream repository:
+
 ```bash
 git clone https://github.com/docxology/template.git
 cd template
 ```
+
+Replace `https://github.com/docxology/template.git` with your own `git` remote (fork, organization mirror, or SSH form) as needed.
 
 ### Active `projects/` names
 
