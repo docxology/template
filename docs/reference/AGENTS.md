@@ -9,11 +9,14 @@ Technical guide for `docs/reference/` — API docs, glossary, FAQ, workflows, an
 | File | Purpose |
 |------|---------|
 | `api-reference.md` | Unified API documentation for infrastructure + project modules |
+| `api-project-modules.md` | Project-side module API reference |
 | `glossary.md` | Comprehensive glossary of terms |
 | `faq.md` | Frequently asked questions |
 | `quick-start-cheatsheet.md` | One-page essential commands |
 | `common-workflows.md` | Step-by-step task recipes |
 | `copypasta.md` | Ready-to-use content for sharing the template |
+| `copypasta-diagrams.md` | Diagram copypasta blocks |
+| `copypasta-outreach.md` | Outreach / social copypasta |
 
 ## Key Conventions
 

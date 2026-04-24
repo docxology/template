@@ -62,9 +62,15 @@ coverage.json
 ehthumbs.db
 Thumbs.db
 
-# Output directories should be included in versioning! Don't ignore output/ or project/output/ . 
-
-# Build outputs should be included in versioning!
+# Generated outputs and caches are disposable and regeneratable by the pipeline.
+# Never commit them (per CLAUDE.md and AGENTS.md). Cleaned by 00_setup_environment.py.
+**/output/
+**/projects/*/output/
+**/.benchmarks/
+**/.pytest_cache/
+**/.venv/
+**/*.egg-info/
+**/__pycache__/
 
 # Temporary files
 *.tmp
@@ -75,23 +81,28 @@ Thumbs.db
 # Test artifacts
 invalid/
 
-# Separate repositories (managed independently)
-projects/*
+# Active projects (only code_project is the canonical control-positive exemplar;
+# others moved to projects_in_progress/ or projects_archive/)
 !projects/code_project/
-!projects/fep_lean/
-!projects/fep_lean/**
-!projects/template/
-!projects/AGENTS.md
-!projects/PAI.md
-!projects/PROJECTS_PARADIGM.md
-!projects/README.md
+!projects/code_project/**
 
-# Archived projects
-/projects_archive 
-/projects_in_progress
+# Archived and in-progress projects (not executed by pipeline)
+projects_archive/
+projects_in_progress/
 
 # Desloppify
 .desloppify
 /.desloppify
-/projects/fep_lean
 /.claude
+.cursor/mcp.json
+.codex/config.toml
+.cursorrules
+/.dotscope
+/virtual
+.windsurfrules
+.mcp.json
+.scopes
+scripts/.scope
+tests/.scope
+/projects/fep_lean
+/projects/fep_lean

@@ -32,20 +32,24 @@ graph TB
     class OUTPUTS output
 ```
 
-## Core Pipeline (10-Stage DAG via Python Orchestrator)
+## Core pipeline (`--core-only`)
 
-| Stage | Name | Purpose |
-|-------|------|---------|
-| 00 | Setup | Environment validation |
-| 01 | Tests | Run test suite (90% project, 60% infra coverage) |
-| 02 | Analysis | Execute generation scripts |
-| 03 | Render | PDF generation via pandoc/LaTeX |
-| 04 | Validate | Output integrity checks |
-| 05 | Copy | Consolidate deliverables |
-| 06 | LLM Review | Optional manuscript review |
-| 07 | Report | Executive summary generation |
+The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) defines a DAG. With **`--core-only`**, stages tagged `llm` are omitted: **eight** core stages run (clean → setup → infra tests → project tests → analysis → PDF render → validate → copy). The **full** graph adds optional LLM review and translation stages (**ten** named stages total). `run.sh` may show an additional clean pre-step in logs.
 
-Run with: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
+| Order | Stage (from `pipeline.yaml`) |
+|-------|------------------------------|
+| 1 | Clean Output Directories |
+| 2 | Environment Setup |
+| 3 | Infrastructure Tests |
+| 4 | Project Tests |
+| 5 | Project Analysis |
+| 6 | PDF Rendering |
+| 7 | Output Validation |
+| 8 | Copy Outputs |
+
+Coverage gates: 90% for `projects/{name}/src/`, 60% for `infrastructure/` (see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)). Full stage reference: [`RUN_GUIDE.md`](../RUN_GUIDE.md).
+
+Run: `uv run python scripts/execute_pipeline.py --project {name} --core-only`
 
 ## Key Principles
 

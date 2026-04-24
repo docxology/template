@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **Test suite**: 39 tests covering edge cases, stability analysis, and performance benchmarks; `projects/code_project/src/` typically measures **~96%** line/branch coverage (90% minimum gate in `pyproject.toml`)
+- **Test suite**: 42 tests covering edge cases, stability analysis, and performance benchmarks; `projects/code_project/src/` typically measures **~96%** line/branch coverage (90% minimum gate in `pyproject.toml`)
 - **Deterministic algorithms**: Reproducible results; tests avoid nondeterministic RNG unless documented (see `docs/agent_instructions.md`)
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -383,7 +383,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: 39 tests; `src/` line/branch coverage is typically ~96% with the current suite (exceeds 90% requirement)
+- **90%+ coverage**: 42 tests; `src/` line/branch coverage is typically ~96% with the current suite (exceeds 90% requirement)
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Tests use fixed inputs; any use of random draws should be justified or seeded (see `docs/agent_instructions.md`)

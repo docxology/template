@@ -107,16 +107,17 @@ class TestManifestRoundTrip:
 
 
 class TestTemplateRepository:
-    def test_default_roots_includes_infrastructure_and_ccd_src(self) -> None:
+    def test_default_roots_includes_infrastructure_and_code_project_src(self) -> None:
         assert DEFAULT_SKILL_SEARCH_ROOTS == (
             "infrastructure",
-            "projects/cognitive_case_diagrams/src",
+            "projects/code_project/src",
+            ".cursor/skills",
         )
 
     def test_all_infrastructure_skills_parse(self) -> None:
         root = _template_repo_root()
         skills = discover_skills(root)
-        assert len(skills) >= 16
+        assert len(skills) >= 15
         for s in skills:
             assert s.absolute_path.is_file()
             assert s.path_posix.endswith("SKILL.md")
@@ -135,9 +136,12 @@ class TestTemplateRepository:
         paths = {s.path_posix for s in skills}
         assert "infrastructure/SKILL.md" in paths
         assert "infrastructure/skills/SKILL.md" in paths
-        assert "projects/cognitive_case_diagrams/src/SKILL.md" in paths
-        names = {s.name for s in skills if s.name}
-        assert "ccd-src" in names
+
+    def test_gauss_skill_present(self) -> None:
+        root = _template_repo_root()
+        skills = discover_skills(root)
+        paths = {s.path_posix for s in skills}
+        assert ".cursor/skills/gauss/SKILL.md" in paths
 
 
 class TestCliModule:

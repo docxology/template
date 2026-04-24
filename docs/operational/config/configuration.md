@@ -140,16 +140,16 @@ def risky_operation():
 
 ### fep_lean (optional Open Gauss CLI)
 
-`fep_lean` lives under **`projects/fep_lean/`** (discovered by `./run.sh` when present). Used by `projects/fep_lean/src/gauss/cli.py` and related orchestration modules:
+When present under **`projects/fep_lean/`**, it is discovered like any other active project (see [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)). Orchestration lives in [`projects/fep_lean/src/gauss/cli.py`](../../../projects/fep_lean/src/gauss/cli.py) and related modules.
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |
 | `FEP_LEAN_REQUIRE_GAUSS` | (unset) | If truthy, pipeline validation fails when `gauss` is missing or `gauss doctor` fails |
-| `FEP_LEAN_GAUSS_WORKFLOWS` | (unset) | If truthy, analysis runs `lake build` in `projects/fep_lean/lean/` |
+| `FEP_LEAN_GAUSS_WORKFLOWS` | (unset) | If truthy, analysis runs Hermes + Lean workflows; `lake build` targets `projects/fep_lean/lean/` when invoked |
 | `FEP_LEAN_TEST_GAUSS_DOCTOR` | (unset) | If set, enables an opt-in pytest that runs a real `gauss doctor` |
 | `GAUSS_HOME` | `~/.gauss` | Writable directory checked for math-inc tooling layout |
 
-Project-local reference: [projects/fep_lean/docs/opengauss.md](../../../projects/fep_lean/docs/opengauss.md).
+Project-local reference: [`projects/fep_lean/docs/opengauss.md`](../../../projects/fep_lean/docs/opengauss.md).
 
 ### Literature Search
 

@@ -112,51 +112,62 @@ Check if a number is odd.
 
 ---
 
-## Module: data_generator
+## Control-Positive Exemplar: projects/code_project/src/optimizer.py
 
-Synthetic data generation with configurable distributions.
+The canonical control-positive project uses `projects/code_project/src/optimizer.py` for all Layer 2 examples. Fictional modules (data_generator, statistics, visualization) are **not** present in the exemplar and have been removed from documentation.
 
-### Functions
+### Real API (from optimizer.py)
 
-#### `generate_synthetic_data(n_samples: int, n_features: int = 1, distribution: str = "normal", seed: Optional[int] = None, **kwargs) -> np.ndarray`
-
-Generate synthetic data with specified distribution.
-
-**Parameters:**
-
-- `n_samples` (int): Number of samples
-- `n_features` (int): Number of features (default: 1)
-- `distribution` (str): Distribution type (normal, uniform, exponential, poisson, beta)
-- `seed` (Optional[int]): Random seed
-- `**kwargs`: Distribution-specific parameters
-
-**Returns:** `np.ndarray` — Array of generated data
-
-**Example:**
+#### OptimizationResult (dataclass)
 
 ```python
-from data_generator import generate_synthetic_data
-data = generate_synthetic_data(100, n_features=2, distribution="normal", mean=0.0, std=1.0)
+@dataclass
+class OptimizationResult:
+    solution: np.ndarray
+    objective_value: float
+    iterations: int
+    converged: bool
+    gradient_norm: float
+    objective_history: list[float] | None = None
 ```
 
----
-
-## Module: statistics
-
-Statistical analysis including descriptive statistics, hypothesis testing, and correlation analysis.
-
-### Functions
-
-#### `calculate_descriptive_stats(data: np.ndarray) -> DescriptiveStats`
-
-Calculate descriptive statistics for a dataset.
-
-**Returns:** `DescriptiveStats` — Object with mean, std, median, min, max, quartiles, count
-
-**Example:**
+#### gradient_descent (function)
 
 ```python
-from statistics import calculate_descriptive_stats
+def gradient_descent(
+    initial_point: np.ndarray,
+    objective_func: Callable[[np.ndarray], float],
+    gradient_func: Callable[[np.ndarray], np.ndarray],
+    max_iterations: int = 1000,
+    tolerance: float = 1e-6,
+    step_size: float = 0.01,
+    verbose: bool = False,
+) -> OptimizationResult:
+    """Perform gradient descent optimization with fixed step size.
+    """
+```
+
+**Usage in scripts (thin orchestrator pattern):**
+
+```python
+from projects.code_project.src.optimizer import gradient_descent, quadratic_function, compute_gradient
+from infrastructure.core.logging.utils import get_logger
+
+logger = get_logger(__name__)
+
+result = gradient_descent(
+    initial_point=np.array([5.0]),
+    objective_func=quadratic_function,
+    gradient_func=compute_gradient,
+    step_size=0.1,
+    tolerance=1e-6
+)
+logger.info("Solution: %s, Converged: %s", result.solution, result.converged)
+```
+
+See `projects/code_project/src/optimizer.py` for the full implementation and `projects/code_project/scripts/optimization_analysis.py` for orchestration.
+
+All other Layer 2 documentation defaults to this exemplar. See `docs/_generated/active_projects.md` for discovery.
 stats = calculate_descriptive_stats(data)
 print(f"Mean: {stats.mean}, Std: {stats.std}")
 ```

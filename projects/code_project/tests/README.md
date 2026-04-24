@@ -43,7 +43,7 @@ open htmlcov/index.html
 
 ```mermaid
 graph TD
-    A[test_optimizer.py — 39 tests] --> B[TestQuadraticFunction]
+    A[test_optimizer.py — 42 tests] --> B[TestQuadraticFunction]
     A --> C[TestComputeGradient]
     A --> D[TestGradientDescent]
     A --> E[TestOptimizationResult]
@@ -60,7 +60,7 @@ graph TD
     E --> O[Data Structures]
 ```
 
-> **Zero-Mock Policy**: All 39 collected tests use real `OptimizationResult` instances and real computations. No `unittest.mock`, `MagicMock`, `@patch`, or synthetic `type()` objects.
+> **Zero-Mock Policy**: All 42 collected tests use real `OptimizationResult` instances and real computations. No `unittest.mock`, `MagicMock`, `@patch`, or synthetic `type()` objects.
 
 ## More Information
 

@@ -90,7 +90,7 @@ graph TD
 
 ✅ **Fully compliant** with template development standards:
 
-- **Testing**: ~96% coverage on `src/` (39 tests), real data only, no mocks
+- **Testing**: ~96% coverage on `src/` (42 tests), real data only, no mocks
 - **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
 - **Code Quality**: Black formatting, descriptive naming, proper imports

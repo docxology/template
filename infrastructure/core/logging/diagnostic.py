@@ -29,11 +29,19 @@ class DiagnosticSeverity(Enum):
 
 @dataclass
 class DiagnosticEvent:
-    """A single diagnostic event (e.g., a broken link or a LaTeX compiler error)."""
+    """A single diagnostic event (e.g., a broken link or a LaTeX compiler error).
+
+    The optional ``code`` field carries a stable, dotted identifier (e.g.
+    ``MARKDOWN.PANDOC_BARE_PIPE``) that survives JSON round-trips and
+    can be used by downstream tooling to filter or suppress specific
+    classes of finding without parsing free-form messages. Any change to
+    an existing code value is a breaking change for downstream filters.
+    """
 
     severity: DiagnosticSeverity
     category: str
     message: str
+    code: str | None = None
     file_path: str | Path | None = None
     line_number: int | None = None
     fix_suggestion: str | None = None
@@ -85,6 +93,7 @@ class DiagnosticReporter:
                             severity=sev,
                             category=ev_dict.get("category", "Unknown"),
                             message=ev_dict.get("message", ""),
+                            code=ev_dict.get("code"),
                             file_path=ev_dict.get("file_path"),
                             line_number=ev_dict.get("line_number"),
                             fix_suggestion=ev_dict.get("fix_suggestion"),
@@ -154,7 +163,8 @@ class DiagnosticReporter:
                         loc += f":{item.line_number}"
                     loc = f"[{loc}] "
 
-                logger.info(f"  [{item.category}] {loc}{item.message}")
+                code_prefix = f"{item.code} " if item.code else ""
+                logger.info(f"  {code_prefix}[{item.category}] {loc}{item.message}")
                 if item.fix_suggestion:
                     logger.info(f"      ↳ Fix: {item.fix_suggestion}")
             logger.info("")

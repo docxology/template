@@ -184,7 +184,7 @@ def run_infrastructure_tests(
         if exit_code == 0:
             log_success("Infrastructure tests passed", logger)
         return exit_code, test_results
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError, RuntimeError, ValueError) as e:
         duration = time.time() - start_time
         logger.error(f"Failed to run infrastructure tests after {duration:.1f}s: {e}", exc_info=True)
         return 1, {}
@@ -230,7 +230,9 @@ def run_project_tests(
     import tempfile
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
-    pythonpath_parts = [str(repo_root), str(project_root)]
+    # Project root before repo root so ``import scripts.*`` resolves to
+    # ``projects/<name>/scripts/``, not the template's top-level ``scripts/``.
+    pythonpath_parts = [str(project_root), str(repo_root)]
     # Include project src/ so subpackage imports resolve when running from repo root
     project_src = project_root / "src"
     if project_src.exists():
@@ -290,7 +292,7 @@ def run_project_tests(
         if exit_code == 0:
             log_success("Project tests passed", logger)
         return exit_code, test_results
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError, RuntimeError, ValueError) as e:
         duration = time.time() - start_time
         logger.error(f"Failed to run project tests after {duration:.1f}s: {e}", exc_info=True)
         return 1, {}

@@ -8,7 +8,9 @@
 
 The `docs/` directory contains project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
 
-Machine-generated snippets (including the authoritative list of active `projects/` workspaces) live under [`_generated/`](_generated/README.md). Human-written pages should link there instead of copying project rosters; concrete examples should use [`projects/code_project/`](../projects/code_project/) as the control-positive layout.
+**`projects/` is a rotating set:** directories are promoted, archived, or moved to `projects_in_progress/` over time. The only workspace **guaranteed** to stay in the tree as the **control-positive** layout for paths and commands is [`projects/code_project/`](../projects/code_project/). For the current discovered list, link [`_generated/active_projects.md`](_generated/active_projects.md)—do not treat any other sibling name as permanent.
+
+Machine-generated snippets (including that authoritative list) live under [`_generated/`](_generated/README.md). Human-written pages should link there instead of copying project rosters.
 
 ## Documentation Navigation Map
 
@@ -131,5 +133,5 @@ graph TD
 - [`../AGENTS.md`](../AGENTS.md) — Repository system reference (root)
 - [`documentation-index.md`](documentation-index.md) - Full file index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
-- Agent skills: [`../.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc), [`../.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — `uv run python -m infrastructure.skills write` / `check`
-- Active `projects/` beyond the [`../projects/code_project/`](../projects/code_project/) exemplar may ship a local docs tree (e.g. [`../projects/fep_lean/docs/`](../projects/fep_lean/docs/)); authoritative slugs remain in [`_generated/active_projects.md`](_generated/active_projects.md)
+- Agent skills manifest: `uv run python -m infrastructure.skills write` (writes `.cursor/skill_manifest.json` at repo root when run) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
+- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/fep_lean/docs/`](../projects/fep_lean/docs/)); work-in-progress trees under [`../projects_in_progress/`](../projects_in_progress/) are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)

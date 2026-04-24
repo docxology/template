@@ -20,6 +20,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **llm_standards.md** - LLM/Ollama integration patterns
 - **code_style.md** - Code formatting and style standards
 - **git_workflow.md** - Git workflow and commit standards
+- **folder_structure.md** - Repository folder layout conventions
 - **security.md** - Security standards and guidelines
 - **api_design.md** - API design and interface standards
 - **manuscript_style.md** - Manuscript formatting and style standards
@@ -53,7 +54,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **Types**: Type hints on all public APIs and functions
 - **Docs**: AGENTS.md + README.md for every directory
 - **Errors**: Use custom exception hierarchy from `infrastructure.core.runtime.exceptions`
-- **Logging**: Unified logging via `infrastructure.core.logging.logging_utils`
+- **Logging**: Unified logging via `infrastructure.core.logging.utils`
 
 ### Terminology Standards
 
@@ -78,7 +79,7 @@ import os
 from pathlib import Path
 
 # Infrastructure core utilities
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.runtime.exceptions import TemplateError
 
 # Type hints
@@ -88,7 +89,7 @@ from typing import List, Dict, Optional
 ### Logging
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 logger.debug("Debug message")

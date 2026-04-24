@@ -104,9 +104,18 @@ results = validator.check_all(docs_dir)
 ## Figure Validation (`figure_validator.py`)
 
 ```python
+from pathlib import Path
 from infrastructure.validation import validate_figure_registry
-results = validate_figure_registry(project_path)
+
+success, issues = validate_figure_registry(
+    Path("projects/<name>/output/figures/figure_registry.json"),
+    Path("projects/<name>/manuscript"),
+)
 ```
+
+Both registry shapes are accepted: ``{"fig:label": {...}, ...}`` (dict, emitted
+by ``FigureManager``) and ``[{"label": "fig:label", ...}, ...]`` (list, emitted
+by project-side scripts that produce a flat manifest).
 
 ## Audit Orchestration (`audit_orchestrator.py`)
 

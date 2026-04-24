@@ -14,11 +14,18 @@ from infrastructure.validation.content.markdown_validator import (
     collect_symbols,
     find_manuscript_directory,
     find_markdown_files,
+    validate_citations,
     validate_images,
     validate_markdown,
     validate_math,
+    validate_pandoc_pitfalls,
     validate_refs,
 )
+from infrastructure.validation.content.diagnostic_codes import (
+    BibtexCode,
+    MarkdownCode,
+)
+from infrastructure.core.logging import DiagnosticSeverity
 
 
 class TestFindMarkdownFiles:
@@ -206,6 +213,18 @@ class TestValidateRefs:
 
         assert len(problems) == 1
         assert "Missing anchor/label for internal link (#missing_anchor)" in problems[0].message
+
+    def test_ignores_markdown_link_pattern_inside_fenced_code(self, tmp_path):
+        """LaTeX like p(#1) in ``` blocks must not be reported as (#1) internal links."""
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "test.md").write_text(
+            "```latex\n" r"\newcommand{\gen}[1]{p(#1)}" "\n```\n"
+        )
+
+        problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
+
+        assert not any("(#1)" in p.message for p in problems)
 
     def test_detects_bare_url(self, tmp_path):
         """Test validate_refs detects bare URLs."""
@@ -436,3 +455,340 @@ Bare URL: https://example.com
 
         assert exit_code == 0  # Non-strict mode
         assert len(problems) >= 5  # At least 5 different types of problems
+
+
+class TestPandocPitfalls:
+    """Tests for ``validate_pandoc_pitfalls`` — patterns Pandoc converts to ``\\mid``."""
+
+    def _write(self, tmp_path, name, content):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir(exist_ok=True)
+        (manuscript / name).write_text(content, encoding="utf-8")
+        return [str(manuscript / name)]
+
+    def test_bare_pipe_in_prose_flagged(self, tmp_path):
+        paths = self._write(tmp_path, "test.md", "Mean |N400| in caption text.\n")
+        problems = validate_pandoc_pitfalls(paths, tmp_path)
+        assert len(problems) == 1
+        assert problems[0].category == "MARKDOWN_PANDOC_MID"
+        assert problems[0].code == MarkdownCode.PANDOC_BARE_PIPE
+        assert problems[0].severity == DiagnosticSeverity.WARNING
+        assert "N400" in problems[0].message
+
+    def test_pipe_in_inline_math_not_flagged(self, tmp_path):
+        paths = self._write(tmp_path, "test.md", "Use $|N400|$ for the magnitude.\n")
+        assert validate_pandoc_pitfalls(paths, tmp_path) == []
+
+    def test_pipe_in_code_not_flagged(self, tmp_path):
+        paths = self._write(tmp_path, "test.md", "See `|alpha|` in the snippet.\n")
+        assert validate_pandoc_pitfalls(paths, tmp_path) == []
+
+    def test_pipe_in_fenced_code_not_flagged(self, tmp_path):
+        paths = self._write(
+            tmp_path,
+            "test.md",
+            "```python\nresult = |word|  # not flagged\n```\n",
+        )
+        assert validate_pandoc_pitfalls(paths, tmp_path) == []
+
+    def test_escaped_pipe_in_table_cell_flagged(self, tmp_path):
+        paths = self._write(
+            tmp_path,
+            "test.md",
+            "| Domain | Example |\n|--------|---------|\n| Prob | P(A \\| B) |\n",
+        )
+        problems = validate_pandoc_pitfalls(paths, tmp_path)
+        assert len(problems) == 1
+        assert problems[0].code == MarkdownCode.PANDOC_TABLE_ESCAPED_PIPE
+        assert "table cell" in problems[0].message.lower()
+
+    def test_escaped_pipe_outside_table_not_flagged(self, tmp_path):
+        # `\|` outside a table row is a normal escape and Pandoc renders it
+        # as a literal pipe, not \mid.
+        paths = self._write(tmp_path, "test.md", "Plain text with \\| escape.\n")
+        assert validate_pandoc_pitfalls(paths, tmp_path) == []
+
+
+class TestCitationAudit:
+    """Tests for ``validate_citations`` — pre-render BibTeX-key check."""
+
+    def _setup(self, tmp_path, md_content, bib_content):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir(exist_ok=True)
+        (manuscript / "test.md").write_text(md_content, encoding="utf-8")
+        (manuscript / "references.bib").write_text(bib_content, encoding="utf-8")
+        return [str(manuscript / "test.md")]
+
+    def test_known_key_passes(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            "See [@smith2020] for details.\n",
+            "@article{smith2020, title={Foo}, author={Smith}, year={2020}}\n",
+        )
+        assert validate_citations(paths, tmp_path) == []
+
+    def test_unknown_key_flagged(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            "See [@unknown2026] for details.\n",
+            "@article{smith2020, title={Foo}, author={Smith}, year={2020}}\n",
+        )
+        problems = validate_citations(paths, tmp_path)
+        assert len(problems) == 1
+        assert problems[0].category == "MARKDOWN_CITATION"
+        assert problems[0].code == BibtexCode.UNDEFINED_KEY
+        assert problems[0].severity == DiagnosticSeverity.ERROR
+        assert "unknown2026" in problems[0].message
+
+    def test_citation_in_code_not_flagged(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            "Run `result = lookup(@email_handle)` here.\n",
+            "@article{smith2020, title={Foo}, author={Smith}, year={2020}}\n",
+        )
+        assert validate_citations(paths, tmp_path) == []
+
+    def test_citation_with_dash_underscore_handled(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            "Cite [@a-b_c2020].\n",
+            "@article{a-b_c2020, title={Foo}}\n",
+        )
+        assert validate_citations(paths, tmp_path) == []
+
+    def test_dedup_per_file(self, tmp_path):
+        # Same unresolved key cited twice should produce a single warning
+        paths = self._setup(
+            tmp_path,
+            "First [@missing2020]; again [@missing2020].\n",
+            "@article{other, title={X}}\n",
+        )
+        assert len(validate_citations(paths, tmp_path)) == 1
+
+    def test_no_bib_file_no_problems(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        md = manuscript / "test.md"
+        md.write_text("[@anything]\n", encoding="utf-8")
+        assert validate_citations([str(md)], tmp_path) == []
+
+    def test_explicit_bib_path(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        md = manuscript / "test.md"
+        md.write_text("[@known]\n", encoding="utf-8")
+        bib = tmp_path / "external.bib"
+        bib.write_text("@misc{known, title={X}}\n", encoding="utf-8")
+        assert validate_citations([str(md)], tmp_path, bib_file=bib) == []
+
+
+class TestNonRenderedFilesSkipped:
+    """AGENTS.md / README.md / preamble.md never reach the renderer; checks skip them."""
+
+    def test_pitfalls_skip_non_rendered(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        # AGENTS.md routinely documents '|' patterns and shouldn't be flagged.
+        (manuscript / "AGENTS.md").write_text("Mean |word| in docs.\n", encoding="utf-8")
+        (manuscript / "preamble.md").write_text(
+            "| col1 | col2 |\n|------|------|\n| a \\| b | c |\n", encoding="utf-8"
+        )
+        (manuscript / "README.md").write_text("Cite [@anything] in docs.\n", encoding="utf-8")
+        paths = [
+            str(manuscript / "AGENTS.md"),
+            str(manuscript / "preamble.md"),
+            str(manuscript / "README.md"),
+        ]
+        assert validate_pandoc_pitfalls(paths, tmp_path) == []
+
+    def test_citations_skip_non_rendered(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "AGENTS.md").write_text("[@undef_key]\n", encoding="utf-8")
+        (manuscript / "references.bib").write_text("@misc{x}\n", encoding="utf-8")
+        assert validate_citations([str(manuscript / "AGENTS.md")], tmp_path) == []
+
+    def test_norm_operator_in_table_math_not_flagged(self, tmp_path):
+        # ``\|`` inside ``$...$`` is the norm operator, NOT a Pandoc-converted pipe.
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "table.md").write_text(
+            "| Term | Symbol |\n|------|--------|\n"
+            "| Cosine | $\\frac{u \\cdot v}{\\|u\\| \\|v\\|}$ |\n",
+            encoding="utf-8",
+        )
+        assert validate_pandoc_pitfalls([str(manuscript / "table.md")], tmp_path) == []
+
+
+class TestRegexHardening:
+    """Tests for the broadened regex coverage (numeric pipes, code variants, BibTeX)."""
+
+    def _write(self, tmp_path, name, content):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir(exist_ok=True)
+        path = manuscript / name
+        path.write_text(content, encoding="utf-8")
+        return [str(path)]
+
+    def test_numeric_bare_pipe_flagged(self, tmp_path):
+        paths = self._write(tmp_path, "test.md", "Sample size |123| in caption.\n")
+        problems = validate_pandoc_pitfalls(paths, tmp_path)
+        assert len(problems) == 1
+        assert "123" in problems[0].message
+
+    def test_indented_code_block_not_flagged(self, tmp_path):
+        paths = self._write(
+            tmp_path,
+            "test.md",
+            "Intro paragraph.\n\n    sample = |word|  # 4-space indented code\n    more = |x|\n\nBack to prose.\n",
+        )
+        assert validate_pandoc_pitfalls(paths, tmp_path) == []
+
+    def test_tilde_fenced_code_not_flagged(self, tmp_path):
+        paths = self._write(
+            tmp_path,
+            "test.md",
+            "Intro.\n\n~~~python\nresult = |word|  # tilde fence\n~~~\n\nOutro.\n",
+        )
+        assert validate_pandoc_pitfalls(paths, tmp_path) == []
+
+    def test_bibtex_entry_without_trailing_comma_recognised(self, tmp_path):
+        # Field-less ``@misc{key}`` is legal BibTeX; the original regex missed it.
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        md = manuscript / "test.md"
+        md.write_text("Cite [@field_less].\n", encoding="utf-8")
+        bib = manuscript / "references.bib"
+        bib.write_text("@misc{field_less}\n", encoding="utf-8")
+        assert validate_citations([str(md)], tmp_path) == []
+
+
+class TestDiagnosticCodes:
+    """Every emission site in markdown_validator carries the matching stable code."""
+
+    def _setup(self, tmp_path, files):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir(exist_ok=True)
+        paths = []
+        for name, content in files.items():
+            (manuscript / name).write_text(content, encoding="utf-8")
+            paths.append(str(manuscript / name))
+        return paths
+
+    def test_image_missing_carries_code(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            {"test.md": "![alt](../figures/missing.png)\n"},
+        )
+        problems = validate_images(paths, tmp_path)
+        assert problems
+        assert all(p.code == MarkdownCode.IMG_MISSING for p in problems)
+
+    def test_eqref_missing_carries_code(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            {"test.md": "See \\eqref{eq:undefined}.\n"},
+        )
+        problems = validate_refs(paths, tmp_path, labels=set(), anchors=set())
+        eq_problems = [p for p in problems if p.code == MarkdownCode.REF_EQUATION_MISSING]
+        assert len(eq_problems) == 1
+
+    def test_link_anchor_missing_carries_code(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            {"test.md": "Jump to [section](#undefined-anchor).\n"},
+        )
+        problems = validate_refs(paths, tmp_path, labels=set(), anchors=set())
+        link_problems = [p for p in problems if p.code == MarkdownCode.LINK_ANCHOR_MISSING]
+        assert link_problems
+
+    def test_link_bare_url_carries_code(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            {"test.md": "Visit https://example.com directly.\n"},
+        )
+        problems = validate_refs(paths, tmp_path, labels=set(), anchors=set())
+        bare = [p for p in problems if p.code == MarkdownCode.LINK_BARE_URL]
+        assert bare
+
+    def test_link_bad_text_carries_code(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            {"test.md": "Click [https://example.com](https://example.com) here.\n"},
+        )
+        problems = validate_refs(paths, tmp_path, labels=set(), anchors=set())
+        bad = [p for p in problems if p.code == MarkdownCode.LINK_BAD_TEXT]
+        assert bad
+
+    def test_math_dollar_display_carries_code(self, tmp_path):
+        paths = self._setup(tmp_path, {"test.md": "$$x = 1$$\n"})
+        problems = validate_math(paths, tmp_path)
+        assert any(p.code == MarkdownCode.MATH_DOLLAR_DISPLAY for p in problems)
+
+    def test_math_bracket_display_carries_code(self, tmp_path):
+        paths = self._setup(tmp_path, {"test.md": "\\[ x = 1 \\]\n"})
+        problems = validate_math(paths, tmp_path)
+        assert any(p.code == MarkdownCode.MATH_BRACKET_DISPLAY for p in problems)
+
+    def test_math_label_missing_carries_code(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            {"test.md": "\\begin{equation}\nx = 1\n\\end{equation}\n"},
+        )
+        problems = validate_math(paths, tmp_path)
+        assert any(p.code == MarkdownCode.MATH_LABEL_MISSING for p in problems)
+
+    def test_math_label_duplicate_carries_code(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            {
+                "test.md": (
+                    "\\begin{equation}\\label{eq:dup}\nx = 1\n\\end{equation}\n"
+                    "\\begin{equation}\\label{eq:dup}\ny = 2\n\\end{equation}\n"
+                )
+            },
+        )
+        problems = validate_math(paths, tmp_path)
+        dup = [p for p in problems if p.code == MarkdownCode.MATH_LABEL_DUPLICATE]
+        assert dup
+
+    def test_pandoc_bare_pipe_carries_code(self, tmp_path):
+        paths = self._setup(tmp_path, {"test.md": "Mean |word| in caption.\n"})
+        problems = validate_pandoc_pitfalls(paths, tmp_path)
+        assert problems[0].code == MarkdownCode.PANDOC_BARE_PIPE
+
+    def test_pandoc_table_escaped_pipe_carries_code(self, tmp_path):
+        paths = self._setup(
+            tmp_path,
+            {"test.md": "| A | B |\n|---|---|\n| P(A \\| B) | x |\n"},
+        )
+        problems = validate_pandoc_pitfalls(paths, tmp_path)
+        assert problems[0].code == MarkdownCode.PANDOC_TABLE_ESCAPED_PIPE
+
+    def test_undefined_citation_carries_code(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir(exist_ok=True)
+        (manuscript / "test.md").write_text("Cite [@nope].\n", encoding="utf-8")
+        (manuscript / "references.bib").write_text(
+            "@misc{good_only}\n", encoding="utf-8"
+        )
+        problems = validate_citations([str(manuscript / "test.md")], tmp_path)
+        assert problems[0].code == BibtexCode.UNDEFINED_KEY
+
+    def test_all_emitted_codes_are_unique_constants(self):
+        """Sanity: the registry exposes 12 unique strings (the audit count)."""
+        all_codes = {
+            MarkdownCode.IMG_MISSING,
+            MarkdownCode.REF_EQUATION_MISSING,
+            MarkdownCode.LINK_ANCHOR_MISSING,
+            MarkdownCode.LINK_BARE_URL,
+            MarkdownCode.LINK_BAD_TEXT,
+            MarkdownCode.MATH_DOLLAR_DISPLAY,
+            MarkdownCode.MATH_BRACKET_DISPLAY,
+            MarkdownCode.MATH_LABEL_MISSING,
+            MarkdownCode.MATH_LABEL_DUPLICATE,
+            MarkdownCode.PANDOC_BARE_PIPE,
+            MarkdownCode.PANDOC_TABLE_ESCAPED_PIPE,
+            BibtexCode.UNDEFINED_KEY,
+        }
+        assert len(all_codes) == 12

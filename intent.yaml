@@ -1,0 +1,183 @@
+conventions:
+  - name: "Lru Cache"
+    source: discovered
+    match:
+      any_of:
+        - has_decorator: "functools\.lru_cache"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 6 files sharing decorator: functools.lru_cache"
+    compliance: 1.0
+  - name: "Dataclass"
+    source: discovered
+    match:
+      any_of:
+        - has_decorator: "dataclass"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 48 files sharing decorator: dataclass"
+    compliance: 1.0
+  - name: "Contextmanager"
+    source: discovered
+    match:
+      any_of:
+        - has_decorator: "contextmanager"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 3 files sharing decorator: contextmanager"
+    compliance: 1.0
+  - name: "Fixture"
+    source: discovered
+    match:
+      any_of:
+        - has_decorator: "pytest\.fixture"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 23 files sharing decorator: pytest.fixture"
+    compliance: 1.0
+  - name: "Timeout"
+    source: discovered
+    match:
+      any_of:
+        - has_decorator: "pytest\.mark\.timeout"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+      allowed_paths: [tests/infra_tests/[^/]+/.*\.py]
+    description: "Discovered from 7 files sharing decorator: pytest.mark.timeout"
+    compliance: 1.0
+  - name: "Requires Ollama"
+    source: discovered
+    match:
+      any_of:
+        - has_decorator: "pytest\.mark\.requires_ollama"
+        - file_path: "tests/infra_tests/llm/.*\.py"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+      allowed_paths: [tests/infra_tests/llm/.*\.py]
+    description: "Discovered from 7 files sharing decorator: pytest.mark.requires_ollama"
+    compliance: 1.0
+  - name: "Requires Latex"
+    source: discovered
+    match:
+      any_of:
+        - has_decorator: "pytest\.mark\.requires_latex"
+        - file_path: "tests/infra_tests/rendering/.*\.py"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+      allowed_paths: [tests/infra_tests/rendering/.*\.py]
+    description: "Discovered from 3 files sharing decorator: pytest.mark.requires_latex"
+    compliance: 1.0
+  - name: "TemplateError Subclass"
+    source: discovered
+    match:
+      any_of:
+        - base_class: "TemplateError"
+        - file_path: "infrastructure/core/.*\.py"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 12 files sharing base_class: TemplateError"
+    compliance: 1.0
+  - name: "ValidationError Subclass"
+    source: discovered
+    match:
+      any_of:
+        - base_class: "ValidationError"
+        - file_path: "infrastructure/core/.*\.py"
+    rules:
+      required_methods: [to_diagnostic_event]
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 3 files sharing base_class: ValidationError"
+    compliance: 0.547945205479452
+  - name: "BuildError Subclass"
+    source: discovered
+    match:
+      any_of:
+        - base_class: "BuildError"
+        - file_path: "infrastructure/core/.*\.py"
+    rules:
+      required_methods: [to_diagnostic_event]
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 3 files sharing base_class: BuildError"
+    compliance: 0.547945205479452
+  - name: "FileOperationError Subclass"
+    source: discovered
+    match:
+      any_of:
+        - base_class: "FileOperationError"
+        - file_path: "infrastructure/core/.*\.py"
+    rules:
+      required_methods: [to_diagnostic_event]
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 3 files sharing base_class: FileOperationError"
+    compliance: 0.547945205479452
+  - name: "LLMError Subclass"
+    source: discovered
+    match:
+      any_of:
+        - base_class: "LLMError"
+        - file_path: "infrastructure/core/.*\.py"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 3 files sharing base_class: LLMError"
+    compliance: 1.0
+  - name: "TypedDict Subclass"
+    source: discovered
+    match:
+      any_of:
+        - base_class: "TypedDict"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 11 files sharing base_class: TypedDict"
+    compliance: 1.0
+  - name: "NamedTuple Subclass"
+    source: discovered
+    match:
+      any_of:
+        - base_class: "NamedTuple"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 4 files sharing base_class: NamedTuple"
+    compliance: 1.0
+  - name: "ResearchTemplate Subclass"
+    source: discovered
+    match:
+      any_of:
+        - base_class: "ResearchTemplate"
+        - file_path: "infrastructure/llm/templates/.*\.py"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+      allowed_paths: [infrastructure/llm/templates/.*\.py]
+    description: "Discovered from 15 files sharing base_class: ResearchTemplate"
+    compliance: 1.0
+  - name: "Manager"
+    source: discovered
+    match:
+      any_of:
+        - file_path: ".*_manager\.py"
+    rules:
+      prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
+    description: "Discovered from 3 files sharing suffix: _manager"
+    compliance: 1.0
+
+voice:
+  mode: adaptive
+  typing: |
+    Strict type hints on all function signatures.
+  docstrings: |
+    Minimal docstrings. Add only when behavior is non-obvious.
+  error_handling: |
+    No bare excepts. Catch specific exception types.
+  structure: |
+    Match the pattern of the file being modified.
+  density: |
+    Comprehensions preferred where readable.
+  enforce:
+    bare_excepts: "hold"
+    missing_type_hints: "note"
+  stats:
+    type_hint_rate: 0.86
+    bare_except_rate: 0.0
+    early_return_rate: 0.04
+    docstring_count: 5733
+    dominant_docstring_style: "other"
+    files_analyzed: 676

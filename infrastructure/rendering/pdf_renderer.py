@@ -15,6 +15,7 @@ from infrastructure.rendering._pdf_combined_renderer import (
     postprocess_latex,
     preprocess_combined_markdown,
     prevalidate_markdown,
+    prevalidate_source_markdown,
     run_pandoc_conversion,
     verify_figure_references,
 )
@@ -170,12 +171,14 @@ class PDFRenderer:
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = combine_manuscript_markdown_sections(source_files)
 
-        # Write combined markdown atomically
+        # Write combined markdown atomically. Any failure (disk full, encoding
+        # error, race between write and replace) must still remove the partial
+        # .tmp file before re-raising, so the broad catch is intentional.
         _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
         try:
             _tmp.write_text(combined_content, encoding="utf-8")
             _tmp.replace(combined_md)
-        except Exception:  # noqa: BLE001
+        except Exception:  # noqa: BLE001 — atomic-write cleanup; re-raised below
             _tmp.unlink(missing_ok=True)
             raise
         logger.debug(
@@ -189,13 +192,21 @@ class PDFRenderer:
         if n_fig_paths or n_mermaid or n_vars:
             combined_md.write_text(combined_content, encoding="utf-8")
 
-        # Step 2: Pre-validate markdown for common issues
+        # Step 2: Pre-validate markdown — first the source set (hard gate
+        # for Pandoc-pitfall patterns and undefined citations), then the
+        # combined file (brace balance).
+        prevalidate_source_markdown(
+            source_files,
+            bib_file=bib_file if bib_exists else None,
+        )
         logger.info("Converting combined markdown to LaTeX...")
         logger.debug(f"Combined markdown file: {combined_md}")
         _validation_errors, md_content = prevalidate_markdown(combined_md)
 
         # Step 3: Run Pandoc markdown→LaTeX conversion
-        pandoc_cmd = build_pandoc_tex_command(self.config, combined_md, combined_tex, manuscript_dir)
+        pandoc_cmd = build_pandoc_tex_command(
+            self.config, combined_md, combined_tex, manuscript_dir
+        )
         run_pandoc_conversion(pandoc_cmd, combined_md, source_files, md_content)
 
         # Step 4: Post-process LaTeX (lmodern, hidelinks, math delimiters)
@@ -211,12 +222,14 @@ class PDFRenderer:
         # Step 7: Inject bibliography
         tex_content = inject_bibliography(tex_content, bib_exists)
 
-        # Write final .tex file atomically
+        # Write final .tex file atomically. Any failure (disk full, encoding
+        # error, race between write and replace) must still remove the partial
+        # .tmp file before re-raising, so the broad catch is intentional.
         _tmp = combined_tex.with_suffix(combined_tex.suffix + ".tmp")
         try:
             _tmp.write_text(tex_content)
             _tmp.replace(combined_tex)
-        except Exception:  # noqa: BLE001
+        except Exception:  # noqa: BLE001 — atomic-write cleanup; re-raised below
             _tmp.unlink(missing_ok=True)
             raise
 

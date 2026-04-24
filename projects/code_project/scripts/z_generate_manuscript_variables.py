@@ -26,9 +26,12 @@ from typing import Any
 import numpy as np
 import yaml
 
-from infrastructure.core.logging.utils import get_logger
-
-logger = get_logger(__name__)
+try:
+    from infrastructure.core.logging.utils import get_logger
+    logger = get_logger(__name__)
+except ImportError:
+    import logging as _logging
+    logger = _logging.getLogger(__name__)
 
 # Project root: projects/code_project/
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

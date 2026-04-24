@@ -42,10 +42,12 @@ from .content import (
     extract_text_from_pdf,
     find_markdown_files,
     scan_for_issues,
+    validate_citations,
     validate_figure_registry,
     validate_images,
     validate_markdown,
     validate_math,
+    validate_pandoc_pitfalls,
     validate_pdf_rendering,
     validate_refs,
 )
@@ -94,6 +96,8 @@ __all__ = [
     "validate_images",
     "validate_refs",
     "validate_math",
+    "validate_citations",
+    "validate_pandoc_pitfalls",
     "validate_figure_registry",
     # Integrity & links
     "verify_file_integrity",

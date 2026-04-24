@@ -4,38 +4,26 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Active Projects
 
-Stand-alone workspaces under `projects/` are discovered by `discover_projects()` and listed in `./run.sh`. Current entries:
+Directories under `projects/` **change over time** (promotion, archiving, or moving to `projects_in_progress/`). The **only** tree guaranteed to remain as the **control-positive** reference for paths and commands is **`code_project`**. Do not assume any other sibling will always be present.
 
-### **code_project** — master numerical exemplar
+**Current** names from `discover_projects()` are listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate after layout changes).
 
-Optimization study with figures, dashboard, and full manuscript (~96% coverage, 39 tests). See [code_project/README.md](code_project/README.md) and [code_project/AGENTS.md](code_project/AGENTS.md).
+### **code_project** — canonical control-positive exemplar
 
-### **template** — meta-documentation project
+Optimization study with figures, dashboard, and full manuscript. All examples in this documentation default to `projects/code_project/`. See [code_project/README.md](code_project/README.md) and [code_project/AGENTS.md](code_project/AGENTS.md).
 
-Self-referential manuscript and metrics for the repository (~93% coverage, 66 tests). See [template/README.md](template/README.md) and [template/AGENTS.md](template/AGENTS.md).
+Additional siblings under `projects/` today (e.g. other research workspaces) are real projects for this checkout, not permanent fixtures.
 
-### **cognitive_case_diagrams** — case diagrams / categorial grammar
+### In-progress projects (under `projects_in_progress/`)
 
-Manuscript and code for cognitive case diagrams; large data-only test suite. See [cognitive_case_diagrams/README.md](cognitive_case_diagrams/README.md) and [cognitive_case_diagrams/AGENTS.md](cognitive_case_diagrams/AGENTS.md).
-
-### **fep_lean** — FEP / Lean catalogue
-
-Fifty-topic `config/topics.yaml`, Hermes (OpenRouter), math-inc [OpenGauss](https://github.com/math-inc/OpenGauss) `gauss` CLI checks, and `lake env lean` verification. See [fep_lean/README.md](fep_lean/README.md) and [fep_lean/AGENTS.md](fep_lean/AGENTS.md).
-
-The authoritative list of names under `projects/` is [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (from `discover_projects()`).
-
-### **_test_project** — pipeline fixture stub
-
-Reserved directory with only `output/` for infrastructure tests that need a project-shaped path. It is **not** a real project: no `src/` or `tests/`, so `discover_projects()` skips it. See [_test_project/README.md](_test_project/README.md).
-
-### In-progress projects (not yet in `projects/`)
-
-These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready:
+These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready (see [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for discovery):
 
 - **act_inf_metaanalysis** — Active Inference meta-analysis
-- **active_inference** — Active Inference project
-- **biology_textbook** — biology textbook project
-- **ento_linguistics** — entomological linguistics
+- **cogant** — Cognitive agent project
+- **cognitive_case_diagrams** — Compositional approaches to linguistic case
+- **fep_lean** — FEP / Lean catalogue with OpenGauss `gauss` CLI
+
+**Note:** Use `projects/code_project/` for all concrete paths, commands, and layout examples unless a document explicitly compares layouts. Promote projects from `projects_in_progress/` or `projects_archive/` to `projects/` when they are ready for pipeline execution.
 
 ### Archived exemplars (not in `projects/`)
 

@@ -88,12 +88,15 @@ steganography = [
 monitoring = [
   "psutil>=5.9.0",
 ]
-# DisCoPy (projects/cognitive_case_diagrams string diagrams; not in default-groups)
+# DisCoPy (string diagrams for projects/cognitive_case_diagrams; in default-groups so
+# `uv sync` at repo root matches CI `uv sync --group discopy` and those tests pass locally)
 discopy = [
-  "discopy>=1.0.0",
+    "discopy>=1.0.0",
+    # hypothesis: see [dependency-groups] dev (root pytest loads _hypothesis_pytestplugin)
 ]
 # Development dependencies (replaces deprecated tool.uv.dev-dependencies)
 dev = [
+    "hypothesis>=6.151.11",
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "pytest-httpserver>=1.0.8",  # Local HTTP test server for no-mocks policy
@@ -114,7 +117,7 @@ dev = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
-default-groups = ["dev", "rendering"]
+default-groups = ["dev", "rendering", "discopy"]
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
@@ -129,6 +132,7 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
+# projects/code_project/src is the canonical example project; add other project src/ paths here if needed
 pythonpath = [".", "infrastructure", "projects/code_project/src"]
 testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]

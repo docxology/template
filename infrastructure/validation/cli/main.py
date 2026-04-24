@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 
 from infrastructure.validation.integrity.checks import verify_output_integrity
@@ -72,6 +73,45 @@ def validate_markdown_command(args: argparse.Namespace) -> None:
         logger.info("  No issues found!")
 
     raise SystemExit(exit_code)
+
+
+def validate_prerender_command(args: argparse.Namespace) -> None:
+    """Run the strict source-markdown gate without triggering a full render.
+
+    Mirrors the gate that :func:`PDFRenderer.render_combined` runs before
+    Pandoc/xelatex (see
+    ``infrastructure/rendering/_pdf_combined_renderer.py::prevalidate_source_markdown``).
+    Useful as a pre-commit check or interactive verification step.
+
+    Exits 0 when the manuscript is render-ready, 1 when any pitfall or
+    undefined citation is found.
+    """
+    # Import lazily so the CLI module doesn't drag the rendering package
+    # into every ``-m infrastructure.validation.cli`` invocation.
+    from infrastructure.rendering._pdf_combined_renderer import (
+        prevalidate_source_markdown,
+    )
+
+    manuscript_dir = Path(args.manuscript_dir)
+    if not manuscript_dir.exists():
+        logger.error(f"Manuscript directory not found: {manuscript_dir}")
+        raise SystemExit(1)
+
+    repo_root = Path(args.repo_root) if args.repo_root else None
+    bib_file = Path(args.bib) if args.bib else None
+
+    logger.info(f"Pre-render validation: {manuscript_dir}")
+    try:
+        prevalidate_source_markdown(
+            manuscript_dir, repo_root=repo_root, bib_file=bib_file
+        )
+    except RenderingError as exc:
+        for line in str(exc).splitlines():
+            logger.error(line)
+        raise SystemExit(1) from exc
+
+    logger.info("No render-blocking pitfalls or undefined citations found.")
+    raise SystemExit(0)
 
 
 def verify_integrity_command(args: argparse.Namespace) -> None:
@@ -171,6 +211,22 @@ def main() -> None:
         help="Exit non-zero when any ERROR-severity markdown issue is found",
     )
     md_parser.set_defaults(func=validate_markdown_command)
+
+    # Pre-render strict gate
+    prer_parser = subparsers.add_parser(
+        "prerender",
+        help="Strict source-markdown gate: pitfalls + undefined citations",
+    )
+    prer_parser.add_argument(
+        "manuscript_dir", help="Path to manuscript directory (source markdown set)"
+    )
+    prer_parser.add_argument(
+        "--repo-root", help="Repository root for relative-path display"
+    )
+    prer_parser.add_argument(
+        "--bib", help="Explicit references.bib path (overrides discovery)"
+    )
+    prer_parser.set_defaults(func=validate_prerender_command)
 
     # Integrity verification
     int_parser = subparsers.add_parser("integrity", help="Verify output integrity")

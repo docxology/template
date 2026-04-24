@@ -17,6 +17,10 @@ from pathlib import Path
 from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
 from infrastructure.core.logging import DiagnosticEvent, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.content.diagnostic_codes import (
+    BibtexCode,
+    MarkdownCode,
+)
 
 logger = get_logger(__name__)
 
@@ -28,6 +32,40 @@ ANCHOR_PATTERN = re.compile(r"\{#([^}]+)\}")
 INTERNAL_LINK_PATTERN = re.compile(r"\(#([^\)]+)\)")
 LINK_PATTERN = re.compile(r"\[([^\]]+)\]\((https?://[^\)]+)\)")
 BARE_URL_PATTERN = re.compile(r"(?<!\]\()https?://\S+")
+
+
+def _text_without_fenced_code(text: str) -> str:
+    """Remove triple-backtick and tilde-fenced code blocks.
+
+    Used for reference and internal-link checks so LaTeX inside a fenced
+    ``latex`` block (e.g. ``p(#1)`` in ``\\newcommand``) is not misparsed
+    as Markdown ``(#...)`` internal links.
+    """
+    text = re.sub(r"```[\s\S]*?```", "", text)
+    text = re.sub(r"~~~[\s\S]*?~~~", "", text)
+    return text
+
+# Pandoc converts bare ``|word|`` in prose contexts and escaped ``\|`` inside
+# table cells to the math macro ``\mid``. When the surrounding text is
+# rendered in text mode (e.g. table cell, prose, accessibility alt-text),
+# ``\mid`` falls back to the text font (lmroman) which lacks U+2223 and emits
+# ``Missing character`` warnings followed by ``U+FFFD`` glyphs in the PDF.
+# These two patterns flag the markdown sources that trigger the conversion
+# so authors can wrap them in math mode (``$|word|$`` or ``$\mid$``).
+PANDOC_BARE_PIPE_PATTERN = re.compile(r"(?<![\\$`])\|(\w+)\|(?![$`])")
+PANDOC_TABLE_ESCAPED_PIPE_PATTERN = re.compile(r"\\\|")
+CITE_KEY_PATTERN = re.compile(r"(?<![A-Za-z0-9_])@([A-Za-z][\w:.\-]*)")
+# Tolerate both ``,`` and ``}`` as the key terminator: BibTeX permits a
+# field-less entry such as ``@misc{key}`` where there is no comma after the
+# key. The original ``,``-only regex silently dropped these.
+BIBTEX_KEY_PATTERN = re.compile(r"^@\w+\{\s*([^,\s}]+)\s*[,}]", re.MULTILINE)
+
+# Files that live alongside manuscript content but are never rendered into the
+# final PDF (project documentation / preamble metadata). Skipped by the
+# render-time pitfall and citation checks to avoid false positives.
+NON_RENDERED_MANUSCRIPT_FILES: frozenset[str] = frozenset(
+    {"AGENTS.md", "README.md", "preamble.md"}
+)
 
 
 def find_markdown_files(markdown_dir: str | Path) -> list[str]:
@@ -147,6 +185,7 @@ def validate_images(
                         severity=DiagnosticSeverity.ERROR,
                         category="MARKDOWN_IMAGE",
                         message=f"Missing referenced image: '{img_clean}'",
+                        code=MarkdownCode.IMG_MISSING,
                         file_path=str(display_path),
                         fix_suggestion="Ensure the image file exists in the specified relative path or figures directory."
                     )
@@ -178,25 +217,27 @@ def validate_refs(
             rel = path
             
         rel_str = str(rel)
-            
-        for ref in EQ_REF_PATTERN.findall(text):
+        text_wo_fences = _text_without_fenced_code(text)
+        for ref in EQ_REF_PATTERN.findall(text_wo_fences):
             if ref not in labels:
                 problems.append(
                     DiagnosticEvent(
                         severity=DiagnosticSeverity.ERROR,
                         category="MARKDOWN_REF",
                         message=f"Missing equation label for \\eqref{{{ref}}}",
+                        code=MarkdownCode.REF_EQUATION_MISSING,
                         file_path=rel_str,
                         fix_suggestion=f"Verify that '\\label{{{ref}}}' exists in an equation block."
                     )
                 )
-        for link in INTERNAL_LINK_PATTERN.findall(text):
+        for link in INTERNAL_LINK_PATTERN.findall(text_wo_fences):
             if link not in anchors and link not in labels:
                 problems.append(
                     DiagnosticEvent(
                         severity=DiagnosticSeverity.ERROR,
                         category="MARKDOWN_LINK",
                         message=f"Missing anchor/label for internal link (#{link})",
+                        code=MarkdownCode.LINK_ANCHOR_MISSING,
                         file_path=rel_str,
                         fix_suggestion=f"Provide a heading anchor '{{#{link}}}' or equation label."
                     )
@@ -210,6 +251,7 @@ def validate_refs(
                     severity=DiagnosticSeverity.WARNING,
                     category="MARKDOWN_LINK",
                     message=f"Bare URL found: '{m.group(0)}'",
+                    code=MarkdownCode.LINK_BARE_URL,
                     file_path=rel_str,
                     fix_suggestion="Wrap the URL in a Markdown link with informative text: [link text](url)"
                 )
@@ -224,6 +266,7 @@ def validate_refs(
                         severity=DiagnosticSeverity.WARNING,
                         category="MARKDOWN_LINK",
                         message=f"Non-informative link text for {url}",
+                        code=MarkdownCode.LINK_BAD_TEXT,
                         file_path=rel_str,
                         fix_suggestion=f"Replace '{label}' with descriptive text about the link destination."
                     )
@@ -262,6 +305,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                     severity=DiagnosticSeverity.WARNING,
                     category="MARKDOWN_MATH",
                     message="Use equation environment instead of $$",
+                    code=MarkdownCode.MATH_DOLLAR_DISPLAY,
                     file_path=rel_str,
                     fix_suggestion="Replace $$...$$ with \\begin{equation}...\\end{equation}"
                 )
@@ -272,6 +316,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                     severity=DiagnosticSeverity.WARNING,
                     category="MARKDOWN_MATH",
                     message="Use equation environment instead of \\[ \\]",
+                    code=MarkdownCode.MATH_BRACKET_DISPLAY,
                     file_path=rel_str,
                     fix_suggestion="Replace \\[...\\] with \\begin{equation}...\\end{equation}"
                 )
@@ -286,6 +331,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                         severity=DiagnosticSeverity.WARNING,
                         category="MARKDOWN_MATH",
                         message="Equation missing \\label{...}",
+                        code=MarkdownCode.MATH_LABEL_MISSING,
                         file_path=rel_str,
                         fix_suggestion="Add a \\label{eq_name} inside the \\begin{equation} block."
                     )
@@ -298,11 +344,212 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                                 severity=DiagnosticSeverity.ERROR,
                                 category="MARKDOWN_MATH",
                                 message=f"Duplicate equation label '{{{lab}}}' found",
+                                code=MarkdownCode.MATH_LABEL_DUPLICATE,
                                 file_path=rel_str,
                                 fix_suggestion="Rename one of the labels to be unique."
                             )
                         )
                     seen_labels.add(lab)
+    return problems
+
+
+def _strip_code_and_math(text: str) -> str:
+    """Remove fenced code, inline code, display math, and inline math regions.
+
+    Strips, in order:
+      1. Triple-backtick fenced blocks (```...```).
+      2. Tilde-fenced blocks (~~~...~~~).
+      3. Inline code (`...`).
+      4. Indented code blocks (4+ leading spaces, contiguous lines).
+      5. LaTeX environments commonly used for display math.
+      6. Display math \\[ \\] and \\( \\).
+      7. Inline ``$...$`` math.
+
+    Used by Pandoc-pitfall and citation checks so that patterns inside
+    code blocks or math contexts are not flagged.
+    """
+    text = re.sub(r"```[\s\S]*?```", "", text)
+    text = re.sub(r"~~~[\s\S]*?~~~", "", text)
+    text = re.sub(r"`[^`\n]+`", "", text)
+    # Indented code blocks: contiguous run of lines each starting with 4+ spaces
+    # or a tab, preceded by a blank line (or start of file). Markdown's loose
+    # rule is "indent of 4+ spaces or a tab"; we collapse such runs to nothing.
+    text = re.sub(
+        r"(?:\A|\n)(?:[ ]{4,}|\t)[^\n]*(?:\n(?:[ ]{4,}|\t)[^\n]*)*",
+        "\n",
+        text,
+    )
+    text = re.sub(r"\\begin\{(equation\*?|align\*?|gather\*?|multline\*?)\}[\s\S]*?\\end\{\1\}", "", text)
+    text = re.sub(r"\\\([\s\S]*?\\\)", "", text)
+    text = re.sub(r"\\\[[\s\S]*?\\\]", "", text)
+    text = re.sub(r"(?<!\$)\$(?!\$)([^$\n]+?)(?<!\$)\$(?!\$)", "", text)
+    return text
+
+
+def validate_pandoc_pitfalls(
+    md_paths: list[str], repo_root: str | Path
+) -> list[DiagnosticEvent]:
+    """Flag markdown patterns Pandoc converts to LaTeX ``\\mid`` in text mode.
+
+    Pandoc transforms two prose patterns into the math macro ``\\mid``:
+
+    * Bare ``|word|`` outside math/code (e.g. figure captions, alt-text).
+    * Escaped ``\\|`` inside table cells (the only way to put a literal
+      pipe in a Markdown table).
+
+    When the rendered context is text mode, ``\\mid`` resolves through the
+    text font (lmroman) which lacks U+2223 and produces visible
+    ``Missing character`` warnings plus ``U+FFFD`` glyphs in the PDF.
+    Wrapping the offending span in inline math (``$|word|$`` or
+    ``$\\mid$``) routes the macro through the math font where it renders
+    correctly.
+
+    Args:
+        md_paths: Markdown source files to scan.
+        repo_root: Repository root for relative-path display.
+
+    Returns:
+        DiagnosticEvents (severity WARNING) for each occurrence.
+    """
+    repo_root_path = Path(repo_root)
+    problems: list[DiagnosticEvent] = []
+
+    for path in md_paths:
+        path_obj = Path(path)
+        if path_obj.name in NON_RENDERED_MANUSCRIPT_FILES:
+            continue
+        text = path_obj.read_text(encoding="utf-8")
+        try:
+            rel: str | Path = path_obj.relative_to(repo_root_path)
+        except ValueError:
+            rel = path_obj
+        rel_str = str(rel)
+
+        prose = _strip_code_and_math(text)
+        for m in PANDOC_BARE_PIPE_PATTERN.finditer(prose):
+            problems.append(
+                DiagnosticEvent(
+                    severity=DiagnosticSeverity.WARNING,
+                    category="MARKDOWN_PANDOC_MID",
+                    message=(
+                        f"Bare pipe pattern '|{m.group(1)}|' in prose will be "
+                        f"converted by Pandoc to '\\mid {m.group(1)}\\mid{{}}', "
+                        "which fails to render U+2223 in text mode."
+                    ),
+                    code=MarkdownCode.PANDOC_BARE_PIPE,
+                    file_path=rel_str,
+                    fix_suggestion=(
+                        f"Wrap the span in inline math (e.g. '$|{m.group(1)}|$' "
+                        f"or '${{|}}{m.group(1)}{{|}}$') so the macro renders "
+                        "through the math font."
+                    ),
+                )
+            )
+
+        for line_no, line in enumerate(text.splitlines(), 1):
+            stripped = line.lstrip()
+            if not stripped.startswith("|"):
+                continue
+            # Strip inline math regions (where ``\|`` is the norm operator,
+            # not a Pandoc-converted pipe) before scanning.
+            line_no_math = re.sub(r"(?<!\$)\$(?!\$)([^$\n]+?)(?<!\$)\$(?!\$)", "", line)
+            line_no_math = re.sub(r"`[^`]+`", "", line_no_math)
+            if not PANDOC_TABLE_ESCAPED_PIPE_PATTERN.search(line_no_math):
+                continue
+            problems.append(
+                DiagnosticEvent(
+                    severity=DiagnosticSeverity.WARNING,
+                    category="MARKDOWN_PANDOC_MID",
+                    message=(
+                        f"Escaped pipe '\\|' in table cell (line {line_no}) "
+                        "is rendered by Pandoc as '\\mid', which fails to "
+                        "render U+2223 in text mode."
+                    ),
+                    code=MarkdownCode.PANDOC_TABLE_ESCAPED_PIPE,
+                    file_path=rel_str,
+                    fix_suggestion=(
+                        "Replace the cell content with inline math, e.g. "
+                        "'$P(\\text{A} \\mid \\text{B})$'."
+                    ),
+                )
+            )
+    return problems
+
+
+def validate_citations(
+    md_paths: list[str], repo_root: str | Path, bib_file: str | Path | None = None
+) -> list[DiagnosticEvent]:
+    """Verify every ``[@key]`` citation resolves in the project's BibTeX file.
+
+    Scans markdown for Pandoc-style citation tokens (``@key`` outside code
+    or math contexts) and reports any keys not present in the supplied
+    ``references.bib``. Mirrors the natbib *Citation `key' undefined*
+    warning that would otherwise surface only after a full LaTeX render.
+
+    Args:
+        md_paths: Markdown source files to scan.
+        repo_root: Repository root for relative-path display.
+        bib_file: Path to ``references.bib``. When ``None``, look for
+            ``references.bib`` next to the first markdown file.
+
+    Returns:
+        DiagnosticEvents (severity ERROR) for each unresolved citation key.
+    """
+    repo_root_path = Path(repo_root)
+    problems: list[DiagnosticEvent] = []
+    if not md_paths:
+        return problems
+
+    if bib_file is None:
+        bib_candidate = Path(md_paths[0]).parent / "references.bib"
+        bib_path = bib_candidate if bib_candidate.exists() else None
+    else:
+        bib_path = Path(bib_file)
+        if not bib_path.exists():
+            bib_path = None
+
+    if bib_path is None:
+        return problems
+
+    try:
+        bib_text = bib_path.read_text(encoding="utf-8", errors="ignore")
+    except OSError as e:
+        logger.warning(f"Failed to read BibTeX file {bib_path}: {e}")
+        return problems
+
+    known_keys = {k.strip() for k in BIBTEX_KEY_PATTERN.findall(bib_text)}
+
+    for path in md_paths:
+        path_obj = Path(path)
+        if path_obj.name in NON_RENDERED_MANUSCRIPT_FILES:
+            continue
+        text = path_obj.read_text(encoding="utf-8")
+        try:
+            rel: str | Path = path_obj.relative_to(repo_root_path)
+        except ValueError:
+            rel = path_obj
+        rel_str = str(rel)
+
+        prose = _strip_code_and_math(text)
+        seen_in_file: set[str] = set()
+        for m in CITE_KEY_PATTERN.finditer(prose):
+            key = m.group(1)
+            if key in known_keys or key in seen_in_file:
+                continue
+            seen_in_file.add(key)
+            problems.append(
+                DiagnosticEvent(
+                    severity=DiagnosticSeverity.ERROR,
+                    category="MARKDOWN_CITATION",
+                    message=f"Undefined citation key '@{key}' (not in {bib_path.name})",
+                    code=BibtexCode.UNDEFINED_KEY,
+                    file_path=rel_str,
+                    fix_suggestion=(
+                        f"Add an entry '@type{{{key}, ...}}' to {bib_path.name} or "
+                        "correct the citation key in the markdown."
+                    ),
+                )
+            )
     return problems
 
 
@@ -342,6 +589,8 @@ def validate_markdown(
     problems += validate_images(md_paths, repo_root)
     problems += validate_refs(md_paths, repo_root, labels, anchors)
     problems += validate_math(md_paths, repo_root)
+    problems += validate_pandoc_pitfalls(md_paths, repo_root)
+    problems += validate_citations(md_paths, repo_root)
 
     if problems:
         # Currently treating WARNING severity as failing if strict is True.

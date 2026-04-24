@@ -186,20 +186,41 @@ jobs:
         if: runner.os == 'macOS'
         run: sudo scutil --set HostName $(hostname)
 
+      # One pytest process per project: code_project and fep_lean both use
+      # ``tests/conftest.py``, which registers as the same plugin name if collected
+      # in a single invocation. fep_lean runs in job ``fep-lean`` (real gauss/lake).
       - name: Run project tests
         env:
           COVERAGE_FILE: .coverage.project
           PYTHONPATH: .
-        run: >-
-          uv run pytest projects/*/tests/
-          --cov=projects/code_project/src
-          --cov=projects/cognitive_case_diagrams/src
-          --cov=projects/template/src
-          --cov-report=term-missing
-          --cov-report=xml:coverage-project.xml
-          --cov-fail-under=90
-          --durations=10
-          -m "not requires_ollama"
+        run: |
+          set -euo pipefail
+          rm -f .coverage.project coverage-project.xml
+          first=1
+          for d in projects/*/tests; do
+            if [ "$d" = "projects/fep_lean/tests" ]; then
+              continue
+            fi
+            if [ "$first" -eq 1 ]; then
+              uv run pytest "$d" \
+                -m "not requires_ollama" \
+                --cov=projects/code_project/src \
+                --cov-report=term-missing \
+                --durations=10 \
+                --timeout=120
+              first=0
+            else
+              uv run pytest "$d" \
+                -m "not requires_ollama" \
+                --cov=projects/code_project/src \
+                --cov-append \
+                --cov-report=term-missing \
+                --durations=10 \
+                --timeout=120
+            fi
+          done
+          uv run coverage xml -o coverage-project.xml
+          uv run coverage report --fail-under=90
 
       - name: Upload project coverage to Codecov
         if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
@@ -214,9 +235,13 @@ jobs:
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 4b — fep_lean (real math-inc gauss + elan lake/lean; excluded from matrix above)
+# This job uses projects/fep_lean/ paths.  When fep_lean lives under
+# projects_in_progress/, the hashFiles guard evaluates to '' and the job
+# is skipped.  Promote to projects/ to activate CI:
+#   mv projects_in_progress/fep_lean projects/fep_lean
 # ─────────────────────────────────────────────────────────────────────────────
   fep-lean:
-    name: fep_lean (real gauss + lake)
+    name: fep_lean (gauss + lake)
     if: hashFiles('projects/fep_lean/lean/lean-toolchain') != ''
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -256,6 +281,19 @@ jobs:
           lean --version
           lake --version
           lake build
+
+      - name: Reject sorry in Lean sketches
+        working-directory: projects/fep_lean/lean/FepSketches
+        run: |
+          set -euo pipefail
+          SORRY_LINES=$(grep -n 'sorry' fep_all.lean Basic.lean \
+            | grep -Ev ':[[:space:]]*--' || true)
+          if [ -n "$SORRY_LINES" ]; then
+            echo "ERROR: 'sorry' found in non-comment Lean lines:"
+            echo "$SORRY_LINES"
+            exit 1
+          fi
+          echo "No sorry in Lean sketches."
 
       - name: Install Open Gauss CLI
         timeout-minutes: 25

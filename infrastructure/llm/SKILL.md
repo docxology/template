@@ -71,19 +71,23 @@ prompt = summary_template.format(manuscript_text=text)
 
 ## Output Validation (`validation/`)
 
+Validation was decomposed into module-level functions in v0.6.0 — the
+previous `OutputValidator` class is gone; call the individual checks
+directly.
+
 ```python
 from infrastructure.llm import (
-    OutputValidator, detect_repetition, is_off_topic,
+    detect_repetition, is_off_topic,
     check_format_compliance, validate_section_completeness,
     calculate_unique_content_ratio, deduplicate_sections,
 )
 
-validator = OutputValidator()
-is_valid = validator.validate(response_text)
-
 # Individual checks
 if is_off_topic(response_text):
     logger.warning("Response appears off-topic")
+
+if detect_repetition(response_text):
+    logger.warning("Response contains repeated content")
 
 ratio = calculate_unique_content_ratio(response_text)
 ```

@@ -26,8 +26,10 @@ Exit codes:
 
 from __future__ import annotations
 
+import shlex
 import subprocess  # nosec B404
 import sys
+import time
 from pathlib import Path
 
 # Add root to path for infrastructure imports
@@ -67,23 +69,31 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     Raises:
         ScriptExecutionError: If script execution fails critically
     """
-    logger.info(f"\n  Running: {project_name}/{script_path.name}")
-
     project_root = repo_root / "projects" / project_name
+    logger.info("")
+    logger.info("  Script: %s", script_path.resolve())
+    logger.info("  Project root: %s", project_root.resolve())
+    logger.info("  Working directory (subprocess cwd): %s", repo_root.resolve())
+
     cmd, env = build_analysis_script_cmd_and_env(script_path, project_root, repo_root)
+    logger.info("  Command: %s", " ".join(shlex.quote(str(part)) for part in cmd))
 
     project_venv = project_root / ".venv"
     if project_venv.is_dir():
-        logger.info(f"  Using project-local venv: {project_venv}")
+        logger.info("  Using project-local venv: %s", project_venv.resolve())
 
     timeout_sec = parse_analysis_script_timeout_sec()
     if timeout_sec is None:
         logger.info(
-            "  Analysis script timeout: unlimited (set ANALYSIS_SCRIPT_TIMEOUT_SEC=0, none, or unlimited)"
+            "  Per-script timeout: unlimited (ANALYSIS_SCRIPT_TIMEOUT_SEC unset or 0/none/unlimited)"
         )
     else:
-        logger.debug("  Analysis script timeout: %.0fs", timeout_sec)
+        logger.info(
+            "  Per-script timeout: %.0fs (default 7200s; override via ANALYSIS_SCRIPT_TIMEOUT_SEC)",
+            timeout_sec,
+        )
 
+    started = time.monotonic()
     try:
         with log_operation(f"Execute {script_path.name}", logger):
             # When using project-local venv, run from repo_root but let uv
@@ -98,8 +108,18 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
                 timeout=timeout_sec,
             )
 
+        elapsed = time.monotonic() - started
+        if result.returncode == 0:
+            logger.info("  Finished %s in %.1fs (exit 0)", script_path.name, elapsed)
+        else:
+            logger.error(
+                "  Finished %s in %.1fs (exit %s)",
+                script_path.name,
+                elapsed,
+                result.returncode,
+            )
+
         if result.returncode != 0:
-            logger.error(f"Script failed: {script_path.name} (exit code: {result.returncode})")
             logger.info("  Troubleshooting:")
             logger.info(f"    - Run script manually: python3 {script_path}")
             logger.info(f"    - Check script syntax: python3 -m py_compile {script_path}")
@@ -206,6 +226,12 @@ def main() -> int:
         if not scripts:
             logger.info("  No analysis scripts found - skipping stage")
             return 0
+
+        logger.info(
+            "  Running %d analysis script(s) in lexicographic order: %s",
+            len(scripts),
+            ", ".join(s.name for s in scripts),
+        )
 
         # Run analysis pipeline
         exit_code = run_analysis_pipeline(scripts, args.project)

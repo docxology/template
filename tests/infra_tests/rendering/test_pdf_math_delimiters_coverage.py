@@ -55,24 +55,36 @@ class TestFixMathDelimiters:
         assert r"\emph" not in result
 
     def test_greek_letter_fix(self):
-        tex = r"\tau\)"
+        tex = r"\(\tau)"
         result = fix_math_delimiters(tex)
-        assert r"\tau)" in result
+        assert r"\(\tau\)" in result
 
     def test_multiple_greek_letters(self):
-        tex = r"\alpha\) and \beta\) and \gamma\)"
+        tex = r"\(\alpha) and \(\beta) and \(\gamma)"
         result = fix_math_delimiters(tex)
-        assert r"\alpha)" in result
-        assert r"\beta)" in result
-        assert r"\gamma)" in result
+        assert r"\(\alpha\)" in result
+        assert r"\(\beta\)" in result
+        assert r"\(\gamma\)" in result
 
     def test_all_greek_letters(self):
         greeks = ["tau", "pi", "Theta", "alpha", "beta", "gamma",
-                   "lambda", "kappa", "sigma", "phi", "eta"]
+                   "lambda", "kappa", "sigma", "phi", "eta",
+                   "mu", "nu", "rho", "omega"]
         for g in greeks:
-            tex = f"\\{g}\\)"
+            tex = f"\\(\\{g})"
             result = fix_math_delimiters(tex)
-            assert f"\\{g})" in result, f"Failed for \\{g}"
+            assert f"\\(\\{g}\\)" in result, f"Failed for \\{g}"
+
+    def test_greek_letter_subscript_closure(self):
+        r"""``\(s_\tau)`` (broken) -> ``\(s_\tau\)`` (proper)."""
+        tex = r"\(s_\tau)"
+        result = fix_math_delimiters(tex)
+        assert r"\(s_\tau\)" in result
+
+    def test_already_proper_greek_unchanged(self):
+        r"""Already-proper ``\(\sigma\)`` must be left alone (idempotent)."""
+        tex = r"\(\sigma\)"
+        assert fix_math_delimiters(tex) == tex
 
     def test_mathbb_emph_pattern_in_label_block(self):
         # Complex mathbb pattern within labeled display math (greedy pattern matches)

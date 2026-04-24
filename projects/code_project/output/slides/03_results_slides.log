@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  12 APR 2026 12:53
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  24 APR 2026 11:25
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1196,120 +1196,6 @@ Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 ))
 \pandoc@box=\box88
 
-(/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
-Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
-File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count397
-))
-(/usr/local/texlive/2026/texmf-dist/tex/latex/xurl/xurl.sty
-Package: xurl 2022/01/09 v 0.10 modify URL breaks
-)
-(/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
-ults_slides.aux)
-\openout1 = `03_results_slides.aux'.
-
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-
-*geometry* driver: auto-detecting
-*geometry* detected driver: xetex
-*geometry* verbose mode - [ preamble ] result:
-* driver: xetex
-* paper: custom
-* layout: <same size as paper>
-* layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: includehead includefoot 
-* h-part:(L,W,R)=(28.45274pt, 307.28987pt, 28.45274pt)
-* v-part:(T,H,B)=(0.0pt, 273.14662pt, 0.0pt)
-* \paperwidth=364.19536pt
-* \paperheight=273.14662pt
-* \textwidth=307.28987pt
-* \textheight=244.6939pt
-* \oddsidemargin=-43.81725pt
-* \evensidemargin=-43.81725pt
-* \topmargin=-72.26999pt
-* \headheight=14.22636pt
-* \headsep=0.0pt
-* \topskip=11.0pt
-* \footskip=14.22636pt
-* \marginparwidth=4.0pt
-* \marginparsep=10.0pt
-* \columnsep=10.0pt
-* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
-* \hoffset=0.0pt
-* \voffset=0.0pt
-* \mag=1000
-* \@twocolumnfalse
-* \@twosidefalse
-* \@mparswitchfalse
-* \@reversemarginfalse
-* (1in=72.27pt=25.4mm, 1cm=28.453pt)
-
-Package hyperref Info: Link coloring OFF on input line 113.
-
-(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-basic-dicti
-onary-English.dict
-Dictionary: translator-basic-dictionary, Language: English 
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-bibliograph
-y-dictionary-English.dict
-Dictionary: translator-bibliography-dictionary, Language: English 
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-environment
--dictionary-English.dict
-Dictionary: translator-environment-dictionary, Language: English 
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-months-dict
-ionary-English.dict
-Dictionary: translator-months-dictionary, Language: English 
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-numbers-dic
-tionary-English.dict
-Dictionary: translator-numbers-dictionary, Language: English 
-)
-(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-theorem-dic
-tionary-English.dict
-Dictionary: translator-theorem-dictionary, Language: English 
-)
-LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 113.
-LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 113.
-LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 113.
-LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 113.
-LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 113.
-LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 113.
-LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 113.
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.03015890977869.
-
-
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
 
@@ -1322,7 +1208,7 @@ Package fontspec Info:
 (fontspec)             Font family 'latinmodern-math.otf(0)' created for font
 (fontspec)             'latinmodern-math.otf' with options
 (fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
+allCapsFont={},Script=Math].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
@@ -1330,16 +1216,9 @@ allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
 (fontspec)             <->s*[1.03015890977869]"[latinmodern-math.otf]/OT:script
 =math;language=dflt;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[1.03015890977869]"[latinmodern-math.otf]/OT:script
-=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 113.
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.03015890977869.
-
+(Font)              scaled to size 11.28015pt on input line 108.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1363,7 +1242,7 @@ Package fontspec Info:
 (fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
 allCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=
 latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,St
-yle=MathScriptScript}},BoldFont={latinmodern-math.otf}].
+yle=MathScriptScript}}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
@@ -1373,31 +1252,20 @@ yle=MathScriptScript}},BoldFont={latinmodern-math.otf}].
 script=math;language=dflt;"<6.57-9.3075>s*[1.03015890977869]"[latinmodern-math.
 otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[1.03015890977869]"[latinmo
 dern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[1.03015890977869]"[latinmodern-math.otf]/OT:script
-=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 113.
+(Font)              scaled to size 11.28015pt on input line 108.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 113.
+(Font)              `operators' in the math version `normal' on input line 108.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 113.
+ line 108.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 113.
+(Font)              `operators' in the math version `bold' on input line 108.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 113.
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.03015890977869.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.030261925669668.
-
+t line 108.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1437,8 +1305,7 @@ Package fontspec Info:
 (fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
 allCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=
 latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,St
-yle=MathScriptScript}},BoldFont={latinmodern-math.otf},ScaleAgain=1.0001,FontAd
-justment={\fontdimen
+yle=MathScriptScript}},ScaleAgain=1.0001,FontAdjustment={\fontdimen
 (fontspec)             8\font =7.63666pt\relax \fontdimen 9\font
 (fontspec)             =4.44438pt\relax \fontdimen 10\font =5.00839pt\relax
 (fontspec)             \fontdimen 11\font =7.73819pt\relax \fontdimen 12\font
@@ -1458,28 +1325,17 @@ justment={\fontdimen
 :script=math;language=dflt;"<6.57-9.3075>s*[1.030261925669668]"[latinmodern-mat
 h.otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[1.030261925669668]"[lati
 nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[1.030261925669668]"[latinmodern-math.otf]/OT:scrip
-t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 113.
+(Font)              `symbols' in the math version `normal' on input line 108.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 113.
+t line 108.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 113.
+(Font)              `symbols' in the math version `bold' on input line 108.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 113.
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.03015890977869.
-
-
-Package fontspec Info: 
-(fontspec)             latinmodern-math scale = 1.030055893887712.
-
+t line 108.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1519,8 +1375,7 @@ Package fontspec Info:
 (fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
 allCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=
 latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,St
-yle=MathScriptScript}},BoldFont={latinmodern-math.otf},ScaleAgain=0.9999,FontAd
-justment={\fontdimen
+yle=MathScriptScript}},ScaleAgain=0.9999,FontAdjustment={\fontdimen
 (fontspec)             8\font =0.4512pt\relax \fontdimen 9\font
 (fontspec)             =2.25603pt\relax \fontdimen 10\font =1.88379pt\relax
 (fontspec)             \fontdimen 11\font =1.25209pt\relax \fontdimen 12\font
@@ -1534,29 +1389,148 @@ justment={\fontdimen
 :script=math;language=dflt;"<6.57-9.3075>s*[1.030055893887712]"[latinmodern-mat
 h.otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[1.030055893887712]"[lati
 nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
-(fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[1.030055893887712]"[latinmodern-math.otf]/OT:scrip
-t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 1
-13.
+08.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 113.
+t line 108.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 113
+(Font)              `largesymbols' in the math version `bold' on input line 108
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 113.
-LaTeX Info: Redefining \microtypecontext on input line 113.
-Package microtype Info: Applying patch `item' on input line 113.
-Package microtype Info: Applying patch `toc' on input line 113.
-Package microtype Info: Applying patch `eqnum' on input line 113.
-Package microtype Info: Applying patch `footnote' on input line 113.
-Package microtype Info: Applying patch `verbatim' on input line 113.
-LaTeX Info: Redefining \microtypesetup on input line 113.
+t line 108.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bookmark.sty
+Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
+File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
+\BKM@id=\count397
+))
+(/usr/local/texlive/2026/texmf-dist/tex/latex/xurl/xurl.sty
+Package: xurl 2022/01/09 v 0.10 modify URL breaks
+)
+(/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
+ults_slides.aux)
+Runaway argument?
+{{5}{13}{Figure: Dimensional scaling from \protect \texttt {generate\_\ETC.
+! File ended while scanning use of \@newl@bel.
+<inserted text> 
+                \par 
+l.118 \begin{document}
+                      
+I suspect you have forgotten a `}', causing me
+to read past where you wanted me to stop.
+I'll try to recover; but if the error is serious,
+you'd better type `E' or `X' now and fix your file.
+
+\openout1 = `03_results_slides.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+*geometry* verbose mode - [ preamble ] result:
+* driver: xetex
+* paper: custom
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: includehead includefoot 
+* h-part:(L,W,R)=(28.45274pt, 307.28987pt, 28.45274pt)
+* v-part:(T,H,B)=(0.0pt, 273.14662pt, 0.0pt)
+* \paperwidth=364.19536pt
+* \paperheight=273.14662pt
+* \textwidth=307.28987pt
+* \textheight=244.6939pt
+* \oddsidemargin=-43.81725pt
+* \evensidemargin=-43.81725pt
+* \topmargin=-72.26999pt
+* \headheight=14.22636pt
+* \headsep=0.0pt
+* \topskip=11.0pt
+* \footskip=14.22636pt
+* \marginparwidth=4.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package hyperref Info: Link coloring OFF on input line 118.
+
+(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-basic-dicti
+onary-English.dict
+Dictionary: translator-basic-dictionary, Language: English 
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-bibliograph
+y-dictionary-English.dict
+Dictionary: translator-bibliography-dictionary, Language: English 
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-environment
+-dictionary-English.dict
+Dictionary: translator-environment-dictionary, Language: English 
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-months-dict
+ionary-English.dict
+Dictionary: translator-months-dictionary, Language: English 
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-numbers-dic
+tionary-English.dict
+Dictionary: translator-numbers-dictionary, Language: English 
+)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/translator/translator-theorem-dic
+tionary-English.dict
+Dictionary: translator-theorem-dictionary, Language: English 
+)
+LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
+(Font)                  TU/latinmodern-math.otf(1)/m/n --> TU/lmr/m/n on input 
+line 118.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 118.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 118.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 118.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 118.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 118.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 118.
+LaTeX Info: Redefining \microtypecontext on input line 118.
+Package microtype Info: Applying patch `item' on input line 118.
+Package microtype Info: Applying patch `toc' on input line 118.
+Package microtype Info: Applying patch `eqnum' on input line 118.
+Package microtype Info: Applying patch `footnote' on input line 118.
+Package microtype Info: Applying patch `verbatim' on input line 118.
+LaTeX Info: Redefining \microtypesetup on input line 118.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1569,36 +1543,44 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
+No file 03_results_slides.nav.
+[1
+
+]
+\openout4 = `03_results_slides.vrb'.
+
+
 (/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
-ults_slides.nav)
+ults_slides.vrb) [2
+
+]
 \openout4 = `03_results_slides.vrb'.
 
 
 (/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
 ults_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 17.
+(Font)              scaled to size 7.8961pt on input line 7.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 17.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-7.
+(Font)              scaled to size 5.64008pt on input line 7.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7
+.
  (/usr/local/texlive/2026/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 17.
+(Font)              scaled to size 11.28131pt on input line 7.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 17.
+(Font)              scaled to size 7.89691pt on input line 7.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 17.
+(Font)              scaled to size 5.64066pt on input line 7.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 17.
+(Font)              scaled to size 11.27914pt on input line 7.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 17.
+(Font)              scaled to size 7.8954pt on input line 7.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 17.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 17.
-
+(Font)              scaled to size 5.63957pt on input line 7.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 7.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1606,8 +1588,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 17.
-
+LaTeX Font Info:    Trying to load font information for U+msb on input line 7.
 
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1618,33 +1599,33 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 File: ../figures/convergence_plot.png Graphic file (type bmp)
 <../figures/convergence_plot.png>
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.30151pt on input line 29.
+(Font)              scaled to size 10.30151pt on input line 19.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.21106pt on input line 29.
+(Font)              scaled to size 7.21106pt on input line 19.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.15076pt on input line 29.
+(Font)              scaled to size 5.15076pt on input line 19.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.30258pt on input line 29.
+(Font)              scaled to size 10.30258pt on input line 19.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.2118pt on input line 29.
+(Font)              scaled to size 7.2118pt on input line 19.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.15129pt on input line 29.
+(Font)              scaled to size 5.15129pt on input line 19.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.3006pt on input line 29.
+(Font)              scaled to size 10.3006pt on input line 19.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.21042pt on input line 29.
+(Font)              scaled to size 7.21042pt on input line 19.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.1503pt on input line 29.
+(Font)              scaled to size 5.1503pt on input line 19.
 
 
 LaTeX Warning: File `../output/figures/step_size_sensitivity.png' not found on 
-input line 58.
+input line 48.
 
 ! Unable to load picture or PDF file '../output/figures/step_size_sensitivity.p
 ng'.
 <to be read again> 
                    }
-l.58 ...output/figures/step_size_sensitivity.png}}
+l.48 ...output/figures/step_size_sensitivity.png}}
                                                   
 The requested image couldn't be read because
 it was not a recognized image format.
@@ -1658,7 +1639,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.58 ...output/figures/step_size_sensitivity.png}}
+l.48 ...output/figures/step_size_sensitivity.png}}
                                                   
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1671,13 +1652,35 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.58 ...output/figures/step_size_sensitivity.png}}
+l.48 ...output/figures/step_size_sensitivity.png}}
                                                   
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
+)
+Underfull \vbox (badness 1112) detected at line 190
+ []
 
+[3
+
+]
+Underfull \vbox (badness 1112) detected at line 190
+ []
+
+
+Overfull \vbox (395.12518pt too high) detected at line 190
+ []
+
+[4
+
+
+]
+\openout4 = `03_results_slides.vrb'.
+
+
+(/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
+ults_slides.vrb
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
 File: mt-LatinModernRoman.cfg 2026/02/26 v1.2 microtype config. file: Latin Mod
 ern Roman (RS)
@@ -1685,33 +1688,43 @@ ern Roman (RS)
 Missing character: There is no α (U+03B1) in font [lmsans10-regular]:mapping=te
 x-text;!
 
-Overfull \hbox (7.61992pt too wide) in paragraph at lines 107--108
+Overfull \hbox (7.61992pt too wide) in paragraph at lines 37--38
 []\TU/lmss/m/n/10.95 Converged  
  []
 
 Missing character: There is no α (U+03B1) in font [lmsans10-regular]:mapping=te
 x-text;!
 
-Overfull \hbox (7.61992pt too wide) in paragraph at lines 121--122
+Overfull \hbox (7.61992pt too wide) in paragraph at lines 51--52
 []\TU/lmss/m/n/10.95 Converged  
  []
 
 
-Overfull \hbox (935.3004pt too wide) in paragraph at lines 131--132
+Overfull \hbox (935.3004pt too wide) in paragraph at lines 61--62
 \TU/lmss/m/n/10.95 123384059690617745524091335813180186890505789975305907992186
 6755540991000896055603956885213015277601167883455158949798962075488056380093617
 68752272295676536457470613583575384064.0000|  
  []
 
+) [5
 
-LaTeX Warning: Citation `nesterov2013gradient' on page 1 undefined on input lin
-e 142.
+] [6
+
+
+]
+\openout4 = `03_results_slides.vrb'.
+
+
+(/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
+ults_slides.vrb
+
+LaTeX Warning: Citation `nesterov2013gradient' on page 7 undefined on input lin
+e 6.
 
 File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
 <../figures/convergence_rate_comparison.png>
 
-LaTeX Warning: Citation `polyak1964some' on page 1 undefined on input line 212.
-
+LaTeX Warning: Citation `polyak1964some' on page 7 undefined on input line 76.
 
 
 ! LaTeX Error: There's no line here to end.
@@ -1720,8 +1733,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.221   \(\\a
-             lpha = 0.01\): \(\\rho \\approx 0.99\), requiring
+l.85   \(\\a
+            lpha = 0.01\): \(\\rho \\approx 0.99\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1729,16 +1742,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.221   \(\\a
-             lpha = 0.01\): \(\\rho \\approx 0.99\), requiring
+l.85   \(\\a
+            lpha = 0.01\): \(\\rho \\approx 0.99\), requiring
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.221   \(\\a
-             lpha = 0.01\): \(\\rho \\approx 0.99\), requiring
+l.85   \(\\a
+            lpha = 0.01\): \(\\rho \\approx 0.99\), requiring
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1748,8 +1761,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.221   \(\\a
-             lpha = 0.01\): \(\\rho \\approx 0.99\), requiring
+l.85   \(\\a
+            lpha = 0.01\): \(\\rho \\approx 0.99\), requiring
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1763,8 +1776,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.221   \(\\alpha = 0.01\)
-                          : \(\\rho \\approx 0.99\), requiring
+l.85   \(\\alpha = 0.01\)
+                         : \(\\rho \\approx 0.99\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1776,8 +1789,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.221   \(\\alpha = 0.01\): \(\\r
-                                 ho \\approx 0.99\), requiring
+l.85   \(\\alpha = 0.01\): \(\\r
+                                ho \\approx 0.99\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1785,16 +1798,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.221   \(\\alpha = 0.01\): \(\\r
-                                 ho \\approx 0.99\), requiring
+l.85   \(\\alpha = 0.01\): \(\\r
+                                ho \\approx 0.99\), requiring
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.221   \(\\alpha = 0.01\): \(\\r
-                                 ho \\approx 0.99\), requiring
+l.85   \(\\alpha = 0.01\): \(\\r
+                                ho \\approx 0.99\), requiring
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1804,8 +1817,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.221   \(\\alpha = 0.01\): \(\\r
-                                 ho \\approx 0.99\), requiring
+l.85   \(\\alpha = 0.01\): \(\\r
+                                ho \\approx 0.99\), requiring
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1819,7 +1832,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.221 ...\\alpha = 0.01\): \(\\rho \\approx 0.99\)
+l.85   \(\\alpha = 0.01\): \(\\rho \\approx 0.99\)
                                                   , requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1832,8 +1845,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.222   \textasciitilde1375 iterations for \(\\e
-                                                psilon = 10^{-6}\)
+l.86   \textasciitilde1375 iterations for \(\\e
+                                               psilon = 10^{-6}\)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1841,16 +1854,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.222   \textasciitilde1375 iterations for \(\\e
-                                                psilon = 10^{-6}\)
+l.86   \textasciitilde1375 iterations for \(\\e
+                                               psilon = 10^{-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.222   \textasciitilde1375 iterations for \(\\e
-                                                psilon = 10^{-6}\)
+l.86   \textasciitilde1375 iterations for \(\\e
+                                               psilon = 10^{-6}\)
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1860,8 +1873,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.222   \textasciitilde1375 iterations for \(\\e
-                                                psilon = 10^{-6}\)
+l.86   \textasciitilde1375 iterations for \(\\e
+                                               psilon = 10^{-6}\)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1871,7 +1884,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.222 ...ilde1375 iterations for \(\\epsilon = 10^
+l.86 ...tilde1375 iterations for \(\\epsilon = 10^
                                                   {-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1883,8 +1896,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.224   \(\\a
-             lpha = 0.1\): \(\\rho \\approx 0.90\), requiring
+l.88   \(\\a
+            lpha = 0.1\): \(\\rho \\approx 0.90\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1892,16 +1905,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.224   \(\\a
-             lpha = 0.1\): \(\\rho \\approx 0.90\), requiring
+l.88   \(\\a
+            lpha = 0.1\): \(\\rho \\approx 0.90\), requiring
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.224   \(\\a
-             lpha = 0.1\): \(\\rho \\approx 0.90\), requiring
+l.88   \(\\a
+            lpha = 0.1\): \(\\rho \\approx 0.90\), requiring
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1911,8 +1924,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.224   \(\\a
-             lpha = 0.1\): \(\\rho \\approx 0.90\), requiring
+l.88   \(\\a
+            lpha = 0.1\): \(\\rho \\approx 0.90\), requiring
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1926,8 +1939,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.224   \(\\alpha = 0.1\)
-                         : \(\\rho \\approx 0.90\), requiring
+l.88   \(\\alpha = 0.1\)
+                        : \(\\rho \\approx 0.90\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1939,8 +1952,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.224   \(\\alpha = 0.1\): \(\\r
-                                ho \\approx 0.90\), requiring
+l.88   \(\\alpha = 0.1\): \(\\r
+                               ho \\approx 0.90\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1948,16 +1961,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.224   \(\\alpha = 0.1\): \(\\r
-                                ho \\approx 0.90\), requiring
+l.88   \(\\alpha = 0.1\): \(\\r
+                               ho \\approx 0.90\), requiring
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.224   \(\\alpha = 0.1\): \(\\r
-                                ho \\approx 0.90\), requiring
+l.88   \(\\alpha = 0.1\): \(\\r
+                               ho \\approx 0.90\), requiring
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -1967,8 +1980,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.224   \(\\alpha = 0.1\): \(\\r
-                                ho \\approx 0.90\), requiring
+l.88   \(\\alpha = 0.1\): \(\\r
+                               ho \\approx 0.90\), requiring
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -1982,8 +1995,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.224   \(\\alpha = 0.1\): \(\\rho \\approx 0.90\)
-                                                  , requiring
+l.88   \(\\alpha = 0.1\): \(\\rho \\approx 0.90\)
+                                                 , requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -1995,8 +2008,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.225   \textasciitilde132 iterations for \(\\e
-                                               psilon = 10^{-6}\)
+l.89   \textasciitilde132 iterations for \(\\e
+                                              psilon = 10^{-6}\)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2004,16 +2017,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.225   \textasciitilde132 iterations for \(\\e
-                                               psilon = 10^{-6}\)
+l.89   \textasciitilde132 iterations for \(\\e
+                                              psilon = 10^{-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.225   \textasciitilde132 iterations for \(\\e
-                                               psilon = 10^{-6}\)
+l.89   \textasciitilde132 iterations for \(\\e
+                                              psilon = 10^{-6}\)
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2023,8 +2036,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.225   \textasciitilde132 iterations for \(\\e
-                                               psilon = 10^{-6}\)
+l.89   \textasciitilde132 iterations for \(\\e
+                                              psilon = 10^{-6}\)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2034,7 +2047,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.225 ...tilde132 iterations for \(\\epsilon = 10^
+l.89 ...itilde132 iterations for \(\\epsilon = 10^
                                                   {-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2046,8 +2059,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.227   \(\\a
-             lpha = 0.5\): \(\\rho \\approx 0.50\), requiring
+l.91   \(\\a
+            lpha = 0.5\): \(\\rho \\approx 0.50\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2055,16 +2068,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.227   \(\\a
-             lpha = 0.5\): \(\\rho \\approx 0.50\), requiring
+l.91   \(\\a
+            lpha = 0.5\): \(\\rho \\approx 0.50\), requiring
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.227   \(\\a
-             lpha = 0.5\): \(\\rho \\approx 0.50\), requiring
+l.91   \(\\a
+            lpha = 0.5\): \(\\rho \\approx 0.50\), requiring
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2074,8 +2087,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.227   \(\\a
-             lpha = 0.5\): \(\\rho \\approx 0.50\), requiring
+l.91   \(\\a
+            lpha = 0.5\): \(\\rho \\approx 0.50\), requiring
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2089,8 +2102,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.227   \(\\alpha = 0.5\)
-                         : \(\\rho \\approx 0.50\), requiring
+l.91   \(\\alpha = 0.5\)
+                        : \(\\rho \\approx 0.50\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2102,8 +2115,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.227   \(\\alpha = 0.5\): \(\\r
-                                ho \\approx 0.50\), requiring
+l.91   \(\\alpha = 0.5\): \(\\r
+                               ho \\approx 0.50\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2111,16 +2124,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.227   \(\\alpha = 0.5\): \(\\r
-                                ho \\approx 0.50\), requiring
+l.91   \(\\alpha = 0.5\): \(\\r
+                               ho \\approx 0.50\), requiring
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.227   \(\\alpha = 0.5\): \(\\r
-                                ho \\approx 0.50\), requiring
+l.91   \(\\alpha = 0.5\): \(\\r
+                               ho \\approx 0.50\), requiring
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2130,8 +2143,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.227   \(\\alpha = 0.5\): \(\\r
-                                ho \\approx 0.50\), requiring
+l.91   \(\\alpha = 0.5\): \(\\r
+                               ho \\approx 0.50\), requiring
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2145,8 +2158,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.227   \(\\alpha = 0.5\): \(\\rho \\approx 0.50\)
-                                                  , requiring
+l.91   \(\\alpha = 0.5\): \(\\rho \\approx 0.50\)
+                                                 , requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2158,8 +2171,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.228   \textasciitilde20 iterations for \(\\e
-                                              psilon = 10^{-6}\)
+l.92   \textasciitilde20 iterations for \(\\e
+                                             psilon = 10^{-6}\)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2167,16 +2180,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.228   \textasciitilde20 iterations for \(\\e
-                                              psilon = 10^{-6}\)
+l.92   \textasciitilde20 iterations for \(\\e
+                                             psilon = 10^{-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.228   \textasciitilde20 iterations for \(\\e
-                                              psilon = 10^{-6}\)
+l.92   \textasciitilde20 iterations for \(\\e
+                                             psilon = 10^{-6}\)
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2186,8 +2199,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.228   \textasciitilde20 iterations for \(\\e
-                                              psilon = 10^{-6}\)
+l.92   \textasciitilde20 iterations for \(\\e
+                                             psilon = 10^{-6}\)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2197,7 +2210,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.228 ...itilde20 iterations for \(\\epsilon = 10^
+l.92 ...iitilde20 iterations for \(\\epsilon = 10^
                                                   {-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2209,8 +2222,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.230   \(\\a
-             lpha = 1.0\): \(\\rho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\a
+            lpha = 1.0\): \(\\rho \\approx 0.00\), requiring \textasciitilde0
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2218,16 +2231,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.230   \(\\a
-             lpha = 1.0\): \(\\rho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\a
+            lpha = 1.0\): \(\\rho \\approx 0.00\), requiring \textasciitilde0
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.230   \(\\a
-             lpha = 1.0\): \(\\rho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\a
+            lpha = 1.0\): \(\\rho \\approx 0.00\), requiring \textasciitilde0
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2237,8 +2250,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.230   \(\\a
-             lpha = 1.0\): \(\\rho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\a
+            lpha = 1.0\): \(\\rho \\approx 0.00\), requiring \textasciitilde0
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2252,8 +2265,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.230   \(\\alpha = 1.0\)
-                         : \(\\rho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\alpha = 1.0\)
+                        : \(\\rho \\approx 0.00\), requiring \textasciitilde0
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2265,8 +2278,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.230   \(\\alpha = 1.0\): \(\\r
-                                ho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\alpha = 1.0\): \(\\r
+                               ho \\approx 0.00\), requiring \textasciitilde0
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2274,16 +2287,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.230   \(\\alpha = 1.0\): \(\\r
-                                ho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\alpha = 1.0\): \(\\r
+                               ho \\approx 0.00\), requiring \textasciitilde0
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.230   \(\\alpha = 1.0\): \(\\r
-                                ho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\alpha = 1.0\): \(\\r
+                               ho \\approx 0.00\), requiring \textasciitilde0
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2293,8 +2306,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.230   \(\\alpha = 1.0\): \(\\r
-                                ho \\approx 0.00\), requiring \textasciitilde0
+l.94   \(\\alpha = 1.0\): \(\\r
+                               ho \\approx 0.00\), requiring \textasciitilde0
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2308,8 +2321,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.230   \(\\alpha = 1.0\): \(\\rho \\approx 0.00\)
-                                                  , requiring \textasciitilde0
+l.94   \(\\alpha = 1.0\): \(\\rho \\approx 0.00\)
+                                                 , requiring \textasciitilde0
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2321,8 +2334,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.231   iterations for \(\\e
-                            psilon = 10^{-6}\)
+l.95   iterations for \(\\e
+                           psilon = 10^{-6}\)
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2330,16 +2343,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.231   iterations for \(\\e
-                            psilon = 10^{-6}\)
+l.95   iterations for \(\\e
+                           psilon = 10^{-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.231   iterations for \(\\e
-                            psilon = 10^{-6}\)
+l.95   iterations for \(\\e
+                           psilon = 10^{-6}\)
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2349,8 +2362,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.231   iterations for \(\\e
-                            psilon = 10^{-6}\)
+l.95   iterations for \(\\e
+                           psilon = 10^{-6}\)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2360,8 +2373,8 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.231   iterations for \(\\epsilon = 10^
-                                        {-6}\)
+l.95   iterations for \(\\epsilon = 10^
+                                       {-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -2372,8 +2385,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.233   \(\\a
-             lpha = 1.5\): \(\\rho \\approx 0.50\), requiring
+l.97   \(\\a
+            lpha = 1.5\): \(\\rho \\approx 0.50\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2381,16 +2394,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.233   \(\\a
-             lpha = 1.5\): \(\\rho \\approx 0.50\), requiring
+l.97   \(\\a
+            lpha = 1.5\): \(\\rho \\approx 0.50\), requiring
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.233   \(\\a
-             lpha = 1.5\): \(\\rho \\approx 0.50\), requiring
+l.97   \(\\a
+            lpha = 1.5\): \(\\rho \\approx 0.50\), requiring
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2400,64 +2413,8 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.233   \(\\a
-             lpha = 1.5\): \(\\rho \\approx 0.50\), requiring
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-! LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.233   \(\\alpha = 1.5\)
-                         : \(\\rho \\approx 0.50\), requiring
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.233   \(\\alpha = 1.5\): \(\\r
-                                ho \\approx 0.50\), requiring
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.233   \(\\alpha = 1.5\): \(\\r
-                                ho \\approx 0.50\), requiring
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing } inserted.
-<inserted text> 
-                }
-l.233   \(\\alpha = 1.5\): \(\\r
-                                ho \\approx 0.50\), requiring
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-! Extra }, or forgotten \endgroup.
-\par ...m \@noitemerr {\@@par }\fi \else {\@@par }
-                                                  \fi 
-l.233   \(\\alpha = 1.5\): \(\\r
-                                ho \\approx 0.50\), requiring
+l.97   \(\\a
+            lpha = 1.5\): \(\\rho \\approx 0.50\), requiring
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2471,8 +2428,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.233   \(\\alpha = 1.5\): \(\\rho \\approx 0.50\)
-                                                  , requiring
+l.97   \(\\alpha = 1.5\)
+                        : \(\\rho \\approx 0.50\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2484,8 +2441,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.234   \textasciitilde20 iterations for \(\\e
-                                              psilon = 10^{-6}\)
+l.97   \(\\alpha = 1.5\): \(\\r
+                               ho \\approx 0.50\), requiring
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
@@ -2493,16 +2450,16 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.234   \textasciitilde20 iterations for \(\\e
-                                              psilon = 10^{-6}\)
+l.97   \(\\alpha = 1.5\): \(\\r
+                               ho \\approx 0.50\), requiring
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.234   \textasciitilde20 iterations for \(\\e
-                                              psilon = 10^{-6}\)
+l.97   \(\\alpha = 1.5\): \(\\r
+                               ho \\approx 0.50\), requiring
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
 With luck, this will get me unwedged. But if you
@@ -2512,8 +2469,64 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.234   \textasciitilde20 iterations for \(\\e
-                                              psilon = 10^{-6}\)
+l.97   \(\\alpha = 1.5\): \(\\r
+                               ho \\approx 0.50\), requiring
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.97   \(\\alpha = 1.5\): \(\\rho \\approx 0.50\)
+                                                 , requiring
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.98   \textasciitilde20 iterations for \(\\e
+                                             psilon = 10^{-6}\)
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.98   \textasciitilde20 iterations for \(\\e
+                                             psilon = 10^{-6}\)
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.98   \textasciitilde20 iterations for \(\\e
+                                             psilon = 10^{-6}\)
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Extra }, or forgotten \endgroup.
+\par ...m \@noitemerr {\@@par }\fi \else {\@@par }
+                                                  \fi 
+l.98   \textasciitilde20 iterations for \(\\e
+                                             psilon = 10^{-6}\)
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
 you forgot something else, as in `\hbox{$x}'. In such cases
@@ -2523,7 +2536,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.234 ...itilde20 iterations for \(\\epsilon = 10^
+l.98 ...iitilde20 iterations for \(\\epsilon = 10^
                                                   {-6}\)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2535,7 +2548,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.236   \(\\a
+l.100   \(\\a
              lpha = 2.5\): \(\\rho \\approx 1.50\), \textbf{divergent}
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -2544,7 +2557,7 @@ or  <return>  to continue without it.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.236   \(\\a
+l.100   \(\\a
              lpha = 2.5\): \(\\rho \\approx 1.50\), \textbf{divergent}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2552,7 +2565,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.236   \(\\a
+l.100   \(\\a
              lpha = 2.5\): \(\\rho \\approx 1.50\), \textbf{divergent}
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -2563,7 +2576,7 @@ my insertion and my current dilemma will both disappear.
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
-l.236   \(\\a
+l.100   \(\\a
              lpha = 2.5\): \(\\rho \\approx 1.50\), \textbf{divergent}
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2578,117 +2591,5 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.236   \(\\alpha = 2.5\)
-                         : \(\\rho \\approx 1.50\), \textbf{divergent}
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-! LaTeX Error: There's no line here to end.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.236   \(\\alpha = 2.5\): \(\\r
-                                ho \\approx 1.50\), \textbf{divergent}
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.236   \(\\alpha = 2.5\): \(\\r
-                                ho \\approx 1.50\), \textbf{divergent}
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing } inserted.
-<inserted text> 
-                }
-l.236   \(\\alpha = 2.5\): \(\\r
-                                ho \\approx 1.50\), \textbf{divergent}
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-! Extra }, or forgotten \endgroup.
-\par ...m \@noitemerr {\@@par }\fi \else {\@@par }
-                                                  \fi 
-l.236   \(\\alpha = 2.5\): \(\\r
-                                ho \\approx 1.50\), \textbf{divergent}
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-
-! LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.236   \(\\alpha = 2.5\): \(\\rho \\approx 1.50\)
-                                                  , \textbf{divergent}
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../figures/algorithm_complexity.png Graphic file (type bmp)
-<../figures/algorithm_complexity.png>
-File: ../figures/performance_benchmark.png Graphic file (type bmp)
-<../figures/performance_benchmark.png>
-File: ../figures/stability_analysis.png Graphic file (type bmp)
-<../figures/stability_analysis.png>
-
-LaTeX Warning: Reference `eq:convergence_factor' on page 1 undefined on input l
-ine 460.
-
-LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 473.
-)
-Overfull \vbox (4494.72075pt too high) detected at line 589
- []
-
-[1
-
-]
-\tf@nav=\write5
-\openout5 = `03_results_slides.nav'.
-
-\tf@toc=\write6
-\openout6 = `03_results_slides.toc'.
-
-\tf@snm=\write7
-\openout7 = `03_results_slides.snm'.
-
-
-(/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
-ults_slides.aux)
- ***********
-LaTeX2e <2025-11-01>
-L3 programming layer <2026-01-19>
- ***********
-
-
-LaTeX Warning: There were undefined references.
-
- ) 
-Here is how much of TeX's memory you used:
- 31334 strings out of 468168
- 636060 string characters out of 5432815
- 1320639 words of memory out of 5000000
- 59467 multiletter control sequences out of 15000+600000
- 634214 words of font info for 97 fonts, out of 8000000 for 9000
- 1348 hyphenation exceptions out of 8191
- 128i,14n,123p,1086b,1228s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-Error 256 (driver return code) generating output;
-file /Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03
-_results_slides.pdf may not be valid.
+l.100   \(\\alpha = 2.5\)
+                         : \(\\rho \\appr

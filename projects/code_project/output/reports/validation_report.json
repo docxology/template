@@ -1,5 +1,5 @@
 {
-  "timestamp": null,
+  "timestamp": "2026-04-24T11:26:27.998116",
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
@@ -18,7 +18,7 @@
         "directory_structure": {
           "project_combined_pdf": {
             "exists": true,
-            "size_mb": 1.65,
+            "size_mb": 1.66,
             "readable": true
           },
           "pdf": {
@@ -37,8 +37,8 @@
           },
           "slides": {
             "exists": true,
-            "files": 72,
-            "size_mb": 1.26,
+            "files": 70,
+            "size_mb": 1.25,
             "readable": true,
             "optional": false
           },
@@ -58,7 +58,7 @@
           },
           "reports": {
             "exists": true,
-            "files": 7,
+            "files": 6,
             "size_mb": 0.0,
             "readable": true,
             "optional": false
@@ -101,8 +101,8 @@
         },
         "slides": {
           "exists": true,
-          "file_count": 72,
-          "size_mb": "1.26",
+          "file_count": 70,
+          "size_mb": "1.25",
           "largest_file": "03_results_slides.pdf"
         },
         "figures": {
@@ -119,7 +119,7 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 7,
+          "file_count": 6,
           "size_mb": "0.00",
           "largest_file": "analysis_dashboard.html"
         },
@@ -145,15 +145,15 @@
       "file_counts": {
         "pdf": 10,
         "web": 11,
-        "slides": 72,
+        "slides": 70,
         "figures": 7,
         "data": 3,
-        "reports": 7,
+        "reports": 6,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.928249359130859,
+      "total_size_mb": 4.917901039123535,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,11 +163,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8968839645385742
+      "size_mb": 1.8972234725952148
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5212326049804688
+      "size_mb": 1.521712303161621
     },
     "data": {
       "files": 3,

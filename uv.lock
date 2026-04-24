@@ -766,6 +766,19 @@ wheels = [
 ]
 
 [[package]]
+name = "hypothesis"
+version = "6.152.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "exceptiongroup", marker = "python_full_version < '3.11'" },
+    { name = "sortedcontainers" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/64/b1/c32bcddb9aab9e3abc700f1f56faf14e7655c64a16ca47701a57362276ea/hypothesis-6.152.1.tar.gz", hash = "sha256:4f4ed934eee295dd84ee97592477d23e8dc03e9f12ae0ee30a4e7c9ef3fca3b0", size = 465029, upload-time = "2026-04-14T22:29:24.062Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5d/83/860fb3075e00b0fc19a22a2301bc3c96f00437558c3911bdd0a3573a4a53/hypothesis-6.152.1-py3-none-any.whl", hash = "sha256:40a3619d9e0cb97b018857c7986f75cf5de2e5ec0fa8a0b172d00747758f749e", size = 530752, upload-time = "2026-04-14T22:29:20.893Z" },
+]
+
+[[package]]
 name = "idna"
 version = "3.11"
 source = { registry = "https://pypi.org/simple" }
@@ -2250,6 +2263,7 @@ dev = [
     { name = "bandit" },
     { name = "black" },
     { name = "desloppify", marker = "python_full_version >= '3.11'" },
+    { name = "hypothesis" },
     { name = "iniconfig" },
     { name = "mypy" },
     { name = "pip-audit" },
@@ -2307,6 +2321,7 @@ dev = [
     { name = "bandit", specifier = ">=1.7.0" },
     { name = "black", specifier = ">=23.0" },
     { name = "desloppify", marker = "python_full_version >= '3.11'", git = "https://github.com/peteromallet/desloppify.git" },
+    { name = "hypothesis", specifier = ">=6.151.11" },
     { name = "iniconfig", specifier = ">=2.3.0" },
     { name = "mypy", specifier = ">=1.17.1" },
     { name = "pip-audit", specifier = ">=2.0.0" },

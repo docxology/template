@@ -167,10 +167,16 @@ class TestGradientDescent:
         assert result.gradient_norm < 1e-6
 
     def test_max_iterations_reached(self):
-        """Test behavior when max iterations reached without convergence."""
+        """Test that iteration cap is respected when tolerance is tighter than achievable.
+
+        f(x) = x^2, optimum at x=0. With step_size=0.01 and only 10 iterations,
+        the contraction factor is |1 - 2*0.01| = 0.98, so after 10 steps
+        x ≈ 10 * 0.98^10 ≈ 8.17. The gradient norm (≈16.3) cannot meet 1e-10
+        in 10 iterations, so the iteration cap triggers.
+        """
 
         def obj_func(x):
-            return x[0] ** 2  # Never converges to zero
+            return x[0] ** 2
 
         def grad_func(x):
             return np.array([2.0 * x[0]])
@@ -179,14 +185,14 @@ class TestGradientDescent:
             initial_point=np.array([10.0]),
             objective_func=obj_func,
             gradient_func=grad_func,
-            step_size=0.01,  # Small step size
-            max_iterations=10,  # Few iterations
-            tolerance=1e-10,  # Tight tolerance
+            step_size=0.01,
+            max_iterations=10,
+            tolerance=1e-10,  # Tight tolerance unreachable in 10 steps
         )
 
         assert not result.converged
         assert result.iterations == 10
-        assert result.solution[0] < 10.0  # Should have moved toward optimum
+        assert result.solution[0] < 10.0  # Has moved toward optimum
 
     def test_already_converged(self):
         """Test when starting point is already at optimum."""
@@ -306,7 +312,8 @@ class TestGradientDescent:
             assert np.isclose(result.objective_value, -0.5, atol=1e-4)
             assert result.converged
 
-        # Larger step sizes should converge faster
+        # For this unit-Hessian 1D problem the contraction factor is |1 - α|,
+        # so α=0.2 (ρ=0.8) converges faster than α=0.1 (ρ=0.9) faster than α=0.01 (ρ=0.99).
         assert (
             results[0.2].iterations < results[0.1].iterations < results[0.01].iterations
         )
@@ -337,6 +344,53 @@ class TestGradientDescent:
         assert result.converged
         assert result.gradient_norm < 1e-4
 
+    def test_divergent_step_size(self):
+        """Test that a step size exceeding the stability threshold causes non-convergence.
+
+        For f(x) = (1/2)x^2 - x (unit Hessian, H=1), the gradient descent
+        contraction factor is |1 - α|. When α > 2 the factor exceeds 1 and
+        the iterates diverge. This verifies the algorithm terminates at
+        max_iterations rather than looping forever.
+        """
+        _A = np.array([[1.0]])
+        _b = np.array([1.0])
+        obj_func = functools.partial(quadratic_function, A=_A, b=_b)
+        grad_func = functools.partial(compute_gradient, A=_A, b=_b)
+
+        result = gradient_descent(
+            initial_point=np.array([0.5]),
+            objective_func=obj_func,
+            gradient_func=grad_func,
+            step_size=2.5,  # |1 - 2.5| = 1.5 > 1 → diverges
+            max_iterations=50,
+            tolerance=1e-8,
+        )
+
+        assert not result.converged
+        assert result.iterations == 50  # Hit the cap
+        # Solution has moved away from the optimum (x=1)
+        assert abs(result.solution[0] - 1.0) > abs(0.5 - 1.0)
+
+    def test_verbose_logging_does_not_affect_result(self):
+        """Test verbose=True path (covers the iteration % 100 log branch)."""
+        import functools
+        _A = np.array([[1.0]])
+        _b = np.array([1.0])
+        obj_func = functools.partial(quadratic_function, A=_A, b=_b)
+        grad_func = functools.partial(compute_gradient, A=_A, b=_b)
+
+        result = gradient_descent(
+            initial_point=np.array([0.0]),
+            objective_func=obj_func,
+            gradient_func=grad_func,
+            step_size=0.5,
+            tolerance=1e-6,
+            max_iterations=200,
+            verbose=True,
+        )
+        assert result.converged
+        assert np.isclose(result.solution[0], 1.0, atol=1e-5)
+
 
 class TestOptimizationResult:
     """Test OptimizationResult dataclass."""
@@ -357,6 +411,35 @@ class TestOptimizationResult:
         assert result.iterations == 42
         assert result.converged is True
         assert result.gradient_norm == 1e-8
+
+    def test_objective_history_populated(self):
+        """Test that gradient_descent populates objective_history correctly.
+
+        objective_history[0] is f(x0) (before any update) and the list grows
+        by one entry per iteration, so len(history) == iterations + 1
+        (initial value plus one value after each update step).
+        """
+        _A = np.array([[1.0]])
+        _b = np.array([1.0])
+        obj_func = functools.partial(quadratic_function, A=_A, b=_b)
+        grad_func = functools.partial(compute_gradient, A=_A, b=_b)
+
+        result = gradient_descent(
+            initial_point=np.array([0.0]),
+            objective_func=obj_func,
+            gradient_func=grad_func,
+            step_size=0.1,
+            max_iterations=20,
+            tolerance=1e-8,
+        )
+
+        assert result.objective_history is not None
+        # History length = iterations taken + 1 (initial value)
+        assert len(result.objective_history) == result.iterations + 1
+        # First entry is f(x0) = f(0) = 0.5*(0)^2 - 1*0 = 0.0
+        assert np.isclose(result.objective_history[0], 0.0)
+        # Final entry matches reported objective_value
+        assert np.isclose(result.objective_history[-1], result.objective_value)
 
 
 class TestPerformanceBenchmarks:
@@ -662,7 +745,7 @@ class TestMakeQuadraticProblem:
             tolerance=1e-8,
         )
         assert result.converged
-        np.testing.assert_allclose(result.optimal_point if hasattr(result, 'optimal_point') else result.solution, [1.0], atol=1e-5)
+        np.testing.assert_allclose(result.solution, [1.0], atol=1e-5)
 
     def test_factory_with_default_params(self):
         """Factory with None params uses quadratic_function defaults."""

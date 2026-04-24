@@ -278,11 +278,9 @@ graph TB
 Active projects under `projects/` (discovered by `./run.sh`; authoritative slugs → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)):
 
 - **`projects/code_project/`** — Optimization research exemplar (default path in docs)
-- **`projects/cognitive_case_diagrams/`** — Case diagrams and categorial grammar manuscript
-- **`projects/template/`** — Meta-documentation for the template
 - **`projects/fep_lean/`** — FEP / Lean catalogue, Hermes, and Open Gauss `gauss` CLI integration
 
-**Note:** More exemplars (e.g. `blake_bimetalism`, `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved into `projects/`. Work-in-progress trees (e.g. `aii-org`) live under `projects_in_progress/` until promoted.
+**Note:** Retired or paused exemplars (e.g. `cognitive_case_diagrams`, `blake_bimetalism`, `traditional_newspaper`, `medical_ai`, `area_handbook`) live under `projects_archive/` until moved back into `projects/`. Work-in-progress trees (e.g. `template`, `aii-org`) live under `projects_in_progress/` until promoted.
 
 ### Usage
 
@@ -341,7 +339,7 @@ Projects in `projects_in_progress/` are **under active development** but not yet
 - **NOT executed** by pipeline scripts
 - Useful for scaffolding before promoting to `projects/`
 
-**Current in-progress projects:** `aii-org`, `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `ento_linguistics` (see `projects_in_progress/`)
+**Current in-progress projects:** `cogant`, `cognitive_case_diagrams`, `template` (see `projects_in_progress/`)
 
 **To promote:** `mv projects_in_progress/{name}/ projects/{name}/`
 
@@ -374,51 +372,22 @@ uv run python scripts/execute_pipeline.py --project code_project --core-only
 # Run tests with coverage (infrastructure + project)
 uv run scripts/01_run_tests.py
 
-# Open generated manuscript
-open output/pdf/project_combined.pdf
+# Open generated manuscript (using exemplar project)
+open output/code_project/pdf/code_project_combined.pdf
 ```
 
-## 📊 System Health & Metrics
+## System Status
 
-**Current Build Status** (See **[RUN_GUIDE.md](docs/RUN_GUIDE.md)** for pipeline details):
+Current state is captured in `docs/_generated/canonical_facts.md` (updated from discovery, test runs, and CI configuration).
 
-```mermaid
-graph LR
-    subgraph Status["✅ System Status"]
-        TESTS[Tests: 6000+ passing\nfull tests/ suite\n(run pytest for current totals)]
-        COV[Coverage: 100% project\n83.33% infra\nExceeds requirements]
-        BUILD[Build Time: 53s\nOptimal performance\n(without LLM review)]
-        PDFS[PDFs: 14/14 generated\nAll sections]
-    end
+Key elements:
+- Active projects listed via `discover_projects()`
+- Coverage enforced at 60% (infrastructure) and 90% (projects)
+- Tests run with real data and computations
+- Commands standardized to `uv run`
+- Outputs organized per project under `output/{name}/`
 
-    subgraph Documentation["📚 Documentation"]
-        DOCS[105+ documentation files\nComprehensive coverage]
-        CROSS[Cross-referencing\nAll links validated]
-        EXAMPLES[Examples\nMultiple use cases]
-    end
-
-    TESTS --> VERIFIED[✅ System\nOperational]
-    COV --> VERIFIED
-    BUILD --> VERIFIED
-    PDFS --> VERIFIED
-    DOCS --> VERIFIED
-    CROSS --> VERIFIED
-    EXAMPLES --> VERIFIED
-
-    classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
-    classDef metrics fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-
-    class VERIFIED success
-    class Status,Documentation metrics
-```
-
-**Key Metrics:**
-
-- **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements) - [Pipeline Guide](docs/RUN_GUIDE.md)
-- **Build Time**: 84 seconds (with full test suite) - [Performance Optimization](docs/operational/config/performance-optimization.md)
-- **Tests Passing**: full `tests/` suite (6000+ tests; run `uv run pytest tests/ -q` for exact counts) — [Testing Guide](docs/development/testing/testing-guide.md)
-- **PDFs Generated**: 14 (all sections) - [Pipeline Guide](docs/RUN_GUIDE.md)
-- **Documentation**: 105+ files - [Documentation Index](docs/documentation-index.md)
+See `docs/_generated/canonical_facts.md` and `docs/development/testing/testing-guide.md` for details.
 
 ## 🎓 Skill-Based Learning Paths
 
@@ -872,7 +841,7 @@ brew install --cask mactex
 uv sync
 ```
 
-After `uv sync`, the project interpreter is **`.venv/bin/python`** (Python **3.12** per [`.python-version`](.python-version)). VS Code and Cursor pick this up from [`.vscode/settings.json`](.vscode/settings.json); otherwise choose that interpreter manually.
+After `uv sync`, the project interpreter is **`.venv/bin/python`** (Python **3.12** per [`.python-version`](.python-version)). Select that interpreter manually in VS Code/Cursor if it is not picked up automatically.
 
 ```bash
 # Workspace management
@@ -1067,53 +1036,35 @@ pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=term-missin
 pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 ```
 
-**Test Requirements (Infrastructure Layer - Layer 1):**
+Test coverage and status are detailed in `docs/_generated/canonical_facts.md`.
 
-- **60% minimum coverage**: Currently achieving 83.33% (exceeds stretch goal!)
-- **No mocks**: All tests use data and computations
-- **Deterministic**: Fixed RNG seeds for reproducible results
-- **Integration testing**: Cross-module interaction validation
+Requirements:
+- infrastructure/: 60% minimum
+- projects/{name}/src/: 90% minimum
 
-**Test Requirements (Project Layer - Layer 2):**
+Tests use real data, computations, and fixed seeds for reproducibility. No mocks.
 
-- **90% minimum coverage**: Currently achieving 100%
-- **Data testing**: Use actual domain data, not synthetic test data
-- **Reproducible**: Fixed seeds and deterministic computation
+## Output
 
-**Current Status**: full `tests/` suite green in CI — run `uv run pytest tests/` locally for counts — [Pipeline Guide](docs/RUN_GUIDE.md)
+Outputs follow per-project structure. See `docs/_generated/canonical_facts.md` for details.
 
-## 📤 Output
+Working outputs: `projects/{name}/output/`
 
-**[Pipeline Orchestration](docs/RUN_GUIDE.md)** | **[PDF validation](docs/modules/pdf-validation.md)**
+Final: `output/{name}/` containing pdf/, figures/, data/, reports/.
 
-Generated outputs are organized in the `output/` directory:
+Multi-project mode adds `output/executive_summary/`.
+
+All contents in `output/` are disposable and regenerated by the pipeline.
 
 ```mermaid
-graph TD
-    OUTPUT[output/] --> EXEC[executive_summary/\nCross-project reports\nJSON, HTML, MD, PNG, PDF, HTML]
-    OUTPUT --> PDFS[pdf/\nIndividual + Combined PDFs\n14 files generated]
-    OUTPUT --> FIGS[figures/\nPNG files from scripts\n23 figures]
-    OUTPUT --> DATA[data/\nCSV, NPZ files\n5 datasets]
-    OUTPUT --> TEX[tex/\nLaTeX source files\nFor further processing]
-
-    classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef files fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef exec fill:#fff8e1,stroke:#f57c00,stroke-width:2px
-
-    class OUTPUT dir
-    class PDFS,FIGS,DATA,TEX files
-    class EXEC exec
+flowchart TD
+    Output[output/] --> PerProject[output/{name}/]
+    PerProject --> PDF[pdf/]
+    PerProject --> Figures[figures/]
+    PerProject --> Data[data/]
+    PerProject --> Reports[reports/]
+    Output --> Executive[executive_summary/ <br/>multi-project]
 ```
-
-- **`output/executive_summary/`** - Cross-project executive reports and visual dashboards (multi-project mode)
-- **`output/pdf/`** - Individual manuscript section PDFs and combined manuscript PDF
-- **`output/tex/`** - LaTeX source files
-- **`output/data/`** - Data files (CSV, NPZ, etc.)
-- **`output/figures/`** - Generated figures (PNG, etc.)
-
-**All files in `output/` are disposable and regenerated by the build pipeline.**
-
-**Generation Time**: 53 seconds for rebuild (without optional LLM review) - [Performance Optimization](docs/operational/config/performance-optimization.md)
 
 ## 🔍 How It Works
 
@@ -1385,13 +1336,13 @@ The thin orchestrator pattern provides:
 - **Performance**: 84-second build time for regeneration (without optional LLM review)
 - **Reliability**: large `tests/` suite with CI gating (run `uv run pytest tests/` for current totals)
 
-**System Status**: ✅ **OPERATIONAL** - [Run Guide](docs/RUN_GUIDE.md)
+**System Status**: Operational (see docs/RUN_GUIDE.md for details).
 
 ---
 
-## 🎯 Quick Navigation by Task
+## Quick Navigation by Task
 
-**Find documentation by what you want to do:**
+Documentation by task:
 
 ```mermaid
 graph TB
@@ -1403,14 +1354,8 @@ graph TB
     TASK -->|Understand architecture| ARCH[docs/core/architecture.md\ndocs/architecture/two-layer-architecture.md]
     TASK -->|Configure system| CONFIG[docs/operational/configuration.md\nAGENTS.md#configuration-system]
     TASK -->|Run pipeline| PIPELINE[docs/RUN_GUIDE.md]
-    TASK -->|Contribute code| CONTRIB[docs/development/contributing.md\n.cursorrules/AGENTS.md]
+    TASK -->|Contribute code| CONTRIB[docs/development/contributing.md\ndocs/rules/AGENTS.md]
     TASK -->|Find all docs| INDEX[docs/documentation-index.md\ndocs/AGENTS.md]
-
-    classDef task fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef doc fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-
-    class TASK task
-    class WRITE,FIGURES,FIX,ARCH,CONFIG,PIPELINE,CONTRIB,INDEX doc
 ```
 
 ### 📚 Documentation Discovery

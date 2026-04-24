@@ -1,9 +1,8 @@
-\beamer@slide {experimental-setup}{1}
-\beamer@slide {problem-definition}{1}
-\beamer@slide {eq:quadratic_objective}{1}
-\beamer@slide {parameter-space}{1}
-\beamer@slide {numerical-stability-grid}{1}
-\beamer@slide {dimensional-scaling}{1}
-\beamer@slide {computational-environment}{1}
-\beamer@slide {pipeline-ordering}{1}
-\beamer@slide {relation-to-figures}{1}
+\beamer@slide {problem-definition}{3}
+\beamer@slide {eq:quadratic_objective}{3}
+\beamer@slide {parameter-space}{4}
+\beamer@slide {numerical-stability-grid}{6}
+\beamer@slide {dimensional-scaling}{7}
+\beamer@slide {computational-environment}{8}
+\beamer@slide {pipeline-ordering}{9}
+\beamer@slide {relation-to-figures}{10}

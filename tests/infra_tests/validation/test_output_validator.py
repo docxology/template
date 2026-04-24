@@ -480,6 +480,32 @@ class TestCollectDetailedValidationResults:
         # Suspicious size should be in warnings
         assert len(result["issues_by_severity"]["warning"]) > 0
 
+    def test_empty_data_dir_is_info_not_warning(self, tmp_path):
+        """Empty ``data/`` (no producers) → ``info``, not ``warning``.
+
+        Pure-proof projects (e.g. ``fep_lean``) never write to ``data/``;
+        emitting a warning every render is noise. Truly anomalous sizes
+        ("unusually small" combined PDF) remain warnings — see preceding test.
+        """
+        from infrastructure.validation.output.validator import collect_detailed_validation_results
+
+        output_root = tmp_path / "output"
+        output_root.mkdir()
+        project_output_dir = output_root / "test_project"
+        project_output_dir.mkdir()
+
+        pdf_dir = project_output_dir / "pdf"
+        pdf_dir.mkdir()
+        (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF content" * 20000)
+        (project_output_dir / "data").mkdir()  # exists but empty
+
+        result = collect_detailed_validation_results(project_output_dir)
+
+        info_msgs = result["issues_by_severity"]["info"]
+        warning_msgs = result["issues_by_severity"]["warning"]
+        assert any("data/ directory is empty" in msg for msg in info_msgs)
+        assert not any("data/ directory is empty" in msg for msg in warning_msgs)
+
 
 class TestValidateOutputStructure:
     """Test validate_output_structure function."""

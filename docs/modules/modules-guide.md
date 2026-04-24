@@ -22,8 +22,8 @@
 | 📊 **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
 | 🔍 **Project** | Project discovery | Multi-project orchestration | [Details](guides/project-module.md) |
 | 🔒 **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | [Details](guides/steganography-module.md) |
-| ⚙️ **Config** | Configuration schemas | Secure config, environment templates | — |
-| 🐳 **Docker** | Containerization | Dockerfile, docker-compose | — |
+| ⚙️ **Config** | Configuration schemas | Secure config, environment templates | [Details](guides/config-module.md) |
+| 🐳 **Docker** | Containerization | Dockerfile, docker-compose | [Details](guides/docker-module.md) |
 | 🔍 **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | [Details](guides/skills-module.md) |
 | 📡 **Telemetry** | Unified pipeline telemetry | Stage resource metrics, diagnostic aggregation, JSON/text reports | — |
 

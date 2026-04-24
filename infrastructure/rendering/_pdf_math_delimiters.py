@@ -123,7 +123,13 @@ def fix_math_delimiters(tex_content: str) -> str:
     # Step 3: Fix remaining issues globally
     tex_content = re.sub(r"\\textbar", r"\\mid", tex_content)
 
-    # Fix broken Greek letters with error handling
+    # Repair Pandoc inline-math closures where the trailing backslash was lost,
+    # e.g. ``\(\sigma)`` (open math, then literal ``)``) instead of ``\(\sigma\)``.
+    # xelatex flags every such case as "Bad math environment delimiter" and
+    # recovers, but the warnings hide real issues. Two shapes are handled:
+    #   1. ``\(\<greek>)``                      -> ``\(\<greek>\)``
+    #   2. ``\(<base>_\<greek>)`` with optional super/subscripts on the base
+    #      e.g. ``\(s_\tau)``                   -> ``\(s_\tau\)``
     greek_letters = [
         "tau",
         "pi",
@@ -136,15 +142,23 @@ def fix_math_delimiters(tex_content: str) -> str:
         "sigma",
         "phi",
         "eta",
+        "mu",
+        "nu",
+        "rho",
+        "omega",
     ]
     for greek in greek_letters:
         try:
-            # Match: backslash + greek_letter + backslash + close-paren
-            # In the LaTeX, we see: \tau\) and want: \tau)
-            # Build pattern as: \\tau\\) (escaping each backslash for regex)
-            pat = r"\\" + greek + r"\\\)"
-            replacement = "\\\\" + greek + ")"
-            tex_content = re.sub(pat, replacement, tex_content)
+            tex_content = re.sub(
+                rf"\\\(\\{greek}\)",
+                rf"\\(\\{greek}\\)",
+                tex_content,
+            )
+            tex_content = re.sub(
+                rf"\\\(([^()\\]+_\\{greek})\)",
+                r"\\(\1\\)",
+                tex_content,
+            )
         except re.error as e:
             logger.warning(f"Failed to fix Greek letter '{greek}': {e}. Skipping this pattern.")
             continue

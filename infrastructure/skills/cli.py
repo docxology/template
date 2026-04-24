@@ -68,7 +68,7 @@ def _add_shared_cli_args(p: argparse.ArgumentParser) -> None:
         metavar="DIR",
         help=(
             "Override search roots relative to repo root "
-            "(default: infrastructure + projects/cognitive_case_diagrams/src). "
+            "(default: infrastructure + projects/code_project/src + .cursor/skills). "
             "Example: write --roots infrastructure docs"
         ),
     )

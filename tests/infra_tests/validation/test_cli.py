@@ -10,6 +10,7 @@ from infrastructure.validation.cli import main as cli
 from infrastructure.validation.cli.main import (
     validate_markdown_command,
     validate_pdf_command,
+    validate_prerender_command,
     verify_integrity_command,
 )
 
@@ -88,6 +89,74 @@ class TestValidateMarkdownCommand:
 
         assert exc_info.value.code == 0
         assert "No issues found" in caplog.text
+
+
+class TestValidatePrerenderCommand:
+    """Test validate_prerender_command — the strict source-markdown gate."""
+
+    def _make_manuscript(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "references.bib").write_text(
+            "@article{good_key, title={Ok}, year={2025}}\n", encoding="utf-8"
+        )
+        return manuscript
+
+    def test_clean_manuscript_exits_zero(self, tmp_path, caplog):
+        manuscript = self._make_manuscript(tmp_path)
+        (manuscript / "01_intro.md").write_text(
+            "# Intro\n\nSee [@good_key].\n", encoding="utf-8"
+        )
+        args = argparse.Namespace(
+            manuscript_dir=str(manuscript), repo_root=str(tmp_path), bib=None
+        )
+        with caplog.at_level(logging.INFO):
+            with pytest.raises(SystemExit) as exc_info:
+                validate_prerender_command(args)
+        assert exc_info.value.code == 0
+        assert "No render-blocking" in caplog.text
+
+    def test_undefined_citation_exits_one(self, tmp_path, caplog):
+        manuscript = self._make_manuscript(tmp_path)
+        (manuscript / "01_intro.md").write_text(
+            "# Intro\n\nSee [@missing_key].\n", encoding="utf-8"
+        )
+        args = argparse.Namespace(
+            manuscript_dir=str(manuscript), repo_root=str(tmp_path), bib=None
+        )
+        with caplog.at_level(logging.ERROR):
+            with pytest.raises(SystemExit) as exc_info:
+                validate_prerender_command(args)
+        assert exc_info.value.code == 1
+        assert "missing_key" in caplog.text
+
+    def test_bare_pipe_in_table_exits_one(self, tmp_path, caplog):
+        manuscript = self._make_manuscript(tmp_path)
+        (manuscript / "01_intro.md").write_text(
+            "| Symbol | Meaning |\n|--------|---------|\n"
+            "| \\|state\\| | bar in cell |\n",
+            encoding="utf-8",
+        )
+        args = argparse.Namespace(
+            manuscript_dir=str(manuscript), repo_root=str(tmp_path), bib=None
+        )
+        with caplog.at_level(logging.ERROR):
+            with pytest.raises(SystemExit) as exc_info:
+                validate_prerender_command(args)
+        assert exc_info.value.code == 1
+        assert "01_intro.md" in caplog.text
+
+    def test_missing_manuscript_dir_exits_one(self, tmp_path, caplog):
+        args = argparse.Namespace(
+            manuscript_dir=str(tmp_path / "nonexistent"),
+            repo_root=None,
+            bib=None,
+        )
+        with caplog.at_level(logging.ERROR):
+            with pytest.raises(SystemExit) as exc_info:
+                validate_prerender_command(args)
+        assert exc_info.value.code == 1
+        assert "Manuscript directory not found" in caplog.text
 
 
 class TestVerifyIntegrityCommand:

@@ -71,6 +71,82 @@ class TestDiagnosticEvent:
         assert d["file_path"] is None
 
 
+class TestDiagnosticCode:
+    """Tests for the optional ``code`` identifier added to DiagnosticEvent."""
+
+    def test_default_code_is_none(self):
+        e = DiagnosticEvent(
+            severity=DiagnosticSeverity.ERROR,
+            category="x",
+            message="m",
+        )
+        assert e.code is None
+
+    def test_code_in_to_dict(self):
+        e = DiagnosticEvent(
+            severity=DiagnosticSeverity.WARNING,
+            category="markdown",
+            message="bare pipe",
+            code="MARKDOWN.PANDOC_BARE_PIPE",
+        )
+        d = e.to_dict()
+        assert d["code"] == "MARKDOWN.PANDOC_BARE_PIPE"
+
+    def test_code_round_trip_via_persisted_report(self, tmp_path):
+        """Construct -> save -> load through DiagnosticReporter; code survives."""
+        r1 = DiagnosticReporter("rt", output_dir=tmp_path)
+        r1.record_error(
+            "markdown",
+            "Undefined citation key '@missing'",
+            code="BIBTEX.UNDEFINED_KEY",
+            file_path="manuscript/01_intro.md",
+        )
+        r1.save_report()
+
+        r2 = DiagnosticReporter("rt", output_dir=tmp_path)
+        assert len(r2.events) == 1
+        loaded = r2.events[0]
+        assert loaded.code == "BIBTEX.UNDEFINED_KEY"
+        assert loaded.message == "Undefined citation key '@missing'"
+        assert loaded.severity == DiagnosticSeverity.ERROR
+
+    def test_record_helpers_accept_code_kwarg(self):
+        r = DiagnosticReporter("p")
+        e = r.record_warning("cat", "msg", code="MARKDOWN.PANDOC_BARE_PIPE")
+        assert e.code == "MARKDOWN.PANDOC_BARE_PIPE"
+        assert r.events[0].code == "MARKDOWN.PANDOC_BARE_PIPE"
+
+    def test_legacy_report_without_code_loads(self, tmp_path):
+        """A report written before the field existed must round-trip cleanly."""
+        report_dir = tmp_path / "reports"
+        report_dir.mkdir()
+        (report_dir / "diagnostics.json").write_text(
+            json.dumps(
+                {
+                    "project_name": "legacy",
+                    "total_events": 1,
+                    "errors": 1,
+                    "warnings": 0,
+                    "events": [
+                        {
+                            "severity": "ERROR",
+                            "category": "markdown",
+                            "message": "old finding without a code",
+                            "file_path": "x.md",
+                            "line_number": None,
+                            "fix_suggestion": None,
+                            "context": {},
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        r = DiagnosticReporter("legacy", output_dir=tmp_path)
+        assert len(r.events) == 1
+        assert r.events[0].code is None
+
+
 class TestDiagnosticReporter:
     def test_init_no_output_dir(self):
         r = DiagnosticReporter("test_project")

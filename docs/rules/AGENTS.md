@@ -136,7 +136,7 @@ See [error_handling.md](error_handling.md)
 
 **Key Points**:
 
-- Use custom exception hierarchy from `infrastructure/core/runtime/exceptions.py`
+- Use custom exception hierarchy from `infrastructure/core/exceptions.py`
 - Always chain exceptions with `from`
 - Provide context in exceptions
 - Log before raising critical errors
@@ -144,7 +144,7 @@ See [error_handling.md](error_handling.md)
 **Example**:
 
 ```python
-from infrastructure.core.runtime.exceptions import ValidationError
+from infrastructure.core.exceptions import ValidationError
 
 try:
     result = process_data(input)
@@ -158,7 +158,7 @@ See [python_logging.md](python_logging.md)
 
 **Key Points**:
 
-- Use `infrastructure.core.logging.logging_utils.get_logger(__name__)`
+- Use `infrastructure.core.logging.utils.get_logger(__name__)`
 - Log at appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 - Include context in log messages
 - Use structured logging where possible
@@ -166,7 +166,7 @@ See [python_logging.md](python_logging.md)
 **Example**:
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 logger.info(f"Processing {count} items")
@@ -248,13 +248,13 @@ As shown in \eqref{eq:objective}, the objective function...
 
 ```text
 tests/
-├── infrastructure/      # Infrastructure tests
+├── infra_tests/        # Infrastructure tests (Layer 1)
 │   └── test_<module>/
 │       ├── __init__.py
 │       ├── conftest.py
 │       └── test_*.py
-├── scientific/         # Scientific code tests
-└── integration/        # End-to-end workflow tests
+├── integration/        # Cross-layer tests
+└── helpers/            # Test utilities
 ```
 
 ### Test Principles
@@ -332,7 +332,7 @@ import requests
 import pytest
 
 # Local infrastructure (Layer 1)
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.runtime.exceptions import TemplateError
 from infrastructure.documentation import FigureManager
 
@@ -364,7 +364,7 @@ class ModuleConfig:
 ### Error Handling Pattern
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.runtime.exceptions import TemplateError
 
 logger = get_logger(__name__)

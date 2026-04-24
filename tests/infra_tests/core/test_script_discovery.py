@@ -258,3 +258,67 @@ class TestVerifyAnalysisOutputs:
         result = verify_analysis_outputs(repo_root)
 
         assert result is True
+
+    def test_verify_analysis_outputs_quiet_when_some_outputs_present(
+        self, tmp_path, caplog
+    ):
+        """When ``figures/`` has files but ``data/`` is absent, the
+        ``not yet created: data`` line should be logged at DEBUG (not INFO)
+        so projects that legitimately produce only figures don't surface
+        the empty-companion message as recurring noise on every run.
+        """
+        repo_root = tmp_path / "repo"
+        project_dir = repo_root / "projects" / "figures_only"
+        figures_dir = project_dir / "output" / "figures"
+        figures_dir.mkdir(parents=True)
+        (figures_dir / "plot.png").write_text("plot")
+
+        with caplog.at_level("DEBUG", logger="infrastructure.core.script_discovery"):
+            result = verify_analysis_outputs(
+                repo_root, project_name="figures_only", project_dir=project_dir
+            )
+
+        assert result is True
+        not_yet_records = [
+            r for r in caplog.records if "not yet created: data" in r.message
+        ]
+        assert not_yet_records, (
+            "Expected at least one log record about the missing data/ directory."
+        )
+        for rec in not_yet_records:
+            assert rec.levelname == "DEBUG", (
+                f"Expected DEBUG when figures/ has files, got {rec.levelname}: "
+                f"{rec.message}"
+            )
+        # And no INFO-level companion noise should leak through.
+        for rec in caplog.records:
+            if "not yet created: data" in rec.message or "is empty: data" in rec.message:
+                assert rec.levelname != "INFO"
+
+    def test_verify_analysis_outputs_loud_when_all_dirs_empty(
+        self, tmp_path, caplog
+    ):
+        """When analysis scripts exist but **no** expected output directory
+        contains files, the legacy INFO-level "not yet created" line stays
+        loud so genuine analysis failures remain visible.
+        """
+        repo_root = tmp_path / "repo"
+        project_dir = repo_root / "projects" / "no_output"
+        scripts_dir = project_dir / "scripts"
+        scripts_dir.mkdir(parents=True)
+        (scripts_dir / "run_analysis.py").write_text("# noop")
+
+        with caplog.at_level("INFO", logger="infrastructure.core.script_discovery"):
+            result = verify_analysis_outputs(
+                repo_root, project_name="no_output", project_dir=project_dir
+            )
+
+        assert result is False  # scripts present but no outputs
+        info_not_yet = [
+            r
+            for r in caplog.records
+            if r.levelname == "INFO" and "not yet created" in r.message
+        ]
+        assert info_not_yet, (
+            "Expected the absent-output INFO line when nothing was generated."
+        )

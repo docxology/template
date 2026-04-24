@@ -54,7 +54,7 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 | 6 | `security` — pip-audit + bandit | lint | 3.12 | ubuntu |
 | 7 | `performance` — import ≤ 5 s | test-infra + test-project | 3.12 | ubuntu |
 
-**Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (real gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when `hashFiles('projects/fep_lean/lean/lean-toolchain') != ''` (otherwise skipped). It exercises the real `gauss` CLI and Lake under `projects/fep_lean/`.
+**Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when `hashFiles('projects/fep_lean/lean/lean-toolchain') != ''` (otherwise skipped). When fep_lean lives under `projects_in_progress/`, the guard evaluates to empty and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate CI.
 
 Coverage is uploaded to **Codecov** after each test job (3.12/ubuntu-latest only).
 
@@ -101,7 +101,7 @@ required_status_checks:
     - "Project Tests (ubuntu-latest, Python 3.11)"
     - "Project Tests (ubuntu-latest, Python 3.12)"
     # Optional: only when fep_lean job runs (skipped if no lean-toolchain file)
-    # - "fep_lean (real gauss + lake)"
+    # - "fep_lean (gauss + lake)"
     - "Validate Manuscripts"
     - "Security Scan"
     - "Performance Check"
@@ -128,7 +128,7 @@ uvx ruff format infrastructure/ projects/*/src/
 
 # Run tests locally (mirror CI)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ --cov=projects --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
+uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ --cov=projects/code_project/src --cov=projects/cognitive_case_diagrams/src --cov=projects/template/src --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
 
 # Security scan locally
 uv run pip-audit

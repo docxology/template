@@ -251,7 +251,7 @@ options.
 The canonical headless configuration is [`.github/workflows/ci.yml`](../.github/workflows/ci.yml):
 
 ```yaml
-- uses: astral-sh/setup-uv@v7          # installs uv in CI
+- uses: astral-sh/setup-uv@v6          # installs uv in CI
   with:
     enable-cache: true
     cache-dependency-glob: "**/uv.lock"
@@ -259,7 +259,7 @@ The canonical headless configuration is [`.github/workflows/ci.yml`](../.github/
 - run: uv run pytest tests/infra_tests/ # runs tests
 ```
 
-This workflow runs on Ubuntu, macOS, and Windows across Python 3.10/3.11/3.12.
+This workflow runs on Ubuntu and macOS (ubuntu-latest + macos-latest) across Python 3.10–3.12. See [.github/workflows/ci.yml](../.github/workflows/ci.yml) for the full matrix and job definitions.
 
 ---
 

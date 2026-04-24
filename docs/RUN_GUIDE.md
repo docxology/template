@@ -450,6 +450,8 @@ brew install --cask mactex
 sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended
 ```
 
+For manuscripts that use **pandoc-crossref** syntax (`@sec:…`, `@tbl:…`, `@fig:…`), install the filter so it appears on `PATH` (the PDF combined renderer passes `--filter` when found). Example on macOS: `brew install pandoc-crossref`. If the binary is missing, the build still succeeds; cross-reference tokens are not expanded until the filter is installed.
+
 ### LLM review fails or skips
 
 Ensure Ollama is running:

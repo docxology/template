@@ -105,6 +105,40 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \usepackage[]{natbib}
 \bibliographystyle{plainnat}
+\makeatletter
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\captionsetup[subfigure]{margin=0.5em}
+\AtBeginDocument{%
+\renewcommand*\figurename{Figure}
+\renewcommand*\tablename{Table}
+}
+\AtBeginDocument{%
+\renewcommand*\listfigurename{List of Figures}
+\renewcommand*\listtablename{List of Tables}
+}
+\newcounter{pandoccrossref@subfigures@footnote@counter}
+\newenvironment{pandoccrossrefsubfigures}{%
+\setcounter{pandoccrossref@subfigures@footnote@counter}{0}
+\begin{figure}\centering%
+\gdef\global@pandoccrossref@subfigures@footnotes{}%
+\DeclareRobustCommand{\footnote}[1]{\footnotemark%
+\stepcounter{pandoccrossref@subfigures@footnote@counter}%
+\ifx\global@pandoccrossref@subfigures@footnotes\empty%
+\gdef\global@pandoccrossref@subfigures@footnotes{{##1}}%
+\else%
+\g@addto@macro\global@pandoccrossref@subfigures@footnotes{, {##1}}%
+\fi}}%
+{\end{figure}%
+\addtocounter{footnote}{-\value{pandoccrossref@subfigures@footnote@counter}}
+\@for\f:=\global@pandoccrossref@subfigures@footnotes\do{\stepcounter{footnote}\footnotetext{\f}}%
+\gdef\global@pandoccrossref@subfigures@footnotes{}}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -155,6 +189,27 @@
 \usepackage[capitalise,noabbrev]{cleveref}
 \usepackage{natbib}
 
+% ── Unicode-capable mono font for code listings ──────────────────────
+% JuliaMono (TeX Live 2026) covers the full math/Greek glyph set used in
+% scientific code blocks; the default lmmono lacks \alpha/\mu/\partial/\nabla.
+\usepackage{fontspec}
+\setmonofont{JuliaMono-Regular}[
+  Path           = /usr/local/texlive/2026/texmf-dist/fonts/truetype/public/juliamono/,
+  Extension      = .ttf,
+  UprightFont    = *,
+  BoldFont       = JuliaMono-Bold,
+  ItalicFont     = JuliaMono-RegularItalic,
+  BoldItalicFont = JuliaMono-BoldItalic,
+  Scale          = MatchLowercase,
+]
+
+% Math font for unicode-math: Latin Modern Math (TeX Live) has full BMP
+% coverage including U+2223 (\mid), U+226A/226B (\ll/\gg), and the Greek/
+% blackboard letters used in equations. Without an explicit \setmathfont,
+% unicode-math falls back to lmroman text font which lacks several glyphs
+% and emits "Missing character" warnings on every \mid in math mode.
+\setmathfont{latinmodern-math.otf}
+
 \begin{document}
 
 \maketitle
@@ -199,7 +254,7 @@ automated six-figure analysis, and reproducibility metadata
 
 \textbf{Results (this configuration):} 4 of 6 grid points report
 \texttt{converged=True} in the CSV; non-convergent rows flag either slow
-progress at small \(\alpha) under the iteration cap or instability when
+progress at small \(\alpha\) under the iteration cap or instability when
 \(|1-\alpha| \geq 1\). The analytical minimizer remains \(x^\ast = 1.0\)
 with \(f(x^\ast) = -0.5\) for the configured \((A,b)\).
 
@@ -360,7 +415,7 @@ manuscript}\label{readers-guide-to-the-manuscript}
 Restricting \(f\) to a quadratic with known \((A,b)\) keeps the optimum,
 gradient, and spectral data explicit. For \(A = I\) and
 \(b = \mathbf{1}\), the optimal point is \(x^\ast = \mathbf{1}\) and
-gradient descent with fixed \(\alpha) reduces to a linear iteration in
+gradient descent with fixed \(\alpha\) reduces to a linear iteration in
 the error (see Equation \ref{eq:scalar_linear_update} in the results
 section). That simplicity isolates step-size effects and makes divergent
 choices (\(\alpha \geq 2\) in 1D) visible in both plots and CSV rows
@@ -398,7 +453,7 @@ configuration}.
 module})}
 
 \begin{quote}
-\textbf{Input:} Initial point \(x_0\), step size \(\alpha), tolerance
+\textbf{Input:} Initial point \(x_0\), step size \(\alpha\), tolerance
 \(\epsilon\), max iterations \(N_{\max}\)
 
 \begin{enumerate}
@@ -496,7 +551,7 @@ passed through \texttt{run\_convergence\_experiment()} in
 
 Labels follow the same agency taxonomy used for plot colours
 (\texttt{\_agency\_category} in the analysis script):
-\textbf{conservative} (small \(\alpha), slow but stable on \(H=I\)),
+\textbf{conservative} (small \(\alpha\), slow but stable on \(H=I\)),
 \textbf{near-optimal} (including \(\alpha=1\) where the method reaches
 \(x^\ast\) in one step for this quadratic), \textbf{aggressive}
 (\(1 < \alpha < 2\), still linearly contracting in \(|x-x^\ast|\) but
@@ -528,7 +583,7 @@ infrastructure build phase.
 \item
   \textbf{Coverage Gates}: The
   \href{https://github.com/docxology/template/blob/main/.github/workflows/ci.yml}{GitHub
-  Actions CI workflow} enforces a mandatory ≥90\% statement coverage
+  Actions CI workflow} enforces a mandatory \texorpdfstring{\ensuremath{\geq}}{>=}90\% statement coverage
   gate on \texttt{projects/code\_project/src/} prior to treating the
   project as build-green.
 \end{enumerate}
@@ -603,7 +658,7 @@ the rule \(x_{k+1} = x_k - \alpha \nabla f(x_k)\).
 \(\alpha \in \{0.01, 0.1, 0.5, 1.0, 1.5, 2.5\}\). Trajectories use
 \protect\texttt{simulate\_trajectory()} (same
 \protect\texttt{gradient\_descent()} as the table); objectives are
-clipped for plotting when \(\alpha) is unstable. Reference line:
+clipped for plotting when \(\alpha\) is unstable. Reference line:
 \(f(x^\ast)=-0.5\). Best iteration count in this experiment: 1 at
 \(\alpha=1.0\).}\label{fig:convergence}
 \end{figure}
@@ -638,8 +693,8 @@ the trade-off between convergence speed and numerical stability.
 \pandocbounded{\includegraphics[keepaspectratio,alt={Figure: Sensitivity sweep (independent dense grid \textbackslash alpha \textbackslash in {[}0.005,0.4{]}) for the same quadratic. Left: log--log iterations vs \textbackslash alpha (longer runs for small \textbackslash alpha). Right: final f(x) vs \textbackslash alpha with horizontal lines at f(x\_0)=0 and f(x\^{}\textbackslash ast)=-0.5. This panel illustrates the continuous trade-off between stability and speed; it is not limited to the discrete experiment.step\_sizes grid.}]{../figures/step_size_sensitivity.png}}
 \caption{Figure: Sensitivity sweep (independent dense grid
 \(\alpha \in [0.005,0.4]\)) for the same quadratic. Left: log--log
-iterations vs \(\alpha) (longer runs for small \(\alpha)). Right:
-final \(f(x)\) vs \(\alpha) with horizontal lines at \(f(x_0)=0\) and
+iterations vs \(\alpha\) (longer runs for small \(\alpha\)). Right:
+final \(f(x)\) vs \(\alpha\) with horizontal lines at \(f(x_0)=0\) and
 \(f(x^\ast)=-0.5\). This panel illustrates the continuous trade-off
 between stability and speed; it is not limited to the discrete
 \protect\texttt{experiment.step\_sizes}
@@ -670,11 +725,11 @@ termination, iteration count capped by \(N_{\max} = 1000\), and the
 \protect\texttt{converged} flag from
 \protect\texttt{gradient\_descent()} using \(\|\nabla f\| < 10^{-8}\).
 Rows marked ``No'' either hit the iteration cap before meeting the
-gradient tolerance (small \(\alpha)) or correspond to unstable dynamics
+gradient tolerance (small \(\alpha\)) or correspond to unstable dynamics
 when \(|1-\alpha| \geq 1\). \label{tab:opt_results}}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
-Step Size (α)
+Step Size (\texorpdfstring{\ensuremath{\alpha}}{alpha})
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Final Solution
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
@@ -688,7 +743,7 @@ Converged
 \endfirsthead
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
-Step Size (α)
+Step Size (\texorpdfstring{\ensuremath{\alpha}}{alpha})
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Final Solution
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
@@ -732,12 +787,12 @@ scale). Colours follow agency categories. Horizontal dashed line:
 \(\varepsilon = 10^{-8}\) from
 \protect\texttt{experiment.convergence\_tolerance}, aligned with the
 plot generated by \protect\texttt{generate\_convergence\_rate\_plot()}.
-Divergent \(\alpha) curves turn upward once numerical blow-up
+Divergent \(\alpha\) curves turn upward once numerical blow-up
 dominates.}\label{fig:convergence_rate}
 \end{figure}
 
 For the scalar problem with \(A = 1\) and optimum \(x^\ast = b\), one
-step of gradient descent with fixed \(\alpha) gives \begin{equation}
+step of gradient descent with fixed \(\alpha\) gives \begin{equation}
 \label{eq:scalar_linear_update}
 x_{k+1} - x^\ast = (1 - \alpha)(x_k - x^\ast),
 \end{equation} so the distance to the minimizer contracts by
@@ -748,7 +803,7 @@ Equivalently, for the objective (which is a translated quadratic in
 |f(x_{k+1}) - f(x^\ast)| \approx \rho(\alpha)^2 \, |f(x_k) - f(x^\ast)|
 \end{equation} in the neighbourhood of \(x^\ast\) for this model, which
 explains the straight-line segments on the log--error plot in Figure
-\ref{fig:convergence_rate} for stable \(\alpha).
+\ref{fig:convergence_rate} for stable \(\alpha\).
 
 Our experimental grid uses
 \(\alpha \in \{0.01, 0.1, 0.5, 1.0, 1.5, 2.5\}\), spanning conservative,
@@ -894,13 +949,13 @@ analysis across different problem scales.
 \pandocbounded{\includegraphics[keepaspectratio,alt={Figure: Four-panel diagnostic from generate\_complexity\_visualization(). Top left: empirical iterations per configured \textbackslash alpha (bar colours = agency category). Top right: \textbackslash log\_\{10\}\mid f(x)-f(x\^{}\textbackslash ast)\mid{} at termination; dashed line at \textbackslash log\_\{10\}(\textbackslash varepsilon) for \textbackslash varepsilon = experiment.convergence\_tolerance (aligned with config.yaml). Bottom left: empirical iterations (solid) vs the smooth proxy 1/(2\textbackslash alpha(1-\textbackslash alpha)) (dashed), log axes---shape comparison, not a tight count prediction for every \textbackslash alpha. Bottom right: \textbackslash rho = \mid1-\textbackslash alpha\mid{} (unit Hessian; Equation ); values above 1 mark instability.}]{../figures/algorithm_complexity.png}}
 \caption{Figure: Four-panel diagnostic from
 \protect\texttt{generate\_complexity\_visualization()}. Top left:
-empirical iterations per configured \(\alpha) (bar colours = agency
+empirical iterations per configured \(\alpha\) (bar colours = agency
 category). Top right: \(\log_{10}|f(x)-f(x^\ast)|\) at termination;
 dashed line at \(\log_{10}(\varepsilon)\) for \(\varepsilon =\)
 \protect\texttt{experiment.convergence\_tolerance} (aligned with
 \protect\texttt{config.yaml}). Bottom left: empirical iterations (solid)
 vs the smooth proxy \(1/(2\alpha(1-\alpha))\) (dashed), log axes---shape
-comparison, not a tight count prediction for every \(\alpha). Bottom
+comparison, not a tight count prediction for every \(\alpha\). Bottom
 right: \(\rho = |1-\alpha|\) (unit Hessian; Equation
 \ref{eq:scalar_linear_update}); values above 1 mark
 instability.}\label{fig:complexity}
@@ -1089,7 +1144,7 @@ The hallmark of this implementation is the test matrix:
   Strict enforcement of zero-mock policies guaranteeing real execution
   dynamics.
 \item
-  CI/CD validation gates requiring ≥90\% statement coverage before
+  CI/CD validation gates requiring \texorpdfstring{\ensuremath{\geq}}{>=}90\% statement coverage before
   progression.
 \end{itemize}
 
@@ -1264,7 +1319,7 @@ to isolate algorithmic scaling from problem conditioning effects.
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-04-12T19:53:37Z
+  \textbf{Generated}: 2026-04-24T18:25:50Z
 \end{itemize}
 
 \subsection{Pipeline ordering}\label{pipeline-ordering}
@@ -1311,7 +1366,7 @@ Primary inputs
 \endlastfoot
 Convergence trajectories & \texttt{experiment.step\_sizes},
 \texttt{initial\_point}, \texttt{tolerance}, \texttt{max\_iterations} \\
-Step-size sensitivity & Dense \(\alpha) sweep internal to
+Step-size sensitivity & Dense \(\alpha\) sweep internal to
 \texttt{generate\_step\_size\_sensitivity\_plot()} \\
 Convergence rate & Same trajectories as above; tolerance line uses
 \texttt{convergence\_tolerance} \\
@@ -1479,7 +1534,7 @@ Practical machine-learning optimizers (e.g., Adam \cite{kingma2014adam})
 introduce momentum, adaptive preconditioning, or noise from
 minibatching. Those methods are \textbf{out of scope} for
 \texttt{code\_project}: the exemplar deliberately keeps the algorithm
-minimal so that failures (divergent \(\alpha), iteration caps) are
+minimal so that failures (divergent \(\alpha\), iteration caps) are
 interpretable without confounding from stochastic sampling or
 line-search logic.
 
@@ -1507,7 +1562,7 @@ optimization, differential equations, or Bayesian workflows.
   \(d > 1\) only with identity Hessians, so no ill-conditioning effects
   appear.
 \item
-  \textbf{Step-size policy}: Only constant \(\alpha) is implemented in
+  \textbf{Step-size policy}: Only constant \(\alpha\) is implemented in
   \texttt{src/optimizer.py}; there is no Wolfe or Armijo backtracking.
 \item
   \textbf{Global optimization}: Convexity is assumed; no basin-hopping

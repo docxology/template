@@ -296,4 +296,7 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
             logger.warning(message)
             exit_code = 0
 
+    # Keep the results dict in sync with the (possibly suppressed) exit code
+    test_results["exit_code"] = exit_code
+
     return exit_code, test_results

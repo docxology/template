@@ -2,13 +2,14 @@
 
 ## Purpose
 
-This directory holds **generator output** (`active_projects.md`) plus **maintainer-written** index files (`README.md`, this `AGENTS.md`). Only `active_projects.md` is overwritten by automation; do not edit that file by hand.
+This directory holds **generator output** (`active_projects.md`) plus **maintainer-written** index files (`README.md`, this `AGENTS.md`). Only `active_projects.md` is overwritten by that script; do not edit it by hand. **`canonical_facts.md`** is updated when maintainers refresh measured test counts and CI facts (see [`README.md`](README.md)).
 
 ## Files
 
 | File | Source |
 | --- | --- |
 | [`active_projects.md`](active_projects.md) | **Generated** — `uv run python scripts/generate_active_projects_doc.py` |
+| [`canonical_facts.md`](canonical_facts.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see [`README.md`](README.md)) |
 | [`README.md`](README.md), `AGENTS.md` | **Maintainer** — policy and linking conventions |
 
 ## Conventions

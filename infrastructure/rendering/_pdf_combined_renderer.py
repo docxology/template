@@ -8,12 +8,15 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
 import subprocess
 import unicodedata
 import yaml
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, NamedTuple
 
+from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.logging import DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_helpers import (
     extract_preamble,
@@ -23,6 +26,12 @@ from infrastructure.rendering._pdf_latex_helpers import (
 from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
 from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
 from infrastructure.rendering._pdf_preflight import check_brace_balance
+from infrastructure.rendering._pdf_unicode_remap import remap_prose_unicode
+from infrastructure.validation.content.markdown_validator import (
+    find_markdown_files,
+    validate_citations,
+    validate_pandoc_pitfalls,
+)
 
 if TYPE_CHECKING:
     from infrastructure.rendering.config import RenderingConfig
@@ -164,17 +173,22 @@ def preprocess_combined_markdown(
                                     flat[f"topics.{topic_id}.maturity_icon"] = "✅"
                                 elif ml_status == "partial":
                                     flat[f"topics.{topic_id}.maturity"] = "partial"
-                                    flat[f"topics.{topic_id}.maturity_icon"] = "⚠️"
+                                    flat[f"topics.{topic_id}.maturity_icon"] = "🔶"
                                 elif ml_status == "aspirational":
                                     flat[f"topics.{topic_id}.maturity"] = "aspirational"
-                                    flat[f"topics.{topic_id}.maturity_icon"] = "○"
+                                    flat[f"topics.{topic_id}.maturity_icon"] = "🔷"
 
                     if isinstance(raw.get("areas"), dict):
                         areas_dict = raw["areas"]
                         flat["total_areas"] = str(len(areas_dict))
-                        # Alias areas.X -> areas.X.count
-                        for area_name, count in areas_dict.items():
-                            flat[f"areas.{area_name}.count"] = str(count)
+                        # Alias areas.X -> areas.X.count for legacy scalar
+                        # shapes only. Nested {count: N} entries are already
+                        # flattened to areas.X.count by flatten_manuscript_vars;
+                        # overwriting with str(dict) would emit "{'count': N}".
+                        for area_name, area_value in areas_dict.items():
+                            if isinstance(area_value, dict):
+                                continue
+                            flat[f"areas.{area_name}.count"] = str(area_value)
 
                     content, n_vars = substitute_manuscript_var_placeholders(content, flat)
                     if n_vars:
@@ -229,6 +243,16 @@ def build_pandoc_tex_command(
         except (OSError, yaml.YAMLError) as e:
             logger.warning(f"Failed to read geometry from config.yaml: {e}")
 
+    crossref = shutil.which("pandoc-crossref")
+    if crossref:
+        cmd.extend(["--filter", crossref])
+        logger.info("Using pandoc-crossref at %s", crossref)
+    else:
+        logger.warning(
+            "pandoc-crossref not on PATH; @sec:/@tbl:/@fig:/@eq: will not resolve. "
+            "Install: https://github.com/lierdakil/pandoc-crossref (e.g. brew install pandoc-crossref)"
+        )
+
     return cmd
 
 
@@ -258,6 +282,35 @@ def postprocess_latex(tex_content: str) -> str:
         tex_content = tex_content.replace("\\usepackage{lmodern}", "% \\usepackage{lmodern}")
         logger.info("✓ Disabled lmodern package to prevent XeLaTeX font conflicts")
 
+    # Defensive rewrite: a user preamble that re-loads hyperref with options
+    # collides with Pandoc's template (which already loads hyperref via the
+    # bookmark package). Convert ``\usepackage[opts]{hyperref}`` into
+    # ``\PassOptionsToPackage{opts}{hyperref}`` + ``\hypersetup{opts}`` so the
+    # options are honoured without triggering ``Option clash for package
+    # hyperref``. Only rewrites the option-bearing form; ``\usepackage{hyperref}``
+    # without options is left alone (no clash).
+    hyperref_pattern = re.compile(
+        r"\\usepackage\[(?P<opts>[^\]]*)\]\{hyperref\}"
+    )
+    rewritten_count = 0
+
+    def _rewrite_hyperref(match: "re.Match[str]") -> str:
+        nonlocal rewritten_count
+        rewritten_count += 1
+        opts = match.group("opts").strip()
+        return (
+            f"\\PassOptionsToPackage{{{opts}}}{{hyperref}}"
+            f"\n\\AtBeginDocument{{\\hypersetup{{{opts}}}}}"
+        )
+
+    tex_content, _subs = hyperref_pattern.subn(_rewrite_hyperref, tex_content)
+    if rewritten_count:
+        logger.info(
+            "✓ Rewrote %d duplicate \\usepackage[...]{hyperref} into "
+            "\\PassOptionsToPackage + \\hypersetup (avoids hyperref option clash)",
+            rewritten_count,
+        )
+
     # Fix hidelinks → colorlinks
     if "hidelinks" in tex_content:
         tex_content = tex_content.replace(
@@ -276,6 +329,15 @@ def postprocess_latex(tex_content: str) -> str:
     except (re.error, TypeError, ValueError) as e:
         logger.warning(f"Math delimiter fixing failed: {e}. Continuing with original LaTeX content.")
         logger.debug(f"Math delimiter fixing error details: {type(e).__name__}: {e}")
+
+    # Remap prose-only unicode glyphs (✓, ≈, α, σ, ≪, …) that lmroman cannot
+    # render to their LaTeX-command equivalents. Verbatim/Highlighting blocks
+    # are preserved byte-for-byte so Lean code listings keep their literal
+    # glyphs (rendered through DejaVuSansMono via \setmonofont).
+    try:
+        tex_content = remap_prose_unicode(tex_content).content
+    except (re.error, TypeError, ValueError) as e:
+        logger.warning(f"Prose unicode remap failed: {e}. Continuing with original LaTeX content.")
 
     return tex_content
 
@@ -447,3 +509,86 @@ def prevalidate_markdown(combined_md: Path) -> tuple[list[str], str]:
         except (OSError, UnicodeDecodeError) as e:  # noqa: BLE001
             logger.debug(f"Pre-validation check failed: {e}")
     return validation_errors, md_content
+
+
+def prevalidate_source_markdown(
+    source: Path | list[Path] | list[str],
+    repo_root: Path | None = None,
+    bib_file: Path | None = None,
+) -> None:
+    """Hard-gate the combined-PDF render on source-markdown integrity.
+
+    Runs the two render-blocking checks against the actual files about to
+    be combined and rendered (not the post-Pandoc ``.tex``), so file paths
+    in error messages point to the editable sources:
+
+    * :func:`validate_pandoc_pitfalls` — bare ``|word|`` in prose and
+      ``\\|`` inside Markdown table cells (Pandoc converts both to
+      ``\\mid`` which fails to render U+2223 in text mode).
+    * :func:`validate_citations` — every ``[@key]`` resolves in
+      ``references.bib``.
+
+    Both classes of finding block the render under the strict gate;
+    pitfall WARNINGS are promoted to blockers here because they
+    materialise downstream as silent ``Missing character`` warnings +
+    ``U+FFFD`` glyphs in the rendered PDF — exactly the class of failure
+    this gate exists to prevent.
+
+    Args:
+        source: Either a manuscript directory (``Path``) — scanned with
+            :func:`find_markdown_files` — or an explicit iterable of
+            markdown file paths.
+        repo_root: Repository root for relative-path display in error
+            messages. Defaults to a best-effort guess based on the first
+            source path.
+        bib_file: Explicit path to ``references.bib``. Defaults to the
+            file next to the first markdown source.
+
+    Raises:
+        RenderingError: When any pitfall or undefined citation is found.
+            The exception message lists every blocker with its file path.
+    """
+    if isinstance(source, Path):
+        if not source.exists():
+            return
+        paths: list[str] = find_markdown_files(source)
+        anchor_dir = source
+    else:
+        paths = [str(p) for p in source]
+        anchor_dir = Path(paths[0]).parent if paths else Path.cwd()
+
+    if not paths:
+        return
+
+    if repo_root is None:
+        repo_root = (
+            anchor_dir.parents[2] if len(anchor_dir.parents) >= 3 else anchor_dir
+        )
+
+    problems = (
+        validate_pandoc_pitfalls(paths, repo_root)
+        + validate_citations(paths, repo_root, bib_file=bib_file)
+    )
+    if not problems:
+        return
+
+    # Promote everything to render-blocker under the strict gate.
+    blockers = problems
+    rendered = "\n".join(
+        f"  [{p.file_path}] {p.message}" for p in blockers
+    )
+    by_severity = {
+        DiagnosticSeverity.ERROR: sum(
+            1 for p in blockers if p.severity == DiagnosticSeverity.ERROR
+        ),
+        DiagnosticSeverity.WARNING: sum(
+            1 for p in blockers if p.severity == DiagnosticSeverity.WARNING
+        ),
+    }
+    raise RenderingError(
+        f"Pre-render validation failed with {len(blockers)} blocker(s) "
+        f"({by_severity[DiagnosticSeverity.ERROR]} error / "
+        f"{by_severity[DiagnosticSeverity.WARNING]} warning) before "
+        f"Pandoc/xelatex runs:\n{rendered}\n"
+        "Fix each occurrence in the listed source markdown file(s) and re-run."
+    )

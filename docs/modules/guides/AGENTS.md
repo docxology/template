@@ -12,9 +12,17 @@ Focused guides for specific infrastructure modules. These documents supplement:
 | File | Purpose |
 | --- | --- |
 | `README.md` | Index for per-module guides |
-| `integrity-module.md` | Integrity/validation module guide |
-| `llm-module.md` | LLM module guide |
-| `publishing-module.md` | Publishing module guide |
-| `rendering-module.md` | Rendering module guide |
-| `reporting-module.md` | Reporting module guide |
-| `scientific-module.md` | Scientific module guide |
+| `config-module.md` | Configuration schemas / templates |
+| `core-module.md` | Core utilities |
+| `docker-module.md` | Docker / compose |
+| `documentation-module.md` | Documentation, figures, glossary |
+| `integrity-module.md` | Integrity checks |
+| `llm-module.md` | LLM integration |
+| `project-module.md` | Project discovery |
+| `publishing-module.md` | Publishing |
+| `rendering-module.md` | Rendering |
+| `reporting-module.md` | Reporting |
+| `scientific-module.md` | Scientific computing |
+| `skills-module.md` | Skills manifest |
+| `steganography-module.md` | Steganography |
+| `validation-module.md` | Validation (PDF, markdown, CLI) |

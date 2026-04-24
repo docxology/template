@@ -396,8 +396,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -e .
-          pip install pytest pytest-cov black isort flake8 mypy
+          uv sync
 
       - name: Check formatting
         run: |

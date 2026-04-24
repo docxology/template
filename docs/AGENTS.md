@@ -26,6 +26,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 
 ## Key Conventions
 
+- **`projects/` rotates:** only [`projects/code_project/`](../projects/code_project/) is guaranteed as the stable control-positive exemplar; current names → [`_generated/active_projects.md`](_generated/active_projects.md).
 - Each sub-directory has a `README.md` (user-facing index) and `AGENTS.md` (technical guide)
 - `documentation-index.md` is the comprehensive flat index of all files
 - Cross-references use relative paths with descriptive link text

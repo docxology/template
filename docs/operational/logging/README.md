@@ -62,7 +62,7 @@ with log.operation("Running simulation"):
 
 ```python
 # Use the full infrastructure logging
-from infrastructure.core.logging.logging_utils import get_logger, log_operation
+from infrastructure.core.logging.utils import get_logger, log_operation
 
 log = get_logger(__name__)
 

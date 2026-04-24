@@ -1,50 +1,4 @@
-\frametitle{Scope, Related Work, and Positioning}
-\protect\phantomsection\label{scope-related-work-and-positioning}
-This section situates the exemplar scientifically and states explicit
-boundaries. The goal is not to compete with monographs on nonlinear
-programming \cite{nocedal2006numerical,bertsekas1999nonlinear}, but to
-show how a minimal, test-backed optimization story fits the template's
-reproducibility and rendering stack \cite{peng2011reproducible}.
-
-\begin{block}{Classical gradient methods}
-\protect\phantomsection\label{classical-gradient-methods}
-Smooth unconstrained minimization via first-order updates has a long
-lineage, from Cauchy's early descent perspective
-\cite{cauchy1847methode} to modern treatments of convex problems
-\cite{boyd2004convex} and accelerated gradient schemes
-\cite{nesterov2013gradient}. Polyak's classical discussion of gradient
-convergence factors remains relevant when interpreting empirical
-iteration counts \cite{polyak1964some}. The present manuscript restricts
-attention to \textbf{fixed-step} gradient descent on a \textbf{convex
-quadratic}, where rates reduce to scalar linear recurrences in the error
-(Section 3, Equation \ref{eq:scalar_linear_update}).
-\end{block}
-
-\begin{block}{Adaptive and stochastic extensions}
-\protect\phantomsection\label{adaptive-and-stochastic-extensions}
-Practical machine-learning optimizers (e.g., Adam \cite{kingma2014adam})
-introduce momentum, adaptive preconditioning, or noise from
-minibatching. Those methods are \textbf{out of scope} for
-\texttt{code\_project}: the exemplar deliberately keeps the algorithm
-minimal so that failures (divergent \(\alpha\), iteration caps) are
-interpretable without confounding from stochastic sampling or
-line-search logic.
-\end{block}
-
-\begin{block}{What this project proves about the template}
-\protect\phantomsection\label{what-this-project-proves-about-the-template}
-The scientific claims in Sections 1--3 are standard textbook material.
-The \textbf{non-standard} contribution is procedural: configuration in
-\texttt{manuscript/config.yaml} drives
-\texttt{run\_convergence\_experiment()}, figures, CSV exports, and
-\texttt{\{\{RESULT\_*\}\}} substitution
-(\texttt{scripts/z\_generate\_manuscript\_variables.py}) so that PDF,
-HTML, and validation logs refer to the same numbers. That pattern is
-what downstream projects should copy---whether the domain is
-optimization, differential equations, or Bayesian workflows.
-\end{block}
-
-\begin{block}{Explicit limitations}
+\frametitle{Explicit limitations}
 \protect\phantomsection\label{explicit-limitations}
 \begin{enumerate}
 \tightlist
@@ -68,4 +22,3 @@ These limitations are intentional: they narrow the failure surface so
 that infrastructure concerns---tests, logging, figure registration, and
 PDF cross-references---remain visible rather than buried under
 algorithmic complexity.
-\end{block}

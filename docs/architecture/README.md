@@ -6,15 +6,18 @@
 
 ## Purpose
 
-The `architecture/` directory contains detailed documentation about the system architecture, design patterns, and implementation decisions.
+The `architecture/` directory contains detailed documentation about the system architecture, design patterns, and implementation decisions. Examples that need a concrete `projects/{name}/` path should use **`projects/code_project/`** only; [`projects/`](../../projects/README.md) is otherwise a rotating set (see [`../_generated/active_projects.md`](../_generated/active_projects.md)).
 
 ## Contents
 
 | File | Purpose | Audience |
 |------|---------|----------|
+| [`AGENTS.md`](AGENTS.md) | Technical guide for this directory | Maintainers, agents |
 | [`two-layer-architecture.md`](two-layer-architecture.md) | two-layer architecture guide | Developers, architects |
 | [`thin-orchestrator-summary.md`](thin-orchestrator-summary.md) | Thin orchestrator pattern implementation | Developers |
 | [`decision-tree.md`](decision-tree.md) | Decision tree for code placement | Developers |
+| [`migration-from-flat.md`](migration-from-flat.md) | Migration from a flat repo layout | Maintainers |
+| [`testing-strategy.md`](testing-strategy.md) | Testing strategy and coverage | Developers |
 
 ## Quick Navigation
 

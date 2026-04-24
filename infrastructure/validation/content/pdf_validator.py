@@ -149,6 +149,7 @@ def scan_for_issues(text: str) -> dict[str, int]:
     - Warnings: [WARNING] or Warning: patterns
     - Errors: Error: or [ERROR] patterns
     - Missing citations: [?] patterns
+    - Unresolved build placeholders (${VAR}): from metrics injection (guard against leakage in final outputs)
 
     Args:
         text: Extracted text from PDF
@@ -160,6 +161,7 @@ def scan_for_issues(text: str) -> dict[str, int]:
             'warnings': int,
             'errors': int,
             'missing_citations': int,
+            'unresolved_placeholders': int,
             'total_issues': int
         }
     """
@@ -170,12 +172,15 @@ def scan_for_issues(text: str) -> dict[str, int]:
     # Exclude scientific terms like "standard error:", "final error:", "measurement error:"
     errors = len(re.findall(r"\[ERROR\]|^\s*Error:\s|Error:\s+[A-Z]", text, re.MULTILINE))
     missing_citations = len(re.findall(r"\[\?\]", text))
+    # Guard against unresolved build-time ${VAR} placeholders (from metrics injection)
+    unresolved_placeholders = len(re.findall(r"\$\{[A-Za-z0-9_]+\}", text))
 
     issues = {
         "unresolved_references": unresolved_references,
         "warnings": warnings,
         "errors": errors,
         "missing_citations": missing_citations,
+        "unresolved_placeholders": unresolved_placeholders,
     }
 
     # Total issues

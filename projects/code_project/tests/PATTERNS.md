@@ -6,7 +6,9 @@ Testing conventions and patterns for the `code_project` exemplar's zero-mock tes
 
 The following are **strictly forbidden** anywhere in the `code_project` exemplar:
 
-- Any mocking framework usage (including built-in mocking libraries and third-party monkeypatch helpers)\n+- Any test strategy that fakes objects/attributes to avoid executing real code paths\n+- Any “synthetic result objects” created solely to satisfy a type shape without executing the algorithm
+- Any mocking framework usage (including built-in mocking libraries and third-party monkeypatch helpers)
+- Any test strategy that fakes objects/attributes to avoid executing real code paths
+- Any "synthetic result objects" created solely to satisfy a type shape without executing the algorithm
 
 Every test must exercise real algorithms with real data.
 
@@ -76,17 +78,27 @@ class TestQuadraticFunction:
 ```python
 @pytest.mark.parametrize("step_size,expected_converged", [
     (0.01, True),
-    (0.05, True),
-    (0.1, True),
-    (1.5, False),  # Divergent step size
+    (0.1,  True),
+    (1.0,  True),   # |1 - 1.0| = 0.0 → single-step convergence for unit Hessian
+    (2.5,  False),  # |1 - 2.5| = 1.5 > 1 → diverges for unit Hessian
 ])
 def test_convergence_by_step_size(self, step_size, expected_converged):
-    """Test convergence across different step sizes."""
+    """Test convergence across different step sizes.
+
+    For f(x) = (1/2)x^T A x - b^T x with unit Hessian (A = I), the
+    contraction factor is |1 - α|. Stability requires |1 - α| < 1, i.e.
+    0 < α < 2. Step sizes ≥ 2 cause divergence.
+    """
+    obj_func, grad_func = make_quadratic_problem(
+        np.array([[1.0]]), np.array([1.0])
+    )
     result = gradient_descent(
-        initial_point=np.array([5.0]),
-        objective_func=quadratic_function,
-        gradient_func=compute_gradient,
+        initial_point=np.array([0.5]),
+        objective_func=obj_func,
+        gradient_func=grad_func,
         step_size=step_size,
+        max_iterations=200,
+        tolerance=1e-6,
     )
     assert result.converged == expected_converged
 ```
@@ -100,30 +112,36 @@ def test_dimension_mismatch_A(self):
     """Test that mismatched A dimensions raise ValueError."""
     x = np.array([1.0, 2.0])
     A = np.array([[1.0]])  # 1×1, but x is 2D
-    with pytest.raises(ValueError, match="Dimension mismatch"):
+    with pytest.raises(ValueError, match="A must be 2x2"):
         quadratic_function(x, A=A)
 ```
 
 - Always use `match=` to verify the error message content
+- The actual message format is `f"A must be {n}x{n}, got {A.shape}"` (see `src/optimizer.py::_validate_quadratic_inputs`)
 - Test every documented `Raises` clause in the docstring
 
 ## Coverage Verification
 
 ```bash
-# Run with coverage (must achieve 100%)
-pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=100
+# Run with coverage (gate is 90% enforced by pyproject.toml)
+uv run pytest projects/code_project/tests/ \
+    --cov=projects/code_project/src \
+    --cov-report=term-missing \
+    --cov-fail-under=90
 
 # Generate HTML report
-pytest tests/ --cov=src --cov-report=html
+uv run pytest projects/code_project/tests/ \
+    --cov=projects/code_project/src \
+    --cov-report=html
 ```
 
-Every line in `src/` must be executed by at least one test. The `pyproject.toml` enforces `fail_under = 90` as a minimum; this exemplar targets 100%.
+The `pyproject.toml` enforces `fail_under = 90` as the CI gate. The current suite typically achieves ~96%, providing a comfortable buffer. Do not delete tests to make a coverage number work — fix the gap.
 
 ## Determinism
 
-- **No random seeds** in tests — algorithms are deterministic
-- **No time-dependent assertions** — test mathematical properties, not wall-clock time
-- **Fixed input data** — every test uses explicitly specified arrays
+- **Fixed inputs preferred** — algorithms are deterministic; use explicit arrays
+- **RNG acceptable only for timing tests** — `np.random.randn` is acceptable in `TestPerformanceBenchmarks` because those tests assert timing bounds, not exact mathematical values
+- **No time-dependent mathematical assertions** — test correctness properties, not wall-clock values
 
 ## See Also
 

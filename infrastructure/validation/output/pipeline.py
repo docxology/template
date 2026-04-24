@@ -170,7 +170,7 @@ def generate_validation_report(
     output_dir = repo_root / "projects" / project_name / "output" / "reports"
 
     validation_results = {
-        "timestamp": None,
+        "timestamp": datetime.now().isoformat(),
         "checks": {name: result for name, result in check_results},
         "figure_issues": figure_issues,
         "output_statistics": output_statistics,

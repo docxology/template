@@ -440,12 +440,12 @@ jobs:
           python-version: "3.11"
       
       - name: Install dependencies
-        run: |
-          python3 -m pip install -r requirements.txt
-          python3 -m pip install pytest pytest-cov
-      
+        run: uv sync
+
       - name: Run tests
-        run: python3 -m pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=100
+        run: |
+          uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
+          uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
       
       - name: Upload coverage
         uses: codecov/codecov-action@v2

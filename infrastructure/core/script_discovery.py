@@ -59,9 +59,14 @@ def discover_analysis_scripts(
         )
         return []
 
-    # Find all Python scripts in the scripts/ directory except README files
+    # Find all Python scripts in the scripts/ directory except private modules and
+    # package markers (__init__.py) so ``scripts/`` may be a proper package.
     scripts = sorted(
-        [f for f in project_scripts_dir.glob("*.py") if f.is_file() and not f.name.startswith("_")]
+        f
+        for f in project_scripts_dir.glob("*.py")
+        if f.is_file()
+        and not f.name.startswith("_")
+        and f.name != "__init__.py"
     )
 
     for script in scripts:
@@ -145,21 +150,37 @@ def verify_analysis_outputs(
         resolved_dir / "output" / "data",
     ]
 
-    has_any_output = False
+    # First pass: probe each expected output directory.
+    statuses: list[tuple[Path, bool, int]] = []
     for output_dir in output_dirs:
         if output_dir.exists():
             files = list(output_dir.glob("*"))
-            if files:
-                has_any_output = True
-                log_success(
-                    f"Output directory has {len(files)} file(s): {output_dir.name}",
-                    logger,
-                )
-            else:
-                logger.info(f"  ℹ️  Output directory is empty: {output_dir.name}")
+            statuses.append((output_dir, True, len(files)))
         else:
-            # Output directories may not exist yet, not an error on its own
-            logger.info(f"  ℹ️  Output directory not yet created: {output_dir.name}")
+            statuses.append((output_dir, False, 0))
+
+    has_any_output = any(file_count > 0 for _, _, file_count in statuses)
+
+    # Second pass: log. When at least one expected directory contains
+    # files, "absent" or "empty" companions are downgraded from INFO to
+    # DEBUG so that projects which legitimately produce only one output
+    # kind (figures-only, data-only) do not surface as recurring noise.
+    absent_or_empty_level = logger.debug if has_any_output else logger.info
+    for output_dir, exists, file_count in statuses:
+        if exists and file_count > 0:
+            log_success(
+                f"Output directory has {file_count} file(s): {output_dir.name}",
+                logger,
+            )
+        elif exists:
+            absent_or_empty_level(
+                f"  ℹ️  Output directory is empty: {output_dir.name}"
+            )
+        else:
+            # Output directories may not exist yet, not an error on its own.
+            absent_or_empty_level(
+                f"  ℹ️  Output directory not yet created: {output_dir.name}"
+            )
 
     if scripts_exist and not has_any_output:
         logger.warning(

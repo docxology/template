@@ -28,17 +28,20 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ```
 template/
-├── infrastructure/        # Generic reusable tools (Layer 1)
-│   ├── core/              # Logging, config, pipeline, checkpoint, security
-│   ├── validation/        # PDF, markdown, integrity, audit
-│   ├── rendering/         # PDF, HTML, slides (xelatex + pandoc)
+├── infrastructure/        # Generic reusable tools (Layer 1); 13 subpackages
+│   ├── config/            # Shared configuration
+│   ├── core/              # Logging, config, pipeline, checkpoint, security, telemetry/
+│   ├── docker/            # Container specs
+│   ├── documentation/     # Figure manager, glossary gen
 │   ├── llm/               # Ollama integration + prompt templates
+│   ├── project/           # Multi-project discovery, validation
 │   ├── publishing/        # Zenodo, arXiv, GitHub release
+│   ├── rendering/         # PDF, HTML, slides (xelatex + pandoc)
 │   ├── reporting/         # Pipeline + executive reports
 │   ├── scientific/        # Numerical stability, benchmarking
-│   ├── documentation/     # Figure manager, glossary gen
+│   ├── skills/            # SKILL.md discovery, manifest generation
 │   ├── steganography/     # PDF hardening (overlays, hashes, encryption)
-│   └── telemetry/         # Unified stage telemetry (TelemetryCollector, JSON/text reports)
+│   └── validation/        # PDF, markdown, integrity, audit
 ├── run.sh                 # Main interactive + pipeline entry point
 ├── scripts/               # Entry-point orchestrators (thin wrappers)
 │   ├── bash_utils.sh      # Shared bash utilities + ensure_uv() bootstrap
@@ -92,7 +95,7 @@ uv run python scripts/01_run_tests.py --project code_project
 uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 ```
 
-Active project slugs: see [_generated/active_projects.md](_generated/active_projects.md).
+Active project slugs: see [_generated/active_projects.md](_generated/active_projects.md) — do not duplicate that roster here.
 
 ### Document
 

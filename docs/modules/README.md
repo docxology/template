@@ -20,7 +20,9 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 | Module | Guide | Focus |
 |--------|-------|-------|
-| Core | [`guides/core-module.md`](guides/core-module.md) | Logging, config, exceptions, pipeline |
+| Config | [`guides/config-module.md`](guides/config-module.md) | Configuration schemas, templates |
+| Core | [`guides/core-module.md`](guides/core-module.md) | Logging, config, exceptions, pipeline, telemetry |
+| Docker | [`guides/docker-module.md`](guides/docker-module.md) | Dockerfile, compose |
 | Documentation | [`guides/documentation-module.md`](guides/documentation-module.md) | Figure management, API glossary |
 | Integrity | [`guides/integrity-module.md`](guides/integrity-module.md) | File integrity, cross-reference validation |
 | LLM | [`guides/llm-module.md`](guides/llm-module.md) | Ollama integration, research templates |

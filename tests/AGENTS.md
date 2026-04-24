@@ -47,45 +47,18 @@ The `tests/` directory ensures **test coverage** for all modules (90% project mi
 3. Run tests until they pass
 4. Refactor with confidence
 
-### ABSOLUTE PROHIBITION: No Mocks Policy
+### No Mocks Policy
 
-**🔄 CURRENT STATUS: MAJOR PROGRESS** - Significant infrastructure test fixes completed, LLM tests partially migrated to HTTP calls.
+All tests must use real data and computations. See `docs/_generated/canonical_facts.md` for current test status and coverage.
 
-**✅ COMPLETED FIXES:**
+**Implementation patterns** (see No-Mocks section below):
 
-- **Project Test Imports**: Fixed `test_reporting.py` and `test_validation.py` import errors by updating conftest.py to add repository root to Python path
-- **Checkpoint Tests**: Fixed directory existence expectations and permission testing for macOS compatibility
-- **CLI Tests**: Updated subprocess test assertions to match actual output format and handle PYTHONPATH requirements
-- **Logging Tests**: Removed syntax error and mock usage, eliminated unused Mock/patch imports
-- **Validation Tests**: Fixed CLI test to pass manuscript directory as argument instead of relying on automatic discovery
-- **Integration Tests**: Corrected type assertions for `verify_file_integrity` return values (dict vs list)
-- **Bash Logging Tests**: Added ANSI color code stripping for proper output comparison
-- **Output Copying Tests**: Updated missing file handling assertions to match current implementation labels
+- HTTP testing with `pytest-httpserver`
+- CLI testing with subprocess
+- PDF testing with `reportlab`
+- File operations with `tmp_path` fixture
 
-**🔄 LLM TESTS (PARTIALLY):**
-
-- **✅ Fallback Logic**: Successfully migrated `test_query_fallback_on_connection_error` to use HTTP calls with test server
-- **⏳ Remaining**: 32 additional LLM tests need server modifications for edge cases (structured JSON parsing, streaming, model discovery, etc.)
-
-**⏳ REMAINING PHASES:**
-
-- LLM test migration (HTTP testing with pytest-httpserver)
-- Publishing module tests (Zenodo/arXiv/GitHub integration)
-- Validation & Rendering (CLI and file operations)
-- Supporting Infrastructure & QA
-
-**NON-NEGOTIABLE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **data** and **computations only**.
-
-**See the No Mocks Policy section below** for implementation patterns.
-
-This is a fundamental testing principle that ensures:
-
-- Tests validate actual behavior, not mocked behavior
-- Integration points are truly tested
-- Code is tested in realistic conditions
-- No false confidence from mocked tests
-
-**ABSOLUTELY FORBIDDEN:**
+This ensures tests validate actual behavior in realistic conditions.
 
 - `MagicMock()`, `mocker.patch()`, `unittest.mock`
 - Any form of dependency injection for testing

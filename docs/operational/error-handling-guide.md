@@ -2,13 +2,13 @@
 
 > **Custom exception hierarchy** for consistent error handling
 
-**Quick Reference:** [Logging Guide](../operational/logging/) | [Testing Guide](../development/testing/testing-guide.md)
+**Quick Reference:** [Logging Guide](logging/README.md) | [Testing Guide](../development/testing/testing-guide.md)
 
 ## Quick Start
 
 ```python
-from exceptions import ValidationError, raise_with_context
-from logging_utils import get_logger
+from infrastructure.core.exceptions import ValidationError, raise_with_context
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -173,7 +173,7 @@ raise ScriptExecutionError(
 ## Integration with Logging
 
 ```python
-from logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from exceptions import ValidationError
 
 logger = get_logger(__name__)

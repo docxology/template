@@ -36,16 +36,48 @@ def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
 
 
 def _load_registry(registry_path: Path) -> tuple[set[str] | None, str | None]:
-    """Load the figure registry JSON; return (registered_keys, error_msg)."""
+    """Load the figure registry JSON; return (registered_labels, error_msg).
+
+    Two shapes are accepted, both encoding the same set of figure labels:
+
+    * **Dict shape** — keys are labels, values are figure metadata records
+      (e.g. ``{"fig:convergence": {"caption": ..., "path": ...}, ...}``).
+      Used by :class:`infrastructure.documentation.figure_manager.FigureManager`.
+    * **List shape** — each item is a record carrying a ``"label"`` field
+      (e.g. ``[{"filename": ..., "label": "fig:foo"}, ...]``). Used by
+      project scripts that emit a flat figure manifest.
+
+    Items in the list shape that lack a ``"label"`` key are skipped with a
+    warning rather than aborting validation. Any other top-level JSON type
+    is reported as a load error.
+    """
     if not registry_path.exists():
         return None, None  # absent, not broken
     try:
         with open(registry_path) as f:
             registry = json.load(f)
-        registered = set(registry.keys())
+        if isinstance(registry, dict):
+            registered = set(registry.keys())
+        elif isinstance(registry, list):
+            registered = set()
+            unlabeled = 0
+            for item in registry:
+                if isinstance(item, dict) and "label" in item:
+                    registered.add(item["label"])
+                else:
+                    unlabeled += 1
+            if unlabeled:
+                logger.warning(
+                    f"Figure registry has {unlabeled} item(s) without a 'label' field; skipped"
+                )
+        else:
+            return None, (
+                f"Failed to load figure registry: unexpected top-level JSON type "
+                f"{type(registry).__name__} (expected object or array)"
+            )
         log_success(f"Figure registry loaded: {len(registered)} figure(s)", logger)
         return registered, None
-    except (OSError, json.JSONDecodeError, ValueError) as e:
+    except (OSError, json.JSONDecodeError, ValueError, AttributeError, TypeError, KeyError) as e:
         return None, f"Failed to load figure registry: {e}"
 
 

@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: code_project
+Version: 0.1.0
+Summary: Fully-tested codebase with numerical optimization and analysis
+Author-email: Code Research Author <code@example.com>
+Requires-Python: >=3.10
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: scipy>=1.10.0
+Requires-Dist: matplotlib>=3.7.0
+Requires-Dist: pyyaml>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"

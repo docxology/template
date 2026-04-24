@@ -304,7 +304,14 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
             )
 
     for size_issue in validation_results["structure"].get("suspicious_sizes", []):
-        validation_results["issues_by_severity"]["warning"].append(size_issue)
+        # An empty subdirectory with no producer is informational, not a
+        # warning: many projects legitimately omit ``data/`` (pure-proof
+        # workspaces such as fep_lean) or ``simulations/``. Truly anomalous
+        # sizes (unusually small combined PDF, etc.) remain warnings.
+        if "directory is empty" in size_issue:
+            validation_results["issues_by_severity"]["info"].append(size_issue)
+        else:
+            validation_results["issues_by_severity"]["warning"].append(size_issue)
 
     if validation_results["issues_by_severity"]["critical"]:
         validation_results["recommendations"].append(

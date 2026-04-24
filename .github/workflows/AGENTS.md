@@ -70,16 +70,16 @@ test-infra + test-project → performance
 
 #### 4. Project Tests (`test-project`)
 
-- **Sync:** `uv sync --group rendering --group monitoring --group discopy` — the **discopy** group installs DisCoPy so `projects/cognitive_case_diagrams/tests/` runs without skips (see root `pyproject.toml` `[dependency-groups]`).
+- **Sync:** `uv sync --group rendering --group monitoring --group discopy` — same packages as a fresh local `uv sync` at the repo root for DisCoPy string-diagram tests: root **`default-groups`** are `dev`, `rendering`, and **`discopy`**, so `uv sync` already installs **DisCoPy**; this job adds **monitoring** (not in `default-groups`). **Hypothesis** comes from the **dev** group (parametric tests), not from `discopy` (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
 - **Matrix:** Same as `test-infra` (6 combinations)
 - **Coverage threshold:** 90% (`--cov-fail-under=90`) — enforces the project quality standard
 - **Coverage file:** `.coverage.project` (isolated)
-- **Scope:** `projects/*/tests/` with `--ignore=projects/fep_lean/tests/` (fep_lean requires real `gauss` / `lake` / `lean`, not installed on macOS matrix runners)
+- **Scope:** One `pytest` invocation per `projects/*/tests/` directory (first pass collects coverage, later passes use `--cov-append`), then `coverage xml` + `coverage report`. **`projects/fep_lean/tests/` is skipped** in this job so `tests/conftest.py` from `code_project` and `fep_lean` are never loaded in the same process (duplicate plugin name); fep_lean runs in job **`fep-lean`** with real `gauss` / `lake` / `lean`.
 - **Codecov upload:** On Python 3.12 / ubuntu-latest only
 
 #### 4b. fep_lean — real Open Gauss + Lake (`fep-lean`)
 
-- **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists (`hashFiles` guard in `ci.yml`).
+- **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists (`hashFiles` guard in `ci.yml`). When fep_lean lives under `projects_in_progress/`, the guard evaluates to empty and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate.
 - **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 45`
 - **Depends on:** `verify-no-mocks`
 - **Working directory:** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
@@ -163,8 +163,11 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
   --cov-fail-under=60 \
   -m "not requires_ollama"
 
-# Reproduce project tests locally (matrix job ignores fep_lean; discopy = zero-skip cognitive_case_diagrams)
-uv sync --group rendering --group monitoring --group discopy
+# Reproduce project tests locally (matrix job ignores fep_lean). Root `default-groups` include
+# `discopy` and `rendering`; CI also installs `monitoring` — use:
+#   uv sync --group monitoring
+# or full explicit parity: uv sync --group rendering --group monitoring --group discopy
+uv sync --group monitoring
 COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
   --ignore=projects/fep_lean/tests/ \
   --cov=projects/code_project/src \
@@ -172,11 +175,11 @@ COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
   -m "not requires_ollama"
 
 # fep_lean only — requires gauss, lake, lean on PATH (see projects/fep_lean/tests/AGENTS.md)
-COVERAGE_FILE=.coverage.fep_lean uv run pytest projects/fep_lean/tests/ \
+(cd projects/fep_lean && COVERAGE_FILE=../../.coverage.fep_lean uv run pytest tests/ \
   --timeout=900 \
-  --cov=projects/fep_lean/src \
-  --cov-fail-under=90 \
-  -m "not requires_ollama"
+  --cov=src \
+  --cov-fail-under=89 \
+  -m "not requires_ollama")
 
 # Reproduce security scan locally
 uv run pip-audit

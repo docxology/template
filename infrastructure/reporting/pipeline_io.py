@@ -114,6 +114,14 @@ def save_validation_report(
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}
 
+    # Stamp generation time so downstream consumers (CI dashboards, manuscript
+    # variables, jq filters) can sort/age reports without parsing the markdown
+    # twin. Mirrors the ``**Generated:**`` line in generate_validation_markdown.
+    # Overwrite explicit None (e.g. callers pre-allocating a placeholder) as
+    # well as missing keys; a null timestamp is never useful downstream.
+    if not validation_results.get("timestamp"):
+        validation_results["timestamp"] = datetime.now().isoformat()
+
     json_path = output_dir / "validation_report.json"
     try:
         _atomic_write_json(json_path, validation_results)

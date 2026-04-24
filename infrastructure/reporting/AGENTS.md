@@ -10,28 +10,28 @@ The reporting module provides reporting capabilities for pipeline execution, tes
 
 ```
 infrastructure/reporting/
-├── __init__.py                  # Public API exports
-├── output_organizer.py          # Unified file organization system
-├── pipeline_reporter.py         # Pipeline report generation
-├── error_aggregator.py          # Error collection and categorization
-├── html_templates.py            # HTML report templates
-├── executive_reporter.py        # Cross-project metrics and summaries
-├── _dashboard_matplotlib.py     # Dashboard orchestrator (thin) + Plotly dashboard
-├── _dashboard_charts.py         # Base chart generators + multi-panel dashboard
-├── _dashboard_specialized.py    # Health radar, pipeline efficiency, codebase charts
-├── _dashboard_csv.py            # CSV exports: breakdowns, analysis, recommendations
-├── manuscript_overview.py       # Manuscript PDF page overview generation
-├── coverage_parser.py           # Test coverage data extraction
-├── coverage_reporter.py         # Coverage report generation
-├── multi_project_reporter.py    # Multi-project orchestration
-├── output_reporter.py           # Output statistics reporting
-├── suite_runner.py              # Test suite execution
-├── suite_summary_generator.py   # Suite-level summary generation
-├── test_orchestrator.py         # Test pipeline orchestration
-├── test_pipeline.py             # Test pipeline definitions
-├── SKILL.md                     # Agent skill descriptor (YAML frontmatter)
-├── README.md                    # Quick reference
-└── AGENTS.md                    # This file
+├── __init__.py
+├── error_aggregator.py
+├── executive_reporter.py
+├── report_generator.py
+├── report_builder.py
+├── pipeline_report_model.py
+├── pipeline_io.py
+├── pipeline_markdown.py
+├── pipeline_html.py
+├── output_organizer.py
+├── multi_project_reporter.py
+├── manuscript_overview.py
+├── coverage_reporter.py
+├── coverage_parser.py
+├── html_templates.py
+├── suite_runner.py
+├── _dashboard_*.py
+├── _executive_*.py
+├── _csv_*.py
+├── SKILL.md
+├── README.md
+└── AGENTS.md
 ```
 
 ### Design Principles
@@ -149,13 +149,13 @@ The `scripts/organize_executive_outputs.py` script reorganizes existing outputs:
 
 ```bash
 # Dry run to see what would be done
-python3 scripts/organize_executive_outputs.py --dry-run
+uv run python scripts/organize_executive_outputs.py --dry-run
 
 # Organize all outputs
-python3 scripts/organize_executive_outputs.py
+uv run python scripts/organize_executive_outputs.py
 
 # Organize only executive summary
-python3 scripts/organize_executive_outputs.py --executive-only
+uv run python scripts/organize_executive_outputs.py --executive-only
 ```
 
 ## Core Components

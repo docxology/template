@@ -16,7 +16,7 @@ This is a research project template with a test-driven development workflow, aut
 | Core pipeline (no LLM) | `uv run python scripts/execute_pipeline.py --project {name} --core-only` |
 | All tests | `uv run python scripts/01_run_tests.py --project {name}` |
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
-| Install deps | `uv sync` |
+| Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`; add `--group monitoring` to mirror CI extras) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
 
 ### CI mirror (GitHub Actions)
@@ -186,7 +186,7 @@ avg = calculate_average(data)  # Use tested method
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
 **Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (do not hard-code names in docs).
-**Current in-progress projects:** See [`projects_in_progress/`](projects_in_progress/) (e.g. `aii-org`, `act_inf_metaanalysis`, `active_inference`, `biology_textbook`, `ento_linguistics`)
+**Current in-progress projects:** See [`projects_in_progress/`](projects_in_progress/) (e.g. `cogant`, `cognitive_case_diagrams`, `template`)
 
 To archive: `mv projects/{name}/ projects_archive/{name}/`
 To reactivate: `mv projects_archive/{name}/ projects/{name}/`
@@ -232,7 +232,7 @@ output/
 
 0. **Clean Output Directories** - Remove previous outputs for a fresh run
 1. **Setup Environment** - Validate dependencies, discover projects
-2. **Infrastructure Tests** - Run infrastructure test suite (may be skipped)
+2. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
 3. **Project Tests** - Project test suite (90% coverage minimum)
 4. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
 5. **Render PDF** - Convert markdown to professional PDFs
@@ -241,7 +241,12 @@ output/
 8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
 9. **Copy Outputs** - Copy final deliverables to `output/<name>/`
 
-**Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed.
+**Stage numbering:**
+
+- **`./run.sh`**: prints `[0/9]` for the clean step, then `[1/9]`–`[9/9]` for the nine tracked steps (see `STAGE_NAMES` in `run.sh`).
+- **Default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)**: **10** named DAG stages (including clean and both LLM stages); **`--core-only`** runs **8** stages (excludes LLM-tagged stages).
+
+**Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed (not counted as a numbered stage).
 
 ## Testing Requirements
 
@@ -260,6 +265,7 @@ output/
 
 - **Infrastructure**: 60% minimum (currently 83.33%)
 - **Projects**: 90% minimum (currently varies by project)
+  - **`fep_lean` exception**: CI gate is 89% (`.github/workflows/ci.yml` `fep-lean` job) — the Lean build + live `gauss doctor` + Ollama-gated paths carry a small amount of exercised-only-in-CI surface that sits below the 90% template floor. Raise back to 90% once that surface is covered.
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducibility
 
@@ -513,3 +519,11 @@ uv run python scripts/03_render_pdf.py --project {name}
 - Use `uv` for dependency management (recommended)
 - Pipeline can be resumed from checkpoints with `--resume`
 - Tests timeout after 10 seconds by default (configurable in pyproject.toml)
+
+## dotscope
+
+This repo uses dotscope. Before touching code:
+
+1. `codebase_search("your task description")` — not manual file reads
+2. `dotscope_check` before every commit
+3. If check returns HOLDs, fix them before committing

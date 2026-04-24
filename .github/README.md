@@ -132,7 +132,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 | Feature | Implementation |
 | --- | --- |
-| Gradient descent optimization | `src/code_project/optimizer.py` |
+| Gradient descent optimization | `projects/code_project/src/optimizer.py` |
 | Scientific benchmarking | uses `infrastructure.scientific` |
 | 45 tests, 100% coverage | `tests/` — Zero-Mock, real operations only |
 | 6 publication-quality figures | generated in `scripts/`, registered via `FigureManager` |
@@ -701,7 +701,7 @@ Required status checks:
   Infra Tests (ubuntu-latest, Python 3.10/3.11/3.12)
   Project Tests (ubuntu-latest, Python 3.10/3.11/3.12)
   Validate Manuscripts · Security Scan · Performance Check
-  # Optional: fep_lean (real gauss + lake) — only when that job runs (skipped if fep_lean not in projects/)
+  # Optional: fep_lean (gauss + lake) — only when that job runs (skipped if fep_lean not in projects/)
 
 Require PR review before merging: 1 approver
 ```

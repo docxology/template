@@ -61,7 +61,8 @@ uv run python scripts/07_generate_executive_report.py
 
 - Project-specific analysis scripts belong in `projects/{name}/scripts/`.
 - The root scripts stay generic and work with any active project discovered from `projects/`.
-- Use `uv run` for the Python entry points.
+- Use `uv run` for direct Python entry points (`execute_pipeline.py`, `execute_multi_project.py`, `07_generate_executive_report.py`).
+- `run.sh` and `secure_run.sh` resolve Python through the `get_python_cmd` helper in `bash_utils.sh`, which prefers the uv-managed `.venv/bin/python` and falls back to `python3`. This is equivalent to `uv run python` for the commands these shells issue; no separate `uv run` wrapping is required inside `run.sh`.
 
 ## See Also
 

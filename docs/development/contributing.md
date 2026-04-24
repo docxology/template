@@ -28,12 +28,7 @@ cd template
 
 ### 2. **Install Dependencies**
 ```bash
-# Create virtual environment
-uv run python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install dependencies
-pip install -e ".[dev]"
+uv sync
 ```
 
 ### 3. **Run Tests**
@@ -70,7 +65,7 @@ pytest --cov=src --cov-report=html
 - **Add docstrings** to new functions
 - **Update relevant guides** in the docs/ directory
 - **Include examples** for new functionality
-- **Agent `SKILL.md`:** If you add or change `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit [`.cursor/skill_manifest.json`](../../.cursor/skill_manifest.json) so CI tests and Cursor stay in sync
+- **Agent `SKILL.md`:** If you add or change `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` (creates or updates `.cursor/skill_manifest.json` at the repo root) and commit that file if it changed; validate with `uv run python -m infrastructure.skills check`
 
 ### 🔄 **Commit Messages**
 Use clear, descriptive commit messages:

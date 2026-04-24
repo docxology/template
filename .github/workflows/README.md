@@ -23,7 +23,7 @@ lint (Ruff + mypy)
  ├── verify-no-mocks
  │    ├── test-infra   · ubuntu+macos × 3.10/3.11/3.12 · ≥60% coverage
  │    ├── test-project · ubuntu+macos × 3.10/3.11/3.12 · ≥90% coverage
- │    └── fep-lean     · ubuntu only, if lean-toolchain present — real gauss + lake
+ │    └── fep-lean     · ubuntu only, if lean-toolchain present — job name: fep_lean (gauss + lake)
  ├── validate         · manuscript markdown + project imports (needs: lint)
  └── security          · pip-audit + bandit MEDIUM+ (needs: lint)
 
@@ -56,10 +56,12 @@ uv run pytest tests/infra_tests/ \
   --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 \
   -m "not requires_ollama"
 
-# Project tests
-uv run pytest projects/*/tests/ \
-  --cov=projects --cov-datafile=.coverage.project --cov-fail-under=90 \
-  -m "not requires_ollama"
+# Project tests (matches ci.yml targets)
+uv run python scripts/01_run_tests.py --project-only --project code_project
+# or for full matrix simulation:
+uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ \
+  --cov=projects/code_project/src --cov=projects/cognitive_case_diagrams/src \
+  --cov=projects/template/src --cov-fail-under=90 -m "not requires_ollama"
 
 # Security
 uv run pip-audit
@@ -98,7 +100,7 @@ gh run rerun <run-id> --failed
 uv run pytest tests/infra_tests/test_foo.py::TestClass::test_method -s --pdb
 
 # Coverage HTML report
-uv run pytest projects/*/tests/ --cov=projects --cov-report=html --cov-datafile=.coverage.project
+uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 open htmlcov/index.html
 ```
 

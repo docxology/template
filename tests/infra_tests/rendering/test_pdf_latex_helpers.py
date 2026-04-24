@@ -9,10 +9,63 @@ import yaml
 
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
+    ensure_setmathfont,
+    extract_math_font_preamble,
     extract_preamble,
     generate_title_page_body,
     generate_title_page_preamble,
 )
+
+
+class TestExtractMathFontPreamble:
+    """Tests for extract_math_font_preamble (slides Beamer math header shim)."""
+
+    def test_returns_none_when_no_unicode_math(self):
+        preamble = "\\usepackage{geometry}\n\\usepackage{hyperref}\n"
+        assert extract_math_font_preamble(preamble) is None
+
+    def test_returns_none_for_empty_preamble(self):
+        assert extract_math_font_preamble("") is None
+
+    def test_unicode_math_without_setmathfont_emits_default(self):
+        preamble = "\\usepackage{geometry}\n\\usepackage{unicode-math}\n"
+        snippet = extract_math_font_preamble(preamble)
+        assert snippet is not None
+        assert "\\usepackage{unicode-math}" in snippet
+        assert "\\setmathfont{latinmodern-math.otf}" in snippet
+        # Geometry / hyperref MUST NOT leak into the slides header.
+        assert "geometry" not in snippet
+        assert "hyperref" not in snippet
+
+    def test_explicit_setmathfont_preserved(self):
+        preamble = (
+            "\\usepackage{unicode-math}\n"
+            "\\setmathfont{XITS Math}\n"
+            "\\usepackage{geometry}\n"
+        )
+        snippet = extract_math_font_preamble(preamble)
+        assert snippet is not None
+        assert "\\setmathfont{XITS Math}" in snippet
+        # Exactly one \setmathfont line — no double declaration.
+        assert snippet.count("\\setmathfont") == 1
+        assert "latinmodern-math.otf" not in snippet
+
+    def test_standalone_setmathfont_implies_unicode_math(self):
+        """Real-world case (e.g. fep_lean): ``\\setmathfont`` declared
+        without an explicit ``\\usepackage{unicode-math}``. The helper
+        still emits a complete header so Beamer can resolve the macro.
+        """
+        preamble = (
+            "\\usepackage{geometry}\n"
+            "\\usepackage{fontspec}\n"
+            "\\setmathfont{latinmodern-math.otf}\n"
+        )
+        snippet = extract_math_font_preamble(preamble)
+        assert snippet is not None
+        assert "\\usepackage{unicode-math}" in snippet
+        assert "\\setmathfont{latinmodern-math.otf}" in snippet
+        assert "geometry" not in snippet
+        assert "fontspec" not in snippet
 
 
 class TestExtractPreamble:
@@ -53,6 +106,60 @@ class TestExtractPreamble:
         preamble_file.write_text("```latex\n  \\usepackage{geometry}  \n```\n")
         result = extract_preamble(preamble_file)
         assert result.strip() == "\\usepackage{geometry}"
+
+    def test_unicode_math_gets_setmathfont_injected(self, tmp_path):
+        """When unicode-math is loaded without \\setmathfont, one is auto-injected."""
+        preamble_file = tmp_path / "preamble.md"
+        preamble_file.write_text("```latex\n\\usepackage{unicode-math}\n```\n")
+        result = extract_preamble(preamble_file)
+        assert "\\setmathfont{latinmodern-math.otf}" in result
+
+    def test_existing_setmathfont_preserved(self, tmp_path):
+        """User-supplied \\setmathfont is not overridden."""
+        preamble_file = tmp_path / "preamble.md"
+        preamble_file.write_text(
+            "```latex\n\\usepackage{unicode-math}\n\\setmathfont{XITSMath-Regular.otf}\n```\n"
+        )
+        result = extract_preamble(preamble_file)
+        assert result.count("\\setmathfont") == 1
+        assert "XITSMath" in result
+        assert "latinmodern-math.otf" not in result
+
+
+class TestEnsureSetmathfont:
+    """Tests for the constitutional ``\\setmathfont`` injector."""
+
+    def test_no_unicode_math_no_change(self):
+        original = "\\usepackage{geometry}\n\\usepackage{amsmath}"
+        assert ensure_setmathfont(original) == original
+
+    def test_unicode_math_appends_default(self):
+        result = ensure_setmathfont("\\usepackage{unicode-math}")
+        assert "\\setmathfont{latinmodern-math.otf}" in result
+
+    def test_existing_setmathfont_no_change(self):
+        original = (
+            "\\usepackage{unicode-math}\n"
+            "\\setmathfont{Latin Modern Math}"
+        )
+        assert ensure_setmathfont(original) == original
+
+    def test_unicode_math_with_options_detected(self):
+        result = ensure_setmathfont("\\usepackage[warnings-off={mathtools-colon}]{unicode-math}")
+        assert "\\setmathfont" in result
+
+    def test_requirepackage_form_detected(self):
+        result = ensure_setmathfont("\\RequirePackage{unicode-math}")
+        assert "\\setmathfont" in result
+
+    def test_custom_math_font_used(self):
+        result = ensure_setmathfont(
+            "\\usepackage{unicode-math}", math_font="STIX2Math.otf"
+        )
+        assert "\\setmathfont{STIX2Math.otf}" in result
+
+    def test_empty_preamble_no_change(self):
+        assert ensure_setmathfont("") == ""
 
 
 class TestCheckLatexLogForGraphicsErrors:
@@ -130,6 +237,62 @@ class TestGenerateTitlePagePreamble:
         self._write_config(tmp_path, {"paper": {"title": "Test"}})
         result = generate_title_page_preamble(tmp_path)
         assert isinstance(result, str)
+
+    def test_singular_affiliation_string(self, tmp_path):
+        """Single affiliation string renders on title page."""
+        self._write_config(
+            tmp_path,
+            {
+                "paper": {"title": "Test"},
+                "authors": [{"name": "Alice", "affiliation": "MIT"}],
+            },
+        )
+        result = generate_title_page_preamble(tmp_path)
+        assert "MIT" in result
+
+    def test_plural_affiliations_list_all_rendered(self, tmp_path):
+        """Multiple affiliations from list all appear on title page."""
+        self._write_config(
+            tmp_path,
+            {
+                "paper": {"title": "Test"},
+                "authors": [
+                    {
+                        "name": "Joel Dietz",
+                        "affiliations": [
+                            "Massachusetts Institute of Technology (MIT)",
+                            "California Institute for Machine Consciousness (CIMC)",
+                        ],
+                    }
+                ],
+            },
+        )
+        result = generate_title_page_preamble(tmp_path)
+        assert "Massachusetts Institute of Technology (MIT)" in result
+        assert "California Institute for Machine Consciousness (CIMC)" in result
+
+    def test_both_authors_affiliations_rendered(self, tmp_path):
+        """Both authors with different affiliation formats all appear."""
+        self._write_config(
+            tmp_path,
+            {
+                "paper": {"title": "Test"},
+                "authors": [
+                    {"name": "Daniel Friedman", "affiliations": ["Active Inference Institute"]},
+                    {
+                        "name": "Joel Dietz",
+                        "affiliations": [
+                            "Massachusetts Institute of Technology (MIT)",
+                            "California Institute for Machine Consciousness (CIMC)",
+                        ],
+                    },
+                ],
+            },
+        )
+        result = generate_title_page_preamble(tmp_path)
+        assert "Active Inference Institute" in result
+        assert "Massachusetts Institute of Technology (MIT)" in result
+        assert "California Institute for Machine Consciousness (CIMC)" in result
 
 
 class TestGenerateTitlePageBody:

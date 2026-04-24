@@ -176,7 +176,6 @@ jobs:
     
     - name: Install dependencies
       run: |
-        pip install uv
         uv sync
     
     - name: Run tests
@@ -208,7 +207,6 @@ jobs:
     
     - name: Install Python dependencies
       run: |
-        pip install uv
         uv sync
     
     - name: Run build pipeline
@@ -462,7 +460,7 @@ git push origin feature/new-algorithm
 
 **Solution**:
 - Check Python version compatibility in workflow matrix
-- Verify pytest-cov installed: `pip install pytest-cov`
+- Verify pytest-cov installed: `uv sync` (it is included in the dev dependencies)
 - Check coverage thresholds match project settings
 
 ### External Tool Integration Fails

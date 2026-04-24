@@ -1188,7 +1188,13 @@ show_project_info() {
 }
 
 main() {
-    # Initialize project discovery using Python module
+    # Initialize project discovery using Python module.
+    # Use a per-process temp file + trap cleanup so concurrent ./run.sh
+    # invocations never collide and nothing is left behind on failure.
+    local _project_list_file
+    _project_list_file="$(mktemp -t run_sh_projects.XXXXXX)"
+    trap 'rm -f "$_project_list_file"' RETURN
+
     if ! $(get_python_cmd) -c "
 import sys
 sys.path.insert(0, '$REPO_ROOT')
@@ -1202,9 +1208,9 @@ try:
 except Exception as e:
     print(f'ERROR: {e}', file=sys.stderr)
     sys.exit(1)
-" > /tmp/project_list.txt 2>&1; then
+" > "$_project_list_file" 2>&1; then
         log_error "Failed to discover projects"
-        cat /tmp/project_list.txt
+        cat "$_project_list_file"
         exit 1
     fi
 
@@ -1214,10 +1220,10 @@ except Exception as e:
         if [[ "$line" != ERROR* ]]; then
             PROJECT_LIST+=("$line")
         fi
-    done < /tmp/project_list.txt
+    done < "$_project_list_file"
 
-    # Clean up temp file
-    rm -f /tmp/project_list.txt
+    # Explicit cleanup (trap is a safety net for early returns)
+    rm -f "$_project_list_file"
 
     # Set default project if it exists
     if [[ ${#PROJECT_LIST[@]} -gt 0 ]] && [[ " ${PROJECT_LIST[*]} " == *" project "* ]]; then
@@ -1233,6 +1239,8 @@ except Exception as e:
     # CLI pipeline modifiers (used with --pipeline).
     local cli_skip_infra="false"
     local cli_core_only="false"
+    local cli_pipeline="false"
+    local cli_resume="false"
 
     # Parse command line arguments (now PROJECT_LIST is available)
     while [[ $# -gt 0 ]]; do
@@ -1305,31 +1313,14 @@ except Exception as e:
                 exit $?
                 ;;
             --pipeline)
-                # Check if next argument is --resume
-                if [[ "${2:-}" == "--resume" ]]; then
-                    shift  # Remove --pipeline
-                    shift  # Remove --resume
-                    if [[ "$cli_core_only" == "true" ]]; then
-                        run_core_pipeline_no_llm "--resume" "$CURRENT_PROJECT" "$cli_skip_infra"
-                    else
-                        run_full_pipeline "--resume" "$CURRENT_PROJECT" "$cli_skip_infra"
-                    fi
-                    exit $?
-                else
-                    if [[ "$cli_core_only" == "true" ]]; then
-                        run_core_pipeline_no_llm "" "$CURRENT_PROJECT" "$cli_skip_infra"
-                        exit $?
-                    else
-                        run_full_pipeline "" "$CURRENT_PROJECT" "$cli_skip_infra"
-                        exit $?
-                    fi
-                fi
+                cli_pipeline="true"
+                shift
+                continue
                 ;;
             --resume)
-                # Resume flag must be used with --pipeline
-                log_error "--resume must be used with --pipeline"
-                log_info "Usage: $0 --pipeline --resume"
-                exit 1
+                cli_resume="true"
+                shift
+                continue
                 ;;
             --reviews)
                 run_llm_scientific_review
@@ -1347,6 +1338,31 @@ except Exception as e:
         esac
         shift
     done
+
+    # --project / --skip-infra / --core-only / --resume are parsed above; run pipeline last
+    # so `./run.sh --pipeline --project fep_lean` and `./run.sh --project fep_lean --pipeline` agree.
+    if [[ "$cli_resume" == "true" ]] && [[ "$cli_pipeline" != "true" ]]; then
+        log_error "--resume must be used with --pipeline"
+        log_info "Usage: $0 --project NAME --pipeline --resume"
+        exit 1
+    fi
+
+    if [[ "$cli_pipeline" == "true" ]]; then
+        if [[ "$cli_core_only" == "true" ]]; then
+            if [[ "$cli_resume" == "true" ]]; then
+                run_core_pipeline_no_llm "--resume" "$CURRENT_PROJECT" "$cli_skip_infra"
+            else
+                run_core_pipeline_no_llm "" "$CURRENT_PROJECT" "$cli_skip_infra"
+            fi
+        else
+            if [[ "$cli_resume" == "true" ]]; then
+                run_full_pipeline "--resume" "$CURRENT_PROJECT" "$cli_skip_infra"
+            else
+                run_full_pipeline "" "$CURRENT_PROJECT" "$cli_skip_infra"
+            fi
+        fi
+        exit $?
+    fi
     
     # Interactive menu mode
     while true; do
@@ -1358,6 +1374,10 @@ except Exception as e:
         local exit_code=0
 
         case "$choice" in
+            q|Q)
+                log_info "Exiting."
+                exit 0
+                ;;
             a|A)
                 run_all_projects_full
                 exit_code=$?

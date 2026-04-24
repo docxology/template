@@ -20,6 +20,28 @@ This document provides documentation for the Research Project Template system, e
 | [`.github/README.md`](.github/README.md) | GitHub: CI overview, templates, Dependabot |
 | [`.github/AGENTS.md`](.github/AGENTS.md) | Actions job names, coverage gates, branch protection hints |
 
+## Learned User Preferences
+
+- When a "Plan" / "Implementation Plan" file is attached, treat the existing todos as authoritative: do not recreate them, do not edit the plan file, mark each in_progress as you work, and do not stop until every todo is complete.
+- Purge legacy / historical / outdated / deprecated narrative from docs, manuscripts, and code on every review pass; never leave superseded references behind.
+- When pointing users to past Cursor agent transcripts, cite only **parent** transcript files (UUID link text with a short title, UUID without the `.jsonl` suffix in the path); do not cite or discuss subagent transcripts or their IDs.
+- Prefer understated, semantically necessary wording in docs and names; trim hype adjectives such as "enhanced", "real", and "new" unless they change meaning.
+- In manuscript introductions and related work, prefer building on, juxtaposing, and extending prior work over oppositional "against" framing; show, do not tell.
+
+## Learned Workspace Facts
+
+- Manuscript metrics, counts, and variables are auto-injected from per-project `output/data/manuscript_variables.json` at render time; never hand-author values that should be injected. The PDF cover DOI is a separate path: `publication.doi` in `projects/{name}/manuscript/config.yaml` is read by `infrastructure/rendering/_pdf_latex_helpers.py` and emitted as `\href{https://doi.org/<doi>}{DOI: <doi>}` on the title page.
+- `fep_lean` is an active project: real Lean 4 + Mathlib via `lake build`, OpenGauss `gauss` CLI, and the Hermes LLM pipeline (no mocks); validate end-to-end through `./run.sh`. Combined-PDF link colours come from `hyperref` / `\hypersetup` in `projects/fep_lean/manuscript/preamble.md` (red `fepred` for link, URL, and citation colours). Infrastructure only injects red when it rewrites a `hidelinks` draft in the emitted `.tex`.
+- In `fep_lean`, Hermes and per-topic Gauss markdown reports are built from the pipeline stage payload (`TopicRunResult.as_dict()`), not by re-reading SQLite artifacts; that dict must include the Hermes fields the reporter uses (`tokens_used`, `explanation`, `refined_lean_sketch`, `hermes_model`, `cache_hit`, `hermes_lean_compiles`) or aggregate and per-topic reports will show empty tokens and missing sections.
+- `fep_lean` topic sketch sources of truth are the catalogue in `projects/fep_lean/scripts/catalogue_sketches.py` and `projects/fep_lean/config/topics.yaml` (one `TopicEntry` per topic: `lean_sketch` + `latex_equations`); `projects/fep_lean/lean/FepSketches/` is for `Basic.lean`, `fep_all.lean`, and ephemeral `_verify_*` verifier files, not long-lived per-topic `.lean` files for the full catalogue. The manuscript emits a **unified** `09z_unified_formalism_catalogue.md` (B+C material juxtaposed per topic; PDF refs `sec:appendix_b_full_topic_lean_catalogue` and `sec:appendix_c_latex_equations` both resolve in that chapter). `projects/fep_lean/scripts/theorem_latex_signatures.py` drives display-math strings aligned with Lean. The pipeline may write LaTeX `equation` environments with `\label{eq:…}` for autonumbered cross-refs, not only `$$` display blocks.
+- The fep_lean manuscript-variables injector reads only `run_*/verification_manifest.json` artifacts and ignores `verify_*/` standalone re-verifications, so the canonical compile-rate cited in the abstract is the Hermes-refined run (e.g. `49/50` with one fallback) — standalone verifier-only runs reporting `50/50` do not propagate into manuscript metrics ([fep_lean DOI + prerender CLI plan](13e04c37-28e8-4b02-a78a-3e0926c5ddfa)).
+- Content-validation diagnostics carry stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`, e.g. `MARKDOWN.PANDOC_BARE_PIPE`, `BIBTEX.UNDEFINED_KEY`); every new `DiagnosticEvent` emission must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters on `diagnostics.json`.
+- `uv run python -m infrastructure.validation.cli prerender <project>` runs the strict source-markdown gate (`prevalidate_source_markdown`) without triggering a full render; use it for fast pre-flight before `scripts/03_render_pdf.py`.
+- Slides keep Beamer Unicode/math parity with combined PDFs via `extract_math_font_preamble` in `infrastructure/rendering/_pdf_latex_helpers.py`, wired through Pandoc `-H header.tex` from `SlidesRenderer.render`; prose Unicode glyphs in body LaTeX are remapped by `infrastructure/rendering/_pdf_unicode_remap.py` inside `_pdf_combined_renderer.postprocess_latex`.
+- Project roster under `projects/` rotates; only `projects/code_project/` is the guaranteed control-positive exemplar — consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding project paths in docs. Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
+- `projects_in_progress/biology_textbook/` is WIP-friendly: `infrastructure.project.discovery.resolve_project_root` lets `uv run python scripts/03_render_pdf.py --project biology_textbook` work from the repository root before promotion, but `./run.sh` and default discovery only list it after it moves under `projects/`.
+- `projects_in_progress/biology_textbook/docs/api_reference.md` is manually curated; after adding or renaming public functions in `src/biology/`, reconcile it with `rg '^\\s*def ' src/biology` and refresh any doc counts from live measurement.
+
 ## 📋 Table of Contents
 
 1. [Core Architecture](#core-architecture)
@@ -95,14 +117,9 @@ The template now supports **multiple independent projects** within a single repo
 - Interactive project selection menu
 - Backward compatibility with single-project workflows
 
-**Active Projects** (under `projects/`; authoritative slugs only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)):
+**Active projects** (under `projects/`): the set **rotates** as workspaces are promoted, archived, or moved. Authoritative names **at any moment** are only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (regenerate after layout changes). The **only** path **guaranteed** to remain the **control-positive** exemplar for docs and commands is `projects/code_project/` (optimization research exemplar).
 
-- `projects/code_project/` — Optimization research exemplar (numerical methods and convergence); default for concrete paths in docs
-- `projects/cognitive_case_diagrams/` — *Compositional Approaches to Linguistic Case for Cognitive Modeling* (case / diagrams / categorial grammar; see project `manuscript/config.yaml`)
-- `projects/template/` — Meta-documentation and template metrics
-- `projects/fep_lean/` — FEP / Active Inference Lean catalogue (OpenGauss `gauss` CLI, Hermes via OpenRouter, SQLite sessions)
-
-**Note:** Additional exemplars (e.g. `blake_bimetalism`, `traditional_newspaper`, `area_handbook`, `density_bioscales`) live under [`projects_archive/`](projects_archive/) until moved back into `projects/`. Work-in-progress trees (e.g. `aii-org`) live under [`projects_in_progress/`](projects_in_progress/). Neither archived nor in-progress projects are discovered or executed by the pipeline until promoted to `projects/`.
+**Note:** Exemplars such as `blake_bimetalism`, `traditional_newspaper`, `area_handbook`, `density_bioscales` may live under [`projects_archive/`](projects_archive/). In-progress trees live under [`projects_in_progress/`](projects_in_progress/) until promoted (roster varies by checkout). Active names are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 ## 📂 Project Organization: Active vs Archived
 
@@ -140,7 +157,7 @@ An optional intermediate staging area for projects that are under active develop
 - **NOT executed** by any pipeline scripts
 - Useful for drafting new project scaffolding before promoting to `projects/`
 
-**Current projects in progress:** `act_inf_metaanalysis`, `active_inference`, `aii-org`, `biology_textbook`, `ento_linguistics` (see `projects_in_progress/`; not executed by `./run.sh` until promoted to `projects/`)
+**Current projects in progress:** see the directories under [`projects_in_progress/`](projects_in_progress/) (e.g. `biology_textbook`, `cogant`, `template` on this checkout; not executed by `./run.sh` until promoted to `projects/`). **Active** projects under `projects/` are listed only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 **To promote:** Move `projects_in_progress/{name}/` → `projects/{name}/`
 
@@ -169,19 +186,17 @@ template/                           # Generic template repository
 │   ├── AGENTS.md
 │   ├── README.md
 │   └── infra_tests/test_*.py       # Tests for infrastructure/ modules
-├── projects/                       # Multiple research projects directory
+├── projects/                       # Active workspaces (roster rotates; see docs/_generated/active_projects.md)
 │   ├── README.md                   # Multi-project guide
 │   ├── _test_project/              # Stub: output/ only; not discovered (see _test_project/AGENTS.md)
-│   ├── code_project/               # Optimization research exemplar (master exemplar)
+│   ├── code_project/               # Guaranteed control-positive exemplar
 │   │   ├── src/                    # Project-specific scientific code
 │   │   ├── tests/                  # Project tests
 │   │   ├── scripts/                # Project analysis scripts
 │   │   ├── manuscript/             # Research manuscript markdown
 │   │   ├── output/                 # Working outputs (generated during pipeline)
 │   │   └── pyproject.toml
-│   ├── cognitive_case_diagrams/    # Compositional case modeling manuscript (config.yaml title)
-│   ├── fep_lean/                    # FEP / Active Inference Lean catalogue (OpenGauss + Hermes)
-│   └── template/                   # Meta-documentation project
+│   └── {name}/                     # Additional discovered projects (varies by checkout)
 ├── projects_in_progress/           # Staging area (not executed)
 ├── projects_archive/               # Retired projects (preserved, not executed)
 └── output/                         # Final deliverables (organized by project)
@@ -206,20 +221,23 @@ Each directory contains documentation for easy navigation:
 | Directory | AGENTS.md | README.md | Purpose |
 | --------- | --------- | --------- | ------- |
 | [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | [README.md](projects/code_project/README.md) | Optimization research exemplar |
-| [`projects/_test_project/`](projects/_test_project/) | [AGENTS.md](projects/_test_project/AGENTS.md) | [README.md](projects/_test_project/README.md) | Pipeline fixture stub (`output/` only); not discovered |
-| [`projects/cognitive_case_diagrams/`](projects/cognitive_case_diagrams/) | [AGENTS.md](projects/cognitive_case_diagrams/AGENTS.md) | [README.md](projects/cognitive_case_diagrams/README.md) | *Compositional Approaches to Linguistic Case for Cognitive Modeling* |
-| [`projects/template/`](projects/template/) | [AGENTS.md](projects/template/AGENTS.md) | [README.md](projects/template/README.md) | Template meta-documentation |
-| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | FEP / Active Inference Lean catalogue; math-inc `gauss` CLI + Hermes |
+| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | FEP / Lean catalogue with OpenGauss `gauss` CLI |
 
 **In-progress projects** (under `projects_in_progress/`, not executed by pipeline):
 
 | Directory | Purpose |
 | --------- | ------- |
-| `projects_in_progress/aii-org/` | Active Inference Institute organisational project |
+| [`projects_in_progress/act_inf_metaanalysis/`](projects_in_progress/act_inf_metaanalysis/) | Active Inference meta-analysis — see [`doc/README.md`](projects_in_progress/act_inf_metaanalysis/doc/README.md) |
+| [`projects_in_progress/cogant/`](projects_in_progress/cogant/) | Cognitive agent project |
+| [`projects_in_progress/template/`](projects_in_progress/template/) | Meta-documentation and template metrics |
 
-Archived exemplars (e.g. [`projects_archive/blake_bimetalism/`](projects_archive/blake_bimetalism/)) are preserved under [`projects_archive/`](projects_archive/).
+**Archived projects** (under `projects_archive/`, preserved but not executed):
 
-See [`projects/README.md`](projects/README.md) for narrative descriptions. Archived exemplars (e.g. [`projects_archive/traditional_newspaper/`](projects_archive/traditional_newspaper/)) are under [`projects_archive/`](projects_archive/) (not executed until moved into `projects/`). Regenerate [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) after changing `projects/` layout (`uv run python scripts/generate_active_projects_doc.py`).
+| Directory | Purpose |
+| --------- | ------- |
+| [`projects_archive/cognitive_case_diagrams/`](projects_archive/cognitive_case_diagrams/) | Categorical case modeling manuscript and implementation |
+
+Archived exemplars are preserved under [`projects_archive/`](projects_archive/) (not discovered or executed until moved to `projects/`). See [`projects/README.md`](projects/README.md) for narrative descriptions. The authoritative list of active projects is in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md). Regenerate it after layout changes: `uv run python scripts/generate_active_projects_doc.py`.
 
 ### Documentation Directories
 
@@ -284,13 +302,16 @@ template/                           # Generic Template
 │   ├── README.md
 │   └── test_*.py
 ├── projects/                       # Multiple research projects directory
-│   ├── code_project/               # Optimization research exemplar
+│   ├── code_project/               # Optimization research exemplar (active)
 │   │   ├── src/                    # Project scientific code (Layer 2)
-│   │   ├── tests/                  # Project Tests
-│   │   ├── scripts/                # Project Analysis Scripts
-│   │   ├── manuscript/             # Research Manuscript
-│   │   ├── output/                 # Generated Files
+│   │   ├── tests/                  # Project Tests (90%+ coverage)
+│   │   ├── scripts/                # Analysis scripts (thin orchestrators)
+│   │   ├── manuscript/             # Research manuscript
+│   │   ├── output/                 # Working outputs (disposable)
 │   │   └── pyproject.toml          # Project configuration
+│   └── {name}/                     # Additional discovered projects (varies by checkout)
+├── projects_in_progress/           # Work-in-progress (not discovered)
+├── projects_archive/               # Archived projects (preserved)
 └── pyproject.toml                  # Root configuration
 ```
 
@@ -398,7 +419,7 @@ Environment variables are supported as an alternative configuration method and t
 vim projects/{name}/manuscript/config.yaml
 
 # Build with config file values
-python3 scripts/03_render_pdf.py --project {name}
+uv run python scripts/03_render_pdf.py --project {name}
 ```
 
 #### Using Environment Variables
@@ -410,14 +431,14 @@ export AUTHOR_EMAIL="jane.smith@university.edu"
 export AUTHOR_ORCID="0000-0000-0000-1234"
 export DOI="10.5281/zenodo.12345678"  # Optional
 
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 #### Verbose Logging
 
 ```bash
 export LOG_LEVEL=0  # Show all debug messages
-python3 scripts/03_render_pdf.py
+uv run python scripts/03_render_pdf.py
 ```
 
 ### Runtime Configuration
@@ -563,53 +584,53 @@ steganography:
 
 ```bash
 # Environment setup
-python3 scripts/00_setup_environment.py --project {name}
+uv run python scripts/00_setup_environment.py --project {name}
 
 # Test execution (combined infra + project)
-python3 scripts/01_run_tests.py --project {name}
+uv run python scripts/01_run_tests.py --project {name}
 
 # Project analysis scripts
-python3 scripts/02_run_analysis.py --project {name}
+uv run python scripts/02_run_analysis.py --project {name}
 
 # PDF rendering
-python3 scripts/03_render_pdf.py --project {name}
+uv run python scripts/03_render_pdf.py --project {name}
 
 # Output validation
-python3 scripts/04_validate_output.py --project {name}
+uv run python scripts/04_validate_output.py --project {name}
 
 # Copy outputs
-python3 scripts/05_copy_outputs.py --project {name}
+uv run python scripts/05_copy_outputs.py --project {name}
 
 # LLM manuscript review (optional, requires Ollama)
-python3 scripts/06_llm_review.py --project {name}
+uv run python scripts/06_llm_review.py --project {name}
 
 # Generate executive report (multi-project only)
-python3 scripts/07_generate_executive_report.py --project {name}
+uv run python scripts/07_generate_executive_report.py --project {name}
 ```
 
 **Validation Tools:**
 
 ```bash
 # Validate markdown files
-python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # Validate PDF outputs
-python3 -m infrastructure.validation.cli pdf output/{name}/pdf/
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 ```
 
-## ✅ Validation Systems
+## Validation Systems
 
 ### PDF Validation
 
 ```bash
-# Validate generated PDF for issues
-python3 -m infrastructure.validation.cli pdf output/pdf/
+# Validate generated PDF for issues (per-project)
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 # With verbose output
-python3 -m infrastructure.validation.cli pdf output/pdf/ --verbose
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/ --verbose
 
 # Specific PDF file
-python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf
 ```
 
 **Validation Checks**:
@@ -624,10 +645,10 @@ python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 
 ```bash
 # Validate all markdown files
-python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # Strict mode (fail on any issues)
-python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/ --strict
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/ --strict
 ```
 
 **Validation Checks**:
@@ -640,29 +661,25 @@ python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/ --
 
 ### Test Coverage
 
-```bash
-# Run both infrastructure and project tests via orchestrator
-python3 scripts/01_run_tests.py --project {name}
+See `docs/_generated/canonical_facts.md` for current status from live test runs.
 
-# Or run manually with coverage reports
-python3 -m pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
-python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
+```bash
+# Run via orchestrator
+uv run python scripts/01_run_tests.py --project {name}
+
+# Manual with reports
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 ```
 
-**Coverage Requirements**:
+**Requirements**:
 
-- 90% minimum for projects/{name}/src/ (currently achieving 100%)
-- 60% minimum for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
-- All tests must pass before PDF generation
-- No mock methods (data analysis only)
+- projects/{name}/src/ : 90% minimum
+- infrastructure/ : 60% minimum
 
-**Coverage Gap Analysis**:
+Tests use real data and computation.
 
-- See test coverage reports for detailed analysis
-- Low-coverage modules identified and improvement plans documented
-- Test files created for checkpoint, progress, retry, CLI, LLM operations, and paper selector
-
-## 🧪 Testing Framework
+## Testing Framework
 
 ### ABSOLUTE PROHIBITION: No Mocks Policy
 
@@ -778,16 +795,16 @@ Tests follow the **thin orchestrator pattern** principles:
 
 ```bash
 # All tests via orchestrator (recommended)
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # Specific test file
-python3 -m pytest projects/{name}/tests/test_example.py -v
+uv run pytest projects/{name}/tests/test_example.py -v
 
 # Infrastructure tests with coverage
-python3 -m pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 # Project tests with coverage
-python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 ```
 
 ## 📤 Output Formats
@@ -1051,7 +1068,7 @@ open output/{name}/{name}_combined.html
 ls -la output/{name}/
 
 # Check PDF validation
-python3 -m infrastructure.validation.cli pdf output/{name}/pdf/
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 ```
 
 ## 🔧 Troubleshooting
@@ -1071,11 +1088,11 @@ python3 -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```bash
 # Ensure coverage requirements met for both suites
-python3 scripts/01_run_tests.py
+uv run python scripts/01_run_tests.py
 
 # Or run individually with coverage reports
-python3 -m pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
-python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 ```
 
 #### Scripts Failing
@@ -1098,7 +1115,7 @@ which xelatex
 python3 -m infrastructure.rendering.latex_package_validator
 
 # Validate markdown first
-python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # Check compilation logs
 ls output/pdf/*_compile.log
@@ -1162,10 +1179,10 @@ brew install --cask mactex
 ```bash
 # Enable verbose logging
 export LOG_LEVEL=0
-python3 scripts/03_render_pdf.py --project {name}
+uv run python scripts/03_render_pdf.py --project {name}
 
 # Run with debug output
-python3 -m infrastructure.validation.cli pdf output/{name}/pdf/ --verbose
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/ --verbose
 ```
 
 ### Log Files
@@ -1237,11 +1254,11 @@ The pipeline includes automatic checkpointing for resume capability:
 
 ```bash
 # Resume from last checkpoint
-python3 scripts/execute_pipeline.py --project {name} --core-only --resume
+uv run python scripts/execute_pipeline.py --project {name} --core-only --resume
 ./run.sh --pipeline --resume
 
 # Start fresh (clears checkpoint on success)
-python3 scripts/execute_pipeline.py --project {name} --core-only
+uv run python scripts/execute_pipeline.py --project {name} --core-only
 ./run.sh --pipeline
 ```
 

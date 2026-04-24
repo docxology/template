@@ -1,9 +1,8 @@
-\beamer@slide {introduction}{1}
-\beamer@slide {template-architecture-context}{1}
-\beamer@slide {eq:optimization_problem}{1}
-\beamer@slide {infrastructure-integration}{1}
-\beamer@slide {algorithm-overview}{1}
-\beamer@slide {eq:gradient_descent_update}{1}
-\beamer@slide {exemplar-implementation-goals}{1}
-\beamer@slide {readers-guide-to-the-manuscript}{1}
-\beamer@slide {why-a-quadratic-model}{1}
+\beamer@slide {template-architecture-context}{3}
+\beamer@slide {eq:optimization_problem}{3}
+\beamer@slide {infrastructure-integration}{5}
+\beamer@slide {algorithm-overview}{6}
+\beamer@slide {eq:gradient_descent_update}{6}
+\beamer@slide {exemplar-implementation-goals}{7}
+\beamer@slide {readers-guide-to-the-manuscript}{8}
+\beamer@slide {why-a-quadratic-model}{9}

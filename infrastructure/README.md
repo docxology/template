@@ -8,7 +8,7 @@ The infrastructure layer provides generic, reusable functionality that can be ap
 
 ## Agent skills (`SKILL.md`)
 
-Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (or `@.cursor/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`. When editing under `infrastructure/`, Cursor can apply [`.cursor/rules/infrastructure-skills.mdc`](../.cursor/rules/infrastructure-skills.mdc) (globs `infrastructure/**`) and the always-on [`.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc).
+Each subpackage (and the package root) includes a **`SKILL.md`** with YAML frontmatter (`name`, `description`) so assistants can route work to the right module. **Discovery:** open [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (or `@.cursor/skill_manifest.json` in Cursor), search `infrastructure/**/SKILL.md`, open the hub [SKILL.md](SKILL.md), or use `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md`. Regenerate the manifest after skill changes: `uv run python -m infrastructure.skills write`.
 
 | Path | Frontmatter `name` |
 | ------ | ------------------- |

@@ -28,7 +28,7 @@
 from pathlib import Path
 from infrastructure.validation import validate_pdf_rendering, extract_text_from_pdf, scan_for_issues
 
-pdf_path = Path("output/code_project/pdf/combined.pdf")
+pdf_path = Path("output/code_project/pdf/code_project_combined.pdf")
 
 # Validate structural integrity of a rendered PDF
 results = validate_pdf_rendering(pdf_path)
@@ -80,7 +80,7 @@ output_dir = Path("output/code_project")
 report = verify_output_integrity(output_dir)
 
 # Targeted checks
-verify_file_integrity(output_dir / "pdf" / "combined.pdf")
+verify_file_integrity(output_dir / "pdf" / "code_project_combined.pdf")
 verify_cross_references(Path("projects/code_project/manuscript"))
 verify_data_consistency(output_dir / "data")
 verify_academic_standards(Path("projects/code_project/manuscript"))
@@ -95,9 +95,18 @@ integrity_report = generate_integrity_report(output_dir)
 from pathlib import Path
 from infrastructure.validation import validate_figure_registry
 
-project_path = Path("projects/code_project")
-results = validate_figure_registry(project_path)
+success, issues = validate_figure_registry(
+    Path("projects/code_project/output/figures/figure_registry.json"),
+    Path("projects/code_project/manuscript"),
+)
 ```
+
+Both registry shapes are accepted:
+
+* **Dict shape** — ``{"fig:label": {...}, ...}`` (emitted by
+  ``FigureManager``).
+* **List shape** — ``[{"label": "fig:label", ...}, ...]`` (emitted by
+  project-side scripts, e.g. ``cognitive_case_diagrams/scripts/generate_diagrams.py``).
 
 ### Repository Audit and Issue Management
 

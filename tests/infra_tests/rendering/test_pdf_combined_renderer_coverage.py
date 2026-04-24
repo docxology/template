@@ -1,7 +1,9 @@
 """Tests for infrastructure.rendering._pdf_combined_renderer — comprehensive coverage."""
 
+import pytest
 import yaml
 
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._pdf_combined_renderer import (
     CombinedMarkdownResult,
     flatten_manuscript_vars,
@@ -11,6 +13,7 @@ from infrastructure.rendering._pdf_combined_renderer import (
     inject_bibliography,
     verify_figure_references,
     prevalidate_markdown,
+    prevalidate_source_markdown,
     inject_latex_preamble,
 )
 
@@ -213,6 +216,37 @@ class TestPreprocessCombinedMarkdown:
         result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
         assert "2" in result.content
 
+    def test_areas_legacy_scalar_shape_substitutes_count(self, tmp_path):
+        """Legacy shape ``areas: {FEP: 14}`` must substitute ``{{areas.FEP.count}}`` → ``14``."""
+        vars_data = {"areas": {"FEP": 14, "Thermo": 7}}
+        (tmp_path / "manuscript_vars.yaml").write_text(yaml.dump(vars_data))
+
+        content = "FEP={{areas.FEP.count}} Thermo={{areas.Thermo.count}}"
+        result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
+        assert "FEP=14" in result.content
+        assert "Thermo=7" in result.content
+
+    def test_areas_nested_dict_shape_does_not_emit_dict_repr(self, tmp_path):
+        """Nested shape ``areas: {FEP: {count: 14}}`` must substitute to integer text,
+
+        not the Python dict repr ``{'count': 14}`` (regression test for the alias
+        loop that previously overwrote the flattened value).
+        """
+        vars_data = {
+            "areas": {
+                "FEP": {"count": 14},
+                "ActiveInference": {"count": 11},
+            }
+        }
+        (tmp_path / "manuscript_vars.yaml").write_text(yaml.dump(vars_data))
+
+        content = "FEP={{areas.FEP.count}} AI={{areas.ActiveInference.count}}"
+        result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
+        assert "FEP=14" in result.content
+        assert "AI=11" in result.content
+        assert "{'count'" not in result.content
+        assert "{\"count\"" not in result.content
+
     def test_manuscript_vars_missing_file(self, tmp_path):
         content = "No vars: {{title}}"
         result = preprocess_combined_markdown(content, manuscript_dir=tmp_path)
@@ -277,6 +311,30 @@ class TestPostprocessLatex:
         tex = r"$x^2$ and $$y^2$$"
         result = postprocess_latex(tex)
         assert isinstance(result, str)
+
+    def test_rewrites_duplicate_hyperref_usepackage(self):
+        """A user-preamble ``\\usepackage[opts]{hyperref}`` must be rewritten to
+
+        ``\\PassOptionsToPackage`` + ``\\hypersetup`` so it cannot clash with
+        Pandoc's template-loaded hyperref.
+        """
+        tex = (
+            "\\PassOptionsToPackage{unicode}{hyperref}\n"
+            "\\hypersetup{pdftitle={Test}}\n"
+            "\\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}\n"
+            "\\begin{document}\nHello\n\\end{document}"
+        )
+        result = postprocess_latex(tex)
+        assert "\\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}" not in result
+        assert "\\PassOptionsToPackage{colorlinks=true,linkcolor=blue,urlcolor=blue}{hyperref}" in result
+        assert "\\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}" in result
+
+    def test_leaves_plain_hyperref_usepackage_alone(self):
+        """``\\usepackage{hyperref}`` without options is harmless — leave intact."""
+        tex = "\\usepackage{hyperref}\n\\begin{document}\n\\end{document}"
+        result = postprocess_latex(tex)
+        assert "\\usepackage{hyperref}" in result
+        assert "\\PassOptionsToPackage" not in result
 
 
 class TestInjectBibliography:
@@ -423,3 +481,52 @@ class TestInjectLatexPreamble:
         )
         result = inject_latex_preamble(tex, manuscript_dir)
         assert isinstance(result, str)
+
+
+class TestPrevalidateSourceMarkdown:
+    """Hard-gate behaviour: clean / undefined-citation / bare-pipe inputs."""
+
+    def _make_manuscript(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "references.bib").write_text(
+            "@article{good_key, title={Ok}, year={2025}}\n",
+            encoding="utf-8",
+        )
+        return manuscript
+
+    def test_clean_manuscript_passes(self, tmp_path):
+        manuscript = self._make_manuscript(tmp_path)
+        (manuscript / "01_intro.md").write_text(
+            "# Intro\n\nSee [@good_key].\n", encoding="utf-8"
+        )
+        prevalidate_source_markdown(manuscript)
+
+    def test_undefined_citation_blocks_render(self, tmp_path):
+        manuscript = self._make_manuscript(tmp_path)
+        (manuscript / "01_intro.md").write_text(
+            "# Intro\n\nSee [@missing_key] and [@good_key].\n", encoding="utf-8"
+        )
+        with pytest.raises(RenderingError) as excinfo:
+            prevalidate_source_markdown(manuscript)
+        assert "missing_key" in str(excinfo.value)
+        assert "Pre-render validation failed" in str(excinfo.value)
+
+    def test_bare_pipe_in_table_blocks_render(self, tmp_path):
+        manuscript = self._make_manuscript(tmp_path)
+        (manuscript / "01_intro.md").write_text(
+            "| Symbol | Meaning |\n|--------|---------|\n"
+            "| \\|state\\| | bar in cell |\n",
+            encoding="utf-8",
+        )
+        with pytest.raises(RenderingError) as excinfo:
+            prevalidate_source_markdown(manuscript)
+        msg = str(excinfo.value)
+        assert "Pre-render validation failed" in msg
+        assert "01_intro.md" in msg
+
+    def test_explicit_path_list_signature(self, tmp_path):
+        manuscript = self._make_manuscript(tmp_path)
+        md = manuscript / "01_intro.md"
+        md.write_text("Clean text with no citations.\n", encoding="utf-8")
+        prevalidate_source_markdown([md], bib_file=manuscript / "references.bib")

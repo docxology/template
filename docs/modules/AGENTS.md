@@ -11,12 +11,20 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `modules-guide.md` | Overview of all 14 infrastructure modules |
 | `scientific-simulation-guide.md` | Scientific simulation and analysis system |
 | `pdf-validation.md` | PDF validation system documentation |
+| `guides/config-module.md` | Config schemas / templates module |
+| `guides/core-module.md` | Core utilities module |
+| `guides/docker-module.md` | Docker / compose module |
+| `guides/documentation-module.md` | Documentation / figure / glossary module |
 | `guides/integrity-module.md` | Integrity verification module |
 | `guides/llm-module.md` | LLM integration module |
+| `guides/project-module.md` | Project discovery module |
 | `guides/publishing-module.md` | Academic publishing module |
 | `guides/rendering-module.md` | Multi-format rendering module |
 | `guides/reporting-module.md` | Pipeline reporting module |
 | `guides/scientific-module.md` | Scientific computing module |
+| `guides/skills-module.md` | SKILL.md discovery / manifest |
+| `guides/steganography-module.md` | Steganography / provenance module |
+| `guides/validation-module.md` | Validation / QA module (PDF, markdown, CLI) |
 
 ## Key Conventions
 

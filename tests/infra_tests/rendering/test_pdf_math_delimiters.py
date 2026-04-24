@@ -66,10 +66,18 @@ class TestFixMathDelimiters:
         assert r"\label{eq:x}" in result
 
     def test_greek_letter_fix(self):
-        r"""Should fix broken Greek letter + close paren patterns."""
-        content = r"Using \tau\) in equation."
+        r"""``\(\tau)`` (broken closure) should become ``\(\tau\)`` (proper)."""
+        content = r"Using \(\tau) in equation."
         result = fix_math_delimiters(content)
-        assert "tau" in result
+        assert r"\(\tau\)" in result
+        assert r"\(\tau)" not in result
+
+    def test_greek_letter_subscript_fix(self):
+        r"""``\(s_\tau)`` (broken closure on subscript) should become ``\(s_\tau\)``."""
+        content = r"State \(s_\tau) at time tau."
+        result = fix_math_delimiters(content)
+        assert r"\(s_\tau\)" in result
+        assert r"\(s_\tau)" not in result
 
     def test_multiple_display_math_blocks(self):
         """Should fix multiple math blocks independently."""

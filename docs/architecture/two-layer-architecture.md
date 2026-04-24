@@ -11,7 +11,7 @@ This research template implements a clear two-layer architecture separating gene
 | **Location** | `infrastructure/` (root level) | `projects/{name}/src/` (project-specific) |
 | **Purpose** | Generic, reusable build tools | Domain-specific research code |
 | **Scope** | Works with any project | Specific to this research |
-| **Test Coverage** | 60% minimum (currently 83.33% - exceeds stretch goal!) | 90% minimum (currently 100% - coverage!) |
+| **Test Coverage** | 60% minimum for `infrastructure/` | 90% minimum for `projects/{name}/src/` |
 | **Scripts** | `scripts/` (root, generic orchestrators) | `projects/{name}/scripts/` (project orchestrators) |
 | **Tests** | `tests/infra_tests/` (root level) | `projects/{name}/tests/` (project-specific) |
 | **Imports** | `from infrastructure.module import` | `from project.src.module import` |
@@ -52,8 +52,7 @@ infrastructure/
 │   ├── image_manager.py      # Image file management
 │   └── markdown_integration.py # Markdown figure integration
 ├── publishing/                # Publishing tools
-├── literature/               # Literature search
-├── llm/                      # LLM integration
+├── llm/                      # LLM integration (includes literature-oriented workflows)
 ├── rendering/                # Multi-format rendering
 └── scientific/               # Scientific dev tools
 ```
@@ -62,7 +61,7 @@ infrastructure/
 
 - Generic and reusable across projects
 - Handles template infrastructure concerns
-- 60% minimum test coverage (currently achieving 83.33% - exceeds stretch goal!)
+- 60% minimum test coverage for infrastructure (see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md) for measured status)
 - No domain-specific logic
 - Interfaces with project files (manuscript/, output/)
 
@@ -114,7 +113,7 @@ projects/{name}/scripts/
 - Domain-specific and research-focused
 - Implements algorithms and computations
 - Calls infrastructure when needed
-- 90% minimum test coverage (currently achieving 100% - coverage!)
+- 90% minimum test coverage for project `src/` (measure locally or see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md))
 - Follows thin orchestrator pattern
 
 **Usage Pattern:**
@@ -154,7 +153,7 @@ graph TB
         end
         
         subgraph INFRA["infrastructure/"]
-            INFRA_MODS[core/, validation/,<br/>documentation/, publishing/,<br/>literature/, llm/, rendering/,<br/>scientific/]
+            INFRA_MODS[core/, validation/,<br/>documentation/, publishing/,<br/>llm/, rendering/,<br/>scientific/, skills/, steganography/]
         end
     end
     
@@ -236,29 +235,26 @@ from project.src.simulation import SimpleSimulation  # ❌ WRONG
 ### [LAYER 1] Infrastructure Structure
 
 ```
-infrastructure/                # Root level - generic tools
+infrastructure/                # Layer 1 — 13 subpackages (telemetry under core/telemetry/)
 ├── __init__.py
-├── AGENTS.md                  # Infrastructure documentation
+├── AGENTS.md                  # Module layout and APIs
 ├── README.md                  # Quick reference
-├── core/                      # Core utilities
-│   ├── exceptions.py
-│   ├── logging/utils.py
-│   └── config/loader.py
-├── validation/                # Validation tools
-│   ├── pdf_validator.py
-│   ├── markdown_validator.py
-│   └── integrity.py
-├── documentation/             # Documentation tools
-│   ├── glossary_gen.py
-│   ├── figure_manager.py
-│   ├── image_manager.py
-│   └── markdown_integration.py
-├── publishing/                # Publishing tools
-├── literature/                # Literature search
-├── llm/                       # LLM integration
-├── rendering/                 # Multi-format rendering
-└── scientific/                # Scientific dev tools
+├── config/                    # Shared configuration
+├── core/                      # Logging, config, pipeline, checkpoint, security, telemetry/
+├── docker/                    # Container specs
+├── documentation/             # Figure manager, glossary gen
+├── llm/                       # Ollama integration + prompts; literature-oriented workflows
+├── project/                   # Multi-project discovery, validation
+├── publishing/                # Zenodo, arXiv, GitHub release
+├── rendering/                 # PDF, HTML, slides (pandoc + xelatex)
+├── reporting/                 # Pipeline + executive reports
+├── scientific/                # Numerical stability, benchmarking
+├── skills/                    # SKILL.md discovery, manifest generation
+├── steganography/             # PDF hardening, provenance
+└── validation/                # PDF, markdown, integrity, audit
 ```
+
+File-level layout inside each package: see [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md).
 
 ### [LAYER 2] Project Structure
 
@@ -288,17 +284,17 @@ project/                       # Project-specific code
 
 ```
 tests/                         # Root level - infrastructure tests
-├── conftest.py                # Test configuration
-├── infrastructure/            # [LAYER 1] Infrastructure tests
+├── infra_tests/               # [LAYER 1] Infrastructure tests
 │   ├── __init__.py
 │   ├── test_build/
 │   ├── test_validation/
 │   ├── test_documentation/
 │   └── ...
-└── integration/               # Cross-layer tests
-    ├── __init__.py
-    ├── test_integration_pipeline.py
-    └── ...
+├── integration/               # Cross-layer tests
+│   ├── __init__.py
+│   ├── test_integration_pipeline.py
+│   └── ...
+└── helpers/                   # Test utilities
 
 projects/{name}/tests/                 # [LAYER 2] Project tests
 ├── __init__.py

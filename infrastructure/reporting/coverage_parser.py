@@ -302,10 +302,13 @@ def extract_coverage_percentage(
             logger.info(f"✓ Found coverage: {pct:.1f}%")
             return True, pct
 
-    # Fallback to stdout parsing
-    coverage_match = re.search(r"TOTAL\s+.*?\s+(\d+\.\d+)%", stdout_text)
+    # Fallback to stdout parsing (strip ANSI codes so regexes work)
+    from .pytest_output_parser import _strip_ansi
+
+    clean_text = _strip_ansi(stdout_text)
+    coverage_match = re.search(r"TOTAL\s+.*?\s+(\d+\.\d+)%", clean_text)
     if not coverage_match:
-        coverage_match = re.search(r"(\d+\.\d+)%", stdout_text)
+        coverage_match = re.search(r"(\d+\.\d+)%", clean_text)
 
     if coverage_match:
         pct = float(coverage_match.group(1))

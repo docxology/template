@@ -1,7 +1,6 @@
-\beamer@slide {reproducibility-certification}{1}
-\beamer@slide {configuration-provenance}{1}
-\beamer@slide {generated-artifact-registry}{1}
-\beamer@slide {numerical-validation-summary}{1}
-\beamer@slide {convergence-verification}{1}
-\beamer@slide {numerical-stability}{1}
-\beamer@slide {madlib-injection-verification}{1}
+\beamer@slide {configuration-provenance}{3}
+\beamer@slide {generated-artifact-registry}{5}
+\beamer@slide {numerical-validation-summary}{6}
+\beamer@slide {convergence-verification}{6}
+\beamer@slide {numerical-stability}{6}
+\beamer@slide {madlib-injection-verification}{7}

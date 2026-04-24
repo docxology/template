@@ -37,7 +37,7 @@ See [`.github/AGENTS.md`](../.github/AGENTS.md) for full troubleshooting and sec
 - [ ] **Project Coverage**: ≥ 90% (as reported by CI)
 - [ ] **Pipeline Validation**: Full `./run.sh --pipeline` (or specific stages) passed locally.
 - [ ] **Skill manifest** (if `infrastructure/**/SKILL.md` changed): Ran `uv run python -m infrastructure.skills write` and included `.cursor/skill_manifest.json` in the PR.
-- [ ] **fep_lean CI** (only if `projects/fep_lean/**` changed): The **`fep_lean (real gauss + lake)`** job runs when `projects/fep_lean/lean/lean-toolchain` exists; otherwise it is skipped. Confirm expectations for forks without Lean/Open Gauss.
+- [ ] **fep_lean CI** (only if `projects/fep_lean/**` changed): The **`fep_lean (gauss + lake)`** job runs when `projects/fep_lean/lean/lean-toolchain` exists; otherwise it is skipped. Confirm expectations for forks without Lean/Open Gauss.
 
 ---
 

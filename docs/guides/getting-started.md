@@ -59,8 +59,8 @@ By the end of this guide, you'll be able to:
 brew install pandoc
 brew install --cask mactex
 
-# Install Python dependencies
-pip install uv
+# Install uv and Python dependencies
+brew install uv
 uv sync
 ```
 
@@ -69,10 +69,10 @@ uv sync
 ```bash
 # Install system dependencies
 sudo apt-get update
-sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu python3-pip
+sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu
 
-# Install Python dependencies
-pip3 install uv
+# Install uv and Python dependencies
+curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
@@ -104,13 +104,15 @@ The template provides pre-structured manuscript files in the `manuscript/` direc
 ```
 projects/code_project/manuscript/
 ├── preamble.md              # LaTeX styling (don't edit yet)
-├── 01_abstract.md           # Research overview
-├── 02_introduction.md       # Project introduction
-├── 03_methodology.md        # Methods and approach
-├── 04_experimental_results.md  # Results and findings
-├── 05_discussion.md         # Analysis
-├── 06_conclusion.md         # Summary
-└── 99_references.md         # Bibliography
+├── 00_abstract.md           # Research overview
+├── 01_introduction.md       # Project introduction
+├── 02_methodology.md        # Methods and approach
+├── 03_results.md            # Results and findings
+├── 04_conclusion.md         # Summary and future work
+├── 05_experimental_setup.md # Experimental design
+├── 06_reproducibility.md    # Reproducibility details
+├── 07_scope_and_related_work.md # Scope and related work
+└── references.bib           # Bibliography
 ```
 
 ### Edit the Abstract
@@ -118,7 +120,7 @@ projects/code_project/manuscript/
 1. **Open the abstract file**
 
    ```bash
-   vim projects/code_project/manuscript/01_abstract.md
+   vim projects/code_project/manuscript/00_abstract.md
    # Or use your preferred text editor
    ```
 
@@ -202,8 +204,8 @@ projects/code_project/manuscript/
 
 Continue editing other sections:
 
-- **Methodology** (`03_methodology.md`): Your research methods
-- **Results** (`04_experimental_results.md`): Your findings
+- **Methodology** (`02_methodology.md`): Your research methods
+- **Results** (`03_results.md`): Your findings
 - **Discussion** (`05_discussion.md`): Analysis and interpretation
 - **Conclusion** (`06_conclusion.md`): Summary and future work
 

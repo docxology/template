@@ -16,6 +16,7 @@ Exit codes:
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -110,6 +111,53 @@ def main() -> int:
                 return install_missing_packages(missing)
             return all_present
 
+    def maybe_bootstrap_fep_lean_mathlib() -> bool:
+        """If targeting fep_lean and Mathlib .olean cache is incomplete, run bootstrap script."""
+        if args.project != "fep_lean":
+            return True
+        proj = repo_root / "projects" / "fep_lean"
+        lean_dir = proj / "lean"
+        if not lean_dir.is_dir():
+            return True
+        sys.path.insert(0, str(proj / "src"))
+        try:
+            from verification.lean_verifier import LeanVerifier
+        except ImportError:
+            logger.warning("fep_lean: skip Lean bootstrap (verification import failed)")
+            return True
+        ver = LeanVerifier(lean_dir, proj)
+        if not ver.check_lake_available():
+            logger.info("fep_lean: lake/elan not available; skipping Mathlib bootstrap")
+            return True
+        ok, msg = ver.check_mathlib_built()
+        if ok:
+            logger.info("fep_lean Mathlib: %s", msg)
+            return True
+        logger.warning("fep_lean Mathlib not ready: %s", msg)
+        logger.info(
+            "Running one-time Lean/Mathlib bootstrap (~10–15 min). "
+            "To run manually: bash projects/fep_lean/scripts/_maint_bootstrap_lean_toolchain.sh"
+        )
+        script = proj / "scripts" / "_maint_bootstrap_lean_toolchain.sh"
+        if not script.is_file():
+            logger.error("Bootstrap script missing: %s", script)
+            return False
+        result = subprocess.run(
+            ["bash", str(script)],
+            cwd=str(repo_root),
+            check=False,
+            timeout=int(os.environ.get("FEP_LEAN_BOOTSTRAP_TIMEOUT_SEC", "3600")),
+        )
+        if result.returncode != 0:
+            logger.error("Lean bootstrap exited with code %s", result.returncode)
+            return False
+        ok2, msg2 = ver.check_mathlib_built()
+        if not ok2:
+            logger.error("Mathlib still incomplete after bootstrap: %s", msg2)
+            return False
+        logger.info("fep_lean Mathlib after bootstrap: %s", msg2)
+        return True
+
     def check_project_discovery() -> bool:
         """Discover and validate available projects."""
         from infrastructure.project.discovery import discover_projects
@@ -154,6 +202,7 @@ def main() -> int:
         ("Source structure", lambda: verify_source_structure(repo_root, args.project)),
         ("Project discovery", check_project_discovery),
         ("Environment variables", lambda: set_environment_variables(repo_root)),
+        ("fep_lean Lean/Mathlib (optional)", maybe_bootstrap_fep_lean_mathlib),
     ]
 
     results = []

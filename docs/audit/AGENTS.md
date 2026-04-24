@@ -27,7 +27,7 @@ audit report containing:
 - **Executive Summary**: Issue counts by category
 - **Detailed Findings**: Line-by-line issue reports with file paths
 
-`FILEPATH_AUDIT_REPORT.md` is a **dated snapshot** in the same family; prefer freshly written `filepath-audit-report.md` when comparing against the current tree.
+Regenerate with `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md` when you need a snapshot aligned with the current tree.
 
 ### documentation-review-report.md
 

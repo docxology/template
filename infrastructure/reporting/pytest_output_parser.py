@@ -9,9 +9,19 @@ from __future__ import annotations
 import re
 from typing import Any
 
+_ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+
+def _strip_ansi(text: str) -> str:
+    """Remove ANSI escape sequences so regexes match raw text."""
+    return _ANSI_ESCAPE_RE.sub("", text)
+
 
 def parse_pytest_output(stdout: str, stderr: str, exit_code: int) -> dict[str, Any]:
     """Parse pytest stdout/stderr and exit_code into structured test metrics."""
+    stdout = _strip_ansi(stdout)
+    stderr = _strip_ansi(stderr)
+
     results: dict[str, Any] = {
         "passed": 0,
         "failed": 0,

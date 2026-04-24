@@ -1,5 +1,4 @@
 \frametitle{Abstract}
-\protect\phantomsection\label{abstract}
 This paper presents a convergence study of \textbf{fixed-step gradient
 descent} on a convex quadratic, framed as the computational exemplar of
 the \href{https://github.com/docxology/template}{Research Project

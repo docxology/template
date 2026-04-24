@@ -178,16 +178,11 @@ def safe_write_file(filepath: str | Path, content: str) -> None:
 
 ```bash
 # Scan for vulnerabilities in dependencies
-pip install pip-audit
-pip-audit
-
-# Or use safety
-pip install safety
-safety check
-
-# For uv projects
-uv pip check  # Check for conflicts
-uv pip audit  # Check for vulnerabilities
+uv pip check  # Check for dependency conflicts
+# For vulnerability auditing:
+uv tool run pip-audit
+# Or install and run safety:
+uv tool install safety && safety check
 ```
 
 ### Secure Dependency Management

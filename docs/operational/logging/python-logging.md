@@ -9,7 +9,7 @@
 ## Quick Start
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 # Get a logger for your module
 logger = get_logger(__name__)
@@ -48,7 +48,7 @@ LOG_LEVEL=0 uv run python scripts/execute_pipeline.py --project {name} --core-on
 ## Context Managers
 
 ```python
-from infrastructure.core.logging.logging_utils import log_operation, log_timing, log_with_spinner
+from infrastructure.core.logging.utils import log_operation, log_timing, log_with_spinner
 
 # Log operation start and completion
 with log_operation("Processing data", logger):
@@ -69,7 +69,7 @@ with log_with_spinner("Loading model...", logger):
 ## Function Decorators
 
 ```python
-from infrastructure.core.logging.logging_utils import log_function_call
+from infrastructure.core.logging.utils import log_function_call
 
 @log_function_call(logger)
 def process_file(filename: str) -> bool:
@@ -88,7 +88,7 @@ def process_file(filename: str) -> bool:
 ## Utility Functions
 
 ```python
-from logging_utils import log_header, log_progress, log_success
+from utils import log_header, log_progress, log_success
 
 # Section headers
 log_header("STAGE 01: Setup", logger)
@@ -123,7 +123,7 @@ Output:
 
 ```python
 from pathlib import Path
-from logging_utils import setup_logger
+from utils import setup_logger
 
 log_file = Path("output/logs/build.log")
 logger = setup_logger(__name__, log_file=log_file)
@@ -160,7 +160,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
-from logging_utils import get_logger, log_header, log_success
+from utils import get_logger, log_header, log_success
 
 logger = get_logger(__name__)
 
@@ -209,7 +209,7 @@ def process_file(file_path: Path) -> dict:
 
 ```python
 # Setup
-from logging_utils import get_logger, log_operation, log_success
+from utils import get_logger, log_operation, log_success
 logger = get_logger(__name__)
 
 # Levels

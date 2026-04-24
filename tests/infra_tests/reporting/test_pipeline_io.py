@@ -85,6 +85,36 @@ class TestSaveValidationReport:
         assert "PASS" in md
         assert "FAIL" in md
 
+    def test_writes_iso_timestamp_when_absent(self, tmp_path):
+        """``timestamp`` must default to an ISO-formatted string, never null."""
+        results = {"checks": {"pdf_check": True}}
+        saved = save_validation_report(results, tmp_path)
+        data = json.loads(saved["json"].read_text())
+        ts = data.get("timestamp")
+        assert isinstance(ts, str) and ts, "timestamp must be a non-empty string"
+        # Round-trip parse to ISO8601 to confirm well-formedness.
+        from datetime import datetime as _dt
+
+        _dt.fromisoformat(ts)
+
+    def test_preserves_caller_supplied_timestamp(self, tmp_path):
+        """A caller-supplied non-empty timestamp must survive the write."""
+        results = {"checks": {"pdf_check": True}, "timestamp": "2024-01-15T10:00:00"}
+        saved = save_validation_report(results, tmp_path)
+        data = json.loads(saved["json"].read_text())
+        assert data["timestamp"] == "2024-01-15T10:00:00"
+
+    def test_overwrites_none_timestamp(self, tmp_path):
+        """A pre-allocated ``timestamp: None`` placeholder must be replaced."""
+        results = {"checks": {"pdf_check": True}, "timestamp": None}
+        saved = save_validation_report(results, tmp_path)
+        data = json.loads(saved["json"].read_text())
+        ts = data.get("timestamp")
+        assert isinstance(ts, str) and ts
+        from datetime import datetime as _dt
+
+        _dt.fromisoformat(ts)
+
 
 class TestGenerateValidationMarkdown:
     def test_with_checks(self):

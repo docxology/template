@@ -1,0 +1,100 @@
+description: infrastructure -- Python module (274 files)
+includes:
+  - infrastructure/
+  - .github/README.md
+  - AGENTS.md
+  - README.md
+  - coverage_project.json
+  - projects/code_project/output/.checkpoints/pipeline_checkpoint.json
+  - projects/code_project/output/figures/performance_benchmark.png
+  - projects/code_project/output/logs/pipeline.log
+  - projects/code_project/output/pdf/_combined_manuscript.log
+  - projects/code_project/output/pdf/code_project_combined.pdf
+  - projects/code_project/output/reports/output_statistics.json
+  - projects/code_project/output/reports/output_statistics.txt
+  - projects/code_project/output/reports/performance_benchmark.json
+  - projects/code_project/output/reports/test_results.json
+  - projects/code_project/output/reports/test_results.md
+  - projects/code_project/output/reports/validation_report.json
+  - projects/code_project/output/reports/validation_report.md
+  - projects/code_project/output/slides/00_abstract_slides.log
+  - projects/code_project/output/slides/00_abstract_slides.pdf
+  - projects/code_project/output/slides/01_introduction_slides.log
+  - projects/code_project/output/slides/01_introduction_slides.pdf
+  - projects/code_project/output/slides/02_methodology_slides.log
+  - projects/code_project/output/slides/02_methodology_slides.pdf
+  - projects/code_project/output/slides/03_results_slides.log
+  - projects/code_project/output/slides/04_conclusion_slides.log
+excludes:
+  - infrastructure/__pycache__/
+  - "*.pyc"
+context: |
+  ## Stability
+  - __init__.py: stable (12 commits, 192 lines)
+  - __init__.py: volatile (18 commits, 608 lines)
+  - _optional_deps.py: tweaked (6 commits, 41 lines)
+  - _rate_limiting.py: volatile (5 commits, 256 lines)
+  - _validation.py: stable (7 commits, 153 lines)
+  - cli.py: stable (11 commits, 515 lines)
+  - loader.py: volatile (3 commits, 165 lines)
+  - credentials.py: tweaked (12 commits, 103 lines)
+  - exceptions.py: volatile (28 commits, 1257 lines)
+  - inventory.py: volatile (3 commits, 237 lines)
+  From AGENTS.md — 🧪 **Advanced Modules**:
+  The template includes 13 advanced infrastructure subpackages for scientific development:
+  From AGENTS.md — 🔒 Core Utilities (`infrastructure/core/`):
+  Enterprise-grade security and system monitoring.
+  
+  **Key Features:**
+  
+  - **Input Sanitization**: LLM prompt validation and threat detection
+  - **Security Monitoring**: Security event tracking and alerting
+  - **Rate Limiting**: Configurable request rate limiting with monitoring
+  - **Health Checks**: System health monitoring with component-level status
+  - **Security Headers**: HTTP security header implementation
+  
+  **Usage:**
+  
+  ```python
+  from infrastructure.llm.core.sanitization import sanitize_llm_input
+  f
+  From AGENTS.md — 🔬 Scientific Development (`infrastructure/scientific/`):
+  Scientific computing best practices and tools.
+  
+  **Modular Structure:**
+  
+  - `stability.py` - Numerical stability checking
+  - `benchmarking.py` - Performance benchmarking
+  - `documentation.py` - API documentation generation
+  - `validation.py` - Best practices validation
+  - `templates.py` - Research workflow templates
+  
+  **Key Features:**
+  
+  - **Numerical Stability**: Algorithm stability testing
+  - **Performance Benchmarking**: Execution time and memory analysis
+  - **Scientific Documentation**: API documentat
+  CRITICAL: Issues",
+  CRITICAL: issues (F grades)
+  DANGER: ous patterns to block — class-level constant, built once at class definition.
+  WARNING: detection
+  WARNING: s
+  WARNING: s only
+  WARNING: s
+  CRITICAL: issues
+  WARNING: issues
+  This module is used by: projects, scripts, tests
+  Changes here may affect downstream consumers.
+  ## Recent Changes
+  - docs: hub accuracy, pipeline stage counts, anchors, and generated-folder clarity
+  - updates
+  - update
+  - update
+  - update
+related:
+  - projects/.scope
+  - scripts/.scope
+  - tests/.scope
+tags:
+  - infrastructure
+tokens_estimate: 422777

@@ -285,7 +285,7 @@ repos:
 
 ```bash
 # Install pre-commit
-pip install pre-commit
+uv tool install pre-commit
 
 # Install hooks
 pre-commit install

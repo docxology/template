@@ -61,19 +61,20 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[code_project<br/>Optimization Exemplar<br/>~96% coverage · 39 tests]
-        P2[template<br/>Meta-Documentation<br/>~93% coverage · 66 tests]
-        P3[cognitive_case_diagrams<br/>Case diagrams manuscript<br/>large suite · data only]
-        P4[fep_lean<br/>FEP / Lean catalogue<br/>large suite · data only]
+        P1[code_project<br/>Optimization Exemplar]
+        P2[fep_lean<br/>FEP / Lean catalogue<br/>~272 pytest items]
     end
 
     subgraph InProgress["In-Progress Projects (projects_in_progress/)"]
-        IP1[aii_org_and_others<br/>NOT Discovered until promoted]
+        IP1[cognitive_case_diagrams<br/>Compositional case modeling]
+        IP2[template<br/>Meta-documentation]
+        IP3[cogant<br/>Cognitive agent]
+        IP4[act_inf_metaanalysis<br/>Active Inference meta-analysis]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
-        A1[traditional_newspaper<br/>Archived - NOT Discovered]
-        A2[area_handbook<br/>Archived - NOT Discovered]
+        A1[traditional_newspaper<br/>Archived]
+        A2[area_handbook<br/>Archived]
     end
 
     subgraph Infrastructure["Infrastructure Discovery"]
@@ -84,9 +85,10 @@ graph TD
 
     P1 -->|Discovered| DISCOVER
     P2 -->|Discovered| DISCOVER
-    P3 -->|Discovered| DISCOVER
-    P4 -->|Discovered| DISCOVER
     IP1 -.->|NOT Scanned| DISCOVER
+    IP2 -.->|NOT Scanned| DISCOVER
+    IP3 -.->|NOT Scanned| DISCOVER
+    IP4 -.->|NOT Scanned| DISCOVER
     A1 -.->|NOT Scanned| DISCOVER
     A2 -.->|NOT Scanned| DISCOVER
 
@@ -94,8 +96,6 @@ graph TD
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
     PIPELINE -->|Executes| P2
-    PIPELINE -->|Executes| P3
-    PIPELINE -->|Executes| P4
 ```
 
 ### Project Lifecycle
@@ -143,7 +143,7 @@ projects/{name}/
 ├── manuscript/             # Research manuscript (markdown)
 │   ├── config.yaml         # Publication metadata
 │   ├── references.bib      # Bibliography
-│   ├── 01_abstract.md      # Manuscript sections
+│   ├── 00_abstract.md      # Manuscript sections (canonical control-positive example)
 │   └── *.md                # Additional sections
 ├── docs/                   # Modular documentation hub
 │   ├── architecture.md     # Flow and orchestration details
@@ -577,25 +577,11 @@ All projects in this directory comply with the template's development standards 
 
 ### Compliance Verification Results
 
-#### ✅ VERIFICATION COMPLETED - ALL STANDARDS MET
+Current status, coverage, and project roster are documented in `docs/_generated/canonical_facts.md` (updated from discovery and test runs).
 
-#### Testing Standards Results
+All projects follow the standalone paradigm, thin orchestrator pattern, no-mocks policy, and coverage requirements (60% infrastructure, 90% projects).
 
-- **code_project**: ~96% coverage (39 tests), all data-driven ✅
-- **template**: ~93% coverage (66 tests), all data-driven ✅
-- **cognitive_case_diagrams**: large suite (`pytest --collect-only` in project dir), data-driven ✅
-- **Combined**: all active projects under `discover_projects()`, no mocks policy ✅
-
-Authoritative project names: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate with `uv run python scripts/generate_active_projects_doc.py` after layout changes).
-
-#### Documentation Standards Results
-
-- **AGENTS.md**: in all directories ✅
-- **README.md**: in all directories ✅
-- **Docstrings**: 100% coverage - all Python files have docstrings ✅
-- **Type hints**: All public APIs have annotations ✅
-
-#### Code Quality Standards Results
+Authoritative project names: `docs/_generated/active_projects.md` (regenerate with `uv run python scripts/generate_active_projects_doc.py`).
 
 - **Black formatting**: Applied consistently across all projects ✅
 - **Import organization**: Standard library, third-party, local imports properly organized ✅

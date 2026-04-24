@@ -3066,14 +3066,36 @@ def discover_orchestrators(repo_root: Path) -> List[Path]:
 
 #### verify_analysis_outputs (function)
 ```python
-def verify_analysis_outputs(repo_root: Path) -> bool:
+def verify_analysis_outputs(
+    repo_root: Path,
+    project_name: str = "project",
+    project_dir: Path | None = None,
+) -> bool:
     """Verify that analysis generated expected outputs.
 
+    Probes ``output/figures`` and ``output/data`` under the resolved
+    project directory in two passes:
+
+    * **First pass** records ``(dir, exists, file_count)`` for each
+      expected output directory.
+    * **Second pass** logs the result. When at least one expected
+      directory contains files, the "Output directory not yet created"
+      and "Output directory is empty" lines for the *other* directories
+      are downgraded from INFO to DEBUG. This keeps logs quiet for
+      projects whose analysis legitimately produces only one output
+      kind (figures-only, data-only) without hiding the warning when
+      analysis produced nothing at all.
+
     Args:
-        repo_root: Repository root directory
+        repo_root: Repository root directory.
+        project_name: Project directory name (default: ``"project"``).
+        project_dir: Absolute path to the project directory. Defaults
+            to ``repo_root / "projects" / project_name``.
 
     Returns:
-        True if outputs are valid, False otherwise
+        ``True`` if outputs are present or no analysis scripts were
+        expected to run; ``False`` only when scripts exist but every
+        expected output directory is empty or absent.
     """
 ```
 

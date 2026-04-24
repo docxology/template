@@ -306,7 +306,7 @@ graph TD
 |--------|---------|----------------------|-------------|
 | **core.py** | Main rendering orchestration | `RenderManager` - Unified API for all formats | All other modules |
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
-| **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and reveal.js support | latex_utils |
+| **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and reveal.js support; passes `--slide-level=2` and applies `_beamer_allowframebreaks.lua` so long sections split across slides instead of overflowing a single Beamer frame | latex_utils, pandoc Lua filter |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration | pandoc |
 | **poster_renderer.py** | Scientific posters | `PosterRenderer` - Large format PDF | latex_utils |
 | **latex_utils.py** | LaTeX compilation utilities | `compile_latex()` - Multi-pass compilation | LaTeX distribution |

@@ -225,3 +225,82 @@ class TestValidateFigureRegistry:
         assert len(issues) == 2
         assert any("fig:unregistered1" in issue for issue in issues)
         assert any("fig:unregistered2" in issue for issue in issues)
+
+
+class TestListShapeRegistry:
+    """Test that the validator accepts the list-shape registry emitted by
+    project scripts (each item carries a ``label`` field)."""
+
+    def test_validate_list_shape_registry_all_registered(self, tmp_path):
+        """List-shape registry where every reference resolves."""
+        registry_path = tmp_path / "registry.json"
+        registry = [
+            {"filename": "a.png", "path": "figures/a.png", "label": "fig:a"},
+            {"filename": "b.png", "path": "figures/b.png", "label": "fig:b"},
+        ]
+        registry_path.write_text(json.dumps(registry))
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "01_intro.md").write_text(
+            "See \\ref{fig:a} and \\label{fig:b}"
+        )
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is True
+        assert issues == []
+
+    def test_validate_list_shape_registry_unregistered(self, tmp_path):
+        """List-shape registry must still flag unregistered references."""
+        registry_path = tmp_path / "registry.json"
+        registry = [{"filename": "a.png", "label": "fig:a"}]
+        registry_path.write_text(json.dumps(registry))
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "01_intro.md").write_text(
+            "\\ref{fig:a} \\ref{fig:missing}"
+        )
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is False
+        assert any("fig:missing" in issue for issue in issues)
+
+    def test_validate_list_shape_registry_missing_label_field(self, tmp_path, caplog):
+        """Items lacking ``label`` are skipped with a warning, not a crash."""
+        registry_path = tmp_path / "registry.json"
+        registry = [
+            {"filename": "a.png", "label": "fig:a"},
+            {"filename": "orphan.png"},  # no label
+            {"filename": "b.png", "label": "fig:b"},
+        ]
+        registry_path.write_text(json.dumps(registry))
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "01_intro.md").write_text("\\ref{fig:a} \\ref{fig:b}")
+
+        with caplog.at_level("WARNING"):
+            success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is True
+        assert issues == []
+        assert any("without a 'label' field" in rec.message for rec in caplog.records)
+
+    def test_validate_invalid_top_level_type(self, tmp_path):
+        """A JSON top-level scalar yields a clean load error, not a crash."""
+        registry_path = tmp_path / "registry.json"
+        registry_path.write_text("42")
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "01_intro.md").write_text("\\ref{fig:a}")
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is False
+        assert len(issues) == 1
+        assert "unexpected top-level JSON type" in issues[0]
+        assert "int" in issues[0]

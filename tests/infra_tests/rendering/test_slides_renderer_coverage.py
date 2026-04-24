@@ -377,3 +377,132 @@ class TestSlidesRendererIntegration:
 
         # Module should be importable
         assert slides_renderer is not None
+
+
+class TestSlidesMathHeaderInjection:
+    """The Beamer renderer writes _slides_math_header.tex when preamble.md
+    loads unicode-math, and passes it to Pandoc via -H. When unicode-math
+    is absent, no header is written and no -H flag is added.
+    """
+
+    def _make_renderer(self, tmp_path):
+        config = RenderingConfig(
+            output_dir=tmp_path, slides_dir=tmp_path / "slides"
+        )
+        (tmp_path / "slides").mkdir(exist_ok=True)
+        return SlidesRenderer(config)
+
+    def test_helper_writes_header_when_unicode_math_loaded(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\usepackage{unicode-math}\n```\n",
+            encoding="utf-8",
+        )
+        renderer = self._make_renderer(tmp_path)
+        output_dir = tmp_path / "slides"
+        header = renderer._maybe_write_math_header(manuscript, output_dir)
+        assert header is not None
+        assert header.name == "_slides_math_header.tex"
+        content = header.read_text(encoding="utf-8")
+        assert "\\usepackage{unicode-math}" in content
+        assert "\\setmathfont{latinmodern-math.otf}" in content
+
+    def test_helper_returns_none_without_preamble(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        renderer = self._make_renderer(tmp_path)
+        assert renderer._maybe_write_math_header(manuscript, tmp_path / "slides") is None
+
+    def test_helper_returns_none_when_no_unicode_math(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8"
+        )
+        renderer = self._make_renderer(tmp_path)
+        assert renderer._maybe_write_math_header(manuscript, tmp_path / "slides") is None
+
+    def test_beamer_pandoc_cmd_includes_h_flag_when_math_required(
+        self, tmp_path, monkeypatch
+    ):
+        """End-to-end wiring: pandoc receives -H _slides_math_header.tex."""
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\usepackage{unicode-math}\n```\n", encoding="utf-8"
+        )
+        source = manuscript / "00_intro.md"
+        source.write_text("# Slide 1\n\nHello.\n", encoding="utf-8")
+
+        renderer = self._make_renderer(tmp_path)
+        captured: dict[str, list[str]] = {}
+
+        def fake_run(cmd, *args, **kwargs):
+            captured["cmd"] = cmd
+            tex_path = Path(cmd[cmd.index("-o") + 1])
+            tex_path.write_text(
+                "\\documentclass{beamer}\\begin{document}foo\\end{document}\n"
+            )
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
+
+        monkeypatch.setattr(
+            "infrastructure.rendering.slides_renderer.subprocess.run", fake_run
+        )
+
+        def fake_compile(tex, out_dir, **kwargs):
+            (out_dir / f"{tex.stem}.pdf").write_bytes(b"%PDF-1.4 fake\n")
+
+        monkeypatch.setattr(
+            "infrastructure.rendering.slides_renderer.compile_latex", fake_compile
+        )
+
+        output_file = tmp_path / "slides" / "00_intro_slides.pdf"
+        result = renderer._render_beamer_with_paths(
+            source, output_file, manuscript_dir=manuscript, figures_dir=None
+        )
+        assert result == output_file
+        cmd = captured["cmd"]
+        assert "-H" in cmd
+        h_idx = cmd.index("-H")
+        assert cmd[h_idx + 1].endswith("_slides_math_header.tex")
+        assert Path(cmd[h_idx + 1]).exists()
+
+    def test_beamer_pandoc_cmd_skips_h_flag_when_no_math(
+        self, tmp_path, monkeypatch
+    ):
+        """Back-compat: no -H flag when preamble lacks unicode-math."""
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8"
+        )
+        source = manuscript / "00_intro.md"
+        source.write_text("# Slide 1\n", encoding="utf-8")
+
+        renderer = self._make_renderer(tmp_path)
+        captured: dict[str, list[str]] = {}
+
+        def fake_run(cmd, *args, **kwargs):
+            captured["cmd"] = cmd
+            tex_path = Path(cmd[cmd.index("-o") + 1])
+            tex_path.write_text(
+                "\\documentclass{beamer}\\begin{document}foo\\end{document}\n"
+            )
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
+
+        monkeypatch.setattr(
+            "infrastructure.rendering.slides_renderer.subprocess.run", fake_run
+        )
+        monkeypatch.setattr(
+            "infrastructure.rendering.slides_renderer.compile_latex",
+            lambda tex, out_dir, **kw: (out_dir / f"{tex.stem}.pdf").write_bytes(
+                b"%PDF-1.4 fake\n"
+            ),
+        )
+
+        output_file = tmp_path / "slides" / "00_intro_slides.pdf"
+        renderer._render_beamer_with_paths(
+            source, output_file, manuscript_dir=manuscript, figures_dir=None
+        )
+        assert "-H" not in captured["cmd"]

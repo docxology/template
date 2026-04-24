@@ -17,7 +17,7 @@ The `tests/` directory contains tests for the optimization algorithms in `src/`.
 tests/
 ├── __init__.py
 ├── conftest.py               # PYTHONPATH, MPLBACKEND
-├── test_optimizer.py         # All project tests (39 collected)
+├── test_optimizer.py         # All project tests (42 collected)
 ├── PATTERNS.md               # Parametrization notes
 ├── AGENTS.md                 # This technical documentation
 └── README.md                 # Quick reference

@@ -57,7 +57,7 @@ def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
     """Discover manuscript files with proper ordering and filtering.
 
     Filters out non-manuscript files and orders files for proper document structure:
-    1. Main sections: 01_*.md through 09_*.md
+    1. Main sections: digit-prefixed ``00_*.md`` through ``09_*.md`` (lexicographic stem order)
     2. Supplemental: S01_*.md through S0N_*.md
     3. Glossary: 98_*.md
     4. References: 99_*.md (always last)

@@ -6,14 +6,13 @@ This directory contains the **Layer 2** domain-specific research projects. Each 
 
 ## 📊 Active Projects
 
-| Project        | Domain                    | Tests | Coverage | Status |
-|----------------|---------------------------|-------|----------|--------|
-| `code_project` | Optimization research     | 45    | 100%     | ✅ Active |
-| `template`     | Meta-documentation        | 65    | 94.4%    | ✅ Active |
-| `cognitive_case_diagrams` | Case / diagrams    | large | ≥90% `src/` | ✅ Active |
-| `fep_lean`     | FEP / Lean catalogue      | ~180  | ≥89% `src/` | ✅ Active |
+| Project           | Domain                          | Status |
+|-------------------|---------------------------------|--------|
+| `code_project`         | Optimization research exemplar  | ✅ Active |
+| `fep_lean`             | FEP / Lean4 formalization       | ✅ Active |
+| `act_inf_metaanalysis` | Active Inference meta-analysis  | ✅ Active |
 
-Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md).
+Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerated from `discover_projects()`).
 
 ## 📂 Structure Per Project
 
@@ -37,5 +36,4 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 - [AGENTS.md](AGENTS.md) — Technical documentation for the projects directory
 - [README.md](README.md) — Quick reference and getting started
 - [PROJECTS_PARADIGM.md](PROJECTS_PARADIGM.md) — Standalone project paradigm philosophy
-- [code_project/AGENTS.md](code_project/AGENTS.md) — Master exemplar technical docs
-- [template/AGENTS.md](template/AGENTS.md) — Meta-documentation project docs
+- [code_project/AGENTS.md](code_project/AGENTS.md) — Canonical control-positive exemplar technical docs

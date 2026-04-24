@@ -10,7 +10,7 @@
 ## Key Features
 
 - **SKILL.md Discovery**: Scans infrastructure modules for `SKILL.md` files with YAML frontmatter
-- **Manifest Generation**: Produces `.cursor/skill_manifest.json` for IDE agent routing
+- **Manifest Generation**: Writes the default manifest at repo-root `.cursor/skill_manifest.json` when you run `uv run python -m infrastructure.skills write` (the `.cursor/` directory is created if needed)
 - **Manifest Validation**: Checks if manifest matches current on-disk skills
 - **MCP Alignment**: Skill descriptors follow Model Context Protocol conventions
 
@@ -35,7 +35,7 @@ for skill in skills:
 from pathlib import Path
 from infrastructure.skills import write_skill_manifest
 
-# Generate .cursor/skill_manifest.json
+# Default: <repo>/.cursor/skill_manifest.json
 path = write_skill_manifest(Path("."))
 print(f"Manifest written to {path}")
 ```

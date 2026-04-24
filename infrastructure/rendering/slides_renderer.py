@@ -1,4 +1,29 @@
-"""Slides rendering module."""
+"""Slides rendering module.
+
+Per-format preamble coverage
+----------------------------
+This renderer drives Pandoc directly with ``-t beamer`` (or ``revealjs``)
+and intentionally **does not** route through
+:func:`infrastructure.rendering._pdf_combined_renderer.inject_latex_preamble`
+— Beamer ships its own document class, so the manuscript's
+``geometry`` / ``hyperref`` / ``titlepage`` machinery would clash.
+
+The math-font subset *is* propagated. Whenever ``preamble.md`` loads
+``unicode-math``, :func:`_maybe_write_math_header` calls
+:func:`infrastructure.rendering._pdf_latex_helpers.extract_math_font_preamble`
+to write a minimal ``_slides_math_header.tex`` containing only
+``\\usepackage{unicode-math}`` plus the active ``\\setmathfont`` (with
+the same ``latinmodern-math.otf`` auto-fallback as the combined-PDF
+path), and passes it to Pandoc via ``-H header.tex``. This gives Beamer
+slides clean rendering of ``\\mid``, ``\\ll``, ``\\gg``, etc. without
+inheriting the rest of the combined-PDF preamble.
+
+The combined-PDF gate
+(:func:`infrastructure.rendering._pdf_combined_renderer.prevalidate_source_markdown`)
+is intentionally *not* invoked here because slides typically render a
+single section in isolation and have a different acceptable-citation
+set than the full manuscript.
+"""
 
 from __future__ import annotations
 
@@ -8,6 +33,10 @@ from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._pdf_latex_helpers import (
+    extract_math_font_preamble,
+    extract_preamble,
+)
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 
@@ -102,7 +131,13 @@ class SlidesRenderer:
         # Create temporary LaTeX file
         temp_tex = output_dir / f"{source_file.stem}_slides.tex"
 
-        # Build pandoc command to convert markdown to LaTeX
+        # Build pandoc command to convert markdown to LaTeX.
+        # ``--slide-level=2`` makes every h2 start its own Beamer frame
+        # (h1 becomes a section break) so a single h1 with several h2
+        # subsections renders as several slides instead of one huge
+        # overflowing frame. Combined with the allowframebreaks Lua
+        # filter below, even h2 sections with long body text split
+        # cleanly across multiple slides.
         cmd = [
             self.config.pandoc_path,
             str(source_file),
@@ -111,7 +146,24 @@ class SlidesRenderer:
             "-o",
             str(temp_tex),
             "--standalone",
+            "--slide-level=2",
         ]
+
+        # Apply the allowframebreaks Lua filter so that long sections
+        # without h2 sub-headings still split across slides instead of
+        # triggering xelatex driver code 256 on overfull vboxes.
+        allowframebreaks_filter = Path(__file__).with_name(
+            "_beamer_allowframebreaks.lua"
+        )
+        if allowframebreaks_filter.exists():
+            cmd.extend(["--lua-filter", str(allowframebreaks_filter)])
+
+        # Inject the math-font subset of the manuscript preamble so
+        # \mid, \ll, \gg etc. render cleanly in slide decks without
+        # pulling in the full combined-PDF preamble.
+        math_header = self._maybe_write_math_header(manuscript_dir, output_dir)
+        if math_header is not None:
+            cmd.extend(["-H", str(math_header)])
 
         # Add resource paths if provided
         if manuscript_dir:
@@ -204,6 +256,41 @@ class SlidesRenderer:
                     "log_file": str(log_file) if log_file.exists() else None,
                 },
             ) from e
+
+    def _maybe_write_math_header(
+        self, manuscript_dir: Path | None, output_dir: Path
+    ) -> Path | None:
+        """Write a Pandoc ``-H`` header file for Unicode math, if needed.
+
+        Looks up ``preamble.md`` next to the manuscript, extracts any
+        ``\\usepackage{unicode-math}`` block, and writes a minimal
+        ``_slides_math_header.tex`` next to the slide output. The file is
+        rewritten on every render so it always reflects the current
+        ``preamble.md``; consumers should treat it as a build artefact.
+
+        Returns the header path when a snippet was produced, or ``None``
+        when ``preamble.md`` doesn't load ``unicode-math`` (Beamer keeps
+        its default fonts in that case).
+        """
+        if manuscript_dir is None:
+            return None
+        preamble_file = manuscript_dir / "preamble.md"
+        if not preamble_file.exists():
+            return None
+
+        preamble = extract_preamble(preamble_file)
+        snippet = extract_math_font_preamble(preamble)
+        if snippet is None:
+            logger.debug(
+                "preamble.md does not load unicode-math; skipping slides math header"
+            )
+            return None
+
+        output_dir.mkdir(parents=True, exist_ok=True)
+        header_path = output_dir / "_slides_math_header.tex"
+        header_path.write_text(snippet, encoding="utf-8")
+        logger.debug(f"Wrote slides math header: {header_path}")
+        return header_path
 
     def _fix_figure_paths(self, tex_content: str, output_dir: Path, figures_dir: Path) -> str:
         """Fix figure paths in LaTeX content for proper compilation.

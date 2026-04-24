@@ -608,8 +608,7 @@ uv run pytest projects/code_project/tests/test_correlation.py --cov=projects.cod
 
 # 2. Generate specific figures
 echo "Generating figures..."
-uv run python projects/code_project/scripts/correlation_analysis.py
-uv run python projects/code_project/scripts/statistics_figure.py
+uv run python projects/code_project/scripts/optimization_analysis.py
 
 # 3. Build specific sections
 # NOTE: paths below are illustrative — substitute your actual manuscript section.

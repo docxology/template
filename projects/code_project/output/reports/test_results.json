@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-12T12:53:31.197729",
+  "timestamp": "2026-04-24T11:25:47.609245",
   "infrastructure": {},
   "project": {
     "passed": 0,
@@ -7,7 +7,7 @@
     "skipped": 0,
     "total": 0,
     "warnings": 0,
-    "exit_code": 1,
+    "exit_code": 0,
     "discovery_count": 0,
     "collection_errors": 0,
     "execution_phases": {},
@@ -19,6 +19,6 @@
     "total_failed": 0,
     "total_skipped": 0,
     "total_tests": 0,
-    "all_passed": false
+    "all_passed": true
   }
 }

@@ -678,14 +678,28 @@ def validate_output_structure(output_dir: Path) -> Dict:
 
 #### validate_figure_registry (function)
 ```python
-def validate_figure_registry(registry_path: Path) -> Dict[str, Any]:
-    """Validate figure registry integrity.
+def validate_figure_registry(
+    registry_path: Path, manuscript_dir: Path
+) -> tuple[bool, list[str]]:
+    """Validate that every ``\\ref{}`` / ``\\label{}`` figure key in
+    ``manuscript_dir`` is present in the registry at ``registry_path``.
 
-    Args:
-        registry_path: Path to figure registry file
+    Two registry shapes are accepted, both encoding the same set of labels:
+
+    * **Dict shape** — ``{"fig:label": {...}, ...}`` (emitted by
+      :class:`infrastructure.documentation.figure_manager.FigureManager`).
+    * **List shape** — ``[{"label": "fig:label", ...}, ...]`` (emitted by
+      project-side scripts that produce a flat manifest, e.g.
+      ``projects/cognitive_case_diagrams/scripts/generate_diagrams.py``).
+
+    Items in the list shape that lack a ``label`` field are skipped with a
+    warning rather than aborting validation; an unexpected top-level JSON
+    type produces a single descriptive load error.
 
     Returns:
-        Validation results dictionary
+        ``(success, issues)`` — ``success`` is ``True`` iff every reference
+        resolves; ``issues`` is the list of unresolved labels (or a single
+        load-error string).
     """
 ```
 

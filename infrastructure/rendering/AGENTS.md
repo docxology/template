@@ -458,6 +458,98 @@ class PosterRenderer:
         """
 ```
 
+### _pdf_latex_helpers.py
+
+#### extract_preamble (function)
+```python
+def extract_preamble(preamble_file: Path) -> str:
+    """Extract LaTeX preamble from a markdown ```latex ...``` fence.
+
+    When the extracted preamble loads ``unicode-math`` without a
+    ``\\setmathfont``, a default ``\\setmathfont{latinmodern-math.otf}``
+    is auto-appended (see :func:`ensure_setmathfont`) so prose math
+    glyphs (e.g. ``\\mid``, ``\\ll``, ``\\gg``) render through a math
+    font instead of falling back to lmroman.
+    """
+```
+
+#### ensure_setmathfont (function)
+```python
+def ensure_setmathfont(preamble: str, math_font: str = "latinmodern-math.otf") -> str:
+    """Append a default ``\\setmathfont`` when ``unicode-math`` is loaded
+    without one. No-op when ``unicode-math`` is absent or the user already
+    declared a ``\\setmathfont`` (any font, any options). Returns the
+    preamble string unchanged in those cases."""
+```
+
+### prevalidate_source_markdown (function — `_pdf_combined_renderer.py`)
+```python
+def prevalidate_source_markdown(
+    source: Path | list[Path] | list[str],
+    repo_root: Path | None = None,
+    bib_file: Path | None = None,
+) -> None:
+    """Hard-gate the combined-PDF render on source-markdown integrity.
+
+    Runs validate_pandoc_pitfalls (bare ``|word|``, ``\\|`` in tables) and
+    validate_citations (every ``[@key]`` resolves in references.bib) over
+    the actual source files about to be rendered. Both classes of finding
+    are promoted to render-blockers — pitfall warnings materialise
+    downstream as silent ``Missing character`` warnings + ``U+FFFD`` glyphs
+    in the PDF, exactly the failure mode this gate exists to prevent.
+
+    Raises:
+        RenderingError: when any blocker is found, with file path and line
+            range for every occurrence so the editor can jump straight to
+            the problem in the source markdown.
+    """
+```
+
+### Per-format preamble & gate coverage
+
+| Renderer | `extract_preamble` / `ensure_setmathfont` | `prevalidate_source_markdown` | Lua filters |
+|----------|-------------------------------------------|-------------------------------|-------------|
+| `PDFRenderer.render_combined` (xelatex)    | ✅ full preamble via `inject_latex_preamble` | ✅ runs before Pandoc | — |
+| `SlidesRenderer.render` (Beamer)           | ✅ math fonts only via `extract_math_font_preamble` (`-H _slides_math_header.tex`) | ❌ single-section scope | ✅ `_beamer_allowframebreaks.lua` |
+| `SlidesRenderer.render` (Reveal.js)        | ❌ N/A (HTML output)                 | ❌ HTML tolerates Unicode | — |
+| `WebRenderer` (HTML)                       | ❌ N/A (no LaTeX preamble)           | ❌ HTML tolerates Unicode | — |
+
+`SlidesRenderer` invokes Pandoc directly, so the *full* combined-PDF
+preamble (geometry, hyperref, titlepage) is intentionally bypassed —
+those packages would clash with Beamer's document class. Only the
+math-font subset is propagated, via
+[`extract_math_font_preamble`](_pdf_latex_helpers.py) and
+`SlidesRenderer._maybe_write_math_header`, which write a minimal
+`_slides_math_header.tex` next to the slide deck and pass it to Pandoc
+through `-H header.tex`. This gives slides the same `\mid` / `\ll` /
+`\gg` rendering as the combined PDF without the rest of the preamble.
+
+The pre-render gate is also skipped because slides typically render a
+single section in isolation with a different acceptable-citation set
+than the full manuscript.
+
+#### Beamer overflow handling
+
+Pandoc's Beamer writer wraps each section in a single
+`\begin{frame}…\end{frame}`. When a markdown source has long sections
+without h2 sub-breaks the resulting frame can overflow its vbox by
+thousands of points; xelatex then aborts with driver code 256 and
+leaves a 15-byte PDF stub on disk. `SlidesRenderer._render_beamer_with_paths`
+defends against this on two complementary axes:
+
+1. **`--slide-level=2`**: forces every h2 heading to start its own frame
+   (h1 becomes a section divider). A single h1 with several h2
+   subsections renders as several slides instead of one massive
+   overflowing frame.
+2. **`--lua-filter _beamer_allowframebreaks.lua`**: the filter tags
+   every h1/h2 with the `allowframebreaks` class, so Pandoc emits
+   `\begin{frame}[allowframebreaks]` and Beamer splits any remaining
+   long h2 across slides automatically.
+
+The Lua filter is applied defensively (only when the file is present),
+so removing it falls back to the previous behaviour without breaking
+the renderer.
+
 ### latex_utils.py
 
 #### compile_latex (function)

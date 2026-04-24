@@ -7,7 +7,7 @@ The Infrastructure layer provides reusable, modular tools for building, validati
 ## Modular Architecture (v2.1)
 
 The infrastructure has been reorganized into focused modules grouping related functionalities.
-Each subpackage has a `SKILL.md` file (YAML frontmatter) for agent skill discovery in Cursor, Claude Code, and similar tools—see also the canonical list in `infrastructure/SKILL.md` and the machine-readable manifest `.cursor/skill_manifest.json` (maintained by `infrastructure/skills/`). In this repository, `.cursor/rules/infrastructure-skills.mdc` applies when working under `infrastructure/` (globs `infrastructure/**`), and `.cursor/rules/skill-manifest.mdc` is always on for the manifest pointer.
+Each subpackage has a `SKILL.md` file (YAML frontmatter) for agent skill discovery in Cursor, Claude Code, and similar tools—see also the canonical list in `infrastructure/SKILL.md` and the machine-readable manifest `.cursor/skill_manifest.json` (maintained by `infrastructure/skills/`).
 
 ```text
 infrastructure/
@@ -92,7 +92,7 @@ infrastructure/
 │   ├── publish_cli.py       # Publishing-oriented CLI wrapper
 │   └── SKILL.md, AGENTS.md, README.md
 ├── reporting/      # Pipeline reporting & error aggregation
-│   ├── pipeline_reporter.py  # Pipeline report generation
+│   ├── report_generator.py  # Pipeline report generation
 │   ├── error_aggregator.py   # Error collection & categorization
 │   ├── executive_reporter.py # Cross-project summaries
 │   ├── _dashboard_matplotlib.py # Dashboard orchestrator + re-exports

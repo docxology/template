@@ -38,7 +38,7 @@ graph TD
     end
 
     subgraph "Template Ecosystem"
-        Tests["tests/ (39 tests, ~96% src)"]:::docs
+        Tests["tests/ (42 tests, ~96% src)"]:::docs
         Config["config.yaml & preamble.md"]:::docs
         
         subgraph "`infrastructure/`"

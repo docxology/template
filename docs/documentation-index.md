@@ -2,6 +2,8 @@
 
 This index lists documentation files in the Research Project Template by category.
 
+**Project layout:** `projects/` is a **rotating** set of workspaces. The only path **guaranteed** for documentation examples is [`projects/code_project/`](../projects/code_project/). Authoritative current names: [`_generated/active_projects.md`](_generated/active_projects.md).
+
 ## Quick start by persona
 
 ### New user / content creator
@@ -84,8 +86,8 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration reference
 - **[../.github/README.md](../.github/README.md)** - **GitHub**: Actions workflows, Dependabot, issue/PR templates, mirroring CI locally
 - **[_generated/](_generated/README.md)** — folder policy; **[_generated/AGENTS.md](_generated/AGENTS.md)** — technical notes for this directory (hand-maintained). **Only** **[_generated/active_projects.md](_generated/active_projects.md)** is produced by `generate_active_projects_doc.py`; it is the single source of truth for active `projects/` names (do not copy that roster elsewhere; default path examples to [`projects/code_project/`](../projects/code_project/))
-- **Agent skills manifest** - [`.cursor/rules/skill-manifest.mdc`](../.cursor/rules/skill-manifest.mdc) (editor rule); machine list [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json). Regenerate: `uv run python -m infrastructure.skills write` · validate: `uv run python -m infrastructure.skills check`
-- **[opengauss.md](opengauss.md)** - Disambiguation: math-inc Open Gauss CLI (`gauss`) vs Huawei DBMS; detail under [`projects/fep_lean/docs/opengauss.md`](../projects/fep_lean/docs/opengauss.md)
+- **Agent skills manifest** — `uv run python -m infrastructure.skills write` (default output: `.cursor/skill_manifest.json`) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
+- **Open Gauss naming** — [`projects/fep_lean/docs/opengauss.md`](../projects/fep_lean/docs/opengauss.md) (math-inc Open Gauss CLI `gauss` vs Huawei DBMS)
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 
 ### Quick Reference
@@ -163,7 +165,9 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ### Per-Module Guides (`modules/guides/`)
 
+- **[modules/guides/config-module.md](modules/guides/config-module.md)**
 - **[modules/guides/core-module.md](modules/guides/core-module.md)**
+- **[modules/guides/docker-module.md](modules/guides/docker-module.md)**
 - **[modules/guides/documentation-module.md](modules/guides/documentation-module.md)**
 - **[modules/guides/integrity-module.md](modules/guides/integrity-module.md)**
 - **[modules/guides/llm-module.md](modules/guides/llm-module.md)**
@@ -184,6 +188,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and stage reference
 - **[.github/README.md](../.github/README.md)** - Repository CI/CD and contribution automation
+- **fep_lean / CI paths** — Use [`projects/fep_lean/`](../projects/fep_lean/) when listed under [`_generated/active_projects.md`](_generated/active_projects.md); WIP copies live under `projects_in_progress/` only when you place them there
 
 ### Build & dependency docs (`operational/build/`)
 
@@ -197,7 +202,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 ### Configuration & Performance (`operational/config/`)
 
 - **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars; paths under `projects/fep_lean/`)
-- **[opengauss.md](opengauss.md)** - Open Gauss naming note → [`projects/fep_lean/docs/opengauss.md`](../projects/fep_lean/docs/opengauss.md)
+- **[projects/fep_lean/docs/opengauss.md](../projects/fep_lean/docs/opengauss.md)** - Open Gauss naming (`gauss` CLI vs Huawei DBMS) — same target as the Open Gauss entry near line 90; listed twice intentionally (theme list + file table)
 - **[operational/config/checkpoint-resume.md](operational/config/checkpoint-resume.md)** - Checkpoint system
 - **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance tuning
 
@@ -277,7 +282,6 @@ docs/
 ├── CLOUD_DEPLOY.md                     # Headless / cloud deployment
 ├── PAI.md                              # PAI context for agents
 ├── RUN_GUIDE.md                        # Pipeline orchestration reference
-├── opengauss.md                        # Open Gauss (gauss CLI) disambiguation
 ├── rules/                              # Development standards (AGENTS, README, topic guides)
 ├── _generated/                         # active_projects.md (generated); README + AGENTS (maintainer)
 │
@@ -291,9 +295,14 @@ docs/
 │   ├── figures-and-analysis.md         # Levels 4-6
 │   ├── testing-and-reproducibility.md  # Levels 7-9
 │   ├── extending-and-automation.md     # Levels 10-12
-│   └── new-project-setup.md            # Setup checklist + pitfalls
+│   ├── new-project-setup.md            # Setup checklist + pitfalls
+│   ├── new-project-one-shot-prompt.md
+│   ├── llm-integration-guide.md
+│   ├── publishing-guide.md
+│   └── secure-research-guide.md
 │
 ├── architecture/                       # Architecture documentation
+│   ├── AGENTS.md, README.md
 │   ├── two-layer-architecture.md       # Full architecture guide
 │   ├── thin-orchestrator-summary.md    # Pattern implementation
 │   ├── decision-tree.md               # Code placement decisions
@@ -344,7 +353,7 @@ docs/
 │   ├── modules-guide.md
 │   ├── scientific-simulation-guide.md
 │   ├── pdf-validation.md
-│   └── guides/ (12 per-module guides)
+│   └── guides/ (14 per-module guides)
 │
 ├── development/                        # Development & contribution (+ README, AGENTS)
 │   ├── contributing.md, code-of-conduct.md

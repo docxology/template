@@ -1,14 +1,21 @@
 # tests/ - Test Suite
 
-The `tests/` tree covers infrastructure modules, integration behavior, and project-specific code. Tests use real data, real subprocesses, and real services when available.
+The `tests/` tree covers infrastructure modules and integration behavior. Project-specific tests live under `projects/{name}/tests/`. All tests use real data, real subprocesses, and real services — **no mocks** (`MagicMock`, `mocker.patch`, `unittest.mock`) anywhere.
 
 ## Running Tests
 
 ```bash
-uv run pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
-uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
+# Infrastructure tests (≥60% coverage floor)
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
+
+# Project tests — control positive exemplar (≥90% coverage floor)
+uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+
+# Integration tests
 uv run pytest tests/integration/ -v
+
+# Full infrastructure + coverage report
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 ```
 
 ## Layout
