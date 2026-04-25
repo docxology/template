@@ -179,6 +179,30 @@ class TestValidateRootOutputStructure:
         assert "test_project" in result["project_folders"]
         assert result["invalid_folders"] == []
 
+    def test_valid_nested_program_folder_only(self, tmp_path):
+        """Nested project outputs keep their top-level program directory."""
+        from infrastructure.validation.output.validator import validate_root_output_structure
+
+        output_dir = tmp_path / "output"
+        output_dir.mkdir()
+
+        project_dir = tmp_path / "projects" / "my_program" / "nested_project"
+        (project_dir / "manuscript").mkdir(parents=True)
+        (project_dir / "manuscript" / "config.yaml").write_text("paper:\n  title: Test")
+        (project_dir / "src").mkdir()
+        (project_dir / "src" / "__init__.py").write_text("")
+        (project_dir / "tests").mkdir()
+        (project_dir / "tests" / "__init__.py").write_text("")
+        (project_dir / "output").mkdir()
+
+        (output_dir / "my_program" / "nested_project").mkdir(parents=True)
+
+        result = validate_root_output_structure(tmp_path)
+
+        assert result["valid"] is True
+        assert "my_program" in result["project_folders"]
+        assert result["invalid_folders"] == []
+
     def test_invalid_root_level_directories(self, tmp_path):
         """Test validation with invalid root-level directories."""
         from infrastructure.validation.output.validator import validate_root_output_structure
@@ -303,6 +327,20 @@ class TestValidateRootOutputStructure:
         result = validate_root_output_structure(tmp_path)
 
         assert result["valid"] is True
+
+    def test_multi_project_report_dirs_ignored(self, tmp_path):
+        """Multi-project report folders are valid root output entries."""
+        from infrastructure.validation.output.validator import validate_root_output_structure
+
+        output_dir = tmp_path / "output"
+        output_dir.mkdir()
+        (output_dir / "multi_project_summary").mkdir()
+        (output_dir / "executive_summary").mkdir()
+
+        result = validate_root_output_structure(tmp_path)
+
+        assert result["valid"] is True
+        assert result["invalid_folders"] == []
 
 
 class TestCollectDetailedValidationResults:
@@ -674,6 +712,42 @@ class TestValidateOutputStructure:
 
         assert result["valid"] is True
         assert len(result["missing_files"]) == 0
+
+    def test_validate_nested_source_output_structure(self, tmp_path):
+        """Source output validation detects qualified project names."""
+        project_output_dir = (
+            tmp_path / "projects" / "my_program" / "nested_project" / "output"
+        )
+        pdf_dir = project_output_dir / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / "nested_project_combined.pdf").write_bytes(b"PDF" * 10000)
+
+        for subdir in ["web", "slides", "figures", "data", "reports"]:
+            subdir_path = project_output_dir / subdir
+            subdir_path.mkdir()
+            (subdir_path / "file.txt").write_text("content")
+
+        result = validate_output_structure(project_output_dir)
+
+        assert result["valid"] is True
+        assert len(result["missing_files"]) == 0
+
+    def test_validate_nested_copied_output_structure(self, tmp_path):
+        """Copied nested output validation uses the qualified output path."""
+        project_output_dir = tmp_path / "output" / "my_program" / "nested_project"
+        pdf_dir = project_output_dir / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (project_output_dir / "nested_project_combined.pdf").write_bytes(b"PDF" * 10000)
+
+        for subdir in ["web", "slides", "figures", "data", "reports"]:
+            subdir_path = project_output_dir / subdir
+            subdir_path.mkdir()
+            (subdir_path / "file.txt").write_text("content")
+
+        result = validate_output_structure(project_output_dir)
+
+        assert result["valid"] is True
+        assert result["directory_structure"]["project_combined_pdf"]["exists"] is True
 
     def test_validate_multiple_issues(self, tmp_path):
         """Test validation with multiple issues."""

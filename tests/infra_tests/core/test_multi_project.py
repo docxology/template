@@ -84,7 +84,7 @@ sys.exit(0)
 def _create_test_project(repo_root: Path, project_name: str) -> None:
     """Create a minimal test project structure."""
     project_dir = repo_root / "projects" / project_name
-    project_dir.mkdir()
+    project_dir.mkdir(parents=True)
 
     # Create required directories
     (project_dir / "src").mkdir()
@@ -297,6 +297,51 @@ class TestMultiProjectOrchestrator:
             # Verify project has results
             assert "project1" in result.project_results
             assert len(result.project_results["project1"]) > 0
+
+    def test_execute_nested_project_uses_qualified_name_and_real_path(self):
+        """Nested projects run with program/name while resolving under projects/."""
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            repo_root = _create_test_repo_structure(Path(tmp_dir))
+            qualified_name = "my_program/nested_project"
+            _create_test_project(repo_root, qualified_name)
+
+            args_log = repo_root / "stage_args.txt"
+            for script_path in (repo_root / "scripts").glob("*.py"):
+                script_path.write_text(
+                    """
+import sys
+from pathlib import Path
+
+Path("stage_args.txt").open("a", encoding="utf-8").write(" ".join(sys.argv) + "\\n")
+sys.exit(0)
+"""
+                )
+
+            project = ProjectInfo(
+                name="nested_project",
+                path=repo_root / "projects" / qualified_name,
+                has_src=True,
+                has_tests=True,
+                has_scripts=True,
+                has_manuscript=True,
+                metadata={},
+                program="my_program",
+            )
+            config = MultiProjectConfig(
+                repo_root=repo_root,
+                projects=[project],
+                run_infra_tests=False,
+            )
+            orchestrator = MultiProjectOrchestrator(config)
+
+            result = orchestrator.execute_all_projects_core_no_infra()
+
+            assert result.successful_projects == 1
+            assert qualified_name in result.project_results
+            assert (repo_root / "projects" / qualified_name / "output" / "logs").exists()
+            assert (repo_root / "output" / qualified_name / "logs").exists()
+            assert args_log.exists()
+            assert f"--project {qualified_name}" in args_log.read_text(encoding="utf-8")
 
     def test_execute_all_projects_full_no_infra_success(self):
         """Test successful full pipeline execution without infrastructure tests."""

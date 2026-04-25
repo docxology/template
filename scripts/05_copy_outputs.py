@@ -82,7 +82,7 @@ def main() -> int:
         from infrastructure.project.discovery import discover_projects
 
         projects = discover_projects(repo_root)
-        project_names = [p.name for p in projects]
+        project_names = [p.qualified_name for p in projects]
         if not clean_root_output_directory(repo_root, project_names):
             logger.error("Failed to clean root output directory")
             return 1

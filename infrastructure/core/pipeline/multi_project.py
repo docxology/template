@@ -23,6 +23,15 @@ if TYPE_CHECKING:
 logger = get_logger(__name__)
 
 
+def _projects_dir_for_project(repo_root: Path, project_path: Path) -> str:
+    """Return the repository-relative projects root for a discovered project."""
+    try:
+        relative_parts = project_path.resolve().relative_to(repo_root.resolve()).parts
+    except ValueError:
+        return "projects"
+    return relative_parts[0] if relative_parts else "projects"
+
+
 @dataclass
 class MultiProjectConfig:
     """Configuration for multi-project execution."""
@@ -148,12 +157,16 @@ class MultiProjectOrchestrator:
 
             try:
                 with log_operation(f"Pipeline execution for {project_name}"):
-                    # Create pipeline config — derive projects_dir from the project's actual path
-                    # so that projects in projects_in_progress/ or projects_archive/ work correctly.
+                    # Preserve qualified names for nested projects.  The
+                    # projects_dir remains the top-level pool (projects or
+                    # projects_in_progress); project_name carries any program
+                    # subpath, e.g. cognitive_integrity/cogsec_multiagent_1_theory.
                     pipeline_config = PipelineConfig(
-                        project_name=project.name,
+                        project_name=project_name,
                         repo_root=self.config.repo_root,
-                        projects_dir=project.path.parent.name,  # e.g. 'projects'  # noqa: E501
+                        projects_dir=_projects_dir_for_project(
+                            self.config.repo_root, project.path
+                        ),
                         skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode  # noqa: E501
                         skip_llm=not run_llm,
                         total_stages=10 if run_llm else 8,

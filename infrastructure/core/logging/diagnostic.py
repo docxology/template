@@ -59,7 +59,13 @@ class DiagnosticEvent:
 class DiagnosticReporter:
     """Centralized collector and formatter for diagnostic events."""
 
-    def __init__(self, project_name: str, output_dir: Path | None = None):
+    def __init__(
+        self,
+        project_name: str,
+        output_dir: Path | None = None,
+        *,
+        load_existing: bool = True,
+    ):
         """Set up the reporter, pre-loading any events saved from a prior run.
 
         ``output_dir`` is optional; when omitted events are held in memory only
@@ -68,7 +74,8 @@ class DiagnosticReporter:
         self.project_name: str = project_name
         self.output_dir: Path | None = output_dir
         self.events: list[DiagnosticEvent] = []
-        self._load_existing_events()
+        if load_existing:
+            self._load_existing_events()
 
     def _load_existing_events(self) -> None:
         """Pre-populate ``self.events`` from the on-disk report of a prior run.
@@ -126,6 +133,16 @@ class DiagnosticReporter:
         event = DiagnosticEvent(severity=DiagnosticSeverity.INFO, category=category, message=message, **kwargs)
         self.record(event)
         return event
+
+    def clear_report(self) -> None:
+        """Remove any persisted diagnostic report for a fresh pipeline stage."""
+        if not self.output_dir:
+            return
+        report_file = self.output_dir / "reports" / "diagnostics.json"
+        try:
+            report_file.unlink(missing_ok=True)
+        except OSError as e:
+            logger.warning(f"Failed to clear diagnostics report {report_file}: {e}")
 
     def has_errors(self) -> bool:
         """Check if any ERROR events were recorded."""

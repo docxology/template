@@ -47,7 +47,8 @@ def find_combined_pdf(output_dir: Path, project_name: str) -> tuple[Path, float]
     Returns:
         A ``(path, size_mb)`` tuple if a non-empty PDF is found, else ``None``.
     """
-    filename = f"{project_name}_combined.pdf"
+    project_basename = Path(project_name).name
+    filename = f"{project_basename}_combined.pdf"
 
     # 1. Root directory (post-copy layout, e.g. output/{project_name}/foo_combined.pdf)
     root_pdf = output_dir / filename

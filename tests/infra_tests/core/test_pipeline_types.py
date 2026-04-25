@@ -30,6 +30,15 @@ class TestPipelineConfig:
         )
         assert config.project_dir == tmp_path / "projects_in_progress" / "myproj"
 
+    def test_nested_project_name_resolves_under_projects_dir(self, tmp_path):
+        """Qualified project names preserve program-directory layouts."""
+        config = PipelineConfig(
+            project_name="my_program/myproj",
+            repo_root=tmp_path,
+            projects_dir="projects",
+        )
+        assert config.project_dir == tmp_path / "projects" / "my_program" / "myproj"
+
     def test_default_values(self, tmp_path):
         """Default values are correct."""
         config = PipelineConfig(project_name="p", repo_root=tmp_path)

@@ -44,6 +44,8 @@ dependencies = [
   # uv sync --group scientific
   # requests is in the [llm] dep group — install with: uv sync --group llm
   "networkx>=3.4.2",
+  "seaborn>=0.13.2",
+  "scipy>=1.15.3",
 ]
 
 

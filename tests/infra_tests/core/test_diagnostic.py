@@ -263,6 +263,27 @@ class TestDiagnosticReporter:
         assert r2.events[0].severity == DiagnosticSeverity.ERROR
         assert r2.events[0].message == "persisted error"
 
+    def test_can_skip_loading_existing_events(self, tmp_path):
+        r1 = DiagnosticReporter("proj", output_dir=tmp_path)
+        r1.record_error("cat", "old error")
+        r1.save_report()
+
+        r2 = DiagnosticReporter("proj", output_dir=tmp_path, load_existing=False)
+
+        assert r2.events == []
+
+    def test_clear_report_removes_persisted_diagnostics(self, tmp_path):
+        r1 = DiagnosticReporter("proj", output_dir=tmp_path)
+        r1.record_error("cat", "old error")
+        r1.save_report()
+        report_file = tmp_path / "reports" / "diagnostics.json"
+        assert report_file.exists()
+
+        r2 = DiagnosticReporter("proj", output_dir=tmp_path, load_existing=False)
+        r2.clear_report()
+
+        assert not report_file.exists()
+
     def test_load_existing_events_invalid_json(self, tmp_path):
         report_dir = tmp_path / "reports"
         report_dir.mkdir(parents=True)

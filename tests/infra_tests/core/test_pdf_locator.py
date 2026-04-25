@@ -108,6 +108,25 @@ class TestFindCombinedPdfSourceLayout:
         found_path, _ = result
         assert found_path == source_pdf
 
+    def test_finds_pdf_for_qualified_nested_project_name(self, tmp_path: Path) -> None:
+        repo_root = tmp_path
+        qualified_name = "my_program/nested_project"
+        project_basename = Path(qualified_name).name
+        source_output = repo_root / "projects" / qualified_name / "output"
+        source_output.mkdir(parents=True)
+        source_pdf = _make_pdf(
+            source_output / "pdf" / f"{project_basename}_combined.pdf"
+        )
+
+        copied_output = repo_root / "output" / qualified_name
+        copied_output.mkdir(parents=True)
+
+        result = find_combined_pdf(copied_output, qualified_name)
+
+        assert result is not None
+        found_path, _ = result
+        assert found_path == source_pdf
+
     def test_returns_none_when_pdf_missing_from_all_locations(self, tmp_path: Path) -> None:
         output_dir = tmp_path / "output" / PROJECT_NAME
         output_dir.mkdir(parents=True)

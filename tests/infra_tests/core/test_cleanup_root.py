@@ -24,6 +24,33 @@ class TestCleanRootOutputDirectory:
         assert result is True
         assert proj_dir.exists()
 
+    def test_keeps_program_dir_for_qualified_projects(self, tmp_path):
+        output = tmp_path / "output"
+        program_dir = output / "my_program"
+        nested_output = program_dir / "nested_project"
+        nested_output.mkdir(parents=True)
+        (nested_output / "file.txt").write_text("data")
+
+        result = clean_root_output_directory(tmp_path, ["my_program/nested_project"])
+
+        assert result is True
+        assert program_dir.exists()
+        assert nested_output.exists()
+
+    def test_removes_obsolete_leaf_dir_for_qualified_projects(self, tmp_path):
+        output = tmp_path / "output"
+        obsolete_leaf = output / "nested_project"
+        obsolete_leaf.mkdir(parents=True)
+        (obsolete_leaf / "old.pdf").write_text("old")
+        current_nested = output / "my_program" / "nested_project"
+        current_nested.mkdir(parents=True)
+
+        result = clean_root_output_directory(tmp_path, ["my_program/nested_project"])
+
+        assert result is True
+        assert not obsolete_leaf.exists()
+        assert current_nested.exists()
+
     def test_removes_root_level_dirs(self, tmp_path):
         output = tmp_path / "output"
         for d in ["data", "figures", "pdf", "web", "slides", "reports", "logs", "tex"]:

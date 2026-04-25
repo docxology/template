@@ -98,7 +98,11 @@ def validate_markdown(project_name: str = "project") -> bool:
             log_success("Markdown validation passed (no issues found)", logger)
             return True
         else:
-            reporter = DiagnosticReporter(project_name=project_name, output_dir=repo_root / "projects" / project_name / "output")
+            reporter = DiagnosticReporter(
+                project_name=project_name,
+                output_dir=repo_root / "projects" / project_name / "output",
+                load_existing=False,
+            )
             logger.info(f"  Found {len(problems)} validation note(s):")
             for p in problems:
                 reporter.record(p)

@@ -241,7 +241,9 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
     reporter = DiagnosticReporter(
         project_name=project_name,
         output_dir=project_root / "output",
+        load_existing=False,
     )
+    reporter.clear_report()
 
     manuscript_dir = _resolve_manuscript_dir(project_root)
 
