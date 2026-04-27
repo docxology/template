@@ -56,5 +56,6 @@ grep -r "from infrastructure\|import infrastructure" projects/code_project/src/ 
 - [../AGENTS.md](../AGENTS.md) — Full project documentation (API reference, known issues, complete directory map)
 - [../README.md](../README.md) — Project quick start
 - [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory rules and `{{VARIABLE}}` protocol
-- [../output/AGENTS.md](../output/AGENTS.md) — Disposable-directory contract and regeneration sequence
-- [../../docs/](../../docs/) — Repository-level documentation hub (127 files, 14 subdirectories)
+ - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
++ - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
+- [../../../docs/](../../../docs/) — Repository-level documentation hub (127 files, 14 subdirectories)

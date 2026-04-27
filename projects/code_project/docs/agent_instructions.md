@@ -126,7 +126,7 @@ If you need to change what a generated file contains, change the **generator**:
 - To change `output/manuscript/03_results.md` → modify `manuscript/03_results.md` (the template) and/or `scripts/z_generate_manuscript_variables.py` (the variable definitions)
 - To change `output/pdf/code_project_combined.pdf` → modify the manuscript source files, then re-render
 
-See [`../output/AGENTS.md`](../output/AGENTS.md) for the complete regeneration sequence.
+See [`output_conventions.md`](output_conventions.md) for the complete regeneration sequence.
 
 ---
 
