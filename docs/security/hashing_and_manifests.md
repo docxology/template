@@ -22,3 +22,8 @@ If `projects/code_project/output/pdf/code_project_combined.pdf` was processed, t
 Because file names change, the pipeline reads the `.hashes.json` and internally binds a serialized copy of the document ID and cryptographic proof payload directly into the `PDF XMP` metadata layer.
 
 If an academic text is found floating on a repository 5 years later, you can scrape its internal metadata structure to find its original generative `Doc-ID` and cross-reference its hashes inside the XMP dictionary to prove if its structural bytes have been altered since compilation.
+
+
+## See Also
+
+- **[Security Index](../security/README.md)** — Security policies and procedures

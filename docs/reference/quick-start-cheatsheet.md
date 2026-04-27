@@ -21,7 +21,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Daily Workflow Commands
 ```bash
 # Run tests only
-pytest projects/code_project/tests/ --cov=projects.code_project.src --cov-report=html
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 
 # Generate figures only
 uv run python scripts/02_run_analysis.py --project code_project
@@ -85,7 +85,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 vim projects/code_project/scripts/my_figure.py
 
 # 2. Import from src/ (thin orchestrator pattern)
-# from projects.code_project.src.example import calculate_average
+# from src.optimizer import gradient_descent
 
 # 3. Generate and save to output/figures/
 # 4. Reference in manuscript:
@@ -101,7 +101,7 @@ vim projects/code_project/src/my_module.py
 vim projects/code_project/tests/test_my_module.py
 
 # 3. Run tests
-pytest projects/code_project/tests/test_my_module.py --cov=projects.code_project.src.my_module
+pytest projects/code_project/tests/test_my_module.py --cov=projects/code_project/src.my_module
 
 # 4. Use in scripts (thin orchestrator pattern)
 # from projects.code_project.src.my_module import my_function
@@ -110,7 +110,7 @@ pytest projects/code_project/tests/test_my_module.py --cov=projects.code_project
 ### Fix Test Coverage
 ```bash
 # 1. Check coverage
-pytest projects/code_project/tests/ --cov=projects.code_project.src --cov-report=term-missing
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing
 
 # 2. Find missing lines (marked with ">>>>>")
 # 3. Add tests for uncovered code
@@ -157,7 +157,7 @@ Reference it: \ref{fig:my_figure}
 | Problem | Quick Fix |
 |---------|-----------|
 | **Tests fail** | `pytest projects/code_project/tests/ -v` to see details |
-| **Coverage < 100%** | `pytest --cov=projects.code_project.src --cov-report=term-missing` |
+| **Coverage < 100%** | `pytest --cov=projects/code_project/src --cov-report=term-missing` |
 | **Import errors** | Check `PYTHONPATH` or use `uv run` |
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
 | **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project code_project` first |

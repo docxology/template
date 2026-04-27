@@ -26,102 +26,102 @@
 
 **1026 critical issues** requiring immediate attention:
 
-**projects_in_progress/biology_textbook/docs/manuscript_guide.md:161**
+**projects/biology_textbook/docs/manuscript_guide.md:161**
 - **Type:** broken_anchor
 - **Target:** `#gl:term-slug`
 - **Issue:** Anchor 'gl:term-slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/AGENTS.md:38**
+**projects/biology_textbook/manuscript/labs/AGENTS.md:38**
 - **Type:** broken_anchor
 - **Target:** `#gl:term-slug`
 - **Issue:** Anchor 'gl:term-slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_I/lab_atoms_molecules.md:101**
+**projects/biology_textbook/manuscript/labs/unit_I/lab_atoms_molecules.md:101**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_I/lab_enzymes_and_kinetics.md:111**
+**projects/biology_textbook/manuscript/labs/unit_I/lab_enzymes_and_kinetics.md:111**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_I/lab_macromolecules.md:119**
+**projects/biology_textbook/manuscript/labs/unit_I/lab_macromolecules.md:119**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_I/lab_water_and_life.md:114**
+**projects/biology_textbook/manuscript/labs/unit_I/lab_water_and_life.md:114**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_II/lab_cell_signaling.md:103**
+**projects/biology_textbook/manuscript/labs/unit_II/lab_cell_signaling.md:103**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_II/lab_cell_structure.md:116**
+**projects/biology_textbook/manuscript/labs/unit_II/lab_cell_structure.md:116**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_II/lab_cell_theory.md:117**
+**projects/biology_textbook/manuscript/labs/unit_II/lab_cell_theory.md:117**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_II/lab_membrane_transport.md:105**
+**projects/biology_textbook/manuscript/labs/unit_II/lab_membrane_transport.md:105**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_III/lab_bioenergetics_and_respiration.md:100**
+**projects/biology_textbook/manuscript/labs/unit_III/lab_bioenergetics_and_respiration.md:100**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_III/lab_metabolic_integration.md:98**
+**projects/biology_textbook/manuscript/labs/unit_III/lab_metabolic_integration.md:98**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_III/lab_photosynthesis.md:117**
+**projects/biology_textbook/manuscript/labs/unit_III/lab_photosynthesis.md:117**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IV/lab_dna_replication_and_cell_cycle.md:101**
+**projects/biology_textbook/manuscript/labs/unit_IV/lab_dna_replication_and_cell_cycle.md:101**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IV/lab_epigenetics_and_gene_regulation.md:111**
+**projects/biology_textbook/manuscript/labs/unit_IV/lab_epigenetics_and_gene_regulation.md:111**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IV/lab_gene_expression.md:99**
+**projects/biology_textbook/manuscript/labs/unit_IV/lab_gene_expression.md:99**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IV/lab_mutations_and_genomics.md:101**
+**projects/biology_textbook/manuscript/labs/unit_IV/lab_mutations_and_genomics.md:101**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IX/lab_action_potential_synapses.md:104**
+**projects/biology_textbook/manuscript/labs/unit_IX/lab_action_potential_synapses.md:104**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IX/lab_circulation_respiration_homeostasis.md:101**
+**projects/biology_textbook/manuscript/labs/unit_IX/lab_circulation_respiration_homeostasis.md:101**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IX/lab_endocrine_and_immune.md:105**
+**projects/biology_textbook/manuscript/labs/unit_IX/lab_endocrine_and_immune.md:105**
 - **Type:** broken_anchor
 - **Target:** `#gl:slug`
 - **Issue:** Anchor 'gl:slug' not found in file

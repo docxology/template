@@ -139,8 +139,10 @@ def risky_operation():
 ## Module-Specific Configuration
 
 ### fep_lean (optional Open Gauss CLI)
+> **Note:** The `fep_lean` project is currently archived under `projects_archive/`. The following documentation describes its configuration when that project is checked out.
 
-When present under **`projects/fep_lean/`**, it is discovered like any other active project (see [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)). Orchestration lives in [`projects/fep_lean/src/gauss/cli.py`](../../../projects/fep_lean/src/gauss/cli.py) and related modules.
+
+When present under **`projects/fep_lean/`**, it is discovered like any other active project (see [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)). Orchestration lives in [`projects_archive/fep_lean/src/gauss/cli.py`](../../../projects_archive/fep_lean/src/gauss/cli.py) and related modules.
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |

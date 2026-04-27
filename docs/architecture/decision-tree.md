@@ -521,3 +521,8 @@ Add to projects/{name}/src/
 ---
 
 When in doubt: **Ask yourself** — "Would another research group use this unchanged?" If yes → Infrastructure. If no → Scientific.
+
+
+## See Also
+
+- **[Two-Layer Architecture](../architecture/two-layer-architecture.md)** — Full system design overview

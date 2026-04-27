@@ -123,9 +123,17 @@ graph TD
 | Understand design | [`architecture/two-layer-architecture.md`](architecture/two-layer-architecture.md) |
 | See examples | [`usage/examples.md`](usage/examples.md) |
 | Find answers | [`reference/faq.md`](reference/faq.md) |
+| System reference (PAI) | [`PAI.md`](PAI.md) |
+| Cloud deployment guide | [`CLOUD_DEPLOY.md`](CLOUD_DEPLOY.md) |
 | Fix an issue | [`operational/troubleshooting/`](operational/troubleshooting/) |
 | Contribute | [`development/contributing.md`](development/contributing.md) |
 | Report security issue | [`development/security.md`](development/security.md) |
+| Understand modules | [`modules/modules-guide.md`](modules/modules-guide.md) |
+| Best practices | [`best-practices/best-practices.md`](best-practices/best-practices.md) |
+| Security policies | [`security/README.md`](security/README.md) |
+| Audit reports | [`audit/README.md`](audit/README.md) |
+| Development rules | [`rules/README.md`](rules/README.md) |
+| Session notes (streams) | [`streams/README.md`](streams/README.md) |
 
 ## See Also
 
@@ -134,4 +142,4 @@ graph TD
 - [`documentation-index.md`](documentation-index.md) - Full file index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
 - Agent skills manifest: `uv run python -m infrastructure.skills write` (writes `.cursor/skill_manifest.json` at repo root when run) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
-- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/fep_lean/docs/`](../projects/fep_lean/docs/)); work-in-progress trees under [`../projects_in_progress/`](../projects_in_progress/) are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)
+- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/code_project/docs/`](../projects/code_project/docs/)); work-in-progress trees under [`../projects_in_progress/`](../projects_in_progress/) are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)

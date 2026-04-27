@@ -52,3 +52,8 @@ For automated deployments or rapid iteration, `secure_run.sh` supports standard 
 | `--skip-infra` | Skips running the `infra_tests/` suite (Stage 3 bottleneck). |
 | `--core-only` | Skips running the `requires_ollama` LLM processing loop (Stage 7/8 bottleneck). |
 | `--steganography-only` | Skips pipeline execution completely and only performs the Steganography loops. |
+
+
+## See Also
+
+- **[Security Index](../security/README.md)** — Security policies and procedures

@@ -39,9 +39,9 @@ This document provides documentation for the Research Project Template system, e
 - `uv run python -m infrastructure.validation.cli prerender <project>` runs the strict source-markdown gate (`prevalidate_source_markdown`) without triggering a full render; use it for fast pre-flight before `scripts/03_render_pdf.py`.
 - Slides keep Beamer Unicode/math parity with combined PDFs via `extract_math_font_preamble` in `infrastructure/rendering/_pdf_latex_helpers.py`, wired through Pandoc `-H header.tex` from `SlidesRenderer.render`; prose Unicode glyphs in body LaTeX are remapped by `infrastructure/rendering/_pdf_unicode_remap.py` inside `_pdf_combined_renderer.postprocess_latex`.
 - Project roster under `projects/` rotates; only `projects/code_project/` is the guaranteed control-positive exemplar — consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding project paths in docs. Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
-- `projects_in_progress/biology_textbook/` is WIP-friendly: `infrastructure.project.discovery.resolve_project_root` lets `uv run python scripts/03_render_pdf.py --project biology_textbook` work from the repository root before promotion, but `./run.sh` and default discovery only list it after it moves under `projects/`.
+- `projects/biology_textbook/` is WIP-friendly: `infrastructure.project.discovery.resolve_project_root` lets `uv run python scripts/03_render_pdf.py --project biology_textbook` work from the repository root before promotion, but `./run.sh` and default discovery only list it after it moves under `projects/`.
 - `projects_in_progress/cognitive_integrity/`: pass the program segment in `--project` (e.g. `cognitive_integrity/cogsec_multiagent_1_theory`); bare `cogsec_multiagent_*` resolves under `projects/` and will not find the WIP tree—same `resolve_project_root` rule as other nested `projects_in_progress` layouts.
-- `projects_in_progress/biology_textbook/docs/api_reference.md` is manually curated; after adding or renaming public functions in `src/biology/`, reconcile it with `rg '^\\s*def ' src/biology` and refresh any doc counts from live measurement. `docs/accessibility.md` in the same project lists which `manuscript/config.yaml` keys are advisory vs test-enforced.
+- `projects/biology_textbook/docs/api_reference.md` is manually curated; after adding or renaming public functions in `src/biology/`, reconcile it with `rg '^\\s*def ' src/biology` and refresh any doc counts from live measurement. `docs/accessibility.md` in the same project lists which `manuscript/config.yaml` keys are advisory vs test-enforced.
 
 ## 📋 Table of Contents
 
@@ -158,7 +158,7 @@ An optional intermediate staging area for projects that are under active develop
 - **NOT executed** by any pipeline scripts
 - Useful for drafting new project scaffolding before promoting to `projects/`
 
-**Current projects in progress:** see the directories under [`projects_in_progress/`](projects_in_progress/) (e.g. `biology_textbook`, `cogant`, `template` on this checkout; not executed by `./run.sh` until promoted to `projects/`). **Active** projects under `projects/` are listed only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+**Current projects in progress:** see the directories under [`projects_in_progress/`](projects_in_progress/) (e.g. `cogant`, `template` on this checkout; not executed by `./run.sh` until promoted to `projects/`). **Active** projects under `projects/` are listed only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 **To promote:** Move `projects_in_progress/{name}/` → `projects/{name}/`
 

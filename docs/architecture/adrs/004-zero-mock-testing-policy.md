@@ -1,0 +1,1 @@
+[[["Options': {'Pattern':", {'name': 'All tests must use real execution, temporary files, and pytest-httpserver. Mocking forbidden.'}, "], 'cons': ['Tests are more realistic", 'Requires real data fixtures']], ['development/testing/testing-guide.md', 'scripts/verify_no_mocks.py']]

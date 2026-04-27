@@ -106,3 +106,6 @@ scripts/.scope
 tests/.scope
 /projects/fep_lean
 /projects/fep_lean
+.cursor/hooks/state/continual-learning.json
+.cursor/hooks/state/continual-learning.json
+.cursor/hooks/state/continual-learning.json

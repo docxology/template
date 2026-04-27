@@ -6,3 +6,8 @@ It does **not** mean **Huawei OpenGauss**, the open-source database product, unl
 
 - **This page** is the hub-visible disambiguation; it does not depend on having `projects/fep_lean/` in the working tree.
 - **Project detail** (Hermes, SQLite, `lake` layout): when `projects/fep_lean/` is present, see `projects/fep_lean/AGENTS.md` and `projects/fep_lean/src/gauss/`.
+
+
+## See Also
+
+- **[Configuration](../operational/config/configuration.md)** — Configuration system (including fep_lean env vars)

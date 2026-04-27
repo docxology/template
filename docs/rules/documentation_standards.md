@@ -139,7 +139,7 @@ This ensures information is available while also providing fast lookup.
 
 ## See Also
 
-- [Related Module](../infrastructure/AGENTS.md) - Infrastructure documentation
+- [Related Module](../../infrastructure/AGENTS.md) - Infrastructure documentation
 - [External Resource](https://example.com) - External documentation
 ```
 
@@ -405,7 +405,7 @@ See [../AGENTS.md](../AGENTS.md) for overview
 ```markdown
 ## See Also
 
-- [Related Module](../infrastructure/AGENTS.md) - Infrastructure documentation
+- [Related Module](../../infrastructure/AGENTS.md) - Infrastructure documentation
 - [External Resource](https://example.com) - External documentation
 - [Configuration Guide](configuration.md) - Configuration documentation
 ```

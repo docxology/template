@@ -189,7 +189,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and stage reference
 - **[.github/README.md](../.github/README.md)** - Repository CI/CD and contribution automation
-- **fep_lean / CI paths** — Use [`projects/fep_lean/`](../projects/fep_lean/) when listed under [`_generated/active_projects.md`](_generated/active_projects.md); WIP copies live under `projects_in_progress/` only when you place them there
+- **code_project / CI paths** — Use [`projects/code_project/`](../projects/code_project/) when listed under [`_generated/active_projects.md`](_generated/active_projects.md); WIP copies live under `projects_in_progress/` only when you place them there
 
 ### Build & dependency docs (`operational/build/`)
 
@@ -202,7 +202,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ### Configuration & Performance (`operational/config/`)
 
-- **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars; paths under `projects/fep_lean/`)
+- **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars; paths under `projects/code_project/`)
 - **[reference/opengauss-naming.md](reference/opengauss-naming.md)** - Open Gauss naming (`gauss` CLI vs Huawei DBMS) — same page as the Open Gauss entry near line 90; listed twice intentionally (theme list + file table)
 - **[operational/config/checkpoint-resume.md](operational/config/checkpoint-resume.md)** - Checkpoint system
 - **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance tuning
@@ -236,7 +236,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[best-practices/best-practices.md](best-practices/best-practices.md)** - Consolidated best practices
 - **[best-practices/version-control.md](best-practices/version-control.md)** - Git workflows
-- **[best-practices/multi-project-management.md](best-practices/multi-project-management.md)** - Multi-project setup (roster → [_generated/active_projects.md](_generated/active_projects.md); optional per-project docs e.g. [`projects/fep_lean/docs/`](../projects/fep_lean/docs/))
+- **[best-practices/multi-project-management.md](best-practices/multi-project-management.md)** - Multi-project setup (roster → [_generated/active_projects.md](_generated/active_projects.md); optional per-project docs e.g. [`projects/code_project/docs/`](../projects/code_project/docs/))
 - **[best-practices/migration-guide.md](best-practices/migration-guide.md)** - Migration from other templates
 - **[best-practices/backup-recovery.md](best-practices/backup-recovery.md)** - Backup strategies
 

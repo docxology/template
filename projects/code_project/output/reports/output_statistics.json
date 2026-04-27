@@ -3,8 +3,8 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.90",
-      "total_size_bytes": 1989028,
+      "size_mb": "1.89",
+      "total_size_bytes": 1985649,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
@@ -65,7 +65,7 @@
       "exists": true,
       "file_count": 70,
       "size_mb": "1.25",
-      "total_size_bytes": 1308847,
+      "total_size_bytes": 1308988,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
@@ -98,7 +98,7 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "1.52",
-      "total_size_bytes": 1596173,
+      "total_size_bytes": 1591591,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -196,7 +196,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 2453,
+      "total_size_bytes": 2451,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -210,7 +210,7 @@
     }
   },
   "total_files": 110,
-  "total_size_mb": 4.922908782958984,
+  "total_size_mb": 4.915449142456055,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
@@ -275,15 +275,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 1.8968849182128906,
+    "pdf": 1.893662452697754,
     "web": 0.23509979248046875,
-    "slides": 1.248213768005371,
-    "figures": 1.5222291946411133,
+    "slides": 1.2483482360839844,
+    "figures": 1.5178594589233398,
     "data": 0.011018753051757812,
     "reports": 0.007122993469238281,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.0023393630981445312
+    "logs": 0.0023374557495117188
   },
   "file_counts_by_type": {
     ".md": 4,

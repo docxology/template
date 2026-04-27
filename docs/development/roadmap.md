@@ -101,3 +101,8 @@ Make `projects/code_project/` fully compliant post-desloppify: zero ruff errors,
 ---
 
 *Last updated: 2026-03-10*
+
+
+## See Also
+
+- **[Contributing](../development/contributing.md)** — How to contribute to the template

@@ -152,3 +152,9 @@ Before marking refactoring:
 5. **Documentation**: Documentation stays current
 6. **Testing**: Tests reflect actual usage
 7. **Simplicity**: Codebase easier to understand
+
+
+## See Also
+
+- **[Development Standards](../rules/README.md)** — Rule index
+- **[Rules AGENTS](../rules/AGENTS.md)** — Rules for AI agents

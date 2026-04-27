@@ -1,12 +1,24 @@
+# Machine- and human-readable intent: import boundaries, marker conventions, and
+# editor/agent voice. Subclasses of ValidationError, BuildError, and FileOperationError
+# inherit to_diagnostic_event() from TemplateError (see infrastructure/core/_exceptions_core.py);
+# they do not need to redeclare that method.
+metadata:
+  purpose: "Default import boundaries for generic modules; pytest marker scoping; agent voice."
+  stats_as_of: "2026-04-26"
+  stats_notes:
+    files_analyzed: "Counted .py under infrastructure/, scripts/, tests/, projects/; excludes venv, projects_archive, __pycache__."
+    docstring_count: "AST: docstrings on module, class, and function (incl. async) nodes."
+    rates_in_voice: "type_hint_rate, bare_except_rate, early_return_rate are prior samples; re-measure to refresh."
+
 conventions:
-  - name: "Lru Cache"
+  - name: "LRU cache"
     source: discovered
     match:
       any_of:
-        - has_decorator: "functools\.lru_cache"
+        - has_decorator: 'functools\.lru_cache'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 6 files sharing decorator: functools.lru_cache"
+    description: "Files using functools.lru_cache (discovered: 6)."
     compliance: 1.0
   - name: "Dataclass"
     source: discovered
@@ -15,110 +27,107 @@ conventions:
         - has_decorator: "dataclass"
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 48 files sharing decorator: dataclass"
+    description: "Files using the dataclass decorator (discovered: 48)."
     compliance: 1.0
-  - name: "Contextmanager"
+  - name: "Context manager"
     source: discovered
     match:
       any_of:
         - has_decorator: "contextmanager"
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 3 files sharing decorator: contextmanager"
+    description: "Files using contextlib.contextmanager (discovered: 3)."
     compliance: 1.0
   - name: "Fixture"
     source: discovered
     match:
       any_of:
-        - has_decorator: "pytest\.fixture"
+        - has_decorator: 'pytest\.fixture'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 23 files sharing decorator: pytest.fixture"
+    description: "Files defining pytest fixtures (discovered: 23)."
     compliance: 1.0
   - name: "Timeout"
     source: discovered
     match:
       any_of:
-        - has_decorator: "pytest\.mark\.timeout"
+        - has_decorator: 'pytest\.mark\.timeout'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-      allowed_paths: [tests/infra_tests/[^/]+/.*\.py]
-    description: "Discovered from 7 files sharing decorator: pytest.mark.timeout"
+      allowed_paths: ['tests/infra_tests/[^/]+/.*\.py']
+    description: "Infra tests using pytest.mark.timeout (discovered: 7)."
     compliance: 1.0
   - name: "Requires Ollama"
     source: discovered
     match:
       any_of:
-        - has_decorator: "pytest\.mark\.requires_ollama"
-        - file_path: "tests/infra_tests/llm/.*\.py"
+        - has_decorator: 'pytest\.mark\.requires_ollama'
+        - file_path: 'tests/infra_tests/llm/.*\.py'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-      allowed_paths: [tests/infra_tests/llm/.*\.py]
-    description: "Discovered from 7 files sharing decorator: pytest.mark.requires_ollama"
+      allowed_paths: ['tests/infra_tests/llm/.*\.py']
+    description: "LLM tests marked requires_ollama or under tests/infra_tests/llm/ (discovered: 7)."
     compliance: 1.0
-  - name: "Requires Latex"
+  - name: "Requires LaTeX"
     source: discovered
     match:
       any_of:
-        - has_decorator: "pytest\.mark\.requires_latex"
-        - file_path: "tests/infra_tests/rendering/.*\.py"
+        - has_decorator: 'pytest\.mark\.requires_latex'
+        - file_path: 'tests/infra_tests/rendering/.*\.py'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-      allowed_paths: [tests/infra_tests/rendering/.*\.py]
-    description: "Discovered from 3 files sharing decorator: pytest.mark.requires_latex"
+      allowed_paths: ['tests/infra_tests/rendering/.*\.py']
+    description: "Rendering tests marked requires_latex or under tests/infra_tests/rendering/ (discovered: 3)."
     compliance: 1.0
   - name: "TemplateError Subclass"
     source: discovered
     match:
       any_of:
         - base_class: "TemplateError"
-        - file_path: "infrastructure/core/.*\.py"
+        - file_path: 'infrastructure/core/.*\.py'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 12 files sharing base_class: TemplateError"
+    description: "Core hierarchy under TemplateError; to_diagnostic_event defined on TemplateError (discovered: 12)."
     compliance: 1.0
   - name: "ValidationError Subclass"
     source: discovered
     match:
       any_of:
         - base_class: "ValidationError"
-        - file_path: "infrastructure/core/.*\.py"
+        - file_path: 'infrastructure/core/.*\.py'
     rules:
-      required_methods: [to_diagnostic_event]
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 3 files sharing base_class: ValidationError"
-    compliance: 0.547945205479452
+    description: "ValidationError subclasses; inherit to_diagnostic_event from TemplateError (discovered: 3 + nested)."
+    compliance: 1.0
   - name: "BuildError Subclass"
     source: discovered
     match:
       any_of:
         - base_class: "BuildError"
-        - file_path: "infrastructure/core/.*\.py"
+        - file_path: 'infrastructure/core/.*\.py'
     rules:
-      required_methods: [to_diagnostic_event]
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 3 files sharing base_class: BuildError"
-    compliance: 0.547945205479452
+    description: "BuildError subclasses; inherit to_diagnostic_event from TemplateError (discovered: 3 + nested)."
+    compliance: 1.0
   - name: "FileOperationError Subclass"
     source: discovered
     match:
       any_of:
         - base_class: "FileOperationError"
-        - file_path: "infrastructure/core/.*\.py"
+        - file_path: 'infrastructure/core/.*\.py'
     rules:
-      required_methods: [to_diagnostic_event]
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 3 files sharing base_class: FileOperationError"
-    compliance: 0.547945205479452
+    description: "FileOperationError subclasses; inherit to_diagnostic_event from TemplateError (discovered: 3 + nested)."
+    compliance: 1.0
   - name: "LLMError Subclass"
     source: discovered
     match:
       any_of:
         - base_class: "LLMError"
-        - file_path: "infrastructure/core/.*\.py"
+        - file_path: 'infrastructure/core/.*\.py'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 3 files sharing base_class: LLMError"
+    description: "LLMError subclasses in core re-exports / domains; same TemplateError MRO (discovered: 3 + nested)."
     compliance: 1.0
   - name: "TypedDict Subclass"
     source: discovered
@@ -127,7 +136,7 @@ conventions:
         - base_class: "TypedDict"
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 11 files sharing base_class: TypedDict"
+    description: "TypedDict shapes (discovered: 11)."
     compliance: 1.0
   - name: "NamedTuple Subclass"
     source: discovered
@@ -136,41 +145,47 @@ conventions:
         - base_class: "NamedTuple"
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 4 files sharing base_class: NamedTuple"
+    description: "NamedTuple records (discovered: 4)."
     compliance: 1.0
   - name: "ResearchTemplate Subclass"
     source: discovered
     match:
       any_of:
         - base_class: "ResearchTemplate"
-        - file_path: "infrastructure/llm/templates/.*\.py"
+        - file_path: 'infrastructure/llm/templates/.*\.py'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-      allowed_paths: [infrastructure/llm/templates/.*\.py]
-    description: "Discovered from 15 files sharing base_class: ResearchTemplate"
+      allowed_paths: ['infrastructure/llm/templates/.*\.py']
+    description: "LLM research templates (discovered: 15)."
     compliance: 1.0
   - name: "Manager"
     source: discovered
     match:
       any_of:
-        - file_path: ".*_manager\.py"
+        - file_path: '.*_manager\.py'
     rules:
       prohibited_imports: [checks, citations, ollama, pipeline_report_model, result_loaders]
-    description: "Discovered from 3 files sharing suffix: _manager"
+    description: "Modules named *_manager.py (discovered: 3)."
     compliance: 1.0
 
 voice:
   mode: adaptive
   typing: |
-    Strict type hints on all function signatures.
+    Strict type hints on all function signatures. Public infrastructure APIs should
+    keep parameter and return types explicit.
   docstrings: |
-    Minimal docstrings. Add only when behavior is non-obvious.
+    Minimal docstrings. Add when behavior, contracts, or edge cases are non-obvious.
   error_handling: |
-    No bare excepts. Catch specific exception types.
+    No bare excepts. Catch specific exception types; use ``# noqa: BLE001`` only with
+    a short comment when a broad catch is required (e.g. stage isolation, optional deps).
   structure: |
-    Match the pattern of the file being modified.
+    Match the pattern of the file being modified. Thin orchestrators delegate to
+    infrastructure or project src/; they do not embed domain algorithms.
   density: |
     Comprehensions preferred where readable.
+  testing: |
+    No mocks: use real data, temp files, pytest-httpserver, or subprocess. Tests assert
+    on computed outputs, not stand-ins.
   enforce:
     bare_excepts: "hold"
     missing_type_hints: "note"
@@ -178,6 +193,6 @@ voice:
     type_hint_rate: 0.86
     bare_except_rate: 0.0
     early_return_rate: 0.04
-    docstring_count: 5733
+    docstring_count: 10816
     dominant_docstring_style: "other"
-    files_analyzed: 676
+    files_analyzed: 965

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-25T13:09:23.737322",
+  "timestamp": "2026-04-27T06:02:32.990849",
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
@@ -24,7 +24,7 @@
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.9,
+            "size_mb": 1.89,
             "readable": true,
             "optional": false
           },
@@ -90,7 +90,7 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.90",
+          "size_mb": "1.89",
           "largest_file": "code_project_combined.pdf"
         },
         "web": {
@@ -153,7 +153,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.918127059936523,
+      "total_size_mb": 4.910667419433594,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,11 +163,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8968849182128906
+      "size_mb": 1.893662452697754
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5222291946411133
+      "size_mb": 1.5178594589233398
     },
     "data": {
       "files": 3,

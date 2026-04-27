@@ -377,3 +377,8 @@ This assessment integrates with:
 - **CI/CD System**: Automated testing and validation
 - **Documentation System**: Self-documenting requirements
 - **Development Workflow**: TDD and quality assurance practices
+
+
+## See Also
+
+- **[Prompt Templates](../prompts/README.md)** — Complete prompt library
