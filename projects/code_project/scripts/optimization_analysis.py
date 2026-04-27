@@ -24,6 +24,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import yaml
 
+# Add project src/ to path for optimizer imports
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root / "src"))
+
 from optimizer import (OptimizationResult, compute_gradient, gradient_descent,
                        make_quadratic_problem, quadratic_function,
                        simulate_trajectory)
