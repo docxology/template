@@ -1,11 +1,12 @@
-# Pre-commit hooks configuration
+# Pre-commit hooks — aligned with `.github/workflows/ci.yml` lint job:
+#   ruff check + ruff format on `infrastructure/` and `projects/*/src/`
+#   mypy on the same paths (see `[tool.mypy]` in pyproject.toml)
 #
-# Hooks align with GitHub Actions `lint` job (ci.yml):
-#   - ruff check + ruff format on `infrastructure/` and `projects/*/src/`
-#   - mypy on the same paths (see pyproject.toml [tool.mypy])
-# Pre-push: infra-only pytest smoke (single root; avoids overlapping tests.conftest).
+# Pre-push (fast): no-mocks script + pytest on `tests/infra_tests/git_hook_smoke/` only.
+# Full infra tests run in CI (`test-infra`); collecting all of `tests/infra_tests/` here
+# is too slow for every push (~thousands of tests).
 #
-# Manual: pre-commit run --all-files --hook-stage manual
+# Manual: `pre-commit run --all-files --hook-stage manual`
 
 repos:
   - repo: local
@@ -40,20 +41,20 @@ repos:
         always_run: true
         verbose: true
 
-      - id: pytest-unit
-        name: pytest (infra smoke)
-        entry: uv
-        language: system
-        stages: [pre-push, manual]
+      - id: pre-push-quick
+        name: verify no mocks + hook smoke pytest
+        entry: bash
         args:
-          - run
-          - pytest
-          - tests/infra_tests/
-          - -q
-          - --maxfail=1
-          - --import-mode=importlib
-          - "-m"
-          - "not slow and not requires_ollama"
+          - -eo
+          - pipefail
+          - -c
+          - >-
+            export PYTHONDONTWRITEBYTECODE=1 &&
+            uv run python scripts/verify_no_mocks.py &&
+            uv run pytest tests/infra_tests/git_hook_smoke/
+            -q --maxfail=1 --import-mode=importlib
+        language: system
         pass_filenames: false
+        stages: [pre-push, manual]
         always_run: true
         verbose: true
