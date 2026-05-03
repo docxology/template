@@ -36,7 +36,7 @@ class TestBibliographyProcessing:
 
         # Use real bibtex execution - may fail if bibtex not available
         try:
-            result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+            result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
             # May succeed or fail depending on bibtex availability
             assert isinstance(result, bool)
         except Exception:
@@ -48,8 +48,27 @@ class TestBibliographyProcessing:
         tex_file = tmp_path / "test.tex"
         bib_file = tmp_path / "missing.bib"
 
-        result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+        result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
         assert result is False
+
+    def test_process_bibliography_empty_paths(self, tmp_path):
+        tex_file = tmp_path / "test.tex"
+        (tmp_path / "pdf").mkdir(exist_ok=True)
+        assert process_bibliography(tex_file, tmp_path / "pdf", []) is False
+
+    def test_process_bibliography_copies_all_bib_files(self, tmp_path):
+        pdf_dir = tmp_path / "pdf"
+        pdf_dir.mkdir()
+        tex_file = tmp_path / "test.tex"
+        tex_file.write_text("% stub\n")
+        (pdf_dir / "test.aux").write_text("\\bibdata{references,extra}\n")
+        bib_a = tmp_path / "references.bib"
+        bib_b = tmp_path / "extra.bib"
+        bib_a.write_text("@article{a,title={A},year={2024}}\n")
+        bib_b.write_text("@article{b,title={B},year={2024}}\n")
+        process_bibliography(tex_file, pdf_dir, [bib_a, bib_b])
+        assert (pdf_dir / "references.bib").exists()
+        assert (pdf_dir / "extra.bib").exists()
 
     def test_process_bibliography_missing_aux_file(self, tmp_path):
         """Test bibliography processing with missing auxiliary file."""
@@ -60,7 +79,7 @@ class TestBibliographyProcessing:
         bib_file.write_text("@article{test, title={Test}}")
         (tmp_path / "pdf").mkdir(exist_ok=True)
 
-        result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+        result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
         assert result is False
 
     def test_process_bibliography_bibtex_warning(self, tmp_path):
@@ -76,7 +95,7 @@ class TestBibliographyProcessing:
 
         # Use real bibtex execution
         try:
-            result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+            result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
             # May succeed or fail depending on bibtex availability
             assert isinstance(result, bool)
         except Exception:

@@ -6,18 +6,24 @@
 
 ## Layout
 
-```text
-infrastructure/llm/
-├── __init__.py
-├── AGENTS.md
-├── README.md
-├── cli/
-├── core/
-├── prompts/
-├── review/
-├── templates/
-├── utils/
-└── validation/
+```mermaid
+flowchart TB
+    LLM[/infrastructure/llm//]
+    LLM --> META[__init__.py · AGENTS.md · README.md · SKILL.md]
+    LLM --> CLI[/cli/]
+    LLM --> CORE[/core/]
+    LLM --> PROMPTS[/prompts/]
+    LLM --> REVIEW[/review/]
+    LLM --> TEMPLATES[/templates/]
+    LLM --> UTILS[/utils/]
+    LLM --> VAL[/validation/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef meta fill:#0f766e,stroke:#0f172a,color:#fff
+    class LLM d
+    class CLI,CORE,PROMPTS,REVIEW,TEMPLATES,UTILS,VAL pkg
+    class META meta
 ```
 
 ## Public API

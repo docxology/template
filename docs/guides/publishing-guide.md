@@ -54,7 +54,7 @@ from infrastructure.publishing import (
 from infrastructure.publishing import extract_publication_metadata
 from pathlib import Path
 
-metadata = extract_publication_metadata(Path("projects/code_project/manuscript/config.yaml"))
+metadata = extract_publication_metadata(Path("projects/template_code_project/manuscript/config.yaml"))
 
 # Generate citations in multiple formats
 bibtex = generate_citation_bibtex(metadata)
@@ -100,7 +100,7 @@ client = ZenodoClient(config)
 
 # Publish
 result = publish_to_zenodo(
-    pdf_path=Path("output/code_project/pdf/code_project_combined.pdf"),
+    pdf_path=Path("output/template_code_project/pdf/code_project_combined.pdf"),
     metadata=metadata,
     client=client,
 )
@@ -126,8 +126,8 @@ from infrastructure.publishing import prepare_arxiv_submission
 
 # Package manuscript for arXiv
 submission = prepare_arxiv_submission(
-    manuscript_dir=Path("projects/code_project/manuscript/"),
-    output_dir=Path("output/code_project/arxiv/"),
+    manuscript_dir=Path("projects/template_code_project/manuscript/"),
+    output_dir=Path("output/template_code_project/arxiv/"),
 )
 print(f"Submission package: {submission.package_path}")
 print(f"Files included: {submission.file_list}")
@@ -145,7 +145,7 @@ release = create_github_release(
     tag="v1.0.0",
     title="Initial Release",
     notes="First public release of the research manuscript.",
-    assets=[Path("output/code_project/pdf/code_project_combined.pdf")],
+    assets=[Path("output/template_code_project/pdf/code_project_combined.pdf")],
 )
 ```
 
@@ -164,7 +164,7 @@ from infrastructure.publishing import (
 
 # Check if everything is ready
 readiness = validate_publication_readiness(
-    project_dir=Path("projects/code_project/"),
+    project_dir=Path("projects/template_code_project/"),
 )
 print(f"Ready: {readiness.is_ready}")
 for issue in readiness.issues:
@@ -175,8 +175,8 @@ checklist = create_submission_checklist(metadata)
 
 # Bundle everything for submission
 package = create_publication_package(
-    project_dir=Path("projects/code_project/"),
-    output_dir=Path("output/code_project/publication/"),
+    project_dir=Path("projects/template_code_project/"),
+    output_dir=Path("output/template_code_project/publication/"),
 )
 ```
 

@@ -38,10 +38,10 @@ cp infrastructure/config/.env.template .env
 
 ```bash
 # Run steganographic post-processing with default settings
-./secure_run.sh --project code_project
+./secure_run.sh --project template_code_project
 
 # Override individual settings in your own YAML
-./secure_run.sh --project code_project --config my_secure_config.yaml
+./secure_run.sh --project template_code_project --config my_secure_config.yaml
 ```
 
 **From Python** (via steganography module):
@@ -51,7 +51,7 @@ from pathlib import Path
 from infrastructure.steganography import apply_steganography
 
 apply_steganography(
-    pdf_path=Path("output/code_project/pdf/paper.pdf"),
+    pdf_path=Path("output/template_code_project/pdf/paper.pdf"),
     config_path=Path("infrastructure/config/secure_config.yaml"),
 )
 ```

@@ -1,6 +1,6 @@
 # One-shot LLM prompt: new `projects/{name}/`
 
-Use this prompt when you want a model to scaffold a full project in one pass. Anchor layout and conventions on the control-positive exemplar [`projects/code_project/`](../../projects/code_project/).
+Use this prompt when you want a model to scaffold a full project in one pass. Anchor layout and conventions on the control-positive exemplar [`projects/template_code_project/`](../../projects/template_code_project/).
 
 **Checklist and pitfalls:** [new-project-setup.md](new-project-setup.md)
 
@@ -10,22 +10,29 @@ Use this prompt when you want a model to scaffold a full project in one pass. An
 
 | Control | Path | Role |
 | -------- | ----- | ----- |
-| A | [projects/code_project](../../projects/code_project/) | Flat `src/` modules, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/` layout |
+| A | [projects/template_code_project](../../projects/template_code_project/) | Flat `src/` modules, `scripts/` orchestrators, standard manuscript sections, reproducible figures/data, `tests/` layout |
 
 ## Prompt (copy from below into your assistant)
 
 ```text
-You are working inside the docxology/template monorepo. Create a new active project at projects/<PROJECT_SLUG>/ that matches the same shape and discipline as the control-positive exemplar projects/code_project/: flat src/ modules, analysis scripts as thin orchestrators, standard manuscript sectioning, reproducible figures/data, tests/ with conftest path and MPLBACKEND=Agg if using matplotlib, ≥90% coverage on projects/<PROJECT_SLUG>/src, no mocks.
+You are working inside the docxology/template monorepo. Create a new active project at projects/<PROJECT_SLUG>/ that matches the same shape and discipline as the control-positive exemplar projects/template_code_project/: flat src/ modules, analysis scripts as thin orchestrators, standard manuscript sectioning, reproducible figures/data, tests/ with conftest path and MPLBACKEND=Agg if using matplotlib, ≥90% coverage on projects/<PROJECT_SLUG>/src, no mocks.
 
 Required layout (must exist):
 
-projects/<PROJECT_SLUG>/
-├── pyproject.toml          # name, python version, deps, pytest + coverage for src
-├── src/
-│   └── __init__.py         # and real module(s) implementing domain logic
-└── tests/
-    ├── __init__.py
-    └── test_*.py           # ≥90% coverage on projects/<PROJECT_SLUG>/src; no mocks
+```mermaid
+flowchart LR
+    P[/projects/&lt;PROJECT_SLUG&gt;//]
+    P --> PY[pyproject.toml<br/>name · python version · deps ·<br/>pytest + coverage for src]
+    P --> SRC[/src/<br/>__init__.py + real modules<br/>implementing domain logic/]
+    P --> T[/tests/<br/>__init__.py · test_*.py<br/>≥ 90% coverage · no mocks/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class P d
+    class SRC,T pkg
+    class PY f
+```
 
 Strongly recommended (match the exemplar):
 
@@ -38,7 +45,7 @@ Rules:
 
 1. No unittest.mock, MagicMock, or pytest monkeypatch of domain code — use real data, temp files, subprocess, or pytest-httpserver for HTTP.
 2. Coverage: configure tool.coverage.run and fail_under in pyproject.toml like the exemplar; exercise all new src lines.
-3. Imports: use from src... in scripts/tests as in code_project; infrastructure imports allowed; never import another projects/* package.
+3. Imports: use from src... in scripts/tests as in template_code_project; infrastructure imports allowed; never import another projects/* package.
 4. Determinism: fixed RNG seeds for anything stochastic; headless plotting (MPLBACKEND=Agg) where relevant.
 5. Naming: <PROJECT_SLUG> is lowercase snake_case; package name in pyproject.toml aligns with repo conventions.
 

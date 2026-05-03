@@ -15,7 +15,7 @@ This directory holds **generator output** (`active_projects.md`) plus **maintain
 ## Conventions
 
 - Link to [`active_projects.md`](active_projects.md) for the authoritative list of discovered `projects/` names; avoid copying that roster into other guides.
-- For concrete paths in examples, default to [`projects/code_project/`](../../projects/code_project/).
+- For concrete paths in examples, default to [`projects/template_code_project/`](../../projects/template_code_project/).
 
 ## See Also
 

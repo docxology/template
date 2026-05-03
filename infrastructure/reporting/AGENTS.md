@@ -8,30 +8,30 @@ The reporting module provides reporting capabilities for pipeline execution, tes
 
 ### Module Structure
 
-```
-infrastructure/reporting/
-├── __init__.py
-├── error_aggregator.py
-├── executive_reporter.py
-├── report_generator.py
-├── report_builder.py
-├── pipeline_report_model.py
-├── pipeline_io.py
-├── pipeline_markdown.py
-├── pipeline_html.py
-├── output_organizer.py
-├── multi_project_reporter.py
-├── manuscript_overview.py
-├── coverage_reporter.py
-├── coverage_parser.py
-├── html_templates.py
-├── suite_runner.py
-├── _dashboard_*.py
-├── _executive_*.py
-├── _csv_*.py
-├── SKILL.md
-├── README.md
-└── AGENTS.md
+```mermaid
+flowchart TB
+    REP[/infrastructure/reporting//]
+    REP --> META[__init__.py · SKILL.md · README.md · AGENTS.md]
+    REP --> ERR[error_aggregator.py]
+    REP --> EXEC[executive_reporter.py]
+    REP --> GEN[report_generator.py · report_builder.py]
+    REP --> PIPE[pipeline_report_model.py · pipeline_io.py ·<br/>pipeline_markdown.py · pipeline_html.py]
+    REP --> ORG[output_organizer.py]
+    REP --> MULTI[multi_project_reporter.py]
+    REP --> MAN[manuscript_overview.py]
+    REP --> COV[coverage_reporter.py · coverage_parser.py]
+    REP --> HTML[html_templates.py]
+    REP --> SUITE[suite_runner.py]
+    REP --> PRIV[_dashboard_*.py · _executive_*.py · _csv_*.py]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef priv fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class REP d
+    class ERR,EXEC,GEN,PIPE,ORG,MULTI,MAN,COV,HTML,SUITE code
+    class PRIV priv
+    class META doc
 ```
 
 ### Design Principles
@@ -115,23 +115,23 @@ print(f"Copied {copied} combined PDFs")
 
 #### Target Directory Structure
 
-```
-output/executive_summary/
-├── png/              # All PNG visualizations
-├── pdf/              # All PDF visualizations
-├── csv/              # All CSV data exports
-├── html/             # All HTML dashboards
-├── json/             # All JSON reports
-├── md/               # All Markdown reports
-└── combined_pdfs/    # All project combined PDFs
-    ├── project1_combined.pdf
-    └── project2_combined.pdf
+```mermaid
+flowchart TB
+    EX[/output/executive_summary//]
+    EX --> PNG[/png/]
+    EX --> PDF[/pdf/]
+    EX --> CSV[/csv/]
+    EX --> HTML[/html/]
+    EX --> JSON[/json/]
+    EX --> MD[/md/]
+    EX --> CB[/combined_pdfs/<br/>project1_combined.pdf · project2_combined.pdf/]
 
-output/multi_project_summary/
-├── json/
-│   └── multi_project_summary.json
-└── md/
-    └── multi_project_summary.md
+    MS[/output/multi_project_summary//]
+    MS --> MS_JSON[/json/<br/>multi_project_summary.json/]
+    MS --> MS_MD[/md/<br/>multi_project_summary.md/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    class EX,PNG,PDF,CSV,HTML,JSON,MD,CB,MS,MS_JSON,MS_MD d
 ```
 
 #### Integration
@@ -543,7 +543,7 @@ from infrastructure.reporting import generate_executive_summary, save_executive_
 from pathlib import Path
 
 repo_root = Path(".")
-project_names = ["code_project"]
+project_names = ["template_code_project"]
 
 # Generate summary
 summary = generate_executive_summary(repo_root, project_names)
@@ -957,17 +957,19 @@ def generate_multi_project_report(
 
 ### Output Structure
 
-```
-output/executive_summary/
-├── consolidated_report.json      # Machine-readable metrics & health scores
-├── consolidated_report.html       # Styled HTML report with recommendations
-├── consolidated_report.md         # Human-readable markdown summary
-├── dashboard.png                  # matplotlib dashboard (9 charts)
-├── dashboard.pdf                  # Vector graphics dashboard for printing
-├── dashboard.html                 # Interactive Plotly dashboard (optional)
-├── project_metrics.csv           # Detailed project metrics table
-├── aggregate_metrics.csv         # Cross-project aggregate statistics
-└── health_scores.csv             # Project health scores breakdown
+```mermaid
+flowchart TB
+    EX[/output/executive_summary//]
+    EX --> CR[consolidated_report.json/.html/.md<br/>metrics · health scores · recommendations]
+    EX --> DB[dashboard.png/.pdf/.html<br/>matplotlib · vector · interactive Plotly · 9 charts]
+    EX --> PM[project_metrics.csv<br/>Detailed project metrics table]
+    EX --> AM[aggregate_metrics.csv<br/>Cross-project aggregate statistics]
+    EX --> HS[health_scores.csv<br/>Project health scores breakdown]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class EX d
+    class CR,DB,PM,AM,HS f
 ```
 
 ### Health Score Calculation

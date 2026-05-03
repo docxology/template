@@ -1,0 +1,8 @@
+__init__
+analysis
+config
+figures
+manuscript_variables
+pipeline
+report
+synthesis

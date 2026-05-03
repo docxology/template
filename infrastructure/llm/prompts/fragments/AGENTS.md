@@ -6,15 +6,23 @@ The `infrastructure/llm/prompts/fragments/` directory contains reusable prompt c
 
 ## Directory Structure
 
-```text
-infrastructure/llm/prompts/fragments/
-├── AGENTS.md                       # This technical documentation
-├── content_requirements.json       # Quality and completeness standards
-├── format_requirements.json        # Output formatting specifications
-├── section_structures.json         # Document organization templates
-├── system_prompts.json             # AI role and behavior definitions
-├── token_budget_awareness.json     # Token usage optimization guidance
-└── validation_hints.json           # Input validation and error handling
+```mermaid
+flowchart TB
+    F[/infrastructure/llm/prompts/fragments//]
+    F --> AG[AGENTS.md]
+    F --> CR[content_requirements.json<br/>Quality &amp; completeness standards]
+    F --> FR[format_requirements.json<br/>Output formatting specifications]
+    F --> SS[section_structures.json<br/>Document organization templates]
+    F --> SP[system_prompts.json<br/>AI role &amp; behavior definitions]
+    F --> TB[token_budget_awareness.json<br/>Token usage optimization]
+    F --> VH[validation_hints.json<br/>Input validation &amp; error handling]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef frag fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class F d
+    class CR,FR,SS,SP,TB,VH frag
+    class AG doc
 ```
 
 ## Fragment Types

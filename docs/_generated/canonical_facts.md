@@ -1,20 +1,37 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-04-24 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `pytest` discovery suite; `fep_lean` counts below are from the last full `projects/fep_lean` tree measurement (see commands).
+**Generated from live repo state on 2026-05-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `pytest tests/infra_tests/project/test_discovery.py --collect-only` (57 tests), `ls` of `projects/` and `infrastructure/`. Counts below for `fep_lean` are from the archived `projects_archive/fep_lean/` tree (see commands).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
 ## Project Roster
 
-**Active projects** — authoritative list: [`active_projects.md`](active_projects.md) (from `discover_projects()`). This checkout: `code_project` only.
+**Always-present canonical exemplars** (the only three guaranteed to live under `projects/`):
 
-**In-progress projects** (`projects_in_progress/`):
+- `template_code_project`
+- `template_prose_project`
+- `template_search_project`
 
-- act_inf_metaanalysis
+**Active projects this checkout** (`projects/`, from `discover_projects()`; rotates):
+
+- `template_code_project`
+- `template_prose_project`
+- `template_search_project`
+- `actinf_policy_entanglement_lean` (rotating)
+- `_test_project` (CI fixture; not a real research project)
+
+Authoritative list (regenerated): [`active_projects.md`](active_projects.md).
+
+**In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`):
+
 - biology_textbook
 - cogant
-- cognitive_integrity
+- corym
 - template
+- trsc
+- what_is_cogsec
+
+**Archived projects** (`projects_archive/`, preserved but not executed): includes `fep_lean`, `act_inf_metaanalysis`, `cognitive_integrity`, and others — list with `ls projects_archive/`.
 
 Regenerate [`active_projects.md`](active_projects.md) with:
 
@@ -22,25 +39,43 @@ Regenerate [`active_projects.md`](active_projects.md) with:
 uv run python scripts/generate_active_projects_doc.py
 ```
 
-Default exemplar for paths: `projects/code_project/`.
+Default exemplar for paths: `projects/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current subpackages under `infrastructure/` (13):
+Current Python subpackages under `infrastructure/` (17):
 
 - config
 - core
 - docker
 - documentation
 - llm
+- orchestration
 - project
+- prose
 - publishing
+- reference
 - rendering
 - reporting
 - scientific
+- search
 - skills
 - steganography
 - validation
+
+Plus `infrastructure/logrotate.d/` (config dir, not a Python package). Recount with:
+
+```bash
+find infrastructure -maxdepth 1 -type d ! -path infrastructure ! -path infrastructure/logrotate.d | wc -l
+```
+
+Python modules on disk:
+
+```bash
+find infrastructure -name '*.py' -type f | wc -l
+```
+
+(Last refreshed count: **313** on 2026-05-03.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -61,20 +96,20 @@ Coverage gates (enforced in CI):
 Run full suite with:
 
 ```bash
-uv run python scripts/01_run_tests.py --project code_project
+uv run python scripts/01_run_tests.py --project template_code_project
 ```
 
-### fep_lean (isolated project tree)
+### fep_lean (archived — `projects_archive/fep_lean/`)
 
-Run from `projects/fep_lean/` so `[tool.coverage.run] source = ["src"]` and multiprocessing coverage apply:
+`fep_lean` is currently archived and not executed by the active pipeline. When present under `projects/`, it has its own coverage gate (≥89 %) and isolated `pyproject.toml`. Historical run from the archive tree:
 
 ```bash
-cd projects/fep_lean
+cd projects_archive/fep_lean
 uv run pytest tests/ --collect-only -q
 uv run pytest tests/ -q --cov=src --cov-fail-under=89
 ```
 
-Last collection: **285** tests across **28** modules (adds `tests/test_hermes_error_paths.py` — 9 `pytest-httpserver`-backed tests covering `HermesExplainer.preflight()` and `HermesConfig.fallback_models`). Parallelism: optional `FEP_LEAN_PREFETCH`, Stage 4 `ThreadPoolExecutor`, figure `ProcessPoolExecutor` (spawn; `FEP_LEAN_FIGURES_MP=0` forces serial); `pytest-xdist` and `pytest-httpserver` are dev dependencies. See `projects/fep_lean/tests/AGENTS.md` and `projects/fep_lean/docs/pipeline.md`.
+Last historical collection: **285** tests across **28** modules (adds `tests/test_hermes_error_paths.py` — 9 `pytest-httpserver`-backed tests covering `HermesExplainer.preflight()` and `HermesConfig.fallback_models`). Parallelism: optional `FEP_LEAN_PREFETCH`, Stage 4 `ThreadPoolExecutor`, figure `ProcessPoolExecutor` (spawn; `FEP_LEAN_FIGURES_MP=0` forces serial); `pytest-xdist` and `pytest-httpserver` are dev dependencies. See `projects_archive/fep_lean/tests/AGENTS.md` and `projects_archive/fep_lean/docs/pipeline.md`.
 
 **Hermes resilience (new):** `HermesConfig.fallback_models` is a first-class user-supplied OpenRouter chain (overrides `_FREE_MODEL_CHAIN`); `HermesExplainer.preflight()` runs one `max_tokens=1` probe at the start of Stage 4, flipping `cfg.enabled=False` on 4xx so credential failures surface in <10 s instead of ~12 min into the batch. Actionable 403 logs link to `https://openrouter.ai/settings/keys` and the Anthropic-direct fallback (`HERMES_API_BASE=https://api.anthropic.com/v1` + `ANTHROPIC_API_KEY`). See `projects/fep_lean/docs/troubleshooting.md#hermes-http-403--key-limit-exceeded`.
 
@@ -125,7 +160,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```mermaid
 flowchart TD
-    Root[Root] --> Infra[infrastructure/ <br/>13 modules]
+    Root[Root] --> Infra[infrastructure/ <br/>17 modules]
     Root --> Projects[projects/ <br/>see active_projects.md]
     Root --> Tests[tests/infra_tests/]
     Infra --> Core[core/ <br/>pipeline, logging, files, config]

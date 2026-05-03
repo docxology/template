@@ -81,10 +81,15 @@ Thumbs.db
 # Test artifacts
 invalid/
 
-# Active projects (only code_project is the canonical control-positive exemplar;
-# others moved to projects_in_progress/ or projects_archive/)
-!projects/code_project/
-!projects/code_project/**
+# projects/: ignore all workspaces except the three canonical template exemplars
+# (Tracked copies of other projects remain in the index until `git rm -r --cached projects/<name>`.)
+projects/*
+!projects/template_code_project/
+!projects/template_code_project/**
+!projects/template_prose_project/
+!projects/template_prose_project/**
+!projects/template_search_project/
+!projects/template_search_project/**
 
 # Archived and in-progress projects (not executed by pipeline)
 projects_archive/
@@ -104,8 +109,4 @@ projects_in_progress/
 .scopes
 scripts/.scope
 tests/.scope
-/projects/fep_lean
-/projects/fep_lean
-.cursor/hooks/state/continual-learning.json
-.cursor/hooks/state/continual-learning.json
 .cursor/hooks/state/continual-learning.json

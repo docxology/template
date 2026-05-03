@@ -33,7 +33,7 @@
 1. **Edit the abstract**
 
    ```bash
-   vim projects/code_project/manuscript/01_abstract.md
+   vim projects/template_code_project/manuscript/01_abstract.md
    ```
 
 2. **Add your content**
@@ -54,7 +54,7 @@
 4. **View the result**
 
    ```bash
-   open output/code_project/pdf/01_abstract.pdf  # Individual section PDFs
+   open output/template_code_project/pdf/01_abstract.pdf  # Individual section PDFs
    ```
 
 **Expected Result**: Professional PDF with your content formatted
@@ -79,7 +79,7 @@
 2. **Create the file**
 
    ```bash
-   vim projects/code_project/manuscript/07_limitations.md
+   vim projects/template_code_project/manuscript/07_limitations.md
    ```
 
 3. **Add section header with label**
@@ -124,7 +124,7 @@
 1. **Create business logic in `projects/{name}/src/`**
 
    ```bash
-   vim projects/code_project/src/data_analysis.py
+   vim projects/template_code_project/src/data_analysis.py
    ```
 
    ```python
@@ -140,7 +140,7 @@
 2. **Create tests (90% minimum coverage required)**
 
    ```bash
-   vim projects/code_project/tests/test_data_analysis.py
+   vim projects/template_code_project/tests/test_data_analysis.py
    ```
 
    ```python
@@ -156,20 +156,20 @@
 3. **Run tests**
 
    ```bash
-   pytest projects/code_project/tests/test_data_analysis.py --cov=projects.code_project.src.data_analysis
+   pytest projects/template_code_project/tests/test_data_analysis.py --cov=projects.template_code_project.src.data_analysis
    ```
 
 4. **Create thin orchestrator script**
 
    ```bash
-   vim projects/code_project/scripts/my_analysis_figure.py
+   vim projects/template_code_project/scripts/my_analysis_figure.py
    ```
 
    ```python
    #!/usr/bin/env python3
    import os
    import matplotlib.pyplot as plt
-   from projects.code_project.src.data_analysis import analyze_data  # Import from project src/
+   from projects.template_code_project.src.data_analysis import analyze_data  # Import from project src/
    
    # Use src/ method for computation
    data = [1, 2, 3, 4, 5]
@@ -191,7 +191,7 @@
 5. **Run script**
 
    ```bash
-   uv run python projects/code_project/scripts/my_analysis_figure.py
+   uv run python projects/template_code_project/scripts/my_analysis_figure.py
    ```
 
 6. **Add to manuscript**
@@ -318,7 +318,7 @@ Table \ref{tab:performance} summarizes...
 **Validation**:
 
 ```bash
-uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
 ```
 
 **See Also**: [Markdown Template Guide](../usage/markdown-template-guide.md)
@@ -336,7 +336,7 @@ uv run python -m infrastructure.validation.cli markdown projects/code_project/ma
 1. **Create module in `projects/{name}/src/`**
 
    ```bash
-   vim projects/code_project/src/statistics.py
+   vim projects/template_code_project/src/statistics.py
    ```
 
    ```python
@@ -355,11 +355,11 @@ uv run python -m infrastructure.validation.cli markdown projects/code_project/ma
 2. **Create tests**
 
    ```bash
-   vim projects/code_project/tests/test_statistics.py
+   vim projects/template_code_project/tests/test_statistics.py
    ```
 
    ```python
-   from projects.code_project.src.statistics import calculate_variance, calculate_std_dev
+   from projects.template_code_project.src.statistics import calculate_variance, calculate_std_dev
    
    def test_calculate_variance():
        values = [1, 2, 3, 4, 5]
@@ -375,7 +375,7 @@ uv run python -m infrastructure.validation.cli markdown projects/code_project/ma
 3. **Ensure coverage**
 
    ```bash
-   pytest projects/code_project/tests/test_statistics.py --cov=projects.code_project.src.statistics --cov-report=term-missing
+   pytest projects/template_code_project/tests/test_statistics.py --cov=projects.template_code_project.src.statistics --cov-report=term-missing
    ```
 
 4. **Use in scripts (thin orchestrator)**
@@ -411,7 +411,7 @@ uv run python -m infrastructure.validation.cli markdown projects/code_project/ma
 1. **Create test file**
 
    ```bash
-   vim projects/code_project/tests/test_my_module.py
+   vim projects/template_code_project/tests/test_my_module.py
    ```
 
 2. **Import module to test**
@@ -442,7 +442,7 @@ uv run python -m infrastructure.validation.cli markdown projects/code_project/ma
 4. **Run tests with coverage**
 
    ```bash
-   pytest projects/code_project/tests/test_my_module.py --cov=projects.code_project.src.my_module --cov-report=term-missing
+   pytest projects/template_code_project/tests/test_my_module.py --cov=projects.template_code_project.src.my_module --cov-report=term-missing
    ```
 
 5. **Check for missing lines**
@@ -478,13 +478,13 @@ uv run python -m infrastructure.validation.cli markdown projects/code_project/ma
 2. **Run specific test**
 
    ```bash
-   pytest projects/code_project/tests/test_my_module.py::test_specific_function -v
+   pytest projects/template_code_project/tests/test_my_module.py::test_specific_function -v
    ```
 
 3. **Use debugger**
 
    ```bash
-   pytest projects/code_project/tests/test_my_module.py --pdb
+   pytest projects/template_code_project/tests/test_my_module.py --pdb
    ```
 
 4. **Check detailed output**

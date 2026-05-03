@@ -2,9 +2,17 @@
 
 **Author:** Hermes Agent  
 **Date:** 2026-04-27  
+**Last Verified:** 2026-05-03  
 **Review Scope:** `docs/` (165 Markdown files, ~42k lines)  
 **Review Depth:** 15 automated passes + manual inspection  
-**Status:** ✅ Production-grade with all critical issues resolved
+**Status:** ✅ Production-grade with all critical issues resolved (re-verified 2026-05-03)
+
+> **2026-05-03 remediation note:** A follow-up pass found one residual issue from
+> the original report — `docs/rules/documentation_standards.md` line 410 still
+> contained the bare `configuration.md` link instead of
+> `../operational/config/configuration.md`. That was corrected on 2026-05-03 in
+> the same change set that updated this report. All other claims in this
+> document were spot-checked and remain accurate.
 
 ---
 
@@ -24,7 +32,7 @@ A comprehensive, multi-pass review of the entire `docs/` directory was conducted
 | 2 | fep_lean active-path misuse | ✓ Properly conditional/archived |
 | 3 | Command/ code examples technical accuracy | ✓ All valid |
 | 4 | Stage count terminology consistency | ✓ All correct |
-| 5 | Exemplar project name usage | ✓ code_project used throughout |
+| 5 | Exemplar project name usage | ✓ template_code_project used throughout |
 | 6 | Hub navigation (README) completeness | ✓ All major sections present |
 | 7 | Deprecated/ confusing terminology | ✓ Appropriate uses only |
 | 8 | Heading structure & orphan prevention | ✓ Every file has H1 |
@@ -44,9 +52,9 @@ A comprehensive, multi-pass review of the entire `docs/` directory was conducted
 
 | File | Fix |
 |------|-----|
-| `docs/README.md` | `../projects/fep_lean/docs/` → `../projects/code_project/docs/` |
-| `docs/best-practices/multi-project-management.md` | `projects/fep_lean/docs/` → `projects/code_project/docs/` |
-| `docs/documentation-index.md` | Heading changed to `code_project / CI paths`; link updated |
+| `docs/README.md` | `../projects/fep_lean/docs/` → `../projects/template_code_project/docs/` |
+| `docs/best-practices/multi-project-management.md` | `projects/fep_lean/docs/` → `projects/template_code_project/docs/` |
+| `docs/documentation-index.md` | Heading changed to `template_code_project / CI paths`; link updated |
 | `docs/rules/documentation_standards.md` | Fixed relative paths: `../infrastructure/AGENTS.md` → `../../infrastructure/AGENTS.md` (4 occurrences); `configuration.md` → `../operational/config/configuration.md`; also fixed code example `../../../` → `../../` |
 | `docs/operational/config/configuration.md` | `projects/fep_lean/` path → `projects_archive/fep_lean/` for functional link |
 
@@ -55,12 +63,12 @@ A comprehensive, multi-pass review of the entire `docs/` directory was conducted
 | File | Before | After |
 |------|--------|-------|
 | `reference/glossary.md` | Build Pipeline described as `Tests → Scripts → Validation → Glossary → Individual PDFs → Combined PDF` | Replaced with accurate DAG: Clean → Setup → Infra Tests → Project Tests → Analysis → PDF Render → Validate → Copy → LLM Review/Translations |
-| `reference/quick-start-cheatsheet.md` | Coverage command `--cov=projects.code_project.src` (invalid) | `--cov=projects/code_project/src` (filesystem path) |
-| `reference/quick-start-cheatsheet.md` | Import `from projects.code_project.src.example import calculate_average` (non-existent) | `from src.optimizer import gradient_descent` (real exemplar code) |
+| `reference/quick-start-cheatsheet.md` | Coverage command `--cov=projects.template_code_project.src` (invalid) | `--cov=projects/template_code_project/src` (filesystem path) |
+| `reference/quick-start-cheatsheet.md` | Import `from projects.template_code_project.src.example import calculate_average` (non-existent) | `from src.optimizer import gradient_descent` (real exemplar code) |
 
 ### 3. Outdated Project References
 
-All active-example references now use `code_project` (guaranteed stable exemplar) instead of archived `fep_lean`. Conditional references to `fep_lean/` are properly annotated with "archived" or "when present" context only.
+All active-example references now use `template_code_project` (guaranteed stable exemplar) instead of archived `fep_lean`. Conditional references to `fep_lean/` are properly annotated with "archived" or "when present" context only.
 
 ### 4. Discoverability Enhancements
 

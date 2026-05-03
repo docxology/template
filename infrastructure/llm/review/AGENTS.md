@@ -6,13 +6,20 @@ The `infrastructure/llm/review/` directory contains the manuscript review system
 
 ## Directory Structure
 
-```text
-infrastructure/llm/review/
-├── AGENTS.md               # This technical documentation
-├── __init__.py            # Package exports
-├── generator.py           # Review generation logic
-├── io.py                  # Review I/O operations and formatting
-└── metrics.py             # Review quality metrics and analysis
+```mermaid
+flowchart LR
+    R[/infrastructure/llm/review//]
+    R --> META[AGENTS.md · __init__.py]
+    R --> GEN[generator.py<br/>Review generation logic]
+    R --> IO[io.py<br/>Review I/O · formatting]
+    R --> MET[metrics.py<br/>Review quality metrics]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class R d
+    class GEN,IO,MET code
+    class META doc
 ```
 
 ## Key Components

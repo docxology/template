@@ -17,7 +17,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`testing-and-reproducibility.md`](testing-and-reproducibility.md) | Testing and reproducibility guide (Levels 7-9) | Advanced |
 | [`extending-and-automation.md`](extending-and-automation.md) | Extending and automation guide (Levels 10-12) | Expert |
 | [`new-project-setup.md`](new-project-setup.md) | New project checklist (pitfalls and venv) | All levels |
-| [`new-project-one-shot-prompt.md`](new-project-one-shot-prompt.md) | Copy-paste LLM prompt (positive controls: code_project + template) | All levels |
+| [`new-project-one-shot-prompt.md`](new-project-one-shot-prompt.md) | Copy-paste LLM prompt (positive controls: template_code_project + template) | All levels |
 | [`llm-integration-guide.md`](llm-integration-guide.md) | AI-assisted research with Ollama (LLM review, translation) | Expert |
 | [`publishing-guide.md`](publishing-guide.md) | Publishing workflow (DOI, Zenodo, arXiv, citations) | Expert |
 | [`secure-research-guide.md`](secure-research-guide.md) | PDF watermarking, provenance, and integrity | Expert |

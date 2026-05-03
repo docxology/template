@@ -27,10 +27,10 @@ The simplest way to use steganography is via `secure_run.sh`:
 
 ```bash
 # Full pipeline + steganography
-./secure_run.sh --project code_project
+./secure_run.sh --project template_code_project
 
 # Steganography only (on existing PDFs)
-./secure_run.sh --steganography-only --project code_project
+./secure_run.sh --steganography-only --project template_code_project
 ```
 
 ---
@@ -44,7 +44,7 @@ from infrastructure.steganography import embed_steganography
 from pathlib import Path
 
 # All techniques enabled with defaults
-embed_steganography(Path("output/code_project/pdf/code_project_combined.pdf"))
+embed_steganography(Path("output/template_code_project/pdf/code_project_combined.pdf"))
 # Creates: code_project_combined_steganography.pdf + .hashes.json
 ```
 
@@ -64,7 +64,7 @@ config = SteganographyConfig(
 
 processor = SteganographyProcessor(config)
 result = processor.process(
-    pdf_path=Path("output/code_project/pdf/code_project_combined.pdf"),
+    pdf_path=Path("output/template_code_project/pdf/code_project_combined.pdf"),
     title="My Research Paper",
     author="Daniel Ari Friedman",
 )
@@ -129,8 +129,8 @@ python3 -c "
 import hashlib, json
 from pathlib import Path
 
-pdf = Path('output/code_project/pdf/code_project_combined_steganography.pdf')
-manifest = Path('output/code_project/pdf/code_project_combined.hashes.json')
+pdf = Path('output/template_code_project/pdf/code_project_combined_steganography.pdf')
+manifest = Path('output/template_code_project/pdf/code_project_combined.hashes.json')
 
 computed = hashlib.sha256(pdf.read_bytes()).hexdigest()
 expected = json.loads(manifest.read_text())['sha256']

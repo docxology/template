@@ -124,7 +124,7 @@ The rendering hooks resolve any nested structures using flatten techniques:
 
 ### Synthetic Pipeline Agnosticism
 
-For structural project topologies resembling `fep_lean`—but completely backward-compatible with generalized architectures (`code_project`, `template`)—the module automatically evaluates synthetic parameters to simplify front-end syntax:
+For structural project topologies resembling `fep_lean`—but completely backward-compatible with generalized architectures (`template_code_project`, `template`)—the module automatically evaluates synthetic parameters to simplify front-end syntax:
 
 - Synthesizes `total_topics` and `total_areas` aggregations based on count metrics if relevant keys exist.
 - Emits derived representations like dynamically scaled `maturity_icon` semantics (`✅`, `⚠️`, `○`) and string metric transformations like `lean_chars` based on codebase properties.

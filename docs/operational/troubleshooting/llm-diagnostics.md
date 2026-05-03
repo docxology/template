@@ -38,7 +38,7 @@ export LLM_REVIEW_TIMEOUT=600
 export LLM_MAX_INPUT_LENGTH=100000
 
 # Run with custom settings
-uv run python scripts/06_llm_review.py --project code_project --reviews-only
+uv run python scripts/06_llm_review.py --project template_code_project --reviews-only
 ```
 
 ---

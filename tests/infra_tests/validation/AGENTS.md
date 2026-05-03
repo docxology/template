@@ -6,22 +6,23 @@ The `tests/infra_tests/validation/` directory contains tests for the validation 
 
 ## Directory Structure
 
-```
-tests/infra_tests/validation/
-├── AGENTS.md                           # This technical documentation
-├── __init__.py                        # Test package initialization
-├── conftest.py                        # Test configuration and fixtures
-├── test_cli.py                        # CLI interface tests
-├── test_config.py                     # Configuration tests
-├── test_doc_completeness.py           # Document completeness tests
-├── test_doc_scanner.py                # Document scanning tests
-├── test_figure_validator.py           # Figure validation tests
-├── test_integrity.py                  # File integrity tests
-├── test_markdown_validator.py         # Markdown validation tests
-├── test_package_validator.py          # Package validation tests
-├── test_pdf_validator.py              # PDF validation tests
-├── test_validation_cli.py             # Validation CLI tests
-└── test_validation_integration.py     # Integration tests
+```mermaid
+flowchart TB
+    T[/tests/infra_tests/validation//]
+    T --> META[AGENTS.md · __init__.py · conftest.py]
+    T --> CFG[Configuration<br/>test_config]
+    T --> DOC[Documentation<br/>test_doc_completeness · test_doc_scanner]
+    T --> CONTENT[Content validators<br/>test_figure_validator · test_markdown_validator ·<br/>test_pdf_validator · test_package_validator]
+    T --> INT[Integrity<br/>test_integrity]
+    T --> CLI[CLI<br/>test_cli · test_validation_cli]
+    T --> INTEG[Integration<br/>test_validation_integration]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class CFG,DOC,CONTENT,INT,CLI,INTEG cat
+    class META doc
 ```
 
 ## Test Categories

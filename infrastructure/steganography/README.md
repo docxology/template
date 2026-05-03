@@ -55,7 +55,7 @@ steganography:
 ./secure_run.sh
 
 # Specific project
-./secure_run.sh --project code_project
+./secure_run.sh --project template_code_project
 
 # Post-process existing PDFs only (skip pipeline)
 ./secure_run.sh --steganography-only
@@ -121,10 +121,22 @@ process_pdf(Path("paper.pdf"), config=config, title="My Paper")
 
 ## Architecture
 
-```
-Input PDF ──→ [Hashing] ──→ [Overlays+Barcodes] ──→ [Metadata] ──→ [Encryption] ──→ Output PDF
-                 │                                                         │
-                 └── .hashes.json manifest ────────────────────────────────┘
+```mermaid
+flowchart LR
+    IN[Input PDF] --> H[Hashing]
+    H --> OB[Overlays + Barcodes]
+    OB --> META[Metadata]
+    META --> ENC[Encryption · optional]
+    ENC --> OUT[Output PDF]
+    H -.SHA-256/SHA-512 manifest.-> MAN[.hashes.json]
+    META -.signed payload.-> MAN
+
+    classDef io fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef proc fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef art fill:#7c2d12,stroke:#0f172a,color:#fff
+    class IN,OUT io
+    class H,OB,META,ENC proc
+    class MAN art
 ```
 
 The module follows the thin orchestrator pattern: `SteganographyProcessor.process()`

@@ -1,0 +1,178 @@
+#!/usr/bin/env python3
+"""
+review — Unified project-specific review orchestration.
+
+Executes a configurable sequence of validation stages defined in
+review_config.yaml.  Each stage is either:
+
+  * ``infra``  — subprocess: ``python -m <module> <command> [args]``
+  * ``script``  — subprocess: ``python <script_path> [args]``  (future extensibility)
+
+Configuration lives in ``review_config.yaml`` at the project root.
+
+Usage:
+    uv run python projects/template_search_project/scripts/review
+    uv run python projects/template_search_project/scripts/review --stage bibliography_completeness
+    uv run python projects/template_search_project/scripts/review --fail-fast
+    uv run python projects/template_search_project/scripts/review --list
+"""
+
+from __future__ import annotations
+
+import os
+import argparse
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+_project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_project_root))          # project root for src/ imports
+sys.path.insert(0, str(_project_root / "src"))
+sys.path.insert(0, str(_project_root.parent.parent))  # template/ root for infrastructure/
+
+
+def load_config(project_root: Path) -> dict:
+    import yaml
+    cfg_path = project_root / "review_config.yaml"
+    if not cfg_path.exists():
+        raise FileNotFoundError(f"Missing {cfg_path}")
+    with open(cfg_path) as f:
+        config = yaml.safe_load(f) or {}
+    return config.get("review", {})
+
+
+def run_infra_stage(name: str, module: str, command: str, args: list[str], cwd: Path) -> dict:
+    cmd = [sys.executable, "-m", module, command, *args]
+    env = _subprocess_env()  # ensure infrastructure/ on PYTHONPATH
+    result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env)
+    return {
+        "name": name,
+        "type": "infra",
+        "module": module,
+        "command": command,
+        "args": args,
+        "exit_code": result.returncode,
+        "stdout": result.stdout[-1000:],
+        "stderr": result.stderr[-500:],
+        "success": result.returncode == 0,
+    }
+
+
+def _subprocess_env(base_env: dict | None = None) -> dict:
+    env = dict(base_env or os.environ)
+    # Ensure template/ root is on PYTHONPATH so `infrastructure/` resolves
+    # __file__ is projects/<name>/scripts/review; template/ is 3 parents up
+    template_root = str(Path(__file__).resolve().parents[3])  # projects/<name>/scripts/review → template/
+    p = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = template_root + (":" + p if p else "")
+    return env
+
+
+def run_custom_stage(name: str, cwd: Path) -> dict:
+    """Invoke src.analysis module as a subprocess with --stage."""
+    cmd = [sys.executable, "-m", "src.analysis", "--stage", name, "--project-root", str(cwd)]
+    env = _subprocess_env()
+    # DEBUG: log env PYTHONPATH
+    print(f"[DEBUG] PYTHONPATH for subprocess: {env.get('PYTHONPATH')}", file=sys.stderr)
+    result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, env=env)
+    parsed: dict = {}
+    if result.returncode in (0, 1) and result.stdout.strip():
+        try:
+            parsed = json.loads(result.stdout)
+        except Exception:
+            parsed = {"raw_stdout": result.stdout[:200]}
+    return {
+        "name": name,
+        "type": "custom",
+        "exit_code": result.returncode,
+        "stdout": result.stdout[-500:],
+        "stderr": result.stderr[-200:],
+        "success": result.returncode == 0,
+        "result": parsed,
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--project-root", default=str(_project_root))
+    parser.add_argument("--stage", action="append")
+    parser.add_argument("--fail-fast", action="store_true")
+    parser.add_argument("--list", action="store_true", dest="list_stages")
+    args = parser.parse_args()
+
+    project_root = Path(args.project_root).resolve()
+    config = load_config(project_root)
+    stages = config.get("stages", [])
+    out_cfg = config.get("output", {})
+    out_dir = project_root / out_cfg.get("dir", "output/review")
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.list_stages:
+        print("Configured review stages:")
+        for s in stages:
+            marker = "✓" if s.get("enabled") else "✗"
+            print(f"  [{marker}] {s['name']}: {s.get('description','')}")
+        return 0
+
+    if args.stage:
+        wanted = set(args.stage)
+        stages = [s for s in stages if s["name"] in wanted]
+        if len(stages) < len(wanted):
+            missing = sorted(wanted - {s["name"] for s in stages})
+            print(f"Unknown stage(s): {', '.join(missing)}", file=sys.stderr)
+            return 2
+
+    results: list[dict] = []
+    for stage in stages:
+        if not stage.get("enabled", True):
+            results.append({"name": stage["name"], "status": "skipped", "message": "disabled"})
+            continue
+
+        name = stage["name"]
+        if stage.get("infra_module"):
+            res = run_infra_stage(
+                name,
+                stage["infra_module"],
+                stage["command"],
+                stage.get("args", []),
+                project_root,
+            )
+        elif stage.get("stage_type") == "custom":
+            res = run_custom_stage(name, project_root)
+        else:
+            print(f"Stage `{name}` misconfigured", file=sys.stderr)
+            return 2
+
+        results.append(res)
+        with open(out_dir / f"stage_{name}.json", "w") as f:
+            json.dump(res, f, indent=2)
+
+        if not res["success"] and args.fail_fast:
+            print(f"Failing fast after `{name}` failed")
+            break
+
+    passed = sum(1 for r in results if r.get("success"))
+    failed = sum(1 for r in results if not r.get("success") and r.get("status") != "skipped")
+    skipped = sum(1 for r in results if r.get("status") == "skipped")
+
+    summary = {
+        "total": len(results),
+        "passed": passed,
+        "failed": failed,
+        "skipped": skipped,
+        "overall_exit_code": 0 if failed == 0 else 1,
+    }
+    with open(out_dir / out_cfg.get("summary_json", "summary.json"), "w") as f:
+        json.dump(summary, f, indent=2)
+
+    print(f"\nReview: {passed} passed, {failed} failed, {skipped} skipped")
+    for r in results:
+        icon = "✓" if r.get("success") else ("○" if r.get("status") == "skipped" else "✗")
+        print(f"  {icon} {r['name']}")
+
+    return summary["overall_exit_code"]
+
+
+if __name__ == "__main__":
+    sys.exit(main())

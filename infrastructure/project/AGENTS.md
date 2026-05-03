@@ -58,24 +58,23 @@ Recommended but not required:
 
 ### Example Project Structure
 
-```
-projects/
-├── project/              # Default template project
-│   ├── src/
-│   ├── tests/
-│   ├── scripts/
-│   ├── manuscript/
-│   ├── output/           # Generated (not in git)
-│   └── pyproject.toml
-├── myresearch/           # Custom project 1
-│   ├── src/
-│   ├── tests/
-│   ├── manuscript/
-│   └── pyproject.toml
-└── experiment2/          # Custom project 2
-    ├── src/
-    ├── tests/
-    └── pyproject.toml
+```mermaid
+flowchart TB
+    PR[/projects//]
+    PR --> P[/project/<br/>Default template project/]
+    PR --> MY[/myresearch/<br/>Custom project 1/]
+    PR --> EX[/experiment2/<br/>Custom project 2/]
+
+    P --> P_F[src/ · tests/ · scripts/ ·<br/>manuscript/ · output/ · pyproject.toml]
+    MY --> MY_F[src/ · tests/ · manuscript/ · pyproject.toml]
+    EX --> EX_F[src/ · tests/ · pyproject.toml]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class PR d
+    class P,MY,EX pkg
+    class P_F,MY_F,EX_F f
 ```
 
 ## Discovery Scope and Project Organization

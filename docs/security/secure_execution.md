@@ -8,7 +8,7 @@ Post-processing is the same for every workspace returned by `discover_projects()
 
 | Project | Pages | Overlays | Barcodes | Metadata | XMP | Manifest |
 |---------|-------|----------|----------|----------|-----|----------|
-| `code_project` | varies by manuscript build | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `template_code_project` | varies by manuscript build | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 **All other active `projects/` names:** [_generated/active_projects.md](../_generated/active_projects.md). Anything under `projects_archive/` or `projects_in_progress/` is not processed until moved into `projects/`.
 
@@ -39,8 +39,8 @@ For automated deployments or rapid iteration, `secure_run.sh` supports standard 
 ```
 
 ```bash
-# Don't run the pipeline at all, just search for existing PDF files and apply Steganography to them for the specific code_project
-./secure_run.sh --project code_project --steganography-only
+# Don't run the pipeline at all, just search for existing PDF files and apply Steganography to them for the specific template_code_project
+./secure_run.sh --project template_code_project --steganography-only
 ```
 
 ### Full Flag List

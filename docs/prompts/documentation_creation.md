@@ -10,7 +10,7 @@ This prompt leverages the documentation standards to create professional documen
 
 - [`../rules/documentation_standards.md`](../rules/documentation_standards.md) - Documentation writing standards
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
-- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
+- [`../../projects/template_code_project/AGENTS.md`](../../projects/template_code_project/AGENTS.md) - Project documentation example
 
 ## Prompt Template
 
@@ -31,9 +31,9 @@ Create technical documentation following the AGENTS.md standard:
 ```markdown
 # [Target Name]
 
-> **[Brief description]** - [Purpose and scope]
+> **[Brief description]** — [Purpose and scope]
 
-**[Quick Reference:** [Related docs and navigation links]
+**Quick reference:** [Related docs and navigation links]
 
 ## Overview
 
@@ -102,28 +102,11 @@ Create technical documentation following the AGENTS.md standard:
 
 ### Content Requirements
 
-**Show, Don't Tell:**
+**Show, don't tell** — prefer runnable snippets over adjectives.
 
-```markdown
-# ❌ BAD: Vague explanation
-This module provides data processing capabilities with various algorithms.
+Bad: vague capability list with no API surface. Good: short example that imports public symbols, runs one path, and asserts observable outcomes (see [`../rules/documentation_standards.md`](../rules/documentation_standards.md)).
 
-# ✅ GOOD: Concrete examples
-```python
-from data_processing import DataProcessor
-
-# Process CSV data with validation
-processor = DataProcessor(config={'validate': True})
-result = processor.process_csv('data.csv')
-
-# Result includes validated data and processing statistics
-assert result['valid_rows'] == 1000
-assert result['processing_time'] < 5.0
-```
-
-```
-
-**API Documentation:**
+**API documentation:**
 ```markdown
 #### `DataProcessor`
 
@@ -386,7 +369,7 @@ TARGET PATH: infrastructure/data_quality/
 
 - [`../rules/documentation_standards.md`](../rules/documentation_standards.md) - Documentation writing standards
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
-- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
+- [`../../projects/template_code_project/AGENTS.md`](../../projects/template_code_project/AGENTS.md) - Project documentation example
 - [`../../README.md`](../../README.md) - README.md standards example
 
 ```

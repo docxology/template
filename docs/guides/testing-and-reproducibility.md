@@ -75,9 +75,9 @@ flowchart TD
 **Step 1: Write Test First** (RED)
 
 ```python
-# projects/code_project/tests/test_optimization.py
+# projects/template_code_project/tests/test_optimization.py
 import pytest
-from projects.code_project.src.optimization import gradient_descent
+from projects.template_code_project.src.optimization import gradient_descent
 
 def test_gradient_descent_converges():
     """Test that gradient descent converges for quadratic function."""
@@ -100,14 +100,14 @@ def test_gradient_descent_converges():
 **Step 2: Run Test** (FAILS)
 
 ```bash
-uv run pytest projects/code_project/tests/test_optimization.py
+uv run pytest projects/template_code_project/tests/test_optimization.py
 # ImportError: No module named 'optimization'
 ```
 
 **Step 3: Write Minimum Code** (GREEN)
 
 ```python
-# projects/code_project/src/optimization.py
+# projects/template_code_project/src/optimization.py
 class OptimizationResult:
     """Container for optimization results."""
     def __init__(self, x, f_x, converged, iterations):
@@ -140,7 +140,7 @@ def gradient_descent(objective_fn, gradient_fn, initial_x,
 **Step 4: Run Test** (PASSES)
 
 ```bash
-uv run pytest projects/code_project/tests/test_optimization.py
+uv run pytest projects/template_code_project/tests/test_optimization.py
 # ✓ test_gradient_descent_converges PASSED
 ```
 
@@ -184,7 +184,7 @@ def test_gradient_descent_tolerance():
 **Step 6: Check Coverage**
 
 ```bash
-uv run pytest projects/code_project/tests/test_optimization.py --cov=projects.code_project.src.optimization --cov-report=term-missing
+uv run pytest projects/template_code_project/tests/test_optimization.py --cov=projects.template_code_project.src.optimization --cov-report=term-missing
 ```
 
 Expected: Coverage requirements met (90% project, 60% infra)
@@ -194,12 +194,12 @@ Expected: Coverage requirements met (90% project, 60% infra)
 **Check for missing lines**:
 
 ```bash
-uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=term-missing
 
 # Output shows:
 # Name                                              Stmts   Miss  Cover   Missing
 # ---------------------------------------------------------------------------------
-# projects/code_project/src/optimization.py           25      2    92%   45-46
+# projects/template_code_project/src/optimization.py           25      2    92%   45-46
 ```
 
 **Lines 45-46 are not covered** - add test:
@@ -213,7 +213,7 @@ def test_edge_case_that_hits_lines_45_46():
 **Generate HTML report** for visual inspection:
 
 ```bash
-uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -240,7 +240,7 @@ This template enforces:
 **Example: Optimization with multiple algorithms**
 
 ```python
-# projects/code_project/src/optimizers.py
+# projects/template_code_project/src/optimizers.py
 from typing import Callable, List, Tuple
 from dataclasses import dataclass
 
@@ -344,10 +344,10 @@ def adam_optimizer(
 ### Testing
 
 ```python
-# projects/code_project/tests/test_optimizers.py
+# projects/template_code_project/tests/test_optimizers.py
 import pytest
 import numpy as np
-from projects.code_project.src.optimizers import (
+from projects.template_code_project.src.optimizers import (
     gradient_descent_with_momentum,
     adam_optimizer,
     OptimizerConfig
@@ -419,7 +419,7 @@ def test_optimizer_history():
 ### Advanced Scripts
 
 ```python
-# projects/code_project/scripts/optimizer_comparison.py
+# projects/template_code_project/scripts/optimizer_comparison.py
 #!/usr/bin/env python3
 """Compare multiple optimization algorithms."""
 import os
@@ -428,7 +428,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.code_project.src.optimizers import (
+from projects.template_code_project.src.optimizers import (
     gradient_descent_with_momentum,
     adam_optimizer,
     OptimizerConfig
@@ -622,7 +622,7 @@ Use the infrastructure validation module to verify output integrity programmatic
 from infrastructure.validation import verify_output_integrity
 from pathlib import Path
 
-report = verify_output_integrity(Path("output/code_project"))
+report = verify_output_integrity(Path("output/template_code_project"))
 if report.overall_integrity:
     print("All integrity checks passed")
 else:
@@ -637,7 +637,7 @@ See the [Validation Module Guide](../modules/guides/validation-module.md) for fu
 For publication-grade provenance, the steganography module embeds SHA-256 hashes and watermarks directly into your PDFs:
 
 ```bash
-./secure_run.sh --project code_project
+./secure_run.sh --project template_code_project
 ```
 
 This creates a tamper-detectable PDF with embedded provenance metadata. See the [Secure Research Guide](secure-research-guide.md) for details.
@@ -653,7 +653,7 @@ This creates a tamper-detectable PDF with embedded provenance metadata. See the 
 **Solution**:
 ```bash
 # Find uncovered lines
-pytest --cov=projects.code_project.src --cov-report=term-missing
+pytest --cov=projects.template_code_project.src --cov-report=term-missing
 # Add tests for lines marked as "Missing"
 ```
 

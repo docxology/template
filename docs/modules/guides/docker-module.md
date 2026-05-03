@@ -37,7 +37,7 @@ docker compose --profile dev --profile ollama up -d
 docker exec -it research-template-dev bash
 
 # Run full pipeline inside container
-./run.sh --pipeline --project code_project
+./run.sh --pipeline --project template_code_project
 
 # Stop all services
 docker compose down
@@ -77,7 +77,7 @@ When running inside Docker with the `ollama` profile, the LLM module connects au
 docker exec research-ollama ollama pull gemma3:4b
 
 # Then run LLM-tagged pipeline stages
-./run.sh --pipeline --project code_project
+./run.sh --pipeline --project template_code_project
 ```
 
 ---

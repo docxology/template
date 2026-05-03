@@ -2,7 +2,7 @@
 
 This index lists documentation files in the Research Project Template by category.
 
-**Project layout:** `projects/` is a **rotating** set of workspaces. The only path **guaranteed** for documentation examples is [`projects/code_project/`](../projects/code_project/). Authoritative current names: [`_generated/active_projects.md`](_generated/active_projects.md).
+**Project layout:** `projects/` is a **rotating** set of workspaces. The only path **guaranteed** for documentation examples is [`projects/template_code_project/`](../projects/template_code_project/). Authoritative current names: [`_generated/active_projects.md`](_generated/active_projects.md).
 
 ## Quick start by persona
 
@@ -85,7 +85,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[PAI.md](PAI.md)** - Personal AI Infrastructure (PAI) context
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration reference
 - **[../.github/README.md](../.github/README.md)** - **GitHub**: Actions workflows, Dependabot, issue/PR templates, mirroring CI locally
-- **[_generated/](_generated/README.md)** — folder policy; **[_generated/AGENTS.md](_generated/AGENTS.md)** — technical notes for this directory (hand-maintained). **Only** **[_generated/active_projects.md](_generated/active_projects.md)** is produced by `generate_active_projects_doc.py`; it is the single source of truth for active `projects/` names (do not copy that roster elsewhere; default path examples to [`projects/code_project/`](../projects/code_project/))
+- **[_generated/](_generated/README.md)** — folder policy; **[_generated/AGENTS.md](_generated/AGENTS.md)** — technical notes for this directory (hand-maintained). **Only** **[_generated/active_projects.md](_generated/active_projects.md)** is produced by `generate_active_projects_doc.py`; it is the single source of truth for active `projects/` names (do not copy that roster elsewhere; default path examples to [`projects/template_code_project/`](../projects/template_code_project/))
 - **Agent skills manifest** — `uv run python -m infrastructure.skills write` (default output: `.cursor/skill_manifest.json`) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
 - **Open Gauss naming** — [reference/opengauss-naming.md](reference/opengauss-naming.md) (math-inc `gauss` CLI vs Huawei DBMS; does not require `fep_lean` on disk)
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
@@ -119,15 +119,16 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 ### Skill-Level Guides
 
 - **[guides/getting-started.md](guides/getting-started.md)** - Levels 1-3 (Beginner)
+- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** - Canonical manuscript syntax (citations, cross-references, sections, tokens) shared by all three template exemplars
 - **[guides/figures-and-analysis.md](guides/figures-and-analysis.md)** - Levels 4-6 (Intermediate)
 - **[guides/testing-and-reproducibility.md](guides/testing-and-reproducibility.md)** - Levels 7-9 (Advanced)
 - **[guides/extending-and-automation.md](guides/extending-and-automation.md)** - Levels 10-12 (Expert)
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** - New project checklist (all learnings)
-- **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (primary exemplar: [`projects/code_project/`](../projects/code_project/); other active names: [_generated/active_projects.md](_generated/active_projects.md))
+- **[guides/new-project-one-shot-prompt.md](guides/new-project-one-shot-prompt.md)** - One-shot LLM prompt for new `projects/{name}/` (primary exemplar: [`projects/template_code_project/`](../projects/template_code_project/); other active names: [_generated/active_projects.md](_generated/active_projects.md))
 - **[guides/llm-integration-guide.md](guides/llm-integration-guide.md)** - AI-assisted research with Ollama
 - **[guides/publishing-guide.md](guides/publishing-guide.md)** - Publishing workflow (DOI, Zenodo, arXiv, citations)
 - **[guides/secure-research-guide.md](guides/secure-research-guide.md)** - PDF watermarking, provenance, and integrity
-- **[../projects/code_project/README.md](../projects/code_project/README.md)** - Control-positive exemplar under `projects/`
+- **[../projects/template_code_project/README.md](../projects/template_code_project/README.md)** - Control-positive exemplar under `projects/`
 
 ### Content Authoring
 
@@ -160,7 +161,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ## Advanced modules
 
-- **[modules/modules-guide.md](modules/modules-guide.md)** - **14** named infrastructure areas (same tree as *13 subpackages* when telemetry is folded into `core/` — see the counting note in that file)
+- **[modules/modules-guide.md](modules/modules-guide.md)** - **16** documented infrastructure areas (includes Orchestration and Prose; see the counting note in that file and [`infrastructure/AGENTS.md`](../infrastructure/AGENTS.md))
 - **[reference/api-reference.md](reference/api-reference.md)** - Unified API documentation
 - **[modules/pdf-validation.md](modules/pdf-validation.md)** - PDF validation system
 
@@ -189,7 +190,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration and stage reference
 - **[.github/README.md](../.github/README.md)** - Repository CI/CD and contribution automation
-- **code_project / CI paths** — Use [`projects/code_project/`](../projects/code_project/) when listed under [`_generated/active_projects.md`](_generated/active_projects.md); WIP copies live under `projects_in_progress/` only when you place them there
+- **template_code_project / CI paths** — Use [`projects/template_code_project/`](../projects/template_code_project/) when listed under [`_generated/active_projects.md`](_generated/active_projects.md); WIP copies live under `projects_in_progress/` only when you place them there
 
 ### Build & dependency docs (`operational/build/`)
 
@@ -199,10 +200,11 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[operational/build/build-history.md](operational/build/build-history.md)** - Build history
 - **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - CI/CD integration
 - **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - Dependency management
+- **Filepath audit** — `scripts/audit_filepaths.py`: `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md` ([script entrypoint](../scripts/audit_filepaths.py)); overview [audit/README.md](audit/README.md)
 
 ### Configuration & Performance (`operational/config/`)
 
-- **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars; paths under `projects/code_project/`)
+- **[operational/config/configuration.md](operational/config/configuration.md)** - Configuration system (includes `fep_lean` env vars; paths under `projects/template_code_project/`)
 - **[reference/opengauss-naming.md](reference/opengauss-naming.md)** - Open Gauss naming (`gauss` CLI vs Huawei DBMS) — same page as the Open Gauss entry near line 90; listed twice intentionally (theme list + file table)
 - **[operational/config/checkpoint-resume.md](operational/config/checkpoint-resume.md)** - Checkpoint system
 - **[operational/config/performance-optimization.md](operational/config/performance-optimization.md)** - Performance tuning
@@ -236,7 +238,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[best-practices/best-practices.md](best-practices/best-practices.md)** - Consolidated best practices
 - **[best-practices/version-control.md](best-practices/version-control.md)** - Git workflows
-- **[best-practices/multi-project-management.md](best-practices/multi-project-management.md)** - Multi-project setup (roster → [_generated/active_projects.md](_generated/active_projects.md); optional per-project docs e.g. [`projects/code_project/docs/`](../projects/code_project/docs/))
+- **[best-practices/multi-project-management.md](best-practices/multi-project-management.md)** - Multi-project setup (roster → [_generated/active_projects.md](_generated/active_projects.md); optional per-project docs e.g. [`projects/template_code_project/docs/`](../projects/template_code_project/docs/))
 - **[best-practices/migration-guide.md](best-practices/migration-guide.md)** - Migration from other templates
 - **[best-practices/backup-recovery.md](best-practices/backup-recovery.md)** - Backup strategies
 
@@ -255,6 +257,8 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[prompts/README.md](prompts/README.md)** - Navigation guide
 - **[prompts/manuscript_creation.md](prompts/manuscript_creation.md)** - Manuscript creation
+- **[prompts/manuscript_cross_references.md](prompts/manuscript_cross_references.md)** - Registry/token manuscript cross-references
+- **[prompts/literature_synthesis.md](prompts/literature_synthesis.md)** - Literature synthesis LLM blocks
 - **[prompts/code_development.md](prompts/code_development.md)** - Code development
 - **[prompts/test_creation.md](prompts/test_creation.md)** - Test creation
 - **[prompts/feature_addition.md](prompts/feature_addition.md)** - Feature addition
@@ -275,124 +279,38 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 ## Directory structure
 
-```text
-docs/
-├── README.md                           # Docs entry point
-├── AGENTS.md                           # Documentation hub guide
-├── documentation-index.md              # This index
-├── CLOUD_DEPLOY.md                     # Headless / cloud deployment
-├── PAI.md                              # PAI context for agents
-├── RUN_GUIDE.md                        # Pipeline orchestration reference
-├── rules/                              # Development standards (AGENTS, README, topic guides)
-├── _generated/                         # active_projects.md (generated); README + AGENTS (maintainer)
-│
-├── core/                               # Essential documentation
-│   ├── how-to-use.md                   # Usage guide (12 levels)
-│   ├── architecture.md                 # System design overview
-│   └── workflow.md                     # Development workflow
-│
-├── guides/                             # Skill-level guides
-│   ├── getting-started.md              # Levels 1-3
-│   ├── figures-and-analysis.md         # Levels 4-6
-│   ├── testing-and-reproducibility.md  # Levels 7-9
-│   ├── extending-and-automation.md     # Levels 10-12
-│   ├── new-project-setup.md            # Setup checklist + pitfalls
-│   ├── new-project-one-shot-prompt.md
-│   ├── llm-integration-guide.md
-│   ├── publishing-guide.md
-│   └── secure-research-guide.md
-│
-├── architecture/                       # Architecture documentation
-│   ├── AGENTS.md, README.md
-│   ├── two-layer-architecture.md       # Full architecture guide
-│   ├── thin-orchestrator-summary.md    # Pattern implementation
-│   ├── decision-tree.md               # Code placement decisions
-│   ├── migration-from-flat.md          # Migration from flat structure
-│   └── testing-strategy.md            # Testing strategy & coverage
-│
-├── usage/                              # Content authoring & patterns
-│   ├── examples.md, examples-showcase.md
-│   ├── markdown-template-guide.md, style-guide.md
-│   ├── manuscript-numbering-system.md
-│   ├── image-management.md, visualization-guide.md
-│   └── template-description.md
-│
-├── operational/                        # Operational workflows
-│   ├── config/                         # Configuration & performance
-│   │   ├── configuration.md
-│   │   ├── checkpoint-resume.md
-│   │   └── performance-optimization.md
-│   ├── logging/                        # Logging guides
-│   │   ├── README.md (comprehensive guide)
-│   │   ├── python-logging.md, bash-logging.md
-│   │   └── logging-patterns.md
-│   ├── troubleshooting/                # Troubleshooting guides
-│   │   ├── README.md (flowchart)
-│   │   ├── common-errors.md, build-tools.md
-│   │   ├── test-failures.md, environment-setup.md
-│   │   ├── recovery-procedures.md
-│   │   ├── llm-review.md
-│   │   └── llm-diagnostics.md
-│   ├── build/                         # Build system & CI/CD
-│   │   ├── build-system.md
-│   │   ├── build-performance.md
-│   │   ├── build-history.md
-│   │   ├── ci-cd-integration.md
-│   │   └── dependency-management.md
-│   ├── reporting-guide.md
-│   └── error-handling-guide.md
-│
-├── reference/                          # Reference materials (+ README, AGENTS)
-│   ├── api-reference.md (unified)
-│   ├── api-project-modules.md
-│   ├── glossary.md, faq.md
-│   ├── quick-start-cheatsheet.md
-│   ├── common-workflows.md
-│   └── copypasta.md, copypasta-diagrams.md, copypasta-outreach.md
-│
-├── modules/                            # Infrastructure modules (+ README, AGENTS)
-│   ├── modules-guide.md
-│   ├── scientific-simulation-guide.md
-│   ├── pdf-validation.md
-│   └── guides/ (14 per-module guides)
-│
-├── development/                        # Development & contribution (+ README, AGENTS)
-│   ├── contributing.md, code-of-conduct.md
-│   ├── security.md, roadmap.md
-│   ├── coverage-gaps.md
-│   └── testing/
-│       ├── testing-guide.md
-│       └── testing-with-credentials.md
-│
-├── best-practices/                     # Best practices
-│   ├── best-practices.md
-│   ├── version-control.md
-│   ├── multi-project-management.md
-│   ├── migration-guide.md
-│   └── backup-recovery.md
-│
-├── prompts/                            # AI prompt templates (9 + README/AGENTS hubs)
-│   ├── manuscript_creation.md, code_development.md
-│   ├── test_creation.md, feature_addition.md
-│   ├── refactoring.md, documentation_creation.md
-│   ├── infrastructure_module.md
-│   ├── validation_quality.md
-│   └── comprehensive_assessment.md
-│
-├── security/                           # Security & provenance
-│   ├── README.md
-│   ├── steganography.md
-│   ├── hashing_and_manifests.md
-│   └── secure_execution.md
-│
-├── streams/                            # Livestream & talk notes
-│   ├── README.md
-│   └── inferant-stream-018-1.md        # InferAnt #018.1 — March 2026
-│
-└── audit/                              # Audit reports (+ README, AGENTS)
-    ├── documentation-review-report.md
-    ├── documentation-review-summary.md
-    └── filepath-audit-report.md        # Default `--output` from `scripts/audit_filepaths.py`
+```mermaid
+flowchart TB
+    DOCS[/docs//]
+    DOCS --> ENTRY[Entry points<br/>README.md · AGENTS.md ·<br/>documentation-index.md ·<br/>CLOUD_DEPLOY.md · PAI.md · RUN_GUIDE.md]
+    DOCS --> CORE[/core/<br/>how-to-use · architecture · workflow/]
+    DOCS --> GUIDES[/guides/<br/>9 skill-level guides<br/>levels 1-12 · LLM · publishing · security/]
+    DOCS --> ARCH[/architecture/<br/>two-layer · thin-orchestrator ·<br/>decision-tree · migration · testing-strategy/]
+    DOCS --> USAGE[/usage/<br/>examples · markdown-template-guide ·<br/>numbering · image-management · visualization/]
+    DOCS --> OP[/operational/]
+    DOCS --> REF[/reference/<br/>api-reference · glossary · faq ·<br/>cheatsheets · common-workflows · copypasta/]
+    DOCS --> MOD[/modules/<br/>modules-guide · scientific-simulation ·<br/>pdf-validation · per-module guides/]
+    DOCS --> DEV[/development/<br/>contributing · code-of-conduct ·<br/>security · roadmap · coverage-gaps · testing//]
+    DOCS --> BP[/best-practices/<br/>best-practices · version-control ·<br/>multi-project · migration · backup-recovery/]
+    DOCS --> PROMPTS[/prompts/<br/>AI prompt templates · manuscript ·<br/>registry cross-refs · literature synthesis ·<br/>code · test · feature · refactor · doc ·<br/>infra · validation · assessment/]
+    DOCS --> SEC[/security/<br/>steganography · hashing &amp; manifests ·<br/>secure_execution/]
+    DOCS --> STREAMS[/streams/<br/>livestream &amp; talk notes/]
+    DOCS --> AUDIT[/audit/<br/>review reports · filepath audits/]
+    DOCS --> RULES[/rules/<br/>development standards/]
+    DOCS --> GEN[/_generated/<br/>active_projects.md/]
+
+    OP --> OP_CFG[/config/<br/>configuration · checkpoint-resume ·<br/>performance-optimization/]
+    OP --> OP_LOG[/logging/<br/>python · bash · patterns/]
+    OP --> OP_TS[/troubleshooting/<br/>common-errors · build-tools ·<br/>test-failures · environment-setup ·<br/>recovery · llm-review/]
+    OP --> OP_BUILD[/build/<br/>build-system · performance ·<br/>history · ci-cd · dependency-management/]
+    OP --> OP_F[reporting-guide · error-handling-guide]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef sub fill:#0f766e,stroke:#0f172a,color:#fff
+    class DOCS root
+    class CORE,GUIDES,ARCH,USAGE,OP,REF,MOD,DEV,BP,PROMPTS,SEC,STREAMS,AUDIT,RULES,GEN pkg
+    class ENTRY,OP_CFG,OP_LOG,OP_TS,OP_BUILD,OP_F sub
 ```
 
 ---

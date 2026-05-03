@@ -186,7 +186,7 @@ jobs:
         if: runner.os == 'macOS'
         run: sudo scutil --set HostName $(hostname)
 
-      # One pytest process per project: code_project and fep_lean both use
+      # One pytest process per project: template_code_project and fep_lean both use
       # ``tests/conftest.py``, which registers as the same plugin name if collected
       # in a single invocation. fep_lean runs in job ``fep-lean`` (real gauss/lake).
       - name: Run project tests
@@ -204,7 +204,7 @@ jobs:
             if [ "$first" -eq 1 ]; then
               uv run pytest "$d" \
                 -m "not requires_ollama" \
-                --cov=projects/code_project/src \
+                --cov=projects/template_code_project/src \
                 --cov-report=term-missing \
                 --durations=10 \
                 --timeout=120
@@ -212,7 +212,7 @@ jobs:
             else
               uv run pytest "$d" \
                 -m "not requires_ollama" \
-                --cov=projects/code_project/src \
+                --cov=projects/template_code_project/src \
                 --cov-append \
                 --cov-report=term-missing \
                 --durations=10 \

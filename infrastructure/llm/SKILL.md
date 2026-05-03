@@ -9,15 +9,21 @@ Local Large Language Model integration for research assistance via Ollama.
 
 ## Module Structure
 
-```
-llm/
-├── core/       # Client, config, context management
-├── templates/  # Prompt templates for research tasks
-├── validation/ # Output quality validation
-├── review/     # Manuscript review generation
-├── prompts/    # Prompt fragment composition system
-├── utils/      # Ollama server management
-└── cli/        # Command-line interface
+```mermaid
+flowchart LR
+    LLM[/llm//]
+    LLM --> CORE[/core/<br/>client · config · context/]
+    LLM --> TPL[/templates/<br/>prompt templates for research/]
+    LLM --> VAL[/validation/<br/>output quality validation/]
+    LLM --> RV[/review/<br/>manuscript review generation/]
+    LLM --> PR[/prompts/<br/>fragment composition system/]
+    LLM --> UT[/utils/<br/>Ollama server management/]
+    LLM --> CLI[/cli/<br/>command-line interface/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class LLM d
+    class CORE,TPL,VAL,RV,PR,UT,CLI pkg
 ```
 
 ## LLM Client (`core/client.py`)

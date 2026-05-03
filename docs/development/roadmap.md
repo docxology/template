@@ -72,7 +72,7 @@ Typed `InfraError` constants in `errors.py`, standardized `❌ [CODE] message �
 
 ### v0.7.0 — Exemplar Hardening
 
-Make `projects/code_project/` fully compliant post-desloppify: zero ruff errors, no mock patterns, demonstrate all infrastructure tooling (`ProjectLogger`, `validate_interpreter()`, `ResolvedTestingConfig`, `load_config()`).
+Make `projects/template_code_project/` fully compliant post-desloppify: zero ruff errors, no mock patterns, demonstrate all infrastructure tooling (`ProjectLogger`, `validate_interpreter()`, `ResolvedTestingConfig`, `load_config()`).
 
 ### v1.0.0 — Next Generation (vision)
 

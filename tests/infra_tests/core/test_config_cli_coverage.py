@@ -85,7 +85,7 @@ class TestConfigCli:
 
             # Test execution with --project argument
             result = subprocess.run(
-                [sys.executable, str(script_path), "--project", "code_project"],
+                [sys.executable, str(script_path), "--project", "template_code_project"],
                 capture_output=True,
                 text=True,
                 env=env,

@@ -36,25 +36,25 @@ This research template implements a clear two-layer architecture separating gene
 
 **Modules:**
 
-```
-infrastructure/
-├── core/                      # Core utilities
-│   ├── exceptions.py         # Exception hierarchy
-│   ├── logging/utils.py      # Unified logging
-│   └── config_loader.py      # Configuration management
-├── validation/                # Validation tools
-│   ├── pdf_validator.py      # PDF rendering quality
-│   ├── markdown_validator.py  # Markdown validation
-│   └── integrity.py          # File and cross-reference integrity
-├── documentation/             # Documentation tools
-│   ├── glossary_gen.py       # API documentation generation
-│   ├── figure_manager.py     # Figure numbering and references
-│   ├── image_manager.py      # Image file management
-│   └── markdown_integration.py # Markdown figure integration
-├── publishing/                # Publishing tools
-├── llm/                      # LLM integration (includes literature-oriented workflows)
-├── rendering/                # Multi-format rendering
-└── scientific/               # Scientific dev tools
+```mermaid
+flowchart TB
+    INFRA[/infrastructure//]
+    INFRA --> CORE[/core/<br/>exceptions · logging · config_loader/]
+    INFRA --> VAL[/validation/<br/>pdf · markdown · integrity/]
+    INFRA --> DOC[/documentation/<br/>figure · image · markdown integration · glossary/]
+    INFRA --> PUB[/publishing/<br/>academic publishing tools/]
+    INFRA --> LLM[/llm/<br/>LLM integration · literature workflows/]
+    INFRA --> REND[/rendering/<br/>multi-format · PDF · slides · HTML/]
+    INFRA --> SCI[/scientific/<br/>scientific dev tools/]
+    INFRA --> SEARCH[/search/<br/>multi-source literature search/]
+    INFRA --> REF[/reference/<br/>BibTeX I/O/]
+    INFRA --> REP[/reporting/<br/>pipeline reports/]
+    INFRA --> STEG[/steganography/<br/>secure PDF post-processing/]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class INFRA root
+    class CORE,VAL,DOC,PUB,LLM,REND,SCI,SEARCH,REF,REP,STEG pkg
 ```
 
 **Key Characteristics:**
@@ -91,21 +91,33 @@ fm.register_figure(
 
 **Modules:**
 
-```
-projects/{name}/src/
-├── example.py                 # Basic operations (template example)
-├── ...                        # Project-specific modules (names vary by project)
+```mermaid
+flowchart LR
+    SRC[/projects/&lt;name&gt;/src//]
+    SRC --> EX[example.py<br/>basic operations]
+    SRC --> OTHER[*.py<br/>project-specific modules]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class SRC d
+    class EX,OTHER f
 ```
 
 **Scripts (thin orchestrators):**
 
-```
-projects/{name}/scripts/
-├── example_figure.py              # Basic figure generation
-├── generate_research_figures.py   # Complex figures
-├── analysis_pipeline.py           # Analysis workflow
-├── scientific_simulation.py       # Simulation execution
-└── generate_scientific_figures.py # Automated figure generation
+```mermaid
+flowchart LR
+    SC[/projects/&lt;name&gt;/scripts//]
+    SC --> EF[example_figure.py<br/>basic figure generation]
+    SC --> RF[generate_research_figures.py<br/>complex figures]
+    SC --> AP[analysis_pipeline.py<br/>analysis workflow]
+    SC --> SS[scientific_simulation.py<br/>simulation execution]
+    SC --> SF[generate_scientific_figures.py<br/>automated figures]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class SC d
+    class EF,RF,AP,SS,SF f
 ```
 
 **Key Characteristics:**
@@ -234,74 +246,78 @@ from project.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ### [LAYER 1] Infrastructure Structure
 
-```
-infrastructure/                # Layer 1 — 13 subpackages (telemetry under core/telemetry/)
-├── __init__.py
-├── AGENTS.md                  # Module layout and APIs
-├── README.md                  # Quick reference
-├── config/                    # Shared configuration
-├── core/                      # Logging, config, pipeline, checkpoint, security, telemetry/
-├── docker/                    # Container specs
-├── documentation/             # Figure manager, glossary gen
-├── llm/                       # Ollama integration + prompts; literature-oriented workflows
-├── project/                   # Multi-project discovery, validation
-├── publishing/                # Zenodo, arXiv, GitHub release
-├── rendering/                 # PDF, HTML, slides (pandoc + xelatex)
-├── reporting/                 # Pipeline + executive reports
-├── scientific/                # Numerical stability, benchmarking
-├── skills/                    # SKILL.md discovery, manifest generation
-├── steganography/             # PDF hardening, provenance
-└── validation/                # PDF, markdown, integrity, audit
+```mermaid
+flowchart TB
+    INFRA[/infrastructure//<br/>Layer 1 · 15 subpackages]
+    INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
+    INFRA --> CFG[/config/<br/>Shared configuration/]
+    INFRA --> CORE[/core/<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
+    INFRA --> DOCK[/docker/<br/>Container specs/]
+    INFRA --> DOC[/documentation/<br/>figure manager · glossary gen/]
+    INFRA --> LLM[/llm/<br/>Ollama integration · prompts/]
+    INFRA --> PROJ[/project/<br/>multi-project discovery/]
+    INFRA --> PUB[/publishing/<br/>Zenodo · arXiv · GitHub/]
+    INFRA --> REND[/rendering/<br/>PDF · HTML · slides/]
+    INFRA --> REP[/reporting/<br/>pipeline · executive reports/]
+    INFRA --> SCI[/scientific/<br/>numerical stability · benchmarking/]
+    INFRA --> SK[/skills/<br/>SKILL.md discovery/]
+    INFRA --> STEG[/steganography/<br/>PDF hardening/]
+    INFRA --> VAL[/validation/<br/>PDF · markdown · integrity · audit/]
+    INFRA --> SEARCH[/search/<br/>literature search/]
+    INFRA --> REF[/reference/<br/>BibTeX I/O/]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef meta fill:#0f766e,stroke:#0f172a,color:#fff
+    class INFRA root
+    class CFG,CORE,DOCK,DOC,LLM,PROJ,PUB,REND,REP,SCI,SK,STEG,VAL,SEARCH,REF pkg
+    class META meta
 ```
 
 File-level layout inside each package: see [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md).
 
 ### [LAYER 2] Project Structure
 
-```
-project/                       # Project-specific code
-├── src/                       # Project scientific code
-│   ├── __init__.py
-│   ├── AGENTS.md              # Project documentation
-│   ├── README.md              # Quick reference
-│   ├── example.py
-│   └── ...                    # Project modules (names vary by project)
-├── scripts/                   # Project orchestrators
-│   ├── example_figure.py
-│   ├── generate_research_figures.py
-│   ├── analysis_pipeline.py
-│   ├── scientific_simulation.py
-│   └── generate_scientific_figures.py
-└── tests/                     # Project tests
-    ├── __init__.py
-    ├── test_example.py
-    ├── test_simulation.py
-    ├── test_statistics.py
-    └── ...
+```mermaid
+flowchart TB
+    PROJ[/project//<br/>Project-specific code]
+    PROJ --> SRC[/src/<br/>Project scientific code/]
+    PROJ --> SC[/scripts/<br/>Project orchestrators/]
+    PROJ --> T[/tests/<br/>Project tests/]
+
+    SRC --> SRC_FILES[__init__.py · AGENTS.md · README.md ·<br/>example.py · ...]
+    SC --> SC_FILES[example_figure.py · generate_research_figures.py ·<br/>analysis_pipeline.py · scientific_simulation.py ·<br/>generate_scientific_figures.py]
+    T --> T_FILES[__init__.py · test_example.py ·<br/>test_simulation.py · test_statistics.py · ...]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class PROJ d
+    class SRC,SC,T pkg
+    class SRC_FILES,SC_FILES,T_FILES f
 ```
 
 ### Test Structure
 
-```
-tests/                         # Root level - infrastructure tests
-├── infra_tests/               # [LAYER 1] Infrastructure tests
-│   ├── __init__.py
-│   ├── test_build/
-│   ├── test_validation/
-│   ├── test_documentation/
-│   └── ...
-├── integration/               # Cross-layer tests
-│   ├── __init__.py
-│   ├── test_integration_pipeline.py
-│   └── ...
-└── helpers/                   # Test utilities
+```mermaid
+flowchart TB
+    ROOT_TESTS[/tests//<br/>Root level · infrastructure tests]
+    ROOT_TESTS --> INFRA_T[/infra_tests/<br/>Layer 1 tests/]
+    ROOT_TESTS --> INTEG[/integration/<br/>Cross-layer tests/]
+    ROOT_TESTS --> HELPERS[/helpers/<br/>Test utilities/]
 
-projects/{name}/tests/                 # [LAYER 2] Project tests
-├── __init__.py
-├── test_example.py
-├── test_simulation.py
-├── test_statistics.py
-└── ...
+    INFRA_T --> INFRA_F[__init__.py · test_build/ ·<br/>test_validation/ · test_documentation/ · ...]
+    INTEG --> INTEG_F[__init__.py · test_integration_pipeline.py · ...]
+
+    PROJ_TESTS[/projects/&lt;name&gt;/tests//<br/>Layer 2 · project tests]
+    PROJ_TESTS --> PROJ_F[__init__.py · test_example.py ·<br/>test_simulation.py · test_statistics.py · ...]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class ROOT_TESTS,PROJ_TESTS d
+    class INFRA_T,INTEG,HELPERS pkg
+    class INFRA_F,INTEG_F,PROJ_F f
 ```
 
 ---
@@ -370,32 +386,27 @@ flowchart TD
 
 ### Decision Tree: Where Should Code Go?
 
-```
-┌─ Is this specific to our research project?
-│  ├─ YES → Layer 2 (projects/{name}/src/)
-│  └─ NO  ─┐
-│          └─ Is it about building/validating?
-│             ├─ YES → Layer 1 (infrastructure/)
-│             └─ NO  → Reconsider scope
-│
-├─ Examples that belong in Layer 2:
-│  ├─ Simulation algorithms
-│  ├─ Statistical analysis specific to our problem
-│  ├─ Custom visualization for our data
-│  ├─ Parameter sweeps for our experiment
-│  └─ Domain-specific data processing
-│
-├─ Examples that belong in Layer 1:
-│  ├─ PDF generation logic
-│  ├─ Figure management and numbering
-│  ├─ Document validation
-│  ├─ Build artifact verification
-│  ├─ Generic data processing utilities
-│  └─ Cross-project templates
-│
-└─ Is your code reusable across projects?
-   ├─ YES → Layer 1 (infrastructure/)
-   └─ NO  → Layer 2 (projects/{name}/src/)
+```mermaid
+flowchart TB
+    Q1{Is this specific to<br/>our research project?}
+    Q1 -- yes --> L2[Layer 2<br/>projects/&lt;name&gt;/src/]
+    Q1 -- no --> Q2{Is it about<br/>building / validating?}
+    Q2 -- yes --> L1[Layer 1<br/>infrastructure/]
+    Q2 -- no --> RECONSIDER[Reconsider scope]
+
+    L2 -.examples.-> L2EX[Simulation algorithms ·<br/>Statistical analysis ·<br/>Custom visualization ·<br/>Parameter sweeps ·<br/>Domain-specific processing]
+    L1 -.examples.-> L1EX[PDF generation · Figure management ·<br/>Document validation · Build verification ·<br/>Generic utilities · Cross-project templates]
+
+    Q3{Reusable across<br/>projects?} -.tiebreaker.- Q1
+    Q3 -- yes --> L1
+    Q3 -- no --> L2
+
+    classDef q fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef l1 fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef l2 fill:#7c2d12,stroke:#0f172a,color:#fff
+    class Q1,Q2,Q3 q
+    class L1,L1EX l1
+    class L2,L2EX,RECONSIDER l2
 ```
 
 ### Adding a New Project Module
@@ -672,8 +683,8 @@ grep -r "import projects\." infrastructure/
 
 - [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - Infrastructure layer documentation
 - [infrastructure/README.md](../../infrastructure/README.md) - Infrastructure quick reference
-- [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md) - Project layer documentation
-- [code_project/src/README.md](../../projects/code_project/src/README.md) - Project quick reference
+- [template_code_project/src/AGENTS.md](../../projects/template_code_project/src/AGENTS.md) - Project layer documentation
+- [template_code_project/src/README.md](../../projects/template_code_project/src/README.md) - Project quick reference
 
 ### System Documentation
 

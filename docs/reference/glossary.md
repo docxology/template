@@ -142,7 +142,7 @@ Auto-generated API reference from `src/` code. Updated automatically during buil
 
 **File**: `manuscript/98_symbols_glossary.md`
 
-**Generation**: `uv run python infrastructure/documentation/generate_glossary_cli.py projects/code_project/src/ projects/code_project/manuscript/98_symbols_glossary.md` (or your project’s paths; see [`docs/modules/modules-guide.md`](../modules/modules-guide.md))
+**Generation**: `uv run python infrastructure/documentation/generate_glossary_cli.py projects/template_code_project/src/ projects/template_code_project/manuscript/98_symbols_glossary.md` (or your project’s paths; see [`docs/modules/modules-guide.md`](../modules/modules-guide.md))
 
 ### Guard Clause
 
@@ -367,7 +367,7 @@ Core business logic residing in `src/` directory. Must have test coverage.
 - No circular imports
 - test coverage
 
-**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md)
+**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [template_code_project/src/AGENTS.md](../../projects/template_code_project/src/AGENTS.md)
 
 ### Statement Coverage
 

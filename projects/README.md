@@ -4,13 +4,13 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Active Projects
 
-Directories under `projects/` **change over time** (promotion, archiving, or moving to `projects_in_progress/`). The **only** tree guaranteed to remain as the **control-positive** reference for paths and commands is **`code_project`**. Do not assume any other sibling will always be present.
+Directories under `projects/` **change over time** (promotion, archiving, or moving to `projects_in_progress/`). The **only** tree guaranteed to remain as the **control-positive** reference for paths and commands is **`template_code_project`**. Do not assume any other sibling will always be present.
 
 **Current** names from `discover_projects()` are listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate after layout changes).
 
-### **code_project** — canonical control-positive exemplar
+### **template_code_project** — canonical control-positive exemplar
 
-Optimization study with figures, dashboard, and full manuscript. All examples in this documentation default to `projects/code_project/`. See [code_project/README.md](code_project/README.md) and [code_project/AGENTS.md](code_project/AGENTS.md).
+Optimization study with figures, dashboard, and full manuscript. All examples in this documentation default to `projects/template_code_project/`. See [template_code_project/README.md](template_code_project/README.md) and [template_code_project/AGENTS.md](template_code_project/AGENTS.md).
 
 Additional siblings under `projects/` today (e.g. other research workspaces) are real projects for this checkout, not permanent fixtures.
 
@@ -23,7 +23,7 @@ These are actively being developed under [`projects_in_progress/`](../projects_i
 - **cognitive_case_diagrams** — Compositional approaches to linguistic case
 - **fep_lean** — FEP / Lean catalogue with OpenGauss `gauss` CLI
 
-**Note:** Use `projects/code_project/` for all concrete paths, commands, and layout examples unless a document explicitly compares layouts. Promote projects from `projects_in_progress/` or `projects_archive/` to `projects/` when they are ready for pipeline execution.
+**Note:** Use `projects/template_code_project/` for all concrete paths, commands, and layout examples unless a document explicitly compares layouts. Promote projects from `projects_in_progress/` or `projects_archive/` to `projects/` when they are ready for pipeline execution.
 
 ### Archived exemplars (not in `projects/`)
 
@@ -99,7 +99,7 @@ mv projects_archive/myproject projects/myproject
 
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
-| `code_project/`               | Master numerical exemplar      | 39    | ~96%     |
+| `template_code_project/`               | Master numerical exemplar      | 39    | ~96%     |
 | `template/`                   | Meta-documentation             | 66    | ~93%     |
 | `cognitive_case_diagrams/`    | Case diagrams / grammar        | large | ≥90% `src/` |
 | `fep_lean/`                   | FEP / Lean catalogue           | ~180  | ≥89% `src/` |
@@ -110,7 +110,7 @@ mv projects_archive/myproject projects/myproject
 ```mermaid
 graph TD
     subgraph projects["projects/ - Multi-Project Container"]
-        PROJ[code_project/<br/>The Master Exemplar]
+        PROJ[template_code_project/<br/>The Master Exemplar]
         CUSTOM[your_project/<br/>Custom research<br/>Your algorithms here]
 
         PROJ --> PROJ_SRC[src/<br/>Pure scientific logic]
@@ -168,10 +168,10 @@ Each project is **operated upon** by infrastructure modules while maintaining in
 from infrastructure.project import discover_projects, validate_project_structure
 
 # Automatically discovers all valid projects
-projects = discover_projects(Path("."))  # Finds code_project, etc.
+projects = discover_projects(Path("."))  # Finds template_code_project, etc.
 
 # Validates project structure
-is_valid, message = validate_project_structure(Path("projects/code_project"))
+is_valid, message = validate_project_structure(Path("projects/template_code_project"))
 # Returns: (True, "Valid project structure")
 ```
 
@@ -299,20 +299,21 @@ Every project must comply with development standards defined in `.cursorrules/`:
 
 Each project follows this structure:
 
-```
-projects/
-├── code_project/         # The Master Exemplar
-│   ├── src/              # Pure scientific logic
-│   ├── tests/            # Zero-Mock test suite
-│   ├── scripts/          # Thin orchestrators
-│   ├── manuscript/       # Research manuscript
-│   ├── docs/             # Modular documentation hub
-│   ├── output/           # Generated outputs (not in git)
-│   └── pyproject.toml    # Project configuration
-├── myresearch/           # Custom project 1
-│   └── ...
-└── experiment2/          # Custom project 2
-    └── ...
+```mermaid
+flowchart TB
+    PR[/projects//]
+    PR --> CP[/template_code_project/<br/>Master exemplar/]
+    PR --> MY[/myresearch/<br/>Custom project 1/]
+    PR --> EX[/experiment2/<br/>Custom project 2/]
+
+    CP --> CP_F[src · tests · scripts ·<br/>manuscript · docs · output ·<br/>pyproject.toml]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class PR d
+    class CP,MY,EX pkg
+    class CP_F f
 ```
 
 ## Creating a New Project
@@ -321,7 +322,7 @@ projects/
 
 ```bash
 # Copy an existing project as a starting point
-cp -r projects/code_project projects/myresearch
+cp -r projects/template_code_project projects/myresearch
 
 # Customize pyproject.toml
 vim projects/myresearch/pyproject.toml
@@ -484,14 +485,17 @@ Copied by `05_copy_outputs.py`:
 
 Example:
 
-```
-output/
-├── code_project/  # Active Inference meta-analysis
-│   ├── pdf/
-│   ├── figures/
-│   └── ...
-└── your_project/          # Your custom research project
-    └── ...
+```mermaid
+flowchart LR
+    OUT[/output//]
+    OUT --> CP[/template_code_project/<br/>active inference meta-analysis/]
+    OUT --> YP[/your_project/<br/>your custom research project/]
+    CP --> CP_F[pdf/ · figures/ · ...]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class OUT,CP,YP d
+    class CP_F f
 ```
 
 ## Project Isolation
@@ -587,7 +591,7 @@ Available projects are automatically discovered - use `--project {name}` to spec
 
 ## Real Project Examples
 
-### **The Master Exemplar** (`projects/code_project/`)
+### **The Master Exemplar** (`projects/template_code_project/`)
 
 The fully-featured research exemplar demonstrating the Generalized Research Template:
 
@@ -601,7 +605,7 @@ The fully-featured research exemplar demonstrating the Generalized Research Temp
 
 ```bash
 # Pipeline execution
-python3 scripts/execute_pipeline.py --project code_project --core-only
+python3 scripts/execute_pipeline.py --project template_code_project --core-only
 ```
 
 ## Creating New Projects
@@ -610,7 +614,7 @@ python3 scripts/execute_pipeline.py --project code_project --core-only
 
 ```bash
 # Copy an existing project as template
-cp -r projects/code_project projects/my_research
+cp -r projects/template_code_project projects/my_research
 cd projects/my_research
 
 # Update project metadata
@@ -848,7 +852,7 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 
 ### 🎯 **Active Projects**
 
-- **code_project**: Optimization research exemplar (100% coverage, 45 tests)
+- **template_code_project**: Optimization research exemplar (100% coverage, 45 tests)
 - **template**: Meta-documentation and repository metrics (94.4% coverage, 65 tests)
 
 **Note:** In-progress projects are in `projects_in_progress/`; archived projects are preserved in `projects_archive/`.

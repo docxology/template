@@ -12,7 +12,7 @@ A systematic review of all 165 Markdown files (42,134 lines) across the `docs/` 
 
 - **Broken internal links:** 5 critical broken references + 2 incorrect relative paths
 - **Factual inaccuracies:** 2 locations with incorrect pipeline stage descriptions; 4 locations with incorrect command syntax
-- **Outdated examples:** 5+ references to archived project `fep_lean` that should use current exemplar `code_project`
+- **Outdated examples:** 5+ references to archived project `fep_lean` that should use current exemplar `template_code_project`
 - **Missing cross-references:** 2 important top-level documents (PAI.md, CLOUD_DEPLOY.md) not surfaced in docs/README.md
 - **Overall health:** Strong structure, comprehensive coverage, consistent terminology — mostly accurate and up-to-date.
 
@@ -24,10 +24,10 @@ These links point to files that do not exist in the current repository tree and 
 
 | # | File | Line | Broken Link | Correct Target / Recommendation |
 |---|------|------|-------------|--------------------------------|
-| 1 | `docs/README.md` | ~137 | `../projects/fep_lean/docs/` | Change to `../projects/code_project/docs/` (fep_lean archived, code_project is active exemplar) |
-| 2 | `docs/best-practices/multi-project-management.md` | 36 | `../../projects/fep_lean/docs/` | Change to `../../projects/code_project/docs/` |
-| 3 | `docs/documentation-index.md` | 192 | `../projects/fep_lean/` | Rephrase: refer to active projects via `_generated/active_projects.md` or use `code_project` |
-| 4 | `docs/documentation-index.md` | 239 | `../projects/fep_lean/docs/` | Change to `../projects/code_project/docs/` |
+| 1 | `docs/README.md` | ~137 | `../projects/fep_lean/docs/` | Change to `../projects/template_code_project/docs/` (fep_lean archived, template_code_project is active exemplar) |
+| 2 | `docs/best-practices/multi-project-management.md` | 36 | `../../projects/fep_lean/docs/` | Change to `../../projects/template_code_project/docs/` |
+| 3 | `docs/documentation-index.md` | 192 | `../projects/fep_lean/` | Rephrase: refer to active projects via `_generated/active_projects.md` or use `template_code_project` |
+| 4 | `docs/documentation-index.md` | 239 | `../projects/fep_lean/docs/` | Change to `../projects/template_code_project/docs/` |
 | 5 | `docs/operational/config/configuration.md` | 143 | `../../../projects/fep_lean/src/gauss/cli.py` | Update to archived path `../../../projects_archive/fep_lean/src/gauss/cli.py` OR drop hyperlink while preserving conditional info |
 | 6 | `docs/rules/documentation_standards.md` | 142 | `../infrastructure/AGENTS.md` | Should be `../../infrastructure/AGENTS.md` (from `docs/rules/` to `infrastructure/`) |
 | 7 | `docs/rules/documentation_standards.md` | 410 | `configuration.md` | File does not exist; should be `../operational/config/configuration.md` |
@@ -49,28 +49,28 @@ These links point to files that do not exist in the current repository tree and 
 
 - **File:** `docs/reference/quick-start-cheatsheet.md`
 - **Lines:** 24, 104, 113
-- **Issue:** Uses `--cov=projects.code_project.src` (dot notation)
-- **Correct:** `--cov=projects/code_project/src` (filesystem path)
+- **Issue:** Uses `--cov=projects.template_code_project.src` (dot notation)
+- **Correct:** `--cov=projects/template_code_project/src` (filesystem path)
 - **Fix:** Replace all three occurrences with path-based coverage argument.
 
 ### 2.3 Invalid Import Example in Cheatsheet
 
 - **File:** `docs/reference/quick-start-cheatsheet.md` — Line 88
-- **Issue:** `from projects.code_project.src.example import calculate_average` assumes `projects/` is a package and references a non-existent module.
-- **Fix:** Use real imports from code_project exemplar, e.g.: `from src.optimizer import gradient_descent`
+- **Issue:** `from projects.template_code_project.src.example import calculate_average` assumes `projects/` is a package and references a non-existent module.
+- **Fix:** Use real imports from template_code_project exemplar, e.g.: `from src.optimizer import gradient_descent`
 
 ---
 
 ## 3. Outdated Project Examples (Medium Priority)
 
-The `fep_lean` project is archived under `projects_archive/` and is no longer an active project. Documentation should use `code_project` as the stable exemplar.
+The `fep_lean` project is archived under `projects_archive/` and is no longer an active project. Documentation should use `template_code_project` as the stable exemplar.
 
 | File | Line(s) | Current Text | Recommended Change |
 |------|---------|--------------|--------------------|
-| `docs/README.md` | 137 | Example project with local docs: `../projects/fep_lean/docs/` | Change to `../projects/code_project/docs/` |
-| `docs/best-practices/multi-project-management.md` | 36 | Example per-project docs hub: `projects/fep_lean/docs/` | Change to `projects/code_project/docs/` |
-| `docs/documentation-index.md` | 192 (heading) | "fep_lean / CI paths" section | Rephrase to refer to generic active projects or `code_project` |
-| `docs/documentation-index.md` | 239 | Example: `projects/fep_lean/docs/` | Change to `projects/code_project/docs/` |
+| `docs/README.md` | 137 | Example project with local docs: `../projects/fep_lean/docs/` | Change to `../projects/template_code_project/docs/` |
+| `docs/best-practices/multi-project-management.md` | 36 | Example per-project docs hub: `projects/fep_lean/docs/` | Change to `projects/template_code_project/docs/` |
+| `docs/documentation-index.md` | 192 (heading) | "fep_lean / CI paths" section | Rephrase to refer to generic active projects or `template_code_project` |
+| `docs/documentation-index.md` | 239 | Example: `projects/fep_lean/docs/` | Change to `projects/template_code_project/docs/` |
 | `docs/operational/config/configuration.md` | 143 | Link to `projects/fep_lean/src/gauss/cli.py` | Update to archived path `../../../projects_archive/fep_lean/src/gauss/cli.py` OR remove hyperlink (keep conditional text) |
 
 **Note:** `docs/_generated/canonical_facts.md` contains historical fep_lean measurements — acceptable as archival snapshot; should not be hand-edited.
@@ -99,7 +99,7 @@ Adding these would improve discoverability for newcomers and automated agents.
 ## 6. Prioritized Action Items
 
 **Priority 1 — Immediately address broken links:**
-1. Update all fep_lean example paths to code_project in README, multi-project-management, documentation-index
+1. Update all fep_lean example paths to template_code_project in README, multi-project-management, documentation-index
 2. Fix broken relative path in rules/documentation_standards.md line 142
 
 **Priority 2 — Fix accuracy errors:**

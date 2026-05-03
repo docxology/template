@@ -1,0 +1,38 @@
+{
+  "augmentation_timestamp": "2026-05-01T09:32:08.430701",
+  "hermes_version": "0.12.0",
+  "skills": {
+    "total_installed": 130,
+    "non_archived": 130,
+    "hermes_atlas_created": true,
+    "atlas_manifest": true
+  },
+  "template_docs": {
+    "required": [
+      "README.md",
+      "CLAUDE.md",
+      "AGENTS.md",
+      "docs/core/architecture.md",
+      "docs/core/workflow.md",
+      "docs/documentation-index.md",
+      "docs/how-to-use.md",
+      "docs/accessibility.md"
+    ],
+    "all_present": true,
+    "generated_present": 4,
+    "broken_links_fixed": [
+      "README.md#thin-orchestrator-pattern \u2192 #architecture-summary",
+      "README.md#configuration-system \u2192 #configuration",
+      "AGENTS.md fep_lean/ \u2192 projects_in_progress/fep_lean/ (WIP)",
+      "AGENTS.md act_inf_metaanalysis/ \u2192 WIP annotated"
+    ]
+  },
+  "active_projects": [
+    "template_code_project",
+    "corym",
+    "template_search_project",
+    "what_is_cogsec"
+  ],
+  "memory_augmented": true,
+  "all_systems_optimal": true
+}

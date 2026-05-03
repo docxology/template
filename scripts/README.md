@@ -10,13 +10,13 @@ Root-level scripts are generic orchestrators for the research pipeline. They coo
 ./run.sh
 ./run.sh --pipeline --resume
 ./run.sh --all-projects --pipeline
-./secure_run.sh --project code_project
+./secure_run.sh --project template_code_project
 ```
 
 ### Python
 
 ```bash
-uv run python scripts/execute_pipeline.py --project code_project --core-only
+uv run python scripts/execute_pipeline.py --project template_code_project --core-only
 uv run python scripts/execute_multi_project.py --no-llm
 uv run python scripts/07_generate_executive_report.py
 ```

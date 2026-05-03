@@ -51,16 +51,9 @@ cleanup_test_directory = _test_helpers.cleanup_test_directory
 # =============================================================================
 # Path Fixtures
 # =============================================================================
-
-
-@pytest.fixture
-def repo_root() -> Path:
-    """Get the repository root directory.
-
-    Returns:
-        Path to the repository root (where pyproject.toml is located)
-    """
-    return ROOT
+#
+# ``repo_root`` lives in tests/conftest.py (the root) so all subdirectories
+# inherit one definition. Do not redefine it here.
 
 
 @pytest.fixture

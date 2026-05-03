@@ -417,29 +417,50 @@ def inject_latex_preamble(
     return tex_preamble + tex_body
 
 
-def inject_bibliography(tex_content: str, bib_exists: bool) -> str:
-    """Ensure bibliography starts on a new page; insert \\bibliography if missing."""
+def discover_manuscript_bib_paths(manuscript_dir: Path) -> list[Path]:
+    """Return sorted ``*.bib`` paths beside the manuscript (multi-database projects)."""
+    return sorted(manuscript_dir.glob("*.bib"))
+
+
+def inject_bibliography(
+    tex_content: str, bib_exists: bool, bib_stems: str = "references"
+) -> str:
+    """Ensure bibliography starts on a new page; set ``\\bibliography{stems}``.
+
+    ``bib_stems`` is a comma-separated list of database names without ``.bib``
+    (e.g. ``references`` or ``references,references_deep``).
+    """
     bib_marker = "\\bibliography{"
-    if bib_exists and bib_marker in tex_content:
+    if not bib_exists:
+        return tex_content
+
+    replacement = r"\bibliography{" + bib_stems + "}"
+    if bib_marker in tex_content:
+        tex_content = re.sub(
+            r"\\bibliography\{[^}]*\}",
+            lambda _m: replacement,
+            tex_content,
+            count=1,
+        )
         idx = tex_content.find(bib_marker)
         before = tex_content[max(0, idx - 80) : idx]
         if "\\clearpage" not in before:
             tex_content = tex_content[:idx] + "\\clearpage\n\n" + tex_content[idx:]
             logger.info("✓ Inserted \\clearpage before \\bibliography{...}")
         return tex_content
-    if bib_exists and bib_marker not in tex_content:
-        end_doc_idx = tex_content.rfind("\\end{document}")
-        if end_doc_idx > 0:
-            tex_content = (
-                tex_content[:end_doc_idx]
-                + "\n\n\\clearpage\n\n\\bibliography{references}\n"
-                + tex_content[end_doc_idx:]
-            )
-            logger.info(
-                "✓ Inserted \\clearpage and \\bibliography{references} before \\end{document}"
-            )
-        else:
-            logger.warning("⚠️  Could not find \\end{document} to insert bibliography")
+
+    end_doc_idx = tex_content.rfind("\\end{document}")
+    if end_doc_idx > 0:
+        tex_content = (
+            tex_content[:end_doc_idx]
+            + f"\n\n\\clearpage\n\n{replacement}\n"
+            + tex_content[end_doc_idx:]
+        )
+        logger.info(
+            "✓ Inserted \\clearpage and \\bibliography{...} before \\end{document}"
+        )
+    else:
+        logger.warning("⚠️  Could not find \\end{document} to insert bibliography")
     return tex_content
 
 
@@ -514,7 +535,7 @@ def prevalidate_markdown(combined_md: Path) -> tuple[list[str], str]:
 def prevalidate_source_markdown(
     source: Path | list[Path] | list[str],
     repo_root: Path | None = None,
-    bib_file: Path | None = None,
+    bib_file: str | Path | list[str | Path] | None = None,
 ) -> None:
     """Hard-gate the combined-PDF render on source-markdown integrity.
 
@@ -525,8 +546,8 @@ def prevalidate_source_markdown(
     * :func:`validate_pandoc_pitfalls` — bare ``|word|`` in prose and
       ``\\|`` inside Markdown table cells (Pandoc converts both to
       ``\\mid`` which fails to render U+2223 in text mode).
-    * :func:`validate_citations` — every ``[@key]`` resolves in
-      ``references.bib``.
+    * :func:`validate_citations` — every ``[@key]`` resolves in the manuscript
+      ``*.bib`` union (or the explicit ``bib_file`` list when supplied).
 
     Both classes of finding block the render under the strict gate;
     pitfall WARNINGS are promoted to blockers here because they
@@ -541,8 +562,8 @@ def prevalidate_source_markdown(
         repo_root: Repository root for relative-path display in error
             messages. Defaults to a best-effort guess based on the first
             source path.
-        bib_file: Explicit path to ``references.bib``. Defaults to the
-            file next to the first markdown source.
+        bib_file: Explicit BibTeX path(s). ``None`` unions every ``*.bib`` next
+            to the first markdown source (same default as combined-PDF render).
 
     Raises:
         RenderingError: When any pitfall or undefined citation is found.

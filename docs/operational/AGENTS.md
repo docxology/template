@@ -6,41 +6,33 @@ Technical guide for `docs/operational/` — operational procedures, build config
 
 ## Directory Structure
 
-```
-docs/operational/
-├── AGENTS.md                       # This guide
-├── README.md                       # Quick reference
-├── reporting-guide.md              # Reporting system guide
-├── error-handling-guide.md         # Error handling patterns
-├── build/                          # Build system, dependencies, CI/CD
-│   ├── README.md
-│   ├── build-system.md
-│   ├── dependency-management.md
-│   ├── ci-cd-integration.md
-│   ├── build-performance.md
-│   └── build-history.md
-├── config/                         # Configuration & performance
-│   ├── configuration.md
-│   ├── checkpoint-resume.md
-│   └── performance-optimization.md
-├── logging/                        # Logging system guides
-│   ├── README.md (comprehensive guide)
-│   ├── python-logging.md
-│   ├── bash-logging.md
-│   └── logging-patterns.md
-└── troubleshooting/                # Troubleshooting guides
-    ├── README.md (flowchart + systematic approach)
-    ├── common-errors.md
-    ├── build-tools.md
-    ├── test-failures.md
-    ├── environment-setup.md
-    ├── recovery-procedures.md
-    └── llm-review.md
+```mermaid
+flowchart TB
+    OP[/docs/operational//]
+    OP --> META[AGENTS.md · README.md]
+    OP --> REP[reporting-guide.md]
+    OP --> ERR[error-handling-guide.md]
+    OP --> BUILD[/build/<br/>Build system · deps · CI/CD/]
+    OP --> CFG[/config/<br/>Configuration &amp; performance/]
+    OP --> LOG[/logging/<br/>Logging system guides/]
+    OP --> TS[/troubleshooting/<br/>Systematic troubleshooting/]
+
+    BUILD --> BUILD_F[README · build-system ·<br/>dependency-management · ci-cd-integration ·<br/>build-performance · build-history]
+    CFG --> CFG_F[configuration · checkpoint-resume ·<br/>performance-optimization]
+    LOG --> LOG_F[README · python-logging ·<br/>bash-logging · logging-patterns]
+    TS --> TS_F[README · common-errors · build-tools ·<br/>test-failures · environment-setup ·<br/>recovery-procedures · llm-review]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class OP d
+    class BUILD,CFG,LOG,TS pkg
+    class META,REP,ERR,BUILD_F,CFG_F,LOG_F,TS_F f
 ```
 
 ## Key Conventions
 
-- **Project paths in commands**: use `--project code_project` in examples unless documenting placeholders; active names → [_generated/active_projects.md](../_generated/active_projects.md).
+- **Project paths in commands**: use `--project template_code_project` in examples unless documenting placeholders; active names → [_generated/active_projects.md](../_generated/active_projects.md).
 - **Pipeline orchestration** → `docs/RUN_GUIDE.md` (stages, flags, common invocations)
 - **Build / dependencies / CI patterns** → `docs/operational/build/` (`build-system.md`, `dependency-management.md`, `ci-cd-integration.md`)
 - **CI/CD automation** → `.github/` (workflows and repository automation docs)
@@ -53,7 +45,7 @@ docs/operational/
 
 ```bash
 # Full pipeline
-uv run python scripts/execute_pipeline.py --project code_project --core-only
+uv run python scripts/execute_pipeline.py --project template_code_project --core-only
 
 # Individual stages
 uv run python scripts/00_setup_environment.py

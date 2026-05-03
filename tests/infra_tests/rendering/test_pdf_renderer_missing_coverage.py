@@ -456,7 +456,7 @@ class TestBibliographyProcessingEdgeCases:
 
         bib_file = tmp_path / "nonexistent.bib"
 
-        result = process_bibliography(tex_file, output_dir, bib_file)
+        result = process_bibliography(tex_file, output_dir, [bib_file])
 
         assert result is False
 
@@ -472,7 +472,7 @@ class TestBibliographyProcessingEdgeCases:
         bib_file.write_text("@article{test, title={Test}}")
 
         # Don't create aux file
-        result = process_bibliography(tex_file, output_dir, bib_file)
+        result = process_bibliography(tex_file, output_dir, [bib_file])
 
         assert result is False
 

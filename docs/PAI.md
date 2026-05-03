@@ -26,38 +26,35 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ## Architecture
 
-**Counting note:** the tree below lists **13** `infrastructure/*` subdirectories at the top level. The docs also describe **14** named areas when **Telemetry** is counted as first-class and **Skills** is separate—same codebase, different grouping. See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md).
+**Counting note:** the tree below lists **17** Python subpackages under `infrastructure/` (config, core, docker, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). For a live count run `ls infrastructure/ | grep -v __pycache__ | grep -v __init__ | grep -v -E '\.(md|py)$' | grep -v logrotate.d | wc -l`. See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
 
-```
-template/
-├── infrastructure/        # Generic reusable tools (Layer 1); 13 subpackages
-│   ├── config/            # Shared configuration
-│   ├── core/              # Logging, config, pipeline, checkpoint, security, telemetry/
-│   ├── docker/            # Container specs
-│   ├── documentation/     # Figure manager, glossary gen
-│   ├── llm/               # Ollama integration + prompt templates
-│   ├── project/           # Multi-project discovery, validation
-│   ├── publishing/        # Zenodo, arXiv, GitHub release
-│   ├── rendering/         # PDF, HTML, slides (xelatex + pandoc)
-│   ├── reporting/         # Pipeline + executive reports
-│   ├── scientific/        # Numerical stability, benchmarking
-│   ├── skills/            # SKILL.md discovery, manifest generation
-│   ├── steganography/     # PDF hardening (overlays, hashes, encryption)
-│   └── validation/        # PDF, markdown, integrity, audit
-├── run.sh                 # Main interactive + pipeline entry point
-├── scripts/               # Entry-point orchestrators (thin wrappers)
-│   ├── bash_utils.sh      # Shared bash utilities + ensure_uv() bootstrap
-│   ├── 00_setup_environment.py → 06_llm_review.py  # Pipeline stages
-│   ├── execute_pipeline.py     # Single-project orchestrator
-│   └── execute_multi_project.py # Multi-project orchestrator
-├── projects/              # Active research projects (Layer 2); names = discover_projects()
-│   └── code_project/          # Control-positive exemplar (concrete paths in docs use this)
-├── projects_archive/      # Archived projects (not executed by default)
-├── projects_in_progress/ # WIP (not discovered until moved under projects/)
-├── tests/                 # Infrastructure tests
-├── docs/CLOUD_DEPLOY.md   # Headless cloud server guide
-├── infrastructure/docker/Dockerfile             # Container specification
-└── infrastructure/docker/docker-compose.yml     # Multi-service orchestration
+```mermaid
+flowchart TB
+    ROOT[/template//]
+    ROOT --> INFRA[/infrastructure//<br/>Layer 1 · 17 subpackages/]
+    ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
+    ROOT --> SCR[/scripts/<br/>Entry-point orchestrators · thin wrappers/]
+    ROOT --> PROJ[/projects//<br/>Active research projects · Layer 2/]
+    ROOT --> ARCH[/projects_archive/<br/>Archived · not executed/]
+    ROOT --> WIP[/projects_in_progress/<br/>WIP · not discovered/]
+    ROOT --> T[/tests/<br/>Infrastructure tests/]
+    ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
+    ROOT --> DOCKER[infrastructure/docker/<br/>Dockerfile · docker-compose.yml]
+
+    INFRA --> INFRA_PKGS[config · core · docker · documentation ·<br/>llm · orchestration · project · prose · publishing ·<br/>reference · rendering · reporting · scientific ·<br/>search · skills · steganography · validation]
+
+    SCR --> SCR_FILES[bash_utils.sh ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
+
+    PROJ --> PROJ_F[template_code_project · template_prose_project · template_search_project<br/>(rotating projects also live here)<br/>concrete paths use template_code_project]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef l2 fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef gen fill:#7c2d12,stroke:#0f172a,color:#fff
+    class ROOT root
+    class INFRA,SCR,T,DOCKER,INFRA_PKGS,SCR_FILES l1
+    class PROJ,PROJ_F l2
+    class ARCH,WIP,DOCS,RUN gen
 ```
 
 ---
@@ -78,10 +75,10 @@ projects = discover_projects(repo_root)
 ./run.sh --pipeline
 
 # Core pipeline (no LLM stages)
-uv run python scripts/execute_pipeline.py --project code_project --core-only
+uv run python scripts/execute_pipeline.py --project template_code_project --core-only
 
 # Specific project
-./run.sh --project code_project --pipeline
+./run.sh --project template_code_project --pipeline
 
 # All projects
 ./run.sh --all-projects --pipeline
@@ -91,10 +88,10 @@ uv run python scripts/execute_pipeline.py --project code_project --core-only
 
 ```bash
 # Always run tests before changes
-uv run python scripts/01_run_tests.py --project code_project
+uv run python scripts/01_run_tests.py --project template_code_project
 
 # Validate markdown (exemplar path)
-uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
 ```
 
 Active project slugs: see [_generated/active_projects.md](_generated/active_projects.md) — do not duplicate that roster here.

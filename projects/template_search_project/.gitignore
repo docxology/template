@@ -1,0 +1,17 @@
+# Generated outputs are regeneratable; never commit them. (Cache files are
+# the only exception — they are intentionally committed for reproducibility,
+# but only when the human curator decides.)
+output/
+.coverage
+.coverage.*
+.pytest_cache/
+__pycache__/
+*.pyc
+.benchmarks/
+
+# Project-local virtualenvs (root .venv is shared)
+.venv/
+
+# Local secrets — never commit. See .env.example for the schema.
+.env
+.env.local

@@ -781,63 +781,32 @@ class TestDissemination:
         assert tar_path.exists()
         assert tar_path.name.endswith(".tar.gz")
 
-    @pytest.mark.requires_github
-    @pytest.mark.requires_network
-    @pytest.mark.requires_credentials
-    def test_create_github_release_alt(self, tmp_path, github_credentials):
-        """Test GitHub release creation with real API calls (alternative test).
+    def test_create_github_release_alt(self, tmp_path, github_test_server):
+        """Test GitHub release creation against a local pytest-httpserver.
 
-        This is an additional test for GitHub release functionality.
+        Uses the shared ``github_test_server`` fixture (no live GitHub API,
+        no parallel-run tag collisions, no wall-clock-derived names).
         """
-        import time
-
-        import requests
+        # Deterministic, parallel-safe tag derived from the per-test tmp_path
+        # (each test gets a unique tmp_path even under pytest-xdist).
+        tag = f"test-alt-{tmp_path.name}"
 
         # Create test artifact
         asset = tmp_path / "asset.pdf"
         asset.write_text("%PDF-1.4\nTest asset for GitHub release")
 
-        # Generate unique tag
-        tag = f"test-alt-{int(time.time())}"
+        url = publishing.create_github_release(
+            tag,
+            "Test Release Alt",
+            "Test Description",
+            [asset],
+            "fake-token",
+            "testuser/testrepo",
+            base_url=github_test_server.url_for("").rstrip("/"),
+        )
 
-        release_id = None
-        try:
-            url = publishing.create_github_release(
-                tag,
-                "Test Release Alt",
-                "Test Description",
-                [asset],
-                github_credentials["token"],
-                github_credentials["repository"],
-            )
-
-            assert url is not None
-            assert "github.com" in url
-
-            # Get release ID for cleanup
-            api_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/releases/tags/{tag}"
-            headers = {
-                "Authorization": f"token {github_credentials['token']}",
-                "Accept": "application/vnd.github.v3+json",
-            }
-            response = requests.get(api_url, headers=headers)
-            if response.status_code == 200:
-                release_id = response.json().get("id")
-        finally:
-            # Cleanup
-            if release_id:
-                try:
-                    delete_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/releases/{release_id}"
-                    headers = {"Authorization": f"token {github_credentials['token']}"}
-                    requests.delete(delete_url, headers=headers)
-                except requests.exceptions.RequestException:
-                    pass
-            try:
-                tag_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/git/refs/tags/{tag}"
-                headers = {"Authorization": f"token {github_credentials['token']}"}
-                requests.delete(tag_url, headers=headers)
-            except requests.exceptions.RequestException:
-                pass
+        assert url is not None
+        assert "github.com" in url
 
 
 if __name__ == "__main__":

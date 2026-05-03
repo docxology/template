@@ -48,8 +48,8 @@ def temp_project_structure(tmp_path):
     repo_root = tmp_path / "repo"
     repo_root.mkdir()
 
-    # Create projects/code_project/output structure (multi-project format)
-    project_output = repo_root / "projects" / "code_project" / "output"
+    # Create projects/template_code_project/output structure (multi-project format)
+    project_output = repo_root / "projects" / "template_code_project" / "output"
     pdf_dir = project_output / "pdf"
     slides_dir = project_output / "slides"
     web_dir = project_output / "web"
@@ -77,7 +77,7 @@ def temp_project_structure(tmp_path):
     # Create top-level output dir with project subdirectory
     output_base = repo_root / "output"
     output_base.mkdir()
-    output_dir = output_base / "code_project"  # Project-specific output directory
+    output_dir = output_base / "template_code_project"  # Project-specific output directory
     output_dir.mkdir()
 
     # Create mock files
@@ -144,7 +144,7 @@ class TestCopyFinalDeliverables:
         """Test copying combined PDF."""
         repo_root, output_dir = temp_project_structure
 
-        stats = copy_final_deliverables(repo_root, output_dir, "code_project")
+        stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         assert stats["combined_pdf"] == 1
         assert (output_dir / "code_project_combined.pdf").exists()
@@ -154,7 +154,7 @@ class TestCopyFinalDeliverables:
         """Test copying slide PDFs."""
         repo_root, output_dir = temp_project_structure
 
-        stats = copy_final_deliverables(repo_root, output_dir, "code_project")
+        stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         assert stats["slides_files"] == 2
         assert (output_dir / "slides" / "01_abstract_slides.pdf").exists()
@@ -164,7 +164,7 @@ class TestCopyFinalDeliverables:
         """Test copying web HTML files."""
         repo_root, output_dir = temp_project_structure
 
-        stats = copy_final_deliverables(repo_root, output_dir, "code_project")
+        stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         assert stats["web_files"] == 3  # 2 HTML files + 1 CSS file
         assert (output_dir / "web" / "01_abstract.html").exists()
@@ -177,10 +177,10 @@ class TestCopyFinalDeliverables:
 
         # Remove combined PDF
         (
-            repo_root / "projects" / "code_project" / "output" / "pdf" / "code_project_combined.pdf"
+            repo_root / "projects" / "template_code_project" / "output" / "pdf" / "code_project_combined.pdf"
         ).unlink()
 
-        stats = copy_final_deliverables(repo_root, output_dir, "code_project")
+        stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         assert stats["combined_pdf"] == 0
         # Missing combined PDF is not an error, just logged as debug
@@ -191,9 +191,9 @@ class TestCopyFinalDeliverables:
         repo_root, output_dir = temp_project_structure
 
         # Remove slides directory
-        shutil.rmtree(repo_root / "projects" / "code_project" / "output" / "slides")
+        shutil.rmtree(repo_root / "projects" / "template_code_project" / "output" / "slides")
 
-        stats = copy_final_deliverables(repo_root, output_dir, "code_project")
+        stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         # Should still copy PDF and handle missing slides gracefully
         assert stats["combined_pdf"] == 1
@@ -208,7 +208,7 @@ class TestValidateCopiedOutputs:
         repo_root, output_dir = temp_project_structure
 
         # Copy files first
-        copy_final_deliverables(repo_root, output_dir, "code_project")
+        copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         # Validate
         result = validate_copied_outputs(output_dir)
@@ -221,7 +221,7 @@ class TestValidateCopiedOutputs:
 
         # Remove PDF from source directory (fixture creates it)
         source_pdf = (
-            repo_root / "projects" / "code_project" / "output" / "pdf" / "code_project_combined.pdf"
+            repo_root / "projects" / "template_code_project" / "output" / "pdf" / "code_project_combined.pdf"
         )
         if source_pdf.exists():
             source_pdf.unlink()
@@ -237,10 +237,10 @@ class TestValidateCopiedOutputs:
 
     def test_validate_empty_combined_pdf(self, tmp_path):
         """Test validation fails when combined PDF is empty."""
-        # Create proper output structure: output/code_project/
+        # Create proper output structure: output/template_code_project/
         output_base = tmp_path / "output"
         output_base.mkdir()
-        output_dir = output_base / "code_project"
+        output_dir = output_base / "template_code_project"
         output_dir.mkdir()
 
         # Create empty PDF
@@ -252,10 +252,10 @@ class TestValidateCopiedOutputs:
 
     def test_validate_partial_outputs(self, tmp_path):
         """Test validation with partial outputs (e.g., only PDF, no slides/web)."""
-        # Create proper output structure: output/code_project/
+        # Create proper output structure: output/template_code_project/
         output_base = tmp_path / "output"
         output_base.mkdir()
-        output_dir = output_base / "code_project"
+        output_dir = output_base / "template_code_project"
         output_dir.mkdir()
 
         # Copy only combined PDF to pdf/ directory (where it actually gets copied)
@@ -287,7 +287,7 @@ class TestCompleteOutputCopyingWorkflow:
         assert not (output_dir / "old_file.txt").exists()
 
         # Copy
-        stats = copy_final_deliverables(repo_root, output_dir, "code_project")
+        stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
         assert stats["combined_pdf"] == 1
         assert stats["slides_files"] == 2
         assert stats["web_files"] == 3
@@ -301,7 +301,7 @@ class TestCompleteOutputCopyingWorkflow:
         repo_root, output_dir = temp_project_structure
 
         # Remove one slide
-        slides_dir = repo_root / "projects" / "code_project" / "output" / "slides"
+        slides_dir = repo_root / "projects" / "template_code_project" / "output" / "slides"
         (slides_dir / "02_introduction_slides.pdf").unlink()
 
         # Clean
@@ -309,7 +309,7 @@ class TestCompleteOutputCopyingWorkflow:
         assert clean_result is None
 
         # Copy
-        stats = copy_final_deliverables(repo_root, output_dir, "code_project")
+        stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
         assert stats["combined_pdf"] == 1
         assert stats["slides_files"] == 1  # Only one slide copied
 
@@ -326,7 +326,7 @@ class TestValidateOutputStructure:
         repo_root, output_dir = temp_project_structure
 
         # Copy files first
-        copy_final_deliverables(repo_root, output_dir, "code_project")
+        copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         # Validate structure
         result = validate_output_structure(output_dir)
@@ -348,10 +348,10 @@ class TestValidateOutputStructure:
 
     def test_structure_missing_combined_pdf(self, tmp_path):
         """Test structure validation detects missing combined PDF."""
-        # Create proper output structure: output/code_project/
+        # Create proper output structure: output/template_code_project/
         output_base = tmp_path / "output"
         output_base.mkdir()
-        output_dir = output_base / "code_project"
+        output_dir = output_base / "template_code_project"
         output_dir.mkdir()
 
         # Create empty directory structure without PDF
@@ -367,10 +367,10 @@ class TestValidateOutputStructure:
 
     def test_structure_empty_directories(self, tmp_path):
         """Test structure validation with empty subdirectories."""
-        # Create proper output structure: output/code_project/
+        # Create proper output structure: output/template_code_project/
         output_base = tmp_path / "output"
         output_base.mkdir()
-        output_dir = output_base / "code_project"
+        output_dir = output_base / "template_code_project"
         output_dir.mkdir()
 
         # Create PDF in pdf/ directory but leave slides/web empty
@@ -389,10 +389,10 @@ class TestValidateOutputStructure:
 
     def test_structure_small_pdf(self, tmp_path):
         """Test structure validation detects unusually small PDF."""
-        # Create proper output structure: output/code_project/
+        # Create proper output structure: output/template_code_project/
         output_base = tmp_path / "output"
         output_base.mkdir()
-        output_dir = output_base / "code_project"
+        output_dir = output_base / "template_code_project"
         output_dir.mkdir()
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir()
@@ -421,7 +421,7 @@ class TestErrorHandling:
             output_dir.chmod(0o444)
 
             # Try to copy - should handle gracefully
-            stats = copy_final_deliverables(repo_root, output_dir, "code_project")
+            stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
             # May or may not copy depending on OS
             assert isinstance(stats, dict)

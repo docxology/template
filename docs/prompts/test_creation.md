@@ -15,7 +15,7 @@ This prompt enforces the strict no-mocks testing policy and leverages testing st
 ## Prompt Template
 
 ```
-You are creating tests for the Research Project Template. ALL TESTS MUST USE DATA ONLY - NO MOCKS, NO PATCHING, NO SIMULATIONS. Tests must validate actual functionality with real inputs and outputs.
+You are creating tests for the Research Project Template. ALL TESTS MUST EXERCISE REAL CODE PATHS WITH REAL DATA OR REAL LOCAL STANDINS — NO MOCKS, NO PATCHING OF THE UNIT UNDER TEST. (Numerical examples, temporary files, `pytest-httpserver`, and deterministic RNG are fine; replacing the implementation under test with a stub is not.)
 
 CODE TO TEST: [Specify the module/function/class to test]
 LAYER: [Specify: "infrastructure" (60% coverage) OR "project" (90% coverage)]
@@ -290,19 +290,24 @@ def test_optimization_results():
 ## 6. Test Organization
 
 ### Test Directory Structure
-```
-tests/
-├── __init__.py
-├── conftest.py                    # Shared fixtures and configuration
-├── test_algorithms.py            # Algorithm tests
-├── test_data_processing.py       # Data processing tests
-├── test_validation.py            # Validation function tests
-├── test_integration.py           # End-to-end workflow tests
-├── test_performance.py           # Performance regression tests
-└── test_data/                    # test data files
-    ├── small_dataset.csv
-    ├── large_dataset.csv
-    └── edge_cases.json
+```mermaid
+flowchart LR
+    T[/tests//]
+    T --> INIT[__init__.py]
+    T --> CFG[conftest.py<br/>Shared fixtures &amp; configuration]
+    T --> ALG[test_algorithms.py<br/>Algorithm tests]
+    T --> DP[test_data_processing.py<br/>Data processing]
+    T --> VAL[test_validation.py<br/>Validation functions]
+    T --> INT[test_integration.py<br/>End-to-end workflows]
+    T --> PERF[test_performance.py<br/>Performance regression]
+    T --> DATA[/test_data/<br/>small_dataset.csv ·<br/>large_dataset.csv ·<br/>edge_cases.json/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class INIT,CFG,ALG,DP,VAL,INT,PERF code
+    class DATA pkg
 ```
 
 ### Test Configuration

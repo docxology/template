@@ -1,200 +1,104 @@
-# docs/prompts/ - AI Prompt Templates
+# docs/prompts/ — AI prompt templates
 
-> Prompt templates for compliant, tested, and documented work with the Research Project Template
+Prompt templates for work that must stay compliant, tested, and documented in this repository.
 
-**Quick Reference:** [AGENTS.md](AGENTS.md) | [Manuscript Creation](manuscript_creation.md) | [Code Development](code_development.md)
+**Index:** [AGENTS.md](AGENTS.md) (file table and conventions)
 
 ## Purpose
 
-This directory contains copy-paste prompt templates that reference project documentation so AI assistants and developers can produce work aligned with the template's standards.
+Copy-paste blocks that reference real standards and commands so assistants and humans produce aligned artifacts without re-deriving policy from memory.
 
-## Prompt Categories
+## Categories
 
-### Core Development Prompts
+### Research content
 
-| Prompt | Purpose | Use Case |
-|--------|---------|----------|
-| [`manuscript_creation.md`](manuscript_creation.md) | Create manuscripts from scratch | New research projects requiring full manuscript structure |
-| [`code_development.md`](code_development.md) | Develop code following all standards | Adding new algorithms, analysis methods, or utilities |
-| [`test_creation.md`](test_creation.md) | Write tests | Testing new functionality with data (no mocks) |
-| [`feature_addition.md`](feature_addition.md) | Add features compliantly | Extending project capabilities while maintaining architecture |
+| Prompt | Use when |
+|--------|----------|
+| [manuscript_creation.md](manuscript_creation.md) | New manuscript + project layout from a research brief |
+| [manuscript_cross_references.md](manuscript_cross_references.md) | Registry-driven manuscripts (`refs/labels.yaml`, `[[FIG:]]`, `[[THMREF:]]`, …) or auditing cross-refs |
+| [literature_synthesis.md](literature_synthesis.md) | LLM blocks for per-paper and corpus synthesis after a search pipeline |
 
-### Advanced Development Prompts
+### Code and tests
 
-| Prompt | Purpose | Use Case |
-|--------|---------|----------|
-| [`refactoring.md`](refactoring.md) | Refactor code following best practices | Code improvement with clean break approach |
-| [`infrastructure_module.md`](infrastructure_module.md) | Develop infrastructure modules | Generic utilities reusable across projects |
-| [`documentation_creation.md`](documentation_creation.md) | Create documentation | Writing AGENTS.md and README.md files |
-| [`validation_quality.md`](validation_quality.md) | Validation and quality assurance | Ensuring output quality and compliance |
-| [`comprehensive_assessment.md`](comprehensive_assessment.md) | Comprehensive assessment and review | Full code, docs, and manuscript assessment |
+| Prompt | Use when |
+|--------|----------|
+| [code_development.md](code_development.md) | New modules, algorithms, or utilities |
+| [test_creation.md](test_creation.md) | Adding tests under the no-mocks policy |
+| [feature_addition.md](feature_addition.md) | End-to-end feature work across layers |
+| [refactoring.md](refactoring.md) | Clean-break refactors with migration |
 
-## Quick Navigation Map
+### Infrastructure and docs
+
+| Prompt | Use when |
+|--------|----------|
+| [infrastructure_module.md](infrastructure_module.md) | New or extended `infrastructure/*` packages |
+| [documentation_creation.md](documentation_creation.md) | AGENTS.md / README.md for a directory |
+| [validation_quality.md](validation_quality.md) | Validation CLI, gates, manuscript/output checks |
+| [comprehensive_assessment.md](comprehensive_assessment.md) | Wide audit: tests, docs, manuscript, pipeline |
+
+## Navigation map
 
 ```mermaid
 graph TD
-    subgraph NewProject["🚀 Starting New Project"]
-        MS[manuscript_creation.md<br/>Create manuscript<br/>from research description]
-        CD[code_development.md<br/>Develop compliant code<br/>following all standards]
-        TC[test_creation.md<br/>Write tests<br/>with data]
+    subgraph Research["Research content"]
+        MS[manuscript_creation.md]
+        MX[manuscript_cross_references.md]
+        LS[literature_synthesis.md]
     end
 
-    subgraph ExistingProject["🔧 Extending Existing Project"]
-        FA[feature_addition.md<br/>Add features<br/>architecture-compliant]
-        REF[refactoring.md<br/>Refactor code<br/>clean break approach]
-        VAL[validation_quality.md<br/>Quality assurance<br/>and validation]
-        CA[comprehensive_assessment.md<br/>Full assessment<br/>code, docs, manuscript]
+    subgraph Code["Code and tests"]
+        CD[code_development.md]
+        TC[test_creation.md]
+        FA[feature_addition.md]
+        RF[refactoring.md]
     end
 
-    subgraph Infrastructure["🏗️ Infrastructure Development"]
-        IM[infrastructure_module.md<br/>Generic modules<br/>60% coverage requirement]
-        DC[documentation_creation.md<br/>Technical docs<br/>AGENTS.md structure]
+    subgraph Ops["Infrastructure · docs · QA"]
+        IM[infrastructure_module.md]
+        DC[documentation_creation.md]
+        VQ[validation_quality.md]
+        CA[comprehensive_assessment.md]
     end
 
-    MS --> CD
+    MS --> MX
     CD --> TC
-    FA --> REF
-    REF --> VAL
+    FA --> RF
     IM --> DC
+    CA --> VQ
 
-    classDef core fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
-    classDef advanced fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-
-    class NewProject core
-    class ExistingProject advanced
-    class Infrastructure infra
+    classDef r fill:#e3f2fd,stroke:#1565c0
+    classDef c fill:#fff3e0,stroke:#e65100
+    classDef o fill:#f3e5f5,stroke:#4a148c
+    class Research r
+    class Code c
+    class Ops o
 ```
 
-## How to Use Prompts
+## How to use
 
-### 1. Choose the Right Prompt
+1. Pick the row that matches the task; open the file and copy the **Prompt Template** / **Copy-paste prompt** block.
+2. Fill bracketed placeholders (`[project]`, `[feature]`, …). Use [`_generated/active_projects.md`](../_generated/active_projects.md) for real project names.
+3. Run the **Verification** / **Commands** section literally; do not substitute invented coverage numbers—use pytest output or [`_generated/canonical_facts.md`](../_generated/canonical_facts.md).
 
-Select the prompt that matches your task:
+## Standards leveraged
 
-- **Creating new research?** → `manuscript_creation.md`
-- **Adding code to existing project?** → `code_development.md`
-- **Testing new functionality?** → `test_creation.md`
-- **Extending project features?** → `feature_addition.md`
+| Resource | Role |
+|----------|------|
+| [`../rules/`](../rules/) | Normative coding, testing, docs, manuscripts |
+| [`../guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) | Pandoc cite + crossref syntax |
+| [`../core/architecture.md`](../core/architecture.md) | Two layers, thin orchestrator |
+| [`.github/AGENTS.md`](../../.github/AGENTS.md) | CI jobs and coverage floors |
 
-### 2. Customize the Prompt
-
-Each prompt contains:
-
-- **Context**: What documentation it leverages
-- **Template**: Copy-and-customize prompt text
-- **Requirements**: Checklist of compliance items
-- **Examples**: Usage demonstrations
-
-### 3. Provide Specific Input
-
-When using prompts, provide:
-
-- **Clear objectives** for what you want to create
-- **Specific constraints** or requirements
-- **Context about the project** (if extending existing work)
-- **Expected outcomes** or deliverables
-
-### 4. Validate Output
-
-After generation, validate against:
-
-- **Standards compliance** (check against `../rules/`)
-- **Architecture alignment** (two-layer, thin orchestrator)
-- **Testing requirements** (coverage, no mocks)
-- **Documentation completeness** (AGENTS.md, README.md)
-
-## Key Standards Leveraged
-
-### Development Standards (`../rules/`)
-
-All prompts reference and require compliance with:
-
-| Standard | Focus | Prompts Using |
-|----------|-------|---------------|
-| [`testing_standards.md`](../rules/testing_standards.md) | No mocks, coverage requirements | All prompts |
-| [`code_style.md`](../rules/code_style.md) | Black formatting, type hints | Code prompts |
-| [`api_design.md`](../rules/api_design.md) | Function signatures, parameters | Code prompts |
-| [`documentation_standards.md`](../rules/documentation_standards.md) | AGENTS.md, README.md structure | Documentation prompts |
-
-### Architecture Principles
-
-| Principle | Description | Prompts Using |
-|-----------|-------------|---------------|
-| **Two-Layer Architecture** | Infrastructure (generic) vs Project (specific) | All prompts |
-| **Thin Orchestrator Pattern** | Scripts coordinate, modules compute | Code/feature prompts |
-| **Clean Break Refactoring** | No backward compatibility, full migration | Refactoring prompt |
-
-### Quality Requirements
-
-| Requirement | Target | Prompts Using |
-|-------------|--------|---------------|
-| **Project Coverage** | 90% minimum | All development prompts |
-| **Infrastructure Coverage** | 60% minimum | Infrastructure prompts |
-| **Data Testing** | No mocks allowed | All testing prompts |
-| **Documentation Standards** | AGENTS.md structure | All prompts |
-
-## Example Usage
-
-### Creating a New Research Project
+## Example commands
 
 ```bash
-# 1. Use manuscript creation prompt
-cat docs/prompts/manuscript_creation.md
-# Copy the prompt template and customize with your research topic
-
-# 2. Use code development prompt
-cat docs/prompts/code_development.md
-# Copy the prompt template for implementing algorithms
-
-# 3. Use test creation prompt
-cat docs/prompts/test_creation.md
-# Copy the prompt template for testing
-```
-
-### Extending an Existing Project
-
-```bash
-# 1. Use feature addition prompt
-cat docs/prompts/feature_addition.md
-# Plan feature with architecture compliance
-
-# 2. Use validation prompt
-cat docs/prompts/validation_quality.md
-# Ensure quality and compliance
-```
-
-## See Also
-
-### Related Documentation
-
-- [`AGENTS.md`](AGENTS.md) - Technical documentation for all prompts
-- [`../core/architecture.md`](../core/architecture.md) - System design principles
-- [`../core/workflow.md`](../core/workflow.md) - Development workflow
-- [`../README.md`](../README.md) - documentation hub
-
-### Project Documentation
-
-- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Active project documentation
-- [`../../projects/AGENTS.md`](../../projects/AGENTS.md) - Multi-project management guide
-
-### Standards Reference
-
-- [`../rules/README.md`](../rules/README.md) - Development standards overview
-- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Testing requirements
-- [`../rules/infrastructure_modules.md`](../rules/infrastructure_modules.md) - Infrastructure development
-
----
-
-## Quick Command Reference
-
-```bash
-# View all available prompts
 ls docs/prompts/
-
-# Get prompt for specific task
-cat docs/prompts/manuscript_creation.md
-
-# Check standards compliance
-cat ../rules/testing_standards.md
+uv run pytest projects/template_code_project/tests/ \
+  --cov=projects/template_code_project/src --cov-fail-under=90 -q
 ```
+
+## See also
+
+- [`../README.md`](../README.md) — documentation hub
+- [`../development/contributing.md`](../development/contributing.md)
+- [`../../CLAUDE.md`](../../CLAUDE.md) — command cheat sheet

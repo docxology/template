@@ -29,7 +29,7 @@ Projects are **architecturally isolated** - each operates as if it were the only
 ```mermaid
 graph TD
     subgraph "Project Isolation"
-        P1[code_project<br/>Master Numerical Exemplar<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
+        P1[template_code_project<br/>Master Numerical Exemplar<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
         P2[template<br/>Meta-Documentation<br/>📝 Own manuscript<br/>🧪 Own tests<br/>🧠 Own algorithms]
 
         P1 -.->|❌ No imports| P2
@@ -85,7 +85,7 @@ from infrastructure.project import discover_projects
 
 # Infrastructure discovers all projects automatically
 projects = discover_projects(Path("."))
-# Returns: [code_project, ...]
+# Returns: [template_code_project, ...]
 
 # Infrastructure validates each project independently
 for project in projects:
@@ -279,36 +279,23 @@ copy_final_deliverables(project.path / "output", output_root / project.name)
 
 ### Project Lifecycle Under Infrastructure
 
-```text
-Project Development Lifecycle
-├── 1. Creation
-│   ├── Copy template or create from scratch
-│   ├── Add algorithms to src/
-│   └── Add tests to tests/
-├── 2. Development
-│   ├── Implement research methods
-│   ├── Write tests
-│   └── Develop analysis scripts
-├── 3. Validation
-│   ├── Infrastructure validates structure
-│   ├── Tests run with coverage checks
-│   └── Code quality verified
-├── 4. Analysis
-│   ├── Infrastructure discovers scripts
-│   ├── Scripts execute with proper environment
-│   └── Outputs collected to project/output/
-├── 5. Rendering
-│   ├── Manuscript processed independently
-│   ├── Figures integrated from analysis
-│   └── PDF generated with project references
-├── 6. Delivery
-│   ├── Outputs copied to output/{project}/
-│   ├── Ready for distribution
-│   └── Project remains standalone
-└── 7. Maintenance
-    ├── Independent updates possible
-    ├── No impact on other projects
-    └── Infrastructure improvements benefit all
+```mermaid
+flowchart TB
+    LC[Project Development Lifecycle]
+    LC --> S1[1 - Creation<br/>Copy template or scratch ·<br/>Add algorithms to src/ ·<br/>Add tests to tests/]
+    LC --> S2[2 - Development<br/>Implement research methods ·<br/>Write tests · Develop analysis scripts]
+    LC --> S3[3 - Validation<br/>Infrastructure validates structure ·<br/>Tests run with coverage checks ·<br/>Code quality verified]
+    LC --> S4[4 - Analysis<br/>Infrastructure discovers scripts ·<br/>Scripts execute with environment ·<br/>Outputs collected to project/output/]
+    LC --> S5[5 - Rendering<br/>Manuscript processed independently ·<br/>Figures integrated from analysis ·<br/>PDF generated with references]
+    LC --> S6[6 - Delivery<br/>Outputs copied to output/&lt;project&gt;/ ·<br/>Ready for distribution ·<br/>Project remains standalone]
+    LC --> S7[7 - Maintenance<br/>Independent updates ·<br/>No impact on other projects ·<br/>Infra improvements benefit all]
+
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef phase fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class LC root
+    class S1,S2,S3,S4,S5,S6,S7 phase
 ```
 
 ## Testing Philosophy
@@ -367,17 +354,25 @@ Every project maintains **manuscript independence**:
 
 #### **Independent Content Structure**
 
-```text
-projects/{name}/manuscript/
-├── 00_abstract.md                    # Project-specific abstract
-├── 01_introduction.md               # Domain introduction
-├── 02_methodology.md                # Methodology
-├── 03_results.md                    # Results and analysis
-├── 04_conclusion.md                 # Conclusion
-├── config.yaml                      # Project publication metadata
-├── config.yaml.example              # Example configuration
-├── preamble.md                      # LaTeX preamble
-└── references.bib                   # Project bibliography
+```mermaid
+flowchart LR
+    M[/projects/&lt;name&gt;/manuscript//]
+    M --> S00[00_abstract.md]
+    M --> S01[01_introduction.md]
+    M --> S02[02_methodology.md]
+    M --> S03[03_results.md]
+    M --> S04[04_conclusion.md]
+    M --> CFG[config.yaml<br/>Project publication metadata]
+    M --> CFGEX[config.yaml.example<br/>Example configuration]
+    M --> PRE[preamble.md<br/>LaTeX preamble]
+    M --> BIB[references.bib<br/>Project bibliography]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef sect fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef cfg fill:#0f766e,stroke:#0f172a,color:#fff
+    class M d
+    class S00,S01,S02,S03,S04 sect
+    class CFG,CFGEX,PRE,BIB cfg
 ```
 
 #### **Independent References**
@@ -448,13 +443,13 @@ Infrastructure modules are **domain-independent utilities** that benefit all pro
 
 ```bash
 # Infrastructure operates on project independently
-python3 scripts/execute_pipeline.py --project code_project --core-only
+python3 scripts/execute_pipeline.py --project template_code_project --core-only
 
 # Result: Complete analysis pipeline executed
 # - Tests validate analysis algorithms
 # - Scripts generate analysis figures
 # - Manuscript renders with equations
-# - Outputs organized in output/code_project/
+# - Outputs organized in output/template_code_project/
 ```
 
 ## Benefits of Standalone Paradigm

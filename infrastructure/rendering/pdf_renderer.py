@@ -10,6 +10,7 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_combined_renderer import (
     build_pandoc_tex_command,
+    discover_manuscript_bib_paths,
     inject_bibliography,
     inject_latex_preamble,
     postprocess_latex,
@@ -161,11 +162,11 @@ class PDFRenderer:
             output_file.unlink()
             logger.debug(f"Removed existing output file: {output_file.name}")
 
-        # Check if bibliography exists
-        bib_file = manuscript_dir / "references.bib"
-        if not bib_file.exists():
-            bib_file = manuscript_dir / "99_references.bib"
-        bib_exists = bib_file.exists()
+        # All manuscript *.bib files: pre-render citation gate unions them when
+        # bib_file=None; LaTeX/BibTeX use \bibliography{stem1,stem2,...}.
+        bib_paths = discover_manuscript_bib_paths(manuscript_dir)
+        bib_exists = bool(bib_paths)
+        bib_stems = ",".join(p.stem for p in bib_paths) if bib_paths else "references"
 
         combined_tex = output_dir / "_combined_manuscript.tex"
         combined_md = output_dir / "_combined_manuscript.md"
@@ -197,7 +198,7 @@ class PDFRenderer:
         # combined file (brace balance).
         prevalidate_source_markdown(
             source_files,
-            bib_file=bib_file if bib_exists else None,
+            bib_file=None,
         )
         logger.info("Converting combined markdown to LaTeX...")
         logger.debug(f"Combined markdown file: {combined_md}")
@@ -220,7 +221,7 @@ class PDFRenderer:
         tex_content = inject_latex_preamble(tex_content, manuscript_dir)
 
         # Step 7: Inject bibliography
-        tex_content = inject_bibliography(tex_content, bib_exists)
+        tex_content = inject_bibliography(tex_content, bib_exists, bib_stems=bib_stems)
 
         # Write final .tex file atomically. Any failure (disk full, encoding
         # error, race between write and replace) must still remove the partial
@@ -243,7 +244,7 @@ class PDFRenderer:
             combined_md=combined_md,
             output_dir=output_dir,
             output_file=output_file,
-            bib_file=bib_file,
+            bib_files=bib_paths,
             bib_exists=bib_exists,
             source_files=source_files,
         )

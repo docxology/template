@@ -6,19 +6,20 @@ The `tests/infra_tests/publishing/` directory contains tests for the academic pu
 
 ## Directory Structure
 
-```
-tests/infra_tests/publishing/
-├── AGENTS.md                           # This technical documentation
-├── __init__.py                         # Test package initialization
-├── test_api.py                         # API client tests
-├── test_cli.py                         # CLI interface tests
-├── test_publish_cli.py                 # Publishing CLI tests
-├── test_publishing_api_coverage.py     # API coverage tests
-├── test_publishing_api_full.py         # Full API integration tests
-├── test_publishing_cli_full.py         # Full CLI integration tests
-├── test_publishing_cli.py              # CLI functionality tests
-├── test_publishing_edge_cases.py       # Edge case and error tests
-└── test_publishing.py                  # Core publishing tests
+```mermaid
+flowchart TB
+    T[/tests/infra_tests/publishing//]
+    T --> META[AGENTS.md · __init__.py]
+    T --> API[API tests<br/>test_api · test_publishing_api_coverage ·<br/>test_publishing_api_full]
+    T --> CLI[CLI tests<br/>test_cli · test_publish_cli ·<br/>test_publishing_cli · test_publishing_cli_full]
+    T --> CORE[Core / edge cases<br/>test_publishing · test_publishing_edge_cases]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class API,CLI,CORE cat
+    class META doc
 ```
 
 ## Test Categories

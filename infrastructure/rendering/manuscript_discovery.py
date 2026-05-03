@@ -63,6 +63,9 @@ def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
     4. References: 99_*.md (always last)
     5. LaTeX files: *.tex (appended after markdown)
 
+    When any digit-prefixed ``NN_*.md`` section exists, ``complete.md`` is omitted — it is an
+    assembled copy of section files and would duplicate figure labels in combined PDF/HTML.
+
     Args:
         manuscript_dir: Path to manuscript directory
 
@@ -78,6 +81,7 @@ def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
         "preamble.md",
         "AGENTS.md",
         "README.md",
+        "SYNTAX.md",
         "config.yaml",
         "config.yaml.example",
         "references.bib",
@@ -103,6 +107,17 @@ def discover_manuscript_files(manuscript_dir: Path) -> list[Path]:
                 if key not in seen_keys:
                     seen_keys.add(key)
                     all_md_files.append(f)
+
+    # ``complete.md`` is an assembled concatenation of numbered sections (some projects
+    # emit it under output/manuscript/). Rendering it alongside ``00_*.md`` duplicates
+    # figures and breaks pandoc-crossref (duplicate \\label{}). Omit when sections exist.
+    numbered_present = any(
+        p.stem[0].isdigit()
+        for p in all_md_files
+        if p.stem and not p.stem.startswith("99_") and not p.stem.startswith("98_")
+    )
+    if numbered_present:
+        all_md_files = [p for p in all_md_files if p.name != "complete.md"]
 
     # Organize files by category for proper ordering
     main_sections: list[Path] = []  # 01_*.md - 09_*.md

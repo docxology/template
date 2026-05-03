@@ -40,15 +40,21 @@ When modularizing or restructuring:
 
 **How to split**:
 
-```text
-old_module.py (835 lines)
-  ↓
-new_structure/
-├── __init__.py (exports all public API)
-├── base.py (base classes, ~100 lines)
-├── component_a.py (~250 lines)
-├── component_b.py (~200 lines)
-└── component_c.py (~200 lines)
+```mermaid
+flowchart LR
+    OLD[old_module.py<br/>835 lines] --> NEW[/new_structure//]
+    NEW --> INIT[__init__.py<br/>exports all public API]
+    NEW --> BASE[base.py<br/>base classes · ~100 lines]
+    NEW --> CA[component_a.py<br/>~250 lines]
+    NEW --> CB[component_b.py<br/>~200 lines]
+    NEW --> CC[component_c.py<br/>~200 lines]
+
+    classDef before fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef after fill:#0f766e,stroke:#0f172a,color:#fff
+    class OLD before
+    class NEW d
+    class INIT,BASE,CA,CB,CC after
 ```
 
 ### Import Updates

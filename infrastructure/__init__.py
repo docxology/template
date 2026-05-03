@@ -13,6 +13,9 @@ Modules:
     llm: Local LLM integration for research assistance
     rendering: Multi-format output generation
     publishing: Academic publishing & dissemination
+    reference: BibTeX I/O (read/write/convert) matching references.bib syntax; see reference/SKILL.md
+    search: Paperclip-style multi-source literature search; see search/SKILL.md
+    prose: Prose analysis (readability, structure, quality, manuscript reports); see prose/SKILL.md
     reporting: Pipeline reporting & error aggregation
     project: Multi-project management and discovery
     skills: SKILL.md discovery and Cursor manifest (.cursor/skill_manifest.json); see skills/SKILL.md

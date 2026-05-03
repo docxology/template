@@ -4,15 +4,16 @@ This file is **generated**. Do not edit by hand.
 
 The names below are the single source of truth from `infrastructure.project.discovery.discover_projects()` for directories under `projects/` that have both `src/` and `tests/`.
 
-Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides—link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/code_project/`](../../projects/code_project/) unless a doc explicitly compares layouts.
+Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides—link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/) unless a doc explicitly compares layouts.
 
-Generated at (UTC): `2026-04-27T02:27:13+00:00`
+Generated at (UTC): `2026-05-02T14:53:30+00:00`
 
 Current entries:
 
-- `act_inf_metaanalysis`
-- `biology_textbook`
-- `code_project`
+- `actinf_policy_entanglement_lean`
+- `template_code_project`
+- `template_prose_project`
+- `template_search_project`
 
 Regenerate after adding, removing, or renaming projects:
 

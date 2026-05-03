@@ -61,7 +61,7 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[code_project<br/>Optimization Exemplar]
+        P1[template_code_project<br/>Optimization Exemplar]
         P2[fep_lean<br/>FEP / Lean catalogue<br/>~272 pytest items]
     end
 
@@ -122,39 +122,45 @@ To reactivate an archived project:
 
 Every valid project **must** have these directories:
 
-```text
-projects/{name}/
-├── src/                    # Python source code (algorithms, data processing)
-│   ├── __init__.py        # Package initialization
-│   └── *.py               # Research algorithms and methods
-├── tests/                  # Test suite (90%+ coverage required)
-│   ├── __init__.py        # Test package
-│   └── test_*.py          # Unit and integration tests
-└── pyproject.toml         # Project metadata and dependencies
+```mermaid
+flowchart TB
+    P[/projects/&lt;name&gt;//]
+    P --> SRC[/src/<br/>Python source code/]
+    P --> T[/tests/<br/>90%+ coverage required/]
+    P --> PY[pyproject.toml<br/>Project metadata · dependencies]
+
+    SRC --> SRC_F[__init__.py · *.py<br/>algorithms · data processing]
+    T --> T_F[__init__.py · test_*.py<br/>unit + integration]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class P d
+    class SRC,T pkg
+    class SRC_F,T_F,PY f
 ```
 
 ### Optional Directories (Recommended for Full Functionality)
 
-```text
-projects/{name}/
-├── scripts/                # Analysis workflows (thin orchestrators)
-│   ├── analysis_pipeline.py    # Main analysis script
-│   └── generate_*.py          # Figure/table generation
-├── manuscript/             # Research manuscript (markdown)
-│   ├── config.yaml         # Publication metadata
-│   ├── references.bib      # Bibliography
-│   ├── 00_abstract.md      # Manuscript sections (canonical control-positive example)
-│   └── *.md                # Additional sections
-├── docs/                   # Modular documentation hub
-│   ├── architecture.md     # Flow and orchestration details
-│   ├── testing_philosophy.md # Validation and zero-mock rules
-│   ├── rendering_pipeline.md # LaTeX/PDF mapping
-│   └── agent_instructions.md # Rules for LLMs
-├── output/                 # Generated outputs (disposable)
-│   ├── figures/            # PNG/PDF figures
-│   ├── data/               # CSV/NPZ data files
-│   ├── pdf/                # Generated PDFs
-│   └── reports/            # Analysis reports
+```mermaid
+flowchart TB
+    P[/projects/&lt;name&gt;//]
+    P --> SC[/scripts/<br/>Analysis workflows · thin orchestrators/]
+    P --> M[/manuscript/<br/>Research manuscript · markdown/]
+    P --> DOCS[/docs/<br/>Modular documentation hub/]
+    P --> OUT[/output/<br/>Generated · disposable/]
+
+    SC --> SC_F[analysis_pipeline.py · generate_*.py]
+    M --> M_F[config.yaml · references.bib ·<br/>00_abstract.md · *.md]
+    DOCS --> DOCS_F[architecture.md · testing_philosophy.md ·<br/>rendering_pipeline.md · agent_instructions.md]
+    OUT --> OUT_F[figures/ · data/ · pdf/ · reports/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class P d
+    class SC,M,DOCS,OUT pkg
+    class SC_F,M_F,DOCS_F,OUT_F f
 ```
 
 ### Stub directory (not discovered)
@@ -181,7 +187,7 @@ for project in projects:
     print(f"  Has scripts: {project.has_scripts}")
 
 # Validate specific project
-is_valid, message = validate_project_structure(Path("projects/code_project"))
+is_valid, message = validate_project_structure(Path("projects/template_code_project"))
 assert is_valid  # (True, "Valid project structure")
 ```
 
@@ -287,15 +293,18 @@ python3 scripts/05_copy_outputs.py --project {name}
 
 **Output Organization:**
 
-```text
-output/
-├── code_project/       # Final deliverables
-│   ├── pdf/                    # Manuscript PDFs
-│   ├── figures/                # Publication figures
-│   ├── data/                   # Analysis datasets
-│   └── reports/                # Pipeline reports
-└── your_project/               # Other projects
-    └── ...
+```mermaid
+flowchart TB
+    OUT[/output//]
+    OUT --> CP[/template_code_project/<br/>Final deliverables/]
+    OUT --> YP[/&lt;your_project&gt;/<br/>Other projects/]
+
+    CP --> CP_FILES[pdf/ · figures/ · data/ · reports/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class OUT,CP,YP d
+    class CP_FILES f
 ```
 
 ## Import Patterns and Dependencies
@@ -415,15 +424,21 @@ def test_llm_integration_real_http(ollama_test_server):
 
 **Directory Structure:**
 
-```text
-projects/{name}/tests/
-├── __init__.py                      # Test package
-├── conftest.py                      # Shared fixtures and configuration
-├── test_domain_analysis.py          # Unit tests for domain analysis
-├── test_term_extraction.py          # Unit tests for term extraction
-├── test_integration.py              # Integration tests across modules
-├── test_performance.py              # Performance and scaling tests
-└── test_validation.py               # Validation and error handling tests
+```mermaid
+flowchart TB
+    T[/projects/&lt;name&gt;/tests//]
+    T --> INIT[__init__.py<br/>Test package]
+    T --> CFG[conftest.py<br/>Shared fixtures · configuration]
+    T --> DA[test_domain_analysis.py<br/>Unit tests · domain analysis]
+    T --> TE[test_term_extraction.py<br/>Unit tests · term extraction]
+    T --> INT[test_integration.py<br/>Cross-module integration]
+    T --> PERF[test_performance.py<br/>Performance &amp; scaling]
+    T --> VAL[test_validation.py<br/>Validation &amp; error handling]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class T d
+    class INIT,CFG,DA,TE,INT,PERF,VAL code
 ```
 
 **Test Categories:**
@@ -493,17 +508,21 @@ for script in scripts:
 
 **Generated during pipeline execution:**
 
-```text
-projects/{name}/output/
-├── figures/                 # PNG/PDF figures for manuscript
-├── data/                    # CSV/NPZ datasets from analysis
-├── pdf/                     # Generated PDF manuscripts
-├── tex/                     # LaTeX source files
-├── slides/                  # Presentation slides (PDF/HTML)
-├── web/                     # HTML versions for web viewing
-├── llm/                     # LLM reviews and translations
-├── logs/                    # Pipeline execution logs
-└── reports/                 # Analysis reports and summaries
+```mermaid
+flowchart LR
+    OUT[/projects/&lt;name&gt;/output//]
+    OUT --> FIG[/figures/<br/>PNG/PDF figures for manuscript/]
+    OUT --> DATA[/data/<br/>CSV/NPZ datasets from analysis/]
+    OUT --> PDF[/pdf/<br/>Generated PDF manuscripts/]
+    OUT --> TEX[/tex/<br/>LaTeX source files/]
+    OUT --> SLIDES[/slides/<br/>Presentation slides · PDF/HTML/]
+    OUT --> WEB[/web/<br/>HTML versions for web viewing/]
+    OUT --> LLM[/llm/<br/>LLM reviews · translations/]
+    OUT --> LOG[/logs/<br/>Pipeline execution logs/]
+    OUT --> REP[/reports/<br/>Analysis reports · summaries/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    class OUT,FIG,DATA,PDF,TEX,SLIDES,WEB,LLM,LOG,REP d
 ```
 
 **Characteristics:**
@@ -517,13 +536,17 @@ projects/{name}/output/
 
 **Copied by `scripts/05_copy_outputs.py`:**
 
-```text
-output/{name}/
-├── pdf/                     # Final manuscript PDFs
-├── figures/                 # Publication-quality figures
-├── data/                    # Analysis datasets for sharing
-├── slides/                  # Presentation materials
-└── reports/                 # Pipeline and analysis reports
+```mermaid
+flowchart LR
+    OUT[/output/&lt;name&gt;//]
+    OUT --> PDF[/pdf/<br/>Final manuscript PDFs/]
+    OUT --> FIG[/figures/<br/>Publication-quality figures/]
+    OUT --> DATA[/data/<br/>Analysis datasets for sharing/]
+    OUT --> SLIDES[/slides/<br/>Presentation materials/]
+    OUT --> REP[/reports/<br/>Pipeline + analysis reports/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    class OUT,PDF,FIG,DATA,SLIDES,REP d
 ```
 
 **Characteristics:**
@@ -927,7 +950,7 @@ ls projects/myproject/output/pdf/*_compile.log
 
 **Note:** This project has been archived. Reactivate by moving from `projects_archive/` to `projects/`.
 
-### Optimization Research Exemplar (`projects/code_project/`)
+### Optimization Research Exemplar (`projects/template_code_project/`)
 
 **Standalone Guarantees:**
 
@@ -938,9 +961,9 @@ ls projects/myproject/output/pdf/*_compile.log
 **Infrastructure Operations:**
 
 ```bash
-python3 scripts/01_run_tests.py --project code_project
-python3 scripts/02_run_analysis.py --project code_project
-python3 scripts/03_render_pdf.py --project code_project
+python3 scripts/01_run_tests.py --project template_code_project
+python3 scripts/02_run_analysis.py --project template_code_project
+python3 scripts/03_render_pdf.py --project template_code_project
 ```
 
 ### Area handbook (archived: `projects_archive/area_handbook/`)

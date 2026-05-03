@@ -6,20 +6,26 @@ Enumerate `SKILL.md` agent descriptors under configurable repository roots, pars
 
 ## Module layout
 
-```
-infrastructure/skills/
-├── __init__.py       # Public re-exports
-├── __main__.py       # python -m infrastructure.skills
-├── cli.py            # write | check | list-json
-├── discovery.py      # discover_skills, manifest helpers
-├── SKILL.md
-├── README.md
-└── AGENTS.md
+```mermaid
+flowchart TB
+    SK[/infrastructure/skills//]
+    SK --> INIT[__init__.py<br/>Public re-exports]
+    SK --> MAIN[__main__.py<br/>python -m infrastructure.skills]
+    SK --> CLI[cli.py<br/>write · check · list-json]
+    SK --> DISC[discovery.py<br/>discover_skills · manifest helpers]
+    SK --> DOCS[SKILL.md · README.md · AGENTS.md]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class SK d
+    class INIT,MAIN,CLI,DISC code
+    class DOCS doc
 ```
 
 ## Public API (`discovery.py`)
 
-- `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "projects/code_project/src", ".cursor/skills")` relative to repo root
+- `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "projects/template_code_project/src", ".cursor/skills")` relative to repo root
 - `SkillDescriptor` — `absolute_path`, `relative_path`, `name`, `description`, `frontmatter`; properties `path_posix`, `cursor_at`
 - `split_yaml_frontmatter(source: str) -> tuple[dict | None, str]`
 - `load_skill_descriptor(skill_path: Path, repo_root: Path) -> SkillDescriptor`

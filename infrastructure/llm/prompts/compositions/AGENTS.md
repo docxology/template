@@ -6,10 +6,18 @@ The `infrastructure/llm/prompts/compositions/` directory contains pre-built prom
 
 ## Directory Structure
 
-```text
-infrastructure/llm/prompts/compositions/
-├── AGENTS.md                       # This technical documentation
-└── retry_prompts.json             # Error recovery and format enforcement prompts
+```mermaid
+flowchart LR
+    C[/infrastructure/llm/prompts/compositions//]
+    C --> AG[AGENTS.md]
+    C --> RP[retry_prompts.json<br/>Error recovery &amp; format enforcement]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class C d
+    class RP code
+    class AG doc
 ```
 
 ## Composition Types

@@ -17,12 +17,20 @@ Every directory **must** contain exactly two documentation files:
 
 This pattern is **mandatory** at all folder levels:
 
-```
-directory/
-├── AGENTS.md          # REQUIRED: technical documentation for AI agents and developers
-├── README.md          # REQUIRED: Quick reference with signposting and Mermaid diagrams
-├── [optional].md      # OPTIONAL: Additional specialized documentation
-└── [code files]
+```mermaid
+flowchart LR
+    DIR[/directory//]
+    DIR --> AG[AGENTS.md<br/>REQUIRED · technical documentation]
+    DIR --> RD[README.md<br/>REQUIRED · quick reference + Mermaid diagrams]
+    DIR --> OPT[OPTIONAL.md<br/>specialized documentation]
+    DIR --> CODE[code files]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef req fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef opt fill:#0f766e,stroke:#0f172a,color:#fff
+    class DIR d
+    class AG,RD req
+    class OPT,CODE opt
 ```
 
 **Violation of this pattern** is considered a documentation standard breach and must be corrected immediately.
@@ -89,38 +97,62 @@ directory/
 
 All `infrastructure/` subdirectories follow the pattern:
 
-```
-infrastructure/module/
-├── __init__.py           # Public API exports
-├── AGENTS.md            # REQUIRED: technical documentation
-├── README.md            # REQUIRED: Quick reference
-├── core.py              # Core functionality
-├── cli.py               # Command-line interface (optional)
-├── config.py            # Configuration (optional)
-├── [other files]
+```mermaid
+flowchart LR
+    M[/infrastructure/module//]
+    M --> INIT[__init__.py<br/>Public API exports]
+    M --> AG[AGENTS.md<br/>REQUIRED · technical documentation]
+    M --> RD[README.md<br/>REQUIRED · quick reference]
+    M --> CORE[core.py<br/>Core functionality]
+    M --> CLI[cli.py<br/>CLI · optional]
+    M --> CFG[config.py<br/>Configuration · optional]
+    M --> OTHER[other files]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef req fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef opt fill:#0f766e,stroke:#0f172a,color:#fff
+    class M d
+    class INIT,AG,RD,CORE req
+    class CLI,CFG,OTHER opt
 ```
 
 ### Project Subdirectories
 
 All `projects/` subdirectories follow the pattern:
 
-```
-projects/<name>/
-├── AGENTS.md            # REQUIRED: Directory documentation
-├── README.md            # REQUIRED: Quick reference
-├── [code files]
-├── [config files]
+```mermaid
+flowchart LR
+    P[/projects/&lt;name&gt;//]
+    P --> AG[AGENTS.md<br/>REQUIRED · directory documentation]
+    P --> RD[README.md<br/>REQUIRED · quick reference]
+    P --> CODE[code files]
+    P --> CFG[config files]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef req fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef opt fill:#0f766e,stroke:#0f172a,color:#fff
+    class P d
+    class AG,RD req
+    class CODE,CFG opt
 ```
 
 ### Documentation Subdirectories
 
 All `docs/` subdirectories follow the pattern:
 
-```
-docs/section/
-├── AGENTS.md            # REQUIRED: Section documentation
-├── README.md            # REQUIRED: Quick reference
-├── [topic files]
+```mermaid
+flowchart LR
+    D[/docs/section//]
+    D --> AG[AGENTS.md<br/>REQUIRED · section documentation]
+    D --> RD[README.md<br/>REQUIRED · quick reference]
+    D --> TOPICS[topic files]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef req fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef opt fill:#0f766e,stroke:#0f172a,color:#fff
+    class D d
+    class AG,RD req
+    class TOPICS opt
 ```
 
 ## Integration with Development Standards
@@ -202,34 +234,42 @@ graph TD
 
 ### Infrastructure Module Example
 
-```
-infrastructure/llm/
-├── __init__.py
-├── AGENTS.md          # LLM integration documentation
-├── README.md          # Quick LLM setup and usage
-├── core/
-│   ├── __init__.py
-│   ├── AGENTS.md      # Core LLM functionality
-│   ├── README.md      # Quick core reference
-│   └── [python files]
-├── templates/
-│   ├── AGENTS.md      # Template system documentation
-│   ├── README.md      # Quick template reference
-│   └── [python files]
-└── [other subdirs]
+```mermaid
+flowchart TB
+    LLM[/infrastructure/llm//]
+    LLM --> META[__init__.py · AGENTS.md · README.md]
+    LLM --> CORE[/core/]
+    LLM --> TPL[/templates/]
+    LLM --> OTHER[other subdirs]
+
+    CORE --> CORE_F[__init__.py · AGENTS.md ·<br/>README.md · python files]
+    TPL --> TPL_F[AGENTS.md · README.md ·<br/>python files]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class LLM d
+    class CORE,TPL,OTHER pkg
+    class META,CORE_F,TPL_F f
 ```
 
 ### Project Directory Example
 
-```
-projects/{name}/src/
-├── __init__.py
-├── AGENTS.md          # research code documentation
-├── README.md          # Quick research code reference
-├── data_processing.py
-├── simulation.py
-├── visualization.py
-└── [other files]
+```mermaid
+flowchart LR
+    SRC[/projects/&lt;name&gt;/src//]
+    SRC --> META[__init__.py · AGENTS.md · README.md<br/>research code documentation]
+    SRC --> DP[data_processing.py]
+    SRC --> SIM[simulation.py]
+    SRC --> VIZ[visualization.py]
+    SRC --> OTHER[other files]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class SRC d
+    class DP,SIM,VIZ,OTHER code
+    class META doc
 ```
 
 ## Quality Checklist

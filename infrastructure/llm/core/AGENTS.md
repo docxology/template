@@ -6,22 +6,27 @@ The `infrastructure/llm/core/` directory contains the fundamental components of 
 
 ## Directory Structure
 
-```text
-infrastructure/llm/core/
-├── AGENTS.md
-├── __init__.py           # Re-exports LLMClient, ResponseMode
-├── client.py             # LLMClient class (composition root)
-├── _connection.py        # _ConnectionMixin — HTTP, retries, generate_response, stream entry
-├── _structured_queries.py # _StructuredQueryMixin — query_structured, JSON parsing
-├── _stream_impl.py       # stream_query_impl — requests streaming, metrics, partial save hooks
-├── _stream_helpers.py    # save_partial_if_needed, try_save_partial, TIMEOUT_WARNING_FRACTION
-├── response_saver.py     # Persist streaming / blocking responses to disk
-├── sanitization.py       # sanitize_llm_input
-├── config.py             # OllamaClientConfig, GenerationOptions, ResponseMode
-├── context.py            # ConversationContext
-├── log_preview.py        # Safe log previews for prompts
-├── _prompt_availability.py
-└── _text_utils.py
+```mermaid
+flowchart TB
+    CORE[/infrastructure/llm/core//]
+    CORE --> META[AGENTS.md · __init__.py]
+    CORE --> CLIENT[client.py<br/>LLMClient · composition root]
+    CORE --> MIXINS[_connection.py · _structured_queries.py ·<br/>_stream_impl.py · _stream_helpers.py<br/>HTTP · retries · streaming · metrics]
+    CORE --> SAVER[response_saver.py<br/>Persist streaming/blocking responses]
+    CORE --> SAN[sanitization.py<br/>sanitize_llm_input]
+    CORE --> CFG[config.py<br/>OllamaClientConfig ·<br/>GenerationOptions · ResponseMode]
+    CORE --> CTX[context.py<br/>ConversationContext]
+    CORE --> LOGP[log_preview.py<br/>Safe log previews]
+    CORE --> PRIV[_prompt_availability.py · _text_utils.py]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef priv fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class CORE d
+    class CLIENT,SAVER,SAN,CFG,CTX,LOGP code
+    class MIXINS,PRIV priv
+    class META doc
 ```
 
 ## Key Components

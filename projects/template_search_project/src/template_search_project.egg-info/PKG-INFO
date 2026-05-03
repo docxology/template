@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: template_search_project
+Version: 0.1.0
+Summary: Configurable literature-search → BibTeX → LLM-synthesis pipeline built on infrastructure/search and infrastructure/reference.
+Author-email: Research Template Author <author@research-template.org>
+Requires-Python: >=3.10
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: matplotlib>=3.7
+Requires-Dist: networkx>=3.4.2
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
+Requires-Dist: pytest-httpserver>=1.0.8; extra == "dev"

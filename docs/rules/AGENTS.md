@@ -6,7 +6,7 @@ This directory contains development standards, coding guidelines, and best pract
 
 > **Note**: These rules were formerly stored in `.cursorrules/`. They now live in `docs/rules/`.
 
-> **Project paths in examples**: default to [`projects/code_project/`](../../projects/code_project/). Authoritative active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md) (see [_generated/README.md](../_generated/README.md)).
+> **Project paths in examples**: default to [`projects/template_code_project/`](../../projects/template_code_project/). Authoritative active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md) (see [_generated/README.md](../_generated/README.md)).
 
 ## Files
 
@@ -189,14 +189,21 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 
 **Structure**:
 
-```text
-infrastructure/<module>/
-├── __init__.py           # Public API
-├── core.py              # Core logic
-├── cli.py               # Command-line interface (optional)
-├── config.py            # Configuration (optional)
-├── AGENTS.md            # Detailed docs
-└── README.md            # Quick reference
+```mermaid
+flowchart LR
+    M[/infrastructure/&lt;module&gt;//]
+    M --> INIT[__init__.py<br/>Public API]
+    M --> CORE[core.py<br/>Core logic]
+    M --> CLI[cli.py<br/>CLI · optional]
+    M --> CFG[config.py<br/>Configuration · optional]
+    M --> DOCS[AGENTS.md · README.md ·<br/>SKILL.md]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class M d
+    class INIT,CORE,CLI,CFG code
+    class DOCS doc
 ```
 
 **Related Documentation:**
@@ -233,7 +240,7 @@ As shown in \eqref{eq:objective}, the objective function...
 **Related Documentation:**
 
 - [manuscript_style.md](manuscript_style.md) - manuscript formatting guide
-- [projects/code_project/manuscript/](../../projects/code_project/manuscript/) - Example manuscript (active project)
+- [projects/template_code_project/manuscript/](../../projects/template_code_project/manuscript/) - Example manuscript (active project)
 - [docs/usage/markdown-template-guide.md](../usage/markdown-template-guide.md) - Markdown guide
 
 ## Testing Standards
@@ -246,15 +253,19 @@ As shown in \eqref{eq:objective}, the objective function...
 
 ### Test Organization
 
-```text
-tests/
-├── infra_tests/        # Infrastructure tests (Layer 1)
-│   └── test_<module>/
-│       ├── __init__.py
-│       ├── conftest.py
-│       └── test_*.py
-├── integration/        # Cross-layer tests
-└── helpers/            # Test utilities
+```mermaid
+flowchart TB
+    T[/tests//]
+    T --> INFRA[/infra_tests/<br/>Layer 1 · infrastructure tests/]
+    T --> INTEG[/integration/<br/>Cross-layer tests/]
+    T --> HELP[/helpers/<br/>Test utilities/]
+
+    INFRA --> SUB[/test_&lt;module&gt;/<br/>__init__.py · conftest.py · test_*.py/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class T d
+    class INFRA,INTEG,HELP,SUB pkg
 ```
 
 ### Test Principles
@@ -380,28 +391,29 @@ except SpecificError as e:
 
 ### Project Structure
 
-```text
-template/
-├── infrastructure/         # [LAYER 1] Generic tools (root level)
-│   ├── core/              # Core utilities (logging, config, exceptions)
-│   ├── documentation/     # Documentation tools (figures, glossary)
-│   ├── llm/               # LLM integration & research templates
-│   ├── project/           # Project discovery & orchestration
-│   ├── publishing/        # Publishing tools (DOI, citations)
-│   ├── rendering/         # Multi-format rendering (PDF, HTML, slides)
-│   ├── reporting/         # Pipeline reporting & error aggregation
-│   ├── scientific/        # Scientific dev tools (benchmarking)
-│   └── validation/        # Validation & integrity checking
-├── projects/             # [LAYER 2] Research projects
-│   ├── {name}/           # [LAYER 2] Research code
-│   │   ├── src/           # Project-specific algorithms
-│   │   ├── tests/         # Project tests
-│   │   ├── scripts/       # Project orchestrators
-│   │   └── manuscript/   # Research content
-├── scripts/               # [LAYER 1] Generic entry points
-├── tests/                 # [LAYER 1] Infrastructure tests
-├── docs/                  # Documentation
-└── docs/rules/                # Development standards (THIS DIR)
+```mermaid
+flowchart TB
+    ROOT[/template//]
+    ROOT --> INFRA[/infrastructure/<br/>Layer 1 · generic tools/]
+    ROOT --> PROJ[/projects/<br/>Layer 2 · research projects/]
+    ROOT --> SCR[/scripts/<br/>Layer 1 · generic entry points/]
+    ROOT --> T[/tests/<br/>Layer 1 · infrastructure tests/]
+    ROOT --> DOC[/docs/<br/>Documentation/]
+    ROOT --> RULES[/docs/rules/<br/>Development standards · this dir/]
+
+    INFRA --> INFRA_SUB[core · documentation · llm · project ·<br/>publishing · rendering · reporting ·<br/>scientific · validation · search · reference ·<br/>steganography · skills]
+
+    PROJ --> P_NAME[/&lt;name&gt;/]
+    P_NAME --> P_SUB[src/ · tests/ · scripts/ · manuscript/]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef l2 fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef doc fill:#7c2d12,stroke:#0f172a,color:#fff
+    class ROOT root
+    class INFRA,SCR,T,INFRA_SUB l1
+    class PROJ,P_NAME,P_SUB l2
+    class DOC,RULES doc
 ```
 
 ## Checklist for New Code
@@ -489,7 +501,7 @@ The `docs/rules/` standards align with and support the main documentation:
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/core/workflow.md](../core/workflow.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/core/architecture.md](../core/architecture.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../../infrastructure/llm/AGENTS.md) |
-| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects/code_project/manuscript/](../../projects/code_project/manuscript/) |
+| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [projects/template_code_project/manuscript/](../../projects/template_code_project/manuscript/) |
 | Refactoring | [refactoring.md](refactoring.md) | [docs/best-practices/best-practices.md](../best-practices/best-practices.md) |
 
 ## Cross-Reference Guide
@@ -526,7 +538,7 @@ The `docs/rules/` standards align with and support the main documentation:
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
-| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects/code_project/manuscript/](../../projects/code_project/manuscript/) for manuscript structure |
+| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [projects/template_code_project/manuscript/](../../projects/template_code_project/manuscript/) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
 | Generating reports | [reporting.md](reporting.md) | [docs/modules/modules-guide.md](../modules/modules-guide.md) for module details |

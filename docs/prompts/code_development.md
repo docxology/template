@@ -232,34 +232,42 @@ class TestParameterOptimization:
 ## 5. Module Organization
 
 ### Infrastructure Module Structure
-```
-infrastructure/research_algorithms/
-├── __init__.py          # Public API exports
-├── core.py             # Core algorithm implementations
-├── validation.py       # Input validation functions
-├── exceptions.py       # Custom exceptions
-├── AGENTS.md           # Technical documentation
-├── README.md           # Quick reference
-└── tests/
-    ├── __init__.py
-    ├── test_core.py
-    └── test_validation.py
+```mermaid
+flowchart LR
+    M[/infrastructure/research_algorithms//]
+    M --> INIT[__init__.py<br/>Public API exports]
+    M --> CORE[core.py<br/>Core algorithm implementations]
+    M --> VAL[validation.py<br/>Input validation functions]
+    M --> EXC[exceptions.py<br/>Custom exceptions]
+    M --> DOCS[AGENTS.md · README.md]
+    M --> T[/tests/<br/>__init__.py · test_core.py · test_validation.py/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class M,T d
+    class INIT,CORE,VAL,EXC code
+    class DOCS doc
 ```
 
 ### Project Module Structure
-```
-projects/research/src/
-├── algorithms.py       # Research algorithms
-├── data_processing.py  # Data preprocessing
-├── analysis.py         # Analysis methods
-├── validation.py       # Result validation
-├── visualization.py    # Plotting functions
-├── AGENTS.md          # Technical documentation
-├── README.md          # Quick reference
-└── tests/
-    ├── test_algorithms.py
-    ├── test_data_processing.py
-    └── test_analysis.py
+```mermaid
+flowchart LR
+    M[/projects/research/src//]
+    M --> ALG[algorithms.py<br/>Research algorithms]
+    M --> DP[data_processing.py<br/>Data preprocessing]
+    M --> AN[analysis.py<br/>Analysis methods]
+    M --> VAL[validation.py<br/>Result validation]
+    M --> VIZ[visualization.py<br/>Plotting functions]
+    M --> DOCS[AGENTS.md · README.md]
+    M --> T[/tests/<br/>test_algorithms.py · test_data_processing.py ·<br/>test_analysis.py/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class M,T d
+    class ALG,DP,AN,VAL,VIZ code
+    class DOCS doc
 ```
 
 ## 6. Quality Assurance

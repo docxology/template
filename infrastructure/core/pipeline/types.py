@@ -17,7 +17,7 @@ class PipelineConfig:
     """Configuration for pipeline execution.
 
     Attributes:
-        project_name: Name of the project directory (e.g. 'code_project').
+        project_name: Name of the project directory (e.g. 'template_code_project').
         repo_root: Absolute path to the repository root.
         projects_dir: Name of the active projects directory relative to repo_root.
             Default 'projects'. Set to 'projects_in_progress' to run a project

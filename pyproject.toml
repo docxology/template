@@ -134,8 +134,8 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-# projects/code_project/src is the canonical example project; add other project src/ paths here if needed
-pythonpath = [".", "infrastructure", "projects/code_project/src"]
+# projects/template_code_project/src is the canonical example project; add other project src/ paths here if needed
+pythonpath = [".", "infrastructure", "projects/template_code_project/src"]
 testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
@@ -170,7 +170,7 @@ filterwarnings = [
 #   - Infrastructure tests: --cov-datafile=.coverage.infra
 #   - Project tests: --cov-datafile=.coverage.project
 branch = true
-source = ["infrastructure", "projects/code_project/src"]
+source = ["infrastructure", "projects/template_code_project/src"]
 omit = [
     "*/tests/*",
     "*/test_*",

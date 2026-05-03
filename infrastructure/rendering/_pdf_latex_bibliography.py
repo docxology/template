@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import time
+from collections.abc import Sequence
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
@@ -13,17 +14,26 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def process_bibliography(tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
+def process_bibliography(
+    tex_file: Path, output_dir: Path, bib_files: Sequence[Path]
+) -> bool:
     """Process bibliography using bibtex.
 
-    Copies the .bib file into the compilation directory (BibTeX's paranoid mode
-    restricts cross-directory access), then runs bibtex against the .aux file.
+    Copies every ``.bib`` file into the compilation directory (BibTeX's
+    paranoid mode restricts cross-directory access), then runs bibtex against
+    the ``.aux`` file. The ``.aux`` ``\\bibdata{...}`` list must match the
+    basenames of these files.
     """
-    if not bib_file.exists():
-        logger.warning(
-            f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"
-        )
+    paths = [Path(p) for p in bib_files]
+    if not paths:
+        logger.warning("No bibliography files to copy (bibliography processing skipped)")
         return False
+    for bib_file in paths:
+        if not bib_file.exists():
+            logger.warning(
+                f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"
+            )
+            return False
 
     bibtex_cmd = "bibtex"
     aux_file = output_dir / f"{tex_file.stem}.aux"
@@ -33,9 +43,10 @@ def process_bibliography(tex_file: Path, output_dir: Path, bib_file: Path) -> bo
         return False
 
     try:
-        local_bib = output_dir / bib_file.name
-        shutil.copy2(str(bib_file), str(local_bib))
-        logger.debug(f"Copied bibliography file to: {local_bib}")
+        for bib_file in paths:
+            local_bib = output_dir / bib_file.name
+            shutil.copy2(str(bib_file), str(local_bib))
+            logger.debug(f"Copied bibliography file to: {local_bib}")
 
         cmd = [bibtex_cmd, aux_file.name]
         logger.info(f"Processing bibliography with {bibtex_cmd}...")

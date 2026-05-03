@@ -237,6 +237,7 @@ class TestDiscoverManuscriptFiles:
         (manuscript_dir / "preamble.md").write_text("Preamble")
         (manuscript_dir / "AGENTS.md").write_text("Agents")
         (manuscript_dir / "README.md").write_text("Readme")
+        (manuscript_dir / "SYNTAX.md").write_text("Syntax doc")
         (manuscript_dir / "config.yaml").write_text("config: value")
         (manuscript_dir / "config.yaml.example").write_text("config: example")
         (manuscript_dir / "references.bib").write_text("@article{test}")
@@ -252,6 +253,7 @@ class TestDiscoverManuscriptFiles:
                 "preamble.md",
                 "AGENTS.md",
                 "README.md",
+                "SYNTAX.md",
                 "config.yaml",
                 "config.yaml.example",
                 "references.bib",
@@ -426,3 +428,24 @@ class TestDiscoverManuscriptFiles:
         # so we check that at least one variant is present (not excluded)
         result_names = [f.name for f in result]
         assert any(name.lower() == "readme.md" for name in result_names)
+
+    def test_discover_omits_complete_when_numbered_sections_exist(self, tmp_path):
+        """``complete.md`` is a concatenation of sections; omit it when digit-prefixed MD exists."""
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "00_intro.md").write_text("# Intro")
+        (manuscript_dir / "complete.md").write_text("# duplicate assembly")
+
+        result = discover_manuscript_files(manuscript_dir)
+
+        assert [f.name for f in result] == ["00_intro.md"]
+
+    def test_discover_keeps_complete_when_no_numbered_sections(self, tmp_path):
+        """Single-file manuscripts may use only ``complete.md``."""
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "complete.md").write_text("# Only doc")
+
+        result = discover_manuscript_files(manuscript_dir)
+
+        assert [f.name for f in result] == ["complete.md"]

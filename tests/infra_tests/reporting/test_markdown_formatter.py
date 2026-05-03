@@ -110,7 +110,7 @@ class TestGenerateMarkdownReport:
 
     def test_report_with_project(self):
         projects = {
-            "code_project": {
+            "template_code_project": {
                 "exit_code": 0,
                 "passed": 50,
                 "failed": 0,
@@ -142,9 +142,9 @@ class TestGenerateMarkdownReport:
 
     def test_report_with_active_projects_metadata(self):
         data = _make_report_data()
-        data["metadata"]["active_projects"] = ["code_project", "template"]
+        data["metadata"]["active_projects"] = ["template_code_project", "template"]
         md = generate_markdown_report(data)
-        assert "code_project" in md
+        assert "template_code_project" in md
         assert "template" in md
 
     def test_zero_warnings_no_warning_line(self):

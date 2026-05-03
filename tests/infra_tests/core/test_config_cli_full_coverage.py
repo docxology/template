@@ -32,7 +32,7 @@ class TestConfigCli:
         """Should run main with --project arg."""
         old_argv = sys.argv
         try:
-            sys.argv = ["config_cli.py", "--project", "code_project"]
+            sys.argv = ["config_cli.py", "--project", "template_code_project"]
             main()
         finally:
             sys.argv = old_argv

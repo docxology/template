@@ -340,7 +340,7 @@ Extract text content from PDF file.
 ```python
 from pathlib import Path
 from infrastructure.validation import extract_text_from_pdf
-text = extract_text_from_pdf(Path("output/code_project/pdf/code_project_combined.pdf"))
+text = extract_text_from_pdf(Path("output/template_code_project/pdf/code_project_combined.pdf"))
 ```
 
 ---
@@ -425,7 +425,7 @@ Perform validation of PDF rendering.
 ```python
 from pathlib import Path
 from infrastructure.validation import validate_pdf_rendering
-report = validate_pdf_rendering(Path("output/code_project/pdf/code_project_combined.pdf"))
+report = validate_pdf_rendering(Path("output/template_code_project/pdf/code_project_combined.pdf"))
 if report['summary']['has_issues']:
     print("PDF has issues:", report['issues'])
 ```
@@ -720,7 +720,7 @@ latex_block = manager.generate_latex_figure_block("fig:convergence")
 For API documentation of all modules, see:
 
 - **[Infrastructure Documentation](../../infrastructure/AGENTS.md)** - infrastructure module descriptions
-- **[Project Source Documentation](../../projects/code_project/src/AGENTS.md)** - Project-specific module descriptions
+- **[Project Source Documentation](../../projects/template_code_project/src/AGENTS.md)** - Project-specific module descriptions
 - **[Scientific Simulation Guide](../modules/scientific-simulation-guide.md)** - Simulation and analysis modules
 - **[Visualization Guide](../usage/visualization-guide.md)** - Visualization and figure management
 - **[Image Management Guide](../usage/image-management.md)** - Image insertion and cross-referencing
@@ -755,7 +755,7 @@ This API reference covers all public functions and classes in the `infrastructur
 
 For usage examples, see [Modules Guide](../modules/modules-guide.md).
 
-For implementation details, see [Infrastructure Documentation](../../infrastructure/AGENTS.md) and [Project Source Documentation](../../projects/code_project/src/AGENTS.md).
+For implementation details, see [Infrastructure Documentation](../../infrastructure/AGENTS.md) and [Project Source Documentation](../../projects/template_code_project/src/AGENTS.md).
 
 ---
 
@@ -763,5 +763,5 @@ For implementation details, see [Infrastructure Documentation](../../infrastruct
 
 - [Modules Guide](../modules/modules-guide.md) - Usage examples
 - [Infrastructure Docs](../../infrastructure/AGENTS.md) - Infrastructure module implementation
-- [Project Source Docs](../../projects/code_project/src/AGENTS.md) - Project module implementation
+- [Project Source Docs](../../projects/template_code_project/src/AGENTS.md) - Project module implementation
 - [Best Practices](../best-practices/best-practices.md) - Usage recommendations

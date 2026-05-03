@@ -6,15 +6,22 @@ The `tests/infra_tests/documentation/` directory contains tests for the document
 
 ## Directory Structure
 
-```
-tests/infra_tests/documentation/
-├── AGENTS.md                           # This technical documentation
-├── __init__.py                         # Test package initialization
-├── test_figure_manager.py              # Figure management tests
-├── test_generate_glossary_cli.py       # Glossary CLI tests
-├── test_glossary_gen.py                # API glossary generation tests
-├── test_image_manager.py               # Image management tests
-└── test_markdown_integration.py        # Markdown integration tests
+```mermaid
+flowchart LR
+    T[/tests/infra_tests/documentation//]
+    T --> META[AGENTS.md · __init__.py]
+    T --> FIG[test_figure_manager.py<br/>Figure management]
+    T --> GCLI[test_generate_glossary_cli.py<br/>Glossary CLI]
+    T --> GGEN[test_glossary_gen.py<br/>API glossary generation]
+    T --> IMG[test_image_manager.py<br/>Image management]
+    T --> MD[test_markdown_integration.py<br/>Markdown integration]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef test fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class FIG,GCLI,GGEN,IMG,MD test
+    class META doc
 ```
 
 ## Test Categories

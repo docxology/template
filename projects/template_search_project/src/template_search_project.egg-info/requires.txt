@@ -1,0 +1,8 @@
+pyyaml>=6.0
+matplotlib>=3.7
+networkx>=3.4.2
+
+[dev]
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-httpserver>=1.0.8

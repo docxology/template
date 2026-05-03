@@ -42,7 +42,7 @@ Profile results appear in pipeline telemetry and can be aggregated.
 For deeper analysis:
 
 ```bash
-uv run python -m cProfile -o profile.out scripts/02_run_analysis.py --project code_project
+uv run python -m cProfile -o profile.out scripts/02_run_analysis.py --project template_code_project
 uv run python -m pstats profile.out
 ```
 
@@ -60,7 +60,7 @@ snakeviz profile.prof
 Use `memray` (optional) for memory allocation tracking:
 
 ```bash
-uv run memray run -o memray.bin scripts/02_run_analysis.py --project code_project
+uv run memray run -o memray.bin scripts/02_run_analysis.py --project template_code_project
 uv run memray flamegraph memray.bin
 ```
 
@@ -189,7 +189,7 @@ When pipeline slows down:
 Use `tracemalloc` or `memray` to detect growing allocations:
 
 ```bash
-uv run python -X tracemalloc=25 scripts/02_run_analysis.py --project code_project
+uv run python -X tracemalloc=25 scripts/02_run_analysis.py --project template_code_project
 # Or with memray as above
 ```
 

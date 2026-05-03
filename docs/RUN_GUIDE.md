@@ -13,24 +13,21 @@ The Research Project Template follows a **thin orchestrator pattern** where all 
 
 ### Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    User Interface                            │
-│  run.sh → execute_pipeline.py → PipelineExecutor            │
-└─────────────────────┬───────────────────────────────────────┘
-                      │ delegates to
-                      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 Orchestration Layer                         │
-│  scripts/00_*.py … scripts/07_*.py → infrastructure/ modules  │
-│  projects/{name}/scripts/*.py → projects/{name}/src/        │
-└─────────────────────┬───────────────────────────────────────┘
-                      │ implements
-                      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  Business Logic                             │
-│  infrastructure/ (reusable) + projects/{name}/src/ (custom) │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    UI["User Interface<br/>run.sh → execute_pipeline.py → PipelineExecutor"]
+    ORCH["Orchestration Layer<br/>scripts/00_*.py … scripts/07_*.py → infrastructure/<br/>projects/&lt;name&gt;/scripts/*.py → projects/&lt;name&gt;/src/"]
+    LOGIC["Business Logic<br/>infrastructure/ (reusable) + projects/&lt;name&gt;/src/ (custom)"]
+
+    UI -- delegates to --> ORCH
+    ORCH -- implements --> LOGIC
+
+    classDef ui fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef orch fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef logic fill:#7c2d12,stroke:#0f172a,color:#fff
+    class UI ui
+    class ORCH orch
+    class LOGIC logic
 ```
 
 ### Key Principles
@@ -122,7 +119,7 @@ The template now supports **multiple research projects** in a single repository.
 
 ### Available Projects
 
-Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`). **Authoritative names:** [_generated/active_projects.md](_generated/active_projects.md) (see [_generated/README.md](_generated/README.md) for policy and regeneration). **Examples in this guide** use **`code_project`** as the stable control-positive layout under `projects/`.
+Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`). **Authoritative names:** [_generated/active_projects.md](_generated/active_projects.md) (see [_generated/README.md](_generated/README.md) for policy and regeneration). **Examples in this guide** use **`template_code_project`** as the stable control-positive layout under `projects/`.
 
 Archived and in-progress work lives under `projects_archive/` and `projects_in_progress/` and is not executed by `./run.sh` until moved into `projects/`.
 
@@ -133,7 +130,7 @@ Archived and in-progress work lives under `projects_archive/` and `projects_in_p
 ./run.sh
 
 # Run specific project
-./run.sh --project code_project --pipeline
+./run.sh --project template_code_project --pipeline
 
 # Run all projects sequentially
 ./run.sh --all-projects --pipeline
@@ -181,7 +178,7 @@ PROJECT
 
 The interactive `run.sh` menu may add decorative characters to these headings; the keys and script names are as above.
 
-Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in `run.sh` (see `STAGE_NAMES` in [`run.sh`](../run.sh)). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) (10 named stages, including clean and both LLM steps).
+Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) (10 named stages, including clean and both LLM steps).
 
 ### Manuscript Menu Options
 
@@ -271,7 +268,7 @@ Runs `execute_pipeline.py` with **`--core-only`** (default [`pipeline.yaml`](../
 Runs the **full** default DAG (**10** stages in `pipeline.yaml`, including clean, both LLM stages, and copy).
 
 - LLM stages are optional at runtime (exit code 2 skip) if Ollama is unavailable
-- Bash progress lines use `[0/9]` for clean, then `[1/9]`–`[9/9]` for the nine entries in `STAGE_NAMES` in [`run.sh`](../run.sh) (see menu block above)
+- Bash progress lines use `[0/9]` for clean, then `[1/9]`–`[9/9]` for the nine entries in `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py) (see menu block above)
 
 #### Menu `f`: Full Pipeline (fast)
 

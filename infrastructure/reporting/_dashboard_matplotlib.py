@@ -74,6 +74,10 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
     fig = make_subplots(
         rows=2,
         cols=2,
+        specs=[
+            [{"type": "xy"}, {"type": "xy"}],
+            [{"type": "xy"}, {"type": "domain"}],
+        ],
         subplot_titles=(
             "Test Coverage",
             "Pipeline Duration",
@@ -147,7 +151,8 @@ def generate_plotly_dashboard(summary: ExecutiveSummary, output_dir: Path) -> Pa
     )
 
     organizer = OutputOrganizer()
-    html_path = organizer.get_output_path("dashboard.html", output_dir, FileType.REPORT)
+    organizer.ensure_directory_structure(output_dir)
+    html_path = organizer.get_output_path("dashboard.html", output_dir, FileType.HTML)
     fig.write_html(str(html_path))
     logger.info(f"Generated interactive dashboard: {html_path}")
 

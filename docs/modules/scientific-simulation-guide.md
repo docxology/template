@@ -4,7 +4,7 @@
 
 This guide provides documentation for the scientific simulation, analysis, reporting, validation, visualization, and image management system integrated into the research template.
 
-**Repository layout:** The snippets below use **illustrative** module names (`simulation.py`, `parameters.py`, …) at a generic `src/` root. In this template, domain code lives under **`projects/{name}/src/`** (see [`projects/code_project/`](../../projects/code_project/)), thin orchestration in **`projects/{name}/scripts/`**, and reusable numerics or benchmarking helpers in **[`infrastructure/scientific/`](../../infrastructure/scientific/)** and **[`docs/modules/guides/scientific-module.md`](guides/scientific-module.md)**.
+**Repository layout:** The snippets below use **illustrative** module names (`simulation.py`, `parameters.py`, …) at a generic `src/` root. In this template, domain code lives under **`projects/{name}/src/`** (see [`projects/template_code_project/`](../../projects/template_code_project/)), thin orchestration in **`projects/{name}/scripts/`**, and reusable numerics or benchmarking helpers in **[`infrastructure/scientific/`](../../infrastructure/scientific/)** and **[`docs/modules/guides/scientific-module.md`](guides/scientific-module.md)**.
 
 ## Architecture
 

@@ -85,20 +85,26 @@ Recommended for full functionality:
 
 ### Example Structure
 
-```
-projects/my_research/
-├── src/                    # Required: Source code
-│   ├── __init__.py
-│   └── analysis.py
-├── tests/                  # Required: Test suite
-│   ├── __init__.py
-│   └── test_analysis.py
-├── scripts/                # Optional: Analysis workflows
-│   └── run_analysis.py
-├── manuscript/             # Optional: Research content
-│   ├── 01_introduction.md
-│   └── config.yaml
-└── pyproject.toml          # Project metadata
+```mermaid
+flowchart TB
+    P[/projects/my_research//]
+    P --> SRC[/src/<br/>Required · source code/]
+    P --> T[/tests/<br/>Required · test suite/]
+    P --> SC[/scripts/<br/>Optional · analysis workflows/]
+    P --> M[/manuscript/<br/>Optional · research content/]
+    P --> PY[pyproject.toml<br/>Project metadata]
+
+    SRC --> SRC_F[__init__.py · analysis.py]
+    T --> T_F[__init__.py · test_analysis.py]
+    SC --> SC_F[run_analysis.py]
+    M --> M_F[01_introduction.md · config.yaml]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class P d
+    class SRC,T,SC,M pkg
+    class SRC_F,T_F,SC_F,M_F,PY f
 ```
 
 ## Integration with Pipeline

@@ -12,14 +12,20 @@ This document consolidates best practices from across all documentation, providi
 
 **Follow the established structure:**
 
-```text
-project/
-├── src/              # Business logic (comprehensively tested)
-├── tests/            # Test suite (90% project, 60% infra minimum)
-├── scripts/          # Thin orchestrators
-├── manuscript/       # Research sections
-├── docs/             # Documentation
-└── output/           # Generated files (disposable)
+```mermaid
+flowchart LR
+    P[/project//]
+    P --> SRC[/src/<br/>Business logic · comprehensively tested/]
+    P --> T[/tests/<br/>Test suite · 90% project · 60% infra minimum/]
+    P --> SC[/scripts/<br/>Thin orchestrators/]
+    P --> M[/manuscript/<br/>Research sections/]
+    P --> DOC[/docs/<br/>Documentation/]
+    P --> OUT[/output/<br/>Generated files · disposable/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class P d
+    class SRC,T,SC,M,DOC,OUT pkg
 ```
 
 **Best Practices:**
@@ -103,12 +109,18 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 
 **Organize tests by module:**
 
-```text
-tests/
-├── test_example.py
-├── test_integrity.py
-├── test_pdf_validator.py
-└── ...
+```mermaid
+flowchart LR
+    T[/tests//]
+    T --> EX[test_example.py]
+    T --> INT[test_integrity.py]
+    T --> PDF[test_pdf_validator.py]
+    T --> ETC[test_*.py · ...]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class T d
+    class EX,INT,PDF,ETC code
 ```
 
 **Best Practices:**

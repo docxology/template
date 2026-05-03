@@ -12,34 +12,42 @@ Scientific computing utilities for research software development.
 ```python
 from infrastructure.scientific import check_numerical_stability, StabilityTest
 
-# Check numerical stability of a function
+# Check numerical stability of a function over a range of inputs
 test = check_numerical_stability(
     func=my_computation,
-    inputs=test_inputs,
-    perturbation=1e-6,
+    test_inputs=[0.0, 1e-6, 1.0, 1e10, float("nan"), float("inf")],
+    tolerance=1e-12,
 )
 
 # Inspect results
-print(test.is_stable, test.max_deviation, test.condition_number)
+print(test.function_name, test.stability_score, test.actual_behavior)
+print(test.recommendations)
 ```
 
 ## Benchmarking (`benchmarking.py`)
 
 ```python
-from infrastructure.scientific import benchmark_function, BenchmarkResult, format_benchmark_report
+from infrastructure.scientific import (
+    benchmark_function,
+    BenchmarkResult,
+    format_benchmark_report,
+    generate_performance_report,
+)
 
-# Benchmark a function
+# Benchmark a function across multiple inputs
 result = benchmark_function(
     func=my_algorithm,
-    args=(data,),
+    test_inputs=[10, 100, 1000],
     iterations=100,
 )
 
 # Inspect results
-print(result.mean_time, result.std_time, result.min_time, result.max_time)
+print(result.function_name, result.execution_time, result.memory_usage)
+print(result.iterations, result.result_summary, result.timestamp)
 
-# Generate performance report
-report = format_benchmark_report(results=[result])
+# Generate Markdown reports
+md_report = format_benchmark_report([result])
+perf_report = generate_performance_report([result])
 ```
 
 ## Scientific Documentation (`documentation.py`)

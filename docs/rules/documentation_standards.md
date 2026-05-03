@@ -407,7 +407,7 @@ See [../AGENTS.md](../AGENTS.md) for overview
 
 - [Related Module](../../infrastructure/AGENTS.md) - Infrastructure documentation
 - [External Resource](https://example.com) - External documentation
-- [Configuration Guide](configuration.md) - Configuration documentation
+- [Configuration Guide](../operational/config/configuration.md) - Configuration documentation
 ```
 
 ## Format Standards
@@ -524,7 +524,7 @@ Before committing documentation:
 ### Good AGENTS.md References
 
 - [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - module docs
-- [projects/code_project/manuscript/](../../projects/code_project/manuscript/) - Example manuscript (active project)
+- [projects/template_code_project/manuscript/](../../projects/template_code_project/manuscript/) - Example manuscript (active project)
 - [tests/AGENTS.md](../../tests/AGENTS.md) - Test framework docs
 
 ### Good README.md References

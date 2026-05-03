@@ -1,0 +1,47 @@
+# Git
+.git
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.egg-info
+dist
+build
+.venv
+venv
+
+# Caches and data directories
+.cache
+.hermes
+output
+
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# IDE and editor configs
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage and test artifacts
+.coverage
+htmlcov
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.benchmarks
+
+# Temporary and log files
+*.log
+tmp
+temp

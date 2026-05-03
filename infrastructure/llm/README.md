@@ -12,7 +12,7 @@ ollama serve
 ollama pull gemma3:4b
 
 # Run manuscript review
-uv run python scripts/06_llm_review.py --project code_project --reviews-only
+uv run python scripts/06_llm_review.py --project template_code_project --reviews-only
 ```
 
 The local LLM workflow assumes a running Ollama daemon on `http://localhost:11434`.
@@ -78,15 +78,21 @@ graph TD
 
 ### Module Structure
 
-```
-infrastructure/llm/
-├── core/           # Core LLM client and configuration
-├── templates/      # High-level operation templates
-├── prompts/        # Prompt engineering system
-├── review/         # Manuscript review functionality
-├── utils/          # Ollama server utilities
-├── validation/     # Response validation and quality checks
-└── cli/            # Command-line interface
+```mermaid
+flowchart LR
+    LLM[/infrastructure/llm//]
+    LLM --> CORE[/core/<br/>Core LLM client + configuration/]
+    LLM --> TPL[/templates/<br/>High-level operation templates/]
+    LLM --> PR[/prompts/<br/>Prompt engineering system/]
+    LLM --> RV[/review/<br/>Manuscript review/]
+    LLM --> UT[/utils/<br/>Ollama server utilities/]
+    LLM --> VAL[/validation/<br/>Response validation · quality checks/]
+    LLM --> CLI[/cli/<br/>Command-line interface/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class LLM d
+    class CORE,TPL,PR,RV,UT,VAL,CLI pkg
 ```
 
 ## Configuration

@@ -26,7 +26,7 @@ LaTeX/pandoc warnings.
 | `validate_refs(paths, root, labels, anchors)` | ERROR / WARNING | `\eqref` and `(#anchor)` resolve; bare URLs / non-informative link text. |
 | `validate_math(paths, root)` | WARNING / ERROR | Bans `$$`/`\[`/`\]`; equation labels present and unique. |
 | `validate_pandoc_pitfalls(paths, root)` | WARNING | Bare `\|word\|` in prose and `\|` inside Markdown table cells (Pandoc converts both to `\mid`). |
-| `validate_citations(paths, root, bib_file=None)` | ERROR | Every `[@key]` resolves in `references.bib`. |
+| `validate_citations(paths, root, bib_file=None)` | ERROR | Every `[@key]` resolves across the manuscript ``*.bib`` union (or explicit ``bib_file`` list). |
 | `validate_markdown(dir, root, strict=False)` | aggregate | Runs all of the above. |
 
 `AGENTS.md`, `README.md` and `preamble.md` are skipped by
@@ -55,7 +55,7 @@ specific findings without parsing prose.
 | `MARKDOWN.MATH_LABEL_DUPLICATE`       | ERROR    | `validate_math`                    | Same `\label{}` used twice                                 |
 | `MARKDOWN.PANDOC_BARE_PIPE`           | WARNING  | `validate_pandoc_pitfalls`         | Bare `\|word\|` in prose -> Pandoc `\mid`                  |
 | `MARKDOWN.PANDOC_TABLE_ESCAPED_PIPE`  | WARNING  | `validate_pandoc_pitfalls`         | `\|` in a Markdown table cell -> Pandoc `\mid`             |
-| `BIBTEX.UNDEFINED_KEY`                | ERROR    | `validate_citations`               | `[@key]` not present in `references.bib`                   |
+| `BIBTEX.UNDEFINED_KEY`                | ERROR    | `validate_citations`               | `[@key]` not present in any loaded `.bib`                        |
 
 Filter examples:
 
@@ -81,8 +81,8 @@ breaking change for downstream filters and must be released with notice.
   and `ensure_setmathfont`) handles glyphs that escape the lint.
 * Undefined `[@key]` citations only surface as *Citation undefined*
   warnings during the natbib pass at the end of a 60-second LaTeX
-  compile. The audit catches them in milliseconds against
-  `references.bib` before any LaTeX runs.
+  compile. The audit catches them in milliseconds against the manuscript
+  ``*.bib`` union before any LaTeX runs.
 
 ## See Also
 

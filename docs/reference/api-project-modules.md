@@ -112,9 +112,9 @@ Check if a number is odd.
 
 ---
 
-## Control-Positive Exemplar: projects/code_project/src/optimizer.py
+## Control-Positive Exemplar: projects/template_code_project/src/optimizer.py
 
-The canonical control-positive project uses `projects/code_project/src/optimizer.py` for all Layer 2 examples. Fictional modules (data_generator, statistics, visualization) are **not** present in the exemplar and have been removed from documentation.
+The canonical control-positive project uses `projects/template_code_project/src/optimizer.py` for all Layer 2 examples. Fictional modules (data_generator, statistics, visualization) are **not** present in the exemplar and have been removed from documentation.
 
 ### Real API (from optimizer.py)
 
@@ -150,7 +150,7 @@ def gradient_descent(
 **Usage in scripts (thin orchestrator pattern):**
 
 ```python
-from projects.code_project.src.optimizer import gradient_descent, quadratic_function, compute_gradient
+from projects.template_code_project.src.optimizer import gradient_descent, quadratic_function, compute_gradient
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -165,7 +165,7 @@ result = gradient_descent(
 logger.info("Solution: %s, Converged: %s", result.solution, result.converged)
 ```
 
-See `projects/code_project/src/optimizer.py` for the full implementation and `projects/code_project/scripts/optimization_analysis.py` for orchestration.
+See `projects/template_code_project/src/optimizer.py` for the full implementation and `projects/template_code_project/scripts/optimization_analysis.py` for orchestration.
 
 All other Layer 2 documentation defaults to this exemplar. See `docs/_generated/active_projects.md` for discovery.
 stats = calculate_descriptive_stats(data)
@@ -234,7 +234,7 @@ latex_block = manager.generate_latex_figure_block("fig:convergence")
 For full per-module details, see:
 
 - **[Infrastructure Documentation](../../infrastructure/AGENTS.md)** — Infrastructure module descriptions
-- **[Project Source Documentation](../../projects/code_project/src/AGENTS.md)** — Project-specific module descriptions
+- **[Project Source Documentation](../../projects/template_code_project/src/AGENTS.md)** — Project-specific module descriptions
 - **[Scientific Simulation Guide](../modules/scientific-simulation-guide.md)** — Simulation and analysis modules
 - **[Visualization Guide](../usage/visualization-guide.md)** — Visualization and figure management
 

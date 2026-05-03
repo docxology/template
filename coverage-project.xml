@@ -4,7 +4,7 @@
 	<!-- Based on https://raw.githubusercontent.com/cobertura/web/master/htdocs/xml/coverage-04.dtd -->
 	<sources>
 		<source>/Users/4d/Documents/GitHub/template/infrastructure</source>
-		<source>/Users/4d/Documents/GitHub/template/projects/code_project/src</source>
+		<source>/Users/4d/Documents/GitHub/template/projects/template_code_project/src</source>
 	</sources>
 	<packages>
 		<package name="." line-rate="1" branch-rate="0.9643" complexity="0">

@@ -8,15 +8,22 @@ The `infrastructure/` directory contains **reusable, generic build and validatio
 
 ### Subfolder Organization
 
-```text
-infrastructure/<module>/
-├── __init__.py           # Public API exports
-├── AGENTS.md            # documentation
-├── README.md            # Quick reference
-├── core.py              # Core functionality
-├── api.py               # External API integrations (if needed)
-├── config.py            # Configuration management
-└── utils.py             # Utilities (if needed)
+```mermaid
+flowchart LR
+    M[/infrastructure/&lt;module&gt;//]
+    M --> INIT[__init__.py<br/>Public API exports]
+    M --> AG[AGENTS.md · README.md ·<br/>SKILL.md]
+    M --> CORE[core.py<br/>Core functionality]
+    M --> API[api.py<br/>External integrations · optional]
+    M --> CFG[config.py<br/>Configuration management]
+    M --> UT[utils.py<br/>Utilities · optional]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class M d
+    class INIT,CORE,API,CFG,UT code
+    class AG doc
 ```
 
 ### Module Requirements
@@ -31,13 +38,19 @@ infrastructure/<module>/
 
 ### Test Organization
 
-```text
-tests/infra_tests/test_<module>/
-├── __init__.py
-├── conftest.py          # Shared fixtures
-├── test_core.py         # Core functionality tests
-├── test_api.py          # API integration tests
-├── test_integration.py  # End-to-end workflows
+```mermaid
+flowchart LR
+    T[/tests/infra_tests/test_&lt;module&gt;//]
+    T --> INIT[__init__.py]
+    T --> CFG[conftest.py<br/>Shared fixtures]
+    T --> CORE[test_core.py<br/>Core functionality tests]
+    T --> API[test_api.py<br/>API integration tests]
+    T --> INTEG[test_integration.py<br/>End-to-end workflows]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class T d
+    class INIT,CFG,CORE,API,INTEG code
 ```
 
 ### Coverage Requirements
@@ -286,14 +299,21 @@ Before committing:
 
 ### Module Structure
 
-```text
-infrastructure/example_module/
-├── __init__.py           # Public API exports
-├── core.py              # Core functionality
-├── cli.py               # Command-line interface (optional)
-├── config.py            # Configuration management (optional)
-├── AGENTS.md            # documentation
-└── README.md            # Quick reference
+```mermaid
+flowchart LR
+    M[/infrastructure/example_module//]
+    M --> INIT[__init__.py<br/>Public API exports]
+    M --> CORE[core.py<br/>Core functionality]
+    M --> CLI[cli.py<br/>CLI · optional]
+    M --> CFG[config.py<br/>Configuration · optional]
+    M --> DOCS[AGENTS.md · README.md ·<br/>SKILL.md]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class M d
+    class INIT,CORE,CLI,CFG code
+    class DOCS doc
 ```
 
 ### **init**.py Example

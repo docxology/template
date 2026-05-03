@@ -8,7 +8,7 @@ This directory contains the **Layer 2** domain-specific research projects. Each 
 
 | Project           | Domain                          | Status |
 |-------------------|---------------------------------|--------|
-| `code_project`         | Optimization research exemplar  | ✅ Active |
+| `template_code_project`         | Optimization research exemplar  | ✅ Active |
 | `fep_lean`             | FEP / Lean4 formalization       | ✅ Active |
 | `act_inf_metaanalysis` | Active Inference meta-analysis  | ✅ Active |
 
@@ -36,4 +36,4 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 - [AGENTS.md](AGENTS.md) — Technical documentation for the projects directory
 - [README.md](README.md) — Quick reference and getting started
 - [PROJECTS_PARADIGM.md](PROJECTS_PARADIGM.md) — Standalone project paradigm philosophy
-- [code_project/AGENTS.md](code_project/AGENTS.md) — Canonical control-positive exemplar technical docs
+- [template_code_project/AGENTS.md](template_code_project/AGENTS.md) — Canonical control-positive exemplar technical docs

@@ -28,12 +28,12 @@ from pathlib import Path
 
 # Apply all steganographic techniques to a PDF
 output = embed_steganography(
-    Path("output/code_project/pdf/combined.pdf"),
+    Path("output/template_code_project/pdf/combined.pdf"),
     title="My Research Paper",
     authors=["Alice Smith", "Bob Jones"],
     keywords=["active inference", "free energy"],
 )
-# Writes: output/code_project/pdf/combined_steganography.pdf
+# Writes: output/template_code_project/pdf/combined_steganography.pdf
 ```
 
 ### Configurable Processing
@@ -155,10 +155,10 @@ config = SteganographyConfig.from_dict(yaml_data["steganography"])
 
 ```bash
 # Run steganography via the secure menu
-./secure_run.sh --project code_project
+./secure_run.sh --project template_code_project
 
 # Steganography only (skip pipeline)
-./secure_run.sh --steganography-only --project code_project
+./secure_run.sh --steganography-only --project template_code_project
 ```
 
 ---

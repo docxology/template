@@ -477,20 +477,29 @@ def validate_pandoc_pitfalls(
 
 
 def validate_citations(
-    md_paths: list[str], repo_root: str | Path, bib_file: str | Path | None = None
+    md_paths: list[str],
+    repo_root: str | Path,
+    bib_file: str | Path | list[str | Path] | None = None,
 ) -> list[DiagnosticEvent]:
-    """Verify every ``[@key]`` citation resolves in the project's BibTeX file.
+    """Verify every ``[@key]`` citation resolves in the project's BibTeX file(s).
 
     Scans markdown for Pandoc-style citation tokens (``@key`` outside code
     or math contexts) and reports any keys not present in the supplied
-    ``references.bib``. Mirrors the natbib *Citation `key' undefined*
-    warning that would otherwise surface only after a full LaTeX render.
+    BibTeX file(s). Mirrors the natbib *Citation `key' undefined* warning
+    that would otherwise surface only after a full LaTeX render.
+
+    Multiple bibliographies are supported because some projects split
+    citations across e.g. ``references.bib`` (curated) and
+    ``references_deep.bib`` (auto-generated from a deep-search pipeline).
+    Pandoc accepts repeated ``--bibliography=`` flags, so the validator
+    must also union keys from every sibling ``*.bib`` file by default.
 
     Args:
         md_paths: Markdown source files to scan.
         repo_root: Repository root for relative-path display.
-        bib_file: Path to ``references.bib``. When ``None``, look for
-            ``references.bib`` next to the first markdown file.
+        bib_file: Either a single path or a list of paths to BibTeX files.
+            When ``None``, every ``*.bib`` file next to the first markdown
+            file is loaded.
 
     Returns:
         DiagnosticEvents (severity ERROR) for each unresolved citation key.
@@ -501,23 +510,31 @@ def validate_citations(
         return problems
 
     if bib_file is None:
-        bib_candidate = Path(md_paths[0]).parent / "references.bib"
-        bib_path = bib_candidate if bib_candidate.exists() else None
+        bib_paths = sorted(Path(md_paths[0]).parent.glob("*.bib"))
+    elif isinstance(bib_file, (list, tuple)):
+        bib_paths = [Path(p) for p in bib_file if Path(p).exists()]
     else:
-        bib_path = Path(bib_file)
-        if not bib_path.exists():
-            bib_path = None
+        single = Path(bib_file)
+        bib_paths = [single] if single.exists() else []
 
-    if bib_path is None:
+    if not bib_paths:
         return problems
 
-    try:
-        bib_text = bib_path.read_text(encoding="utf-8", errors="ignore")
-    except OSError as e:
-        logger.warning(f"Failed to read BibTeX file {bib_path}: {e}")
+    known_keys: set[str] = set()
+    bib_names: list[str] = []
+    for bib_path in bib_paths:
+        try:
+            bib_text = bib_path.read_text(encoding="utf-8", errors="ignore")
+        except OSError as e:
+            logger.warning(f"Failed to read BibTeX file {bib_path}: {e}")
+            continue
+        known_keys.update(k.strip() for k in BIBTEX_KEY_PATTERN.findall(bib_text))
+        bib_names.append(bib_path.name)
+
+    if not bib_names:
         return problems
 
-    known_keys = {k.strip() for k in BIBTEX_KEY_PATTERN.findall(bib_text)}
+    bib_label = bib_names[0] if len(bib_names) == 1 else ", ".join(bib_names)
 
     for path in md_paths:
         path_obj = Path(path)
@@ -536,16 +553,24 @@ def validate_citations(
             key = m.group(1)
             if key in known_keys or key in seen_in_file:
                 continue
+            # pandoc-crossref reserves the ``sec:``, ``fig:``, ``tbl:``,
+            # ``eq:`` and ``lst:`` prefixes for cross-references such as
+            # ``[@sec:methodology]`` or ``[@fig:per-source]``. These are
+            # never bibliography keys and should not trigger
+            # BIBTEX.UNDEFINED_KEY — Pandoc resolves them at render time
+            # against ``{#sec:foo}`` / ``{#fig:foo}`` anchors.
+            if any(key.startswith(prefix) for prefix in ("sec:", "fig:", "tbl:", "eq:", "lst:")):
+                continue
             seen_in_file.add(key)
             problems.append(
                 DiagnosticEvent(
                     severity=DiagnosticSeverity.ERROR,
                     category="MARKDOWN_CITATION",
-                    message=f"Undefined citation key '@{key}' (not in {bib_path.name})",
+                    message=f"Undefined citation key '@{key}' (not in {bib_label})",
                     code=BibtexCode.UNDEFINED_KEY,
                     file_path=rel_str,
                     fix_suggestion=(
-                        f"Add an entry '@type{{{key}, ...}}' to {bib_path.name} or "
+                        f"Add an entry '@type{{{key}, ...}}' to {bib_names[0]} or "
                         "correct the citation key in the markdown."
                     ),
                 )

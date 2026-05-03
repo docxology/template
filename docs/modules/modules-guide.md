@@ -4,7 +4,7 @@ Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
-**Counting:** The overview table lists **14** named areas (including Skills and Telemetry as first-class). Other docs may say *13 subpackages* when telemetry is treated as part of `core/`—same tree, different grouping. See [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) for the authoritative layout.
+**Counting:** The overview table lists **16** documented areas — including **Orchestration** (CLI/menu runner) and **Prose** (editorial analytics) alongside Skills and Telemetry-as-first-class. **Reference**, **Search**, and **Orchestration** are distinct Python trees under [`infrastructure/`](../../infrastructure/); older guides that cite *13 subpackages* reflect an earlier rollup (often folding telemetry into `core/`). See [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) for the current diagram.
 
 ---
 
@@ -26,8 +26,8 @@ Reference for Layer-1 infrastructure modules.
 | **Docker** | Containerization | Dockerfile, docker-compose | [Details](guides/docker-module.md) |
 | **Skills** | SKILL.md discovery | Cursor manifest, agent routing (`discover_skills`) | [Details](guides/skills-module.md) |
 | **Telemetry** | Unified pipeline telemetry | Stage resource metrics, diagnostic aggregation, JSON/text reports | — |
-
-All modules follow the thin orchestrator pattern with test coverage.
+| **Prose** | Manuscript prose analytics | Readability metrics, outline, editorial flags, JSON reports | [`infrastructure/prose/AGENTS.md`](../../infrastructure/prose/AGENTS.md) |
+| **Orchestration** | Pipeline CLI / menus | Thin shell over `PipelineExecutor`, slug validation, stage logs | [`infrastructure/orchestration/AGENTS.md`](../../infrastructure/orchestration/AGENTS.md) |
 
 ---
 
@@ -50,12 +50,12 @@ if report.overall_integrity:
 ```python
 from infrastructure.documentation.glossary_gen import build_api_index, generate_markdown_table
 
-entries = build_api_index("projects/code_project/src/")
+entries = build_api_index("projects/template_code_project/src/")
 table_md = generate_markdown_table(entries)
 print(f"API entries: {len(entries)}")
 ```
 
-CLI: `uv run python -m infrastructure.documentation.generate_glossary_cli projects/code_project/src/ projects/code_project/manuscript/98_symbols_glossary.md` (second path is the markdown file to inject into; created if missing).
+CLI: `uv run python -m infrastructure.documentation.generate_glossary_cli projects/template_code_project/src/ projects/template_code_project/manuscript/98_symbols_glossary.md` (second path is the markdown file to inject into; created if missing).
 
 ### LLM Assistance
 
@@ -81,10 +81,10 @@ pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
 
 ```bash
 # Validate outputs for a project (after render / copy)
-uv run python scripts/04_validate_output.py --project code_project
+uv run python scripts/04_validate_output.py --project template_code_project
 
 # Manual integrity check on final deliverables tree
-uv run python -m infrastructure.validation.cli integrity output/code_project/
+uv run python -m infrastructure.validation.cli integrity output/template_code_project/
 ```
 
 ---

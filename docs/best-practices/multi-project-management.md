@@ -33,7 +33,7 @@ The repository uses three sibling directories to manage projects at different st
 - Use `projects_in_progress/` while actively writing; move to `projects/` only when ready for a full pipeline render.
 - Use `projects_archive/` for completed or low-priority projects so they do not increase pipeline runtime.
 
-**Authoritative roster:** [`docs/_generated/active_projects.md`](../_generated/active_projects.md) from `discover_projects()`. Default path examples in docs use [`projects/code_project/`](../../projects/code_project/); an active project may maintain its own reference hub (for example [`projects/code_project/docs/`](../../projects/code_project/docs/)), and work-in-progress copies may live under `projects_in_progress/` until promoted.
+**Authoritative roster:** [`docs/_generated/active_projects.md`](../_generated/active_projects.md) from `discover_projects()`. Default path examples in docs use [`projects/template_code_project/`](../../projects/template_code_project/); an active project may maintain its own reference hub (for example [`projects/template_code_project/docs/`](../../projects/template_code_project/docs/)), and work-in-progress copies may live under `projects_in_progress/` until promoted.
 
 **Moving a project:**
 
@@ -72,22 +72,23 @@ Infrastructure modules (`discovery.py`, `script_discovery.py`, `config_loader.py
 
 **Recommended organization:**
 
-```text
-research/
-├── project1/
-│   ├── src/
-│   ├── tests/
-│   ├── scripts/
-│   └── ...
-├── project2/
-│   ├── src/
-│   ├── tests/
-│   ├── scripts/
-│   └── ...
-└── shared/
-    ├── templates/
-    ├── utilities/
-    └── configs/
+```mermaid
+flowchart TB
+    R[/research//]
+    R --> P1[/project1//]
+    R --> P2[/project2//]
+    R --> SH[/shared//]
+
+    P1 --> P1_F[src/ · tests/ · scripts/ · ...]
+    P2 --> P2_F[src/ · tests/ · scripts/ · ...]
+    SH --> SH_F[templates/ · utilities/ · configs/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class R d
+    class P1,P2,SH pkg
+    class P1_F,P2_F,SH_F f
 ```
 
 **Benefits:**

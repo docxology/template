@@ -9,7 +9,7 @@ This document provides documentation for the Research Project Template system, e
 **Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 **DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
 
-`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, and provenance, built through a ten-stage DAG. **Layer 1** (`infrastructure/`, ~277 Python files) is separated from **Layer 2** (self-contained projects under `projects/`). Each directory carries `README.md` + `AGENTS.md`; infrastructure modules add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
+`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, and provenance, built through a ten-stage DAG. **Layer 1** (`infrastructure/`, **313** Python files under `infrastructure/` per `find infrastructure -name '*.py' | wc -l` on this tree) is separated from **Layer 2** (self-contained projects under `projects/`). Each directory carries `README.md` + `AGENTS.md`; infrastructure packages usually add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
 
 ### Documentation map
 
@@ -31,14 +31,14 @@ This document provides documentation for the Research Project Template system, e
 ## Learned Workspace Facts
 
 - Manuscript metrics, counts, and variables are auto-injected from per-project `output/data/manuscript_variables.json` at render time; never hand-author values that should be injected. The PDF cover DOI is a separate path: `publication.doi` in `projects/{name}/manuscript/config.yaml` is read by `infrastructure/rendering/_pdf_latex_helpers.py` and emitted as `\href{https://doi.org/<doi>}{DOI: <doi>}` on the title page.
-- `fep_lean` is an active project: real Lean 4 + Mathlib via `lake build`, OpenGauss `gauss` CLI, and the Hermes LLM pipeline (no mocks); validate end-to-end through `./run.sh`. Combined-PDF link colours come from `hyperref` / `\hypersetup` in `projects/fep_lean/manuscript/preamble.md` (red `fepred` for link, URL, and citation colours). Infrastructure only injects red when it rewrites a `hidelinks` draft in the emitted `.tex`.
-- In `fep_lean`, Hermes and per-topic Gauss markdown reports are built from the pipeline stage payload (`TopicRunResult.as_dict()`), not by re-reading SQLite artifacts; that dict must include the Hermes fields the reporter uses (`tokens_used`, `explanation`, `refined_lean_sketch`, `hermes_model`, `cache_hit`, `hermes_lean_compiles`) or aggregate and per-topic reports will show empty tokens and missing sections.
-- `fep_lean` topic sketch sources of truth are the catalogue in `projects/fep_lean/scripts/catalogue_sketches.py` and `projects/fep_lean/config/topics.yaml` (one `TopicEntry` per topic: `lean_sketch` + `latex_equations`); `projects/fep_lean/lean/FepSketches/` is for `Basic.lean`, `fep_all.lean`, and ephemeral `_verify_*` verifier files, not long-lived per-topic `.lean` files for the full catalogue. The manuscript emits a **unified** `09z_unified_formalism_catalogue.md` (B+C material juxtaposed per topic; PDF refs `sec:appendix_b_full_topic_lean_catalogue` and `sec:appendix_c_latex_equations` both resolve in that chapter). `projects/fep_lean/scripts/theorem_latex_signatures.py` drives display-math strings aligned with Lean. The pipeline may write LaTeX `equation` environments with `\label{eq:…}` for autonumbered cross-refs, not only `$$` display blocks.
-- The fep_lean manuscript-variables injector reads only `run_*/verification_manifest.json` artifacts and ignores `verify_*/` standalone re-verifications, so the canonical compile-rate cited in the abstract is the Hermes-refined run (e.g. `49/50` with one fallback) — standalone verifier-only runs reporting `50/50` do not propagate into manuscript metrics ([fep_lean DOI + prerender CLI plan](13e04c37-28e8-4b02-a78a-3e0926c5ddfa)).
+- **Rotating Lean-toolchain project (e.g. `fep_lean`, when checked out under `projects/`)**: real Lean 4 + Mathlib via `lake build`, OpenGauss `gauss` CLI, and the Hermes LLM pipeline (no mocks); validate end-to-end through `./run.sh`. Combined-PDF link colours come from `hyperref` / `\hypersetup` in the project's `manuscript/preamble.md` (red `fepred` for link, URL, and citation colours). Infrastructure only injects red when it rewrites a `hidelinks` draft in the emitted `.tex`.
+- For that rotating project, Hermes and per-topic Gauss markdown reports are built from the pipeline stage payload (`TopicRunResult.as_dict()`), not by re-reading SQLite artifacts; that dict must include the Hermes fields the reporter uses (`tokens_used`, `explanation`, `refined_lean_sketch`, `hermes_model`, `cache_hit`, `hermes_lean_compiles`) or aggregate and per-topic reports will show empty tokens and missing sections.
+- Topic sketch sources of truth (when checked out) are the catalogue in the project's `scripts/catalogue_sketches.py` and `config/topics.yaml` (one `TopicEntry` per topic: `lean_sketch` + `latex_equations`); the project's `lean/FepSketches/` is for `Basic.lean`, `fep_all.lean`, and ephemeral `_verify_*` verifier files, not long-lived per-topic `.lean` files for the full catalogue. The manuscript emits a **unified** `09z_unified_formalism_catalogue.md` (B+C material juxtaposed per topic; PDF refs `sec:appendix_b_full_topic_lean_catalogue` and `sec:appendix_c_latex_equations` both resolve in that chapter). The project's `scripts/theorem_latex_signatures.py` drives display-math strings aligned with Lean. The pipeline may write LaTeX `equation` environments with `\label{eq:…}` for autonumbered cross-refs, not only `$$` display blocks.
+- That project's manuscript-variables injector reads only `run_*/verification_manifest.json` artifacts and ignores `verify_*/` standalone re-verifications, so the canonical compile-rate cited in the abstract is the Hermes-refined run (e.g. `49/50` with one fallback) — standalone verifier-only runs reporting `50/50` do not propagate into manuscript metrics.
 - Content-validation diagnostics carry stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`, e.g. `MARKDOWN.PANDOC_BARE_PIPE`, `BIBTEX.UNDEFINED_KEY`); every new `DiagnosticEvent` emission must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters on `diagnostics.json`.
 - `uv run python -m infrastructure.validation.cli prerender <project>` runs the strict source-markdown gate (`prevalidate_source_markdown`) without triggering a full render; use it for fast pre-flight before `scripts/03_render_pdf.py`.
 - Slides keep Beamer Unicode/math parity with combined PDFs via `extract_math_font_preamble` in `infrastructure/rendering/_pdf_latex_helpers.py`, wired through Pandoc `-H header.tex` from `SlidesRenderer.render`; prose Unicode glyphs in body LaTeX are remapped by `infrastructure/rendering/_pdf_unicode_remap.py` inside `_pdf_combined_renderer.postprocess_latex`.
-- Project roster under `projects/` rotates; only `projects/code_project/` is the guaranteed control-positive exemplar — consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding project paths in docs. Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
+- Project roster under `projects/` rotates; the **only three permanent canonical exemplars** are [`projects/template_code_project/`](projects/template_code_project/), [`projects/template_prose_project/`](projects/template_prose_project/), and [`projects/template_search_project/`](projects/template_search_project/) — consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any other project paths in docs (every non-template path may rotate to `projects_in_progress/` or `projects_archive/` between renders). Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
 - `projects/biology_textbook/` is WIP-friendly: `infrastructure.project.discovery.resolve_project_root` lets `uv run python scripts/03_render_pdf.py --project biology_textbook` work from the repository root before promotion, but `./run.sh` and default discovery only list it after it moves under `projects/`.
 - `projects_in_progress/cognitive_integrity/`: pass the program segment in `--project` (e.g. `cognitive_integrity/cogsec_multiagent_1_theory`); bare `cogsec_multiagent_*` resolves under `projects/` and will not find the WIP tree—same `resolve_project_root` rule as other nested `projects_in_progress` layouts.
 - `projects/biology_textbook/docs/api_reference.md` is manually curated; after adding or renaming public functions in `src/biology/`, reconcile it with `rg '^\\s*def ' src/biology` and refresh any doc counts from live measurement. `docs/accessibility.md` in the same project lists which `manuscript/config.yaml` keys are advisory vs test-enforced.
@@ -118,7 +118,7 @@ The template now supports **multiple independent projects** within a single repo
 - Interactive project selection menu
 - Backward compatibility with single-project workflows
 
-**Active projects** (under `projects/`): the set **rotates** as workspaces are promoted, archived, or moved. Authoritative names **at any moment** are only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (regenerate after layout changes). The **only** path **guaranteed** to remain the **control-positive** exemplar for docs and commands is `projects/code_project/` (optimization research exemplar).
+**Active projects** (under `projects/`): the set **rotates** as workspaces are promoted, archived, or moved. Authoritative names **at any moment** are only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (regenerate after layout changes). The **only** path **guaranteed** to remain the **control-positive** exemplar for docs and commands is `projects/template_code_project/` (optimization research exemplar).
 
 **Note:** Exemplars such as `blake_bimetalism`, `traditional_newspaper`, `area_handbook`, `density_bioscales` may live under [`projects_archive/`](projects_archive/). In-progress trees live under [`projects_in_progress/`](projects_in_progress/) until promoted (roster varies by checkout). Active names are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
@@ -166,43 +166,41 @@ An optional intermediate staging area for projects that are under active develop
 
 The template separates **generic infrastructure** from **project-specific code**:
 
-```text
-template/                           # Generic template repository
-├── infrastructure/                 # Generic build/validation tools (Layer 1)
-│   ├── AGENTS.md
-│   ├── README.md
-│   ├── SKILL.md                    # AI skill descriptor (MCP-aligned)
-│   ├── config/                     # Repository-wide configuration
-│   │   ├── .env.template
-│   │   └── secure_config.yaml
-│   ├── docker/                     # Docker configuration
-│   │   ├── Dockerfile
-│   │   └── docker-compose.yml
-│   └── {core,documentation,...}/   # 13 subpackages (~277 Python files)
-├── scripts/                        # Entry point orchestrators (00–07)
-│   ├── AGENTS.md
-│   ├── README.md
-│   └── *.py                        # Pipeline stage scripts
-├── tests/                          # Infrastructure test suite
-│   ├── AGENTS.md
-│   ├── README.md
-│   └── infra_tests/test_*.py       # Tests for infrastructure/ modules
-├── projects/                       # Active workspaces (roster rotates; see docs/_generated/active_projects.md)
-│   ├── README.md                   # Multi-project guide
-│   ├── _test_project/              # Stub: output/ only; not discovered (see _test_project/AGENTS.md)
-│   ├── code_project/               # Guaranteed control-positive exemplar
-│   │   ├── src/                    # Project-specific scientific code
-│   │   ├── tests/                  # Project tests
-│   │   ├── scripts/                # Project analysis scripts
-│   │   ├── manuscript/             # Research manuscript markdown
-│   │   ├── output/                 # Working outputs (generated during pipeline)
-│   │   └── pyproject.toml
-│   └── {name}/                     # Additional discovered projects (varies by checkout)
-├── projects_in_progress/           # Staging area (not executed)
-├── projects_archive/               # Retired projects (preserved, not executed)
-└── output/                         # Final deliverables (organized by project)
-    ├── code_project/               # Project outputs
-    └── ...
+```mermaid
+flowchart TB
+    ROOT[/template//<br/>Generic template repository]
+
+    ROOT --> INFRA[/infrastructure//<br/>Layer 1 · generic build · validation tools]
+    ROOT --> SCRIPTS[/scripts//<br/>Pipeline stage orchestrators 00–07]
+    ROOT --> TESTS[/tests//<br/>Infrastructure test suite]
+    ROOT --> PROJECTS[/projects//<br/>Active workspaces · roster rotates]
+    ROOT --> WIP[/projects_in_progress//<br/>Staging · not executed]
+    ROOT --> ARCH[/projects_archive//<br/>Retired · preserved · not executed]
+    ROOT --> OUT[/output//<br/>Final deliverables · organized by project]
+
+    INFRA --> I_DOCS[AGENTS.md · README.md · SKILL.md]
+    INFRA --> I_CONFIG[/config//<br/>Repo-wide configuration]
+    INFRA --> I_DOCKER[/docker//<br/>Container specs]
+    INFRA --> I_SUB[Layer 1 packages listed in<br/>`infrastructure/AGENTS.md` —<br/>17 Python dirs + logrotate configs ·<br/>313 `.py` files in `infrastructure/`]
+
+    PROJECTS --> P_README[README.md · multi-project guide]
+    PROJECTS --> P_STUB[/_test_project//<br/>Stub · output/ only · not discovered]
+    PROJECTS --> P_CODE[/template_code_project//<br/>Guaranteed control-positive exemplar]
+    PROJECTS --> P_OTHER[/&lt;name&gt;//<br/>Additional discovered projects]
+
+    P_CODE --> P_C_SRC[/src · tests · scripts · manuscript · output/<br/>+ pyproject.toml]
+
+    OUT --> O_CODE[/template_code_project//<br/>Project outputs]
+    OUT --> O_DOTS[/&lt;other projects&gt;//]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef l2 fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef gen fill:#7c2d12,stroke:#0f172a,color:#fff
+    class ROOT root
+    class INFRA,SCRIPTS,TESTS,I_CONFIG,I_DOCKER,I_SUB,I_DOCS l1
+    class PROJECTS,P_CODE,P_OTHER,P_STUB,P_README,P_C_SRC l2
+    class WIP,ARCH,OUT,O_CODE,O_DOTS gen
 ```
 
 ## 📚 Directory-Level Documentation
@@ -221,14 +219,16 @@ Each directory contains documentation for easy navigation:
 
 | Directory | AGENTS.md | README.md | Purpose |
 | --------- | --------- | --------- | ------- |
-| [`projects/code_project/`](projects/code_project/) | [AGENTS.md](projects/code_project/AGENTS.md) | [README.md](projects/code_project/README.md) | Optimization research exemplar |
-| [`projects/fep_lean/`](projects/fep_lean/) | [AGENTS.md](projects/fep_lean/AGENTS.md) | [README.md](projects/fep_lean/README.md) | FEP / Lean catalogue with OpenGauss `gauss` CLI |
+| [`projects/template_code_project/`](projects/template_code_project/) | [AGENTS.md](projects/template_code_project/AGENTS.md) | [README.md](projects/template_code_project/README.md) | Code-centric exemplar (canonical, always present) |
+| [`projects/template_prose_project/`](projects/template_prose_project/) | [AGENTS.md](projects/template_prose_project/AGENTS.md) | [README.md](projects/template_prose_project/README.md) | Prose-centric exemplar (canonical, always present) |
+| [`projects/template_search_project/`](projects/template_search_project/) | [AGENTS.md](projects/template_search_project/AGENTS.md) | [README.md](projects/template_search_project/README.md) | Literature-search exemplar (canonical, always present) |
+| Rotating projects (e.g. `fep_lean`, `actinf_policy_entanglement_lean`) | see project tree when checked out under `projects/` | see project tree when checked out under `projects/` | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current roster; rotates between `projects_in_progress/` and `projects_archive/` |
 
 **In-progress projects** (under `projects_in_progress/`, not executed by pipeline):
 
 | Directory | Purpose |
 | --------- | ------- |
-| [`projects_in_progress/act_inf_metaanalysis/`](projects_in_progress/act_inf_metaanalysis/) | Active Inference meta-analysis — see [`doc/README.md`](projects_in_progress/act_inf_metaanalysis/doc/README.md) |
+| [`projects_in_progress/act_inf_metaanalysis/` (WIP)](projects_in_progress/act_inf_metaanalysis/) | Active Inference meta-analysis — see [`doc/README.md`](projects_in_progress/act_inf_metaanalysis/doc/README.md)  *(WIP)* |
 | [`projects_in_progress/cogant/`](projects_in_progress/cogant/) | Cognitive agent project |
 | [`projects_in_progress/template/`](projects_in_progress/template/) | Meta-documentation and template metrics |
 
@@ -265,55 +265,46 @@ Archived exemplars are preserved under [`projects_archive/`](projects_archive/) 
 
 ### Directory Structure
 
-```text
-template/                           # Generic Template
-├── infrastructure/                 # Generic build/validation tools (Layer 1)
-│   ├── AGENTS.md                   # Infrastructure documentation
-│   ├── README.md                   # Quick reference
-│   ├── config/                     # Repository-wide configuration
-│   │   ├── .env.template
-│   │   └── secure_config.yaml
-│   ├── docker/                     # Docker configuration
-│   │   ├── Dockerfile
-│   │   └── docker-compose.yml
-│   ├── build_verifier.py
-│   ├── figure_manager.py
-│   └── ...
-├── docs/                           # Documentation hub
-│   ├── AGENTS.md
-│   ├── README.md
-│   ├── CLOUD_DEPLOY.md
-│   ├── PAI.md
-│   └── RUN_GUIDE.md
-├── .cursor/                        # Editor configuration
-│   ├── .cursorrules
-│   ├── .cursorignore
-│   └── README.md
-├── scripts/                        # Entry Points (Generic Orchestrators)
-│   ├── AGENTS.md                   # Entry point documentation
-│   ├── README.md                   # Quick reference
-│   ├── 00_setup_environment.py     # Stage 1: Setup Environment
-│   ├── 01_run_tests.py             # Stage 2: Test
-│   ├── 02_run_analysis.py          # Stage 3: Analysis
-│   ├── 03_render_pdf.py            # Stage 4: PDF
-│   ├── 04_validate_output.py       # Stage 5: Validate
-│   ├── 05_copy_outputs.py          # Stage 6: Copy outputs
-├── tests/                          # Infrastructure Tests
-│   ├── AGENTS.md
-│   ├── README.md
-│   └── test_*.py
-├── projects/                       # Multiple research projects directory
-│   ├── code_project/               # Optimization research exemplar (active)
-│   │   ├── src/                    # Project scientific code (Layer 2)
-│   │   ├── tests/                  # Project Tests (90%+ coverage)
-│   │   ├── scripts/                # Analysis scripts (thin orchestrators)
-│   │   ├── manuscript/             # Research manuscript
-│   │   ├── output/                 # Working outputs (disposable)
-│   │   └── pyproject.toml          # Project configuration
-│   └── {name}/                     # Additional discovered projects (varies by checkout)
-├── projects_in_progress/           # Work-in-progress (not discovered)
-├── projects_archive/               # Archived projects (preserved)
-└── pyproject.toml                  # Root configuration
+```mermaid
+flowchart TB
+    ROOT[/template//<br/>Generic Template]
+
+    ROOT --> INFRA[/infrastructure//<br/>Layer 1 · generic build/validation tools]
+    ROOT --> DOCS[/docs//<br/>Documentation hub]
+    ROOT --> CUR[/.cursor//<br/>Editor configuration]
+    ROOT --> SCR[/scripts//<br/>Pipeline stage entry points]
+    ROOT --> TS[/tests//<br/>Infrastructure tests]
+    ROOT --> PR[/projects//<br/>Multiple research projects]
+    ROOT --> WIP[/projects_in_progress//<br/>Work-in-progress · not discovered]
+    ROOT --> ARC[/projects_archive//<br/>Archived · preserved]
+    ROOT --> PYPROJ[pyproject.toml<br/>Root configuration]
+
+    INFRA --> I_DOCS[AGENTS.md · README.md · SKILL.md]
+    INFRA --> I_CFG[/config/<br/>.env.template · secure_config.yaml/]
+    INFRA --> I_DOCKER[/docker/<br/>Dockerfile · docker-compose.yml/]
+    INFRA --> I_MODULES[build_verifier.py · figure_manager.py · ...]
+
+    DOCS --> D_FILES[AGENTS.md · README.md ·<br/>CLOUD_DEPLOY.md · PAI.md · RUN_GUIDE.md]
+
+    CUR --> C_FILES[.cursorrules · .cursorignore · README.md]
+
+    SCR --> S_DOCS[AGENTS.md · README.md]
+    SCR --> S_STAGES[00_setup_environment.py<br/>01_run_tests.py<br/>02_run_analysis.py<br/>03_render_pdf.py<br/>04_validate_output.py<br/>05_copy_outputs.py]
+
+    TS --> T_FILES[AGENTS.md · README.md · test_*.py]
+
+    PR --> PR_CODE[/template_code_project//<br/>Optimization exemplar · active]
+    PR --> PR_OTHER[/&lt;name&gt;//<br/>additional discovered projects]
+    PR_CODE --> PRC_LAYOUT[/src · tests · scripts ·<br/>manuscript · output/<br/>+ pyproject.toml]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef l2 fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef gen fill:#7c2d12,stroke:#0f172a,color:#fff
+    class ROOT,PYPROJ root
+    class INFRA,DOCS,CUR,SCR,TS,I_DOCS,I_CFG,I_DOCKER,I_MODULES,D_FILES,C_FILES,S_DOCS,S_STAGES,T_FILES l1
+    class PR,PR_CODE,PR_OTHER,PRC_LAYOUT l2
+    class WIP,ARC gen
 ```
 
 **Documentation in each directory:**
@@ -471,7 +462,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: Pipeline (9 stages displayed as [1/9] to [9/9], with an initial clean step shown as [0/9]) with optional LLM review
+# Non-interactive: full pipeline — 10 named stages in pipeline.yaml; run.sh displays [0/9] clean + [1/9]–[9/9]; --core-only would drop the two LLM stages and leave 8.
 ./run.sh --pipeline
 ```
 
@@ -499,10 +490,10 @@ Original PDFs are always left untouched.
 ./secure_run.sh
 
 # Full secure pipeline (pipeline + steganography)
-./secure_run.sh --project code_project
+./secure_run.sh --project template_code_project
 
 # Re-process existing PDFs only (skip pipeline re-run)
-./secure_run.sh --steganography-only --project code_project
+./secure_run.sh --steganography-only --project template_code_project
 
 # Core pipeline only (no LLM) + steganography
 ./secure_run.sh --pipeline --core-only
@@ -513,11 +504,17 @@ Original PDFs are always left untouched.
 
 **Output files:**
 
-```text
-projects/{name}/output/pdf/
-├── {name}_combined.pdf               # Standard output (untouched)
-├── {name}_combined_steganography.pdf # Steganographically hardened copy
-└── {name}_combined.hashes.json       # SHA-256/SHA-512 integrity manifest
+```mermaid
+flowchart LR
+    PDF[/projects/&lt;name&gt;/output/pdf//]
+    PDF --> A[&lt;name&gt;_combined.pdf<br/>Standard output · untouched]
+    PDF --> B[&lt;name&gt;_combined_steganography.pdf<br/>Steganographically hardened copy]
+    PDF --> C[&lt;name&gt;_combined.hashes.json<br/>SHA-256/SHA-512 integrity manifest]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class PDF d
+    class A,B,C f
 ```
 
 **Steganographic techniques:** diagonal watermark overlays, QR + barcode strips, PDF
@@ -542,7 +539,7 @@ steganography:
   output_suffix: "_steganography"
 ```
 
-**See also:** [`scripts/AGENTS.md`](scripts/AGENTS.md#secure-entry-point) · [`infrastructure/steganography/`](infrastructure/steganography/)
+**See also:** [`scripts/AGENTS.md`](scripts/AGENTS.md) · [`infrastructure/steganography/`](infrastructure/steganography/)
 
 #### Entry Point Comparison
 
@@ -552,7 +549,7 @@ steganography:
 
 ### Pipeline Stages
 
-**Full Pipeline Stages** (displayed as [1/9] to [9/9] in logs, with an initial clean step shown as [0/9]):
+**Full Pipeline Stages** — the default `pipeline.yaml` declares **10 named stages** (`Clean Output Directories` is stage 0; nine numbered stages follow). `run.sh` displays them as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding the two LLM-tagged stages.
 
 - **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
 1. **Environment Setup** - Verify system requirements and dependencies
@@ -574,10 +571,9 @@ steganography:
 
 - **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards (generated after all projects, not as a numbered stage)
 
-**Stage numbering:**
+**Stage numbering (canonical phrasing — keep in sync with CLAUDE.md and README.md):**
 
-- **`./run.sh`**: `[0/9]` clean, then `[1/9]`–`[9/9]` for tracked steps (see `run.sh`).
-- **Default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)**: **10** named DAG stages (including clean and both LLM stages); **`--core-only`** runs **8** stages (excludes LLM-tagged stages).
+> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **10 named stages** (`Clean Output Directories` is stage 0; nine numbered stages follow). `run.sh` displays them as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding the two LLM-tagged stages.
 
 ### Manual Execution Options
 
@@ -812,27 +808,29 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 
 ### Generated Files Structure
 
-```text
-output/
-├── project/                # Project-specific outputs
-│   ├── pdf/                # PDF documents
-│   │   ├── 01_abstract.pdf # Individual section PDFs
-│   │   ├── 02_introduction.pdf
-│   │   ├── project_combined.pdf # Manuscript
-│   │   └── *.pdf           # Additional formats
-│   ├── tex/                # LaTeX source files
-│   │   ├── 01_abstract.tex
-│   │   ├── project_combined.tex
-│   │   └── *.tex
-│   ├── figures/            # Generated figures
-│   │   ├── example_figure.png
-│   │   ├── convergence_plot.png
-│   │   └── *.png
-│   ├── data/               # Generated datasets
-│   │   ├── example_data.csv
-│   │   ├── convergence_data.npz
-│   │   └── *.csv
-│   └── project_combined.html # HTML version for IDE
+```mermaid
+flowchart TB
+    OUT[/output/]
+    OUT --> P[/project/<br/>Project-specific outputs/]
+    P --> PDF[/pdf/<br/>PDF documents/]
+    P --> TEX[/tex/<br/>LaTeX source files/]
+    P --> FIG[/figures/<br/>Generated figures/]
+    P --> DATA[/data/<br/>Generated datasets/]
+    P --> HTML[project_combined.html<br/>HTML version for IDE]
+
+    PDF --> PDF_SECT[01_abstract.pdf · 02_introduction.pdf · ...]
+    PDF --> PDF_COMB[project_combined.pdf<br/>Full manuscript]
+
+    TEX --> TEX_FILES[01_abstract.tex · project_combined.tex · ...]
+
+    FIG --> FIG_FILES[example_figure.png · convergence_plot.png · ...]
+
+    DATA --> DATA_FILES[example_data.csv · convergence_data.npz · ...]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class OUT,P,PDF,TEX,FIG,DATA d
+    class PDF_SECT,PDF_COMB,TEX_FILES,FIG_FILES,DATA_FILES,HTML f
 ```
 
 ### PDF Versions

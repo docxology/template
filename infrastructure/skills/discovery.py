@@ -12,7 +12,7 @@ import yaml
 # Roots (relative to repository root) searched recursively for **/SKILL.md
 DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     "infrastructure",
-    "projects/code_project/src",
+    "projects/template_code_project/src",
     ".cursor/skills",
 )
 

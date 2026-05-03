@@ -6,6 +6,7 @@ import yaml
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._pdf_combined_renderer import (
     CombinedMarkdownResult,
+    discover_manuscript_bib_paths,
     flatten_manuscript_vars,
     substitute_manuscript_var_placeholders,
     preprocess_combined_markdown,
@@ -362,11 +363,20 @@ class TestInjectBibliography:
         result = inject_bibliography(tex, bib_exists=False)
         assert "\\bibliography" not in result
 
-    def test_no_end_document(self):
-        tex = "Content without end document marker"
-        result = inject_bibliography(tex, bib_exists=True)
-        # Should not crash, bibliography not inserted
-        assert "\\bibliography" not in result
+    def test_inject_rewrites_bibliography_stems(self):
+        tex = "Content\n\\bibliography{references}\n\\end{document}"
+        result = inject_bibliography(
+            tex, bib_exists=True, bib_stems="references,references_deep"
+        )
+        assert "\\bibliography{references,references_deep}" in result
+
+    def test_discover_manuscript_bib_paths_sorted(self, tmp_path):
+        m = tmp_path / "manuscript"
+        m.mkdir()
+        (m / "z_extra.bib").write_text("@misc{z}\n", encoding="utf-8")
+        (m / "references.bib").write_text("@misc{a}\n", encoding="utf-8")
+        paths = discover_manuscript_bib_paths(m)
+        assert [p.name for p in paths] == ["references.bib", "z_extra.bib"]
 
 
 class TestVerifyFigureReferences:
@@ -532,3 +542,20 @@ class TestPrevalidateSourceMarkdown:
         md = manuscript / "01_intro.md"
         md.write_text("Clean text with no citations.\n", encoding="utf-8")
         prevalidate_source_markdown([md], bib_file=manuscript / "references.bib")
+
+    def test_citation_resolves_with_second_bib_file(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "references.bib").write_text(
+            "@article{good_key, title={Ok}, year={2025}}\n",
+            encoding="utf-8",
+        )
+        (manuscript / "references_deep.bib").write_text(
+            "@article{deep_only, title={Deep}, year={2025}}\n",
+            encoding="utf-8",
+        )
+        (manuscript / "01_intro.md").write_text(
+            "# Intro\n\nSee [@good_key] and [@deep_only].\n",
+            encoding="utf-8",
+        )
+        prevalidate_source_markdown(manuscript)

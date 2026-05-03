@@ -2,16 +2,18 @@
 
 ## Purpose
 
-Create a, compliant research manuscript from scratch based on a research description, ensuring full compliance with the Research Project Template standards and architecture.
+Create a compliant research manuscript and project layout from a research description, aligned with this template’s architecture and rendering pipeline.
 
 ## Context
 
-This prompt leverages extensive project documentation to create manuscripts that follow professional academic standards:
+- [`../guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) — **Canonical** Pandoc citation (`[@key]`) and `pandoc-crossref` (`@fig:`, `@eq:`, `@sec:`) semantics for the three exemplar projects.
+- [`manuscript_cross_references.md`](manuscript_cross_references.md) — Projects that use **`manuscript/refs/labels.yaml`** and body tokens such as `[[FIG:…]]`, `[[THMREF:…]]` instead of (or as well as) `@fig:` / `\ref{}`.
+- [`../rules/manuscript_style.md`](../rules/manuscript_style.md) — Sectioning, math, figures, tone.
+- [`../rules/testing_standards.md`](../rules/testing_standards.md) — Project test policy (90%, no mocks).
+- [`../core/workflow.md`](../core/workflow.md) — How manuscript, scripts, and pipeline connect.
+- [`../usage/markdown-template-guide.md`](../usage/markdown-template-guide.md) — Markdown authoring details.
 
-- [`../rules/manuscript_style.md`](../rules/manuscript_style.md) - Section numbering, cross-references, equations, figures
-- [`../rules/testing_standards.md`](../rules/testing_standards.md) - Standards compliance
-- [`../core/workflow.md`](../core/workflow.md) - Research workflow integration
-- [`../usage/markdown-template-guide.md`](../usage/markdown-template-guide.md) - Markdown authoring guide
+**Before choosing filenames:** copy the closest exemplar under [`projects/template_code_project/`](../../projects/template_code_project/), [`projects/template_prose_project/`](../../projects/template_prose_project/), or [`projects/template_search_project/`](../../projects/template_search_project/); do not assume the generic `01_abstract` / `02_introduction` skeleton below if your exemplar uses different numbering (`00_abstract`, themed sections, etc.).
 
 ## Prompt Template
 
@@ -50,11 +52,16 @@ Create all required manuscript files following the section numbering system:
 - `references.bib` - BibTeX bibliography database
 - `preamble.md` - LaTeX preamble customizations
 
-## 2. Cross-Referencing System
+## 2. Cross-referencing system
 
-Implement cross-referencing throughout the manuscript:
+Prefer **Pandoc-crossref** field syntax and `[@citekey]` in Markdown source as in [`../guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) (`@fig:`, `@eq:`, `@sec:`)—not raw `\ref{}` in prose, so HTML/EPUB stay coherent.
 
-### Section References
+If the project uses **`refs/labels.yaml` + `[[FIG:]]` / `[[THMREF:]]` tokens**, follow [`manuscript_cross_references.md`](manuscript_cross_references.md) instead of duplicating numbering by hand.
+
+Legacy LaTeX-style examples (for drafts that still emit `\ref` from Pandoc or appendices):
+
+### Section references (illustrative)
+
 Use `\ref{sec:name}` with `{#sec:name}` labels:
 ```markdown
 # Introduction {#sec:introduction}
@@ -202,22 +209,18 @@ Ensure all output meets standards:
 - mathematical derivations
 - Clear figure and table presentation
 
-## Key Requirements
+## Key requirements
 
-- [ ] manuscript structure (01-09, S01-S0N, 98-99)
-- [ ] Proper cross-referencing (\ref{}, \eqref{}, \cite{})
-- [ ] Mathematical equations with proper formatting
-- [ ] Figures and tables with captions and labels
-- [ ] research code in `src/` (90% coverage)
-- [ ] Thin orchestrator scripts in `scripts/`
-- [ ] testing (data, no mocks)
-- [ ] Full documentation (AGENTS.md, README.md)
-- [ ] Configuration files (config.yaml, references.bib)
-- [ ] Validation and quality assurance
-- [ ] Two-layer architecture compliance
-- [ ] Thin orchestrator pattern implementation
-
-## Standards Compliance Checklist
+- [ ] Manuscript file set consistent with chosen exemplar (not necessarily generic 01–09)
+- [ ] Cross-references per [`../guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) and/or [`manuscript_cross_references.md`](manuscript_cross_references.md)
+- [ ] Mathematical display and numbering per manuscript_style / exemplar
+- [ ] Figures and tables with captions and resolvable references
+- [ ] Research code in `projects/{name}/src/` (90% coverage) unless the change is infrastructure-layer
+- [ ] Thin orchestrator scripts under `projects/{name}/scripts/`
+- [ ] Tests with real data (no mocks of the unit under test)
+- [ ] AGENTS.md and README.md where the template expects them
+- [ ] `config.yaml` and bibliography sources (`references.bib` / `refs/citations.yaml`) aligned with body cites
+- [ ] Pre-flight validation (markdown) and pipeline-aligned checks before declaring done
 
 ### Manuscript Standards ([`../rules/manuscript_style.md`](../rules/manuscript_style.md))
 - [ ] Section numbering (01-09, S01-S0N, 98-99)

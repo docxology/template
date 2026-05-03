@@ -1,6 +1,8 @@
 ## `infrastructure/config/`
 
-Repo-scoped configuration defaults used by infrastructure modules.
+Repo-scoped **non-Python** configuration assets (templates, defaults). This directory intentionally contains **no Python code** — the Python configuration loaders live in [`infrastructure/core/config/`](../core/config/) (`loader.py`, `schema.py`, `formatting.py`, `queries.py`, `cli.py`).
+
+If you are looking for `from infrastructure.config import ...`, you want `infrastructure.core.config` instead.
 
 ### Files
 
@@ -9,4 +11,5 @@ Repo-scoped configuration defaults used by infrastructure modules.
 
 ### See also
 
-- **Configuration docs**: `docs/operational/config/configuration.md`
+- **Python config loaders**: [`infrastructure/core/config/`](../core/config/)
+- **Configuration docs**: [`docs/operational/config/configuration.md`](../../docs/operational/config/configuration.md)

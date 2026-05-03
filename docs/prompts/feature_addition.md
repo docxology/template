@@ -18,7 +18,7 @@ This prompt ensures features integrate properly with the existing system:
 You are adding a feature to the Research Project Template. The feature must integrate seamlessly with the existing two-layer architecture and thin orchestrator pattern while meeting all quality and testing standards.
 
 FEATURE DESCRIPTION: [Describe the feature to implement]
-TARGET PROJECT: [Specify which project: "code_project" or new project name]
+TARGET PROJECT: [Specify which project: "template_code_project" or new project name]
 LAYER: [Specify: "infrastructure" for generic/shared OR "project" for domain-specific]
 
 FEATURE REQUIREMENTS:
@@ -329,20 +329,22 @@ class TestNewFeature:
 
 ### Module Structure
 
-```
+```mermaid
+flowchart LR
+    NF[/new_feature//]
+    NF --> INIT[__init__.py<br/>Public API exports]
+    NF --> CORE[core.py<br/>Main feature implementation]
+    NF --> EXC[exceptions.py<br/>Custom exceptions]
+    NF --> VAL[validators.py<br/>Input validation]
+    NF --> DOCS[AGENTS.md · README.md]
+    NF --> T[/tests/<br/>__init__.py · test_core.py · test_validators.py/]
 
-new_feature/
-├── **init**.py          # Public API exports
-├── core.py             # Main feature implementation
-├── exceptions.py       # Custom exceptions
-├── validators.py       # Input validation
-├── AGENTS.md           # This documentation
-├── README.md           # Quick reference
-└── tests/
-    ├── **init**.py
-    ├── test_core.py
-    └── test_validators.py
-
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class NF,T d
+    class INIT,CORE,EXC,VAL code
+    class DOCS doc
 ```
 
 ## API Reference
@@ -499,12 +501,20 @@ new_feature:
 
 ### Exception Hierarchy
 
-```
-FeatureError (base exception)
-├── FeatureExecutionError
-├── ValidationError
-├── ConfigurationError
-└── ResourceError
+```mermaid
+classDiagram
+    class FeatureError {
+        +base exception
+    }
+    class FeatureExecutionError
+    class ValidationError
+    class ConfigurationError
+    class ResourceError
+
+    FeatureError <|-- FeatureExecutionError
+    FeatureError <|-- ValidationError
+    FeatureError <|-- ConfigurationError
+    FeatureError <|-- ResourceError
 ```
 
 ### Error Recovery

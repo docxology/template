@@ -26,7 +26,11 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 | `rendering/` | Multi-format output (PDF, HTML, slides) | `RenderManager`, `RenderingConfig` |
 | `documentation/` | Figure/image management, markdown integration, glossary | `FigureManager`, `ImageManager`, `MarkdownIntegration` |
 | `llm/` | Local LLM integration via Ollama | `LLMClient`, `OllamaClientConfig`, `detect_repetition`, `check_format_compliance` |
+| `orchestration/` | Pipeline CLI, menu, project discovery, stage logging, secure-run wrapper (backs `run.sh`/`secure_run.sh`) | `build_parser`, `PipelineRunner`, `validate_project_slug`, `run_secure_pipeline` |
 | `publishing/` | Academic publishing (DOI, citations, Zenodo, arXiv) | `publish_to_zenodo`, `generate_citation_bibtex` |
+| `reference/` | BibTeX I/O (read / write / convert) matching `references.bib` syntax | `parse_bibfile`, `render_database`, `paper_to_bibentry` |
+| `search/` | Paperclip-style multi-source literature search (arXiv, Crossref, local, Paperclip) | `LiteratureClient`, `SearchQuery`, `ArxivBackend`, `CrossrefBackend` |
+| `prose/` | Prose analysis (readability, structure, editorial quality, manuscript reports) | `analyze_manuscript`, `compute_metrics`, `analyze_structure`, `analyze_quality` |
 | `reporting/` | Pipeline reports, error aggregation, dashboards | `generate_pipeline_report`, `get_error_aggregator` |
 | `scientific/` | Benchmarking, numerical stability, scientific templates | `benchmark_function`, `check_numerical_stability` |
 | `project/` | Multi-project discovery and validation | `discover_projects`, `validate_project_structure` |
@@ -72,14 +76,14 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 ### Using the Pipeline
 
 ```bash
-python3 scripts/execute_pipeline.py --project code_project --core-only
+python3 scripts/execute_pipeline.py --project template_code_project --core-only
 ```
 
 ### Validating Outputs
 
 ```bash
-python3 -m infrastructure.validation.cli.main markdown projects/code_project/manuscript/
-python3 -m infrastructure.validation.cli.main pdf output/code_project/pdf/
+python3 -m infrastructure.validation.cli.main markdown projects/template_code_project/manuscript/
+python3 -m infrastructure.validation.cli.main pdf output/template_code_project/pdf/
 ```
 
 ## Submodule Skills

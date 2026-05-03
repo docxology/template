@@ -6,12 +6,18 @@ Unified pipeline telemetry: bridges per-stage resource tracking (CPU, memory, I/
 
 ## Module Structure
 
-```text
-telemetry/
-├── __init__.py     # Re-exports: TelemetryCollector, TelemetryConfig, models
-├── collector.py    # TelemetryCollector — lifecycle + persistence
-├── config.py       # TelemetryConfig dataclass (YAML-loadable)
-└── models.py       # StageTelemetry, PipelineTelemetry, PerformanceWarning
+```mermaid
+flowchart LR
+    TEL[/telemetry//]
+    TEL --> INIT[__init__.py<br/>Re-exports TelemetryCollector,<br/>TelemetryConfig, models]
+    TEL --> COL[collector.py<br/>TelemetryCollector · lifecycle + persistence]
+    TEL --> CFG[config.py<br/>TelemetryConfig dataclass · YAML-loadable]
+    TEL --> MOD[models.py<br/>StageTelemetry · PipelineTelemetry ·<br/>PerformanceWarning]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class TEL d
+    class INIT,COL,CFG,MOD code
 ```
 
 ## Key Classes

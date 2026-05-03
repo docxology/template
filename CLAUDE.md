@@ -34,10 +34,10 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 # Interactive secure menu (pipeline + steganography)
 ./secure_run.sh
 
-# Full pipeline (10 stages: clean, setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
+# Full pipeline (10 named stages: clean=stage 0, then nine numbered stages — setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
 
-# Core pipeline only (8 DAG stages in default pipeline.yaml; LLM-tagged stages excluded)
+# Core pipeline only (8 stages — LLM review and LLM translations excluded)
 uv run python scripts/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
@@ -80,7 +80,7 @@ uv run python scripts/manage_workspace.py status
 uv run python scripts/manage_workspace.py add <package> --project <name>
 
 # Linting and type checking
-uv run mypy infrastructure/ projects/code_project/src/
+uv run mypy infrastructure/ projects/template_code_project/src/
 uv run bandit -r infrastructure/
 
 # Validate markdown
@@ -115,7 +115,14 @@ uv run python scripts/execute_multi_project.py --no-llm
 uv run python -c "from infrastructure.project.discovery import discover_projects; from pathlib import Path; print([p.name for p in discover_projects(Path('.'))])"
 ```
 
-**Active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`). Default path examples → [`projects/code_project/`](projects/code_project/); FEP / Lean catalogue → [`projects/fep_lean/`](projects/fep_lean/).
+**Active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`).
+
+**Canonical exemplars (always present in `projects/`):**
+- [`projects/template_code_project/`](projects/template_code_project/) — code-centric template
+- [`projects/template_prose_project/`](projects/template_prose_project/) — prose-centric template
+- [`projects/template_search_project/`](projects/template_search_project/) — literature-search template
+
+All other projects under `projects/` rotate between `projects_in_progress/`, `projects/`, and `projects_archive/` as work progresses; never hard-code their paths in long-lived docs — consult `_generated/active_projects.md` instead.
 **In-progress projects:** `aii-org` and others in [`projects_in_progress/`](projects_in_progress/) (not discovered until moved under `projects/`)
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
@@ -193,37 +200,46 @@ To reactivate: `mv projects_archive/{name}/ projects/{name}/`
 
 ### Standard Project Layout
 
-```text
-projects/{project_name}/
-├── src/                    # Project-specific code (100% test coverage target)
-│   ├── __init__.py
-│   └── *.py               # Domain algorithms and logic
-├── tests/                  # Project test suite (90% coverage minimum)
-│   ├── __init__.py
-│   └── test_*.py
-├── scripts/                # Analysis scripts (thin orchestrators)
-│   └── *.py
-├── manuscript/             # Markdown manuscript sections
-│   ├── config.yaml        # Project metadata
-│   ├── preamble.md        # LaTeX preamble
-│   ├── 01_*.md            # Main sections
-│   ├── S01_*.md           # Supplemental sections
-│   └── 99_references.md
-├── output/                 # Working outputs (disposable)
-└── pyproject.toml          # Project configuration
+```mermaid
+flowchart TB
+    P[/projects/&lt;project_name&gt;//]
+    P --> SRC[/src/<br/>Project-specific code · 100% target/]
+    P --> T[/tests/<br/>Project tests · 90% min/]
+    P --> SC[/scripts/<br/>Analysis · thin orchestrators/]
+    P --> M[/manuscript/<br/>Markdown sections/]
+    P --> O[/output/<br/>Working outputs · disposable/]
+    P --> PY[pyproject.toml<br/>Project configuration]
+
+    SRC --> SRC_F[__init__.py · *.py<br/>domain algorithms / logic]
+    T --> T_F[__init__.py · test_*.py]
+    SC --> SC_F[*.py]
+    M --> M_F[config.yaml · preamble.md ·<br/>01_*.md · S01_*.md · 99_references.md]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef cfg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class P,SRC,T,SC,M,O d
+    class SRC_F,T_F,SC_F,M_F f
+    class PY cfg
 ```
 
 ### Output Organization
 
-```text
-output/
-├── {project_name}/         # Project-specific outputs
-│   ├── pdf/               # Individual + combined PDFs
-│   ├── figures/           # Generated figures
-│   ├── data/              # Analysis data files
-│   ├── llm/               # LLM reviews and translations
-│   └── reports/           # Validation reports
-└── executive_summary/      # Cross-project reports (multi-project mode)
+```mermaid
+flowchart TB
+    OUT[/output/]
+    OUT --> P[/&lt;project_name&gt;/<br/>Project-specific outputs/]
+    OUT --> EX[/executive_summary/<br/>Cross-project reports · multi-project mode/]
+
+    P --> PDF[/pdf/<br/>Individual + combined PDFs/]
+    P --> FIG[/figures/<br/>Generated figures/]
+    P --> DATA[/data/<br/>Analysis data files/]
+    P --> LLM[/llm/<br/>LLM reviews · translations/]
+    P --> REP[/reports/<br/>Validation reports/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class OUT,P,EX,PDF,FIG,DATA,LLM,REP d
 ```
 
 ## Pipeline Stages
@@ -241,10 +257,9 @@ output/
 8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
 9. **Copy Outputs** - Copy final deliverables to `output/<name>/`
 
-**Stage numbering:**
+**Stage numbering (canonical phrasing — keep in sync with AGENTS.md and README.md):**
 
-- **`./run.sh`**: prints `[0/9]` for the clean step, then `[1/9]`–`[9/9]` for the nine tracked steps (see `STAGE_NAMES` in `run.sh`).
-- **Default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)**: **10** named DAG stages (including clean and both LLM stages); **`--core-only`** runs **8** stages (excludes LLM-tagged stages).
+> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **10 named stages** (`Clean Output Directories` is stage 0; nine numbered stages follow). `run.sh` displays them as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding the two LLM-tagged stages.
 
 **Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed (not counted as a numbered stage).
 
@@ -265,7 +280,7 @@ output/
 
 - **Infrastructure**: 60% minimum (currently 83.33%)
 - **Projects**: 90% minimum (currently varies by project)
-  - **`fep_lean` exception**: CI gate is 89% (`.github/workflows/ci.yml` `fep-lean` job) — the Lean build + live `gauss doctor` + Ollama-gated paths carry a small amount of exercised-only-in-CI surface that sits below the 90% template floor. Raise back to 90% once that surface is covered.
+  - **Rotating-project exceptions**: a CI matrix job may pin a lower floor for a checked-out rotating project (e.g. an 89% gate for a Lean-toolchain project) when its Lean build + live external CLI + Ollama-gated paths carry CI-only surface below the 90% floor. The exception applies only while that project is checked out under `projects/`; raise back to 90% once that surface is covered.
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducibility
 
@@ -323,7 +338,7 @@ llm:
 
 ```bash
 # Set Python path for IDE/editor integration
-export PYTHONPATH=".:infrastructure:projects/code_project/src"
+export PYTHONPATH=".:infrastructure:projects/template_code_project/src"
 ```
 
 ## Development Workflow
@@ -345,7 +360,7 @@ touch projects/my_project/src/__init__.py
 touch projects/my_project/tests/__init__.py
 
 # Copy config template
-cp projects/code_project/manuscript/config.yaml projects/my_project/manuscript/
+cp projects/template_code_project/manuscript/config.yaml projects/my_project/manuscript/
 
 # Create pyproject.toml (see existing projects for template)
 

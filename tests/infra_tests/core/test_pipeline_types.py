@@ -68,8 +68,8 @@ class TestPipelineConfig:
 
     def test_project_name_stored(self, tmp_path):
         """project_name is stored correctly."""
-        config = PipelineConfig(project_name="code_project", repo_root=tmp_path)
-        assert config.project_name == "code_project"
+        config = PipelineConfig(project_name="template_code_project", repo_root=tmp_path)
+        assert config.project_name == "template_code_project"
 
     def test_repo_root_stored(self, tmp_path):
         """repo_root is stored as-is."""

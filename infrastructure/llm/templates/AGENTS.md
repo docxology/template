@@ -6,14 +6,21 @@ The `infrastructure/llm/templates/` directory contains specialized template clas
 
 ## Directory Structure
 
-```text
-infrastructure/llm/templates/
-├── AGENTS.md               # This technical documentation
-├── __init__.py            # Package exports
-├── base.py                # Base template classes and interfaces
-├── helpers.py             # Template utility functions and helpers
-├── manuscript.py          # Manuscript-specific templates
-└── research.py            # General research workflow templates
+```mermaid
+flowchart LR
+    T[/infrastructure/llm/templates//]
+    T --> META[AGENTS.md · __init__.py]
+    T --> BASE[base.py<br/>Base template classes &amp; interfaces]
+    T --> HELP[helpers.py<br/>Template utility functions]
+    T --> MAN[manuscript.py<br/>Manuscript-specific templates]
+    T --> RES[research.py<br/>General research workflow templates]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class BASE,HELP,MAN,RES code
+    class META doc
 ```
 
 ## Key Components

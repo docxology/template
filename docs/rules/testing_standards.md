@@ -31,38 +31,47 @@ python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-un
 
 ### Directory Structure
 
-```text
-tests/
-├── __init__.py                      # Makes tests a package
-├── conftest.py                      # Shared fixtures
-├── infrastructure/                  # Infrastructure module tests
-│   ├── test_core/                  # Core functionality tests
-│   │   ├── __init__.py
-│   │   ├── conftest.py             # Module-specific fixtures
-│   │   ├── test_basic.py           # Basic functionality
-│   │   ├── test_edge_cases.py      # Edge cases and errors
-│   │   └── test_integration.py     # End-to-end workflows
-│   └── validation/                 # Example module
-│       ├── __init__.py
-│       └── test_*.py
-├── scientific/                      # Scientific code tests
-│   └── test_*.py
-└── integration/                     # End-to-end tests
-    └── test_*.py
+```mermaid
+flowchart TB
+    T[/tests//]
+    T --> META[__init__.py · conftest.py<br/>shared fixtures]
+    T --> INFRA[/infrastructure/<br/>Infrastructure module tests/]
+    T --> SCI[/scientific/<br/>Scientific code tests/]
+    T --> INTEG[/integration/<br/>End-to-end tests/]
+
+    INFRA --> CORE[/test_core/<br/>core functionality/]
+    INFRA --> VAL[/validation/<br/>example module/]
+    CORE --> CORE_F[__init__.py · conftest.py ·<br/>test_basic · test_edge_cases · test_integration]
+    VAL --> VAL_F[__init__.py · test_*.py]
+    SCI --> SCI_F[test_*.py]
+    INTEG --> INTEG_F[test_*.py]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class INFRA,SCI,INTEG,CORE,VAL pkg
+    class META,CORE_F,VAL_F,SCI_F,INTEG_F f
 ```
 
 ### Module Test Organization
 
 For each infrastructure module:
 
-```text
-tests/infra_tests/test_<module>/
-├── __init__.py
-├── conftest.py                  # Fixtures: sample data, temp files
-├── test_core.py                 # Core functionality
-├── test_cli.py                  # CLI interface (if applicable)
-├── test_errors.py               # Error conditions
-└── test_integration.py          # End-to-end workflows
+```mermaid
+flowchart LR
+    T[/tests/infra_tests/test_&lt;module&gt;//]
+    T --> INIT[__init__.py]
+    T --> CFG[conftest.py<br/>Fixtures · sample data · temp files]
+    T --> CORE[test_core.py<br/>Core functionality]
+    T --> CLI[test_cli.py<br/>CLI interface · if applicable]
+    T --> ERR[test_errors.py<br/>Error conditions]
+    T --> INTEG[test_integration.py<br/>End-to-end workflows]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class T d
+    class INIT,CFG,CORE,CLI,ERR,INTEG code
 ```
 
 ## Testing Principles

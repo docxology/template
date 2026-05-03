@@ -10,9 +10,9 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 
 ## Policy
 
-- **`projects/` is a rotating set** of workspaces. The only path **guaranteed** as the long-term control-positive layout is **`projects/code_project/`**. Everything else appears or disappears as maintainers promote or move projects.
+- **`projects/` is a rotating set** of workspaces. The only path **guaranteed** as the long-term control-positive layout is **`projects/template_code_project/`**. Everything else appears or disappears as maintainers promote or move projects.
 - **[active_projects.md](active_projects.md)** lists active `projects/` names from `discover_projects()` **at generation time**. Treat it as authoritative for that moment; do not duplicate that roster in RUN_GUIDE, PAI, security tables, or similar.
-- For walkthroughs, commands, and “see also” paths, use **`projects/code_project/`** as the control-positive exemplar unless the doc’s purpose is to compare layouts.
+- For walkthroughs, commands, and “see also” paths, use **`projects/template_code_project/`** as the control-positive exemplar unless the doc’s purpose is to compare layouts.
 - Describe other work as folder patterns (`projects/{name}/`, `projects_in_progress/`, `projects_archive/`) rather than enumerating sibling projects in prose as if permanent.
 
 ## Regeneration

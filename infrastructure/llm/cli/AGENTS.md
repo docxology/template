@@ -6,12 +6,19 @@
 
 ## Layout
 
-```text
-infrastructure/llm/cli/
-├── AGENTS.md
-├── README.md
-├── __init__.py
-└── main.py
+```mermaid
+flowchart LR
+    CLI[/infrastructure/llm/cli//]
+    CLI --> META[AGENTS.md · README.md]
+    CLI --> INIT[__init__.py]
+    CLI --> MAIN[main.py]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class CLI d
+    class INIT,MAIN code
+    class META doc
 ```
 
 ## Entry Point

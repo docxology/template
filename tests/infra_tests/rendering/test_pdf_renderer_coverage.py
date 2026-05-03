@@ -154,7 +154,7 @@ class TestBibliographyProcessing:
 
         # Use real execution - may succeed or fail depending on bibtex
         try:
-            result = process_bibliography(tex_file, tmp_path / "pdf", bib_file)
+            result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
             # Should return boolean
             assert isinstance(result, bool)
         except (RenderingError, OSError, subprocess.SubprocessError) as e:

@@ -100,15 +100,19 @@ csv_path = organizer.get_output_path("data.csv", output_dir, FileType.CSV)
 
 All executive reports are organized by file type:
 
-```
-output/executive_summary/
-├── png/              # Visualizations
-├── pdf/              # Charts and reports
-├── csv/              # Data exports
-├── html/             # Interactive dashboards
-├── json/             # Machine-readable reports
-├── md/               # Human-readable reports
-└── combined_pdfs/    # All project manuscripts
+```mermaid
+flowchart LR
+    EX[/output/executive_summary//]
+    EX --> PNG[/png/<br/>visualisations/]
+    EX --> PDF[/pdf/<br/>charts &amp; reports/]
+    EX --> CSV[/csv/<br/>data exports/]
+    EX --> HTML[/html/<br/>interactive dashboards/]
+    EX --> JSON[/json/<br/>machine-readable reports/]
+    EX --> MD[/md/<br/>human-readable reports/]
+    EX --> CB[/combined_pdfs/<br/>all project manuscripts/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    class EX,PNG,PDF,CSV,HTML,JSON,MD,CB d
 ```
 
 ### Reorganization
@@ -177,7 +181,7 @@ from infrastructure.reporting import generate_executive_summary, save_executive_
 from pathlib import Path
 
 repo_root = Path(".")
-project_names = ["code_project"]
+project_names = ["template_code_project"]
 
 # Generate cross-project summary
 summary = generate_executive_summary(repo_root, project_names)
@@ -334,19 +338,20 @@ overview_files = generate_all_manuscript_overviews(summary, output_dir, repo_roo
 
 Executive reports are saved to `output/executive_summary/`:
 
-```
-output/executive_summary/
-├── consolidated_report.json      # metrics & health scores
-├── consolidated_report.html       # Styled HTML with recommendations
-├── consolidated_report.md         # Human-readable summary
-├── dashboard.png                  # 9-chart dashboard
-├── dashboard.pdf                  # Vector graphics for printing
-├── dashboard.html                 # Interactive charts (Plotly)
-├── manuscript_overview_{project_name}.png    # Manuscript page grid (PNG)
-├── manuscript_overview_{project_name}.pdf    # Manuscript page grid (PDF)
-├── project_metrics.csv           # Detailed project data
-├── aggregate_metrics.csv         # Cross-project statistics
-└── health_scores.csv             # Health score breakdowns
+```mermaid
+flowchart TB
+    EX[/output/executive_summary//]
+    EX --> CR[consolidated_report<br/>.json · .html · .md]
+    EX --> DB[dashboard<br/>.png · .pdf · .html<br/>9-chart dashboard]
+    EX --> MO[manuscript_overview_&lt;project&gt;<br/>.png · .pdf<br/>page grid]
+    EX --> PM[project_metrics.csv<br/>detailed project data]
+    EX --> AM[aggregate_metrics.csv<br/>cross-project statistics]
+    EX --> HS[health_scores.csv<br/>health-score breakdowns]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class EX d
+    class CR,DB,MO,PM,AM,HS f
 ```
 
 ## See Also

@@ -3,6 +3,8 @@
 Tests visual dashboard generation in multiple formats (PNG, PDF, HTML).
 """
 
+from pathlib import Path
+
 import pytest
 
 from infrastructure.reporting._dashboard_matplotlib import (
@@ -275,6 +277,7 @@ class TestMatplotlibDashboard:
 class TestPlotlyDashboard:
     """Test plotly dashboard generation."""
 
+    @pytest.mark.timeout(30)
     def test_generate_plotly_dashboard(self, sample_summary, tmp_path):
         """Test generating plotly dashboard (interactive HTML)."""
         try:
@@ -308,9 +311,16 @@ class TestAllDashboards:
         # Just check that files were generated
         assert len(all_files) >= 2
 
-        # Verify all files exist
-        for file_path in all_files.values():
-            assert file_path.exists()
+        # Verify filesystem artefacts (skip structured keys like "_errors"; allow list values)
+        for key, file_path in all_files.items():
+            if key == "_errors":
+                continue
+            if isinstance(file_path, Path):
+                assert file_path.exists()
+            elif isinstance(file_path, list):
+                for p in file_path:
+                    assert isinstance(p, Path)
+                    assert p.exists()
 
     def test_generate_all_dashboards_empty_projects(self, tmp_path):
         """Test dashboard generation with no projects."""

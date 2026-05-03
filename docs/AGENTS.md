@@ -14,10 +14,10 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `usage/` | Content authoring, formatting, visualization patterns |
 | `operational/` | Build, config, logging, troubleshooting, reporting |
 | `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
-| `modules/` | Infrastructure module guides (14 documented areas; see [modules/modules-guide.md](modules/modules-guide.md)) |
+| `modules/` | Infrastructure module guides (16 documented areas; see [modules/modules-guide.md](modules/modules-guide.md)) |
 | `development/` | Contributing, testing, security, roadmap |
 | `best-practices/` | Best practices, version control, migration |
-| `prompts/` | AI prompt templates (9 copy-paste templates; see [prompts/AGENTS.md](prompts/AGENTS.md)) |
+| `prompts/` | AI prompt templates (see [prompts/AGENTS.md](prompts/AGENTS.md)) |
 | `audit/` | Audit reports and findings |
 | `security/` | Security documentation and policies |
 | `rules/` | Development standards and guidelines (formerly .cursorrules) |
@@ -26,7 +26,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 
 ## Key Conventions
 
-- **`projects/` rotates:** only [`projects/code_project/`](../projects/code_project/) is guaranteed as the stable control-positive exemplar; current names → [`_generated/active_projects.md`](_generated/active_projects.md).
+- **`projects/` rotates:** only [`projects/template_code_project/`](../projects/template_code_project/) is guaranteed as the stable control-positive exemplar; current names → [`_generated/active_projects.md`](_generated/active_projects.md).
 - Each sub-directory has a `README.md` (user-facing index) and `AGENTS.md` (technical guide)
 - `documentation-index.md` is the comprehensive flat index of all files
 - Cross-references use relative paths with descriptive link text
@@ -48,6 +48,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 Key discoveries from multi-project development are documented in:
 
 - **[guides/new-project-setup.md](guides/new-project-setup.md)** — Comprehensive setup checklist with all pitfalls
+- **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** — Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all three template exemplars; project-specific overlays live in `projects/template_*/manuscript/SYNTAX.md`
 - **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** — Pipeline-specific error patterns
 
 ### ⚠️ Critical Rule: Root Venv Must Include All Project Dependencies
@@ -62,7 +63,7 @@ If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/
 
 | Scope | Notes |
 | --- | --- |
-| [`projects/code_project/`](../projects/code_project/) | Stable exemplar; often uses a local `projects/code_project/.venv/`. |
+| [`projects/template_code_project/`](../projects/template_code_project/) | Stable exemplar; often uses a local `projects/template_code_project/.venv/`. |
 | Any other `projects/{name}/` | Listed in [_generated/active_projects.md](_generated/active_projects.md). If that project has **no** `.venv/`, every package in its `pyproject.toml` must also appear in the **root** `pyproject.toml`. |
 | Plotting | `matplotlib` must be in root `[project.dependencies]` (not only optional groups) when analysis needs it under the root interpreter. |
 

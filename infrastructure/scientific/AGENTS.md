@@ -10,14 +10,20 @@ The Scientific module provides utilities and best practices for developing scien
 
 The scientific module has been refactored into focused submodules for better organization:
 
-```
-infrastructure/scientific/
-├── __init__.py              # Public API exports
-├── stability.py             # Numerical stability checking
-├── benchmarking.py          # Performance benchmarking
-├── documentation.py         # Scientific documentation generation
-├── validation.py            # Implementation validation
-└── templates.py             # Module and workflow templates
+```mermaid
+flowchart TB
+    SCI[/infrastructure/scientific//]
+    SCI --> INIT[__init__.py<br/>Public API exports]
+    SCI --> STAB[stability.py<br/>Numerical stability checking]
+    SCI --> BEN[benchmarking.py<br/>Performance benchmarking]
+    SCI --> DOC[documentation.py<br/>Scientific documentation generation]
+    SCI --> VAL[validation.py<br/>Implementation validation]
+    SCI --> TPL[templates.py<br/>Module &amp; workflow templates]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class SCI d
+    class INIT,STAB,BEN,DOC,VAL,TPL f
 ```
 
 **stability.py** (~100 lines)

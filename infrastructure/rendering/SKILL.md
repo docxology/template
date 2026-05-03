@@ -12,22 +12,28 @@ Multi-format output generation for research manuscripts. Converts markdown sourc
 The primary entry point for all rendering operations:
 
 ```python
-from infrastructure.rendering import RenderManager, RenderingConfig, get_render_manager
+from pathlib import Path
+from infrastructure.rendering import RenderManager, RenderingConfig
 
-# Default configuration
-renderer = get_render_manager()
+# Default configuration (loaded from environment)
+renderer = RenderManager()
 
 # Custom configuration
-config = RenderingConfig(
-    output_format="pdf",
-    template="academic",
+config = RenderingConfig()  # configure attributes as needed
+renderer = RenderManager(
+    config=config,
+    manuscript_dir=Path("projects/my_project/manuscript"),
+    figures_dir=Path("projects/my_project/output/figures"),
 )
-renderer = RenderManager(config)
 
-# Render a manuscript
-renderer.render_pdf(manuscript_dir, output_dir)
-renderer.render_html(manuscript_dir, output_dir)
-renderer.render_all(manuscript_dir, output_dir)
+# Render a single source file (.md or .tex)
+renderer.render_pdf(source_file)
+renderer.render_web(source_file)        # standalone HTML
+renderer.render_slides(source_file)     # beamer (PDF) by default
+renderer.render_all(source_file)        # md → slides + web; tex → PDF
+
+# Render combined manuscript from multiple ordered source files
+renderer.render_combined_pdf(source_files, manuscript_dir, project_name="my_project")
 ```
 
 ## Rendering Configuration (`config.py`)
@@ -44,11 +50,12 @@ config = RenderingConfig()
 ```python
 from infrastructure.rendering import discover_manuscript_files, verify_figures_exist
 
-# Find all manuscript markdown files in order
+# Find all manuscript markdown (and .tex) files in canonical order
 files = discover_manuscript_files(manuscript_dir)
 
-# Verify referenced figures exist
-missing = verify_figures_exist(manuscript_dir, figures_dir)
+# Verify expected figures exist (returns dict with figures_dir_exists,
+# found_figures, missing_figures, total_expected)
+status = verify_figures_exist(project_root, manuscript_dir)
 ```
 
 ## PDF Rendering (`pdf_renderer.py`)
@@ -79,8 +86,8 @@ Direct import required (not in `__init__.py`):
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 renderer = SlidesRenderer(config)
-renderer.render(source_file, format="beamer")   # PDF slides
-renderer.render(source_file, format="revealjs")  # HTML slides
+renderer.render(source_file, output_format="beamer")    # PDF slides
+renderer.render(source_file, output_format="revealjs")  # HTML slides
 ```
 
 ## Web Rendering (`web_renderer.py`)
@@ -95,6 +102,14 @@ renderer.render(source_file)
 renderer.render_combined(source_files, manuscript_dir, project_name="my_project")
 ```
 
+## Poster Rendering (`poster_renderer.py`)
+
+```python
+from infrastructure.rendering.poster_renderer import render_poster
+
+render_poster(source_file, config)
+```
+
 ## LaTeX Utilities (`latex_utils.py`)
 
 ```python
@@ -104,9 +119,10 @@ from infrastructure.rendering.latex_utils import compile_latex
 
 ## LaTeX Package Validation (`latex_package_validator.py`)
 
-```python
-from infrastructure.rendering.latex_package_validator import LatexPackageValidator
-# Ensures required LaTeX packages are installed
+Module-level CLI entry point — run as a module to validate the host LaTeX install:
+
+```bash
+uv run python -m infrastructure.rendering.latex_package_validator
 ```
 
 **Troubleshooting:**
@@ -129,6 +145,5 @@ Only these are re-exported at package level:
 | --- | --- |
 | `RenderManager` | Class |
 | `RenderingConfig` | Class |
-| `get_render_manager` | Function |
 | `discover_manuscript_files` | Function |
 | `verify_figures_exist` | Function |

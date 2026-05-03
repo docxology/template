@@ -6,30 +6,25 @@ The `tests/infra_tests/rendering/` directory contains tests for the multi-format
 
 ## Directory Structure
 
-```
-tests/infra_tests/rendering/
-├── AGENTS.md                           # This technical documentation
-├── __init__.py                        # Test package initialization
-├── conftest.py                        # Test configuration and fixtures
-├── test_cli.py                        # CLI interface tests
-├── test_config.py                     # Configuration tests
-├── test_core.py                       # Core rendering functionality tests
-├── test_latex_package_validator.py    # LaTeX package validation tests
-├── test_latex_utils.py                # LaTeX utility tests
-├── test_manuscript_discovery.py       # Manuscript discovery tests
-├── test_pdf_renderer_additional.py    # Additional PDF renderer tests
-├── test_pdf_renderer_combined.py      # Combined PDF renderer tests
-├── test_pdf_renderer_coverage.py       # PDF renderer coverage tests
-├── test_pdf_renderer_fixes.py         # PDF renderer bug fix tests
-├── test_pdf_renderer_full.py          # Full PDF renderer tests
-├── test_poster_renderer.py            # Poster renderer tests
-├── test_render_all_cli.py             # Render all CLI tests
-├── test_renderers.py                  # General renderer tests
-├── test_rendering_cli_full.py         # Full rendering CLI tests
-├── test_rendering_cli.py              # Rendering CLI tests
-├── test_slides_renderer_comprehensive.py # slides renderer tests
-├── test_slides_renderer_coverage.py   # Slides renderer coverage tests
-├── test_web_renderer_coverage.py      # Web renderer coverage tests
+```mermaid
+flowchart TB
+    T[/tests/infra_tests/rendering//]
+    T --> META[AGENTS.md · __init__.py · conftest.py]
+    T --> CORE[Core<br/>test_core · test_config · test_renderers]
+    T --> PDF[PDF renderer<br/>test_pdf_renderer_additional / _combined ·<br/>_coverage / _fixes / _full]
+    T --> SLIDES[Slides renderer<br/>test_slides_renderer_comprehensive ·<br/>_coverage]
+    T --> WEB[Web renderer<br/>test_web_renderer_coverage]
+    T --> POSTER[Poster<br/>test_poster_renderer]
+    T --> LATEX[LaTeX<br/>test_latex_package_validator · test_latex_utils]
+    T --> MAN[Manuscript<br/>test_manuscript_discovery]
+    T --> CLI[CLI<br/>test_cli · test_render_all_cli ·<br/>test_rendering_cli · test_rendering_cli_full]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class CORE,PDF,SLIDES,WEB,POSTER,LATEX,MAN,CLI cat
+    class META doc
 ```
 
 ## Test Categories

@@ -6,14 +6,21 @@ The `infrastructure/llm/validation/` directory contains validation utilities for
 
 ## Directory Structure
 
-```text
-infrastructure/llm/validation/
-├── AGENTS.md               # This technical documentation
-├── __init__.py            # Package exports
-├── core.py                # Core validation framework and base classes
-├── format.py              # Format validation and compliance checking
-├── repetition.py          # Content repetition and redundancy detection
-└── structure.py           # Structural validation and organization checking
+```mermaid
+flowchart LR
+    V[/infrastructure/llm/validation//]
+    V --> META[AGENTS.md · __init__.py]
+    V --> CORE[core.py<br/>Core validation framework]
+    V --> FMT[format.py<br/>Format compliance checking]
+    V --> REP[repetition.py<br/>Repetition &amp; redundancy detection]
+    V --> STR[structure.py<br/>Structural validation]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class V d
+    class CORE,FMT,REP,STR code
+    class META doc
 ```
 
 ## Key Components

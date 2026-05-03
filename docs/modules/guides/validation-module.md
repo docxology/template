@@ -28,7 +28,7 @@
 from pathlib import Path
 from infrastructure.validation import validate_pdf_rendering, extract_text_from_pdf, scan_for_issues
 
-pdf_path = Path("output/code_project/pdf/code_project_combined.pdf")
+pdf_path = Path("output/template_code_project/pdf/code_project_combined.pdf")
 
 # Validate structural integrity of a rendered PDF
 results = validate_pdf_rendering(pdf_path)
@@ -50,7 +50,7 @@ from infrastructure.validation import (
 from infrastructure.validation.content.markdown_validator import collect_symbols
 
 repo_root = Path(".")
-manuscript_dir = repo_root / "projects" / "code_project" / "manuscript"
+manuscript_dir = repo_root / "projects" / "template_code_project" / "manuscript"
 
 # Validate all markdown files in a manuscript directory
 problems, exit_code = validate_markdown(manuscript_dir, repo_root)
@@ -74,16 +74,16 @@ from infrastructure.validation import (
     verify_academic_standards, generate_integrity_report,
 )
 
-output_dir = Path("output/code_project")
+output_dir = Path("output/template_code_project")
 
 # Full integrity check across all output artifacts
 report = verify_output_integrity(output_dir)
 
 # Targeted checks
 verify_file_integrity(output_dir / "pdf" / "code_project_combined.pdf")
-verify_cross_references(Path("projects/code_project/manuscript"))
+verify_cross_references(Path("projects/template_code_project/manuscript"))
 verify_data_consistency(output_dir / "data")
-verify_academic_standards(Path("projects/code_project/manuscript"))
+verify_academic_standards(Path("projects/template_code_project/manuscript"))
 
 # Generate a structured integrity report
 integrity_report = generate_integrity_report(output_dir)
@@ -96,8 +96,8 @@ from pathlib import Path
 from infrastructure.validation import validate_figure_registry
 
 success, issues = validate_figure_registry(
-    Path("projects/code_project/output/figures/figure_registry.json"),
-    Path("projects/code_project/manuscript"),
+    Path("projects/template_code_project/output/figures/figure_registry.json"),
+    Path("projects/template_code_project/manuscript"),
 )
 ```
 
@@ -118,7 +118,7 @@ from infrastructure.validation import (
     filter_false_positives, prioritize_issues, generate_issue_summary,
 )
 
-project_path = Path("projects/code_project")
+project_path = Path("projects/template_code_project")
 
 # Run all validation checks in a single pass
 audit_results = run_comprehensive_audit(project_path)
@@ -137,10 +137,10 @@ summary = generate_issue_summary(prioritized)
 from pathlib import Path
 from infrastructure.validation import validate_output_structure, validate_copied_outputs
 
-validate_output_structure(Path("output/code_project"))
+validate_output_structure(Path("output/template_code_project"))
 validate_copied_outputs(
-    source_dir=Path("projects/code_project/output"),
-    dest_dir=Path("output/code_project"),
+    source_dir=Path("projects/template_code_project/output"),
+    dest_dir=Path("output/template_code_project"),
 )
 ```
 

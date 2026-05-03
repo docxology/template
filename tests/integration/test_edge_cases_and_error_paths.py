@@ -6,7 +6,6 @@ infrastructure modules, ensuring graceful degradation and proper error propagati
 
 from pathlib import Path
 
-import pytest
 
 from infrastructure.scientific import check_numerical_stability
 from infrastructure.validation.integrity import checks as integrity
@@ -99,4 +98,4 @@ class TestEdgeCasesAndErrorPaths:
 
         projects = discover_projects(Path("."))
         names = {p.name for p in projects}
-        assert "code_project" in names, "code_project must always be discoverable"
+        assert "template_code_project" in names, "template_code_project must always be discoverable"

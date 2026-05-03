@@ -82,9 +82,9 @@ uv sync
 # Run the unified interactive menu and select Option 8 (Full Pipeline)
 ./run.sh
 
-# Open the result (example project code_project)
-open output/code_project/pdf/code_project_combined.pdf  # macOS
-xdg-open output/code_project/pdf/code_project_combined.pdf  # Linux
+# Open the result (example project template_code_project)
+open output/template_code_project/pdf/code_project_combined.pdf  # macOS
+xdg-open output/template_code_project/pdf/code_project_combined.pdf  # Linux
 ```
 
 **🎉 Success!** You should see a professional PDF document.
@@ -101,18 +101,24 @@ xdg-open output/code_project/pdf/code_project_combined.pdf  # Linux
 
 The template provides pre-structured manuscript files in the `manuscript/` directory:
 
-```
-projects/code_project/manuscript/
-├── preamble.md              # LaTeX styling (don't edit yet)
-├── 00_abstract.md           # Research overview
-├── 01_introduction.md       # Project introduction
-├── 02_methodology.md        # Methods and approach
-├── 03_results.md            # Results and findings
-├── 04_conclusion.md         # Summary and future work
-├── 05_experimental_setup.md # Experimental design
-├── 06_reproducibility.md    # Reproducibility details
-├── 07_scope_and_related_work.md # Scope and related work
-└── references.bib           # Bibliography
+```mermaid
+flowchart TB
+    M[/projects/template_code_project/manuscript//]
+    M --> PRE[preamble.md<br/>LaTeX styling]
+    M --> ABS[00_abstract.md<br/>Research overview]
+    M --> INTRO[01_introduction.md]
+    M --> METH[02_methodology.md]
+    M --> RES[03_results.md]
+    M --> CONC[04_conclusion.md]
+    M --> EXP[05_experimental_setup.md]
+    M --> REP[06_reproducibility.md]
+    M --> SCOPE[07_scope_and_related_work.md]
+    M --> BIB[references.bib<br/>Bibliography]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class M d
+    class PRE,ABS,INTRO,METH,RES,CONC,EXP,REP,SCOPE,BIB f
 ```
 
 ### Edit the Abstract
@@ -120,7 +126,7 @@ projects/code_project/manuscript/
 1. **Open the abstract file**
 
    ```bash
-   vim projects/code_project/manuscript/00_abstract.md
+   vim projects/template_code_project/manuscript/00_abstract.md
    # Or use your preferred text editor
    ```
 
@@ -149,7 +155,7 @@ projects/code_project/manuscript/
 1. **Open the introduction**
 
    ```bash
-   vim projects/code_project/manuscript/02_introduction.md
+   vim projects/template_code_project/manuscript/02_introduction.md
    ```
 
 2. **Add your content**:
@@ -190,7 +196,7 @@ projects/code_project/manuscript/
 2. **View the result**
 
    ```bash
-   open output/code_project/pdf/code_project_combined.pdf  # After copy outputs: output/{name}/pdf/
+   open output/template_code_project/pdf/code_project_combined.pdf  # After copy outputs: output/{name}/pdf/
    ```
 
 **What You Get**:
@@ -423,7 +429,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 1. **Open preamble**
 
    ```bash
-   vim projects/code_project/manuscript/preamble.md
+   vim projects/template_code_project/manuscript/preamble.md
    ```
 
 2. **Find color definitions** (around line 97-103):
@@ -451,14 +457,14 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    }
    ```
 
-**See [code_project/manuscript/preamble.md](../../projects/code_project/manuscript/preamble.md) for the LaTeX preamble configuration.**
+**See [template_code_project/manuscript/preamble.md](../../projects/template_code_project/manuscript/preamble.md) for the LaTeX preamble configuration.**
 
 ### Add Bibliography
 
 1. **Edit references.bib**
 
    ```bash
-   vim projects/code_project/manuscript/references.bib
+   vim projects/template_code_project/manuscript/references.bib
    ```
 
 2. **Add entries**:

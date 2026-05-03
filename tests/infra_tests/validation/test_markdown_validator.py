@@ -581,6 +581,50 @@ class TestCitationAudit:
         bib.write_text("@misc{known, title={X}}\n", encoding="utf-8")
         assert validate_citations([str(md)], tmp_path, bib_file=bib) == []
 
+    def test_sibling_bib_files_unioned_by_default(self, tmp_path):
+        # Two .bib files next to the markdown — split-citation projects
+        # (e.g. references.bib + references_deep.bib) must validate as a union.
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        md = manuscript / "test.md"
+        md.write_text("Curated [@smith2020]; deep [@deep2024].\n", encoding="utf-8")
+        (manuscript / "references.bib").write_text(
+            "@article{smith2020, title={Foo}}\n", encoding="utf-8"
+        )
+        (manuscript / "references_deep.bib").write_text(
+            "@misc{deep2024, title={Bar}}\n", encoding="utf-8"
+        )
+        assert validate_citations([str(md)], tmp_path) == []
+
+    def test_explicit_bib_list(self, tmp_path):
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        md = manuscript / "test.md"
+        md.write_text("[@a]\n[@b]\n", encoding="utf-8")
+        bib_a = tmp_path / "a.bib"
+        bib_a.write_text("@misc{a, title={A}}\n", encoding="utf-8")
+        bib_b = tmp_path / "b.bib"
+        bib_b.write_text("@misc{b, title={B}}\n", encoding="utf-8")
+        assert validate_citations([str(md)], tmp_path, bib_file=[bib_a, bib_b]) == []
+
+    def test_multibib_message_lists_all_filenames(self, tmp_path):
+        # When multiple bibs are loaded and a key is missing, the error message
+        # should list every filename so users know where to add the entry.
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        md = manuscript / "test.md"
+        md.write_text("[@missing_everywhere]\n", encoding="utf-8")
+        (manuscript / "references.bib").write_text(
+            "@article{smith2020, title={Foo}}\n", encoding="utf-8"
+        )
+        (manuscript / "references_deep.bib").write_text(
+            "@misc{deep2024, title={Bar}}\n", encoding="utf-8"
+        )
+        problems = validate_citations([str(md)], tmp_path)
+        assert len(problems) == 1
+        assert "references.bib" in problems[0].message
+        assert "references_deep.bib" in problems[0].message
+
 
 class TestNonRenderedFilesSkipped:
     """AGENTS.md / README.md / preamble.md never reach the renderer; checks skip them."""

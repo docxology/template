@@ -33,7 +33,7 @@ def compile_latex_manuscript(
     combined_md: Path,
     output_dir: Path,
     output_file: Path,
-    bib_file: Path,
+    bib_files: list[Path],
     bib_exists: bool,
     source_files: list[Path],
 ) -> Path:
@@ -49,8 +49,11 @@ def compile_latex_manuscript(
 
     logger.info(f"Rendering combined manuscript to PDF: {output_file.name}")
     logger.info(f"  Source files: {len(source_files)}")
-    if bib_exists:
-        logger.info(f"  Bibliography: {bib_file.name}")
+    if bib_exists and bib_files:
+        bib_desc = (
+            bib_files[0].name if len(bib_files) == 1 else ", ".join(p.name for p in bib_files)
+        )
+        logger.info(f"  Bibliography: {bib_desc}")
     logger.debug(f"  Output directory: {output_dir}")
     logger.debug(f"  Combined TeX file: {combined_tex.name}")
     logger.debug(f"  Combined MD file: {combined_md.name}")
@@ -97,7 +100,7 @@ def compile_latex_manuscript(
         if bib_exists:
             logger.info("  Bibliography processing...")
             try:
-                process_bibliography(combined_tex, output_dir, bib_file)
+                process_bibliography(combined_tex, output_dir, bib_files)
             except Exception as bib_error:  # noqa: BLE001
                 logger.warning(f"  Bibliography processing failed: {bib_error}")
                 logger.warning("  Continuing PDF generation without bibliography processing")

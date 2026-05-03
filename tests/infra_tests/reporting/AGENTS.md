@@ -6,21 +6,23 @@ The `tests/infra_tests/reporting/` directory contains tests for the pipeline rep
 
 ## Directory Structure
 
-```
-tests/infra_tests/reporting/
-├── AGENTS.md                           # This technical documentation
-├── __init__.py                        # Test package initialization
-├── conftest.py                        # Test configuration and fixtures
-├── test_cli.py                        # CLI interface tests
-├── test_config.py                     # Configuration tests
-├── test_core.py                       # Core reporting functionality tests
-├── test_error_aggregator.py           # Error aggregation tests
-├── test_html_templates.py             # HTML template tests
-├── test_pipeline_reporter.py          # Pipeline reporter tests
-├── test_reporting_cli_full.py         # Full reporting CLI tests
-├── test_reporting_cli.py              # Reporting CLI tests
-├── test_reporting_integration.py      # Integration tests
-└── test_reporting.py                  # General reporting tests
+```mermaid
+flowchart TB
+    T[/tests/infra_tests/reporting//]
+    T --> META[AGENTS.md · __init__.py · conftest.py]
+    T --> CORE[Core<br/>test_core · test_config · test_reporting]
+    T --> ERR[Errors<br/>test_error_aggregator]
+    T --> HTML[HTML<br/>test_html_templates]
+    T --> PIPE[Pipeline<br/>test_pipeline_reporter]
+    T --> CLI[CLI<br/>test_cli · test_reporting_cli ·<br/>test_reporting_cli_full]
+    T --> INTEG[Integration<br/>test_reporting_integration]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class CORE,ERR,HTML,PIPE,CLI,INTEG cat
+    class META doc
 ```
 
 ## Test Categories

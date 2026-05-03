@@ -8,16 +8,23 @@ Standards and patterns for integrating with the LLM infrastructure module (`infr
 
 ### Module Structure
 
-```
-infrastructure/llm/
-├── __init__.py           # Public API exports
-├── core/                 # LLMClient, configuration, and context
-├── templates/            # ResearchTemplate system
-├── validation/           # OutputValidator
-├── utils/ollama.py       # Model discovery and Ollama helpers
-├── cli/main.py           # Command-line interface
-├── AGENTS.md             # Detailed documentation
-└── README.md             # Quick reference
+```mermaid
+flowchart LR
+    LLM[/infrastructure/llm//]
+    LLM --> INIT[__init__.py<br/>Public API exports]
+    LLM --> CORE[/core/<br/>LLMClient · configuration · context/]
+    LLM --> TPL[/templates/<br/>ResearchTemplate system/]
+    LLM --> VAL[/validation/<br/>OutputValidator/]
+    LLM --> UT[/utils/ollama.py<br/>Model discovery &amp; Ollama helpers/]
+    LLM --> CLI[/cli/main.py<br/>Command-line interface/]
+    LLM --> DOCS[AGENTS.md · README.md · SKILL.md]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class LLM d
+    class INIT,CORE,TPL,VAL,UT,CLI code
+    class DOCS doc
 ```
 
 ### Key Classes

@@ -18,6 +18,7 @@ Each subpackage (and the package root) includes a **`SKILL.md`** with YAML front
 | [docker/SKILL.md](docker/SKILL.md) | `infrastructure-docker` |
 | [documentation/SKILL.md](documentation/SKILL.md) | `infrastructure-documentation` |
 | [llm/SKILL.md](llm/SKILL.md) | `infrastructure-llm` |
+| [orchestration/SKILL.md](orchestration/SKILL.md) | `infrastructure-orchestration` |
 | [project/SKILL.md](project/SKILL.md) | `infrastructure-project` |
 | [publishing/SKILL.md](publishing/SKILL.md) | `infrastructure-publishing` |
 | [rendering/SKILL.md](rendering/SKILL.md) | `infrastructure-rendering` |
@@ -359,14 +360,23 @@ pytest tests/infra_tests/core/ -v
 
 ### Module Structure
 
-```text
-infrastructure/new_module/
-├── __init__.py      # Public API exports
-├── core.py          # Main functionality
-├── utils.py         # Helper functions
-├── cli.py                   # Command-line interface (if needed)
-├── AGENTS.md        # Technical documentation
-└── README.md        # Quick reference
+```mermaid
+flowchart TB
+    NM[/infrastructure/new_module//]
+    NM --> INIT[__init__.py<br/>Public API exports]
+    NM --> CORE[core.py<br/>Main functionality]
+    NM --> UTILS[utils.py<br/>Helper functions]
+    NM --> CLI[cli.py<br/>Command-line interface · optional]
+    NM --> AG[AGENTS.md<br/>Technical documentation]
+    NM --> RD[README.md<br/>Quick reference]
+    NM --> SK[SKILL.md<br/>Agent-skill descriptor]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class NM d
+    class INIT,CORE,UTILS,CLI code
+    class AG,RD,SK doc
 ```
 
 ## Quality Standards

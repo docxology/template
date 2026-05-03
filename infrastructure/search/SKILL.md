@@ -1,0 +1,140 @@
+---
+name: infrastructure-search
+description: Discovery utilities for academic literature. Currently exposes the `literature` submodule — Paperclip-style multi-source search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI. Use when the user wants to find papers, build reading lists, populate references.bib from a query, or replay a prior search reproducibly. Designed to host additional discovery workflows without breaking the public API.
+---
+
+# Search Module
+
+Discovery utilities for academic literature, modelled after the
+agent-native abstractions of [Paperclip](https://paperclip.gxl.ai): every
+backend produces normalised `Paper` records that downstream consumers
+(citation export, manuscript synthesis, agent loops) can treat uniformly.
+
+## `literature` — Multi-source literature search
+
+```python
+from infrastructure.search.literature import (
+    Paper, SearchQuery, SearchResult, merge_papers,
+    SearchBackend, LocalBackend, CrossrefBackend, ArxivBackend, PaperclipBackend,
+    LiteratureClient, SearchCache,
+    HttpClient, UrllibHttpClient, HttpResponse, BackendError,
+)
+```
+
+### Search across arXiv + Crossref
+
+```python
+client = LiteratureClient([ArxivBackend(), CrossrefBackend(mailto="you@example.org")])
+result = client.search(SearchQuery(text="protein language model fitness", max_results=20))
+print(f"{len(result)} unique papers from {len(result.per_source_counts)} backends")
+for paper in result.papers[:5]:
+    print(f"  [{paper.score:.2f}] {paper.title} ({paper.year})  {paper.doi or paper.url}")
+```
+
+### Search a local JSON corpus (offline-friendly)
+
+```python
+backend = LocalBackend("data/curated_corpus.json")
+result = LiteratureClient([backend]).search(SearchQuery(text="convex"))
+```
+
+Corpus format — either a list of `Paper` dicts or `{"papers": [...]}`:
+
+```json
+[
+  {
+    "id": "doi:10.1126/science.1213847",
+    "title": "Reproducible research in computational science",
+    "authors": ["Roger D Peng"],
+    "year": 2011,
+    "doi": "10.1126/science.1213847",
+    "venue": "Science", "venue_type": "journal"
+  }
+]
+```
+
+### Search Paperclip (API key required)
+
+```python
+import os
+backend = PaperclipBackend(api_key=os.environ["PAPERCLIP_API_KEY"])
+result = LiteratureClient([backend]).search(
+    SearchQuery(text="GRPO hyperparameters", sources=["arxiv"], max_results=50)
+)
+```
+
+### Cache results for reproducibility
+
+```python
+cache = SearchCache("output/search_cache", ttl_seconds=3600 * 24)
+client = LiteratureClient([ArxivBackend(), CrossrefBackend()], cache=cache)
+
+# First call hits the network and writes search_<hash>.json.
+client.search(SearchQuery(text="adam optimizer"))
+# Re-running the identical query is a deterministic file read.
+client.search(SearchQuery(text="adam optimizer"))
+```
+
+### Merge / deduplicate results manually
+
+```python
+from infrastructure.search.literature import merge_papers
+unique = merge_papers(result_a.papers + result_b.papers)
+```
+
+Deduplication priority: DOI → arXiv id → normalised (title, year). Higher
+`score` wins; missing fields on the winner are filled from the loser
+("union of evidence").
+
+### CLI
+
+```bash
+# JSON to stdout
+uv run python -m infrastructure.search.literature.cli search \
+    "scaling laws" --source arxiv,crossref --max-results 10
+
+# Direct BibTeX to a file
+uv run python -m infrastructure.search.literature.cli to-bibtex \
+    "GRPO hyperparameters" \
+    --source arxiv \
+    --output output/grpo_refs.bib
+
+# Cached, offline-only over a local corpus
+uv run python -m infrastructure.search.literature.cli search \
+    "convex" --source local --corpus data/corpus.json \
+    --cache-dir output/cache
+```
+
+## End-to-End: search → BibTeX → PDF
+
+```python
+from infrastructure.search.literature import (
+    LiteratureClient, SearchQuery, ArxivBackend, CrossrefBackend
+)
+from infrastructure.reference.citation import paper_to_bibentry, write_bibfile
+from infrastructure.reference.citation.models import BibDatabase
+
+client = LiteratureClient([ArxivBackend(), CrossrefBackend()])
+result = client.search(SearchQuery(text="reproducible research", max_results=15))
+
+db = BibDatabase()
+for paper in result.papers:
+    db.add(paper_to_bibentry(paper))
+write_bibfile("projects/my_project/manuscript/references.bib", db)
+```
+
+## Reliability Properties
+
+* **Per-backend failure isolation**: a network outage in one backend records
+  an entry in `result.errors[name]` and leaves the rest of the search intact.
+* **Deterministic caching**: `SearchCache` keys on the canonical query
+  identity; cached files are pretty-printed JSON, version-control friendly.
+* **Year filters re-applied defensively** by the aggregator even when a
+  backend ignores them — protects downstream code.
+
+## Related Modules
+
+* [`infrastructure.reference.citation`](../reference/SKILL.md) — export side
+  of the literature workflow (BibTeX writer, parser, converter).
+* [`infrastructure.publishing`](../publishing/SKILL.md) — APA / MLA / DOI
+  utilities for the resulting publications.

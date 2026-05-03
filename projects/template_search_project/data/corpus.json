@@ -1,0 +1,91 @@
+{
+  "_comment": "Curated offline corpus shipped with template_search_project so the pipeline runs deterministically in CI with no network. To regenerate from a live search run, point an arxiv/crossref client at write_corpus(...) — see docs/quickstart.md.",
+  "papers": [
+    {
+      "id": "doi:10.1126/science.1213847",
+      "title": "Reproducible research in computational science",
+      "authors": ["Roger D Peng"],
+      "year": 2011,
+      "doi": "10.1126/science.1213847",
+      "url": "https://doi.org/10.1126/science.1213847",
+      "venue": "Science",
+      "venue_type": "journal",
+      "volume": "334",
+      "issue": "6060",
+      "pages": "1226-1227",
+      "publisher": "AAAS",
+      "abstract": "Computational science has led to exciting new developments, but the nature of the work has exposed limitations in our ability to evaluate published findings. Reproducibility has the potential to serve as a minimum standard for judging scientific claims when full independent replication of a study is not possible.",
+      "keywords": ["reproducibility", "computational science"],
+      "source": "curated"
+    },
+    {
+      "id": "arxiv:1412.6980",
+      "title": "Adam: A Method for Stochastic Optimization",
+      "authors": ["Kingma, Diederik P", "Ba, Jimmy"],
+      "year": 2014,
+      "url": "https://arxiv.org/abs/1412.6980",
+      "venue": "ICLR",
+      "venue_type": "conference",
+      "abstract": "We introduce Adam, an algorithm for first-order gradient-based optimization of stochastic objective functions, based on adaptive estimates of lower-order moments.",
+      "keywords": ["optimization", "deep learning"],
+      "source": "curated"
+    },
+    {
+      "id": "doi:10.1007/s10107-012-0629-5",
+      "title": "Gradient methods for minimizing composite functions",
+      "authors": ["Nesterov, Yurii"],
+      "year": 2013,
+      "doi": "10.1007/s10107-012-0629-5",
+      "venue": "Mathematical Programming",
+      "venue_type": "journal",
+      "volume": "140",
+      "issue": "1",
+      "pages": "125-161",
+      "publisher": "Springer",
+      "abstract": "In this paper we analyze several new methods for solving optimization problems with the objective function formed as a sum of two terms: one is smooth and given by a black-box oracle, the other is general but simple.",
+      "keywords": ["composite optimization", "convergence rates"],
+      "source": "curated"
+    },
+    {
+      "id": "doi:10.1017/CBO9780511804441",
+      "title": "Convex Optimization",
+      "authors": ["Boyd, Stephen", "Vandenberghe, Lieven"],
+      "year": 2004,
+      "doi": "10.1017/CBO9780511804441",
+      "venue": "Cambridge University Press",
+      "venue_type": "book",
+      "publisher": "Cambridge University Press",
+      "isbn": "978-0-521-83378-3",
+      "abstract": "Convex optimization problems arise frequently in many different fields. A comprehensive introduction to the subject, this book shows in detail how such problems can be solved numerically with great efficiency.",
+      "keywords": ["convex analysis", "optimization"],
+      "source": "curated"
+    },
+    {
+      "id": "doi:10.1007/978-0-387-40065-5",
+      "title": "Numerical Optimization",
+      "authors": ["Nocedal, Jorge", "Wright, Stephen"],
+      "year": 2006,
+      "doi": "10.1007/978-0-387-40065-5",
+      "venue": "Springer Science & Business Media",
+      "venue_type": "book",
+      "publisher": "Springer Science & Business Media",
+      "edition": "2nd",
+      "isbn": "978-0-387-30303-1",
+      "abstract": "Numerical Optimization presents a comprehensive and up-to-date description of the most effective methods in continuous optimization, responding to the growing interest in such problems in engineering and the sciences.",
+      "keywords": ["numerical optimization", "nonlinear programming"],
+      "source": "curated"
+    },
+    {
+      "id": "arxiv:2003.06070",
+      "title": "On the Convergence of Adam and Beyond",
+      "authors": ["Reddi, Sashank J", "Kale, Satyen", "Kumar, Sanjiv"],
+      "year": 2018,
+      "venue": "ICLR",
+      "venue_type": "conference",
+      "url": "https://arxiv.org/abs/1904.09237",
+      "abstract": "We provide a sufficient condition that guarantees the convergence of Adam and propose a new variant of Adam which improves convergence properties on problems with sparse gradients.",
+      "keywords": ["adam", "convergence", "stochastic optimization"],
+      "source": "curated"
+    }
+  ]
+}

@@ -77,6 +77,21 @@ for project_name in active_projects:
 
 
 # ============================================================================
+# Shared Path Fixtures
+# ============================================================================
+
+
+@pytest.fixture
+def repo_root() -> Path:
+    """Return the repository root (where pyproject.toml lives).
+
+    Centralized here so both ``tests/infra_tests/`` and ``tests/integration/``
+    inherit one definition. Subdir conftests no longer need to redefine it.
+    """
+    return Path(ROOT)
+
+
+# ============================================================================
 # Pytest Configuration and Markers
 # ============================================================================
 
@@ -196,7 +211,11 @@ def _env_truthy(name: str) -> bool:
 
 
 def _ollama_test_pull_timeout() -> float | None:
-    raw = os.environ.get("OLLAMA_TEST_PULL_TIMEOUT", "900").strip()
+    # Default 180s (3 min) — long enough for a small model on a warm cache,
+    # short enough that a missing/slow registry fails fast with a clear
+    # message pointing to manual `ollama pull <model>`. Override with
+    # OLLAMA_TEST_PULL_TIMEOUT (seconds, or "none"/"inf" to disable).
+    raw = os.environ.get("OLLAMA_TEST_PULL_TIMEOUT", "180").strip()
     if not raw or raw.lower() in ("none", "inf"):
         return None
     return float(raw)
@@ -280,9 +299,12 @@ def ensure_ollama_for_tests():
                 "❌ CRITICAL: ollama pull failed for test model.\n"
                 "=" * 80 + "\n"
                 f"Model: {pull_model}\n"
+                f"Timeout: {pull_timeout}s (override with OLLAMA_TEST_PULL_TIMEOUT)\n"
                 f"Error: {err}\n\n"
-                "Fix network/disk, or pre-install the model and set "
-                "OLLAMA_SKIP_TEST_MODEL_PULL=1.\n"
+                "Fastest fix — pull the model manually in another terminal:\n"
+                f"  ollama pull {pull_model}\n\n"
+                "Then re-run tests, or set OLLAMA_SKIP_TEST_MODEL_PULL=1 to\n"
+                "use whatever is already installed (see `ollama list`).\n"
                 "=" * 80
             )
         models = get_model_names()

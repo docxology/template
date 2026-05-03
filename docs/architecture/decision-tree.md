@@ -270,58 +270,50 @@ def plot_experimental_results(
 
 **Feature:** Add convergence analysis with custom stopping criterion
 
-```
-1. Analyze the feature
-   ├─ Generic part: "benchmarking and performance measurement" → infrastructure/scientific/benchmarking.py
-   ├─ Specific part: "our stopping criterion" → projects/{name}/src/analysis.py
-   └─ Decision: Split into two files
+```mermaid
+flowchart TB
+    S1[1 - Analyze the feature]
+    S1 --> S1A[Generic part:<br/>benchmarking · performance measurement<br/>→ infrastructure/scientific/benchmarking.py]
+    S1 --> S1B[Specific part:<br/>our stopping criterion<br/>→ projects/&lt;name&gt;/src/analysis.py]
+    S1 --> S1C[Decision: split into two files]
 
-2. Create infrastructure first
-   └─ infrastructure/scientific/benchmarking.py
-      ├─ Generic timing/measurement utilities
-      ├─ Reusable benchmark/report helpers
-      └─ 100% tested
+    S1 --> S2[2 - Create infrastructure first]
+    S2 --> S2A[infrastructure/scientific/benchmarking.py<br/>Generic timing/measurement ·<br/>Reusable benchmark/report helpers ·<br/>100% tested]
 
-3. Use infrastructure in project code
-   └─ projects/{name}/src/analysis.py
-      ├─ Import from infrastructure
-      ├─ Add domain-specific logic
-      └─ 100% tested
+    S2 --> S3[3 - Use infrastructure in project code]
+    S3 --> S3A[projects/&lt;name&gt;/src/analysis.py<br/>Import from infrastructure ·<br/>Add domain-specific logic ·<br/>100% tested]
 
-4. Use project code in scripts
-   └─ projects/{name}/scripts/analyze_results.py
-      ├─ Import from project.src
-      ├─ Orchestrate execution
-      └─ Generate outputs
+    S3 --> S4[4 - Use project code in scripts]
+    S4 --> S4A[projects/&lt;name&gt;/scripts/analyze_results.py<br/>Import from project.src ·<br/>Orchestrate execution ·<br/>Generate outputs]
 
-5. Document everywhere
-   ├─ infrastructure/scientific/AGENTS.md
-   ├─ projects/{name}/src/AGENTS.md
-   └─ projects/{name}/scripts/AGENTS.md
+    S4 --> S5[5 - Document everywhere]
+    S5 --> S5A[infrastructure/scientific/AGENTS.md ·<br/>projects/&lt;name&gt;/src/AGENTS.md ·<br/>projects/&lt;name&gt;/scripts/AGENTS.md]
+
+    classDef step fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef detail fill:#0f766e,stroke:#0f172a,color:#fff
+    class S1,S2,S3,S4,S5 step
+    class S1A,S1B,S1C,S2A,S3A,S4A,S5A detail
 ```
 
 ### Adding a New Data Processing Step
 
-```
-Question: Where does this belong?
+```mermaid
+flowchart TB
+    Q[Question: Where does this belong?]
+    Q --> A1{For our specific<br/>problem?}
+    A1 -- yes --> P1[Project layer<br/>projects/&lt;name&gt;/src/data_processing.py<br/><br/>def process_our_specific_data&#40;raw_data&#41;:<br/>&nbsp;&nbsp;&nbsp;&nbsp;pass]
+    A1 -- no --> A2{Any research<br/>could use this?}
+    A2 -- yes --> I1[Infrastructure layer<br/>infrastructure/scientific/data_processing.py<br/><br/>def normalize_data&#40;raw_data&#41;:<br/>&nbsp;&nbsp;&nbsp;&nbsp;pass]
+    A2 -- both --> SPLIT{Generic + specific}
+    SPLIT --> I2[Infrastructure: Generic version<br/>def normalize_data&#40;raw_data, method=&quot;zscore&quot;&#41;]
+    SPLIT --> P2[Project: Specific usage<br/>def process_our_data&#40;raw_data&#41;:<br/>&nbsp;&nbsp;&nbsp;&nbsp;return normalize_data&#40;..., method=&quot;our_method&quot;&#41;]
 
-If answer is "for our specific problem":
-└─ Project layer (projects/{name}/src/data_processing.py)
-   def process_our_specific_data(raw_data):
-       pass
-
-If answer is "any research could use this":
-└─ Infrastructure layer (infrastructure/scientific/data_processing.py)
-   def normalize_data(raw_data):
-       pass
-
-If both generic + specific:
-├─ Infrastructure: Generic version
-│  def normalize_data(raw_data, method="zscore"):
-│      pass
-└─ Scientific: Specific usage
-   def process_our_data(raw_data):
-       return normalize_data(raw_data, method="our_method")
+    classDef q fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef p fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef i fill:#0f766e,stroke:#0f172a,color:#fff
+    class Q,A1,A2,SPLIT q
+    class P1,P2 p
+    class I1,I2 i
 ```
 
 ---
@@ -500,22 +492,34 @@ def test_script_execution():
 
 **For Infrastructure:**
 
-```
-Add to infrastructure/
-├─ If it helps build documents
-├─ If it validates outputs
-├─ If any project would use it
-└─ If it doesn't know about our research
+```mermaid
+flowchart TB
+    INFRA[Add to infrastructure/]
+    INFRA --> I1[If it helps build documents]
+    INFRA --> I2[If it validates outputs]
+    INFRA --> I3[If any project would use it]
+    INFRA --> I4[If it does not know about our research]
+
+    classDef root fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef cond fill:#0f766e,stroke:#0f172a,color:#fff
+    class INFRA root
+    class I1,I2,I3,I4 cond
 ```
 
 **For Project:**
 
-```
-Add to projects/{name}/src/
-├─ If it implements our algorithms
-├─ If it analyzes our data
-├─ If it visualizes our results
-└─ If it's specific to our research
+```mermaid
+flowchart TB
+    PROJ[Add to projects/&lt;name&gt;/src/]
+    PROJ --> P1[If it implements our algorithms]
+    PROJ --> P2[If it analyzes our data]
+    PROJ --> P3[If it visualizes our results]
+    PROJ --> P4[If it is specific to our research]
+
+    classDef root fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef cond fill:#0f766e,stroke:#0f172a,color:#fff
+    class PROJ root
+    class P1,P2,P3,P4 cond
 ```
 
 ---

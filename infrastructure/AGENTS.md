@@ -9,107 +9,51 @@ The Infrastructure layer provides reusable, modular tools for building, validati
 The infrastructure has been reorganized into focused modules grouping related functionalities.
 Each subpackage has a `SKILL.md` file (YAML frontmatter) for agent skill discovery in Cursor, Claude Code, and similar tools—see also the canonical list in `infrastructure/SKILL.md` and the machine-readable manifest `.cursor/skill_manifest.json` (maintained by `infrastructure/skills/`).
 
-```text
-infrastructure/
-├── SKILL.md        # Top-level infrastructure skill
-├── core/           # Foundation utilities
-│   ├── exceptions.py       # Exception hierarchy with context
-│   ├── logging/utils.py    # Unified Python logging
-│   ├── config/loader.py           # Configuration management
-│   ├── pipeline/pipeline.py         # Pipeline execution system
-│   ├── pipeline/multi_project.py    # Multi-project orchestration
-│   ├── runtime/checkpoint.py       # Pipeline state persistence
-│   ├── runtime/retry.py            # Exponential backoff retries
-│   ├── runtime/function_profiler.py # Function-level performance profiling
-│   ├── security.py         # Security & rate limiting
-│   ├── runtime/environment.py      # Environment setup & validation
-│   ├── files/operations.py  # File I/O utilities
-│   ├── telemetry/          # Unified pipeline telemetry
-│   │   ├── config.py            # TelemetryConfig dataclass (YAML-configurable)
-│   │   ├── models.py            # StageTelemetry, PipelineTelemetry dataclasses
-│   │   ├── collector.py         # TelemetryCollector lifecycle (start/end stage, finalize)
-│   │   └── SKILL.md, AGENTS.md, README.md
-│   └── SKILL.md, AGENTS.md, README.md
-├── config/         # Repository configuration templates
-│   ├── .env.template        # Example environment variables
-│   ├── secure_config.yaml   # Default steganography / secure settings
-│   └── SKILL.md, AGENTS.md
-├── docker/         # Containerization
-│   ├── Dockerfile
-│   ├── docker-compose.yml
-│   └── SKILL.md, AGENTS.md
-├── skills/         # SKILL.md discovery; .cursor/skill_manifest.json generation
-│   ├── __init__.py
-│   ├── discovery.py
-│   ├── cli.py
-│   ├── __main__.py
-│   └── SKILL.md, AGENTS.md, README.md
-├── validation/     # Quality & validation tools
-│   ├── content/pdf_validator.py      # PDF rendering validation
-│   ├── content/markdown_validator.py # Markdown structure validation
-│   ├── integrity/checks.py            # File integrity & cross-references
-│   ├── repo/audit_orchestrator.py # Comprehensive audit coordination
-│   ├── repo/scanner.py      # Repository-wide scanning
-│   ├── cli/main.py          # CLI for validation tools
-│   └── SKILL.md, AGENTS.md, README.md
-├── documentation/  # Documentation & figure management
-│   ├── figure_manager.py       # Automatic figure numbering
-│   ├── image_manager.py        # Image file management
-│   ├── markdown_integration.py # Figure/reference insertion
-│   ├── glossary_gen.py         # API documentation generation
-│   └── SKILL.md, AGENTS.md, README.md
-├── project/        # Multi-project management
-│   ├── discovery.py         # Project discovery & metadata
-│   └── SKILL.md, AGENTS.md, README.md
-├── scientific/     # Scientific development
-│   ├── benchmarking.py      # Performance benchmarking
-│   ├── stability.py         # Numerical stability checks
-│   ├── validation.py        # Scientific best practices
-│   ├── templates.py         # Module/workflow scaffolding
-│   └── SKILL.md, AGENTS.md, README.md
-├── llm/            # LLM integration
-│   ├── core/                # Client, config, context
-│   ├── templates/           # Research prompt templates
-│   ├── validation/          # Output validation
-│   ├── review/              # Manuscript review generation
-│   ├── prompts/             # Prompt fragment system
-│   └── SKILL.md, AGENTS.md, README.md
-├── rendering/      # Multi-format rendering
-│   ├── core.py              # Render manager
-│   ├── pdf_renderer.py      # PDF rendering engine
-│   ├── slides_renderer.py   # Beamer/Reveal.js slides
-│   ├── web_renderer.py      # HTML generation
-│   ├── latex_utils.py       # LaTeX utilities
-│   ├── cli.py               # CLI for rendering
-│   └── SKILL.md, AGENTS.md, README.md
-├── publishing/     # Academic publishing & dissemination
-│   ├── api.py               # Platform API clients (Zenodo)
-│   ├── citations.py         # Citation generation
-│   ├── metadata.py          # Metadata extraction/normalization
-│   ├── package.py           # Submission/release packaging
-│   ├── platforms.py         # Platform routing and helpers
-│   ├── cli.py               # CLI entry point
-│   ├── publish_cli.py       # Publishing-oriented CLI wrapper
-│   └── SKILL.md, AGENTS.md, README.md
-├── reporting/      # Pipeline reporting & error aggregation
-│   ├── report_generator.py  # Pipeline report generation
-│   ├── error_aggregator.py   # Error collection & categorization
-│   ├── executive_reporter.py # Cross-project summaries
-│   ├── _dashboard_matplotlib.py # Dashboard orchestrator + re-exports
-│   ├── _dashboard_charts.py     # Base chart generators
-│   ├── _dashboard_specialized.py # Health, pipeline, codebase charts
-│   ├── _dashboard_csv.py        # CSV data exports
-│   └── SKILL.md, AGENTS.md, README.md
-└── steganography/  # Secure PDF post-processing
-    ├── core.py              # Steganography orchestration
-    ├── config.py            # Steganography configuration
-    ├── overlays.py          # Diagonal text overlays
-    ├── barcodes.py          # QR and barcode generation
-    ├── metadata.py          # PDF metadata and XMP injection
-    ├── hashing.py           # SHA-256 integrity manifests
-    ├── encryption.py        # AES-256 PDF encryption
-    └── SKILL.md, AGENTS.md, README.md
+```mermaid
+flowchart TB
+    INFRA[/infrastructure//<br/>SKILL.md · top-level infrastructure skill]
+
+    INFRA --> CORE[/core/<br/>Foundation utilities/]
+    INFRA --> CFG[/config/<br/>Repository configuration templates/]
+    INFRA --> DOCK[/docker/<br/>Containerization/]
+    INFRA --> SK[/skills/<br/>SKILL.md discovery · skill_manifest.json/]
+    INFRA --> VAL[/validation/<br/>Quality &amp; validation tools/]
+    INFRA --> DOC[/documentation/<br/>Figure &amp; markdown management/]
+    INFRA --> PROJ[/project/<br/>Multi-project management/]
+    INFRA --> SCI[/scientific/<br/>Scientific development/]
+    INFRA --> LLM[/llm/<br/>LLM integration/]
+    INFRA --> REND[/rendering/<br/>Multi-format rendering/]
+    INFRA --> PUB[/publishing/<br/>Academic publishing/]
+    INFRA --> REP[/reporting/<br/>Pipeline reports · error aggregation/]
+    INFRA --> STEG[/steganography/<br/>Secure PDF post-processing/]
+    INFRA --> SEARCH[/search/<br/>Multi-source literature search/]
+    INFRA --> REF[/reference/<br/>BibTeX read · write · convert/]
+    INFRA --> ORCH[/orchestration/<br/>run.sh-equivalent CLI · menu · PipelineRunner<br/>stage logs · secure_run wrapper/]
+    INFRA --> PRS[/prose/<br/>Readability metrics · outline · editorial flags · CLI/]
+
+    CORE --> CORE_F[exceptions · logging · config/loader ·<br/>pipeline · runtime/checkpoint · runtime/retry ·<br/>runtime/function_profiler · security ·<br/>runtime/environment · files/operations ·<br/>telemetry/]
+    VAL --> VAL_F[content/pdf_validator · content/markdown_validator ·<br/>integrity/checks · repo/audit_orchestrator ·<br/>repo/scanner · cli/main]
+    DOC --> DOC_F[figure_manager · image_manager ·<br/>markdown_integration · glossary_gen]
+    SCI --> SCI_F[benchmarking · stability · validation · templates]
+    LLM --> LLM_F[core · templates · validation · review · prompts]
+    REND --> REND_F[core · pdf_renderer · slides_renderer ·<br/>web_renderer · latex_utils · cli]
+    PUB --> PUB_F[api · citations · metadata · package ·<br/>platforms · cli · publish_cli]
+    REP --> REP_F[report_generator · error_aggregator · executive_reporter ·<br/>_dashboard_matplotlib · _dashboard_charts ·<br/>_dashboard_specialized · _dashboard_csv]
+    STEG --> STEG_F[core · config · overlays · barcodes ·<br/>metadata · hashing · encryption]
+    SEARCH --> SEARCH_F[literature/ · models · backends ·<br/>client · cache · fulltext · cli]
+    REF --> REF_F[citation/ · models · escape ·<br/>bibtex_writer · bibtex_parser · converter · cli]
+    ORCH --> ORCH_F[cli · discovery · menu · pipeline_runner<br/>stage_logger · secure_run]
+    PRS --> PRS_F[analysis/metrics · structure · quality<br/>markdown · report · cli]
+
+    classDef hub fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef files fill:#0f766e,stroke:#0f172a,color:#fff
+    class INFRA hub
+    class CORE,CFG,DOCK,SK,VAL,DOC,PROJ,SCI,LLM,REND,PUB,REP,STEG,SEARCH,REF,ORCH,PRS pkg
+    class CORE_F,VAL_F,DOC_F,SCI_F,LLM_F,REND_F,PUB_F,REP_F,STEG_F,SEARCH_F,REF_F,ORCH_F,PRS_F files
 ```
+
+> Each Layer-1 Python package ships `AGENTS.md` and `README.md`; most also ship `SKILL.md` (YAML frontmatter for editors). Exceptions are folders like `logrotate.d/` (config only — see [`logrotate.d/AGENTS.md`](logrotate.d/AGENTS.md)). The manifest aggregator lives in [`infrastructure/skills/`](skills/).
 
 ## Function Signatures
 
@@ -582,7 +526,7 @@ saved_files = save_pipeline_report(report, Path("output/reports"))
 # Generate multi-project executive report
 exec_report = generate_multi_project_report(
     repo_root=Path("."),
-    project_names=["code_project"],
+    project_names=["template_code_project"],
     output_dir=Path("output/executive_summary")
 )
 

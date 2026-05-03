@@ -6,24 +6,26 @@ The `infrastructure/llm/prompts/` directory contains the prompt engineering syst
 
 ## Directory Structure
 
-```text
-infrastructure/llm/prompts/
-├── AGENTS.md               # This technical documentation
-├── __init__.py            # Package exports
-├── composer.py            # Prompt composition and assembly logic
-├── loader.py              # Prompt loading and validation
-├── compositions/          # Pre-built prompt compositions
-│   └── retry_prompts.json # Error recovery prompts
-├── fragments/             # Reusable prompt components
-│   ├── content_requirements.json    # Content quality requirements
-│   ├── format_requirements.json     # Output format specifications
-│   ├── section_structures.json      # Section organization templates
-│   ├── system_prompts.json         # System-level instructions
-│   ├── token_budget_awareness.json  # Token usage optimization
-│   └── validation_hints.json       # Input validation guidance
-└── templates/             # prompt templates
-    ├── manuscript_reviews.json     # Review generation templates
-    └── paper_summarization.json    # Summarization templates
+```mermaid
+flowchart TB
+    PR[/infrastructure/llm/prompts//]
+    PR --> META[AGENTS.md · __init__.py]
+    PR --> COMP[composer.py<br/>Prompt composition &amp; assembly]
+    PR --> LOAD[loader.py<br/>Prompt loading &amp; validation]
+    PR --> CMP_DIR[/compositions/<br/>Pre-built prompt compositions/]
+    PR --> FRAG[/fragments/<br/>Reusable prompt components/]
+    PR --> TPL[/templates/<br/>Prompt templates/]
+
+    CMP_DIR --> CMP_F[retry_prompts.json<br/>error recovery]
+    FRAG --> FRAG_F[content_requirements.json · format_requirements.json ·<br/>section_structures.json · system_prompts.json ·<br/>token_budget_awareness.json · validation_hints.json]
+    TPL --> TPL_F[manuscript_reviews.json · paper_summarization.json]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef code fill:#0f766e,stroke:#0f172a,color:#fff
+    class PR d
+    class CMP_DIR,FRAG,TPL pkg
+    class META,COMP,LOAD,CMP_F,FRAG_F,TPL_F code
 ```
 
 ## Key Components

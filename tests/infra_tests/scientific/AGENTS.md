@@ -6,17 +6,23 @@ The `tests/infra_tests/scientific/` directory contains tests for the scientific 
 
 ## Directory Structure
 
-```
-tests/infra_tests/scientific/
-├── AGENTS.md                           # This technical documentation
-├── __init__.py                        # Test package initialization
-├── conftest.py                        # Test configuration and fixtures
-├── test_benchmarking.py               # Performance benchmarking tests
-├── test_documentation.py              # API documentation tests
-├── test_scientific_dev.py             # Scientific development tests
-├── test_stability.py                  # Numerical stability tests
-├── test_templates.py                  # Research template tests
-├── test_validation.py                 # Scientific validation tests
+```mermaid
+flowchart LR
+    T[/tests/infra_tests/scientific//]
+    T --> META[AGENTS.md · __init__.py · conftest.py]
+    T --> BEN[test_benchmarking.py<br/>Performance benchmarking]
+    T --> DOC[test_documentation.py<br/>API documentation]
+    T --> DEV[test_scientific_dev.py<br/>Scientific development]
+    T --> STAB[test_stability.py<br/>Numerical stability]
+    T --> TPL[test_templates.py<br/>Research templates]
+    T --> VAL[test_validation.py<br/>Scientific validation]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef test fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class BEN,DOC,DEV,STAB,TPL,VAL test
+    class META doc
 ```
 
 ## Test Categories

@@ -50,16 +50,40 @@
       "cursor_at": "infrastructure/llm/SKILL.md"
     },
     {
+      "name": "infrastructure-orchestration",
+      "description": "Python CLI and menu orchestration for pipeline runs — project slug validation, interactive picker, PipelineRunner wrapping PipelineExecutor, per-stage logs, secure pipeline wrapper. Use when extending run.sh behavior, fixing menu/CLI routing, or testing discovery helpers.",
+      "path": "infrastructure/orchestration/SKILL.md",
+      "cursor_at": "infrastructure/orchestration/SKILL.md"
+    },
+    {
       "name": "infrastructure-project",
       "description": "Skill for the project management infrastructure module providing multi-project discovery, structure validation, and metadata extraction. Use when discovering active projects, validating project directory structure, or extracting project configuration metadata.",
       "path": "infrastructure/project/SKILL.md",
       "cursor_at": "infrastructure/project/SKILL.md"
     },
     {
+      "name": "infrastructure-prose",
+      "description": "Prose analysis utilities for research manuscripts and prose-focused projects. Provides readability metrics (Flesch, Flesch-Kincaid, Gunning Fog), heading-outline structural analysis, editorial quality flags (passive voice, hedge words, citation density, long sentences), aggregate ManuscriptReport across a manuscript directory, and a CLI (metrics/outline/quality/report). Use when analyzing manuscripts for readability, building editorial dashboards, validating heading structure, extracting citation keys from prose, or wiring prose-quality gates into the pipeline.",
+      "path": "infrastructure/prose/SKILL.md",
+      "cursor_at": "infrastructure/prose/SKILL.md"
+    },
+    {
       "name": "infrastructure-publishing",
       "description": "Skill for the publishing infrastructure module providing academic publishing workflows including citation generation (BibTeX, APA, MLA), DOI management, Zenodo publication, arXiv submission preparation, GitHub releases, and publication readiness validation. Use when publishing research, generating citations, minting DOIs, or preparing submissions.",
       "path": "infrastructure/publishing/SKILL.md",
       "cursor_at": "infrastructure/publishing/SKILL.md"
+    },
+    {
+      "name": "infrastructure-reference",
+      "description": "Bibliographic-reference utilities for research projects. Read, write, and convert BibTeX entries that match the syntax/semantics of projects/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib during PDF render -- see infrastructure/rendering/_pdf_combined_renderer.py). Currently exposes the `citation` submodule (BibTeX I/O + Paper→BibEntry conversion); designed to host additional reference workflows (e.g. CSL-JSON export, ORCID lookups) without breaking the public API.",
+      "path": "infrastructure/reference/SKILL.md",
+      "cursor_at": "infrastructure/reference/SKILL.md"
+    },
+    {
+      "name": "infrastructure-reference-citation",
+      "description": "BibTeX read/write/convert that matches the syntax/semantics of projects/template_code_project/manuscript/references.bib (consumed by Pandoc with --natbib -- see infrastructure/rendering/_pdf_combined_renderer.py). Provides BibEntry/BibDatabase models, parse_bibfile/render_database functions, paper_to_bibentry conversion from literature search results, generate_citation_key in the project's house style (firstauthorlastname+year+firsttitleword), LaTeX-special-character escape helpers, and a CLI (validate/format/convert). Use when reading or writing .bib files, exporting search results to BibTeX, or generating citation keys.",
+      "path": "infrastructure/reference/citation/SKILL.md",
+      "cursor_at": "infrastructure/reference/citation/SKILL.md"
     },
     {
       "name": "infrastructure-rendering",
@@ -78,6 +102,18 @@
       "description": "Skill for the scientific infrastructure module providing numerical stability checks, performance benchmarking, scientific documentation generation, implementation validation, and module/workflow templates. Use when benchmarking functions, checking numerical stability, validating scientific implementations, or creating scientific module scaffolds.",
       "path": "infrastructure/scientific/SKILL.md",
       "cursor_at": "infrastructure/scientific/SKILL.md"
+    },
+    {
+      "name": "infrastructure-search",
+      "description": "Discovery utilities for academic literature. Currently exposes the `literature` submodule — Paperclip-style multi-source search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI. Use when the user wants to find papers, build reading lists, populate references.bib from a query, or replay a prior search reproducibly. Designed to host additional discovery workflows without breaking the public API.",
+      "path": "infrastructure/search/SKILL.md",
+      "cursor_at": "infrastructure/search/SKILL.md"
+    },
+    {
+      "name": "infrastructure-search-literature",
+      "description": "Paperclip-style multi-source literature search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API. Provides Paper/SearchQuery/SearchResult data models, a LiteratureClient aggregator with per-backend failure isolation, DOI/arXiv-aware deduplication via merge_papers, deterministic JSON caching via SearchCache, an HttpClient protocol for test injection, and a CLI (search/to-bibtex). Use when finding papers by topic, building reading lists, populating references.bib from a query, or replaying a prior search reproducibly.",
+      "path": "infrastructure/search/literature/SKILL.md",
+      "cursor_at": "infrastructure/search/literature/SKILL.md"
     },
     {
       "name": "infrastructure-skills",

@@ -472,8 +472,10 @@ parse_choice_sequence() {
         return 0
     fi
 
-    # Otherwise split on commas
-    IFS=',' read -ra parts <<< "$input"
+    # Otherwise split on commas.
+    # Use a local IFS so we never leak a comma IFS to callers.
+    local IFS=','
+    read -ra parts <<< "$input"
     for part in "${parts[@]}"; do
         [[ -z "$part" ]] && continue
         if [[ "$part" =~ ^[0-9]+$ ]]; then
@@ -564,6 +566,100 @@ ensure_secure_run_environment() {
         return 1
     }
     log_success "Environment ready (steganography: qrcode, python-barcode)"
+}
+
+# ============================================================================
+# Project Discovery (shared by run.sh / secure_run.sh)
+# ============================================================================
+
+# discover_active_projects [--qualified]
+# Populates the caller-provided array name with the list of active projects.
+# Usage:
+#   local -a PROJECTS=()
+#   discover_active_projects PROJECTS              # bare names (.name)
+#   discover_active_projects PROJECTS --qualified  # qualified_name (e.g. program/proj)
+# Returns 0 on success, non-zero on Python discovery failure.
+discover_active_projects() {
+    local _outvar="$1"
+    local _mode="${2:-bare}"
+    local _attr="name"
+    if [[ "$_mode" == "--qualified" ]]; then
+        _attr="qualified_name"
+    fi
+
+    local _py
+    _py="$(get_python_cmd)"
+
+    # Use a per-process temp file so concurrent callers do not collide.
+    local _tmp
+    _tmp="$(mktemp -t bash_utils_projects.XXXXXX)" || return 1
+
+    if ! "$_py" -c "
+import sys
+sys.path.insert(0, '$REPO_ROOT')
+from infrastructure.project.discovery import discover_projects
+from pathlib import Path
+
+try:
+    for p in discover_projects(Path('$REPO_ROOT')):
+        print(getattr(p, '$_attr'))
+except Exception as e:
+    print(f'ERROR: {e}', file=sys.stderr)
+    sys.exit(1)
+" > "$_tmp" 2>/dev/null; then
+        rm -f "$_tmp"
+        return 1
+    fi
+
+    # Reset the named array, then populate from file.
+    eval "$_outvar=()"
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        [[ "$line" == ERROR* ]] && continue
+        eval "$_outvar+=(\"\$line\")"
+    done < "$_tmp"
+
+    rm -f "$_tmp"
+    return 0
+}
+
+# is_safe_project_slug "<name>"
+# Returns 0 if the string looks like a safe simple project slug:
+#   - non-empty
+#   - no path separators ("/")
+#   - no path traversal (".." anywhere)
+#   - no leading "-" (avoids being mistaken for a flag)
+#   - only [A-Za-z0-9._-]
+# Returns 1 otherwise.
+# Use this for user-supplied --project arguments that should NEVER include a
+# program/name namespace (i.e. cannot include any "/").
+is_safe_project_slug() {
+    local s="${1:-}"
+    [[ -z "$s" ]] && return 1
+    [[ "$s" == *"/"* ]] && return 1
+    [[ "$s" == *".."* ]] && return 1
+    [[ "${s:0:1}" == "-" ]] && return 1
+    [[ "$s" =~ ^[A-Za-z0-9._-]+$ ]] || return 1
+    return 0
+}
+
+# is_safe_qualified_project_name "<qualified_name>"
+# Like is_safe_project_slug but also accepts a single "program/name" namespace
+# (matches ProjectInfo.qualified_name). Still rejects:
+#   - empty strings
+#   - leading "/" (absolute paths)
+#   - ".." anywhere
+#   - leading "-"
+#   - more than one "/" segment
+#   - characters outside [A-Za-z0-9._-/]
+is_safe_qualified_project_name() {
+    local s="${1:-}"
+    [[ -z "$s" ]] && return 1
+    [[ "${s:0:1}" == "/" ]] && return 1
+    [[ "${s:0:1}" == "-" ]] && return 1
+    [[ "$s" == *".."* ]] && return 1
+    [[ "$s" =~ ^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)?$ ]] || return 1
+    return 0
 }
 
 # Get Python command with environment awareness

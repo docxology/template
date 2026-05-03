@@ -17,6 +17,11 @@ Floor: **60%** (currently ~83%). Coverage is measured over `infrastructure/` onl
 |-----------|----------------------|-------------------|
 | `core/` | `infrastructure/core/` — logging, files, runtime, pipeline, telemetry, security | ~66 |
 | `documentation/` | `infrastructure/documentation/` — figures, API docs | ~7 |
+| `orchestration/` | `infrastructure/orchestration/` — CLI, menu, PipelineRunner, logs, secure wrapper | ~7 |
+| `project/` | `infrastructure/project/` — discovery, layout validation | ~2 |
+| `prose/` | `infrastructure/prose/` — readability, outline, editorial quality, reports | ~7 |
+| `reference/` | `infrastructure/reference/` — BibTeX parse/write, models, CLI | ~8 |
+| `search/` | `infrastructure/search/` — literature client, backends, cache, CLI | ~8 |
 | `llm/` | `infrastructure/llm/` — Ollama client, prompts, streaming, reviews, translations | ~66 |
 | `publishing/` | `infrastructure/publishing/` — metadata, citations, Zenodo, arXiv | ~21 |
 | `rendering/` | `infrastructure/rendering/` — PDF, LaTeX, web, slides | ~49 |
@@ -26,7 +31,7 @@ Floor: **60%** (currently ~83%). Coverage is measured over `infrastructure/` onl
 | `steganography/` | `infrastructure/steganography/` — watermarking, encryption | ~14 |
 | `validation/` | `infrastructure/validation/` — docs scanning, links, repo scanning, integrity | ~56 |
 
-Top-level files outside subfolders include `test_docs_discovery_consistency.py`, `test_documentation_index_invariants.py` (documentation invariants), and `test_cogant_coverage_table_check.py` (parses the COGANT staging `check_coverage_table.py` helper for manuscript Table 9 vs `coverage report`).
+Top-level files outside subfolders include `test_docs_discovery_consistency.py`, `test_documentation_index_invariants.py` (documentation invariants), `test_cogant_coverage_table_check.py` (parses the COGANT staging `check_coverage_table.py` helper for manuscript Table 9 vs `coverage report`), and `test_cogant_manuscript_crossrefs_audit.py` (loads `audit_manuscript_crossrefs.py` against the staging manuscript tree).
 
 ## File Naming Convention
 

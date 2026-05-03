@@ -84,7 +84,7 @@ Replace `https://github.com/docxology/template.git` with your own `git` remote (
 
 ### Active `projects/` names
 
-The pipeline discovers workspaces under `projects/` that have `src/` and `tests/`. **Current names:** [_generated/active_projects.md](_generated/active_projects.md). **Examples in this guide** use `--project code_project` as the stable exemplar.
+The pipeline discovers workspaces under `projects/` that have `src/` and `tests/`. **Current names:** [_generated/active_projects.md](_generated/active_projects.md). **Examples in this guide** use `--project template_code_project` as the stable exemplar.
 
 ---
 
@@ -148,7 +148,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Specific project
 
 ```bash
-./run.sh --project code_project --pipeline
+./run.sh --project template_code_project --pipeline
 ```
 
 ### Resume from checkpoint after failure
@@ -159,15 +159,15 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 ### Individual stages
 
-Use `--project code_project` (or your active project name; see [_generated/active_projects.md](_generated/active_projects.md)):
+Use `--project template_code_project` (or your active project name; see [_generated/active_projects.md](_generated/active_projects.md)):
 
 ```bash
-uv run scripts/00_setup_environment.py --project code_project
-uv run scripts/01_run_tests.py --project code_project
-uv run scripts/02_run_analysis.py --project code_project
-uv run scripts/03_render_pdf.py --project code_project
-uv run scripts/04_validate_output.py --project code_project
-uv run scripts/05_copy_outputs.py --project code_project
+uv run scripts/00_setup_environment.py --project template_code_project
+uv run scripts/01_run_tests.py --project template_code_project
+uv run scripts/02_run_analysis.py --project template_code_project
+uv run scripts/03_render_pdf.py --project template_code_project
+uv run scripts/04_validate_output.py --project template_code_project
+uv run scripts/05_copy_outputs.py --project template_code_project
 ```
 
 ---

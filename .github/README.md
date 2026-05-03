@@ -65,9 +65,9 @@ uv sync
 ./run.sh
 
 # 4. Or run non-interactively against the exemplar project
-./run.sh --pipeline --project code_project
+./run.sh --pipeline --project template_code_project
 
-# Outputs → output/code_project/
+# Outputs → output/template_code_project/
 ```
 
 > **Don't have `uv`?** → `curl -Ls https://astral.sh/uv/install.sh | sh`
@@ -88,7 +88,7 @@ graph TD
     Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 13 subpackages under infrastructure/ · 14 named areas in docs (see docs/modules/modules-guide.md)"
+    subgraph "Layer 1 · 17 Python packages under infrastructure/ (+ logrotate.d templates) · 16 docs areas (see docs/modules/modules-guide.md)"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -98,7 +98,7 @@ graph TD
     end
 
     subgraph "Layer 2 · Active Project Workspaces"
-        Projects --> CP["code_project/ ← Master numerical exemplar"]
+        Projects --> CP["template_code_project/ ← Master numerical exemplar"]
         Projects --> CCD["cognitive_case_diagrams/ ← Case diagrams manuscript"]
         Projects --> TP["template/ ← Meta-documentation"]
         Projects --> Dots["More under projects/ ← Auto-discovered"]
@@ -111,7 +111,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
-| `infrastructure/` | Permanent | 13 top-level subpackages under `infrastructure/` (+ hub `SKILL.md`); module count as **14 named areas** in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) |
+| `infrastructure/` | Permanent | **17** top-level Python packages under `infrastructure/` (plus `logrotate.d/` configs, not a package); **16** documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
@@ -126,20 +126,20 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ## 📁 Active Projects
 
-### `code_project` — Master Numerical Exemplar
+### `template_code_project` — Master Numerical Exemplar
 
-> **`projects/code_project/`** is the canonical example of a complete, working project. Use it as the reference when building your own.
+> **`projects/template_code_project/`** is the canonical example of a complete, working project. Use it as the reference when building your own.
 
 | Feature | Implementation |
 | --- | --- |
-| Gradient descent optimization | `projects/code_project/src/optimizer.py` |
+| Gradient descent optimization | `projects/template_code_project/src/optimizer.py` |
 | Scientific benchmarking | uses `infrastructure.scientific` |
 | 45 tests, 100% coverage | `tests/` — Zero-Mock, real operations only |
 | 6 publication-quality figures | generated in `scripts/`, registered via `FigureManager` |
 | Full pipeline output | PDF rendered, validated, steganographically signed |
 | Complete documentation | `AGENTS.md` + `README.md` throughout |
 
-→ **Details**: [projects/code_project/AGENTS.md](../projects/code_project/AGENTS.md) · [projects/code_project/README.md](../projects/code_project/README.md)
+→ **Details**: [projects/template_code_project/AGENTS.md](../projects/template_code_project/AGENTS.md) · [projects/template_code_project/README.md](../projects/template_code_project/README.md)
 
 ### `template` — Meta-Documentation Project
 
@@ -173,14 +173,20 @@ Retired or sample projects are kept under [`projects_archive/`](../projects_arch
 
 ### Project Directory Layout
 
-```text
-projects/{name}/
-├── src/{name}/            # All domain logic (algorithms, analysis)
-├── tests/                 # Real tests — no mocks (≥ 90% coverage)
-├── scripts/               # Thin orchestrators calling src/
-├── manuscript/            # Markdown chapters + config.yaml
-├── output/                # Pipeline artifacts (generated)
-└── AGENTS.md              # AI-agent context for this project
+```mermaid
+flowchart LR
+    P[/projects/&lt;name&gt;//]
+    P --> SRC[/src/&lt;name&gt;/<br/>All domain logic · algorithms · analysis/]
+    P --> T[/tests/<br/>Real tests · no mocks · ≥ 90% coverage/]
+    P --> SC[/scripts/<br/>Thin orchestrators calling src//]
+    P --> M[/manuscript/<br/>Markdown chapters · config.yaml/]
+    P --> O[/output/<br/>Pipeline artifacts · generated/]
+    P --> AG[AGENTS.md<br/>AI-agent context for this project]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class P,SRC,T,SC,M,O d
+    class AG f
 ```
 
 ### System Architecture Overview
@@ -351,10 +357,20 @@ Every directory at every level contains **two documentation files**:
 
 Under `infrastructure/`, each subpackage also has **`SKILL.md`** (YAML frontmatter). The aggregated list for editors is [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (regenerate with `uv run python -m infrastructure.skills write`). Cursor project rules live under [`.cursor/rules/`](../.cursor/rules/).
 
-```
-CLAUDE.md (root)          ← Global constraints: Zero-Mock, Thin Orchestrator, naming
-  └── AGENTS.md (per dir) ← Local API surfaces, file inventories, integration patterns
-        └── README.md     ← Human navigation and quick-start
+```mermaid
+flowchart TB
+    CL[CLAUDE.md · root<br/>Global constraints: Zero-Mock ·<br/>Thin Orchestrator · naming]
+    AG[AGENTS.md · per directory<br/>Local API surfaces · file inventories ·<br/>integration patterns]
+    RD[README.md<br/>Human navigation · quick-start]
+
+    CL --> AG --> RD
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef tech fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef hum fill:#0f766e,stroke:#0f172a,color:#fff
+    class CL root
+    class AG tech
+    class RD hum
 ```
 
 See [docs/rules/](../docs/rules/) for standards and [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) for the infrastructure skill hub.
@@ -383,13 +399,13 @@ Full specification: [docs/security/steganography.md](../docs/security/steganogra
 | **Zero-Mock policy** | No `MagicMock`, `mocker.patch`, or `unittest.mock` anywhere |
 | **Real operations** | Tests use real filesystem, subprocess, and HTTP calls |
 | **Infrastructure coverage** | ≥ 60% (currently achieving 83%+) |
-| **Project coverage** | ≥ 90% (`code_project` achieves 100% · `template` achieves 94.4%) |
+| **Project coverage** | ≥ 90% (`template_code_project` achieves 100% · `template` achieves 94.4%) |
 | **Optional service skipping** | `@pytest.mark.requires_ollama` for graceful degradation |
 
 ```bash
 # Mirror CI locally
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/code_project/tests/ --cov-fail-under=90 -m "not requires_ollama"
+uv run pytest projects/template_code_project/tests/ --cov-fail-under=90 -m "not requires_ollama"
 python scripts/verify_no_mocks.py
 ```
 
@@ -683,7 +699,7 @@ uv run ruff format --check infrastructure/ projects/*/src/
 
 # Tests (skip Ollama-requiring tests)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/code_project/tests/ --cov-fail-under=90 -m "not requires_ollama"
+uv run pytest projects/template_code_project/tests/ --cov-fail-under=90 -m "not requires_ollama"
 
 # Security
 uv run pip-audit

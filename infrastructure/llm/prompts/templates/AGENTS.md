@@ -6,11 +6,19 @@ The `infrastructure/llm/prompts/templates/` directory contains, pre-built prompt
 
 ## Directory Structure
 
-```text
-infrastructure/llm/prompts/templates/
-├── AGENTS.md                       # This technical documentation
-├── manuscript_reviews.json         # manuscript review template
-└── paper_summarization.json        # Research paper summarization template
+```mermaid
+flowchart LR
+    T[/infrastructure/llm/prompts/templates//]
+    T --> AG[AGENTS.md]
+    T --> MR[manuscript_reviews.json<br/>Manuscript review template]
+    T --> PS[paper_summarization.json<br/>Research paper summarization]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef tpl fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class MR,PS tpl
+    class AG doc
 ```
 
 ## Template Architecture

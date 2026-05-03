@@ -72,7 +72,7 @@ class TestGenerateMarkdownReport:
 
     def test_with_projects(self):
         projects = {
-            "code_project": {
+            "template_code_project": {
                 "exit_code": 0,
                 "passed": 400,
                 "failed": 0,
@@ -105,9 +105,9 @@ class TestGenerateMarkdownReport:
 
     def test_metadata_active_projects(self):
         data = _make_report_data()
-        data["metadata"]["active_projects"] = ["code_project", "template"]
+        data["metadata"]["active_projects"] = ["template_code_project", "template"]
         md = generate_markdown_report(data)
-        assert "code_project" in md
+        assert "template_code_project" in md
         assert "template" in md
 
     def test_files_generated_listed(self):
@@ -136,7 +136,7 @@ class TestFormatConsoleSummary:
 
     def test_with_projects(self):
         projects = {
-            "code_project": {
+            "template_code_project": {
                 "exit_code": 0,
                 "passed": 400,
                 "failed": 0,
@@ -151,7 +151,7 @@ class TestFormatConsoleSummary:
         }
         data = _make_report_data(projects=projects)
         output = _format_console_summary(data)
-        assert "code_project" in output
+        assert "template_code_project" in output
 
     def test_long_project_name_truncated(self):
         projects = {

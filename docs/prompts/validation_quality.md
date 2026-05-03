@@ -12,6 +12,8 @@ This prompt leverages the validation infrastructure to ensure quality and compli
 - [`../../infrastructure/validation/`](../../infrastructure/validation/) modules - Validation implementation
 - [`../rules/testing_standards.md`](../rules/testing_standards.md) - Quality standards
 
+The **Python sketch** inside the template below is illustrative: prefer the **actual** CLI entrypoints in [`../../CLAUDE.md`](../../CLAUDE.md) (`infrastructure.validation.cli`, prerender, markdown, pdf, etc.) and any **project-local** `scripts/validate_*.py`.
+
 ## Prompt Template
 
 ```

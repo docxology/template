@@ -347,7 +347,7 @@ _PATH_SKIP_KEYWORDS: frozenset[str] = frozenset(
         "ml_build.sh",
         "scripts/│",
         "scripts/tests",
-        "projects/code_project/:",
+        "projects/template_code_project/:",
         "scripts/03_render_pdf.py;",
         "data_quality",
         "infrastructure/[module_name",

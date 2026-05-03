@@ -409,7 +409,7 @@ uv run pytest projects/my_project/tests/ --cov=projects/my_project/src
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # Verify outputs (exemplar layout)
-ls -la output/code_project/pdf/
+ls -la output/template_code_project/pdf/
 ```
 
 ## Common Migration Challenges

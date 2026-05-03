@@ -150,103 +150,29 @@ For modules requiring external services (LLM, Literature, Publishing):
 
 Tests are organized to mirror `infrastructure/` module structure. Note: Multiple test files with suffixes like `_coverage`, `_full`, `_comprehensive` exist to achieve test coverage across different scenarios and edge cases. These files are intentionally split rather than consolidated to ensure thorough validation of complex functionality:
 
-```text
-tests/
-├── conftest.py                          # Root test configuration and fixtures
-│   ├── core/                            # Core utilities tests
-│   │   ├── test_checkpoint.py           # Checkpoint/resume functionality
-│   │   ├── test_config_cli_coverage.py  # Config CLI coverage
-│   │   ├── test_config_loader.py        # Configuration loading
-│   │   ├── test_credentials.py          # Credential management
-│   │   ├── test_environment.py          # Environment handling
-│   │   ├── test_exceptions.py           # Exception handling
-│   │   ├── test_file_operations.py      # File operations
-│   │   ├── test_logging_*.py            # Logging system tests
-│   │   ├── test_performance.py          # Performance monitoring
-│   │   ├── test_progress.py             # Progress tracking
-│   │   ├── test_project_discovery.py    # Project discovery and validation
-│   │   ├── test_retry.py                # Retry mechanisms
-│   │   └── test_script_discovery.py     # Script discovery
-│   ├── documentation/                   # Documentation tools tests
-│   │   ├── test_figure_manager.py       # Figure management and registration
-│   │   ├── test_generate_glossary_cli.py # Glossary generation CLI
-│   │   ├── test_glossary_gen.py         # API documentation generation (189 lines)
-│   │   ├── test_image_manager.py        # Image handling in markdown
-│   │   └── test_markdown_integration.py # Markdown processing integration
-│   ├── llm/                             # LLM integration tests
-│   │   ├── conftest.py                  # LLM test configuration
-│   │   ├── test_cli.py                  # CLI interface
-│   │   ├── test_config.py               # Configuration management
-│   │   ├── test_context.py              # Conversation context
-│   │   ├── test_context_engineering.py  # Context engineering
-│   │   ├── test_core.py                 # Core LLM functionality
-│   │   ├── test_llm_core_*.py           # Additional core tests (coverage/full)
-│   │   ├── test_llm_review.py           # LLM manuscript review
-│   │   ├── test_logging.py              # LLM logging
-│   │   ├── test_ollama_utils.py         # Ollama client utilities
-│   │   ├── test_prompts_*.py            # Prompt management
-│   │   ├── test_response_saving.py      # Response saving
-│   │   ├── test_review_generators.py    # Review generation
-│   │   ├── test_streaming.py            # Streaming responses
-│   │   ├── test_templates.py            # Research prompt templates
-│   │   └── test_validation.py           # Input validation
-│   ├── publishing/                      # Publishing tools tests
-│   │   ├── test_api.py                  # Platform API clients
-│   │   ├── test_cli.py                  # CLI interface
-│   │   ├── test_publish_cli.py          # Publishing CLI
-│   │   ├── test_publishing.py           # Publishing metadata (427 lines)
-│   │   └── test_publishing_*             # Additional publishing tests (coverage/full/edge_cases)
-│   ├── rendering/                       # Rendering pipeline tests
-│   │   ├── conftest.py                  # Rendering test configuration
-│   │   ├── test_cli.py                  # CLI interface
-│   │   ├── test_config.py               # Rendering configuration
-│   │   ├── test_core.py                 # Core rendering functionality
-│   │   ├── test_latex_*.py              # LaTeX utilities and validation
-│   │   ├── test_manuscript_*.py         # Manuscript handling
-│   │   ├── test_pdf_renderer_*.py       # PDF rendering (core/coverage/full/additional)
-│   │   ├── test_poster_renderer.py      # Scientific poster rendering
-│   │   ├── test_render_*.py             # Render CLI and utilities
-│   │   ├── test_renderers.py            # General rendering tests
-│   │   ├── test_rendering_cli*.py       # CLI functionality (core/full)
-│   │   ├── test_slides_renderer_*.py    # Presentation slides (core/coverage)
-│   │   └── test_web_renderer_*.py       # Web/HTML rendering
-│   ├── reporting/                       # Reporting and dashboard tests
-│   │   ├── test_dashboard_generator.py  # Dashboard system (_dashboard_matplotlib + extracted modules)
-│   │   ├── test_error_aggregator.py     # Error aggregation
-│   │   ├── test_executive_reporter.py   # Executive reporting
-│   │   ├── test_html_templates.py       # HTML template rendering
-│   │   ├── test_manuscript_overview.py  # Manuscript overview generation
-│   │   ├── test_output_reporter.py      # Output reporting
-│   │   ├── test_pipeline_reporter.py    # Pipeline reporting
-│   │   └── test_test_reporter.py        # Test result reporting
-│   ├── scientific/                      # Scientific tools tests
-│   │   ├── test_scientific_dev.py       # Scientific development utilities
-│   │   └── test_scientific_dev_edge_cases.py # Edge case handling
-│   └── validation/                      # Validation system tests
-│       ├── test_audit_orchestrator.py   # Audit orchestration
-│       ├── test_check_links*.py         # Link validation (core/coverage/full/edge_cases)
-│       ├── test_cli.py                  # CLI interface
-│       ├── test_doc_scanner*.py         # Document scanning (core/coverage/full/phases)
-│       ├── test_figure_validator.py     # Figure validation
-│       ├── test_integrity*.py           # Integrity verification (core/edge_cases)
-│       ├── test_issue_categorizer.py    # Issue categorization
-│       ├── test_markdown_validator.py   # Markdown validation
-│       ├── test_output_validator.py     # Output validation
-│       ├── test_pdf_validator.py        # PDF validation (328 lines)
-│       ├── test_repo_scanner*.py        # Repository scanning (core/coverage/full/comprehensive/additional)
-│       ├── test_validate_markdown_cli*.py # Markdown CLI (core/coverage/full/comprehensive)
-│       ├── test_validate_pdf_cli*.py    # PDF CLI (core/coverage/full/comprehensive)
-│       └── test_validation_cli.py       # General validation CLI
-└── integration/                         # Integration tests
-    ├── conftest.py                      # Integration test configuration
-    ├── test_executive_report_generation.py  # Executive report generation
-    ├── test_bash_utils.sh               # Bash utility function tests
-    ├── test_edge_cases_and_error_paths.py # Edge cases and error handling
-    ├── test_figure_equation_citation.py # Figure/equation/citation handling
-    ├── test_logging.py                  # Bash logging integration tests
-    ├── test_module_interoperability.py  # Cross-module interaction validation
-    ├── test_output_copying.py           # Output file handling and copying
-    └── test_run_sh.py                   # Script orchestration tests
+```mermaid
+flowchart TB
+    T[/tests//<br/>conftest.py · root configuration]
+    T --> INFRA[/infra_tests/<br/>mirrors infrastructure/ layout/]
+    T --> INTEG[/integration/<br/>cross-module &amp; CLI tests/]
+
+    INFRA --> CORE_T[/core/<br/>checkpoint · config · credentials ·<br/>environment · exceptions · file_operations ·<br/>logging_* · performance · progress ·<br/>project_discovery · retry · script_discovery/]
+    INFRA --> DOC_T[/documentation/<br/>figure_manager · glossary_gen ·<br/>image_manager · markdown_integration/]
+    INFRA --> LLM_T[/llm/<br/>cli · config · context · core · llm_core_* ·<br/>llm_review · logging · ollama_utils ·<br/>prompts_* · response_saving · review_generators ·<br/>streaming · templates · validation/]
+    INFRA --> PUB_T[/publishing/<br/>api · cli · publish_cli ·<br/>publishing · publishing_*/]
+    INFRA --> REND_T[/rendering/<br/>cli · config · core · latex_* ·<br/>manuscript_* · pdf_renderer_* ·<br/>poster_renderer · render_* · renderers ·<br/>rendering_cli* · slides_renderer_* · web_renderer_*/]
+    INFRA --> REP_T[/reporting/<br/>dashboard_generator · error_aggregator ·<br/>executive_reporter · html_templates ·<br/>manuscript_overview · output_reporter ·<br/>pipeline_reporter · test_reporter/]
+    INFRA --> SCI_T[/scientific/<br/>scientific_dev · scientific_dev_edge_cases/]
+    INFRA --> VAL_T[/validation/<br/>audit_orchestrator · check_links* · cli ·<br/>doc_scanner* · figure_validator · integrity* ·<br/>issue_categorizer · markdown_validator ·<br/>output_validator · pdf_validator · repo_scanner* ·<br/>validate_markdown_cli* · validate_pdf_cli* · validation_cli/]
+
+    INTEG --> INT_FILES[conftest · executive_report_generation ·<br/>bash_utils.sh · edge_cases_and_error_paths ·<br/>figure_equation_citation · logging ·<br/>module_interoperability · output_copying · run_sh]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef sub fill:#0f766e,stroke:#0f172a,color:#fff
+    class T root
+    class INFRA,INTEG pkg
+    class CORE_T,DOC_T,LLM_T,PUB_T,REND_T,REP_T,SCI_T,VAL_T,INT_FILES sub
 ```
 
 ## conftest.py
@@ -301,7 +227,7 @@ This allows tests to import directly:
 
 ```python
 from infrastructure.core.config.loader import load_config  # Infrastructure imports
-from projects.code_project.src.optimizer import gradient_descent  # Project imports
+from projects.template_code_project.src.optimizer import gradient_descent  # Project imports
 ```
 
 ## Test Categories
@@ -336,7 +262,7 @@ Test project-specific code in `projects/{name}/tests/`:
 
 - Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
 - Each project has independent test suite with 90%+ coverage requirement
-- code_project: 34 tests, 100% coverage
+- template_code_project: 34 tests, 100% coverage
 
 ### Integration Tests
 
@@ -353,14 +279,14 @@ Test cross-module interactions in `tests/integration/`:
 
 ```bash
 # Using pytest directly (both infrastructure and project)
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=term-missing --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/template_code_project/src --cov-report=term-missing --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/template_code_project/src --cov-report=html
 
 # Verify coverage requirements
 pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-fail-under=90
 ```
 
 ### Specific Tests
@@ -396,7 +322,7 @@ pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html --cov-
 
 ### Coverage Snapshot (latest)
 
-- code_project: **100%** (exceeds 90% target!)
+- template_code_project: **100%** (exceeds 90% target!)
 - Infrastructure: **83.33%** (exceeds 60% target by 39%!)
 - Total tests: **~6060+** collected from `tests/` and `tests/integration/` (`uv run pytest --collect-only`); add project suites under `projects/*/tests/` separately
 
@@ -509,7 +435,7 @@ def test_integration(client):
 ### Current Coverage Status
 
 **Project Modules** (`projects/{name}/src/`):
-- **code_project**: **100%** (Target: 90%+) ✅ Exceeds requirement!
+- **template_code_project**: **100%** (Target: 90%+) ✅ Exceeds requirement!
 - test coverage ensures research code reliability
 
 **Infrastructure Modules** (`infrastructure/`): **83.33%** (Target: 60%+)
@@ -523,7 +449,7 @@ def test_integration(client):
 ```toml
 [tool.coverage.run]
 branch = true
-source = ["infrastructure", "projects/code_project/src"]
+source = ["infrastructure", "projects/template_code_project/src"]
 
 [tool.coverage.report]
 fail_under = 70  # Global fallback; individual runs use 60% (infra) and 90% (project)
@@ -727,7 +653,7 @@ See **[docs/development/testing/testing-with-credentials.md](../docs/development
 
 - [`conftest.py`](conftest.py) - Test configuration and fixtures
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure module documentation
-- [`../projects/code_project/AGENTS.md`](../projects/code_project/AGENTS.md) - code_project project documentation
+- [`../projects/template_code_project/AGENTS.md`](../projects/template_code_project/AGENTS.md) - template_code_project project documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/core/workflow.md`](../docs/core/workflow.md) - Development workflow
 - [`../docs/development/testing/testing-with-credentials.md`](../docs/development/testing/testing-with-credentials.md) - Credential configuration guide

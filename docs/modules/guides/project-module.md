@@ -36,7 +36,7 @@ for project in projects:
 from pathlib import Path
 from infrastructure.project import validate_project_structure
 
-result = validate_project_structure(Path("projects/code_project"))
+result = validate_project_structure(Path("projects/template_code_project"))
 if result.is_valid:
     print("Project structure is valid")
 else:
@@ -49,7 +49,7 @@ else:
 from pathlib import Path
 from infrastructure.project import get_project_metadata
 
-metadata = get_project_metadata(Path("projects/code_project"))
+metadata = get_project_metadata(Path("projects/template_code_project"))
 print(f"Title: {metadata.title}")
 print(f"Authors: {metadata.authors}")
 ```

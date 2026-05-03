@@ -144,7 +144,7 @@
 **.claude/worktrees/blissful-noether/docs/guides/figures-and-analysis.md:615**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/output/pdf/04_experimental_results.pdf
+- **Issue:** File path in code block does not exist: projects/template_code_project/output/pdf/04_experimental_results.pdf
 
 **.claude/worktrees/charming-kalam/.github/workflows/AGENTS.md:179**
 - **Type:** code_block_path
@@ -159,7 +159,7 @@
 **.claude/worktrees/charming-kalam/docs/guides/figures-and-analysis.md:611**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/output/pdf/04_experimental_results.pdf
+- **Issue:** File path in code block does not exist: projects/template_code_project/output/pdf/04_experimental_results.pdf
 
 **.claude/worktrees/musing-engelbart/.github/workflows/AGENTS.md:179**
 - **Type:** code_block_path
@@ -174,7 +174,7 @@
 **.claude/worktrees/musing-engelbart/docs/guides/figures-and-analysis.md:615**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/output/pdf/04_experimental_results.pdf
+- **Issue:** File path in code block does not exist: projects/template_code_project/output/pdf/04_experimental_results.pdf
 
 **.github/AGENTS.md:130**
 - **Type:** code_block_path
@@ -194,7 +194,7 @@
 **docs/guides/figures-and-analysis.md:612**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/output/pdf/04_experimental_results.pdf
+- **Issue:** File path in code block does not exist: projects/template_code_project/output/pdf/04_experimental_results.pdf
 
 **infrastructure/validation/cli/AGENTS.md:38**
 - **Type:** code_block_path

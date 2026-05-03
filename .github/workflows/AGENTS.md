@@ -6,13 +6,20 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 
 ## Directory Structure
 
-```
-.github/workflows/
-├── AGENTS.md       # This technical documentation
-├── README.md       # Quick reference
-├── ci.yml          # Main CI/CD pipeline (8 jobs)
-├── stale.yml       # Auto-label and close stale issues/PRs
-└── release.yml     # Create GitHub Releases on version tags
+```mermaid
+flowchart LR
+    W[/.github/workflows//]
+    W --> META[AGENTS.md · README.md]
+    W --> CI[ci.yml<br/>Main CI/CD pipeline · 8 jobs]
+    W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
+    W --> REL[release.yml<br/>Create GitHub Releases on version tags]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class W d
+    class CI,STALE,REL code
+    class META doc
 ```
 
 ## CI Pipeline (`ci.yml`)
@@ -34,16 +41,23 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 
 `validate` and `security` depend on **`lint` only** (they run in parallel with the `verify-no-mocks` subtree). `test-infra`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
 
-```
-lint
- ├── verify-no-mocks
- │    ├── test-infra   (matrix: ubuntu+macos × 3.10/3.11/3.12) → codecov on 3.12/ubuntu only
- │    ├── test-project (same matrix; ignores projects/fep_lean/tests/)
- │    └── fep-lean     (ubuntu-only; skipped if no lean-toolchain)
- ├── validate        (needs: lint)
- └── security          (needs: lint)
+```mermaid
+flowchart TB
+    LINT[lint] --> VNM[verify-no-mocks]
+    LINT --> VAL[validate]
+    LINT --> SEC[security]
+    VNM --> TI[test-infra<br/>matrix: ubuntu+macos × 3.10/3.11/3.12<br/>codecov on 3.12/ubuntu only]
+    VNM --> TP[test-project<br/>same matrix · ignores projects/fep_lean/tests/]
+    VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
+    TI --> PERF[performance]
+    TP --> PERF
 
-test-infra + test-project → performance
+    classDef gate fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef matrix fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef terminal fill:#7c2d12,stroke:#0f172a,color:#fff
+    class LINT,VNM gate
+    class TI,TP,FL matrix
+    class VAL,SEC,PERF terminal
 ```
 
 ### Job Details
@@ -74,7 +88,7 @@ test-infra + test-project → performance
 - **Matrix:** Same as `test-infra` (6 combinations)
 - **Coverage threshold:** 90% (`--cov-fail-under=90`) — enforces the project quality standard
 - **Coverage file:** `.coverage.project` (isolated)
-- **Scope:** One `pytest` invocation per `projects/*/tests/` directory (first pass collects coverage, later passes use `--cov-append`), then `coverage xml` + `coverage report`. **`projects/fep_lean/tests/` is skipped** in this job so `tests/conftest.py` from `code_project` and `fep_lean` are never loaded in the same process (duplicate plugin name); fep_lean runs in job **`fep-lean`** with real `gauss` / `lake` / `lean`.
+- **Scope:** One `pytest` invocation per `projects/*/tests/` directory (first pass collects coverage, later passes use `--cov-append`), then `coverage xml` + `coverage report`. **`projects/fep_lean/tests/` is skipped** in this job so `tests/conftest.py` from `template_code_project` and `fep_lean` are never loaded in the same process (duplicate plugin name); fep_lean runs in job **`fep-lean`** with real `gauss` / `lake` / `lean`.
 - **Codecov upload:** On Python 3.12 / ubuntu-latest only
 
 #### 4b. fep_lean — real Open Gauss + Lake (`fep-lean`)
@@ -170,7 +184,7 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
 uv sync --group monitoring
 COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
   --ignore=projects/fep_lean/tests/ \
-  --cov=projects/code_project/src \
+  --cov=projects/template_code_project/src \
   --cov-fail-under=90 \
   -m "not requires_ollama"
 
@@ -218,7 +232,7 @@ open htmlcov/index.html
 
 # Project report
 COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
-  --cov=projects/code_project/src --cov-report=html
+  --cov=projects/template_code_project/src --cov-report=html
 open htmlcov/index.html
 ```
 

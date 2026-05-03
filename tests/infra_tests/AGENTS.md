@@ -17,10 +17,15 @@ The `tests/infra_tests/` directory validates the reusable infrastructure modules
 - `core/`
 - `documentation/`
 - `llm/`
+- `orchestration/`
+- `project/`
+- `prose/`
 - `publishing/`
+- `reference/`
 - `rendering/`
 - `reporting/`
 - `scientific/`
+- `search/`
 - `skills/`
 - `steganography/`
 - `validation/`

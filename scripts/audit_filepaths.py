@@ -26,7 +26,10 @@ import sys
 from pathlib import Path
 
 # Add root to path for infrastructure imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Bootstrap: add repo root so the centralized helper itself is importable
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from scripts import ensure_repo_root_on_path  # noqa: E402
+ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, setup_logger, log_header, log_success
 from infrastructure.validation.repo.audit_orchestrator import (

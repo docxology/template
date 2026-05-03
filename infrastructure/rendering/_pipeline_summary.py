@@ -212,11 +212,11 @@ def verify_pdf_outputs(project_name: str = "project") -> bool:
                     status_msg += f" - file too small ({size_kb:.1f} KB)"
                     logger.warning(status_msg)
 
-        bib_file = manuscript_dir / "references.bib"
+        bib_paths = sorted(manuscript_dir.glob("*.bib"))
         citations_used = _check_citations_used(manuscript_dir)
 
-        if bib_file.exists():
-            logger.info("\n✅ Bibliography file found and will be processed")
+        if bib_paths:
+            logger.info("\n✅ Manuscript bibliography file(s) found and will be processed")
         elif citations_used:
             logger.warning(
                 "\n⚠️  Bibliography file not found (citations detected in manuscript - bibliography processing will be skipped)"

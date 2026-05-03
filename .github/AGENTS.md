@@ -15,23 +15,28 @@ The `.github/` directory contains GitHub-specific configuration and automation f
 
 ## Directory Structure
 
-```text
-.github/
-├── AGENTS.md                    # This technical documentation
-├── README.md                    # Quick reference
-├── dependabot.yml               # Automated dependency updates
-├── PULL_REQUEST_TEMPLATE.md     # PR checklist
-├── ISSUE_TEMPLATE/
-│   ├── config.yml               # Disable blank issues; add Discussions link
-│   ├── bug_report.md            # Bug report template
-│   ├── feature_request.md       # Feature request template
-│   └── documentation.md         # Documentation update template
-├── workflows/
-│   ├── AGENTS.md                # CI/CD workflow documentation
-│   ├── README.md                # Quick reference
-│   ├── ci.yml                   # Main CI/CD pipeline (8 jobs; fep-lean conditional)
-│   ├── stale.yml                # Auto-label and close stale issues/PRs
-│   └── release.yml              # Create GitHub Releases on version tags
+```mermaid
+flowchart TB
+    GH[/.github//]
+    GH --> META[AGENTS.md · README.md]
+    GH --> DEP[dependabot.yml<br/>Automated dependency updates]
+    GH --> PRT[PULL_REQUEST_TEMPLATE.md]
+    GH --> ITPL[/ISSUE_TEMPLATE/]
+    GH --> WF[/workflows/]
+
+    ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
+
+    WF --> WF_DOCS[AGENTS.md · README.md]
+    WF --> WF_CI[ci.yml<br/>Main CI/CD pipeline · 8 jobs ·<br/>fep-lean conditional]
+    WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
+    WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class GH d
+    class ITPL,WF pkg
+    class META,DEP,PRT,ITPL_F,WF_DOCS,WF_CI,WF_STALE,WF_REL f
 ```
 
 ## Continuous Integration (CI/CD)
@@ -128,7 +133,7 @@ uvx ruff format infrastructure/ projects/*/src/
 
 # Run tests locally (mirror CI)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ --cov=projects/code_project/src --cov=projects/cognitive_case_diagrams/src --cov=projects/template/src --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
+uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ --cov=projects/template_code_project/src --cov=projects/cognitive_case_diagrams/src --cov=projects/template/src --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
 
 # Security scan locally
 uv run pip-audit

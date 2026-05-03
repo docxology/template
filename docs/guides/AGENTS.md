@@ -13,14 +13,14 @@ Technical guide for `docs/guides/` — skill-level progression guides from begin
 | `testing-and-reproducibility.md` | Levels 7-9 | Developers implementing TDD workflow |
 | `extending-and-automation.md` | Levels 10-12 | Expert users extending the template |
 | `new-project-setup.md` | All levels | Complete setup checklist with pitfalls |
-| `new-project-one-shot-prompt.md` | All levels | LLM one-shot scaffold; primary exemplar `projects/code_project/`; active names in `_generated/active_projects.md` |
+| `new-project-one-shot-prompt.md` | All levels | LLM one-shot scaffold; primary exemplar `projects/template_code_project/`; active names in `_generated/active_projects.md` |
 | `llm-integration-guide.md` | Levels 11-12 | AI-assisted research: Ollama setup, LLM review, templates, programmatic usage |
 | `publishing-guide.md` | Levels 11-12 | Academic publishing: DOI, Zenodo, arXiv, citations (BibTeX/APA/MLA) |
 | `secure-research-guide.md` | Level 11 | PDF steganography: watermarks, QR codes, SHA-256 hashing, provenance |
 
 ## Key Conventions
 
-- **Paths in examples**: [`projects/code_project/`](../../projects/code_project/) as control-positive; other active workspaces → [_generated/active_projects.md](../_generated/active_projects.md).
+- **Paths in examples**: [`projects/template_code_project/`](../../projects/template_code_project/) as control-positive; other active workspaces → [_generated/active_projects.md](../_generated/active_projects.md).
 - Guides follow a progressive skill-level structure (1-12)
 - Each guide builds on the previous — prerequisites are clearly stated
 - All code examples use real, working commands (no placeholders)

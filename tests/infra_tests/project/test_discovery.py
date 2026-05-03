@@ -826,7 +826,7 @@ class TestNestedProjectDiscovery:
         projects_dir = tmp_path / "projects"
         projects_dir.mkdir()
 
-        # Create standalone project (like code_project)
+        # Create standalone project (like template_code_project)
         standalone = projects_dir / "standalone_project"
         (standalone / "src").mkdir(parents=True)
         (standalone / "tests").mkdir()
@@ -1109,17 +1109,17 @@ authors:
         projects_dir = tmp_path / "projects"
         projects_dir.mkdir()
 
-        # Simulate code_project structure (the primary active project)
-        code_project = projects_dir / "code_project"
-        (code_project / "src").mkdir(parents=True)
-        (code_project / "tests").mkdir()
-        (code_project / "scripts").mkdir()
-        (code_project / "manuscript").mkdir()
-        (code_project / "output").mkdir()
-        (code_project / "src" / "__init__.py").write_text("")
-        (code_project / "src" / "optimizer.py").write_text("# optimizer code")
-        (code_project / "tests" / "__init__.py").write_text("")
-        (code_project / "tests" / "test_optimizer.py").write_text("# optimizer tests")
+        # Simulate template_code_project structure (the primary active project)
+        template_code_project = projects_dir / "template_code_project"
+        (template_code_project / "src").mkdir(parents=True)
+        (template_code_project / "tests").mkdir()
+        (template_code_project / "scripts").mkdir()
+        (template_code_project / "manuscript").mkdir()
+        (template_code_project / "output").mkdir()
+        (template_code_project / "src" / "__init__.py").write_text("")
+        (template_code_project / "src" / "optimizer.py").write_text("# optimizer code")
+        (template_code_project / "tests" / "__init__.py").write_text("")
+        (template_code_project / "tests" / "test_optimizer.py").write_text("# optimizer tests")
 
         # Simulate a second active project
         second_project = projects_dir / "second_project"
@@ -1142,7 +1142,7 @@ authors:
 
         assert len(projects) == 2
         names = [p.name for p in projects]
-        assert "code_project" in names
+        assert "template_code_project" in names
         assert "second_project" in names
         assert "old_project" not in names
 

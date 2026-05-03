@@ -75,9 +75,16 @@ def zenodo_test_server():
 
 @pytest.fixture
 def github_test_server():
-    """Local HTTP test server mimicking GitHub API endpoints."""
+    """Local HTTP test server mimicking GitHub API endpoints.
+
+    Provides both the basic ``/repos/testuser/testrepo/releases`` POST endpoint
+    and a generic asset-upload endpoint so callers can exercise
+    ``create_github_release`` end-to-end against ``server.url_for("")``.
+    """
     server = HTTPServer()
     server.start()
+
+    upload_url = f"{server.url_for('')}/repos/testuser/testrepo/releases/12345/assets"
 
     # Mock GitHub release creation
     server.expect_request("/repos/testuser/testrepo/releases", method="POST").respond_with_json(
@@ -87,7 +94,17 @@ def github_test_server():
             "name": "Test Release",
             "body": "Test release description",
             "html_url": "https://github.com/testuser/testrepo/releases/tag/v1.0.0",
+            # GitHub returns a templated upload_url with {?name,label} suffix
+            "upload_url": upload_url + "{?name,label}",
         }
+    )
+
+    # Mock GitHub asset upload (generic — accepts any POST under the assets path)
+    server.expect_request(
+        "/repos/testuser/testrepo/releases/12345/assets", method="POST"
+    ).respond_with_json(
+        {"id": 99, "name": "asset.pdf", "state": "uploaded"},
+        status=201,
     )
 
     try:

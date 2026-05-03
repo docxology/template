@@ -18,16 +18,23 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 `validate` and `security` depend on **`lint` only** (parallel with the `verify-no-mocks` branch). See [`AGENTS.md`](AGENTS.md) for full detail.
 
-```
-lint (Ruff + mypy)
- ├── verify-no-mocks
- │    ├── test-infra   · ubuntu+macos × 3.10/3.11/3.12 · ≥60% coverage
- │    ├── test-project · ubuntu+macos × 3.10/3.11/3.12 · ≥90% coverage
- │    └── fep-lean     · ubuntu only, if lean-toolchain present — job name: fep_lean (gauss + lake)
- ├── validate         · manuscript markdown + project imports (needs: lint)
- └── security          · pip-audit + bandit MEDIUM+ (needs: lint)
+```mermaid
+flowchart TB
+    LINT[lint<br/>Ruff + mypy] --> VNM[verify-no-mocks]
+    LINT --> VAL[validate<br/>manuscript markdown +<br/>project imports]
+    LINT --> SEC[security<br/>pip-audit + bandit MEDIUM+]
+    VNM --> TI[test-infra<br/>ubuntu+macos × 3.10/3.11/3.12<br/>≥ 60% coverage]
+    VNM --> TP[test-project<br/>ubuntu+macos × 3.10/3.11/3.12<br/>≥ 90% coverage]
+    VNM --> FL[fep_lean<br/>ubuntu-only · gauss + lake ·<br/>if lean-toolchain present]
+    TI --> PERF[performance<br/>import time ≤ 5 s]
+    TP --> PERF
 
-test-infra + test-project → performance (import time ≤ 5 s)
+    classDef gate fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef matrix fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef terminal fill:#7c2d12,stroke:#0f172a,color:#fff
+    class LINT,VNM gate
+    class TI,TP,FL matrix
+    class VAL,SEC,PERF terminal
 ```
 
 ### Quality Gates
@@ -57,10 +64,10 @@ uv run pytest tests/infra_tests/ \
   -m "not requires_ollama"
 
 # Project tests (matches ci.yml targets)
-uv run python scripts/01_run_tests.py --project-only --project code_project
+uv run python scripts/01_run_tests.py --project-only --project template_code_project
 # or for full matrix simulation:
 uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ \
-  --cov=projects/code_project/src --cov=projects/cognitive_case_diagrams/src \
+  --cov=projects/template_code_project/src --cov=projects/cognitive_case_diagrams/src \
   --cov=projects/template/src --cov-fail-under=90 -m "not requires_ollama"
 
 # Security
@@ -100,7 +107,7 @@ gh run rerun <run-id> --failed
 uv run pytest tests/infra_tests/test_foo.py::TestClass::test_method -s --pdb
 
 # Coverage HTML report
-uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
 open htmlcov/index.html
 ```
 

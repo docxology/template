@@ -22,14 +22,22 @@ uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" \
 
 ## Layout
 
-```text
-tests/infra_tests/llm/
-├── __init__.py
-├── conftest.py                 # ollama_test_server, patch_llm_client_for_tests (OLLAMA_HOST → stub)
-├── ollama_stub_server.py       # POST /api/chat handler rules (models, prompts, stream shapes)
-├── real_ollama_client.py       # Real daemon helpers for requires_ollama
-├── test_*.py                   # 66 modules — core client, streaming, review, validation, CLI, …
-└── AGENTS.md                   # This file
+```mermaid
+flowchart LR
+    T[/tests/infra_tests/llm//]
+    T --> INIT[__init__.py]
+    T --> CFG[conftest.py<br/>ollama_test_server ·<br/>patch_llm_client_for_tests<br/>OLLAMA_HOST → stub]
+    T --> STUB[ollama_stub_server.py<br/>POST /api/chat handler rules<br/>models · prompts · stream shapes]
+    T --> REAL[real_ollama_client.py<br/>Real daemon helpers · requires_ollama]
+    T --> TESTS[test_*.py<br/>66 modules · core client · streaming ·<br/>review · validation · CLI · ...]
+    T --> AG[AGENTS.md]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class INIT,CFG,STUB,REAL,TESTS code
+    class AG doc
 ```
 
 Groupings (non-exhaustive):

@@ -9,7 +9,7 @@ The `tests/` tree covers infrastructure modules and integration behavior. Projec
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 
 # Project tests — control positive exemplar (≥90% coverage floor)
-uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-fail-under=90
 
 # Integration tests
 uv run pytest tests/integration/ -v
@@ -20,35 +20,25 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 ## Layout
 
-```text
-tests/
-├── AGENTS.md
-├── infra_tests/
-│   ├── AGENTS.md
-│   ├── README.md
-│   ├── core/
-│   ├── documentation/
-│   ├── llm/
-│   ├── publishing/
-│   ├── rendering/
-│   ├── reporting/
-│   ├── scientific/
-│   ├── skills/
-│   └── validation/
-├── integration/
-│   ├── AGENTS.md
-│   ├── README.md
-│   ├── conftest.py
-│   ├── test_bash_utils.sh
-│   ├── test_edge_cases_and_error_paths.py
-│   ├── test_environment_setup.py
-│   ├── test_execute_pipeline_cli.py
-│   ├── test_executive_report_generation.py
-│   ├── test_figure_equation_citation.py
-│   ├── test_logging.py
-│   ├── test_module_interoperability.py
-│   ├── test_output_copying.py
-│   └── test_run_sh.py
+```mermaid
+flowchart TB
+    T[/tests//]
+    T --> T_AG[AGENTS.md]
+    T --> INFRA_T[/infra_tests/]
+    T --> INTEG[/integration/]
+
+    INFRA_T --> INFRA_DOCS[AGENTS.md · README.md]
+    INFRA_T --> INFRA_SUB[/core · documentation · llm ·<br/>publishing · rendering · reporting ·<br/>scientific · skills · validation/]
+
+    INTEG --> INT_DOCS[AGENTS.md · README.md · conftest.py]
+    INTEG --> INT_FILES[test_bash_utils.sh · test_edge_cases_and_error_paths.py ·<br/>test_environment_setup.py · test_execute_pipeline_cli.py ·<br/>test_executive_report_generation.py ·<br/>test_figure_equation_citation.py · test_logging.py ·<br/>test_module_interoperability.py · test_output_copying.py ·<br/>test_run_sh.py]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class INFRA_T,INTEG pkg
+    class T_AG,INFRA_DOCS,INFRA_SUB,INT_DOCS,INT_FILES f
 ```
 
 ## Rules

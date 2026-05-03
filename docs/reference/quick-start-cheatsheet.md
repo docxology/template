@@ -21,16 +21,16 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Daily Workflow Commands
 ```bash
 # Run tests only
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
+pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
 
 # Generate figures only
-uv run python scripts/02_run_analysis.py --project code_project
+uv run python scripts/02_run_analysis.py --project template_code_project
 
 # Validate markdown
-uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
 
 # Open manuscript
-open output/code_project/pdf/code_project_combined.pdf  # Top-level output (example project)
+open output/template_code_project/pdf/code_project_combined.pdf  # Top-level output (example project)
 ```
 
 ### Build Pipeline Commands
@@ -39,30 +39,39 @@ open output/code_project/pdf/code_project_combined.pdf  # Top-level output (exam
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # With specific stage
-uv run python scripts/00_setup_environment.py --project code_project
-uv run python scripts/01_run_tests.py --project code_project
-uv run python scripts/02_run_analysis.py --project code_project
-uv run python scripts/03_render_pdf.py --project code_project
-uv run python scripts/04_validate_output.py --project code_project
+uv run python scripts/00_setup_environment.py --project template_code_project
+uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/02_run_analysis.py --project template_code_project
+uv run python scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/04_validate_output.py --project template_code_project
 
 # Validate PDFs (after copy stage or use project working tree)
-uv run python -m infrastructure.validation.cli pdf output/code_project/pdf/code_project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/code_project_combined.pdf
 ```
 
 ## 📁 Directory Structure Quick Reference
 
-```
-template/
-├── infrastructure/   # Reusable infrastructure (Layer 1)
-├── scripts/          # Root pipeline orchestrators
-├── tests/            # Infrastructure test suite
-├── projects/         # Multiple independent research projects
-│   └── code_project/
-│       ├── src/      # Core business logic (Layer 2)
-│       ├── tests/    # Project-specific test suite
-│       ├── manuscript/ # Research sections & config.yaml
-│       └── scripts/  # Thin orchestrators for data/figures
-└── output/           # Final generated deliverables
+```mermaid
+flowchart TB
+    R[/template//]
+    R --> INF[/infrastructure/<br/>Reusable infrastructure · Layer 1/]
+    R --> SC[/scripts/<br/>Root pipeline orchestrators/]
+    R --> T[/tests/<br/>Infrastructure test suite/]
+    R --> PR[/projects/<br/>Multiple research projects/]
+    R --> OUT[/output/<br/>Final generated deliverables/]
+
+    PR --> CP[/template_code_project//]
+    CP --> CP_SRC[/src/<br/>Business logic · Layer 2/]
+    CP --> CP_T[/tests/<br/>Project-specific tests/]
+    CP --> CP_M[/manuscript/<br/>Research sections + config.yaml/]
+    CP --> CP_SC[/scripts/<br/>Thin orchestrators for data/figures/]
+
+    classDef root fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef sub fill:#0f766e,stroke:#0f172a,color:#fff
+    class R root
+    class INF,SC,T,PR,OUT,CP pkg
+    class CP_SRC,CP_T,CP_M,CP_SC sub
 ```
 
 ## 🔧 Common Workflows
@@ -70,10 +79,10 @@ template/
 ### Create a New Document Section
 ```bash
 # 1. Create markdown file
-vim projects/code_project/manuscript/07_new_section.md
+vim projects/template_code_project/manuscript/07_new_section.md
 
 # 2. Add content with section label
-echo "# New Section {#sec:new_section}" > projects/code_project/manuscript/07_new_section.md
+echo "# New Section {#sec:new_section}" > projects/template_code_project/manuscript/07_new_section.md
 
 # 3. Rebuild
 uv run python scripts/execute_pipeline.py --project {name} --core-only
@@ -82,7 +91,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Add a New Figure
 ```bash
 # 1. Create script in project's scripts/ directory
-vim projects/code_project/scripts/my_figure.py
+vim projects/template_code_project/scripts/my_figure.py
 
 # 2. Import from src/ (thin orchestrator pattern)
 # from src.optimizer import gradient_descent
@@ -95,22 +104,22 @@ vim projects/code_project/scripts/my_figure.py
 ### Add New Source Code
 ```bash
 # 1. Create module
-vim projects/code_project/src/my_module.py
+vim projects/template_code_project/src/my_module.py
 
 # 2. Create tests (90% minimum coverage required)
-vim projects/code_project/tests/test_my_module.py
+vim projects/template_code_project/tests/test_my_module.py
 
 # 3. Run tests
-pytest projects/code_project/tests/test_my_module.py --cov=projects/code_project/src.my_module
+pytest projects/template_code_project/tests/test_my_module.py --cov=projects/template_code_project/src.my_module
 
 # 4. Use in scripts (thin orchestrator pattern)
-# from projects.code_project.src.my_module import my_function
+# from projects.template_code_project.src.my_module import my_function
 ```
 
 ### Fix Test Coverage
 ```bash
 # 1. Check coverage
-pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing
+pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=term-missing
 
 # 2. Find missing lines (marked with ">>>>>")
 # 3. Add tests for uncovered code
@@ -156,11 +165,11 @@ Reference it: \ref{fig:my_figure}
 
 | Problem | Quick Fix |
 |---------|-----------|
-| **Tests fail** | `pytest projects/code_project/tests/ -v` to see details |
-| **Coverage < 100%** | `pytest --cov=projects/code_project/src --cov-report=term-missing` |
+| **Tests fail** | `pytest projects/template_code_project/tests/ -v` to see details |
+| **Coverage < 100%** | `pytest --cov=projects/template_code_project/src --cov-report=term-missing` |
 | **Import errors** | Check `PYTHONPATH` or use `uv run` |
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
-| **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project code_project` first |
+| **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project template_code_project` first |
 | **References show ??** | Check label spelling and existence |
 | **Project not discovered** | Ensure `manuscript/config.yaml` exists |
 | **Stage 4 fails silently** | Check root pyproject.toml has project deps ([details](../guides/new-project-setup.md#pitfall-6-root-venv)) |
@@ -197,7 +206,7 @@ Reference it: \ref{fig:my_figure}
 
 ## 💡 Pro Tips
 
-1. **Always run tests first**: `pytest projects/code_project/tests/` before building
+1. **Always run tests first**: `pytest projects/template_code_project/tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `projects/{name}/src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
 4. **Run pipeline**: `uv run python scripts/execute_pipeline.py --project {name} --core-only` executes all stages

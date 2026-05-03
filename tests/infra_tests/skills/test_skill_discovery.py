@@ -110,7 +110,7 @@ class TestTemplateRepository:
     def test_default_roots_includes_infrastructure_and_code_project_src(self) -> None:
         assert DEFAULT_SKILL_SEARCH_ROOTS == (
             "infrastructure",
-            "projects/code_project/src",
+            "projects/template_code_project/src",
             ".cursor/skills",
         )
 

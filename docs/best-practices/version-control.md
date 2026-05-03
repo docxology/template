@@ -56,12 +56,25 @@ git push origin feature/new-feature
 
 **Recommended branching:**
 
-```text
-main (production-ready)
-  ├── develop (integration)
-  │   ├── feature/new-feature
-  │   ├── feature/another-feature
-  │   └── fix/bug-description
+```mermaid
+gitGraph
+    commit id: "main · production-ready"
+    branch develop
+    commit id: "develop · integration"
+    branch feature/new-feature
+    commit
+    checkout develop
+    branch feature/another-feature
+    commit
+    checkout develop
+    branch fix/bug-description
+    commit
+    checkout develop
+    merge feature/new-feature
+    merge feature/another-feature
+    merge fix/bug-description
+    checkout main
+    merge develop
 ```
 
 **Branch naming conventions:**

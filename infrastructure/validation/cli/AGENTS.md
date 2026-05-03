@@ -32,7 +32,7 @@ Useful as a fast pre-commit / interactive check that fires in milliseconds and
 fails the same way the renderer would, on the same source files.
 
 ```bash
-# Default discovery: references.bib next to the markdown
+# Default discovery: union of manuscript/*.bib next to the markdown (omit --bib)
 uv run python -m infrastructure.validation.cli prerender projects/fep_lean/manuscript
 
 # Explicit bibliography path

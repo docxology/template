@@ -99,7 +99,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # 3. Generate figures and validate
-uv run python projects/code_project/scripts/example_figure.py
+uv run python projects/template_code_project/scripts/example_figure.py
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # 4. Build pipeline

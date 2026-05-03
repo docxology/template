@@ -104,12 +104,12 @@ save_test_report(report, output_dir)
 
 ```python
 # projects/{name}/scripts/example_figure.py - Project orchestrator
-from projects.code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
+from projects.template_code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
 from infrastructure.documentation.figure_manager import FigureManager  # From infrastructure/
 
 # Use projects/{name}/src/ methods for computation
 data = [1, 2, 3, 4, 5]
-avg = calculate_average(data)  # From projects.code_project.src.example
+avg = calculate_average(data)  # From projects.template_code_project.src.example
 
 # Script handles visualization and output
 fig, ax = plt.subplots()
@@ -175,7 +175,7 @@ test_results = parse_pytest_output(stdout, stderr, exit_code)
 
 ```python
 # projects/{name}/scripts/example_figure.py - Project orchestrator
-from projects.code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
+from projects.template_code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
 
 # Use projects/{name}/src/ methods for computation
 result = add_numbers(5, 3)

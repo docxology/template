@@ -34,30 +34,30 @@ INFRASTRUCTURE REQUIREMENTS:
 - Abstract interfaces for domain-specific implementations
 
 **Reusability Requirements:**
-- Usable by `code_project` and future projects
+- Usable by `template_code_project` and future projects
 - Clear separation of generic logic from domain-specific logic
 - Extensible design for domain-specific extensions
 - Stable APIs that don't break between versions
 
 ### Module Structure
-```
+```mermaid
+flowchart LR
+    M[/infrastructure/&lt;module_name&gt;//]
+    M --> INIT[__init__.py<br/>Public API exports · __all__ list]
+    M --> CORE[core.py<br/>Main functionality]
+    M --> EXC[exceptions.py<br/>Custom exception classes]
+    M --> VAL[validators.py<br/>Input validation functions]
+    M --> UT[utils.py<br/>Generic utility functions]
+    M --> TY[types.py<br/>Type definitions &amp; protocols]
+    M --> DOCS[AGENTS.md · README.md ·<br/>SKILL.md]
+    M --> T[/tests/<br/>__init__.py · test_core ·<br/>test_validators · test_utils ·<br/>test_integration/]
 
-infrastructure/[module_name]/
-├── __init__.py          # Public API exports (__all__ list)
-├── core.py             # Main functionality implementation
-├── exceptions.py       # Custom exception classes
-├── validators.py       # Input validation functions
-├── utils.py            # Generic utility functions
-├── types.py            # Type definitions and protocols
-├── AGENTS.md           # Technical documentation
-├── README.md           # Quick reference
-└── tests/
-    ├── __init__.py
-    ├── test_core.py
-    ├── test_validators.py
-    ├── test_utils.py
-    └── test_integration.py
-
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class M,T d
+    class INIT,CORE,EXC,VAL,UT,TY code
+    class DOCS doc
 ```
 
 ## 2. Public API Design
@@ -525,16 +525,20 @@ The `[module_name]` infrastructure module provides generic [functionality descri
 
 ### Module Structure
 
-```
+```mermaid
+flowchart LR
+    M[/infrastructure/&lt;module_name&gt;//]
+    M --> INIT[__init__.py<br/>Public API exports]
+    M --> CORE[core.py<br/>GenericProcessor implementation]
+    M --> EXC[exceptions.py<br/>Custom exception hierarchy]
+    M --> VAL[validators.py<br/>Generic validation functions]
+    M --> TY[types.py<br/>Type definitions &amp; protocols]
+    M --> T[/tests/<br/>60%+ coverage/]
 
-infrastructure/[module_name]/
-├── __init__.py          # Public API exports
-├── core.py             # Main GenericProcessor implementation
-├── exceptions.py       # Custom exception hierarchy
-├── validators.py       # Generic validation functions
-├── types.py            # Type definitions and protocols
-└── tests/              # test suite (60%+ coverage)
-
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    class M,T d
+    class INIT,CORE,EXC,VAL,TY code
 ```
 
 ## API Reference

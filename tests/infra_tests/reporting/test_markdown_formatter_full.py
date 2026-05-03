@@ -33,7 +33,7 @@ def _make_report_data():
             "duration_seconds": 60.0,
         },
         "projects": {
-            "code_project": {
+            "template_code_project": {
                 "exit_code": 0,
                 "passed": 190,
                 "failed": 3,
@@ -52,7 +52,7 @@ def _make_report_data():
             "slow_tests_included": True,
             "ollama_tests_included": False,
             "ollama_server_available": False,
-            "active_projects": ["code_project"],
+            "active_projects": ["template_code_project"],
         },
         "files_generated": ["test_results_summary.json", "test_results_summary.md"],
     }
@@ -65,7 +65,7 @@ class TestGenerateMarkdownReport:
         assert "# Full Repository Test Suite Results" in md
         assert "## Summary" in md
         assert "## Infrastructure Tests" in md
-        assert "## Code Project Tests" in md
+        assert "## Template Code Project Tests" in md
         assert "## Test Configuration" in md
         assert "## Generated Files" in md
 
@@ -109,7 +109,7 @@ class TestGenerateMarkdownReport:
 
     def test_project_warnings_included(self):
         data = _make_report_data()
-        data["projects"]["code_project"]["warnings"] = 3
+        data["projects"]["template_code_project"]["warnings"] = 3
         md = generate_markdown_report(data)
         assert "**Warnings**: 3" in md
 
@@ -122,7 +122,7 @@ class TestGenerateMarkdownReport:
     def test_metadata_includes_active_projects(self):
         data = _make_report_data()
         md = generate_markdown_report(data)
-        assert "code_project" in md
+        assert "template_code_project" in md
 
     def test_generated_files_listed(self):
         data = _make_report_data()
@@ -140,11 +140,11 @@ class TestFormatConsoleSummary:
 
     def test_long_project_name_truncated(self):
         data = _make_report_data()
-        data["projects"]["this_is_a_very_long_project_name_xyz"] = data["projects"].pop("code_project")
+        data["projects"]["this_is_a_very_long_project_name_xyz"] = data["projects"].pop("template_code_project")
         output = _format_console_summary(data)
         assert "..." in output
 
     def test_short_project_name(self):
         data = _make_report_data()
         output = _format_console_summary(data)
-        assert "code_project" in output
+        assert "template_code_project" in output

@@ -107,10 +107,10 @@ class TestFormatMenu:
             MenuOption(key="2", label="Build project"),
         ]
 
-        result = format_menu("Main Menu", options, "code_project")
+        result = format_menu("Main Menu", options, "template_code_project")
 
         assert "Main Menu" in result
-        assert "Project: code_project" in result
+        assert "Project: template_code_project" in result
         assert "1. Run tests" in result
         assert "2. Build project" in result
 
@@ -194,7 +194,7 @@ class TestMenuIntegration:
         ]
 
         # Format menu
-        menu_text = format_menu("Pipeline Menu", options, "code_project")
+        menu_text = format_menu("Pipeline Menu", options, "template_code_project")
 
         # Verify menu contains all options
         for opt in options:

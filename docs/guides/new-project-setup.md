@@ -1,6 +1,6 @@
 # New Project Setup Checklist
 
-Complete checklist for creating a new project workspace in the Docxology Template. Lessons are framed around folder patterns and the stable exemplar [`projects/code_project/`](../../projects/code_project/).
+Complete checklist for creating a new project workspace in the Docxology Template. Lessons are framed around folder patterns and the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/).
 
 For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-shot-prompt.md](new-project-one-shot-prompt.md). Other active layouts under `projects/` are listed in [_generated/active_projects.md](../_generated/active_projects.md). For archived reference trees (not run by default), see `projects_archive/`.
 
@@ -64,36 +64,29 @@ uv sync
 
 ## 1. Directory Scaffold
 
-```text
-projects/<name>/
-├── manuscript/
-│   ├── config.yaml           # Required — triggers auto-discovery
-│   ├── 01_abstract.md
-│   ├── 02_introduction.md
-│   ├── ...
-│   ├── AGENTS.md
-│   └── README.md
-├── scripts/
-│   ├── <analysis_scripts>.py
-│   ├── AGENTS.md
-│   └── README.md
-├── src/<name>/
-│   ├── __init__.py           # Public API exports
-│   ├── <domain_modules>.py
-│   ├── AGENTS.md
-│   └── README.md
-├── tests/
-│   ├── conftest.py           # ⚠ Required — sys.path setup
-│   ├── test_<module>.py
-│   ├── AGENTS.md
-│   └── README.md
-├── data/                     # Input datasets (optional)
-├── output/                   # Pipeline-generated artifacts
-│   ├── figures/
-│   └── logs/
-├── AGENTS.md
-├── README.md
-└── pyproject.toml
+```mermaid
+flowchart TB
+    P[/projects/&lt;name&gt;//]
+    P --> M[/manuscript/]
+    P --> SC[/scripts/]
+    P --> SRC[/src/&lt;name&gt;/]
+    P --> T[/tests/]
+    P --> DATA[/data/<br/>Input datasets · optional/]
+    P --> OUT[/output/<br/>Pipeline-generated artifacts/]
+    P --> META[AGENTS.md · README.md · pyproject.toml]
+
+    M --> M_F[config.yaml ⚠ required ·<br/>01_abstract.md · 02_introduction.md · ... ·<br/>AGENTS.md · README.md]
+    SC --> SC_F[&lt;analysis_scripts&gt;.py ·<br/>AGENTS.md · README.md]
+    SRC --> SRC_F[__init__.py · &lt;domain_modules&gt;.py ·<br/>AGENTS.md · README.md]
+    T --> T_F[conftest.py ⚠ required · sys.path setup ·<br/>test_&lt;module&gt;.py · AGENTS.md · README.md]
+    OUT --> OUT_F[/figures/ · /logs//]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef f fill:#0f766e,stroke:#0f172a,color:#fff
+    class P d
+    class M,SC,SRC,T,DATA,OUT pkg
+    class M_F,SC_F,SRC_F,T_F,OUT_F,META f
 ```
 
 ---

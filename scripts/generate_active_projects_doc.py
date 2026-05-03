@@ -38,7 +38,7 @@ def main() -> None:
         "Human-written documentation should **not** copy this list into RUN_GUIDE, "
         "PAI, or other guides—link here instead. For concrete paths, commands, and "
         "layout examples, default to the stable exemplar "
-        "[`projects/code_project/`](../../projects/code_project/) unless a doc "
+        "[`projects/template_code_project/`](../../projects/template_code_project/) unless a doc "
         "explicitly compares layouts.",
         "",
         f"Generated at (UTC): `{datetime.now(UTC).isoformat(timespec='seconds')}`",

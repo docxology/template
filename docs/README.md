@@ -8,7 +8,7 @@
 
 The `docs/` directory contains project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
 
-**`projects/` is a rotating set:** directories are promoted, archived, or moved to `projects_in_progress/` over time. The only workspace **guaranteed** to stay in the tree as the **control-positive** layout for paths and commands is [`projects/code_project/`](../projects/code_project/). For the current discovered list, link [`_generated/active_projects.md`](_generated/active_projects.md)—do not treat any other sibling name as permanent.
+**`projects/` is a rotating set:** directories are promoted, archived, or moved to `projects_in_progress/` over time. The only workspace **guaranteed** to stay in the tree as the **control-positive** layout for paths and commands is [`projects/template_code_project/`](../projects/template_code_project/). For the current discovered list, link [`_generated/active_projects.md`](_generated/active_projects.md)—do not treat any other sibling name as permanent.
 
 Machine-generated snippets (including that authoritative list) live under [`_generated/`](_generated/README.md). Human-written pages should link there instead of copying project rosters.
 
@@ -85,7 +85,7 @@ graph TD
 | [`modules/`](modules/) | Infrastructure modules | modules-guide, scientific simulation, pdf-validation, `guides/` |
 | [`development/`](development/) | Development & contribution | contributing, security, roadmap, `testing/` sub-folder |
 | [`best-practices/`](best-practices/) | Best practices | version-control, migration, multi-project, backup-recovery |
-| [`prompts/`](prompts/) | AI prompt templates (9 + README/AGENTS) | manuscript, code, test, feature, refactoring, assessment |
+| [`prompts/`](prompts/) | AI prompt templates (see [prompts/AGENTS.md](prompts/AGENTS.md)) | manuscript, registry cross-refs, literature synthesis, code, test, feature, refactor, docs, infra, validation, assessment |
 | [`security/`](security/) | Security & provenance | steganography, hashing, secure execution |
 | [`audit/`](audit/) | Audit reports | documentation-review, filepath-audit |
 | [`rules/`](rules/) | Project Rules | AGENTS, README, testing, manuscript, etc. |
@@ -104,7 +104,8 @@ graph TD
 ### Creating a New Project
 
 1. [`guides/new-project-setup.md`](guides/new-project-setup.md) - **Complete setup checklist** with all pitfalls
-2. [`architecture/thin-orchestrator-summary.md`](architecture/thin-orchestrator-summary.md) - Script pattern
+2. [`guides/manuscript-semantics.md`](guides/manuscript-semantics.md) - Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by all three template exemplars
+3. [`architecture/thin-orchestrator-summary.md`](architecture/thin-orchestrator-summary.md) - Script pattern
 
 ### Developers Start Here
 
@@ -142,4 +143,4 @@ graph TD
 - [`documentation-index.md`](documentation-index.md) - Full file index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates
 - Agent skills manifest: `uv run python -m infrastructure.skills write` (writes `.cursor/skill_manifest.json` at repo root when run) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
-- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/code_project/docs/`](../projects/code_project/docs/)); work-in-progress trees under [`../projects_in_progress/`](../projects_in_progress/) are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)
+- Active projects under [`../projects/`](../projects/) may ship a local docs tree (e.g. [`../projects/template_code_project/docs/`](../projects/template_code_project/docs/)); work-in-progress trees under [`../projects_in_progress/`](../projects_in_progress/) are not discovered until promoted. Authoritative slugs: [`_generated/active_projects.md`](_generated/active_projects.md)

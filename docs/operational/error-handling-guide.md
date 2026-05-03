@@ -31,28 +31,65 @@ except ValidationError as e:
 
 ## Exception Hierarchy
 
-```
-TemplateError (base)
-├── ConfigurationError
-│   ├── MissingConfigurationError
-│   └── InvalidConfigurationError
-├── ValidationError
-│   ├── MarkdownValidationError
-│   ├── PDFValidationError
-│   └── DataValidationError
-├── BuildError
-│   ├── CompilationError
-│   ├── ScriptExecutionError
-│   └── PipelineError
-├── FileOperationError
-│   ├── FileNotFoundError
-│   └── InvalidFileFormatError
-├── DependencyError
-│   ├── MissingDependencyError
-│   └── VersionMismatchError
-├── TestError
-│   └── InsufficientCoverageError
-└── IntegrationError
+```mermaid
+classDiagram
+    class TemplateError {
+        +base exception
+    }
+
+    class ConfigurationError
+    class MissingConfigurationError
+    class InvalidConfigurationError
+
+    class ValidationError
+    class MarkdownValidationError
+    class PDFValidationError
+    class DataValidationError
+
+    class BuildError
+    class CompilationError
+    class ScriptExecutionError
+    class PipelineError
+
+    class FileOperationError
+    class FileNotFoundError
+    class InvalidFileFormatError
+
+    class DependencyError
+    class MissingDependencyError
+    class VersionMismatchError
+
+    class TestError
+    class InsufficientCoverageError
+
+    class IntegrationError
+
+    TemplateError <|-- ConfigurationError
+    ConfigurationError <|-- MissingConfigurationError
+    ConfigurationError <|-- InvalidConfigurationError
+
+    TemplateError <|-- ValidationError
+    ValidationError <|-- MarkdownValidationError
+    ValidationError <|-- PDFValidationError
+    ValidationError <|-- DataValidationError
+
+    TemplateError <|-- BuildError
+    BuildError <|-- CompilationError
+    BuildError <|-- ScriptExecutionError
+    BuildError <|-- PipelineError
+
+    TemplateError <|-- FileOperationError
+    FileOperationError <|-- FileNotFoundError
+    FileOperationError <|-- InvalidFileFormatError
+
+    TemplateError <|-- DependencyError
+    DependencyError <|-- MissingDependencyError
+    DependencyError <|-- VersionMismatchError
+
+    TemplateError <|-- TestError
+    TestError <|-- InsufficientCoverageError
+
+    TemplateError <|-- IntegrationError
 ```
 
 ## Usage Patterns

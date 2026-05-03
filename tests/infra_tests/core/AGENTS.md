@@ -6,33 +6,26 @@ The `tests/infra_tests/core/` directory contains test suites for the core infras
 
 ## Directory Structure
 
-```
-tests/infra_tests/core/
-├── AGENTS.md                           # This technical documentation
-├── __init__.py                         # Test package initialization
-├── test_checkpoint.py                  # Checkpoint management tests
-├── test_cli.py                         # CLI interface tests
-├── test_config_cli_coverage.py         # Configuration CLI coverage tests
-├── test_config_loader.py               # Configuration loading tests
-├── test_credentials.py                 # Credential handling tests
-├── test_credentials_module.py          # Credential manager comprehensive tests
-├── test_environment.py                 # Environment validation tests
-├── test_exceptions.py                  # Exception hierarchy tests
-├── test_file_inventory.py              # File inventory tests
-├── test_file_operations.py             # File operation tests
-├── test_logging_helpers.py             # Logging helper tests
-├── test_logging_progress.py            # Progress logging tests
-├── test_logging_utils.py               # Logging utility tests
-├── test_menu.py                        # Menu utilities tests
-├── test_multi_project.py               # Multi-project orchestration tests
-├── test_performance.py                 # Performance monitoring tests
-├── test_pipeline.py                    # Pipeline execution tests
-├── test_pipeline_summary.py            # Pipeline summary tests
-├── test_progress.py                    # Progress tracking tests
-├── test_project_discovery.py           # Project discovery tests
-├── test_project_logger.py              # Project logger tests
-├── test_retry.py                       # Retry logic tests
-└── test_script_discovery.py            # Script discovery tests
+```mermaid
+flowchart TB
+    T[/tests/infra_tests/core//]
+    T --> META[AGENTS.md · __init__.py]
+
+    T --> CFG[Configuration / Environment<br/>test_config_cli_coverage · test_config_loader ·<br/>test_credentials · test_credentials_module ·<br/>test_environment]
+    T --> EXC[Exceptions<br/>test_exceptions]
+    T --> LOG[Logging<br/>test_logging_helpers · test_logging_progress ·<br/>test_logging_utils · test_project_logger]
+    T --> FILES[Files / Filesystem<br/>test_file_inventory · test_file_operations]
+    T --> MENU[Menu / Performance / Progress<br/>test_menu · test_performance · test_progress]
+    T --> PIPE[Pipeline / Orchestration<br/>test_checkpoint · test_pipeline · test_pipeline_summary ·<br/>test_multi_project · test_retry]
+    T --> DISC[Discovery<br/>test_project_discovery · test_script_discovery]
+    T --> CLI[CLI<br/>test_cli]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    class T d
+    class CFG,EXC,LOG,FILES,MENU,PIPE,DISC,CLI cat
+    class META doc
 ```
 
 ## Test Categories

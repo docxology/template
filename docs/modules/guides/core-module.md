@@ -93,7 +93,7 @@ config_dict = get_config_as_dict(config_path)
 ```python
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 
-config = PipelineConfig(project_name="code_project", core_only=True)
+config = PipelineConfig(project_name="template_code_project", core_only=True)
 executor = PipelineExecutor(config)
 result = executor.run()
 ```

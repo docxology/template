@@ -30,7 +30,7 @@ The simplest way to use LLM features is through the pipeline:
 ./run.sh --pipeline  # Select your project, LLM stages run automatically
 
 # Or via the core pipeline
-uv run python scripts/execute_pipeline.py --project code_project
+uv run python scripts/execute_pipeline.py --project template_code_project
 # Stage 06 (LLM Review) runs if Ollama is available
 ```
 
@@ -83,7 +83,7 @@ from pathlib import Path
 
 # Generate a structured review of a manuscript
 result, metrics = generate_review_with_metrics(
-    manuscript_path=Path("projects/code_project/output/manuscript/"),
+    manuscript_path=Path("projects/template_code_project/output/manuscript/"),
     review_type="quality_review",
 )
 print(result)

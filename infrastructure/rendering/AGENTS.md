@@ -62,7 +62,7 @@ outputs = manager.render_all(Path("manuscript/main.tex"))
 
 ```python
 # Generate slides
-manager.render_slides(Path("manuscript/presentation.md"), format="revealjs")
+manager.render_slides(Path("manuscript/presentation.md"), output_format="revealjs")
 ```
 
 ## Configuration
@@ -185,12 +185,12 @@ class RenderManager:
             Path to generated PDF
         """
 
-    def render_slides(self, source_path: Path, format: str = "beamer") -> Path:
+    def render_slides(self, source_path: Path, output_format: str = "beamer") -> Path:
         """Render presentation slides.
 
         Args:
             source_path: Path to source manuscript
-            format: Slide format ("beamer" or "revealjs")
+            output_format: Slide format ("beamer" or "revealjs")
 
         Returns:
             Path to generated slides
@@ -398,12 +398,12 @@ class SlidesRenderer:
             config: Rendering configuration
         """
 
-    def render(self, source_path: Path, format: str = "beamer") -> Path:
+    def render(self, source_path: Path, output_format: str = "beamer") -> Path:
         """Render manuscript to presentation slides.
 
         Args:
             source_path: Path to source manuscript
-            format: Slide format ("beamer" or "revealjs")
+            output_format: Slide format ("beamer" or "revealjs")
 
         Returns:
             Path to generated slides
@@ -487,12 +487,13 @@ def ensure_setmathfont(preamble: str, math_font: str = "latinmodern-math.otf") -
 def prevalidate_source_markdown(
     source: Path | list[Path] | list[str],
     repo_root: Path | None = None,
-    bib_file: Path | None = None,
+    bib_file: str | Path | list[str | Path] | None = None,
 ) -> None:
     """Hard-gate the combined-PDF render on source-markdown integrity.
 
     Runs validate_pandoc_pitfalls (bare ``|word|``, ``\\|`` in tables) and
-    validate_citations (every ``[@key]`` resolves in references.bib) over
+    validate_citations (every ``[@key]`` resolves in the manuscript ``*.bib``
+    union, or in an explicit ``bib_file`` path/list when supplied) over
     the actual source files about to be rendered. Both classes of finding
     are promoted to render-blockers — pitfall warnings materialise
     downstream as silent ``Missing character`` warnings + ``U+FFFD`` glyphs
@@ -762,9 +763,10 @@ The rendering system automatically processes citations in your manuscript using 
 
 ### Citation Workflow
 
-1. **Markdown Processing**: Pandoc processes LaTeX `\cite{}` commands using `--citeproc`
-2. **Bibliography Processing**: BibTeX runs to match citations with `references.bib` entries
-3. **Reference Resolution**: Additional LaTeX passes resolve all citation references
+1. **Markdown Processing**: Pandoc converts `[@key]` Markdown citations to LaTeX `\cite{}`/`\citep{}`/`\citet{}` commands using `--natbib` (see `_pdf_combined_renderer.py`).
+2. **Cross-references**: The `pandoc-crossref` filter resolves `[@fig:label]`, `[@tbl:label]`, `[@eq:label]`, `[@sec:label]` to numbered LaTeX cross-references.
+3. **Bibliography Processing**: BibTeX runs to match citations with `references.bib` entries.
+4. **Reference Resolution**: Additional LaTeX passes resolve all citation and cross-reference numbers.
 
 ### Bibliography Setup
 

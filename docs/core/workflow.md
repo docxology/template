@@ -146,7 +146,7 @@ flowchart TD
 
 ```bash
 # Always start with tests
-uv run pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=term-missing
 
 # Check coverage (must be 100%)
 coverage report
@@ -163,11 +163,11 @@ coverage report
 uv run pytest
 
 # Generate figures and data
-uv run python projects/code_project/scripts/example_figure.py
-uv run python scripts/02_run_analysis.py --project code_project
+uv run python projects/template_code_project/scripts/example_figure.py
+uv run python scripts/02_run_analysis.py --project template_code_project
 
 # Validate markdown integrity
-uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
 ```
 
 ### 3. Integration Phase
@@ -218,12 +218,16 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 
 ### Output Structure (`output/`)
 
-```text
-output/
-├── figures/          # PNG/MP4/SVG files
-├── data/             # CSV/NPZ files and manifests
-├── pdf/              # Individual and combined PDFs
-└── tex/              # Exported LaTeX files
+```mermaid
+flowchart LR
+    OUT[/output//]
+    OUT --> FIG[/figures/<br/>PNG · MP4 · SVG/]
+    OUT --> DATA[/data/<br/>CSV · NPZ · manifests/]
+    OUT --> PDF[/pdf/<br/>Individual + combined PDFs/]
+    OUT --> TEX[/tex/<br/>Exported LaTeX files/]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    class OUT,FIG,DATA,PDF,TEX d
 ```
 
 ## Validation Rules
@@ -256,14 +260,14 @@ output/
 uv sync
 
 # Run tests with coverage
-uv run pytest projects/code_project/tests/ --cov=projects.code_project.src --cov-report=term-missing
+uv run pytest projects/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
 
 # Generate figures
-uv run python projects/code_project/scripts/example_figure.py
-uv run python scripts/02_run_analysis.py --project code_project
+uv run python projects/template_code_project/scripts/example_figure.py
+uv run python scripts/02_run_analysis.py --project template_code_project
 
 # Validate markdown
-uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
 
 # Build PDF pipeline
 uv run python scripts/execute_pipeline.py --project {name} --core-only
@@ -356,10 +360,10 @@ pytest --cov=src --cov-report=term-missing
 
 ```bash
 # Check what's failing
-uv run python -m infrastructure.validation.cli markdown projects/code_project/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
 
 # Regenerate specific figures
-uv run python projects/code_project/scripts/example_figure.py
+uv run python projects/template_code_project/scripts/example_figure.py
 
 # Check test coverage gaps
 coverage report -m
