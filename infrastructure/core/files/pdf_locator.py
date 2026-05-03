@@ -69,7 +69,7 @@ def find_combined_pdf(output_dir: Path, project_name: str) -> tuple[Path, float]
         repo_root = Path(*path_parts[:output_idx])
         # Preserve any sub-path qualifiers after the 'output' segment so a caller
         # like output/foo/bar maps to projects/foo/bar/output/pdf.
-        qualified_path = "/".join(path_parts[output_idx + 1:])
+        qualified_path = "/".join(path_parts[output_idx + 1 :])
         source_pdf_dir = repo_root / "projects" / qualified_path / "output" / "pdf"
     else:
         source_pdf_dir = output_dir.parent.parent / "projects" / project_name / "output" / "pdf"

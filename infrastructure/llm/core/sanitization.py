@@ -60,9 +60,7 @@ class InputSanitizer:
         logger.debug(f"Sanitized prompt: {len(prompt)} characters")
         return prompt
 
-    def validate_file_input(
-        self, file_path: Path, allowed_extensions: list[str] | None = None
-    ) -> None:
+    def validate_file_input(self, file_path: Path, allowed_extensions: list[str] | None = None) -> None:
         """Reject LLM-provided file paths that are absolute, traversal-based, missing, or oversized.
 
         Args:
@@ -102,7 +100,6 @@ class InputSanitizer:
         file_stat = resolved.stat()
         if file_stat.st_size > max_size:
             raise SecurityError(f"File too large: {file_stat.st_size} bytes")
-
 
     def sanitize_filename(self, filename: str) -> str:
         """Strip path separators and control characters from an LLM-supplied filename.
@@ -160,6 +157,7 @@ class InputSanitizer:
             logger.warning(f"Text truncated from {len(text)} to {max_length} characters")
             return text[:max_length] + "...[truncated]"
         return text
+
 
 @functools.lru_cache(maxsize=1)
 def get_input_sanitizer() -> InputSanitizer:

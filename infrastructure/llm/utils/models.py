@@ -103,9 +103,7 @@ def get_available_model_info(
                 )
                 time.sleep(wait_time)
             else:
-                logger.warning(
-                    f"Failed to get available models after {retries + 1} attempts: {last_error}"
-                )
+                logger.warning(f"Failed to get available models after {retries + 1} attempts: {last_error}")
 
         except RequestsConnectionError as e:
             last_error = f"Connection error: {e}"
@@ -116,9 +114,7 @@ def get_available_model_info(
                 )
                 time.sleep(wait_time)
             else:
-                logger.warning(
-                    f"Failed to get available models after {retries + 1} attempts: {last_error}"
-                )
+                logger.warning(f"Failed to get available models after {retries + 1} attempts: {last_error}")
 
         except RequestException as e:
             last_error = f"Request error: {e}"
@@ -141,9 +137,7 @@ def get_model_names(base_url: str = "http://localhost:11434") -> list[str]:
     return [m["name"] for m in models]
 
 
-def select_best_model(
-    preferences: list[str] | None = None, base_url: str = "http://localhost:11434"
-) -> str | None:
+def select_best_model(preferences: list[str] | None = None, base_url: str = "http://localhost:11434") -> str | None:
     """Select the best available model based on preferences.
 
     Iterates through preference list and returns first available model.
@@ -223,9 +217,7 @@ def select_small_fast_model(base_url: str = "http://localhost:11434") -> str | N
     return select_best_model(SMALL_FAST_MODEL_PREFERENCES, base_url)
 
 
-def get_model_info(
-    model_name: str, base_url: str = "http://localhost:11434"
-) -> dict[str, Any] | None:
+def get_model_info(model_name: str, base_url: str = "http://localhost:11434") -> dict[str, Any] | None:
     """Get detailed information about a specific model.
 
     Args:
@@ -400,9 +392,7 @@ def preload_model(
                 )
                 time.sleep(wait_time)
             else:
-                logger.warning(
-                    f"Preload connection error after {retries + 1} attempts: {last_error}"
-                )
+                logger.warning(f"Preload connection error after {retries + 1} attempts: {last_error}")
 
         except RequestException as e:
             last_error = f"Request error: {e}"

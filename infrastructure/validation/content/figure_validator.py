@@ -67,9 +67,7 @@ def _load_registry(registry_path: Path) -> tuple[set[str] | None, str | None]:
                 else:
                     unlabeled += 1
             if unlabeled:
-                logger.warning(
-                    f"Figure registry has {unlabeled} item(s) without a 'label' field; skipped"
-                )
+                logger.warning(f"Figure registry has {unlabeled} item(s) without a 'label' field; skipped")
         else:
             return None, (
                 f"Failed to load figure registry: unexpected top-level JSON type "
@@ -110,10 +108,7 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
 
     if registered_figures is None:
         # Registry absent but figures are referenced
-        issue = (
-            f"Figure registry not found but {len(referenced_figures)} "
-            f"figure reference(s) found in manuscript"
-        )
+        issue = f"Figure registry not found but {len(referenced_figures)} figure reference(s) found in manuscript"
         logger.warning(f"Figure registry not found at {registry_path}")
         logger.warning(f"  Found {len(referenced_figures)} figure reference(s) in manuscript")
         return False, [issue]

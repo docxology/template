@@ -23,6 +23,7 @@ try:
     import requests
     from requests.exceptions import ConnectionError as RequestsConnectionError
     from requests.exceptions import RequestException, Timeout
+
     _requests_available = True
 except ImportError:
     requests = None  # type: ignore[assignment]
@@ -99,9 +100,7 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
                 logger.info("✓ Ollama server started successfully")
                 return True
             else:
-                logger.warning(
-                    f"Ollama process started but server not responding after {wait_seconds}s"
-                )
+                logger.warning(f"Ollama process started but server not responding after {wait_seconds}s")
 
         except FileNotFoundError:
             logger.error("Ollama command not found. Install Ollama: https://ollama.ai")

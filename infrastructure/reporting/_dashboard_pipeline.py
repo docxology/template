@@ -26,9 +26,7 @@ from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 logger = get_logger(__name__)
 
 
-def generate_pipeline_efficiency_chart(
-    summary: ExecutiveSummary, output_dir: Path
-) -> dict[str, Path]:
+def generate_pipeline_efficiency_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate pipeline efficiency and bottleneck analysis chart.
 
     Args:
@@ -179,9 +177,7 @@ def generate_pipeline_efficiency_chart(
     return saved_files
 
 
-def generate_pipeline_bottlenecks_chart(
-    summary: ExecutiveSummary, output_dir: Path
-) -> dict[str, Path]:
+def generate_pipeline_bottlenecks_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate detailed pipeline bottlenecks visualization.
 
     Args:

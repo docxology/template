@@ -87,9 +87,7 @@ def content_requirements(
         lines.append("   - Do NOT reference sources not mentioned in the provided content")
 
     if cite_sources:
-        lines.append(
-            "2. CITE SOURCES: Reference specific sections, passages, or elements from the content"
-        )
+        lines.append("2. CITE SOURCES: Reference specific sections, passages, or elements from the content")
         lines.append("   - Quote or paraphrase actual text when making observations")
         lines.append("   - Use specific section titles or page references when available")
 
@@ -151,9 +149,7 @@ def validation_hints(
         sections.append(["Required elements:"] + [f"   - {e}" for e in required_elements])
 
     if format_checks:
-        sections.append(
-            ["Format compliance checks:"] + [f"   - {c}" for c in format_checks]
-        )
+        sections.append(["Format compliance checks:"] + [f"   - {c}" for c in format_checks])
 
     lines = ["VALIDATION HINTS (what will be checked):"]
     for n, section in enumerate(sections, 1):

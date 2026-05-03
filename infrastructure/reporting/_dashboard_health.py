@@ -142,9 +142,7 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
     return saved_files
 
 
-def generate_health_comparison_chart(
-    summary: ExecutiveSummary, output_dir: Path
-) -> dict[str, Path]:
+def generate_health_comparison_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate health score comparison bar chart.
 
     Args:
@@ -185,9 +183,7 @@ def generate_health_comparison_chart(
                 factors = health.get("factors", {})
                 factor_scores["coverage"].append(factors.get("test_coverage", {}).get("score", 0))
                 factor_scores["integrity"].append(factors.get("test_failures", {}).get("score", 0))
-                factor_scores["manuscript"].append(
-                    factors.get("manuscript_size", {}).get("score", 0)
-                )
+                factor_scores["manuscript"].append(factors.get("manuscript_size", {}).get("score", 0))
                 factor_scores["outputs"].append(factors.get("outputs", {}).get("score", 0))
 
         if not project_names:

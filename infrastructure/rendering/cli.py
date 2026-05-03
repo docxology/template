@@ -76,9 +76,7 @@ def render_web_command(args: argparse.Namespace) -> None:
 
 def main() -> None:
     """Main CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Render documents in multiple formats (PDF, HTML, slides)."
-    )
+    parser = argparse.ArgumentParser(description="Render documents in multiple formats (PDF, HTML, slides).")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # PDF rendering

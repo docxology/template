@@ -47,9 +47,7 @@ def group_by_category(
     return groups
 
 
-def generate_text_report(
-    entries: list[FileInventoryEntry], base_dir: Path | None = None
-) -> str:
+def generate_text_report(entries: list[FileInventoryEntry], base_dir: Path | None = None) -> str:
     """Generate text format inventory report.
 
     Args:
@@ -75,9 +73,7 @@ def generate_text_report(
             count = len(category_entries)
 
             category_name = category.upper() if category in ["pdf", "tex"] else category.title()
-            lines.append(
-                f"  {category_name} ({count} file(s), {format_file_size(total_size)}):"
-            )
+            lines.append(f"  {category_name} ({count} file(s), {format_file_size(total_size)}):")
 
             shown_count = 0
             for entry in sorted(category_entries, key=lambda e: e.path):
@@ -96,9 +92,7 @@ def generate_text_report(
     return "\n".join(lines)
 
 
-def generate_json_report(
-    entries: list[FileInventoryEntry], base_dir: Path | None = None
-) -> str:
+def generate_json_report(entries: list[FileInventoryEntry], base_dir: Path | None = None) -> str:
     """Generate JSON format inventory report.
 
     Args:
@@ -117,14 +111,10 @@ def generate_json_report(
         result[category] = {
             "count": len(category_entries),
             "total_size": sum(entry.size for entry in category_entries),
-            "total_size_formatted": format_file_size(
-                sum(entry.size for entry in category_entries)
-            ),
+            "total_size_formatted": format_file_size(sum(entry.size for entry in category_entries)),
             "files": [
                 {
-                    "path": (
-                        str(entry.path.relative_to(base_dir)) if base_dir else str(entry.path)
-                    ),
+                    "path": (str(entry.path.relative_to(base_dir)) if base_dir else str(entry.path)),
                     "size": entry.size,
                     "size_formatted": entry.size_formatted,
                     "modified": entry.modified,
@@ -136,9 +126,7 @@ def generate_json_report(
     return json.dumps(result, indent=2)
 
 
-def generate_html_report(
-    entries: list[FileInventoryEntry], base_dir: Path | None = None
-) -> str:
+def generate_html_report(entries: list[FileInventoryEntry], base_dir: Path | None = None) -> str:
     """Generate HTML format inventory report.
 
     Args:
@@ -164,9 +152,7 @@ def generate_html_report(
             count = len(category_entries)
 
             category_name = category.upper() if category in ["pdf", "tex"] else category.title()
-            html_parts.append(
-                f"<h4>{category_name} ({count} file(s), {format_file_size(total_size)})</h4>"
-            )
+            html_parts.append(f"<h4>{category_name} ({count} file(s), {format_file_size(total_size)})</h4>")
             html_parts.append("<ul>")
 
             for entry in sorted(category_entries, key=lambda e: e.path):

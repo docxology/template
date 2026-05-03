@@ -128,9 +128,7 @@ def log_rendering_summary(summary: dict[str, Any]) -> None:
         for slide in summary["slides"]:
             logger.info(f"   {slide['name']:<40} {slide['size_kb']:>8.1f} KB")
 
-    logger.info(
-        f"\n📦 Total Output Size: {summary['total_size_kb']:.1f} KB ({summary['total_size_kb'] / 1024:.2f} MB)"
-    )
+    logger.info(f"\n📦 Total Output Size: {summary['total_size_kb']:.1f} KB ({summary['total_size_kb'] / 1024:.2f} MB)")
     logger.info("=" * 60 + "\n")
 
 
@@ -219,12 +217,11 @@ def verify_pdf_outputs(project_name: str = "project") -> bool:
             logger.info("\n✅ Manuscript bibliography file(s) found and will be processed")
         elif citations_used:
             logger.warning(
-                "\n⚠️  Bibliography file not found (citations detected in manuscript - bibliography processing will be skipped)"
+                "\n⚠️  Bibliography file not found "
+                "(citations detected in manuscript - bibliography processing will be skipped)"
             )
         else:
-            logger.info(
-                "\nℹ️  Bibliography file not found (no citations detected in manuscript - this is fine)"
-            )
+            logger.info("\nℹ️  Bibliography file not found (no citations detected in manuscript - this is fine)")
 
         if failed_compilations:
             logger.error(f"\n❌ {len(failed_compilations)} PDF compilation(s) failed:")
@@ -236,7 +233,8 @@ def verify_pdf_outputs(project_name: str = "project") -> bool:
             if size_mb > 0.01:
                 if failed_compilations:
                     logger.warning(
-                        f"\n⚠️  Combined manuscript PDF generated but {len(failed_compilations)} other PDF(s) failed to compile"
+                        "\n⚠️  Combined manuscript PDF generated but "
+                        f"{len(failed_compilations)} other PDF(s) failed to compile"
                     )
                 else:
                     logger.info("\n✅ Combined manuscript PDF successfully generated!")

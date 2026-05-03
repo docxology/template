@@ -62,6 +62,7 @@ class StreamingMetrics:
     first_chunk_time: float = 0.0  # Time to first chunk
     last_chunk_time: float = 0.0  # Time of last chunk
 
+
 # estimate_tokens imported from infrastructure.llm.validation.core
 __all__ = [
     "ManuscriptInputMetrics",

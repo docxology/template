@@ -148,12 +148,8 @@ class DeepSearchArtifacts:
             "total_papers": self.total_papers,
             "unique_papers": self.unique_papers,
             "bibtex_path": str(self.bibtex_path) if self.bibtex_path else None,
-            "aggregate_json_path": (
-                str(self.aggregate_json_path) if self.aggregate_json_path else None
-            ),
-            "aggregate_report_path": (
-                str(self.aggregate_report_path) if self.aggregate_report_path else None
-            ),
+            "aggregate_json_path": (str(self.aggregate_json_path) if self.aggregate_json_path else None),
+            "aggregate_report_path": (str(self.aggregate_report_path) if self.aggregate_report_path else None),
             "output_dir": str(self.output_dir) if self.output_dir else None,
             "keyword_results": [kr.to_dict() for kr in self.keyword_results],
         }
@@ -187,16 +183,12 @@ def _build_backends(
             backends.append(CrossrefBackend(mailto=config.crossref_mailto))
         elif name == "local":
             if corpus_path is None:
-                raise ValueError(
-                    "deep_search.sources includes 'local' but no corpus_path supplied"
-                )
+                raise ValueError("deep_search.sources includes 'local' but no corpus_path supplied")
             backends.append(LocalBackend(corpus_path))
         elif name == "paperclip":
             api_key = os.environ.get("PAPERCLIP_API_KEY", "")
             if not api_key:
-                raise RuntimeError(
-                    "Paperclip backend requested but PAPERCLIP_API_KEY is not set"
-                )
+                raise RuntimeError("Paperclip backend requested but PAPERCLIP_API_KEY is not set")
             backends.append(PaperclipBackend(api_key=api_key))
         else:
             raise ValueError(f"Unknown deep-search source: {source!r}")
@@ -358,12 +350,8 @@ def write_keyword_report(
     for paper in result.papers:
         key = keyword_result.citation_keys.get(paper.id, paper.id)
         authors = ", ".join(paper.authors) if paper.authors else "Unknown"
-        locator = (
-            f"https://doi.org/{paper.doi}" if paper.doi else (paper.url or "(no link)")
-        )
-        first_abs = (
-            (paper.abstract or "_(no abstract)_").strip().splitlines()[0][:240]
-        )
+        locator = f"https://doi.org/{paper.doi}" if paper.doi else (paper.url or "(no link)")
+        first_abs = (paper.abstract or "_(no abstract)_").strip().splitlines()[0][:240]
         lines.append(f"- **[{key}]** *{paper.title}* — {authors} ({paper.year or 'n.d.'})")
         lines.append(f"  {locator}")
         lines.append(f"  > {first_abs}")
@@ -464,9 +452,7 @@ def run_deep_search(
     if write_outputs:
         output_dir.mkdir(parents=True, exist_ok=True)
 
-    backends = _build_backends(
-        config, corpus_path=corpus_path, extra_backends=extra_backends
-    )
+    backends = _build_backends(config, corpus_path=corpus_path, extra_backends=extra_backends)
     cache: SearchCache | None = None
     if config.search_cache_dir:
         cache_dir = (root / config.search_cache_dir).resolve()
@@ -476,9 +462,7 @@ def run_deep_search(
     abs_fetcher: AbstractFetcher | None = None
     ft_fetcher: FulltextFetcher | None = None
     if config.fetch_abstracts:
-        abs_fetcher = AbstractFetcher(
-            cache_dir=(root / config.abstract_cache_dir).resolve()
-        )
+        abs_fetcher = AbstractFetcher(cache_dir=(root / config.abstract_cache_dir).resolve())
     if config.fetch_fulltext:
         ft_fetcher = FulltextFetcher(
             cache_dir=(root / config.fulltext_cache_dir).resolve(),
@@ -522,9 +506,7 @@ def run_deep_search(
             for paper in result.papers:
                 key = citation_keys.get(paper.id, paper.id)
                 block = build_rich_paper_block(paper, max_fulltext=config.max_fulltext_chars)
-                prompt = DEEP_PROMPT.format(
-                    keyword=keyword, citation_key=key, paper_block=block
-                )
+                prompt = DEEP_PROMPT.format(keyword=keyword, citation_key=key, paper_block=block)
                 per_paper_summaries[paper.id] = llm(prompt)
 
         kw_dir = output_dir / slug if write_outputs else None
@@ -584,7 +566,6 @@ def run_deep_search(
 
     bibtex_path: Path | None = None
     aggregate_json_path: Path | None = None
-    aggregate_report_path: Path | None = None
     if write_outputs:
         # Aggregate JSON.
         aggregate_json_path = output_dir / "aggregate.json"
@@ -605,8 +586,8 @@ def run_deep_search(
         if config.write_unified_bibtex:
             db = BibDatabase()
             for paper in aggregate_papers:
-                key = aggregate_citation_keys.get(paper.id)
-                db.add(paper_to_bibentry(paper, citation_key=key))
+                cite_key = aggregate_citation_keys[paper.id]
+                db.add(paper_to_bibentry(paper, citation_key=cite_key))
             bibtex_path = (root / config.unified_bibtex_path).resolve()
             write_bibfile(bibtex_path, db)
 

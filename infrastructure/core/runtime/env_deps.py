@@ -87,9 +87,7 @@ def install_missing_packages(packages: list[str]) -> bool:
             add_cmd = ["uv", "add", package]
             logger.info(f"Adding to pyproject.toml: {' '.join(add_cmd)}")
             try:
-                add_result = subprocess.run(
-                    add_cmd, check=False, capture_output=True, text=True, timeout=30
-                )
+                add_result = subprocess.run(add_cmd, check=False, capture_output=True, text=True, timeout=30)
             except subprocess.TimeoutExpired:
                 logger.warning(f"Timeout adding {package} to pyproject.toml (30s)")
                 continue

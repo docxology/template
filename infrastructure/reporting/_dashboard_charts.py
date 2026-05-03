@@ -26,6 +26,7 @@ from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)
 
+
 def create_test_count_chart(projects: list[ProjectMetrics]) -> Figure:
     """Create bar chart showing test counts by project.
 
@@ -461,10 +462,7 @@ def create_performance_timeline_chart(projects: list[ProjectMetrics]) -> Figure:
 
     # Performance efficiency (output per time)
     if durations and pdf_counts:
-        efficiency = [
-            count / duration if duration > 0 else 0
-            for count, duration in zip(pdf_counts, durations)
-        ]
+        efficiency = [count / duration if duration > 0 else 0 for count, duration in zip(pdf_counts, durations)]
 
         bars = ax4.bar(range(len(projects)), efficiency, color=COLORS["warning"], alpha=0.7)
         ax4.set_xlabel("Project", fontweight="bold")
@@ -777,10 +775,7 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
         # Performance efficiency
         ax6 = axes[1, 2]
         pdf_counts = [p.outputs.pdf_files for p in projects]
-        efficiency = [
-            count / duration if duration > 0 else 0
-            for count, duration in zip(pdf_counts, durations)
-        ]
+        efficiency = [count / duration if duration > 0 else 0 for count, duration in zip(pdf_counts, durations)]
 
         ax6.bar(x, efficiency, color=COLORS["success"], alpha=0.8)
         ax6.set_xlabel("Project", fontweight="bold")
@@ -933,4 +928,3 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
         plt.close("all")
 
     return saved_files
-

@@ -48,14 +48,10 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
     logger.debug(f"PDF file size: {file_size} bytes ({file_size / 1024:.1f} KB)")
 
     if file_size < 1000:  # Less than 1KB
-        raise PDFValidationError(
-            f"PDF file is too small ({file_size} bytes) - likely corrupted or empty"
-        )
+        raise PDFValidationError(f"PDF file is too small ({file_size} bytes) - likely corrupted or empty")
 
     if file_size > 100 * 1024 * 1024:  # More than 100MB
-        raise PDFValidationError(
-            f"PDF file is too large ({file_size / 1024 / 1024:.1f} MB) - exceeds safety limit"
-        )
+        raise PDFValidationError(f"PDF file is too large ({file_size / 1024 / 1024:.1f} MB) - exceeds safety limit")
 
     # Try extraction with multiple libraries in order of preference
     extraction_methods = [
@@ -139,6 +135,7 @@ def _extract_with_pdfplumber(pdf_path: Path) -> str:
                 text_parts.append(page_text)
 
     return "\n\n".join(text_parts)
+
 
 def scan_for_issues(text: str) -> dict[str, int]:
     """

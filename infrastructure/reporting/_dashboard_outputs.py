@@ -25,9 +25,7 @@ from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 logger = get_logger(__name__)
 
 
-def generate_output_distribution_charts(
-    summary: ExecutiveSummary, output_dir: Path
-) -> dict[str, Path]:
+def generate_output_distribution_charts(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate output distribution and comparison charts.
 
     Args:
@@ -79,10 +77,7 @@ def generate_output_distribution_charts(
         ax1.bar(
             project_names,
             web_counts,
-            bottom=[
-                pdf + fig + slide
-                for pdf, fig, slide in zip(pdf_counts, figure_counts, slide_counts)
-            ],
+            bottom=[pdf + fig + slide for pdf, fig, slide in zip(pdf_counts, figure_counts, slide_counts)],
             label="Web",
             color=COLORS["secondary"],
             alpha=0.8,
@@ -158,20 +153,10 @@ def generate_output_distribution_charts(
             expected_slides = 4  # Standard slide count
             expected_web = 4  # Standard web count
 
-            pdf_score = (
-                min(project.outputs.pdf_files / expected_pdfs, 1.0) if expected_pdfs > 0 else 1.0
-            )
-            figure_score = (
-                min(project.outputs.figures / expected_figures, 1.0)
-                if expected_figures > 0
-                else 1.0
-            )
-            slide_score = (
-                min(project.outputs.slides / expected_slides, 1.0) if expected_slides > 0 else 1.0
-            )
-            web_score = (
-                min(project.outputs.web_outputs / expected_web, 1.0) if expected_web > 0 else 1.0
-            )
+            pdf_score = min(project.outputs.pdf_files / expected_pdfs, 1.0) if expected_pdfs > 0 else 1.0
+            figure_score = min(project.outputs.figures / expected_figures, 1.0) if expected_figures > 0 else 1.0
+            slide_score = min(project.outputs.slides / expected_slides, 1.0) if expected_slides > 0 else 1.0
+            web_score = min(project.outputs.web_outputs / expected_web, 1.0) if expected_web > 0 else 1.0
 
             avg_completeness = (pdf_score + figure_score + slide_score + web_score) / 4
             completeness_scores.append(avg_completeness * 100)  # Convert to percentage
@@ -218,9 +203,7 @@ def generate_output_distribution_charts(
     return saved_files
 
 
-def generate_output_comparison_chart(
-    summary: ExecutiveSummary, output_dir: Path
-) -> dict[str, Path]:
+def generate_output_comparison_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate detailed output comparison visualization.
 
     Args:

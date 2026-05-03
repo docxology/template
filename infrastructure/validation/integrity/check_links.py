@@ -30,8 +30,10 @@ from infrastructure.validation.docs.accuracy import extract_headings
 
 logger = get_logger(__name__)
 
+
 class LinkCheckResult(TypedDict):
     """Represents a single link check result from the link checker."""
+
     file: str
     line: int
     target: str
@@ -181,9 +183,7 @@ def _check_code_path_match(
     context_before = block["content"][max(0, match_start - 10) : match_start]
     context_after = block["content"][match_end : min(len(block["content"]), match_end + 10)]
 
-    if ('"' in context_before or "'" in context_before) and (
-        '"' in context_after or "'" in context_after
-    ):
+    if ('"' in context_before or "'" in context_before) and ('"' in context_after or "'" in context_after):
         return None
 
     if is_valid_directory_reference(path_ref) or not _should_validate_path(path_ref):
@@ -216,9 +216,7 @@ def _check_code_path_match(
     return None
 
 
-def validate_file_paths_in_code(
-    content: str, file_path: Path, repo_root: Path
-) -> list[dict[str, Any]]:
+def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
     """Validate file path references within code blocks.
 
     Improved to avoid catching formatting artifacts and better handle multi-line paths.
@@ -390,11 +388,7 @@ def _should_validate_path(path_ref: str) -> bool:
     # Malformed paths containing formatting artifacts
     if any(char in path_ref for char in ("`", ")", "]", "}", "|", "\n", "\r")):
         path_stripped = path_ref.rstrip()
-        if (
-            path_stripped.endswith((")", "]", "}", "`", "|", "\\n"))
-            or "\n" in path_ref
-            or "\r" in path_ref
-        ):
+        if path_stripped.endswith((")", "]", "}", "`", "|", "\\n")) or "\n" in path_ref or "\r" in path_ref:
             return False
         if re.search(r"/\s*\n\s*[A-Z]", path_ref):
             return False
@@ -438,6 +432,7 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
     except OSError:
         return None
 
+
 def validate_directory_structures(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
     """Validate directory structure examples in markdown against actual filesystem.
 
@@ -468,13 +463,15 @@ def validate_directory_structures(content: str, file_path: Path, repo_root: Path
                 candidate = repo_root / item_name.rstrip("/")
                 if not candidate.exists():
                     line_num = content[: match.start()].count("\n") + 1
-                    issues.append({
-                        "file": str(file_path),
-                        "line": line_num,
-                        "target": item_name,
-                        "issue": f"Directory tree references '{item_name}' which does not exist",
-                        "type": "missing_tree_item",
-                    })
+                    issues.append(
+                        {
+                            "file": str(file_path),
+                            "line": line_num,
+                            "target": item_name,
+                            "issue": f"Directory tree references '{item_name}' which does not exist",
+                            "type": "missing_tree_item",
+                        }
+                    )
 
     return issues
 
@@ -510,15 +507,11 @@ def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> l
                         if isinstance(node, ast.Import):
                             for alias in node.names:
                                 module_name = alias.name
-                                issues.extend(
-                                    _validate_import_path(module_name, block, file_path, repo_root)
-                                )
+                                issues.extend(_validate_import_path(module_name, block, file_path, repo_root))
                         elif isinstance(node, ast.ImportFrom):
                             module_name: str | None = node.module
                             if module_name is not None:
-                                issues.extend(
-                                    _validate_import_path(module_name, block, file_path, repo_root)
-                                )
+                                issues.extend(_validate_import_path(module_name, block, file_path, repo_root))
             except SyntaxError as e:
                 # Skip malformed Python code
                 logger.debug(f"Syntax error extracting imports from {file_path.name}: {e}")
@@ -536,9 +529,7 @@ def _validate_import_path(
     # Convert module path to file path
     if module_name.startswith("infrastructure."):
         # First check if it's a direct module import (e.g., infrastructure.core.performance)
-        file_path_guess = (
-            module_name.replace("infrastructure.", "infrastructure/").replace(".", "/") + ".py"
-        )
+        file_path_guess = module_name.replace("infrastructure.", "infrastructure/").replace(".", "/") + ".py"
         full_path = repo_root / file_path_guess
         if full_path.exists():
             # File exists, import should be valid
@@ -552,8 +543,7 @@ def _validate_import_path(
             for i in range(len(path_parts) - 1, 0, -1):
                 parent_module = ".".join(path_parts[:i])
                 init_path_guess = (
-                    parent_module.replace("infrastructure.", "infrastructure/").replace(".", "/")
-                    + "/__init__.py"
+                    parent_module.replace("infrastructure.", "infrastructure/").replace(".", "/") + "/__init__.py"
                 )
                 init_full_path = repo_root / init_path_guess
                 if init_full_path.exists():
@@ -578,10 +568,7 @@ def _validate_import_path(
         project_names = _get_actual_project_names(repo_root)
         for project_name in project_names:
             file_path_guess = (
-                module_name.replace(
-                    "projects.project.src.", f"projects/{project_name}/src/"
-                ).replace(".", "/")
-                + ".py"
+                module_name.replace("projects.project.src.", f"projects/{project_name}/src/").replace(".", "/") + ".py"
             )
             full_path = repo_root / file_path_guess
             if full_path.exists():
@@ -607,9 +594,7 @@ def _validate_import_path(
     return issues
 
 
-def validate_placeholder_consistency(
-    content: str, file_path: Path, repo_root: Path
-) -> list[dict[str, Any]]:
+def validate_placeholder_consistency(content: str, file_path: Path, repo_root: Path) -> list[dict[str, Any]]:
     """Validate consistency of {name} placeholders vs actual project names."""
     issues: list[dict[str, Any]] = []
 
@@ -668,9 +653,7 @@ def validate_placeholder_consistency(
                 "this project",
             ]
 
-            has_specific_indicator = any(
-                indicator in context.lower() for indicator in specific_project_indicators
-            )
+            has_specific_indicator = any(indicator in context.lower() for indicator in specific_project_indicators)
             mentions_specific_project = any(proj in context for proj in project_names)
 
             if has_specific_indicator and mentions_specific_project:
@@ -808,9 +791,7 @@ def run_link_audit(repo_root: Path) -> int:
                     "conclusion",
                     "results",
                 ]
-                if target in common_sections or any(
-                    sec in target.lower() for sec in common_sections
-                ):
+                if target in common_sections or any(sec in target.lower() for sec in common_sections):
                     continue
 
                 # Only check for actual heading anchors within the same file
@@ -875,6 +856,7 @@ def main() -> int:
     # Go up from infrastructure/validation/check_links.py to repo root
     repo_root = Path(__file__).parent.parent.parent
     return run_link_audit(repo_root)
+
 
 def generate_comprehensive_report(issues: dict[str, list[LinkCheckResult]], total_files: int) -> int:
     """Generate a comprehensive validation report."""

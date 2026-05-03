@@ -101,18 +101,10 @@ class DeepSearchConfig:
     def resolve_llm_budget(self, llm: LLMConfig) -> tuple[int, int, int, float]:
         """Return (context_window, long_max_tokens, max_input_length, review_timeout)."""
         return (
-            self.llm_context_window
-            if self.llm_context_window is not None
-            else llm.context_window,
-            self.llm_long_max_tokens
-            if self.llm_long_max_tokens is not None
-            else llm.long_max_tokens,
-            self.llm_max_input_length
-            if self.llm_max_input_length is not None
-            else llm.max_input_length,
-            self.llm_review_timeout
-            if self.llm_review_timeout is not None
-            else llm.review_timeout,
+            self.llm_context_window if self.llm_context_window is not None else llm.context_window,
+            self.llm_long_max_tokens if self.llm_long_max_tokens is not None else llm.long_max_tokens,
+            self.llm_max_input_length if self.llm_max_input_length is not None else llm.max_input_length,
+            self.llm_review_timeout if self.llm_review_timeout is not None else llm.review_timeout,
         )
 
 
@@ -166,21 +158,13 @@ class ProjectConfig:
                 paperclip=bool(search_raw.get("paperclip", False)),
                 cache_dir=str(search_raw.get("cache_dir") or "output/search/cache"),
                 cache_ttl_seconds=_optional_int(search_raw.get("cache_ttl_seconds")),
-                local_corpus=(
-                    str(search_raw["local_corpus"])
-                    if search_raw.get("local_corpus")
-                    else None
-                ),
+                local_corpus=(str(search_raw["local_corpus"]) if search_raw.get("local_corpus") else None),
             ),
             enrichment=EnrichmentConfig(
                 fetch_abstracts=bool(enrich_raw.get("fetch_abstracts", True)),
                 fetch_fulltext=bool(enrich_raw.get("fetch_fulltext", False)),
-                abstract_cache_dir=str(
-                    enrich_raw.get("abstract_cache_dir") or "output/cache/abs"
-                ),
-                fulltext_cache_dir=str(
-                    enrich_raw.get("fulltext_cache_dir") or "output/cache/pdf"
-                ),
+                abstract_cache_dir=str(enrich_raw.get("abstract_cache_dir") or "output/cache/abs"),
+                fulltext_cache_dir=str(enrich_raw.get("fulltext_cache_dir") or "output/cache/pdf"),
                 max_fulltext_chars=int(enrich_raw.get("max_fulltext_chars", 200_000)),
             ),
             llm=LLMConfig(
@@ -199,9 +183,7 @@ class ProjectConfig:
             report=ReportConfig(
                 output_path=str(report_raw.get("output_path") or "output/reading_report.md"),
                 include_per_paper=bool(report_raw.get("include_per_paper", True)),
-                include_corpus_synthesis=bool(
-                    report_raw.get("include_corpus_synthesis", True)
-                ),
+                include_corpus_synthesis=bool(report_raw.get("include_corpus_synthesis", True)),
             ),
             deep_search=_parse_deep_search(data.get("deep_search") or {}),
             references_path=str(data.get("references_path") or "manuscript/references.bib"),
@@ -225,27 +207,15 @@ def _parse_deep_search(raw: dict[str, Any]) -> DeepSearchConfig:
         llm_seed=int(raw.get("llm_seed", 42)),
         llm_temperature=float(raw.get("llm_temperature", 0.0)),
         output_dir=str(raw.get("output_dir") or "output/deep_search"),
-        abstract_cache_dir=str(
-            raw.get("abstract_cache_dir") or "output/cache/abs"
-        ),
-        fulltext_cache_dir=str(
-            raw.get("fulltext_cache_dir") or "output/cache/pdf"
-        ),
-        search_cache_dir=str(
-            raw.get("search_cache_dir") or "output/search/cache"
-        ),
+        abstract_cache_dir=str(raw.get("abstract_cache_dir") or "output/cache/abs"),
+        fulltext_cache_dir=str(raw.get("fulltext_cache_dir") or "output/cache/pdf"),
+        search_cache_dir=str(raw.get("search_cache_dir") or "output/search/cache"),
         write_unified_bibtex=bool(raw.get("write_unified_bibtex", True)),
-        unified_bibtex_path=str(
-            raw.get("unified_bibtex_path") or "manuscript/references_deep.bib"
-        ),
+        unified_bibtex_path=str(raw.get("unified_bibtex_path") or "manuscript/references_deep.bib"),
         llm_context_window=_optional_int(raw.get("llm_context_window")),
         llm_long_max_tokens=_optional_int(raw.get("llm_long_max_tokens")),
         llm_max_input_length=_optional_int(raw.get("llm_max_input_length")),
-        llm_review_timeout=(
-            float(raw["llm_review_timeout"])
-            if raw.get("llm_review_timeout") is not None
-            else None
-        ),
+        llm_review_timeout=(float(raw["llm_review_timeout"]) if raw.get("llm_review_timeout") is not None else None),
     )
 
 

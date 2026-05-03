@@ -12,9 +12,7 @@ from .synthesis import SynthesisResult
 
 def _format_paper_summary(paper: Paper, citation_key: str) -> str:
     authors = ", ".join(paper.authors) if paper.authors else "Unknown authors"
-    locator = (
-        f"https://doi.org/{paper.doi}" if paper.doi else (paper.url or "(no link)")
-    )
+    locator = f"https://doi.org/{paper.doi}" if paper.doi else (paper.url or "(no link)")
     abstract_line = (paper.abstract or "(no abstract)").strip().splitlines()[0][:240]
     return (
         f"- **[{citation_key}]** *{paper.title}* — {authors} ({paper.year or 'n.d.'})  \n"

@@ -116,9 +116,7 @@ class SecurityValidator:
             SecurityViolation: If content is too large
         """
         if len(content) > self.limits["content_size"]:
-            raise SecurityViolation(
-                f"Content too large: {len(content)} > {self.limits['content_size']}"
-            )
+            raise SecurityViolation(f"Content too large: {len(content)} > {self.limits['content_size']}")
         return content
 
     def _sanitize_html(self, text: str) -> str:

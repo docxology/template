@@ -120,9 +120,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_format.add_argument("--output", "-o", help="Output path (default: overwrite input)")
     p_format.set_defaults(func=_cmd_format)
 
-    p_convert = sub.add_parser(
-        "convert", help="Convert a JSON file of Paper records to BibTeX."
-    )
+    p_convert = sub.add_parser("convert", help="Convert a JSON file of Paper records to BibTeX.")
     p_convert.add_argument("input", help="Input JSON path")
     p_convert.add_argument(
         "output",

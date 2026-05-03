@@ -163,7 +163,9 @@ def generate_html_report(report: PipelineReport) -> str:
         <p><strong>Skipped:</strong> {summary.get("total_skipped", 0)}</p>
 """
         if "infrastructure_coverage" in summary:
-            html += f"        <p><strong>Infrastructure Coverage:</strong> {summary['infrastructure_coverage']:.2f}%</p>\n"  # noqa: E501
+            html += (
+                f"        <p><strong>Infrastructure Coverage:</strong> {summary['infrastructure_coverage']:.2f}%</p>\n"  # noqa: E501
+            )
         if "project_coverage" in summary:
             html += f"        <p><strong>Project Coverage:</strong> {summary['project_coverage']:.2f}%</p>\n"  # noqa: E501
         html += "    </div>\n"

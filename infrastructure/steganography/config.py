@@ -29,6 +29,7 @@ class DocumentMetadata:
     keywords: list[str] | None = None
     extra: dict[str, str] | None = None
 
+
 @dataclass
 class SteganographyConfig:
     """Configuration for steganographic PDF post-processing.

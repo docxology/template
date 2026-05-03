@@ -35,9 +35,7 @@ class BenchmarkResult:
     timestamp: str
 
 
-def benchmark_function(
-    func: Callable[..., Any], test_inputs: list[Any], iterations: int = 100
-) -> BenchmarkResult:
+def benchmark_function(func: Callable[..., Any], test_inputs: list[Any], iterations: int = 100) -> BenchmarkResult:
     """Benchmark function performance across multiple inputs.
 
     Args:
@@ -53,9 +51,7 @@ def benchmark_function(
     execution_times = []
     memory_usages = []
 
-    func_name = getattr(
-        func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func))
-    )
+    func_name = getattr(func, "__name__", getattr(getattr(func, "func", None), "__name__", repr(func)))
 
     iterations = max(1, int(iterations))
 
@@ -99,9 +95,7 @@ def benchmark_function(
             memory_usages.append(None)
 
     avg_execution_time = np.mean(execution_times) if execution_times else 0.0
-    valid_memory = [
-        m for m in memory_usages if m is not None and not (isinstance(m, float) and np.isnan(m))
-    ]
+    valid_memory = [m for m in memory_usages if m is not None and not (isinstance(m, float) and np.isnan(m))]
     avg_memory_usage = np.mean(valid_memory) if valid_memory else None
 
     # Create result summary
@@ -188,4 +182,3 @@ def generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str
     scientific-dev APIs and tests.
     """
     return format_benchmark_report(benchmark_results)
-

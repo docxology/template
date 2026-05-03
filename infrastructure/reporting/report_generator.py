@@ -34,9 +34,7 @@ def generate_test_report(
             "total_failed": infra_results.get("failed", 0) + project_results.get("failed", 0),
             "total_skipped": infra_results.get("skipped", 0) + project_results.get("skipped", 0),
             "total_tests": infra_results.get("total", 0) + project_results.get("total", 0),
-            "all_passed": (
-                infra_results.get("exit_code", 0) == 0 and project_results.get("exit_code", 1) == 0
-            ),
+            "all_passed": (infra_results.get("exit_code", 0) == 0 and project_results.get("exit_code", 1) == 0),
         },
     }
 
@@ -113,9 +111,7 @@ def save_test_report_to_files(report: dict[str, Any], output_dir: Path) -> tuple
             f.write(f"- Total Passed: {report['summary']['total_passed']}\n")
             f.write(f"- Total Failed: {report['summary']['total_failed']}\n")
             f.write(f"- Total Tests: {report['summary']['total_tests']}\n")
-            f.write(
-                f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n"
-            )
+            f.write(f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n")
     except OSError as e:
         logger.error(f"Failed to write test report markdown: {e}")
         raise

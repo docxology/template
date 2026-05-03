@@ -67,8 +67,7 @@ def check_documented_commands(
                     else:
                         if (
                             md_file.name == "EXAMPLES.md"
-                            and "Create"
-                            in content[max(0, match.start() - 50) : match.start()]
+                            and "Create" in content[max(0, match.start() - 50) : match.start()]
                         ):
                             continue
 

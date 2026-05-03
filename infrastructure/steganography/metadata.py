@@ -43,8 +43,7 @@ def inject_pdf_metadata(
         from pypdf import PdfReader, PdfWriter  # type: ignore[import-untyped]
     except ImportError:
         raise ImportError(
-            "The 'pypdf' package is required for PDF metadata injection. "
-            "Install it with: pip install pypdf"
+            "The 'pypdf' package is required for PDF metadata injection. Install it with: pip install pypdf"
         ) from None
 
     reader = PdfReader(str(input_pdf))

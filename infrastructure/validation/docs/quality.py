@@ -12,9 +12,7 @@ from infrastructure.validation.docs.models import QualityIssue
 logger = get_logger(__name__)
 
 
-def assess_clarity(
-    content: str, md_file: Path, lines: list[str], repo_root: Path
-) -> list[QualityIssue]:
+def assess_clarity(content: str, md_file: Path, lines: list[str], repo_root: Path) -> list[QualityIssue]:
     """Assess clarity and readability of a markdown document.
 
     Flags lines that exceed 120 characters, which may harm readability in
@@ -48,20 +46,60 @@ def assess_clarity(
     return issues
 
 
-_IMPERATIVE_VERBS: frozenset[str] = frozenset([
-    "run", "execute", "install", "use", "configure", "create", "set",
-    "add", "remove", "check", "verify", "update", "open", "close",
-    "edit", "delete", "build", "deploy", "test", "start", "stop",
-    "copy", "move", "rename", "make", "write", "read", "load", "save",
-    "enable", "disable", "restart", "connect", "specify", "define",
-    "provide", "pass", "import", "export", "generate", "select",
-    "ensure", "include", "exclude", "replace", "modify", "review",
-])
+_IMPERATIVE_VERBS: frozenset[str] = frozenset(
+    [
+        "run",
+        "execute",
+        "install",
+        "use",
+        "configure",
+        "create",
+        "set",
+        "add",
+        "remove",
+        "check",
+        "verify",
+        "update",
+        "open",
+        "close",
+        "edit",
+        "delete",
+        "build",
+        "deploy",
+        "test",
+        "start",
+        "stop",
+        "copy",
+        "move",
+        "rename",
+        "make",
+        "write",
+        "read",
+        "load",
+        "save",
+        "enable",
+        "disable",
+        "restart",
+        "connect",
+        "specify",
+        "define",
+        "provide",
+        "pass",
+        "import",
+        "export",
+        "generate",
+        "select",
+        "ensure",
+        "include",
+        "exclude",
+        "replace",
+        "modify",
+        "review",
+    ]
+)
 
 
-def assess_actionability(
-    content: str, md_file: Path, lines: list[str], repo_root: Path
-) -> list[QualityIssue]:
+def assess_actionability(content: str, md_file: Path, lines: list[str], repo_root: Path) -> list[QualityIssue]:
     """Assess whether list-item instructions in the document are actionable.
 
     Scans bulleted and numbered list items outside code blocks and checks
@@ -93,12 +131,7 @@ def assess_actionability(
 
         # Match bulleted or numbered list items
         is_bullet = stripped.startswith(("- ", "* ", "+ "))
-        is_numbered = (
-            len(stripped) > 2
-            and stripped[0].isdigit()
-            and len(stripped) > 1
-            and stripped[1] in ".)"
-        )
+        is_numbered = len(stripped) > 2 and stripped[0].isdigit() and len(stripped) > 1 and stripped[1] in ".)"
         if not (is_bullet or is_numbered):
             continue
 
@@ -106,7 +139,7 @@ def assess_actionability(
         if is_bullet:
             item_text = stripped[2:].strip()
         else:
-            item_text = stripped[stripped.index(stripped[1]) + 1:].strip()
+            item_text = stripped[stripped.index(stripped[1]) + 1 :].strip()
 
         if not item_text or item_text.startswith("`"):
             # Inline code command — always actionable
@@ -119,10 +152,7 @@ def assess_actionability(
                     file=file_key,
                     line=i,
                     issue_type="actionability",
-                    issue_message=(
-                        f"List item may lack an imperative directive "
-                        f"(starts with '{first_word}')"
-                    ),
+                    issue_message=(f"List item may lack an imperative directive (starts with '{first_word}')"),
                     severity="info",
                 )
             )
@@ -130,9 +160,7 @@ def assess_actionability(
     return issues
 
 
-def assess_maintainability(
-    content: str, md_file: Path, lines: list[str], repo_root: Path
-) -> list[QualityIssue]:
+def assess_maintainability(content: str, md_file: Path, lines: list[str], repo_root: Path) -> list[QualityIssue]:
     """Assess maintainability of the document by detecting duplicate lines.
 
     Flags non-blank, non-heading lines that appear three or more times in the
@@ -176,9 +204,7 @@ def assess_maintainability(
                     file=file_key,
                     line=first_occurrence[line_text],
                     issue_type="maintainability",
-                    issue_message=(
-                        f"Line repeated {count} times — consider consolidating: '{preview}'"
-                    ),
+                    issue_message=(f"Line repeated {count} times — consider consolidating: '{preview}'"),
                     severity="info",
                 )
             )
@@ -186,9 +212,7 @@ def assess_maintainability(
     return issues
 
 
-def check_formatting(
-    content: str, md_file: Path, lines: list[str], repo_root: Path
-) -> list[QualityIssue]:
+def check_formatting(content: str, md_file: Path, lines: list[str], repo_root: Path) -> list[QualityIssue]:
     """Check markdown formatting consistency.
 
     Validates heading hierarchy (no skipped levels) and other structural
@@ -242,9 +266,7 @@ def group_quality_by_severity(issues: list[QualityIssue]) -> dict[str, int]:
     return dict(severities)
 
 
-def run_quality_phase(
-    md_files: list[Path], repo_root: Path
-) -> tuple[dict[str, Any], list[QualityIssue]]:
+def run_quality_phase(md_files: list[Path], repo_root: Path) -> tuple[dict[str, Any], list[QualityIssue]]:
     """Run Phase 4: Quality Assessment.
 
     Args:

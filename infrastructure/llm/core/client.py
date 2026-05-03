@@ -192,7 +192,9 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
                             "attempt": self.config.fallback_models.index(fallback) + 1,
                         },
                     )
-                    response_text = self._generate_response_direct(fallback, self.context.get_messages(), options=options)
+                    response_text = self._generate_response_direct(
+                        fallback, self.context.get_messages(), options=options
+                    )
                     generation_time = time_module.time() - fallback_start
 
                     logger.info(
@@ -255,6 +257,7 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         # design debt; the correct long-term fix is to extract the SecurityMonitor audit
         # interface into a separate lightweight module that neither side depends on.
         from infrastructure.core.security import get_security_monitor  # noqa: PLC0415
+
         get_security_monitor().log_security_event(
             "raw_llm_query",
             {"model": model_name, "prompt_length": len(prompt)},

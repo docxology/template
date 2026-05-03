@@ -45,6 +45,7 @@ def _text_without_fenced_code(text: str) -> str:
     text = re.sub(r"~~~[\s\S]*?~~~", "", text)
     return text
 
+
 # Pandoc converts bare ``|word|`` in prose contexts and escaped ``\|`` inside
 # table cells to the math macro ``\mid``. When the surrounding text is
 # rendered in text mode (e.g. table cell, prose, accessibility alt-text),
@@ -63,9 +64,7 @@ BIBTEX_KEY_PATTERN = re.compile(r"^@\w+\{\s*([^,\s}]+)\s*[,}]", re.MULTILINE)
 # Files that live alongside manuscript content but are never rendered into the
 # final PDF (project documentation / preamble metadata). Skipped by the
 # render-time pitfall and citation checks to avoid false positives.
-NON_RENDERED_MANUSCRIPT_FILES: frozenset[str] = frozenset(
-    {"AGENTS.md", "README.md", "preamble.md"}
-)
+NON_RENDERED_MANUSCRIPT_FILES: frozenset[str] = frozenset({"AGENTS.md", "README.md", "preamble.md"})
 
 
 def find_markdown_files(markdown_dir: str | Path) -> list[str]:
@@ -187,7 +186,7 @@ def validate_images(
                         message=f"Missing referenced image: '{img_clean}'",
                         code=MarkdownCode.IMG_MISSING,
                         file_path=str(display_path),
-                        fix_suggestion="Ensure the image file exists in the specified relative path or figures directory."
+                        fix_suggestion="Ensure the image file exists in the specified relative path or figures directory.",
                     )
                 )
     return problems
@@ -215,7 +214,7 @@ def validate_refs(
             rel: str | Path = Path(path).relative_to(repo_root_path)
         except ValueError:
             rel = path
-            
+
         rel_str = str(rel)
         text_wo_fences = _text_without_fenced_code(text)
         for ref in EQ_REF_PATTERN.findall(text_wo_fences):
@@ -227,7 +226,7 @@ def validate_refs(
                         message=f"Missing equation label for \\eqref{{{ref}}}",
                         code=MarkdownCode.REF_EQUATION_MISSING,
                         file_path=rel_str,
-                        fix_suggestion=f"Verify that '\\label{{{ref}}}' exists in an equation block."
+                        fix_suggestion=f"Verify that '\\label{{{ref}}}' exists in an equation block.",
                     )
                 )
         for link in INTERNAL_LINK_PATTERN.findall(text_wo_fences):
@@ -239,7 +238,7 @@ def validate_refs(
                         message=f"Missing anchor/label for internal link (#{link})",
                         code=MarkdownCode.LINK_ANCHOR_MISSING,
                         file_path=rel_str,
-                        fix_suggestion=f"Provide a heading anchor '{{#{link}}}' or equation label."
+                        fix_suggestion=f"Provide a heading anchor '{{#{link}}}' or equation label.",
                     )
                 )
         # Flag bare URLs not inside Markdown links.
@@ -253,7 +252,7 @@ def validate_refs(
                     message=f"Bare URL found: '{m.group(0)}'",
                     code=MarkdownCode.LINK_BARE_URL,
                     file_path=rel_str,
-                    fix_suggestion="Wrap the URL in a Markdown link with informative text: [link text](url)"
+                    fix_suggestion="Wrap the URL in a Markdown link with informative text: [link text](url)",
                 )
             )
         # Flag non-informative link text
@@ -268,7 +267,7 @@ def validate_refs(
                         message=f"Non-informative link text for {url}",
                         code=MarkdownCode.LINK_BAD_TEXT,
                         file_path=rel_str,
-                        fix_suggestion=f"Replace '{label}' with descriptive text about the link destination."
+                        fix_suggestion=f"Replace '{label}' with descriptive text about the link destination.",
                     )
                 )
     return problems
@@ -295,9 +294,9 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
             rel: str | Path = Path(path).relative_to(repo_root_path)
         except ValueError:
             rel = path
-            
+
         rel_str = str(rel)
-            
+
         # Disallow $$ and \[ \] display math in sources
         if "$$" in text:
             problems.append(
@@ -307,7 +306,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                     message="Use equation environment instead of $$",
                     code=MarkdownCode.MATH_DOLLAR_DISPLAY,
                     file_path=rel_str,
-                    fix_suggestion="Replace $$...$$ with \\begin{equation}...\\end{equation}"
+                    fix_suggestion="Replace $$...$$ with \\begin{equation}...\\end{equation}",
                 )
             )
         if "\\[" in text or "\\]" in text:
@@ -318,7 +317,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                     message="Use equation environment instead of \\[ \\]",
                     code=MarkdownCode.MATH_BRACKET_DISPLAY,
                     file_path=rel_str,
-                    fix_suggestion="Replace \\[...\\] with \\begin{equation}...\\end{equation}"
+                    fix_suggestion="Replace \\[...\\] with \\begin{equation}...\\end{equation}",
                 )
             )
         # Ensure each equation block carries a label and detect duplicates
@@ -333,7 +332,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                         message="Equation missing \\label{...}",
                         code=MarkdownCode.MATH_LABEL_MISSING,
                         file_path=rel_str,
-                        fix_suggestion="Add a \\label{eq_name} inside the \\begin{equation} block."
+                        fix_suggestion="Add a \\label{eq_name} inside the \\begin{equation} block.",
                     )
                 )
             else:
@@ -346,7 +345,7 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                                 message=f"Duplicate equation label '{{{lab}}}' found",
                                 code=MarkdownCode.MATH_LABEL_DUPLICATE,
                                 file_path=rel_str,
-                                fix_suggestion="Rename one of the labels to be unique."
+                                fix_suggestion="Rename one of the labels to be unique.",
                             )
                         )
                     seen_labels.add(lab)
@@ -386,9 +385,7 @@ def _strip_code_and_math(text: str) -> str:
     return text
 
 
-def validate_pandoc_pitfalls(
-    md_paths: list[str], repo_root: str | Path
-) -> list[DiagnosticEvent]:
+def validate_pandoc_pitfalls(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]:
     """Flag markdown patterns Pandoc converts to LaTeX ``\\mid`` in text mode.
 
     Pandoc transforms two prose patterns into the math macro ``\\mid``:
@@ -468,8 +465,7 @@ def validate_pandoc_pitfalls(
                     code=MarkdownCode.PANDOC_TABLE_ESCAPED_PIPE,
                     file_path=rel_str,
                     fix_suggestion=(
-                        "Replace the cell content with inline math, e.g. "
-                        "'$P(\\text{A} \\mid \\text{B})$'."
+                        "Replace the cell content with inline math, e.g. '$P(\\text{A} \\mid \\text{B})$'."
                     ),
                 )
             )
@@ -647,6 +643,4 @@ def find_manuscript_directory(repo_root: str | Path, project_name: str = "projec
     if manuscript_dir.exists() and manuscript_dir.is_dir():
         return manuscript_dir
 
-    raise FileNotFoundError(
-        f"Manuscript directory not found at expected location: {manuscript_dir}"
-    )
+    raise FileNotFoundError(f"Manuscript directory not found at expected location: {manuscript_dir}")

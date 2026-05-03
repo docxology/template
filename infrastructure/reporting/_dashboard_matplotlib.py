@@ -200,9 +200,7 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> dict
     _try("project_breakdowns", lambda: generate_project_breakdowns(summary, output_dir))
 
     # Generate pipeline efficiency visualizations
-    _try(
-        "pipeline_efficiency_chart", lambda: generate_pipeline_efficiency_chart(summary, output_dir)
-    )
+    _try("pipeline_efficiency_chart", lambda: generate_pipeline_efficiency_chart(summary, output_dir))
     _try(
         "pipeline_bottlenecks_chart",
         lambda: generate_pipeline_bottlenecks_chart(summary, output_dir),
@@ -216,12 +214,8 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> dict
     _try("output_comparison_chart", lambda: generate_output_comparison_chart(summary, output_dir))
 
     # Generate codebase analysis visualizations
-    _try(
-        "codebase_complexity_chart", lambda: generate_codebase_complexity_chart(summary, output_dir)
-    )
-    _try(
-        "codebase_comparison_chart", lambda: generate_codebase_comparison_chart(summary, output_dir)
-    )
+    _try("codebase_complexity_chart", lambda: generate_codebase_complexity_chart(summary, output_dir))
+    _try("codebase_comparison_chart", lambda: generate_codebase_comparison_chart(summary, output_dir))
 
     # Generate plotly dashboard (HTML)
     _try("html", lambda: generate_plotly_dashboard(summary, output_dir))
@@ -230,13 +224,9 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> dict
     def _generate_csvs() -> dict[str, Any]:
         result: dict[str, Any] = {}
         result.update(generate_csv_data_tables(summary, output_dir))
-        result["detailed_breakdown_csv"] = generate_detailed_project_breakdown_csv(
-            summary, output_dir
-        )
+        result["detailed_breakdown_csv"] = generate_detailed_project_breakdown_csv(summary, output_dir)
         result["comparative_analysis_csv"] = generate_comparative_analysis_csv(summary, output_dir)
-        result["recommendations_csv"] = generate_prioritized_recommendations_csv(
-            summary, output_dir
-        )
+        result["recommendations_csv"] = generate_prioritized_recommendations_csv(summary, output_dir)
         return result
 
     _try("csv_data_tables", _generate_csvs)

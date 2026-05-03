@@ -35,6 +35,7 @@ from infrastructure.llm.templates.manuscript import (
 
 from infrastructure.llm.review.metrics import ReviewMetrics, ManuscriptInputMetrics, estimate_tokens
 from infrastructure.llm.review.quality import validate_review_quality, _is_small_model, ReviewType
+
 # Cross-subsystem import: llm/review depends on validation/pdf_validator for text extraction.
 # This is an intentional seam — PDF text extraction lives in validation because it is also
 # used by the output validator. If this becomes a problem, move extract_text_from_pdf to
@@ -94,9 +95,7 @@ def extract_manuscript_text(
         if max_length > 0 and len(text) > max_length:
             metrics.truncated = True
             metrics.truncated_chars = max_length
-            logger.warning(
-                f"  Truncating from {metrics.total_chars:,} to {max_length:,} characters"
-            )
+            logger.warning(f"  Truncating from {metrics.total_chars:,} to {max_length:,} characters")
             text = text[:max_length] + "\\n\\n[... truncated for LLM context limit ...]"
         else:
             metrics.truncated = False
@@ -168,14 +167,11 @@ def _stream_with_heartbeat(
         total_time = time.time() - start_gen_time
         final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
         progress.finish(
-            f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s"
-            f" ({final_tokens_per_sec:.1f} tokens/sec)"
+            f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)"
         )
         return "".join(response_chunks)
     except Exception as e:  # noqa: BLE001 — intentional: fallback to blocking query on any stream failure
-        logger.warning(
-            f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}"
-        )
+        logger.warning(f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}")
         try:
             return client.query(prompt, options=options, sanitize=False)
         except Exception as block_err:
@@ -249,13 +245,9 @@ def generate_review_with_metrics(
                 options = GenerationOptions(temperature=adjusted_temp, max_tokens=max_tokens)
                 current_prompt = _build_off_topic_retry_prompt(prompt, had_off_topic)
 
-            response = _stream_with_heartbeat(
-                client, current_prompt, options, review_name, max_tokens, config
-            )
+            response = _stream_with_heartbeat(client, current_prompt, options, review_name, max_tokens, config)
 
-            is_valid, issues, details = validate_review_quality(
-                response, review_type, model_name=model_name
-            )
+            is_valid, issues, details = validate_review_quality(response, review_type, model_name=model_name)
             had_off_topic = any("off-topic" in issue.lower() for issue in issues)
 
             if len(response.split()) > len(best_response.split()):
@@ -291,9 +283,7 @@ def generate_review_with_metrics(
     metrics.output_chars = len(final_response)
     metrics.output_words = len(final_response.split())
     metrics.output_tokens_est = estimate_tokens(final_response)
-    metrics.preview = (
-        final_response[:150].replace("\\n", " ") + "..." if len(final_response) > 150 else final_response
-    )
+    metrics.preview = final_response[:150].replace("\\n", " ") + "..." if len(final_response) > 150 else final_response
 
     log_success(f"{review_name} generated", logger)
     return final_response, metrics
@@ -322,9 +312,7 @@ def generate_translation(
     logger.info(f"    Timeout: {timeout:.0f}s per translation ({target_language})")
     if timeout < 60:
         logger.warning(f"    ⚠️  Low timeout ({timeout:.0f}s) - may cause failures for slow models")
-        logger.info(
-            "    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability"
-        )
+        logger.info("    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability")
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
     temperature = 0.4 if _is_small_model(model_name) else 0.3
@@ -332,9 +320,7 @@ def generate_translation(
 
     start_time = time.time()
     try:
-        response = _stream_with_heartbeat(
-            client, prompt, options, f"translation ({target_language})", max_tokens, _cfg
-        )
+        response = _stream_with_heartbeat(client, prompt, options, f"translation ({target_language})", max_tokens, _cfg)
     except Exception as e:  # noqa: BLE001 — intentional: translation errors are non-fatal
         metrics.generation_time_seconds = time.time() - start_time
         logger.warning(f"Translation to {target_language} failed: {e}")
@@ -344,9 +330,7 @@ def generate_translation(
     metrics.output_chars = len(response)
     metrics.output_words = len(response.split())
     metrics.output_tokens_est = estimate_tokens(response)
-    metrics.preview = (
-        response[:150].replace("\\n", " ") + "..." if len(response) > 150 else response
-    )
+    metrics.preview = response[:150].replace("\\n", " ") + "..." if len(response) > 150 else response
 
     log_success(f"translation ({target_language}) generated", logger)
     return response, metrics

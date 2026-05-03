@@ -16,6 +16,7 @@ from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
+
 class CopyStats(TypedDict):
     """Typed structure for copy_final_deliverables return value."""
 
@@ -35,9 +36,15 @@ class CopyStats(TypedDict):
 
 # Output subdirectory name → stats dict key mapping (module-level constant).
 _SUBDIR_STATS_KEYS: dict[str, str] = {
-    "pdf": "pdf_files", "web": "web_files", "slides": "slides_files",
-    "figures": "figures_files", "data": "data_files", "reports": "reports_files",
-    "simulations": "simulations_files", "llm": "llm_files", "logs": "logs_files",
+    "pdf": "pdf_files",
+    "web": "web_files",
+    "slides": "slides_files",
+    "figures": "figures_files",
+    "data": "data_files",
+    "reports": "reports_files",
+    "simulations": "simulations_files",
+    "llm": "llm_files",
+    "logs": "logs_files",
 }
 
 
@@ -89,7 +96,10 @@ def _collect_subdirectory_stats(output_dir: Path, stats: CopyStats, files_list: 
 
             logger.info(f"  {subdir_name}/: {file_count} file(s)")
 
-def _copy_combined_pdf(output_dir: Path, project_basename: str, stats: CopyStats, files_list: list[dict[str, Any]]) -> None:
+
+def _copy_combined_pdf(
+    output_dir: Path, project_basename: str, stats: CopyStats, files_list: list[dict[str, Any]]
+) -> None:
     """Copy combined PDF to root of output directory for convenient access."""
     combined_pdf_src = output_dir / "pdf" / f"{project_basename}_combined.pdf"
     combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"
@@ -120,9 +130,7 @@ def _copy_combined_pdf(output_dir: Path, project_basename: str, stats: CopyStats
         logger.debug(f"Combined PDF not found at: {combined_pdf_src}")
 
 
-def copy_final_deliverables(
-    project_root: Path, output_dir: Path, project_name: str = "project"
-) -> CopyStats:
+def copy_final_deliverables(project_root: Path, output_dir: Path, project_name: str = "project") -> CopyStats:
     """Copy all project outputs to top-level output directory.
 
     Recursively copies entire projects/{project_name}/output/ directory structure, preserving:
@@ -151,9 +159,18 @@ def copy_final_deliverables(
     project_output = project_root / "projects" / project_name / "output"
 
     stats: CopyStats = {
-        "pdf_files": 0, "web_files": 0, "slides_files": 0, "figures_files": 0,
-        "data_files": 0, "reports_files": 0, "simulations_files": 0, "llm_files": 0,
-        "logs_files": 0, "combined_pdf": 0, "total_files": 0, "errors": [],
+        "pdf_files": 0,
+        "web_files": 0,
+        "slides_files": 0,
+        "figures_files": 0,
+        "data_files": 0,
+        "reports_files": 0,
+        "simulations_files": 0,
+        "llm_files": 0,
+        "logs_files": 0,
+        "combined_pdf": 0,
+        "total_files": 0,
+        "errors": [],
     }
 
     files_list: list[dict[str, Any]] = []

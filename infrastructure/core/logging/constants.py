@@ -24,6 +24,7 @@ EMOJIS = {
     "chart": "📊",
 }
 
+
 def get_emoji_enabled() -> bool:
     """Return True if emoji output is enabled (NO_EMOJI unset and stdout is a TTY).
 

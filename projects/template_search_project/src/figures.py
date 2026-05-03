@@ -25,8 +25,14 @@ from infrastructure.search.literature import Paper, SearchResult, SearchQuery
 
 # Colour-blind-safe categorical palette (Wong, 2011).
 _PALETTE = [
-    "#0072B2", "#E69F00", "#009E73", "#CC79A7",
-    "#56B4E9", "#D55E00", "#F0E442", "#999999",
+    "#0072B2",
+    "#E69F00",
+    "#009E73",
+    "#CC79A7",
+    "#56B4E9",
+    "#D55E00",
+    "#F0E442",
+    "#999999",
 ]
 
 
@@ -136,9 +142,7 @@ def plot_score_distribution(result: SearchResult, output_dir: Path | str) -> Pat
     return out_path
 
 
-def generate_all_figures(
-    result: SearchResult, output_dir: Path | str
-) -> list[Path]:
+def generate_all_figures(result: SearchResult, output_dir: Path | str) -> list[Path]:
     """Run every figure generator. Order is stable across runs."""
     return [
         plot_papers_per_source(result, output_dir),

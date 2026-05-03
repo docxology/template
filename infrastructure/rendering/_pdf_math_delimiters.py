@@ -163,9 +163,7 @@ def fix_math_delimiters(tex_content: str) -> str:
             logger.warning(f"Failed to fix Greek letter '{greek}': {e}. Skipping this pattern.")
             continue
         except (TypeError, ValueError) as e:
-            logger.warning(
-                f"Unexpected error fixing Greek letter '{greek}': {e}. Skipping this pattern."
-            )
+            logger.warning(f"Unexpected error fixing Greek letter '{greek}': {e}. Skipping this pattern.")
             continue
 
     if fixed_count > 0:

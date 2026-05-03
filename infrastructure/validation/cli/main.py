@@ -102,9 +102,7 @@ def validate_prerender_command(args: argparse.Namespace) -> None:
 
     logger.info(f"Pre-render validation: {manuscript_dir}")
     try:
-        prevalidate_source_markdown(
-            manuscript_dir, repo_root=repo_root, bib_file=bib_file
-        )
+        prevalidate_source_markdown(manuscript_dir, repo_root=repo_root, bib_file=bib_file)
     except RenderingError as exc:
         for line in str(exc).splitlines():
             logger.error(line)
@@ -187,17 +185,13 @@ def validate_links_command(args: argparse.Namespace) -> None:
 
 def main() -> None:
     """Main CLI entry point."""
-    parser = argparse.ArgumentParser(
-        description="Validate research output (PDFs, Markdown, integrity)."
-    )
+    parser = argparse.ArgumentParser(description="Validate research output (PDFs, Markdown, integrity).")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # PDF validation
     pdf_parser = subparsers.add_parser("pdf", help="Validate PDF rendering")
     pdf_parser.add_argument("pdf_path", help="Path to PDF file")
-    pdf_parser.add_argument(
-        "--preview-words", type=int, default=200, help="Number of words to preview"
-    )
+    pdf_parser.add_argument("--preview-words", type=int, default=200, help="Number of words to preview")
     pdf_parser.add_argument("-v", "--verbose", action="store_true")
     pdf_parser.set_defaults(func=validate_pdf_command)
 
@@ -217,15 +211,9 @@ def main() -> None:
         "prerender",
         help="Strict source-markdown gate: pitfalls + undefined citations",
     )
-    prer_parser.add_argument(
-        "manuscript_dir", help="Path to manuscript directory (source markdown set)"
-    )
-    prer_parser.add_argument(
-        "--repo-root", help="Repository root for relative-path display"
-    )
-    prer_parser.add_argument(
-        "--bib", help="Explicit references.bib path (overrides discovery)"
-    )
+    prer_parser.add_argument("manuscript_dir", help="Path to manuscript directory (source markdown set)")
+    prer_parser.add_argument("--repo-root", help="Repository root for relative-path display")
+    prer_parser.add_argument("--bib", help="Explicit references.bib path (overrides discovery)")
     prer_parser.set_defaults(func=validate_prerender_command)
 
     # Integrity verification
@@ -236,9 +224,7 @@ def main() -> None:
 
     # Link validation
     link_parser = subparsers.add_parser("links", help="Validate markdown links")
-    link_parser.add_argument(
-        "--repo-root", help="Repository root directory (default: current directory)"
-    )
+    link_parser.add_argument("--repo-root", help="Repository root directory (default: current directory)")
     link_parser.add_argument("--output", help="Output file for validation report")
     link_parser.set_defaults(func=validate_links_command)
 

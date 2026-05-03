@@ -150,10 +150,7 @@ class PipelineRunner:
         else:
             result = orchestrator.execute_all_projects_full()
 
-        success = (
-            getattr(result, "successful_projects", 0) == len(projects)
-            and len(projects) > 0
-        )
+        success = getattr(result, "successful_projects", 0) == len(projects) and len(projects) > 0
         self._emit(
             f"=== MULTI-PROJECT {'COMPLETE' if success else 'FAILED'} === "
             f"{getattr(result, 'successful_projects', 0)}/{len(projects)} succeeded"

@@ -40,11 +40,11 @@ def _get_reportlab():
         from reportlab.lib.pagesizes import letter  # type: ignore[import-untyped]
         from reportlab.lib.units import inch  # type: ignore[import-untyped]
         from reportlab.pdfgen import canvas as rl_canvas  # type: ignore[import-untyped]
+
         return rl_canvas, letter, inch
     except ImportError:
         raise ImportError(
-            "The 'reportlab' package is required for overlay generation. "
-            "Install it with: pip install reportlab"
+            "The 'reportlab' package is required for overlay generation. Install it with: pip install reportlab"
         ) from None
 
 
@@ -133,9 +133,7 @@ def create_qr_overlay(
         from reportlab.lib.utils import ImageReader  # type: ignore[import-untyped]
         from infrastructure.steganography.barcodes import generate_qr_code
     except ImportError as exc:
-        raise ImportError(
-            "QR overlay requires optional dependencies: uv sync --group steganography"
-        ) from exc
+        raise ImportError("QR overlay requires optional dependencies: uv sync --group steganography") from exc
 
     qr_png = generate_qr_code(qr_data, box_size=4, border=1)
 
@@ -266,9 +264,7 @@ def create_footer_overlay(
     parts.append(f"ID: {id_short}")
 
     if cfg.source_filename:
-        fn_short = (
-            cfg.source_filename[:20] + "…" if len(cfg.source_filename) > 20 else cfg.source_filename
-        )
+        fn_short = cfg.source_filename[:20] + "…" if len(cfg.source_filename) > 20 else cfg.source_filename
         parts.append(f"Source: {fn_short}")
 
     if cfg.source_file_size:

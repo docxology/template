@@ -34,7 +34,6 @@ class HealthStatus(TypedDict):
     summary: dict[str, Any]
 
 
-
 CRITICAL_RESOURCE_THRESHOLD = 95.0
 
 
@@ -51,9 +50,7 @@ class SystemHealthChecker:
         self.start_time = start_time if start_time is not None else time.time()
         self.repo_root = repo_root or Path.cwd()
         self._network_dns_host, self._network_tcp_host = (
-            network_test_hosts[:2]
-            if network_test_hosts and len(network_test_hosts) >= 2
-            else ("google.com", "1.1.1.1")
+            network_test_hosts[:2] if network_test_hosts and len(network_test_hosts) >= 2 else ("google.com", "1.1.1.1")
         )
         self.checks = {
             "filesystem": self._check_filesystem,
@@ -96,9 +93,7 @@ class SystemHealthChecker:
 
         # Determine overall status
         if unhealthy_checks:
-            status["overall_status"] = (
-                "degraded" if len(unhealthy_checks) < len(self.checks) else "unhealthy"
-            )
+            status["overall_status"] = "degraded" if len(unhealthy_checks) < len(self.checks) else "unhealthy"
             status["summary"]["unhealthy_checks"] = unhealthy_checks
 
         # Add summary metrics
@@ -227,9 +222,7 @@ class SystemHealthChecker:
         except (FileNotFoundError, OSError):
             # Fallback for systems without /proc/uptime
             uptime_seconds = (
-                time.time() - psutil.boot_time()
-                if psutil is not None and hasattr(psutil, "boot_time")
-                else None
+                time.time() - psutil.boot_time() if psutil is not None and hasattr(psutil, "boot_time") else None
             )
 
         process_uptime = time.time() - self.start_time

@@ -61,9 +61,7 @@ def _validate_quadratic_inputs(
     return x, A, b
 
 
-def quadratic_function(
-    x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
-) -> float:
+def quadratic_function(x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None) -> float:
     """Evaluate f(x) = (1/2) x^T A x - b^T x. A defaults to identity, b to ones."""
     x, A, b = _validate_quadratic_inputs(x, A, b)
 
@@ -74,9 +72,7 @@ def quadratic_function(
     return float(quadratic_term - linear_term)
 
 
-def compute_gradient(
-    x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None
-) -> np.ndarray:
+def compute_gradient(x: np.ndarray, A: np.ndarray | None = None, b: np.ndarray | None = None) -> np.ndarray:
     """Compute ∇f(x) = A x - b for the quadratic objective. A defaults to identity, b to ones."""
     x, A, b = _validate_quadratic_inputs(x, A, b)
 
@@ -247,8 +243,6 @@ def simulate_trajectory(
         verbose=False,
     )
     return {
-        "iterations": list(range(len(result.objective_history)))
-        if result.objective_history
-        else [],
+        "iterations": list(range(len(result.objective_history))) if result.objective_history else [],
         "objectives": result.objective_history if result.objective_history else [],
     }

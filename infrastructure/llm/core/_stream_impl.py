@@ -14,6 +14,7 @@ from typing import Any, Callable, Iterator
 
 from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
+
 try:
     import requests
 except ImportError as _err:
@@ -68,8 +69,12 @@ def stream_query_impl(
 
     # Pre-bind stable per-request params so save_partial_if_needed and the final save call
     # don't need to forward save_path, model_name, prompt, and start_time individually.
-    def _bound_save(full_response: list[str], chunk_count: int, *, is_error: bool = False, options: GenerationOptions | None = None) -> bool:
-        return save_streaming_state_fn(full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=is_error, options=options)
+    def _bound_save(
+        full_response: list[str], chunk_count: int, *, is_error: bool = False, options: GenerationOptions | None = None
+    ) -> bool:
+        return save_streaming_state_fn(
+            full_response, save_path, model_name, prompt, chunk_count, start_time, is_error=is_error, options=options
+        )
 
     logger.debug("Starting streaming query model=%s", model_name)
 
@@ -112,9 +117,7 @@ def stream_query_impl(
                 )
                 time_module.sleep(wait_time)
 
-            with requests.post(
-                url, json=payload, stream=True, timeout=config.timeout
-            ) as r:
+            with requests.post(url, json=payload, stream=True, timeout=config.timeout) as r:
                 r.raise_for_status()
 
                 for line in r.iter_lines():
@@ -147,8 +150,7 @@ def stream_query_impl(
                                 # Check for stalled stream (configurable threshold)
                                 if (
                                     prev_chunk_time is not None
-                                    and (current_time - prev_chunk_time)
-                                    > config.stall_threshold
+                                    and (current_time - prev_chunk_time) > config.stall_threshold
                                 ):
                                     time_since_last_chunk = current_time - prev_chunk_time
                                     logger.warning(
@@ -160,8 +162,7 @@ def stream_query_impl(
                                             "total_elapsed": current_time - start_time,
                                             "timeout_remaining": max(
                                                 0,
-                                                config.timeout
-                                                - (current_time - start_time),
+                                                config.timeout - (current_time - start_time),
                                             ),
                                             "token_count": chunk_count,
                                         },
@@ -171,10 +172,7 @@ def stream_query_impl(
 
                                 # Log timeout remaining when approaching limit (warn once only)
                                 elapsed = current_time - start_time
-                                if (
-                                    not _timeout_warned
-                                    and elapsed > config.timeout * TIMEOUT_WARNING_FRACTION
-                                ):
+                                if not _timeout_warned and elapsed > config.timeout * TIMEOUT_WARNING_FRACTION:
                                     remaining = config.timeout - elapsed
                                     if remaining > 0:
                                         _timeout_warned = True
@@ -212,19 +210,25 @@ def stream_query_impl(
             last_error_msg = f"Timeout after {config.timeout}s" if is_timeout else f"Connection error: {e}"
 
             if attempt < retries:
-                logger.debug(
-                    f"Streaming {error_label} (attempt {attempt + 1}/{retries + 1}), will retry..."
-                )
+                logger.debug(f"Streaming {error_label} (attempt {attempt + 1}/{retries + 1}), will retry...")
                 partial_saved = save_partial_if_needed(
-                    full_response, save_response, partial_saved, _bound_save,
-                    chunk_count, "before retry",
+                    full_response,
+                    save_response,
+                    partial_saved,
+                    _bound_save,
+                    chunk_count,
+                    "before retry",
                 )
                 continue
 
             logger.error(f"Streaming {error_label} after {retries + 1} attempts: {last_error_msg}")
             partial_saved = save_partial_if_needed(
-                full_response, save_response, partial_saved, _bound_save,
-                chunk_count, f"after {error_label}",
+                full_response,
+                save_response,
+                partial_saved,
+                _bound_save,
+                chunk_count,
+                f"after {error_label}",
                 skip_if_already_saved=False,
             )
             raise LLMConnectionError(
@@ -238,7 +242,12 @@ def stream_query_impl(
             logger.error(f"Streaming request error ({model_name}): {e}")
             raise LLMConnectionError(
                 f"Stream request failed ({model_name}): {type(e).__name__}: {e}",
-                context={"url": url, "model": model_name, "chunks_received": chunk_count, "error_type": type(e).__name__},
+                context={
+                    "url": url,
+                    "model": model_name,
+                    "chunks_received": chunk_count,
+                    "error_type": type(e).__name__,
+                },
             ) from e
 
     # Calculate final metrics

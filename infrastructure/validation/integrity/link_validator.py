@@ -352,9 +352,7 @@ class LinkValidator:
 
         return results
 
-    def generate_report(
-        self, validation_results: dict[str, dict[str, list[dict[str, str]]]]
-    ) -> str:
+    def generate_report(self, validation_results: dict[str, dict[str, list[dict[str, str]]]]) -> str:
         """Generate a comprehensive validation report.
 
         Args:

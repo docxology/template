@@ -126,9 +126,7 @@ def validate_bibliography_completeness(project_root: Path) -> StageResult:
         cited_keys.update(_extract_citation_keys(text))
 
     missing = sorted(cited_keys - bib_keys)
-    bib_label = (
-        bib_paths[0].name if len(bib_paths) == 1 else ", ".join(p.name for p in bib_paths)
-    )
+    bib_label = bib_paths[0].name if len(bib_paths) == 1 else ", ".join(p.name for p in bib_paths)
     if missing:
         return StageResult(
             name="bibliography_completeness",
@@ -166,7 +164,7 @@ def validate_variables_resolved(project_root: Path) -> StageResult:
 
     unresolved: list[tuple[Path, str]] = []
 
-    marker_re = re.compile(r'\{\{([A-Z_][A-Z0-9_]*)\}\}')
+    marker_re = re.compile(r"\{\{([A-Z_][A-Z0-9_]*)\}\}")
     for md in sorted(scan_root.glob("*.md")):
         text = md.read_text(encoding="utf-8")
         for m in marker_re.finditer(text):
@@ -225,9 +223,7 @@ def audit_infrastructure_imports(project_root: Path) -> StageResult:
                     mod_file = infra_root / rel_path.with_suffix(".py")
                     pkg_init = infra_root / rel_path / "__init__.py"
                     if not mod_file.exists() and not pkg_init.exists():
-                        issues.append(
-                            f"{py.name} imports non-existent infra module: {node.module}"
-                        )
+                        issues.append(f"{py.name} imports non-existent infra module: {node.module}")
                     infra_imports_used.setdefault(node.module, set()).add(py.name)
         # Check for cross-project imports — not enforceable here, but warn
         # (those imports would be caught by Python import resolution at runtime;
@@ -280,9 +276,7 @@ def check_determinism_artifacts(project_root: Path) -> StageResult:
         # ``run_search_pipeline.py`` writes ``papers`` (single-query) and
         # ``run_deep_search.py`` writes ``total_papers``. Accept either
         # so the determinism check works after either orchestrator.
-        findings["papers_found"] = summary.get(
-            "papers", summary.get("total_papers", "unknown")
-        )
+        findings["papers_found"] = summary.get("papers", summary.get("total_papers", "unknown"))
 
     # 2. Search cache
     cache_dir = output / "search" / "cache"
@@ -354,7 +348,7 @@ def run_project_tests(project_root: Path, min_coverage: float = 90.0) -> StageRe
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
 
-    coverage_match = re.search(r'TOTAL\s+\S+\s+\S+\s+(\d+)%', result.stdout)
+    coverage_match = re.search(r"TOTAL\s+\S+\s+\S+\s+(\d+)%", result.stdout)
     coverage = int(coverage_match.group(1)) if coverage_match else None
 
     if result.returncode != 0:
@@ -395,7 +389,6 @@ __all__ = [
 ]
 
 
-
 def _cli() -> None:
     import argparse
     import json
@@ -403,13 +396,17 @@ def _cli() -> None:
     from pathlib import Path
 
     parser = argparse.ArgumentParser(description="Project-specific review stage CLI")
-    parser.add_argument("--stage", required=True, choices=[
-        "bibliography_completeness",
-        "variables_resolved",
-        "infrastructure_usage",
-        "determinism_check",
-        "test_suite_health",
-    ])
+    parser.add_argument(
+        "--stage",
+        required=True,
+        choices=[
+            "bibliography_completeness",
+            "variables_resolved",
+            "infrastructure_usage",
+            "determinism_check",
+            "test_suite_health",
+        ],
+    )
     parser.add_argument("--project-root", required=True, help="Project root directory")
     args = parser.parse_args()
 

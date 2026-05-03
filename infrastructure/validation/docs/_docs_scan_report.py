@@ -63,9 +63,7 @@ def build_documentation_scan_report(results: ScanResults) -> str:
     if results.link_issues:
         report_lines.extend(["### Link Issues", ""])
         for issue in results.link_issues[:20]:
-            report_lines.append(
-                f"- `{issue.file}:{issue.line}` - {issue.target} ({issue.issue_message})"
-            )
+            report_lines.append(f"- `{issue.file}:{issue.line}` - {issue.target} ({issue.issue_message})")
         if len(results.link_issues) > 20:
             report_lines.append(f"- ... and {len(results.link_issues) - 20} more")
         report_lines.append("")

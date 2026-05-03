@@ -106,20 +106,21 @@ def analyze_files(
         long_sentence_threshold: Forwarded to :func:`analyze_text`.
     """
     file_reports = [
-        analyze_text(name, text, long_sentence_threshold=long_sentence_threshold)
-        for name, text in files.items()
+        analyze_text(name, text, long_sentence_threshold=long_sentence_threshold) for name, text in files.items()
     ]
 
     total_words = sum(f.metrics.word_count for f in file_reports)
     total_sentences = sum(f.metrics.sentence_count for f in file_reports)
     total_paragraphs = sum(f.metrics.paragraph_count for f in file_reports)
 
-    n = max(1, len(file_reports))
-    weighted = lambda key: round(
-        sum(getattr(f.metrics, key) * f.metrics.word_count for f in file_reports)
-        / max(1, total_words),
-        2,
-    )
+    def weighted(metric_key: str) -> float:
+        num = round(
+            sum(float(getattr(f.metrics, metric_key)) * float(f.metrics.word_count) for f in file_reports)
+            / max(1, total_words),
+            2,
+        )
+        return float(num)
+
     avg_fre = weighted("flesch_reading_ease") if total_words else 0.0
     avg_fkgl = weighted("flesch_kincaid_grade") if total_words else 0.0
     avg_fog = weighted("gunning_fog") if total_words else 0.0

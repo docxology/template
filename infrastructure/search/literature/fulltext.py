@@ -120,9 +120,7 @@ class AbstractFetcher:
             except BackendError as exc:
                 return FetchResult(paper=paper, status="error", message=str(exc))
             if resp.status_code != 200:
-                return FetchResult(
-                    paper=paper, status="error", message=f"HTTP {resp.status_code}"
-                )
+                return FetchResult(paper=paper, status="error", message=f"HTTP {resp.status_code}")
             try:
                 root = ET.fromstring(resp.text)
             except ET.ParseError as exc:
@@ -146,9 +144,7 @@ class AbstractFetcher:
             message=f"no abstract source available for id={paper.id!r}",
         )
 
-    def fetch_all(
-        self, papers: Iterable[Paper], *, force: bool = False
-    ) -> list[FetchResult]:
+    def fetch_all(self, papers: Iterable[Paper], *, force: bool = False) -> list[FetchResult]:
         return [self.fetch(p, force=force) for p in papers]
 
 
@@ -255,9 +251,7 @@ class FulltextFetcher:
         except BackendError as exc:
             return FetchResult(paper=paper, status="error", message=str(exc))
         if resp.status_code != 200:
-            return FetchResult(
-                paper=paper, status="error", message=f"HTTP {resp.status_code}"
-            )
+            return FetchResult(paper=paper, status="error", message=f"HTTP {resp.status_code}")
 
         pdf_bytes = resp.text.encode("latin-1", errors="ignore")
         # Write PDF to cache regardless of whether we can extract text.
@@ -286,9 +280,7 @@ class FulltextFetcher:
             path = text_path
         return FetchResult(paper=paper, status="hit", path=path)
 
-    def fetch_all(
-        self, papers: Iterable[Paper], *, force: bool = False
-    ) -> list[FetchResult]:
+    def fetch_all(self, papers: Iterable[Paper], *, force: bool = False) -> list[FetchResult]:
         return [self.fetch(p, force=force) for p in papers]
 
 

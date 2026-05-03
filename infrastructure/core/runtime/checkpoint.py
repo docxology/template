@@ -89,12 +89,8 @@ class CheckpointManager:
             if project_dir is not None:
                 checkpoint_dir = project_dir / "output" / ".checkpoints"
             else:
-                resolved_root = (
-                    repo_root if repo_root is not None else Path(__file__).parent.parent.parent
-                )
-                checkpoint_dir = (
-                    resolved_root / "projects" / project_name / "output" / ".checkpoints"
-                )
+                resolved_root = repo_root if repo_root is not None else Path(__file__).parent.parent.parent
+                checkpoint_dir = resolved_root / "projects" / project_name / "output" / ".checkpoints"
 
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_file = self.checkpoint_dir / "pipeline_checkpoint.json"
@@ -139,9 +135,7 @@ class CheckpointManager:
             return True
         except Exception as e:  # noqa: BLE001 — intentional: checkpoint save must not crash the pipeline regardless of failure mode
             logger.error(f"Failed to save checkpoint: {e}", exc_info=True)
-            logger.warning(
-                "Checkpoint save failed - pipeline resume will not be available for this run"
-            )
+            logger.warning("Checkpoint save failed - pipeline resume will not be available for this run")
             return False
 
     def load_checkpoint(self) -> PipelineCheckpoint | None:

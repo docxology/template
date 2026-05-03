@@ -38,6 +38,7 @@ from infrastructure.validation.docs.models import (
 from infrastructure.validation.docs.quality import run_quality_phase
 from infrastructure.validation.docs._docs_scan_report import build_documentation_scan_report
 
+
 class AccuracyIssue(ScanAccuracyIssue):
     """Backward-compatible wrapper around :class:`ScanAccuracyIssue`."""
 
@@ -68,6 +69,7 @@ class AccuracyIssue(ScanAccuracyIssue):
     def issue_message(self) -> str:
         """Compatibility alias for the legacy field name."""
         return self.message
+
 
 __all__ = [
     "DocumentationScanner",

@@ -36,9 +36,7 @@ class RateLimiter:
     def _clean_window(self, key: str, now: float) -> None:
         """Remove timestamps outside the current window for the given key."""
         if key in self.requests:
-            self.requests[key] = [
-                ts for ts in self.requests[key] if now - ts < self.window_seconds
-            ]
+            self.requests[key] = [ts for ts in self.requests[key] if now - ts < self.window_seconds]
 
     def is_allowed(self, key: str) -> bool:
         """Check if request is allowed for given key.
@@ -98,9 +96,7 @@ class SecurityMonitor:
         self.events: list[SecurityEvent] = []
         self.max_events = 1000
 
-    def log_security_event(
-        self, event_type: str, details: dict[str, Any], severity: str = "info"
-    ) -> None:
+    def log_security_event(self, event_type: str, details: dict[str, Any], severity: str = "info") -> None:
         """Log a security event.
 
         Args:

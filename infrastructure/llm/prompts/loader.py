@@ -205,6 +205,7 @@ class PromptFragmentLoader:
         self._fragment_cache.clear()
         self._template_cache.clear()
 
+
 @functools.lru_cache(maxsize=1)
 def get_default_loader() -> PromptFragmentLoader:
     """Get the default global fragment loader instance (lazily initialized)."""

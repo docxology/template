@@ -260,8 +260,7 @@ def validate_no_repetition(
 
     if not is_valid:
         logger.warning(
-            f"Excessive repetition detected: {repetition_ratio:.1%} repeated "
-            f"(max allowed: {max_allowed_ratio:.1%})"
+            f"Excessive repetition detected: {repetition_ratio:.1%} repeated (max allowed: {max_allowed_ratio:.1%})"
         )
 
     return is_valid, details
@@ -274,9 +273,7 @@ def clean_repetitive_output(
     """Clean repetitive content from LLM output."""
     # Use balanced mode with lower content preservation threshold
     # since the purpose of this function is to aggressively clean repetition
-    return deduplicate_sections(
-        content, max_repetitions, mode="balanced", min_content_preservation=0.3
-    )
+    return deduplicate_sections(content, max_repetitions, mode="balanced", min_content_preservation=0.3)
 
 
 __all__ = [

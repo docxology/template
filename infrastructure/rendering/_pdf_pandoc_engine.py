@@ -50,9 +50,7 @@ def build_pandoc_render_error(
         for line in text.strip().split("\n"):
             line_lower = line.lower()
             has_position = "position" in line_lower and (
-                "unbalanced" in line_lower
-                or "parenthesis" in line_lower
-                or "error" in line_lower
+                "unbalanced" in line_lower or "parenthesis" in line_lower or "error" in line_lower
             )
             has_error = "unbalanced" in line_lower or "parenthesis" in line_lower
             if has_position:
@@ -98,10 +96,7 @@ def build_pandoc_render_error(
                 lines = md_content.split("\n")
                 if line_num <= len(lines):
                     context_info["error_line_content"] = lines[line_num - 1]
-                suggestions.append(
-                    f"Check character position {pos} "
-                    f"(line {line_num}) in combined markdown file"
-                )
+                suggestions.append(f"Check character position {pos} (line {line_num}) in combined markdown file")
                 suggestions.append(
                     f"Review content around position: "
                     f"{repr(md_content[max(0, pos - 20) : min(len(md_content), pos + 20)])}"
@@ -118,9 +113,7 @@ def build_pandoc_render_error(
                 ]
 
             suggestions.append(f"Inspect combined markdown file: {combined_md}")
-            suggestions.append(
-                "Try converting individual markdown files to identify the problematic file"
-            )
+            suggestions.append("Try converting individual markdown files to identify the problematic file")
         except Exception as ex:  # noqa: BLE001
             logger.debug(f"Error gathering context: {ex}")
             suggestions.append(f"Could not read combined markdown file: {ex}")
@@ -160,17 +153,12 @@ def build_pandoc_render_error(
                 file_content = source_file.read_text(encoding="utf-8")
                 file_content_processed = file_content.rstrip() + "\n"
                 file_size = len(file_content_processed)
-                separator_size = (
-                    len("\n```{=latex}\n\\newpage\n```\n") if i < len(source_files) - 1 else 0
-                )
+                separator_size = len("\n```{=latex}\n\\newpage\n```\n") if i < len(source_files) - 1 else 0
 
                 if current_pos <= position_info < current_pos + file_size:
                     context_info["problematic_file"] = str(source_file)
                     context_info["problematic_file_index"] = i + 1
-                    logger.error(
-                        f"  Error likely in source file "
-                        f"{i + 1}/{len(source_files)}: {source_file.name}"
-                    )
+                    logger.error(f"  Error likely in source file {i + 1}/{len(source_files)}: {source_file.name}")
                     file_pos = position_info - current_pos
                     line_num = file_content[:file_pos].count("\n") + 1
                     logger.error(f"  Position within file: {file_pos} (line {line_num})")
@@ -189,17 +177,12 @@ def build_pandoc_render_error(
                                 < start + sum(len(l) + 1 for l in snippet_lines[: j + 1])
                                 else "     "
                             )
-                            logger.error(
-                                f"    {marker}Line {actual_line}: {repr(snippet_line)}"
-                            )
+                            logger.error(f"    {marker}Line {actual_line}: {repr(snippet_line)}")
                     else:
                         logger.error(f"    {repr(context_snippet)}")
                     if file_pos < len(file_content):
                         char_at_pos = file_content[file_pos]
-                        logger.error(
-                            f"  Character at error position: "
-                            f"{repr(char_at_pos)} (ord: {ord(char_at_pos)})"
-                        )
+                        logger.error(f"  Character at error position: {repr(char_at_pos)} (ord: {ord(char_at_pos)})")
                     break
 
                 current_pos += file_size + separator_size

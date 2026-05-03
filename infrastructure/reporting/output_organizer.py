@@ -169,10 +169,7 @@ class OutputOrganizer:
             if len(relative_path.parts) > 1:  # File is in a subdirectory
                 parent_dir = relative_path.parts[0]
                 # Check if it's in one of our organized subdirectories
-                if (
-                    parent_dir in {ft.subdirectory for ft in FileType}
-                    or parent_dir == "combined_pdfs"
-                ):
+                if parent_dir in {ft.subdirectory for ft in FileType} or parent_dir == "combined_pdfs":
                     # Check if it's in the correct subdirectory for its type
                     file_type = self.detect_file_type(file_path)
                     if file_type is not None and parent_dir == file_type.subdirectory:

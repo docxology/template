@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+
 # Valid directory references (these are directories, not files)
 # Note: Only generic directory patterns are listed here.
 # Project-specific directories are validated dynamically.

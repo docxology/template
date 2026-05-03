@@ -142,20 +142,32 @@ class TestStageSpec:
 
     def test_name_and_func_stored(self):
         """name and func fields are accessible."""
-        func = lambda: True
+
+        def truthy() -> bool:
+            return True
+
+        func = truthy
         spec = StageSpec(name="my_stage", func=func)
         assert spec.name == "my_stage"
         assert spec.func is func
 
     def test_callable_func(self):
         """func field is callable."""
-        spec = StageSpec(name="test", func=lambda: False)
+
+        def falsy() -> bool:
+            return False
+
+        spec = StageSpec(name="test", func=falsy)
         assert callable(spec.func)
         assert spec.func() is False
 
     def test_is_named_tuple(self):
         """StageSpec is a NamedTuple (supports indexing)."""
-        func = lambda: True
+
+        def truthy() -> bool:
+            return True
+
+        func = truthy
         spec = StageSpec(name="stage", func=func)
         assert spec[0] == "stage"
         assert spec[1] is func

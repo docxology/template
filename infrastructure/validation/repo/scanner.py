@@ -238,9 +238,7 @@ class RepositoryScanner:
 
     def _check_documented_commands(self) -> None:
         """Append documented-command issues to ``results`` (tests and scan phase 2)."""
-        self.results.accuracy_issues.extend(
-            check_documented_commands(self.repo_root, self.src_modules)
-        )
+        self.results.accuracy_issues.extend(check_documented_commands(self.repo_root, self.src_modules))
 
     def _check_documented_commands_into(self, issues: list[ScanAccuracyIssue]) -> None:
         """Merge documented-command findings into a local issues list (phase 2)."""
@@ -335,9 +333,7 @@ class RepositoryScanner:
                             severity="error",
                             file="tests/",
                             message="Test suite has failures",
-                            details=(
-                                result.stdout[-500:] if result.stdout else result.stderr[-500:]
-                            ),
+                            details=(result.stdout[-500:] if result.stdout else result.stderr[-500:]),
                         )
                     )
                     logger.warning("Test suite has failures")

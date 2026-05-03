@@ -21,7 +21,9 @@ def generate_doi_badge(doi: str, style: str = "zenodo") -> str:
     elif style == "github":
         return f"[![DOI](https://img.shields.io/badge/DOI-{doi}-blue.svg)](https://doi.org/{doi})"
     elif style == "shields":
-        return f"[![DOI](https://img.shields.io/badge/DOI-{doi.replace('/', '%2F')}-informational)](https://doi.org/{doi})"
+        return (
+            f"[![DOI](https://img.shields.io/badge/DOI-{doi.replace('/', '%2F')}-informational)](https://doi.org/{doi})"
+        )
     else:
         return f"**DOI**: [{doi}](https://doi.org/{doi})"
 

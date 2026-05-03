@@ -49,10 +49,7 @@ def clean_dir_preserving(
             sub.rmdir()
 
     if preserved_count:
-        log.info(
-            f"  Selectively cleaned {dir_path.name}/: "
-            f"removed {removed_count} files, preserved {preserved_count}"
-        )
+        log.info(f"  Selectively cleaned {dir_path.name}/: removed {removed_count} files, preserved {preserved_count}")
 
 
 def archive_output_logs(output_dir: Path) -> None:
@@ -86,9 +83,7 @@ def archive_output_logs(output_dir: Path) -> None:
         logger.info(f"  Archived {archived_count} log file(s) to logs/archive/")
 
 
-def clean_output_dir_contents(
-    output_dir: Path, preserved_relative_paths: set[Path]
-) -> None:
+def clean_output_dir_contents(output_dir: Path, preserved_relative_paths: set[Path]) -> None:
     """Remove all contents of output_dir except .checkpoints and preserved paths.
 
     Paths in preserved_relative_paths are relative to output_dir.

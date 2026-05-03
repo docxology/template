@@ -137,9 +137,7 @@ class _ConnectionMixin:
             except requests.exceptions.Timeout as e:
                 last_error = f"Timeout after {self.config.timeout}s"
                 if attempt < retries:
-                    logger.debug(
-                        f"Request timeout (attempt {attempt + 1}/{retries + 1}), will retry..."
-                    )
+                    logger.debug(f"Request timeout (attempt {attempt + 1}/{retries + 1}), will retry...")
                     continue
                 else:
                     logger.error(f"Request timeout after {retries + 1} attempts: {last_error}")
@@ -155,9 +153,7 @@ class _ConnectionMixin:
             except requests.exceptions.ConnectionError as e:
                 last_error = f"Connection error: {e}"
                 if attempt < retries:
-                    logger.debug(
-                        f"Connection error (attempt {attempt + 1}/{retries + 1}), will retry..."
-                    )
+                    logger.debug(f"Connection error (attempt {attempt + 1}/{retries + 1}), will retry...")
                     continue
                 else:
                     logger.error(f"Connection error after {retries + 1} attempts: {last_error}")
@@ -266,9 +262,7 @@ class _ConnectionMixin:
         return is_available
 
     def check_connection_with_reason(self, timeout: float = 2.0) -> tuple[bool, str | None]:
-        """Return (is_available, error_message) for the Ollama server.
-
-        """
+        """Return (is_available, error_message) for the Ollama server."""
         try:
             response = requests.get(f"{self.config.base_url}/api/tags", timeout=timeout)
             if response.status_code == 200:
@@ -289,4 +283,3 @@ class _ConnectionMixin:
             error_msg = f"Request error: {e}"
             logger.warning(f"Ollama connection check failed: {error_msg}")
             return (False, error_msg)
-

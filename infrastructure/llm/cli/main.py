@@ -190,28 +190,18 @@ Examples:
     # Query command
     query_parser = subparsers.add_parser("query", help="Send a query to the LLM")
     query_parser.add_argument("prompt", help="The prompt to send")
-    query_parser.add_argument(
-        "--short", action="store_true", help="Request a short response (< 150 tokens)"
-    )
-    query_parser.add_argument(
-        "--long", action="store_true", help="Request a detailed response (> 500 tokens)"
-    )
+    query_parser.add_argument("--short", action="store_true", help="Request a short response (< 150 tokens)")
+    query_parser.add_argument("--long", action="store_true", help="Request a detailed response (> 500 tokens)")
     query_parser.add_argument("--stream", action="store_true", help="Stream response in real-time")
-    query_parser.add_argument(
-        "--model", type=str, default=None, help="Model to use (overrides OLLAMA_MODEL)"
-    )
+    query_parser.add_argument("--model", type=str, default=None, help="Model to use (overrides OLLAMA_MODEL)")
     query_parser.add_argument(
         "--temperature",
         type=float,
         default=None,
         help="Sampling temperature (0.0 = deterministic)",
     )
-    query_parser.add_argument(
-        "--max-tokens", type=int, default=None, help="Maximum tokens to generate"
-    )
-    query_parser.add_argument(
-        "--seed", type=int, default=None, help="Random seed for reproducibility"
-    )
+    query_parser.add_argument("--max-tokens", type=int, default=None, help="Maximum tokens to generate")
+    query_parser.add_argument("--seed", type=int, default=None, help="Random seed for reproducibility")
     query_parser.set_defaults(func=query_command)
 
     # Check command
@@ -226,9 +216,7 @@ Examples:
     template_parser = subparsers.add_parser("template", help="Apply a research template")
     template_parser.add_argument("name", nargs="?", default=None, help="Template name to apply")
     template_parser.add_argument("--list", action="store_true", help="List available templates")
-    template_parser.add_argument(
-        "--input", type=str, default=None, help="Input text (otherwise read from stdin)"
-    )
+    template_parser.add_argument("--input", type=str, default=None, help="Input text (otherwise read from stdin)")
     template_parser.set_defaults(func=template_command)
 
     return parser

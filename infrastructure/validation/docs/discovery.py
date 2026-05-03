@@ -335,9 +335,7 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
                     project_docs[project.name]["test_docs"].append(doc_info)
 
         # Calculate statistics
-        project_docs[project.name]["statistics"] = _calculate_project_stats(
-            project_docs[project.name]
-        )
+        project_docs[project.name]["statistics"] = _calculate_project_stats(project_docs[project.name])
 
     return project_docs
 
@@ -346,9 +344,7 @@ def _calculate_project_stats(project_data: dict[str, Any]) -> dict[str, int]:
     """Calculate documentation statistics for a project."""
     # documentation_files already contains all docs; sub-lists are subsets of it.
     # Use only the sub-lists plus any uncategorized docs to avoid double-counting.
-    sub_docs = (
-        project_data["manuscript_files"] + project_data["script_docs"] + project_data["test_docs"]
-    )
+    sub_docs = project_data["manuscript_files"] + project_data["script_docs"] + project_data["test_docs"]
     sub_doc_ids = {id(d) for d in sub_docs}
     uncategorized = [d for d in project_data["documentation_files"] if id(d) not in sub_doc_ids]
     all_docs = sub_docs + uncategorized
@@ -356,9 +352,7 @@ def _calculate_project_stats(project_data: dict[str, Any]) -> dict[str, int]:
     total_words = sum(doc.word_count for doc in all_docs if hasattr(doc, "word_count"))
     total_lines = sum(doc.line_count for doc in all_docs if hasattr(doc, "line_count"))
     has_links = sum(1 for doc in all_docs if hasattr(doc, "has_links") and doc.has_links)
-    has_code_blocks = sum(
-        1 for doc in all_docs if hasattr(doc, "has_code_blocks") and doc.has_code_blocks
-    )
+    has_code_blocks = sum(1 for doc in all_docs if hasattr(doc, "has_code_blocks") and doc.has_code_blocks)
 
     return {
         "total_files": len(all_docs),
@@ -427,9 +421,7 @@ def get_audit_context(repo_root: Path) -> dict[str, Any]:
     project_docs = discover_project_documentation(repo_root)
 
     return {
-        "projects": [
-            {"name": p.name, "path": str(p.path), "metadata": p.metadata} for p in projects
-        ],
+        "projects": [{"name": p.name, "path": str(p.path), "metadata": p.metadata} for p in projects],
         "total_projects": len(projects),
         "total_markdown_files": len(md_files),
         "config_files": list(config_files.keys()),

@@ -111,9 +111,7 @@ Begin with the English abstract, then provide the translation:"""
             markdown_format=True,
             section_requirements=section_requirements,
         )
-        section_struct = section_structure(
-            required_headers, section_descriptions, required_order=True
-        )
+        section_struct = section_structure(required_headers, section_descriptions, required_order=True)
         token_budget = token_budget_awareness(
             total_tokens=max_tokens,
             section_budgets=section_budgets,

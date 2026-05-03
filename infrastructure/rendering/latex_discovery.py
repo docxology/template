@@ -46,9 +46,7 @@ def find_kpsewhich() -> Path | None:
 
     # Try which command
     try:
-        result = subprocess.run(
-            ["which", "kpsewhich"], capture_output=True, text=True, check=False, timeout=5
-        )
+        result = subprocess.run(["which", "kpsewhich"], capture_output=True, text=True, check=False, timeout=5)
         if result.returncode == 0 and result.stdout.strip():
             return Path(result.stdout.strip())
     except (OSError, subprocess.TimeoutExpired) as e:  # noqa: BLE001 — kpsewhich lookup is optional; return None

@@ -87,23 +87,15 @@ def compile_latex(
                         "Document structure error: missing \\end{document} or unmatched \\begin{}/\\end{} pairs"  # noqa: E501
                     )
                 if "Undefined control sequence" in log_content:
-                    error_hints.append(
-                        "Undefined LaTeX command - check for typos or missing packages"
-                    )
+                    error_hints.append("Undefined LaTeX command - check for typos or missing packages")
                 if "File `" in log_content and "not found" in log_content:
-                    error_hints.append(
-                        "Missing file reference - check figure paths and bibliography files"
-                    )
+                    error_hints.append("Missing file reference - check figure paths and bibliography files")
                 if "LaTeX Error: File" in log_content and "not found" in log_content:
                     error_hints.append("Missing LaTeX package - install required packages")
                 if "Missing \\begin{document}" in log_content:
-                    error_hints.append(
-                        "Missing \\begin{document} command - check document structure"
-                    )
+                    error_hints.append("Missing \\begin{document} command - check document structure")
                 if "Division by 0" in log_content and "graphics" in log_content.lower():
-                    error_hints.append(
-                        "Graphics error - ensure PNG files are valid and -shell-escape flag is used"
-                    )
+                    error_hints.append("Graphics error - ensure PNG files are valid and -shell-escape flag is used")
 
                 # Extract the most recent error messages for context
                 error_lines = []
@@ -113,11 +105,7 @@ def compile_latex(
                         error_lines.append(line)
                         if len(error_lines) >= 5:  # Get last 5 error lines
                             break
-                recent_errors = (
-                    "\n".join(reversed(error_lines))
-                    if error_lines
-                    else "No specific errors found in log"
-                )
+                recent_errors = "\n".join(reversed(error_lines)) if error_lines else "No specific errors found in log"
 
                 enhanced_suggestions = [
                     f"Check full log file: {log_file}",

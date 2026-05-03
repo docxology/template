@@ -56,28 +56,53 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
         # Generate comparative data for each project and metric
         for project in projects:
             _write_comparative_row(
-                writer, project.name, "Manuscript", "Total_Words", "words",
-                project.manuscript.total_words, metrics_data["manuscript_words"],
+                writer,
+                project.name,
+                "Manuscript",
+                "Total_Words",
+                "words",
+                project.manuscript.total_words,
+                metrics_data["manuscript_words"],
                 higher_is_better=True,
             )
             _write_comparative_row(
-                writer, project.name, "Manuscript", "Sections", "count",
-                project.manuscript.sections, metrics_data["manuscript_sections"],
+                writer,
+                project.name,
+                "Manuscript",
+                "Sections",
+                "count",
+                project.manuscript.sections,
+                metrics_data["manuscript_sections"],
                 higher_is_better=True,
             )
             _write_comparative_row(
-                writer, project.name, "Codebase", "Source_Lines", "lines",
-                project.codebase.source_lines, metrics_data["codebase_lines"],
+                writer,
+                project.name,
+                "Codebase",
+                "Source_Lines",
+                "lines",
+                project.codebase.source_lines,
+                metrics_data["codebase_lines"],
                 higher_is_better=True,
             )
             _write_comparative_row(
-                writer, project.name, "Pipeline", "Duration", "seconds",
-                project.pipeline.total_duration, metrics_data["pipeline_duration"],
+                writer,
+                project.name,
+                "Pipeline",
+                "Duration",
+                "seconds",
+                project.pipeline.total_duration,
+                metrics_data["pipeline_duration"],
                 higher_is_better=False,
             )
             _write_comparative_row(
-                writer, project.name, "Outputs", "Total_Files", "files",
-                project.outputs.total_outputs, metrics_data["output_total"],
+                writer,
+                project.name,
+                "Outputs",
+                "Total_Files",
+                "files",
+                project.outputs.total_outputs,
+                metrics_data["output_total"],
                 higher_is_better=True,
             )
 
@@ -129,17 +154,10 @@ def _calculate_percentile_and_rank(
     sorted_values = sorted(values_list, reverse=higher_is_better)
     try:
         rank = sorted_values.index(value) + 1
-        percentile = (
-            (len(values_list) - rank) / (len(values_list) - 1) * 100
-            if len(values_list) > 1
-            else 100
-        )
+        percentile = (len(values_list) - rank) / (len(values_list) - 1) * 100 if len(values_list) > 1 else 100
     except ValueError:
         # Handle ties or missing values
-        rank = (
-            len([v for v in values_list if (v > value if higher_is_better else v < value)])
-            + 1
-        )
+        rank = len([v for v in values_list if (v > value if higher_is_better else v < value)]) + 1
         percentile = (rank - 1) / len(values_list) * 100
 
     return percentile, rank

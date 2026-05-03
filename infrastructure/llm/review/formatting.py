@@ -69,9 +69,7 @@ def _build_combined_review_content(
     for name, metrics in session_metrics.reviews.items():
         metrics_summary += f"- {name.replace('_', ' ').title()}: {metrics.output_chars:,} chars ({metrics.output_words:,} words) in {metrics.generation_time_seconds:.1f}s\n"  # noqa: E501
 
-    metrics_summary += (
-        f"\n**Total Generation Time:** {session_metrics.total_generation_time:.1f}s\n"
-    )
+    metrics_summary += f"\n**Total Generation Time:** {session_metrics.total_generation_time:.1f}s\n"
 
     # Build navigation table
     nav_rows = [

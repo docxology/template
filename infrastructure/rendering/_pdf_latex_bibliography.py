@@ -14,9 +14,7 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def process_bibliography(
-    tex_file: Path, output_dir: Path, bib_files: Sequence[Path]
-) -> bool:
+def process_bibliography(tex_file: Path, output_dir: Path, bib_files: Sequence[Path]) -> bool:
     """Process bibliography using bibtex.
 
     Copies every ``.bib`` file into the compilation directory (BibTeX's
@@ -30,9 +28,7 @@ def process_bibliography(
         return False
     for bib_file in paths:
         if not bib_file.exists():
-            logger.warning(
-                f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)"
-            )
+            logger.warning(f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)")
             return False
 
     bibtex_cmd = "bibtex"

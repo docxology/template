@@ -89,9 +89,7 @@ def generate_pipeline_report(
     # Enrich a copy of output_statistics with log file info (avoid mutating caller's dict)
     if project_name and output_statistics is not None:
         # Use explicit project_dir if given; fall back to default projects/ location.
-        _log_base = (
-            project_dir if project_dir is not None else repo_root / "projects" / project_name
-        )
+        _log_base = project_dir if project_dir is not None else repo_root / "projects" / project_name
         log_file = _log_base / "output" / "logs" / "pipeline.log"
         output_statistics = {
             **output_statistics,

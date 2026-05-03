@@ -126,11 +126,7 @@ def improve_file(path: Path) -> FileImprovementResult:
         and isinstance(tree2.body[0].value.value, str)
     )
     if tree2 is not None and not has_docstring:
-        doc = (
-            f'"""{path.stem.replace("_", " ").title()} module.\n\n'
-            f"Part of the Cognitive Integrity Framework.\n"
-            f'"""\n\n'
-        )
+        doc = f'"""{path.stem.replace("_", " ").title()} module.\n\nPart of the Cognitive Integrity Framework.\n"""\n\n'
         new_lines.insert(0, doc)
         changes["docstring"] = True
         changes["modified"] = True

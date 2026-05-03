@@ -104,10 +104,7 @@ class FigureManager:
             try:
                 with open(self.registry_file, "r") as f:
                     data = json.load(f)
-                    self.figures = {
-                        fig_id: FigureMetadata.from_dict(fig_data)
-                        for fig_id, fig_data in data.items()
-                    }
+                    self.figures = {fig_id: FigureMetadata.from_dict(fig_data) for fig_id, fig_data in data.items()}
                     # Update counter from max numeric suffix; default=0 guards against
                     # non-standard IDs that lack a numeric suffix
                     if self.figures:
@@ -116,8 +113,7 @@ class FigureManager:
                                 (
                                     int(fig.figure_id.split("_")[-1])
                                     for fig in self.figures.values()
-                                    if "_" in fig.figure_id
-                                    and fig.figure_id.split("_")[-1].isdigit()
+                                    if "_" in fig.figure_id and fig.figure_id.split("_")[-1].isdigit()
                                 ),
                                 default=0,
                             )

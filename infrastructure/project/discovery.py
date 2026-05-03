@@ -88,9 +88,7 @@ def discover_projects(
             # It's a standalone project
             project_info = build_project_info(child_dir)
             projects.append(project_info)
-            logger.debug(
-                f"Discovered standalone project: {project_info.name} at {project_info.path}"
-            )
+            logger.debug(f"Discovered standalone project: {project_info.name} at {project_info.path}")
         else:
             # Not a valid project - check if it's a program directory containing projects
             nested_projects = _discover_nested_projects(child_dir, program_name=child_dir.name)
@@ -160,9 +158,7 @@ def _discover_nested_projects(program_dir: Path, program_name: str) -> list[Proj
         if is_valid:
             project_info = build_project_info(child_dir, program=program_name)
             nested_projects.append(project_info)
-            logger.debug(
-                f"Discovered nested project: {project_info.qualified_name} at {project_info.path}"
-            )
+            logger.debug(f"Discovered nested project: {project_info.qualified_name} at {project_info.path}")
 
     return nested_projects
 

@@ -66,9 +66,9 @@ _PROSE_GLYPH_REPLACEMENTS: Final[dict[str, str]] = {
     "ι": _T(r"\iota", "iota"),
     "κ": _T(r"\kappa", "kappa"),
     "λ": _T(r"\lambda", "lambda"),
-    "μ": _T(r"\mu", "mu"),   # U+03BC GREEK SMALL LETTER MU
-    "µ": _T(r"\mu", "mu"),   # U+00B5 MICRO SIGN — visually identical, semantic differ
-    "𝜇": _T(r"\mu", "mu"),   # U+1D707 MATHEMATICAL ITALIC SMALL MU
+    "μ": _T(r"\mu", "mu"),  # U+03BC GREEK SMALL LETTER MU
+    "µ": _T(r"\mu", "mu"),  # U+00B5 MICRO SIGN — visually identical, semantic differ
+    "𝜇": _T(r"\mu", "mu"),  # U+1D707 MATHEMATICAL ITALIC SMALL MU
     "ν": _T(r"\nu", "nu"),
     "ξ": _T(r"\xi", "xi"),
     "π": _T(r"\pi", "pi"),

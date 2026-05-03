@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+
 @dataclass
 class DocumentationFile:
     """Represents a documentation file with metadata."""
@@ -32,7 +33,6 @@ class LinkIssue:
     issue_type: str
     issue_message: str
     severity: str = "error"
-
 
 
 @dataclass(init=False)
@@ -73,6 +73,7 @@ class ScanAccuracyIssue:
     def issue_message(self) -> str:
         """Backward-compatible alias for the legacy field name."""
         return self.message
+
 
 @dataclass
 class CompletenessGap:

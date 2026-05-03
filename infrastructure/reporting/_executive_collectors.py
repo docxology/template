@@ -148,9 +148,7 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
     test_report_path = reports_dir / "test_results.json"
 
     if not test_report_path.exists():
-        logger.warning(
-            f"Test report not found: {test_report_path} - test metrics will show as unavailable"
-        )
+        logger.warning(f"Test report not found: {test_report_path} - test metrics will show as unavailable")
         logger.info(f"Expected test report location: {test_report_path}")
         # Set a flag to indicate data is unavailable (using negative values to distinguish from actual 0s)  # noqa: E501
         metrics.total_tests = -1  # Special value to indicate "unavailable"
@@ -241,11 +239,7 @@ def collect_output_metrics(output_dir: Path) -> OutputMetrics:
 
     # Total outputs
     metrics.total_outputs = (
-        metrics.pdf_files
-        + metrics.figures
-        + metrics.data_files
-        + metrics.slides
-        + metrics.web_outputs
+        metrics.pdf_files + metrics.figures + metrics.data_files + metrics.slides + metrics.web_outputs
     )
 
     return metrics
@@ -284,9 +278,7 @@ def collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics:
             metrics.bottleneck_stage = slowest.get("name", "")
             metrics.bottleneck_duration = slowest.get("duration", 0.0)
             if metrics.total_duration > 0:
-                metrics.bottleneck_percent = (
-                    metrics.bottleneck_duration / metrics.total_duration * 100
-                )
+                metrics.bottleneck_percent = metrics.bottleneck_duration / metrics.total_duration * 100
 
     except (OSError, json.JSONDecodeError, KeyError, ValueError) as e:  # noqa: BLE001 — return empty metrics if report absent
         logger.warning(f"Error loading pipeline report: {e}")

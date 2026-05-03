@@ -203,12 +203,17 @@ class CodeProfiler:
 
         return "\n".join(report_lines)
 
+
 @functools.lru_cache(maxsize=1)
 def get_code_profiler() -> CodeProfiler:
     """Return the global CodeProfiler instance (lazily initialized)."""
     return CodeProfiler()
 
-def monitor_performance(operation_name: str, track_memory: bool = True) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+
+def monitor_performance(
+    operation_name: str,
+    track_memory: bool = True,
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """Decorator for monitoring function performance via the global CodeProfiler."""
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
@@ -222,6 +227,7 @@ def monitor_performance(operation_name: str, track_memory: bool = True) -> Calla
         return wrapper
 
     return decorator
+
 
 def profile_memory_usage(func: Callable[..., Any], *args: Any, **kwargs: Any) -> dict[str, Any]:
     """Profile memory usage of a function via CodeProfiler."""

@@ -86,11 +86,7 @@ def save_response(
         output_path = output_path.with_suffix(extensions.get(format, ".md"))
 
     if format == "markdown":
-        time_str = (
-            f"{metadata.generation_time_seconds:.2f}s"
-            if metadata.generation_time_seconds is not None
-            else "N/A"
-        )
+        time_str = f"{metadata.generation_time_seconds:.2f}s" if metadata.generation_time_seconds is not None else "N/A"
         content = f"""# LLM Response
 
 *Generated on {metadata.timestamp}*

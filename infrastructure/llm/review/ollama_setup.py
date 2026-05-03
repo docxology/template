@@ -83,6 +83,7 @@ def create_review_client(model_name: str) -> LLMClient:
     logger.debug(f"Review max_tokens configuration: {source}")
     return LLMClient(config)
 
+
 def select_and_start_ollama_model() -> tuple[bool, str | None]:
     """Ensure Ollama is running and select the best available model.
 
@@ -115,9 +116,7 @@ def select_and_start_ollama_model() -> tuple[bool, str | None]:
                     break  # auto-start succeeded — server is ready
                 else:
                     if attempt == max_retries - 1:
-                        logger.warning(
-                            "❌ Failed to start Ollama server automatically after retries"
-                        )
+                        logger.warning("❌ Failed to start Ollama server automatically after retries")
                         return False, None
             else:
                 logger.warning("❌ Ollama server is not running")
@@ -164,9 +163,7 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
     if need_preload:
         logger.info(f"    ⏳ Loading {model_name} into GPU memory...")
         preload_start = time.time()
-        with log_with_spinner(
-            f"Loading {model_name} into GPU memory...", logger, final_message=None
-        ):
+        with log_with_spinner(f"Loading {model_name} into GPU memory...", logger, final_message=None):
             preload_timeout = min(15.0, float(warmup_timeout)) if warmup_timeout else 15.0
             preload_success, preload_error = preload_model(
                 model_name,
@@ -182,9 +179,7 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> tuple
             error_msg = f": {preload_error}" if preload_error else ""
             logger.warning(f"    ⚠️ Preload returned error{error_msg}, continuing anyway...")
 
-    prompt = (
-        f"In exactly one sentence, what is the main topic of this text?\\n\\n{text_preview[:500]}"
-    )
+    prompt = f"In exactly one sentence, what is the main topic of this text?\\n\\n{text_preview[:500]}"
 
     start_time = time.time()
     response_chunks = []

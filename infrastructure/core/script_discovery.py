@@ -47,9 +47,7 @@ def discover_analysis_scripts(
         >>> # Discovers scripts in projects/myresearch/scripts/
     """
     resolved_dir = project_dir if project_dir is not None else repo_root / "projects" / project_name
-    logger.info(
-        f"[STAGE-02] Discovering analysis scripts in {resolved_dir.relative_to(repo_root)}/..."
-    )
+    logger.info(f"[STAGE-02] Discovering analysis scripts in {resolved_dir.relative_to(repo_root)}/...")
 
     project_scripts_dir = resolved_dir / "scripts"
 
@@ -64,9 +62,7 @@ def discover_analysis_scripts(
     scripts = sorted(
         f
         for f in project_scripts_dir.glob("*.py")
-        if f.is_file()
-        and not f.name.startswith("_")
-        and f.name != "__init__.py"
+        if f.is_file() and not f.name.startswith("_") and f.name != "__init__.py"
     )
 
     for script in scripts:
@@ -90,9 +86,7 @@ def discover_orchestrators(repo_root: Path) -> list[Path]:
     scripts_dir = repo_root / "scripts"
 
     if not scripts_dir.exists():
-        raise PipelineError(
-            "Scripts directory not found", context={"expected_path": str(scripts_dir)}
-        )
+        raise PipelineError("Scripts directory not found", context={"expected_path": str(scripts_dir)})
 
     orchestrators = [
         scripts_dir / "00_setup_environment.py",
@@ -135,15 +129,11 @@ def verify_analysis_outputs(
         False if scripts exist but no output was generated.
     """
     resolved_dir = project_dir if project_dir is not None else repo_root / "projects" / project_name
-    logger.info(
-        f"[STAGE-02] Verifying analysis outputs for {resolved_dir.relative_to(repo_root)}/..."
-    )
+    logger.info(f"[STAGE-02] Verifying analysis outputs for {resolved_dir.relative_to(repo_root)}/...")
 
     # Determine whether analysis scripts exist (so we know whether output is expected)
     scripts_dir = resolved_dir / "scripts"
-    scripts_exist = scripts_dir.exists() and any(
-        f for f in scripts_dir.glob("*.py") if not f.name.startswith("_")
-    )
+    scripts_exist = scripts_dir.exists() and any(f for f in scripts_dir.glob("*.py") if not f.name.startswith("_"))
 
     output_dirs = [
         resolved_dir / "output" / "figures",
@@ -173,14 +163,10 @@ def verify_analysis_outputs(
                 logger,
             )
         elif exists:
-            absent_or_empty_level(
-                f"  ℹ️  Output directory is empty: {output_dir.name}"
-            )
+            absent_or_empty_level(f"  ℹ️  Output directory is empty: {output_dir.name}")
         else:
             # Output directories may not exist yet, not an error on its own.
-            absent_or_empty_level(
-                f"  ℹ️  Output directory not yet created: {output_dir.name}"
-            )
+            absent_or_empty_level(f"  ℹ️  Output directory not yet created: {output_dir.name}")
 
     if scripts_exist and not has_any_output:
         logger.warning(

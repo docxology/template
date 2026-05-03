@@ -109,13 +109,9 @@ class PipelineDAG:
         """
         before = len(self.stages)
         if exclude:
-            self.stages = [
-                s for s in self.stages if not (set(s.tags) & exclude)
-            ]
+            self.stages = [s for s in self.stages if not (set(s.tags) & exclude)]
         if include_only:
-            self.stages = [
-                s for s in self.stages if set(s.tags) & include_only
-            ]
+            self.stages = [s for s in self.stages if set(s.tags) & include_only]
         removed = before - len(self.stages)
         if removed:
             logger.info(f"Tag filter removed {removed} stage(s), {len(self.stages)} remaining")
@@ -192,16 +188,13 @@ class PipelineDAG:
 
     # ── Internals ────────────────────────────────────────────────────────
 
-    def _resolve_stage_func(
-        self, stage: StageDefinition, executor: Any
-    ) -> Callable[[], bool]:
+    def _resolve_stage_func(self, stage: StageDefinition, executor: Any) -> Callable[[], bool]:
         """Build a zero-arg callable for a stage definition."""
         if stage.method:
             method = getattr(executor, stage.method, None)
             if method is None:
                 raise ValueError(
-                    f"Stage '{stage.name}' references method '{stage.method}' "
-                    f"but executor has no such method"
+                    f"Stage '{stage.name}' references method '{stage.method}' but executor has no such method"
                 )
             return method
 
@@ -220,9 +213,7 @@ class PipelineDAG:
 
             return _run
 
-        raise ValueError(
-            f"Stage '{stage.name}' must define either 'script' or 'method'"
-        )
+        raise ValueError(f"Stage '{stage.name}' must define either 'script' or 'method'")
 
     def _validate(self) -> None:
         """Ensure stage names are unique and deps reference existing stages."""
@@ -260,4 +251,3 @@ def load_telemetry_config(yaml_path: Path) -> Any:
         logger.debug(f"Failed to load telemetry config from {yaml_path}: {e}")
 
     return None
-

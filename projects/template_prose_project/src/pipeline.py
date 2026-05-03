@@ -99,8 +99,7 @@ def _check_no_skipped_levels(report: ManuscriptReport) -> CheckResult:
     return CheckResult(
         name="no_skipped_heading_levels",
         passed=len(bad) == 0,
-        message=f"{len(bad)} file(s) with skipped levels"
-        + (f": {', '.join(bad)}" if bad else ""),
+        message=f"{len(bad)} file(s) with skipped levels" + (f": {', '.join(bad)}" if bad else ""),
         details={"offending_files": bad},
     )
 
@@ -110,8 +109,7 @@ def _check_h1_per_file(report: ManuscriptReport) -> CheckResult:
     return CheckResult(
         name="every_file_has_h1",
         passed=len(bad) == 0,
-        message=f"{len(bad)} file(s) missing H1"
-        + (f": {', '.join(bad)}" if bad else ""),
+        message=f"{len(bad)} file(s) missing H1" + (f": {', '.join(bad)}" if bad else ""),
         details={"offending_files": bad},
     )
 
@@ -145,10 +143,7 @@ def _check_bibliography(
         passed = False
         msgs.append(f"{len(unused)} unused bib entries: {', '.join(unused)}")
     if not msgs:
-        msgs.append(
-            f"{len(cited_keys)} cited / {len(bib_keys)} in bib · "
-            f"{len(missing)} missing · {len(unused)} unused"
-        )
+        msgs.append(f"{len(cited_keys)} cited / {len(bib_keys)} in bib · {len(missing)} missing · {len(unused)} unused")
 
     return CheckResult(
         name="bibliography_consistency",

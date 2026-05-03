@@ -44,16 +44,12 @@ def extract_action_items(reviews: dict[str, str]) -> str:
         elif "medium priority" in line.lower() or "low priority" in line.lower():
             in_high_priority = False
 
-        if in_high_priority and line.strip().startswith(
-            ("- **", "- *", "1.", "2.", "3.", "4.", "5.")
-        ):
+        if in_high_priority and line.strip().startswith(("- **", "- *", "1.", "2.", "3.", "4.", "5.")):
             # Extract the issue/recommendation
             item = line.strip()
             if item.startswith("- "):
                 item = item[2:]
-            if item.startswith(
-                ("**Issue**:", "*Issue*:", "**Recommendation**:", "*Recommendation*:")
-            ):
+            if item.startswith(("**Issue**:", "*Issue*:", "**Recommendation**:", "*Recommendation*:")):
                 item = item.split(":", 1)[1].strip()
             if len(item) > 10 and item not in todos:
                 todos.append(f"[ ] {item[:100]}..." if len(item) > 100 else f"[ ] {item}")
@@ -90,17 +86,13 @@ def calculate_format_compliance_summary(reviews: dict[str, str]) -> str:
             conversational_count += 1
 
     # Calculate compliance percentage (only conversational phrases matter now)
-    compliance_rate = (
-        ((total_reviews - conversational_count) / total_reviews) * 100 if total_reviews > 0 else 100
-    )
+    compliance_rate = ((total_reviews - conversational_count) / total_reviews) * 100 if total_reviews > 0 else 100
 
     # Build summary
     summary_parts = [f"**Format Compliance:** {compliance_rate:.0f}%"]
 
     if conversational_count > 0:
-        summary_parts.append(
-            f"*Notes: {conversational_count} review(s) with conversational phrases*"
-        )
+        summary_parts.append(f"*Notes: {conversational_count} review(s) with conversational phrases*")
     else:
         summary_parts.append("*All reviews comply with format requirements*")
 

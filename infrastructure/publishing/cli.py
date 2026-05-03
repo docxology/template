@@ -155,8 +155,7 @@ def publish_zenodo_command(args: argparse.Namespace) -> None:
         "publication_type": "article",
         "title": args.title or "Research Publication",
         "creators": [
-            {"name": name.strip()}
-            for name in (args.authors.split(",") if args.authors else ["Unknown Author"])
+            {"name": name.strip()} for name in (args.authors.split(",") if args.authors else ["Unknown Author"])
         ],
         "description": args.description or "Published research output",
     }

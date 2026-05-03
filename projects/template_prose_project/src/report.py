@@ -99,10 +99,7 @@ def write_review_report(
                 if q.passive_count:
                     lines.append(f"- {q.passive_count} potential passive-voice sentence(s)")
                 if q.hedge_count:
-                    lines.append(
-                        f"- {q.hedge_count} hedge word(s): "
-                        + ", ".join(sorted(set(q.hedge_words))[:10])
-                    )
+                    lines.append(f"- {q.hedge_count} hedge word(s): " + ", ".join(sorted(set(q.hedge_words))[:10]))
                 lines.append("")
 
     out.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")

@@ -36,6 +36,7 @@ class TimeoutErrorInfo(TypedDict):
     timeout_duration: str
     suggestion: str
 
+
 logger = get_logger(__name__)
 
 # Minimum file size (bytes) for a valid coverage JSON file; an empty JSON is ~50 bytes
@@ -116,9 +117,7 @@ def _parse_failures_short(combined_output: str) -> list[FailedTestInfo]:
                     if ":" in error_part:
                         e = error_part.split(":", 1)
                         error_type, error_message = e[0].strip(), e[1].strip()
-                failed_tests.append(
-                    {"test": m.group(1), "error_type": error_type, "error_message": error_message}
-                )
+                failed_tests.append({"test": m.group(1), "error_type": error_type, "error_message": error_message})
     return failed_tests
 
 
@@ -199,9 +198,7 @@ def extract_timeout_errors(stdout: str, stderr: str) -> list[TimeoutErrorInfo]:
             test_name = "Unknown"
             for j in range(max(0, i - 5), i):
                 prev_line = lines[j]
-                test_match = re.search(
-                    r"([^\s]+\.py(?:::[^\s]+)*)\s+(?:PASSED|FAILED|ERROR)", prev_line
-                )
+                test_match = re.search(r"([^\s]+\.py(?:::[^\s]+)*)\s+(?:PASSED|FAILED|ERROR)", prev_line)
                 if test_match:
                     test_name = test_match.group(1)
                     break
@@ -254,9 +251,7 @@ def check_test_failures(
         )
 
 
-def _wait_for_coverage_file(
-    paths: list[Path], max_retries: int = 3, delay: float = 0.5
-) -> Path | None:
+def _wait_for_coverage_file(paths: list[Path], max_retries: int = 3, delay: float = 0.5) -> Path | None:
     """Return the first ready coverage JSON path, waiting up to max_retries attempts."""
     for attempt in range(max_retries):
         if attempt > 0:
@@ -267,9 +262,7 @@ def _wait_for_coverage_file(
             file_size = path.stat().st_size
             if file_size >= MIN_VALID_COVERAGE_FILE_BYTES:
                 return path
-            logger.debug(
-                f"Attempt {attempt + 1}/{max_retries}: {path} too small ({file_size} bytes)"
-            )
+            logger.debug(f"Attempt {attempt + 1}/{max_retries}: {path} too small ({file_size} bytes)")
     return None
 
 
@@ -289,9 +282,7 @@ def _parse_coverage_json(path: Path) -> float | None:
     return None
 
 
-def extract_coverage_percentage(
-    stdout_text: str, coverage_json_paths: list[Path]
-) -> tuple[bool, float | None]:
+def extract_coverage_percentage(stdout_text: str, coverage_json_paths: list[Path]) -> tuple[bool, float | None]:
     """Extract coverage percentage from defined JSON paths or stdout fallback; returns (found, pct)."""
     logger.debug("Looking for coverage files")
 

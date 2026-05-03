@@ -130,11 +130,7 @@ class SearchQuery:
             raise ValueError("SearchQuery.text must be a non-empty string")
         if self.max_results <= 0:
             raise ValueError("SearchQuery.max_results must be positive")
-        if (
-            self.year_min is not None
-            and self.year_max is not None
-            and self.year_min > self.year_max
-        ):
+        if self.year_min is not None and self.year_max is not None and self.year_min > self.year_max:
             raise ValueError("year_min cannot exceed year_max")
 
     def matches_year(self, year: int | None) -> bool:
@@ -215,8 +211,18 @@ def merge_papers(papers: Iterable[Paper]) -> list[Paper]:
         winner, loser = (existing, paper) if existing.score >= paper.score else (paper, existing)
         # Fill missing scalar fields from loser onto winner.
         for fname in (
-            "abstract", "year", "doi", "url", "venue", "venue_type",
-            "volume", "issue", "pages", "publisher", "edition", "isbn",
+            "abstract",
+            "year",
+            "doi",
+            "url",
+            "venue",
+            "venue_type",
+            "volume",
+            "issue",
+            "pages",
+            "publisher",
+            "edition",
+            "isbn",
         ):
             if getattr(winner, fname) in (None, "") and getattr(loser, fname) not in (None, ""):
                 setattr(winner, fname, getattr(loser, fname))

@@ -118,7 +118,7 @@ class TestFulltextFetcher:
         fetcher = FulltextFetcher(cache_dir=tmp_path)
         # Override the URL to point at our local server.
         p = Paper(id="arxiv:1", title="x", pdf_url=httpserver.url_for("/pdf/1.pdf"))
-        result = fetcher.fetch(p)
+        fetcher.fetch(p)
         # Without pypdf installed, status will be "error" with the cached
         # PDF path; with pypdf, it may be "error" (parse failure on the
         # synthetic PDF) — in either case the PDF must have been written.

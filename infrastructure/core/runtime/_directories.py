@@ -45,9 +45,7 @@ def _project_output_dirs(project_name: str) -> list[str]:
     ]
 
 
-def setup_directories(
-    repo_root: Path, project_name: str = "project", directories: list[str] | None = None
-) -> bool:
+def setup_directories(repo_root: Path, project_name: str = "project", directories: list[str] | None = None) -> bool:
     """Create required directory structure.
 
     Args:

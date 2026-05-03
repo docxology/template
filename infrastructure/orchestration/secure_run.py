@@ -41,7 +41,7 @@ class SecureRunOptions:
     extra_args: list[str] = field(default_factory=list)
 
 
-def _load_steganography(): # pragma: no cover - import indirection
+def _load_steganography():  # pragma: no cover - import indirection
     """Lazy import to keep the orchestration package import-light.
 
     The steganography module pulls in ``reportlab`` / ``qrcode``; we don't
@@ -199,9 +199,7 @@ def run_secure_pipeline(
 
     overall_status = 0
     for target in targets:
-        rc = apply_steganography_to_project(
-            repo_root, target, processor_factory=processor_factory
-        )
+        rc = apply_steganography_to_project(repo_root, target, processor_factory=processor_factory)
         if rc == 1:
             overall_status = 1
         # rc == 2 (no PDFs) is non-fatal here, mirroring secure_run.sh

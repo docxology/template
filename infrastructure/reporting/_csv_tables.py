@@ -91,9 +91,7 @@ def _classify_recommendation(rec: str, summary: ExecutiveSummary) -> dict[str, A
     affected_projects = "All"
     next_steps = "Review and implement as appropriate"
 
-    if any(
-        keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]
-    ):
+    if any(keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]):
         priority_score = 5
         priority_level = "High"
         impact_level = "High"
@@ -164,9 +162,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> dic
     return csv_files
 
 
-def _write_project_metrics_csv(
-    summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer
-) -> Path:
+def _write_project_metrics_csv(summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer) -> Path:
     """Write per-project metrics CSV."""
     from infrastructure.reporting.executive_reporter import calculate_project_health_score
 
@@ -234,9 +230,7 @@ def _write_project_metrics_csv(
     return metrics_csv
 
 
-def _write_aggregate_metrics_csv(
-    summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer
-) -> Path:
+def _write_aggregate_metrics_csv(summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer) -> Path:
     """Write aggregate (cross-project) metrics CSV."""
     aggregate_csv = organizer.get_output_path("aggregate_metrics.csv", output_dir, FileType.CSV)
     with open(aggregate_csv, "w", newline="") as f:
@@ -248,18 +242,10 @@ def _write_aggregate_metrics_csv(
         # Manuscript aggregates
         manuscript = agg.get("manuscript", {})
         writer.writerow(["Manuscript", "Total_Words", manuscript.get("total_words", 0), "words"])
-        writer.writerow(
-            ["Manuscript", "Total_Sections", manuscript.get("total_sections", 0), "sections"]
-        )
-        writer.writerow(
-            ["Manuscript", "Total_Equations", manuscript.get("total_equations", 0), "equations"]
-        )
-        writer.writerow(
-            ["Manuscript", "Total_Figures", manuscript.get("total_figures", 0), "figures"]
-        )
-        writer.writerow(
-            ["Manuscript", "Total_References", manuscript.get("total_references", 0), "references"]
-        )
+        writer.writerow(["Manuscript", "Total_Sections", manuscript.get("total_sections", 0), "sections"])
+        writer.writerow(["Manuscript", "Total_Equations", manuscript.get("total_equations", 0), "equations"])
+        writer.writerow(["Manuscript", "Total_Figures", manuscript.get("total_figures", 0), "figures"])
+        writer.writerow(["Manuscript", "Total_References", manuscript.get("total_references", 0), "references"])
 
         # Test aggregates
         tests = agg.get("tests", {})
@@ -267,24 +253,14 @@ def _write_aggregate_metrics_csv(
         writer.writerow(["Tests", "Total_Passed", tests.get("total_passed", 0), "tests"])
         writer.writerow(["Tests", "Total_Failed", tests.get("total_failed", 0), "tests"])
         writer.writerow(["Tests", "Average_Coverage", tests.get("average_coverage", 0), "percent"])
-        writer.writerow(
-            ["Tests", "Total_Execution_Time", tests.get("total_execution_time", 0), "seconds"]
-        )
+        writer.writerow(["Tests", "Total_Execution_Time", tests.get("total_execution_time", 0), "seconds"])
 
         # Pipeline aggregates
         pipeline = agg.get("pipeline", {})
-        writer.writerow(
-            ["Pipeline", "Total_Duration", pipeline.get("total_duration", 0), "seconds"]
-        )
-        writer.writerow(
-            ["Pipeline", "Average_Duration", pipeline.get("average_duration", 0), "seconds"]
-        )
-        writer.writerow(
-            ["Pipeline", "Total_Stages_Passed", pipeline.get("total_stages_passed", 0), "stages"]
-        )
-        writer.writerow(
-            ["Pipeline", "Total_Stages_Failed", pipeline.get("total_stages_failed", 0), "stages"]
-        )
+        writer.writerow(["Pipeline", "Total_Duration", pipeline.get("total_duration", 0), "seconds"])
+        writer.writerow(["Pipeline", "Average_Duration", pipeline.get("average_duration", 0), "seconds"])
+        writer.writerow(["Pipeline", "Total_Stages_Passed", pipeline.get("total_stages_passed", 0), "stages"])
+        writer.writerow(["Pipeline", "Total_Stages_Failed", pipeline.get("total_stages_failed", 0), "stages"])
 
         # Output aggregates
         outputs = agg.get("outputs", {})
@@ -298,9 +274,7 @@ def _write_aggregate_metrics_csv(
     return aggregate_csv
 
 
-def _write_health_scores_csv(
-    summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer
-) -> Path:
+def _write_health_scores_csv(summary: ExecutiveSummary, output_dir: Path, organizer: OutputOrganizer) -> Path:
     """Write per-project health scores CSV."""
     health_csv = organizer.get_output_path("health_scores.csv", output_dir, FileType.CSV)
     with open(health_csv, "w", newline="") as f:

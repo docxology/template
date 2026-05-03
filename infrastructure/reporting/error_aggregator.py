@@ -201,16 +201,13 @@ class ErrorAggregator:
         for error_type, errors in error_types.items():
             template = _FIX_TEMPLATES.get(error_type)
             if template:
-                fixes.append(
-                    {"issue": f"{len(errors)} {error_type.replace('_', ' ')}(s)", **template}
-                )
+                fixes.append({"issue": f"{len(errors)} {error_type.replace('_', ' ')}(s)", **template})
             else:
                 fixes.append(
                     {
                         "priority": "medium",
                         "issue": f"{len(errors)} {error_type} error(s)",
-                        "actions": errors[0].suggestions
-                        or ["Review error messages", "Check logs for details"],
+                        "actions": errors[0].suggestions or ["Review error messages", "Check logs for details"],
                     }
                 )
         return fixes
@@ -317,6 +314,7 @@ class ErrorAggregator:
                 lines.append(f"*... and {len(summary['errors']) - 10} more errors*")
 
         return "\n".join(lines)
+
 
 @functools.lru_cache(maxsize=1)
 def get_error_aggregator() -> ErrorAggregator:

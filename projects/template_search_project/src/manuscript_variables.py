@@ -89,8 +89,7 @@ def compute_variables(
         config_sources=", ".join(config_sources),
         result_num_papers=len(papers),
         result_num_sources=len(per_source),
-        result_per_source=", ".join(f"{k}={v}" for k, v in per_source.items())
-        or "(none)",
+        result_per_source=", ".join(f"{k}={v}" for k, v in per_source.items()) or "(none)",
         result_errors=", ".join(f"{k}: {v}" for k, v in errors.items()) or "none",
         result_year_min=str(query.get("year_min") or "—"),
         result_year_max=str(query.get("year_max") or "—"),

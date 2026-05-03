@@ -23,9 +23,7 @@ _UNICODE_MATH_PATTERN = re.compile(
 _SETMATHFONT_PATTERN = re.compile(r"\\setmathfont\b")
 # Match a real ``\setmathfont{...}`` declaration (not a comment that
 # merely mentions the macro). Skips lines starting with ``%``.
-_SETMATHFONT_DECLARATION = re.compile(
-    r"^[^%\n]*\\setmathfont(?:\[[^\]]*\])?\{[^}]*\}[^\n]*", re.MULTILINE
-)
+_SETMATHFONT_DECLARATION = re.compile(r"^[^%\n]*\\setmathfont(?:\[[^\]]*\])?\{[^}]*\}[^\n]*", re.MULTILINE)
 
 
 def ensure_setmathfont(preamble: str, math_font: str = _DEFAULT_MATH_FONT) -> str:
@@ -61,8 +59,7 @@ def ensure_setmathfont(preamble: str, math_font: str = _DEFAULT_MATH_FONT) -> st
         "an explicit math\n"
         "% font the macros \\mid, \\ll, \\gg fall back to the lmroman text "
         "font (no U+2223 /\n"
-        "% U+226A / U+226B) and emit Missing-character warnings. "
-        + math_font + " ships\n"
+        "% U+226A / U+226B) and emit Missing-character warnings. " + math_font + " ships\n"
         "% with TeX Live and covers the BMP math symbols.\n"
         "\\setmathfont{" + math_font + "}"
     )
@@ -211,9 +208,7 @@ def check_latex_log_for_graphics_errors(log_file: Path) -> dict[str, list[str]]:
 
         # Check for undefined control sequences related to graphics
         if r"\includegraphics" in log_content and "Undefined" in log_content:
-            result["graphics_errors"].append(
-                "includegraphics command undefined - graphicx package may not be loaded"
-            )
+            result["graphics_errors"].append("includegraphics command undefined - graphicx package may not be loaded")
 
         return result
 
@@ -313,9 +308,7 @@ def generate_title_page_preamble(manuscript_dir: Path) -> str:
 
                 if extras:
                     # Add extras with small vertical space and small font
-                    author_str += " \\\\ " + " \\\\ ".join(
-                        [f"\\footnotesize{{{e}}}" for e in extras]
-                    )
+                    author_str += " \\\\ " + " \\\\ ".join([f"\\footnotesize{{{e}}}" for e in extras])
 
                 preamble_lines.append(f"\\author{{{author_str}}}")
 

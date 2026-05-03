@@ -79,9 +79,7 @@ class SlidesRenderer:
 
         # For beamer, we need to handle figure paths specially
         if output_format == "beamer":
-            return self._render_beamer_with_paths(
-                source_file, output_file, manuscript_dir, figures_dir
-            )
+            return self._render_beamer_with_paths(source_file, output_file, manuscript_dir, figures_dir)
         else:
             # For reveal.js, use direct pandoc rendering
             return self._render_revealjs(source_file, output_file)
@@ -152,9 +150,7 @@ class SlidesRenderer:
         # Apply the allowframebreaks Lua filter so that long sections
         # without h2 sub-headings still split across slides instead of
         # triggering xelatex driver code 256 on overfull vboxes.
-        allowframebreaks_filter = Path(__file__).with_name(
-            "_beamer_allowframebreaks.lua"
-        )
+        allowframebreaks_filter = Path(__file__).with_name("_beamer_allowframebreaks.lua")
         if allowframebreaks_filter.exists():
             cmd.extend(["--lua-filter", str(allowframebreaks_filter)])
 
@@ -228,20 +224,14 @@ class SlidesRenderer:
                             "LaTeX document structure error: missing \\end{document} or unmatched \\begin{}/\\end{} pairs"  # noqa: E501
                         )
                     if "Undefined control sequence" in log_content:
-                        error_hints.append(
-                            "Undefined LaTeX command - check for typos in LaTeX syntax"
-                        )
+                        error_hints.append("Undefined LaTeX command - check for typos in LaTeX syntax")
                     if "File `" in log_content and "not found" in log_content:
-                        error_hints.append(
-                            "Missing file reference - check figure paths and bibliography files"
-                        )
+                        error_hints.append("Missing file reference - check figure paths and bibliography files")
 
                     error_msg += f"\n\nLaTeX Compilation Log ({log_file}):\n{recent_errors}"
 
                     if error_hints:
-                        error_msg += "\n\nPossible Issues:\n" + "\n".join(
-                            f"- {hint}" for hint in error_hints
-                        )
+                        error_msg += "\n\nPossible Issues:\n" + "\n".join(f"- {hint}" for hint in error_hints)
 
                     error_msg += f"\n\nSuggestions:\n- Check LaTeX log file: {log_file}\n- Verify LaTeX syntax in generated .tex file: {temp_tex}\n- Ensure all referenced figures exist\n- Check for missing LaTeX packages"  # noqa: E501
 
@@ -257,9 +247,7 @@ class SlidesRenderer:
                 },
             ) from e
 
-    def _maybe_write_math_header(
-        self, manuscript_dir: Path | None, output_dir: Path
-    ) -> Path | None:
+    def _maybe_write_math_header(self, manuscript_dir: Path | None, output_dir: Path) -> Path | None:
         """Write a Pandoc ``-H`` header file for Unicode math, if needed.
 
         Looks up ``preamble.md`` next to the manuscript, extracts any
@@ -281,9 +269,7 @@ class SlidesRenderer:
         preamble = extract_preamble(preamble_file)
         snippet = extract_math_font_preamble(preamble)
         if snippet is None:
-            logger.debug(
-                "preamble.md does not load unicode-math; skipping slides math header"
-            )
+            logger.debug("preamble.md does not load unicode-math; skipping slides math header")
             return None
 
         output_dir.mkdir(parents=True, exist_ok=True)

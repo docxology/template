@@ -236,8 +236,8 @@ class TestTimeseriesBenchmarks:
         """Assert ARIMA SMAPE < 0.5 across benchmarks."""
         per_model = self._run_backtest_on_all()
         smapes = per_model["arima"]
-        assert len(smape) > 0, "ARIMA produced no valid forecasts"
-        mean_smape = float(np.mean(smape))
+        assert len(smapes) > 0, "ARIMA produced no valid forecasts"
+        mean_smape = float(np.mean(smapes))
         print(f"\nARIMA mean SMAPE: {mean_smape:.4f}")
         assert mean_smape < 0.5, f"ARIMA SMAPE {mean_smape:.4f} >= 0.5"
 
@@ -245,8 +245,8 @@ class TestTimeseriesBenchmarks:
         """Assert ETS SMAPE < 0.5 across benchmarks."""
         per_model = self._run_backtest_on_all()
         smapes = per_model["ets"]
-        assert len(smape) > 0, "ETS produced no valid forecasts"
-        mean_smape = float(np.mean(smape))
+        assert len(smapes) > 0, "ETS produced no valid forecasts"
+        mean_smape = float(np.mean(smapes))
         print(f"\nETS mean SMAPE: {mean_smape:.4f}")
         assert mean_smape < 0.5, f"ETS SMAPE {mean_smape:.4f} >= 0.5"
 
@@ -254,8 +254,8 @@ class TestTimeseriesBenchmarks:
         """Assert Theta SMAPE < 0.5 across benchmarks."""
         per_model = self._run_backtest_on_all()
         smapes = per_model["theta"]
-        assert len(smape) > 0, "Theta produced no valid forecasts"
-        mean_smape = float(np.mean(smape))
+        assert len(smapes) > 0, "Theta produced no valid forecasts"
+        mean_smape = float(np.mean(smapes))
         print(f"\nTheta mean SMAPE: {mean_smape:.4f}")
         assert mean_smape < 0.5, f"Theta SMAPE {mean_smape:.4f} >= 0.5"
 
@@ -263,7 +263,7 @@ class TestTimeseriesBenchmarks:
         """Assert LightGBM SMAPE < 0.5 across benchmarks."""
         per_model = self._run_backtest_on_all()
         smapes = per_model["lightgbm"]
-        assert len(smape) > 0, "LightGBM produced no valid forecasts"
-        mean_smape = float(np.mean(smape))
+        assert len(smapes) > 0, "LightGBM produced no valid forecasts"
+        mean_smape = float(np.mean(smapes))
         print(f"\nLightGBM mean SMAPE: {mean_smape:.4f}")
         assert mean_smape < 0.5, f"LightGBM SMAPE {mean_smape:.4f} >= 0.5"

@@ -62,9 +62,7 @@ def validate_project_slug(slug: str, repo_root: Path) -> str:
 
     available = discover_qualified_names(repo_root)
     if slug not in available:
-        raise ValueError(
-            f"project {slug!r} not found. Available: {', '.join(available) or '(none)'}"
-        )
+        raise ValueError(f"project {slug!r} not found. Available: {', '.join(available) or '(none)'}")
     return slug
 
 

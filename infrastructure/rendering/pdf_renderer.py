@@ -182,9 +182,7 @@ class PDFRenderer:
         except Exception:  # noqa: BLE001 — atomic-write cleanup; re-raised below
             _tmp.unlink(missing_ok=True)
             raise
-        logger.debug(
-            f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
-        )
+        logger.debug(f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)")
 
         # Step 1: Preprocess markdown (Mermaid, figure paths, optional manuscript_vars.yaml)
         combined_content, n_mermaid, n_fig_paths, n_vars = preprocess_combined_markdown(
@@ -205,9 +203,7 @@ class PDFRenderer:
         _validation_errors, md_content = prevalidate_markdown(combined_md)
 
         # Step 3: Run Pandoc markdown→LaTeX conversion
-        pandoc_cmd = build_pandoc_tex_command(
-            self.config, combined_md, combined_tex, manuscript_dir
-        )
+        pandoc_cmd = build_pandoc_tex_command(self.config, combined_md, combined_tex, manuscript_dir)
         run_pandoc_conversion(pandoc_cmd, combined_md, source_files, md_content)
 
         # Step 4: Post-process LaTeX (lmodern, hidelinks, math delimiters)

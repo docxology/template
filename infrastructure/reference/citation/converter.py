@@ -28,11 +28,32 @@ if TYPE_CHECKING:
 # Words skipped when picking the title-word component of the citation key.
 _TITLE_STOP_WORDS: frozenset[str] = frozenset(
     {
-        "a", "an", "the",
-        "and", "or", "but", "nor",
-        "of", "on", "in", "at", "to", "from", "for", "with", "by",
-        "is", "are", "was", "were", "be", "been", "being",
-        "as", "into", "via",
+        "a",
+        "an",
+        "the",
+        "and",
+        "or",
+        "but",
+        "nor",
+        "of",
+        "on",
+        "in",
+        "at",
+        "to",
+        "from",
+        "for",
+        "with",
+        "by",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "as",
+        "into",
+        "via",
     }
 )
 
@@ -132,11 +153,7 @@ def paper_to_bibentry(
     if entry_type is None:
         source_key = (paper.source or "").lower()
         venue_key = (paper.venue_type or "").lower()
-        entry_type = (
-            _SOURCE_TO_ENTRY_TYPE.get(venue_key)
-            or _SOURCE_TO_ENTRY_TYPE.get(source_key)
-            or "article"
-        )
+        entry_type = _SOURCE_TO_ENTRY_TYPE.get(venue_key) or _SOURCE_TO_ENTRY_TYPE.get(source_key) or "article"
 
     if citation_key is None:
         citation_key = generate_citation_key(

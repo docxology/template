@@ -38,7 +38,6 @@ ISSUE_TYPE_QUALITY = "quality_issue"
 ISSUE_TYPE_UNKNOWN = "unknown"
 
 
-
 # Type alias for any issue type in the validation system
 ValidationIssue = Union[LinkIssue, ScanAccuracyIssue, CompletenessGap, QualityIssue]
 
@@ -310,6 +309,7 @@ def prioritize_issues(issues: list[ValidationIssue]) -> list[ValidationIssue]:
         return (severity_order.get(severity, 4), issue_type, _get_issue_file(issue))
 
     return sorted(issues, key=sort_key)
+
 
 def generate_issue_summary(issues: list[ValidationIssue]) -> dict[str, Any]:
     """Generate a summary of issues by category and severity.

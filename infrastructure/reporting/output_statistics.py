@@ -87,9 +87,7 @@ def collect_output_statistics(
         - Missing expected files
         - Total size and file count
     """
-    output_dir = (
-        project_dir if project_dir is not None else repo_root / "projects" / project_name
-    ) / "output"
+    output_dir = (project_dir if project_dir is not None else repo_root / "projects" / project_name) / "output"
 
     stats: dict[str, Any] = {
         "directories": {},
@@ -175,9 +173,9 @@ def collect_output_statistics(
             stats["missing_expected_files"].append(f"{dir_name}/ directory")
 
     # Sort largest files by size
-    stats["largest_files"] = sorted(
-        stats["largest_files"], key=lambda x: float(x["size_mb"]), reverse=True
-    )[:10]  # Keep top 10
+    stats["largest_files"] = sorted(stats["largest_files"], key=lambda x: float(x["size_mb"]), reverse=True)[
+        :10
+    ]  # Keep top 10
 
     # Check for expected combined PDF
     # Use project basename for file matching (handles nested projects like "cognitive_integrity/cogsec_multiagent_1_theory")  # noqa: E501
@@ -186,9 +184,7 @@ def collect_output_statistics(
     combined_pdf_found = combined_pdf_path.exists()
 
     if not combined_pdf_found:
-        stats["missing_expected_files"].append(
-            f"{project_basename}_combined.pdf"
-        )
+        stats["missing_expected_files"].append(f"{project_basename}_combined.pdf")
 
     # Add file type counts
     all_extensions = {}
@@ -231,17 +227,13 @@ def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> 
 
     for dir_name, dir_info in stats["directories"].items():
         if dir_info["exists"] and dir_info["file_count"] > 0:
-            lines.append(
-                f"  • {dir_name}: {dir_info['file_count']} files ({dir_info['size_mb']} MB)"
-            )
+            lines.append(f"  • {dir_name}: {dir_info['file_count']} files ({dir_info['size_mb']} MB)")
 
     if stats["largest_files"]:
         lines.append("")
         lines.append("Largest Files:")
         for file_info in stats["largest_files"][:5]:
-            lines.append(
-                f"  • {file_info['name']}: {file_info['size_mb']} MB ({file_info['category']})"
-            )
+            lines.append(f"  • {file_info['name']}: {file_info['size_mb']} MB ({file_info['category']})")
 
     if stats["missing_expected_files"]:
         lines.append("")
@@ -252,9 +244,7 @@ def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> 
     if stats["file_counts_by_type"]:
         lines.append("")
         lines.append("File Types:")
-        for ext, count in sorted(
-            stats["file_counts_by_type"].items(), key=lambda x: x[1], reverse=True
-        )[:10]:
+        for ext, count in sorted(stats["file_counts_by_type"].items(), key=lambda x: x[1], reverse=True)[:10]:
             lines.append(f"  • {ext}: {count} file(s)")
 
     lines.append("")

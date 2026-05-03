@@ -37,8 +37,7 @@ def validate_pdf_structure(pdf_path: Path) -> bool:
         has_startxref = b"startxref" in tail
         if not has_eof or not has_startxref:
             logger.debug(
-                f"  PDF validation: %%EOF={has_eof}, startxref={has_startxref} "
-                f"in {pdf_path.name} ({size:,} bytes)"
+                f"  PDF validation: %%EOF={has_eof}, startxref={has_startxref} in {pdf_path.name} ({size:,} bytes)"
             )
             return False
         return True

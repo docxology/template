@@ -210,9 +210,7 @@ class StreamHeartbeatMonitor:
 
         if self.first_token_time is not None and elapsed > 0:
             # Calculate tokens per second
-            tokens_per_sec = self.token_count / (
-                elapsed - (self.first_token_time - self.start_time)
-            )
+            tokens_per_sec = self.token_count / (elapsed - (self.first_token_time - self.start_time))
             extra["tokens_per_sec"] = tokens_per_sec
 
             # Estimate completion if we have total estimate

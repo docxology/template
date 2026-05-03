@@ -103,9 +103,7 @@ class WebRenderer:
         except OSError:
             _tmp.unlink(missing_ok=True)
             raise
-        logger.debug(
-            f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)"
-        )
+        logger.debug(f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)")
 
         # Build pandoc command for HTML conversion
         figures_dir = manuscript_dir.parent / "output" / "figures"

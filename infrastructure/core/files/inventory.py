@@ -89,9 +89,7 @@ class FileInventoryManager:
 
         return entries
 
-    def _collect_files_in_directory(
-        self, directory: Path, category: str
-    ) -> list[FileInventoryEntry]:
+    def _collect_files_in_directory(self, directory: Path, category: str) -> list[FileInventoryEntry]:
         """Collect all files in a directory recursively.
 
         Args:
@@ -173,9 +171,7 @@ class FileInventoryManager:
     _group_by_category = staticmethod(group_by_category)
 
 
-def collect_output_files(
-    output_dir: Path, categories: list[str] | None = None
-) -> list[FileInventoryEntry]:
+def collect_output_files(output_dir: Path, categories: list[str] | None = None) -> list[FileInventoryEntry]:
     """Convenience function to collect output files.
 
     Args:

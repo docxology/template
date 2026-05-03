@@ -49,9 +49,7 @@ class PromptComposer:
         """
         self.loader = loader or PromptFragmentLoader()
 
-    def compose_template(
-        self, template_ref: str, max_tokens: int | None = None, **variables: Any
-    ) -> str:
+    def compose_template(self, template_ref: str, max_tokens: int | None = None, **variables: Any) -> str:
         """Compose a prompt from a template definition.
 
         Args:
@@ -81,9 +79,7 @@ class PromptComposer:
             fragment_values: dict[str, str] = {}
 
             for fragment_key, fragment_ref in fragments.items():
-                fragment_values[fragment_key] = build_fragment(
-                    self.loader, fragment_ref, template, max_tokens
-                )
+                fragment_values[fragment_key] = build_fragment(self.loader, fragment_ref, template, max_tokens)
 
             # Merge template variables
             template_vars = template.get("variables", {})
@@ -113,9 +109,7 @@ class PromptComposer:
 
             # Handle section structure substitution
             if "section_structure" in fragment_values:
-                result = result.replace(
-                    "${section_structure}", fragment_values["section_structure"]
-                )
+                result = result.replace("${section_structure}", fragment_values["section_structure"])
 
             return result
 
@@ -138,9 +132,7 @@ class PromptComposer:
             Prompt with retry reinforcement added
         """
         try:
-            retry_prompt = self.loader.load_composition(
-                f"retry_prompts.json#{retry_type}_reinforcement"
-            )
+            retry_prompt = self.loader.load_composition(f"retry_prompts.json#{retry_type}_reinforcement")
 
             if isinstance(retry_prompt, dict):
                 content = retry_prompt.get("content", str(retry_prompt))
@@ -169,9 +161,7 @@ class PromptComposer:
         """Backward-compatible wrapper for section structure assembly."""
         return build_section_structure(self.loader, structure_key)
 
-    def _build_token_budget_awareness(
-        self, total_tokens: int, section_budgets: dict[str, int]
-    ) -> str:
+    def _build_token_budget_awareness(self, total_tokens: int, section_budgets: dict[str, int]) -> str:
         """Backward-compatible wrapper for token budget assembly."""
         return build_token_budget_awareness(
             self.loader,
@@ -179,9 +169,7 @@ class PromptComposer:
             section_budgets=section_budgets,
         )
 
-    def _build_validation_hints(
-        self, word_count_range: tuple[int, int], required_elements: list[str]
-    ) -> str:
+    def _build_validation_hints(self, word_count_range: tuple[int, int], required_elements: list[str]) -> str:
         """Backward-compatible wrapper for validation hints assembly."""
         return build_validation_hints(
             self.loader,

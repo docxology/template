@@ -131,18 +131,14 @@ def generate_all_manuscript_overviews(
                 break
 
         if not pdf_path:
-            logger.warning(
-                f"Manuscript PDF not found for project {project_name}, skipping overview generation"
-            )
+            logger.warning(f"Manuscript PDF not found for project {project_name}, skipping overview generation")
             continue
 
         try:
             logger.info(f"Generating manuscript overview for {project_name}")
             overview_files = generate_manuscript_overview(pdf_path, output_dir, project_name)
             all_files.update(overview_files)
-            logger.info(
-                f"Generated overview files for {project_name}: {list(overview_files.keys())}"
-            )
+            logger.info(f"Generated overview files for {project_name}: {list(overview_files.keys())}")
         except (OSError, ImportError, ValueError, PDFValidationError) as e:
             logger.warning(f"Failed to generate manuscript overview for {project_name}: {e}")
             continue

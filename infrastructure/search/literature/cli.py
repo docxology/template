@@ -51,9 +51,7 @@ def _build_backends(args: argparse.Namespace) -> list[SearchBackend]:
         elif source == "paperclip":
             api_key = os.environ.get("PAPERCLIP_API_KEY", "")
             if not api_key:
-                raise SystemExit(
-                    "--source paperclip requires PAPERCLIP_API_KEY environment variable"
-                )
+                raise SystemExit("--source paperclip requires PAPERCLIP_API_KEY environment variable")
             backends.append(PaperclipBackend(api_key=api_key))
         else:
             raise SystemExit(f"Unknown source: {source!r}")
@@ -129,8 +127,7 @@ def _cmd_to_bibtex(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m infrastructure.search.literature",
-        description="Aggregated literature search across arXiv, Crossref, "
-        "Paperclip, and local corpora.",
+        description="Aggregated literature search across arXiv, Crossref, Paperclip, and local corpora.",
     )
 
     def add_common(p: argparse.ArgumentParser) -> None:

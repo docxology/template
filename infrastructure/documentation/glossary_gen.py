@@ -124,10 +124,4 @@ def inject_between_markers(text: str, begin_marker: str, end_marker: str, conten
         block = f"\n\n{begin_marker}\n{content}\n{end_marker}\n"
         return text + ("\n" if not text.endswith("\n") else "") + block
     start_end = start + len(begin_marker)
-    return (
-        text[:start_end]
-        + "\n"
-        + content
-        + ("\n" if not content.endswith("\n") else "")
-        + text[end:]
-    )
+    return text[:start_end] + "\n" + content + ("\n" if not content.endswith("\n") else "") + text[end:]

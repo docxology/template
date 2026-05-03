@@ -40,9 +40,7 @@ class LiteratureReview(ResearchTemplate):
     """Template for generating literature reviews."""
 
     template_str = (
-        "Based on the following paper summaries, write a cohesive "
-        "literature review paragraph:\n\n"
-        "${summaries}"
+        "Based on the following paper summaries, write a cohesive literature review paragraph:\n\n${summaries}"
     )
 
 
@@ -50,9 +48,7 @@ class CodeDocumentation(ResearchTemplate):
     """Template for documenting code."""
 
     template_str = (
-        "Generate a Python docstring for the following code, "
-        "including Args, Returns, and Raises sections:\n\n"
-        "${code}"
+        "Generate a Python docstring for the following code, including Args, Returns, and Raises sections:\n\n${code}"
     )
 
 
@@ -60,9 +56,7 @@ class DataInterpretation(ResearchTemplate):
     """Template for interpreting data."""
 
     template_str = (
-        "Analyze the following data statistics and provide "
-        "a scientific interpretation of the trends:\n\n"
-        "${stats}"
+        "Analyze the following data statistics and provide a scientific interpretation of the trends:\n\n${stats}"
     )
 
 

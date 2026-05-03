@@ -64,8 +64,7 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
                 # Extract authors
                 if "authors" in project_config:
                     metadata["authors"] = [
-                        author.get("name", author.get("email", "Unknown"))
-                        for author in project_config["authors"]
+                        author.get("name", author.get("email", "Unknown")) for author in project_config["authors"]
                     ]
         except (OSError, ValueError, KeyError) as e:
             logger.warning(f"Failed to parse {pyproject_path}: {e}")
@@ -87,9 +86,7 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
 
                 if config_data and "authors" in config_data:
                     # Manuscript authors override pyproject authors
-                    metadata["authors"] = [
-                        author.get("name", "Unknown") for author in config_data["authors"]
-                    ]
+                    metadata["authors"] = [author.get("name", "Unknown") for author in config_data["authors"]]
             except (OSError, ValueError, AttributeError) as e:
                 logger.warning(f"Failed to parse {config_path}: {e}")
             except _yaml.YAMLError as e:

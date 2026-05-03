@@ -85,7 +85,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_quality = sub.add_parser("quality", help="Editorial quality flags.")
     p_quality.add_argument("path", help="Markdown file path")
     p_quality.add_argument(
-        "--long-sentence-threshold", type=int, default=35,
+        "--long-sentence-threshold",
+        type=int,
+        default=35,
         help="Word count above which a sentence is flagged as long (default: 35).",
     )
     p_quality.set_defaults(func=_cmd_quality)

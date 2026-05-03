@@ -24,10 +24,26 @@ _PP_RE = re.compile(r"\b\w+(ed|en)\b", re.IGNORECASE)
 
 # Hedge words / weasel words common in academic writing.
 _HEDGE_WORDS = {
-    "may", "might", "could", "perhaps", "probably", "likely", "possibly",
-    "somewhat", "roughly", "approximately", "essentially", "basically",
-    "arguably", "generally", "largely", "nearly", "almost", "seems",
-    "appears", "suggests",
+    "may",
+    "might",
+    "could",
+    "perhaps",
+    "probably",
+    "likely",
+    "possibly",
+    "somewhat",
+    "roughly",
+    "approximately",
+    "essentially",
+    "basically",
+    "arguably",
+    "generally",
+    "largely",
+    "nearly",
+    "almost",
+    "seems",
+    "appears",
+    "suggests",
 }
 
 # Pandoc / pandoc-citeproc citation key patterns.

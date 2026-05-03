@@ -101,9 +101,7 @@ def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> tuple[
         return False, f"Error resolving path: {e}", "unknown"
 
 
-def check_links(
-    md_files: list[Path], repo_root: Path, all_headings: dict[str, set[str]]
-) -> list[LinkIssue]:
+def check_links(md_files: list[Path], repo_root: Path, all_headings: dict[str, set[str]]) -> list[LinkIssue]:
     """Check all links in markdown files.
 
     Improved to skip links inside code blocks.
@@ -159,9 +157,7 @@ def check_links(
                         if not exists:
                             # Only flag as error if it's clearly a file reference
                             # Directory references are often valid (especially if they end with /)
-                            if path_type == "file" or (
-                                path_type == "directory" and not file_part.endswith("/")
-                            ):
+                            if path_type == "file" or (path_type == "directory" and not file_part.endswith("/")):
                                 # Determine severity based on path type
                                 if path_type == "file":
                                     issue_type = "broken_file"
@@ -261,9 +257,7 @@ def check_file_paths(md_files: list[Path], repo_root: Path) -> list[ScanAccuracy
                     exists, message, path_type = resolved
                     if not exists and "output" not in path_str:
                         # Only flag file references, not directory references
-                        if path_type == "file" or (
-                            path_type == "directory" and not path_str.endswith("/")
-                        ):
+                        if path_type == "file" or (path_type == "directory" and not path_str.endswith("/")):
                             issues.append(
                                 ScanAccuracyIssue(
                                     category="path",
@@ -279,9 +273,7 @@ def check_file_paths(md_files: list[Path], repo_root: Path) -> list[ScanAccuracy
     return issues
 
 
-def validate_config_options(
-    md_files: list[Path], config_files: dict[str, Path]
-) -> list[ScanAccuracyIssue]:
+def validate_config_options(md_files: list[Path], config_files: dict[str, Path]) -> list[ScanAccuracyIssue]:
     """Validate configuration options mentioned in docs."""
     issues: list[ScanAccuracyIssue] = []
 

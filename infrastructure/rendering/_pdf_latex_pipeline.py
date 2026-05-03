@@ -50,9 +50,7 @@ def compile_latex_manuscript(
     logger.info(f"Rendering combined manuscript to PDF: {output_file.name}")
     logger.info(f"  Source files: {len(source_files)}")
     if bib_exists and bib_files:
-        bib_desc = (
-            bib_files[0].name if len(bib_files) == 1 else ", ".join(p.name for p in bib_files)
-        )
+        bib_desc = bib_files[0].name if len(bib_files) == 1 else ", ".join(p.name for p in bib_files)
         logger.info(f"  Bibliography: {bib_desc}")
     logger.debug(f"  Output directory: {output_dir}")
     logger.debug(f"  Combined TeX file: {combined_tex.name}")
@@ -152,9 +150,7 @@ def compile_latex_manuscript(
                                 context={
                                     "source": str(combined_tex),
                                     "log_file": str(log_file),
-                                    "last_error": (
-                                        result.stderr[:500] if result.stderr else "No stderr"
-                                    ),
+                                    "last_error": (result.stderr[:500] if result.stderr else "No stderr"),
                                 },
                             )
                     else:
@@ -181,9 +177,7 @@ def compile_latex_manuscript(
 
         if temp_pdf.exists():
             if not validate_pdf_structure(temp_pdf):
-                logger.warning(
-                    "PDF structurally invalid (truncated xref/%%EOF). Re-running recovery pass..."
-                )
+                logger.warning("PDF structurally invalid (truncated xref/%%EOF). Re-running recovery pass...")
                 with open(xelatex_stdout_log, "w") as stdout_sink:
                     subprocess.run(
                         cmd,

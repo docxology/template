@@ -13,9 +13,7 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
-def validate_publication_readiness(
-    markdown_files: list[Path], pdf_files: list[Path]
-) -> dict[str, Any]:
+def validate_publication_readiness(markdown_files: list[Path], pdf_files: list[Path]) -> dict[str, Any]:
     """Validate that the project is ready for publication.
 
     Args:
@@ -49,8 +47,7 @@ def validate_publication_readiness(
     # bare substring matching to avoid false positives from body text mentions.
     _heading_re = re.compile(r"^\s*#{1,3}\s+", re.MULTILINE)
     headings_lower = {
-        m.string[m.end():m.end() + 60].split("\n")[0].strip().lower()
-        for m in _heading_re.finditer(all_content)
+        m.string[m.end() : m.end() + 60].split("\n")[0].strip().lower() for m in _heading_re.finditer(all_content)
     }
 
     def _has_section(*keywords: str) -> bool:

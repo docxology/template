@@ -64,9 +64,7 @@ class RenderManager:
         # Validate file format
         supported_formats = [".tex", ".md"]
         if source_file.suffix not in supported_formats:
-            raise TemplateError(
-                f"Unsupported file format: {source_file.suffix}. Supported: {supported_formats}"
-            )
+            raise TemplateError(f"Unsupported file format: {source_file.suffix}. Supported: {supported_formats}")
 
         try:
             # Determine what to render based on extension/type
@@ -92,14 +90,14 @@ class RenderManager:
                     # Check if PDF was created but is empty (0.0 KB)
                     # Derive expected path from config — do NOT re-invoke the renderer
                     try:
-                        beamer_pdf = (
-                            Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
-                        )
+                        beamer_pdf = Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
                         if beamer_pdf.exists():
                             size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
                             if size_mb < _MIN_VALID_PDF_MB:
                                 error_msg += f" (PDF created but empty: {size_mb:.3f} MB)"
-                                error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
+                                error_msg += (
+                                    f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
+                                )
                             else:
                                 error_msg += f" (PDF created: {size_mb:.2f} MB)"
                     except (OSError, AttributeError) as pdf_check_err:
@@ -129,8 +127,7 @@ class RenderManager:
             if not rendered_paths:
                 failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)
                 raise TemplateError(
-                    f"No rendered_paths generated for {source_file.name}. "
-                    f"All formats failed: {failed_formats}"
+                    f"No rendered_paths generated for {source_file.name}. All formats failed: {failed_formats}"
                 )
 
             if format_errors:

@@ -42,9 +42,7 @@ def _atomic_write_text(path: Path, content: str) -> None:
         raise
 
 
-def save_pipeline_report(
-    report: PipelineReport, output_dir: Path, formats: list[str] | None = None
-) -> dict[str, Path]:
+def save_pipeline_report(report: PipelineReport, output_dir: Path, formats: list[str] | None = None) -> dict[str, Path]:
     """Save pipeline report in multiple formats; returns dict mapping format to path.
 
     Raises:
@@ -73,17 +71,11 @@ def save_pipeline_report(
 
     formats_to_write = []
     if "json" in formats:
-        formats_to_write.append(
-            ("json", output_dir / "pipeline_report.json", json.dumps(report_dict, indent=2))
-        )
+        formats_to_write.append(("json", output_dir / "pipeline_report.json", json.dumps(report_dict, indent=2)))
     if "markdown" in formats:
-        formats_to_write.append(
-            ("markdown", output_dir / "pipeline_report.md", _generate_pipeline_markdown(report))
-        )
+        formats_to_write.append(("markdown", output_dir / "pipeline_report.md", _generate_pipeline_markdown(report)))
     if "html" in formats:
-        formats_to_write.append(
-            ("html", output_dir / "pipeline_report.html", generate_html_report(report))
-        )
+        formats_to_write.append(("html", output_dir / "pipeline_report.html", generate_html_report(report)))
 
     for fmt, path, content in formats_to_write:
         try:
@@ -107,9 +99,7 @@ def save_test_results(test_results: dict[str, Any], output_dir: Path) -> Path:
     return report_path
 
 
-def save_validation_report(
-    validation_results: dict[str, Any], output_dir: Path
-) -> dict[str, Path]:
+def save_validation_report(validation_results: dict[str, Any], output_dir: Path) -> dict[str, Path]:
     """Generate validation report as JSON and Markdown; returns paths by format key."""
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_files = {}

@@ -45,9 +45,7 @@ def _generate_pipeline_markdown(report: PipelineReport) -> str:
     for stage in report.stages:
         status_emoji = "✅" if stage.status == "passed" else "❌"
         duration_str = format_duration(stage.duration)
-        lines.append(
-            f"| {stage.name} | {status_emoji} {stage.status} | {duration_str} | {stage.exit_code} |"
-        )
+        lines.append(f"| {stage.name} | {status_emoji} {stage.status} | {duration_str} | {stage.exit_code} |")
 
     lines.append("")
 
@@ -61,9 +59,7 @@ def _generate_pipeline_markdown(report: PipelineReport) -> str:
         lines.append(f"- **Failed:** {summary.get('total_failed', 0)}")
         lines.append(f"- **Skipped:** {summary.get('total_skipped', 0)}")
         if "infrastructure_coverage" in summary:
-            lines.append(
-                f"- **Infrastructure Coverage:** {summary['infrastructure_coverage']:.2f}%"
-            )
+            lines.append(f"- **Infrastructure Coverage:** {summary['infrastructure_coverage']:.2f}%")
         if "project_coverage" in summary:
             lines.append(f"- **Project Coverage:** {summary['project_coverage']:.2f}%")
         lines.append("")

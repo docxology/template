@@ -208,10 +208,7 @@ class LocalBackend(SearchBackend):
         raw = json.loads(self.corpus_path.read_text(encoding="utf-8"))
         records = raw["papers"] if isinstance(raw, dict) and "papers" in raw else raw
         if not isinstance(records, list):
-            raise BackendError(
-                f"LocalBackend corpus {self.corpus_path} must be a list "
-                "or {'papers': [...]}"
-            )
+            raise BackendError(f"LocalBackend corpus {self.corpus_path} must be a list or {{'papers': [...]}}")
         self._corpus = [Paper.from_dict(r) for r in records]
         return self._corpus
 
@@ -568,10 +565,7 @@ class PaperclipBackend(SearchBackend):
             raise BackendError(f"Paperclip request failed: {exc}") from exc
 
         if resp.status_code != 200:
-            raise BackendError(
-                f"Paperclip returned HTTP {resp.status_code} (body[:200]: "
-                f"{resp.text[:200]!r})"
-            )
+            raise BackendError(f"Paperclip returned HTTP {resp.status_code} (body[:200]: {resp.text[:200]!r})")
         try:
             envelope = resp.json()
         except json.JSONDecodeError as exc:
@@ -643,17 +637,13 @@ class PaperclipBackend(SearchBackend):
         produce a record with the title set; missing fields stay
         ``None``.
         """
-        text = "\n".join(
-            block.get("text", "") for block in content if isinstance(block, dict)
-        )
+        text = "\n".join(block.get("text", "") for block in content if isinstance(block, dict))
         if not text.strip():
             return []
 
         # Split into one block per numbered entry. The leading guard
         # group keeps the index/title line on the matched block.
-        block_re = re.compile(
-            r"(?=^[ \t]*\d+\.[ \t]+)", re.MULTILINE
-        )
+        block_re = re.compile(r"(?=^[ \t]*\d+\.[ \t]+)", re.MULTILINE)
         blocks = [b for b in block_re.split(text) if re.match(r"^\s*\d+\.", b)]
         # Pre-compiled patterns reused below.
         title_re = re.compile(r"^\s*\d+\.[ \t]+(.+?)\s*$", re.MULTILINE)
@@ -661,19 +651,11 @@ class PaperclipBackend(SearchBackend):
             r"\b((?:pmc|arxiv|doi|biorxiv|medrxiv|pmid):[A-Za-z0-9._/+-]+)\b",
             re.IGNORECASE,
         )
-        # Internal Paperclip ids look like `bio_<hex>`, `arx_2004.08128`,
-        # `med_<hex>`, `pmc_<id>`, etc.
-        internal_id_re = re.compile(
-            r"^\s+((?:bio|med|pmc|pmid|arx|arxiv)_[A-Za-z0-9.]+)\s*·",
-            re.MULTILINE,
-        )
         meta_row_re = re.compile(
             r"^\s+([A-Za-z0-9_.]+)\s*·\s*([^·\n]+?)\s*·\s*(\d{4})(?:-\d{2}-\d{2})?\s*$",
             re.MULTILINE,
         )
-        doi_url_re = re.compile(
-            r"https?://(?:dx\.)?doi\.org/(\S+)", re.IGNORECASE
-        )
+        doi_url_re = re.compile(r"https?://(?:dx\.)?doi\.org/(\S+)", re.IGNORECASE)
         # Authors are the first indented non-numbered line after the title,
         # before the metadata row. They use commas as separators and may
         # contain ``*`` markers for corresponding authors (which we strip).
@@ -683,7 +665,7 @@ class PaperclipBackend(SearchBackend):
             if not title_match:
                 continue
             title = re.sub(r"\s+", " ", title_match.group(1)).strip()
-            tail = block[title_match.end():]
+            tail = block[title_match.end() :]
 
             # Authors: the first indented line that is NOT a metadata row
             # (no ` · ` triple) and NOT a URL or quoted abstract.
@@ -697,11 +679,7 @@ class PaperclipBackend(SearchBackend):
                 if " · " in stripped:
                     break
                 # Likely an authors line — split on commas, strip ``*``.
-                authors = [
-                    re.sub(r"\s*\*+\s*$", "", a).strip()
-                    for a in stripped.split(",")
-                    if a.strip()
-                ]
+                authors = [re.sub(r"\s*\*+\s*$", "", a).strip() for a in stripped.split(",") if a.strip()]
                 break
 
             meta = meta_row_re.search(tail)
@@ -738,11 +716,7 @@ class PaperclipBackend(SearchBackend):
 
             # Abstract: the first quoted block (may span multiple lines).
             abstract_match = re.search(r'"([^"]+)"', tail, re.DOTALL)
-            abstract = (
-                re.sub(r"\s+", " ", abstract_match.group(1)).strip()
-                if abstract_match
-                else None
-            )
+            abstract = re.sub(r"\s+", " ", abstract_match.group(1)).strip() if abstract_match else None
 
             url = f"https://doi.org/{doi}" if doi else None
             venue_type = None

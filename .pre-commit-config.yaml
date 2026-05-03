@@ -1,46 +1,59 @@
 # Pre-commit hooks configuration
 #
-# Hooks:
-#   ruff (pre-commit stage): auto-formats and lints all Python files
-#   mypy (pre-commit stage): type checks staged .py files
-#   pytest-unit (pre-push stage): runs unit tests on changed files with --maxfail=1
+# Hooks align with GitHub Actions `lint` job (ci.yml):
+#   - ruff check + ruff format on `infrastructure/` and `projects/*/src/`
+#   - mypy on the same paths (see pyproject.toml [tool.mypy])
+# Pre-push: infra-only pytest smoke (single root; avoids overlapping tests.conftest).
 #
-# All hooks also run in the manual stage, enabling explicit testing via:
-#   pre-commit run --all-files --hook-stage manual
+# Manual: pre-commit run --all-files --hook-stage manual
 
 repos:
-  # Ruff: extremely fast Python linter & formatter
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.7
-    hooks:
-      - id: ruff
-        name: ruff (format & lint)
-        args: [--fix]
-        stages: [pre-commit, manual]
-        verbose: true
-        always_run: true
-        pass_filenames: false
-
-  # MyPy: static type checker
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.17.1
-    hooks:
-      - id: mypy
-        name: mypy (type check)
-        args: [--ignore-missing-imports]
-        stages: [pre-commit, manual]
-        files: \.py$
-        verbose: true
-
-  # Pytest unit tests: local hook (uses system Python environment)
   - repo: local
     hooks:
+      - id: ruff-ci
+        name: ruff check + format (CI scope)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - >-
+            uvx ruff check infrastructure/ projects/*/src/ --fix &&
+            uvx ruff format infrastructure/ projects/*/src/
+        language: system
+        pass_filenames: false
+        stages: [pre-commit, manual]
+        always_run: true
+        verbose: true
+
+      - id: mypy-ci
+        name: mypy (CI scope)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - uv run mypy infrastructure/ projects/*/src/
+        language: system
+        pass_filenames: false
+        stages: [pre-commit, manual]
+        always_run: true
+        verbose: true
+
       - id: pytest-unit
-        name: pytest (unit tests)
-        entry: pytest
+        name: pytest (infra smoke)
+        entry: uv
         language: system
         stages: [pre-push, manual]
-        args: [-m, unit, --maxfail=1]
-        files: \.py$
-        pass_filenames: true
+        args:
+          - run
+          - pytest
+          - tests/infra_tests/
+          - -q
+          - --maxfail=1
+          - --import-mode=importlib
+          - "-m"
+          - "not slow and not requires_ollama"
+        pass_filenames: false
+        always_run: true
         verbose: true

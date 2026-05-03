@@ -16,9 +16,7 @@ from infrastructure.core.logging.helpers import format_duration
 from infrastructure.core.pipeline.executor import PipelineStageResult
 
 
-def format_stage_result(
-    result: PipelineStageResult, total_duration: float, skip_infra: bool
-) -> str:
+def format_stage_result(result: PipelineStageResult, total_duration: float, skip_infra: bool) -> str:
     """Format a single stage result for display.
 
     Args:

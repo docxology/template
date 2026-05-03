@@ -78,9 +78,7 @@ def flatten_manuscript_vars(data: Any, prefix: str = "") -> dict[str, str]:
     return flat
 
 
-def substitute_manuscript_var_placeholders(
-    content: str, flat: dict[str, str]
-) -> tuple[str, int]:
+def substitute_manuscript_var_placeholders(content: str, flat: dict[str, str]) -> tuple[str, int]:
     """Replace ``{{name}}`` placeholders using flattened manuscript_vars.
 
     Handles ``{{maturity.*}}`` and ``{{verify.*}}`` summaries. Unknown keys are left unchanged.
@@ -154,7 +152,7 @@ def preprocess_combined_markdown(
                     raw = {}
                 if isinstance(raw, dict):
                     flat = flatten_manuscript_vars(raw)
-                    
+
                     # Augment with synthetic variables if present
                     if isinstance(raw.get("topics"), dict):
                         topics_dict = raw["topics"]
@@ -165,7 +163,7 @@ def preprocess_combined_markdown(
                                 # lean_chars derived from lean_sketch
                                 sketch = topic_data.get("lean_sketch", "")
                                 flat[f"topics.{topic_id}.lean_chars"] = str(len(sketch))
-                                
+
                                 # Update maturity display string and icon based on mathlib_status
                                 ml_status = topic_data.get("mathlib_status", "")
                                 if ml_status == "real":
@@ -198,9 +196,7 @@ def preprocess_combined_markdown(
                             vars_path.name,
                         )
                 else:
-                    logger.warning(
-                        "manuscript_vars.yaml root must be a mapping; skipping placeholder substitution"
-                    )
+                    logger.warning("manuscript_vars.yaml root must be a mapping; skipping placeholder substitution")
 
     return CombinedMarkdownResult(content, n_mermaid, n_fig_paths, n_vars)
 
@@ -233,7 +229,7 @@ def build_pandoc_tex_command(
         try:
             with open(config_file, "r", encoding="utf-8") as f:
                 yaml_data = yaml.safe_load(f)
-            
+
             if yaml_data and isinstance(yaml_data, dict):
                 metadata = yaml_data.get("metadata", {})
                 geometry = metadata.get("geometry")
@@ -289,19 +285,14 @@ def postprocess_latex(tex_content: str) -> str:
     # options are honoured without triggering ``Option clash for package
     # hyperref``. Only rewrites the option-bearing form; ``\usepackage{hyperref}``
     # without options is left alone (no clash).
-    hyperref_pattern = re.compile(
-        r"\\usepackage\[(?P<opts>[^\]]*)\]\{hyperref\}"
-    )
+    hyperref_pattern = re.compile(r"\\usepackage\[(?P<opts>[^\]]*)\]\{hyperref\}")
     rewritten_count = 0
 
     def _rewrite_hyperref(match: "re.Match[str]") -> str:
         nonlocal rewritten_count
         rewritten_count += 1
         opts = match.group("opts").strip()
-        return (
-            f"\\PassOptionsToPackage{{{opts}}}{{hyperref}}"
-            f"\n\\AtBeginDocument{{\\hypersetup{{{opts}}}}}"
-        )
+        return f"\\PassOptionsToPackage{{{opts}}}{{hyperref}}\n\\AtBeginDocument{{\\hypersetup{{{opts}}}}}"
 
     tex_content, _subs = hyperref_pattern.subn(_rewrite_hyperref, tex_content)
     if rewritten_count:
@@ -379,13 +370,9 @@ def inject_latex_preamble(
             combined_preamble += "\n".join(title_page_preamble.split("\n")) + "\n\n"
         if preamble_content:
             combined_preamble += preamble_content + "\n\n"
-        tex_content = (
-            tex_content[:begin_doc_idx] + combined_preamble + tex_content[begin_doc_idx:]
-        )
+        tex_content = tex_content[:begin_doc_idx] + combined_preamble + tex_content[begin_doc_idx:]
         begin_doc_idx += len(combined_preamble)
-        logger.debug(
-            f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}"
-        )
+        logger.debug(f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}")
 
     # Insert title page body after \begin{document}
     if not title_page_body or begin_doc_idx <= 0:
@@ -396,23 +383,13 @@ def inject_latex_preamble(
     tex_body = tex_content[begin_doc_idx:]
 
     if "\\maketitle" in tex_body:
-        logger.debug(
-            "✓ \\maketitle already present in LaTeX body - replacing with our full title/TOC body"
-        )
+        logger.debug("✓ \\maketitle already present in LaTeX body - replacing with our full title/TOC body")
         tex_body = tex_body.replace("\\maketitle", full_title_body, 1)
     else:
         end_of_begin_doc = tex_body.find("\n") + 1
         if end_of_begin_doc > 0:
-            tex_body = (
-                tex_body[:end_of_begin_doc]
-                + "\n"
-                + full_title_body
-                + "\n\n"
-                + tex_body[end_of_begin_doc:]
-            )
-        logger.info(
-            r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}"
-        )
+            tex_body = tex_body[:end_of_begin_doc] + "\n" + full_title_body + "\n\n" + tex_body[end_of_begin_doc:]
+        logger.info(r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}")
 
     return tex_preamble + tex_body
 
@@ -422,9 +399,7 @@ def discover_manuscript_bib_paths(manuscript_dir: Path) -> list[Path]:
     return sorted(manuscript_dir.glob("*.bib"))
 
 
-def inject_bibliography(
-    tex_content: str, bib_exists: bool, bib_stems: str = "references"
-) -> str:
+def inject_bibliography(tex_content: str, bib_exists: bool, bib_stems: str = "references") -> str:
     """Ensure bibliography starts on a new page; set ``\\bibliography{stems}``.
 
     ``bib_stems`` is a comma-separated list of database names without ``.bib``
@@ -451,14 +426,8 @@ def inject_bibliography(
 
     end_doc_idx = tex_content.rfind("\\end{document}")
     if end_doc_idx > 0:
-        tex_content = (
-            tex_content[:end_doc_idx]
-            + f"\n\n\\clearpage\n\n{replacement}\n"
-            + tex_content[end_doc_idx:]
-        )
-        logger.info(
-            "✓ Inserted \\clearpage and \\bibliography{...} before \\end{document}"
-        )
+        tex_content = tex_content[:end_doc_idx] + f"\n\n\\clearpage\n\n{replacement}\n" + tex_content[end_doc_idx:]
+        logger.info("✓ Inserted \\clearpage and \\bibliography{...} before \\end{document}")
     else:
         logger.warning("⚠️  Could not find \\end{document} to insert bibliography")
     return tex_content
@@ -492,18 +461,14 @@ def verify_figure_references(tex_content: str, figures_dir: Path) -> None:
             logger.warning(f"  ✗ Missing: {filename}")
             if figures_dir.exists():
                 similar = [
-                    f.name
-                    for f in figures_dir.iterdir()
-                    if f.name.lower().startswith(filename.split(".")[0].lower())
+                    f.name for f in figures_dir.iterdir() if f.name.lower().startswith(filename.split(".")[0].lower())
                 ]
                 if similar:
                     logger.debug(f"    Similar files found: {', '.join(similar)}")
 
     logger.info(f"  Found: {len(found_figures)}/{len(referenced_figures)} figures")
     if missing_figures:
-        logger.warning(
-            f"  Missing {len(missing_figures)} figure(s): {', '.join(missing_figures[:5])}"
-        )
+        logger.warning(f"  Missing {len(missing_figures)} figure(s): {', '.join(missing_figures[:5])}")
         if len(missing_figures) > 5:
             logger.warning(f"  ... and {len(missing_figures) - 5} more missing figures")
 
@@ -521,9 +486,7 @@ def prevalidate_markdown(combined_md: Path) -> tuple[list[str], str]:
             md_content = combined_md.read_text(encoding="utf-8")
             validation_errors = check_brace_balance(md_content)
             if validation_errors:
-                logger.warning(
-                    f"Pre-validation found {len(validation_errors)} potential issue(s):"
-                )
+                logger.warning(f"Pre-validation found {len(validation_errors)} potential issue(s):")
                 for err in validation_errors:
                     logger.warning(f"  • {err}")
                 logger.info("  (These are warnings - PDF generation will proceed)")
@@ -582,29 +545,18 @@ def prevalidate_source_markdown(
         return
 
     if repo_root is None:
-        repo_root = (
-            anchor_dir.parents[2] if len(anchor_dir.parents) >= 3 else anchor_dir
-        )
+        repo_root = anchor_dir.parents[2] if len(anchor_dir.parents) >= 3 else anchor_dir
 
-    problems = (
-        validate_pandoc_pitfalls(paths, repo_root)
-        + validate_citations(paths, repo_root, bib_file=bib_file)
-    )
+    problems = validate_pandoc_pitfalls(paths, repo_root) + validate_citations(paths, repo_root, bib_file=bib_file)
     if not problems:
         return
 
     # Promote everything to render-blocker under the strict gate.
     blockers = problems
-    rendered = "\n".join(
-        f"  [{p.file_path}] {p.message}" for p in blockers
-    )
+    rendered = "\n".join(f"  [{p.file_path}] {p.message}" for p in blockers)
     by_severity = {
-        DiagnosticSeverity.ERROR: sum(
-            1 for p in blockers if p.severity == DiagnosticSeverity.ERROR
-        ),
-        DiagnosticSeverity.WARNING: sum(
-            1 for p in blockers if p.severity == DiagnosticSeverity.WARNING
-        ),
+        DiagnosticSeverity.ERROR: sum(1 for p in blockers if p.severity == DiagnosticSeverity.ERROR),
+        DiagnosticSeverity.WARNING: sum(1 for p in blockers if p.severity == DiagnosticSeverity.WARNING),
     }
     raise RenderingError(
         f"Pre-render validation failed with {len(blockers)} blocker(s) "

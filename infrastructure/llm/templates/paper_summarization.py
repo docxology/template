@@ -211,10 +211,10 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
             reference_info += "   - You should search the paper text for the References section and count the entries\n"  # noqa: E501
         else:
             reference_info = "   - No references section was automatically detected, but you should still check the entire paper text\n"  # noqa: E501
+            reference_info += "   - Look for sections titled 'References', 'Bibliography', or 'Works Cited'\n"
             reference_info += (
-                "   - Look for sections titled 'References', 'Bibliography', or 'Works Cited'\n"
+                "   - Only claim 'no references' if you have verified the entire paper text contains no such section\n"  # noqa: E501
             )
-            reference_info += "   - Only claim 'no references' if you have verified the entire paper text contains no such section\n"  # noqa: E501
 
         # Extract key terms from title for topic validation
         # Extract significant words from title (3+ characters, not common stop words)
@@ -262,9 +262,7 @@ Begin your summary now. Remember: NO repeated sections, NO repeated paragraphs, 
             "those",
         }
         title_words = re.findall(r"\b[a-zA-Z]{3,}\b", title.lower())
-        key_terms = [word for word in title_words if word not in stop_words][
-            :10
-        ]  # Top 10 key terms
+        key_terms = [word for word in title_words if word not in stop_words][:10]  # Top 10 key terms
         key_terms_text = ", ".join(key_terms) if key_terms else "key terms from the title"
 
         # Replace template variables

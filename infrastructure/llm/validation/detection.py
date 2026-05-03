@@ -137,14 +137,10 @@ def detect_repetition(
     # Check for high semantic similarity using improved methods
     for i in range(len(normalized_chunks)):
         for j in range(i + 1, len(normalized_chunks)):
-            similarity = _calculate_similarity(
-                normalized_chunks[i], normalized_chunks[j], method=similarity_method
-            )
+            similarity = _calculate_similarity(normalized_chunks[i], normalized_chunks[j], method=similarity_method)
             if similarity >= similarity_threshold:
                 if chunks[j] not in duplicates:
-                    duplicates.append(
-                        chunks[j][:100] + "..." if len(chunks[j]) > 100 else chunks[j]
-                    )
+                    duplicates.append(chunks[j][:100] + "..." if len(chunks[j]) > 100 else chunks[j])
 
     # Calculate unique content ratio
     # For better detection, also check content without headers
@@ -202,15 +198,12 @@ def _deduplicate_paragraphs(
 
     # Content preservation check
     if len(result) / original_length < min_content_preservation:
-        logger.warning(
-            "Paragraph deduplication would remove too much content. Skipping deduplication."
-        )
+        logger.warning("Paragraph deduplication would remove too much content. Skipping deduplication.")
         return text
 
     if removed_count > 0:
         logger.info(
-            f"Paragraph deduplication removed {removed_count} duplicates "
-            f"({original_length} → {len(result)} chars)"
+            f"Paragraph deduplication removed {removed_count} duplicates ({original_length} → {len(result)} chars)"
         )
 
     return result
@@ -263,9 +256,7 @@ def deduplicate_sections(
 
     if len(parts) < 3:
         # Not enough sections to deduplicate, try paragraphs
-        return _deduplicate_paragraphs(
-            text, max_repetitions, similarity_threshold, min_content_preservation
-        )
+        return _deduplicate_paragraphs(text, max_repetitions, similarity_threshold, min_content_preservation)
 
     # Track seen sections with semantic similarity
     seen_sections: dict[str, dict] = {}  # key -> {"count": int, "text": str}

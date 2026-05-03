@@ -34,8 +34,7 @@ def _calculate_weighted_coverage(
     if total_lines == 0:
         return 0.0
     weighted_sum: float = sum(
-        float(r.get("coverage_percent", 0)) * float(r.get("total_lines", 0))
-        for r in results_list
+        float(r.get("coverage_percent", 0)) * float(r.get("total_lines", 0)) for r in results_list
     )
     return weighted_sum / float(total_lines)
 

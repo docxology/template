@@ -39,9 +39,7 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
 
     try:
         known_output_roots = {Path(name).parts[0] for name in project_names if Path(name).parts}
-        known_nested_leaf_names = {
-            Path(name).name for name in project_names if len(Path(name).parts) > 1
-        }
+        known_nested_leaf_names = {Path(name).name for name in project_names if len(Path(name).parts) > 1}
 
         # Track what we remove and keep
         removed_items: list[str] = []

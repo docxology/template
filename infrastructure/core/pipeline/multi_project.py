@@ -113,9 +113,7 @@ class MultiProjectOrchestrator:
 
         return self._execute_multi_project_pipeline(run_infra_tests=False, run_llm=False)
 
-    def _execute_multi_project_pipeline(
-        self, run_infra_tests: bool, run_llm: bool
-    ) -> MultiProjectResult:
+    def _execute_multi_project_pipeline(self, run_infra_tests: bool, run_llm: bool) -> MultiProjectResult:
         """Execute pipeline across multiple projects.
 
         Args:
@@ -164,9 +162,7 @@ class MultiProjectOrchestrator:
                     pipeline_config = PipelineConfig(
                         project_name=project_name,
                         repo_root=self.config.repo_root,
-                        projects_dir=_projects_dir_for_project(
-                            self.config.repo_root, project.path
-                        ),
+                        projects_dir=_projects_dir_for_project(self.config.repo_root, project.path),
                         skip_infra=True,  # Always skip infra tests for individual projects in multi-project mode  # noqa: E501
                         skip_llm=not run_llm,
                         total_stages=10 if run_llm else 8,
@@ -174,11 +170,7 @@ class MultiProjectOrchestrator:
 
                     # Execute pipeline
                     executor = PipelineExecutor(pipeline_config)
-                    method = (
-                        executor.execute_full_pipeline
-                        if run_llm
-                        else executor.execute_core_pipeline
-                    )
+                    method = executor.execute_full_pipeline if run_llm else executor.execute_core_pipeline
                     results = method()
 
                     project_results[project_name] = results
@@ -240,9 +232,7 @@ class MultiProjectOrchestrator:
             # Use an existing project name so reports can be written under projects/{name}/output/reports/  # noqa: E501
             # (the infrastructure test suite itself does not depend on project code).
             # Use qualified_name for proper nested project path resolution.
-            fallback_project = (
-                self.config.projects[0].qualified_name if self.config.projects else "project"
-            )
+            fallback_project = self.config.projects[0].qualified_name if self.config.projects else "project"
 
             # Create a config just to run infra tests
             dummy_config = PipelineConfig(

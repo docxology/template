@@ -66,9 +66,7 @@ def format_text_summary(
     executed_stages = summary.executed_stages
 
     for result in summary.stage_results:
-        stage_display = format_stage_result(
-            result, summary.total_duration, summary.skip_infra
-        )
+        stage_display = format_stage_result(result, summary.total_duration, summary.skip_infra)
         lines.append(f"  {stage_display}")
 
     lines.append("")
@@ -97,9 +95,7 @@ def format_text_summary(
     # File inventory
     if summary.inventory:
         base_dir = find_base_output_dir(summary.inventory)
-        inventory_report = file_inventory_manager.generate_inventory_report(
-            summary.inventory, "text", base_dir
-        )
+        inventory_report = file_inventory_manager.generate_inventory_report(summary.inventory, "text", base_dir)
         lines.append(inventory_report)
 
         # Add notes about file locations
@@ -205,9 +201,7 @@ def format_html_summary(
     html_parts.append("<h2>Pipeline Summary</h2>")
     if summary.failed_stages:
         failed_names = ", ".join(r.stage_name for r in summary.failed_stages)
-        html_parts.append(
-            f"<p class='error'>Pipeline completed with failures: {failed_names}</p>"
-        )
+        html_parts.append(f"<p class='error'>Pipeline completed with failures: {failed_names}</p>")
     else:
         html_parts.append("<p class='success'>All stages completed successfully!</p>")
 
@@ -215,9 +209,7 @@ def format_html_summary(
         log_file_final = get_final_log_path(summary.log_file)
         html_parts.append(f"<p><strong>Log file:</strong> {summary.log_file}")
         if str(summary.log_file) != str(log_file_final):
-            html_parts.append(
-                f"<br><em>(Will be available at: {log_file_final} after copy stage)</em></p>"
-            )
+            html_parts.append(f"<br><em>(Will be available at: {log_file_final} after copy stage)</em></p>")
 
     html_parts.append("<h3>Stage Results</h3>")
     html_parts.append("<ul class='stage-results'>")
@@ -226,11 +218,7 @@ def format_html_summary(
         css_class = "success" if result.success else "error"
         status_icon = "\u2713" if result.success else "\u2717"
         duration_formatted = format_duration(result.duration)
-        percentage = (
-            (result.duration * 100) / summary.total_duration
-            if summary.total_duration > 0
-            else 0
-        )
+        percentage = (result.duration * 100) / summary.total_duration if summary.total_duration > 0 else 0
 
         html_parts.append(f"<li class='{css_class}'>")
         html_parts.append(f"  {status_icon} Stage {result.stage_num}: {result.stage_name} ")
@@ -269,9 +257,7 @@ def format_html_summary(
     if summary.inventory:
         html_parts.append("<h3>Generated Files</h3>")
         base_dir = find_base_output_dir(summary.inventory)
-        inventory_html = file_inventory_manager.generate_inventory_report(
-            summary.inventory, "html", base_dir
-        )
+        inventory_html = file_inventory_manager.generate_inventory_report(summary.inventory, "html", base_dir)
         html_parts.append(inventory_html)
 
     html_parts.append("</div>")

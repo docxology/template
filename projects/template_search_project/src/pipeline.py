@@ -84,6 +84,7 @@ def _disambiguate_citation_key(base: str, taken: set[str]) -> str:
     # Single-letter suffixes first, then double, etc.
     for length in range(1, 4):
         from itertools import product
+
         for combo in product(suffix_chars, repeat=length):
             candidate = base + "".join(combo)
             if candidate not in taken:
@@ -166,16 +167,12 @@ def _build_backends(
             backends.append(CrossrefBackend(mailto=config.search.crossref_mailto))
         elif name == "local":
             if corpus_path is None:
-                raise ValueError(
-                    "config.search.sources includes 'local' but no corpus_path was supplied"
-                )
+                raise ValueError("config.search.sources includes 'local' but no corpus_path was supplied")
             backends.append(LocalBackend(corpus_path))
         elif name == "paperclip":
             api_key = os.environ.get("PAPERCLIP_API_KEY", "")
             if not api_key:
-                raise RuntimeError(
-                    "Paperclip backend requested but PAPERCLIP_API_KEY is not set"
-                )
+                raise RuntimeError("Paperclip backend requested but PAPERCLIP_API_KEY is not set")
             backends.append(PaperclipBackend(api_key=api_key))
         else:
             raise ValueError(f"Unknown search source: {source!r}")

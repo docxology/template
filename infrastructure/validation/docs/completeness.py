@@ -13,9 +13,7 @@ from infrastructure.validation.docs.models import CompletenessGap, Documentation
 logger = get_logger(__name__)
 
 
-def check_feature_documentation(
-    repo_root: Path, documentation_files: list[DocumentationFile]
-) -> list[CompletenessGap]:
+def check_feature_documentation(repo_root: Path, documentation_files: list[DocumentationFile]) -> list[CompletenessGap]:
     """Check if all features are documented."""
     gaps = []
     # Check src/ modules are documented

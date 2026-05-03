@@ -198,12 +198,8 @@ class LLMProgressTracker:
     def _display(self, throughput: float) -> None:
         """Display current progress."""
         if self.total_tokens:
-            percent = (
-                (self.generated_tokens * 100) // self.total_tokens if self.total_tokens > 0 else 0
-            )
-            status = (
-                f"  {self.task}: {self.generated_tokens}/{self.total_tokens} tokens ({percent}%)"
-            )
+            percent = (self.generated_tokens * 100) // self.total_tokens if self.total_tokens > 0 else 0
+            status = f"  {self.task}: {self.generated_tokens}/{self.total_tokens} tokens ({percent}%)"
 
             # Calculate ETA
             if self.generated_tokens > 0 and throughput > 0:
@@ -318,9 +314,7 @@ class SubStageProgress:
                 return linear_eta
 
             # Update EMA
-            self.previous_eta = calculate_eta_ema(
-                elapsed, self.current, self.total, previous_eta=self.previous_eta
-            )
+            self.previous_eta = calculate_eta_ema(elapsed, self.current, self.total, previous_eta=self.previous_eta)
             return self.previous_eta
         else:
             return calculate_eta(elapsed, self.current, self.total)

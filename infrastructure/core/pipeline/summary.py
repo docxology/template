@@ -138,7 +138,5 @@ def generate_pipeline_summary(
         Formatted summary string
     """
     generator = PipelineSummaryGenerator()
-    summary = generator.generate_summary(
-        stage_results, total_duration, output_dir, log_file, skip_infra
-    )
+    summary = generator.generate_summary(stage_results, total_duration, output_dir, log_file, skip_infra)
     return generator.format_summary(summary, output_format)

@@ -68,16 +68,12 @@ class ProjectConfig:
                 target_grade_level_min=float(prose_raw.get("target_grade_level_min", 10.0)),
                 target_grade_level_max=float(prose_raw.get("target_grade_level_max", 16.0)),
                 long_sentence_threshold=int(prose_raw.get("long_sentence_threshold", 35)),
-                citation_density_min_per_1000=float(
-                    prose_raw.get("citation_density_min_per_1000", 5.0)
-                ),
+                citation_density_min_per_1000=float(prose_raw.get("citation_density_min_per_1000", 5.0)),
                 require_h1_per_section=bool(prose_raw.get("require_h1_per_section", True)),
                 forbid_skipped_levels=bool(prose_raw.get("forbid_skipped_levels", True)),
             ),
             bibliography=BibliographyConfig(
-                references_path=str(
-                    bib_raw.get("references_path") or "manuscript/references.bib"
-                ),
+                references_path=str(bib_raw.get("references_path") or "manuscript/references.bib"),
                 fail_on_missing=bool(bib_raw.get("fail_on_missing", True)),
                 fail_on_unused=bool(bib_raw.get("fail_on_unused", False)),
             ),

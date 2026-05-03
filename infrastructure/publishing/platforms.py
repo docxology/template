@@ -9,6 +9,7 @@ from pathlib import Path
 
 try:
     import requests
+
     _requests_available = True
 except ImportError:
     requests = None  # type: ignore[assignment]
@@ -22,6 +23,7 @@ from infrastructure.publishing.models import PublicationMetadata
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
 
 def publish_to_zenodo(
     metadata: PublicationMetadata,

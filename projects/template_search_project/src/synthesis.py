@@ -120,9 +120,7 @@ def synthesise_per_paper(
     block = build_paper_block(paper, citation_key)
     prompt = prompt_template.format(citation_key=citation_key, paper_block=block)
     text = llm(prompt)
-    return SynthesisResult(
-        kind="per_paper", prompt=prompt, text=text, paper_id=paper.id
-    )
+    return SynthesisResult(kind="per_paper", prompt=prompt, text=text, paper_id=paper.id)
 
 
 def synthesise_corpus(

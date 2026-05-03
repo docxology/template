@@ -104,9 +104,6 @@ def _make_review_fn(review_type: str) -> Callable[[LLMClient, str, str, float], 
     return _review_fn
 
 
-
-
-
 # Named public API entry points — generated from _REVIEW_REGISTRY to eliminate duplication.
 # Each function binds a specific review_type, template_class, and default temperature.
 generate_llm_executive_summary = _make_review_fn("executive_summary")

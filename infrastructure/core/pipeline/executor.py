@@ -37,7 +37,6 @@ from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
 logger = get_logger(__name__)
 
 
-
 class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
     """Execute research project pipeline stages."""
 
@@ -60,9 +59,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             config: Pipeline configuration
         """
         self.config = config
-        self.checkpoint_manager = CheckpointManager(
-            project_name=config.project_name, repo_root=config.repo_root
-        )
+        self.checkpoint_manager = CheckpointManager(project_name=config.project_name, repo_root=config.repo_root)
 
         # Log file: projects/{project_name}/output/logs/pipeline.log
         # Recreated by _setup_log_file_handler after clean stage deletes it.
@@ -95,9 +92,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
     def _resolve_pipeline_yaml(self) -> Path:
         """Return the pipeline YAML path to use: project-specific if it exists, else default."""
         project_yaml = self.config.project_dir / "pipeline.yaml"
-        default_yaml = (
-            self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
-        )
+        default_yaml = self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
         return project_yaml if project_yaml.exists() else default_yaml
 
     def _init_telemetry(self) -> None:
@@ -204,9 +199,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if self.config.resume:
             return self._resume_pipeline()
         skip_clean = not self.config.clean
-        return self._execute_pipeline(
-            self._build_stage_list(include_llm=include_llm, skip_clean=skip_clean)
-        )
+        return self._execute_pipeline(self._build_stage_list(include_llm=include_llm, skip_clean=skip_clean))
 
     def _run_stage_and_checkpoint(
         self,
@@ -219,9 +212,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         result = self._execute_stage(stage_num, stage_spec.name, stage_spec.func, pipeline_start)
         results.append(result)
         if not result.success:
-            logger.error(
-                PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name)
-            )
+            logger.error(PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name))
         else:
             self._save_checkpoint(pipeline_start, stage_num, results)
         return result
@@ -264,9 +255,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         # Use enhanced stage logging with ETA if pipeline start time available
         if pipeline_start is not None:
-            log_pipeline_stage_with_eta(
-                stage_num, self.config.total_stages, stage_name, pipeline_start, logger
-            )
+            log_pipeline_stage_with_eta(stage_num, self.config.total_stages, stage_name, pipeline_start, logger)
         else:
             logger.info(f"Stage {stage_num}: {stage_name}")
 
@@ -304,9 +293,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             duration = time.time() - start_time
             logger.error(STAGE_EXCEPTION.format(stage_num=stage_num, error=e))
             if self._telemetry is not None:
-                self._telemetry.end_stage(
-                    stage_name, stage_num, success=False, exit_code=1, error_message=str(e)
-                )
+                self._telemetry.end_stage(stage_name, stage_num, success=False, exit_code=1, error_message=str(e))
             return PipelineStageResult(
                 stage_num=stage_num,
                 stage_name=stage_name,
@@ -316,4 +303,3 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
                 error_message=str(e),
                 exception_type=type(e).__name__,
             )
-

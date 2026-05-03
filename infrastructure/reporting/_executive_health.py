@@ -20,26 +20,26 @@ _COVERAGE_TIERS = [
     (90, 40, "A", "Excellent coverage ≥90%"),
     (80, 30, "B", "Good coverage ≥80%"),
     (70, 20, "C", "Adequate coverage ≥70%"),
-    (0,   0, "F", "Poor coverage <70%"),
+    (0, 0, "F", "Poor coverage <70%"),
 ]
 _WORD_TIERS = [
     (2000, 20, "A", "Comprehensive manuscript ({} words)"),
     (1000, 15, "B", "Good manuscript ({} words)"),
-    (500,  10, "C", "Basic manuscript ({} words)"),
-    (0,     0, "F", "Insufficient manuscript ({} words)"),
+    (500, 10, "C", "Basic manuscript ({} words)"),
+    (0, 0, "F", "Insufficient manuscript ({} words)"),
 ]
 _OUTPUT_TIERS = [
     (10, 10, "A", "Rich outputs ({} files)"),
-    (5,   7, "B", "Good outputs ({} files)"),
-    (2,   4, "C", "Basic outputs ({} files)"),
-    (0,   0, "F", "Limited outputs ({} files)"),
+    (5, 7, "B", "Good outputs ({} files)"),
+    (2, 4, "C", "Basic outputs ({} files)"),
+    (0, 0, "F", "Limited outputs ({} files)"),
 ]
 _GRADE_TIERS = [
     (90, "A", "Excellent"),
     (80, "B", "Good"),
     (70, "C", "Fair"),
     (60, "D", "Poor"),
-    (0,  "F", "Critical"),
+    (0, "F", "Critical"),
 ]
 
 
@@ -99,10 +99,7 @@ def calculate_project_health_score(project: ProjectMetrics) -> dict[str, Any]:
 
     # Output generation (10% weight)
     outputs_generated = (
-        project.outputs.pdf_files
-        + project.outputs.figures
-        + project.outputs.slides
-        + project.outputs.web_outputs
+        project.outputs.pdf_files + project.outputs.figures + project.outputs.slides + project.outputs.web_outputs
     )
     out = _score_tier(_OUTPUT_TIERS, outputs_generated, label=str(outputs_generated))
     factors["outputs"] = out
@@ -140,17 +137,11 @@ def generate_recommendations(projects: list[ProjectMetrics]) -> list[str]:
     # Overall portfolio health
     avg_health = sum(score["percentage"] for _, score in health_scores) / len(health_scores)
     if avg_health >= 85:
-        recommendations.append(
-            "🎉 **Portfolio Health**: Excellent overall project health across all metrics."
-        )
+        recommendations.append("🎉 **Portfolio Health**: Excellent overall project health across all metrics.")
     elif avg_health >= 70:
-        recommendations.append(
-            "✅ **Portfolio Health**: Good overall project health with room for improvement."
-        )
+        recommendations.append("✅ **Portfolio Health**: Good overall project health with room for improvement.")
     else:
-        recommendations.append(
-            "⚠️ **Portfolio Health**: Portfolio requires attention to improve overall health."
-        )
+        recommendations.append("⚠️ **Portfolio Health**: Portfolio requires attention to improve overall health.")
 
     # Critical issues (F grades)
     critical_projects = [name for name, score in health_scores if score["grade"] == "F"]
@@ -229,13 +220,9 @@ def generate_recommendations(projects: list[ProjectMetrics]) -> list[str]:
     manuscript_issues = []
     for p in projects:
         if p.manuscript.total_words < 500:
-            manuscript_issues.append(
-                f"{p.name} (only {p.manuscript.total_words} words - critically insufficient)"
-            )
+            manuscript_issues.append(f"{p.name} (only {p.manuscript.total_words} words - critically insufficient)")
         elif p.manuscript.total_words < 1000:
-            manuscript_issues.append(
-                f"{p.name} ({p.manuscript.total_words} words - needs expansion)"
-            )
+            manuscript_issues.append(f"{p.name} ({p.manuscript.total_words} words - needs expansion)")
 
     if manuscript_issues:
         recommendations.append(
@@ -247,9 +234,7 @@ def generate_recommendations(projects: list[ProjectMetrics]) -> list[str]:
     # Output richness analysis
     output_poor = []
     for p in projects:
-        total_outputs = (
-            p.outputs.pdf_files + p.outputs.figures + p.outputs.slides + p.outputs.web_outputs
-        )
+        total_outputs = p.outputs.pdf_files + p.outputs.figures + p.outputs.slides + p.outputs.web_outputs
         if total_outputs < 3:
             output_poor.append(f"{p.name} ({total_outputs} outputs)")
 
@@ -274,9 +259,7 @@ def generate_recommendations(projects: list[ProjectMetrics]) -> list[str]:
 
         # Manuscript size comparison
         largest_manuscript = max(p.manuscript.total_words for p in projects)
-        largest_project = next(
-            p.name for p in projects if p.manuscript.total_words == largest_manuscript
-        )
+        largest_project = next(p.name for p in projects if p.manuscript.total_words == largest_manuscript)
 
         if largest_manuscript > 2000:
             recommendations.append(

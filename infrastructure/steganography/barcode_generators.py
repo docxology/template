@@ -20,17 +20,18 @@ logger = get_logger(__name__)
 def _get_qrcode():
     try:
         import qrcode  # type: ignore[import-untyped]
+
         return qrcode
     except ImportError as e:
         raise ImportError(
-            "The 'qrcode' package is required for QR code generation. "
-            "Install it with: pip install qrcode[pil]"
+            "The 'qrcode' package is required for QR code generation. Install it with: pip install qrcode[pil]"
         ) from e
 
 
 def _get_barcode():
     try:
         import barcode  # type: ignore[import-untyped]
+
         return barcode
     except ImportError as e:
         raise ImportError(
@@ -44,11 +45,11 @@ def _get_reportlab():
         from reportlab.lib.units import inch, mm  # type: ignore[import-untyped]
         from reportlab.pdfgen import canvas as rl_canvas  # type: ignore[import-untyped]
         from reportlab.lib.utils import ImageReader  # type: ignore[import-untyped]
+
         return rl_canvas, inch, mm, ImageReader
     except ImportError as e:
         raise ImportError(
-            "The 'reportlab' package is required for barcode rendering. "
-            "Install it with: pip install reportlab"
+            "The 'reportlab' package is required for barcode rendering. Install it with: pip install reportlab"
         ) from e
 
 
@@ -85,9 +86,7 @@ def generate_qr_code(
     buf = io.BytesIO()
     img.save(buf, format="PNG")
     buf.seek(0)
-    logger.debug(
-        f"QR code generated, data length={len(data)}, image size={buf.getbuffer().nbytes} bytes"
-    )
+    logger.debug(f"QR code generated, data length={len(data)}, image size={buf.getbuffer().nbytes} bytes")
     return buf.getvalue()
 
 

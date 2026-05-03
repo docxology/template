@@ -3,6 +3,7 @@
 This module contains the business logic for discovering, executing, and reporting
 on the tests for both infrastructure and project suites.
 """
+
 from __future__ import annotations
 
 import os
@@ -33,6 +34,7 @@ logger = get_logger(__name__)
 
 class TestSuiteResults(TypedDict, total=False):
     """Structured result dict returned by run_infrastructure_tests / run_project_tests."""
+
     passed: int
     failed: int
     skipped: int
@@ -63,8 +65,12 @@ def _log_discovered_tests(cmd: list[str], repo_root: Path, env: dict, label: str
     log_substep(f"Discovering {label} tests...", logger)
     try:
         result = subprocess.run(  # nosec B603
-            discovery_cmd, cwd=str(repo_root), env=env,
-            capture_output=True, text=True, timeout=30,
+            discovery_cmd,
+            cwd=str(repo_root),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
         )
         combined = result.stdout + "\n" + result.stderr
         test_count = None
@@ -104,15 +110,13 @@ def run_infrastructure_tests(
 
     log_substep(f"Running infrastructure tests ({infra_threshold}% coverage threshold)...", logger)
     if not include_ollama_tests:
-        log_substep(
-            "(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)", logger
-        )
+        log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)", logger)
     logger.info(f"Test path: {repo_root / 'tests' / 'infra_tests'}")
     logger.info("Coverage target: infrastructure (60% minimum)")
 
     root_venv = repo_root / ".venv"
     if root_venv.is_dir():
-        python_exe = str(root_venv / "Scripts" / "python.exe" if os.name == 'nt' else root_venv / "bin" / "python")
+        python_exe = str(root_venv / "Scripts" / "python.exe" if os.name == "nt" else root_venv / "bin" / "python")
         cmd = [python_exe]
     else:
         cmd = get_python_command()
@@ -129,6 +133,7 @@ def run_infrastructure_tests(
         cmd.extend(["-m", "not requires_ollama"])
 
     import tempfile
+
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     cov_datafile_supported = check_cov_datafile_support()
@@ -137,13 +142,15 @@ def run_infrastructure_tests(
     else:
         env["COVERAGE_FILE"] = ".coverage.infra"
 
-    cmd.extend([
-        "--cov-report=term-missing",
-        "--cov-report=html",
-        "--cov-report=json:coverage_infra.json",
-        f"--cov-fail-under={infra_threshold}",
-        "--tb=short",
-    ])
+    cmd.extend(
+        [
+            "--cov-report=term-missing",
+            "--cov-report=html",
+            "--cov-report=json:coverage_infra.json",
+            f"--cov-fail-under={infra_threshold}",
+            "--tb=short",
+        ]
+    )
     if not include_slow:
         cmd.extend(["-m", "not slow"])
     if quiet:
@@ -206,28 +213,30 @@ def run_project_tests(
     testing_config = get_testing_config(repo_root)
     project_threshold = testing_config.project_coverage_threshold
 
-    log_substep(
-        f"Running project tests for '{project_name}' ({project_threshold}% coverage threshold)...", logger
-    )
+    log_substep(f"Running project tests for '{project_name}' ({project_threshold}% coverage threshold)...", logger)
     logger.info(f"Test path: {project_root / 'tests'}")
     logger.info(f"Coverage target: projects/{project_name}/src ({project_threshold}% minimum)")
 
     project_cov_config = project_root / "pyproject.toml"
     project_venv = project_root / ".venv"
     if project_venv.is_dir():
-        python_exe = str(project_venv / "Scripts" / "python.exe" if os.name == 'nt' else project_venv / "bin" / "python")
+        python_exe = str(
+            project_venv / "Scripts" / "python.exe" if os.name == "nt" else project_venv / "bin" / "python"
+        )
         cmd = [python_exe]
     else:
         cmd = get_python_command()
 
     cmd += [
-        "-m", "pytest",
+        "-m",
+        "pytest",
         f"projects/{project_name}/tests",
         f"--cov=projects/{project_name}/src",
         f"--cov-config={project_cov_config}",
     ]
 
     import tempfile
+
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     # Project root before repo root so ``import scripts.*`` resolves to
@@ -251,13 +260,15 @@ def run_project_tests(
     else:
         env["COVERAGE_FILE"] = ".coverage.project"
 
-    cmd.extend([
-        "--cov-report=term-missing",
-        "--cov-report=html",
-        "--cov-report=json:coverage_project.json",
-        f"--cov-fail-under={project_threshold}",
-        "--tb=short",
-    ])
+    cmd.extend(
+        [
+            "--cov-report=term-missing",
+            "--cov-report=html",
+            "--cov-report=json:coverage_project.json",
+            f"--cov-fail-under={project_threshold}",
+            "--tb=short",
+        ]
+    )
     if not include_slow:
         cmd.extend(["-m", "not slow"])
     if quiet:
@@ -430,9 +441,7 @@ def report_results(
         logger.info("-" * 64)
         logger.info(f"Total:         ✓ PASSED ({total_passed}/{total_tests} tests)")
         if infra_was_run:
-            logger.info(
-                f"Coverage:      Infrastructure: {infra_coverage:.1f}% | Project: {project_coverage:.1f}%"
-            )
+            logger.info(f"Coverage:      Infrastructure: {infra_coverage:.1f}% | Project: {project_coverage:.1f}%")
         else:
             logger.info(f"Coverage:      Infrastructure: N/A | Project: {project_coverage:.1f}%")
 
@@ -489,18 +498,12 @@ def execute_test_pipeline(
 
     if run_project:
         phase_num = 2 if run_infra else 1
-        phase_title = (
-            f"Project Tests ({project_name})" if run_infra else f"Project Tests ({project_name}) (Only)"
-        )
+        phase_title = f"Project Tests ({project_name})" if run_infra else f"Project Tests ({project_name}) (Only)"
         log_header(f"Phase {phase_num}/{total_phases}: {phase_title}", logger)
-        project_exit, project_results = run_project_tests(
-            repo_root, project_name, quiet, include_slow, strict
-        )
+        project_exit, project_results = run_project_tests(repo_root, project_name, quiet, include_slow, strict)
 
     if run_project:
-        report = generate_test_report(
-            infra_results, project_results, repo_root, include_coverage_details=True
-        )
+        report = generate_test_report(infra_results, project_results, repo_root, include_coverage_details=True)
         output_dir = repo_root / "projects" / project_name / "output" / "reports"
         save_test_report_to_files(report, output_dir)
         report_results(infra_exit, project_exit, infra_results, project_results, report, project_name)

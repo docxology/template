@@ -25,9 +25,7 @@ from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 logger = get_logger(__name__)
 
 
-def generate_codebase_complexity_chart(
-    summary: ExecutiveSummary, output_dir: Path
-) -> dict[str, Path]:
+def generate_codebase_complexity_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate codebase complexity visualization.
 
     Args:
@@ -198,9 +196,7 @@ def generate_codebase_complexity_chart(
     return saved_files
 
 
-def generate_codebase_comparison_chart(
-    summary: ExecutiveSummary, output_dir: Path
-) -> dict[str, Path]:
+def generate_codebase_comparison_chart(summary: ExecutiveSummary, output_dir: Path) -> dict[str, Path]:
     """Generate detailed codebase comparison visualization.
 
     Args:

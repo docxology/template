@@ -199,31 +199,20 @@ class TelemetryCollector:
 
                 if self._stage_start_io is not None:
                     current_io = proc.io_counters()
-                    stage.io_read_mb = (
-                        current_io.read_bytes - self._stage_start_io.read_bytes
-                    ) / 1024 / 1024
-                    stage.io_write_mb = (
-                        current_io.write_bytes - self._stage_start_io.write_bytes
-                    ) / 1024 / 1024
+                    stage.io_read_mb = (current_io.read_bytes - self._stage_start_io.read_bytes) / 1024 / 1024
+                    stage.io_write_mb = (current_io.write_bytes - self._stage_start_io.write_bytes) / 1024 / 1024
             except (AttributeError, OSError) as e:
                 logger.debug(f"Resource metrics unavailable for '{stage_name}': {e}")
 
         # Diagnostic event delta
         if self.config.track_diagnostics and self.diagnostic_reporter:
-            new_events = self.diagnostic_reporter.events[self._stage_diagnostic_snapshot:]
-            stage.diagnostic_errors = sum(
-                1 for e in new_events if e.severity == DiagnosticSeverity.ERROR
-            )
-            stage.diagnostic_warnings = sum(
-                1 for e in new_events if e.severity == DiagnosticSeverity.WARNING
-            )
+            new_events = self.diagnostic_reporter.events[self._stage_diagnostic_snapshot :]
+            stage.diagnostic_errors = sum(1 for e in new_events if e.severity == DiagnosticSeverity.ERROR)
+            stage.diagnostic_warnings = sum(1 for e in new_events if e.severity == DiagnosticSeverity.WARNING)
 
         self._report.stages.append(stage)
         self._current_stage = None
-        logger.debug(
-            f"Telemetry: ended stage '{stage_name}' "
-            f"(duration={duration:.2f}s, success={success})"
-        )
+        logger.debug(f"Telemetry: ended stage '{stage_name}' (duration={duration:.2f}s, success={success})")
         return stage
 
     # ------------------------------------------------------------------
@@ -278,10 +267,7 @@ class TelemetryCollector:
 
         for stage in stages:
             # Slow stage
-            if (
-                avg_duration > 0
-                and stage.duration > avg_duration * self.config.slow_stage_multiplier
-            ):
+            if avg_duration > 0 and stage.duration > avg_duration * self.config.slow_stage_multiplier:
                 warnings.append(
                     PerformanceWarning(
                         warning_type="slow_stage",
@@ -380,8 +366,7 @@ class TelemetryCollector:
         for s in r.stages:
             status = "✓ OK" if s.success else "✗ FAIL"
             lines.append(
-                f"{s.stage_name:<35} {s.duration:>7.1f}s {s.memory_mb:>7.0f} "
-                f"{s.cpu_percent:>5.1f} {status:>8}"
+                f"{s.stage_name:<35} {s.duration:>7.1f}s {s.memory_mb:>7.0f} {s.cpu_percent:>5.1f} {status:>8}"
             )
 
         # Warnings

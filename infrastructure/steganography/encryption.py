@@ -35,8 +35,7 @@ def _require_cryptography() -> None:
     """Raise ImportError with guidance if ``cryptography`` is missing."""
     if not _CRYPTOGRAPHY_AVAILABLE:
         raise ImportError(
-            "The 'cryptography' package is required for AES-256 encryption. "
-            "Install it with: pip install cryptography"
+            "The 'cryptography' package is required for AES-256 encryption. Install it with: pip install cryptography"
         )
 
 
@@ -162,8 +161,7 @@ def apply_pdf_password(
         from pypdf import PdfReader, PdfWriter  # type: ignore[import-untyped]
     except ImportError:
         raise ImportError(
-            "The 'pypdf' package is required for PDF password protection. "
-            "Install it with: pip install pypdf"
+            "The 'pypdf' package is required for PDF password protection. Install it with: pip install pypdf"
         ) from None
 
     if owner_password is None:

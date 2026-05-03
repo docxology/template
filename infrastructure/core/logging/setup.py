@@ -42,9 +42,7 @@ def get_log_level_from_env() -> int:
     return LOG_LEVEL_MAP.get(env_level, logging.INFO)
 
 
-def setup_logger(
-    name: str, level: int | None = None, log_file: Path | str | None = None
-) -> logging.Logger:
+def setup_logger(name: str, level: int | None = None, log_file: Path | str | None = None) -> logging.Logger:
     """Configure and return a logger with console handler and optional file handler."""
     logger = logging.getLogger(name)
 
@@ -81,8 +79,7 @@ def setup_logger(
         root_handlers_to_remove = [
             h
             for h in root_logger.handlers
-            if isinstance(h, logging.StreamHandler)
-            and (h.stream is sys.stdout or h.stream is sys.stderr)
+            if isinstance(h, logging.StreamHandler) and (h.stream is sys.stdout or h.stream is sys.stderr)
         ]
         for h in root_handlers_to_remove:
             root_logger.removeHandler(h)

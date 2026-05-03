@@ -181,11 +181,7 @@ def _cmd_menu(ns: argparse.Namespace) -> int:
     project = ns.project
     if project is None:
         names = discover_qualified_names(repo_root)
-        project = (
-            "template_code_project"
-            if "template_code_project" in names
-            else (names[0] if names else "(none)")
-        )
+        project = "template_code_project" if "template_code_project" in names else (names[0] if names else "(none)")
     print(render_menu(project))
     return 0
 
@@ -253,9 +249,7 @@ def _interactive(
             continue
 
         for key in keys:
-            rc = _dispatch_menu_key(
-                key, current, repo_root, runner, stage_runner=stage_runner
-            )
+            rc = _dispatch_menu_key(key, current, repo_root, runner, stage_runner=stage_runner)
             if rc != 0:
                 print(f"Last operation exited with code {rc}", file=sys.stderr)
                 break
@@ -301,9 +295,7 @@ def _dispatch_menu_key(
     if key in {"a", "b", "c", "d"}:
         skip_infra = key in {"b", "d"}
         skip_llm = key in {"c", "d"}
-        return runner.run_multi(
-            MultiProjectInvocation(skip_infra=skip_infra, skip_llm=skip_llm)
-        )
+        return runner.run_multi(MultiProjectInvocation(skip_infra=skip_infra, skip_llm=skip_llm))
     if key in _STAGE_KEY_MAP:
         if stage_runner is not None:
             return stage_runner(_STAGE_KEY_MAP[key], project, repo_root)

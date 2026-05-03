@@ -70,9 +70,7 @@ def clean_output_directory(output_dir: Path) -> None:
         raise FileOperationError(f"Failed to clean output directory {output_dir}: {e}") from e
 
 
-def clean_output_directories(
-    repo_root: Path, project_name: str = "project", subdirs: list[str] | None = None
-) -> None:
+def clean_output_directories(repo_root: Path, project_name: str = "project", subdirs: list[str] | None = None) -> None:
     """Clean output directories for a fresh pipeline start.
 
     Removes all contents from both projects/{project_name}/output/ and output/{project_name}/

@@ -44,9 +44,7 @@ class IntegrityReport:
     recommendations: list[str] = field(default_factory=list)
 
 
-def verify_file_integrity(
-    file_paths: list[Path], expected_hashes: dict[str, str] | None = None
-) -> dict[str, bool]:
+def verify_file_integrity(file_paths: list[Path], expected_hashes: dict[str, str] | None = None) -> dict[str, bool]:
     """Verify file integrity using hash comparison."""
     integrity = {}
 
@@ -220,27 +218,19 @@ def verify_academic_standards(markdown_files: list[Path]) -> dict[str, bool]:
 
     return {
         "has_abstract": bool(re.search(r"\\section\{.*abstract|#\s*abstract", content_lower)),
-        "has_introduction": bool(
-            re.search(r"\\section\{.*introduction|#\s*introduction", content_lower)
-        ),
-        "has_methodology": bool(
-            re.search(r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower)
-        ),
+        "has_introduction": bool(re.search(r"\\section\{.*introduction|#\s*introduction", content_lower)),
+        "has_methodology": bool(re.search(r"\\section\{.*methodology|#\s*methodology|#\s*methods", content_lower)),
         "has_results": bool(re.search(r"\\section\{.*results?|#\s*results?", content_lower)),
         "has_discussion": bool(re.search(r"\\section\{.*discussion|#\s*discussion", content_lower)),
         "has_conclusion": bool(re.search(r"\\section\{.*conclusion|#\s*conclusion", content_lower)),
-        "has_references": bool(
-            re.search(r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower)
-        ),
+        "has_references": bool(re.search(r"\\section\{.*references?|#\s*references?|\\bibliography", content_lower)),
         "proper_citations": has_citations,
         "equation_labels": bool(re.findall(r"\\label\{eq:[^}]+\}", combined_content)),
         "figure_captions": bool(re.findall(r"\\caption\{[^}]+\}", combined_content)),
     }
 
 
-def verify_output_integrity(
-    output_dir: Path, manuscript_dir: Path | None = None
-) -> IntegrityReport:
+def verify_output_integrity(output_dir: Path, manuscript_dir: Path | None = None) -> IntegrityReport:
     """Perform comprehensive integrity verification of all outputs."""
     report = IntegrityReport()
 
@@ -250,11 +240,7 @@ def verify_output_integrity(
         return report
 
     pdf_files = list(output_dir.rglob("*.pdf"))
-    data_files = (
-        list(output_dir.rglob("*.csv"))
-        + list(output_dir.rglob("*.npz"))
-        + list(output_dir.rglob("*.json"))
-    )
+    data_files = list(output_dir.rglob("*.csv")) + list(output_dir.rglob("*.npz")) + list(output_dir.rglob("*.json"))
     markdown_files = list(output_dir.rglob("*.md"))
 
     report.file_integrity = verify_file_integrity(pdf_files + data_files)
@@ -278,9 +264,7 @@ def verify_output_integrity(
     if manuscript_dir and manuscript_dir.exists():
         academic_standards_files = list(manuscript_dir.rglob("*.md"))
         # Exclude documentation files (AGENTS.md, README.md) from academic standards check
-        academic_standards_files = [
-            f for f in academic_standards_files if f.name not in ("AGENTS.md", "README.md")
-        ]
+        academic_standards_files = [f for f in academic_standards_files if f.name not in ("AGENTS.md", "README.md")]
 
     report.academic_standards = verify_academic_standards(academic_standards_files)
 

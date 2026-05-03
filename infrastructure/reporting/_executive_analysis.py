@@ -21,11 +21,7 @@ def _calc_aggregate_stats(values: list[float]) -> dict[str, float]:
 
     sorted_values = sorted(values)
     n = len(sorted_values)
-    median = (
-        sorted_values[n // 2]
-        if n % 2 == 1
-        else (sorted_values[n // 2 - 1] + sorted_values[n // 2]) / 2
-    )
+    median = sorted_values[n // 2] if n % 2 == 1 else (sorted_values[n // 2 - 1] + sorted_values[n // 2]) / 2
 
     return {
         "min": min(values),
@@ -53,11 +49,7 @@ def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]
 
     # Filter out projects with unavailable test data (total_tests = -1)
     available_test_projects = [p for p in projects if p.tests.total_tests >= 0]
-    test_coverage = (
-        [p.tests.coverage_percent for p in available_test_projects]
-        if available_test_projects
-        else [0.0]
-    )
+    test_coverage = [p.tests.coverage_percent for p in available_test_projects] if available_test_projects else [0.0]
     pipeline_durations = [p.pipeline.total_duration for p in projects]
 
     aggregates = {
@@ -77,30 +69,14 @@ def generate_aggregate_metrics(projects: list[ProjectMetrics]) -> dict[str, Any]
         },
         "tests": {
             "total_tests": (
-                sum(p.tests.total_tests for p in available_test_projects)
-                if available_test_projects
-                else 0
+                sum(p.tests.total_tests for p in available_test_projects) if available_test_projects else 0
             ),
-            "total_passed": (
-                sum(p.tests.passed for p in available_test_projects)
-                if available_test_projects
-                else 0
-            ),
-            "total_failed": (
-                sum(p.tests.failed for p in available_test_projects)
-                if available_test_projects
-                else 0
-            ),
-            "average_coverage": (
-                sum(test_coverage) / len(available_test_projects)
-                if available_test_projects
-                else 0.0
-            ),
+            "total_passed": (sum(p.tests.passed for p in available_test_projects) if available_test_projects else 0),
+            "total_failed": (sum(p.tests.failed for p in available_test_projects) if available_test_projects else 0),
+            "average_coverage": (sum(test_coverage) / len(available_test_projects) if available_test_projects else 0.0),
             "coverage_stats": _calc_aggregate_stats(test_coverage),
             "total_execution_time": (
-                sum(p.tests.execution_time for p in available_test_projects)
-                if available_test_projects
-                else 0.0
+                sum(p.tests.execution_time for p in available_test_projects) if available_test_projects else 0.0
             ),
             "projects_with_test_data": len(available_test_projects),
             "total_projects": len(projects),

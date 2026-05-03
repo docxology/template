@@ -72,9 +72,7 @@ def run_llm_review_pipeline(
     if repo_root is None:
         repo_root = Path.cwd()
 
-    _project_root = (
-        project_dir if project_dir is not None else repo_root / "projects" / project_name
-    )
+    _project_root = project_dir if project_dir is not None else repo_root / "projects" / project_name
     project_output = _project_root / "output"
 
     # Use project basename for file matching
@@ -139,9 +137,7 @@ def run_llm_review_pipeline(
             review_types = get_review_types(repo_root, project_name) or ["executive_summary"]
 
             for i, review_type in enumerate(review_types, 1):
-                log_progress(
-                    i, len(review_types), f"Review: {review_type.replace('_', ' ').title()}", logger
-                )
+                log_progress(i, len(review_types), f"Review: {review_type.replace('_', ' ').title()}", logger)
 
                 generator = REVIEW_GENERATORS.get(review_type)
                 if generator is None:
@@ -161,9 +157,7 @@ def run_llm_review_pipeline(
         if mode != ReviewMode.REVIEWS_ONLY:
             translation_languages = get_translation_languages(repo_root, project_name)
             if translation_languages:
-                logger.info(
-                    f"\n  Generating translations for {len(translation_languages)} language(s)..."
-                )
+                logger.info(f"\n  Generating translations for {len(translation_languages)} language(s)...")
 
                 for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)

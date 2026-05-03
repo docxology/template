@@ -13,6 +13,7 @@ from pathlib import Path
 from infrastructure.core.logging.utils import get_logger
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from infrastructure.core.config.loader import ResolvedTestingConfig
 
@@ -186,12 +187,8 @@ def get_testing_config(repo_root: Path | str) -> "ResolvedTestingConfig":
 
     return ResolvedTestingConfig(
         max_test_failures=_int_or_default("max_test_failures", defaults.max_test_failures),
-        max_infra_test_failures=_int_or_default(
-            "max_infra_test_failures", defaults.max_infra_test_failures
-        ),
-        max_project_test_failures=_int_or_default(
-            "max_project_test_failures", defaults.max_project_test_failures
-        ),
+        max_infra_test_failures=_int_or_default("max_infra_test_failures", defaults.max_infra_test_failures),
+        max_project_test_failures=_int_or_default("max_project_test_failures", defaults.max_project_test_failures),
         infra_coverage_threshold=_resolve_int_setting(
             "INFRA_COVERAGE_THRESHOLD",
             testing_cfg,

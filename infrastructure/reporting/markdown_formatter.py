@@ -83,9 +83,7 @@ def generate_markdown_report(data: dict[str, Any]) -> str:
         lines.append(
             f"**Coverage**: {proj_data['coverage_percent']:.1f}% ({'meets' if proj_data['meets_threshold'] else 'below'} 90% threshold)"  # noqa: E501
         )
-        lines.append(
-            f"**Lines**: {proj_data['covered_lines']:,}/{proj_data['total_lines']:,} covered"
-        )
+        lines.append(f"**Lines**: {proj_data['covered_lines']:,}/{proj_data['total_lines']:,} covered")
         lines.append(f"**Duration**: {proj_data['duration_seconds']:.1f}s")
         lines.append("")
 
@@ -100,12 +98,8 @@ def generate_markdown_report(data: dict[str, Any]) -> str:
         f"- **Integration Tests**: {'Included' if meta['integration_tests_included'] else 'Excluded'}"  # noqa: E501
     )
     lines.append(f"- **Slow Tests**: {'Included' if meta['slow_tests_included'] else 'Excluded'}")
-    lines.append(
-        f"- **Ollama Tests**: {'Included' if meta['ollama_tests_included'] else 'Excluded'}"
-    )
-    lines.append(
-        f"- **Ollama Server**: {'Available' if meta['ollama_server_available'] else 'Unavailable'}"
-    )
+    lines.append(f"- **Ollama Tests**: {'Included' if meta['ollama_tests_included'] else 'Excluded'}")
+    lines.append(f"- **Ollama Server**: {'Available' if meta['ollama_server_available'] else 'Unavailable'}")
     if "active_projects" in meta:
         lines.append(f"- **Active Projects**: {', '.join(meta['active_projects'])}")
     lines.append("")

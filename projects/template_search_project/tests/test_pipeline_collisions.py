@@ -131,7 +131,7 @@ def test_enrichment_log_persisted(tmp_path: Path):
         encoding="utf-8",
     )
 
-    artifacts = run_literature_pipeline(config, project_root=tmp_path)
+    run_literature_pipeline(config, project_root=tmp_path)
     log_path = tmp_path / "output" / "enrichment_log.json"
     assert log_path.exists()
     import json

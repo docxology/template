@@ -71,9 +71,7 @@ class ImageManager:
             content += f"\n\n{figure_block}\n"
         else:
             # Insert at found position
-            content = (
-                content[:insertion_point] + f"\n\n{figure_block}\n\n" + content[insertion_point:]
-            )
+            content = content[:insertion_point] + f"\n\n{figure_block}\n\n" + content[insertion_point:]
 
         # Write back
         _tmp = markdown_file.with_suffix(markdown_file.suffix + ".tmp")

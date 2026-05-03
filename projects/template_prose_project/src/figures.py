@@ -17,8 +17,14 @@ import numpy as np
 from infrastructure.prose import ManuscriptReport
 
 _PALETTE = [
-    "#0072B2", "#E69F00", "#009E73", "#CC79A7",
-    "#56B4E9", "#D55E00", "#F0E442", "#999999",
+    "#0072B2",
+    "#E69F00",
+    "#009E73",
+    "#CC79A7",
+    "#56B4E9",
+    "#D55E00",
+    "#F0E442",
+    "#999999",
 ]
 
 
@@ -121,9 +127,7 @@ def plot_citation_density(report: ManuscriptReport, output_dir: Path | str) -> P
     return out_path
 
 
-def generate_all_figures(
-    report: ManuscriptReport, output_dir: Path | str
-) -> list[Path]:
+def generate_all_figures(report: ManuscriptReport, output_dir: Path | str) -> list[Path]:
     """Render every figure in stable order."""
     return [
         plot_section_word_counts(report, output_dir),
@@ -155,9 +159,7 @@ def load_manuscript_report(path: Path | str) -> ManuscriptReport:
         headings = [Heading(**h) for h in s_data.get("headings") or []]
         sections: list[Section] = []
         for sec, hd in zip(s_data.get("sections") or [], headings):
-            sections.append(
-                Section(heading=hd, body="", word_count=int(sec.get("word_count", 0)))
-            )
+            sections.append(Section(heading=hd, body="", word_count=int(sec.get("word_count", 0))))
         struct = StructureReport(
             headings=headings,
             sections=sections,

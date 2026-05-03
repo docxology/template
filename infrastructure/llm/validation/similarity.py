@@ -46,6 +46,7 @@ def _jaccard_similarity(text1: str, text2: str) -> float:
 
     return len(intersection) / len(union) if union else 0.0
 
+
 def _tf_cosine_similarity(text1: str, text2: str) -> float:
     """Calculate TF cosine similarity for semantic matching."""
     # Tokenize and count

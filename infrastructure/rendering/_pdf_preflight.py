@@ -74,8 +74,7 @@ def check_brace_balance(md_content: str) -> list[str]:
 
     if brace_count != 0:
         warnings.append(
-            f"Potential unbalanced braces in markdown: "
-            f"difference={brace_count} (positive=more {{, negative=more }})"
+            f"Potential unbalanced braces in markdown: difference={brace_count} (positive=more {{, negative=more }})"
         )
 
     return warnings

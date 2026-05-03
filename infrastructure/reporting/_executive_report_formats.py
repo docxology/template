@@ -11,6 +11,7 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
+
 def generate_executive_markdown_report(summary: ExecutiveSummary) -> str:
     """Generate Markdown format executive report."""
     lines = [
@@ -29,9 +30,7 @@ def generate_executive_markdown_report(summary: ExecutiveSummary) -> str:
     avg_project_size = manuscript_words / total_projects if total_projects > 0 else 0
 
     # Identify best and worst performers
-    projects_by_size = sorted(
-        summary.project_metrics, key=lambda p: p.manuscript.total_words, reverse=True
-    )
+    projects_by_size = sorted(summary.project_metrics, key=lambda p: p.manuscript.total_words, reverse=True)
     largest_project = projects_by_size[0] if projects_by_size else None
     smallest_project = projects_by_size[-1] if len(projects_by_size) > 1 else None
 
@@ -60,18 +59,12 @@ def generate_executive_markdown_report(summary: ExecutiveSummary) -> str:
         )
 
     if most_efficient:
-        efficiency = most_efficient.outputs.total_outputs / max(
-            most_efficient.pipeline.total_duration, 1
-        )
-        lines.append(
-            f"- **Most Efficient**: {most_efficient.name} ({efficiency:.2f} outputs/second)"
-        )
+        efficiency = most_efficient.outputs.total_outputs / max(most_efficient.pipeline.total_duration, 1)
+        lines.append(f"- **Most Efficient**: {most_efficient.name} ({efficiency:.2f} outputs/second)")
 
     # Health assessment
     failing_projects = [
-        p.name
-        for p in summary.project_metrics
-        if summary.health_scores.get(p.name, {}).get("percentage", 0) < 70
+        p.name for p in summary.project_metrics if summary.health_scores.get(p.name, {}).get("percentage", 0) < 70
     ]
     if failing_projects:
         lines.extend(
@@ -179,9 +172,7 @@ def generate_executive_markdown_report(summary: ExecutiveSummary) -> str:
     low_priority: list[str] = []
 
     for rec in summary.recommendations:
-        if any(
-            keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]
-        ):
+        if any(keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]):
             high_priority.append(f"🚨 **HIGH**: {rec}")
         elif any(keyword in rec.lower() for keyword in ["below", "improve", "consider"]):
             medium_priority.append(f"⚠️ **MEDIUM**: {rec}")
@@ -293,14 +284,10 @@ def generate_executive_html_report(summary: ExecutiveSummary) -> str:
 
     # Generate executive overview
     manuscript_words = summary.aggregate_metrics["manuscript"]["total_words"]
-    avg_project_size = (
-        manuscript_words / summary.total_projects if summary.total_projects > 0 else 0
-    )
+    avg_project_size = manuscript_words / summary.total_projects if summary.total_projects > 0 else 0
 
     # Find best/worst performers
-    projects_by_size = sorted(
-        summary.project_metrics, key=lambda p: p.manuscript.total_words, reverse=True
-    )
+    projects_by_size = sorted(summary.project_metrics, key=lambda p: p.manuscript.total_words, reverse=True)
     largest_project = projects_by_size[0] if projects_by_size else None
 
     overview_html = f"""
@@ -337,9 +324,7 @@ def generate_executive_html_report(summary: ExecutiveSummary) -> str:
     low_priority: list[str] = []
 
     for rec in summary.recommendations:
-        if any(
-            keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]
-        ):
+        if any(keyword in rec.lower() for keyword in ["critical", "immediate", "failing", "broken"]):
             high_priority.append(f'<li class="status-failed">{rec}</li>')
         elif any(keyword in rec.lower() for keyword in ["below", "improve", "consider"]):
             medium_priority.append(f'<li class="status-warning">{rec}</li>')
@@ -352,9 +337,7 @@ def generate_executive_html_report(summary: ExecutiveSummary) -> str:
         recommendations_html += "<h3>🚨 High Priority</h3><ul>" + "".join(high_priority) + "</ul>"
 
     if medium_priority:
-        recommendations_html += (
-            "<h3>⚠️ Medium Priority</h3><ul>" + "".join(medium_priority) + "</ul>"
-        )
+        recommendations_html += "<h3>⚠️ Medium Priority</h3><ul>" + "".join(medium_priority) + "</ul>"
 
     if low_priority:
         recommendations_html += "<h3>ℹ️ Low Priority</h3><ul>" + "".join(low_priority) + "</ul>"

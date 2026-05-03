@@ -27,9 +27,7 @@ except ImportError:
 logger = get_logger(__name__)
 
 
-def generate_multi_project_report(
-    repo_root: Path, project_names: list[str], output_dir: Path
-) -> dict[str, Path]:
+def generate_multi_project_report(repo_root: Path, project_names: list[str], output_dir: Path) -> dict[str, Path]:
     """Orchestrate executive reporting for multiple projects into output_dir.
 
     Returns:
@@ -113,9 +111,7 @@ def _build_summary_dict(result: MultiProjectResult, projects: list[Any]) -> dict
     ]
     summary["error_aggregation"] = {
         "total_errors": len(all_errors),
-        "errors_by_project": {
-            proj: len(summary["projects"].get(proj, {}).get("errors", [])) for proj in project_names
-        },
+        "errors_by_project": {proj: len(summary["projects"].get(proj, {}).get("errors", [])) for proj in project_names},
     }
 
     if result.failed_projects > 0:

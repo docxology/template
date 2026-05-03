@@ -180,9 +180,7 @@ class SteganographyProcessor:
         try:
             from pypdf import PdfReader, PdfWriter  # type: ignore[import-untyped]
         except ImportError:
-            raise ImportError(
-                "The 'pypdf' package is required. Install with: pip install pypdf"
-            ) from None
+            raise ImportError("The 'pypdf' package is required. Install with: pip install pypdf") from None
 
         reader = PdfReader(str(working_pdf))
         writer = PdfWriter()
@@ -341,9 +339,7 @@ class SteganographyProcessor:
         }
         attachments = {"stego_manifest.json": json.dumps(manifest_dict, indent=2).encode("utf-8")}
 
-        inject_pdf_metadata(
-            working_pdf, working_pdf, metadata=meta, xmp_string=xmp, attachments=attachments
-        )
+        inject_pdf_metadata(working_pdf, working_pdf, metadata=meta, xmp_string=xmp, attachments=attachments)
         logger.info("║  ✓ Metadata, XMP, and manifest attachment injected")
         return working_pdf
 

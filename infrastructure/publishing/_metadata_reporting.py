@@ -122,6 +122,7 @@ def generate_publication_metrics(metadata: PublicationMetadata) -> dict[str, Any
 
     return metrics
 
+
 def calculate_metadata_complexity_score(metadata: PublicationMetadata) -> int:
     """Calculate a complexity score for the publication.
 

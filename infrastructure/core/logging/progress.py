@@ -20,7 +20,6 @@ from infrastructure.core.logging.helpers import format_duration
 __all__: list[str] = []
 
 
-
 def log_progress_bar(
     current: int,
     total: int,
@@ -219,9 +218,7 @@ class StreamingProgress:
         elif self.stream.isatty():
             # Show completion
             elapsed = time.time() - self.start_time
-            self.stream.write(
-                f"✅ {self.message}: {self.current}/{self.total} complete ({elapsed:.1f}s)\n"
-            )
+            self.stream.write(f"✅ {self.message}: {self.current}/{self.total} complete ({elapsed:.1f}s)\n")
             self.stream.flush()
 
 

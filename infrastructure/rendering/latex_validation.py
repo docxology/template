@@ -52,9 +52,7 @@ class ValidationReport:
         return "\n".join(lines)
 
 
-def validate_packages(
-    required: list[str], optional: list[str], kpsewhich_path: Path | None = None
-) -> ValidationReport:
+def validate_packages(required: list[str], optional: list[str], kpsewhich_path: Path | None = None) -> ValidationReport:
     """Validate all required and optional LaTeX packages.
 
     Args:
@@ -68,9 +66,7 @@ def validate_packages(
     if kpsewhich_path is None:
         kpsewhich_path = find_kpsewhich()
 
-    logger.info(
-        f"Validating {len(required)} required and {len(optional)} optional LaTeX packages..."
-    )
+    logger.info(f"Validating {len(required)} required and {len(optional)} optional LaTeX packages...")
 
     def _bulk_check(packages: list[str]) -> list[PackageStatus]:
         """Check many packages with a single kpsewhich invocation (fast path)."""

@@ -86,17 +86,11 @@ Begin your methodology review now:"""
         section_budgets = None
         if max_tokens:
             tokens_per_section = max_tokens // 5
-            section_budgets = {
-                section.replace("## ", ""): tokens_per_section for section in required_headers
-            }
+            section_budgets = {section.replace("## ", ""): tokens_per_section for section in required_headers}
 
         format_req = format_requirements(required_headers, markdown_format=True)
-        section_struct = section_structure(
-            required_headers, section_descriptions, required_order=True
-        )
-        token_budget = token_budget_awareness(
-            total_tokens=max_tokens, section_budgets=section_budgets
-        )
+        section_struct = section_structure(required_headers, section_descriptions, required_order=True)
+        token_budget = token_budget_awareness(total_tokens=max_tokens, section_budgets=section_budgets)
         content_req = content_requirements(
             no_hallucination=True,
             cite_sources=True,
@@ -214,12 +208,8 @@ Begin your improvement suggestions now:"""
             markdown_format=True,
             section_requirements=section_requirements,
         )
-        section_struct = section_structure(
-            required_headers, section_descriptions, required_order=True
-        )
-        token_budget = token_budget_awareness(
-            total_tokens=max_tokens, section_budgets=section_budgets
-        )
+        section_struct = section_structure(required_headers, section_descriptions, required_order=True)
+        token_budget = token_budget_awareness(total_tokens=max_tokens, section_budgets=section_budgets)
         content_req = content_requirements(
             no_hallucination=True,
             cite_sources=True,

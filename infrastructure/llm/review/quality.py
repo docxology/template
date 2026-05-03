@@ -81,9 +81,7 @@ def validate_review_quality(
         issues.append(f"Excessive repetition detected: {unique_ratio:.0%} unique content")
         return False, issues, details
     elif has_repetition:
-        details["repetition_warning"] = (
-            f"Some repeated content detected ({len(duplicates)} duplicates)"
-        )
+        details["repetition_warning"] = f"Some repeated content detected ({len(duplicates)} duplicates)"
         logger.debug(f"Repetition warning: {unique_ratio:.0%} unique content")
 
     is_format_compliant, format_issues, format_details = check_format_compliance(response)
@@ -117,9 +115,7 @@ def validate_review_quality(
     return is_valid, issues, details
 
 
-def _validate_executive_summary_section(
-    response_lower: str, details: dict[str, Any], issues: list[str]
-) -> None:
+def _validate_executive_summary_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
     header_variations = [
         (["overview", "summary", "introduction", "abstract"], "overview"),
         (
@@ -130,20 +126,14 @@ def _validate_executive_summary_section(
         (["results", "findings", "principal results", "outcomes", "key results"], "results"),
         (["significance", "impact", "implications", "importance", "takeaway"], "significance"),
     ]
-    found_sections = [
-        name
-        for variations, name in header_variations
-        if any(v in response_lower for v in variations)
-    ]
+    found_sections = [name for variations, name in header_variations if any(v in response_lower for v in variations)]
     details["sections_found"] = found_sections
     details["sections_required"] = 1
     if not found_sections:
         issues.append("Missing expected structure (found: none of 5 expected sections)")
 
 
-def _validate_quality_review_section(
-    response_lower: str, details: dict[str, Any], issues: list[str]
-) -> None:
+def _validate_quality_review_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
     score_patterns = [
         (r"\*\*score:\s*(\d)/5\*\*", "**Score: X/5**"),
         (r"score:\s*(\d)/5", "Score: X/5"),
@@ -154,22 +144,17 @@ def _validate_quality_review_section(
         (r"(\d)\s*out\s*of\s*5", "X out of 5"),
         (r"(\d)/5", "X/5"),
     ]
-    scores_found = [
-        (m, name) for pattern, name in score_patterns for m in re.findall(pattern, response_lower)
-    ]
+    scores_found = [(m, name) for pattern, name in score_patterns for m in re.findall(pattern, response_lower)]
     details["scores_found"] = scores_found
     has_assessment = any(
-        kw in response_lower
-        for kw in ("clarity", "structure", "readability", "technical accuracy", "overall quality")
+        kw in response_lower for kw in ("clarity", "structure", "readability", "technical accuracy", "overall quality")
     )
     details["has_assessment"] = has_assessment
     if not scores_found and not has_assessment:
         issues.append("Missing scoring or quality assessment")
 
 
-def _validate_methodology_review_section(
-    response_lower: str, details: dict[str, Any], issues: list[str]
-) -> None:
+def _validate_methodology_review_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
     methodology_sections = [
         (["strengths", "strong points", "advantages", "positives", "pros"], "strengths"),
         (
@@ -178,46 +163,33 @@ def _validate_methodology_review_section(
         ),
         (["suggestions", "recommendations", "improvements", "future work"], "recommendations"),
     ]
-    found_sections = [
-        name
-        for variations, name in methodology_sections
-        if any(v in response_lower for v in variations)
-    ]
+    found_sections = [name for variations, name in methodology_sections if any(v in response_lower for v in variations)]
     details["sections_found"] = found_sections
     has_methodology_content = any(
-        kw in response_lower
-        for kw in ("research design", "methodology", "approach", "methods", "experimental")
+        kw in response_lower for kw in ("research design", "methodology", "approach", "methods", "experimental")
     )
     details["has_methodology_content"] = has_methodology_content
     if not found_sections and not has_methodology_content:
         issues.append(f"Missing expected sections (found: {found_sections or 'none'})")
 
 
-def _validate_improvement_suggestions_section(
-    response_lower: str, details: dict[str, Any], issues: list[str]
-) -> None:
+def _validate_improvement_suggestions_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
     priority_variations = [
         (["high priority", "critical", "urgent", "must fix", "immediate", "major"], "high"),
         (["medium priority", "moderate", "should address", "important", "significant"], "medium"),
         (["low priority", "minor", "nice to have", "optional", "consider", "cosmetic"], "low"),
     ]
     found_priorities = [
-        name
-        for variations, name in priority_variations
-        if any(v in response_lower for v in variations)
+        name for variations, name in priority_variations if any(v in response_lower for v in variations)
     ]
     details["priorities_found"] = found_priorities
-    has_recommendations = any(
-        kw in response_lower for kw in ("recommendation", "suggest", "improve", "fix", "address")
-    )
+    has_recommendations = any(kw in response_lower for kw in ("recommendation", "suggest", "improve", "fix", "address"))
     details["has_recommendations"] = has_recommendations
     if not found_priorities and not has_recommendations:
         issues.append("Missing priority sections or recommendations")
 
 
-def _validate_translation_section(
-    response_lower: str, details: dict[str, Any], issues: list[str]
-) -> None:
+def _validate_translation_section(response_lower: str, details: dict[str, Any], issues: list[str]) -> None:
     has_english = (
         "english abstract" in response_lower
         or "## english" in response_lower
@@ -225,8 +197,7 @@ def _validate_translation_section(
     )
     details["has_english_section"] = has_english
     has_translation = any(
-        kw in response_lower
-        for kw in ("translation", "chinese", "hindi", "russian", "中文", "हिंदी", "русский")
+        kw in response_lower for kw in ("translation", "chinese", "hindi", "russian", "中文", "हिंदी", "русский")
     )
     details["has_translation_section"] = has_translation
     if not has_english:

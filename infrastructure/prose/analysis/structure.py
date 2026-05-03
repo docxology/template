@@ -53,10 +53,7 @@ class StructureReport:
             "max_depth": self.max_depth,
             "has_h1": self.has_h1,
             "has_skipped_level": self.has_skipped_level,
-            "headings": [
-                {"level": h.level, "title": h.title, "line": h.line}
-                for h in self.headings
-            ],
+            "headings": [{"level": h.level, "title": h.title, "line": h.line} for h in self.headings],
             "sections": [
                 {
                     "level": s.heading.level,

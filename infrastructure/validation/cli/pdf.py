@@ -32,9 +32,7 @@ try:
 except ImportError as e:
     logger.error("Failed to import from infrastructure/validation/pdf_validator.py")
     logger.error(f"   {e}")
-    logger.error(
-        "   Ensure infrastructure/validation/pdf_validator.py exists and is properly formatted"
-    )
+    logger.error("   Ensure infrastructure/validation/pdf_validator.py exists and is properly formatted")
     raise SystemExit(1) from e
 
 

@@ -48,4 +48,3 @@ __all__ = [
     "log_with_spinner",
     "setup_logger",
 ]
-

@@ -8,6 +8,7 @@ from typing import Any
 
 try:
     import requests
+
     _requests_available = True
 except ImportError:
     requests = None  # type: ignore[assignment]
@@ -26,6 +27,7 @@ REQUEST_TIMEOUT = 30
 @dataclass
 class ZenodoConfig:
     """Configuration for Zenodo API client."""
+
     access_token: str
     sandbox: bool = True
     base_url: str | None = None
@@ -58,9 +60,7 @@ class ZenodoClient:
         payload = {"metadata": metadata}
 
         try:
-            response = requests.post(
-                url, json=payload, headers=self.headers, timeout=REQUEST_TIMEOUT
-            )  # noqa: E501
+            response = requests.post(url, json=payload, headers=self.headers, timeout=REQUEST_TIMEOUT)  # noqa: E501
             response.raise_for_status()
             return str(response.json()["id"])
         except requests.exceptions.RequestException as e:

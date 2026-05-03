@@ -63,7 +63,12 @@ class ConversationContext:
 
         logger.debug(
             "Adding message to context role=%s len=%d tokens_est=%d total=%d/%d msgs=%d",
-            role, len(content), tokens, self.estimated_tokens, self.max_tokens, len(self.messages),
+            role,
+            len(content),
+            tokens,
+            self.estimated_tokens,
+            self.max_tokens,
+            len(self.messages),
         )
 
         if self.estimated_tokens + tokens > self.max_tokens:
@@ -232,9 +237,7 @@ class ConversationContext:
 
     def get_usage_stats(self) -> dict[str, Any]:
         """Return context usage statistics dictionary."""
-        usage_percent = (
-            (self.estimated_tokens / self.max_tokens * 100) if self.max_tokens > 0 else 0
-        )
+        usage_percent = (self.estimated_tokens / self.max_tokens * 100) if self.max_tokens > 0 else 0
 
         stats = {
             "current_messages": len(self.messages),

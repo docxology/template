@@ -107,7 +107,7 @@ def validate_markdown(project_name: str = "project") -> bool:
             for p in problems:
                 reporter.record(p)
             reporter.save_report()
-            
+
             for p in problems[:5]:
                 loc = f"[{p.file_path}] " if p.file_path else ""
                 logger.info(f"    • {loc}{p.message}")
@@ -144,9 +144,7 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str,
         log_success("Output structure is valid", logger)
         for dir_name, dir_info in detailed_validation["directories"].items():
             if dir_info["exists"] and dir_info["file_count"] > 0:
-                logger.info(
-                    f"  • {dir_name}/: {dir_info['file_count']} files ({dir_info['size_mb']} MB)"
-                )
+                logger.info(f"  • {dir_name}/: {dir_info['file_count']} files ({dir_info['size_mb']} MB)")
     else:
         logger.warning("Output structure validation has issues:")
         for severity in ["critical", "warning"]:

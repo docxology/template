@@ -77,7 +77,12 @@ def save_review_outputs(
     combined_path = output_dir / "combined_review.md"
     try:
         combined_content = _build_combined_review_content(
-            reviews, model_name, pdf_path, session_metrics, timestamp, date_str,
+            reviews,
+            model_name,
+            pdf_path,
+            session_metrics,
+            timestamp,
+            date_str,
         )
         _tmp = combined_path.with_suffix(combined_path.suffix + ".tmp")
         try:
@@ -95,7 +100,11 @@ def save_review_outputs(
     metadata_path = output_dir / "review_metadata.json"
     try:
         metadata = _build_review_metadata(
-            reviews, model_name, pdf_path, session_metrics, timestamp,
+            reviews,
+            model_name,
+            pdf_path,
+            session_metrics,
+            timestamp,
         )
         _tmp = metadata_path.with_suffix(metadata_path.suffix + ".tmp")
         try:
@@ -198,9 +207,7 @@ def generate_review_summary(
     # Input manuscript metrics
     m = session_metrics.manuscript
     logger.info("\nInput manuscript:")
-    logger.info(
-        f"  {m.total_chars:,} chars ({m.total_words:,} words, ~{m.total_tokens_est:,} tokens)"
-    )
+    logger.info(f"  {m.total_chars:,} chars ({m.total_words:,} words, ~{m.total_tokens_est:,} tokens)")
     if m.truncated:
         logger.info(f"  Truncated to {m.truncated_chars:,} chars")
     else:
@@ -250,9 +257,7 @@ def generate_review_summary(
             metrics = session_metrics.reviews.get(review_name, ReviewMetrics())
             word_count = metrics.output_words if metrics.output_words > 0 else "N/A"
             if word_count != "N/A":
-                logger.info(
-                    f"    • {full_path} ({lang_name}): {size_kb:.1f} KB, {word_count:,} words"
-                )
+                logger.info(f"    • {full_path} ({lang_name}): {size_kb:.1f} KB, {word_count:,} words")
             else:
                 logger.info(f"    • {full_path} ({lang_name}): {size_kb:.1f} KB")
 

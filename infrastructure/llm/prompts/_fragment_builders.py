@@ -47,16 +47,12 @@ def build_fragment(
         sections = section_config.get("sections", 2)
         total = max_tokens or 1000
         section_budgets = {f"Section{i + 1}": total // sections for i in range(sections)}
-        return build_token_budget_awareness(
-            loader, total_tokens=total, section_budgets=section_budgets
-        )
+        return build_token_budget_awareness(loader, total_tokens=total, section_budgets=section_budgets)
 
     if "validation_hints" in fragment_ref:
         word_count = template.get("variables", {}).get("word_count_range", [100, 200])
         required = template.get("variables", {}).get("required_elements", [])
-        return build_validation_hints(
-            loader, word_count_range=tuple(word_count), required_elements=required
-        )
+        return build_validation_hints(loader, word_count_range=tuple(word_count), required_elements=required)
 
     # Default: load fragment directly from disk
     fragment_data = loader.load_fragment(fragment_ref)
@@ -65,9 +61,7 @@ def build_fragment(
     return str(fragment_data)
 
 
-def build_format_requirements(
-    loader: PromptFragmentLoader, headers_list: list[str]
-) -> str:
+def build_format_requirements(loader: PromptFragmentLoader, headers_list: list[str]) -> str:
     """Build format requirements fragment.
 
     Args:
@@ -142,11 +136,7 @@ def build_section_structure(loader: PromptFragmentLoader, structure_key: str) ->
         if structure_key not in structures:
             raise LLMTemplateError(
                 f"Section structure '{structure_key}' not found",
-                context={
-                    "available_keys": (
-                        list(structures.keys()) if isinstance(structures, dict) else []
-                    )
-                },
+                context={"available_keys": (list(structures.keys()) if isinstance(structures, dict) else [])},
             )
 
         structure = structures[structure_key]
@@ -193,18 +183,12 @@ def build_token_budget_awareness(
             context={"fragment": "token_budget_awareness.json"},
         )
 
-    total_template = budget_data.get(
-        "total_tokens_template", "1. Total: ${total_tokens} tokens"
-    )
-    section_template = budget_data.get(
-        "section_budgets_template", "2. Per section:\n${budgets_list}"
-    )
+    total_template = budget_data.get("total_tokens_template", "1. Total: ${total_tokens} tokens")
+    section_template = budget_data.get("section_budgets_template", "2. Per section:\n${budgets_list}")
 
     total_block = total_template.replace("${total_tokens}", str(total_tokens))
 
-    budgets_list = "\n".join(
-        f"  - {name}: {budget} tokens" for name, budget in section_budgets.items()
-    )
+    budgets_list = "\n".join(f"  - {name}: {budget} tokens" for name, budget in section_budgets.items())
     section_block = section_template.replace("${budgets_list}", budgets_list)
 
     result = base_template.replace("${total_tokens_block}", total_block)
@@ -237,17 +221,11 @@ def build_validation_hints(
             context={"fragment": "validation_hints.json"},
         )
 
-    word_template = validation_data.get(
-        "word_count_template", "1. Word count: ${min_words}-${max_words}"
-    )
-    elements_template = validation_data.get(
-        "required_elements_template", "2. Required:\n${elements_list}"
-    )
+    word_template = validation_data.get("word_count_template", "1. Word count: ${min_words}-${max_words}")
+    elements_template = validation_data.get("required_elements_template", "2. Required:\n${elements_list}")
 
     min_words, max_words = word_count_range
-    word_block = word_template.replace("${min_words}", str(min_words)).replace(
-        "${max_words}", str(max_words)
-    )
+    word_block = word_template.replace("${min_words}", str(min_words)).replace("${max_words}", str(max_words))
 
     elements_list = "\n".join(f"  - {elem}" for elem in required_elements)
     elements_block = elements_template.replace("${elements_list}", elements_list)

@@ -45,9 +45,7 @@ def generate_scientific_documentation(func: Callable[..., Any]) -> str:
     return_info = ""
     if signature.return_annotation != inspect.Signature.empty:
         # Use getattr fallback: generic return types have no __name__
-        ret_name = getattr(
-            signature.return_annotation, "__name__", str(signature.return_annotation)
-        )
+        ret_name = getattr(signature.return_annotation, "__name__", str(signature.return_annotation))
         return_info = f"Returns: {ret_name}"
 
     if return_info:
@@ -79,7 +77,8 @@ def generate_scientific_documentation(func: Callable[..., Any]) -> str:
 
 ### Scientific Context
 
-Generated documentation for a scientific workflow function; confirm units, ranges, and error handling for your experiment.
+Generated documentation for a scientific workflow function; confirm units, ranges,
+and error handling for your experiment.
 
 """
 

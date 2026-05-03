@@ -89,9 +89,7 @@ def _passes_quiet_filter(char: str, line: str, quiet: bool) -> bool:
     return False
 
 
-def run_pytest_stream(
-    cmd: list[str], repo_root: Path, env: dict, quiet: bool
-) -> tuple[int, str, str]:
+def run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) -> tuple[int, str, str]:
     """Run pytest streaming output to console while capturing logs for reporting."""
     stdout_buf: list[str] = []
     recent_lines: collections.deque = collections.deque(maxlen=10)
@@ -214,8 +212,7 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
                 retry_count += 1
                 if retry_count <= max_retries:
                     logger.warning(
-                        "Coverage data conflict detected for %s tests, "
-                        "cleaning stale files and retrying (%d/%d)...",
+                        "Coverage data conflict detected for %s tests, cleaning stale files and retrying (%d/%d)...",
                         config.label.lower(),
                         retry_count,
                         max_retries,
@@ -238,8 +235,7 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
                 retry_count += 1
                 if retry_count <= max_retries:
                     logger.warning(
-                        "Coverage database corruption detected for %s, "
-                        "cleaning and retrying (%d/%d)...",
+                        "Coverage database corruption detected for %s, cleaning and retrying (%d/%d)...",
                         config.label.lower(),
                         retry_count,
                         max_retries,
@@ -254,9 +250,7 @@ def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
                     raise
             raise
 
-    coverage_found, coverage_pct = extract_coverage_percentage(
-        stdout_text, config.coverage_json_paths
-    )
+    coverage_found, coverage_pct = extract_coverage_percentage(stdout_text, config.coverage_json_paths)
 
     if not coverage_found:
         logger.warning(f"No {config.label.lower()} coverage percentage found")

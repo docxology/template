@@ -75,14 +75,16 @@ from .analysis import (
     run_project_tests,
 )
 
-__all__.extend([
-    "StageResult",
-    "validate_bibliography_completeness",
-    "validate_variables_resolved",
-    "audit_infrastructure_imports",
-    "check_determinism_artifacts",
-    "run_project_tests",
-])
+__all__.extend(
+    [
+        "StageResult",
+        "validate_bibliography_completeness",
+        "validate_variables_resolved",
+        "audit_infrastructure_imports",
+        "check_determinism_artifacts",
+        "run_project_tests",
+    ]
+)
 
 from .deep_search import (
     DeepSearchArtifacts,
@@ -96,14 +98,16 @@ from .deep_search import (
     write_per_paper_note,
 )
 
-__all__.extend([
-    "DeepSearchArtifacts",
-    "KeywordResult",
-    "build_rich_paper_block",
-    "run_deep_search",
-    "deep_safe_id",
-    "deep_slugify",
-    "write_aggregate_report",
-    "write_keyword_report",
-    "write_per_paper_note",
-])
+__all__.extend(
+    [
+        "DeepSearchArtifacts",
+        "KeywordResult",
+        "build_rich_paper_block",
+        "run_deep_search",
+        "deep_safe_id",
+        "deep_slugify",
+        "write_aggregate_report",
+        "write_keyword_report",
+        "write_per_paper_note",
+    ]
+)

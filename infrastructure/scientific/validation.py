@@ -19,15 +19,21 @@ logger = get_logger(__name__)
 # Minimum coverage fraction considered acceptable for docstrings and type hints
 _COVERAGE_THRESHOLD = 0.8
 
+
 class _ValidationResults(TypedDict):
     """TypedDict for holding the results of scientific validation."""
+
     total_tests: int
     passed_tests: int
     failed_tests: int
     accuracy_score: float
     details: list[dict[str, Any]]
 
-def validate_scientific_implementation(func: Callable[..., Any], test_cases: list[tuple[Any, Any]]) -> _ValidationResults:
+
+def validate_scientific_implementation(
+    func: Callable[..., Any],
+    test_cases: list[tuple[Any, Any]],
+) -> _ValidationResults:
     """Validate scientific implementation against known test cases."""
     validation_results: _ValidationResults = {
         "total_tests": len(test_cases),
@@ -42,9 +48,7 @@ def validate_scientific_implementation(func: Callable[..., Any], test_cases: lis
             actual_output = func(test_input)
 
             # Compare results with tolerance for floating point
-            if isinstance(actual_output, (int, float)) and isinstance(
-                expected_output, (int, float)
-            ):
+            if isinstance(actual_output, (int, float)) and isinstance(expected_output, (int, float)):
                 passed = abs(actual_output - expected_output) < 1e-10
             else:
                 passed = actual_output == expected_output
@@ -76,9 +80,7 @@ def validate_scientific_implementation(func: Callable[..., Any], test_cases: lis
             )
 
     if validation_results["total_tests"] > 0:
-        validation_results["accuracy_score"] = (
-            validation_results["passed_tests"] / validation_results["total_tests"]
-        )
+        validation_results["accuracy_score"] = validation_results["passed_tests"] / validation_results["total_tests"]
 
     return validation_results
 
@@ -89,9 +91,7 @@ def _type_hints_fraction(functions: list[tuple[str, Any]]) -> float:
     for _, func in functions:
         sig = inspect.signature(func)
         has_return = sig.return_annotation != inspect.Signature.empty
-        has_params = any(
-            p.annotation != inspect.Parameter.empty for p in sig.parameters.values()
-        )
+        has_params = any(p.annotation != inspect.Parameter.empty for p in sig.parameters.values())
         if has_return or has_params:
             typed += 1
     return typed / len(functions) if functions else 0.0
@@ -107,8 +107,7 @@ def _analyze_source_features(module: Any) -> tuple[bool, bool]:
 
     has_error = any("try:" in line or "except" in line or "raise" in line for line in source_lines)
     has_validation = any(
-        "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
-        for line in source_lines
+        "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line for line in source_lines
     )
     return has_error, has_validation
 
@@ -148,9 +147,9 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     if not functions:
         return validation
 
-    validation["docstring_coverage"] = sum(
-        1 for _, func in functions if inspect.getdoc(func) is not None
-    ) / len(functions)
+    validation["docstring_coverage"] = sum(1 for _, func in functions if inspect.getdoc(func) is not None) / len(
+        functions
+    )
     validation["type_hints_coverage"] = _type_hints_fraction(functions)
     validation["error_handling"], validation["input_validation"] = _analyze_source_features(module)
 
@@ -162,6 +161,7 @@ def validate_scientific_best_practices(module: Any) -> dict[str, Any]:
     )
     validation["recommendations"] = _best_practices_recommendations(validation)
     return validation
+
 
 def _compliance_docstring_features(func: Callable[..., Any]) -> tuple[bool, bool]:
     """Return (has_docstring, has_examples) for *func*."""
@@ -196,8 +196,7 @@ def _compliance_source_features(func: Callable[..., Any]) -> tuple[bool, bool]:
 
     has_error = any("try:" in line or "except" in line or "raise" in line for line in source_lines)
     has_validation = any(
-        "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line
-        for line in source_lines
+        "assert" in line or "isinstance" in line or "ValueError" in line or "TypeError" in line for line in source_lines
     )
     return has_error, has_validation
 
@@ -214,9 +213,7 @@ _COMPLIANCE_WEIGHTS: dict[str, float] = {
 
 def _compliance_score(compliance: dict[str, Any]) -> float:
     """Compute weighted compliance score from boolean feature flags."""
-    return sum(
-        weight for key, weight in _COMPLIANCE_WEIGHTS.items() if compliance.get(key)
-    )
+    return sum(weight for key, weight in _COMPLIANCE_WEIGHTS.items() if compliance.get(key))
 
 
 def _compliance_recommendations(compliance: dict[str, Any]) -> list[str]:

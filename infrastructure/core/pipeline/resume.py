@@ -113,10 +113,7 @@ class PipelineResumeMixin(ABC):
         remaining: list[StageSpec] = []
         for stage_spec in stages:
             stage_name = stage_spec.name
-            if (
-                completed_idx < len(completed_names)
-                and stage_name == completed_names[completed_idx]
-            ):
+            if completed_idx < len(completed_names) and stage_name == completed_names[completed_idx]:
                 completed_idx += 1
                 continue
 
@@ -128,26 +125,20 @@ class PipelineResumeMixin(ABC):
             )
             return self._start_fresh()
 
-        logger.info(
-            f"Resuming from stage {len(resumed_results) + 1} ({len(remaining)} stage(s) remaining)"
-        )
+        logger.info(f"Resuming from stage {len(resumed_results) + 1} ({len(remaining)} stage(s) remaining)")
 
         # Execute remaining stages, continuing checkpoint numbering from prior completed count
         pipeline_start = checkpoint.pipeline_start_time
         executed_stage_num = len(resumed_results)
         for stage_spec in remaining:
             executed_stage_num += 1
-            result = self._run_stage_and_checkpoint(
-                executed_stage_num, stage_spec, resumed_results, pipeline_start
-            )
+            result = self._run_stage_and_checkpoint(executed_stage_num, stage_spec, resumed_results, pipeline_start)
             if not result.success:
                 break
 
         return resumed_results
 
-    def _save_checkpoint(
-        self, pipeline_start: float, last_stage: int, results: list[PipelineStageResult]
-    ) -> None:
+    def _save_checkpoint(self, pipeline_start: float, last_stage: int, results: list[PipelineStageResult]) -> None:
         """Save pipeline checkpoint.
 
         Args:

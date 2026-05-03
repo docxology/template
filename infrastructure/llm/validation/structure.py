@@ -134,9 +134,7 @@ def validate_response_structure(
         issues.append(f"Response too long: {word_count} > {max_word_count} words")
 
     # Check section completeness
-    is_complete, missing, section_details = validate_section_completeness(
-        response, required_headers, flexible_headers
-    )
+    is_complete, missing, section_details = validate_section_completeness(response, required_headers, flexible_headers)
     details["sections"] = section_details
 
     if not is_complete:

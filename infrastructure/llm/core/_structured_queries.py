@@ -92,10 +92,7 @@ class _StructuredQueryMixin:
             prompt,
             model=model,
             max_tokens=self.config.short_max_tokens,
-            instruction=(
-                "Provide a concise, brief response (less than 150 words). "
-                "Be direct and to the point.\n\n"
-            ),
+            instruction=("Provide a concise, brief response (less than 150 words). Be direct and to the point.\n\n"),
             options=options,
         )
 
@@ -132,13 +129,9 @@ class _StructuredQueryMixin:
         """
         model_name = model or self.config.default_model
         mode_options = (
-            dataclasses.replace(options, max_tokens=max_tokens)
-            if options
-            else GenerationOptions(max_tokens=max_tokens)
+            dataclasses.replace(options, max_tokens=max_tokens) if options else GenerationOptions(max_tokens=max_tokens)
         )
-        response, _ = self._time_call(
-            lambda: self.query(instruction + prompt, model=model_name, options=mode_options)
-        )
+        response, _ = self._time_call(lambda: self.query(instruction + prompt, model=model_name, options=mode_options))
         return response
 
     def query_structured(
@@ -190,14 +183,9 @@ class _StructuredQueryMixin:
 
         schema_instruction = ""
         if schema:
-            schema_instruction = (
-                f"\n\nReturn valid JSON matching this schema:\n{json.dumps(schema, indent=2)}"
-            )
+            schema_instruction = f"\n\nReturn valid JSON matching this schema:\n{json.dumps(schema, indent=2)}"
 
-        instruction = (
-            "Return your response as valid JSON only, no markdown or extra text. "
-            f"{schema_instruction}\n\n"
-        )
+        instruction = f"Return your response as valid JSON only, no markdown or extra text. {schema_instruction}\n\n"
 
         # Use raw generation for structured to bypass context issues with JSON
         full_prompt = instruction + prompt
@@ -283,10 +271,15 @@ class _StructuredQueryMixin:
     ) -> Iterator[str]:
         """Stream a concise response (<=150 words) with a brevity instruction prepended."""
         yield from self._stream_with_instruction(
-            "Provide a concise, brief response (less than 150 words). "
-            "Be direct and to the point.\n\n",
-            prompt, model, options, self.config.short_max_tokens,
-            save_response, save_path, log_progress, retries,
+            "Provide a concise, brief response (less than 150 words). Be direct and to the point.\n\n",
+            prompt,
+            model,
+            options,
+            self.config.short_max_tokens,
+            save_response,
+            save_path,
+            log_progress,
+            retries,
         )
 
     def stream_long(
@@ -303,8 +296,14 @@ class _StructuredQueryMixin:
         yield from self._stream_with_instruction(
             "Provide a comprehensive, detailed response with examples and "
             "thorough explanation. Use multiple paragraphs if needed.\n\n",
-            prompt, model, options, self.config.long_max_tokens,
-            save_response, save_path, log_progress, retries,
+            prompt,
+            model,
+            options,
+            self.config.long_max_tokens,
+            save_response,
+            save_path,
+            log_progress,
+            retries,
         )
 
     def _stream_with_instruction(

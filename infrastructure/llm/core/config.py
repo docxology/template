@@ -52,6 +52,7 @@ class GenerationOptions:
         Returns:
             Dictionary compatible with Ollama API options parameter
         """
+
         def _pick(override: Any, fallback: Any) -> Any:
             """Return override if not None, else fallback."""
             return override if override is not None else fallback
@@ -106,9 +107,7 @@ class OllamaClientConfig:
     # Model settings - default to fast model for testing
     # Override with OLLAMA_MODEL env var for quality reviews
     default_model: str = "gemma3:4b"  # Reliable default with predictable name
-    fallback_models: list[str] = field(
-        default_factory=lambda: ["gemma2:2b", "mistral"]
-    )
+    fallback_models: list[str] = field(default_factory=lambda: ["gemma2:2b", "mistral"])
 
     # Generation settings
     temperature: float = 0.7
@@ -269,16 +268,16 @@ class OllamaClientConfig:
 
         return GenerationOptions(**options_dict)
 
+
 # Module-level accessors so callers don't need to instantiate OllamaClientConfig.
 # Each call creates a fresh OllamaClientConfig.from_env() to pick up env mutations in tests.
+
 
 def _get_env_config() -> "OllamaClientConfig":
     """Return a config instance populated from the current environment."""
     return OllamaClientConfig.from_env()
 
 
-
 def get_max_input_length() -> int:
     """Return the maximum input character length (from env or default)."""
     return _get_env_config().max_input_length
-

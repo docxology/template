@@ -95,7 +95,7 @@ class DiagnosticReporter:
                             sev = DiagnosticSeverity(ev_dict.get("severity", "ERROR"))
                         except ValueError:
                             sev = DiagnosticSeverity.ERROR
-                        
+
                         event = DiagnosticEvent(
                             severity=sev,
                             category=ev_dict.get("category", "Unknown"),
@@ -104,7 +104,7 @@ class DiagnosticReporter:
                             file_path=ev_dict.get("file_path"),
                             line_number=ev_dict.get("line_number"),
                             fix_suggestion=ev_dict.get("fix_suggestion"),
-                            context=ev_dict.get("context", {})
+                            context=ev_dict.get("context", {}),
                         )
                         # Avoid duplicates
                         if event not in self.events:
@@ -159,9 +159,9 @@ class DiagnosticReporter:
         yellow_flag = EMOJIS["warning"] if use_emojis else "[WARN]"
         info_flag = EMOJIS["info"] if use_emojis else "[INFO]"
 
-        logger.info(f"\n{'='*80}")
+        logger.info(f"\n{'=' * 80}")
         logger.info(f" DIAGNOSTIC REPORT: {self.project_name}")
-        logger.info(f"{'='*80}\n")
+        logger.info(f"{'=' * 80}\n")
 
         errors = [e for e in self.events if e.severity == DiagnosticSeverity.ERROR]
         warnings = [e for e in self.events if e.severity == DiagnosticSeverity.WARNING]
@@ -171,7 +171,7 @@ class DiagnosticReporter:
             if not items:
                 return
             logger.info(f"{icon} {title} ({len(items)})")
-            logger.info(f"{'-'*80}")
+            logger.info(f"{'-' * 80}")
             for item in items:
                 loc = ""
                 if item.file_path:
@@ -190,7 +190,7 @@ class DiagnosticReporter:
         _log_group("YELLOW FLAGS (Warnings)", warnings, yellow_flag)
         _log_group("DIAGNOSTICS (Info)", infos, info_flag)
 
-        logger.info(f"{'='*80}\n")
+        logger.info(f"{'=' * 80}\n")
 
     def save_report(self) -> None:
         """Save the diagnostic report to JSON if output_dir is configured."""
@@ -222,7 +222,7 @@ class DiagnosticReporter:
             "total_events": len(unique_events),
             "errors": sum(1 for e in unique_events if e.severity == DiagnosticSeverity.ERROR),
             "warnings": sum(1 for e in unique_events if e.severity == DiagnosticSeverity.WARNING),
-            "events": [e.to_dict() for e in unique_events]
+            "events": [e.to_dict() for e in unique_events],
         }
 
         with open(report_file, "w", encoding="utf-8") as f:

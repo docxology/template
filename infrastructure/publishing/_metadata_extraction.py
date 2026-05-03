@@ -71,10 +71,7 @@ def extract_publication_metadata(markdown_files: list[Path]) -> PublicationMetad
         if match:
             authors_text = match.group(1).strip()
             # Check if this looks like author names (contains common title indicators)
-            if any(
-                title in authors_text.lower()
-                for title in ["dr.", "prof.", "phd", "ms.", "mr.", "mrs."]
-            ):
+            if any(title in authors_text.lower() for title in ["dr.", "prof.", "phd", "ms.", "mr.", "mrs."]):
                 metadata.authors = [a.strip() for a in authors_text.split(",")]
                 break
 

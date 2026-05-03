@@ -22,6 +22,7 @@ from typing import Any, TypedDict
 
 class AuthorConfig(TypedDict, total=False):
     """Configuration for a manuscript author."""
+
     name: str
     corresponding: bool
     orcid: str
@@ -30,33 +31,40 @@ class AuthorConfig(TypedDict, total=False):
 
 class PaperConfig(TypedDict, total=False):
     """Configuration for a paper's base metadata."""
+
     title: str
 
 
 class PublicationConfig(TypedDict, total=False):
     """Configuration for a paper's publication details."""
+
     doi: str
 
 
 class TranslationsConfig(TypedDict, total=False):
     """Configuration for LLM translation settings."""
+
     enabled: bool
     languages: list[str]
 
 
 class ReviewsConfig(TypedDict, total=False):
     """Configuration for LLM review settings."""
+
     enabled: bool
     types: list[str]
 
+
 class LLMYAMLConfig(TypedDict, total=False):
     """YAML config schema for the ``llm:`` section of config.yaml."""
+
     translations: TranslationsConfig
     reviews: ReviewsConfig
 
 
 class TestingConfig(TypedDict, total=False):
     """Configuration for test thresholds and coverage."""
+
     max_test_failures: int
     max_infra_test_failures: int
     max_project_test_failures: int
@@ -91,6 +99,7 @@ class ResolvedTestingConfig:
 
 class ManuscriptConfig(TypedDict, total=False):
     """Full manuscript configuration combining all sections."""
+
     paper: PaperConfig
     authors: list[AuthorConfig]
     publication: PublicationConfig
@@ -100,4 +109,4 @@ class ManuscriptConfig(TypedDict, total=False):
     keywords: list[str]
     metadata: dict[str, str]
     project_config: dict[str, Any]  # passthrough for project-specific config sections
-    experiment: dict[str, Any]      # passthrough for project experimental parameters
+    experiment: dict[str, Any]  # passthrough for project experimental parameters

@@ -107,11 +107,18 @@ def compute_metrics(text: str) -> ProseMetrics:
     """Compute :class:`ProseMetrics` for *text*."""
     if not text or not text.strip():
         return ProseMetrics(
-            char_count=0, word_count=0, sentence_count=0, paragraph_count=0,
-            syllable_count=0, avg_words_per_sentence=0.0,
-            avg_syllables_per_word=0.0, complex_word_count=0,
-            complex_word_fraction=0.0, flesch_reading_ease=0.0,
-            flesch_kincaid_grade=0.0, gunning_fog=0.0,
+            char_count=0,
+            word_count=0,
+            sentence_count=0,
+            paragraph_count=0,
+            syllable_count=0,
+            avg_words_per_sentence=0.0,
+            avg_syllables_per_word=0.0,
+            complex_word_count=0,
+            complex_word_fraction=0.0,
+            flesch_reading_ease=0.0,
+            flesch_kincaid_grade=0.0,
+            gunning_fog=0.0,
         )
 
     paragraphs = split_paragraphs(text)
