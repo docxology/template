@@ -1,0 +1,62 @@
+# Bandit configuration for the template research repository.
+#
+# Policy: CI runs Bandit at MEDIUM+ severity (`-ll`) over `infrastructure/`,
+# `scripts/`, and `projects/`. The skips below silence LOW-severity findings
+# that are systemically safe in this codebase, so a stricter scan
+# (`bandit -r --severity-level low`) also runs clean. Documented at
+# `docs/rules/security.md` and `.github/AGENTS.md`.
+#
+# Each skipped test is justified below. New findings outside these IDs MUST
+# be triaged: either fix the code or add a targeted `# nosec <ID> reason: …`.
+
+skips:
+  # B101 — assert_used.
+  # Asserts in `infrastructure/` express internal invariants and are validated
+  # by tests, not relied on for security boundaries. Coverage gates ensure
+  # they are exercised. Suppressing B101 reduces noise without weakening
+  # security review of real issues. (Mirrors `[tool.bandit]` in
+  # `pyproject.toml`.)
+  - B101
+
+  # B311 — pseudo-random generators.
+  # `random.random()` is used only for retry-jitter (thundering-herd
+  # mitigation in `infrastructure/core/runtime/retry.py`). It is never used
+  # for tokens, secrets, or anything cryptographic. Cryptographic randomness
+  # uses `secrets` / `os.urandom` directly where required.
+  - B311
+
+  # B403 — pickle import.
+  # Imported only by `infrastructure/validation/integrity/checks.py` to
+  # validate already-trusted, locally-produced pickle artifacts during
+  # output integrity checks. No untrusted pickle data is loaded; the file
+  # carries an explicit `noqa: S403` comment.
+  - B403
+
+  # B404 — subprocess import.
+  # Subprocess is unavoidable for our orchestrator pattern: launching the
+  # local Ollama server, invoking `pdflatex`/`pandoc` for rendering,
+  # running `ruff`/`mypy`/`bandit` from gate scripts, and executing
+  # discovered `scripts/` analysis modules. All call sites use fixed-list
+  # argv with `shell=False`. Importing the module itself is not a risk.
+  - B404
+
+  # B405 — xml.etree Element import.
+  # The single occurrence in
+  # `infrastructure/search/literature/backends.py` re-exports `Element`
+  # solely as a type-hint target. Actual XML parsing uses `defusedxml`.
+  - B405
+
+  # B603 — subprocess_without_shell_equals_true.
+  # Same systemic justification as B404. Every call site passes a fixed
+  # argv list (`shell=False`); no user-controlled string is concatenated
+  # into a command. Inputs that vary across runs (project names, file
+  # paths) are validated by `infrastructure.core.security` before being
+  # placed into argv lists.
+  - B603
+
+  # B607 — start_process_with_partial_path.
+  # Partial paths are restricted to well-known, hard-coded executables
+  # (`bandit`, `pip-audit`, `safety`, `which`, `rm`, `kpsewhich`, `git`)
+  # invoked from gate / fixture / discovery scripts. Resolution relies on
+  # the developer / CI runner `PATH`, which is treated as trusted.
+  - B607

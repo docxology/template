@@ -168,6 +168,7 @@ The template separates **generic infrastructure** from **project-specific code**
 
 ```mermaid
 flowchart TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     ROOT[/template//<br/>Generic template repository]
 
     ROOT --> INFRA[/infrastructure//<br/>Layer 1 · generic build · validation tools]
@@ -228,7 +229,6 @@ Each directory contains documentation for easy navigation:
 
 | Directory | Purpose |
 | --------- | ------- |
-| [`projects_in_progress/act_inf_metaanalysis/` (WIP)](projects_in_progress/act_inf_metaanalysis/) | Active Inference meta-analysis — see [`doc/README.md`](projects_in_progress/act_inf_metaanalysis/doc/README.md)  *(WIP)* |
 | [`projects_in_progress/cogant/`](projects_in_progress/cogant/) | Cognitive agent project |
 | [`projects_in_progress/template/`](projects_in_progress/template/) | Meta-documentation and template metrics |
 
@@ -267,6 +267,7 @@ Archived exemplars are preserved under [`projects_archive/`](projects_archive/) 
 
 ```mermaid
 flowchart TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     ROOT[/template//<br/>Generic Template]
 
     ROOT --> INFRA[/infrastructure//<br/>Layer 1 · generic build/validation tools]

@@ -93,3 +93,50 @@ def chain_exceptions(new_exception: TemplateError, original: Exception) -> Templ
     # Use exception chaining
     new_exception.__cause__ = original
     return new_exception
+
+
+__all__ = [
+    # Re-exports from _exceptions_core
+    "BuildError",
+    "CompilationError",
+    "ConfigurationError",
+    "DataValidationError",
+    "DependencyError",
+    "FileNotFoundError",
+    "FileOperationError",
+    "InsufficientCoverageError",
+    "IntegrationError",
+    "InvalidConfigurationError",
+    "InvalidFileFormatError",
+    "MarkdownValidationError",
+    "MissingConfigurationError",
+    "MissingDependencyError",
+    "NotADirectoryError",
+    "PDFValidationError",
+    "PipelineError",
+    "ScriptExecutionError",
+    "TemplateError",
+    "TestError",
+    "ValidationError",
+    "VersionMismatchError",
+    # Re-exports from _exceptions_domains
+    "APIRateLimitError",
+    "ContextLimitError",
+    "FormatError",
+    "InvalidQueryError",
+    "LiteratureSearchError",
+    "LLMConnectionError",
+    "LLMError",
+    "LLMTemplateError",
+    "MetadataError",
+    "PublishingError",
+    "RenderingError",
+    "SecurityError",
+    "SecurityViolation",
+    "TemplateRenderingError",
+    "UploadError",
+    # Utility functions
+    "chain_exceptions",
+    "format_file_context",
+    "raise_with_context",
+]

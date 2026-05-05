@@ -14,9 +14,9 @@ class ProseAnalysisConfig:
     """Knobs for the prose-analysis stage."""
 
     target_grade_level_min: float = 10.0
-    target_grade_level_max: float = 16.0
+    target_grade_level_max: float = 18.0
     long_sentence_threshold: int = 35
-    citation_density_min_per_1000: float = 5.0
+    citation_density_min_per_1000: float = 0.0
     require_h1_per_section: bool = True
     forbid_skipped_levels: bool = True
 
@@ -66,9 +66,9 @@ class ProjectConfig:
             manuscript_dir=str(data.get("manuscript_dir") or "manuscript"),
             prose=ProseAnalysisConfig(
                 target_grade_level_min=float(prose_raw.get("target_grade_level_min", 10.0)),
-                target_grade_level_max=float(prose_raw.get("target_grade_level_max", 16.0)),
+                target_grade_level_max=float(prose_raw.get("target_grade_level_max", 18.0)),
                 long_sentence_threshold=int(prose_raw.get("long_sentence_threshold", 35)),
-                citation_density_min_per_1000=float(prose_raw.get("citation_density_min_per_1000", 5.0)),
+                citation_density_min_per_1000=float(prose_raw.get("citation_density_min_per_1000", 0.0)),
                 require_h1_per_section=bool(prose_raw.get("require_h1_per_section", True)),
                 forbid_skipped_levels=bool(prose_raw.get("forbid_skipped_levels", True)),
             ),

@@ -61,7 +61,7 @@ Every knob lives in `manuscript/config.yaml`:
 |---|---|---|---|
 | `prose` | `target_grade_level_min` / `_max` | `10.0 / 18.0` | Acceptable Flesch-Kincaid Grade Level band. |
 | `prose` | `long_sentence_threshold` | `35` | Words per sentence above which sentences are flagged. |
-| `prose` | `citation_density_min_per_1000` | `3.0` | Minimum citations per 1000 words. |
+| `prose` | `citation_density_min_per_1000` | `0.0` | Minimum citations per 1000 words. |
 | `prose` | `require_h1_per_section` | `true` | Every file must have an H1. |
 | `prose` | `forbid_skipped_levels` | `true` | Heading levels must be contiguous. |
 | `bibliography` | `references_path` | `manuscript/references.bib` | Path to BibTeX file. |

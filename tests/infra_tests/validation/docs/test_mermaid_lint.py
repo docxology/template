@@ -1,0 +1,125 @@
+"""Tests for infrastructure.validation.docs.mermaid_lint.
+
+Zero-mocks: the test creates a real on-disk Markdown tree and (when ``mmdc`` is
+available locally) invokes the actual binary. CI installs ``mmdc`` explicitly,
+so the gate fails loudly there if it is missing.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from infrastructure.validation.docs.mermaid_lint import (
+    MermaidBlock,
+    ValidationFailure,
+    find_mermaid_blocks,
+    mmdc_available,
+    validate_blocks,
+)
+
+
+_VALID_MERMAID = """flowchart TB
+    A[Start] --> B[End]
+"""
+
+_INVALID_MERMAID = """flowchart TB
+    A --> B(((( <<<broken syntax>>>>
+"""
+
+
+def _write_md(path: Path, body: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(body, encoding="utf-8")
+
+
+def test_find_mermaid_blocks_discovers_fenced_blocks(tmp_path: Path) -> None:
+    md = tmp_path / "page.md"
+    _write_md(
+        md,
+        f"""# Heading
+
+Some text.
+
+```mermaid
+{_VALID_MERMAID.strip()}
+```
+
+More text.
+
+```mermaid
+{_INVALID_MERMAID.strip()}
+```
+""",
+    )
+    blocks = find_mermaid_blocks([tmp_path])
+    assert len(blocks) == 2
+    assert all(isinstance(b, MermaidBlock) for b in blocks)
+    assert blocks[0].kind == "flowchart"
+    # Line numbers are 1-indexed and point at the opening fence
+    assert blocks[0].line == 5
+    assert blocks[1].line == 12
+
+
+def test_find_mermaid_blocks_skips_excluded_dirs(tmp_path: Path) -> None:
+    # output/ is on the default exclude list
+    bad = tmp_path / "output" / "ignored.md"
+    _write_md(bad, "```mermaid\nflowchart\n```\n")
+    good = tmp_path / "docs" / "live.md"
+    _write_md(good, "```mermaid\nflowchart\n```\n")
+    blocks = find_mermaid_blocks([tmp_path])
+    assert len(blocks) == 1
+    assert blocks[0].file == good
+
+
+def test_find_mermaid_blocks_handles_unicode(tmp_path: Path) -> None:
+    md = tmp_path / "u.md"
+    _write_md(md, "```mermaid\ngraph LR\n  A --> B\n```\n# heading 文字\n")
+    blocks = find_mermaid_blocks([tmp_path])
+    assert len(blocks) == 1
+    assert blocks[0].kind == "graph"
+
+
+def test_validate_blocks_raises_when_mmdc_missing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """If mmdc is on PATH but we point to a non-existent path, a clear error fires."""
+    md = tmp_path / "p.md"
+    _write_md(md, "```mermaid\nflowchart\n  A-->B\n```\n")
+    blocks = find_mermaid_blocks([tmp_path])
+    assert blocks
+    with pytest.raises(RuntimeError, match="mmdc"):
+        validate_blocks(blocks, mmdc_path="/nonexistent/path/to/mmdc")
+
+
+@pytest.mark.skipif(not mmdc_available(), reason="mmdc (mermaid-cli) not installed")
+def test_validate_blocks_passes_valid_diagram(tmp_path: Path) -> None:
+    md = tmp_path / "p.md"
+    _write_md(md, f"```mermaid\n{_VALID_MERMAID}```\n")
+    blocks = find_mermaid_blocks([tmp_path])
+    failures = validate_blocks(blocks)
+    assert failures == []
+
+
+@pytest.mark.skipif(not mmdc_available(), reason="mmdc (mermaid-cli) not installed")
+def test_validate_blocks_flags_invalid_diagram(tmp_path: Path) -> None:
+    md = tmp_path / "p.md"
+    # Use clearly-broken mermaid that mmdc rejects.
+    body = "flowchart TB\n  A -->\n  --> ?? <<<\n"
+    _write_md(md, f"```mermaid\n{body}```\n")
+    blocks = find_mermaid_blocks([tmp_path])
+    failures = validate_blocks(blocks)
+    assert len(failures) == 1
+    assert isinstance(failures[0], ValidationFailure)
+    assert failures[0].block.file == md
+    assert failures[0].returncode != 0
+    assert "mermaid" in failures[0].format().lower()
+
+
+def test_validate_blocks_empty_input_returns_empty_list() -> None:
+    assert validate_blocks([]) == []
+
+
+def test_mermaid_block_dataclass_is_frozen() -> None:
+    block = MermaidBlock(file=Path("/x.md"), line=1, kind="flowchart", body="A-->B")
+    with pytest.raises(Exception):  # frozen dataclass
+        block.line = 2  # type: ignore[misc]

@@ -8,7 +8,15 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 
 - `executor.py` - pipeline execution
 - `dag.py` - stage dependency graph helpers
-- `multi_project.py` - multi-project orchestration
+- `multi_project.py` - multi-project orchestration (serial)
+- `multi_project_parallel.py` - bounded-parallel multi-project orchestration
+  via `concurrent.futures.ProcessPoolExecutor`. Public entry point:
+  `run_projects_in_parallel(...) -> ParallelRunResult`. Worker count defaults
+  to `min(N_projects, os.cpu_count() or 1)` and is overridable by the
+  `MULTI_PROJECT_MAX_WORKERS` environment variable or by passing
+  `max_workers=N` explicitly. Each worker redirects FD 1/2 to its
+  per-project `projects/<name>/output/logs/pipeline.log` so the parent
+  never sees interleaved output.
 - `resume.py` - checkpoint resume helpers
 - `stages.py` - stage definitions
 - `stage_monitor.py` - stage resource monitoring

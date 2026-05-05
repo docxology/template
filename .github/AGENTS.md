@@ -57,6 +57,7 @@ flowchart TB
 | 4b | `fep-lean` — Lean/Lake + Open Gauss (`gauss`) | verify-no-mocks | 3.12 | ubuntu |
 | 5 | `validate` — manuscript markdown | lint | 3.12 | ubuntu |
 | 6 | `security` — pip-audit + bandit | lint | 3.12 | ubuntu |
+| 6b | `docs-lint` — mermaid + cross-links + consistency | lint | 3.12 | ubuntu |
 | 7 | `performance` — import ≤ 5 s | test-infra + test-project | 3.12 | ubuntu |
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when `hashFiles('projects/fep_lean/lean/lean-toolchain') != ''` (otherwise skipped). When fep_lean lives under `projects_in_progress/`, the guard evaluates to empty and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate CI.
@@ -88,7 +89,36 @@ Triggered by `v*.*.*` tag pushes. Generates a commit-based changelog and creates
 | Infrastructure coverage | ≥ 60% |
 | Project coverage | ≥ 90% |
 | Bandit MEDIUM+ | zero findings |
+| Mermaid diagrams render under `mmdc` | zero failures |
+| Markdown cross-links resolve on disk | zero broken links |
+| `N Python (sub)packages` claims match reality | zero stale counts |
+| Rotating projects in long-lived docs are conditional | zero ghost references |
 | Import time | ≤ 5 s |
+
+## Local Pre-Push Parity (`.pre-commit-config.yaml`)
+
+The repo ships a [`.pre-commit-config.yaml`](../.pre-commit-config.yaml) with
+**three pre-push hooks** that mirror the corresponding CI gates so pushes that
+would fail CI fail locally first:
+
+| Hook id | Mirrors CI step | Typical runtime |
+| --- | --- | :-: |
+| `pre-push-quick` | `verify-no-mocks` + a fast subset of `test-infra` (`tests/infra_tests/git_hook_smoke/`) | ~3 s |
+| `bandit-quick` | `security` job's `Code security scan (Bandit MEDIUM+ severity)` step (same `-ll` severity, same `infrastructure/ scripts/` scope, same exclude list, plus `-c bandit.yaml`) | ~3 s |
+| `skills-check` | `infrastructure.skills check` (catches stale `.cursor/skill_manifest.json`) | <1 s |
+
+The lint hooks (`ruff-ci`, `mypy-ci`) run on the **pre-commit** stage, not
+pre-push, to keep `git commit` fast. A separate manual-stage `bandit-low`
+hook provides a stricter LOW+MEDIUM+HIGH sweep against `bandit.yaml`'s
+allow-list — invoke with `pre-commit run --hook-stage manual bandit-low`. To
+run the full pre-push gate manually:
+
+```bash
+pre-commit run --hook-stage pre-push --all-files
+```
+
+A new MEDIUM Bandit finding fails `git push` locally with the same scope and
+severity as the CI `security` job, so contributors hear it before CI does.
 
 ## Branch Protection (Recommended)
 
@@ -109,6 +139,7 @@ required_status_checks:
     # - "fep_lean (gauss + lake)"
     - "Validate Manuscripts"
     - "Security Scan"
+    - "Documentation Lint"
     - "Performance Check"
 required_pull_request_reviews:
   required_approving_review_count: 1
@@ -137,7 +168,9 @@ uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ --cov=projects
 
 # Security scan locally
 uv run pip-audit
-uv run bandit -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress
+# Strict LOW+MEDIUM+HIGH sweep against the documented allow-list:
+uv run bandit -c bandit.yaml -r --severity-level low infrastructure/ scripts/ --exclude projects_archive,projects_in_progress
 
 # Check workflow status via GitHub CLI
 gh workflow list

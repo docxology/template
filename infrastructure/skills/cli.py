@@ -9,6 +9,7 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 
+from .check_all_exports import run_cli as run_all_exports_audit
 from .discovery import (
     discover_skills,
     manifest_matches_discovery,
@@ -49,9 +50,24 @@ def cmd_check(args: argparse.Namespace) -> int:
     ok, msg = manifest_matches_discovery(root, mpath, search_roots=args.roots)
     if ok:
         logger.info("%s", msg)
-        return 0
-    logger.error("%s", msg)
-    return 1
+        manifest_rc = 0
+    else:
+        logger.error("%s", msg)
+        manifest_rc = 1
+
+    if not getattr(args, "all_exports", False):
+        return manifest_rc
+
+    audit_root = (root / "infrastructure").resolve()
+    audit_rc = run_all_exports_audit(audit_root)
+    return manifest_rc or audit_rc
+
+
+def cmd_check_all_exports(args: argparse.Namespace) -> int:
+    """Run the ``__all__`` audit on a directory (default: ``infrastructure/``)."""
+    root = _repo_root_from_args(args)
+    audit_root = (root / args.audit_root).resolve() if args.audit_root else (root / "infrastructure").resolve()
+    return run_all_exports_audit(audit_root)
 
 
 def _add_shared_cli_args(p: argparse.ArgumentParser) -> None:
@@ -100,7 +116,24 @@ def build_parser() -> argparse.ArgumentParser:
         default=".cursor/skill_manifest.json",
         help="Manifest path relative to repo root unless absolute",
     )
+    p_check.add_argument(
+        "--all-exports",
+        action="store_true",
+        help=("Also run the __all__ audit on infrastructure/ (modules that re-export symbols must declare __all__)."),
+    )
     p_check.set_defaults(func=cmd_check)
+
+    p_audit = sub.add_parser(
+        "check-all-exports",
+        help="Audit every public Python module under <audit-root> for missing __all__",
+    )
+    _add_shared_cli_args(p_audit)
+    p_audit.add_argument(
+        "--audit-root",
+        default="infrastructure",
+        help="Directory under repo root to audit (default: infrastructure)",
+    )
+    p_audit.set_defaults(func=cmd_check_all_exports)
 
     return parser
 

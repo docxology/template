@@ -58,7 +58,7 @@ uv run python projects/template_code_project/scripts/z_generate_manuscript_varia
 
 **Command**:
 ```bash
-uv run python scripts/03_render_pdf.py --project code_project
+uv run python scripts/03_render_pdf.py --project template_code_project
 ```
 
 **Inputs**: `output/manuscript/*.md` (substituted) + `manuscript/config.yaml` + `manuscript/preamble.md` + `manuscript/references.bib`
@@ -70,10 +70,10 @@ uv run python scripts/03_render_pdf.py --project code_project
 | `infrastructure/rendering/pdf_renderer.py` | Orchestrates Pandoc → pdflatex pipeline |
 | `infrastructure/rendering/_pdf_latex_helpers.py` | LaTeX package validation and preamble injection |
 | `infrastructure/rendering/manuscript_discovery.py` | Discovers and orders manuscript section files |
-| `infrastructure/core/config_loader.py` | Reads `manuscript/config.yaml` for title, authors, metadata |
+| `infrastructure/core/config/loader.py` | Reads `manuscript/config.yaml` for title, authors, metadata |
 
 **Outputs**:
-- `output/pdf/code_project_combined.pdf` — final publication PDF
+- `output/pdf/template_code_project_combined.pdf` — final publication PDF
 - `output/tex/` — LaTeX intermediates (`.tex`, `.aux`, `.log`)
 - `output/slides/` — Per-section Beamer slide PDFs (one per manuscript section)
 - `output/web/` — HTML versions of each section
@@ -84,7 +84,7 @@ uv run python scripts/03_render_pdf.py --project code_project
 
 **Command**:
 ```bash
-uv run python scripts/05_copy_outputs.py --project code_project
+uv run python scripts/05_copy_outputs.py --project template_code_project
 ```
 
 **Output**: Final PDF and figures copied to `output/code_project/` at the repository root (used by CI artifact upload and the multi-project executive report).
@@ -93,7 +93,7 @@ uv run python scripts/05_copy_outputs.py --project code_project
 
 | YAML Key | Controls | Consumed by |
 |---|---|---|
-| `paper.title` | PDF title page and page headers | `infrastructure/core/config_loader.py` → `pdf_renderer.py` |
+| `paper.title` | PDF title page and page headers | `infrastructure/core/config/loader.py` → `pdf_renderer.py` |
 | `paper.version` | `{{CONFIG_VERSION}}` token | `z_generate_manuscript_variables.py` |
 | `authors[*]` | Author list on title page | `pdf_renderer.py` + `{{CONFIG_FIRST_AUTHOR}}` |
 | `publication.doi` | DOI on title page and citations | `pdf_renderer.py` |

@@ -2,11 +2,15 @@
 #   ruff check + ruff format on `infrastructure/` and `projects/*/src/`
 #   mypy on the same paths (see `[tool.mypy]` in pyproject.toml)
 #
-# Pre-push (fast): no-mocks script + pytest on `tests/infra_tests/git_hook_smoke/` only.
-# Full infra tests run in CI (`test-infra`); collecting all of `tests/infra_tests/` here
-# is too slow for every push (~thousands of tests).
+# Pre-push (fast): no-mocks script + pytest on `tests/infra_tests/git_hook_smoke/`,
+# Bandit MEDIUM+ on the same scope as the CI `security` job, and a stale-manifest
+# check via `infrastructure.skills check`. Full infra tests run in CI
+# (`test-infra`); collecting all of `tests/infra_tests/` here is too slow for
+# every push (~thousands of tests).
 #
-# Manual: `pre-commit run --all-files --hook-stage manual`
+# Manual: `pre-commit run --all-files --hook-stage manual` (also runs the
+# strict `bandit-low` pass, which mirrors the LOW-severity sweep allowed by
+# `bandit.yaml`).
 
 repos:
   - repo: local
@@ -56,5 +60,85 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-push, manual]
+        always_run: true
+        verbose: true
+
+      # Mirrors the CI `security` job's Bandit step
+      # (.github/workflows/ci.yml — "Code security scan (Bandit MEDIUM+ severity)").
+      # Same scope and severity gate (`-ll` = MEDIUM+); fails the push when a new
+      # MEDIUM/HIGH finding lands so contributors hear it locally before CI does.
+      # `-c bandit.yaml` applies the documented LOW-severity allow-list policy.
+      - id: bandit-quick
+        name: bandit MEDIUM+ (CI scope)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - >-
+            uv run bandit -c bandit.yaml -r -ll
+            infrastructure/ scripts/
+            --exclude projects_archive,projects_in_progress
+            -q
+        language: system
+        pass_filenames: false
+        stages: [pre-push, manual]
+        always_run: true
+        verbose: true
+
+      # Catches drift in `.cursor/skill_manifest.json` vs the on-disk skill
+      # tree. Cheap (~0.2 s); runs before every push so a stale manifest never
+      # rides into main.
+      - id: skills-check
+        name: infrastructure.skills check (manifest freshness)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - uv run python -m infrastructure.skills check
+        language: system
+        pass_filenames: false
+        stages: [pre-push, manual]
+        always_run: true
+        verbose: true
+
+      # Audits every public Python module under `infrastructure/` for missing
+      # `__all__` on re-exporting umbrella modules. Prevents regression of the
+      # `[attr-defined]` mypy class of bug — see docs/rules/api_design.md.
+      # Cheap (~0.2 s); runs before every push and on the lint hook stage.
+      - id: all-exports-check
+        name: infrastructure.skills check-all-exports
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - uv run python -m infrastructure.skills check-all-exports
+        language: system
+        pass_filenames: false
+        stages: [pre-push, manual]
+        always_run: true
+        verbose: true
+
+      # Strict pass: LOW + MEDIUM + HIGH against `bandit.yaml`'s allow-list.
+      # Manual-stage only (run with `pre-commit run --hook-stage manual
+      # bandit-low`) — too noisy for every push, but kept here so the
+      # invocation stays in lockstep with the documented policy.
+      - id: bandit-low
+        name: bandit LOW (allow-listed via bandit.yaml)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - >-
+            uv run bandit -c bandit.yaml -r --severity-level low
+            infrastructure/ scripts/
+            --exclude projects_archive,projects_in_progress
+            -q
+        language: system
+        pass_filenames: false
+        stages: [manual]
         always_run: true
         verbose: true

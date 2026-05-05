@@ -1,18 +1,24 @@
 # Triple-Check Documentation Improvement Report
 
-**Author:** Hermes Agent  
-**Date:** 2026-04-27  
-**Last Verified:** 2026-05-03  
-**Review Scope:** `docs/` (165 Markdown files, ~42k lines)  
-**Review Depth:** 15 automated passes + manual inspection  
-**Status:** ✅ Production-grade with all critical issues resolved (re-verified 2026-05-03)
+**Author:** Hermes Agent
+**Date:** 2026-04-27
+**Last verified:** 2026-05-04
+**Review Scope:** `docs/` (165 Markdown files, ~42k lines)
+**Review Depth:** 15 automated passes + manual inspection
+**Status:** Production-grade with all critical issues resolved (re-verified
+2026-05-04)
 
-> **2026-05-03 remediation note:** A follow-up pass found one residual issue from
-> the original report — `docs/rules/documentation_standards.md` line 410 still
-> contained the bare `configuration.md` link instead of
-> `../operational/config/configuration.md`. That was corrected on 2026-05-03 in
-> the same change set that updated this report. All other claims in this
-> document were spot-checked and remain accurate.
+> **2026-05-04 verification note:** Spot-checked every fix listed in
+> "Detailed Fixes Applied" against the live tree. All 7 broken-link fixes
+> still hold; the 3 factual corrections (glossary stage list, cheatsheet
+> `--cov` path, cheatsheet import example) are present in their fixed
+> form. Cross-references added in the discoverability pass remain valid.
+>
+> **2026-05-03 remediation note:** A follow-up pass found one residual issue
+> from the original report — `docs/rules/documentation_standards.md` line 410
+> still contained the bare `configuration.md` link instead of
+> `../operational/config/configuration.md`. That was corrected on 2026-05-03.
+> All other claims in this document were spot-checked and remain accurate.
 
 ---
 
@@ -155,6 +161,17 @@ The documentation is:
 - **Agent-Ready:** AGENTS.md files in place, skills manifest up-to-date, links valid
 
 **Ready for production, CI, and AI agent consumption.**
+
+---
+
+## See Also
+
+- [`../../TO-DO.md`](../../TO-DO.md) — active backlog (M7 covers periodic
+  freshness sweeps of audit reports)
+- [`documentation-review-report.md`](documentation-review-report.md) — the
+  source review whose findings this report tracks
+- [`documentation-review-summary.md`](documentation-review-summary.md) —
+  one-page summary of remediation status
 
 ---
 

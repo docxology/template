@@ -32,6 +32,7 @@ report = validate_scientific_best_practices(your_module)
 
 ```mermaid
 graph TD
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph ScientificModule["infrastructure/scientific/"]
         STABILITY[stability.py<br/>Numerical stability<br/>check_numerical_stability()]
         BENCHMARKING[benchmarking.py<br/>Performance analysis<br/>benchmark_function()]

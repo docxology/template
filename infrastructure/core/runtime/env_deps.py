@@ -157,3 +157,11 @@ def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
 
 
 from infrastructure.core.install_commands import build_install_commands  # noqa: E402, F401
+
+
+__all__ = [
+    "build_install_commands",
+    "check_build_tools",
+    "check_dependencies",
+    "install_missing_packages",
+]

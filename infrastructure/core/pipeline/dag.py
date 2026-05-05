@@ -24,7 +24,12 @@ logger = get_logger(__name__)
 
 @dataclass
 class StageDefinition:
-    """A single stage parsed from ``pipeline.yaml``."""
+    """A single stage parsed from ``pipeline.yaml``.
+
+    ``failure_mode`` is documentation-only metadata: it is rendered into
+    generated stage tables (see :mod:`infrastructure.documentation.stage_table`)
+    and never interpreted by the executor.
+    """
 
     name: str
     script: str | None = None
@@ -33,6 +38,7 @@ class StageDefinition:
     allow_skip: bool = False
     depends_on: list[str] = field(default_factory=list)
     tags: list[str] = field(default_factory=list)
+    failure_mode: str | None = None
 
 
 class PipelineDAG:
@@ -70,6 +76,7 @@ class PipelineDAG:
                     allow_skip=entry.get("allow_skip", False),
                     depends_on=entry.get("depends_on", []),
                     tags=entry.get("tags", []),
+                    failure_mode=entry.get("failure_mode"),
                 )
             )
         logger.debug(f"Parsed {len(definitions)} stage definition(s) from {yaml_path.name}")
@@ -89,6 +96,7 @@ class PipelineDAG:
                     allow_skip=entry.get("allow_skip", False),
                     depends_on=entry.get("depends_on", []),
                     tags=entry.get("tags", []),
+                    failure_mode=entry.get("failure_mode"),
                 )
             )
         return cls(definitions)

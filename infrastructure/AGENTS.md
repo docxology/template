@@ -11,6 +11,7 @@ Each subpackage has a `SKILL.md` file (YAML frontmatter) for agent skill discove
 
 ```mermaid
 flowchart TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     INFRA[/infrastructure//<br/>SKILL.md · top-level infrastructure skill]
 
     INFRA --> CORE[/core/<br/>Foundation utilities/]
@@ -310,6 +311,36 @@ flowchart TB
   - `AGENTS.md` - Detailed documentation
   - `README.md` - Quick reference
 - All public APIs have type hints and docstrings
+
+### 4. Mandatory `__all__` for Re-Exporting Modules (MED5)
+
+Every module that re-exports symbols at module top level **MUST** declare an explicit `__all__`. Concretely: any `.py` file with at least one top-level `from X import Y  # noqa: F401` statement (the canonical marker for an intentional backwards-compat re-export) is a re-exporter and must list its public surface.
+
+**Why:**
+- `mypy --strict` flags every downstream caller of an undeclared re-export with `[attr-defined]`. A single missing `__all__` cascades to dozens of false-positives.
+- `from module import *` honours `__all__`; without it the public surface is implicit and easy to break.
+- An explicit list documents intent and lets reviewers audit the public API at a glance.
+
+**Audit:**
+
+```bash
+# Run locally
+uv run python -m infrastructure.skills check-all-exports
+
+# Via the unified skills CLI
+uv run python -m infrastructure.skills check --all-exports
+```
+
+**Gates:**
+- CI: the `Lint & Type Check` job in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs the audit after `mypy`.
+- Pre-push: the `all-exports-check` hook in [`.pre-commit-config.yaml`](../.pre-commit-config.yaml).
+
+**Conventions:**
+- Group `__all__` entries by source submodule with `#` comment headers.
+- Do **not** add `__all__` to leaf modules that don't re-export — bogus lists go stale, and the audit ignores them.
+- Filenames starting with `_` are private and skipped by the audit; `__init__.py` is treated as public.
+
+See [`docs/rules/api_design.md`](../docs/rules/api_design.md#mandatory-__all__-for-re-exporting-modules-med5) for the full convention and worked example.
 
 ## Module Organization
 

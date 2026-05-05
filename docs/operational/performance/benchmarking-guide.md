@@ -217,7 +217,72 @@ When performance characteristics change:
 
 ---
 
-## 12. Continuous Monitoring
+## 12. Project-setup-hook + analysis-pipeline benchmarks
+
+**Location:** [`tests/infra_tests/bench/`](../../../tests/infra_tests/bench/)
+**Marker:** `@pytest.mark.bench` — skipped by default; opt-in only.
+**Driver:** `pytest-benchmark` ≥ 5 (declared in `pyproject.toml#[dependency-groups].dev`).
+**Policy:** Zero-mocks. Real `tmp_path` filesystems, real subprocesses, real `pytest-benchmark` fixtures.
+
+### Invocation
+
+```bash
+uv run pytest tests/infra_tests/bench/ -m bench --benchmark-only \
+    --benchmark-min-rounds=3 --benchmark-json=bench-results.json --timeout=180
+```
+
+CI (`.github/workflows/ci.yml#performance`) runs this step after the
+import-timer check and uploads `bench-results.json` as the `bench-results`
+artifact. The bench step is informational only (`|| true`); it cannot fail
+the build.
+
+### What each bench measures
+
+| Bench | Subject | Operation |
+| --- | --- | --- |
+| A | `find_setup_hook` (no-hook miss) | `Path.is_file()` lookups on a hook-less project |
+| B | `find_setup_hook` (Python-hook hit) | `Path.is_file()` resolving to `setup_hook.py` |
+| C | `run_project_setup_hook` (no hook) | Pure no-op early return |
+| D | `run_project_setup_hook` (trivial Python hook) | Real `subprocess.run` of an exit-0 hook |
+| E1 | `run_analysis_pipeline` N=1 | One trivial script via real subprocess |
+| E5 | `run_analysis_pipeline` N=5 | Five trivial scripts in sequence |
+| E25 | `run_analysis_pipeline` N=25 | Twenty-five trivial scripts in sequence |
+
+### Expected order of magnitude (macOS, Apple Silicon, Python 3.12)
+
+| Bench | Median |
+| --- | --- |
+| `find_setup_hook` (hit) | ~8 µs |
+| `find_setup_hook` (miss) | ~14 µs |
+| `run_project_setup_hook` (no hook) | ~15 µs |
+| `run_project_setup_hook` (trivial hook) | ~25 ms (interpreter startup) |
+| `run_analysis_pipeline` N=1 | ~30 ms |
+| `run_analysis_pipeline` N=5 | ~160 ms |
+| `run_analysis_pipeline` N=25 | ~800 ms |
+
+The setup-hook discovery functions sit comfortably in the µs regime —
+they are not pipeline-startup bottlenecks. The cost of *running* a hook
+or an analysis script is dominated by Python interpreter startup
+(~25 ms per `python script.py` fork). Linux runners typically read 2–3×
+slower for the subprocess-bound benches; the µs-regime discovery
+benches are platform-insensitive within a small constant.
+
+### When to look at the artifact
+
+* PR introduces new work into `find_setup_hook` / `run_project_setup_hook` /
+  `run_analysis_pipeline` / `build_analysis_script_cmd_and_env`.
+* PR changes how analysis-script subprocesses are constructed
+  (PYTHONPATH, env, cmd argv).
+* You suspect a regression in pipeline startup time and want a
+  before/after delta.
+
+Compare medians across runs — `pytest-benchmark` writes the structured
+JSON the artifact preserves; the CLI table prints µs / ms / s with
+`Min / Max / Mean / StdDev / Median / IQR`.
+
+---
+
+## 13. Continuous Monitoring
 
 For long-running servers or repeated executions, consider:
 

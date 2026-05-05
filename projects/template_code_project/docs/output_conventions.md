@@ -33,7 +33,7 @@ flowchart TB
     FIG --> FIG_F[convergence_plot · step_size_sensitivity ·<br/>convergence_rate_comparison · algorithm_complexity ·<br/>performance_benchmark · stability_analysis]
     DATA --> DATA_F[optimization_results.csv ·<br/>manuscript_variables.json ·<br/>stability_analysis.json · performance_benchmark.json · ...]
     REP --> REP_F[analysis_dashboard.html · output_statistics.json ·<br/>validation_report.json · telemetry.json]
-    PDF --> PDF_F[code_project_combined.pdf]
+    PDF --> PDF_F[template_code_project_combined.pdf]
     WEB --> WEB_F[index.html · section pages...]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -65,15 +65,15 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 4. **Render PDF** — converts substituted markdown to PDF via Pandoc/LaTeX.
    ```bash
-   uv run python scripts/03_render_pdf.py --project code_project
+   uv run python scripts/03_render_pdf.py --project template_code_project
    ```
    **Outputs**: `pdf/`, `slides/`, `web/`, `tex/`
 
-5. **Copy final deliverables** — copies PDF and figures to `output/code_project/` (used by CI).
+5. **Copy final deliverables** — copies PDF and figures to `output/template_code_project/` (used by CI).
    ```bash
-   uv run python scripts/05_copy_outputs.py --project code_project
+   uv run python scripts/05_copy_outputs.py --project template_code_project
    ```
-   **Outputs**: final deliverables at repository-level `output/code_project/`
+   **Outputs**: final deliverables at repository-level `output/template_code_project/`
 
 ## Version-Control Policy
 
@@ -105,7 +105,7 @@ To add a new figure or data product:
 | output/figures/convergence_plot.png | Gradient descent trajectories | generate_convergence_plot() | 1 |
 | output/data/optimization_results.csv | Per-step-size results table | save_optimization_results() | 1 |
 | output/manuscript/03_results.md | Resolved results section | z_generate_manuscript_variables.py | 2 |
-| output/pdf/code_project_combined.pdf | Final publication PDF | 03_render_pdf.py | 3 |
+| output/pdf/template_code_project_combined.pdf | Final publication PDF | 03_render_pdf.py | 3 |
 ```
 
 ## Troubleshooting

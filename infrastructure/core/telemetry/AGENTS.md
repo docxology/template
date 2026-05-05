@@ -9,15 +9,16 @@ Unified pipeline telemetry: bridges per-stage resource tracking (CPU, memory, I/
 ```mermaid
 flowchart LR
     TEL[/telemetry//]
-    TEL --> INIT[__init__.py<br/>Re-exports TelemetryCollector,<br/>TelemetryConfig, models]
+    TEL --> INIT[__init__.py<br/>Re-exports TelemetryCollector,<br/>TelemetryConfig, models, rotate]
     TEL --> COL[collector.py<br/>TelemetryCollector · lifecycle + persistence]
     TEL --> CFG[config.py<br/>TelemetryConfig dataclass · YAML-loadable]
     TEL --> MOD[models.py<br/>StageTelemetry · PipelineTelemetry ·<br/>PerformanceWarning]
+    TEL --> RET[retention.py<br/>rotate · RotationResult · TELEMETRY_KEEP]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     class TEL d
-    class INIT,COL,CFG,MOD code
+    class INIT,COL,CFG,MOD,RET code
 ```
 
 ## Key Classes
@@ -29,6 +30,13 @@ flowchart LR
 | `StageTelemetry` | `models.py` | Per-stage metrics: timing, resources, diagnostic counts |
 | `PipelineTelemetry` | `models.py` | Full pipeline report with warnings and system info |
 | `PerformanceWarning` | `models.py` | Individual anomaly (slow stage / high memory / high CPU) |
+| `RotationResult` | `retention.py` | Frozen dataclass: `archived`, `pruned`, `kept` counts |
+
+## Public API
+
+| Function | Module | Purpose |
+| --- | --- | --- |
+| `rotate(reports_dir, *, keep=10, archive_subdir=".history") -> RotationResult` | `retention.py` | Move the previous run's `telemetry.json` into `<reports_dir>/<archive_subdir>/telemetry-<ts>.json` and prune archived files beyond `keep`. Idempotent. Honors `TELEMETRY_KEEP` env var when called from `TelemetryCollector._persist_report()`. |
 
 ## Integration Points
 
@@ -54,9 +62,22 @@ telemetry:
 
 | File | Format | Contents |
 | --- | --- | --- |
-| `reports/telemetry.json` | JSON | Full structured report |
-| `reports/telemetry.txt` | Text | Human-readable summary table |
+| `reports/telemetry.json` | JSON | Full structured report (current run) |
+| `reports/telemetry.txt` | Text | Human-readable summary table (current run) |
+| `reports/.history/telemetry-<unix_ts>.json` | JSON | Archived prior runs, oldest pruned beyond `TELEMETRY_KEEP` |
+
+## Retention
+
+| Env var | Default | Behaviour |
+| --- | --- | --- |
+| `TELEMETRY_KEEP` | `10` | Maximum archived `telemetry.json` files retained in `<reports_dir>/.history/`. `0` = archive then prune everything. Negative or non-integer values fall back to the default. |
+
+The collector calls `rotate()` from `_persist_report()` *before* writing
+the new report so the in-flight file is never affected. Failures inside
+`rotate()` are logged at WARNING and never block the new write.
 
 ## Testing
 
-Tests: `tests/infra_tests/core/test_telemetry.py` — 21 tests, Zero-Mock.
+Tests:
+- `tests/infra_tests/core/test_telemetry.py` — 21 tests, Zero-Mock.
+- `tests/infra_tests/core/telemetry/test_retention.py` — 10 tests for `rotate()` (synthetic 12-run pruning, idempotence, edge cases, collision handling, end-to-end collector integration).

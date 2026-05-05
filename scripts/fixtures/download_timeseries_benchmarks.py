@@ -48,11 +48,12 @@ def try_download_m4() -> bool:
 
     try:
         print("⬇ Loading M4 monthly dataset from Hugging Face...")
-        # The dataset identifier: "hub/M4" or "m4" - need to check actual name
-        # Common: "m4" is on Hugging Face as "m4"
-        # Actually M4 is available as: "m4" or "haway/m4"? Let's try "m4"
-        # The M4 dataset is in hhttps://huggingface.co/datasets/m4
-        dataset = load_dataset("m4", split="monthly", streaming=True)
+        # nosec B615 — research fixture: streaming-mode load of the public
+        # M4 forecasting dataset for benchmark seed data only. No model
+        # weights or executable assets. The hub-side dataset has a stable
+        # schema; if `datasets` later supports content-addressed pinning by
+        # SHA we will adopt it here.
+        dataset = load_dataset("m4", split="monthly", streaming=True)  # nosec B615
         # Streaming to avoid downloading full dataset (which is huge)
         print(f"✓ Dataset loaded (streaming). Sampling {NUM_SERIES} series...")
 

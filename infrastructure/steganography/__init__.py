@@ -29,7 +29,10 @@ Usage::
 
 from __future__ import annotations
 
-from infrastructure.steganography.config import SteganographyConfig
+from infrastructure.steganography.config import (
+    SteganographyConfig,
+    resolve_build_timestamp,
+)
 from infrastructure.steganography.core import (
     SteganographyProcessor,
     embed_steganography,
@@ -41,4 +44,5 @@ __all__ = [
     "SteganographyProcessor",
     "embed_steganography",
     "process_pdf",
+    "resolve_build_timestamp",
 ]

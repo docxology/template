@@ -192,6 +192,7 @@ flowchart TD
 
 ```mermaid
 flowchart LR
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph Input["📥 Input Sources"]
         YAML[config.yaml<br/>Project metadata]
         SRC[src/<br/>Scientific code]

@@ -1,1 +1,169 @@
-[{'Symptom**': 'The rendered PDF contains literal `{{TOKEN_NAME'}, {' projects/template_code_project/output/manuscript/ | grep -v ".json': 4.0, 'manuscript_variables.json`': 'bash\ncat projects/template_code_project/output/data/manuscript_variables.json | jq .\n```\n\n5. If the token looks like `CONFIG_*` or `RESULT_*`', 'scripts/z_generate_manuscript_variables.py': 'build_variables()`. Add it if missing.\n\n6. If the token is `{{VERSION'}, {'Symptom**': 'After editing `manuscript/config.yaml`', 'analysis)': 'bash\nuv run python projects/template_code_project/scripts/optimization_analysis.py\n```\n\n3. Confirm the figure registry was updated:\n```bash\ncat projects/template_code_project/output/figures/figure_registry.json | jq .\n```\n\n---\n\n## Figure Reference Shows', ' in PDF\n\n**Symptom**: `Figure ???` appears instead of `Figure 1`.\n\n**Cause**: The `\ref{fig:label}` label does not match any registered figure, or the figure inclusion was not processed before compilation.\n\n**Fix**:\n\n1. Verify `03_results.md` contains the image with the correct label:\n```markdown\n![Convergence plot](../output/figures/convergence_plot.png){#fig:convergence}\n```\n\n2. Verify the prose reference uses the same label:\n```markdown\nFigure \ref{fig:convergence} shows…\n```\n\n3. Re-run the pipeline from step 2 through step 4:\n```bash\nuv run python projects/template_code_project/scripts/optimization_analysis.py\nuv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py\nuv run python scripts/03_render_pdf.py --project code_project\n```\n\n---\n\n## BibTeX / Citation Errors During PDF Render\n\n**Symptom**: `pdflatex` or `biber` fails with "undefined citation" or "malformed entry': 'Cause**: Invalid entry in `manuscript/references.bib`.\n\n**Fix**:\n\n1. Check the LaTeX log in `output/tex/` for the exact error line:\n```bash\ncat projects/template_code_project/output/tex/_combined_manuscript.log | grep -A5', 'Citation.*undefined': 2.0, 'file': 'bash\npython -c', "bibtexparser.load(open('projects/template_code_project/manuscript/references.bib'))": 'or use an online BibTeX validator.\n\n3. Ensure all required fields are present (`author`', 'error|failed|exception': 'tmp/analysis.log\n```\n\n3. Verify output directories were created:\n```bash\nls -la projects/template_code_project/output/\n```\n\n4. Check `manuscript/config.yaml` for valid YAML syntax:\n```bash\npython -c', "yaml.safe_load(open('projects/template_code_project/manuscript/config.yaml'))": 'Correct any `yaml.parser.ParserError` or `yaml.scanner.ScannerError`.\n\n---\n\n## Step Size Changes Not Reflected in Manuscript\n\n**Symptom**: You changed `experiment.step_sizes` in `config.yaml` but the PDF still shows old values.\n\n**Cause**: You did not re-run the variable hydration after changing config.\n\n**Fix**: Always re-run phases 2–4 after any config change:\n```bash\nuv run python projects/template_code_project/scripts/optimization_analysis.py  # uses config\nuv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py  # reads config\nuv run python scripts/03_render_pdf.py --project code_project  # renders with new values\n```\n\n---\n\n## `uv` Command Not Found\n\n**Symptom**: `zsh: command not found: uv`.\n\n**Fix**: Install `uv`:\n```bash\n# macOS/Linux\ncurl -LsSf https://astral.sh/uv/install.sh | sh\n\n# Or via pip\npip install uv\n```\n\nEnsure `~/.local/bin` or the install location is on your `PATH`.\n\n---\n\n## See Also\n\n- [`output_conventions.md`](output_conventions.md) — Output directory layout and regeneration rules\n- [`docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — 4-phase pipeline with config controls\n- [`docs/syntax_guide.md`](../docs/syntax_guide.md) — Token reference and figure registration details\n- [`docs/quickstart.md`](quickstart.md) — Basic run commands', 'lines': "bash\nuv run pytest projects/template_code_project/tests/ \n    --cov=projects/template_code_project/src \n    --cov-report=term-missing \n    -v\n```\n\n2. Add tests that exercise the uncovered branches or conditions.\n\n3. Re-run until coverage ≥90% and all 42 tests pass.\n\n---\n\n## `optimization_analysis.py` Fails to Import `optimizer`\n\n**Symptoms**: `ModuleNotFoundError: No module named 'optimizer'`.\n\n**Cause**: The script expects `src/` to be on `sys.path`", 'Fix**': 'Run tests in parallel:\n  ```bash\n  uv run pytest projects/template_code_project/tests/ -n auto\n  ```\n- Avoid stray `print` statements in `src/optimizer.py`', 'src': 'from optimizer import …\n```\n\nIf the lines are missing', 'output': 'bash\n# After phases 1–2', 'manuscript': 'open projects/template_code_project/output/web/index.html\n```\n\n---\n\n## Sluggish Test Execution\n\n**Cause**: Performance benchmarks use real timing with `time.perf_counter` and multiple repeats', 'CI)': 'bash\n  uv run pytest projects/template_code_project/tests/ -k', 'Performance': '--', 'mistakes**': 'Indentation uses tabs instead of spaces.\n- Trailing commas (JSON style) are invalid in YAML.\n- Unclosed quotes or brackets.\n- Commented example lines accidentally uncommented.\n\n**Fix**: Validate the file before running:\n```bash\npython -c'}]
+# Troubleshooting
+
+Symptom-driven recipes for the most common breakage modes when running this project.
+
+## Literal `{{TOKEN_NAME}}` appears in the rendered PDF
+
+**Cause.** A placeholder in `manuscript/*.md` was not substituted because
+`scripts/z_generate_manuscript_variables.py` was not (re)run after the
+analysis stage, or the token is not defined in `generate_variables()`.
+
+**Fix.**
+
+1. Run the variable-hydration stage:
+   ```bash
+   uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+   ```
+2. Inspect the resolved values:
+   ```bash
+   cat projects/template_code_project/output/data/manuscript_variables.json | jq .
+   ```
+3. Re-render:
+   ```bash
+   uv run python scripts/03_render_pdf.py --project template_code_project
+   ```
+4. If the token is still literal, add it to `generate_variables()` in
+   `scripts/z_generate_manuscript_variables.py`.
+
+## Edited `manuscript/config.yaml` but the figures or PDF didn't change
+
+**Cause.** Stages 4-5 (analysis → render) were skipped or only the render
+stage ran (it does not re-execute `optimization_analysis.py`).
+
+**Fix.** Run the analysis stage first, then variables, then render:
+
+```bash
+uv run python projects/template_code_project/scripts/optimization_analysis.py
+uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+uv run python scripts/03_render_pdf.py --project template_code_project
+```
+
+Or just re-run the full pipeline:
+
+```bash
+uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+```
+
+## `Figure ???` in the rendered PDF
+
+**Cause.** The Pandoc-crossref `[@fig:label]` reference does not match
+any `{#fig:label}` anchor, or the figure inclusion was not resolved
+before compilation.
+
+**Fix.**
+
+1. Verify `manuscript/03_results.md` contains the image with the
+   correct anchor:
+   ```markdown
+   ![Caption.](../output/figures/convergence_plot.png){#fig:convergence}
+   ```
+2. Verify the prose reference uses the same label:
+   ```markdown
+   See [@fig:convergence] for the trajectories.
+   ```
+3. Re-run the analysis and render stages.
+
+## BibTeX / citation errors during PDF rendering
+
+**Symptom.** `xelatex` reports `Citation 'foo' on page X undefined` or
+`bibtex` flags a malformed entry.
+
+**Fix.**
+
+1. Look at the LaTeX log for the exact line:
+   ```bash
+   grep -nE "Citation|undefined|Error" \
+     projects/template_code_project/output/pdf/_combined_manuscript.log
+   ```
+2. Check the entry exists in `manuscript/references.bib` and is well-formed.
+3. Ensure all required BibTeX fields are present (`author`, `title`,
+   `year`, plus type-specific fields).
+
+## Analysis script aborts with a Python error
+
+**Fix.**
+
+1. Re-run with the full traceback visible:
+   ```bash
+   uv run python projects/template_code_project/scripts/optimization_analysis.py 2>&1 | tee /tmp/analysis.log
+   ```
+2. Check the output directory exists and is writable.
+3. Validate `manuscript/config.yaml`:
+   ```bash
+   uv run python -c "import yaml; yaml.safe_load(open('projects/template_code_project/manuscript/config.yaml'))"
+   ```
+
+## `uv` command not found
+
+**Fix.** Install `uv`:
+
+```bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# or
+pip install uv
+```
+
+Make sure `~/.local/bin` (or the install location) is on your `PATH`.
+
+## Coverage gate fails (under 90%)
+
+**Fix.**
+
+1. Find which lines are uncovered:
+   ```bash
+   uv run pytest projects/template_code_project/tests/ \
+       --cov=projects/template_code_project/src \
+       --cov-report=term-missing -v
+   ```
+2. Add tests covering the missing branches.
+3. Re-run until coverage ≥ 90% and all tests pass.
+
+## `optimization_analysis.py` fails to import `optimizer`
+
+**Symptom.** `ModuleNotFoundError: No module named 'optimizer'`.
+
+**Fix.** Run from the repository root and let the workspace handle paths:
+
+```bash
+uv run python projects/template_code_project/scripts/optimization_analysis.py
+```
+
+## Sluggish test execution
+
+**Cause.** Performance benchmarks use real timing with multiple
+repetitions; on a slow machine they can dominate the suite.
+
+**Fix.** Skip them for fast iteration:
+
+```bash
+uv run pytest projects/template_code_project/tests/ -k "not Performance"
+```
+
+Or run the suite in parallel:
+
+```bash
+uv run pytest projects/template_code_project/tests/ -n auto
+```
+
+## YAML parse error in `manuscript/config.yaml`
+
+**Common mistakes.**
+
+- Indentation uses tabs instead of spaces.
+- Trailing commas (JSON style) are invalid in YAML.
+- Unclosed quotes or brackets.
+
+**Fix.** Validate the file before running:
+
+```bash
+uv run python -c "import yaml; yaml.safe_load(open('projects/template_code_project/manuscript/config.yaml'))"
+```
+
+## See also
+
+- [`output_conventions.md`](output_conventions.md) — output directory layout and regeneration rules.
+- [`rendering_pipeline.md`](rendering_pipeline.md) — the four phases and their config controls.
+- [`syntax_guide.md`](syntax_guide.md) — manuscript token and cross-reference syntax.
+- [`quickstart.md`](quickstart.md) — basic run commands.
+- [`faq.md`](faq.md) — frequently asked questions.

@@ -502,12 +502,24 @@ def run_deep_search(
         # pass ``llm=None`` (which the script-level ``_build_llm_callable``
         # does when the LLM stack is unreachable).
         per_paper_summaries: dict[str, str] = {}
+        per_paper_failures: list[str] = []
         if config.llm_per_paper and llm is not None:
             for paper in result.papers:
                 key = citation_keys.get(paper.id, paper.id)
                 block = build_rich_paper_block(paper, max_fulltext=config.max_fulltext_chars)
                 prompt = DEEP_PROMPT.format(keyword=keyword, citation_key=key, paper_block=block)
-                per_paper_summaries[paper.id] = llm(prompt)
+                # Per-paper LLM failures (model unavailable, transient
+                # network error, prompt too long) must not abort the
+                # whole deep-search stage: a single uncooperative paper
+                # would otherwise discard the unified BibTeX, the
+                # aggregate report, and every successful summary.
+                # Failures are recorded in ``enrichment_log`` and the
+                # per-paper section is omitted; a `--no-llm` rerun then
+                # produces the same artefact set without summaries.
+                try:
+                    per_paper_summaries[paper.id] = llm(prompt)
+                except Exception as exc:  # noqa: BLE001
+                    per_paper_failures.append(f"{paper.id}: {exc}")
 
         kw_dir = output_dir / slug if write_outputs else None
         if write_outputs and kw_dir is not None:

@@ -35,6 +35,30 @@ The Documentation module provides tools for managing figures, images, and markdo
 - Markdown table generation from API entries
 - Marker-based content injection
 
+**stage_table.py**
+- Renders the canonical pipeline stage table from
+  `infrastructure/core/pipeline/pipeline.yaml`
+- Injects the rendered Markdown into long-lived docs between
+  `<!-- BEGIN:STAGE_TABLE -->` / `<!-- END:STAGE_TABLE -->` markers
+- Reuses `glossary_gen.inject_between_markers` for the marker round-trip
+- Idempotent: regenerating with no YAML change produces no diff
+
+**api_reference_gen.py**
+- Auto-generates `docs/reference/api-reference.md` from each
+  `infrastructure/<pkg>/__init__.py` `__all__` (single source of truth).
+- Pure AST: never imports user code. Resolves each `__all__` entry to
+  its source-module definition site, follows re-export chains
+  (`utils.py` → `setup.py`, etc.) up to 5 hops, and pulls the signature
+  + first docstring line.
+- Injects the rendered block between `<!-- BEGIN:API_REFERENCE -->` /
+  `<!-- END:API_REFERENCE -->` markers; hand-written prose stays above.
+- Driven by `scripts/generate_api_reference_doc.py` with `--write` and
+  `--check` modes; CI runs `--check` in the `validate` job and fails
+  on drift.
+- Deterministic: alphabetical ordering of packages and per-package
+  symbols. Idempotent: regenerating with no `__all__` change produces
+  no diff.
+
 ## Function Signatures
 
 ### figure_manager.py
@@ -446,6 +470,106 @@ def inject_between_markers(
         Modified text with content injected
     """
 ```
+
+### stage_table.py
+
+#### build_stage_table (function)
+```python
+def build_stage_table(yaml_path: Path) -> str:
+    """Render a Markdown stage table from pipeline.yaml.
+
+    Args:
+        yaml_path: Path to ``pipeline.yaml``.
+
+    Returns:
+        Markdown block (caption + 4-column table:
+        Stage | Script | Tags | Failure mode). Stage indices are 0-based
+        positions in the YAML; they intentionally do not match the
+        ``scripts/NN_*.py`` numeric prefixes.
+    """
+```
+
+#### inject_stage_table (function)
+```python
+def inject_stage_table(
+    markdown_path: Path,
+    table: str,
+    marker: str = "STAGE_TABLE",
+) -> bool:
+    """Replace the marker block in ``markdown_path`` with ``table``.
+
+    Looks for ``<!-- BEGIN:{marker} -->`` / ``<!-- END:{marker} -->`` and
+    replaces the content between them. Returns ``True`` if the file was
+    actually changed (idempotent: no-op writes return ``False``).
+    """
+```
+
+The thin orchestrator that drives both functions across the canonical
+target docs is [`scripts/generate_stage_table_doc.py`](../../scripts/generate_stage_table_doc.py).
+
+### api_reference_gen.py
+
+#### ModuleAPI (dataclass)
+```python
+@dataclass(frozen=True)
+class ModuleAPI:
+    """One public symbol exported from a package's __all__."""
+    package: str
+    module: str   # defining module (resolved via re-export chains)
+    name: str
+    kind: str     # "function" | "class" | "constant" | "unknown"
+    signature: str
+    summary: str
+```
+
+#### walk_public_api (function)
+```python
+def walk_public_api(package_root: Path) -> list[ModuleAPI]:
+    """Walk one package's ``__init__.py`` and return ModuleAPI records.
+
+    Args:
+        package_root: A directory whose __init__.py declares __all__,
+            e.g. ``infrastructure/llm``.
+
+    Returns:
+        Records sorted alphabetically (case-insensitive). Empty if the
+        package has an empty __all__.
+    """
+```
+
+#### build_api_reference_markdown (function)
+```python
+def build_api_reference_markdown(packages: list[Path]) -> str:
+    """Render a deterministic Markdown block covering ``packages``.
+
+    Args:
+        packages: Package roots to document (caller-supplied order;
+            CLI sorts alphabetically).
+
+    Returns:
+        Markdown block (no surrounding marker comments). Always ends
+        with a single trailing newline.
+    """
+```
+
+#### inject_api_reference (function)
+```python
+def inject_api_reference(
+    markdown_path: Path,
+    content: str,
+    marker: str = "API_REFERENCE",
+) -> bool:
+    """Inject ``content`` between marker comments in ``markdown_path``.
+
+    Idempotent: returns False if the file is already up-to-date.
+    Reuses ``glossary_gen.inject_between_markers``.
+    """
+```
+
+The thin orchestrator is
+[`scripts/generate_api_reference_doc.py`](../../scripts/generate_api_reference_doc.py)
+with `--write` and `--check` flags. CI runs `--check` in the
+`validate` job (see `.github/workflows/ci.yml`).
 
 ## Key Features
 

@@ -1,6 +1,7 @@
 pyyaml<7.0,>=6.0
 matplotlib<4.0,>=3.7
 networkx<4.0,>=3.4.2
+defusedxml<1.0,>=0.7
 
 [dev]
 pytest>=7.4.0

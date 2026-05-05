@@ -72,6 +72,44 @@ cat projects/{name}/output/reports/log_summary.txt
 grep -i error projects/{name}/output/reports/log_summary.txt
 ```
 
+### 3.5 Telemetry Reports and Retention
+
+**Location**: `projects/{name}/output/reports/telemetry.{json,txt}`
+**Archive**: `projects/{name}/output/reports/.history/telemetry-<unix_ts>.json`
+
+**Contents** (`telemetry.json`):
+- Per-stage timing, memory, CPU, and I/O
+- Diagnostic event counts (errors / warnings) per stage
+- Performance warnings (slow stage, high memory, high CPU)
+- System info captured at run start
+- Configuration snapshot
+
+**Retention behaviour:**
+Each pipeline run, `TelemetryCollector.finalize()` rotates the previous
+run's `telemetry.json` into `.history/` before writing the new one. The
+in-flight report for the current run is never touched. The number of
+archived files retained is controlled by the `TELEMETRY_KEEP`
+environment variable (default `10`); the oldest archived files beyond
+that count are pruned.
+
+**Inspect history:**
+```bash
+# Walk the archive in chronological order
+ls -1 projects/{name}/output/reports/.history/
+
+# View the most recent prior run
+jq . "$(ls -1t projects/{name}/output/reports/.history/telemetry-*.json | head -1)"
+
+# Override retention for a single run
+TELEMETRY_KEEP=25 uv run python scripts/execute_pipeline.py --project {name} --core-only
+```
+
+The rotation function is `infrastructure.core.telemetry.retention.rotate`
+and is idempotent — running it twice without a new live report leaves
+the archive unchanged. See
+[Configuration Guide → Telemetry Retention](config/configuration.md#telemetry-retention)
+for the full env-var contract.
+
 ### 4. Output Statistics
 
 **Location**: `projects/{name}/output/reports/output_statistics.*`

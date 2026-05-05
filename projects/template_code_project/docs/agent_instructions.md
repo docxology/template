@@ -23,9 +23,9 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 ---
 
-## Rule 2: Coverage Gate — 40 Tests, ≥90% on `src/`
+## Rule 2: Coverage Gate — 52 Tests, ≥90% on `src/`
 
-The current test suite has **42 collected tests** and achieves approximately **99% line/branch coverage** on `projects/template_code_project/src/`. The gate is 90% (`fail_under = 90` in `pyproject.toml`).
+The current test suite has **52 collected tests** and achieves approximately **96% line/branch coverage** on `projects/template_code_project/src/`. The gate is 90% (`fail_under = 90` in `pyproject.toml`).
 
 Before modifying `src/optimizer.py`, count the existing tests for the function you are changing. After modifying, run:
 
@@ -86,7 +86,7 @@ The infrastructure renders the manuscript to PDF automatically.
 **GOOD** (concrete):
 ```markdown
 `infrastructure/rendering/pdf_renderer.py` orchestrates Pandoc → pdflatex to produce
-`output/code_project/pdf/code_project_combined.pdf` from the substituted markdown in `output/manuscript/`.
+`output/template_code_project/pdf/template_code_project_combined.pdf` from the substituted markdown in `output/manuscript/`.
 ```
 
 ---
@@ -111,7 +111,7 @@ Prefer analytical inputs over random inputs whenever a mathematical property can
 ## Rule 6: Style and Syntax Guides Govern Their Domains
 
 - **[`style_guide.md`](style_guide.md)** governs: `src/optimizer.py`, `tests/test_optimizer.py`, `scripts/*.py` — mock prohibition, infrastructure delegation, thin orchestrator, error message format, type hints.
-- **[`syntax_guide.md`](syntax_guide.md)** governs: `manuscript/*.md` — `{{VARIABLE}}` injection, `\ref{}` cross-references, figure labels, table captions.
+- **[`syntax_guide.md`](syntax_guide.md)** governs: `manuscript/*.md` — `{{VARIABLE}}` injection, `[@label]` Pandoc-crossref cross-references, figure labels, table captions.
 
 Do not apply code-style rules to manuscript prose, and do not apply manuscript syntax rules to Python source.
 
@@ -124,7 +124,7 @@ The entire `projects/template_code_project/output/` tree is written by the pipel
 If you need to change what a generated file contains, change the **generator**:
 - To change `output/data/optimization_results.csv` → modify `scripts/optimization_analysis.py`
 - To change `output/manuscript/03_results.md` → modify `manuscript/03_results.md` (the template) and/or `scripts/z_generate_manuscript_variables.py` (the variable definitions)
-- To change `output/pdf/code_project_combined.pdf` → modify the manuscript source files, then re-render
+- To change `output/pdf/template_code_project_combined.pdf` → modify the manuscript source files, then re-render
 
 See [`output_conventions.md`](output_conventions.md) for the complete regeneration sequence.
 

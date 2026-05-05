@@ -29,6 +29,19 @@ from infrastructure.core.cli_handlers import (  # noqa: F401
 logger = get_logger(__name__)
 
 
+__all__ = [
+    # Re-exports from cli_parser
+    "create_parser",
+    # Re-exports from cli_handlers
+    "handle_discover_command",
+    "handle_inventory_command",
+    "handle_multi_project_command",
+    "handle_pipeline_command",
+    # Local
+    "main",
+]
+
+
 def main() -> int:
     """Main CLI entry point."""
     parser = create_parser()

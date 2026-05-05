@@ -14,7 +14,6 @@ Implementation split across:
 from __future__ import annotations
 
 import io
-from datetime import datetime, timezone
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -31,6 +30,7 @@ from infrastructure.steganography.barcode_payload import (
     build_mailto_qr_text,
     build_metadata_qr_text,
 )
+from infrastructure.steganography.config import resolve_build_timestamp
 
 logger = get_logger(__name__)
 
@@ -205,7 +205,7 @@ def create_barcode_strip_overlay(
     c.saveState()
     c.setFont("Courier", 3.5)
     c.setFillColorRGB(0.5, 0.5, 0.5)
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    ts = resolve_build_timestamp()
     c.drawRightString(page_width - 6, qr_y + qr_size + 2, ts)
     c.restoreState()
 

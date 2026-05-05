@@ -53,11 +53,16 @@ Each check produces a `CheckResult(passed, message, details)`; the run's `all_pa
 * Heading outline per file.
 * Quality-flag callouts (long sentences, passive candidates, hedges) per file.
 
-The orchestrator in `scripts/run_prose_pipeline.py` writes:
+Three orchestrators run in lexicographic order (so the figure and variable
+stages always see a fresh review):
 
-* `output/manuscript_report.json` — the raw `ManuscriptReport`.
-* `output/checks.json` — the list of check results.
-* `output/review_report.md` — the human-readable review report.
-* `output/figures/{section_word_counts,readability_metrics,citation_density}.png`.
-* `output/data/manuscript_variables.json` — substitution variables for the abstract.
+* `scripts/run_prose_pipeline.py` writes `output/manuscript_report.json`
+  (the raw `ManuscriptReport`), `output/checks.json` (the list of check
+  results), `output/review_report.md` (the human-readable review report),
+  and `output/run_summary.json` (one-line metadata).
+* `scripts/y_generate_prose_figures.py` reads `manuscript_report.json`
+  and writes `output/figures/{section_word_counts,readability_metrics,citation_density}.png`.
+* `scripts/z_generate_manuscript_variables.py` reads `manuscript_report.json`
+  + `config.yaml` and writes `output/data/manuscript_variables.json`
+  along with a resolved manuscript tree under `output/manuscript/`.
 * `manuscript/references.bib` is **not** modified by this pipeline — the prose project does not generate citations, only validates them.

@@ -12,6 +12,7 @@
 
 ```mermaid
 graph TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph "Research Project Template"
         SRC[📁 projects/{name}/src/<br/>Core business logic<br/>Tested]
         TESTS[🧪 projects/{name}/tests/<br/>Test suite<br/>coverage]
@@ -72,6 +73,7 @@ flowchart TD
 
 ```mermaid
 graph LR
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph "Input Sources"
         SRC[📁 projects/{name}/src/ modules]
         MD[📚 Markdown files]

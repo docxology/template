@@ -16,6 +16,22 @@ Dataclass with boolean toggles for each technique. Factory methods:
 - `from_dict(data)` — parse from YAML config section
 - `all_enabled()` — return a config with everything on
 
+### `resolve_build_timestamp(*, deterministic=None, repo_root=None)` (`config.py`)
+
+Single source of truth for the build timestamp embedded in overlays,
+footers, barcode payloads, XMP packets, and hash manifests.
+
+* `deterministic=True` (or `STEGANOGRAPHY_DETERMINISTIC=1` in the
+  environment with `deterministic=None`) — returns
+  `git log -1 --format=%cI` from `repo_root` (defaults to `Path.cwd()`).
+  Same `HEAD` ⇒ same timestamp ⇒ byte-identical
+  `*_steganography.pdf` across runs.
+* Otherwise — current UTC wall-clock time as `YYYY-MM-DDTHH:MM:SSZ`.
+* Missing `git` or non-zero exit ⇒ logs a single warning and falls back
+  to wall-clock time. **Trade-off:** deterministic mode trades a fresh
+  per-run timestamp for reproducibility — combine with the
+  `*.hashes.json` manifest when both are needed.
+
 ### `SteganographyProcessor` (`core.py`)
 
 Orchestrator. Call `process(input_pdf, output_pdf, title, authors, keywords)`.

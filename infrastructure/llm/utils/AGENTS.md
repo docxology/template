@@ -145,6 +145,6 @@ uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 - [`README.md`](README.md) - Quick reference
 - [`../core/README.md`](../core/README.md) - Core client and configuration
 - [`../AGENTS.md`](../AGENTS.md) - Module overview
-- [`../../docs/operational/troubleshooting/llm-review.md`](../../docs/operational/troubleshooting/llm-review.md) - Local Ollama setup and review troubleshooting
+- [`../../../docs/operational/troubleshooting/llm-review.md`](../../../docs/operational/troubleshooting/llm-review.md) - Local Ollama setup and review troubleshooting
 
 Consider these rules if they affect your changes.

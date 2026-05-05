@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **Test suite**: 42 tests covering edge cases, stability analysis, and performance benchmarks; `projects/template_code_project/src/` typically measures **~96%** line/branch coverage (90% minimum gate in `pyproject.toml`)
+- **Test suite**: 52 tests covering edge cases, stability analysis, and performance benchmarks; `projects/template_code_project/src/` typically measures **~96%** line/branch coverage (90% minimum gate in `pyproject.toml`)
 - **Deterministic algorithms**: Reproducible results; tests avoid nondeterministic RNG unless documented (see `docs/agent_instructions.md`)
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -357,7 +357,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: 42 tests; `src/` line/branch coverage is typically ~96% with the current suite (exceeds 90% requirement)
+- **90%+ coverage**: 52 tests; `src/` line/branch coverage is typically ~96% with the current suite (exceeds 90% requirement)
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Tests use fixed inputs; any use of random draws should be justified or seeded (see `docs/agent_instructions.md`)
@@ -504,13 +504,14 @@ print(citations['mla'])     # MLA format
 Visual progress indicators for long-running operations:
 
 ```python
-from infrastructure.core import ProgressBar
+from infrastructure.core.progress import ProgressBar
 
 # Progress tracking for step size experiments
-with ProgressBar(total=4, desc="Step sizes") as progress:
-    for step_size in [0.01, 0.05, 0.1, 0.2]:
-        result = run_single_experiment(step_size)
-        progress.update(1)  # Update progress
+progress = ProgressBar(total=4, task="Step sizes")
+for step_size in [0.01, 0.05, 0.1, 0.2]:
+    result = run_single_experiment(step_size)
+    progress.update(1)
+progress.finish()
 ```
 
 **Console Output:**

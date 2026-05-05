@@ -43,6 +43,20 @@ class StageResult:
 _CROSSREF_PREFIXES = ("sec:", "fig:", "tbl:", "eq:", "lst:")
 
 
+def _strip_code_spans(text: str) -> str:
+    """Remove inline-code spans and fenced code blocks from *text*.
+
+    A ``[@key]`` example that lives inside a backtick-quoted code span
+    (e.g. `` `[@key]` ``) or a ``` ``` ``` fenced block is illustrative
+    documentation, not a real Pandoc citation. The bibliography-
+    completeness check must not flag those keys as missing.
+    """
+    # Remove fenced code blocks first (greedy, multiline).
+    without_fences = re.sub(r"```.*?```", "", text, flags=re.DOTALL)
+    # Then remove single-line inline-code spans.
+    return re.sub(r"`[^`\n]*`", "", without_fences)
+
+
 def _extract_citation_keys(text: str) -> set[str]:
     """Pull every BibTeX citation key out of *text*.
 
@@ -51,20 +65,23 @@ def _extract_citation_keys(text: str) -> set[str]:
     same ``[@…]`` brackets for cross-references (``[@sec:foo]``,
     ``[@fig:bar]``, etc.). This helper:
 
-      1. Splits on ``;`` *inside* a ``[@…]`` group so multi-cites yield
+      1. Strips inline-code spans and fenced code blocks so didactic
+         examples like `` `[@key]` `` are not treated as citations.
+      2. Splits on ``;`` *inside* a ``[@…]`` group so multi-cites yield
          one key per element.
-      2. Strips leading ``-``/``+`` (suppression / author-only) and
+      3. Strips leading ``-``/``+`` (suppression / author-only) and
          ``@`` and trailing ``,`` (locator separator) per Pandoc spec.
-      3. Drops pandoc-crossref labels (``sec:``, ``fig:``, ``tbl:``,
+      4. Drops pandoc-crossref labels (``sec:``, ``fig:``, ``tbl:``,
          ``eq:``, ``lst:``) — those are validated by stage
          ``markdown_links`` / ``prerender_validation``, not by this
          stage.
     """
     keys: set[str] = set()
+    cleaned = _strip_code_spans(text)
     # Match ``[@key]`` and ``[-@key]`` / ``[+@key]`` (suppression /
     # author-only forms). The capture excludes the bracket itself so
     # multi-cite splitting and per-element cleanup can be done below.
-    for group in re.findall(r"\[[-+]?@([^\]]+)\]", text):
+    for group in re.findall(r"\[[-+]?@([^\]]+)\]", cleaned):
         for raw in re.split(r";\s*[-+]?@?", group):
             token = raw.strip()
             if not token:

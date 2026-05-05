@@ -70,6 +70,13 @@ The Core module provides fundamental foundation utilities used across the entire
 - Component status checking
 - Health status reporting
 
+**health.py**
+- Unified repository health check entry point (`uv run python -m infrastructure.core.health`)
+- Aggregates every per-CLI quality gate (mypy, ruff, ruff-format, bandit, no-mocks, `__all__` audit, docs-lint, stage-table & api-reference idempotence, architecture-overview presence) into a single typed `HealthReport`
+- Subprocess-only orchestrator — exit code is the sole pass/fail signal; stdout/stderr captured for diagnostics only
+- `--json` for machine-readable output (consumed by CI artefact upload), `--gates=<names>` for subset runs, `--quiet`, `--repo-root`, `--no-color`
+- Public API: `GateResult`, `HealthReport`, `GATE_NAMES`, `build_gate_specs`, `run_health_checks`, `format_report_table`, `main`
+
 **cli.py**
 - Command-line interface utilities
 - CLI argument parsing and validation
@@ -164,6 +171,10 @@ The Core module provides fundamental foundation utilities used across the entire
 - `StageTelemetry` — per-stage timing, resource usage, diagnostic counts
 - `PipelineTelemetry` — full pipeline report with warnings and system info
 - `PerformanceWarning` — individual anomaly record
+
+**telemetry/retention.py**
+- `rotate(reports_dir, *, keep=10, archive_subdir=".history") -> RotationResult` — moves any previous `telemetry.json` into `<reports_dir>/<archive_subdir>/telemetry-<unix_ts>.json` and prunes archived files beyond `keep` (oldest first). Idempotent; honors `TELEMETRY_KEEP` env var when invoked from `TelemetryCollector._persist_report()`.
+- `RotationResult` — frozen dataclass (`archived`, `pruned`, `kept`) describing a single rotation call.
 
 ## Function Signatures
 

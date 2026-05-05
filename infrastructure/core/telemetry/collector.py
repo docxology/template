@@ -37,6 +37,7 @@ from infrastructure.core.telemetry.models import (
     PipelineTelemetry,
     StageTelemetry,
 )
+from infrastructure.core.telemetry.retention import rotate as rotate_telemetry
 
 logger = get_logger(__name__)
 
@@ -321,12 +322,30 @@ class TelemetryCollector:
     # ------------------------------------------------------------------
 
     def _persist_report(self) -> None:
-        """Write the telemetry report to the output directory."""
+        """Write the telemetry report to the output directory.
+
+        Before writing, the *previous* run's ``telemetry.json`` (if any)
+        is rotated into ``reports/.history/`` and pruned to at most
+        ``TELEMETRY_KEEP`` archived files (default ``10``). The rotation
+        only acts on the pre-existing file — the new report being
+        written here is never affected.
+        """
         if not self.output_dir:
             return
 
         report_dir = self.output_dir / "reports"
         report_dir.mkdir(parents=True, exist_ok=True)
+
+        # Rotate the previous run's telemetry.json before writing the new one.
+        try:
+            keep = max(0, int(os.environ.get("TELEMETRY_KEEP", "10")))
+        except ValueError:
+            keep = 10
+        try:
+            rotate_telemetry(report_dir, keep=keep)
+        except (OSError, ValueError) as e:
+            logger.warning(f"Telemetry retention rotation failed: {e}")
+
         report_file = report_dir / "telemetry.json"
 
         try:

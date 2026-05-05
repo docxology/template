@@ -45,3 +45,42 @@ steganography:
   # Inject cryptographic SHA manifests
   hashing_enabled: true
 ```
+
+## Deterministic mode
+
+By default the steganography overlay embeds a fresh wall-clock timestamp on
+every run, so two consecutive `secure_run.sh` invocations against the same
+inputs produce *different* PDF bytes — useful as a tamper-evident marker
+but inconvenient for reproducibility audits and content-addressable
+storage.
+
+Setting **`STEGANOGRAPHY_DETERMINISTIC=1`** (or passing `--deterministic`
+to `secure_run.sh`) pins every timestamp inside the steganography
+pipeline to the latest commit's strict-ISO8601 committer date, retrieved
+via `git log -1 --format=%cI`. The same env var also derives the
+`Doc-ID` from a SHA-256 of that timestamp instead of `secrets.token_hex`,
+so two consecutive runs against the same `HEAD` produce **byte-identical**
+`*_steganography.pdf` files.
+
+```bash
+# Reproducible build — byte-identical PDFs across consecutive runs
+STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh --pipeline --project template_code_project
+./secure_run.sh --deterministic --pipeline --project template_code_project
+```
+
+Trade-offs:
+
+* **Reproducibility ↑** — supports SLSA-style provenance, content-hash
+  pinning, and bitwise diffing across CI runs.
+* **Tamper signal ↓** — the embedded timestamp no longer reflects when
+  the PDF was actually rendered; combine with the
+  `*.hashes.json` manifest if you need both properties.
+* **Fallback** — when `git` is missing or the working tree is not a
+  repository, the helper logs a warning and falls back to wall-clock
+  time. Builds therefore never *fail* because of deterministic mode;
+  they simply stop being byte-identical.
+
+The single source of truth is
+[`infrastructure.steganography.config.resolve_build_timestamp`](../../infrastructure/steganography/config.py).
+Every overlay, footer, barcode payload, XMP packet, and hash manifest
+calls into it.

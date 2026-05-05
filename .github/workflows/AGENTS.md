@@ -10,7 +10,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[/.github/workflows//]
     W --> META[AGENTS.md · README.md]
-    W --> CI[ci.yml<br/>Main CI/CD pipeline · 8 jobs]
+    W --> CI[ci.yml<br/>Main CI/CD pipeline · 9 jobs]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
 
@@ -39,13 +39,14 @@ flowchart LR
 
 ### Job Graph
 
-`validate` and `security` depend on **`lint` only** (they run in parallel with the `verify-no-mocks` subtree). `test-infra`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
+`validate`, `security`, and `docs-lint` depend on **`lint` only** (they run in parallel with the `verify-no-mocks` subtree). `test-infra`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
 
 ```mermaid
 flowchart TB
     LINT[lint] --> VNM[verify-no-mocks]
     LINT --> VAL[validate]
     LINT --> SEC[security]
+    LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> TI[test-infra<br/>matrix: ubuntu+macos × 3.10/3.11/3.12<br/>codecov on 3.12/ubuntu only]
     VNM --> TP[test-project<br/>same matrix · ignores projects/fep_lean/tests/]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
@@ -57,7 +58,7 @@ flowchart TB
     classDef terminal fill:#7c2d12,stroke:#0f172a,color:#fff
     class LINT,VNM gate
     class TI,TP,FL matrix
-    class VAL,SEC,PERF terminal
+    class VAL,SEC,DL,PERF terminal
 ```
 
 ### Job Details
@@ -96,7 +97,7 @@ flowchart TB
 - **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists (`hashFiles` guard in `ci.yml`). When fep_lean lives under `projects_in_progress/`, the guard evaluates to empty and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate.
 - **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 45`
 - **Depends on:** `verify-no-mocks`
-- **Working directory:** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
+- **Working directory (when present):** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
 - **Toolchain:** elan + pinned `lean-toolchain`, `lake build` warm-up
 - **Open Gauss:** clone [math-inc/OpenGauss](https://github.com/math-inc/OpenGauss), `./scripts/install.sh --plain --noninteractive --skip-system-packages`, `gauss doctor`
 - **Tests:** `uv run pytest tests/ --timeout=1200 --cov=src --cov-fail-under=89` with `COVERAGE_FILE: ../../.coverage.fep_lean`
@@ -114,6 +115,22 @@ flowchart TB
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **pip-audit:** `continue-on-error: true` (upstream DB can be transiently unavailable)
 - **bandit:** `-ll` (MEDIUM+ severity), covers `infrastructure/`, `scripts/`, `projects/`; excludes `projects_archive/` and `projects_in_progress/`
+
+#### 6b. Documentation Lint (`docs-lint`)
+
+- **Runner:** `ubuntu-latest` / Python 3.12 / Node 20
+- **Depends on:** `lint`
+- **Timeout:** 15 minutes
+- **External tools (real, not mocked):**
+  - `mmdc` (mermaid-cli) — `npm install -g @mermaid-js/mermaid-cli`
+  - `chrome-headless-shell` — `npx puppeteer browsers install chrome-headless-shell`, exported via `CHROME_EXECUTABLE_PATH`
+- **Linters (thin orchestrator [`scripts/lint_docs.py`](../../scripts/lint_docs.py)):**
+  1. **Mermaid** — every fenced \`\`\`mermaid block in `docs/`, `infrastructure/`, `.github/`, `scripts/`, and root `*.md` is rendered with the real `mmdc` binary. Failure exits non-zero.
+  2. **Cross-links** — every relative Markdown link must resolve on disk; fenced and inline-code spans are skipped.
+  3. **Consistency** — `N Python (sub)packages` claims must match the live count under `infrastructure/`; rotating project names (`fep_lean`, `cogant`, …) must be conditionally framed in long-lived docs.
+- **Escape hatch:** append `<!-- noqa: docs-lint -->` to a Markdown line to suppress consistency or broken-link warnings on that line.
+- **Scope guarantees:** the linter sweeps long-lived doc roots only; `output/`, `projects_archive/`, `projects_in_progress/`, `htmlcov/`, `node_modules/`, `_generated/`, and `audit/` are excluded.
+- **Module:** [`infrastructure/validation/docs/`](../../infrastructure/validation/docs/) — `mermaid_lint.py`, `cross_link_lint.py`, `consistency_lint.py`.
 
 #### 7. Performance Check (`performance`)
 

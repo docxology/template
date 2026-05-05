@@ -312,6 +312,53 @@ __all__ = [
 ]
 ```
 
+### Mandatory `__all__` for Re-Exporting Modules (MED5)
+
+**Rule:** Any module that re-exports symbols at module top level **MUST** declare an explicit `__all__`.
+
+A module is a "re-exporter" if it has at least one top-level `from X import Y` statement carrying a `# noqa: F401` marker (the canonical marker for an intentional backwards-compat re-export). Examples include `infrastructure/core/exceptions.py`, `infrastructure/core/runtime/environment.py`, and any package `__init__.py` that flattens a sub-tree.
+
+**Why this matters:**
+- Under `mypy --strict`, downstream callers cannot import re-exported names unless `__all__` is declared. Missing `__all__` produces `[attr-defined]` errors at every call site.
+- `from module import *` only honours names in `__all__` (or non-underscore names if `__all__` is absent), so the public surface becomes implicit and easy to break.
+- An explicit list documents intent and lets reviewers audit the public API at a glance.
+
+**Enforcement:**
+- Local: `uv run python -m infrastructure.skills check-all-exports`
+- Pre-push hook: `all-exports-check` in `.pre-commit-config.yaml`
+- CI gate: the `Lint & Type Check` job in `.github/workflows/ci.yml` runs the audit
+
+**Convention:**
+- Group `__all__` entries by source submodule with `#` comment headers (matches the import block layout).
+- Sort within groups; do not interleave alphabetical and grouped order.
+- Do **not** add `__all__` to leaf modules that don't re-export — the audit ignores them, and bogus `__all__` lists go stale.
+- Filenames starting with `_` are private and skipped by the audit; `__init__.py` is public.
+
+```python
+# Re-exports for backwards compatibility
+from infrastructure.publishing.announcement import (  # noqa: F401
+    create_publication_announcement,
+    generate_doi_badge,
+)
+from infrastructure.publishing.checklist import (  # noqa: F401
+    create_submission_checklist,
+)
+
+
+def create_publication_package(...) -> dict[str, Any]: ...
+
+
+__all__ = [
+    # Re-exports from announcement
+    "create_publication_announcement",
+    "generate_doi_badge",
+    # Re-exports from checklist
+    "create_submission_checklist",
+    # Local
+    "create_publication_package",
+]
+```
+
 ### Factory Functions
 
 ```python

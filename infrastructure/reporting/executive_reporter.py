@@ -47,3 +47,34 @@ from infrastructure.reporting._executive_report_formats import (  # noqa: F401 â
     generate_executive_html_report,
     generate_executive_markdown_report,
 )
+
+
+__all__ = [
+    # _executive_analysis
+    "generate_aggregate_metrics",
+    "generate_comparative_tables",
+    # _executive_collectors
+    "collect_codebase_metrics",
+    "collect_manuscript_metrics",
+    "collect_output_metrics",
+    "collect_pipeline_metrics",
+    "collect_project_metrics",
+    "collect_test_metrics",
+    # _executive_health
+    "calculate_project_health_score",
+    "generate_recommendations",
+    # _executive_models
+    "CodebaseMetrics",
+    "ExecutiveSummary",
+    "ManuscriptMetrics",
+    "OutputMetrics",
+    "PipelineMetrics",
+    "ProjectMetrics",
+    "TestMetrics",
+    # _executive_renderers
+    "generate_executive_summary",
+    "save_executive_summary",
+    # _executive_report_formats
+    "generate_executive_html_report",
+    "generate_executive_markdown_report",
+]

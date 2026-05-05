@@ -9,6 +9,7 @@ Description-Content-Type: text/markdown
 Requires-Dist: pyyaml<7.0,>=6.0
 Requires-Dist: matplotlib<4.0,>=3.7
 Requires-Dist: networkx<4.0,>=3.4.2
+Requires-Dist: defusedxml<1.0,>=0.7
 Provides-Extra: dev
 Requires-Dist: pytest>=7.4.0; extra == "dev"
 Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
@@ -128,7 +129,7 @@ or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/qu
 | Key | Default | Meaning |
 |---|---|---|
 | `query` | `"reproducible research optimization"` | Free-text topic passed to every backend. |
-| `max_results` | `12` | Per-backend cap; aggregator dedupes and re-applies year filters. |
+| `max_results` | `100` | Per-backend cap; aggregator dedupes and re-applies year filters. |
 | `year_min` / `year_max` | `null` | Optional inclusive year filter. |
 | `sources` | `[local]` | Subset of `arxiv`, `crossref`, `local`, `paperclip`. |
 | `local_corpus` | `data/corpus.json` | Path (relative to project root) consumed when `sources` includes `local`. |
@@ -177,7 +178,7 @@ or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/qu
 |---|---|---|
 | `enabled` | `true` | Run end-to-end on every pipeline invocation. |
 | `keywords` | `[convex optimization, stochastic gradient descent, reproducible research]` | One `SearchQuery` per keyword. |
-| `max_results_per_keyword` | `10` | Per-keyword cap honoured by the aggregator. |
+| `max_results_per_keyword` | `100` | Per-keyword cap honoured by the aggregator. |
 | `sources` | `[arxiv, crossref, paperclip]` | Backend list; `paperclip` degrades gracefully on a missing key or HTTP 405. |
 | `year_min` / `year_max` | `null` | Optional inclusive year filter. |
 | `crossref_mailto` | `you@example.org` | Polite-pool identifier. |

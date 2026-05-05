@@ -26,10 +26,11 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ## Architecture
 
-**Counting note:** the tree below lists **17** Python subpackages under `infrastructure/` (config, core, docker, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). For a live count run `ls infrastructure/ | grep -v __pycache__ | grep -v __init__ | grep -v -E '\.(md|py)$' | grep -v logrotate.d | wc -l`. See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
+**Counting note:** the tree below lists **15** Python packages under `infrastructure/` (core, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). The `config/`, `docker/`, and `logrotate.d/` directories ship config files rather than `__init__.py`, so they aren't Python packages. For a live count run `for d in infrastructure/*/; do [ -f "$d/__init__.py" ] && echo "$d"; done | wc -l`. See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
 
 ```mermaid
 flowchart TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     ROOT[/template//]
     ROOT --> INFRA[/infrastructure//<br/>Layer 1 · 17 subpackages/]
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]

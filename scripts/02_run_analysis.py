@@ -1,213 +1,52 @@
 #!/usr/bin/env python3
-"""Analysis and figure generation orchestrator script.
+"""Analysis-stage orchestrator (thin dispatcher).
 
-This thin orchestrator coordinates the analysis and figure generation stage:
-1. Discovers all analysis scripts in project/scripts/
-2. Executes them in order
-3. Collects generated outputs from project/output/
-4. Validates output quality
-
-**Entry Point 2:** Generic orchestrator for template
-- Works with any project by looking in project/scripts/
-- Does NOT implement analysis logic
-- Delegates to project-specific scripts
-
-Stage 02 of the pipeline orchestration.
+Stage 02. Discovers ``projects/<name>/scripts/*.py`` and runs each in
+lexicographic order via :func:`infrastructure.core.analysis_pipeline.run_analysis_pipeline`.
+This file is intentionally thin — all execution logic lives in
+:mod:`infrastructure.core.analysis_pipeline` and
+:mod:`infrastructure.core.script_discovery`.
 
 Architecture:
-    This is a generic entry point (Layer 1 - Infrastructure).
-    It discovers and executes project-specific scripts from project/scripts/
-    without knowing their implementation details. Follows thin orchestrator pattern.
+    Generic Layer-1 entry point. Discovers and dispatches to project-specific
+    scripts without knowing their implementation details. Follows the thin
+    orchestrator pattern.
 
 Exit codes:
-    0: All discovered analysis scripts completed successfully
-    1: At least one analysis script failed or the project has no scripts/ directory
+    0: All discovered analysis scripts completed successfully (or no scripts found).
+    1: At least one analysis script failed, or an unrecoverable pipeline error.
 """
 
 from __future__ import annotations
 
-import shlex
-import subprocess  # nosec B404
+import argparse
 import sys
-import time
 from pathlib import Path
 
-# Add root to path for infrastructure imports
 # Bootstrap: add repo root so the centralized helper itself is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts import ensure_repo_root_on_path  # noqa: E402
+
 ensure_repo_root_on_path()
 
-from infrastructure.core.logging.utils import (
+from infrastructure.core.analysis_pipeline import run_analysis_pipeline  # noqa: E402
+from infrastructure.core.exceptions import PipelineError, ScriptExecutionError  # noqa: E402
+from infrastructure.core.logging.utils import (  # noqa: E402
     get_logger,
     log_header,
     log_live_resource_usage,
-    log_operation,
     log_success,
 )
-from infrastructure.core.progress import SubStageProgress
-from infrastructure.core.exceptions import ScriptExecutionError, PipelineError
-from infrastructure.core.runtime.environment import build_analysis_script_cmd_and_env
-from infrastructure.core.script_discovery import (
+from infrastructure.core.script_discovery import (  # noqa: E402
     discover_analysis_scripts,
     verify_analysis_outputs,
 )
-from infrastructure.core.analysis_timeout import parse_analysis_script_timeout_sec
 
-# Set up logger for this module
 logger = get_logger(__name__)
 
 
-def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = "project") -> int:
-    """Execute a single analysis script.
-
-    Args:
-        script_path: Path to the script to execute
-        repo_root: Repository root directory
-        project_name: Name of project in projects/ directory (default: "project")
-
-    Returns:
-        Exit code from script execution
-
-    Raises:
-        ScriptExecutionError: If script execution fails critically
-    """
-    project_root = repo_root / "projects" / project_name
-    logger.info("")
-    logger.info("  Script: %s", script_path.resolve())
-    logger.info("  Project root: %s", project_root.resolve())
-    logger.info("  Working directory (subprocess cwd): %s", repo_root.resolve())
-
-    cmd, env = build_analysis_script_cmd_and_env(script_path, project_root, repo_root)
-    logger.info("  Command: %s", " ".join(shlex.quote(str(part)) for part in cmd))
-
-    project_venv = project_root / ".venv"
-    if project_venv.is_dir():
-        logger.info("  Using project-local venv: %s", project_venv.resolve())
-
-    timeout_sec = parse_analysis_script_timeout_sec()
-    if timeout_sec is None:
-        logger.info(
-            "  Per-script timeout: unlimited (ANALYSIS_SCRIPT_TIMEOUT_SEC unset or 0/none/unlimited)"
-        )
-    else:
-        logger.info(
-            "  Per-script timeout: %.0fs (default 7200s; override via ANALYSIS_SCRIPT_TIMEOUT_SEC)",
-            timeout_sec,
-        )
-
-    started = time.monotonic()
-    try:
-        with log_operation(f"Execute {script_path.name}", logger):
-            # When using project-local venv, run from repo_root but let uv
-            # handle the venv via --directory. Otherwise run from repo_root
-            # as before.
-            result = subprocess.run(  # nosec B603
-                cmd,
-                cwd=str(repo_root),
-                capture_output=False,
-                check=False,
-                env=env,
-                timeout=timeout_sec,
-            )
-
-        elapsed = time.monotonic() - started
-        if result.returncode == 0:
-            logger.info("  Finished %s in %.1fs (exit 0)", script_path.name, elapsed)
-        else:
-            logger.error(
-                "  Finished %s in %.1fs (exit %s)",
-                script_path.name,
-                elapsed,
-                result.returncode,
-            )
-
-        if result.returncode != 0:
-            logger.info("  Troubleshooting:")
-            logger.info(f"    - Run script manually: python3 {script_path}")
-            logger.info(f"    - Check script syntax: python3 -m py_compile {script_path}")
-            logger.info(f"    - Verify dependencies: Check imports in {script_path.name}")
-            logger.info("    - Review script logs above for specific error details")
-
-        return result.returncode
-    except Exception as e:
-        raise ScriptExecutionError(
-            f"Failed to execute {script_path.name}",
-            context={"script": str(script_path), "error": str(e)},
-        ) from e
-
-
-def run_analysis_pipeline(scripts: list[Path], project_name: str = "project") -> int:
-    """Execute all analysis scripts in sequence.
-
-    Args:
-        scripts: List of script paths to execute
-        project_name: Name of project in projects/ directory (default: "project")
-
-    Returns:
-        Exit code (0=success, non-zero=at least one script failed)
-    """
-    logger.info("[STAGE-02] Executing analysis pipeline...")
-
-    repo_root = Path(__file__).parent.parent
-
-    if not scripts:
-        logger.info("  No analysis scripts found - skipping stage")
-        return 0
-
-    successful_scripts = []
-    failed_scripts = []
-
-    # Use sub-stage progress tracking with EMA for better ETA
-    progress = SubStageProgress(total=len(scripts), stage_name="Analysis Pipeline", use_ema=True)
-
-    for i, script in enumerate(scripts, 1):
-        progress.start_substage(i, f"{project_name}/{script.name}")
-        exit_code = run_analysis_script(script, repo_root, project_name)
-        progress.complete_substage()
-
-        # Log progress with ETA every few scripts
-        if i % 2 == 0 or i == len(scripts):
-            progress.log_progress()
-
-        if exit_code == 0:
-            successful_scripts.append(script.name)
-        else:
-            failed_scripts.append(script.name)
-
-    # Consolidated success message
-    if successful_scripts:
-        script_list_with_project = ", ".join(
-            [f"{project_name}/{name}" for name in successful_scripts]
-        )
-        log_success(
-            f"Analysis scripts completed: {len(successful_scripts)}/{len(scripts)} ({script_list_with_project})",  # noqa: E501
-            logger,
-        )
-
-    if failed_scripts:
-        logger.error(f"\n{len(failed_scripts)} script(s) failed:")
-        for script_name in failed_scripts:
-            logger.error(f"  Failed: {script_name}")
-        logger.info("\n  Troubleshooting:")
-        logger.info("    - Review error messages above for each failed script")
-        logger.info("    - Run scripts individually to isolate issues")
-        logger.info("    - Check script dependencies and imports")
-        logger.info("    - Verify input data files exist if required")
-        return 1
-
-    return 0
-
-
 def main() -> int:
-    """Execute analysis orchestration.
-
-    Returns:
-        Exit code (0=success, 1=failure)
-    """
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Run analysis pipeline")
+    parser = argparse.ArgumentParser(description="Run analysis pipeline (Stage 02)")
     parser.add_argument(
         "--project",
         default="project",
@@ -216,16 +55,11 @@ def main() -> int:
     args = parser.parse_args()
 
     log_header(f"STAGE 02: Run Analysis (Project: {args.project})", logger)
-
-    # Log resource usage at start
     log_live_resource_usage("Analysis stage start", logger)
 
+    repo_root = Path(__file__).resolve().parent.parent
     try:
-        repo_root = Path(__file__).parent.parent
-
-        # Discover scripts for the specified project
         scripts = discover_analysis_scripts(repo_root, args.project)
-
         if not scripts:
             logger.info("  No analysis scripts found - skipping stage")
             return 0
@@ -236,34 +70,26 @@ def main() -> int:
             ", ".join(s.name for s in scripts),
         )
 
-        # Run analysis pipeline
-        exit_code = run_analysis_pipeline(scripts, args.project)
+        exit_code = run_analysis_pipeline(scripts, repo_root, args.project)
 
         if exit_code == 0:
-            # Verify outputs
-            outputs_valid = verify_analysis_outputs(repo_root, args.project)
-
-            if outputs_valid:
+            if verify_analysis_outputs(repo_root, args.project):
                 log_success("Analysis complete - ready for PDF rendering", logger)
             else:
                 logger.warning("\nAnalysis complete but output verification failed")
         else:
             logger.error("\nAnalysis failed - fix issues and try again")
 
-        # Log resource usage at end
-        log_live_resource_usage("Analysis stage end", logger)
-
         return exit_code
-
     except (ScriptExecutionError, PipelineError) as e:
-        logger.error(f"Pipeline error: {e}")
-        log_live_resource_usage("Analysis stage end (error)", logger)
+        logger.error("Pipeline error: %s", e)
         return 1
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}", exc_info=True)
-        log_live_resource_usage("Analysis stage end (error)", logger)
+    except Exception as e:  # noqa: BLE001 — last-line crash containment
+        logger.error("Unexpected error: %s", e, exc_info=True)
         return 1
+    finally:
+        log_live_resource_usage("Analysis stage end", logger)
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

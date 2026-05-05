@@ -197,6 +197,20 @@ def main() -> int:
             logger.error(f"Project discovery failed: {e}")
             return False
 
+    def run_setup_hook() -> bool:
+        """Invoke the optional ``projects/<name>/scripts/setup_hook.{py,sh}``.
+
+        Generic per-project bootstrap (e.g. fetch model weights, prime caches).
+        See ``infrastructure/project/setup_hook.py`` for the manifest schema.
+        Backward-compatible: returns ``True`` when no hook exists.
+        """
+        from infrastructure.project.setup_hook import run_project_setup_hook
+
+        project_dir = repo_root / "projects" / args.project
+        if not project_dir.is_dir():
+            return True
+        return run_project_setup_hook(project_dir)
+
     checks = [
         ("Python version", lambda: check_python_version()),
         ("Dependencies", check_and_install_dependencies),
@@ -206,6 +220,7 @@ def main() -> int:
         ("Project discovery", check_project_discovery),
         ("Environment variables", lambda: set_environment_variables(repo_root)),
         ("fep_lean Lean/Mathlib (optional)", maybe_bootstrap_fep_lean_mathlib),
+        ("Project setup_hook (optional)", run_setup_hook),
     ]
 
     results = []

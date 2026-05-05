@@ -334,3 +334,13 @@ def execute_render_pipeline(project_name: str = "project") -> int:
         logger.error(f"Render pipeline error: {e}", exc_info=True)
         log_live_resource_usage("PDF rendering stage end (error)", logger)
         return 1
+
+
+__all__ = [
+    # Re-exports from _pipeline_summary
+    "generate_rendering_summary",
+    "log_rendering_summary",
+    "verify_pdf_outputs",
+    # Public entry point
+    "execute_render_pipeline",
+]

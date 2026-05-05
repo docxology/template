@@ -52,6 +52,26 @@ For automated deployments or rapid iteration, `secure_run.sh` supports standard 
 | `--skip-infra` | Skips running the `infra_tests/` suite (Stage 3 bottleneck). |
 | `--core-only` | Skips running the `requires_ollama` LLM processing loop (Stage 7/8 bottleneck). |
 | `--steganography-only` | Skips pipeline execution completely and only performs the Steganography loops. |
+| `--deterministic` | Pin every embedded timestamp to `git log -1 --format=%cI` so two consecutive runs produce byte-identical PDFs. Equivalent to `STEGANOGRAPHY_DETERMINISTIC=1`. |
+
+### Deterministic / reproducible mode
+
+For provenance audits and content-hash pinning, run with
+`--deterministic`:
+
+```bash
+# Reproducible build — byte-identical *_steganography.pdf across runs
+./secure_run.sh --deterministic --pipeline --project template_code_project
+
+# Equivalent via env var
+STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh --pipeline --project template_code_project
+```
+
+The flag pins every timestamp inside the steganography overlay (footer,
+barcode payload, metadata, XMP packet, hash manifest) and the document
+ID to a function of the latest commit's `%cI`. See
+[`steganography.md` § Deterministic mode](steganography.md#deterministic-mode)
+for trade-offs.
 
 
 ## See Also

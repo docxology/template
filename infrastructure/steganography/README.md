@@ -8,7 +8,7 @@ with layered security and steganographic techniques.
 
 | File | Purpose |
 |------|---------|
-| `__init__.py` | Public API: `SteganographyProcessor`, `SteganographyConfig`, `process_pdf` |
+| `__init__.py` | Public API: `SteganographyProcessor`, `SteganographyConfig`, `process_pdf`, `resolve_build_timestamp` |
 | `config.py` | `SteganographyConfig` dataclass with per-technique toggles |
 | `core.py` | `SteganographyProcessor` orchestrator class |
 | `overlays.py` | Diagonal watermark + footer + invisible text overlays (reportlab) |
@@ -118,6 +118,18 @@ process_pdf(Path("paper.pdf"), config=config, title="My Paper")
 - AES-256-GCM encrypted metadata payloads
 - HMAC-SHA256 digital fingerprinting
 - PDF-level password protection via pypdf
+
+## Deterministic mode
+
+Setting `STEGANOGRAPHY_DETERMINISTIC=1` (or passing `--deterministic` to
+`secure_run.sh`) pins every embedded timestamp to the latest commit's
+strict-ISO8601 committer date and derives the `Doc-ID` from a SHA-256 of
+that timestamp. Two consecutive runs against the same `HEAD` produce
+**byte-identical** `*_steganography.pdf` files — useful for provenance
+audits and content-addressable storage. Trade-off: the embedded
+timestamp no longer reflects rendering time. Falls back to wall-clock
+time (with a logger warning) if `git` is unavailable. See
+[`docs/security/steganography.md`](../../docs/security/steganography.md#deterministic-mode).
 
 ## Architecture
 

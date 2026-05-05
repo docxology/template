@@ -93,3 +93,21 @@ def get_rate_limiter() -> RateLimiter:
 def reset_rate_limiter() -> None:
     """Reset the rate limiter singleton (for testing)."""
     get_rate_limiter.cache_clear()
+
+
+__all__ = [
+    # Re-exports for backwards compatibility
+    "RateLimiter",
+    "SecurityMonitor",
+    "SecurityValidator",
+    "SecurityViolation",
+    "get_security_monitor",
+    "rate_limit",
+    # Local functions
+    "get_cors_headers",
+    "get_rate_limiter",
+    "get_security_headers",
+    "get_security_validator",
+    "reset_rate_limiter",
+    "reset_security_validator",
+]

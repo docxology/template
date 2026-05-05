@@ -19,9 +19,76 @@ if str(repo_root) not in sys.path:
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.core.pipeline.multi_project_parallel import (
+    ParallelRunResult,
+    run_projects_in_parallel,
+)
 from infrastructure.project.discovery import discover_projects
 
 logger = get_logger(__name__)
+
+
+def execute_multi_project_parallel(
+    repo_root: Path,
+    *,
+    run_llm: bool = True,
+    max_workers: int | None = None,
+    resume: bool = False,
+) -> int:
+    """Execute multi-project orchestration with bounded parallelism.
+
+    Mirrors :func:`execute_multi_project` but dispatches each project to a
+    worker process. The serial entry point remains the default; this helper
+    is reached only when the caller passes ``--parallel``.
+
+    Args:
+        repo_root: Repository root path.
+        run_llm: Whether to include LLM stages.
+        max_workers: Optional ``ProcessPoolExecutor`` size override.
+        resume: Forward ``--resume`` to each worker.
+
+    Returns:
+        Exit code (``0`` on success, ``1`` on failure).
+    """
+    try:
+        projects = discover_projects(repo_root)
+        if not projects:
+            logger.error("No valid projects found")
+            return 1
+
+        logger.info(
+            "Found %d projects (parallel mode): %s",
+            len(projects),
+            ", ".join(p.qualified_name for p in projects),
+        )
+
+        result: ParallelRunResult = run_projects_in_parallel(
+            projects,
+            repo_root=repo_root,
+            max_workers=max_workers,
+            core_only=not run_llm,
+            skip_llm=not run_llm,
+            resume=resume,
+        )
+
+        log_header("MULTI-PROJECT EXECUTION RESULTS (PARALLEL)", logger)
+        logger.info("Total Projects: %d", len(projects))
+        logger.info("Successful: %d", len(result.succeeded))
+        logger.info("Failed: %d", len(result.failed))
+        logger.info("Total Duration: %.1fs", result.elapsed_seconds)
+
+        if result.failed:
+            logger.error("Failed projects:")
+            for name in result.failed:
+                logger.error("  - %s", name)
+            return 1
+
+        log_success("🎉 All projects completed successfully!", logger)
+        return 0
+
+    except Exception as e:  # noqa: BLE001 — top-level CLI boundary
+        logger.error("Parallel multi-project execution failed: %s", e)
+        return 1
 
 
 def execute_multi_project(
@@ -82,9 +149,7 @@ def execute_multi_project(
 
         # Enhanced result reporting
         total_projects = len(projects)
-        success_rate = (
-            (result.successful_projects / total_projects * 100) if total_projects > 0 else 0
-        )
+        success_rate = (result.successful_projects / total_projects * 100) if total_projects > 0 else 0
 
         log_header("MULTI-PROJECT EXECUTION RESULTS", logger)
         logger.info(f"Operation: {operation_desc}")
@@ -99,9 +164,7 @@ def execute_multi_project(
 
         if run_infra_tests and result.infra_test_duration > 0:
             infra_percentage = result.infra_test_duration / result.total_duration * 100
-            logger.info(
-                f"Infrastructure Tests: {result.infra_test_duration:.1f}s ({infra_percentage:.1f}%)"
-            )
+            logger.info(f"Infrastructure Tests: {result.infra_test_duration:.1f}s ({infra_percentage:.1f}%)")
 
         # Show project status summary
         if hasattr(result, "project_results") and result.project_results:
@@ -111,16 +174,10 @@ def execute_multi_project(
                     proj_result = result.project_results[proj_name]
                     if isinstance(proj_result, list) and proj_result:
                         # Check if all stages succeeded
-                        all_success = all(
-                            stage.success for stage in proj_result if hasattr(stage, "success")
-                        )
-                        duration = sum(
-                            stage.duration for stage in proj_result if hasattr(stage, "duration")
-                        )
+                        all_success = all(stage.success for stage in proj_result if hasattr(stage, "success"))
+                        duration = sum(stage.duration for stage in proj_result if hasattr(stage, "duration"))
                         status = "✅" if all_success else "❌"
-                        logger.info(
-                            f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s"
-                        )
+                        logger.info(f"  {status} {proj_name}: {len(proj_result)} stages, {duration:.1f}s")
                     else:
                         logger.info(f"  ❓ {proj_name}: Unknown status")
             else:
@@ -186,11 +243,41 @@ def main():
     parser.add_argument("--no-infra-tests", action="store_true", help="Skip infrastructure tests")
     parser.add_argument("--no-llm", action="store_true", help="Skip LLM stages")
     parser.add_argument("--no-executive-report", action="store_true", help="Skip executive report")
+    parser.add_argument("--skip-infra", action="store_true", help="Skip infra tests for individual projects")
     parser.add_argument(
-        "--skip-infra", action="store_true", help="Skip infra tests for individual projects"
+        "--parallel",
+        action="store_true",
+        help=(
+            "Run each project's pipeline in a separate worker process via "
+            "ProcessPoolExecutor. Default (without this flag) runs serially. "
+            "MULTI_PROJECT_MAX_WORKERS env var sets the default pool size."
+        ),
+    )
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=None,
+        help=(
+            "Override the parallel worker count (only meaningful with "
+            "--parallel). Defaults to min(N_projects, os.cpu_count()) or the "
+            "value of MULTI_PROJECT_MAX_WORKERS when set."
+        ),
+    )
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Resume each project from its last checkpoint.",
     )
 
     args = parser.parse_args()
+
+    if args.parallel:
+        return execute_multi_project_parallel(
+            repo_root=repo_root,
+            run_llm=not args.no_llm,
+            max_workers=args.max_workers,
+            resume=args.resume,
+        )
 
     return execute_multi_project(
         repo_root=repo_root,

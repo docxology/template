@@ -2,16 +2,127 @@
 
 Defines SteganographyConfig — a dataclass controlling which steganographic
 techniques are applied when producing the secure PDF variant.
+
+Also exposes :func:`resolve_build_timestamp`, the single source of truth for
+the build-timestamp embedded in overlays, barcodes, metadata, XMP packets,
+and hash manifests. When ``STEGANOGRAPHY_DETERMINISTIC=1`` is set (or the
+``deterministic=True`` keyword is passed), the timestamp is pinned to the
+``%cI`` (strict ISO-8601) of the latest ``HEAD`` commit so two consecutive
+secure-pipeline runs produce byte-identical PDFs.
 """
 
 from __future__ import annotations
 
+import os
+import subprocess
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
+
+__all__ = [
+    "DocumentMetadata",
+    "SteganographyConfig",
+    "resolve_build_timestamp",
+]
+
+
+# ── Deterministic build-timestamp resolution ──────────────────────────────
+
+
+def _wallclock_iso8601_z() -> str:
+    """Return the current UTC time as a strict-ISO8601 ``Z`` string."""
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def resolve_build_timestamp(
+    *,
+    deterministic: bool | None = None,
+    repo_root: Path | None = None,
+) -> str:
+    """Return an ISO-8601 build timestamp.
+
+    When ``deterministic`` is ``True`` (or the environment variable
+    ``STEGANOGRAPHY_DETERMINISTIC`` is set to ``1`` / ``true`` / ``yes`` and
+    ``deterministic`` is left ``None``), the timestamp is read from
+    ``git log -1 --format=%cI`` in *repo_root* — yielding a value that is
+    stable across runs as long as ``HEAD`` does not move. Otherwise the
+    current wall-clock time in UTC ISO-8601 (``Z`` suffix) is returned.
+
+    If deterministic mode is requested but ``git`` is not on PATH, returns
+    a non-zero exit, or *repo_root* is not a git checkout, the function
+    falls back to the wall-clock value and emits a single
+    :func:`logger.warning` so the audit trail records the degradation.
+
+    Args:
+        deterministic: Tri-state flag.
+
+            * ``True``  — force deterministic mode.
+            * ``False`` — force wall-clock mode (env var ignored).
+            * ``None``  — default; consult ``STEGANOGRAPHY_DETERMINISTIC``.
+        repo_root: Repository root to query. Defaults to
+            :func:`pathlib.Path.cwd` when omitted.
+
+    Returns:
+        ISO-8601 timestamp string. In deterministic mode the value carries
+        the commit's recorded timezone offset (``%cI``); in wall-clock mode
+        the value uses the ``Z`` (UTC) suffix.
+    """
+    if deterministic is None:
+        env = os.environ.get("STEGANOGRAPHY_DETERMINISTIC", "").strip().lower()
+        deterministic = env in {"1", "true", "yes", "on"}
+
+    if not deterministic:
+        return _wallclock_iso8601_z()
+
+    cwd = Path(repo_root) if repo_root is not None else Path.cwd()
+
+    try:
+        result = subprocess.run(  # noqa: S603 — fixed argv, no shell
+            ["git", "log", "-1", "--format=%cI"],
+            cwd=str(cwd),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except FileNotFoundError:
+        logger.warning(
+            "STEGANOGRAPHY_DETERMINISTIC requested but 'git' is not on PATH; falling back to wall-clock timestamp."
+        )
+        return _wallclock_iso8601_z()
+    except (OSError, subprocess.SubprocessError) as exc:
+        logger.warning(
+            "STEGANOGRAPHY_DETERMINISTIC requested but git invocation failed (%s); "
+            "falling back to wall-clock timestamp.",
+            exc,
+        )
+        return _wallclock_iso8601_z()
+
+    if result.returncode != 0:
+        logger.warning(
+            "STEGANOGRAPHY_DETERMINISTIC requested but 'git log -1 --format=%%cI' "
+            "returned exit %d in %s; falling back to wall-clock timestamp.",
+            result.returncode,
+            cwd,
+        )
+        return _wallclock_iso8601_z()
+
+    ts = result.stdout.strip()
+    if not ts:
+        logger.warning(
+            "STEGANOGRAPHY_DETERMINISTIC requested but git returned an empty "
+            "timestamp in %s; falling back to wall-clock timestamp.",
+            cwd,
+        )
+        return _wallclock_iso8601_z()
+
+    return ts
 
 
 @dataclass

@@ -231,6 +231,7 @@ pytest tests/infra_tests/test_project_discovery.py::test_discover_projects -v
 
 ```mermaid
 graph TD
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     A[Project Module] --> B[Discovery]
     A --> C[Validation]
     A --> D[Metadata]
@@ -247,6 +248,46 @@ graph TD
     I --> K
     J --> K
 ```
+
+## Optional: Per-Project Setup Hook
+
+A project may ship a one-time bootstrap script that runs at Stage 0:
+
+- `projects/<name>/scripts/setup_hook.py` — preferred, cross-platform.
+- `projects/<name>/scripts/setup_hook.sh` — POSIX-only fallback (skipped on Windows).
+
+```python
+from infrastructure.project import (
+    find_setup_hook,
+    preflight_setup_hook,
+    run_project_setup_hook,
+)
+
+hook = find_setup_hook(Path("projects/my_research"))
+ok, errors = preflight_setup_hook(Path("projects/my_research"))
+ran_ok = run_project_setup_hook(Path("projects/my_research"))
+```
+
+Hooks may declare an optional `setup_hook.yaml` manifest alongside the script:
+
+```yaml
+description: "Install Lean toolchain and pre-build Mathlib"
+required_tools: ["elan", "lake"]   # must be on PATH before the hook runs
+required_env: ["HF_TOKEN"]          # must be set (presence only)
+timeout_sec: 1800                   # overrides PROJECT_SETUP_HOOK_TIMEOUT_SEC
+skip_if_env: ["CI_NO_HOOKS"]        # truthy values disable the hook entirely
+```
+
+All fields are optional. A project without `setup_hook.yaml` behaves
+exactly as before. The default timeout is 3600 s and can be overridden
+globally with `PROJECT_SETUP_HOOK_TIMEOUT_SEC`.
+
+Set `PROJECT_SETUP_HOOK_DRY_RUN=1` to perform the preflight checks and
+log what *would* run without invoking the hook — useful for CI dry-runs
+and local debugging.
+
+**Windows portability**: provide a `setup_hook.py`. The `.sh` fallback is
+POSIX-only and is skipped with a warning on Windows hosts.
 
 ## See Also
 

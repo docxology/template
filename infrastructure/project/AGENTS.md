@@ -19,6 +19,59 @@ The `infrastructure/project/` module provides project discovery, validation, and
 
 - `get_default_project(repo_root, projects_dir="projects")` - Get the default template project if present
 
+### Project Setup Hook (`setup_hook.py`)
+
+A project may ship an optional one-time bootstrap script that is executed
+during Stage 0 (`scripts/00_setup_environment.py`). Common uses: install a
+toolchain (e.g. Lean/elan), prime a model cache, fetch a dataset.
+
+**Public API:**
+
+- `find_setup_hook(project_dir) -> Path | None` — locate `scripts/setup_hook.py` (preferred) or `scripts/setup_hook.sh` (POSIX-only).
+- `preflight_setup_hook(project_dir) -> tuple[bool, list[str]]` — read the optional `setup_hook.yaml` manifest and verify declared `required_tools` are on `PATH`, declared `required_env` vars are set, and honour `skip_if_env`.
+- `run_project_setup_hook(project_dir) -> bool` — runs preflight, then the hook (or short-circuits in dry-run).
+
+**Hook resolution & portability:**
+
+| Platform | `setup_hook.py` | `setup_hook.sh` |
+| -------- | --------------- | --------------- |
+| Linux/macOS | preferred | accepted (executed via `bash`) |
+| Windows | **required** | **skipped** with a warning — POSIX shells are not guaranteed |
+
+Authors targeting cross-platform CI must provide `setup_hook.py`.
+
+**Optional `setup_hook.yaml` manifest** (lives next to the hook in `scripts/`):
+
+```yaml
+# All fields are optional.
+description: "Free-text purpose"
+required_tools: ["elan", "lake"]   # binaries that must be on PATH
+required_env: ["HF_TOKEN"]          # env vars that must be set (presence only)
+timeout_sec: 1800                   # overrides PROJECT_SETUP_HOOK_TIMEOUT_SEC for this project
+skip_if_env: ["CI_NO_HOOKS"]        # truthy env vars that disable the hook entirely
+```
+
+Backward-compatible: a project without `setup_hook.yaml` behaves exactly as before — the hook simply runs to completion (or times out).
+
+**Environment knobs:**
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `PROJECT_SETUP_HOOK_TIMEOUT_SEC` | Global default timeout (s). Manifest `timeout_sec` overrides. | `3600` |
+| `PROJECT_SETUP_HOOK_DRY_RUN` | If truthy (`1`/`true`/`yes`/`on`), preflight runs and the resolved invocation is logged, but the hook is **not** executed. Returns `True`. | unset |
+
+**Failure-mode summary** (used by `00_setup_environment.py`):
+
+| Condition | `run_project_setup_hook` returns |
+| --- | --- |
+| No hook present | `True` (no-op) |
+| `skip_if_env` truthy | `True` (skipped) |
+| Preflight failure (missing tool/env) | `False` (single actionable error logged; hook **not** invoked) |
+| `PROJECT_SETUP_HOOK_DRY_RUN=1` (preflight ok) | `True` (hook **not** invoked) |
+| Hook exits non-zero | `False` |
+| Hook timeout | `False` |
+| Hook exits 0 | `True` |
+
 **ProjectInfo Dataclass:**
 ```python
 @dataclass

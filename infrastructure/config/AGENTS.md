@@ -18,5 +18,5 @@ Configuration files used by infrastructure components (repo-scoped defaults).
 
 ### See also
 
-- [`infrastructure/core/config_loader.py`](../core/config_loader.py)
+- [`infrastructure/core/config/loader.py`](../core/config/loader.py)
 - [`docs/operational/config/configuration.md`](../../docs/operational/config/configuration.md)

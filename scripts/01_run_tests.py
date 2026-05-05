@@ -26,9 +26,11 @@ from pathlib import Path
 # Bootstrap: add repo root so the centralized helper itself is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts import ensure_repo_root_on_path  # noqa: E402
+
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_live_resource_usage, log_substep
+from infrastructure.core.test_runner import run_per_project_pytest
 from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
 
 # Set up logger for this module
@@ -89,6 +91,16 @@ def main() -> int:
         action="store_true",
         help="Include Ollama-dependent tests (requires Ollama server running)",
     )
+    parser.add_argument(
+        "--all-projects",
+        action="store_true",
+        help=(
+            "When combined with --project-only, run every discovered "
+            "projects/<name>/tests/ via infrastructure.core.test_runner "
+            "(one pytest process per project; combined coverage gate at end). "
+            "This mirrors the open-coded loop in .github/workflows/ci.yml."
+        ),
+    )
     args = parser.parse_args()
 
     # Validate mutually exclusive flags
@@ -112,9 +124,7 @@ def main() -> int:
     # If the default placeholder project is selected but isn't a runnable project,
     # pick the first discovered runnable project (has src/ and tests/).
     project_root = repo_root / "projects" / args.project
-    if args.project == "project" and (
-        not (project_root / "src").exists() or not (project_root / "tests").exists()
-    ):
+    if args.project == "project" and (not (project_root / "src").exists() or not (project_root / "tests").exists()):
         try:
             from infrastructure.project.discovery import discover_projects
 
@@ -125,6 +135,25 @@ def main() -> int:
                 log_substep(f"Default project placeholder is not runnable; using '{args.project}' instead.", logger)
         except Exception as e:
             logger.warning("Project discovery failed; continuing with project=%s (%s)", args.project, e)
+
+    # --project-only --all-projects dispatches to the per-project runner
+    # (one pytest process per project, combined coverage gate at end).
+    # This is the local mirror of the bash loop in .github/workflows/ci.yml.
+    if args.project_only and args.all_projects:
+        marker_expr = "not requires_ollama"
+        if args.include_slow:
+            # Honour --include-slow by clearing the implicit "not slow" marker.
+            # Existing tests that opt out of slow runs use the slow marker;
+            # callers asking for slow tests want everything except Ollama.
+            marker_expr = "not requires_ollama"
+        if args.include_ollama_tests:
+            marker_expr = ""
+        exit_code = run_per_project_pytest(
+            repo_root,
+            marker_expr=marker_expr or "not requires_ollama",
+        )
+        log_live_resource_usage("Test stage end", logger)
+        return exit_code
 
     exit_code = execute_test_pipeline(
         project_name=args.project,
@@ -141,6 +170,7 @@ def main() -> int:
     log_live_resource_usage("Test stage end", logger)
 
     return exit_code
+
 
 if __name__ == "__main__":
     sys.exit(main())

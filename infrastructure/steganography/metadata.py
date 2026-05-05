@@ -6,14 +6,23 @@ document provenance, hash values, timestamps, and encrypted payloads.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.steganography.config import DocumentMetadata
+from infrastructure.steganography.config import (
+    DocumentMetadata,
+    resolve_build_timestamp,
+)
 
 logger = get_logger(__name__)
+
+
+__all__ = [
+    "build_document_metadata",
+    "build_xmp_packet",
+    "inject_pdf_metadata",
+]
 
 
 def inject_pdf_metadata(
@@ -101,7 +110,7 @@ def build_document_metadata(doc: DocumentMetadata) -> dict[str, str]:
     Returns:
         Dictionary of ``/Key`` → string value pairs.
     """
-    timestamp = datetime.now(timezone.utc).isoformat()
+    timestamp = resolve_build_timestamp()
 
     meta: dict[str, str] = {
         "/Creator": "Research Template Steganography Module",
@@ -147,7 +156,7 @@ def build_xmp_packet(doc: DocumentMetadata) -> str:
     Returns:
         XMP XML string.
     """
-    timestamp = datetime.now(timezone.utc).isoformat()
+    timestamp = resolve_build_timestamp()
 
     authors_xml = ""
     if doc.authors:

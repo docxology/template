@@ -140,3 +140,22 @@ def generate_pipeline_summary(
     generator = PipelineSummaryGenerator()
     summary = generator.generate_summary(stage_results, total_duration, output_dir, log_file, skip_infra)
     return generator.format_summary(summary, output_format)
+
+
+__all__ = [
+    # Re-exports from summary_models
+    "PipelineSummary",
+    # Re-exports from summary_formatters
+    "format_html_summary",
+    "format_json_summary",
+    "format_text_summary",
+    # Re-exports from summary_helpers
+    "extract_project_name_from_path",
+    "find_base_output_dir",
+    "format_stage_result",
+    "get_final_log_path",
+    "stage_result_to_dict",
+    # Local
+    "PipelineSummaryGenerator",
+    "generate_pipeline_summary",
+]

@@ -295,13 +295,14 @@ except TemplateError as e:
 Visual progress indicators for long-running operations:
 
 ```python
-from infrastructure.core import ProgressBar
+from infrastructure.core.progress import ProgressBar
 
 # Progress tracking for experiments
-with ProgressBar(total=4, desc="Step sizes") as progress:
-    for step_size in [0.01, 0.05, 0.1, 0.2]:
-        result = run_single_experiment(step_size)
-        progress.update(1)
+progress = ProgressBar(total=4, task="Step sizes")
+for step_size in [0.01, 0.05, 0.1, 0.2]:
+    result = run_single_experiment(step_size)
+    progress.update(1)
+progress.finish()
 ```
 
 ### Publishing Integration

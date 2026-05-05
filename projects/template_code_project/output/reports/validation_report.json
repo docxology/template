@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-03T15:31:57.445569",
+  "timestamp": "2026-05-05T06:25:06.819024",
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
@@ -153,7 +153,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.589376449584961,
+      "total_size_mb": 4.593583106994629,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,11 +163,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8874549865722656
+      "size_mb": 1.889115333557129
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5169391632080078
+      "size_mb": 1.5188522338867188
     },
     "data": {
       "files": 3,

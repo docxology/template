@@ -24,13 +24,13 @@ uv run python --version
 
 ## Run the Test Suite
 
-Validate the environment and check that all 42 tests pass with ≥90% coverage:
+Validate the environment and check that all 52 tests pass with ≥90% coverage:
 
 ```bash
 uv run pytest projects/template_code_project/tests/ -v --tb=short
 ```
 
-Expected: **42 passed**, coverage ~99%.
+Expected: **52 passed**, coverage ≥ 96%.
 
 ## Execute the Analysis Pipeline
 
@@ -41,7 +41,7 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 ```
 
 **Outputs created under `projects/template_code_project/output/`:**
-- `figures/` — 7 PNG plots (convergence, stability, benchmarks)
+- `figures/` — 6 PNG plots (convergence, stability, benchmarks)
 - `data/` — CSV and JSON results
 - `reports/` — HTML dashboard and validation JSON
 - `manuscript/` — token-substituted markdown sections
@@ -52,14 +52,14 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 Convert the manuscript to a PDF with LaTeX:
 
 ```bash
-uv run python scripts/03_render_pdf.py --project code_project
+uv run python scripts/03_render_pdf.py --project template_code_project
 ```
 
-Final PDF: `projects/template_code_project/output/pdf/code_project_combined.pdf`
+Final PDF: `projects/template_code_project/output/pdf/template_code_project_combined.pdf`
 
 ## View Results
 
-- **PDF manuscript**: open `projects/template_code_project/output/pdf/code_project_combined.pdf`
+- **PDF manuscript**: open `projects/template_code_project/output/pdf/template_code_project_combined.pdf`
 - **HTML dashboard**: open `projects/template_code_project/output/reports/analysis_dashboard.html`
 - **Figures**: browse `projects/template_code_project/output/figures/`
 - **Data**: `cat projects/template_code_project/output/data/optimization_results.csv`
@@ -84,6 +84,6 @@ Final PDF: `projects/template_code_project/output/pdf/code_project_combined.pdf`
 | Run tests | `uv run pytest projects/template_code_project/tests/ -v` |
 | Run analysis | `uv run python projects/template_code_project/scripts/optimization_analysis.py` |
 | Hydrate manuscript variables | `uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py` |
-| Render PDF | `uv run python scripts/03_render_pdf.py --project code_project` |
-| Copy final deliverables | `uv run python scripts/05_copy_outputs.py --project code_project` |
+| Render PDF | `uv run python scripts/03_render_pdf.py --project template_code_project` |
+| Copy final deliverables | `uv run python scripts/05_copy_outputs.py --project template_code_project` |
 | Clean outputs | `rm -rf projects/template_code_project/output/` |

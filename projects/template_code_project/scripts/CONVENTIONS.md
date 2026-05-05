@@ -110,18 +110,19 @@ except Exception as e:
 ## Progress Tracking
 
 ```python
-from infrastructure.core import ProgressBar
+from infrastructure.core.progress import ProgressBar
 
 step_sizes = [0.01, 0.05, 0.1, 0.2]
 
-with ProgressBar(total=len(step_sizes), desc="Experiments") as progress:
-    for step_size in step_sizes:
-        result = run_experiment(step_size)
-        progress.update(1)
+progress = ProgressBar(total=len(step_sizes), task="Experiments")
+for step_size in step_sizes:
+    result = run_experiment(step_size)
+    progress.update(1)
+progress.finish()
 ```
 
 - Use `ProgressBar` for any loop with >3 iterations
-- Set descriptive `desc=` labels
+- Set a descriptive `task=` label
 
 ## Infrastructure Integration Checklist
 

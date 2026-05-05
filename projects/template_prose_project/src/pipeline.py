@@ -79,7 +79,8 @@ def _check_grade_level(report: ManuscriptReport, lo: float, hi: float) -> CheckR
 
 def _check_citation_density(report: ManuscriptReport, threshold: float) -> CheckResult:
     n = max(1, report.total_words)
-    density = round(1000.0 * len(report.citation_keys) / n, 2)
+    citation_count = sum(f.quality.citation_count for f in report.files)
+    density = round(1000.0 * citation_count / n, 2)
     passed = density >= threshold
     return CheckResult(
         name="citation_density_above_floor",
@@ -88,7 +89,8 @@ def _check_citation_density(report: ManuscriptReport, threshold: float) -> Check
         details={
             "density_per_1000": density,
             "min": threshold,
-            "citation_count": len(report.citation_keys),
+            "citation_count": citation_count,
+            "unique_keys": len(report.citation_keys),
             "word_count": report.total_words,
         },
     )

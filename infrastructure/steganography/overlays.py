@@ -227,7 +227,7 @@ def create_footer_overlay(
         )
 
     rl_canvas, _letter, _inch = _get_reportlab()
-    from datetime import datetime, timezone
+    from infrastructure.steganography.config import resolve_build_timestamp
 
     buf = io.BytesIO()
     c = rl_canvas.Canvas(buf, pagesize=(page_width, page_height))
@@ -279,7 +279,7 @@ def create_footer_overlay(
     if cfg.hash_short:
         parts.append(f"SHA256 (compiled PDF): {cfg.hash_short}")
 
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    ts = resolve_build_timestamp()
     parts.append(ts)
 
     metrics_text = "  │  ".join(parts)

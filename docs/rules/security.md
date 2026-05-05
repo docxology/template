@@ -185,6 +185,32 @@ uv tool run pip-audit
 uv tool install safety && safety check
 ```
 
+### Local pre-push security gate
+
+`.pre-commit-config.yaml` ships a `bandit-quick` hook that mirrors the CI
+`security` job's Bandit step (`-ll` MEDIUM+ severity on `infrastructure/` and
+`scripts/`, with `projects_archive`/`projects_in_progress` excluded and
+`bandit.yaml`'s LOW-allow-list applied). It runs on the **pre-push** stage
+only (so `git commit` stays fast) and fails the push on any new MEDIUM/HIGH
+finding — same scope, same severity, same message text as CI. A
+`skills-check` pre-push hook also runs `python -m infrastructure.skills
+check` to catch stale `.cursor/skill_manifest.json`. A stricter manual-stage
+`bandit-low` hook is available for ad-hoc audits.
+
+```bash
+# Run the full pre-push gate locally (no actual push needed):
+pre-commit run --hook-stage pre-push --all-files
+
+# Just the security hook:
+pre-commit run bandit-quick --hook-stage pre-push --all-files
+
+# Strict LOW+MEDIUM+HIGH sweep:
+pre-commit run bandit-low --hook-stage manual --all-files
+```
+
+See [`.github/AGENTS.md`](../../.github/AGENTS.md#local-pre-push-parity-pre-commit-configyaml)
+for the full hook table and CI mapping.
+
 ### Secure Dependency Management
 
 ```python

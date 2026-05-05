@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import subprocess
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
@@ -73,7 +74,7 @@ def build_pandoc_render_error(
     elif not error_lines:
         error_msg += f"\n\nPandoc failed with return code {e.returncode} (no output captured)"
 
-    context_info: dict = {
+    context_info: dict[str, Any] = {
         "source": str(combined_md),
         "target": str(combined_md.with_suffix(".tex")),
     }

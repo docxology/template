@@ -27,7 +27,8 @@ from __future__ import annotations
 
 import json
 import re
-import xml.etree.ElementTree as ET
+
+import defusedxml.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -160,9 +161,9 @@ def _extract_pdf_text(pdf_bytes: bytes) -> str | None:
         reader = pypdf.PdfReader(BytesIO(pdf_bytes))
         chunks: list[str] = []
         for page in reader.pages:
-            try:
+            try:  # nosec B112 reason: per-page best-effort extraction; outer except logs, partial pages are acceptable for fulltext indexing
                 chunks.append(page.extract_text() or "")
-            except Exception:  # pragma: no cover - per-page failure
+            except Exception:  # pragma: no cover - per-page failure  # nosec B112 reason: see try-line above
                 continue
         return re.sub(r"\n{3,}", "\n\n", "\n".join(chunks)).strip() or None
     except Exception as exc:  # pragma: no cover - defensive

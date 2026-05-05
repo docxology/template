@@ -112,6 +112,19 @@ def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
         return 1
 
 
+__all__ = [
+    # Re-exports from infrastructure.validation.content.markdown_validator
+    # (re-exported for tests; the public surface preserved here for callers)
+    "collect_symbols",
+    "find_markdown_files",
+    # Local helpers / CLI surface
+    "main",
+    "validate_images",
+    "validate_math",
+    "validate_refs",
+]
+
+
 if __name__ == "__main__":
     import argparse
 

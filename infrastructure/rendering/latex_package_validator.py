@@ -21,6 +21,21 @@ from infrastructure.rendering.latex_validation import (  # noqa: F401
 )
 
 
+__all__ = [
+    # latex_discovery
+    "PackageStatus",
+    "check_latex_package",
+    "find_kpsewhich",
+    # latex_validation
+    "ValidationReport",
+    "get_missing_packages_command",
+    "validate_packages",
+    "validate_preamble_packages",
+    # local
+    "main",
+]
+
+
 def main() -> None:
     """CLI entry point for package validation."""
     print("LaTeX Package Validator")

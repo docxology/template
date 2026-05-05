@@ -61,6 +61,55 @@ jobs:
       - name: Type checking
         run: uv run mypy infrastructure/ projects/*/src/
 
+      # MED5 gate: every re-exporting module under infrastructure/ must
+      # declare __all__ — see docs/rules/api_design.md. Prevents regression
+      # of the [attr-defined] mypy class of bug.
+      - name: Audit __all__ on re-exporting modules
+        run: uv run python -m infrastructure.skills check-all-exports
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 1b — Unified health report (informational, no fail)
+#
+# MED2: ``infrastructure.core.health`` aggregates every quality gate into a
+# single typed ``HealthReport``. The job runs after ``lint`` and uploads the
+# JSON for triage; ``|| true`` keeps the workflow green even if individual
+# gates regress here (their dedicated jobs above are the blocking ones).
+# ─────────────────────────────────────────────────────────────────────────────
+  health:
+    name: Unified Health Report (informational)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [lint]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Run unified health checks (informational)
+        run: |
+          uv run python -m infrastructure.core.health --json --quiet \
+            > health-report.json || true
+
+      - name: Upload health report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report
+          path: health-report.json
+          if-no-files-found: warn
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 2 — No-Mocks Policy Verification
 # ─────────────────────────────────────────────────────────────────────────────
@@ -189,6 +238,9 @@ jobs:
       # One pytest process per project: template_code_project and fep_lean both use
       # ``tests/conftest.py``, which registers as the same plugin name if collected
       # in a single invocation. fep_lean runs in job ``fep-lean`` (real gauss/lake).
+      # The per-project loop, --cov-append accumulation, and combined coverage gate
+      # live in infrastructure.core.test_runner.run_per_project_pytest so CI and
+      # local runs share one implementation.
       - name: Run project tests
         env:
           COVERAGE_FILE: .coverage.project
@@ -196,31 +248,9 @@ jobs:
         run: |
           set -euo pipefail
           rm -f .coverage.project coverage-project.xml
-          first=1
-          for d in projects/*/tests; do
-            if [ "$d" = "projects/fep_lean/tests" ]; then
-              continue
-            fi
-            if [ "$first" -eq 1 ]; then
-              uv run pytest "$d" \
-                -m "not requires_ollama" \
-                --cov=projects/template_code_project/src \
-                --cov-report=term-missing \
-                --durations=10 \
-                --timeout=120
-              first=0
-            else
-              uv run pytest "$d" \
-                -m "not requires_ollama" \
-                --cov=projects/template_code_project/src \
-                --cov-append \
-                --cov-report=term-missing \
-                --durations=10 \
-                --timeout=120
-            fi
-          done
+          uv run python scripts/01_run_tests.py \
+            --project-only --all-projects --non-strict --include-slow
           uv run coverage xml -o coverage-project.xml
-          uv run coverage report --fail-under=90
 
       - name: Upload project coverage to Codecov
         if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
@@ -352,6 +382,12 @@ jobs:
           uv run python -m infrastructure.validation.cli markdown
           projects/*/manuscript/
 
+      - name: Verify api-reference.md is in sync with __all__
+        # Auto-generated from each `infrastructure/<pkg>/__init__.py` `__all__`
+        # by `scripts/generate_api_reference_doc.py`. Drift fails the build;
+        # regenerate locally with `--write` and commit the result.
+        run: uv run python scripts/generate_api_reference_doc.py --check
+
       - name: Verify project imports
         run: |
           uv run python -c "
@@ -412,6 +448,68 @@ jobs:
           scripts/
           projects/
           --exclude projects_archive,projects_in_progress
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 6b — Documentation Lint (mermaid + cross-links + consistency)
+#
+# Rules enforced:
+#   1. Every fenced ```mermaid block in long-lived docs must render with the
+#      real `mmdc` (mermaid-cli) binary backed by chrome-headless-shell.
+#   2. Every relative Markdown link must resolve on disk (skipping fenced and
+#      inline-code spans).
+#   3. ``N Python (sub)packages`` claims in long-lived docs must match the
+#      live count under ``infrastructure/``; rotating project names must not
+#      appear unconditionally hard-coded outside ``docs/_generated/``.
+#
+# This job intentionally fails LOUDLY when mmdc / chrome-headless-shell is
+# missing instead of skipping — see ``infrastructure/validation/docs/mermaid_lint.py``.
+# ─────────────────────────────────────────────────────────────────────────────
+  docs-lint:
+    name: Documentation Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [lint]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Sync Python dependencies
+        run: uv sync
+
+      - name: Install mermaid-cli
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      - name: Install chrome-headless-shell for puppeteer
+        run: npx --yes puppeteer browsers install chrome-headless-shell
+
+      - name: Locate chrome-headless-shell binary
+        id: chrome
+        run: |
+          set -euo pipefail
+          CHROME_PATH=$(find "$HOME/.cache/puppeteer/chrome-headless-shell" -type f -name 'chrome-headless-shell' | head -n1)
+          if [ -z "$CHROME_PATH" ]; then
+            echo "ERROR: chrome-headless-shell binary not found"
+            exit 1
+          fi
+          echo "CHROME_EXECUTABLE_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          echo "Resolved chrome at: $CHROME_PATH"
+
+      - name: Run docs linters (mermaid + cross-links + consistency)
+        run: uv run python scripts/lint_docs.py --quiet
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 7 — Performance Check
@@ -479,3 +577,36 @@ jobs:
               sys.exit(1)
           print('Performance check passed')
           "
+
+      # Informational microbench harness for setup_hook + analysis_pipeline (MED6).
+      # `|| true` keeps this strictly informational — a slow bench will never
+      # fail the build. Results are uploaded as a CI artifact for trend analysis.
+      - name: Run setup_hook + analysis_pipeline microbenches (informational)
+        run: |
+          uv run pytest tests/infra_tests/bench/ -m bench --benchmark-only \
+            --benchmark-min-rounds=3 --benchmark-json=bench-results.json \
+            --timeout=180 || true
+
+      - name: Upload microbench results
+        uses: actions/upload-artifact@v4
+        with:
+          name: bench-results
+          path: bench-results.json
+          if-no-files-found: warn
+
+      # MED3 — coverage trend dashboard. Pulls last 30 days of CI artefacts
+      # via `gh run download` and renders ``docs/_generated/coverage_history.md``.
+      # Strictly informational (`|| true`); the result is uploaded as the
+      # ``coverage-history`` artefact for trend review.
+      - name: Generate coverage history dashboard (informational)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run python scripts/generate_coverage_history.py --from-gh --days=30 || true
+
+      - name: Upload coverage history dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-history
+          path: docs/_generated/coverage_history.md
+          if-no-files-found: warn

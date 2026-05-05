@@ -5,7 +5,7 @@ Real-data test suite for the prose-review pipeline. **No mocks.**
 ## Run
 
 ```bash
-# Full suite (37 tests, ~2 s)
+# Full suite (66 tests, ~2 s)
 uv run pytest projects/template_prose_project/tests/ -v
 
 # Coverage gate
@@ -32,6 +32,7 @@ uv run pytest projects/template_prose_project/tests/ \
   directories, real subprocess.
 * **`tmp_path` for isolation.** Tests never touch the project's own
   `output/`.
-* **90%+ coverage gate** (currently 98%+).
+* **90%+ coverage gate** (run with `--cov-report=term-missing` to see the
+  current value).
 
 See [AGENTS.md](AGENTS.md) for the editing rules and how to add new tests.

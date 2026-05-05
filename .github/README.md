@@ -88,7 +88,7 @@ graph TD
     Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 17 Python packages under infrastructure/ (+ logrotate.d templates) · 16 docs areas (see docs/modules/modules-guide.md)"
+    subgraph "Layer 1 · 15 Python packages under infrastructure/ (+ logrotate.d templates) · 16 docs areas (see docs/modules/modules-guide.md)"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -111,7 +111,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
-| `infrastructure/` | Permanent | **17** top-level Python packages under `infrastructure/` (plus `logrotate.d/` configs, not a package); **16** documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
+| `infrastructure/` | Permanent | **15** top-level Python packages under `infrastructure/` (plus `logrotate.d/` configs and a `docker/` config tree, neither a Python package); **16** documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
@@ -141,9 +141,11 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 → **Details**: [projects/template_code_project/AGENTS.md](../projects/template_code_project/AGENTS.md) · [projects/template_code_project/README.md](../projects/template_code_project/README.md)
 
-### `template` — Meta-Documentation Project
+<!-- The three sections below catalogue rotating projects that may not currently be checked out under projects/; per-line noqa comments suppress the docs-lint ghost-project warning. Authoritative current roster: docs/_generated/active_projects.md. -->
 
-> **`projects/template/`** is a self-referential manuscript that programmatically documents this very repository.
+### `template` — Meta-Documentation Project (rotating)
+
+> **`projects/template/`** is a self-referential manuscript that programmatically documents this very repository. <!-- noqa: docs-lint -->
 
 | Feature | Implementation |
 | --- | --- |
@@ -153,19 +155,19 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 | 4 architecture figures | `scripts/generate_architecture_viz.py` — generated from live data |
 | 21-chapter manuscript | ~13,500 words covering Two-Layer Architecture, pipeline, provenance |
 
-→ **Details**: [projects/template/AGENTS.md](../projects/template/AGENTS.md) · [projects/template/README.md](../projects/template/README.md)
+→ **Details**: [projects/template/AGENTS.md](../projects/template/AGENTS.md) · [projects/template/README.md](../projects/template/README.md) <!-- noqa: docs-lint -->
 
-### `cognitive_case_diagrams` — Cognitive Case Diagrams
+### `cognitive_case_diagrams` — Cognitive Case Diagrams (rotating)
 
-> **`projects/cognitive_case_diagrams/`** is an active manuscript project (categorial grammar, case diagrams, and related chapters).
+> **`projects/cognitive_case_diagrams/`** is an active manuscript project (categorial grammar, case diagrams, and related chapters). <!-- noqa: docs-lint -->
 
-→ **Details**: [projects/cognitive_case_diagrams/AGENTS.md](../projects/cognitive_case_diagrams/AGENTS.md) · [projects/cognitive_case_diagrams/README.md](../projects/cognitive_case_diagrams/README.md)
+→ **Details**: [projects/cognitive_case_diagrams/AGENTS.md](../projects/cognitive_case_diagrams/AGENTS.md) · [projects/cognitive_case_diagrams/README.md](../projects/cognitive_case_diagrams/README.md) <!-- noqa: docs-lint -->
 
-### `fep_lean` — FEP / Lean catalogue
+### `fep_lean` — FEP / Lean catalogue (rotating)
 
-> **`projects/fep_lean/`** — Free Energy Principle / Active Inference topics with Lean 4 sketches, Hermes (OpenRouter), and math-inc Open Gauss (`gauss`) when workflows are enabled.
+> **`projects/fep_lean/`** — Free Energy Principle / Active Inference topics with Lean 4 sketches, Hermes (OpenRouter), and math-inc Open Gauss (`gauss`) when workflows are enabled. <!-- noqa: docs-lint -->
 
-→ **Details**: [projects/fep_lean/AGENTS.md](../projects/fep_lean/AGENTS.md) · [projects/fep_lean/README.md](../projects/fep_lean/README.md)
+→ **Details**: [projects/fep_lean/AGENTS.md](../projects/fep_lean/AGENTS.md) · [projects/fep_lean/README.md](../projects/fep_lean/README.md) <!-- noqa: docs-lint -->
 
 ### Archived exemplars
 
@@ -273,6 +275,7 @@ stateDiagram-v2
 
 ```mermaid
 flowchart TD
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph Input["📥 Input Data"]
         SOURCE_CODE[Source Code\nprojects/{name}/src/*.py\nAlgorithm implementations]
         ANALYSIS_SCRIPTS[Analysis Scripts\nprojects/{name}/scripts/*.py\nWorkflow orchestrators]
@@ -331,18 +334,22 @@ flowchart TD
 
 Stage indices **0–9** are pipeline positions; they **do not** match `scripts/NN_*.py` numeric prefixes (e.g. stage 2 uses `01_run_tests.py`). The table below is authoritative.
 
-| Stage | Script | Failure Mode |
-| --- | --- | :---: |
-| **00** Clean | `PipelineExecutor` built-in | Soft fail |
-| **01** Setup | `00_setup_environment.py` | Hard fail |
-| **02** Infra Tests | `01_run_tests.py --infra-only` | Configurable tolerance |
-| **03** Project Tests| `01_run_tests.py --project-only` | Configurable tolerance |
-| **04** Analysis | `02_run_analysis.py` | Hard fail |
-| **05** Render PDF | `03_render_pdf.py` | Hard fail |
-| **06** Validate | `04_validate_output.py` | Warning + report |
-| **07** LLM Reviews | `06_llm_review.py --reviews-only` | Skippable (requires Ollama) |
-| **08** LLM Translations| `06_llm_review.py --translations-only`| Skippable (requires Ollama) |
-| **09** Copy | `05_copy_outputs.py` | Soft fail |
+<!-- BEGIN:STAGE_TABLE -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+
+| Stage | Script | Tags | Failure mode |
+| ----- | ------ | ---- | ------------ |
+| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
+| **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
+| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
+| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
+| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
+| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+<!-- END:STAGE_TABLE -->
 
 Full stage details: [docs/core/workflow.md](../docs/core/workflow.md) · [docs/core/how-to-use.md](../docs/core/how-to-use.md).
 
@@ -355,7 +362,7 @@ Every directory at every level contains **two documentation files**:
 - **`README.md`** — Human-readable overview and quick-start
 - **`AGENTS.md`** — Machine-readable spec for AI coding assistants: API tables, dependency graphs, architectural constraints, naming conventions
 
-Under `infrastructure/`, each subpackage also has **`SKILL.md`** (YAML frontmatter). The aggregated list for editors is [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (regenerate with `uv run python -m infrastructure.skills write`). Cursor project rules live under [`.cursor/rules/`](../.cursor/rules/).
+Under `infrastructure/`, each subpackage also has **`SKILL.md`** (YAML frontmatter). The aggregated list for editors is [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (regenerate with `uv run python -m infrastructure.skills write`). Cursor project skills live under [`.cursor/skills/`](../.cursor/skills/).
 
 ```mermaid
 flowchart TB
@@ -656,7 +663,7 @@ Documentation review reports and filepath audits.
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| [`ci.yml`](workflows/ci.yml) | push · PR · weekly · manual | 8 CI jobs (`fep-lean` runs only if `projects/fep_lean/lean/lean-toolchain` exists) |
+| [`ci.yml`](workflows/ci.yml) | push · PR · weekly · manual | 8 CI jobs (`fep-lean` runs only when `projects/fep_lean/lean/lean-toolchain` is present) |
 | [`stale.yml`](workflows/stale.yml) | Daily 01:00 UTC | Close inactive issues/PRs |
 | [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual | GitHub Release with changelog |
 

@@ -55,6 +55,7 @@ flowchart TB
 
 ```mermaid
 graph TD
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     A[User] --> B[run.sh]
     B --> C[execute_pipeline.py]
     C --> D[PipelineExecutor]
@@ -311,16 +312,37 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 ### Core Pipeline Stages + Executive Reporting
 
-| Stage | Script | Purpose |
-|-------|--------|---------|
-| 00 | `00_setup_environment.py` | Environment setup & validation |
-| 01 | `01_run_tests.py` | Run test suite (infrastructure + project) |
-| 02 | `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
-| 03 | `03_render_pdf.py` | PDF rendering orchestration |
-| 04 | `04_validate_output.py` | Output validation & reporting |
-| 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
-| 06 | `06_llm_review.py` | LLM manuscript review & translations (optional, requires Ollama) |
-| 07 | `07_generate_executive_report.py` | Executive summaries & dashboards (multi-project only) |
+The canonical pipeline-stage table (rendered from `pipeline.yaml`):
+
+<!-- BEGIN:STAGE_TABLE -->
+<!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->
+
+| Stage | Script | Tags | Failure mode |
+| ----- | ------ | ---- | ------------ |
+| **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
+| **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
+| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
+| **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
+| **6** Output Validation | `04_validate_output.py` | `core` | warning + report |
+| **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
+| **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
+| **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+<!-- END:STAGE_TABLE -->
+
+The table above lists pipeline-position indices (0-based, as the executor sees them); the table below maps script *filename* prefixes to their high-level purpose:
+
+| Script | Purpose |
+|--------|---------|
+| `00_setup_environment.py` | Environment setup & validation |
+| `01_run_tests.py` | Run test suite (infrastructure + project) |
+| `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
+| `03_render_pdf.py` | PDF rendering orchestration |
+| `04_validate_output.py` | Output validation & reporting |
+| `05_copy_outputs.py` | Copy final deliverables to `output/` |
+| `06_llm_review.py` | LLM manuscript review & translations (optional, requires Ollama) |
+| `07_generate_executive_report.py` | Executive summaries & dashboards (multi-project only) |
 
 `--core-only` runs the executor stages through copy outputs and does **not** run `06` or `07`; those are optional or multi-project entry points.
 

@@ -282,6 +282,19 @@ saved_files = generate_validation_report(validation_results, Path("output/report
 - `get_error_aggregator()` - Get global error aggregator instance
 - `ErrorEntry` - Single error/warning entry dataclass
 
+### Coverage Trend Dashboard (`coverage_history.py`)
+
+Generates a static `docs/_generated/coverage_history.md` with a 30-day rolling
+table and ASCII sparklines per suite. Imported from a thin orchestrator at
+`scripts/generate_coverage_history.py`.
+
+- `CoveragePoint` — frozen dataclass: `(date, suite, percentage, lines_covered, lines_total)`
+- `parse_coverage_xml(path) -> CoveragePoint` — Cobertura XML → point (uses `defusedxml`)
+- `collect_history_from_dir(directory) -> list[CoveragePoint]` — recursive offline parse
+- `collect_history_via_gh(workflow="ci.yml", *, days=30, repo_root=None) -> list[CoveragePoint]` —
+  real `gh run list` + `gh run download` (raises `RuntimeError` if `gh` is missing)
+- `build_history_markdown(points, *, days=30, today=None) -> str` — pure, deterministic Markdown
+
 ## Report Formats
 
 All reports are generated in multiple formats:

@@ -110,3 +110,25 @@ generate_llm_executive_summary = _make_review_fn("executive_summary")
 generate_quality_review = _make_review_fn("quality_review")
 generate_methodology_review = _make_review_fn("methodology_review")
 generate_improvement_suggestions = _make_review_fn("improvement_suggestions")
+
+
+__all__ = [
+    # Re-exports from quality
+    "ReviewType",
+    "ReviewQualityDetails",
+    "validate_review_quality",
+    # Re-exports from ollama_setup
+    "create_review_client",
+    "get_manuscript_review_system_prompt",
+    "select_and_start_ollama_model",
+    "warmup_model",
+    # Re-exports from generation
+    "extract_manuscript_text",
+    "generate_review_with_metrics",
+    "generate_translation",
+    # Public API entry points generated locally
+    "generate_improvement_suggestions",
+    "generate_llm_executive_summary",
+    "generate_methodology_review",
+    "generate_quality_review",
+]

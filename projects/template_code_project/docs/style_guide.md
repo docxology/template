@@ -30,7 +30,7 @@ assert mock_grad.call_count > 0
 obj, grad = make_quadratic_problem(A=np.array([[2.0]]), b=np.array([4.0]))
 result = gradient_descent(np.array([0.0]), obj, grad, step_size=0.1)
 assert result.converged
-assert abs(result.final_point[0] - 2.0) < 1e-4  # x* = A^-1 b = 2.0
+assert abs(result.solution[0] - 2.0) < 1e-4  # x* = A^-1 b = 2.0
 ```
 
 **Verify cleanliness**:
@@ -77,7 +77,7 @@ def run_experiment(alpha, x0):
 **Correct** — `scripts/` calls `src/` for the math:
 ```python
 # GOOD — import and call the tested function
-from projects.code_project.src.optimizer import gradient_descent, make_quadratic_problem
+from projects.template_code_project.src.optimizer import gradient_descent, make_quadratic_problem
 
 def run_experiment(alpha, A, b, x0):
     obj, grad = make_quadratic_problem(A=A, b=b)
@@ -129,7 +129,7 @@ When AI agents or humans refer to files in logs, documentation, comments, or imp
 | variable hydration | `projects/template_code_project/scripts/z_generate_manuscript_variables.py` |
 | config | `projects/template_code_project/manuscript/config.yaml` |
 | results CSV | `projects/template_code_project/output/data/optimization_results.csv` |
-| final PDF | `output/code_project/pdf/code_project_combined.pdf` |
+| final PDF | `output/template_code_project/template_code_project_combined.pdf` |
 
 **Forbidden (relative / ambiguous)**:
 ```

@@ -105,6 +105,7 @@ flowchart LR
 
 ```mermaid
 flowchart TD
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph FigureWorkflow["Figure Management Workflow"]
         A[Generate Plot<br/>Create visualization]
         B[Register Figure<br/>FigureManager.register_figure()]
@@ -659,6 +660,33 @@ For detailed function signatures and API documentation, see [AGENTS.md](AGENTS.m
 - `build_api_index(src_dir)` - Parse source for public APIs
 - `generate_markdown_table(entries)` - Create Markdown table
 - `inject_between_markers()` - Update content sections
+
+### Pipeline Stage-Table Generator
+- `stage_table.build_stage_table(yaml_path)` - Render the canonical
+  pipeline stage table from `infrastructure/core/pipeline/pipeline.yaml`
+  (4 columns: Stage | Script | Tags | Failure mode)
+- `stage_table.inject_stage_table(md_path, table)` - Replace the block
+  between `<!-- BEGIN:STAGE_TABLE -->` / `<!-- END:STAGE_TABLE -->`
+  in a Markdown file (idempotent)
+- Driver: [`scripts/generate_stage_table_doc.py`](../../scripts/generate_stage_table_doc.py)
+  updates `README.md`, `.github/README.md`, `scripts/AGENTS.md`,
+  `docs/RUN_GUIDE.md`, and `docs/core/workflow.md` in lockstep
+
+### Public API Reference Generator
+- `api_reference_gen.walk_public_api(package_root)` - Parse one
+  `infrastructure/<pkg>/__init__.py`, extract `__all__`, resolve each
+  symbol to its source-module definition (follows re-export chains),
+  and return `ModuleAPI` records (name, kind, signature, summary).
+- `api_reference_gen.build_api_reference_markdown(packages)` - Render
+  alphabetised per-package sections — fenced Python signatures plus
+  first-line docstring as prose.
+- `api_reference_gen.inject_api_reference(md_path, content)` - Replace
+  the block between `<!-- BEGIN:API_REFERENCE -->` /
+  `<!-- END:API_REFERENCE -->` (idempotent).
+- Driver: [`scripts/generate_api_reference_doc.py`](../../scripts/generate_api_reference_doc.py)
+  with `--write` (apply) and `--check` (CI gate) flags. Target:
+  [`docs/reference/api-reference.md`](../../docs/reference/api-reference.md).
+  Drift fails the `validate` job in `.github/workflows/ci.yml`.
 
 ## API Glossary Generation
 

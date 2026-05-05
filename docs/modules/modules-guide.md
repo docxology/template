@@ -4,7 +4,7 @@ Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
-**Counting:** The overview table lists **16** documented areas — including **Orchestration** (CLI/menu runner) and **Prose** (editorial analytics) alongside Skills and Telemetry-as-first-class. **Reference**, **Search**, and **Orchestration** are distinct Python trees under [`infrastructure/`](../../infrastructure/); older guides that cite *13 subpackages* reflect an earlier rollup (often folding telemetry into `core/`). See [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) for the current diagram.
+**Counting:** The overview table lists **16** documented areas — including **Orchestration** (CLI/menu runner) and **Prose** (editorial analytics) alongside Skills and Telemetry-as-first-class. **Reference**, **Search**, and **Orchestration** are distinct Python trees under [`infrastructure/`](../../infrastructure/); older guides that cite *13 subpackages* reflect an earlier rollup (often folding telemetry into `core/`). See [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) for the current diagram. <!-- noqa: docs-lint — historical-context reference to a prior rollup count -->
 
 ---
 

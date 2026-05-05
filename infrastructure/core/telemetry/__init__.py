@@ -28,11 +28,14 @@ from infrastructure.core.telemetry.models import (
     PipelineTelemetry,
     StageTelemetry,
 )
+from infrastructure.core.telemetry.retention import RotationResult, rotate
 
 __all__ = [
     "PerformanceWarning",
     "PipelineTelemetry",
+    "RotationResult",
     "StageTelemetry",
     "TelemetryCollector",
     "TelemetryConfig",
+    "rotate",
 ]

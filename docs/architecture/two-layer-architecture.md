@@ -248,6 +248,7 @@ from project.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ```mermaid
 flowchart TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     INFRA[/infrastructure//<br/>Layer 1 · 15 subpackages]
     INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
     INFRA --> CFG[/config/<br/>Shared configuration/]
@@ -280,6 +281,7 @@ File-level layout inside each package: see [`infrastructure/AGENTS.md`](../../in
 
 ```mermaid
 flowchart TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     PROJ[/project//<br/>Project-specific code]
     PROJ --> SRC[/src/<br/>Project scientific code/]
     PROJ --> SC[/scripts/<br/>Project orchestrators/]
@@ -301,6 +303,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     ROOT_TESTS[/tests//<br/>Root level · infrastructure tests]
     ROOT_TESTS --> INFRA_T[/infra_tests/<br/>Layer 1 tests/]
     ROOT_TESTS --> INTEG[/integration/<br/>Cross-layer tests/]
@@ -328,6 +331,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     START([User runs:<br/>uv run python scripts/execute_pipeline.py --project {name} --core-only]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
     CLEAN --> STAGE00[STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools]
     

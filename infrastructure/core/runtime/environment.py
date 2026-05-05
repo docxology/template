@@ -38,3 +38,25 @@ from infrastructure.core.runtime._packages import (  # noqa: F401
 
 # Re-export from env_deps (was already here)
 from infrastructure.core.runtime.env_deps import check_dependencies  # noqa: F401
+
+
+__all__ = [
+    # _python_env
+    "build_analysis_script_cmd_and_env",
+    "check_python_version",
+    "check_uv_available",
+    "get_python_command",
+    "get_subprocess_env",
+    "validate_interpreter",
+    # _directories
+    "setup_directories",
+    "validate_directory_structure",
+    "verify_source_structure",
+    # _packages
+    "check_build_tools",
+    "install_missing_packages",
+    "set_environment_variables",
+    "validate_uv_sync_result",
+    # env_deps
+    "check_dependencies",
+]

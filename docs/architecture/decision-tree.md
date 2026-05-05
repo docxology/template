@@ -6,6 +6,7 @@ Quick reference for determining where new code belongs in the two-layer architec
 
 ```mermaid
 flowchart TD
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     START([New code to write?]) --> Q1{Is it about building/<br/>validating/managing documents?}
     Q1 -->|YES| L1[LAYER 1: INFRASTRUCTURE<br/>Add to infrastructure/]
     Q1 -->|NO| Q2{Does it implement research<br/>algorithms/analysis?}

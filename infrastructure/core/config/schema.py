@@ -11,13 +11,22 @@ Type selection rationale:
   all fields have defaults, immutability is required, and attribute access is
   preferred over dict subscript.
 
+Per-project schema extensions
+-----------------------------
+Projects may register additional valid top-level keys via
+:func:`register_project_schema_extension`. Once registered for a project,
+those keys are accepted by :func:`infrastructure.core.config.loader.validate_config_keys`
+without emitting "unknown config key" warnings. The registry is process-local
+(a module-level dict) and is not persisted to disk; tests that mutate it
+should call :func:`clear_project_schema_extensions` in a fixture.
+
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, TypedDict
+from typing import Any, Mapping, TypedDict
 
 
 class AuthorConfig(TypedDict, total=False):
@@ -110,3 +119,81 @@ class ManuscriptConfig(TypedDict, total=False):
     metadata: dict[str, str]
     project_config: dict[str, Any]  # passthrough for project-specific config sections
     experiment: dict[str, Any]  # passthrough for project experimental parameters
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Per-project schema extensions
+#
+# Projects can register additional valid top-level keys without disabling
+# global validation. The registry is module-local (process-scoped); tests must
+# use ``clear_project_schema_extensions()`` in a fixture to avoid leakage.
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+_PROJECT_SCHEMA_EXTENSIONS: dict[str, dict[str, Any]] = {}
+
+
+def register_project_schema_extension(project_name: str, schema: Mapping[str, Any]) -> None:
+    """Register additional valid top-level config keys for a project.
+
+    Keys present in ``schema`` are accepted as valid top-level keys in
+    ``manuscript/config.yaml`` for the named project; the validator
+    won't warn on them. Schema values describe the expected type
+    (e.g. ``dict``, ``list``, ``str``) — they are recorded for
+    documentation purposes and not currently enforced beyond
+    membership.
+
+    Calling this function twice for the same ``project_name`` merges
+    the new mapping into the existing one (later keys override
+    earlier ones with the same name).
+
+    Args:
+        project_name: Name of the project (matches the directory name
+            under ``projects/``). Empty string registers a global
+            extension that applies to all projects.
+        schema: Mapping of extra top-level key name to a type or
+            description. Stored as-is.
+    """
+    if not isinstance(project_name, str):
+        raise TypeError(f"project_name must be str, got {type(project_name).__name__}")
+    bucket = _PROJECT_SCHEMA_EXTENSIONS.setdefault(project_name, {})
+    bucket.update(dict(schema))
+
+
+def get_project_schema_extensions(project_name: str) -> Mapping[str, Any]:
+    """Return registered extensions for a project (or empty mapping).
+
+    Args:
+        project_name: Name of the project to look up.
+
+    Returns:
+        A read-only view of the per-project extension mapping. Empty
+        mapping if nothing has been registered for the project.
+    """
+    return dict(_PROJECT_SCHEMA_EXTENSIONS.get(project_name, {}))
+
+
+def clear_project_schema_extensions() -> None:
+    """Test helper. Clears the registry.
+
+    Use in a pytest fixture (autouse or explicit) to keep registry
+    state from leaking between tests.
+    """
+    _PROJECT_SCHEMA_EXTENSIONS.clear()
+
+
+__all__ = [
+    "AuthorConfig",
+    "LLMYAMLConfig",
+    "ManuscriptConfig",
+    "PaperConfig",
+    "PublicationConfig",
+    "ResolvedTestingConfig",
+    "ReviewsConfig",
+    "SteganographyConfigYAML",
+    "TestingConfig",
+    "TranslationsConfig",
+    "clear_project_schema_extensions",
+    "get_project_schema_extensions",
+    "register_project_schema_extension",
+]

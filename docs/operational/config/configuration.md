@@ -47,6 +47,36 @@ export NO_EMOJI=1   # Disable emojis
 | `PIPELINE_RESUME` | (unset) | Resume from checkpoint if available |
 | `PIPELINE_CLEAN` | (unset) | Clean output directories before run |
 
+### Telemetry Retention
+
+`TelemetryCollector.finalize()` writes
+`projects/{name}/output/reports/telemetry.json` (and the matching
+`output/{name}/reports/telemetry.json` once `09_copy_outputs` has run).
+Without rotation those files would accumulate one report per run and
+nothing else. Before each write, the collector calls
+`infrastructure.core.telemetry.retention.rotate(reports_dir, keep=N)`
+which:
+
+1. Moves any *previous* `telemetry.json` into
+   `<reports_dir>/.history/telemetry-<unix_ts>.json` (the in-flight
+   report being written next is never touched).
+2. Prunes the oldest archived files until at most `N` remain.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TELEMETRY_KEEP` | `10` | Maximum number of archived `telemetry.json` files to retain in `<reports_dir>/.history/`. Set to `0` to archive nothing (every previous report is rotated and immediately pruned). Negative or non-integer values fall back to the default. |
+
+**Example:**
+```bash
+# Keep the last 25 telemetry reports per project
+export TELEMETRY_KEEP=25
+uv run python scripts/execute_pipeline.py --project template_code_project --core-only
+```
+
+The function is idempotent: re-running it without a new live report
+returns `RotationResult(archived=0, pruned=0, kept=N)` and leaves the
+archive unchanged.
+
 ## Configuration File
 
 ### Location
@@ -230,6 +260,57 @@ The template validates configuration at startup:
 # Check configuration
 uv run python -c "from infrastructure.core.config.loader import load_config; print(load_config())"
 ```
+
+### Per-project schema extensions
+
+`infrastructure.core.config.schema` enforces a canonical set of top-level
+keys for `manuscript/config.yaml` and the loader emits a warning for any
+unrecognized key. Two existing escape hatches let projects pass through
+arbitrary data:
+
+- Nest custom keys under the canonical `project_config:` mapping (no
+  warning, no validation).
+- Nest experiment parameters under `experiment:` (same).
+
+When a project wants its own *first-class* top-level keys without warning
+spam — and without disabling validation globally — register them at
+process startup:
+
+```python
+# projects/my_project/setup_hook.py (or any module imported before
+# load_config runs)
+from infrastructure.core.config.schema import register_project_schema_extension
+
+register_project_schema_extension(
+    "my_project",
+    {
+        "simulation": dict,    # arbitrary nested mapping
+        "datasets": list,      # list of dataset descriptors
+        "experiment_id": str,  # short identifier
+    },
+)
+```
+
+Then `manuscript/config.yaml` may include those keys at the top level:
+
+```yaml
+paper:
+  title: "My Paper"
+simulation:
+  steps: 1000
+datasets:
+  - name: "primary"
+experiment_id: "EX-2026-001"
+```
+
+`load_config()` infers the project name from a standard
+`…/projects/<name>/manuscript/config.yaml` layout, or you can pass it
+explicitly via `load_config(path, project_name="my_project")`. Calling
+`register_project_schema_extension("", {...})` registers a key that
+applies to *all* projects (use sparingly).
+
+The registry is process-local. Tests should call
+`clear_project_schema_extensions()` in a fixture to avoid state leakage.
 
 ## Best Practices
 

@@ -9,13 +9,20 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.steganography.config import resolve_build_timestamp
 
 logger = get_logger(__name__)
+
+
+__all__ = [
+    "compute_content_hash",
+    "compute_file_hashes",
+    "write_hash_manifest",
+]
 
 
 def compute_file_hashes(
@@ -73,7 +80,7 @@ def write_hash_manifest(
 
     manifest: dict[str, Any] = {
         "source_file": pdf_path.name,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": resolve_build_timestamp(),
         "hashes": hashes,
     }
     if extra:

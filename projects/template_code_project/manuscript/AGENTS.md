@@ -39,7 +39,7 @@ Numeric values that come from analysis outputs **must** use `{{VARIABLE_NAME}}` 
 4. `scripts/03_render_pdf.py` renders the **substituted** copies (from `output/manuscript/`), not the originals
 
 **Adding a new token**:
-1. Add a key/value pair to the `variables` dict in `z_generate_manuscript_variables.py::build_variables()`
+1. Add a key/value pair to the `variables` dict in `z_generate_manuscript_variables.py::generate_variables()`
 2. Verify: `python -c "import json; d=json.load(open('projects/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`
 3. Reference in a manuscript file as `{{MY_TOKEN}}`
 

@@ -54,6 +54,23 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
     exit 1
 fi
 
+# Strip out --deterministic before forwarding (the orchestration argparse
+# does not know about it). Setting STEGANOGRAPHY_DETERMINISTIC=1 makes
+# `infrastructure.steganography.config.resolve_build_timestamp` pin the
+# embedded build timestamp to `git log -1 --format=%cI`, so two
+# consecutive secure_run.sh invocations produce byte-identical PDFs.
+FORWARD_ARGS=()
+for arg in "$@"; do
+    case "$arg" in
+        --deterministic)
+            export STEGANOGRAPHY_DETERMINISTIC=1
+            ;;
+        *)
+            FORWARD_ARGS+=("$arg")
+            ;;
+    esac
+done
+
 if ! ensure_uv; then
     print_uv_install_instructions
     exit 1
@@ -65,5 +82,5 @@ uv sync --group steganography || {
     exit 1
 }
 
-# Forward all args to the Python secure subcommand.
-exec uv run python -m infrastructure.orchestration secure "$@"
+# Forward remaining args to the Python secure subcommand.
+exec uv run python -m infrastructure.orchestration secure ${FORWARD_ARGS[@]+"${FORWARD_ARGS[@]}"}

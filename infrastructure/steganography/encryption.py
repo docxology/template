@@ -190,5 +190,17 @@ def apply_pdf_password(
 
 
 def generate_document_id() -> str:
-    """Generate a unique document identifier (UUID4-style hex token)."""
+    """Generate a unique document identifier (UUID4-style hex token).
+
+    When ``STEGANOGRAPHY_DETERMINISTIC`` is active, the identifier is
+    derived from the SHA-256 of the resolved build timestamp so two
+    consecutive runs against the same ``HEAD`` yield byte-identical PDFs.
+    Otherwise it is a 16-byte cryptographically random hex token.
+    """
+    from infrastructure.steganography.config import resolve_build_timestamp
+
+    env = os.environ.get("STEGANOGRAPHY_DETERMINISTIC", "").strip().lower()
+    if env in {"1", "true", "yes", "on"}:
+        ts = resolve_build_timestamp()
+        return hashlib.sha256(f"steg-doc-id|{ts}".encode("utf-8")).hexdigest()[:32]
     return secrets.token_hex(16)

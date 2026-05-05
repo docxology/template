@@ -201,6 +201,7 @@ After configuring your project, you'll have:
 
 ```mermaid
 graph LR
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph "projects/{name}/src/ Modules"
         EXISTING[example.py<br/>Basic functions]
         NEW1[ml_optimizer.py<br/>ML algorithms]

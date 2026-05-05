@@ -6,7 +6,7 @@ This `template_code_project` serves as the foundational exemplar for the [Resear
 
 Scientific engineering requires mathematical accuracy combined with software reliability. This project unifies theoretical optimization with the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer (Root Directory)**: A modular stack of sixteen subpackages (`config`, `core`, `docker`, `documentation`, `llm`, `project`, `prose`, `publishing`, `reference`, `rendering`, `reporting`, `scientific`, `search`, `skills`, `steganography`, `validation`) providing the computational scaffolding.
+1. **`infrastructure/` Layer (Root Directory)**: A modular stack of fifteen Python subpackages (`core`, `documentation`, `llm`, `orchestration`, `project`, `prose`, `publishing`, `reference`, `rendering`, `reporting`, `scientific`, `search`, `skills`, `steganography`, `validation`) providing the computational scaffolding (the sibling `config/` and `docker/` directories under `infrastructure/` are configuration/data, not Python packages).
 2. **`tests/` Framework (`projects/template_code_project/tests/`)**: An uncompromising validation layer maintaining a zero-mock testing policy. This is enforced automatically via the [CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) mapping to `pyproject.toml` directives.
 3. **`docs/` Knowledge Base (`projects/template_code_project/docs/`)**: A structured repository of architectural guidelines, operational patterns, and the Rigorous Agentic Scientific Protocol (RASP) that governs the AI-assisted agents writing these very texts.
 

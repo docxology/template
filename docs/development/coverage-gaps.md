@@ -1,162 +1,126 @@
 # Test Coverage Gap Analysis
 
-This document analyzes test coverage gaps in infrastructure modules and provides improvement plans.
+This document tracks infrastructure test coverage gaps. Numbers are
+re-baselined from the live `pytest --cov` run; see "How this file is
+generated" below.
 
-## 🎉 Coverage Achievement Celebration
-
-**Major Milestone Reached!**
-
-The infrastructure test coverage has achieved **83.33%**, representing a **+22% improvement** from the previous baseline of 61.48%.
-
-### Key Achievements
-
-- ✅ **Exceeded stretch goal**: Surpassed 75% target by 8%
-- ✅ **testing**: Added 100+ tests across multiple modules
-- ✅ **Zero mocks policy**: All tests use data and computations
-- ✅ **Project coverage**: Achieved 90.81% coverage (exceeds 90% target)
-- ✅ **Infrastructure coverage**: Improved to 83.33% (exceeds 60% minimum by 39%)
-
-### Impact
-
-- code reliability and maintainability
-- Improved confidence in infrastructure modules
-- Better documentation through tests
-- Foundation for continued improvement
+**Last verified:** 2026-05-04 (re-baselined against live `pytest --cov`)
 
 ## Current Coverage Status
 
-**Overall Infrastructure Coverage: 83.33%** (exceeds 60% minimum requirement by 39%!)
-**Project Coverage: 100%** (exceeds 90% minimum requirement!)
+**Overall infrastructure coverage: 76.83 %** (gate: ≥ 60 %)
+**Tests:** 5246 passing, 8 skipped (LLM tests excluded via `--ignore=tests/infra_tests/llm`)
+**Total statements measured:** 22 400
 
-### Modules Below 50% Coverage
+The numbers below come from:
 
-The following modules have coverage below 50% and are prioritized for improvement:
+```bash
+.venv/bin/python -m pytest tests/infra_tests/ \
+  --cov=infrastructure --cov-report=term --cov-fail-under=0 \
+  -q --ignore=tests/infra_tests/llm --timeout=60
+```
 
-1. **`infrastructure/core/runtime/retry.py` (22.22%)**
-   - **Status**: Retry utilities for handling transient failures
-   - **Gap**: Retry decorators and context manager untested
-   - **Improvement Plan**:
-     - Add tests for retry_with_backoff decorator
-     - Test exponential backoff timing
-     - Test RetryableOperation context manager
-   - **Test File**: `tests/infra_tests/core/test_retry.py` (created)
+The `--ignore=tests/infra_tests/llm` flag is what the local fast suite uses;
+the LLM suite is exercised separately and gates Ollama-bound paths. The
+numbers in this file therefore describe the *non-LLM* surface — that's the
+stable surface that ships in every CI matrix run.
 
-2. **`infrastructure/core/pipeline/progress.py` (18.09%)**
-   - **Status**: Progress reporting utilities
-   - **Gap**: Progress bar and sub-stage tracking untested
-   - **Improvement Plan**:
-     - Add tests for ProgressBar class
-     - Test SubStageProgress tracking
-     - Test ETA calculations
-   - **Test File**: `tests/infra_tests/core/test_progress.py` (created)
+## Lowest-Coverage Modules (non-LLM)
 
-3. **`infrastructure/core/runtime/checkpoint.py` (39.24%)**
-   - **Status**: Pipeline checkpoint system for resume capability
-   - **Gap**: Checkpoint validation and error handling untested
-   - **Improvement Plan**:
-     - Add tests for checkpoint save/load
-     - Test checkpoint validation
-     - Test corruption detection
-     - Test resume functionality
-   - **Test File**: `tests/infra_tests/core/test_checkpoint.py` (created)
+CLI `__main__` shims and `prose/cli.py` register at 0 % because they're
+exercised by subprocess in integration tests rather than the in-process
+suite. They are intentionally thin (≤ 60 stmts) and excluded from the
+priority list below.
 
-## Coverage Improvement Strategy
+| Module | Coverage | Statements | Notes |
+| ------ | -------- | ---------- | ----- |
+| `steganography/barcodes.py` | 11.39 % | 73 | Optional barcode rendering; gated on `pyzbar`/`pillow` |
+| `steganography/barcode_generators.py` | 20.00 % | 45 | Optional, same dependency gate |
+| `rendering/pipeline.py` | 34.83 % | 207 | High-value target — orchestrates PDF stages |
+| `core/cli_handlers.py` | 38.07 % | 128 | Top-level CLI dispatch; subprocess-tested |
+| `core/install_commands.py` | 40.54 % | 23 | Optional-dep install hints; tiny module |
+| `publishing/publish_cli.py` | 41.18 % | 17 | CLI entry; subprocess-tested |
+| `core/runtime/env_deps.py` | 46.22 % | 89 | Environment-dep checks; mostly platform branches |
+| `reporting/pipeline_test_runner.py` | 50.00 % | 310 | High-value target — pytest orchestration logic |
+| `core/config/cli.py` | 53.12 % | 26 | CLI entry; subprocess-tested |
+| `validation/cli/main.py` | 58.83 % | 147 | CLI entry; partial subprocess coverage |
+| `rendering/_pdf_latex_pipeline.py` | 60.65 % | 109 | Real-LaTeX gated paths skip when xelatex absent |
+| `reporting/_dashboard_matplotlib.py` | 60.67 % | 81 | Optional matplotlib backend code |
+| `rendering/core.py` | 60.91 % | 90 | High-value target — render-tree builder |
+| `rendering/cli.py` | 61.73 % | 69 | CLI entry; subprocess-tested |
 
-### Phase 1: Critical Modules (Completed)
+### Real Improvement Targets
 
-✅ **Core Infrastructure Modules**
+After excluding CLI subprocess shims and optional-dep gated modules, the
+genuine gaps are:
 
-- Created tests for checkpoint, progress, and retry modules
-- Expanded CLI test coverage significantly
-- Created tests for LLM operations and paper selector
+1. **`infrastructure/rendering/pipeline.py` (34.83 %, 207 stmts)** — the
+   PDF orchestration entry point. Most missed lines are error-handling
+   branches around `RenderingError` / `ValidationError`. Adding integration
+   tests with a synthetic project (no LaTeX needed if we mock the engine
+   layer at the seam, which we won't — instead, gate behind `xelatex`
+   detection and run real renders).
 
-### Phase 2: Reporting (Completed)
+2. **`infrastructure/reporting/pipeline_test_runner.py` (50.00 %, 310 stmts)**
+   — pytest orchestration. Per-project coverage merge logic is the largest
+   uncovered cluster (lines 198–253, 282–286). Closing this is also a
+   blocker for TO-DO MED3 (per-project test-runner factor).
 
-- Added reporting module tests (coverage ~92%)
-- Covered markdown/HTML generation, validation/performance/error reporting
+3. **`infrastructure/rendering/core.py` (60.91 %, 90 stmts)** — the render
+   tree builder. Missing lines are mostly the multi-format branching
+   (HTML/slides/poster).
 
-### Phase 3: Missing Test Files (Completed - 2024)
+## Modules Previously Listed (Now Resolved)
 
-✅ **Test Files Created**
+The earlier baseline of this file flagged three modules at < 50 %; all
+three are now well above the gate. Listed for historical context:
 
-- `tests/infra_tests/core/test_file_operations.py` - File and directory operation utilities
-- `tests/infra_tests/core/test_credentials.py` - Credential management with .env and YAML support
-- `tests/infra_tests/core/test_environment.py` - Environment setup and validation functions
-- `tests/infra_tests/core/test_script_discovery.py` - Script discovery and output verification
-- `tests/infra_tests/core/test_stage_monitor.py` - Stage-level performance monitoring and resource tracking
+| Module | Old % | Current % | Change |
+| ------ | ----- | --------- | ------ |
+| `core/runtime/retry.py` | 22.22 % | 97.56 % | +75 pp |
+| `core/runtime/checkpoint.py` | 39.24 % | 83.59 % | +44 pp |
+| `core/progress.py` | 18.09 % | 93.37 % | +75 pp |
 
-### Phase 4: Additional Coverage Improvements (Completed)
+## Coverage Gates
 
-**Note**: Build verification modules were planned but not implemented. Verification functionality is provided by the validation module.
+- **Infrastructure**: ≥ 60 % (current 76.83 %)
+- **Projects**: ≥ 90 % per project (rotating-project exception possible per
+  the `.github/workflows/ci.yml` matrix; see CLAUDE.md)
+- **Per-project gates** are enforced separately in CI; they do not aggregate
+  with the infrastructure number above.
 
-- Test reproducibility checking
-- Test error conditions
+## How This File Is Generated
 
-### Phase 5: Remaining Low-Coverage Modules
+These numbers should be re-baselined whenever `infrastructure/` gains a new
+module or whenever a low-coverage module is closed out:
 
-**Target**: Other modules below 50% coverage
+```bash
+.venv/bin/python -m pytest tests/infra_tests/ \
+  --cov=infrastructure --cov-report=term --cov-fail-under=0 \
+  -q --ignore=tests/infra_tests/llm --timeout=60 \
+  2>&1 | tail -80
+```
 
-**Approach**:
-
-- Prioritize by usage frequency
-- Focus on critical code paths
-- Maintain "no mocks" testing policy
+Then sort the per-module rows by coverage percentage and update the
+"Lowest-Coverage Modules" table above. Do not copy historical numbers
+forward — re-measure each time.
 
 ## Testing Standards
 
-### Requirements
-
-- **No Mock Methods**: All tests use real implementations
-- **Data**: Tests use actual data structures and operations
-- **Integration Tests**: End-to-end workflow validation
-- **Edge Cases**: Error conditions and boundary cases tested
-
-### Coverage Goals
-
-- **Infrastructure**: Maintain >60% (currently 83.33% - exceeds stretch goal!)
-- **Project**: Maintain >90% (currently 100%)
-- **New Code**: 100% coverage for modules
-
-## Monitoring Coverage
-
-### Running Coverage Reports
-
-```bash
-# Infrastructure coverage
-uv run python -m pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
-
-# View HTML report
-open htmlcov/index.html
-
-# Check specific module
-uv run python -m pytest tests/infra_tests/core/ --cov=infrastructure.core.runtime.checkpoint --cov-report=term
-```
-
-### Coverage Trends
-
-Track coverage improvements over time:
-
-- Previous baseline: 61.48%
-- **Current Infrastructure: 83.33%** (+22% improvement!)
-- **Current Project: 100%** (exceeds 90% target!)
-- **Status: ✅ Exceeded all coverage goals!**
-- Infrastructure minimum: 60% (requirement)
-- Project minimum: 90% (requirement)
-
-## Next Steps
-
-1. ✅ Phase 1: Core infrastructure tests
-2. ✅ Phase 3: Missing test files (5 test files created)
-3. ✅ Expand literature CLI tests (edge cases and environment variable handling)
-4. ⏳ Expand remaining low-coverage modules:
-   - `infrastructure/core/runtime/retry.py` (22.22%) - Tests exist but may need expansion
-   - `infrastructure/core/pipeline/progress.py` (18.09%) - Tests exist but may need expansion
-   - `infrastructure/core/runtime/checkpoint.py` (39.24%) - Tests exist but may need expansion
-5. ⏳ Expand build_verifier tests
-6. ⏳ Add integration tests for checkpoint/resume
-7. ⏳ Document testing patterns and best practices
+- **No mocks** — every test uses real data, real files, real subprocess
+  calls. See `infrastructure/validation/output/no_mock_enforcer.py` for
+  the CI gate.
+- **Deterministic** — fixed RNG seeds, `MPLBACKEND=Agg`, hermetic env via
+  `get_subprocess_env()`.
+- **Real I/O** — `tmp_path` fixture for files, `pytest-httpserver` for
+  HTTP, real subprocess invocations for CLIs.
 
 ## See Also
 
-- [`testing-guide.md`](../development/testing/testing-guide.md) - testing documentation
-- [`../core/architecture.md`](../core/architecture.md) - System architecture and testing standards
+- [`testing-guide.md`](testing/testing-guide.md) — testing patterns and
+  fixtures
+- [`../core/architecture.md`](../core/architecture.md) — two-layer
+  architecture and testing standards
+- [`../../TO-DO.md`](../../TO-DO.md) — active backlog (MED3 covers the
+  per-project pytest runner factor that would help close the
+  `pipeline_test_runner.py` gap)

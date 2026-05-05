@@ -1059,6 +1059,45 @@ class PipelineReport:
 3. **Performance**: Report generation should be fast (< 1s)
 4. **Location**: Save all reports to `project/output/reports/`
 
+## Coverage Trend Dashboard (`coverage_history.py`)
+
+Long-running coverage telemetry: parses Cobertura `coverage-*.xml` artefacts
+(the same files Codecov ingests) and renders a deterministic, diff-friendly
+Markdown report at `docs/_generated/coverage_history.md`.
+
+### Public API
+
+```python
+from infrastructure.reporting.coverage_history import (
+    CoveragePoint,            # frozen dataclass: date, suite, percentage, lines_covered, lines_total
+    parse_coverage_xml,       # Path → CoveragePoint (defusedxml-based)
+    collect_history_from_dir, # Path → list[CoveragePoint], recursive
+    collect_history_via_gh,   # gh run list + gh run download, raises RuntimeError if gh absent
+    build_history_markdown,   # Sequence[CoveragePoint] → Markdown string (pure, idempotent)
+)
+```
+
+### Driver
+
+`scripts/generate_coverage_history.py` is the thin orchestrator. Two modes:
+
+```bash
+# Offline (CI uses this after artefact download)
+uv run python scripts/generate_coverage_history.py --from-dir=./_artefacts --days=30
+
+# Online (requires `gh auth login`)
+uv run python scripts/generate_coverage_history.py --from-gh --days=30
+```
+
+### Notes
+
+- XML parsing uses `defusedxml.ElementTree` (bandit B314 fires on stdlib `xml.etree`).
+- `collect_history_via_gh` shells out with `subprocess.run(..., shell=False)` and
+  resolves `gh` via `shutil.which`; argv is always list-form.
+- `build_history_markdown` is **pure** — same input → byte-identical output.
+- The CI step lives in the `performance` job (informational, `|| true`); the
+  artefact name is `coverage-history`.
+
 ## Testing
 
 The reporting module has test coverage:
@@ -1066,6 +1105,9 @@ The reporting module has test coverage:
 ```bash
 # Run reporting module tests
 pytest tests/infra_tests/reporting/ -v
+
+# Coverage history specifically
+pytest tests/infra_tests/reporting/test_coverage_history.py -q --timeout=60
 
 # With coverage
 pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting

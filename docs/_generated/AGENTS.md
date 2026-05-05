@@ -9,6 +9,8 @@ This directory holds **generator output** (`active_projects.md`) plus **maintain
 | File | Source |
 | --- | --- |
 | [`active_projects.md`](active_projects.md) | **Generated** — `uv run python scripts/generate_active_projects_doc.py` |
+| [`architecture_overview.svg`](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/generate_architecture_overview.py` |
+| [`coverage_history.md`](coverage_history.md) | **Generated** — `uv run python scripts/generate_coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
 | [`canonical_facts.md`](canonical_facts.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see [`README.md`](README.md)) |
 | [`README.md`](README.md), `AGENTS.md` | **Maintainer** — policy and linking conventions |
 

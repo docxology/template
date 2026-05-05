@@ -1,8 +1,19 @@
 # Comprehensive Documentation Review
-**Repository:** Research Project Template  
-**Review Date:** 2026-04-27  
-**Reviewer:** Hermes Agent (automated deep review)  
+
+**Repository:** Research Project Template
+**Review Date:** 2026-04-27
+**Last verified:** 2026-05-04
+**Reviewer:** Hermes Agent (automated deep review)
 **Scope:** `/Users/4d/Documents/GitHub/template/docs` (all Markdown documentation)
+
+> **Status (2026-05-04):** All findings in this report have been
+> remediated. Verification was re-run on 2026-05-04: every broken-link
+> fix listed in [`triple-check-report.md`](triple-check-report.md) is
+> still in place, the glossary Build-Pipeline entry now lists the correct
+> 8/10-stage executor sequence, and `quick-start-cheatsheet.md` uses
+> filesystem-path coverage args plus a real exemplar import. The body of
+> this document is preserved as a record of what was found and what was
+> changed.
 
 ---
 
@@ -15,6 +26,11 @@ A systematic review of all 165 Markdown files (42,134 lines) across the `docs/` 
 - **Outdated examples:** 5+ references to archived project `fep_lean` that should use current exemplar `template_code_project`
 - **Missing cross-references:** 2 important top-level documents (PAI.md, CLOUD_DEPLOY.md) not surfaced in docs/README.md
 - **Overall health:** Strong structure, comprehensive coverage, consistent terminology — mostly accurate and up-to-date.
+
+All items above were remediated; see
+[`triple-check-report.md`](triple-check-report.md) for the fix log and
+[`documentation-review-summary.md`](documentation-review-summary.md) for
+the action-item summary.
 
 ---
 

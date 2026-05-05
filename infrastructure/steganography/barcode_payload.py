@@ -11,8 +11,33 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.steganography.config import resolve_build_timestamp
 
 logger = get_logger(__name__)
+
+
+__all__ = [
+    "build_barcode_payload",
+    "build_citation_qr_text",
+    "build_integrity_qr_text",
+    "build_mailto_qr_text",
+    "build_metadata_qr_text",
+]
+
+
+def _deterministic_datetime() -> datetime:
+    """Parse :func:`resolve_build_timestamp` back into a UTC :class:`datetime`.
+
+    The deterministic timestamp may carry an offset (e.g. ``-08:00``); we
+    convert to UTC so downstream ``strftime`` calls remain consistent
+    regardless of the committer's local timezone.
+    """
+    ts = resolve_build_timestamp()
+    try:
+        return datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone(timezone.utc)
+    except ValueError:
+        logger.warning("Could not parse build timestamp %r — using current UTC.", ts)
+        return datetime.now(timezone.utc)
 
 
 # ── Barcode data builder ─────────────────────────────────────────────────
@@ -38,7 +63,7 @@ def build_barcode_payload(
     Returns:
         Payload string.
     """
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    timestamp = _deterministic_datetime().strftime("%Y%m%dT%H%M%SZ")
     parts = [f"T:{title[:60]}", f"TS:{timestamp}"]
 
     if document_id:
@@ -77,7 +102,7 @@ def build_metadata_qr_text(
     if document_id:
         # Use hyphen instead of colon to avoid URI scheme triggering in camera apps
         parts.append(f"Doc-ID {document_id[:16]}")
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    ts = _deterministic_datetime().strftime("%Y-%m-%d")
     parts.append(ts)
     return " | ".join(parts)
 
@@ -89,7 +114,7 @@ def build_citation_qr_text(
 ) -> str:
     """Build a compact citation string (<=100 chars)."""
     author = authors[0] if authors else "Unknown"
-    year = datetime.now(timezone.utc).strftime("%Y")
+    year = _deterministic_datetime().strftime("%Y")
     cite = f"{author} ({year}). {title[:50]}."
     return cite[:100]
 

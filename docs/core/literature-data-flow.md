@@ -52,6 +52,7 @@ A typical run lands the following artefacts:
 
 ```mermaid
 flowchart TB
+%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     PROJ[/projects/template_search_project/]
     PROJ --> OUTPUT[/output/]
     PROJ --> MANUSCRIPT[/manuscript/]

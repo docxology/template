@@ -82,3 +82,16 @@ def create_publication_package(output_dir: Path, metadata: PublicationMetadata) 
         "package_hash": package_hash,
         "created_at": datetime.now().isoformat(),
     }
+
+
+__all__ = [
+    # Re-exports from announcement
+    "create_publication_announcement",
+    "generate_doi_badge",
+    # Re-exports from checklist
+    "create_submission_checklist",
+    # Re-exports from readiness
+    "validate_publication_readiness",
+    # Local
+    "create_publication_package",
+]

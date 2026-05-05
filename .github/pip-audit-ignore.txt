@@ -1,0 +1,21 @@
+# pip-audit ignore list — one CVE / advisory id per non-comment line.
+#
+# The `Dependency audit (pip-audit)` step in `.github/workflows/ci.yml` reads
+# this file. Empty file = no exemptions, which is the default and preferred.
+#
+# Use only when:
+#   1. The CVE applies to a transitive dep we cannot upgrade.
+#   2. Upstream has acknowledged the report and a fix is in flight.
+#   3. The vector is not exploitable in this codebase (must justify in a
+#      comment immediately above the id).
+#
+# Format: one of
+#   GHSA-xxxx-xxxx-xxxx
+#   PYSEC-YYYY-NNN
+#   CVE-YYYY-NNNNN
+#
+# Lines starting with `#` are comments. Trailing comments after `#` on an id
+# line are stripped before passing to `--ignore-vuln`.
+#
+# Whenever you add an entry, also add it to the M2 acceptance log in TO-DO.md
+# so future maintainers can re-evaluate.
