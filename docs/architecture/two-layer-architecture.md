@@ -38,18 +38,18 @@ This research template implements a clear two-layer architecture separating gene
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure//]
-    INFRA --> CORE[/core/<br/>exceptions · logging · config_loader/]
-    INFRA --> VAL[/validation/<br/>pdf · markdown · integrity/]
-    INFRA --> DOC[/documentation/<br/>figure · image · markdown integration · glossary/]
-    INFRA --> PUB[/publishing/<br/>academic publishing tools/]
-    INFRA --> LLM[/llm/<br/>LLM integration · literature workflows/]
-    INFRA --> REND[/rendering/<br/>multi-format · PDF · slides · HTML/]
-    INFRA --> SCI[/scientific/<br/>scientific dev tools/]
-    INFRA --> SEARCH[/search/<br/>multi-source literature search/]
-    INFRA --> REF[/reference/<br/>BibTeX I/O/]
-    INFRA --> REP[/reporting/<br/>pipeline reports/]
-    INFRA --> STEG[/steganography/<br/>secure PDF post-processing/]
+    INFRA[/infrastructure/]
+    INFRA --> CORE[/core<br/>exceptions · logging · config_loader/]
+    INFRA --> VAL[/validation<br/>pdf · markdown · integrity/]
+    INFRA --> DOC[/documentation<br/>figure · image · markdown integration · glossary/]
+    INFRA --> PUB[/publishing<br/>academic publishing tools/]
+    INFRA --> LLM[/llm<br/>LLM integration · literature workflows/]
+    INFRA --> REND[/rendering<br/>multi-format · PDF · slides · HTML/]
+    INFRA --> SCI[/scientific<br/>scientific dev tools/]
+    INFRA --> SEARCH[/search<br/>multi-source literature search/]
+    INFRA --> REF[/reference<br/>BibTeX I/O/]
+    INFRA --> REP[/reporting<br/>pipeline reports/]
+    INFRA --> STEG[/steganography<br/>secure PDF post-processing/]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -93,7 +93,7 @@ fm.register_figure(
 
 ```mermaid
 flowchart LR
-    SRC[/projects/&lt;name&gt;/src//]
+    SRC[/projects/&lt;name&gt;/src/]
     SRC --> EX[example.py<br/>basic operations]
     SRC --> OTHER[*.py<br/>project-specific modules]
 
@@ -107,7 +107,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    SC[/projects/&lt;name&gt;/scripts//]
+    SC[/projects/&lt;name&gt;/scripts/]
     SC --> EF[example_figure.py<br/>basic figure generation]
     SC --> RF[generate_research_figures.py<br/>complex figures]
     SC --> AP[analysis_pipeline.py<br/>analysis workflow]
@@ -174,12 +174,12 @@ graph TB
             SRC_MODS[simulation, statistics,<br/>data_processing, metrics,<br/>parameters, performance,<br/>plots, reporting, validation,<br/>visualization, data_generator,<br/>example]
         end
         
-        subgraph PROJ_SCRIPTS["projects/{name}/scripts/<br/>(thin orchestrators)"]
+        subgraph PROJ_SCRIPTS["projects/{name}/scripts<br/>(thin orchestrators)"]
             PROJ_SCRIPT_LIST[example_figure.py<br/>generate_research_figures.py<br/>analysis_pipeline.py<br/>scientific_simulation.py<br/>generate_scientific_figures.py]
         end
     end
     
-    subgraph MANUSCRIPT["manuscript/<br/>(research content)"]
+    subgraph MANUSCRIPT["manuscript<br/>(research content)"]
         MANUSCRIPT_FILES[01_abstract.md through<br/>99_references.md]
     end
     
@@ -248,24 +248,23 @@ from project.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ```mermaid
 flowchart TB
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    INFRA[/infrastructure//<br/>Layer 1 · 15 subpackages]
+    INFRA[/infrastructure<br/>Layer 1 · 15 subpackages/]
     INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
-    INFRA --> CFG[/config/<br/>Shared configuration/]
-    INFRA --> CORE[/core/<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
-    INFRA --> DOCK[/docker/<br/>Container specs/]
-    INFRA --> DOC[/documentation/<br/>figure manager · glossary gen/]
-    INFRA --> LLM[/llm/<br/>Ollama integration · prompts/]
-    INFRA --> PROJ[/project/<br/>multi-project discovery/]
-    INFRA --> PUB[/publishing/<br/>Zenodo · arXiv · GitHub/]
-    INFRA --> REND[/rendering/<br/>PDF · HTML · slides/]
-    INFRA --> REP[/reporting/<br/>pipeline · executive reports/]
-    INFRA --> SCI[/scientific/<br/>numerical stability · benchmarking/]
-    INFRA --> SK[/skills/<br/>SKILL.md discovery/]
-    INFRA --> STEG[/steganography/<br/>PDF hardening/]
-    INFRA --> VAL[/validation/<br/>PDF · markdown · integrity · audit/]
-    INFRA --> SEARCH[/search/<br/>literature search/]
-    INFRA --> REF[/reference/<br/>BibTeX I/O/]
+    INFRA --> CFG[/config<br/>Shared configuration/]
+    INFRA --> CORE[/core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
+    INFRA --> DOCK[/docker<br/>Container specs/]
+    INFRA --> DOC[/documentation<br/>figure manager · glossary gen/]
+    INFRA --> LLM[/llm<br/>Ollama integration · prompts/]
+    INFRA --> PROJ[/project<br/>multi-project discovery/]
+    INFRA --> PUB[/publishing<br/>Zenodo · arXiv · GitHub/]
+    INFRA --> REND[/rendering<br/>PDF · HTML · slides/]
+    INFRA --> REP[/reporting<br/>pipeline · executive reports/]
+    INFRA --> SCI[/scientific<br/>numerical stability · benchmarking/]
+    INFRA --> SK[/skills<br/>SKILL.md discovery/]
+    INFRA --> STEG[/steganography<br/>PDF hardening/]
+    INFRA --> VAL[/validation<br/>PDF · markdown · integrity · audit/]
+    INFRA --> SEARCH[/search<br/>literature search/]
+    INFRA --> REF[/reference<br/>BibTeX I/O/]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -281,11 +280,10 @@ File-level layout inside each package: see [`infrastructure/AGENTS.md`](../../in
 
 ```mermaid
 flowchart TB
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    PROJ[/project//<br/>Project-specific code]
-    PROJ --> SRC[/src/<br/>Project scientific code/]
-    PROJ --> SC[/scripts/<br/>Project orchestrators/]
-    PROJ --> T[/tests/<br/>Project tests/]
+    PROJ[/project<br/>Project-specific code/]
+    PROJ --> SRC[/src<br/>Project scientific code/]
+    PROJ --> SC[/scripts<br/>Project orchestrators/]
+    PROJ --> T[/tests<br/>Project tests/]
 
     SRC --> SRC_FILES[__init__.py · AGENTS.md · README.md ·<br/>example.py · ...]
     SC --> SC_FILES[example_figure.py · generate_research_figures.py ·<br/>analysis_pipeline.py · scientific_simulation.py ·<br/>generate_scientific_figures.py]
@@ -303,16 +301,15 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    ROOT_TESTS[/tests//<br/>Root level · infrastructure tests]
-    ROOT_TESTS --> INFRA_T[/infra_tests/<br/>Layer 1 tests/]
-    ROOT_TESTS --> INTEG[/integration/<br/>Cross-layer tests/]
-    ROOT_TESTS --> HELPERS[/helpers/<br/>Test utilities/]
+    ROOT_TESTS[/tests<br/>Root level · infrastructure tests/]
+    ROOT_TESTS --> INFRA_T[/infra_tests<br/>Layer 1 tests/]
+    ROOT_TESTS --> INTEG[/integration<br/>Cross-layer tests/]
+    ROOT_TESTS --> HELPERS[/helpers<br/>Test utilities/]
 
     INFRA_T --> INFRA_F[__init__.py · test_build/ ·<br/>test_validation/ · test_documentation/ · ...]
     INTEG --> INTEG_F[__init__.py · test_integration_pipeline.py · ...]
 
-    PROJ_TESTS[/projects/&lt;name&gt;/tests//<br/>Layer 2 · project tests]
+    PROJ_TESTS[/projects/&lt;name&gt;/tests<br/>Layer 2 · project tests/]
     PROJ_TESTS --> PROJ_F[__init__.py · test_example.py ·<br/>test_simulation.py · test_statistics.py · ...]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -331,21 +328,20 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    START([User runs:<br/>uv run python scripts/execute_pipeline.py --project {name} --core-only]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
-    CLEAN --> STAGE00[STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools]
+    START(["User runs:<br/>uv run python scripts/execute_pipeline.py --project {name} --core-only"]) --> CLEAN["STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build"]
+    CLEAN --> STAGE00["STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools"]
     
-    STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infra_tests/<br/>- Run projects/{name}/tests/<br/>- Run tests/integration/<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
+    STAGE00 --> PHASE1["PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infra_tests<br/>- Run projects/{name}/tests<br/>- Run tests/integration<br/>- Validate coverage requirements<br/>Report: LAYER-1-INFRASTRUCTURE Running"]
     
-    PHASE1 --> PHASE2[PHASE 2: LAYER 2<br/>Project Execution<br/>- Run projects/{name}/scripts/*.py<br/>- Generate figures<br/>- Process data<br/>- Create outputs<br/>Report: [LAYER-2-PROJECT] Running]
+    PHASE1 --> PHASE2["PHASE 2: LAYER 2<br/>Project Execution<br/>- Run projects/{name}/scripts/*.py<br/>- Generate figures<br/>- Process data<br/>- Create outputs<br/>Report: LAYER-2-PROJECT Running"]
     
-    PHASE2 --> PHASE2_5[PHASE 2.5: LAYER 1<br/>Utilities<br/>- Generate API glossary<br/>- Validate markdown<br/>- Check cross-references<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
+    PHASE2 --> PHASE2_5["PHASE 2.5: LAYER 1<br/>Utilities<br/>- Generate API glossary<br/>- Validate markdown<br/>- Check cross-references<br/>Report: LAYER-1-INFRASTRUCTURE Running"]
     
-    PHASE2_5 --> PHASE3_5[PHASE 3-5: LAYER 1<br/>Document Generation<br/>- Generate LaTeX preamble<br/>- Build individual PDFs<br/>- Build combined PDF<br/>- Create HTML version<br/>Report: [LAYER-1-INFRASTRUCTURE] Building]
+    PHASE2_5 --> PHASE3_5["PHASE 3-5: LAYER 1<br/>Document Generation<br/>- Generate LaTeX preamble<br/>- Build individual PDFs<br/>- Build combined PDF<br/>- Create HTML version<br/>Report: LAYER-1-INFRASTRUCTURE Building"]
     
-    PHASE3_5 --> PHASE6[PHASE 6: LAYER 1<br/>Validation<br/>- Validate PDF quality<br/>- Check for rendering issues<br/>Report: [LAYER-1-INFRASTRUCTURE] Done]
+    PHASE3_5 --> PHASE6["PHASE 6: LAYER 1<br/>Validation<br/>- Validate PDF quality<br/>- Check for rendering issues<br/>Report: LAYER-1-INFRASTRUCTURE Done"]
     
-    PHASE6 --> SUCCESS([Success:<br/>All PDFs generated,<br/>all layers working])
+    PHASE6 --> SUCCESS(["Success:<br/>All PDFs generated,<br/>all layers working"])
     
     classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef layer2 fill:#f1f8e9,stroke:#33691e,stroke-width:2px

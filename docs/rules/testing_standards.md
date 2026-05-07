@@ -35,12 +35,12 @@ python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-un
 flowchart TB
     T[/tests//]
     T --> META[__init__.py · conftest.py<br/>shared fixtures]
-    T --> INFRA[/infrastructure/<br/>Infrastructure module tests/]
-    T --> SCI[/scientific/<br/>Scientific code tests/]
-    T --> INTEG[/integration/<br/>End-to-end tests/]
+    T --> INFRA[/infrastructure<br/>Infrastructure module tests/]
+    T --> SCI[/scientific<br/>Scientific code tests/]
+    T --> INTEG[/integration<br/>End-to-end tests/]
 
-    INFRA --> CORE[/test_core/<br/>core functionality/]
-    INFRA --> VAL[/validation/<br/>example module/]
+    INFRA --> CORE[/test_core<br/>core functionality/]
+    INFRA --> VAL[/validation<br/>example module/]
     CORE --> CORE_F[__init__.py · conftest.py ·<br/>test_basic · test_edge_cases · test_integration]
     VAL --> VAL_F[__init__.py · test_*.py]
     SCI --> SCI_F[test_*.py]

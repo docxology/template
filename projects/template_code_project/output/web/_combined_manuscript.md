@@ -24,7 +24,7 @@ This `template_code_project` serves as the foundational exemplar for the [Resear
 
 Scientific engineering requires mathematical accuracy combined with software reliability. This project unifies theoretical optimization with the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer (Root Directory)**: A modular stack of sixteen subpackages (`config`, `core`, `docker`, `documentation`, `llm`, `project`, `prose`, `publishing`, `reference`, `rendering`, `reporting`, `scientific`, `search`, `skills`, `steganography`, `validation`) providing the computational scaffolding.
+1. **`infrastructure/` Layer (Root Directory)**: A modular stack of fifteen Python subpackages (`core`, `documentation`, `llm`, `orchestration`, `project`, `prose`, `publishing`, `reference`, `rendering`, `reporting`, `scientific`, `search`, `skills`, `steganography`, `validation`) providing the computational scaffolding (the sibling `config/` and `docker/` directories under `infrastructure/` are configuration/data, not Python packages).
 2. **`tests/` Framework (`projects/template_code_project/tests/`)**: An uncompromising validation layer maintaining a zero-mock testing policy. This is enforced automatically via the [CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) mapping to `pyproject.toml` directives.
 3. **`docs/` Knowledge Base (`projects/template_code_project/docs/`)**: A structured repository of architectural guidelines, operational patterns, and the Rigorous Agentic Scientific Protocol (RASP) that governs the AI-assisted agents writing these very texts.
 
@@ -368,7 +368,7 @@ This study demonstrated a complete computational research pipeline from algorith
 
 Operating as the representative exemplar for the Generalized Research Template methodology, the project successfully deployed the three foundational pillars:
 
-1. **`infrastructure` Ecosystem**: Fully leveraged the 16-module infrastructure cluster to handle scientific benchmarking, rendering, prose review, literature search, BibTeX validation, and reporting.
+1. **`infrastructure` Ecosystem**: Fully leveraged the 15-package infrastructure cluster to handle scientific benchmarking, rendering, prose review, literature search, BibTeX validation, and reporting.
 2. **`tests` Integrity**: Established absolute logical hermeticity through a comprehensive integration and infrastructure validation suite operating continuously.
 3. **`docs` Knowledge Operations**: Adhered structurally to the RASP methodology, producing verified, accessible output spanning from documentation indices to the final LLM-assisted publication configurations.
 
@@ -465,7 +465,7 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 - **Python**: 3.12.11
 - **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-05-05T13:24:15Z
+- **Generated**: 2026-05-07T21:21:42Z
 
 ## Pipeline ordering
 
@@ -518,9 +518,9 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
 | Publication-quality figures        | 6   |
-| Structured data files (CSV/JSON)   | 2 |
-| Analysis reports                   | 6   |
-| **Total artifacts**                | **14** |
+| Structured data files (CSV/JSON)   | 3 |
+| Analysis reports                   | 8   |
+| **Total artifacts**                | **17** |
 
 ## Numerical Validation Summary
 

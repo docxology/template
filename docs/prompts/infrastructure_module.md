@@ -50,7 +50,7 @@ flowchart LR
     M --> UT[utils.py<br/>Generic utility functions]
     M --> TY[types.py<br/>Type definitions &amp; protocols]
     M --> DOCS[AGENTS.md · README.md ·<br/>SKILL.md]
-    M --> T[/tests/<br/>__init__.py · test_core ·<br/>test_validators · test_utils ·<br/>test_integration/]
+    M --> T[/tests<br/>__init__.py · test_core ·<br/>test_validators · test_utils ·<br/>test_integration/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -533,7 +533,7 @@ flowchart LR
     M --> EXC[exceptions.py<br/>Custom exception hierarchy]
     M --> VAL[validators.py<br/>Generic validation functions]
     M --> TY[types.py<br/>Type definitions &amp; protocols]
-    M --> T[/tests/<br/>60%+ coverage/]
+    M --> T[/tests<br/>60%+ coverage/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff

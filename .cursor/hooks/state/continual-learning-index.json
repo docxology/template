@@ -1,25 +1,91 @@
 {
   "version": 1,
   "transcript_root": "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts",
-  "entry_count": 140,
+  "entry_count": 318,
   "entries": {
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0035a37d-d862-482a-8c00-03212c10e148/0035a37d-d862-482a-8c00-03212c10e148.jsonl": {
       "mtime_ms": 1777059563128
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0035a37d-d862-482a-8c00-03212c10e148/subagents/4708f7ee-ae45-4081-aeca-3029a94f2653.jsonl": {
+      "mtime_ms": 1777058844433
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0035a37d-d862-482a-8c00-03212c10e148/subagents/58d7b6b1-9a12-4584-b00f-6bf5ebb1817e.jsonl": {
+      "mtime_ms": 1777059203506
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0035a37d-d862-482a-8c00-03212c10e148/subagents/63bebe34-7285-4c1e-ad1d-73b39b5ef17d.jsonl": {
+      "mtime_ms": 1777058810234
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0035a37d-d862-482a-8c00-03212c10e148/subagents/95fcb594-3efe-4fce-a762-058dc8f06fc6.jsonl": {
+      "mtime_ms": 1777058838874
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/03afb1f5-b282-4ba0-b3e2-640543fc35d9/03afb1f5-b282-4ba0-b3e2-640543fc35d9.jsonl": {
       "mtime_ms": 1776178949060
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/03afb1f5-b282-4ba0-b3e2-640543fc35d9/subagents/0fa2490e-af6f-4a7d-a318-5e73634de270.jsonl": {
+      "mtime_ms": 1776176979854
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/03afb1f5-b282-4ba0-b3e2-640543fc35d9/subagents/127c0e4d-9cc5-4cc5-b0dd-630400720d4b.jsonl": {
+      "mtime_ms": 1776177854346
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/03afb1f5-b282-4ba0-b3e2-640543fc35d9/subagents/253b5a5a-c598-497f-be83-100b7c3368d0.jsonl": {
+      "mtime_ms": 1776177862747
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/03afb1f5-b282-4ba0-b3e2-640543fc35d9/subagents/2e3e756c-c94f-42ae-a861-a27c578f83e0.jsonl": {
+      "mtime_ms": 1776173833449
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/03afb1f5-b282-4ba0-b3e2-640543fc35d9/subagents/3bbd7619-45c0-435a-bbd9-6fd660698a4e.jsonl": {
+      "mtime_ms": 1776177882913
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/03afb1f5-b282-4ba0-b3e2-640543fc35d9/subagents/45202725-e908-412a-9bc6-58cb3dc0d755.jsonl": {
+      "mtime_ms": 1776173871753
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/03afb1f5-b282-4ba0-b3e2-640543fc35d9/subagents/eafb14c0-2fcc-4350-bfd4-4c322cf8dd82.jsonl": {
+      "mtime_ms": 1776177868137
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06385a15-f6bf-4f62-9f83-db86a2781fa1/06385a15-f6bf-4f62-9f83-db86a2781fa1.jsonl": {
       "mtime_ms": 1774036446947
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06487a2a-8298-4043-83ac-cdd6cdd8ff6c/06487a2a-8298-4043-83ac-cdd6cdd8ff6c.jsonl": {
+      "mtime_ms": 1777835070547
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06487a2a-8298-4043-83ac-cdd6cdd8ff6c/subagents/3f50b218-0375-4466-a5b8-97d85d33b832.jsonl": {
+      "mtime_ms": 1777833966988
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06487a2a-8298-4043-83ac-cdd6cdd8ff6c/subagents/6a115cf1-b3fc-49ad-bc0a-6b46207117f0.jsonl": {
+      "mtime_ms": 1777833986311
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06487a2a-8298-4043-83ac-cdd6cdd8ff6c/subagents/db439792-7e6a-499c-9514-28b05c1f3b47.jsonl": {
+      "mtime_ms": 1777833944116
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06a65438-b722-4b84-9e6d-819d197ac32f/06a65438-b722-4b84-9e6d-819d197ac32f.jsonl": {
       "mtime_ms": 1775749953114
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06a65438-b722-4b84-9e6d-819d197ac32f/subagents/05173a77-d4d1-4290-a5b0-b1e5142e5955.jsonl": {
+      "mtime_ms": 1775705236622
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06a65438-b722-4b84-9e6d-819d197ac32f/subagents/33e26a39-f3e8-4020-935b-6fceca4687f6.jsonl": {
+      "mtime_ms": 1775705294350
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06a65438-b722-4b84-9e6d-819d197ac32f/subagents/84eae37f-7395-4d82-b508-7df417ba83ed.jsonl": {
+      "mtime_ms": 1775705317339
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06a65438-b722-4b84-9e6d-819d197ac32f/subagents/bb4ccdf3-c131-45fc-9585-29acb12ed3ce.jsonl": {
+      "mtime_ms": 1775705197367
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06a65438-b722-4b84-9e6d-819d197ac32f/subagents/c481e3d6-acdd-41f6-b353-b6e6429e06bd.jsonl": {
+      "mtime_ms": 1775705325373
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/06a65438-b722-4b84-9e6d-819d197ac32f/subagents/dfd333c0-4196-4695-bae7-021e56092adb.jsonl": {
+      "mtime_ms": 1775705188347
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0af7ca1a-9da5-4425-859e-bbca54deeb8c/0af7ca1a-9da5-4425-859e-bbca54deeb8c.jsonl": {
       "mtime_ms": 1774982038094
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0ddf159c-6f79-4230-87b6-6258a561dd79/0ddf159c-6f79-4230-87b6-6258a561dd79.jsonl": {
       "mtime_ms": 1775694300373
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0e453f50-ac39-42c6-bf83-c52fcb63dbc7/0e453f50-ac39-42c6-bf83-c52fcb63dbc7.jsonl": {
+      "mtime_ms": 1778023117058
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0f8d3492-e46a-4bb7-b325-cee20aa9053e/0f8d3492-e46a-4bb7-b325-cee20aa9053e.jsonl": {
       "mtime_ms": 1777326231258
@@ -29,6 +95,12 @@
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/13e04c37-28e8-4b02-a78a-3e0926c5ddfa/13e04c37-28e8-4b02-a78a-3e0926c5ddfa.jsonl": {
       "mtime_ms": 1776914700878
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/13e04c37-28e8-4b02-a78a-3e0926c5ddfa/subagents/5feeccac-d79b-4218-ba9d-da89b069fa6d.jsonl": {
+      "mtime_ms": 1776901012551
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/13e04c37-28e8-4b02-a78a-3e0926c5ddfa/subagents/f0cc6ce1-71e4-480c-8807-8241815e37ba.jsonl": {
+      "mtime_ms": 1776901506529
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/13e974f3-d8c7-4273-ba16-8a07683e301a/13e974f3-d8c7-4273-ba16-8a07683e301a.jsonl": {
       "mtime_ms": 1775911912592
@@ -45,6 +117,12 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/18846384-e4cc-4b1d-bcb5-4c6231275796/18846384-e4cc-4b1d-bcb5-4c6231275796.jsonl": {
       "mtime_ms": 1776968580670
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/18846384-e4cc-4b1d-bcb5-4c6231275796/subagents/c7501215-8b49-48de-83b0-d44065513d16.jsonl": {
+      "mtime_ms": 1776964008158
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/18846384-e4cc-4b1d-bcb5-4c6231275796/subagents/eaed43a3-23cf-489c-86ae-8d7b09549b4c.jsonl": {
+      "mtime_ms": 1776963975971
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/19e1c2c7-ce7c-42c1-a6e0-938201e497c0/19e1c2c7-ce7c-42c1-a6e0-938201e497c0.jsonl": {
       "mtime_ms": 1775762126684
     },
@@ -57,6 +135,9 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/1dbae0d1-967b-461a-afa9-1887ff02937f/1dbae0d1-967b-461a-afa9-1887ff02937f.jsonl": {
       "mtime_ms": 1777399827076
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/1dbae0d1-967b-461a-afa9-1887ff02937f/subagents/aa3208e2-4e87-4ee8-9ef3-fb904bf74a23.jsonl": {
+      "mtime_ms": 1777391643929
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/1ffe34f1-c226-4abe-a3d9-6e1738b8059a/1ffe34f1-c226-4abe-a3d9-6e1738b8059a.jsonl": {
       "mtime_ms": 1773759448719
     },
@@ -65,6 +146,12 @@
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/25d2d9ff-d0a8-41eb-9758-c29c05cf2653/25d2d9ff-d0a8-41eb-9758-c29c05cf2653.jsonl": {
       "mtime_ms": 1776195398733
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/25d2d9ff-d0a8-41eb-9758-c29c05cf2653/subagents/d37f0080-b178-4a32-a9f4-857312c04b12.jsonl": {
+      "mtime_ms": 1776194861142
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/28ae6f1f-4d7f-4128-9725-85f6cec7f75b/28ae6f1f-4d7f-4128-9725-85f6cec7f75b.jsonl": {
+      "mtime_ms": 1778027341702
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/290dbb13-e502-4789-842e-949982902877/290dbb13-e502-4789-842e-949982902877.jsonl": {
       "mtime_ms": 1775321523837
@@ -108,17 +195,71 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/3ecd1eff-8a7f-488b-930d-cb0f7518d302/3ecd1eff-8a7f-488b-930d-cb0f7518d302.jsonl": {
       "mtime_ms": 1775167308520
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/3ecd1eff-8a7f-488b-930d-cb0f7518d302/subagents/063143dc-a971-4695-95a5-3e2e7d8a15d7.jsonl": {
+      "mtime_ms": 1775137123374
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/3ecd1eff-8a7f-488b-930d-cb0f7518d302/subagents/a37830b9-713c-4c54-8236-9c999c70e826.jsonl": {
+      "mtime_ms": 1775137125739
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/3ecd1eff-8a7f-488b-930d-cb0f7518d302/subagents/edcda339-6bd9-4450-8ae6-f8d633ff8188.jsonl": {
+      "mtime_ms": 1775137137324
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/3f71216f-41d4-413d-b2a3-2d2c5dd3fe85/3f71216f-41d4-413d-b2a3-2d2c5dd3fe85.jsonl": {
       "mtime_ms": 1773757095074
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/43ac1e98-3057-436d-b295-e78b32ee1e65/43ac1e98-3057-436d-b295-e78b32ee1e65.jsonl": {
       "mtime_ms": 1777037090308
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/43ac1e98-3057-436d-b295-e78b32ee1e65/subagents/37260c74-7e30-46df-994c-d788e9f26264.jsonl": {
+      "mtime_ms": 1776989077895
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/43ac1e98-3057-436d-b295-e78b32ee1e65/subagents/60fe7d95-0d14-4630-b360-4876704ee629.jsonl": {
+      "mtime_ms": 1777034636970
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4798e853-047e-4547-84cc-d60778c0b618/4798e853-047e-4547-84cc-d60778c0b618.jsonl": {
       "mtime_ms": 1774218531664
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/4922e630-176e-475e-9df8-7183cb08976c.jsonl": {
       "mtime_ms": 1776194956400
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/02df6778-ce37-4d30-b163-5a116cdae050.jsonl": {
+      "mtime_ms": 1776191006080
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/277f1ee4-cd4b-4bf3-adf8-ebf1bfa5823c.jsonl": {
+      "mtime_ms": 1776191025933
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/4842d963-cd8b-434f-b6aa-b7a275a68eb6.jsonl": {
+      "mtime_ms": 1776191869190
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/6ba2cad4-a2c8-4eb2-8fc1-0920f444f15e.jsonl": {
+      "mtime_ms": 1776191860386
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/70f5c200-3f2f-4d34-87da-dc5778b644a7.jsonl": {
+      "mtime_ms": 1776192840618
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/7af0117e-5906-43ac-893e-b78f4e2b2611.jsonl": {
+      "mtime_ms": 1776191022163
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/ad7b17fb-429b-461c-96b5-80ba5ea50f59.jsonl": {
+      "mtime_ms": 1776187584227
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/af531af8-6b6d-403a-8b5c-6d4481c499a9.jsonl": {
+      "mtime_ms": 1776193848381
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/b10cd7c3-ee4d-4a41-9a35-6b21ccff1e42.jsonl": {
+      "mtime_ms": 1776187563302
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/b8865c69-7d4d-4aba-89d5-cccf3d8c95a2.jsonl": {
+      "mtime_ms": 1776187601159
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/c45c192a-93fa-4531-b4fb-02481b25ad53.jsonl": {
+      "mtime_ms": 1776184322360
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/cfa9fe22-1b83-468c-b9bd-37254ab77ca5.jsonl": {
+      "mtime_ms": 1776190089306
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4922e630-176e-475e-9df8-7183cb08976c/subagents/e482a737-4da1-4399-9589-d105201965e7.jsonl": {
+      "mtime_ms": 1776191848400
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/49369817-097c-4806-ab6a-ace951b44b55/49369817-097c-4806-ab6a-ace951b44b55.jsonl": {
       "mtime_ms": 1777415369811
@@ -132,11 +273,26 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4ec2ffd2-4e63-4010-8ea8-3d6f49d838bc/4ec2ffd2-4e63-4010-8ea8-3d6f49d838bc.jsonl": {
       "mtime_ms": 1775006374886
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4ec2ffd2-4e63-4010-8ea8-3d6f49d838bc/subagents/43003245-c456-4025-8d54-a13316566c97.jsonl": {
+      "mtime_ms": 1775004623476
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/4ec2ffd2-4e63-4010-8ea8-3d6f49d838bc/subagents/759349b0-b1cd-4132-85ad-7bc69f2d47a4.jsonl": {
+      "mtime_ms": 1775004806898
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5358d16b-c616-4dcc-89cf-94caec9f5d43/5358d16b-c616-4dcc-89cf-94caec9f5d43.jsonl": {
       "mtime_ms": 1774220831655
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/53f9cca1-dd04-4369-b015-c5ff884184aa/53f9cca1-dd04-4369-b015-c5ff884184aa.jsonl": {
       "mtime_ms": 1775003495828
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/53f9cca1-dd04-4369-b015-c5ff884184aa/subagents/1c4ca4f9-9ffb-4f9a-949d-c36ab18d5037.jsonl": {
+      "mtime_ms": 1775002695055
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/53f9cca1-dd04-4369-b015-c5ff884184aa/subagents/81259eeb-8403-4a88-a275-8cc7e6c0b2ed.jsonl": {
+      "mtime_ms": 1775002583735
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/53f9cca1-dd04-4369-b015-c5ff884184aa/subagents/b62e7daa-1e78-4f48-aa6f-320cad6551fb.jsonl": {
+      "mtime_ms": 1775002607254
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/55d781ac-76b5-4119-b7ec-8e03e0f24163/55d781ac-76b5-4119-b7ec-8e03e0f24163.jsonl": {
       "mtime_ms": 1775838690010
@@ -147,17 +303,68 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/55dcadc9-5742-4ea8-847e-46f5ce6b9c89/55dcadc9-5742-4ea8-847e-46f5ce6b9c89.jsonl": {
       "mtime_ms": 1775057838685
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/55dcadc9-5742-4ea8-847e-46f5ce6b9c89/subagents/0a365bb4-f0d1-48aa-9a01-377947633294.jsonl": {
+      "mtime_ms": 1775054937932
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/55dcadc9-5742-4ea8-847e-46f5ce6b9c89/subagents/0fc46108-5660-4195-8e4b-92ae9b0cd8bf.jsonl": {
+      "mtime_ms": 1775045069738
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/55dcadc9-5742-4ea8-847e-46f5ce6b9c89/subagents/17b89779-58a6-4d6f-bd86-1036a940ded2.jsonl": {
+      "mtime_ms": 1775054930162
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/55dcadc9-5742-4ea8-847e-46f5ce6b9c89/subagents/4b048717-3f13-4917-9cfe-98c73aa9ed7f.jsonl": {
+      "mtime_ms": 1775045023862
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5646e5b0-eb7f-4bf3-9840-82b95caaada9/5646e5b0-eb7f-4bf3-9840-82b95caaada9.jsonl": {
       "mtime_ms": 1775332185910
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/56edfd86-42c5-4ad3-96c9-202a991cd1e8/56edfd86-42c5-4ad3-96c9-202a991cd1e8.jsonl": {
+      "mtime_ms": 1778189689195
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/56edfd86-42c5-4ad3-96c9-202a991cd1e8/subagents/e067c08e-1a53-4339-8fc1-e40a70540fd5.jsonl": {
+      "mtime_ms": 1778189722774
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/57c62b39-2c2e-42e3-889e-b8adffb90150/57c62b39-2c2e-42e3-889e-b8adffb90150.jsonl": {
       "mtime_ms": 1773757590613
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/59a69157-1ce8-46ab-9a7a-5f6b4856c4f7/59a69157-1ce8-46ab-9a7a-5f6b4856c4f7.jsonl": {
+      "mtime_ms": 1778189695733
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/5b3a0cab-6ec9-4b54-b001-4130999233aa.jsonl": {
       "mtime_ms": 1776183650653
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/0a2439a7-4477-48fe-a653-2ac45490f4c8.jsonl": {
+      "mtime_ms": 1776181375586
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/1166935e-facb-4979-9081-26b4c1de546f.jsonl": {
+      "mtime_ms": 1776181321707
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/1805f106-5155-4b18-b9a6-5557b0403521.jsonl": {
+      "mtime_ms": 1776180819766
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/3a5f6f3e-a70e-456e-abdc-f453ea126e26.jsonl": {
+      "mtime_ms": 1776180816376
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/6817f38e-bf3a-4423-9cb3-2c629c74dd70.jsonl": {
+      "mtime_ms": 1776180822903
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/71abf383-80ac-4321-9349-965d1ee19f30.jsonl": {
+      "mtime_ms": 1776180846495
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/89af9ef9-ac8c-4a72-81aa-c7a842683a97.jsonl": {
+      "mtime_ms": 1776180824984
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/9a59a762-93fb-41c2-923f-f031fb34d8af.jsonl": {
+      "mtime_ms": 1776180839056
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5b3a0cab-6ec9-4b54-b001-4130999233aa/subagents/b9909912-a8cf-49e7-a67e-7b62a9dd104e.jsonl": {
+      "mtime_ms": 1776180812415
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5bff09a4-5e5a-4733-9bdd-2fee47ebb15e/5bff09a4-5e5a-4733-9bdd-2fee47ebb15e.jsonl": {
       "mtime_ms": 1775598027937
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5de49c4f-f2c6-499f-b9bd-f00fa61619a6/5de49c4f-f2c6-499f-b9bd-f00fa61619a6.jsonl": {
+      "mtime_ms": 1777667061899
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5f40e8a1-f3db-4398-9d15-4de2b62a0dbd/5f40e8a1-f3db-4398-9d15-4de2b62a0dbd.jsonl": {
       "mtime_ms": 1774212081691
@@ -165,11 +372,29 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5fd6d3f2-e8df-402f-8cd2-23a3854c7d59/5fd6d3f2-e8df-402f-8cd2-23a3854c7d59.jsonl": {
       "mtime_ms": 1773776530562
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/5fd6d3f2-e8df-402f-8cd2-23a3854c7d59/subagents/b5c414be-0fd7-4234-9071-7f1a2c62a780.jsonl": {
+      "mtime_ms": 1773774000405
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/62bf0fd0-c2b1-43cc-a781-ca03f1128a72/62bf0fd0-c2b1-43cc-a781-ca03f1128a72.jsonl": {
       "mtime_ms": 1775766452919
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6331e1b1-6f1f-4ea6-9cc2-5ca678494b78/6331e1b1-6f1f-4ea6-9cc2-5ca678494b78.jsonl": {
       "mtime_ms": 1774273097155
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6331e1b1-6f1f-4ea6-9cc2-5ca678494b78/subagents/337fb3ce-afbc-4056-b3ec-519599e645ba.jsonl": {
+      "mtime_ms": 1774269882885
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6331e1b1-6f1f-4ea6-9cc2-5ca678494b78/subagents/3cd169fb-740a-478e-89b0-9ea13371556f.jsonl": {
+      "mtime_ms": 1774270378734
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6331e1b1-6f1f-4ea6-9cc2-5ca678494b78/subagents/4e31658a-0e63-4214-84ad-8f210f3fad58.jsonl": {
+      "mtime_ms": 1774269874714
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6331e1b1-6f1f-4ea6-9cc2-5ca678494b78/subagents/56158c14-8f49-4082-aebf-b4b168f7d79c.jsonl": {
+      "mtime_ms": 1774269871300
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6331e1b1-6f1f-4ea6-9cc2-5ca678494b78/subagents/6a341d6c-cf3a-4e9e-8521-f6fd6176453f.jsonl": {
+      "mtime_ms": 1774270258299
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6b6cfc01-744c-4d63-99f3-3f5f43b0968e/6b6cfc01-744c-4d63-99f3-3f5f43b0968e.jsonl": {
       "mtime_ms": 1775577641854
@@ -180,11 +405,14 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6c516cf6-b9d2-4f28-ac87-3295256141ee/6c516cf6-b9d2-4f28-ac87-3295256141ee.jsonl": {
       "mtime_ms": 1774961952353
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6c577a45-a14c-4be4-afbb-e4bb8ca4cd29/6c577a45-a14c-4be4-afbb-e4bb8ca4cd29.jsonl": {
+      "mtime_ms": 1777833477152
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6cae4903-229e-48d1-bbe6-d5f8d2596494/6cae4903-229e-48d1-bbe6-d5f8d2596494.jsonl": {
       "mtime_ms": 1774219543764
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6da17bbf-45a2-4dc1-8697-960a5535d72b/6da17bbf-45a2-4dc1-8697-960a5535d72b.jsonl": {
-      "mtime_ms": 1777464376428
+      "mtime_ms": 1777467322670
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/6ede5c5c-a5d8-45a2-af58-5b6712561701/6ede5c5c-a5d8-45a2-af58-5b6712561701.jsonl": {
       "mtime_ms": 1775653688039
@@ -213,11 +441,101 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/742cd6ae-e5cc-47e2-bd31-b2066646832c/742cd6ae-e5cc-47e2-bd31-b2066646832c.jsonl": {
       "mtime_ms": 1776968432491
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/742cd6ae-e5cc-47e2-bd31-b2066646832c/subagents/8846f50a-28f3-4907-bb65-17e7c57e2e5a.jsonl": {
+      "mtime_ms": 1776966500715
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/746eea0b-355b-4f46-8444-b39c45f40d96.jsonl": {
       "mtime_ms": 1776255966103
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/036c43a3-fdec-4a9f-aece-e6b354c99949.jsonl": {
+      "mtime_ms": 1776190431524
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/05902abb-aff6-4c6b-9f47-150df702e25d.jsonl": {
+      "mtime_ms": 1776196076247
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/1740cda0-1095-49fc-829d-ca3cccdc344c.jsonl": {
+      "mtime_ms": 1776196078240
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/271749af-b7f8-4812-bd2d-a227a357551d.jsonl": {
+      "mtime_ms": 1776191217144
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/459c1883-4581-4e43-9c71-4c51d8aa43e9.jsonl": {
+      "mtime_ms": 1776197213734
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/476c6adb-ef5c-4471-a004-2ae6fa489b38.jsonl": {
+      "mtime_ms": 1776196068360
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/4ce493f9-3e56-4bef-b554-4ddc735f4c12.jsonl": {
+      "mtime_ms": 1776194872943
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/5862a246-092b-4fc2-a169-c1bef27a7a7f.jsonl": {
+      "mtime_ms": 1776190864509
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/6b887e50-97a4-47ad-8322-185c46f900b4.jsonl": {
+      "mtime_ms": 1776194828932
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/71d27643-744f-43e3-b23c-62ba10c7f690.jsonl": {
+      "mtime_ms": 1776190791076
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/737d6c56-cd1e-4be2-b9e9-98d724e28462.jsonl": {
+      "mtime_ms": 1776197226139
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/7cc6f100-7c40-45b6-9f9e-dbe6df44d25c.jsonl": {
+      "mtime_ms": 1776192419269
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/81dd550f-cf49-46c2-8baf-f76a647c30c1.jsonl": {
+      "mtime_ms": 1776195292374
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/84969aab-2aff-4d33-b8e3-128d1928643c.jsonl": {
+      "mtime_ms": 1776191950581
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/852fc64f-37f8-432b-94e3-7217ad7cb0cb.jsonl": {
+      "mtime_ms": 1776190250723
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/95289b9c-b9ca-4fff-ab11-b9dea7a2f865.jsonl": {
+      "mtime_ms": 1776193330469
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/a1ab5a94-0700-45b5-a27d-0d7116613e98.jsonl": {
+      "mtime_ms": 1776195310908
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/a6d0f880-34a9-4881-8edc-08c21f4f7460.jsonl": {
+      "mtime_ms": 1776194873378
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/bb35c0c1-d423-4ac9-867c-e1aee9ecaa2d.jsonl": {
+      "mtime_ms": 1776197234111
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/be861964-9818-479c-977e-1771c331a09d.jsonl": {
+      "mtime_ms": 1776228695177
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/d05e38bd-8537-4399-b6c8-4ea880e9dbb3.jsonl": {
+      "mtime_ms": 1776190320481
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/ec4a4118-77ec-449d-a1f0-12f880f0d06f.jsonl": {
+      "mtime_ms": 1776228784191
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/fde76b35-3a2c-469e-8d92-42a02ffbbbbe.jsonl": {
+      "mtime_ms": 1776191670485
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/fe12d72e-fae0-4221-84c4-28263a059067.jsonl": {
+      "mtime_ms": 1776193967144
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/746eea0b-355b-4f46-8444-b39c45f40d96/subagents/ff38d8c6-dbb2-4e6f-bc75-df88217a69ba.jsonl": {
+      "mtime_ms": 1776195341760
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/76225e9b-d010-4c1b-b449-969c91d51404/76225e9b-d010-4c1b-b449-969c91d51404.jsonl": {
       "mtime_ms": 1776178661955
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/76225e9b-d010-4c1b-b449-969c91d51404/subagents/3a3c70db-da58-40f1-a9c1-48441ae7865a.jsonl": {
+      "mtime_ms": 1776176823213
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/76225e9b-d010-4c1b-b449-969c91d51404/subagents/3afc34ed-0e35-4101-aef3-a739e524fce3.jsonl": {
+      "mtime_ms": 1776176827073
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/76225e9b-d010-4c1b-b449-969c91d51404/subagents/768294a3-41a6-4128-b32a-4041d1a7e641.jsonl": {
+      "mtime_ms": 1776177717513
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/76225e9b-d010-4c1b-b449-969c91d51404/subagents/b5e36eba-dd15-47bd-908c-0a41b64bd56e.jsonl": {
+      "mtime_ms": 1776176823826
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/78ab293e-4006-4248-b106-cdfe4f9064ce/78ab293e-4006-4248-b106-cdfe4f9064ce.jsonl": {
       "mtime_ms": 1773757354584
@@ -225,14 +543,44 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/79ae8215-c923-4feb-a849-6f47ad7f1e91/79ae8215-c923-4feb-a849-6f47ad7f1e91.jsonl": {
       "mtime_ms": 1775964527720
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/7a6aeb0a-92e3-4032-a5ce-d5d070bab063/7a6aeb0a-92e3-4032-a5ce-d5d070bab063.jsonl": {
+      "mtime_ms": 1777848993899
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/7e750d1b-74b2-459d-97ac-67fc62d7bb41/7e750d1b-74b2-459d-97ac-67fc62d7bb41.jsonl": {
       "mtime_ms": 1776256919687
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/7e750d1b-74b2-459d-97ac-67fc62d7bb41/subagents/19249dd9-d42b-4578-a7ee-37b8e196d6dc.jsonl": {
+      "mtime_ms": 1776197303799
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/7e750d1b-74b2-459d-97ac-67fc62d7bb41/subagents/c2d398d2-889d-4df5-b9fe-bce45a62dbe4.jsonl": {
+      "mtime_ms": 1776197260294
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/7e750d1b-74b2-459d-97ac-67fc62d7bb41/subagents/d19baaa4-daa7-4317-9ff9-f2ee4de9bceb.jsonl": {
+      "mtime_ms": 1776197455700
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/7e750d1b-74b2-459d-97ac-67fc62d7bb41/subagents/e1b90c90-2c10-40a2-9067-573b5b32c106.jsonl": {
+      "mtime_ms": 1776197302712
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/8039ebce-b126-4e2a-aa20-0509a4e62f09/8039ebce-b126-4e2a-aa20-0509a4e62f09.jsonl": {
       "mtime_ms": 1774220141503
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7.jsonl": {
       "mtime_ms": 1776178424837
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7/subagents/4f2aa178-1c83-480a-aed2-b5c4bd0cc775.jsonl": {
+      "mtime_ms": 1776177495644
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7/subagents/79ceaa79-44e0-49df-bc22-ebe369e82ea0.jsonl": {
+      "mtime_ms": 1776178133662
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7/subagents/948ad800-b985-4180-acbc-1c7e770e481d.jsonl": {
+      "mtime_ms": 1776177508758
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7/subagents/9b5a3560-ebdc-46da-aecb-ab14a960c452.jsonl": {
+      "mtime_ms": 1776178117720
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7/subagents/ff036776-2921-40d9-9048-841e9b40f844.jsonl": {
+      "mtime_ms": 1776178098473
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/87f61ade-aea7-4521-ae64-8739e4bdda0c/87f61ade-aea7-4521-ae64-8739e4bdda0c.jsonl": {
       "mtime_ms": 1774455639199
@@ -243,17 +591,32 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/88979cbb-a28b-4ff2-9a45-79ca03a2bf38/88979cbb-a28b-4ff2-9a45-79ca03a2bf38.jsonl": {
       "mtime_ms": 1776293911747
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/88979cbb-a28b-4ff2-9a45-79ca03a2bf38/subagents/123b462a-26eb-465e-9973-96ddc82c0edb.jsonl": {
+      "mtime_ms": 1776292397058
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/88979cbb-a28b-4ff2-9a45-79ca03a2bf38/subagents/f0ba26a6-b1b0-4466-9aef-22bd00ae22aa.jsonl": {
+      "mtime_ms": 1776292436253
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/8bcf5393-e5a0-4151-9dea-5504629e7371/8bcf5393-e5a0-4151-9dea-5504629e7371.jsonl": {
       "mtime_ms": 1775763962647
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/8d842d59-d1dc-4e89-aa9d-f980b2b505a4/8d842d59-d1dc-4e89-aa9d-f980b2b505a4.jsonl": {
       "mtime_ms": 1776959211948
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/8d842d59-d1dc-4e89-aa9d-f980b2b505a4/subagents/c497aedd-928e-466d-a130-252dbfbf2ddc.jsonl": {
+      "mtime_ms": 1776959179904
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/8ea6e29e-c0ef-4646-8759-621ddfd38d06/8ea6e29e-c0ef-4646-8759-621ddfd38d06.jsonl": {
+      "mtime_ms": 1778028136275
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/8f658cc1-d35b-4f52-ae81-f44dcf7f6ce4/8f658cc1-d35b-4f52-ae81-f44dcf7f6ce4.jsonl": {
       "mtime_ms": 1775223801987
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/8f85048d-dc26-420b-9923-98f8f52326bd/8f85048d-dc26-420b-9923-98f8f52326bd.jsonl": {
       "mtime_ms": 1774279724842
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/93d2e125-4ed6-47e6-901d-49e531dc7173/93d2e125-4ed6-47e6-901d-49e531dc7173.jsonl": {
+      "mtime_ms": 1778156443278
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/959c02c8-6e28-409b-aea3-3834c1b95ad8/959c02c8-6e28-409b-aea3-3834c1b95ad8.jsonl": {
       "mtime_ms": 1777246839113
@@ -276,17 +639,32 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9c131243-0345-4895-b6b8-20a61933bf26/9c131243-0345-4895-b6b8-20a61933bf26.jsonl": {
       "mtime_ms": 1777003489137
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9c131243-0345-4895-b6b8-20a61933bf26/subagents/9a4daf36-3f30-4002-bba6-d8b0e74c613b.jsonl": {
+      "mtime_ms": 1776980318893
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9d8a73d6-4e77-4f79-a4ba-7a98f47b68a5/9d8a73d6-4e77-4f79-a4ba-7a98f47b68a5.jsonl": {
       "mtime_ms": 1774211214043
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9dc1fa7b-8c47-4ab6-b5c9-18313035eedb/9dc1fa7b-8c47-4ab6-b5c9-18313035eedb.jsonl": {
       "mtime_ms": 1777058901898
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9dc1fa7b-8c47-4ab6-b5c9-18313035eedb/subagents/1c9826da-ca50-43bb-a7a2-7e4526a757e4.jsonl": {
+      "mtime_ms": 1777058800374
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9e456d6e-b755-4bb1-9a5b-d989d942d2f4/9e456d6e-b755-4bb1-9a5b-d989d942d2f4.jsonl": {
       "mtime_ms": 1774222995440
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9fb26958-eef7-4236-ba19-671cbab303d8/9fb26958-eef7-4236-ba19-671cbab303d8.jsonl": {
       "mtime_ms": 1773772662514
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9fb26958-eef7-4236-ba19-671cbab303d8/subagents/19a6c8c9-1495-4ea8-8159-b14277a90e77.jsonl": {
+      "mtime_ms": 1773766232880
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9fb26958-eef7-4236-ba19-671cbab303d8/subagents/6abd4937-7beb-4da2-b2ef-e3d5209b3dca.jsonl": {
+      "mtime_ms": 1773766248913
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/9fb26958-eef7-4236-ba19-671cbab303d8/subagents/75b7dbf9-f9df-4b5e-9b60-5e717ca4a86c.jsonl": {
+      "mtime_ms": 1773766251164
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a019c0a8-c6fe-4718-9d13-2b20bbb5b883/a019c0a8-c6fe-4718-9d13-2b20bbb5b883.jsonl": {
       "mtime_ms": 1773774713076
@@ -306,17 +684,56 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a46787dd-23a5-4928-a8bc-359c6eb7826c/a46787dd-23a5-4928-a8bc-359c6eb7826c.jsonl": {
       "mtime_ms": 1776968407374
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a46787dd-23a5-4928-a8bc-359c6eb7826c/subagents/0bd6087d-5910-4fc8-957b-d3feadfa2533.jsonl": {
+      "mtime_ms": 1776954702486
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a46787dd-23a5-4928-a8bc-359c6eb7826c/subagents/a049a84c-dbe7-4799-8d68-ae779b217ae0.jsonl": {
+      "mtime_ms": 1776954712885
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a9999281-28b2-4617-84c4-10a1f2010cde/a9999281-28b2-4617-84c4-10a1f2010cde.jsonl": {
       "mtime_ms": 1777153884619
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a9999281-28b2-4617-84c4-10a1f2010cde/subagents/1e15ec9e-3ac5-47c3-a6e0-e6cce9bad7ff.jsonl": {
+      "mtime_ms": 1777149088448
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a9999281-28b2-4617-84c4-10a1f2010cde/subagents/a4bbea4c-d529-4fa4-bd9e-f4b23b6d4348.jsonl": {
+      "mtime_ms": 1777149072781
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a9999281-28b2-4617-84c4-10a1f2010cde/subagents/a5d1ae10-3886-4cef-886b-b6d09cebc82e.jsonl": {
+      "mtime_ms": 1777149104890
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a9999281-28b2-4617-84c4-10a1f2010cde/subagents/ac838458-0027-461e-a60a-ced6628ee939.jsonl": {
+      "mtime_ms": 1777149070461
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a9999281-28b2-4617-84c4-10a1f2010cde/subagents/be5c4109-6967-40b0-99f8-378a33a949ab.jsonl": {
+      "mtime_ms": 1777149102060
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/af0eee72-ab87-4960-b3d8-611a99d05c65/af0eee72-ab87-4960-b3d8-611a99d05c65.jsonl": {
       "mtime_ms": 1775844438265
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/af857e2a-38c1-42ae-86c6-22bd6f1c50bc/af857e2a-38c1-42ae-86c6-22bd6f1c50bc.jsonl": {
+      "mtime_ms": 1778014547677
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/b08706c4-acd0-4bf9-a5d6-35eaf786232d/b08706c4-acd0-4bf9-a5d6-35eaf786232d.jsonl": {
       "mtime_ms": 1774219084150
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/b8377736-d35b-4137-99cb-ea7abceab784/b8377736-d35b-4137-99cb-ea7abceab784.jsonl": {
       "mtime_ms": 1776178949378
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/b8377736-d35b-4137-99cb-ea7abceab784/subagents/2fe1830a-e080-4c8e-9ed9-06e44f6ae9eb.jsonl": {
+      "mtime_ms": 1776176774183
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/b8377736-d35b-4137-99cb-ea7abceab784/subagents/88d3958e-d92a-40ad-b4cc-791839af09fb.jsonl": {
+      "mtime_ms": 1776177530518
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/b8377736-d35b-4137-99cb-ea7abceab784/subagents/93b53d94-1b5d-43c1-abb2-248aca0e7b61.jsonl": {
+      "mtime_ms": 1776177513596
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/b8377736-d35b-4137-99cb-ea7abceab784/subagents/9b4766c7-d4cc-4dec-85bf-282085e6dc3d.jsonl": {
+      "mtime_ms": 1776176850530
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/b8377736-d35b-4137-99cb-ea7abceab784/subagents/fba861fd-928c-407f-955d-0bba9acee121.jsonl": {
+      "mtime_ms": 1776176800630
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/b9e1cadc-6615-40f7-9233-f534685df7d0/b9e1cadc-6615-40f7-9233-f534685df7d0.jsonl": {
       "mtime_ms": 1777391095616
@@ -330,6 +747,42 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/bced5366-ce02-456b-a7cc-f764cbfd4f12.jsonl": {
       "mtime_ms": 1776881938204
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/0534219f-2196-45be-a3df-486389e0a0ea.jsonl": {
+      "mtime_ms": 1776705494545
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/142ddb03-6ee3-4c56-8bd9-e86ad772ba75.jsonl": {
+      "mtime_ms": 1776784151736
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/410e41f1-6cb5-4407-a1d8-b0f3e7377472.jsonl": {
+      "mtime_ms": 1776784142672
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/64c24d3d-9be5-404e-8f0c-133fb2948e10.jsonl": {
+      "mtime_ms": 1776705485448
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/698dd80e-15b6-4895-ad3c-fcb420803890.jsonl": {
+      "mtime_ms": 1776784181740
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/7116ac81-2d37-4459-b1e2-797f4d91bf52.jsonl": {
+      "mtime_ms": 1776831722979
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/84da8fb2-1f98-4791-9239-a2723e004937.jsonl": {
+      "mtime_ms": 1776784166697
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/8dd84919-a3db-4bf5-b49e-8e3350fd8a8a.jsonl": {
+      "mtime_ms": 1776784139700
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/ad47f40b-b69e-4435-823a-eb0fe190e39d.jsonl": {
+      "mtime_ms": 1776879911913
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/b624d3f2-9fb3-449a-9e95-f3c680a05a14.jsonl": {
+      "mtime_ms": 1776727645652
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/cd4bde13-f0aa-45dc-8595-0154792699d4.jsonl": {
+      "mtime_ms": 1776705572566
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bced5366-ce02-456b-a7cc-f764cbfd4f12/subagents/e637c7ad-16f7-4633-b549-01e0723f414e.jsonl": {
+      "mtime_ms": 1776772762806
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bd2ec1fd-de2b-406f-97c0-7a2c0da50784/bd2ec1fd-de2b-406f-97c0-7a2c0da50784.jsonl": {
       "mtime_ms": 1777390693761
     },
@@ -341,6 +794,45 @@
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/bfb8c190-0be3-4211-9cd1-5450a6663280.jsonl": {
       "mtime_ms": 1776367353740
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/096ae738-a50b-4f52-9f7e-e6ef5115d3a8.jsonl": {
+      "mtime_ms": 1776294410370
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/1381365d-6917-4d9d-8284-fb448479a79f.jsonl": {
+      "mtime_ms": 1776294410064
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/1c60e84c-4a8e-4809-a140-df11a435d60b.jsonl": {
+      "mtime_ms": 1776295825164
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/313950e2-fbb2-41b1-8dd4-3f414d76edfc.jsonl": {
+      "mtime_ms": 1776294455358
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/407e3868-d68c-489a-b468-620b478e805b.jsonl": {
+      "mtime_ms": 1776295854785
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/417277d0-dc80-4ef9-a25c-a1f5d01d3a44.jsonl": {
+      "mtime_ms": 1776295778361
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/4b96cfd8-f61d-4fc0-bb6f-38b9f56cb285.jsonl": {
+      "mtime_ms": 1776293240426
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/711b7956-3ec4-44fb-b169-19f4e8fbd651.jsonl": {
+      "mtime_ms": 1776294407560
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/828862c8-a2c4-4727-83f5-ea60deb3fe91.jsonl": {
+      "mtime_ms": 1776295728809
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/87c3255b-4b84-4e75-ba86-ba41b1d27d46.jsonl": {
+      "mtime_ms": 1776294383444
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/99a3e2bb-c7c7-46db-bec3-f164c81169e3.jsonl": {
+      "mtime_ms": 1776293165436
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bfb8c190-0be3-4211-9cd1-5450a6663280/subagents/f794dfaf-6900-4e11-b623-6fca2b0d0257.jsonl": {
+      "mtime_ms": 1776293272986
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bff1661b-3d5a-402f-9198-988d99cb0a7b/bff1661b-3d5a-402f-9198-988d99cb0a7b.jsonl": {
+      "mtime_ms": 1777848471672
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/c0be6a60-0b1f-47cd-bd5e-c12d5d1e6f8a/c0be6a60-0b1f-47cd-bd5e-c12d5d1e6f8a.jsonl": {
       "mtime_ms": 1777389339899
@@ -363,14 +855,32 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/d0054120-b4b0-4d97-a93c-1e099d0769f5/d0054120-b4b0-4d97-a93c-1e099d0769f5.jsonl": {
       "mtime_ms": 1775842168681
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/d01144bb-e361-4253-a913-05c1882630aa/d01144bb-e361-4253-a913-05c1882630aa.jsonl": {
+      "mtime_ms": 1777936273769
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/d0584acc-92af-4419-a801-3f8a0eb4c2c8/d0584acc-92af-4419-a801-3f8a0eb4c2c8.jsonl": {
       "mtime_ms": 1774211804345
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/d2dca9cf-62a0-48eb-829c-4ff2a5e3d8eb/d2dca9cf-62a0-48eb-829c-4ff2a5e3d8eb.jsonl": {
+      "mtime_ms": 1777658995243
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/d60764bd-cb17-4ff0-a934-52136682532f/d60764bd-cb17-4ff0-a934-52136682532f.jsonl": {
       "mtime_ms": 1777388262051
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/d60764bd-cb17-4ff0-a934-52136682532f/subagents/965b49c6-7fc7-457a-bd69-937a9280e5a2.jsonl": {
+      "mtime_ms": 1777384303905
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/d9830e9e-146e-450d-8ec9-6e3493cd3188/d9830e9e-146e-450d-8ec9-6e3493cd3188.jsonl": {
       "mtime_ms": 1776703679560
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/d9830e9e-146e-450d-8ec9-6e3493cd3188/subagents/41c9a2a7-8105-4ee3-b6c3-dc3c74aa8ab0.jsonl": {
+      "mtime_ms": 1776701140452
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/da20e6a5-1d05-46e1-a7fd-c3dc614f3cab/da20e6a5-1d05-46e1-a7fd-c3dc614f3cab.jsonl": {
+      "mtime_ms": 1778018929901
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/da20e6a5-1d05-46e1-a7fd-c3dc614f3cab/subagents/9c787fae-2f69-4e78-880b-c777136eab71.jsonl": {
+      "mtime_ms": 1778017990573
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/db05f04f-9bbe-4f57-b233-f0e1ab67f674/db05f04f-9bbe-4f57-b233-f0e1ab67f674.jsonl": {
       "mtime_ms": 1775230288248
@@ -392,6 +902,9 @@
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/e3eea738-eaab-4533-ae99-b2ee78211711/e3eea738-eaab-4533-ae99-b2ee78211711.jsonl": {
       "mtime_ms": 1776951923486
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/e3eea738-eaab-4533-ae99-b2ee78211711/subagents/269a8f95-c8e1-498e-9a1f-94b20d403da7.jsonl": {
+      "mtime_ms": 1776948980031
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/e5e7c565-5489-4979-973e-f1c0d0aeff5f/e5e7c565-5489-4979-973e-f1c0d0aeff5f.jsonl": {
       "mtime_ms": 1775865546932
@@ -422,6 +935,27 @@
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/fcfe4537-86c4-48c1-af69-e11ab9049df0/fcfe4537-86c4-48c1-af69-e11ab9049df0.jsonl": {
       "mtime_ms": 1776178949191
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/fcfe4537-86c4-48c1-af69-e11ab9049df0/subagents/07f7df2a-e04b-4c64-81a2-db9ef597d193.jsonl": {
+      "mtime_ms": 1776178133474
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/fcfe4537-86c4-48c1-af69-e11ab9049df0/subagents/483b6711-4201-454f-94c4-62733cfa63a9.jsonl": {
+      "mtime_ms": 1776177441102
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/fcfe4537-86c4-48c1-af69-e11ab9049df0/subagents/54903263-7154-4088-ba99-9ad22d62f119.jsonl": {
+      "mtime_ms": 1776178149613
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/fcfe4537-86c4-48c1-af69-e11ab9049df0/subagents/714d765d-2b44-4d3a-a730-d19773b4f4f6.jsonl": {
+      "mtime_ms": 1776178123205
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/fcfe4537-86c4-48c1-af69-e11ab9049df0/subagents/a6d03693-a371-4abb-85e8-8715233fea04.jsonl": {
+      "mtime_ms": 1776177472062
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/fddcb7b6-c4b8-4ca9-8be5-eff9f11a4b81/fddcb7b6-c4b8-4ca9-8be5-eff9f11a4b81.jsonl": {
+      "mtime_ms": 1777924035597
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/fddcb7b6-c4b8-4ca9-8be5-eff9f11a4b81/subagents/f267f557-6e1e-4be2-942f-3e7e81cbec46.jsonl": {
+      "mtime_ms": 1777924025569
     }
   }
 }

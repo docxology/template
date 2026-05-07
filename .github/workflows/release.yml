@@ -55,4 +55,5 @@ jobs:
           body_path: ${{ steps.changelog.outputs.file }}
           draft: false
           prerelease: ${{ contains(steps.tag.outputs.name, '-rc') || contains(steps.tag.outputs.name, '-beta') || contains(steps.tag.outputs.name, '-alpha') }}
-          generate_release_notes: true  # GitHub's built-in PR-based notes
+          # Omit generate_release_notes — avoids duplicating narrative vs body_path excerpt.
+          generate_release_notes: false

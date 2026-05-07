@@ -36,24 +36,24 @@ Pair each `SKILL.md` with the matching **`AGENTS.md`** for full API tables.
 ```mermaid
 graph TD
     subgraph "🔧 Core Infrastructure"
-        CORE[core/<br/>Fundamental utilities<br/>Logging, config, progress]
+        CORE[core<br/>Fundamental utilities<br/>Logging, config, progress]
         EXCEPTIONS[core/exceptions.py<br/>Exception hierarchy<br/>Context preservation]
     end
 
     subgraph "📝 Document Processing"
-        DOC[documentation/<br/>Figure management<br/>API documentation]
-        RENDER[rendering/<br/>Multi-format output<br/>PDF, HTML, slides]
-        VALIDATION[validation/<br/>Quality assurance<br/>Content validation]
+        DOC[documentation<br/>Figure management<br/>API documentation]
+        RENDER[rendering<br/>Multi-format output<br/>PDF, HTML, slides]
+        VALIDATION[validation<br/>Quality assurance<br/>Content validation]
     end
 
     subgraph "🔗 External Integrations"
-        LLM[llm/<br/>Local LLM integration<br/>Ollama support]
-        PUBLISHING[publishing/<br/>Academic publishing<br/>Zenodo, arXiv, GitHub]
-        SCIENTIFIC[scientific/<br/>Scientific utilities<br/>Benchmarking, validation]
+        LLM[llm<br/>Local LLM integration<br/>Ollama support]
+        PUBLISHING[publishing<br/>Academic publishing<br/>Zenodo, arXiv, GitHub]
+        SCIENTIFIC[scientific<br/>Scientific utilities<br/>Benchmarking, validation]
     end
 
     subgraph "📊 Reporting & Quality"
-        REPORTING[reporting/<br/>Pipeline reporting<br/>Error aggregation]
+        REPORTING[reporting<br/>Pipeline reporting<br/>Error aggregation]
     end
 
     PROJECT_SCRIPTS[Project Scripts<br/>project/scripts/]
@@ -89,13 +89,13 @@ flowchart TD
     end
 
     subgraph "🏗️ Infrastructure Layer"
-        CORE_MOD[core/<br/>Foundation utilities]
-        VALIDATION_MOD[validation/<br/>Quality checks]
-        DOCUMENTATION_MOD[documentation/<br/>Figure management]
-        RENDERING_MOD[rendering/<br/>Output generation]
-        LLM_MOD[llm/<br/>AI assistance]
-        PUBLISHING_MOD[publishing/<br/>Academic dissemination]
-        REPORTING_MOD[reporting/<br/>Pipeline reporting]
+        CORE_MOD[core<br/>Foundation utilities]
+        VALIDATION_MOD[validation<br/>Quality checks]
+        DOCUMENTATION_MOD[documentation<br/>Figure management]
+        RENDERING_MOD[rendering<br/>Output generation]
+        LLM_MOD[llm<br/>AI assistance]
+        PUBLISHING_MOD[publishing<br/>Academic dissemination]
+        REPORTING_MOD[reporting<br/>Pipeline reporting]
     end
 
     subgraph "📊 Data Flow"
@@ -161,7 +161,7 @@ flowchart TD
     F --> DD[web_renderer.py<br/>Web output]
 
     G --> EE[llm/core/client.py<br/>Ollama integration]
-    G --> FF[llm/templates/<br/>Research templates]
+    G --> FF[llm/templates<br/>Research templates]
     G --> GG[llm/core/context.py<br/>Context management]
 
     H --> HH[api.py<br/>Platform API clients]
@@ -192,27 +192,26 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph Input["📥 Input Sources"]
         YAML[config.yaml<br/>Project metadata]
-        SRC[src/<br/>Scientific code]
-        MANUSCRIPT[manuscript/<br/>Research content]
-        SCRIPTS[scripts/<br/>Orchestrators]
+        SRC[src<br/>Scientific code]
+        MANUSCRIPT[manuscript<br/>Research content]
+        SCRIPTS[scripts<br/>Orchestrators]
     end
 
     subgraph Processing["⚙️ Infrastructure Processing"]
         CONFIG[config_loader<br/>Load settings]
-        VALIDATE[validation/<br/>Quality checks]
-        RENDER[rendering/<br/>Generate outputs]
+        VALIDATE[validation<br/>Quality checks]
+        RENDER[rendering<br/>Generate outputs]
         LOGGING[logging_utils<br/>Track progress]
-        REPORT[reporting/<br/>Generate reports]
+        REPORT[reporting<br/>Generate reports]
     end
 
     subgraph Output["📤 Generated Outputs"]
-        PDF[output/{project_name}/pdf/<br/>Manuscript PDFs]
-        FIGURES[output/{project_name}/figures/<br/>Publication plots]
-        REPORTS[output/{project_name}/reports/<br/>Validation reports]
-        HTML[output/{project_name}/web/<br/>HTML versions]
+        PDF["output/{project_name}/pdf<br/>Manuscript PDFs"]
+        FIGURES["output/{project_name}/figures<br/>Publication plots"]
+        REPORTS["output/{project_name}/reports<br/>Validation reports"]
+        HTML["output/{project_name}/web<br/>HTML versions"]
     end
 
     YAML --> CONFIG
@@ -297,10 +296,10 @@ flowchart TD
     end
 
     subgraph "🔧 Infrastructure Integration"
-        CORE[core/<br/>logging, progress]
-        DOC[documentation/<br/>figures, markdown]
-        LLM[llm/<br/>AI assistance]
-        PUBLISH[publishing/<br/>academic platforms]
+        CORE[core<br/>logging, progress]
+        DOC[documentation<br/>figures, markdown]
+        LLM[llm<br/>AI assistance]
+        PUBLISH[publishing<br/>academic platforms]
     end
 
     INIT --> CORE
@@ -363,7 +362,7 @@ pytest tests/infra_tests/core/ -v
 
 ```mermaid
 flowchart TB
-    NM[/infrastructure/new_module//]
+    NM[/infrastructure/new_module/]
     NM --> INIT[__init__.py<br/>Public API exports]
     NM --> CORE[core.py<br/>Main functionality]
     NM --> UTILS[utils.py<br/>Helper functions]

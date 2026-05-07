@@ -5,18 +5,17 @@ infrastructure. Architecture details:
 [`architecture.md`](../core/architecture.md) and
 [`workflow.md`](../core/workflow.md).
 
-**Last verified:** 2026-05-04 (re-baselined against live audit)
+**Last verified:** 2026-05-05 (metrics defer to [`TO-DO.md`](../../TO-DO.md) live snapshot unless this file is re-measured)
 
 ## Completed Releases
 
 ### v3.0.0 — Production / Stable (2026-02-22)
 
-- mypy strict adopted as the baseline gate for `infrastructure/` (current
-  state: see TO-DO M1 — a small residual is open against re-export
-  attribute exports)
+- mypy strict adopted as the baseline gate for `infrastructure/` (live
+  counts in [`TO-DO.md`](../../TO-DO.md))
 - Ruff format enforcement
-- Security hardening: Bandit MEDIUM+ gate in CI, pip-audit job present
-  (still informational; see TO-DO M2)
+- Security hardening: Bandit MEDIUM+ gate in CI; pip-audit blocking since **v0.7.2**
+  (ignore list + retries — see [`CHANGELOG.md`](../../CHANGELOG.md))
 - Dockerfile modernised to `python:3.12` + `uv`
 
 ### v2.x — Foundation Series (2025–2026)
@@ -77,34 +76,24 @@ against a live audit; the roadmap intentionally does not duplicate the
 items there. The current top items (verify against `TO-DO.md` for the
 authoritative form):
 
-- **M1** — Close residual mypy strict errors (re-export `__all__` audit)
-- **M2** — Make CI pip-audit a blocking gate (remove `continue-on-error`)
-- **M3** — Resolve the 3 remaining MEDIUM Bandit findings (`B314` ×2, `B615` ×1)
-- **M4** — Triage / suppress the LOW Bandit pile
-- **M7** — Roadmap freshness sweep (this document is its output)
-- **MED3** — Per-project test-runner factor (lifts the open-coded loop in
-  `ci.yml` into infrastructure)
-- **MED4** — Documentation linter as a CI job (Mermaid + cross-tree links
-  + module-count consistency + ghost-project detection)
+- **`TO-DO.md`** — authoritative backlog and live audit snapshot (metrics and open items — verify there before copying numbers here).
+- **M7** — Roadmap hygiene: link to sources instead of duplicating drift-prone counts.
+
+Shipped elsewhere (do not re-track here): **M2** pip-audit blocking CI (**v0.7.2**), **M4** Bandit LOW triage via `bandit.yaml`, **docs-lint** CI job (**MED4** in [`CHANGELOG.md`](../../CHANGELOG.md)), per-project test runner (**MED3** — `infrastructure.core.test_runner`). **DOC-MERMAID-1** in [`TO-DO.md`](../../TO-DO.md) is separate backlog for legacy Mermaid `noqa` cleanup — not the MED4 docs-lint ship label.
 
 ---
 
-## Quality Metrics (live, 2026-05-04)
+## Quality Metrics
 
-| Metric | Value | Source |
-| ------ | ----- | ------ |
-| `pyproject.toml` version | `3.0.0` | `pyproject.toml` |
-| Ruff lint errors | **0** | `uv run ruff check infrastructure/` |
-| mypy strict errors (`infrastructure/`) | **19** in 12 files (residual `__all__` re-exports — TO-DO M1) | `uv run mypy --strict infrastructure/` |
-| Bandit MEDIUM+ findings | **3 MEDIUM** (`B314` ×2 in `search/`, `B615` ×1 in `scripts/fixtures/`) — TO-DO M3 | `uv run bandit -r -ll infrastructure/ scripts/` |
-| Bandit LOW findings | 90 (allow-list / triage pending — TO-DO M4) | same |
-| Test suite | **5246 passing**, 8 skipped | `pytest tests/infra_tests/` |
-| Infrastructure coverage | **76.83 %** (gate ≥ 60 %) | `pytest --cov=infrastructure` |
-| `infrastructure/` Python packages | 15 (+ 3 config dirs) | `infrastructure/` tree |
-| pip-audit CI gate | informational (`continue-on-error: true`) — TO-DO M2 | `.github/workflows/ci.yml:405` |
+Authoritative counts and gate outputs live in the **Live state snapshot**
+table in [`TO-DO.md`](../../TO-DO.md) (re-baseline there after substantive
+changes). This roadmap avoids duplicating numbers that drift between audits.
 
-Numbers above are re-measured each time this file is touched. Do not
-copy them forward without re-running the source command.
+| Topic | Where to verify |
+| ----- | ---------------- |
+| mypy / ruff / Bandit / pip-audit / health | [`TO-DO.md`](../../TO-DO.md) |
+| CI wiring | [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml), [`.github/AGENTS.md`](../../.github/AGENTS.md) |
+| Coverage gaps | [`coverage-gaps.md`](coverage-gaps.md) |
 
 ---
 

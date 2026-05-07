@@ -17,7 +17,7 @@ flowchart TB
     OP --> MAINT[maintenance.md<br/>Maintenance &amp; log rotation]
     OP --> RB[runbook.md<br/>Daily/weekly/monthly]
     OP --> TU[template-usage.md<br/>Forking/adapting]
-    OP --> SCR[/scripts/<br/>rotate-logs.sh/]
+    OP --> SCR[/scripts<br/>rotate-logs.sh/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff

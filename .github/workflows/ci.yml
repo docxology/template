@@ -9,11 +9,6 @@ on:
     # Weekly Sunday midnight UTC — catches newly-published CVEs without a push
     - cron: "0 0 * * 0"
   workflow_dispatch:
-    inputs:
-      project:
-        description: "Specific project to test (leave blank for all)"
-        required: false
-        default: ""
 
 # Global minimum permissions; individual jobs override where needed
 permissions:
@@ -139,6 +134,43 @@ jobs:
         run: uv run python scripts/verify_no_mocks.py
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Job 2b — Setup hook on Windows (conditional smoke)
+#
+# When any active project ships ``projects/**/scripts/setup_hook.py``, verify
+# hook discovery and subprocess paths on ``windows-latest`` (``.sh`` hooks are
+# intentionally skipped there — see TO-DO.md / infrastructure.project.setup_hook).
+# ─────────────────────────────────────────────────────────────────────────────
+  setup-hook-windows-smoke:
+    name: Setup hook (Windows smoke)
+    runs-on: windows-latest
+    timeout-minutes: 15
+    needs: [verify-no-mocks]
+    if: hashFiles('projects/**/scripts/setup_hook.py') != ''
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Run setup_hook tests (Windows)
+        env:
+          PYTHONUTF8: "1"
+        run: >-
+          uv run pytest tests/infra_tests/project/test_setup_hook.py -v
+          --timeout=120
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.12)
 # ─────────────────────────────────────────────────────────────────────────────
   test-infra:
@@ -187,7 +219,7 @@ jobs:
           --cov-report=xml:coverage-infra.xml
           --cov-fail-under=60
           --durations=10
-          -m "not requires_ollama"
+          -m "not requires_ollama and not slow and not bench"
           --timeout=120
 
       - name: Upload infrastructure coverage to Codecov
@@ -437,13 +469,29 @@ jobs:
         run: uv sync
 
       - name: Dependency audit (pip-audit)
-        # continue-on-error: upstream vuln DBs can be intermittently unavailable
-        continue-on-error: true
-        run: uv run pip-audit
+        run: |
+          set -euo pipefail
+          IGNORE_FILE=".github/pip-audit-ignore.txt"
+          PIP_AUDIT_ARGS=()
+          while IFS= read -r raw || [ -n "$raw" ]; do
+            [[ "$raw" =~ ^[[:space:]]*# ]] && continue
+            line="${raw%%#*}"
+            line="$(echo "$line" | xargs)"
+            [ -z "$line" ] && continue
+            PIP_AUDIT_ARGS+=(--ignore-vuln "$line")
+          done < "$IGNORE_FILE"
+          for attempt in 1 2 3; do
+            if uv run pip-audit "${PIP_AUDIT_ARGS[@]}"; then
+              exit 0
+            fi
+            echo "pip-audit attempt ${attempt} failed; retrying in 15s..." >&2
+            sleep 15
+          done
+          exit 1
 
       - name: Code security scan (Bandit MEDIUM+ severity)
         run: >-
-          uv run bandit -r -ll
+          uv run bandit -c bandit.yaml -r -ll
           infrastructure/
           scripts/
           projects/

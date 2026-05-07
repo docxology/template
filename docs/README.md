@@ -36,10 +36,10 @@ graph TD
 
     subgraph Operational["Operational"]
         PIPELINE[RUN_GUIDE.md<br/>Pipeline Orchestration]
-        BUILD[operational/build/<br/>uv, CI/CD]
-        TROUBLESHOOT[operational/troubleshooting/<br/>Fix Issues]
-        CONFIG[operational/config/<br/>Settings and Performance]
-        LOGGING[operational/logging/<br/>Logging System]
+        BUILD[operational/build<br/>uv, CI/CD]
+        TROUBLESHOOT[operational/troubleshooting<br/>Fix Issues]
+        CONFIG[operational/config<br/>Settings and Performance]
+        LOGGING[operational/logging<br/>Logging System]
     end
 
     subgraph Reference["Reference"]

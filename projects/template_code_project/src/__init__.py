@@ -5,6 +5,14 @@ basic numerical optimization algorithms with comprehensive testing
 and analysis capabilities.
 """
 
+from .invariants import (
+    InvariantResult,
+    OptimizerSweepConfig,
+    all_invariants,
+    convergence_invariants,
+    gradient_consistency_invariants,
+    trajectory_invariants,
+)
 from .optimizer import (
     OptimizationResult,
     compute_gradient,
@@ -15,10 +23,18 @@ from .optimizer import (
 )
 
 __all__ = [
+    # Optimizer primitives
     "quadratic_function",
     "gradient_descent",
     "compute_gradient",
     "make_quadratic_problem",
     "simulate_trajectory",
     "OptimizationResult",
+    # Numerical invariants (driven by scripts/build_dashboard.py)
+    "InvariantResult",
+    "OptimizerSweepConfig",
+    "all_invariants",
+    "convergence_invariants",
+    "gradient_consistency_invariants",
+    "trajectory_invariants",
 ]

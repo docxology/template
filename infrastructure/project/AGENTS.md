@@ -114,9 +114,9 @@ Recommended but not required:
 ```mermaid
 flowchart TB
     PR[/projects//]
-    PR --> P[/project/<br/>Default template project/]
-    PR --> MY[/myresearch/<br/>Custom project 1/]
-    PR --> EX[/experiment2/<br/>Custom project 2/]
+    PR --> P[/project<br/>Default template project/]
+    PR --> MY[/myresearch<br/>Custom project 1/]
+    PR --> EX[/experiment2<br/>Custom project 2/]
 
     P --> P_F[src/ · tests/ · scripts/ ·<br/>manuscript/ · output/ · pyproject.toml]
     MY --> MY_F[src/ · tests/ · manuscript/ · pyproject.toml]

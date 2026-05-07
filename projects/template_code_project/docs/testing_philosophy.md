@@ -10,11 +10,15 @@ If you ever feel the urge to mock something in a test for `src/`, treat it as a 
 
 ## The Validation Suite
 
-File: `projects/template_code_project/tests/test_optimizer.py` (749 lines)
-Configuration: `projects/template_code_project/pyproject.toml` (`fail_under = 90`)
+Files:
+- `projects/template_code_project/tests/test_optimizer.py` — covers `src/optimizer.py` (pure math)
+- `projects/template_code_project/tests/test_invariants.py` — covers `src/invariants.py` (dashboard invariants)
+- `projects/template_code_project/tests/test_invariants_and_dashboard.py` — covers `scripts/build_dashboard.py` orchestration
+
+Configuration: `projects/template_code_project/pyproject.toml` (`fail_under = 70` locally; the root pipeline gates at 90)
 Conftest: `projects/template_code_project/tests/conftest.py` (sets `MPLBACKEND=Agg`, adds `src/` to `sys.path`)
 
-The suite currently collects **42** tests covering `optimizer.py` and, via conditional imports, thin orchestration in `scripts/optimization_analysis.py`. Line/branch coverage on `src/` typically lands at ~96%, well above the 90% gate.
+The suite currently collects **96** tests covering `src/optimizer.py`, `src/invariants.py`, and the thin orchestration in `scripts/build_dashboard.py` plus `scripts/optimization_analysis.py` (via conditional imports). Line/branch coverage on `src/` typically lands at ~99.5%, well above the 90% gate.
 
 ## Test Class Inventory
 
@@ -31,7 +35,10 @@ The suite currently collects **42** tests covering `optimizer.py` and, via condi
 | `TestPerformanceBenchmarking` | 2 | Infrastructure-dependent; skipped if `infrastructure.scientific` unavailable |
 | `TestAnalysisDashboard` | 2 | Infrastructure-dependent; skipped if `infrastructure.reporting` unavailable |
 
-**Total: 42 collected tests**
+| `TestInvariants` (test_invariants.py) | 30+ | `src/invariants.py` invariant builders, `InvariantResult`/`Panel` schema, dashboard payload primitives |
+| `TestBuildDashboard` (test_invariants_and_dashboard.py) | 20+ | `scripts/build_dashboard.py` end-to-end: payload JSON, HTML emission, invariants.txt, summary.txt |
+
+**Total: 96 collected tests** (run `pytest --collect-only -q | tail -1` for the live count).
 
 ## Coverage Mechanics
 

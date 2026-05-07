@@ -105,30 +105,29 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph FigureWorkflow["Figure Management Workflow"]
         A[Generate Plot<br/>Create visualization]
-        B[Register Figure<br/>FigureManager.register_figure()]
-        C[Generate LaTeX<br/>FigureManager.generate_latex_figure_block()]
-        D[Insert Reference<br/>ImageManager.insert_figure()]
-        E[Validate References<br/>ImageManager.validate_figure_references()]
+        B["Register Figure<br/>FigureManager.register_figure"]
+        C["Generate LaTeX<br/>FigureManager.generate_latex_figure_block"]
+        D["Insert Reference<br/>ImageManager.insert_figure"]
+        E["Validate References<br/>ImageManager.validate_figure_references"]
         F[Render Document<br/>Include in manuscript]
     end
 
     subgraph APIWorkflow["API Documentation Workflow"]
-        G[Parse Source<br/>build_api_index()]
-        H[Generate Table<br/>generate_markdown_table()]
-        I[Inject Content<br/>inject_between_markers()]
-        J[Update Glossary<br/>Replace markers in manuscript]
-        K[Validate Links<br/>Check cross-references]
+        G["Parse Source<br/>build_api_index"]
+        H["Generate Table<br/>generate_markdown_table"]
+        I["Inject Content<br/>inject_between_markers"]
+        J["Update Glossary<br/>Replace markers in manuscript"]
+        K["Validate Links<br/>Check cross-references"]
     end
 
     subgraph IntegrationWorkflow["Manuscript Integration"]
-        L[Detect Sections<br/>MarkdownIntegration.detect_sections()]
-        M[Insert Figures<br/>insert_figure_in_section()]
-        N[Update References<br/>update_cross_references()]
-        O[Generate ToF<br/>generate_table_of_figures()]
-        P[Validate Manuscript<br/>validate_manuscript()]
+        L["Detect Sections<br/>MarkdownIntegration.detect_sections"]
+        M["Insert Figures<br/>insert_figure_in_section"]
+        N["Update References<br/>update_cross_references"]
+        O["Generate ToF<br/>generate_table_of_figures"]
+        P["Validate Manuscript<br/>validate_manuscript"]
     end
 
     A --> B --> C --> D --> E --> F

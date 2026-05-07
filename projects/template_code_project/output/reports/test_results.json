@@ -1,40 +1,47 @@
 {
-  "timestamp": "2026-05-05T06:24:11.276806",
+  "timestamp": "2026-05-07T14:21:38.194533",
   "infrastructure": {},
   "project": {
-    "passed": 52,
+    "passed": 96,
     "failed": 0,
     "skipped": 0,
-    "total": 52,
+    "total": 96,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 52,
+    "discovery_count": 96,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 3.15,
-      "collection": 3.15,
-      "execution": 3.15
+      "setup": 9.92,
+      "collection": 9.92,
+      "execution": 9.92
     },
     "test_categories": {},
-    "coverage_percent": 99.09909909909909,
+    "coverage_percent": 99.50980392156863,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 52,
+    "total_passed": 96,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 52,
+    "total_tests": 96,
     "all_passed": true,
-    "project_coverage": 99.09909909909909
+    "project_coverage": 99.50980392156863
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 100.0,
-      "total_executed": 83,
+      "overall_coverage": 98.80952380952381,
+      "total_executed": 166,
       "total_missing": 0,
-      "total_excluded": 0,
-      "total_lines": 83,
+      "total_excluded": 2,
+      "total_lines": 168,
       "file_coverage": {
+        "projects/template_code_project/src/invariants.py": {
+          "coverage_percent": 97.6470588235294,
+          "executed_lines": 83,
+          "missing_lines": 0,
+          "excluded_lines": 2,
+          "total_lines": 85
+        },
         "projects/template_code_project/src/optimizer.py": {
           "coverage_percent": 100.0,
           "executed_lines": 83,

@@ -54,17 +54,17 @@ uv run python -m infrastructure.validation.cli pdf output/template_code_project/
 ```mermaid
 flowchart TB
     R[/template//]
-    R --> INF[/infrastructure/<br/>Reusable infrastructure · Layer 1/]
-    R --> SC[/scripts/<br/>Root pipeline orchestrators/]
-    R --> T[/tests/<br/>Infrastructure test suite/]
-    R --> PR[/projects/<br/>Multiple research projects/]
-    R --> OUT[/output/<br/>Final generated deliverables/]
+    R --> INF[/infrastructure<br/>Reusable infrastructure · Layer 1/]
+    R --> SC[/scripts<br/>Root pipeline orchestrators/]
+    R --> T[/tests<br/>Infrastructure test suite/]
+    R --> PR[/projects<br/>Multiple research projects/]
+    R --> OUT[/output<br/>Final generated deliverables/]
 
     PR --> CP[/template_code_project//]
-    CP --> CP_SRC[/src/<br/>Business logic · Layer 2/]
-    CP --> CP_T[/tests/<br/>Project-specific tests/]
-    CP --> CP_M[/manuscript/<br/>Research sections + config.yaml/]
-    CP --> CP_SC[/scripts/<br/>Thin orchestrators for data/figures/]
+    CP --> CP_SRC[/src<br/>Business logic · Layer 2/]
+    CP --> CP_T[/tests<br/>Project-specific tests/]
+    CP --> CP_M[/manuscript<br/>Research sections + config.yaml/]
+    CP --> CP_SC[/scripts<br/>Thin orchestrators for data/figures/]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff

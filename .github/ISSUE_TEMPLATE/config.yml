@@ -1,4 +1,5 @@
 blank_issues_enabled: false
+# Forks: replace docxology/template below with your org/repo (Settings → General → Repository name).
 contact_links:
   - name: 💬 Ask a Question (Discussions)
     url: https://github.com/docxology/template/discussions

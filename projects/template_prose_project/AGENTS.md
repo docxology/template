@@ -12,13 +12,13 @@ code.
 
 ```mermaid
 flowchart TB
-    P[/projects/template_prose_project//]
-    P --> SRC[/src/<br/>domain orchestration/]
-    P --> T[/tests/<br/>real-data tests · no mocks/]
-    P --> SC[/scripts/<br/>thin orchestrators/]
+    P[/projects/template_prose_project/]
+    P --> SRC[/src<br/>domain orchestration/]
+    P --> T[/tests<br/>real-data tests · no mocks/]
+    P --> SC[/scripts<br/>thin orchestrators/]
     P --> M[/manuscript/]
     P --> DOCS[/docs/]
-    P --> OUT[/output/<br/>regeneratable/]
+    P --> OUT[/output<br/>regeneratable/]
     P --> META[pyproject.toml · README.md ·<br/>AGENTS.md · .gitignore]
 
     SRC --> SRC_F[config.py · pipeline.py · figures.py ·<br/>manuscript_variables.py · report.py]

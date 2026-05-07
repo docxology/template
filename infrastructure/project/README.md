@@ -87,11 +87,11 @@ Recommended for full functionality:
 
 ```mermaid
 flowchart TB
-    P[/projects/my_research//]
-    P --> SRC[/src/<br/>Required · source code/]
-    P --> T[/tests/<br/>Required · test suite/]
-    P --> SC[/scripts/<br/>Optional · analysis workflows/]
-    P --> M[/manuscript/<br/>Optional · research content/]
+    P[/projects/my_research/]
+    P --> SRC[/src<br/>Required · source code/]
+    P --> T[/tests<br/>Required · test suite/]
+    P --> SC[/scripts<br/>Optional · analysis workflows/]
+    P --> M[/manuscript<br/>Optional · research content/]
     P --> PY[pyproject.toml<br/>Project metadata]
 
     SRC --> SRC_F[__init__.py · analysis.py]
@@ -231,14 +231,13 @@ pytest tests/infra_tests/test_project_discovery.py::test_discover_projects -v
 
 ```mermaid
 graph TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     A[Project Module] --> B[Discovery]
     A --> C[Validation]
     A --> D[Metadata]
 
-    B --> E[discover_projects()]
-    C --> F[validate_project_structure()]
-    D --> G[get_project_metadata()]
+    B --> E["discover_projects"]
+    C --> F["validate_project_structure"]
+    D --> G["get_project_metadata"]
 
     E --> H[ProjectInfo dataclass]
     F --> I[Validation results]

@@ -17,6 +17,7 @@ The `scripts/` directory contains **Thin Orchestrators**. In the context of the 
 flowchart LR
     SC[/scripts//]
     SC --> OA[optimization_analysis.py<br/>Main analysis pipeline]
+    SC --> BD[build_dashboard.py<br/>Interactive HTML dashboard +<br/>numerical-invariants report]
     SC --> GD[generate_api_docs.py<br/>API documentation generator]
     SC --> ZGEN[z_generate_manuscript_variables.py<br/>Manuscript variable hydration]
     SC --> DOCS[AGENTS.md · README.md · CONVENTIONS.md]
@@ -25,7 +26,7 @@ flowchart LR
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class SC d
-    class OA,GD,ZGEN code
+    class OA,BD,GD,ZGEN code
     class DOCS doc
 ```
 

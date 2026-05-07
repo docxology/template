@@ -13,6 +13,7 @@ The reporting module provides reporting capabilities for pipeline execution, inc
 - Error aggregation and categorization
 - **Executive cross-project summaries and visual dashboards**
 - **Unified output organization system**
+- **Interactive simulation dashboards** (`interactive_dashboard.py`) — project-agnostic builder for self-contained Plotly dashboards with multi-view linked panels, live controls, and plaintext invariants. See [`AGENTS.md`](AGENTS.md#interactive-simulation-dashboard-interactive_dashboardpy).
 
 ## Architecture
 
@@ -103,13 +104,13 @@ All executive reports are organized by file type:
 ```mermaid
 flowchart LR
     EX[/output/executive_summary//]
-    EX --> PNG[/png/<br/>visualisations/]
-    EX --> PDF[/pdf/<br/>charts &amp; reports/]
-    EX --> CSV[/csv/<br/>data exports/]
-    EX --> HTML[/html/<br/>interactive dashboards/]
-    EX --> JSON[/json/<br/>machine-readable reports/]
-    EX --> MD[/md/<br/>human-readable reports/]
-    EX --> CB[/combined_pdfs/<br/>all project manuscripts/]
+    EX --> PNG[/png<br/>visualisations/]
+    EX --> PDF[/pdf<br/>charts &amp; reports/]
+    EX --> CSV[/csv<br/>data exports/]
+    EX --> HTML[/html<br/>interactive dashboards/]
+    EX --> JSON[/json<br/>machine-readable reports/]
+    EX --> MD[/md<br/>human-readable reports/]
+    EX --> CB[/combined_pdfs<br/>all project manuscripts/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class EX,PNG,PDF,CSV,HTML,JSON,MD,CB d

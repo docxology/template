@@ -25,6 +25,7 @@ from infrastructure.reporting.coverage_reporter import (
     format_failure_suggestions,
 )
 from infrastructure.core.logging.helpers import format_duration as _format_duration
+from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.runtime.environment import get_python_command
 from infrastructure.reporting.coverage_parser import check_cov_datafile_support
 from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite
@@ -97,6 +98,7 @@ def run_infrastructure_tests(
     quiet: bool = True,
     include_slow: bool = False,
     include_ollama_tests: bool = False,
+    include_bench: bool = False,
     strict: bool = True,
 ) -> tuple[int, TestSuiteResults]:
     """Execute infrastructure test suite with coverage."""
@@ -129,8 +131,13 @@ def run_infrastructure_tests(
         "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
         "--cov=infrastructure",
     ]
-    if not include_ollama_tests:
-        cmd.extend(["-m", "not requires_ollama"])
+    infra_marker = build_pytest_marker_expression(
+        skip_requires_ollama=not include_ollama_tests,
+        skip_slow=not include_slow,
+        skip_bench=not include_bench,
+    )
+    if infra_marker:
+        cmd.extend(["-m", infra_marker])
 
     import tempfile
 
@@ -151,8 +158,6 @@ def run_infrastructure_tests(
             "--tb=short",
         ]
     )
-    if not include_slow:
-        cmd.extend(["-m", "not slow"])
     if quiet:
         cmd.extend(["-q"])
 
@@ -202,8 +207,9 @@ def run_project_tests(
     project_name: str = "project",
     quiet: bool = True,
     include_slow: bool = False,
+    include_bench: bool = False,
     strict: bool = True,
-) -> tuple[int, dict]:
+) -> tuple[int, TestSuiteResults]:
     """Execute project test suite with coverage."""
     start_time = time.time()
     project_root = repo_root / "projects" / project_name
@@ -269,8 +275,13 @@ def run_project_tests(
             "--tb=short",
         ]
     )
-    if not include_slow:
-        cmd.extend(["-m", "not slow"])
+    project_marker = build_pytest_marker_expression(
+        skip_requires_ollama=False,
+        skip_slow=not include_slow,
+        skip_bench=not include_bench,
+    )
+    if project_marker:
+        cmd.extend(["-m", project_marker])
     if quiet:
         cmd.extend(["-q"])
     if shutil.which("uv"):
@@ -493,14 +504,25 @@ def execute_test_pipeline(
         phase_title = "Infrastructure Tests" if run_project else "Infrastructure Tests (Only)"
         log_header(f"Phase 1/{total_phases}: {phase_title}", logger)
         infra_exit, infra_results = run_infrastructure_tests(
-            repo_root, project_name, quiet, include_slow, include_ollama_tests, strict
+            repo_root,
+            project_name,
+            quiet,
+            include_slow,
+            include_ollama_tests,
+            strict=strict,
         )
 
     if run_project:
         phase_num = 2 if run_infra else 1
         phase_title = f"Project Tests ({project_name})" if run_infra else f"Project Tests ({project_name}) (Only)"
         log_header(f"Phase {phase_num}/{total_phases}: {phase_title}", logger)
-        project_exit, project_results = run_project_tests(repo_root, project_name, quiet, include_slow, strict)
+        project_exit, project_results = run_project_tests(
+            repo_root,
+            project_name,
+            quiet,
+            include_slow,
+            strict=strict,
+        )
 
     if run_project:
         report = generate_test_report(infra_results, project_results, repo_root, include_coverage_details=True)

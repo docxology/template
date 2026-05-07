@@ -300,7 +300,7 @@ flowchart LR
     T --> VAL[test_validation.py<br/>Validation functions]
     T --> INT[test_integration.py<br/>End-to-end workflows]
     T --> PERF[test_performance.py<br/>Performance regression]
-    T --> DATA[/test_data/<br/>small_dataset.csv ·<br/>large_dataset.csv ·<br/>edge_cases.json/]
+    T --> DATA[/test_data<br/>small_dataset.csv ·<br/>large_dataset.csv ·<br/>edge_cases.json/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff

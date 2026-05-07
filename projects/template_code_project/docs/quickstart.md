@@ -24,13 +24,13 @@ uv run python --version
 
 ## Run the Test Suite
 
-Validate the environment and check that all 52 tests pass with ≥90% coverage:
+Validate the environment and check that all 96 tests pass with ≥90% coverage:
 
 ```bash
 uv run pytest projects/template_code_project/tests/ -v --tb=short
 ```
 
-Expected: **52 passed**, coverage ≥ 96%.
+Expected: **96 passed**, coverage ≥ 99% (gate: 90%).
 
 ## Execute the Analysis Pipeline
 

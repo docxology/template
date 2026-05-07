@@ -57,14 +57,15 @@ genuine gaps are:
 1. **`infrastructure/rendering/pipeline.py` (34.83 %, 207 stmts)** — the
    PDF orchestration entry point. Most missed lines are error-handling
    branches around `RenderingError` / `ValidationError`. Adding integration
-   tests with a synthetic project (no LaTeX needed if we mock the engine
-   layer at the seam, which we won't — instead, gate behind `xelatex`
-   detection and run real renders).
+   tests with a synthetic project gated on ``xelatex`` detection so renders
+   stay real-data paths without mocks.
 
 2. **`infrastructure/reporting/pipeline_test_runner.py` (50.00 %, 310 stmts)**
-   — pytest orchestration. Per-project coverage merge logic is the largest
-   uncovered cluster (lines 198–253, 282–286). Closing this is also a
-   blocker for TO-DO MED3 (per-project test-runner factor).
+   — pytest subprocess orchestration (marker expressions, discovery logging).
+   Per-suite coverage merge logic remains the largest uncovered cluster.
+   Per-project CI-style runs are centralized in
+   `infrastructure.core.test_runner.run_per_project_pytest` (see **MED3**
+   shipped in **CHANGELOG** / [`TO-DO.md`](../../TO-DO.md)).
 
 3. **`infrastructure/rendering/core.py` (60.91 %, 90 stmts)** — the render
    tree builder. Missing lines are mostly the multi-format branching

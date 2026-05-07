@@ -12,9 +12,9 @@ Standards and patterns for integrating with the LLM infrastructure module (`infr
 flowchart LR
     LLM[/infrastructure/llm//]
     LLM --> INIT[__init__.py<br/>Public API exports]
-    LLM --> CORE[/core/<br/>LLMClient · configuration · context/]
-    LLM --> TPL[/templates/<br/>ResearchTemplate system/]
-    LLM --> VAL[/validation/<br/>OutputValidator/]
+    LLM --> CORE[/core<br/>LLMClient · configuration · context/]
+    LLM --> TPL[/templates<br/>ResearchTemplate system/]
+    LLM --> VAL[/validation<br/>OutputValidator/]
     LLM --> UT[/utils/ollama.py<br/>Model discovery &amp; Ollama helpers/]
     LLM --> CLI[/cli/main.py<br/>Command-line interface/]
     LLM --> DOCS[AGENTS.md · README.md · SKILL.md]

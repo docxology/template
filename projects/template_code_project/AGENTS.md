@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **Test suite**: 52 tests covering edge cases, stability analysis, and performance benchmarks; `projects/template_code_project/src/` typically measures **~96%** line/branch coverage (90% minimum gate in `pyproject.toml`)
+- **Test suite**: 96 tests covering edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/template_code_project/src/` typically measures **~99.5%** line/branch coverage (90% minimum gate enforced by the root pipeline; project `pyproject.toml` configures a 70% floor for ad-hoc runs)
 - **Deterministic algorithms**: Reproducible results; tests avoid nondeterministic RNG unless documented (see `docs/agent_instructions.md`)
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -49,18 +49,18 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ```mermaid
 flowchart TB
-    P[/projects/template_code_project//]
-    P --> SRC[/src/<br/>Core algorithms · pure logic · no infrastructure imports/]
-    P --> SC[/scripts/<br/>Thin orchestrators/]
+    P[/projects/template_code_project/]
+    P --> SRC[/src<br/>Core algorithms · pure logic · no infrastructure imports/]
+    P --> SC[/scripts<br/>Thin orchestrators/]
     P --> T[/tests/]
-    P --> DOCS[/docs/<br/>Agent-facing documentation hub/]
+    P --> DOCS[/docs<br/>Agent-facing documentation hub/]
     P --> M[/manuscript/]
-    P --> OUT[/output/<br/>Working outputs · regenerated · gitignored/]
+    P --> OUT[/output<br/>Working outputs · regenerated · gitignored/]
     P --> PY[pyproject.toml<br/>Pytest/coverage config · project metadata]
 
-    SRC --> SRC_F[__init__.py · optimizer.py ·<br/>STYLE.md · AGENTS.md · README.md]
-    SC --> SC_F[optimization_analysis.py · generate_api_docs.py ·<br/>z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
-    T --> T_F[__init__.py · conftest.py · test_optimizer.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
+    SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>STYLE.md · AGENTS.md · README.md]
+    SC --> SC_F[optimization_analysis.py · build_dashboard.py ·<br/>generate_api_docs.py · z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
+    T --> T_F[__init__.py · conftest.py · test_optimizer.py ·<br/>test_invariants.py · test_invariants_and_dashboard.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
     DOCS --> DOCS_F[AGENTS.md · README.md · agent_instructions.md ·<br/>architecture.md · testing_philosophy.md ·<br/>rendering_pipeline.md · style_guide.md · syntax_guide.md]
     M --> M_F[00_abstract → 07_scope_and_related_work.md ·<br/>SYNTAX.md · config.yaml · config.yaml.example ·<br/>preamble.md · references.bib · AGENTS.md · README.md]
 
@@ -357,7 +357,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: 52 tests; `src/` line/branch coverage is typically ~96% with the current suite (exceeds 90% requirement)
+- **90%+ coverage**: 96 tests; `src/` line/branch coverage is typically ~99.5% with the current suite (exceeds 90% requirement)
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Tests use fixed inputs; any use of random draws should be justified or seeded (see `docs/agent_instructions.md`)

@@ -12,7 +12,11 @@ Technical guide for `projects/template_code_project/docs/` — the operational r
 | `AGENTS.md` | This index — technical overview of `docs/` | ~100 | Current |
 | `agent_instructions.md` | Behavioral constraints for AI agents (read-first priority) | ~80 | Comprehensive |
 | `architecture.md` | Thin orchestrator flow: layers, dependencies, forbidden patterns, how-to-add-algorithm | ~100 | Comprehensive |
-| `testing_philosophy.md` | Zero-mock policy; 42 collected tests; coverage mechanics; class inventory | ~90 | Comprehensive |
+| `testing_philosophy.md` | Zero-mock policy; 96 collected tests; coverage mechanics; class inventory | ~110 | Comprehensive |
+| `faq.md` | Frequently asked questions about architecture, testing, manuscripts | ~130 | Comprehensive |
+| `troubleshooting.md` | Symptom-driven recipes for common failures | ~170 | Comprehensive |
+| `quickstart.md` | 5-minute first-run walkthrough | ~90 | Comprehensive |
+| `output_conventions.md` | `output/` directory layout and regeneration | ~120 | Comprehensive |
 | `rendering_pipeline.md` | 4-phase manuscript→PDF flow; config.yaml controls; troubleshooting | ~80 | Comprehensive |
 | `style_guide.md` | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | ~120 | Comprehensive |
 | `syntax_guide.md` | Markdown links, LaTeX refs, all 28 `{{VARIABLE}}` tokens, figure label registry, adding variables/figures | ~130 | Comprehensive |

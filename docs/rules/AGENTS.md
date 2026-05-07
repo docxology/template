@@ -256,11 +256,11 @@ As shown in \eqref{eq:objective}, the objective function...
 ```mermaid
 flowchart TB
     T[/tests//]
-    T --> INFRA[/infra_tests/<br/>Layer 1 · infrastructure tests/]
-    T --> INTEG[/integration/<br/>Cross-layer tests/]
-    T --> HELP[/helpers/<br/>Test utilities/]
+    T --> INFRA[/infra_tests<br/>Layer 1 · infrastructure tests/]
+    T --> INTEG[/integration<br/>Cross-layer tests/]
+    T --> HELP[/helpers<br/>Test utilities/]
 
-    INFRA --> SUB[/test_&lt;module&gt;/<br/>__init__.py · conftest.py · test_*.py/]
+    INFRA --> SUB[/test_&lt;module&gt;<br/>__init__.py · conftest.py · test_*.py/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -394,12 +394,12 @@ except SpecificError as e:
 ```mermaid
 flowchart TB
     ROOT[/template//]
-    ROOT --> INFRA[/infrastructure/<br/>Layer 1 · generic tools/]
-    ROOT --> PROJ[/projects/<br/>Layer 2 · research projects/]
-    ROOT --> SCR[/scripts/<br/>Layer 1 · generic entry points/]
-    ROOT --> T[/tests/<br/>Layer 1 · infrastructure tests/]
-    ROOT --> DOC[/docs/<br/>Documentation/]
-    ROOT --> RULES[/docs/rules/<br/>Development standards · this dir/]
+    ROOT --> INFRA[/infrastructure<br/>Layer 1 · generic tools/]
+    ROOT --> PROJ[/projects<br/>Layer 2 · research projects/]
+    ROOT --> SCR[/scripts<br/>Layer 1 · generic entry points/]
+    ROOT --> T[/tests<br/>Layer 1 · infrastructure tests/]
+    ROOT --> DOC[/docs<br/>Documentation/]
+    ROOT --> RULES[/docs/rules<br/>Development standards · this dir/]
 
     INFRA --> INFRA_SUB[core · documentation · llm · project ·<br/>publishing · rendering · reporting ·<br/>scientific · validation · search · reference ·<br/>steganography · skills]
 

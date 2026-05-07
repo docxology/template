@@ -192,13 +192,16 @@ software reliability. This project unifies theoretical optimization with
 the repository’s three foundational pillars:</p>
 <ol type="1">
 <li><strong><code>infrastructure/</code> Layer (Root
-Directory)</strong>: A modular stack of sixteen subpackages
-(<code>config</code>, <code>core</code>, <code>docker</code>,
-<code>documentation</code>, <code>llm</code>, <code>project</code>,
-<code>prose</code>, <code>publishing</code>, <code>reference</code>,
-<code>rendering</code>, <code>reporting</code>, <code>scientific</code>,
-<code>search</code>, <code>skills</code>, <code>steganography</code>,
-<code>validation</code>) providing the computational scaffolding.</li>
+Directory)</strong>: A modular stack of fifteen Python subpackages
+(<code>core</code>, <code>documentation</code>, <code>llm</code>,
+<code>orchestration</code>, <code>project</code>, <code>prose</code>,
+<code>publishing</code>, <code>reference</code>, <code>rendering</code>,
+<code>reporting</code>, <code>scientific</code>, <code>search</code>,
+<code>skills</code>, <code>steganography</code>,
+<code>validation</code>) providing the computational scaffolding (the
+sibling <code>config/</code> and <code>docker/</code> directories under
+<code>infrastructure/</code> are configuration/data, not Python
+packages).</li>
 <li><strong><code>tests/</code> Framework
 (<code>projects/template_code_project/tests/</code>)</strong>: An
 uncompromising validation layer maintaining a zero-mock testing policy.

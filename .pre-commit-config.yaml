@@ -77,7 +77,7 @@ repos:
           - -c
           - >-
             uv run bandit -c bandit.yaml -r -ll
-            infrastructure/ scripts/
+            infrastructure/ scripts/ projects/
             --exclude projects_archive,projects_in_progress
             -q
         language: system

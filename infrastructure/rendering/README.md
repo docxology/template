@@ -6,11 +6,10 @@ Multi-format output generation for research manuscripts.
 
 ```mermaid
 graph TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph Input["Input Sources"]
-        MANUSCRIPT[Manuscript Files<br/>Markdown sections<br/>projects/{project_name}/manuscript/*.md]
-        CONFIG[Configuration<br/>config.yaml<br/>Title page & metadata]
-        FIGURES[Figures<br/>Generated figures<br/>output/figures/*.png]
+        MANUSCRIPT["Manuscript Files<br/>Markdown sections<br/>projects/{project_name}/manuscript/*.md"]
+        CONFIG["Configuration<br/>config.yaml<br/>Title page and metadata"]
+        FIGURES["Figures<br/>Generated figures<br/>output/figures/*.png"]
         BIBLIOGRAPHY[Bibliography<br/>references.bib<br/>Academic citations]
     end
 
@@ -29,10 +28,10 @@ graph TD
     end
 
     subgraph Output["Output Formats"]
-        PDF_OUT[PDF Document<br/>Professional typesetting<br/>output/{project_name}/pdf/*.pdf]
-        SLIDES_OUT[Slides<br/>PDF & HTML formats<br/>output/{project_name}/slides/]
-        WEB_OUT[Web HTML<br/>Interactive with MathJax<br/>output/{project_name}/web/*.html]
-        POSTER_OUT[Posters<br/>Large format<br/>output/{project_name}/posters/]
+        PDF_OUT["PDF Document<br/>Professional typesetting<br/>output/{project_name}/pdf/*.pdf"]
+        SLIDES_OUT["Slides<br/>PDF and HTML formats<br/>output/{project_name}/slides/"]
+        WEB_OUT["Web HTML<br/>Interactive with MathJax<br/>output/{project_name}/web/*.html"]
+        POSTER_OUT["Posters<br/>Large format<br/>output/{project_name}/posters/"]
     end
 
     MANUSCRIPT --> MANAGER
@@ -238,9 +237,8 @@ python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
 
 ```mermaid
 graph TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph EntryPoints["Entry Points"]
-        MANAGER_API[RenderManager API<br/>Python programmatic access<br/>render_all(), render_pdf(), etc.]
+        MANAGER_API["RenderManager API<br/>Python programmatic access<br/>render_all, render_pdf, …"]
         CLI_INTERFACE[CLI Interface<br/>Command-line tools<br/>python3 -m infrastructure.rendering.cli]
         PIPELINE_INTEGRATION[Pipeline Integration<br/>scripts/03_render_pdf.py<br/>Automatic rendering in build]
     end
@@ -253,7 +251,7 @@ graph TD
 
     subgraph SpecializedRenderers["Specialized Renderers"]
         PDF_RENDERER[PDFRenderer<br/>LaTeX compilation<br/>Professional document generation]
-        SLIDES_RENDERER[SlidesRenderer<br/>Beamer & reveal.js<br/>Presentation slide creation]
+        SLIDES_RENDERER["SlidesRenderer<br/>Beamer and reveal.js<br/>Presentation slide creation"]
         WEB_RENDERER[WebRenderer<br/>HTML + MathJax<br/>Web-compatible output]
         POSTER_RENDERER[PosterRenderer<br/>Large format<br/>Scientific poster generation]
     end
@@ -523,11 +521,10 @@ python3 scripts/03_render_pdf.py --project {project_name}
 
 ```mermaid
 flowchart TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph Input["Pipeline Input"]
-        MANUSCRIPT[Manuscript Files<br/>projects/{project_name}/manuscript/*.md]
+        MANUSCRIPT["Manuscript Files<br/>projects/{project_name}/manuscript/*.md"]
         CONFIG[Configuration<br/>config.yaml<br/>Title and author info]
-        FIGURES[Generated Figures<br/>output/{project_name}/figures/*.png]
+        FIGURES["Generated Figures<br/>output/{project_name}/figures/*.png"]
         SCRIPTS[Analysis Scripts<br/>Generated content]
     end
 
@@ -540,9 +537,9 @@ flowchart TD
     end
 
     subgraph Output["Pipeline Output"]
-        PDF[Final PDF<br/>output/{project_name}/pdf/{project_name}_combined.pdf]
-        LOGS[Compilation Logs<br/>output/{project_name}/pdf/_combined_manuscript.log]
-        AUX_FILES[Auxiliary Files<br/>*.aux, *.bbl, *.blg files]
+        PDF["Final PDF<br/>output/{project_name}/pdf/{project_name}_combined.pdf"]
+        LOGS["Compilation Logs<br/>output/{project_name}/pdf/_combined_manuscript.log"]
+        AUX_FILES["Auxiliary Files<br/>*.aux, *.bbl, *.blg files"]
         REPORTS[Validation Reports<br/>Quality and error reports]
     end
 

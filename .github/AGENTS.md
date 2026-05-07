@@ -27,7 +27,7 @@ flowchart TB
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[ci.yml<br/>Main CI/CD pipeline · 8 jobs ·<br/>fep-lean conditional]
+    WF --> WF_CI[ci.yml<br/>11 jobs + conditional fep-lean + setup-hook Windows]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
 
@@ -43,22 +43,26 @@ flowchart TB
 
 ### CI Pipeline (`workflows/ci.yml`)
 
-**Triggers:** push to `main`, pull requests targeting `main`, weekly scheduled run (Sunday midnight UTC), `workflow_dispatch`.
+**Triggers:** push to `main`, pull requests targeting `main`, weekly scheduled run (Sunday midnight UTC), manual **`workflow_dispatch`** (no inputs).
 **Concurrency:** Running builds for the same ref are cancelled when a new commit arrives.
 
-**Pipeline Jobs:**
+**Pipeline jobs** (job ids in `ci.yml`; display names differ — use `name:` for branch protection):
 
-| # | Job | Depends on | Python | Runner |
-| --- | --- | --- | --- | --- |
-| 1 | `lint` — Ruff + mypy | — | 3.12 | ubuntu |
-| 2 | `verify-no-mocks` | lint | 3.12 | ubuntu |
-| 3 | `test-infra` — 60% coverage | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
-| 4 | `test-project` — 90% coverage | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
-| 4b | `fep-lean` — Lean/Lake + Open Gauss (`gauss`) | verify-no-mocks | 3.12 | ubuntu |
-| 5 | `validate` — manuscript markdown | lint | 3.12 | ubuntu |
-| 6 | `security` — pip-audit + bandit | lint | 3.12 | ubuntu |
-| 6b | `docs-lint` — mermaid + cross-links + consistency | lint | 3.12 | ubuntu |
-| 7 | `performance` — import ≤ 5 s | test-infra + test-project | 3.12 | ubuntu |
+| # | Job id | Display name (representative) | Depends on | Python | Runner |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
+| 2 | `health` | Unified Health Report (informational) | lint | 3.12 | ubuntu |
+| 3 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
+| 3b | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks | 3.12 | windows · **skipped** if no `projects/**/scripts/setup_hook.py` |
+| 4 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
+| 5 | `test-project` | Project Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
+| 6 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks | 3.12 | ubuntu · **skipped** if no `projects/fep_lean/lean/lean-toolchain` |
+| 7 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
+| 8 | `security` | Security Scan | lint | 3.12 | ubuntu |
+| 9 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
+| 10 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
+
+**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate). **`validate`** runs manuscript markdown validation, `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, `projects/` (excluding archive/WIP trees).
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when `hashFiles('projects/fep_lean/lean/lean-toolchain') != ''` (otherwise skipped). When fep_lean lives under `projects_in_progress/`, the guard evaluates to empty and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate CI.
 
@@ -72,7 +76,7 @@ Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale 
 
 ### Release Workflow (`workflows/release.yml`)
 
-Triggered by `v*.*.*` tag pushes. Generates a commit-based changelog and creates a GitHub Release via `softprops/action-gh-release@v2`.
+Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Writes a short git-log excerpt to the release body (`body_path`); **`generate_release_notes`** is off so the body is not duplicated by GitHub auto-notes.
 
 ## Dependabot (`dependabot.yml`)
 
@@ -88,7 +92,8 @@ Triggered by `v*.*.*` tag pushes. Generates a commit-based changelog and creates
 | No-mocks policy | zero mock usage |
 | Infrastructure coverage | ≥ 60% |
 | Project coverage | ≥ 90% |
-| Bandit MEDIUM+ | zero findings |
+| pip-audit | zero known vulns not listed in `.github/pip-audit-ignore.txt` |
+| Bandit MEDIUM+ (`-c bandit.yaml`) | zero findings |
 | Mermaid diagrams render under `mmdc` | zero failures |
 | Markdown cross-links resolve on disk | zero broken links |
 | `N Python (sub)packages` claims match reality | zero stale counts |
@@ -104,7 +109,7 @@ would fail CI fail locally first:
 | Hook id | Mirrors CI step | Typical runtime |
 | --- | --- | :-: |
 | `pre-push-quick` | `verify-no-mocks` + a fast subset of `test-infra` (`tests/infra_tests/git_hook_smoke/`) | ~3 s |
-| `bandit-quick` | `security` job's `Code security scan (Bandit MEDIUM+ severity)` step (same `-ll` severity, same `infrastructure/ scripts/` scope, same exclude list, plus `-c bandit.yaml`) | ~3 s |
+| `bandit-quick` | `security` job Bandit step (`-c bandit.yaml -r -ll`, `infrastructure/` + `scripts/` + `projects/`, same excludes) | variable |
 | `skills-check` | `infrastructure.skills check` (catches stale `.cursor/skill_manifest.json`) | <1 s |
 
 The lint hooks (`ruff-ci`, `mypy-ci`) run on the **pre-commit** stage, not
@@ -137,6 +142,7 @@ required_status_checks:
     - "Project Tests (ubuntu-latest, Python 3.12)"
     # Optional: only when fep_lean job runs (skipped if no lean-toolchain file)
     # - "fep_lean (gauss + lake)"
+    # Optional (informational artefact only): "Unified Health Report (informational)"
     - "Validate Manuscripts"
     - "Security Scan"
     - "Documentation Lint"
@@ -164,10 +170,14 @@ uvx ruff format infrastructure/ projects/*/src/
 
 # Run tests locally (mirror CI)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ --cov=projects/template_code_project/src --cov=projects/cognitive_case_diagrams/src --cov=projects/template/src --cov-datafile=.coverage.project --cov-fail-under=90 -m "not requires_ollama"
+uv sync --group rendering --group monitoring --group discopy
+COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
+uv run coverage xml -o coverage-project.xml
 
-# Security scan locally
-uv run pip-audit
+# Security scan locally (mirror CI)
+IGNORE_ARGS=()
+while IFS= read -r raw; do [[ "$raw" =~ ^[[:space:]]*# ]] && continue; line="${raw%%#*}"; line="$(echo "$line" | xargs)"; [ -z "$line" ] || IGNORE_ARGS+=(--ignore-vuln "$line"); done < .github/pip-audit-ignore.txt
+uv run pip-audit "${IGNORE_ARGS[@]}"
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress
 # Strict LOW+MEDIUM+HIGH sweep against the documented allow-list:
 uv run bandit -c bandit.yaml -r --severity-level low infrastructure/ scripts/ --exclude projects_archive,projects_in_progress

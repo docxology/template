@@ -8,7 +8,7 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 | File | Trigger | Purpose |
 |---|---|---|
-| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | 8-job pipeline (`fep-lean` conditional on `projects/fep_lean/lean/lean-toolchain`) |
+| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **11 jobs** + conditional **`fep-lean`** and **`setup-hook-windows-smoke`** (`hashFiles` guards in workflow; see [`AGENTS.md`](AGENTS.md)) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
 
@@ -16,25 +16,30 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 ### Job Graph
 
-`validate` and `security` depend on **`lint` only** (parallel with the `verify-no-mocks` branch). See [`AGENTS.md`](AGENTS.md) for full detail.
+`health`, `validate`, `security`, and `docs-lint` fan out from **`lint`**; `verify-no-mocks` gates the test matrix; **`performance`** waits on **`test-infra`** + **`test-project`**. See [`AGENTS.md`](AGENTS.md).
 
 ```mermaid
 flowchart TB
-    LINT[lint<br/>Ruff + mypy] --> VNM[verify-no-mocks]
-    LINT --> VAL[validate<br/>manuscript markdown +<br/>project imports]
-    LINT --> SEC[security<br/>pip-audit + bandit MEDIUM+]
-    VNM --> TI[test-infra<br/>ubuntu+macos × 3.10/3.11/3.12<br/>≥ 60% coverage]
-    VNM --> TP[test-project<br/>ubuntu+macos × 3.10/3.11/3.12<br/>≥ 90% coverage]
-    VNM --> FL[fep_lean<br/>ubuntu-only · gauss + lake ·<br/>if lean-toolchain present]
+    LINT[lint<br/>Ruff + mypy + exports audit] --> HEALTH[health<br/>informational JSON artefact]
+    LINT --> VNM[verify-no-mocks]
+    LINT --> VAL[validate<br/>markdown + api-ref check + imports]
+    LINT --> SEC[security<br/>pip-audit + bandit -c bandit.yaml]
+    LINT --> DL[docs-lint<br/>mermaid + links + consistency]
+    VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
+    VNM --> TI[test-infra<br/>ubuntu+macos × py310–312<br/>≥ 60% coverage]
+    VNM --> TP[test-project<br/>01_run_tests.py all-projects<br/>≥ 90% coverage]
+    VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
     TI --> PERF[performance<br/>import time ≤ 5 s]
     TP --> PERF
 
     classDef gate fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef matrix fill:#0f766e,stroke:#0f172a,color:#fff
     classDef terminal fill:#7c2d12,stroke:#0f172a,color:#fff
+    classDef info fill:#334155,stroke:#0f172a,color:#fff
     class LINT,VNM gate
-    class TI,TP,FL matrix
-    class VAL,SEC,PERF terminal
+    class TI,TP,FL,SHW matrix
+    class VAL,SEC,DL,PERF terminal
+    class HEALTH info
 ```
 
 ### Quality Gates
@@ -44,10 +49,13 @@ flowchart TB
 | Ruff lint | zero violations |
 | Ruff format | zero diffs |
 | mypy | no errors |
+| `check-all-exports` | zero violations |
 | No-mocks policy | zero mock usage |
 | Infrastructure coverage | ≥ 60% |
 | Project coverage | ≥ 90% |
-| Bandit MEDIUM+ | zero findings |
+| pip-audit | blocking (ignore IDs from `.github/pip-audit-ignore.txt`; retries in CI) |
+| Bandit MEDIUM+ (`bandit.yaml`) | zero findings |
+| Docs lint | mermaid + cross-links + consistency clean |
 | Import time | ≤ 5 s total |
 
 ### Local CI Simulation
@@ -63,16 +71,19 @@ uv run pytest tests/infra_tests/ \
   --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 \
   -m "not requires_ollama"
 
-# Project tests (matches ci.yml targets)
-uv run python scripts/01_run_tests.py --project-only --project template_code_project
-# or for full matrix simulation:
-uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ \
-  --cov=projects/template_code_project/src --cov=projects/cognitive_case_diagrams/src \
-  --cov=projects/template/src --cov-fail-under=90 -m "not requires_ollama"
+uv sync --group rendering --group monitoring --group discopy
+COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
+uv run coverage xml -o coverage-project.xml
 
-# Security
-uv run pip-audit
-uv run bandit -r -ll infrastructure/ scripts/ projects/ \
+# Security (mirror CI — ignores file + bandit.yaml)
+IGNORE_ARGS=()
+while IFS= read -r raw || [ -n "$raw" ]; do
+  [[ "$raw" =~ ^[[:space:]]*# ]] && continue
+  line="${raw%%#*}"; line="$(echo "$line" | xargs)"
+  [ -z "$line" ] || IGNORE_ARGS+=(--ignore-vuln "$line")
+done < .github/pip-audit-ignore.txt
+uv run pip-audit "${IGNORE_ARGS[@]}"
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ \
   --exclude projects_archive,projects_in_progress
 ```
 
@@ -87,7 +98,7 @@ Exempt labels: `pinned` · `security` · `in-progress` · `blocked` · `do-not-c
 
 ## Release Workflow (`release.yml`)
 
-Triggered on `v*.*.*` tag push or `workflow_dispatch`. Generates commit-based changelog since previous tag; creates GitHub Release via `softprops/action-gh-release@v2`. Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
+Triggered on `v*.*.*` tag push or `workflow_dispatch`. Writes a git-log excerpt to the release body (`generate_release_notes: false`). Uses `softprops/action-gh-release@v2`. Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
 
 ## Troubleshooting
 

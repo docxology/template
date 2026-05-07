@@ -4,36 +4,46 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Active Projects
 
-Directories under `projects/` **change over time** (promotion, archiving, or moving to `projects_in_progress/`). The **only** tree guaranteed to remain as the **control-positive** reference for paths and commands is **`template_code_project`**. Do not assume any other sibling will always be present.
+Directories under `projects/` **change over time** (promotion, archiving, or moving to `projects_in_progress/`). The set guaranteed to remain as the **canonical exemplar trio** is:
+
+- [`template_code_project/`](template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
+- [`template_prose_project/`](template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
+- [`template_search_project/`](template_search_project/) — literature-search exemplar (multi-source discovery, auto-populated BibTeX, optional LLM synthesis)
+
+All three are **standalone** projects with the same directory layout (`src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`, `output/`), the same 12-file `docs/` hub (agent_instructions, architecture, testing_philosophy, rendering_pipeline, style_guide, syntax_guide, faq, quickstart, troubleshooting, output_conventions, plus `AGENTS.md` and `README.md`), and the same verification commands. Examples in this documentation default to `projects/template_code_project/` unless a doc explicitly compares projects.
 
 **Current** names from `discover_projects()` are listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate after layout changes).
 
-### **template_code_project** — canonical control-positive exemplar
+### The exemplar trio at a glance
 
-Optimization study with figures, dashboard, and full manuscript. All examples in this documentation default to `projects/template_code_project/`. See [template_code_project/README.md](template_code_project/README.md) and [template_code_project/AGENTS.md](template_code_project/AGENTS.md).
+| Exemplar | Purpose | Algorithm? | Mutates `references.bib`? | Embeds figures? | Tests | Coverage |
+|---|---|---|---|---|---|---|
+| [`template_code_project`](template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | 96 | ~99.5% |
+| [`template_prose_project`](template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | 66 | 100.00% |
+| [`template_search_project`](template_search_project/) | Literature discovery → BibTeX → LLM synthesis | no | yes (auto-populates) | yes (3 figures) | 266 | ~99.5% |
+
+The trio covers the three dominant shapes of academic research projects. New projects pick whichever shape is closest and adjust from there. **Important:** run each project's `tests/` in **its own** `pytest` invocation — pointing pytest at `projects/*/tests/` simultaneously triggers `ImportPathMismatchError` because every project ships a `tests/conftest.py`.
 
 Additional siblings under `projects/` today (e.g. other research workspaces) are real projects for this checkout, not permanent fixtures.
 
 ### In-progress projects (under `projects_in_progress/`)
 
-These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready (see [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for discovery):
+These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready (see [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for live discovery):
 
-- **act_inf_metaanalysis** — Active Inference meta-analysis
-- **cogant** — Cognitive agent project
-- **cognitive_case_diagrams** — Compositional approaches to linguistic case
-- **fep_lean** — FEP / Lean catalogue with OpenGauss `gauss` CLI
+- **biology_textbook**, **cogant**, **corym**, **template**, **trsc** — current in-progress workspaces in this checkout (subject to rotation)
 
-**Note:** Use `projects/template_code_project/` for all concrete paths, commands, and layout examples unless a document explicitly compares layouts. Promote projects from `projects_in_progress/` or `projects_archive/` to `projects/` when they are ready for pipeline execution.
+**Note:** Use `projects/template_code_project/` for concrete paths, commands, and layout examples unless a document explicitly compares the trio. Promote projects from `projects_in_progress/` or `projects_archive/` to `projects/` when they are ready for pipeline execution.
 
 ### Archived exemplars (not in `projects/`)
 
 These are kept under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them:
 
-- **blake_bimetalism** — Blake / monetary history manuscript; see [`projects_archive/blake_bimetalism/README.md`](../projects_archive/blake_bimetalism/README.md)
-- **traditional_newspaper** — multi-folio tabloid layout (`geometry` / `multicol`, masthead figure); see [`projects_archive/traditional_newspaper/README.md`](../projects_archive/traditional_newspaper/README.md)
-- **area_handbook** — corpus-driven handbook-style manuscript (was `projects/area_handbook/`)
+- **blake_bimetalism** — Blake / monetary history manuscript
+- **traditional_newspaper** — multi-folio tabloid layout (`geometry` / `multicol`, masthead figure)
+- **area_handbook** — corpus-driven handbook-style manuscript
 - **density_bioscales** — fluids and composite density scenarios
 - **special_number_proximity** — Diophantine proximity statistics
+- Plus: `act_inf_metaanalysis`, `active_inference`, `active_inference_meta_pragmatic`, `cognitive_case_diagrams`, `cognitive_integrity`, `ento_linguistics`, `fep_lean`, `game_design`, `medical_ai`, `pragmatism_blake`, `reliable_specification`, `wooden_planes`
 
 **Note:** Promote by moving a directory from `projects_archive/` or `projects_in_progress/` into `projects/`.
 
@@ -99,12 +109,13 @@ mv projects_archive/myproject projects/myproject
 
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
-| `template_code_project/`               | Master numerical exemplar      | 39    | ~96%     |
-| `template/`                   | Meta-documentation             | 66    | ~93%     |
-| `cognitive_case_diagrams/`    | Case diagrams / grammar        | large | ≥90% `src/` |
-| `fep_lean/`                   | FEP / Lean catalogue           | ~180  | ≥89% `src/` |
+| `template_code_project/`    | Code-centric exemplar (optimization + dashboard) | 96 | ~99.5%   |
+| `template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | 66 | 100.00% |
+| `template_search_project/`  | Literature-search exemplar (auto-populated BibTeX + LLM) | 266 | ~99.5%   |
 
-**In-progress projects** live in `projects_in_progress/` (e.g. `act_inf_metaanalysis`).
+The three exemplars share the same `docs/` hub structure (12 files: `AGENTS.md`, `README.md`, `agent_instructions.md`, `architecture.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `style_guide.md`, `syntax_guide.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`) and the same per-directory `AGENTS.md` + `README.md` convention.
+
+**In-progress projects** live in `projects_in_progress/` (e.g. `biology_textbook`, `cogant`, `corym`).
 **Archived projects** live in `projects_archive/` (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `medical_ai`, `cognitive_integrity`, `special_number_proximity`).
 
 ```mermaid

@@ -53,6 +53,7 @@ from infrastructure.core.logging.utils import (
     log_success,
 )
 from infrastructure.core.runtime._python_env import get_python_command
+from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.project.discovery import discover_projects
 
 logger = get_logger(__name__)
@@ -60,7 +61,14 @@ logger = get_logger(__name__)
 DEFAULT_SKIP_PROJECTS: tuple[str, ...] = ("fep_lean",)
 DEFAULT_COVERAGE_FILE: str = ".coverage.project"
 DEFAULT_FAIL_UNDER: int = 90
-DEFAULT_MARKER_EXPR: str = "not requires_ollama"
+_DEFAULT_MARKER = build_pytest_marker_expression(
+    skip_requires_ollama=True,
+    skip_slow=True,
+    skip_bench=True,
+)
+if _DEFAULT_MARKER is None:  # pragma: no cover - defensive
+    raise RuntimeError("default pytest marker expression must not be empty")
+DEFAULT_MARKER_EXPR: str = _DEFAULT_MARKER
 DEFAULT_TIMEOUT: int = 120
 
 
@@ -112,7 +120,7 @@ def _build_pytest_cmd(
     *,
     repo_root: Path,
     is_first: bool,
-    marker_expr: str,
+    marker_expr: str | None,
     timeout: int,
 ) -> list[str]:
     """Build the per-project ``pytest`` command line.
@@ -128,13 +136,13 @@ def _build_pytest_cmd(
         "-m",
         "pytest",
         str(tests_dir),
-        "-m",
-        marker_expr,
         f"--cov={cov_target}",
         "--cov-report=term-missing",
         f"--timeout={timeout}",
         "--durations=10",
     ]
+    if marker_expr:
+        cmd.extend(["-m", marker_expr])
     if not is_first:
         cmd.append("--cov-append")
     return cmd
@@ -214,7 +222,7 @@ def run_per_project_pytest(
     skip_projects: Sequence[str] = DEFAULT_SKIP_PROJECTS,
     coverage_file: str = DEFAULT_COVERAGE_FILE,
     fail_under: int = DEFAULT_FAIL_UNDER,
-    marker_expr: str = DEFAULT_MARKER_EXPR,
+    marker_expr: str | None = None,
     timeout: int = DEFAULT_TIMEOUT,
 ) -> int:
     """Run pytest once per project and gate combined coverage.
@@ -232,8 +240,9 @@ def run_per_project_pytest(
             Default: ``".coverage.project"``.
         fail_under: Minimum combined coverage percentage required by the
             final ``coverage report`` gate.
-        marker_expr: ``pytest -m`` expression. Defaults to
-            ``"not requires_ollama"`` so Ollama-gated tests are skipped.
+        marker_expr: ``pytest -m`` expression. ``None`` uses
+            :data:`DEFAULT_MARKER_EXPR` (``not requires_ollama and not slow and
+            not bench``). Pass ``""`` to omit ``-m`` (collect all markers).
         timeout: Per-test ``--timeout`` value forwarded to pytest.
 
     Returns:
@@ -246,6 +255,8 @@ def run_per_project_pytest(
     if not pairs:
         logger.warning("No runnable projects with a tests/ directory were found.")
         return 0
+
+    resolved_markers = DEFAULT_MARKER_EXPR if marker_expr is None else marker_expr or None
 
     coverage_file_value = _resolve_coverage_file(coverage_file)
     # Reset combined coverage data file before the first project runs.
@@ -272,7 +283,7 @@ def run_per_project_pytest(
             tests_dir,
             repo_root=repo_root,
             is_first=(index == 0),
-            marker_expr=marker_expr,
+            marker_expr=resolved_markers,
             timeout=timeout,
         )
         rc = _run_pytest_for_project(cmd, repo_root, env, project_name)

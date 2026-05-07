@@ -147,4 +147,6 @@ The `pyproject.toml` enforces `fail_under = 90` as the CI gate. The current suit
 
 - [AGENTS.md](AGENTS.md) — Test class listing and run commands
 - [../src/STYLE.md](../src/STYLE.md) — How source code should be structured
+- [../src/invariants.py](../src/invariants.py) — Numerical invariant builders covered by `test_invariants.py`
+- [../scripts/build_dashboard.py](../scripts/build_dashboard.py) — Dashboard CLI covered by `test_invariants_and_dashboard.py`
 - [../docs/testing_philosophy.md](../docs/testing_philosophy.md) — Zero-mock rationale

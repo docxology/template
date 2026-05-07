@@ -32,6 +32,26 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 - **References**: Own cross-reference system and bibliography
 - **Metadata**: Project-specific publication information
 
+## Exemplar Trio (Permanent Canonical Projects)
+
+Three projects under `projects/` are **permanent canonical exemplars** — they are guaranteed to remain present, are tracked in git (everything else under `projects/*` is gitignored), and together cover the three dominant shapes of academic research projects:
+
+| Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
+|---|---|---|---|---|---|---|
+| [`template_code_project/`](template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | 96 | ~99.5% |
+| [`template_prose_project/`](template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | 66 | 100.00% |
+| [`template_search_project/`](template_search_project/) | Search-centric (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | 266 | ~99.5% |
+
+All three share the **same** structural conventions:
+
+- `src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`, `output/`, `pyproject.toml`, root `README.md` + `AGENTS.md`.
+- The same 12-file `docs/` hub: `AGENTS.md`, `README.md`, `agent_instructions.md`, `architecture.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `style_guide.md`, `syntax_guide.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`.
+- Per-directory `AGENTS.md` + `README.md` (and, for `tests/`, a `PATTERNS.md`).
+- Manuscript files `00_abstract.md` … `99_references.md` plus `config.yaml`, `preamble.md`, `references.bib`, `SYNTAX.md`, and a manuscript-level `AGENTS.md`/`README.md`.
+- The same verification checklist: `pytest --cov`, no-mocks grep, layer-purity grep.
+
+When a new project is bootstrapped, copy whichever exemplar is closest in shape and adjust from there. Examples in repo-wide docs default to `projects/template_code_project/` unless the doc explicitly compares the trio.
+
 ## Active vs Archived Projects
 
 ### Infrastructure Discovery Scope
@@ -61,20 +81,18 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[template_code_project<br/>Optimization Exemplar]
-        P2[fep_lean<br/>FEP / Lean catalogue<br/>~272 pytest items]
+        P1[template_code_project<br/>Code exemplar · 96 tests · ~99.5% cov]
+        P2[template_prose_project<br/>Prose exemplar · 66 tests · 100% cov]
+        P3[template_search_project<br/>Search exemplar · 266 tests · ~99.5% cov]
+        Pn[other rotating workspaces<br/>see docs/_generated/active_projects.md]
     end
 
     subgraph InProgress["In-Progress Projects (projects_in_progress/)"]
-        IP1[cognitive_case_diagrams<br/>Compositional case modeling]
-        IP2[template<br/>Meta-documentation]
-        IP3[cogant<br/>Cognitive agent]
-        IP4[act_inf_metaanalysis<br/>Active Inference meta-analysis]
+        IP[biology_textbook · cogant · corym ·<br/>template · trsc<br/>(rotates)]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
-        A1[traditional_newspaper<br/>Archived]
-        A2[area_handbook<br/>Archived]
+        A[blake_bimetalism · traditional_newspaper ·<br/>area_handbook · density_bioscales · …]
     end
 
     subgraph Infrastructure["Infrastructure Discovery"]
@@ -85,17 +103,16 @@ graph TD
 
     P1 -->|Discovered| DISCOVER
     P2 -->|Discovered| DISCOVER
-    IP1 -.->|NOT Scanned| DISCOVER
-    IP2 -.->|NOT Scanned| DISCOVER
-    IP3 -.->|NOT Scanned| DISCOVER
-    IP4 -.->|NOT Scanned| DISCOVER
-    A1 -.->|NOT Scanned| DISCOVER
-    A2 -.->|NOT Scanned| DISCOVER
+    P3 -->|Discovered| DISCOVER
+    Pn -->|Discovered| DISCOVER
+    IP -.->|NOT Scanned| DISCOVER
+    A -.->|NOT Scanned| DISCOVER
 
     DISCOVER -->|Active Projects| RUNSH
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
     PIPELINE -->|Executes| P2
+    PIPELINE -->|Executes| P3
 ```
 
 ### Project Lifecycle
@@ -151,9 +168,9 @@ flowchart TB
     P --> OUT[/output/<br/>Generated · disposable/]
 
     SC --> SC_F[analysis_pipeline.py · generate_*.py]
-    M --> M_F[config.yaml · references.bib ·<br/>00_abstract.md · *.md]
-    DOCS --> DOCS_F[architecture.md · testing_philosophy.md ·<br/>rendering_pipeline.md · agent_instructions.md]
-    OUT --> OUT_F[figures/ · data/ · pdf/ · reports/]
+    M --> M_F[config.yaml · references.bib · preamble.md ·<br/>00_abstract.md · *.md · SYNTAX.md ·<br/>AGENTS.md · README.md]
+    DOCS --> DOCS_F[12-file hub: AGENTS.md · README.md ·<br/>agent_instructions.md · architecture.md ·<br/>testing_philosophy.md · rendering_pipeline.md ·<br/>style_guide.md · syntax_guide.md · faq.md ·<br/>quickstart.md · output_conventions.md ·<br/>troubleshooting.md]
+    OUT --> OUT_F[figures/ · data/ · pdf/ · reports/ ·<br/>web/ · slides/ · manuscript/ · logs/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff

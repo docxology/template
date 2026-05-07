@@ -19,17 +19,17 @@ deliberately split it into **three** along orthogonal dependency lines:
 ```mermaid
 flowchart TB
     subgraph L1 [Layer 1 - Infrastructure - reusable across projects]
-        SEARCH["infrastructure/search/literature/<br/>network · dedup · cache · enrichment"]
-        REF["infrastructure/reference/citation/<br/>BibTeX read · write · convert"]
-        LLM["infrastructure/llm/<br/>Ollama wrapper · prompts · validation"]
+        SEARCH["infrastructure/search/literature<br/>network · dedup · cache · enrichment"]
+        REF["infrastructure/reference/citation<br/>BibTeX read · write · convert"]
+        LLM["infrastructure/llm<br/>Ollama wrapper · prompts · validation"]
     end
 
     subgraph L2 [Layer 2 - Project-specific orchestration]
-        SRC["projects/&lt;name&gt;/src/<br/>config · pipeline · synthesis · report"]
+        SRC["projects/&lt;name&gt;/src<br/>config · pipeline · synthesis · report"]
     end
 
     subgraph SCRIPTS [Thin orchestrators - I/O only]
-        SCR["projects/&lt;name&gt;/scripts/<br/>run_search_pipeline.py · y_figures · z_variables"]
+        SCR["projects/&lt;name&gt;/scripts<br/>run_search_pipeline.py · y_figures · z_variables"]
     end
 
     SEARCH -- "Paper" --> SRC

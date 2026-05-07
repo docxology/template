@@ -6,11 +6,10 @@ Quick reference for determining where new code belongs in the two-layer architec
 
 ```mermaid
 flowchart TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    START([New code to write?]) --> Q1{Is it about building/<br/>validating/managing documents?}
+    START([New code to write?]) --> Q1{Is it about building<br/>validating/managing documents?}
     Q1 -->|YES| L1[LAYER 1: INFRASTRUCTURE<br/>Add to infrastructure/]
     Q1 -->|NO| Q2{Does it implement research<br/>algorithms/analysis?}
-    Q2 -->|YES| L2[LAYER 2: PROJECT<br/>Add to projects/{name}/src/]
+    Q2 -->|YES| L2["LAYER 2: PROJECT<br/>Add to projects/{name}/src/"]
     Q2 -->|NO| RECONSIDER[Reconsider scope<br/>or ask team]
     
     classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px

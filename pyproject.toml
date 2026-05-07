@@ -121,6 +121,10 @@ dev = [
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
 default-groups = ["dev", "rendering", "discopy"]
+# pip-api (via pip-audit) pins an older pip; bump so pip-audit passes CVE gates (CVE-2026-3219).
+override-dependencies = [
+    "pip>=26.1.1",
+]
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
@@ -313,6 +317,10 @@ ignore_errors = true
 
 [[tool.mypy.overrides]]
 module = "projects.template_search_project.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "projects.what_is_cogsec.*"
 ignore_errors = true
 
 [tool.bandit]

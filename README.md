@@ -92,11 +92,15 @@ The repo can host multiple research projects in parallel. Each project owns its
 own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 `projects/<name>/`. Layer-1 infrastructure is shared.
 
-**Canonical exemplars — always present in `projects/`:**
+**Canonical exemplar trio — always present and tracked in git:**
 
-- `projects/template_code_project/` — code-centric exemplar (default path in docs)
-- `projects/template_prose_project/` — prose-centric exemplar
-- `projects/template_search_project/` — literature-search exemplar
+| Exemplar | Shape | Tests | Coverage |
+|---|---|---|---|
+| [`projects/template_code_project/`](projects/template_code_project/) | Code-centric (optimization + dashboard) | 96 | ~99.5% |
+| [`projects/template_prose_project/`](projects/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | 66 | 100.00% |
+| [`projects/template_search_project/`](projects/template_search_project/) | Search-centric (literature discovery + auto-populated BibTeX + LLM synthesis) | 266 | ~99.5% |
+
+All three share the same directory layout, the same 12-file `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`), and the same verification checklist. New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#exemplar-trio-permanent-canonical-projects) for the full comparison.
 
 Other entries in `projects/` rotate between `projects_in_progress/`,
 `projects/`, and `projects_archive/` as work progresses (Lean toolchain

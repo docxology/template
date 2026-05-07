@@ -27,6 +27,24 @@ The `tests/` directory contains repository-wide tests for infrastructure, integr
 - Keep `README.md` files aligned with the live test tree.
 - Keep per-folder `AGENTS.md` files accurate and specific to the folder they document.
 
+## Multi-project pytest and `conftest.py`
+
+**Canonical:** Run **one pytest process per** `projects/<name>/tests/` tree. Use
+`infrastructure.core.test_runner.run_per_project_pytest` (from
+[`scripts/01_run_tests.py`](../../scripts/01_run_tests.py)), or invoke
+`uv run pytest projects/<name>/tests/` for a single workspace. CI `test-project`
+merges coverage with `--cov-append` across per-project runs.
+
+**Unsupported:** One `pytest` collection that spans multiple
+`projects/*/tests/` directories when **more than one** of them defines
+`tests/conftest.py`. Pytest loads each `conftest` as a plugin; the shared
+basename collides (`ValueError: plugin already registered`). The workaround is
+the per-project subprocess model above, not a single mega pytest command.
+
+**References:** [`infrastructure/core/test_runner.py`](../../infrastructure/core/test_runner.py),
+[`tests/infra_tests/core/test_test_runner.py`](infra_tests/core/test_test_runner.py),
+[`TO-DO.md`](../../TO-DO.md) (tracked conftest item).
+
 ## See Also
 
 - [`README.md`](README.md)

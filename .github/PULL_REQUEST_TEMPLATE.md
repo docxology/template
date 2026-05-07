@@ -13,12 +13,15 @@ Link to any relevant issues using 'Closes #123' syntax.
 ### Local development (mirror CI)
 
 ```bash
-uv sync
-uv run ruff check infrastructure/ projects/*/src/
-uv run ruff format --check infrastructure/ projects/*/src/
+uv sync --group rendering --group monitoring --group discopy
+uvx ruff check infrastructure/ projects/*/src/
+uvx ruff format --check infrastructure/ projects/*/src/
 uv run mypy infrastructure/ projects/*/src/
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/*/tests/ --ignore=projects/fep_lean/tests/ --cov-fail-under=90 -m "not requires_ollama"
+COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
+# Docs / API surface (when touching docs or infrastructure package exports):
+# uv run python scripts/lint_docs.py
+# uv run python scripts/generate_api_reference_doc.py --check
 ```
 
 See [`.github/AGENTS.md`](../.github/AGENTS.md) for full troubleshooting and security commands.
@@ -37,6 +40,8 @@ See [`.github/AGENTS.md`](../.github/AGENTS.md) for full troubleshooting and sec
 - [ ] **Project Coverage**: ≥ 90% (as reported by CI)
 - [ ] **Pipeline Validation**: Full `./run.sh --pipeline` (or specific stages) passed locally.
 - [ ] **Skill manifest** (if `infrastructure/**/SKILL.md` changed): Ran `uv run python -m infrastructure.skills write` and included `.cursor/skill_manifest.json` in the PR.
+- [ ] **Docs lint** (if `docs/`, `.github/**/*.md`, or root `*.md` changed): Ran `uv run python scripts/lint_docs.py`.
+- [ ] **API reference** (if `infrastructure/**/__init__.py` `__all__` changed): Ran `uv run python scripts/generate_api_reference_doc.py --check` (or `--write` and committed output).
 - [ ] **fep_lean CI** (only if `projects/fep_lean/**` changed): The **`fep_lean (gauss + lake)`** job runs when `projects/fep_lean/lean/lean-toolchain` exists; otherwise it is skipped. Confirm expectations for forks without Lean/Open Gauss.
 
 ---
@@ -91,5 +96,5 @@ Example: uv run pytest output summary.
 - [ ] `AGENTS.md` and `README.md` updated in the affected directories.
 - [ ] All code is PEP8 compliant (Ruff check/format passed).
 - [ ] Mypy type checking passes with zero errors.
-- [ ] Security scan (`uv run bandit`) reveals no new issues.
+- [ ] Security scan reveals no new issues (`uv run pip-audit` with ignores from `.github/pip-audit-ignore.txt`; `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress`).
 - [ ] Commits follow project conventions (e.g., 'feat:', 'fix:', 'docs:').

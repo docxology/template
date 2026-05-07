@@ -12,9 +12,9 @@ flowchart TB
     PR --> META[AGENTS.md · __init__.py]
     PR --> COMP[composer.py<br/>Prompt composition &amp; assembly]
     PR --> LOAD[loader.py<br/>Prompt loading &amp; validation]
-    PR --> CMP_DIR[/compositions/<br/>Pre-built prompt compositions/]
-    PR --> FRAG[/fragments/<br/>Reusable prompt components/]
-    PR --> TPL[/templates/<br/>Prompt templates/]
+    PR --> CMP_DIR[/compositions<br/>Pre-built prompt compositions/]
+    PR --> FRAG[/fragments<br/>Reusable prompt components/]
+    PR --> TPL[/templates<br/>Prompt templates/]
 
     CMP_DIR --> CMP_F[retry_prompts.json<br/>error recovery]
     FRAG --> FRAG_F[content_requirements.json · format_requirements.json ·<br/>section_structures.json · system_prompts.json ·<br/>token_budget_awareness.json · validation_hints.json]

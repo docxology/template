@@ -77,6 +77,9 @@ The Core module provides fundamental foundation utilities used across the entire
 - `--json` for machine-readable output (consumed by CI artefact upload), `--gates=<names>` for subset runs, `--quiet`, `--repo-root`, `--no-color`
 - Public API: `GateResult`, `HealthReport`, `GATE_NAMES`, `build_gate_specs`, `run_health_checks`, `format_report_table`, `main`
 
+**pytest_marker_exprs.py**
+- ``build_pytest_marker_expression(...)`` returns one ``pytest -m`` string for subprocess runners (`pipeline_test_runner`, ``run_per_project_pytest``) so benchmarks and slow/Ollama-gated tests stay opt-in outside defaults.
+
 **cli.py**
 - Command-line interface utilities
 - CLI argument parsing and validation

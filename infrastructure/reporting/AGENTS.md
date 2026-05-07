@@ -124,11 +124,11 @@ flowchart TB
     EX --> HTML[/html/]
     EX --> JSON[/json/]
     EX --> MD[/md/]
-    EX --> CB[/combined_pdfs/<br/>project1_combined.pdf · project2_combined.pdf/]
+    EX --> CB[/combined_pdfs<br/>project1_combined.pdf · project2_combined.pdf/]
 
     MS[/output/multi_project_summary//]
-    MS --> MS_JSON[/json/<br/>multi_project_summary.json/]
-    MS --> MS_MD[/md/<br/>multi_project_summary.md/]
+    MS --> MS_JSON[/json<br/>multi_project_summary.json/]
+    MS --> MS_MD[/md<br/>multi_project_summary.md/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class EX,PNG,PDF,CSV,HTML,JSON,MD,CB,MS,MS_JSON,MS_MD d
@@ -670,6 +670,99 @@ print(f"Generated {len(dashboard_files)} dashboard files")
 for fmt, path in dashboard_files.items():
     print(f"  {fmt.upper()}: {path.name}")
 ```
+
+### Interactive Simulation Dashboard (`interactive_dashboard.py`)
+
+Project-agnostic builder for self-contained interactive simulation
+dashboards. Used by every active research project under `projects/` to
+expose configurable simulations on the website with multiple linked views,
+live controls, and plaintext-validatable invariants.
+
+**Design principles:**
+
+- **Zero new Python deps.** Plotly is loaded at runtime from the CDN; the
+  builder itself is stdlib + numpy.
+- **Configurable.** Every simulation knob (grid range, seed, hyperparameter,
+  threshold) is surfaced as a CLI flag on the project's `build_dashboard.py`,
+  not baked into source.
+- **Plaintext companion artefacts.** Every dashboard ships an
+  `invariants.txt` (PASS/FAIL with concrete witnesses), a `summary.txt`
+  (provenance + hyperparameters + notes), and a `payload.json` (full
+  numerical payload) so CI / agents validate without a browser.
+- **Reproducibility.** Each emitted artefact carries the git revision,
+  dirty-state flag, and ISO-8601 UTC timestamp.
+
+#### Public API
+
+```python
+from infrastructure.reporting import (
+    InteractiveDashboard,
+    Panel,
+    Control,
+    Invariant,
+)
+
+d = InteractiveDashboard(
+    title="My simulation",
+    subtitle="K=2 Ising toy",
+    project_name="my_project",
+    repo_root=Path("/abs/path/to/repo"),
+)
+d.set_payload({"x": np.linspace(0, 1, 100), "y": ...})  # numpy → JSON
+d.set_hyperparameters({"alpha": 0.1, "seed": 42})
+d.add_slider("a", "α", min=0, max=1, step=0.01, default=0.5)
+d.add_panel(Panel(panel_id="p", title="P", traces=[...], layout={...}))
+d.add_invariant(Invariant("nn", actual=[...], kind="nonneg", tol=0.0))
+d.write(html_path=..., json_path=..., invariants_path=..., txt_path=...)
+```
+
+#### Invariant kinds
+
+| Kind | Comparator | Witness |
+| --- | --- | --- |
+| `equal` | `\|actual − expected\| ≤ tol` | `\|a − e\| = δ (tol=ε)` |
+| `le` / `ge` | `actual ≤/≥ expected ± tol` | `a ≤/≥ e ± ε` |
+| `in_range` | `expected[0]−tol ≤ actual ≤ expected[1]+tol` | bracket + value |
+| `monotone_increasing` / `monotone_decreasing` | weakly monotone within tol | `worst out-of-order step` |
+| `finite` | every value `math.isfinite` | non-finite indices or count |
+| `nonneg` | `min(actual) ≥ −tol` | `min = …` |
+| `array_close` | `max\|actual_i − expected_i\| ≤ tol` (elementwise) | `max \|Δ\| at index i` |
+
+#### Control kinds
+
+| Kind | UI | Default semantics |
+| --- | --- | --- |
+| `slider` | range input | numeric, requires `min`, `max`, `step`, `default` |
+| `number` | numeric input | as `slider`, no slider track |
+| `dropdown` | `<select>` | requires `options` list (and optional `option_labels`) |
+| `toggle` | checkbox | boolean default |
+
+#### Panel update_fn semantics
+
+`Panel.update_fn` is a JS body executed when any of `Panel.driven_by`
+controls change. Free variables in scope: `payload` (the JSON-serialised
+payload tree), `controls` (a `{control_id: value}` map), `Plotly` (the
+CDN-loaded library), `panelId` (the DOM id of this panel). Use
+`Plotly.restyle(panelId, …)` for trace data updates and
+`Plotly.relayout(panelId, …)` for axis / shape / annotation changes.
+Syntactic JS errors in `update_fn` are silent failures in the browser —
+the project test suite typically wraps every `update_fn` with
+`Function(…)` and runs `node --check` to catch them at CI time.
+
+#### Outputs
+
+`InteractiveDashboard.write()` returns a `dict[str, Path]` mapping
+`{"html", "json", "invariants", "summary"}` to absolute paths (only the
+keys whose paths were provided are returned). The HTML file is fully
+self-contained except for the Plotly CDN script tag.
+
+#### Reference projects
+
+- [`projects/actinf_policy_entanglement_lean/scripts/build_dashboard.py`](../../projects/actinf_policy_entanglement_lean/scripts/build_dashboard.py)
+  — closed-form Ising mirror with 6 panels, 3 live controls, 18 invariants.
+- [`projects/template_code_project/scripts/build_dashboard.py`](../../projects/template_code_project/scripts/build_dashboard.py)
+  — gradient-descent diagnostics with 5 panels, 2 live controls, 22 invariants;
+  defaults read from `manuscript/config.yaml`.
 
 ### Manuscript Overview Generator (`manuscript_overview.py`)
 

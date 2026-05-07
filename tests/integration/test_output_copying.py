@@ -81,7 +81,7 @@ def temp_project_structure(tmp_path):
     output_dir.mkdir()
 
     # Create mock files
-    (pdf_dir / "code_project_combined.pdf").write_text("mock pdf content")
+    (pdf_dir / "template_code_project_combined.pdf").write_text("mock pdf content")
     (slides_dir / "01_abstract_slides.pdf").write_text("mock slide 1")
     (slides_dir / "02_introduction_slides.pdf").write_text("mock slide 2")
     (web_dir / "01_abstract.html").write_text("<html>mock</html>")
@@ -147,8 +147,8 @@ class TestCopyFinalDeliverables:
         stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         assert stats["combined_pdf"] == 1
-        assert (output_dir / "code_project_combined.pdf").exists()
-        assert (output_dir / "code_project_combined.pdf").read_text() == "mock pdf content"
+        assert (output_dir / "template_code_project_combined.pdf").exists()
+        assert (output_dir / "template_code_project_combined.pdf").read_text() == "mock pdf content"
 
     def test_copy_slides(self, temp_project_structure):
         """Test copying slide PDFs."""
@@ -177,14 +177,14 @@ class TestCopyFinalDeliverables:
 
         # Remove combined PDF
         (
-            repo_root / "projects" / "template_code_project" / "output" / "pdf" / "code_project_combined.pdf"
+            repo_root / "projects" / "template_code_project" / "output" / "pdf" / "template_code_project_combined.pdf"
         ).unlink()
 
         stats = copy_final_deliverables(repo_root, output_dir, "template_code_project")
 
         assert stats["combined_pdf"] == 0
         # Missing combined PDF is not an error, just logged as debug
-        assert not (output_dir / "code_project_combined.pdf").exists()
+        assert not (output_dir / "template_code_project_combined.pdf").exists()
 
     def test_copy_missing_slides_directory(self, temp_project_structure):
         """Test handling missing slides directory."""
@@ -221,7 +221,7 @@ class TestValidateCopiedOutputs:
 
         # Remove PDF from source directory (fixture creates it)
         source_pdf = (
-            repo_root / "projects" / "template_code_project" / "output" / "pdf" / "code_project_combined.pdf"
+            repo_root / "projects" / "template_code_project" / "output" / "pdf" / "template_code_project_combined.pdf"
         )
         if source_pdf.exists():
             source_pdf.unlink()
@@ -244,7 +244,7 @@ class TestValidateCopiedOutputs:
         output_dir.mkdir()
 
         # Create empty PDF
-        (output_dir / "code_project_combined.pdf").write_text("")
+        (output_dir / "template_code_project_combined.pdf").write_text("")
 
         result = validate_copied_outputs(output_dir)
 
@@ -261,9 +261,9 @@ class TestValidateCopiedOutputs:
         # Copy only combined PDF to pdf/ directory (where it actually gets copied)
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir(exist_ok=True)
-        (pdf_dir / "code_project_combined.pdf").write_text("mock pdf")
+        (pdf_dir / "template_code_project_combined.pdf").write_text("mock pdf")
         # Also copy to root for validation
-        (output_dir / "code_project_combined.pdf").write_text("mock pdf")
+        (output_dir / "template_code_project_combined.pdf").write_text("mock pdf")
 
         result = validate_copied_outputs(output_dir)
 
@@ -376,9 +376,9 @@ class TestValidateOutputStructure:
         # Create PDF in pdf/ directory but leave slides/web empty
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir()
-        (pdf_dir / "code_project_combined.pdf").write_text("x" * 1024 * 100)  # > 100KB
+        (pdf_dir / "template_code_project_combined.pdf").write_text("x" * 1024 * 100)  # > 100KB
         # Also copy to root for validation
-        (output_dir / "code_project_combined.pdf").write_text("x" * 1024 * 100)
+        (output_dir / "template_code_project_combined.pdf").write_text("x" * 1024 * 100)
         (output_dir / "slides").mkdir()
         (output_dir / "web").mkdir()
 
@@ -398,9 +398,9 @@ class TestValidateOutputStructure:
         pdf_dir.mkdir()
 
         # Create very small PDF (< 100KB) in pdf/ directory
-        (pdf_dir / "code_project_combined.pdf").write_text("tiny")
+        (pdf_dir / "template_code_project_combined.pdf").write_text("tiny")
         # Also copy to root for validation
-        (output_dir / "code_project_combined.pdf").write_text("tiny")
+        (output_dir / "template_code_project_combined.pdf").write_text("tiny")
 
         result = validate_output_structure(output_dir)
 

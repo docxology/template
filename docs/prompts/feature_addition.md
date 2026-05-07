@@ -337,7 +337,7 @@ flowchart LR
     NF --> EXC[exceptions.py<br/>Custom exceptions]
     NF --> VAL[validators.py<br/>Input validation]
     NF --> DOCS[AGENTS.md · README.md]
-    NF --> T[/tests/<br/>__init__.py · test_core.py · test_validators.py/]
+    NF --> T[/tests<br/>__init__.py · test_core.py · test_validators.py/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff

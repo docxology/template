@@ -14,15 +14,14 @@ Subfolder documentation: [`docs/AGENTS.md`](docs/AGENTS.md), [`manuscript/AGENTS
 
 ```mermaid
 flowchart TB
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    ROOT[/projects/template_search_project//]
-    ROOT --> SRC_DIR[/src/<br/>domain logic]
-    ROOT --> TESTS_DIR[/tests/<br/>real-data tests]
-    ROOT --> SCR_DIR[/scripts/<br/>thin orchestrators]
+    ROOT[/projects/template_search_project/]
+    ROOT --> SRC_DIR[/src<br/>domain logic/]
+    ROOT --> TESTS_DIR[/tests<br/>real-data tests/]
+    ROOT --> SCR_DIR[/scripts<br/>thin orchestrators/]
     ROOT --> MAN_DIR[/manuscript/]
-    ROOT --> DATA_DIR[/data/<br/>committed corpus]
+    ROOT --> DATA_DIR[/data<br/>committed corpus/]
     ROOT --> DOCS_DIR[/docs/]
-    ROOT --> OUT_DIR[/output/<br/>regeneratable]
+    ROOT --> OUT_DIR[/output<br/>regeneratable/]
     ROOT --> META[pyproject.toml<br/>README.md · AGENTS.md · .gitignore]
 
     SRC_DIR --> S_CFG[config.py<br/>typed YAML loader]

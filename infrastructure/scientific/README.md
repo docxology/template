@@ -32,18 +32,17 @@ report = validate_scientific_best_practices(your_module)
 
 ```mermaid
 graph TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph ScientificModule["infrastructure/scientific/"]
-        STABILITY[stability.py<br/>Numerical stability<br/>check_numerical_stability()]
-        BENCHMARKING[benchmarking.py<br/>Performance analysis<br/>benchmark_function()]
-        DOCUMENTATION[documentation.py<br/>API documentation<br/>generate_scientific_documentation()]
-        VALIDATION[validation.py<br/>Best practices<br/>validate_scientific_implementation()]
-        TEMPLATES[templates.py<br/>Code templates<br/>create_scientific_module_template()]
+        STABILITY["stability.py<br/>Numerical stability<br/>check_numerical_stability"]
+        BENCHMARKING["benchmarking.py<br/>Performance analysis<br/>benchmark_function"]
+        DOCUMENTATION["documentation.py<br/>API documentation<br/>generate_scientific_documentation"]
+        VALIDATION["validation.py<br/>Best practices<br/>validate_scientific_implementation"]
+        TEMPLATES["templates.py<br/>Code templates<br/>create_scientific_module_template"]
     end
 
     subgraph CoreFeatures["Core Features"]
         NUMERICAL[Numerical Stability<br/>Algorithm robustness]
-        PERFORMANCE[Performance Analysis<br/>Timing & memory tracking]
+        PERFORMANCE["Performance Analysis<br/>Timing and memory tracking"]
         DOC_GEN[Documentation Generation<br/>API docs from code]
         COMPLIANCE[Best Practices Validation<br/>Scientific standards]
         BOILERPLATE[Module Templates<br/>Research code patterns]

@@ -14,11 +14,13 @@ Thin orchestrators executed in **lexicographic order** by `scripts/02_run_analys
 | 4 | [`y_generate_search_figures.py`](y_generate_search_figures.py) | Figures under `output/figures/` |
 | 5 | [`z_generate_manuscript_variables.py`](z_generate_manuscript_variables.py) | `output/data/manuscript_variables.json` and resolved `output/manuscript/` (the PDF-rendering stage prefers this tree when present) |
 | 6 | [`zz_generate_review_report.py`](zz_generate_review_report.py) | Runs `review` if needed; writes `output/review/REVIEW_REPORT.md` |
+| 7 | [`zzz_build_dashboard.py`](zzz_build_dashboard.py) | Interactive search-coverage dashboard + plaintext invariants (writes `output/web/dashboard.html`, `output/data/dashboard_payload.json`, `output/reports/dashboard_*.txt`). Runs **last** because it consumes the corpus + aggregate JSON produced by `run_search_pipeline.py` and `run_deep_search.py`. |
 
 > Lexicographic ordering matters. The composer is named `s_*` (between
 > `run_*` and `y_*`/`z_*`) so `S01_literature_review.md` is fully written
 > *before* `z_generate_manuscript_variables.py` resolves the manuscript
-> tree into `output/manuscript/`.
+> tree into `output/manuscript/`. The dashboard is named `zzz_*` so it runs
+> after every script that writes its inputs.
 
 ## Review entrypoint
 

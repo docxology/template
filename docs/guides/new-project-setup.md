@@ -71,8 +71,8 @@ flowchart TB
     P --> SC[/scripts/]
     P --> SRC[/src/&lt;name&gt;/]
     P --> T[/tests/]
-    P --> DATA[/data/<br/>Input datasets · optional/]
-    P --> OUT[/output/<br/>Pipeline-generated artifacts/]
+    P --> DATA[/data<br/>Input datasets · optional/]
+    P --> OUT[/output<br/>Pipeline-generated artifacts/]
     P --> META[AGENTS.md · README.md · pyproject.toml]
 
     M --> M_F[config.yaml ⚠ required ·<br/>01_abstract.md · 02_introduction.md · ... ·<br/>AGENTS.md · README.md]
@@ -114,6 +114,21 @@ if SRC not in sys.path:
 ```
 
 > **Lesson learned**: Omitting `conftest.py` causes `ModuleNotFoundError: No module named '<package>'` when running tests via `pytest` or the pipeline's `01_run_tests.py`. The pipeline's test runner adds `src/` via `PYTHONPATH`, but pytest's collection phase happens before that can take effect for direct `pytest` invocations.
+
+### Optional `scripts/setup_hook.py` — **cross-platform bootstrap**
+
+The pipeline may run an optional hook during environment setup (Stage 0 / 1) to
+install toolchains, fetch assets, or verify prerequisites. See
+[`infrastructure/project/setup_hook.py`](../../infrastructure/project/setup_hook.py).
+
+| Hook file | Platforms |
+| --- | --- |
+| `projects/<name>/scripts/setup_hook.py` | **Use this** for Linux, macOS, and **Windows** (including GitHub Actions `windows-latest`). |
+| `projects/<name>/scripts/setup_hook.sh` | POSIX only. **Skipped on Windows** with a warning — not available in pure Windows shells. |
+
+For CI that exercises Windows, ship **`setup_hook.py`**, not only `.sh`. An optional
+`setup_hook.yaml` manifest next to the hook can declare `required_tools`, `required_env`,
+and timeouts (see [`infrastructure/project/AGENTS.md`](../../infrastructure/project/AGENTS.md)).
 
 ### `pyproject.toml` — Minimum Viable
 

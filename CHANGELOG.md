@@ -1,8 +1,74 @@
 # Changelog
 
-All notable changes to the Research Project Template are documented here.
+All notable changes to this **template repository** (Layer 1 infrastructure, root
+orchestration, CI, and repository-level docs) are documented here. This file does
+not describe individual workspaces under `projects/` (many checkouts omit,
+gitignore, or treat those trees as confidential); where entries mention
+`projects/`, they refer to **generic layout and tooling** defined by the template,
+not to the contents of any specific workspace.
 
-## [0.7.1] — 2026-05-04 (PM)
+## [Unreleased]
+
+### Added
+
+- **Interactive simulation dashboards** — new project-agnostic infrastructure
+  module ``infrastructure.reporting.interactive_dashboard`` (``InteractiveDashboard``,
+  ``Panel``, ``Control``, ``Invariant``) builds self-contained Plotly HTML
+  dashboards with multiple linked views, live controls, and plaintext-validatable
+  numerical invariants. Zero new Python dependencies (Plotly via CDN). Companion
+  ``invariants.txt`` + ``summary.txt`` + ``payload.json`` artefacts let CI / agents
+  validate without a browser. Eight invariant kinds: ``equal``, ``le``, ``ge``,
+  ``in_range``, ``monotone_increasing``, ``monotone_decreasing``, ``finite``,
+  ``nonneg``, ``array_close``.
+- **Per-project ``build_dashboard.py`` scripts** — every active exemplar under
+  ``projects/`` now ships a CLI-configurable interactive dashboard:
+  - ``actinf_policy_entanglement_lean`` — 6 panels, 3 live controls, 47
+    invariants (Ising MI, free energy, optimal λ, phase classifier, marginal
+    entropy, Theorem 4.1 decomposition witness, coupling-pays verdict,
+    Theorem 6.4 e-geodesic affine slope).
+  - ``template_code_project`` — 5 panels, 2 live controls, 22 invariants
+    (gradient finite-difference agreement, monotone descent for stable α,
+    closed-form-minimum agreement, trajectory monotonicity).
+  - ``what_is_cogsec`` — 5 panels, 2 live controls, 11 corpus invariants
+    (schema, uniqueness, year range, decade buckets, category coverage).
+  - ``template_search_project`` — 5 panels, 11 search-coverage invariants
+    (DOI/abstract/year coverage floors, keyword distribution, year plausibility).
+- **CLI override layer for ``simulate_pymdp.py``** — every ``simulation.hyperparameters``
+  knob (K, γ, coupling λ, sweep grid, rollout, observations, seed) is now a
+  CLI flag while preserving bit-exact backwards compatibility.
+- **CLI on ``parameter_sweep.py``** — λ grid, utilities, phase thresholds, and
+  Schmidt tolerance are now overridable.
+- **Numerical invariants modules** — ``src/lean/invariants.py``
+  (actinf), ``src/invariants.py`` (template_code),
+  ``src/analysis/corpus_invariants.py`` (what_is_cogsec),
+  ``src/search_invariants.py`` (template_search_project) provide pure-compute
+  invariant builders that drive both the dashboard and the test suite.
+- **Comprehensive infrastructure tests** — ``tests/infra_tests/reporting/``
+  ``test_interactive_dashboard.py`` adds 62 tests covering every Invariant
+  kind (pass + fail paths), every Control kind, JSON/numpy serialisation,
+  HTML+JSON round-trip, plaintext rendering, and JS syntax of every
+  ``Panel.update_fn`` (when ``node`` is available).
+
+### Fixed
+
+- **Pytest orchestration:** ``pipeline_test_runner`` and
+  ``infrastructure.core.test_runner.run_per_project_pytest`` now emit one
+  combined ``-m`` expression (including ``not bench`` by default), aligned
+  with ``pyproject.toml`` addopts for subprocess invocations that would
+  otherwise collect benchmark tests under the global timeout.
+
+## [0.7.2] — 2026-05-05
+
+### CI / GitHub
+
+- **pip-audit (blocking):** CI parses `.github/pip-audit-ignore.txt` into `--ignore-vuln` flags, retries up to three times on failure, and fails the job on remaining findings. Root **`tool.uv.override-dependencies`** adds **`pip>=26.1.1`** so the lock does not pin a vulnerable pip pulled in via **pip-audit** → **pip-api**.
+- **Bandit:** CI invokes **`bandit -c bandit.yaml`** over the same configured roots as before (`infrastructure/`, `scripts/`, optional `projects/` tree per workflow excludes). **`bandit-quick`** pre-push hook matches that scope.
+- **Manual CI dispatch:** Removed unused `workflow_dispatch.inputs.project` from **`ci.yml`**.
+- **Release workflow:** Set **`generate_release_notes: false`** so the git-log **`body_path`** is not duplicated by GitHub auto-notes.
+- **Dependency bumps (security):** `black`, `cryptography`, `pillow`, `pygments`, `pypdf`, `pytest`, `requests`, `werkzeug` refreshed in **`uv.lock`** to satisfy pip-audit.
+- **Docs:** `.github/AGENTS.md`, `.github/README.md`, `.github/workflows/{AGENTS,README}.md`, stale-issue parity (`do-not-close` on issues), PR template CI parity, issue-template fork note.
+
+---
 
 ### 🧹 Wave-3 backlog: 6 items closed (m1–m3 minor, MED1–MED3 medium)
 
@@ -26,12 +92,12 @@ gate in the "Live state snapshot" table of `TO-DO.md` is green via
   Wired through metadata, overlays, barcodes, hashing, encryption.
   Two consecutive `secure_run.sh` invocations now produce
   byte-identical output PDFs (verified end-to-end). 8 real-data tests.
-- **m3 — Project-metadata schema-extension hook.** New
+- **m3 — Config schema-extension hook (per workspace root).** New
   `register_project_schema_extension(project_name, schema)`,
   `get_project_schema_extensions(project_name)`,
   `clear_project_schema_extensions()` in
   `infrastructure/core/config/schema.py`. Validator hook in
-  `loader.py` infers project name from the config path (or accepts
+  `loader.py` infers the workspace segment from the config path (or accepts
   explicit `project_name=`). 12 real-data tests.
 
 ### Medium
@@ -41,10 +107,11 @@ gate in the "Live state snapshot" table of `TO-DO.md` is green via
   `run_projects_in_parallel(...)`. CLI flags `--parallel` and
   `--max-workers=N` added to `scripts/execute_multi_project.py`
   (default remains serial — backwards compatible). Per-worker
-  stdout/stderr is redirected via `os.dup2` into
-  `projects/<name>/output/logs/pipeline.log` (no parent-process
-  interleaving). Observed wall-time: 6.0 s serial → 2.2 s parallel
-  with 3 workers (~2.6× speedup) on 3 synthetic projects. 8 tests.
+  stdout/stderr is redirected via `os.dup2` into each workspace's
+  `…/output/logs/pipeline.log` under the configured projects root (no
+  parent-process interleaving). Observed wall-time improvement in fixture
+  runs: serial vs parallel with multiple workers (~2–3× in synthetic
+  multi-workspace tests). 8 tests.
 - **MED2 — Unified `health` command.** New
   `infrastructure/core/health.py` with `GateResult`, `HealthReport`,
   `run_health_checks(...)`, and `python -m infrastructure.core.health`
@@ -119,8 +186,8 @@ command (linked in that table).
 - **M6 — Architecture overview generator.** New
   `infrastructure/documentation/architecture_overview.py` +
   `scripts/generate_architecture_overview.py` produce
-  `docs/_generated/architecture_overview.{mmd,svg}` from live infra +
-  project discovery.
+  `docs/_generated/architecture_overview.{mmd,svg}` from live infra and
+  workspace-root discovery (layout only; no workspace contents).
 - **M7 — Roadmap freshness.** Re-baselined
   `docs/development/coverage-gaps.md` and
   `docs/development/roadmap.md`; date-stamped audit reports;
@@ -131,13 +198,13 @@ command (linked in that table).
   Markdown table from `infrastructure/core/pipeline/pipeline.yaml`
   into 5 docs via `<!-- BEGIN:STAGE_TABLE --> … <!-- END:STAGE_TABLE -->`
   markers.
-- **MED2 — Project-setup-hook polish.** Optional `setup_hook.yaml`
+- **MED2 — Workspace setup-hook polish.** Optional `setup_hook.yaml`
   manifest (required tools / env vars / timeout / skip_if_env);
   `PROJECT_SETUP_HOOK_DRY_RUN=1` mode; preflight-before-invoke;
   Windows portability documented.
-- **MED3 — Per-project pytest factor.** New
+- **MED3 — Per-workspace pytest driver.** New
   `infrastructure/core/test_runner.py` lifts the open-coded
-  `for d in projects/*/tests; do …` bash loop out of
+  shell loop over discovered test directories out of
   `.github/workflows/ci.yml#test-project` into a tested infrastructure
   function. CI workflow now calls
   `scripts/01_run_tests.py --project-only --all-projects`.
@@ -158,7 +225,7 @@ command (linked in that table).
 - **MED7 — API-reference auto-generation.** New
   `infrastructure/documentation/api_reference_gen.py` +
   `scripts/generate_api_reference_doc.py` walk every `__all__` and
-  inject a 213-symbol catalogue into
+  inject a generated symbol catalogue into
   `docs/reference/api-reference.md`. CI `--check` gate.
 
 ### Restored architecture
@@ -187,9 +254,11 @@ command (linked in that table).
 
 ### 🧹 Code Health: Desloppify Campaign (161 commits)
 
-The largest code-quality improvement cycle since the template's inception. Every infrastructure
-package and project module was subjected to systematic blind review and remediation across
-26 review rounds, eliminating all AI-generated debt, convention outliers, and structural issues.
+The largest code-quality improvement cycle since the template's inception. All
+`infrastructure/` packages and repository-level scripts were subjected to
+systematic blind review and remediation across 26 review rounds, eliminating
+AI-generated debt, convention outliers, and structural issues; tracked exemplar
+layouts were aligned where they share code with Layer 1.
 
 ### Fixes
 
@@ -242,7 +311,7 @@ quality gates across all 8 infrastructure packages (126 source files).
 - Dockerfile: `python:3.11-slim` + `pip` → `python:3.12-slim` + `uv`
 - docker-compose.yml: Removed deprecated `version` key; added Ollama healthcheck
 - `.pre-commit-config.yaml`: Added mypy hook; ruff `v0.8.4` → `v0.9.7`; pre-commit-hooks `v4.6.0` → `v5.0.0`
-- `ci.yml`: `pip-audit` now blocking; Bandit scans `infrastructure/ + scripts/ + projects/` at MEDIUM+
+- `ci.yml`: `pip-audit` now blocking; Bandit scans `infrastructure/`, `scripts/`, and (when present) the configured `projects/` roots at MEDIUM+
 
 ### Quality Gates (v3.0.0, all enforced in CI)
 
@@ -254,14 +323,14 @@ quality gates across all 8 infrastructure packages (126 source files).
 | `mypy` (all 8 packages) | 0 errors |
 | `bandit -ll` | 0 MEDIUM+ findings |
 | `pip-audit` | Blocking gate |
-| `pytest` (2,544 infra + 469 project) | All pass |
+| `pytest` (infra suite; workspace suites per CI matrix) | All pass |
 
 ## [2.0.0] — 2026-02-18
 
 ### Added (v2.0.0)
 
-- Two-Layer Architecture (Infrastructure + Projects)
+- Two-layer layout (shared infrastructure + optional per-workspace trees)
 - Build pipeline with thin orchestrator pattern
-- Program-aware project discovery
-- Executive reporting dashboard
-- Standalone Project Paradigm with Graduation Pattern
+- Program-aware discovery of workspace roots under the configured `projects/` layout
+- Executive reporting dashboard (multi-workspace orchestration)
+- Standalone workspace lifecycle pattern (promote / archive) for local trees

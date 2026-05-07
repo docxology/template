@@ -118,13 +118,15 @@ the repository's three foundational pillars:
 \tightlist
 \item
   \textbf{\texttt{infrastructure/} Layer (Root Directory)}: A modular
-  stack of sixteen subpackages (\texttt{config}, \texttt{core},
-  \texttt{docker}, \texttt{documentation}, \texttt{llm},
+  stack of fifteen Python subpackages (\texttt{core},
+  \texttt{documentation}, \texttt{llm}, \texttt{orchestration},
   \texttt{project}, \texttt{prose}, \texttt{publishing},
   \texttt{reference}, \texttt{rendering}, \texttt{reporting},
   \texttt{scientific}, \texttt{search}, \texttt{skills},
   \texttt{steganography}, \texttt{validation}) providing the
-  computational scaffolding.
+  computational scaffolding (the sibling \texttt{config/} and
+  \texttt{docker/} directories under \texttt{infrastructure/} are
+  configuration/data, not Python packages).
 \item
   \textbf{\texttt{tests/} Framework
   (\texttt{projects/template\_code\_project/tests/})}: An uncompromising

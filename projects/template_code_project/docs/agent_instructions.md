@@ -23,9 +23,9 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 ---
 
-## Rule 2: Coverage Gate — 52 Tests, ≥90% on `src/`
+## Rule 2: Coverage Gate — 96 Tests, ≥90% on `src/`
 
-The current test suite has **52 collected tests** and achieves approximately **96% line/branch coverage** on `projects/template_code_project/src/`. The gate is 90% (`fail_under = 90` in `pyproject.toml`).
+The current test suite has **96 collected tests** across `test_optimizer.py`, `test_invariants.py`, and `test_invariants_and_dashboard.py`, and achieves approximately **99.5% line/branch coverage** on `projects/template_code_project/src/`. The gate is 90% (`fail_under = 90` in `pyproject.toml`); the project's own `pyproject.toml` configures a 70% floor and the root pipeline raises that to 90%.
 
 Before modifying `src/optimizer.py`, count the existing tests for the function you are changing. After modifying, run:
 
@@ -37,7 +37,7 @@ uv run pytest projects/template_code_project/tests/ \
     -v
 ```
 
-The current ~96% means there is a ~6% buffer before the gate is hit. Do not consume the buffer unnecessarily. Do not delete tests to make a coverage number work — fix the gap.
+The current ~99.5% means there is a ~9.5% buffer before the gate is hit. Do not consume the buffer unnecessarily. Do not delete tests to make a coverage number work — fix the gap.
 
 ---
 

@@ -46,9 +46,9 @@ By the end of this guide, you'll be able to:
 
 ```mermaid
 flowchart TB
-    SRC["projects/&lt;name&gt;/src/<br/>ALL business logic<br/>example.py · analysis.py<br/>mathematical functions · algorithms"]
-    SCR["projects/&lt;name&gt;/scripts/<br/>Thin orchestrators<br/>my_figure.py — visualization only"]
-    OUT["output/<br/>figures/ — PNG · PDF<br/>data/ — CSV · NPZ"]
+    SRC["projects/&lt;name&gt;/src<br/>ALL business logic<br/>example.py · analysis.py<br/>mathematical functions · algorithms"]
+    SCR["projects/&lt;name&gt;/scripts<br/>Thin orchestrators<br/>my_figure.py — visualization only"]
+    OUT["output<br/>figures/ — PNG · PDF<br/>data/ — CSV · NPZ"]
 
     SRC -- import --> SCR
     SCR -- generate --> OUT
@@ -526,10 +526,10 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```mermaid
 flowchart TB
     OUT[/output//]
-    OUT --> FIG[/figures/<br/>PNG files from scripts/]
-    OUT --> DATA[/data/<br/>CSV · NPZ data files/]
-    OUT --> PDF[/pdf/<br/>Individual + combined PDFs/]
-    OUT --> TEX[/tex/<br/>LaTeX source files/]
+    OUT --> FIG[/figures<br/>PNG files from scripts/]
+    OUT --> DATA[/data<br/>CSV · NPZ data files/]
+    OUT --> PDF[/pdf<br/>Individual + combined PDFs/]
+    OUT --> TEX[/tex<br/>LaTeX source files/]
 
     FIG --> FIG_F[example_figure.png ·<br/>correlation_analysis.png ·<br/>statistics_figure.png]
     DATA --> DATA_F[analysis_data.csv · analysis_data.npz]

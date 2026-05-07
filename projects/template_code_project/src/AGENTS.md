@@ -20,13 +20,14 @@ flowchart LR
     SRC[/src//]
     SRC --> INIT[__init__.py<br/>Module exports]
     SRC --> OPT[optimizer.py<br/>Core optimization algorithms]
+    SRC --> INV[invariants.py<br/>Numerical invariant builders<br/>consumed by scripts/build_dashboard.py]
     SRC --> AG[AGENTS.md · README.md · STYLE.md<br/>documentation]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class SRC d
-    class INIT,OPT code
+    class INIT,OPT,INV code
     class AG doc
 ```
 

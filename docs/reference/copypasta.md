@@ -279,12 +279,12 @@ Thanks!
 ```mermaid
 graph TB
     subgraph "Research Project Template"
-        SRC[📁 src/<br/>Core business logic<br/>Tested]
-        TESTS[🧪 tests/<br/>Test suite<br/>coverage]
-        SCRIPTS[📜 scripts/<br/>Thin orchestrators<br/>Use src/ methods]
-        MANUSCRIPT[📚 manuscript/<br/>Research manuscript<br/>Cross-referenced]
-        SCRIPTS[📊 scripts/\n<br/>Build pipeline<br/>Stage scripts]
-        OUTPUT[📤 output/<br/>Generated files<br/>PDFs, figures, data]
+        SRC[📁 src<br/>Core business logic<br/>Tested]
+        TESTS[🧪 tests<br/>Test suite<br/>coverage]
+        SCRIPTS[📜 scripts<br/>Thin orchestrators<br/>Use src/ methods]
+        MANUSCRIPT[📚 manuscript<br/>Research manuscript<br/>Cross-referenced]
+        SCRIPTS[📊 scripts/<br/><br/>Build pipeline<br/>Stage scripts]
+        OUTPUT[📤 output<br/>Generated files<br/>PDFs, figures, data]
     end
     
     subgraph "Thin Orchestrator Pattern"

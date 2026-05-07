@@ -240,7 +240,7 @@ flowchart LR
     M --> VAL[validation.py<br/>Input validation functions]
     M --> EXC[exceptions.py<br/>Custom exceptions]
     M --> DOCS[AGENTS.md · README.md]
-    M --> T[/tests/<br/>__init__.py · test_core.py · test_validation.py/]
+    M --> T[/tests<br/>__init__.py · test_core.py · test_validation.py/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -260,7 +260,7 @@ flowchart LR
     M --> VAL[validation.py<br/>Result validation]
     M --> VIZ[visualization.py<br/>Plotting functions]
     M --> DOCS[AGENTS.md · README.md]
-    M --> T[/tests/<br/>test_algorithms.py · test_data_processing.py ·<br/>test_analysis.py/]
+    M --> T[/tests<br/>test_algorithms.py · test_data_processing.py ·<br/>test_analysis.py/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff

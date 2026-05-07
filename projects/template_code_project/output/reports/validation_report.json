@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-05T06:25:06.819024",
+  "timestamp": "2026-05-07T14:22:30.160134",
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
@@ -30,8 +30,8 @@
           },
           "web": {
             "exists": true,
-            "files": 11,
-            "size_mb": 0.24,
+            "files": 12,
+            "size_mb": 0.35,
             "readable": true,
             "optional": false
           },
@@ -51,15 +51,15 @@
           },
           "data": {
             "exists": true,
-            "files": 3,
-            "size_mb": 0.01,
+            "files": 4,
+            "size_mb": 0.12,
             "readable": true,
             "optional": false
           },
           "reports": {
             "exists": true,
-            "files": 7,
-            "size_mb": 0.0,
+            "files": 9,
+            "size_mb": 0.01,
             "readable": true,
             "optional": false
           },
@@ -95,9 +95,9 @@
         },
         "web": {
           "exists": true,
-          "file_count": 11,
-          "size_mb": "0.24",
-          "largest_file": "index.html"
+          "file_count": 12,
+          "size_mb": "0.35",
+          "largest_file": "dashboard.html"
         },
         "slides": {
           "exists": true,
@@ -113,15 +113,15 @@
         },
         "data": {
           "exists": true,
-          "file_count": 3,
-          "size_mb": "0.01",
-          "largest_file": "convergence_plot.json"
+          "file_count": 4,
+          "size_mb": "0.12",
+          "largest_file": "dashboard_payload.json"
         },
         "reports": {
           "exists": true,
-          "file_count": 7,
-          "size_mb": "0.00",
-          "largest_file": "analysis_dashboard.html"
+          "file_count": 9,
+          "size_mb": "0.01",
+          "largest_file": "dashboard_invariants.txt"
         },
         "simulations": {
           "exists": true,
@@ -144,16 +144,16 @@
       },
       "file_counts": {
         "pdf": 10,
-        "web": 11,
+        "web": 12,
         "slides": 70,
         "figures": 7,
-        "data": 3,
-        "reports": 7,
+        "data": 4,
+        "reports": 9,
         "simulations": 0,
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.593583106994629,
+      "total_size_mb": 4.822427749633789,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -163,15 +163,15 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.889115333557129
+      "size_mb": 1.890366554260254
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.5188522338867188
+      "size_mb": 1.520005226135254
     },
     "data": {
-      "files": 3,
-      "size_mb": 0.010951995849609375
+      "files": 4,
+      "size_mb": 0.11583423614501953
     }
   },
   "summary": {

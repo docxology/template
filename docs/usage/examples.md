@@ -84,11 +84,11 @@ After configuring your project, your project will have this structure:
 graph TB
     subgraph "Renamed Project"
         ROOT[project_name/]
-        SRC[src/<br/>Core business logic]
-        TESTS[tests/<br/>tests]
-        SCRIPTS[scripts/<br/>Thin orchestrators]
-        MANUSCRIPT[manuscript/<br/>Research manuscript]
-        OUTPUT[output/<br/>Generated files]
+        SRC[src<br/>Core business logic]
+        TESTS[tests<br/>tests]
+        SCRIPTS[scripts<br/>Thin orchestrators]
+        MANUSCRIPT[manuscript<br/>Research manuscript]
+        OUTPUT[output<br/>Generated files]
     end
     
     subgraph "Key Files"
@@ -201,17 +201,16 @@ After configuring your project, you'll have:
 
 ```mermaid
 graph LR
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    subgraph "projects/{name}/src/ Modules"
+    subgraph L2SRC["Layer 2 · projects · src · modules"]
         EXISTING[example.py<br/>Basic functions]
         NEW1[ml_optimizer.py<br/>ML algorithms]
         NEW2[data_processor.py<br/>Data utilities]
         NEW3[visualization.py<br/>Plotting tools]
     end
     
-    subgraph "Scripts Integration"
+    subgraph SCRINT["Scripts Integration"]
         SCRIPT[ml_training.py]
-        IMPORT[Import from projects/{name}/src/]
+        IMPORT["Import from projects/{name}/src/"]
         USE[Use ml_optimizer]
         USE2[Use data_processor]
         USE3[Use visualization]

@@ -14,7 +14,7 @@ flowchart LR
         SCRIPT[run_search_pipeline.py]
         PIPE[src/pipeline.py]
         FETCH[AbstractFetcher · FulltextFetcher]
-        CACHE[(output/cache/<br/>SearchCache + abs/pdf)]
+        CACHE[(output/cache<br/>SearchCache + abs/pdf)]
     end
 
     subgraph LOCAL [Local trust boundary]

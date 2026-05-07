@@ -30,6 +30,7 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_live_resource_usage, log_substep
+from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.test_runner import run_per_project_pytest
 from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
 
@@ -140,17 +141,14 @@ def main() -> int:
     # (one pytest process per project, combined coverage gate at end).
     # This is the local mirror of the bash loop in .github/workflows/ci.yml.
     if args.project_only and args.all_projects:
-        marker_expr = "not requires_ollama"
-        if args.include_slow:
-            # Honour --include-slow by clearing the implicit "not slow" marker.
-            # Existing tests that opt out of slow runs use the slow marker;
-            # callers asking for slow tests want everything except Ollama.
-            marker_expr = "not requires_ollama"
-        if args.include_ollama_tests:
-            marker_expr = ""
+        marker_expr = build_pytest_marker_expression(
+            skip_requires_ollama=not args.include_ollama_tests,
+            skip_slow=not args.include_slow,
+            skip_bench=True,
+        )
         exit_code = run_per_project_pytest(
             repo_root,
-            marker_expr=marker_expr or "not requires_ollama",
+            marker_expr=marker_expr,
         )
         log_live_resource_usage("Test stage end", logger)
         return exit_code

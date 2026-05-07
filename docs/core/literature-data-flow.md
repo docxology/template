@@ -52,7 +52,6 @@ A typical run lands the following artefacts:
 
 ```mermaid
 flowchart TB
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     PROJ[/projects/template_search_project/]
     PROJ --> OUTPUT[/output/]
     PROJ --> MANUSCRIPT[/manuscript/]
@@ -64,10 +63,10 @@ flowchart TB
     OUTPUT --> CORPUS_F[corpus.json<br/>LocalBackend-compatible]
 
     SEARCH --> RES_F[results.json<br/>SearchResult]
-    SEARCH --> SC[/cache/search_HASH.json/<br/>deterministic SearchCache]
+    SEARCH --> SC[/cache/search_HASH.json<br/>deterministic SearchCache/]
 
-    CACHE --> ABS_DIR[/abs/SAFE_ID.txt/<br/>cached abstracts]
-    CACHE --> PDF_CACHE[/pdf/SAFE_ID.pdf and .txt/<br/>cached fulltext]
+    CACHE --> ABS_DIR[/abs/SAFE_ID.txt<br/>cached abstracts/]
+    CACHE --> PDF_CACHE[/pdf/SAFE_ID.pdf and .txt<br/>cached fulltext/]
 
     LLM_DIR --> SYNTH[synthesis.md<br/>cross-corpus narrative]
     LLM_DIR --> PER_PAPER[/per_paper/SAFE_ID.md/]

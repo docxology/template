@@ -30,23 +30,22 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ```mermaid
 flowchart TB
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    ROOT[/template//]
-    ROOT --> INFRA[/infrastructure//<br/>Layer 1 · 17 subpackages/]
+    ROOT[/template/]
+    ROOT --> INFRA[/infrastructure<br/>Layer 1 · 17 subpackages/]
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
-    ROOT --> SCR[/scripts/<br/>Entry-point orchestrators · thin wrappers/]
-    ROOT --> PROJ[/projects//<br/>Active research projects · Layer 2/]
-    ROOT --> ARCH[/projects_archive/<br/>Archived · not executed/]
-    ROOT --> WIP[/projects_in_progress/<br/>WIP · not discovered/]
-    ROOT --> T[/tests/<br/>Infrastructure tests/]
+    ROOT --> SCR[/scripts<br/>Entry-point orchestrators · thin wrappers/]
+    ROOT --> PROJ[/projects<br/>Active research projects · Layer 2/]
+    ROOT --> ARCH[/projects_archive<br/>Archived · not executed/]
+    ROOT --> WIP[/projects_in_progress<br/>WIP · not discovered/]
+    ROOT --> T[/tests<br/>Infrastructure tests/]
     ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
-    ROOT --> DOCKER[infrastructure/docker/<br/>Dockerfile · docker-compose.yml]
+    ROOT --> DOCKER[infrastructure/docker<br/>Dockerfile · docker-compose.yml]
 
     INFRA --> INFRA_PKGS[config · core · docker · documentation ·<br/>llm · orchestration · project · prose · publishing ·<br/>reference · rendering · reporting · scientific ·<br/>search · skills · steganography · validation]
 
     SCR --> SCR_FILES[bash_utils.sh ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 
-    PROJ --> PROJ_F[template_code_project · template_prose_project · template_search_project<br/>(rotating projects also live here)<br/>concrete paths use template_code_project]
+    PROJ --> PROJ_F["template_code_project · template_prose_project · template_search_project<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff

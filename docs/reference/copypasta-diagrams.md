@@ -12,25 +12,22 @@
 
 ```mermaid
 graph TB
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    subgraph "Research Project Template"
-        SRC[📁 projects/{name}/src/<br/>Core business logic<br/>Tested]
-        TESTS[🧪 projects/{name}/tests/<br/>Test suite<br/>coverage]
-        SCRIPTS[📜 projects/{name}/scripts/<br/>Thin orchestrators<br/>Use src/ methods]
-        MANUSCRIPT[📚 projects/{name}/manuscript/<br/>Research manuscript<br/>Cross-referenced]
-        PIPELINE[📊 scripts/\n<br/>Build pipeline<br/>Stage scripts]
-        OUTPUT[📤 projects/{name}/output/<br/>Generated files<br/>PDFs, figures, data]
+    subgraph RPT["Research Project Template"]
+        SRC["projects/{name}/src<br/>Core business logic<br/>Tested"]
+        TESTS["projects/{name}/tests<br/>Test suite<br/>coverage"]
+        SCRIPTS["projects/{name}/scripts<br/>Thin orchestrators<br/>Use src/ methods"]
+        MANUSCRIPT["projects/{name}/manuscript<br/>Research manuscript<br/>Cross-referenced"]
+        PIPE["scripts/<br/><br/>Build pipeline<br/>Stage scripts"]
+        OUTPUT["projects/{name}/output<br/>Generated files<br/>PDFs, figures, data"]
     end
     
-    subgraph "Thin Orchestrator Pattern"
-        SRC -->|"provides tested methods"| SCRIPTS
-        SCRIPTS -->|"import & use"| SRC
-        SCRIPTS -->|"generate"| OUTPUT
-        TESTS -->|"validate"| SRC
-    end
+    SRC -->|"provides tested methods"| SCRIPTS
+    SCRIPTS -->|"import and use"| SRC
+    SCRIPTS -->|"generate"| OUTPUT
+    TESTS -->|"validate"| SRC
     
-    subgraph "Build Pipeline"
-        RENDER[🚀 execute_pipeline.py<br/>Pipeline Orchestrator]
+    subgraph BPL["Build Pipeline"]
+        RENDER["execute_pipeline.py<br/>Pipeline Orchestrator"]
         RENDER -->|"runs tests"| TESTS
         RENDER -->|"executes scripts"| SCRIPTS
         RENDER -->|"builds PDFs"| OUTPUT
@@ -41,7 +38,7 @@ graph TB
     classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
     
-    class SRC,TESTS,SCRIPTS,MANUSCRIPT,REPO_UTILS core
+    class SRC,TESTS,SCRIPTS,MANUSCRIPT,PIPE core
     class SRC,SCRIPTS pattern
     class RENDER pipeline
     class OUTPUT output
@@ -51,15 +48,15 @@ graph TB
 
 ```mermaid
 flowchart TD
-    START([🚀 Start Development]) --> TESTS[🧪 Write Tests First]
-    TESTS --> IMPLEMENT[💻 Implement Functionality]
-    IMPLEMENT --> VALIDATE[✅ Run Tests & Check Coverage]
-    VALIDATE -->|Coverage below requirements| ADD_TESTS[➕ Add Missing Tests]
+    START(["Start Development"]) --> TESTS["Write Tests First"]
+    TESTS --> IMPLEMENT["Implement Functionality"]
+    IMPLEMENT --> VALIDATE["Run Tests and Check Coverage"]
+    VALIDATE -->|Coverage below requirements| ADD_TESTS["Add Missing Tests"]
     ADD_TESTS --> VALIDATE
-    VALIDATE -->|Coverage requirements met| INTEGRATION[🔗 Test Script Integration]
-    INTEGRATION --> DOCS[📚 Update Documentation]
-    DOCS --> PIPELINE[🚀 Run Pipeline]
-    PIPELINE --> SUCCESS[🎉 Development]
+    VALIDATE -->|Coverage requirements met| INTEGRATION["Test Script Integration"]
+    INTEGRATION --> DOCS["Update Documentation"]
+    DOCS --> PIPELINE["Run Pipeline"]
+    PIPELINE --> SUCCESS["Development complete"]
     
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
@@ -73,25 +70,24 @@ flowchart TD
 
 ```mermaid
 graph LR
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    subgraph "Input Sources"
-        SRC[📁 projects/{name}/src/ modules]
-        MD[📚 Markdown files]
-        PREAMBLE[📝 LaTeX preamble]
+    subgraph IN["Input Sources"]
+        SRC["projects/{name}/src/ modules"]
+        MD["Markdown files"]
+        PREAMBLE["LaTeX preamble"]
     end
     
-    subgraph "Processing Pipeline"
-        TESTS[🧪 Test validation]
-        SCRIPTS[📜 Script execution]
-        VALIDATION[✅ Markdown validation]
-        GLOSSARY[📖 Glossary generation]
+    subgraph PROC["Processing Pipeline"]
+        TESTS["Test validation"]
+        SCRIPTS["Script execution"]
+        VALIDATION["Markdown validation"]
+        GLOSSARY["Glossary generation"]
     end
     
-    subgraph "Generated Outputs"
-        FIGS[🖼️ Figures]
-        DATA[📊 Data files]
-        PDFS[📄 PDFs]
-        TEX[🔤 LaTeX exports]
+    subgraph GO["Generated Outputs"]
+        FIGS["Figures"]
+        DATA["Data files"]
+        PDFS["PDFs"]
+        TEX["LaTeX exports"]
     end
     
     SRC --> TESTS

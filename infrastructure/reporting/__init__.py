@@ -58,6 +58,14 @@ from .markdown_formatter import generate_markdown_report, run_test_summary_gener
 from .report_builder import generate_summary_report
 from .result_loaders import load_infrastructure_results, load_test_results
 
+# Project-agnostic interactive simulation dashboard (stdlib-only, no plotly dep)
+from .interactive_dashboard import (
+    Control,
+    InteractiveDashboard,
+    Invariant,
+    Panel,
+)
+
 
 # Optional imports: _dashboard_matplotlib requires matplotlib/plotly which may not be installed
 try:
@@ -100,4 +108,8 @@ __all__ = [
     "load_infrastructure_results",
     "run_test_summary_generation",
     "DASHBOARD_AVAILABLE",
+    "InteractiveDashboard",
+    "Panel",
+    "Control",
+    "Invariant",
 ]

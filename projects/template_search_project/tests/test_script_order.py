@@ -24,6 +24,9 @@ REPO_ROOT = PROJECT_ROOT.parent.parent
 
 # These are the analysis scripts the project ships. The order below is the
 # REQUIRED execution order; any change must also update ``scripts/AGENTS.md``.
+# ``zzz_build_dashboard.py`` runs LAST because it consumes
+# ``output/corpus.json`` (written by ``run_search_pipeline.py``) and
+# ``output/deep_search/aggregate.json`` (written by ``run_deep_search.py``).
 EXPECTED_ORDER: list[str] = [
     "run_deep_search.py",
     "run_search_pipeline.py",
@@ -31,6 +34,7 @@ EXPECTED_ORDER: list[str] = [
     "y_generate_search_figures.py",
     "z_generate_manuscript_variables.py",
     "zz_generate_review_report.py",
+    "zzz_build_dashboard.py",
 ]
 
 

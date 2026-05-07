@@ -26,25 +26,24 @@ The generic project template implements a **unified test-driven development para
 
 ```mermaid
 graph TB
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
-    subgraph "Development Components"
-        SRC[Source Code<br/>projects/{name}/src/]
-        TESTS[Tests<br/>projects/{name}/tests/]
-        SCRIPTS[Scripts<br/>projects/{name}/scripts/]
-        MANUSCRIPT[Manuscript<br/>projects/{name}/manuscript/]
+    subgraph DEV["Development Components"]
+        SRC["Source Code<br/>projects/{name}/src/"]
+        TESTS["Tests<br/>projects/{name}/tests/"]
+        SCRIPTS["Scripts<br/>projects/{name}/scripts/"]
+        MANUSCRIPT["Manuscript<br/>projects/{name}/manuscript/"]
     end
 
-    subgraph "Validation & Generation"
-        VALIDATION[Test Validation<br/>100% Coverage]
-        FIGURES[Figure Generation<br/>Using project src/ methods]
-        DATA[Data Generation<br/>Using project src/ methods]
-        MARKDOWN_VAL[Markdown Validation<br/>Images & References]
+    subgraph VALGEN["Validation and generation"]
+        VALIDATION["Test Validation<br/>100% coverage target"]
+        FIGURES["Figure Generation<br/>Using project src/ methods"]
+        DATA["Data Generation<br/>Using project src/ methods"]
+        MARKDOWN_VAL["Markdown Validation<br/>Images and references"]
     end
 
-    subgraph "Build Pipeline"
-        RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
-        PDFS[PDF Generation<br/>Individual + Combined]
-        LATEX[LaTeX Export<br/>For further processing]
+    subgraph PIPE["Build Pipeline"]
+        RENDER["execute_pipeline.py<br/>Pipeline Orchestrator"]
+        PDFS["PDF Generation<br/>Individual and combined"]
+        LATEX["LaTeX Export<br/>For further processing"]
     end
 
     SRC --> VALIDATION
@@ -69,7 +68,7 @@ graph TB
     classDef validation fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
 
-    class SRC,TESTS,SCRIPTS,MD component
+    class SRC,TESTS,SCRIPTS,MANUSCRIPT component
     class VALIDATION,FIGURES,DATA,MARKDOWN_VAL validation
     class RENDER,PDFS,LATEX pipeline
 ```
@@ -240,11 +239,11 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 
 ```mermaid
 flowchart LR
-    OUT[/output//]
-    OUT --> FIG[/figures/<br/>PNG · MP4 · SVG/]
-    OUT --> DATA[/data/<br/>CSV · NPZ · manifests/]
-    OUT --> PDF[/pdf/<br/>Individual + combined PDFs/]
-    OUT --> TEX[/tex/<br/>Exported LaTeX files/]
+    OUT[/output/]
+    OUT --> FIG[/figures<br/>PNG · MP4 · SVG/]
+    OUT --> DATA[/data<br/>CSV · NPZ · manifests/]
+    OUT --> PDF[/pdf<br/>Individual + combined PDFs/]
+    OUT --> TEX[/tex<br/>Exported LaTeX files/]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     class OUT,FIG,DATA,PDF,TEX d
@@ -315,10 +314,10 @@ This script:
 
 ```mermaid
 graph TD
-    OUTPUT[output/] --> FIGS[figures/<br/>PNG/MP4/SVG files]
-    OUTPUT --> DATA[data/<br/>CSV/NPZ files]
-    OUTPUT --> PDFS[pdf/<br/>Individual + Combined PDFs]
-    OUTPUT --> TEX[tex/<br/>Exported LaTeX files]
+    OUTPUT[output/] --> FIGS[figures<br/>PNG/MP4/SVG files]
+    OUTPUT --> DATA[data<br/>CSV/NPZ files]
+    OUTPUT --> PDFS[pdf<br/>Individual + Combined PDFs]
+    OUTPUT --> TEX[tex<br/>Exported LaTeX files]
 
     classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef files fill:#fff3e0,stroke:#e65100,stroke-width:2px

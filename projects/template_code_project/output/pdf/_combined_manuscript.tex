@@ -288,13 +288,15 @@ the repository's three foundational pillars:
 \tightlist
 \item
   \textbf{\texttt{infrastructure/} Layer (Root Directory)}: A modular
-  stack of sixteen subpackages (\texttt{config}, \texttt{core},
-  \texttt{docker}, \texttt{documentation}, \texttt{llm},
+  stack of fifteen Python subpackages (\texttt{core},
+  \texttt{documentation}, \texttt{llm}, \texttt{orchestration},
   \texttt{project}, \texttt{prose}, \texttt{publishing},
   \texttt{reference}, \texttt{rendering}, \texttt{reporting},
   \texttt{scientific}, \texttt{search}, \texttt{skills},
   \texttt{steganography}, \texttt{validation}) providing the
-  computational scaffolding.
+  computational scaffolding (the sibling \texttt{config/} and
+  \texttt{docker/} directories under \texttt{infrastructure/} are
+  configuration/data, not Python packages).
 \item
   \textbf{\texttt{tests/} Framework
   (\texttt{projects/template\_code\_project/tests/})}: An uncompromising
@@ -1163,7 +1165,7 @@ foundational pillars:
 \tightlist
 \item
   \textbf{\texttt{infrastructure} Ecosystem}: Fully leveraged the
-  16-module infrastructure cluster to handle scientific benchmarking,
+  15-package infrastructure cluster to handle scientific benchmarking,
   rendering, prose review, literature search, BibTeX validation, and
   reporting.
 \item
@@ -1369,7 +1371,7 @@ to isolate algorithmic scaling from problem conditioning effects.
 \item
   \textbf{Platform}: Darwin arm64
 \item
-  \textbf{Generated}: 2026-05-05T13:24:15Z
+  \textbf{Generated}: 2026-05-07T21:21:42Z
 \end{itemize}
 
 \subsection{Pipeline ordering}\label{pipeline-ordering}
@@ -1486,9 +1488,9 @@ Category & Count \\
 \bottomrule\noalign{}
 \endlastfoot
 Publication-quality figures & 6 \\
-Structured data files (CSV/JSON) & 2 \\
-Analysis reports & 6 \\
-\textbf{Total artifacts} & \textbf{14} \\
+Structured data files (CSV/JSON) & 3 \\
+Analysis reports & 8 \\
+\textbf{Total artifacts} & \textbf{17} \\
 \end{longtable}
 }
 

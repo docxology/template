@@ -7,14 +7,14 @@ Advanced validation tools for research documents, ensuring PDF integrity, markdo
 ```mermaid
 graph TD
     subgraph ValidationLayers["Validation Layers"]
-        CONTENT[Content Validation<br/>PDF & Markdown Structure<br/>Text extraction, references, equations]
+        CONTENT["Content Validation<br/>PDF and Markdown structure<br/>Text extraction, references, equations"]
         INTEGRITY[Integrity Validation<br/>File consistency, cross-references<br/>Academic standards compliance]
         QUALITY[Quality Assurance<br/>Documentation scanning<br/>Link validation, completeness checks]
     end
 
     subgraph ValidationModules["Validation Modules"]
         PDF_VAL[content/pdf_validator.py<br/>PDF rendering validation]
-        MD_VAL[content/content/content/markdown_validator.py<br/>Markdown structure validation]
+        MD_VAL["content/markdown_validator.py<br/>Markdown structure validation"]
         INTEGRITY_MOD[integrity/checks.py<br/>File integrity verification]
         DOC_SCAN[docs/scanner.py<br/>Documentation quality scanning]
         LINK_VAL[integrity/link_validator.py<br/>Link and reference validation]
@@ -53,11 +53,10 @@ graph TD
 
 ```mermaid
 flowchart LR
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph Sources["Input Sources"]
-        PDF_FILES[output/{project_name}/pdf/*.pdf<br/>Rendered manuscripts]
-        MD_FILES[projects/{project_name}/manuscript/*.md<br/>Research content]
-        OUTPUT_DIR[output/{project_name}/<br/>Generated artifacts]
+        PDF_FILES["output/{project_name}/pdf/*.pdf<br/>Rendered manuscripts"]
+        MD_FILES["projects/{project_name}/manuscript/*.md<br/>Research content"]
+        OUTPUT_DIR["output/{project_name}<br/>Generated artifacts"]
         CONFIG_FILES[config.yaml<br/>Project configuration]
     end
 
@@ -110,12 +109,11 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph BuildIntegration["Build Pipeline Integration"]
         A[Build Pipeline<br/>scripts/03_render_pdf.py]
         B[Generate PDF<br/>Render manuscript]
-        C[Validate PDF<br/>validate_pdf_rendering()]
-        D[Check Issues<br/>Review validation report]
+        C["Validate PDF<br/>validate_pdf_rendering"]
+        D["Check Issues<br/>Review validation report"]
         E{PDF Valid?}
         F[Continue Pipeline<br/>scripts/04_validate_output.py]
         G[Fail Build<br/>Stop with error]
@@ -123,9 +121,9 @@ flowchart TD
 
     subgraph QualityGates["Quality Gates"]
         H[Quality Gates<br/>scripts/04_validate_output.py]
-        I[Integrity Check<br/>verify_output_integrity()]
-        J[Completeness Check<br/>validate_output_structure()]
-        K[Cross-Ref Validation<br/>verify_cross_references()]
+        I["Integrity Check<br/>verify_output_integrity"]
+        J["Completeness Check<br/>validate_output_structure"]
+        K["Cross-Ref Validation<br/>verify_cross_references"]
         L{All Valid?}
         M[Copy Outputs<br/>scripts/05_copy_outputs.py]
         N[Report Issues<br/>Generate validation report]
@@ -219,7 +217,6 @@ print(generate_integrity_report(integrity_report))
 
 ```mermaid
 stateDiagram-v2
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     [*] --> InputValidation
     InputValidation --> ContentValidation: Valid inputs
     InputValidation --> Error: Invalid inputs
@@ -250,10 +247,10 @@ stateDiagram-v2
     IntegrityValidationComplete --> QualityAggregation
 
     QualityAggregation --> ReportGeneration
-    ReportGeneration --> [*]: Validation Error --> [*]: Validation Failed
+    ReportGeneration --> [*]
 
-    note right of ContentValidation : Parallel validation\nof different content types
-    note right of QualityAggregation : Aggregate all validation\nresults into report
+    note right of ContentValidation : Parallel validation<br/>of different content types
+    note right of QualityAggregation : Aggregate all validation<br/>results into report
 ```
 
 ## Validation Types & Capabilities

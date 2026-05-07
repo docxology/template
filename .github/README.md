@@ -177,12 +177,12 @@ Retired or sample projects are kept under [`projects_archive/`](../projects_arch
 
 ```mermaid
 flowchart LR
-    P[/projects/&lt;name&gt;//]
-    P --> SRC[/src/&lt;name&gt;/<br/>All domain logic · algorithms · analysis/]
-    P --> T[/tests/<br/>Real tests · no mocks · ≥ 90% coverage/]
-    P --> SC[/scripts/<br/>Thin orchestrators calling src//]
-    P --> M[/manuscript/<br/>Markdown chapters · config.yaml/]
-    P --> O[/output/<br/>Pipeline artifacts · generated/]
+    P[/projects/&lt;name&gt;/]
+    P --> SRC[/src/&lt;name&gt;<br/>All domain logic · algorithms · analysis/]
+    P --> T[/tests<br/>Real tests · no mocks · ≥ 90% coverage/]
+    P --> SC[/scripts<br/>Thin orchestrators calling src/]
+    P --> M[/manuscript<br/>Markdown chapters · config.yaml/]
+    P --> O[/output<br/>Pipeline artifacts · generated/]
     P --> AG[AGENTS.md<br/>AI-agent context for this project]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -196,36 +196,36 @@ flowchart LR
 ```mermaid
 graph TB
     subgraph Entry["🚀 Entry Points"]
-        RUNSH[./run.sh\nInteractive menu\nFull pipeline control]
-        RUNALL[uv run python scripts/execute_pipeline.py --core-only\nProgrammatic\nCore pipeline]
-        INDIVIDUAL[Individual Scripts\nscripts/00-07_*.py\nStage-specific execution]
+        RUNSH[./run.sh<br/>Interactive menu<br/>Full pipeline control]
+        RUNALL[uv run python scripts/execute_pipeline.py --core-only<br/>Programmatic<br/>Core pipeline]
+        INDIVIDUAL[Individual Scripts<br/>scripts/00-07_*.py<br/>Stage-specific execution]
     end
 
     subgraph Orchestration["⚙️ Orchestration Layer"]
-        SETUP[Environment Setup\nDependencies & validation]
-        TESTING[Test Execution\nCoverage requirements]
-        ANALYSIS[Script Discovery\nProject analysis execution]
-        RENDERING[PDF Generation\nManuscript compilation]
-        VALIDATION[Quality Assurance\nContent validation]
-        DELIVERY[Output Distribution\nFinal deliverables]
+        SETUP[Environment Setup<br/>Dependencies & validation]
+        TESTING[Test Execution<br/>Coverage requirements]
+        ANALYSIS[Script Discovery<br/>Project analysis execution]
+        RENDERING[PDF Generation<br/>Manuscript compilation]
+        VALIDATION[Quality Assurance<br/>Content validation]
+        DELIVERY[Output Distribution<br/>Final deliverables]
     end
 
     subgraph Core["🧠 Core Systems (DAG Engine)"]
-        INFRASTRUCTURE[Infrastructure Modules\n13 specialized modules\nValidation, rendering, LLM]
-        BUSINESS_LOGIC[Business Logic\nProject algorithms\n100% test coverage]
-        CONFIGURATION[Configuration System\nYAML + environment\nRuntime flexibility]
+        INFRASTRUCTURE[Infrastructure Modules<br/>13 specialized modules<br/>Validation, rendering, LLM]
+        BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
+        CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
     end
 
     subgraph Data["📊 Data Flow"]
-        SOURCE_CODE[Source Code\nPython modules\nAlgorithm implementation]
-        MANUSCRIPT_CONTENT[Manuscript Content\nMarkdown sections\nResearch writing]
-        GENERATED_OUTPUTS[Generated Outputs\nPDFs, figures, data\nResearch deliverables]
+        SOURCE_CODE[Source Code<br/>Python modules<br/>Algorithm implementation]
+        MANUSCRIPT_CONTENT[Manuscript Content<br/>Markdown sections<br/>Research writing]
+        GENERATED_OUTPUTS[Generated Outputs<br/>PDFs, figures, data<br/>Research deliverables]
     end
 
     subgraph Quality["✅ Quality Assurance"]
-        UNIT_TESTS[Unit Tests\nFunction validation\nReal data, no mocks]
-        INTEGRATION_TESTS[Integration Tests\nSystem validation\nEnd-to-end workflows]
-        VALIDATION_CHECKS[Content Validation\nQuality assurance\nAcademic standards]
+        UNIT_TESTS[Unit Tests<br/>Function validation<br/>Real data, no mocks]
+        INTEGRATION_TESTS[Integration Tests<br/>System validation<br/>End-to-end workflows]
+        VALIDATION_CHECKS[Content Validation<br/>Quality assurance<br/>Academic standards]
     end
 
     RUNSH --> Orchestration
@@ -275,32 +275,31 @@ stateDiagram-v2
 
 ```mermaid
 flowchart TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     subgraph Input["📥 Input Data"]
-        SOURCE_CODE[Source Code\nprojects/{name}/src/*.py\nAlgorithm implementations]
-        ANALYSIS_SCRIPTS[Analysis Scripts\nprojects/{name}/scripts/*.py\nWorkflow orchestrators]
-        MANUSCRIPT_FILES[Manuscript Files\nprojects/{name}/manuscript/*.md\nResearch content]
-        CONFIG_FILES[Configuration\nconfig.yaml\nRuntime parameters]
+        SOURCE_CODE["Source Code<br/>projects/{name}/src/*.py<br/>Algorithm implementations"]
+        ANALYSIS_SCRIPTS["Analysis Scripts<br/>projects/{name}/scripts/*.py<br/>Workflow orchestrators"]
+        MANUSCRIPT_FILES["Manuscript Files<br/>projects/{name}/manuscript/*.md<br/>Research content"]
+        CONFIG_FILES[Configuration<br/>config.yaml<br/>Runtime parameters]
     end
 
     subgraph Processing["⚙️ 10-Stage DAG Pipeline"]
-        STAGE0["Stage 0 — Clean\n(built-in / executor)"]
-        STAGE1["Stage 1 — Setup\n00_setup_environment.py"]
-        STAGE2["Stage 2 — Infra tests\n01_run_tests.py --infra-only"]
-        STAGE3["Stage 3 — Project tests\n01_run_tests.py --project-only"]
-        STAGE4["Stage 4 — Analysis\n02_run_analysis.py"]
-        STAGE5["Stage 5 — Render PDF\n03_render_pdf.py"]
-        STAGE6["Stage 6 — Validate\n04_validate_output.py"]
-        STAGE7["Stage 7 — LLM reviews\n06_llm_review.py --reviews-only"]
-        STAGE8["Stage 8 — LLM translations\n06_llm_review.py --translations-only"]
-        STAGE9["Stage 9 — Copy outputs\n05_copy_outputs.py"]
+        STAGE0["Stage 0 — Clean<br/>(built-in / executor)"]
+        STAGE1["Stage 1 — Setup<br/>00_setup_environment.py"]
+        STAGE2["Stage 2 — Infra tests<br/>01_run_tests.py --infra-only"]
+        STAGE3["Stage 3 — Project tests<br/>01_run_tests.py --project-only"]
+        STAGE4["Stage 4 — Analysis<br/>02_run_analysis.py"]
+        STAGE5["Stage 5 — Render PDF<br/>03_render_pdf.py"]
+        STAGE6["Stage 6 — Validate<br/>04_validate_output.py"]
+        STAGE7["Stage 7 — LLM reviews<br/>06_llm_review.py --reviews-only"]
+        STAGE8["Stage 8 — LLM translations<br/>06_llm_review.py --translations-only"]
+        STAGE9["Stage 9 — Copy outputs<br/>05_copy_outputs.py"]
     end
 
     subgraph Output["📤 Generated Outputs"]
-        PDF_DOCS[PDF Documents\noutput/{name}/pdf/*.pdf\nProfessional manuscripts]
-        FIGURES[Figures\noutput/{name}/figures/*.png\nPublication-quality plots]
-        DATA_FILES[Data Files\noutput/{name}/data/*.csv\nAnalysis results]
-        REPORTS[Reports\noutput/{name}/reports/*.md\nValidation summaries]
+        PDF_DOCS["PDF Documents<br/>output/{name}/pdf/*.pdf<br/>Professional manuscripts"]
+        FIGURES["Figures<br/>output/{name}/figures/*.png<br/>Publication-quality plots"]
+        DATA_FILES["Data Files<br/>output/{name}/data/*.csv<br/>Analysis results"]
+        REPORTS["Reports<br/>output/{name}/reports/*.md<br/>Validation summaries"]
     end
 
     SOURCE_CODE --> STAGE3
@@ -663,26 +662,37 @@ Documentation review reports and filepath audits.
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| [`ci.yml`](workflows/ci.yml) | push · PR · weekly · manual | 8 CI jobs (`fep-lean` runs only when `projects/fep_lean/lean/lean-toolchain` is present) |
+| [`ci.yml`](workflows/ci.yml) | push · PR · weekly · manual | **10 CI jobs** + conditional **`fep-lean`** when `projects/fep_lean/lean/lean-toolchain` exists |
 | [`stale.yml`](workflows/stale.yml) | Daily 01:00 UTC | Close inactive issues/PRs |
 | [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual | GitHub Release with changelog |
 
 ### CI Job Flow
 
 ```mermaid
-graph TD
-    L[Job 1: Lint & Type Check] --> VNM[Job 2: Verify No Mocks]
-    VNM --> TI[Job 3: Infra Tests]
-    VNM --> TP[Job 4: Project Tests]
-    VNM --> FL[Job 4b: fep_lean optional]
-    L --> VM[Job 5: Validate Manuscript]
-    L --> SS[Job 6: Security Scan]
-    TI --> PC[Job 7: Performance Check]
+flowchart TB
+    L[Lint and Type Check]
+    H[Unified Health Report informational]
+    VNM[Verify No Mocks]
+    TI[Infra Tests matrix]
+    TP[Project Tests matrix]
+    FL[fep_lean optional]
+    VM[Validate Manuscripts]
+    SS[Security Scan]
+    DL[Documentation Lint]
+    PC[Performance Check]
+    L --> H
+    L --> VNM
+    L --> VM
+    L --> SS
+    L --> DL
+    VNM --> TI
+    VNM --> TP
+    VNM --> FL
+    TI --> PC
     TP --> PC
-
-    style L fill:#f9f,stroke:#333,stroke-width:2px
-    style PC fill:#bbf,stroke:#333,stroke-width:2px
 ```
+
+See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-audit` ignore file, `bandit.yaml`, `01_run_tests.py`).
 
 ### Quality Gates
 
@@ -692,25 +702,36 @@ graph TD
 | Formatting | Ruff | zero diffs |
 | Type safety | mypy | no errors |
 | No mocks | `verify_no_mocks.py` | zero mock usage |
+| Exports audit | `infrastructure.skills check-all-exports` | zero violations |
 | Infra coverage | pytest-cov | **≥ 60%** |
 | Project coverage | pytest-cov | **≥ 90%** |
-| Security | Bandit MEDIUM+ | zero findings |
+| pip-audit | blocking | zero unignored vulns |
+| Security | Bandit `-c bandit.yaml` MEDIUM+ | zero findings |
+| Docs lint | `scripts/lint_docs.py` | clean |
 | Performance | import timer | **≤ 5 s** |
 
 ### Simulate CI Locally
 
 ```bash
-# Lint + format check
-uv run ruff check infrastructure/ projects/*/src/
-uv run ruff format --check infrastructure/ projects/*/src/
+# Lint + format check (mirror CI)
+uvx ruff check infrastructure/ projects/*/src/
+uvx ruff format --check infrastructure/ projects/*/src/
+uv run mypy infrastructure/ projects/*/src/
 
 # Tests (skip Ollama-requiring tests)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/template_code_project/tests/ --cov-fail-under=90 -m "not requires_ollama"
+uv sync --group rendering --group monitoring --group discopy
+COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
 
-# Security
-uv run pip-audit
-uv run bandit -r -ll infrastructure/ scripts/ projects/ \
+# Security (mirror CI)
+IGNORE_ARGS=()
+while IFS= read -r raw || [ -n "$raw" ]; do
+  [[ "$raw" =~ ^[[:space:]]*# ]] && continue
+  line="${raw%%#*}"; line="$(echo "$line" | xargs)"
+  [ -z "$line" ] || IGNORE_ARGS+=(--ignore-vuln "$line")
+done < .github/pip-audit-ignore.txt
+uv run pip-audit "${IGNORE_ARGS[@]}"
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ \
   --exclude projects_archive,projects_in_progress
 ```
 
@@ -723,7 +744,8 @@ Required status checks:
   Lint & Type Check
   Infra Tests (ubuntu-latest, Python 3.10/3.11/3.12)
   Project Tests (ubuntu-latest, Python 3.10/3.11/3.12)
-  Validate Manuscripts · Security Scan · Performance Check
+  Validate Manuscripts · Security Scan · Documentation Lint · Performance Check
+  # Optional informational artefact: Unified Health Report (informational)
   # Optional: fep_lean (gauss + lake) — only when that job runs (skipped if fep_lean not in projects/)
 
 Require PR review before merging: 1 approver

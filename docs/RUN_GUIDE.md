@@ -16,7 +16,7 @@ The Research Project Template follows a **thin orchestrator pattern** where all 
 ```mermaid
 flowchart TB
     UI["User Interface<br/>run.sh → execute_pipeline.py → PipelineExecutor"]
-    ORCH["Orchestration Layer<br/>scripts/00_*.py … scripts/07_*.py → infrastructure/<br/>projects/&lt;name&gt;/scripts/*.py → projects/&lt;name&gt;/src/"]
+    ORCH["Orchestration Layer<br/>scripts/00_*.py … scripts/07_*.py → infrastructure<br/>projects/&lt;name&gt;/scripts/*.py → projects/&lt;name&gt;/src/"]
     LOGIC["Business Logic<br/>infrastructure/ (reusable) + projects/&lt;name&gt;/src/ (custom)"]
 
     UI -- delegates to --> ORCH
@@ -55,7 +55,6 @@ flowchart TB
 
 ```mermaid
 graph TD
-%% noqa: docs-lint — pre-existing diagram, see TO-DO MED4 follow-up to repair syntax
     A[User] --> B[run.sh]
     B --> C[execute_pipeline.py]
     C --> D[PipelineExecutor]
@@ -69,8 +68,8 @@ graph TD
     G --> K[infrastructure.core.runtime.script_discovery]
     H --> L[infrastructure.rendering.RenderManager]
 
-    K --> M[projects/{name}/scripts/*.py]
-    M --> N[projects/{name}/src/]
+    K --> M["projects/{name}/scripts/*.py"]
+    M --> N["projects/{name}/src/"]
 ```
 
 ### Benefits

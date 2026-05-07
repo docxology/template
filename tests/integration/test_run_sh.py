@@ -39,39 +39,44 @@ def test_script_exists(script_path: Path) -> None:
 
 
 def test_help_option(script_path: Path) -> None:
+    """``run.sh`` forwards to ``python -m infrastructure.orchestration`` (argparse)."""
     result = run_script(script_path, ["--help"])
     assert result.returncode == 0
-    assert "USAGE" in result.stdout  # Help text uses uppercase headers
-    assert "--pipeline" in result.stdout
-    assert "--project" in result.stdout or "project" in result.stdout.lower()
+    assert "usage:" in result.stdout.lower()
+    assert "pipeline" in result.stdout
+    pl = run_script(script_path, ["pipeline", "--help"])
+    assert pl.returncode == 0
+    assert "--project" in pl.stdout
 
 
 def test_invalid_option(script_path: Path) -> None:
     result = run_script(script_path, ["--invalid-option"])
-    assert result.returncode == 1
+    assert result.returncode == 2
     combined = (result.stdout or "") + (result.stderr or "")
-    assert "Unknown option: --invalid-option" in combined
+    assert "unrecognized arguments: --invalid-option" in combined
 
 
 def test_project_option_missing_value(script_path: Path) -> None:
-    result = run_script(script_path, ["--project"])
-    assert result.returncode == 1
+    result = run_script(script_path, ["pipeline", "--project"])
+    assert result.returncode == 2
     combined = (result.stdout or "") + (result.stderr or "")
-    assert "Missing project name after --project" in combined
+    assert "expected one argument" in combined
 
 
 def test_project_option_invalid_project(script_path: Path) -> None:
-    result = run_script(script_path, ["--project", "nonexistent_project_name_12345"])
+    result = run_script(script_path, ["pipeline", "--project", "nonexistent_project_name_12345"])
     assert result.returncode == 1
     combined = (result.stdout or "") + (result.stderr or "")
-    assert "Project 'nonexistent_project_name_12345' not found" in combined
+    assert "nonexistent_project_name_12345" in combined
+    assert "not found" in combined
 
 
 def test_pipeline_resume_without_pipeline(script_path: Path) -> None:
+    """``--resume`` is only defined on the ``pipeline`` subcommand, not at top level."""
     result = run_script(script_path, ["--resume"])
-    assert result.returncode == 1
+    assert result.returncode == 2
     combined = (result.stdout or "") + (result.stderr or "")
-    assert "--resume must be used with --pipeline" in combined
+    assert "unrecognized arguments: --resume" in combined
 
 
 def test_all_projects_help(script_path: Path) -> None:
