@@ -23,7 +23,11 @@ Just cloned the repo? Do this:
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
+**Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration).
+
 **Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) (overview) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
+
+**Local hooks:** After `uv sync`, run `pre-commit install` and `pre-commit install --hook-type pre-push` to mirror Ruff, mypy, Bandit, and smoke tests locally (see [`.pre-commit-config.yaml`](.pre-commit-config.yaml)).
 
 A system for research and development projects. This template provides a test-driven structure with automated PDF generation, professional documentation, and validated build pipelines.
 
@@ -445,6 +449,7 @@ and CI-gated quality. Full benefits + rationale:
 
 | Task | Start here |
 | --- | --- |
+| **Assistants / Cursor** | [`.cursorrules`](.cursorrules), [`CLAUDE.md`](CLAUDE.md), [`AGENTS.md`](AGENTS.md#for-assistants-and-automation) |
 | Write documents | [`docs/guides/getting-started.md`](docs/guides/getting-started.md), [`docs/usage/markdown-template-guide.md`](docs/usage/markdown-template-guide.md) |
 | Add figures | [`docs/guides/figures-and-analysis.md`](docs/guides/figures-and-analysis.md), [`docs/usage/visualization-guide.md`](docs/usage/visualization-guide.md) |
 | Fix issues | [`docs/operational/troubleshooting/README.md`](docs/operational/troubleshooting/README.md), [`docs/reference/faq.md`](docs/reference/faq.md) |

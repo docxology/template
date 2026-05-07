@@ -101,7 +101,6 @@ projects_in_progress/
 /.claude
 .cursor/mcp.json
 .codex/config.toml
-.cursorrules
 /virtual
 .windsurfrules
 .mcp.json

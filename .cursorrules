@@ -1,0 +1,54 @@
+# Cursor and IDE agents — repository guidance
+
+Use this file together with **[README.md](README.md)** (onboarding),
+**[CLAUDE.md](CLAUDE.md)** (commands and patterns for Claude Code), and
+**[AGENTS.md](AGENTS.md)** (full system reference, troubleshooting, configuration).
+
+## What to read first
+
+| Goal | Primary doc |
+| --- | --- |
+| Clone → run pipeline | [README.md](README.md) Quickstart, [docs/RUN_GUIDE.md](docs/RUN_GUIDE.md) |
+| Exact shell commands, CI mirror, examples | [CLAUDE.md](CLAUDE.md) |
+| Pipeline stages, validation, multi-project rules, deep TOC | [AGENTS.md](AGENTS.md) |
+| Directory-specific APIs and conventions | `AGENTS.md` / `README.md` in that directory |
+| Authoritative project names (rotating roster) | [docs/_generated/active_projects.md](docs/_generated/active_projects.md) |
+| Live counts and coverage claims | [docs/_generated/canonical_facts.md](docs/_generated/canonical_facts.md) |
+
+## Architecture (non-negotiable)
+
+- **Thin orchestrators:** Business logic belongs only in `infrastructure/` (generic)
+  or `projects/{name}/src/` (domain). Root `scripts/` and `projects/{name}/scripts/`
+  coordinate I/O, subprocesses, and plotting — they call tested functions; they do
+  not own algorithms.
+- **Layer 1:** `infrastructure/`, repo `scripts/`, `tests/infra_tests/`.
+- **Layer 2:** Each active project under `projects/<name>/` with `src/`, `tests/`,
+  `manuscript/`, `scripts/`, `output/`. Final deliverables are copied to `output/<name>/`.
+- **Canonical exemplars** (always tracked): `template_code_project`, `template_prose_project`,
+  `template_search_project`. Do not assume other folder names under `projects/` exist in
+  every checkout; use discovery output above.
+
+## Tooling
+
+- **Python / deps:** `uv sync` at repo root. Prefer `uv run …` for every tool.
+- **Pre-commit (matches CI lint for Python):** `ruff` + `mypy` on `infrastructure/`
+  and `projects/*/src/`; **pre-push** adds no-mocks check, fast pytest smoke, Bandit
+  (`bandit.yaml`), skills manifest check. See [.pre-commit-config.yaml](.pre-commit-config.yaml).
+- **Tests:** No mocks (`unittest.mock`, `MagicMock`, `mocker.patch`, etc.). Use real data,
+  temp files, `pytest-httpserver` for HTTP, subprocess for CLIs. Infra coverage floor 60%,
+  project src floor 90% (unless CI documents an exception for a rotating project).
+
+## Editing discipline
+
+- Prefer **registry-backed** manuscript figures, equations, and variables over hard-coded
+  numbers in prose when the project defines injectors.
+- After layout or discovery changes, regenerate `docs/_generated/active_projects.md` when
+  docs must list projects: `uv run python scripts/generate_active_projects_doc.py`.
+- Keep stage numbering and pipeline phrasing aligned across README, CLAUDE, AGENTS, and
+  `infrastructure/core/pipeline/pipeline.yaml`.
+- Touch only files and behaviour the user requested; avoid drive-by refactors.
+
+## Security and secrets
+
+- Follow [docs/rules/security.md](docs/rules/security.md) and [bandit.yaml](bandit.yaml).
+- Do not commit secrets, API keys, or machine-local paths into shared docs.

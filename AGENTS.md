@@ -15,10 +15,27 @@ This document provides documentation for the Research Project Template system, e
 
 | Entry | Role |
 | --- | --- |
-| [`README.md`](README.md) | Human onboarding, badges, quick paths |
-| [`CLAUDE.md`](CLAUDE.md) | Claude Code: commands, architecture, constraints |
+| [`README.md`](README.md) | Onboarding, documentation hub links, exemplar table |
+| [`.cursorrules`](.cursorrules) | Cursor agents: layer rules, CI scope, editing discipline |
+| [`CLAUDE.md`](CLAUDE.md) | Command cheat sheet, patterns; keep in sync with this file for pipeline wording |
+| **This file (`AGENTS.md`)** | Full reference: stages, validation, modules, troubleshooting |
+| [`docs/documentation-index.md`](docs/documentation-index.md) | Flat index of long-lived docs |
+| [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) | Authoritative `projects/` names — never hard-code rotating paths in docs |
+| [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) | Measured coverage and counts; refresh after changing gates or discovery |
 | [`.github/README.md`](.github/README.md) | GitHub: CI overview, templates, Dependabot |
-| [`.github/AGENTS.md`](.github/AGENTS.md) | Actions job names, coverage gates, branch protection hints |
+| [`.github/AGENTS.md`](.github/AGENTS.md) | Actions job names, coverage gates, local reproduction commands |
+
+## For assistants and automation
+
+**Read order:** [`README.md`](README.md) → [`CLAUDE.md`](CLAUDE.md) → this file for anything not covered there.
+
+**Ground truth:** Active project names come from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`). Measured numbers for documentation claims belong in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md); avoid inventing statistics.
+
+**Definition of done (code):** Ruff + mypy clean on `infrastructure/` and `projects/*/src/`; tests exercise real behaviour (no mocks); coverage still meets 60% (infra) / 90% (project `src/`) unless CI documents a rotating-project exception ([`.github/AGENTS.md`](.github/AGENTS.md)).
+
+**Hooks:** [`.pre-commit-config.yaml`](.pre-commit-config.yaml) — commit stage runs Ruff and mypy; pre-push adds no-mocks verification, a short pytest smoke module, Bandit (`-c bandit.yaml`, exclusions in YAML), and `infrastructure.skills check` + `check-all-exports`. Install: `pre-commit install` and `pre-commit install --hook-type pre-push` after `uv sync`.
+
+**Architecture:** Business logic only in `infrastructure/` or `projects/{name}/src/`. Scripts orchestrate; violating this breaks the test and documentation contract ([Thin orchestrator pattern](#thin-orchestrator-pattern)).
 
 ## Learned User Preferences
 
@@ -46,6 +63,8 @@ This document provides documentation for the Research Project Template system, e
 - `projects_in_progress/cognitive_integrity/`: pass the program segment in `--project` (e.g. `cognitive_integrity/cogsec_multiagent_1_theory`); bare `cogsec_multiagent_*` resolves under `projects/` and will not find the WIP tree—same `resolve_project_root` rule as other nested `projects_in_progress` layouts.
 
 ## 📋 Table of Contents
+
+**Assistants:** [For assistants and automation](#for-assistants-and-automation)
 
 1. [Core Architecture](#core-architecture)
 2. [Directory-Level Documentation](#directory-level-documentation)

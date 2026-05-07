@@ -6,6 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a research project template with a test-driven development workflow, automated PDF generation, and multi-project support. It uses a two-layer architecture separating generic infrastructure (Layer 1) from project-specific code (Layer 2), following a thin orchestrator pattern.
 
+### How this file fits with other entry points
+
+| File | Use when you need |
+| --- | --- |
+| [`README.md`](README.md) | First-time setup, documentation map, contributor links |
+| **This file (`CLAUDE.md`)** | Copy-paste commands, CI parity, common code patterns |
+| [`AGENTS.md`](AGENTS.md) | Full pipeline semantics, validation, configuration reference, troubleshooting index |
+| [`.cursorrules`](.cursorrules) | Cursor-focused agent rules (overlap with this file by design) |
+| [`.github/AGENTS.md`](.github/AGENTS.md) | Exact CI job names, coverage thresholds, branch protection hints |
+
 ## Quick Reference
 
 | Task | Command |
@@ -18,6 +28,11 @@ This is a research project template with a test-driven development workflow, aut
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
 | Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`; add `--group monitoring` to mirror CI extras) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
+| Ruff (CI scope) | `uvx ruff check infrastructure/ projects/*/src/ --fix && uvx ruff format infrastructure/ projects/*/src/` |
+| Mypy (CI scope) | `uv run mypy infrastructure/ projects/*/src/` |
+| Bandit (CI / security job) | `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` (exclusions in `bandit.yaml` → `exclude_dirs`) |
+| Pre-commit (lint stage) | `pre-commit run --all-files` |
+| Pre-push hooks | `pre-commit run --hook-stage pre-push --all-files` |
 
 ### CI mirror (GitHub Actions)
 
@@ -79,9 +94,13 @@ uv sync
 uv run python scripts/manage_workspace.py status
 uv run python scripts/manage_workspace.py add <package> --project <name>
 
-# Linting and type checking
-uv run mypy infrastructure/ projects/template_code_project/src/
-uv run bandit -r infrastructure/
+# Linting and type checking (mirror CI `lint` job)
+uvx ruff check infrastructure/ projects/*/src/ --fix
+uvx ruff format infrastructure/ projects/*/src/
+uv run mypy infrastructure/ projects/*/src/
+
+# Security scan (mirror CI `security` job Bandit step)
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 
 # Validate markdown
 uv run python -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
@@ -515,9 +534,14 @@ uv run python scripts/03_render_pdf.py --project {name}
 ## Documentation Resources
 
 - **README.md** - Project overview and quick start
+- **.cursorrules** - Cursor agent rules (overlap with this file on commands and architecture)
 - **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
-- **.github/README.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates
+- **.github/README.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates; local parity via **`.pre-commit-config.yaml`**
 - **RUN_GUIDE.md** - Pipeline execution documentation
+- **docs/core/architecture.md** - Detailed architecture guide
+- **docs/core/workflow.md** - Development workflow details
+- **docs/core/how-to-use.md** - Usage guide (12 skill levels)
+- **docs/documentation-index.md** - Documentation inventory (authoritative file list)
 - **docs/core/architecture.md** - Detailed architecture guide
 - **docs/core/workflow.md** - Development workflow details
 - **docs/core/how-to-use.md** - Usage guide (12 skill levels)
@@ -527,6 +551,7 @@ uv run python scripts/03_render_pdf.py --project {name}
 
 - All files in `output/` are disposable and regeneratable
 - Never commit generated outputs to version control
+- Install **pre-commit** hooks after `uv sync` so Ruff, mypy, Bandit, and push-time checks run locally (see `.pre-commit-config.yaml`)
 - Always run tests before committing changes
 - Follow thin orchestrator pattern strictly
 - No mocks allowed in tests (use `pytest-httpserver` for HTTP, real files for I/O)

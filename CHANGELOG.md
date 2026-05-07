@@ -11,6 +11,12 @@ not to the contents of any specific workspace.
 
 ### Changed
 
+- **Entry-point docs** — Expanded [`.cursorrules`](.cursorrules) (now tracked),
+  [`README.md`](README.md), [`CLAUDE.md`](CLAUDE.md), and [`AGENTS.md`](AGENTS.md)
+  with clearer roles, pre-commit/CI commands, `_generated/` ground truth, and an
+  **For assistants** section in `AGENTS.md`. Removed `.cursorrules` from
+  [`.gitignore`](.gitignore).
+
 - **Bandit** — `bandit.yaml` now sets `exclude_dirs` for `projects_archive`,
   `projects_in_progress`, `.venv`, and `site-packages` so pre-push/CICD scans
   authored code only (local per-project virtualenvs no longer trigger
