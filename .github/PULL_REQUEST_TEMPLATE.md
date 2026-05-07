@@ -96,5 +96,5 @@ Example: uv run pytest output summary.
 - [ ] `AGENTS.md` and `README.md` updated in the affected directories.
 - [ ] All code is PEP8 compliant (Ruff check/format passed).
 - [ ] Mypy type checking passes with zero errors.
-- [ ] Security scan reveals no new issues (`uv run pip-audit` with ignores from `.github/pip-audit-ignore.txt`; `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress`).
+- [ ] Security scan reveals no new issues (`uv run pip-audit` with ignores from `.github/pip-audit-ignore.txt`; `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` — exclusions in `bandit.yaml`).
 - [ ] Commits follow project conventions (e.g., 'feat:', 'fix:', 'docs:').

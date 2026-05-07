@@ -20,7 +20,7 @@ run when this file was last edited.
 | `mypy --strict infrastructure/` | **0 errors / 327 files** | `uv run mypy --strict infrastructure/` |
 | `ruff check` (infra + canonical project src) | **clean** | `uvx ruff check infrastructure/ projects/template_code_project/src/` |
 | `ruff format --check` | **325/325 already formatted** | `uvx ruff format --check infrastructure/ projects/template_code_project/src/` |
-| Bandit `-ll` (with `bandit.yaml` allow-list) | **HIGH 0 · MEDIUM 0 · LOW 0** | `uv run bandit -r -ll -c bandit.yaml infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress` |
+| Bandit `-ll` (with `bandit.yaml` allow-list) | **HIGH 0 · MEDIUM 0 · LOW 0** | `uv run bandit -r -ll -c bandit.yaml infrastructure/ scripts/ projects/` (`exclude_dirs` in `bandit.yaml`) |
 | Bandit strict-LOW pass | **0 unsuppressed** | `uv run bandit -c bandit.yaml -r --severity-level low …` |
 | `pip-audit` CI gate | **blocking** (allow-list: `.github/pip-audit-ignore.txt`; retries in CI) | `.github/workflows/ci.yml` → job `security` |
 | Zero-Mock Policy (`scripts/verify_no_mocks.py`) | **clean** | `uv run python scripts/verify_no_mocks.py` |

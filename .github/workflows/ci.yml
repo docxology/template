@@ -495,7 +495,6 @@ jobs:
           infrastructure/
           scripts/
           projects/
-          --exclude projects_archive,projects_in_progress
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 6b — Documentation Lint (mermaid + cross-links + consistency)

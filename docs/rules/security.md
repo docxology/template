@@ -188,9 +188,11 @@ uv tool install safety && safety check
 ### Local pre-push security gate
 
 `.pre-commit-config.yaml` ships a `bandit-quick` hook that mirrors the CI
-`security` job's Bandit step (`-ll` MEDIUM+ severity on `infrastructure/` and
-`scripts/`, with `projects_archive`/`projects_in_progress` excluded and
-`bandit.yaml`'s LOW-allow-list applied). It runs on the **pre-push** stage
+`security` job's Bandit step (`-ll` MEDIUM+ severity on `infrastructure/`,
+`scripts/`, and `projects/`, with path exclusions declared in `bandit.yaml`
+`exclude_dirs` — archive/WIP roots plus `.venv` / `site-packages` so local
+dependency trees are not scanned — and with `bandit.yaml`'s LOW-allow-list
+applied). It runs on the **pre-push** stage
 only (so `git commit` stays fast) and fails the push on any new MEDIUM/HIGH
 finding — same scope, same severity, same message text as CI. A
 `skills-check` pre-push hook also runs `python -m infrastructure.skills

@@ -9,6 +9,14 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Changed
+
+- **Bandit** — `bandit.yaml` now sets `exclude_dirs` for `projects_archive`,
+  `projects_in_progress`, `.venv`, and `site-packages` so pre-push/CICD scans
+  authored code only (local per-project virtualenvs no longer trigger
+  multi-minute runs). CI, pre-commit, and docs use the same config via `-c
+  bandit.yaml` without a separate `--exclude` CLI list.
+
 ### Added
 
 - **Interactive simulation dashboards** — new project-agnostic infrastructure

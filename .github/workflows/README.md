@@ -83,8 +83,7 @@ while IFS= read -r raw || [ -n "$raw" ]; do
   [ -z "$line" ] || IGNORE_ARGS+=(--ignore-vuln "$line")
 done < .github/pip-audit-ignore.txt
 uv run pip-audit "${IGNORE_ARGS[@]}"
-uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ \
-  --exclude projects_archive,projects_in_progress
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 ```
 
 ## Stale Workflow (`stale.yml`)

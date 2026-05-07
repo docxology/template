@@ -1,7 +1,17 @@
 # Bandit configuration for the template research repository.
 #
+# exclude_dirs: skip third-party and non-authored trees so local pre-push stays
+# fast when developers keep per-project `.venv/` trees under `projects/` (tens
+# of thousands of `.py` files otherwise). Same policy in CI (harmless no-ops
+# when those dirs are absent on a clean checkout).
+exclude_dirs:
+  - "projects_archive"
+  - "projects_in_progress"
+  - ".venv"
+  - "site-packages"
+#
 # Policy: CI runs Bandit at MEDIUM+ severity (`-ll`) over `infrastructure/`,
-# `scripts/`, and `projects/`. The skips below silence LOW-severity findings
+# `scripts/`, and `projects/` (minus `exclude_dirs` above). The skips below silence LOW-severity findings
 # that are systemically safe in this codebase, so a stricter scan
 # (`bandit -r --severity-level low`) also runs clean. Documented at
 # `docs/rules/security.md` and `.github/AGENTS.md`.

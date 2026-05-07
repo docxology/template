@@ -3,8 +3,9 @@
 #   mypy on the same paths (see `[tool.mypy]` in pyproject.toml)
 #
 # Pre-push (fast): no-mocks script + pytest on `tests/infra_tests/git_hook_smoke/`,
-# Bandit MEDIUM+ on the same scope as the CI `security` job, and a stale-manifest
-# check via `infrastructure.skills check`. Full infra tests run in CI
+# Bandit MEDIUM+ (`bandit.yaml`, including `exclude_dirs` for archive/WIP roots
+# and local `.venv` / `site-packages` trees), and a stale-manifest check via
+# `infrastructure.skills check`. Full infra tests run in CI
 # (`test-infra`); collecting all of `tests/infra_tests/` here is too slow for
 # every push (~thousands of tests).
 #
@@ -65,8 +66,9 @@ repos:
 
       # Mirrors the CI `security` job's Bandit step
       # (.github/workflows/ci.yml — "Code security scan (Bandit MEDIUM+ severity)").
-      # Same scope and severity gate (`-ll` = MEDIUM+); fails the push when a new
-      # MEDIUM/HIGH finding lands so contributors hear it locally before CI does.
+      # Same scope and severity gate (`-ll` = MEDIUM+); exclusions are configured
+      # in `bandit.yaml` (`exclude_dirs`). Fails the push when a new MEDIUM/HIGH
+      # finding lands so contributors hear it locally before CI does.
       # `-c bandit.yaml` applies the documented LOW-severity allow-list policy.
       - id: bandit-quick
         name: bandit MEDIUM+ (CI scope)
@@ -78,7 +80,6 @@ repos:
           - >-
             uv run bandit -c bandit.yaml -r -ll
             infrastructure/ scripts/ projects/
-            --exclude projects_archive,projects_in_progress
             -q
         language: system
         pass_filenames: false
@@ -135,7 +136,6 @@ repos:
           - >-
             uv run bandit -c bandit.yaml -r --severity-level low
             infrastructure/ scripts/
-            --exclude projects_archive,projects_in_progress
             -q
         language: system
         pass_filenames: false

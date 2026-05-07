@@ -324,6 +324,10 @@ module = "projects.what_is_cogsec.*"
 ignore_errors = true
 
 [tool.bandit]
+# Exclusions for paths (mirrors `exclude_dirs` in `bandit.yaml`). CI and
+# pre-commit use `-c bandit.yaml`; this block keeps ad-hoc `bandit -c pyproject.toml`
+# runs aligned.
+exclude_dirs = ["projects_archive", "projects_in_progress", ".venv", "site-packages"]
 # B101: assert_used — asserts are used as internal invariants in infrastructure code.
 # Suppressing B101 reduces noise without compromising security review of real issues.
 skips = ["B101"]

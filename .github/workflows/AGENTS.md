@@ -132,7 +132,7 @@ flowchart TB
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **pip-audit:** blocking; builds `--ignore-vuln` args from [`.github/pip-audit-ignore.txt`](../pip-audit-ignore.txt); retries up to **3** times with backoff on failure (transient OSV/network issues)
-- **bandit:** `bandit -c bandit.yaml -r -ll`, covers `infrastructure/`, `scripts/`, `projects/`; excludes `projects_archive/` and `projects_in_progress/`
+- **bandit:** `bandit -c bandit.yaml -r -ll`, covers `infrastructure/`, `scripts/`, `projects/`; path exclusions are in `bandit.yaml` (`exclude_dirs`, including archive/WIP roots and `.venv` / `site-packages` so local trees are not scanned)
 
 #### 9. Documentation Lint (`docs-lint`)
 
@@ -237,8 +237,7 @@ while IFS= read -r raw || [ -n "$raw" ]; do
   IGNORE_ARGS+=(--ignore-vuln "$line")
 done < .github/pip-audit-ignore.txt
 uv run pip-audit "${IGNORE_ARGS[@]}"
-uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ \
-  --exclude projects_archive,projects_in_progress
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 ```
 
 ---

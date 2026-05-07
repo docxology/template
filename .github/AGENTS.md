@@ -62,7 +62,7 @@ flowchart TB
 | 9 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
 | 10 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
 
-**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate). **`validate`** runs manuscript markdown validation, `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, `projects/` (excluding archive/WIP trees).
+**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate). **`validate`** runs manuscript markdown validation, `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (`projects_archive/`, `projects_in_progress/`, and local `.venv/` / `site-packages` trees) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when `hashFiles('projects/fep_lean/lean/lean-toolchain') != ''` (otherwise skipped). When fep_lean lives under `projects_in_progress/`, the guard evaluates to empty and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate CI.
 
@@ -109,7 +109,7 @@ would fail CI fail locally first:
 | Hook id | Mirrors CI step | Typical runtime |
 | --- | --- | :-: |
 | `pre-push-quick` | `verify-no-mocks` + a fast subset of `test-infra` (`tests/infra_tests/git_hook_smoke/`) | ~3 s |
-| `bandit-quick` | `security` job Bandit step (`-c bandit.yaml -r -ll`, `infrastructure/` + `scripts/` + `projects/`, same excludes) | variable |
+| `bandit-quick` | `security` job Bandit step (`-c bandit.yaml -r -ll`, `infrastructure/` + `scripts/` + `projects/`, `exclude_dirs` in `bandit.yaml`) | ~5–30 s |
 | `skills-check` | `infrastructure.skills check` (catches stale `.cursor/skill_manifest.json`) | <1 s |
 
 The lint hooks (`ruff-ci`, `mypy-ci`) run on the **pre-commit** stage, not
@@ -178,9 +178,9 @@ uv run coverage xml -o coverage-project.xml
 IGNORE_ARGS=()
 while IFS= read -r raw; do [[ "$raw" =~ ^[[:space:]]*# ]] && continue; line="${raw%%#*}"; line="$(echo "$line" | xargs)"; [ -z "$line" ] || IGNORE_ARGS+=(--ignore-vuln "$line"); done < .github/pip-audit-ignore.txt
 uv run pip-audit "${IGNORE_ARGS[@]}"
-uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/ --exclude projects_archive,projects_in_progress
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 # Strict LOW+MEDIUM+HIGH sweep against the documented allow-list:
-uv run bandit -c bandit.yaml -r --severity-level low infrastructure/ scripts/ --exclude projects_archive,projects_in_progress
+uv run bandit -c bandit.yaml -r --severity-level low infrastructure/ scripts/
 
 # Check workflow status via GitHub CLI
 gh workflow list
