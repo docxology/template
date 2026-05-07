@@ -102,7 +102,6 @@ projects_in_progress/
 .cursor/mcp.json
 .codex/config.toml
 .cursorrules
-/.dotscope
 /virtual
 .windsurfrules
 .mcp.json
