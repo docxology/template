@@ -75,6 +75,35 @@ run when this file was last edited.
   **Incremental check:** After each diagram fix, the two commands above should
   still pass (no new `noqa` lines).
 
+* **GH-HYGIENE-1 — GitHub supply-chain & process hardening.**
+
+  **Problem:** workflow/process gaps surfaced by the `.github` audit.
+
+  **In scope (each is independent, ~½–2 h):**
+
+  | Sub | Item | Why |
+  | --- | --- | --- |
+  | a | SHA-pin every `uses:` action in `ci.yml`/`release.yml`/`stale.yml` (full 40-char SHA + `# vX.Y.Z`), let Dependabot bump | Mutable tags are force-pushable (supply-chain) |
+  | b | Add an `actionlint` CI job (`needs: []`, `contents: read`) | Would have caught the `hashFiles()`-in-job-`if:` outage; prevents regression |
+  | c | Add `.github/CODEOWNERS` (needs owner handle) | Activates the documented review routing |
+  | d | Add root `SECURITY.md` + `CITATION.cff` + `CONTRIBUTING.md` pointer | Lights up GitHub Security/Cite/Contributing tabs (DOI `10.5281/zenodo.19139090`); CITATION.cff becomes the single citation source (removes README DOI drift) |
+  | e | Dependabot auto-merge workflow gated on green required checks | The 3 open safe action bumps need no manual toil |
+  | f | Harden `release.yml` tag-name injection (pass `${{ steps.tag.outputs.name }}` via `env:`, not direct `run:` interpolation) | Textbook script-injection class |
+  | g | Fix dead coverage-history step (`performance` job `gh run download` lacks `actions: read` → silent `|| true` no-op) | Either grant the permission or delete the dead step |
+
+  **Acceptance:** per sub-item — `actionlint` clean incl. SHA-pin check (a/b);
+  files exist and GitHub tabs populate (c/d); Dependabot PR auto-merges on
+  green (e); `release.yml` uses `env:` not direct interpolation (f);
+  coverage-history artefact is non-empty or the step is removed (g).
+
+* **DOCS-CONFIDENTIALITY-1 — DONE (this cycle).** The confidentiality
+  invariant (public repo; only `template_code_project` +
+  `template_prose_project` tracked; enforced by
+  `scripts/check_tracked_projects.py` in pre-push + CI `lint`) is now stated
+  in `CLAUDE.md`, root `AGENTS.md`, `README.md`, `.github/README.md`,
+  `.github/AGENTS.md`; the false "`template_search_project` is a restorable
+  tracked exemplar" framing was corrected to "local-only, never committed".
+
 _Shipped note — m2 (Steganography deterministic mode):_
 `infrastructure.steganography.config.resolve_build_timestamp`,
 `STEGANOGRAPHY_DETERMINISTIC=1` (or `secure_run.sh --deterministic`),

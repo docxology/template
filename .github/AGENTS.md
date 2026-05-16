@@ -49,23 +49,28 @@ flowchart TB
 
 **Pipeline jobs** (job ids in `ci.yml`; display names differ — use `name:` for branch protection):
 
+**12 jobs total; 2 are conditional, gated by the `detect` job's outputs
+(`needs.detect.outputs.*`) — NOT a job-level `hashFiles()` (that is invalid
+in a job `if:` and rejects the whole workflow at parse).**
+
 | # | Job id | Display name (representative) | Depends on | Python | Runner |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
-| 2 | `health` | Unified Health Report (informational) | lint | 3.12 | ubuntu |
-| 3 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
-| 3b | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks | 3.12 | windows · **skipped** if no `projects/**/scripts/setup_hook.py` |
-| 4 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
-| 5 | `test-project` | Project Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
-| 6 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks | 3.12 | ubuntu · **skipped** if no `projects/fep_lean/lean/lean-toolchain` |
-| 7 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
-| 8 | `security` | Security Scan | lint | 3.12 | ubuntu |
-| 9 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
-| 10 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
+| 1 | `detect` | Detect optional projects | — | — | ubuntu (always) |
+| 2 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
+| 3 | `health` | Unified Health Report (informational) | lint | 3.12 | ubuntu |
+| 4 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
+| 5 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
+| 6 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
+| 7 | `test-project` | Project Tests (matrix) | verify-no-mocks | 3.10–3.12 | ubuntu+macos |
+| 8 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
+| 9 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
+| 10 | `security` | Security Scan | lint | 3.12 | ubuntu |
+| 11 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
+| 12 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
 
-**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate). **`validate`** runs manuscript markdown validation, `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (`projects_archive/`, `projects_in_progress/`, and local `.venv/` / `site-packages` trees) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
+**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/check_tracked_generated_artifacts.py`, and **`scripts/check_tracked_projects.py`** — the **confidentiality guard** that fails CI if any project other than `template_code_project` / `template_prose_project` is git-tracked (this is a public repo; confidential/rotating projects are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (`projects_archive/`, `projects_in_progress/`, `.venv/`, `site-packages`, `.lake`, and the rotating research projects under `projects/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 
-**Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when `hashFiles('projects/fep_lean/lean/lean-toolchain') != ''` (otherwise skipped). When fep_lean lives under `projects_in_progress/`, the guard evaluates to empty and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate CI.
+**Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects_in_progress/`, `detect` reports `false` and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
 
 Coverage is uploaded to **Codecov** after each test job (3.12/ubuntu-latest only).
 

@@ -142,18 +142,25 @@ uv run python -c "from infrastructure.project.discovery import discover_projects
 
 **Active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`).
 
-**Canonical exemplars (always present in `projects/`):**
+**🔒 CONFIDENTIALITY INVARIANT (public repo).** Only these two canonical
+exemplars are ever git-tracked/pushed:
 - [`projects/template_code_project/`](projects/template_code_project/) — code-centric template
 - [`projects/template_prose_project/`](projects/template_prose_project/) — prose-centric template
 
-The literature-search exemplar
-[`projects_archive/template_search_project/`](projects_archive/template_search_project/)
-is an optional third template that rotates between `projects/` (active)
-and `projects_archive/` (resting); restore it under `projects/` when
-exercising the literature-search workflow. All other projects under
-`projects/` rotate between `projects_in_progress/`, `projects/`, and
-`projects_archive/` as work progresses; never hard-code their paths in
-long-lived docs — consult `_generated/active_projects.md` instead.
+`.gitignore` ignores `projects/*` and negates **only** those two (plus the
+repo-level `projects/*.md` docs). **Every other project under `projects/` —
+rotating research, client/confidential work, and the optional
+`template_search_project` literature-search exemplar — is LOCAL-ONLY and must
+never be committed.** This is enforced, not conventional:
+`scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push
+`pre-push-quick` hook on any non-template tracked project (a `git add -f`
+cannot slip past it). `template_search_project` rests in
+[`projects_archive/template_search_project/`](projects_archive/template_search_project/);
+copy it under `projects/` **locally** to exercise the literature-search
+workflow, then never commit it. Other rotating projects move between
+`projects_in_progress/`, `projects/`, and `projects_archive/` as work
+progresses; never hard-code their paths in long-lived docs — consult
+`_generated/active_projects.md` instead.
 **In-progress projects:** `aii-org` and others in [`projects_in_progress/`](projects_in_progress/) (not discovered until moved under `projects/`)
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 

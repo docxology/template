@@ -107,7 +107,18 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) after substantive changes.*
 
-Both permanent exemplars share the same directory layout, the same 12-file `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`), and the same verification checklist. The optional search exemplar lives at [`projects_archive/template_search_project/`](projects_archive/template_search_project/) and can be restored under `projects/` when exercising literature discovery. New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) for the full comparison.
+Both permanent exemplars share the same directory layout, the same 12-file `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`), and the same verification checklist. New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) for the full comparison.
+
+> **🔒 Confidentiality.** This is a **public** template repo. Only the two
+> canonical exemplars above are git-tracked/pushed — `.gitignore` ignores
+> `projects/*` and negates only those two. Any project you add under
+> `projects/` (research, client, confidential, or the optional local-only
+> `template_search_project` literature-search exemplar that rests in
+> [`projects_archive/`](projects_archive/template_search_project/)) stays
+> **local-only and is never committed**; `scripts/check_tracked_projects.py`
+> blocks any accidental commit in the pre-push hook and CI. Copy
+> `template_search_project` under `projects/` locally to exercise literature
+> discovery, then never commit it.
 
 Other entries in `projects/` rotate between `projects_in_progress/`,
 `projects/`, and `projects_archive/` as work progresses (Lean toolchain
@@ -399,27 +410,29 @@ This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE
 
 If you use this template in your research, please cite:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
-Archived as `docxology/template` 0.3 — DOI `10.5281/zenodo.16903351` (<https://zenodo.org/records/17857724>).
+Cite the current release. Earlier versions retain their own Zenodo DOIs;
+the version-independent concept DOI always resolves to the latest.
 
 **BibTeX:**
 
 ```bibtex
-@software{friedman_daniel_ari_2025_16903352,
-  author       = {Daniel Ari Friedman},
-  title        = {docxology/template: 0.1},
-  month        = aug,
-  year         = 2025,
-  publisher    = {Zenodo},
-  version      = {0.1},
-  doi          = {10.5281/zenodo.16903352},
-  url          = {https://doi.org/10.5281/zenodo.16903352}
+@software{friedman_template_2026,
+  author    = {Daniel Ari Friedman},
+  title     = {A template/ approach to Reproducible Generative Research:
+               Architecture and Ergonomics from Configuration through Publication},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.19139090},
+  url       = {https://doi.org/10.5281/zenodo.19139090}
 }
 ```
 
 **Plain text:**
-Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. <https://doi.org/10.5281/zenodo.16903352>
+Daniel Ari Friedman. (2026). *A template/ approach to Reproducible Generative
+Research: Architecture and Ergonomics from Configuration through Publication.*
+Zenodo. <https://doi.org/10.5281/zenodo.19139090>
 
 ## 🆘 Troubleshooting
 
