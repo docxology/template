@@ -509,6 +509,7 @@ def generate_step_size_sensitivity_plot(results: Any) -> Any:
     plt.tight_layout()
 
     output_dir = project_root / "output" / "figures"
+    output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "step_size_sensitivity.png"
     plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
@@ -595,6 +596,7 @@ def generate_convergence_rate_plot(results: Any) -> Any:
 
     # Save plot
     output_dir = project_root / "output" / "figures"
+    output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "convergence_rate_comparison.png"
     plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
@@ -773,6 +775,7 @@ def generate_complexity_visualization(results: Any) -> Any:
     plt.tight_layout()
 
     output_dir = project_root / "output" / "figures"
+    output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "algorithm_complexity.png"
     plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
@@ -1027,6 +1030,7 @@ def generate_stability_visualization(stability_path: Any) -> Any:
     plt.tight_layout()
 
     output_dir = project_root / "output" / "figures"
+    output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "stability_analysis.png"
     plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
@@ -1116,6 +1120,7 @@ def generate_benchmark_visualization(benchmark_path: Any) -> Any:
     plt.tight_layout()
 
     output_dir = project_root / "output" / "figures"
+    output_dir.mkdir(parents=True, exist_ok=True)
     plot_path = output_dir / "performance_benchmark.png"
     plt.savefig(plot_path, dpi=300, bbox_inches="tight", facecolor="white", edgecolor="none")
     plt.close()
