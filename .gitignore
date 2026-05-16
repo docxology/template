@@ -67,6 +67,15 @@ Thumbs.db
 # Generated outputs and caches are disposable and regeneratable by the pipeline.
 # Never commit them (per CLAUDE.md and AGENTS.md). Cleaned by 00_setup_environment.py.
 **/output/
+# EXCEPTION: `infrastructure/validation/output/` is a SOURCE package
+# (validator.py, pipeline.py, no_mock_enforcer.py) whose name collides with
+# the generated-output glob above. Without these negations the whole package
+# is excluded from version control, so CI's clean checkout cannot
+# `import infrastructure.validation.output` — every job that uses it
+# (verify-no-mocks, validate, copy, lint's artifact guard) fails with
+# ModuleNotFoundError even though it works on a developer's disk.
+!infrastructure/validation/output/
+!infrastructure/validation/output/**
 **/projects/*/output/
 **/.benchmarks/
 **/.pytest_cache/

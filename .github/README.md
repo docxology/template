@@ -662,24 +662,47 @@ Documentation review reports and filepath audits.
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| [`ci.yml`](workflows/ci.yml) | push · PR · weekly · manual | **10 CI jobs** + conditional **`fep-lean`** when `projects/fep_lean/lean/lean-toolchain` exists |
-| [`stale.yml`](workflows/stale.yml) | Daily 01:00 UTC | Close inactive issues/PRs |
-| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual | GitHub Release with changelog |
+| [`ci.yml`](workflows/ci.yml) | push/PR to `main` · weekly (Sun 00:00 UTC) · manual | **12 jobs** (2 conditional) — see the full table below |
+| [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
+| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | GitHub Release with generated changelog |
+
+### CI Jobs (`ci.yml`) — complete inventory
+
+The repo-wide `permissions:` is `contents: read`; every job re-declares its own minimal scope. **Conditional jobs are gated by the `detect` job's outputs** — *not* by a job-level `hashFiles()` (that is invalid in a job-level `if:` and rejects the entire workflow at parse time).
+
+| # | Job (`id`) | `needs` | Runs when | Purpose |
+| - | --- | --- | --- | --- |
+| 1 | `detect` | — | always | Emits presence flags (`setup_hook`, `fep_lean`) for the optional jobs |
+| 2 | `lint` | — | always | `ruff check` + `ruff format` + `mypy` (CI scope) + `__all__` audit + tracked-generated-artifact guard |
+| 3 | `health` | `lint` | always | Unified health report (informational, non-blocking) |
+| 4 | `verify-no-mocks` | `lint` | always | Enforces the zero-mock policy (`scripts/verify_no_mocks.py`) |
+| 5 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
+| 6 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu/macOS × Py 3.10–3.12, `--cov-fail-under=60` (macOS leg `continue-on-error`) |
+| 7 | `test-project` | `verify-no-mocks` | always | Per-project suites, same matrix; per-project ≥90 / combined-union ≥75 |
+| 8 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |
+| 9 | `validate` | `lint` | always | Manuscript/output validation (`infrastructure.validation.cli`) |
+| 10 | `security` | `lint` | always | Bandit MEDIUM+ (`bandit.yaml`) over `infrastructure/ scripts/ projects/` |
+| 11 | `docs-lint` | `lint` | always | Mermaid render + relative-link resolution + doc-pair + consistency |
+| 12 | `performance` | `test-infra`, `test-project` | always | Benchmarks + coverage-history dashboard (informational) |
+
+**Required status checks** for branch protection on `main` are documented in [`AGENTS.md`](AGENTS.md) (the conditional jobs `setup-hook-windows-smoke` / `fep-lean` must NOT be required — they are skipped, not failed, when their project is absent). Reproduce every gate locally with the commands in [`AGENTS.md`](AGENTS.md) → "Local CI parity" and the root [`CLAUDE.md`](../CLAUDE.md) Quick Reference.
 
 ### CI Job Flow
 
 ```mermaid
 flowchart TB
-    L[Lint and Type Check]
-    H[Unified Health Report informational]
-    VNM[Verify No Mocks]
-    TI[Infra Tests matrix]
-    TP[Project Tests matrix]
-    FL[fep_lean optional]
-    VM[Validate Manuscripts]
-    SS[Security Scan]
-    DL[Documentation Lint]
-    PC[Performance Check]
+    D[detect — presence flags]
+    L[lint + type check]
+    H[health — informational]
+    VNM[verify-no-mocks]
+    SH[setup-hook windows — conditional]
+    TI[test-infra matrix]
+    TP[test-project matrix]
+    FL[fep-lean — conditional]
+    VM[validate manuscripts]
+    SS[security scan]
+    DL[docs lint]
+    PC[performance — informational]
     L --> H
     L --> VNM
     L --> VM
@@ -687,7 +710,10 @@ flowchart TB
     L --> DL
     VNM --> TI
     VNM --> TP
+    VNM --> SH
     VNM --> FL
+    D -. setup_hook .-> SH
+    D -. fep_lean .-> FL
     TI --> PC
     TP --> PC
 ```

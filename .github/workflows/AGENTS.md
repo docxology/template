@@ -10,7 +10,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[/.github/workflows//]
     W --> META[AGENTS.md · README.md]
-    W --> CI[ci.yml<br/>11 jobs — 2 conditional — fep-lean and setup-hook-windows-smoke]
+    W --> CI[ci.yml<br/>12 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
 
