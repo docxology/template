@@ -26,6 +26,39 @@ env:
 # Job 1 — Lint & Type Check
 # ─────────────────────────────────────────────────────────────────────────────
 jobs:
+  # Presence-detection for OPTIONAL/rotating projects. `hashFiles()` is NOT
+  # available in a job-level `if:` (only in step contexts) — using it there is
+  # a workflow-validation error that makes GitHub reject the ENTIRE workflow
+  # at startup (zero jobs run, surfaced as "workflow file issue"). This tiny
+  # job computes the existence flags in a step (valid) and exposes them as
+  # outputs that the optional jobs gate on via `needs.detect.outputs.*`.
+  detect:
+    name: Detect optional projects
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      setup_hook: ${{ steps.d.outputs.setup_hook }}
+      fep_lean: ${{ steps.d.outputs.fep_lean }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: d
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          hooks=(projects/**/scripts/setup_hook.py)
+          if [ ${#hooks[@]} -gt 0 ]; then
+            echo "setup_hook=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "setup_hook=false" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -f projects/fep_lean/lean/lean-toolchain ]; then
+            echo "fep_lean=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "fep_lean=false" >> "$GITHUB_OUTPUT"
+          fi
+
   lint:
     name: Lint & Type Check
     runs-on: ubuntu-latest
@@ -147,8 +180,8 @@ jobs:
     name: Setup hook (Windows smoke)
     runs-on: windows-latest
     timeout-minutes: 15
-    needs: [verify-no-mocks]
-    if: hashFiles('projects/**/scripts/setup_hook.py') != ''
+    needs: [verify-no-mocks, detect]
+    if: needs.detect.outputs.setup_hook == 'true'
     permissions:
       contents: read
     steps:
@@ -205,7 +238,7 @@ jobs:
 
       - name: Fix macOS socket.getfqdn timeout
         if: runner.os == 'macOS'
-        run: sudo scutil --set HostName $(hostname)
+        run: sudo scutil --set HostName "$(hostname)"
 
       - name: Install pandoc
         uses: pandoc/actions/setup@v1
@@ -268,7 +301,7 @@ jobs:
 
       - name: Fix macOS socket.getfqdn timeout
         if: runner.os == 'macOS'
-        run: sudo scutil --set HostName $(hostname)
+        run: sudo scutil --set HostName "$(hostname)"
 
       # One pytest process per project: template_code_project and fep_lean both use
       # ``tests/conftest.py``, which registers as the same plugin name if collected
@@ -307,10 +340,10 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
   fep-lean:
     name: fep_lean (gauss + lake)
-    if: hashFiles('projects/fep_lean/lean/lean-toolchain') != ''
+    if: needs.detect.outputs.fep_lean == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [verify-no-mocks]
+    needs: [verify-no-mocks, detect]
     permissions:
       contents: read
     steps:
