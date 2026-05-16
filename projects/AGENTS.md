@@ -34,13 +34,13 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 
 ## Permanent Canonical Exemplars and Optional Search Add-On
 
-Two projects under `projects/` are **permanent canonical exemplars** — they are guaranteed to remain present and tracked in git. Other active project directories can rotate by checkout; new non-exemplar directories are ignored by default unless intentionally tracked. Together, the permanent exemplars cover the computational and prose-review paths. The search exemplar is an optional add-on kept under `projects_archive/template_search_project/` until restored for literature-search workflows:
+Two projects under `projects/` are **permanent canonical exemplars** — `template_code_project` and `template_prose_project` are the **only** project trees git-tracked/pushed. **CONFIDENTIALITY INVARIANT (public repo):** `.gitignore` ignores `projects/*` and negates only those two; every other project (rotating research, client/confidential work, the search exemplar) is **local-only and must never be committed** — enforced by `scripts/check_tracked_projects.py` (pre-push `pre-push-quick` hook + CI `lint`), which a `git add -f` cannot bypass. Together the permanent exemplars cover the computational and prose-review paths. The `template_search_project` literature-search exemplar is local-only, rests under `projects_archive/template_search_project/`, and is copied under `projects/` *locally only* to run literature-search workflows (never committed):
 
 | Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
 |---|---|---|---|---|---|---|
 | [`template_code_project/`](template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | 117 | ~99.5% |
 | [`template_prose_project/`](template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | 67 | 100.00% |
-| [`../projects_archive/template_search_project/`](../projects_archive/template_search_project/) | Optional search-centric add-on (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | 267 | ~99.5% |
+| [`../projects_archive/template_search_project/`](../projects_archive/template_search_project/) **(local-only — NOT git-tracked)** | Optional search-centric add-on (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | 267 | ~99.5% |
 
 The two permanent exemplars, and the optional search add-on when restored, share the **same** structural conventions:
 
