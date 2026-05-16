@@ -5,6 +5,14 @@ __pycache__/
 *.so
 .Python
 build/
+# EXCEPTION: `docs/operational/build/` is a documentation directory (the
+# build-system docs hub: build-system.md, ci-cd-integration.md, …), not a
+# Python build artifact. Without these negations the broad `build/` rule
+# above excludes it from version control, so CI's clean checkout has ~14
+# broken links into it (docs-lint fails). Same failure class as the
+# `**/output/` vs `infrastructure/validation/output/` collision.
+!docs/operational/build/
+!docs/operational/build/**
 develop-eggs/
 dist/
 downloads/
