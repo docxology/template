@@ -96,10 +96,10 @@ class TestRevealJsRendering:
         # Use real execution - may succeed or fail depending on pandoc
         try:
             renderer._render_revealjs(source, output)
-            # May succeed
-            assert True
-        except (RenderingError, Exception):
-            # Expected to fail in some cases
+            # Real post-condition: a successful render must produce the output file
+            assert output.exists(), "_render_revealjs returned without producing the output file"
+        except (RenderingError, OSError, subprocess.SubprocessError):
+            # Expected when pandoc / reveal.js dependencies are unavailable
             pass
 
 
@@ -160,10 +160,10 @@ class TestBeamerRendering:
         # Use real execution - may fail before PDF generation
         try:
             renderer._render_beamer_with_paths(source, output, None, None)
-            # May succeed or fail
-            assert True
-        except (RenderingError, Exception):
-            # Expected to fail if PDF not generated or dependencies not available
+            # Real post-condition: a successful beamer render must produce the PDF
+            assert output.exists(), "_render_beamer_with_paths returned without producing the PDF"
+        except (RenderingError, OSError, subprocess.SubprocessError):
+            # Expected when pandoc / LaTeX dependencies are unavailable
             pass
 
     def test_render_beamer_subprocess_failure(self, tmp_path):
@@ -178,10 +178,10 @@ class TestBeamerRendering:
         # Use real execution - may succeed or fail
         try:
             renderer._render_beamer_with_paths(source, output, None, None)
-            # May succeed
-            assert True
-        except (RenderingError, Exception):
-            # Expected to fail in some cases
+            # Real post-condition: a successful beamer render must produce the PDF
+            assert output.exists(), "_render_beamer_with_paths returned without producing the PDF"
+        except (RenderingError, OSError, subprocess.SubprocessError):
+            # Expected when the beamer subprocess fails or deps are unavailable
             pass
 
 

@@ -88,7 +88,13 @@ class TestCollectSymbols:
         )
 
         assert labels == {"eq:test1", "eq:test2"}
-        assert anchors == {"sec:test1", "subsec:test2"}
+        # Explicit ``{#anchor}`` attributes are always valid targets...
+        assert {"sec:test1", "subsec:test2"} <= anchors
+        # ...and GitHub/MkDocs-slugified plain heading text is now ALSO
+        # accepted so that table-of-contents self-links resolve in the
+        # rendered doc: ``# Section`` / ``## Subsection`` also contribute
+        # ``section`` / ``subsection``.
+        assert {"section", "subsection"} <= anchors
 
     def test_empty_file_list(self):
         """Test collect_symbols with empty file list."""

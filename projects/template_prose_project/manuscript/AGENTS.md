@@ -44,6 +44,23 @@ flowchart TB
 * **`preamble.md`** is injected into Pandoc before LaTeX compilation.
   Do not put prose here.
 
+## Rendering prerequisite — Mermaid needs `chrome-headless-shell`
+
+`05_pipeline_internals.md` embeds **Mermaid** blocks (a `flowchart` and a
+`classDiagram`). At combined-PDF render time these are rasterised by `mmdc`,
+which requires a pinned **`chrome-headless-shell`** in the Puppeteer cache.
+Without it the **PDF Rendering** pipeline stage fails (per-section slide PDFs
+still succeed — that asymmetry is the tell). One-time install:
+
+```bash
+npx --yes puppeteer browsers install chrome-headless-shell
+```
+
+Full explanation and the version-pin variant:
+[`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md#prerequisite-mermaid-diagrams-need-chrome-headless-shell)
+and [`../docs/troubleshooting.md`](../docs/troubleshooting.md#pdf-rendering-stage-fails-mmdc-could-not-find-chrome).
+If you add a ```mermaid``` block to any section, this prerequisite applies.
+
 ## Substitution markers
 
 `scripts/z_generate_manuscript_variables.py` replaces

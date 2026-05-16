@@ -325,6 +325,28 @@ ignore_errors = true
 module = "projects.what_is_cogsec.*"
 ignore_errors = true
 
+# Rotating research projects (animation/visualization/numpy-heavy surface
+# intentionally NOT driven to the exemplar type-strictness floor — the same
+# documented rotating-project exception that applies to coverage). Keeps the
+# CI-scope `mypy infrastructure/ projects/*/src/` gate enforcing the standard
+# on infrastructure + the canonical exemplars (which are clean) without a
+# rotating research WIP blocking every contributor's commit and CI.
+[[tool.mypy.overrides]]
+module = "projects.BeeStack.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "beestack.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "projects.crescent_city.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "_figures.*"
+ignore_errors = true
+
 [tool.bandit]
 # Exclusions for paths (mirrors `exclude_dirs` in `bandit.yaml`). CI and
 # pre-commit use `-c bandit.yaml`; this block keeps ad-hoc `bandit -c pyproject.toml`

@@ -6,6 +6,34 @@ automatically by the template's rendering infrastructure. This document
 describes every step, what it produces, which scripts run it, and how to
 troubleshoot failures.
 
+## Prerequisite: Mermaid diagrams need `chrome-headless-shell`
+
+This manuscript embeds **Mermaid** diagrams (see
+`manuscript/05_pipeline_internals.md`). When the rendering infrastructure
+builds the **combined PDF**, every inline ```mermaid``` block is rasterised
+by `mmdc` (mermaid-cli), which drives a **pinned** `chrome-headless-shell`
+via Puppeteer. If that exact Chrome build is absent from the Puppeteer cache
+(`~/.cache/puppeteer/`), the combined-PDF step — and the whole **PDF
+Rendering** pipeline stage — fails with:
+
+```
+mmdc failed for inline_mermaid_0001_...: Could not find Chrome (ver. X)
+```
+
+Install it once (reversible, one-time per machine):
+
+```bash
+npx --yes puppeteer browsers install chrome-headless-shell
+# or pin to the exact version mmdc reports as missing:
+npx --yes puppeteer browsers install chrome-headless-shell@131.0.6778.204
+```
+
+CI provisions this automatically; a fresh local clone does not. The
+per-section slide PDFs do **not** need Chrome (no `mmdc`), so a partial
+success with slides-but-no-combined-PDF is the signature of this missing
+dependency. See
+[troubleshooting.md](troubleshooting.md#pdf-rendering-stage-fails-mmdc-could-not-find-chrome).
+
 ## The Self-Referential Flow
 
 The pipeline has four phases. Each phase must complete before the next

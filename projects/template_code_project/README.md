@@ -15,6 +15,30 @@ uv run pytest projects/template_code_project/tests/ -v
 ls -la output/template_code_project/
 ```
 
+## Prerequisites & verification
+
+**Test/coverage gate (authoritative per-project command).** Exit code 0
+alone is not proof — confirm tests collected > 0 and coverage ≥ 90%:
+
+```bash
+uv run pytest projects/template_code_project/tests/ \
+  --cov=projects/template_code_project/src --cov-fail-under=90
+# exemplar baseline: 117 passed, ~99% coverage
+```
+
+**Combined-PDF rendering & Mermaid.** This project's convention is
+Mermaid-for-all-diagrams. If a manuscript section embeds a ```mermaid```
+block, the combined PDF is built with `mmdc`, which needs a pinned
+`chrome-headless-shell` (CI provisions it; a fresh clone does not):
+
+```bash
+npx --yes puppeteer browsers install chrome-headless-shell
+```
+
+Without it the **PDF Rendering** stage fails while slides still render — see
+[`docs/troubleshooting.md`](docs/troubleshooting.md#pdf-rendering-fails-mmdc-could-not-find-chrome).
+Full end-to-end: `uv run python scripts/execute_pipeline.py --project template_code_project --core-only`.
+
 ## Dependencies
 
 Run `uv sync` at the **repository root**; that environment is what CI and `./run.sh` use. [`pyproject.toml`](pyproject.toml) in this directory configures pytest/coverage for `projects/template_code_project/tests/` and records the same scientific stack for isolated runs. Root [`pyproject.toml`](../../pyproject.toml) has `[tool.uv.workspace]` with `members = []`, so this folder is not installed as a separate workspace package.

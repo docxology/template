@@ -1,30 +1,30 @@
 # 📊 Comprehensive Filepath and Reference Audit Report
 
-**Generated:** 2026-05-04 16:37:59
-**Files Scanned:** 4463
-**Scan Duration:** 19.86 seconds
+**Generated:** 2026-05-16 09:17:16
+**Files Scanned:** 3431
+**Scan Duration:** 8.26 seconds
 
 ## 📈 Executive Summary
 
-**Total Issues Found:** 5121
+**Total Issues Found:** 1667
 
 ### 🚩 Severity Flag Summary
 
-🔴 **Red Flags (Critical):** 1038 - Issues requiring immediate attention
-🟡 **Yellow Flags (Warnings):** 224 - Issues that should be reviewed
-🟢 **Green Flags (Exceptions):** 3859 - Known exceptions and false positives
+🔴 **Red Flags (Critical):** 124 - Issues requiring immediate attention
+🟡 **Yellow Flags (Warnings):** 167 - Issues that should be reviewed
+🟢 **Green Flags (Exceptions):** 1376 - Known exceptions and false positives
 
-**False Positives Filtered:** 391 (7.6%)
+**False Positives Filtered:** 292 (17.5%)
 
 
 ### Issues by Category
 
-- **Link Issues:** 1290 issues
-- **Quality Issues:** 3831 issues
+- **Link Issues:** 410 issues
+- **Quality Issues:** 1257 issues
 
 ## 🔴 Red Flags (Critical Issues)
 
-**1038 critical issues** requiring immediate attention:
+**124 critical issues** requiring immediate attention:
 
 **docs/operational/maintenance.md:250**
 - **Type:** broken_anchor
@@ -51,159 +51,159 @@
 - **Target:** `#disaster-recovery-drill`
 - **Issue:** Anchor 'disaster-recovery-drill' not found in file
 
-**projects_in_progress/biology_textbook/docs/manuscript_guide.md:161**
+**projects/cogant/cogant/evaluation/eval_repos/dulwich/fuzzing/README.md:52**
 - **Type:** broken_anchor
-- **Target:** `##gl:term-slug`
-- **Issue:** Anchor 'gl:term-slug' not found in file
+- **Target:** `#files--directories-overview`
+- **Issue:** Anchor 'files--directories-overview' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/AGENTS.md:38**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/de/docs/_llm-test.md:171**
 - **Type:** broken_anchor
-- **Target:** `##gl:term-slug`
-- **Issue:** Anchor 'gl:term-slug' not found in file
+- **Target:** `#code-snippets`
+- **Issue:** Anchor 'code-snippets' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_I/lab_atoms_molecules.md:101**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/de/docs/deployment/docker.md:9**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#build-a-docker-image-for-fastapi`
+- **Issue:** Anchor 'build-a-docker-image-for-fastapi' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_I/lab_enzymes_and_kinetics.md:111**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/de/docs/deployment/docker.md:461**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#dockerfile`
+- **Issue:** Anchor 'dockerfile' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_I/lab_macromolecules.md:119**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/de/docs/deployment/docker.md:577**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#build-a-docker-image-for-fastapi`
+- **Issue:** Anchor 'build-a-docker-image-for-fastapi' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_I/lab_water_and_life.md:114**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/de/docs/help-fastapi.md:221**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#help-others-with-questions-in-github`
+- **Issue:** Anchor 'help-others-with-questions-in-github' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_II/lab_cell_signaling.md:103**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/de/docs/help-fastapi.md:222**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#review-pull-requests`
+- **Issue:** Anchor 'review-pull-requests' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_II/lab_cell_structure.md:116**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/de/docs/index.md:40**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#performance`
+- **Issue:** Anchor 'performance' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_II/lab_cell_theory.md:117**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/en/docs/_llm-test.md:171**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#code-snippets`
+- **Issue:** Anchor 'code-snippets' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_II/lab_membrane_transport.md:105**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/en/docs/deployment/docker.md:9**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#build-a-docker-image-for-fastapi`
+- **Issue:** Anchor 'build-a-docker-image-for-fastapi' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_III/lab_bioenergetics_and_respiration.md:100**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/en/docs/deployment/docker.md:461**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#dockerfile`
+- **Issue:** Anchor 'dockerfile' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_III/lab_metabolic_integration.md:210**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/en/docs/deployment/docker.md:577**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#build-a-docker-image-for-fastapi`
+- **Issue:** Anchor 'build-a-docker-image-for-fastapi' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_III/lab_photosynthesis.md:239**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/en/docs/help-fastapi.md:221**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#help-others-with-questions-in-github`
+- **Issue:** Anchor 'help-others-with-questions-in-github' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IV/lab_dna_replication_and_cell_cycle.md:222**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/en/docs/help-fastapi.md:222**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#review-pull-requests`
+- **Issue:** Anchor 'review-pull-requests' not found in file
 
-**projects_in_progress/biology_textbook/manuscript/labs/unit_IV/lab_epigenetics_and_gene_regulation.md:221**
+**projects/cogant/cogant/evaluation/eval_repos/fastapi/docs/en/docs/index.md:40**
 - **Type:** broken_anchor
-- **Target:** `#gl:slug`
-- **Issue:** Anchor 'gl:slug' not found in file
+- **Target:** `#performance`
+- **Issue:** Anchor 'performance' not found in file
 
-*... and 1018 more red flags*
+*... and 104 more red flags*
 
 ## 🟡 Yellow Flags (Warnings)
 
-**224 warnings** that should be reviewed:
-**.claude/worktrees/blissful-noether/projects/code_project/AGENTS.md:169**
-- **Type:** code_block_path
-
-- **Issue:** File path in code block does not exist: projects/code_project/src
-
-**.claude/worktrees/blissful-noether/projects/code_project/AGENTS.md:427**
-- **Type:** code_block_path
-
-- **Issue:** File path in code block does not exist: projects/code_project/src
-
-**.claude/worktrees/blissful-noether/tests/AGENTS.md:385**
-- **Type:** code_block_path
-
-- **Issue:** File path in code block does not exist: projects/code_project/src
-
-**.claude/worktrees/blissful-noether/tests/AGENTS.md:389**
-- **Type:** code_block_path
-
-- **Issue:** File path in code block does not exist: projects/code_project/src
-
-**.claude/worktrees/blissful-noether/tests/AGENTS.md:393**
-- **Type:** code_block_path
-
-- **Issue:** File path in code block does not exist: projects/code_project/src
-
-**.claude/worktrees/charming-kalam/.github/ISSUE_TEMPLATE/documentation.md:26**
-- **Type:** code_block_path
-
-- **Issue:** File path in code block does not exist: projects/code_project/AGENTS.md
-
-**.claude/worktrees/charming-kalam/.github/workflows/AGENTS.md:175**
-- **Type:** code_block_path
-
-- **Issue:** File path in code block does not exist: projects/code_project/src
-
-**.claude/worktrees/charming-kalam/.github/workflows/AGENTS.md:179**
+**167 warnings** that should be reviewed:
+**.github/workflows/AGENTS.md:233**
 - **Type:** code_block_path
 
 - **Issue:** File path in code block does not exist: projects/fep_lean/tests/AGENTS.md
 
-**.claude/worktrees/charming-kalam/.github/workflows/AGENTS.md:182**
+**docs/accessibility.md:34**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/fep_lean/src
+- **Issue:** File path in code block does not exist: scripts/validate_alt_text.py
 
-**.claude/worktrees/charming-kalam/.github/workflows/AGENTS.md:215**
+**docs/operational/AGENTS.md:93**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/src
+- **Issue:** File path in code block does not exist: scripts/rotate-logs.sh
 
-**.claude/worktrees/charming-kalam/CLAUDE.md:316**
+**docs/operational/maintenance.md:56**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/src
+- **Issue:** File path in code block does not exist: scripts/rotate-logs.sh
 
-**.claude/worktrees/charming-kalam/docs/core/workflow.md:148**
+**docs/operational/runbook.md:135**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/src
+- **Issue:** File path in code block does not exist: scripts/rotate-logs.sh
 
-**.claude/worktrees/charming-kalam/docs/development/contributing.md:44**
+**docs/operational/runbook.md:157**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/src
+- **Issue:** File path in code block does not exist: scripts/rotate-logs.sh
 
-**.claude/worktrees/charming-kalam/docs/guides/extending-and-automation.md:169**
+**docs/operational/runbook.md:272**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/src
+- **Issue:** File path in code block does not exist: infrastructure/docker/:
 
-**.claude/worktrees/charming-kalam/docs/guides/figures-and-analysis.md:611**
+**docs/operational/scripts/AGENTS.md:25**
 - **Type:** code_block_path
 
-- **Issue:** File path in code block does not exist: projects/code_project/output/pdf/04_experimental_results.pdf
+- **Issue:** File path in code block does not exist: scripts/rotate-logs.sh
 
-*... and 209 more yellow flags*
+**docs/operational/scripts/README.md:17**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/rotate-logs.sh
+
+**docs/prompts/comprehensive_assessment.md:24**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/;
+
+**docs/prompts/manuscript_cross_references.md:40**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/validate_manuscript.py
+
+**infrastructure/documentation/AGENTS.md:496**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: scripts/NN_*.py
+
+**infrastructure/validation/cli/AGENTS.md:38**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: projects/fep_lean/manuscript
+
+**infrastructure/validation/cli/AGENTS.md:40**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: projects/fep_lean/manuscript
+
+**infrastructure/validation/cli/AGENTS.md:42**
+- **Type:** code_block_path
+
+- **Issue:** File path in code block does not exist: projects/fep_lean/manuscript/references.bib
+
+*... and 152 more yellow flags*

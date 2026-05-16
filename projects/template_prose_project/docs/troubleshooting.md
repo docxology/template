@@ -109,6 +109,79 @@ discovery confuses them.
 **Fix:** Run them separately. The infrastructure pipeline always invokes
 them in separate subprocess calls so this only affects ad-hoc usage.
 
+### "PDF Rendering stage fails: `mmdc` could not find Chrome"
+
+**Symptom:** The pipeline reaches **PDF Rendering** and fails (authoritative
+`output/reports/pipeline_report.json` shows `"PDF Rendering" -> failed`),
+even though Project Tests, Analysis, and the per-section slide PDFs all
+passed. The error contains:
+
+```
+❌ Rendering error generating combined PDF: mmdc failed for
+inline_mermaid_0001_...: Error: Could not find Chrome (ver. 131.0.6778.204).
+```
+
+**Cause:** This manuscript embeds **Mermaid** diagrams (e.g.
+`manuscript/05_pipeline_internals.md`). The combined-PDF render shells out to
+`mmdc` (mermaid-cli), which renders each diagram with a **pinned**
+`chrome-headless-shell`. If that exact build is not in the Puppeteer cache,
+the combined PDF — and therefore the whole PDF Rendering stage — fails. The
+per-section slide PDFs still succeed because they do not invoke `mmdc`.
+
+**Fix:** install the pinned headless Chrome once (reversible; lands in
+`~/.cache/puppeteer/`):
+
+```bash
+# Install the version mmdc reports as missing (read the version from the error)
+npx --yes puppeteer browsers install chrome-headless-shell@131.0.6778.204
+# or simply the latest line mmdc/puppeteer resolves:
+npx --yes puppeteer browsers install chrome-headless-shell
+```
+
+Then re-run only the render stage to confirm:
+
+```bash
+uv run python scripts/03_render_pdf.py --project template_prose_project
+# expect: "✅ Generated combined PDF: template_prose_project_combined.pdf"
+```
+
+**Note:** this is an *environment provisioning* requirement, not a manuscript
+defect. CI provisions `chrome-headless-shell`; a fresh local clone does not.
+Any project whose manuscript contains a ```mermaid``` block inherits this
+prerequisite — see [rendering_pipeline.md](rendering_pipeline.md#prerequisite-mermaid-diagrams-need-chrome-headless-shell).
+
+### "Tests report PASSED but ran 0 tests / 0.0% coverage"
+
+**Symptom:** `scripts/01_run_tests.py --project template_prose_project`
+prints `Project: ✓ PASSED (0/0 tests, 0.0% coverage)` and exits 0, while the
+documented direct command runs all tests at full coverage.
+
+**Cause:** the aggregate runner resolves the project interpreter from
+`projects/template_prose_project/.venv`. If that venv exists but lacks
+`pytest`/`pytest-cov` (created by `uv venv` without `uv sync`), pytest
+collects nothing. A green exit with **zero collected tests is not a pass.**
+
+**Fixes:**
+
+1. Run the **canonical per-project gate** directly — this is the real
+   quality gate (it always uses the workspace interpreter and the repo-root
+   coverage config):
+   ```bash
+   uv run pytest projects/template_prose_project/tests/ \
+     --cov=projects/template_prose_project/src --cov-fail-under=90
+   ```
+2. Or `uv sync` so the per-project `.venv` has the test deps.
+3. Always verify the run **collected > 0 tests AND coverage ≥ 90%** — exit
+   code 0 alone is insufficient. (The current runner now falls back to the
+   workspace interpreter and hard-fails a 0-collected or below-threshold run;
+   the direct command above is still the authoritative gate.)
+
+**Coverage-config note:** the project's own `pyproject.toml`
+`[tool.coverage]` uses *project-relative* `source`/`omit` paths that do not
+resolve when pytest runs from the repo root. The canonical command and the
+runner both measure against the **repo-root** `pyproject.toml` coverage
+config — that is the number the 90% gate enforces (≈100% for this exemplar).
+
 ## Where to look
 
 * `output/checks.json` — every check's pass/fail with `details` payload.

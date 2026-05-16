@@ -12,6 +12,7 @@ import re
 import shutil
 import subprocess
 import time
+import tomllib
 from pathlib import Path
 from typing import TypedDict
 
@@ -29,11 +30,38 @@ from infrastructure.reporting.coverage_reporter import (
 )
 from infrastructure.core.logging.helpers import format_duration as _format_duration
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
-from infrastructure.core.runtime.environment import resolve_test_python
+from infrastructure.core.runtime.environment import get_python_command, resolve_test_python
 from infrastructure.reporting.coverage_parser import check_cov_datafile_support
 from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite
 
 logger = get_logger(__name__)
+
+
+def _project_declared_coverage_floor(project_root: Path) -> int | None:
+    """Return a project's self-declared coverage floor, if any.
+
+    Rotating research projects (animation/visualization/Lean-adjacent surface
+    intentionally not driven to the 90% exemplar floor) pin their own
+    sustainable floor via ``[tool.coverage.report] fail_under`` in their
+    ``pyproject.toml`` — the rotating-project coverage exception documented in
+    CLAUDE.md. The per-project gate honours that declared floor when present so
+    it enforces the project's real contract instead of a global value the
+    project never claimed to meet. Returns ``None`` when the project declares
+    no floor (the global default then applies). This keeps the gate strict — a
+    declared floor is still enforced, so a "0/0 lies green" run cannot pass —
+    while not forcing research projects to an inappropriate exemplar threshold.
+    """
+    pyproject = project_root / "pyproject.toml"
+    if not pyproject.is_file():
+        return None
+    try:
+        data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return None
+    declared = data.get("tool", {}).get("coverage", {}).get("report", {}).get("fail_under")
+    if isinstance(declared, (int, float)):
+        return int(declared)
+    return None
 
 
 class TestSuiteResults(TypedDict, total=False):
@@ -213,21 +241,53 @@ def run_project_tests(
     clean_coverage_files(repo_root)
 
     testing_config = get_testing_config(repo_root)
-    project_threshold = testing_config.project_coverage_threshold
+    _declared_floor = _project_declared_coverage_floor(project_root)
+    project_threshold = _declared_floor if _declared_floor is not None else testing_config.project_coverage_threshold
 
     log_substep(f"Running project tests for '{project_name}' ({project_threshold}% coverage threshold)...", logger)
     logger.info(f"Test path: {project_root / 'tests'}")
     logger.info(f"Coverage target: projects/{project_name}/src ({project_threshold}% minimum)")
 
-    project_cov_config = project_root / "pyproject.toml"
     cmd = resolve_test_python(project_root / ".venv")
+    # A per-project ``.venv`` can have a valid interpreter symlink yet lack
+    # pytest/pytest-cov (e.g. ``uv venv`` was run but ``uv sync`` was not).
+    # Running ``<that python> -m pytest`` then collects zero tests, which the
+    # suite scorer would otherwise normalise to a green "0/0 PASSED". Verify
+    # the resolved interpreter can import pytest; if not, fall back LOUDLY to
+    # the workspace interpreter (which has the dev deps) so the documented
+    # per-project command actually runs the suite instead of lying green.
+    try:
+        _pytest_probe = subprocess.run(  # nosec B603
+            [*cmd, "-c", "import pytest"],
+            capture_output=True,
+            check=False,
+            timeout=30,
+        )
+        if _pytest_probe.returncode != 0:
+            logger.warning(
+                "Resolved interpreter %s cannot import pytest (project venv "
+                "%s/.venv is missing test deps — run `uv sync`). Falling back "
+                "to the workspace interpreter %s so the project suite actually runs.",
+                cmd,
+                project_root,
+                get_python_command(),
+            )
+            cmd = get_python_command()
+    except (OSError, subprocess.SubprocessError) as _probe_err:
+        logger.warning("pytest-availability probe failed (%s); using %s", _probe_err, get_python_command())
+        cmd = get_python_command()
 
     cmd += [
         "-m",
         "pytest",
         f"projects/{project_name}/tests",
         f"--cov=projects/{project_name}/src",
-        f"--cov-config={project_cov_config}",
+        # No per-project --cov-config: the project pyproject's
+        # source=["src"]/omit=["src/analysis.py"] are project-relative and do
+        # NOT resolve when pytest runs from repo-root, which silently mis-scoped
+        # coverage (48.7% instead of the canonical 99.04%). Omitting it makes
+        # coverage use the repo-root pyproject — identical to the documented
+        # direct command and CI's run_per_project_pytest path.
     ]
 
     env = os.environ.copy()
@@ -242,10 +302,11 @@ def run_project_tests(
     if env.get("PYTHONPATH"):
         pythonpath_parts.append(env["PYTHONPATH"])
     env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
-    if project_cov_config.exists():
-        env["COVERAGE_PROCESS_START"] = str(project_cov_config)
-    else:
-        env.pop("COVERAGE_PROCESS_START", None)
+    # Keep subprocess coverage on the repo-root config too (CI's
+    # run_per_project_pytest does not set COVERAGE_PROCESS_START); pointing it
+    # at the project pyproject would re-introduce the project-relative-path
+    # mis-scoping fixed above.
+    env.pop("COVERAGE_PROCESS_START", None)
 
     cov_datafile_supported = check_cov_datafile_support()
     if cov_datafile_supported:
@@ -296,6 +357,46 @@ def run_project_tests(
         exit_code, test_results = run_test_suite(config)
         if strict and test_results.get("failed", 0) > 0:
             exit_code = 1
+        # Zero-collected guard: if the project ships test files but the run
+        # executed none, the suite never actually validated anything. The
+        # scorer can otherwise report "Project: ✓ PASSED (0/0 tests, 0.0%
+        # coverage)" and exit 0 — a coverage/test gate that lies green. A
+        # project with discoverable tests that collected zero is always a
+        # hard failure, regardless of strict tolerance.
+        tests_dir = project_root / "tests"
+        has_test_files = (
+            tests_dir.is_dir()
+            and any(tests_dir.rglob("test_*.py"))
+            or (tests_dir.is_dir() and any(tests_dir.rglob("*_test.py")))
+        )
+        ran_count = test_results.get("total", 0) or test_results.get("passed", 0)
+        if has_test_files and ran_count == 0:
+            logger.error(
+                "Project '%s' has test files under %s but the run collected/ran "
+                "0 tests — refusing to score this as PASSED. The project "
+                "interpreter is likely missing pytest/pytest-cov (run `uv sync`).",
+                project_name,
+                tests_dir,
+            )
+            exit_code = 1
+            test_results["exit_code"] = 1
+        # Coverage-threshold enforcement: a project run measurably below the
+        # gate must FAIL even when no test failed. suite_runner suppresses
+        # pytest's --cov-fail-under non-zero exit when failed==0, so without
+        # this a below-threshold run would still be scored PASSED — a coverage
+        # gate that lies. Safe now that coverage is measured against the
+        # repo-root config (matches the canonical 99.04% for the exemplar).
+        cov_pct = test_results.get("coverage_percent")
+        if strict and cov_pct is not None and ran_count > 0 and cov_pct < project_threshold:
+            logger.error(
+                "Project '%s' coverage %.2f%% is below the %.0f%% gate — failing "
+                "(suite_runner would otherwise suppress the cov-fail-under exit).",
+                project_name,
+                cov_pct,
+                project_threshold,
+            )
+            exit_code = 1
+            test_results["exit_code"] = 1
         duration = time.time() - start_time
         logger.info(f"Project test suite completed in {duration:.1f}s")
         if exit_code == 0:

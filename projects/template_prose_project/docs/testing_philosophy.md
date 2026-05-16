@@ -136,3 +136,33 @@ The zero-mock constraint is self-enforcing when the architecture is correct:
 If you find yourself wanting to mock `analyze_manuscript`, `parse_bibfile`,
 or any I/O inside a test, stop. Either pass it real data, or move the
 work behind a configuration knob and test both branches with real inputs.
+
+## Running the Gate: Collection and Threshold, Not Just Exit Code
+
+A green exit code is **not** proof the suite ran. Two failure modes have
+bitten this stack; both are now guarded, but the rule stands:
+
+1. **Zero collected = not a pass.** `scripts/01_run_tests.py --project
+   template_prose_project` resolves the interpreter from a per-project
+   `.venv`. A `.venv` created by `uv venv` without `uv sync` lacks
+   `pytest`, so pytest collects nothing and a naive scorer reports
+   `✓ PASSED (0/0 tests, 0.0% coverage)` with exit 0. Always confirm
+   **N collected > 0 AND coverage ≥ 90%**, never exit code alone.
+
+2. **The canonical gate is the direct command.** This is the authoritative
+   per-project quality gate and what CI enforces project-by-project:
+
+   ```bash
+   uv run pytest projects/template_prose_project/tests/ \
+     --cov=projects/template_prose_project/src --cov-fail-under=90
+   ```
+
+3. **Coverage resolves against the repo-root config.** The project's own
+   `pyproject.toml` `[tool.coverage]` `source`/`omit` are *project-relative*
+   and do not resolve when pytest runs from the repo root. The canonical
+   command and the aggregate runner both measure against the **repo-root**
+   `pyproject.toml` coverage config — that is the number the 90% gate
+   enforces. (The runner now hard-fails a 0-collected or below-threshold
+   run rather than scoring it green.)
+
+See [`troubleshooting.md`](troubleshooting.md#tests-report-passed-but-ran-0-tests--00-coverage).

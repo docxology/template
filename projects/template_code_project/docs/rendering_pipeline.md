@@ -2,6 +2,32 @@
 
 The `manuscript/` directory contains the narrative components of the research. It is compiled into a publication-ready PDF automatically by the template's rendering infrastructure. This document describes every step, what it produces, which scripts run it, and how to troubleshoot failures.
 
+## Prerequisite: Mermaid diagrams need `chrome-headless-shell`
+
+This project's convention (`docs/AGENTS.md`) is that **every diagram is
+Mermaid**. Any ```mermaid``` block that reaches the **combined PDF** is
+rasterised by `mmdc` (mermaid-cli), which drives a **pinned**
+`chrome-headless-shell` via Puppeteer. If that Chrome build is absent from
+`~/.cache/puppeteer/`, the combined-PDF step — and the whole **PDF
+Rendering** pipeline stage — fails with:
+
+```
+mmdc failed for inline_mermaid_0001_...: Could not find Chrome (ver. X)
+```
+
+Install it once (reversible, one-time per machine; CI provisions it
+automatically, a fresh local clone does not):
+
+```bash
+npx --yes puppeteer browsers install chrome-headless-shell
+# or pin to the exact version mmdc reports as missing:
+npx --yes puppeteer browsers install chrome-headless-shell@131.0.6778.204
+```
+
+Per-section slide PDFs do **not** invoke `mmdc`, so "slides render but the
+combined PDF fails" is the signature of this missing dependency. See
+[troubleshooting.md](troubleshooting.md#pdf-rendering-fails-mmdc-could-not-find-chrome).
+
 ## The Self-Referential Flow
 
 The pipeline has four phases. Each phase must complete before the next begins.

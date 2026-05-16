@@ -100,6 +100,14 @@ Follow these steps in order whenever you change behavior and need to update the 
    ```
 7. **Verify figures and table appear** in the rendered PDF; check `output/tex/*.log` for LaTeX errors.
 
+> **Mermaid prerequisite.** The project convention is that every diagram is
+> Mermaid (`docs/AGENTS.md`). If a manuscript section embeds a ```mermaid```
+> block, the combined-PDF render shells out to `mmdc`, which needs a pinned
+> `chrome-headless-shell` in the Puppeteer cache. Install it once
+> (`npx --yes puppeteer browsers install chrome-headless-shell`) or the
+> **PDF Rendering** stage fails while per-section slides still render. Full
+> detail: [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md#prerequisite-mermaid-diagrams-need-chrome-headless-shell).
+
 Final deliverables appear under `output/template_code_project/` after `scripts/05_copy_outputs.py` runs (working files remain under `projects/template_code_project/output/` during the run).
 
 ## RASP Conventions

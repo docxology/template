@@ -98,7 +98,7 @@ for paper in result.papers:
 write_bibfile(OUT / "references.bib", db)
 
 # Synthesise with Ollama.
-llm = LLMClient(OllamaClientConfig(model="gemma3:4b"))
+llm = LLMClient(OllamaClientConfig(default_model="gemma3:4b"))
 joined = "\n\n".join(
     f"### {p.title}\n{p.abstract or ''}" for p in result.papers if p.abstract
 )

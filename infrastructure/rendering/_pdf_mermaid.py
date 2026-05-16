@@ -8,6 +8,8 @@ replaces the fence with a normal Markdown image reference before Pandoc runs.
 from __future__ import annotations
 
 import hashlib
+import json
+import os
 import re
 import shutil
 import subprocess
@@ -34,6 +36,19 @@ _BRACE_LABEL_RE: Final[re.Pattern[str]] = re.compile(
     r"(?P<prefix>\b[A-Za-z][\w.-]*)\{(?P<label>(?![\"`])[^}\n]*<br/>[^}\n]*)\}"
 )
 _STATE_DESCRIPTION_RE: Final[re.Pattern[str]] = re.compile(r"^\s*[A-Za-z_][\w.-]*\s*:")
+_PUPPETEER_RUNTIME_CONFIG_NAME: Final[str] = "inline_mermaid.puppeteer.json"
+_VERBATIM_END_MARKER: Final[str] = r"\end{verbatim}"
+_CACHE_CHROME_FILENAMES: Final[tuple[str, ...]] = (
+    "chrome",
+    "chrome-headless-shell",
+    "Google Chrome for Testing",
+)
+_SYSTEM_CHROME_NAMES: Final[tuple[str, ...]] = (
+    "google-chrome",
+    "google-chrome-stable",
+    "chromium",
+    "chromium-browser",
+)
 
 
 @dataclass(frozen=True)
@@ -63,31 +78,54 @@ def replace_inline_mermaid(content: str, manuscript_dir: Path | None) -> Mermaid
     output_dir = _inline_mermaid_dir(Path(manuscript_dir))
     output_dir.mkdir(parents=True, exist_ok=True)
     puppeteer_config = _find_puppeteer_config(Path(manuscript_dir))
+    if puppeteer_config is None:
+        chrome_executable = _resolve_chrome_executable()
+        if chrome_executable is None:
+            render_disabled_reason = "no Chrome resolved"
+        else:
+            render_disabled_reason = None
+            puppeteer_config = _write_puppeteer_runtime_config(output_dir, chrome_executable)
+    else:
+        render_disabled_reason = None
     mmdc = shutil.which("mmdc")
-    if mmdc is None:
-        raise RenderingError(
-            "Mermaid CLI 'mmdc' is required to render inline Mermaid diagrams for PDF output. "
-            "Install @mermaid-js/mermaid-cli and rerun the PDF render."
-        )
     expected_artifacts = _expected_inline_artifacts(content)
     _prune_inline_mermaid_dir(output_dir, expected_artifacts)
 
-    index = 0
+    block_index = 0
+    diagrams_rendered = 0
 
     def _replace(match: re.Match[str]) -> str:
-        nonlocal index
-        index += 1
-        source = _normalise_mermaid_source(match.group("source").strip())
+        nonlocal block_index, diagrams_rendered
+        block_index += 1
+        raw_source = match.group("source").strip()
+        source = _normalise_mermaid_source(raw_source) if raw_source else ""
         alt = _first_alt(match.group("alts")) or "Mermaid diagram"
         caption = _caption_for_markdown(_caption_text(match) or alt)
-        stem = f"inline_mermaid_{index:04d}_{_source_hash(source)}"
-        png_path = _render_mermaid(
-            mmdc=mmdc,
-            output_dir=output_dir,
-            stem=stem,
-            source=source,
-            puppeteer_config=puppeteer_config,
-        )
+        fallback_source = source or raw_source
+        stem = f"inline_mermaid_{block_index:04d}_{_source_hash(source)}"
+        if not source:
+            logger.warning("Inline Mermaid block %s is empty; falling back to verbatim figure", stem)
+            return _mermaid_fallback_figure(fallback_source, caption)
+        if render_disabled_reason is not None:
+            logger.warning("Inline Mermaid block %s falling back: %s", stem, render_disabled_reason)
+            return _mermaid_fallback_figure(fallback_source, caption)
+        if mmdc is None:
+            raise RenderingError(
+                "Mermaid CLI 'mmdc' is required to render inline Mermaid diagrams for PDF output. "
+                "Install @mermaid-js/mermaid-cli and rerun the PDF render."
+            )
+        try:
+            png_path = _render_mermaid(
+                mmdc=mmdc,
+                output_dir=output_dir,
+                stem=stem,
+                source=source,
+                puppeteer_config=puppeteer_config,
+            )
+        except RenderingError as exc:
+            logger.warning("%s", exc)
+            return _mermaid_fallback_figure(fallback_source, caption)
+        diagrams_rendered += 1
         rel_path = f"../figures/mermaid_inline/{png_path.name}"
         escaped_caption = _latex_caption(caption)
         return (
@@ -99,8 +137,8 @@ def replace_inline_mermaid(content: str, manuscript_dir: Path | None) -> Mermaid
         )
 
     rewritten = _MERMAID_BLOCK_RE.sub(_replace, content)
-    logger.info("Rendered %d inline Mermaid diagram(s) for PDF output", index)
-    return MermaidReplacementResult(rewritten, index)
+    logger.info("Rendered %d inline Mermaid diagram(s) for PDF output", diagrams_rendered)
+    return MermaidReplacementResult(rewritten, diagrams_rendered)
 
 
 def _inline_mermaid_dir(manuscript_dir: Path) -> Path:
@@ -138,6 +176,83 @@ def _find_puppeteer_config(start: Path) -> Path | None:
         if config.is_file():
             return config
     return None
+
+
+def _is_executable_file(path: Path) -> bool:
+    return path.is_file() and os.access(path, os.X_OK)
+
+
+def _cache_version_key(dirname: str) -> tuple[int, tuple[int, ...], str]:
+    _, _, version = dirname.partition("-")
+    if version:
+        parts = version.split(".")
+        if all(part.isdigit() for part in parts):
+            return (1, tuple(int(part) for part in parts), version)
+    return (0, tuple(), dirname)
+
+
+def _iter_cache_chrome_candidates(cache_root: Path) -> list[tuple[tuple[int, tuple[int, ...], str], Path]]:
+    candidates: list[tuple[tuple[int, tuple[int, ...], str], Path]] = []
+    for subtree in ("chrome", "chrome-headless-shell"):
+        subtree_root = cache_root / subtree
+        if not subtree_root.is_dir():
+            continue
+        for version_dir in subtree_root.iterdir():
+            if not version_dir.is_dir():
+                continue
+            for candidate in sorted(version_dir.rglob("*")):
+                if candidate.name in _CACHE_CHROME_FILENAMES and _is_executable_file(candidate):
+                    candidates.append((_cache_version_key(version_dir.name), candidate))
+                    break
+    return candidates
+
+
+def _resolve_chrome_executable() -> Path | None:
+    env_path = os.environ.get("PUPPETEER_EXECUTABLE_PATH")
+    if env_path:
+        candidate = Path(env_path)
+        if _is_executable_file(candidate):
+            return candidate
+
+    cache_dir = Path(os.environ.get("PUPPETEER_CACHE_DIR", Path.home() / ".cache" / "puppeteer"))
+    cache_candidates = _iter_cache_chrome_candidates(cache_dir)
+    if cache_candidates:
+        return max(cache_candidates, key=lambda item: item[0])[1]
+
+    for executable_name in _SYSTEM_CHROME_NAMES:
+        resolved = shutil.which(executable_name)
+        if resolved is None:
+            continue
+        candidate = Path(resolved)
+        if _is_executable_file(candidate):
+            return candidate
+
+    for executable_name in _SYSTEM_CHROME_NAMES:
+        candidate = Path.home() / executable_name
+        if _is_executable_file(candidate):
+            return candidate
+
+    for executable_name in _SYSTEM_CHROME_NAMES:
+        candidate = Path("/usr/bin") / executable_name
+        if _is_executable_file(candidate):
+            return candidate
+
+    return None
+
+
+def _write_puppeteer_runtime_config(output_dir: Path, chrome_executable: Path) -> Path:
+    runtime_config = output_dir / _PUPPETEER_RUNTIME_CONFIG_NAME
+    runtime_config.write_text(
+        json.dumps(
+            {
+                "executablePath": str(chrome_executable),
+                "args": ["--no-sandbox"],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return runtime_config
 
 
 def _source_hash(source: str) -> str:
@@ -342,6 +457,21 @@ def _latex_caption(text: str) -> str:
     return "".join(replacements.get(char, char) for char in text)
 
 
+def _mermaid_fallback_figure(source: str, caption: str) -> str:
+    body = source or "(empty mermaid diagram)"
+    body = body.replace(_VERBATIM_END_MARKER, r"\end {verbatim}")
+    escaped_caption = _latex_caption(caption)
+    return (
+        "\n\\begin{figure}[htbp]\n"
+        "\\centering\n"
+        "\\begin{verbatim}\n"
+        f"{body}\n"
+        "\\end{verbatim}\n"
+        f"\\caption{{{escaped_caption}}}\n"
+        "\\end{figure}\n"
+    )
+
+
 def _markdown_alt(text: str) -> str:
     cleaned = " ".join(text.split())
     cleaned = cleaned.replace("[", "(").replace("]", ")")
@@ -357,9 +487,6 @@ def _render_mermaid(
     puppeteer_config: Path | None,
 ) -> Path:
     """Render one Mermaid source string to PNG with strict failure handling."""
-    if not source:
-        raise RenderingError(f"Inline Mermaid block {stem} is empty")
-
     mmd_path = output_dir / f"{stem}.mmd"
     png_path = output_dir / f"{stem}.png"
     if png_path.is_file() and png_path.stat().st_size > 0 and mmd_path.is_file():
@@ -383,12 +510,17 @@ def _render_mermaid(
     ]
     if puppeteer_config is not None:
         cmd.extend(["--puppeteerConfigFile", str(puppeteer_config)])
+    env = os.environ.copy()
+    env["PATH"] = os.pathsep.join(part for part in (env.get("PATH", ""), os.defpath) if part)
 
     try:
+        # Intentionally convert every mmdc execution failure into a documented
+        # caller-side fallback so combined PDF rendering can continue.
         completed = subprocess.run(
             cmd,
             capture_output=True,
             check=False,
+            env=env,
             text=True,
             timeout=90,
         )
@@ -405,4 +537,4 @@ def _render_mermaid(
     return png_path
 
 
-__all__ = ["MermaidReplacementResult", "replace_inline_mermaid"]
+__all__ = ["MermaidReplacementResult", "_resolve_chrome_executable", "replace_inline_mermaid"]

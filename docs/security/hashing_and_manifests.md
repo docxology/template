@@ -15,7 +15,7 @@ During the post-processing phase of `./secure_run.sh`, the system calculates two
 
 A `.hashes.json` manifest is written to the output directory immediately adjacent to the finalized PDFs. This file tracks the timestamp, doc-id, SHA-256 hash, and SHA-512 hash.
 
-If `projects/template_code_project/output/pdf/code_project_combined.pdf` was processed, the engine will drop `code_project_combined.hashes.json` right next to it.
+If `projects/template_code_project/output/pdf/template_code_project_combined.pdf` was processed, the engine will drop `template_code_project_combined.hashes.json` right next to it.
 
 ## Internal Binding
 

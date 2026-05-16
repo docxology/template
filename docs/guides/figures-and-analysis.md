@@ -533,7 +533,7 @@ flowchart TB
 
     FIG --> FIG_F[example_figure.png ·<br/>correlation_analysis.png ·<br/>statistics_figure.png]
     DATA --> DATA_F[analysis_data.csv · analysis_data.npz]
-    PDF --> PDF_F[01_abstract.pdf · 02_introduction.pdf · ...<br/>code_project_combined.pdf]
+    PDF --> PDF_F[01_abstract.pdf · 02_introduction.pdf · ...<br/>template_code_project_combined.pdf]
     TEX --> TEX_F[01_abstract.tex · ...]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -565,7 +565,7 @@ vim projects/template_code_project/scripts/my_figure.py
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
 # 6. View result (top-level output after copy outputs)
-open output/template_code_project/pdf/code_project_combined.pdf
+open output/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
 **Advanced workflow with validation**:

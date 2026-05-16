@@ -55,6 +55,56 @@ flowchart LR
 * **Understanding what lands in `output/`** →
   [`output_conventions.md`](output_conventions.md).
 
+## Using this exemplar as a reference for a new project
+
+`template_prose_project` is a **canonical, always-present reference** (root
+`CLAUDE.md`/`AGENTS.md`). Use it two ways:
+
+**1. As a pattern reference (read, don't copy).** Mirror these invariants —
+they are what the repo's gates enforce:
+
+| Invariant | Where it's taught | How it's enforced |
+|---|---|---|
+| Thin-orchestrator: only `src/pipeline.py` touches `infrastructure/`; `scripts/` are CLI shims | [`architecture.md`](architecture.md), [`style_guide.md`](style_guide.md) | code review + `src/` infra-import grep |
+| Zero mocks: real Markdown + real BibTeX in `tmp_path` | [`testing_philosophy.md`](testing_philosophy.md) | `scripts/verify_no_mocks.py` |
+| ≥90% project coverage on `src/` (this exemplar holds 100%) | [`testing_philosophy.md`](testing_philosophy.md) | `--cov-fail-under=90` (canonical command below) |
+| `manuscript/config.yaml` is the single source of run policy | [`rendering_pipeline.md`](rendering_pipeline.md) | the prose pipeline |
+| `references.bib` hand-curated, read-only (validated, never written) | [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) | bibliography checks |
+
+**2. As a fork seed for a new prose/review project:**
+
+```bash
+NEW=my_review_project
+cp -r projects/template_prose_project projects/$NEW
+cd projects/$NEW
+# 1. Edit manuscript/config.yaml (title, thresholds, bibliography policy) — the only knob
+# 2. Replace manuscript/*.md with your prose; keep H1-per-section + {{TOKEN}} conventions
+# 3. Curate manuscript/references.bib (validated, never auto-written)
+# 4. Adjust src/ only if you need new checks — keep pipeline.py as the sole infra seam
+uv run pytest projects/$NEW/tests/ --cov=projects/$NEW/src --cov-fail-under=90
+uv run python scripts/execute_pipeline.py --project $NEW --core-only
+```
+
+The project is then auto-discovered; the repo-level
+[`docs/guides/new-project-setup.md`](../../../docs/guides/new-project-setup.md)
+covers the full workflow.
+
+**Prerequisites before referencing the render path:** this manuscript embeds
+Mermaid (`manuscript/05_pipeline_internals.md`), so combined-PDF rendering
+needs `chrome-headless-shell`
+(`npx --yes puppeteer browsers install chrome-headless-shell`); the
+authoritative test gate is the **direct** command below (a green
+`01_run_tests.py` exit with 0 collected tests is not a pass). See
+[`troubleshooting.md`](troubleshooting.md) and
+[`rendering_pipeline.md`](rendering_pipeline.md).
+
+**Prose vs. code — pick the right reference.** Use
+**`template_prose_project`** when the deliverable is editorial
+(readability / structure / citation review of written prose). Use the sibling
+**[`template_code_project`](../../template_code_project/)** when the
+deliverable is computed (algorithms, data figures, numerical results). Both
+share the identical structural contract above.
+
 ## See also
 
 * Project [`README.md`](../README.md) — top-level project overview.

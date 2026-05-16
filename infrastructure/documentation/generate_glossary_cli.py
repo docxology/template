@@ -44,6 +44,17 @@ def main() -> int:
         0 on success, 1 on failure
     """
     args = sys.argv[1:]
+    if args and args[0] in ("-h", "--help"):
+        print(
+            "Usage: python -m infrastructure.documentation.generate_glossary_cli "
+            "[SRC_DIR GLOSSARY_MD]\n\n"
+            "Regenerate the AUTO-API-GLOSSARY table between markers in the "
+            "project glossary.\n"
+            "With no args: defaults to <repo>/project/src and "
+            "<repo>/project/manuscript/98_symbols_glossary.md.\n"
+            "Exit 0 on success (including 'already up-to-date'), 1 on failure."
+        )
+        return 0
     if len(args) >= 2:
         src_dir = Path(args[0])
         glossary_md = Path(args[1])

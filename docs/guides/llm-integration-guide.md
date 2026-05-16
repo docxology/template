@@ -118,13 +118,13 @@ off_topic = is_off_topic(response_text, expected_topic="gradient descent")
 
 ```bash
 # Query the LLM directly
-uv run python -m infrastructure.llm.cli query "What is gradient descent?"
+uv run python -m infrastructure.llm.cli.main query "What is gradient descent?"
 
 # Check Ollama connectivity
-uv run python -m infrastructure.llm.cli check
+uv run python -m infrastructure.llm.cli.main check
 
 # List available models
-uv run python -m infrastructure.llm.cli models
+uv run python -m infrastructure.llm.cli.main models
 ```
 
 ---

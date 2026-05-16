@@ -204,13 +204,18 @@ avg = calculate_average(data)  # Use tested method
 - `infrastructure/config/` - Repository-wide configuration and defaults
 - `infrastructure/core/` - Core utilities (logging, exceptions, file operations, pipeline, telemetry, security)
 - `infrastructure/docker/` - Docker containerization settings and configuration
+- `infrastructure/doctor/` - Repository health diagnostics and self-check tooling
 - `infrastructure/documentation/` - Figure management, API docs, glossary generation
 - `infrastructure/llm/` - Local LLM integration (Ollama) for reviews and translations
+- `infrastructure/orchestration/` - Pipeline/multi-project/secure CLI entrypoints (`python -m infrastructure.orchestration`)
 - `infrastructure/project/` - Multi-project discovery and management
+- `infrastructure/prose/` - Prose-manuscript analysis helpers (prose-centric projects)
 - `infrastructure/publishing/` - Academic publishing tools (DOI, citations, Zenodo, arXiv)
+- `infrastructure/reference/` - Citation and reference-management utilities
 - `infrastructure/rendering/` - Multi-format rendering (PDF, HTML, slides)
 - `infrastructure/reporting/` - Pipeline reporting and error aggregation
 - `infrastructure/scientific/` - Scientific computing best practices and benchmarking
+- `infrastructure/search/` - Literature search and reference discovery
 - `infrastructure/skills/` - Programmatic AI skill discovery and manifest generation
 - `infrastructure/steganography/` - Cryptographic PDF watermarking and verification
 - `infrastructure/validation/` - PDF, output, and markdown integrity validation

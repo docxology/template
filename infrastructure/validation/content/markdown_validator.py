@@ -109,6 +109,19 @@ def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:
             text = fh.read()
         labels.update(EQ_LABEL_PATTERN.findall(text))
         anchors.update(ANCHOR_PATTERN.findall(text))
+        # Also accept GitHub/MkDocs-slugified plain headings as valid
+        # internal-link targets. A table-of-contents self-link such as
+        # ``[Level 8](#level-8-complex-mathematical-workflows)`` is correct in
+        # the rendered doc even without an explicit ``{#anchor}`` attribute;
+        # without this the validator emits false "missing anchor" findings for
+        # every guide's own TOC.
+        body = _text_without_fenced_code(text)
+        for raw_heading in re.findall(r"(?m)^#{1,6}[ \t]+(.+?)[ \t]*$", body):
+            heading = re.sub(r"\s*\{#[^}]+\}\s*$", "", raw_heading).strip()
+            slug = re.sub(r"[^\w\s-]", "", heading.lower())
+            slug = re.sub(r"\s+", "-", slug).strip("-")
+            if slug:
+                anchors.add(slug)
     return labels, anchors
 
 
@@ -368,8 +381,14 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
                     fix_suggestion="Replace \\[...\\] with \\begin{equation}...\\end{equation}",
                 )
             )
-        # Ensure each equation block carries a label and detect duplicates
-        for m in eq_block.finditer(text):
+        # Ensure each equation block carries a label and detect duplicates.
+        # Scan with fenced code removed so ```` ```latex ````/```` ```markdown ````
+        # teaching examples in guides are not parsed as real equations
+        # (otherwise the non-greedy span pairs an example's
+        # ``\begin{equation}`` with a later prose mention, producing false
+        # "duplicate label" / "missing \label" findings).
+        _eq_scan_text = re.sub(r"`+[^`\n]*`+", "", _text_without_fenced_code(text))
+        for m in eq_block.finditer(_eq_scan_text):
             block = m.group(1)
             labels_in_block = label_pattern.findall(block)
             if not labels_in_block:

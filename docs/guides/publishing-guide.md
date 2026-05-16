@@ -100,7 +100,7 @@ client = ZenodoClient(config)
 
 # Publish
 result = publish_to_zenodo(
-    pdf_path=Path("output/template_code_project/pdf/code_project_combined.pdf"),
+    pdf_path=Path("output/template_code_project/pdf/template_code_project_combined.pdf"),
     metadata=metadata,
     client=client,
 )
@@ -145,7 +145,7 @@ release = create_github_release(
     tag="v1.0.0",
     title="Initial Release",
     notes="First public release of the research manuscript.",
-    assets=[Path("output/template_code_project/pdf/code_project_combined.pdf")],
+    assets=[Path("output/template_code_project/pdf/template_code_project_combined.pdf")],
 )
 ```
 

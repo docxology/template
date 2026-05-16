@@ -54,10 +54,10 @@ Command-line interface that:
 uv run python scripts/04_validate_output.py --project template_code_project
 
 # Validate a specific PDF using CLI
-uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/code_project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/template_code_project_combined.pdf
 
 # Validate with verbose output
-uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/code_project_combined.pdf --verbose
+uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/template_code_project_combined.pdf --verbose
 
 # Validate markdown files
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
@@ -82,12 +82,12 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Sample Output
 
 ```
-🔍 Validating PDF: code_project_combined.pdf
+🔍 Validating PDF: template_code_project_combined.pdf
 
 ======================================================================
 📋 PDF VALIDATION REPORT
 ======================================================================
-📄 File: code_project_combined.pdf
+📄 File: template_code_project_combined.pdf
 
 ⚠️  Found 11 rendering issue(s):
    • Unresolved references (??): 11
@@ -200,7 +200,7 @@ Ensure you're running from the repository root:
 
 ```bash
 cd /path/to/template
-uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/code_project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
 ### "PDF file not found"

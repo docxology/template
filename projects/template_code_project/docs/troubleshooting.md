@@ -160,6 +160,69 @@ uv run pytest projects/template_code_project/tests/ -n auto
 uv run python -c "import yaml; yaml.safe_load(open('projects/template_code_project/manuscript/config.yaml'))"
 ```
 
+## PDF Rendering fails: `mmdc` could not find Chrome
+
+**Symptom:** the pipeline reaches **PDF Rendering** and fails (authoritative
+`output/reports/pipeline_report.json` shows `"PDF Rendering" -> failed`)
+even though tests, analysis, and per-section slide PDFs passed. The error
+contains:
+
+```
+❌ Rendering error generating combined PDF: mmdc failed for
+inline_mermaid_0001_...: Error: Could not find Chrome (ver. 131.0.6778.204).
+```
+
+**Cause:** a manuscript section embeds a ```mermaid``` block (this project's
+convention is Mermaid-for-all-diagrams). The combined-PDF render shells out
+to `mmdc`, which needs a **pinned** `chrome-headless-shell` in the Puppeteer
+cache. Slide PDFs do not invoke `mmdc`, so they still succeed — that
+asymmetry is the tell.
+
+**Fix:** install the pinned headless Chrome once (reversible; lands in
+`~/.cache/puppeteer/`):
+
+```bash
+npx --yes puppeteer browsers install chrome-headless-shell@131.0.6778.204
+# or the line mmdc/puppeteer resolves by default:
+npx --yes puppeteer browsers install chrome-headless-shell
+uv run python scripts/03_render_pdf.py --project template_code_project   # re-verify
+```
+
+Environment provisioning, not a manuscript defect — CI provisions it; a
+fresh clone does not. See
+[rendering_pipeline.md](rendering_pipeline.md#prerequisite-mermaid-diagrams-need-chrome-headless-shell).
+
+## Tests report PASSED but ran 0 tests / 0.0% coverage
+
+**Symptom:** `scripts/01_run_tests.py --project template_code_project` prints
+`Project: ✓ PASSED (0/0 tests, 0.0% coverage)` and exits 0, while the
+documented direct command runs all 117 tests at ~99% coverage.
+
+**Cause:** the aggregate runner resolves the interpreter from
+`projects/template_code_project/.venv`. A `.venv` made by `uv venv` without
+`uv sync` lacks `pytest`, so pytest collects nothing. **A green exit with
+zero collected tests is not a pass.**
+
+**Fixes:**
+
+1. Run the **canonical per-project gate** directly (authoritative; what CI
+   enforces project-by-project):
+   ```bash
+   uv run pytest projects/template_code_project/tests/ \
+     --cov=projects/template_code_project/src --cov-fail-under=90
+   ```
+2. Or `uv sync` so the per-project `.venv` has the test deps.
+3. Always confirm **collected > 0 AND coverage ≥ 90%** — never exit code
+   alone. (The runner now falls back to the workspace interpreter and
+   hard-fails a 0-collected or below-threshold run.)
+
+**Coverage-config note:** the project's `pyproject.toml` `[tool.coverage]`
+`source`/`omit` are *project-relative* and do not resolve when pytest runs
+from the repo root; the canonical command and the runner both measure
+against the **repo-root** `pyproject.toml` config — that is the number the
+90% gate enforces (≈99% for this exemplar; `src/analysis.py` and
+`src/dashboard.py` are intentionally omitted there).
+
 ## See also
 
 - [`output_conventions.md`](output_conventions.md) — output directory layout and regeneration rules.

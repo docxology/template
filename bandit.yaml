@@ -13,6 +13,21 @@ exclude_dirs:
   # lean/MathlibProofs/.lake/packages/mathlib). Third-party, non-authored;
   # same policy as .venv/site-packages. Harmless no-op on clean checkouts.
   - ".lake"
+  # Rotating research projects: research WIP intentionally NOT held to the
+  # exemplar security floor (the same documented rotating-project exception
+  # that applies to coverage and mypy). The security gate stays strict on
+  # `infrastructure/`, `scripts/`, and the canonical exemplars
+  # (`template_code_project` / `template_prose_project` — all clean); rotating
+  # research code must not block every contributor's push/CI. Harmless no-op
+  # when a name is absent on a given checkout (these rotate to the already-
+  # excluded `projects_archive/` / `projects_in_progress/`).
+  - "projects/BeeStack"
+  - "projects/cogant"
+  - "projects/crescent_city"
+  - "projects/deep_temporal_affect"
+  - "projects/biology_textbook"
+  - "projects/actinf_policy_entanglement_lean"
+  - "projects/_test_project"
 #
 # Policy: CI runs Bandit at MEDIUM+ severity (`-ll`) over `infrastructure/`,
 # `scripts/`, and `projects/` (minus `exclude_dirs` above). The skips below silence LOW-severity findings

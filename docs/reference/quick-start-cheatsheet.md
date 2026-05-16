@@ -30,7 +30,7 @@ uv run python scripts/02_run_analysis.py --project template_code_project
 uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
 
 # Open manuscript
-open output/template_code_project/pdf/code_project_combined.pdf  # Top-level output (example project)
+open output/template_code_project/pdf/template_code_project_combined.pdf  # Top-level output (example project)
 ```
 
 ### Build Pipeline Commands
@@ -46,7 +46,7 @@ uv run python scripts/03_render_pdf.py --project template_code_project
 uv run python scripts/04_validate_output.py --project template_code_project
 
 # Validate PDFs (after copy stage or use project working tree)
-uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/code_project_combined.pdf
+uv run python -m infrastructure.validation.cli pdf output/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
 ## 📁 Directory Structure Quick Reference

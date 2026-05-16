@@ -12,6 +12,13 @@
 # Manual: `pre-commit run --all-files --hook-stage manual` (also runs the
 # strict `bandit-low` pass, which mirrors the LOW-severity sweep allowed by
 # `bandit.yaml`).
+#
+# PATH robustness: GUI git clients (GitHub Desktop, IDEs) launch hooks with a
+# minimal login PATH that does NOT include `~/.local/bin` (uv's default install
+# dir), so a bare `uv`/`uvx` would exit 127 "command not found". Every hook
+# script below therefore prepends the common uv install locations to PATH
+# before invoking uv/uvx so commits succeed from a terminal AND from GUI
+# clients identically.
 
 repos:
   - repo: local
@@ -24,6 +31,7 @@ repos:
           - pipefail
           - -c
           - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             uvx ruff check infrastructure/ projects/*/src/ --fix &&
             uvx ruff format infrastructure/ projects/*/src/
         language: system
@@ -39,7 +47,9 @@ repos:
           - -eo
           - pipefail
           - -c
-          - uv run mypy infrastructure/ projects/*/src/
+          - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
+            uv run mypy infrastructure/ projects/*/src/
         language: system
         pass_filenames: false
         stages: [pre-commit, manual]
@@ -54,6 +64,7 @@ repos:
           - pipefail
           - -c
           - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
             uv run python scripts/check_tracked_generated_artifacts.py &&
             uv run python scripts/verify_no_mocks.py &&
@@ -79,6 +90,7 @@ repos:
           - pipefail
           - -c
           - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             uv run bandit -c bandit.yaml -r -ll
             infrastructure/ scripts/ projects/
             -q
@@ -98,7 +110,9 @@ repos:
           - -eo
           - pipefail
           - -c
-          - uv run python -m infrastructure.skills check
+          - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
+            uv run python -m infrastructure.skills check
         language: system
         pass_filenames: false
         stages: [pre-push, manual]
@@ -116,7 +130,9 @@ repos:
           - -eo
           - pipefail
           - -c
-          - uv run python -m infrastructure.skills check-all-exports
+          - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
+            uv run python -m infrastructure.skills check-all-exports
         language: system
         pass_filenames: false
         stages: [pre-push, manual]
@@ -135,6 +151,7 @@ repos:
           - pipefail
           - -c
           - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             uv run bandit -c bandit.yaml -r --severity-level low
             infrastructure/ scripts/
             -q

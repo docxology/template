@@ -53,6 +53,35 @@ After the run, look in `output/`:
 * `data/manuscript_variables.json` — substitution variables for the abstract.
 * `run_summary.json` — one-line metadata.
 
+## Prerequisites & verification
+
+**Combined-PDF rendering needs headless Chrome.** This manuscript embeds
+Mermaid diagrams (`manuscript/05_pipeline_internals.md`); the combined PDF is
+built with `mmdc`, which requires a pinned `chrome-headless-shell`. Install
+it once (CI provisions it automatically; a fresh clone does not):
+
+```bash
+npx --yes puppeteer browsers install chrome-headless-shell
+```
+
+Without it the **PDF Rendering** stage fails while per-section slides still
+render — see [`docs/troubleshooting.md`](docs/troubleshooting.md#pdf-rendering-stage-fails-mmdc-could-not-find-chrome).
+
+**Test/coverage gate (authoritative per-project command).** Exit code 0
+alone is not proof; confirm tests collected > 0 and coverage ≥ 90%:
+
+```bash
+uv run pytest projects/template_prose_project/tests/ \
+  --cov=projects/template_prose_project/src --cov-fail-under=90
+# exemplar baseline: 67 passed, 100% coverage
+```
+
+Full end-to-end (tests → analysis → render → validate → copy):
+
+```bash
+uv run python scripts/execute_pipeline.py --project template_prose_project --core-only
+```
+
 ## Configuration
 
 Every knob lives in `manuscript/config.yaml`:

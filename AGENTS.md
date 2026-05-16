@@ -206,7 +206,7 @@ An optional intermediate staging area for projects that are under active develop
 - **NOT executed** by any pipeline scripts
 - Useful for drafting new project scaffolding before promoting to `projects/`
 
-**Current projects in progress:** see the directories under [`projects_in_progress/`](projects_in_progress/) (e.g. `cogant`, `template` on this checkout; not executed by `./run.sh` until promoted to `projects/`). **Active** projects under `projects/` are listed only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+**Current projects in progress:** the roster rotates every checkout, so it is deliberately **not** hard-coded here — run `ls projects_in_progress/` for the live set (not executed by `./run.sh` until promoted to `projects/`). **Active** projects under `projects/` are listed only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 **To promote:** Move `projects_in_progress/{name}/` → `projects/{name}/`
 
@@ -272,12 +272,7 @@ Each directory contains documentation for easy navigation:
 | [`projects_archive/template_search_project/`](projects_archive/template_search_project/) | [AGENTS.md](projects_archive/template_search_project/AGENTS.md) | [README.md](projects_archive/template_search_project/README.md) | Literature-search exemplar (rotating; restore under `projects/` to run) |
 | Rotating projects (e.g. `fep_lean`, `actinf_policy_entanglement_lean`) | see project tree when checked out under `projects/` | see project tree when checked out under `projects/` | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current roster; rotates between `projects_in_progress/` and `projects_archive/` |
 
-**In-progress projects** (under `projects_in_progress/`, not executed by pipeline):
-
-| Directory | Purpose |
-| --------- | ------- |
-| [`projects_in_progress/cogant/`](projects_in_progress/cogant/) | Cognitive agent project |
-| [`projects_in_progress/template/`](projects_in_progress/template/) | Meta-documentation and template metrics |
+**In-progress projects** live under [`projects_in_progress/`](projects_in_progress/) and are not executed by the pipeline until promoted to `projects/`. The roster rotates every checkout, so it is deliberately **not** hard-coded here (cf. the rotation rule above — hard-coding rotating project paths is the recurring staleness defect this guidance prevents): run `ls projects_in_progress/` for the live set, and see [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for the active `projects/` roster.
 
 **Archived projects** (under `projects_archive/`, preserved but not executed):
 

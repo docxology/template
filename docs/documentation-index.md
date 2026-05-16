@@ -90,6 +90,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **Open Gauss naming** — [reference/opengauss-naming.md](reference/opengauss-naming.md) (math-inc `gauss` CLI vs Huawei DBMS; does not require `fep_lean` on disk)
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 - **[core/literature-data-flow.md](core/literature-data-flow.md)** - Literature search and data pipeline overview
+- **[accessibility.md](accessibility.md)** - Accessibility notes for generated documentation and diagrams
 
 ### Quick Reference
 

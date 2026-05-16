@@ -44,6 +44,7 @@ nosetests.xml
 coverage.xml
 coverage*.xml
 coverage.json
+coverage_*.json
 *.cover
 .hypothesis/
 

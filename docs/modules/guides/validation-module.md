@@ -28,7 +28,7 @@
 from pathlib import Path
 from infrastructure.validation import validate_pdf_rendering, extract_text_from_pdf, scan_for_issues
 
-pdf_path = Path("output/template_code_project/pdf/code_project_combined.pdf")
+pdf_path = Path("output/template_code_project/pdf/template_code_project_combined.pdf")
 
 # Validate structural integrity of a rendered PDF
 results = validate_pdf_rendering(pdf_path)
@@ -80,7 +80,7 @@ output_dir = Path("output/template_code_project")
 report = verify_output_integrity(output_dir)
 
 # Targeted checks
-verify_file_integrity(output_dir / "pdf" / "code_project_combined.pdf")
+verify_file_integrity(output_dir / "pdf" / "template_code_project_combined.pdf")
 verify_cross_references(Path("projects/template_code_project/manuscript"))
 verify_data_consistency(output_dir / "data")
 verify_academic_standards(Path("projects/template_code_project/manuscript"))

@@ -54,8 +54,13 @@ pytest tests/
 # With verbose output
 pytest tests/ -v
 
-# With coverage
+# With coverage (local HTML exploration)
 pytest tests/ --cov=../src --cov-report=html
+
+# Canonical enforced gate (from repo root — the real per-project gate, CI parity).
+# A green exit with 0 collected tests is NOT a pass: confirm collected > 0 AND coverage >= 90%.
+uv run pytest projects/template_code_project/tests/ \
+  --cov=projects/template_code_project/src --cov-fail-under=90
 ```
 
 ### Run Specific Test Classes
