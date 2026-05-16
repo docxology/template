@@ -119,6 +119,278 @@ class TemplateError(message: str, context: dict[str, Any] | None=None, suggestio
 
 Base exception for all template-related errors.
 
+## Package: `infrastructure.doctor`
+
+### `build_plans_for_findings`
+
+*function — defined in `infrastructure.doctor.fixers`*
+
+```python
+build_plans_for_findings(findings: list[Finding], state: DoctorState, *, max_therapy: TherapyLevel=TherapyLevel.CONSERVATIVE, selected_codes: frozenset[str] | None=None, selected_fix_ids: frozenset[str] | None=None) -> list[FixPlan]
+```
+
+Translate findings into a deduplicated, ordered list of plans.
+
+### `compute_exit_code`
+
+*function — defined in `infrastructure.doctor.reporter`*
+
+```python
+compute_exit_code(findings: Iterable[Finding]) -> int
+```
+
+Map the worst finding severity into a stable exit code.
+
+### `compute_scorecard`
+
+*function — defined in `infrastructure.doctor.scorecard`*
+
+```python
+compute_scorecard(findings: Iterable[Finding]) -> tuple[float, dict[str, float]]
+```
+
+Return ``(overall, per_dimension)`` 0–100 scores.
+
+### `DETECTORS`
+
+*constant — defined in `infrastructure.doctor.detectors`*
+
+```python
+DETECTORS: tuple[DetectorFn, ...] = (detect_doctor_state_writable, detect_uv_available, detect_python_version, de...
+```
+
+### `DIMENSION_WEIGHTS`
+
+*constant — defined in `infrastructure.doctor.scorecard`*
+
+```python
+DIMENSION_WEIGHTS: dict[str, float] = {'environment': 2.0, 'project_layout': 2.0, 'hygiene': 1.0, 'tooling_state': ...
+```
+
+### `DIMENSIONS`
+
+*constant — defined in `infrastructure.doctor.scorecard`*
+
+```python
+DIMENSIONS: dict[str, str] = {'DOC1': 'environment', 'DOC2': 'project_layout', 'DOC3': 'hygiene', 'DOC4': ...
+```
+
+### `DoctorReport`
+
+*class — defined in `infrastructure.doctor.models`*
+
+```python
+class DoctorReport
+```
+
+Aggregate result of one doctor run.
+
+### `DoctorSafetyError`
+
+*class — defined in `infrastructure.doctor.safety`*
+
+```python
+class DoctorSafetyError(RuntimeError)
+```
+
+Raised when the safety contract cannot be honoured.
+
+### `DoctorState`
+
+*class — defined in `infrastructure.doctor.safety`*
+
+```python
+class DoctorState(repo_root: Path)
+```
+
+Filesystem layout for doctor state.
+
+### `EXIT_CRITICAL`
+
+*constant — defined in `infrastructure.doctor.reporter`*
+
+```python
+EXIT_CRITICAL = 3
+```
+
+### `EXIT_ERROR`
+
+*constant — defined in `infrastructure.doctor.reporter`*
+
+```python
+EXIT_ERROR = 2
+```
+
+### `EXIT_HEALTHY`
+
+*constant — defined in `infrastructure.doctor.reporter`*
+
+```python
+EXIT_HEALTHY = 0
+```
+
+### `EXIT_REGRESSION`
+
+*constant — defined in `infrastructure.doctor.reporter`*
+
+```python
+EXIT_REGRESSION = 4
+```
+
+### `EXIT_USAGE`
+
+*constant — defined in `infrastructure.doctor.reporter`*
+
+```python
+EXIT_USAGE = 64
+```
+
+### `EXIT_WARN`
+
+*constant — defined in `infrastructure.doctor.reporter`*
+
+```python
+EXIT_WARN = 1
+```
+
+### `Finding`
+
+*class — defined in `infrastructure.doctor.models`*
+
+```python
+class Finding
+```
+
+Outcome of one read-only detector.
+
+### `FIXER_REGISTRY`
+
+*constant — defined in `infrastructure.doctor.fixers`*
+
+```python
+FIXER_REGISTRY: dict[str, FixerFn] = {'fix_make_run_sh_executable': build_fix_make_run_sh_executable, 'fix_clean_p...
+```
+
+### `FixPlan`
+
+*class — defined in `infrastructure.doctor.models`*
+
+```python
+class FixPlan
+```
+
+Declarative description of an intended mutation.
+
+### `load_journal`
+
+*function — defined in `infrastructure.doctor.safety`*
+
+```python
+load_journal(state: DoctorState) -> list[MutateRecord]
+```
+
+Return every record in the journal, oldest first.
+
+### `mutate`
+
+*function — defined in `infrastructure.doctor.safety`*
+
+```python
+mutate(plan: FixPlan, state: DoctorState) -> MutateRecord
+```
+
+Execute ``plan`` under the full safety contract.
+
+### `MutateRecord`
+
+*class — defined in `infrastructure.doctor.models`*
+
+```python
+class MutateRecord
+```
+
+Audit record produced by the mutate() chokepoint.
+
+### `register_handler`
+
+*function — defined in `infrastructure.doctor.safety`*
+
+```python
+register_handler(action_kind: str, handler: ActionHandler) -> None
+```
+
+Register an :class:`ActionHandler` for ``action_kind``.
+
+### `render_report_json`
+
+*function — defined in `infrastructure.doctor.reporter`*
+
+```python
+render_report_json(report: DoctorReport, *, indent: int | None=2) -> str
+```
+
+Render the report as JSON for agent consumption.
+
+### `render_report_text`
+
+*function — defined in `infrastructure.doctor.reporter`*
+
+```python
+render_report_text(report: DoctorReport) -> str
+```
+
+Render the full report as a text block.
+
+### `RepairLevel`
+
+*class — defined in `infrastructure.doctor.models`*
+
+```python
+class RepairLevel
+```
+
+One available therapy for a finding.
+
+### `run_detectors`
+
+*function — defined in `infrastructure.doctor.detectors`*
+
+```python
+run_detectors(repo_root: Path, selected: tuple[DetectorFn, ...] | None=None) -> list[Finding]
+```
+
+Run every detector (or only ``selected``) and return findings.
+
+### `Severity`
+
+*class — defined in `infrastructure.doctor.models`*
+
+```python
+class Severity(IntEnum)
+```
+
+Ordered diagnostic severity. Higher = worse.
+
+### `TherapyLevel`
+
+*class — defined in `infrastructure.doctor.models`*
+
+```python
+class TherapyLevel(IntEnum)
+```
+
+How radical a fixer is.
+
+### `undo`
+
+*function — defined in `infrastructure.doctor.safety`*
+
+```python
+undo(record: MutateRecord, state: DoctorState) -> MutateRecord
+```
+
+Restore the filesystem to the pre-mutation state for ``record``.
+
 ## Package: `infrastructure.documentation`
 
 ### `ApiEntry`
@@ -198,7 +470,7 @@ Integrates figures and references into markdown files.
 *function — defined in `infrastructure.llm.review.generation`*
 
 ```python
-generate_review_with_metrics(client: LLMClient, text: str, review_type: ReviewType, review_name: str, template_class: type[ResearchTemplate], model_name: str='', temperature: float=0.3, max_tokens: int | None=None, max_retries: int=1) -> tuple[str | None, ReviewMetrics]
+generate_review_with_metrics(client: LLMClient, text: str, review_type: ReviewType, review_name: str, template_class: 'type[ResearchTemplate]', model_name: str='', temperature: float=0.3, max_tokens: int | None=None, max_retries: int=1) -> tuple[str | None, ReviewMetrics]
 ```
 
 Generate a review using a specified template and record execution metrics.
@@ -413,7 +685,7 @@ Information about a discovered project.
 resolve_project_root(repo_root: Path | str, project_name: str) -> Path
 ```
 
-Return the directory for *project_name*, preferring ``projects/`` over ``projects_in_progress/``.
+Return the directory for *project_name*, preferring real active projects over WIP trees.
 
 ### `run_project_setup_hook`
 
@@ -1306,7 +1578,7 @@ Generate comprehensive test summary report.
 *function — defined in `infrastructure.reporting.error_aggregator`*
 
 ```python
-get_error_aggregator() -> ErrorAggregator
+get_error_aggregator() -> 'ErrorAggregator'
 ```
 
 Get global error aggregator instance (lazily initialized).
@@ -1797,12 +2069,22 @@ build_manifest_payload(skills: Sequence[SkillDescriptor]) -> dict[str, Any]
 
 Build the canonical JSON-serializable manifest structure.
 
+### `build_skill_index_markdown`
+
+*function — defined in `infrastructure.skills.discovery`*
+
+```python
+build_skill_index_markdown(skills: Sequence[SkillDescriptor]) -> str
+```
+
+Build a human-readable Markdown index for discovered skills.
+
 ### `DEFAULT_SKILL_SEARCH_ROOTS`
 
 *constant — defined in `infrastructure.skills.discovery`*
 
 ```python
-DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure', 'projects/template_code_project/src', '.cursor/skills')
+DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure', 'projects', '.cursor/skills')
 ```
 
 ### `discover_skills`
