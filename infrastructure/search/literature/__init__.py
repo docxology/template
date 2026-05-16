@@ -14,8 +14,6 @@ Public API:
 * :class:`SearchCache` — JSON-file cache.
 """
 
-from __future__ import annotations
-
 from infrastructure.search.literature.backends import (
     ArxivBackend,
     BackendError,

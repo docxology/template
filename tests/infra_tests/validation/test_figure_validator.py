@@ -126,6 +126,25 @@ class TestValidateFigureRegistry:
         assert success is True
         assert len(issues) == 0
 
+    def test_validate_nested_manuscript_files(self, tmp_path):
+        """Nested chapter, lab, and appendix files are part of the manuscript."""
+        registry_path = tmp_path / "registry.json"
+        registry = {
+            "fig:nested": {"path": "figures/nested.png"},
+        }
+        with open(registry_path, "w") as f:
+            json.dump(registry, f)
+
+        manuscript_dir = tmp_path / "manuscript"
+        nested_dir = manuscript_dir / "unit_I"
+        nested_dir.mkdir(parents=True)
+        (nested_dir / "chapter.md").write_text("\\label{fig:nested}")
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is True
+        assert len(issues) == 0
+
     def test_validate_ref_and_label_patterns(self, tmp_path):
         """Test that both \\ref and \\label patterns are detected."""
         # Create registry
@@ -148,6 +167,21 @@ class TestValidateFigureRegistry:
 
         assert success is True
         assert len(issues) == 0
+
+    def test_validate_ignores_latex_comment_reference_examples(self, tmp_path):
+        """Preamble comments may document label syntax without referencing a figure."""
+        registry_path = tmp_path / "registry.json"
+        registry_path.write_text(json.dumps({"fig:real": {"path": "figures/real.png"}}))
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "preamble.md").write_text("% Example: \\label{fig:...}\n")
+        (manuscript_dir / "01_intro.md").write_text("\\ref{fig:real}")
+
+        success, issues = validate_figure_registry(registry_path, manuscript_dir)
+
+        assert success is True
+        assert issues == []
 
     def test_validate_handles_file_read_errors(self, tmp_path):
         """Test that file read errors are handled gracefully."""

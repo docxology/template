@@ -33,12 +33,12 @@ def test_stage_log_path_rejects_unknown_layout(tmp_path: Path) -> None:
 
 def test_setup_stage_log_creates_directory_and_banner(tmp_path: Path) -> None:
     fixed_now = datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
-    log = setup_stage_log(tmp_path, "template_code_project", "Setup Environment", now=fixed_now)
+    log = setup_stage_log(tmp_path, "template_code_project", "Environment Setup", now=fixed_now)
     assert log.exists()
     assert log.parent.is_dir()
     text = log.read_text(encoding="utf-8")
     assert "2024-01-01 12:00:00 UTC" in text
-    assert "Starting: Setup Environment" in text
+    assert "Starting: Environment Setup" in text
 
 
 def test_setup_stage_log_appends_not_clobbers(tmp_path: Path) -> None:

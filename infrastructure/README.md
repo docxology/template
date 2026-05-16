@@ -16,14 +16,18 @@ Each subpackage (and the package root) includes a **`SKILL.md`** with YAML front
 | [config/SKILL.md](config/SKILL.md) | `infrastructure-config` |
 | [core/SKILL.md](core/SKILL.md) | `infrastructure-core` |
 | [docker/SKILL.md](docker/SKILL.md) | `infrastructure-docker` |
+| [doctor/SKILL.md](doctor/SKILL.md) | `infrastructure-doctor` |
 | [documentation/SKILL.md](documentation/SKILL.md) | `infrastructure-documentation` |
 | [llm/SKILL.md](llm/SKILL.md) | `infrastructure-llm` |
 | [orchestration/SKILL.md](orchestration/SKILL.md) | `infrastructure-orchestration` |
 | [project/SKILL.md](project/SKILL.md) | `infrastructure-project` |
+| [prose/SKILL.md](prose/SKILL.md) | `infrastructure-prose` |
 | [publishing/SKILL.md](publishing/SKILL.md) | `infrastructure-publishing` |
+| [reference/SKILL.md](reference/SKILL.md) | `infrastructure-reference` |
 | [rendering/SKILL.md](rendering/SKILL.md) | `infrastructure-rendering` |
 | [reporting/SKILL.md](reporting/SKILL.md) | `infrastructure-reporting` |
 | [scientific/SKILL.md](scientific/SKILL.md) | `infrastructure-scientific` |
+| [search/SKILL.md](search/SKILL.md) | `infrastructure-search` |
 | [skills/SKILL.md](skills/SKILL.md) | `infrastructure-skills` |
 | [steganography/SKILL.md](steganography/SKILL.md) | `infrastructure-steganography` |
 | [core/telemetry/SKILL.md](core/telemetry/SKILL.md) | `telemetry` |
@@ -244,12 +248,15 @@ flowchart LR
 - **[documentation/](documentation/)** - Figure management and API documentation generation
 - **[rendering/](rendering/)** - Multi-format output generation (PDF, HTML, slides)
 - **[validation/](validation/)** - Quality assurance and content validation
+- **[prose/](prose/)** - Readability metrics, outline analysis, editorial quality flags for manuscripts
 
 ### External Integrations
 
 - **[llm/](llm/)** - Local Large Language Model integration
 - **[publishing/](publishing/)** - Academic publishing workflows
 - **[scientific/](scientific/)** - Scientific computing utilities
+- **[search/](search/)** - Multi-source literature search (arXiv, Crossref, Paperclip, local)
+- **[reference/](reference/)** - BibTeX read / write / convert (`parse_bibfile`, `render_database`)
 
 ### Reporting & Quality
 
@@ -258,6 +265,11 @@ flowchart LR
 ### Project Management
 
 - **[project/](project/)** - Multi-project discovery, validation, and lifecycle management
+- **[orchestration/](orchestration/)** - Pipeline CLI, interactive menu, stage logging, secure-run wrapper (backs `run.sh` / `secure_run.sh`)
+
+### Diagnostics & Repair
+
+- **[doctor/](doctor/)** - Repository diagnostics and safe, reversible automated repair (`uv run python -m infrastructure.doctor`)
 
 ### Security & Integrity
 
@@ -322,10 +334,10 @@ Infrastructure modules maintain **≥60% test coverage** (typically 80-84% overa
 
 ```bash
 # Test all infrastructure
-pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=term-missing
 
 # Test specific module
-pytest tests/infra_tests/core/ -v
+uv run pytest tests/infra_tests/core/ -v
 ```
 
 ## Architecture Principles

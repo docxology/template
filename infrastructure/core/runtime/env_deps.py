@@ -5,8 +5,6 @@ missing dependencies. Split from environment.py to keep each module
 under 300 LOC.
 """
 
-from __future__ import annotations
-
 import shutil
 import subprocess
 

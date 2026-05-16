@@ -15,9 +15,8 @@ Subcommands
 All subcommands return an integer exit code.
 """
 
-from __future__ import annotations
-
 import argparse
+import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -94,12 +93,82 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # 'secure' subcommand (secure_run.sh entry point)
-    secure = sub.add_parser("secure", help="Run pipeline + steganography.")
-    secure.add_argument("--project", required=False)
-    secure.add_argument("--steganography-only", action="store_true")
-    secure.add_argument("--skip-infra", action="store_true")
-    secure.add_argument("--core-only", action="store_true")
-    secure.add_argument("--resume", action="store_true")
+    #
+    # Two modes are supported:
+    #   1. Pipeline + steganography  — requires --project.
+    #   2. Steganography-only        — --steganography-only; if no --project,
+    #      every discovered project under projects/ is post-processed.
+    secure = sub.add_parser(
+        "secure",
+        help="Run pipeline + steganography (or steganography-only).",
+        description=(
+            "Secure manuscript pipeline. Runs the standard pipeline for "
+            "one project and then applies cryptographic PDF watermarking "
+            "(steganography) to every emitted PDF. Use --steganography-only "
+            "to skip the pipeline phase and post-process existing PDFs "
+            "under projects/<name>/output/pdf/ (or output/<name>/pdf/)."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  ./secure_run.sh --project my_project\n"
+            "      Full pipeline + steganography for one project.\n"
+            "\n"
+            "  ./secure_run.sh --project my_project --core-only\n"
+            "      Pipeline without LLM stages, then steganography.\n"
+            "\n"
+            "  ./secure_run.sh --steganography-only --project my_project\n"
+            "      Skip the pipeline; only post-process one project's PDFs.\n"
+            "\n"
+            "  ./secure_run.sh --steganography-only\n"
+            "      Skip the pipeline; post-process every discovered project.\n"
+            "\n"
+            "  ./secure_run.sh --deterministic --project my_project\n"
+            "      Pin embedded build timestamp to `git log -1 --format=%cI`\n"
+            "      so two consecutive runs produce byte-identical PDFs."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    secure.add_argument(
+        "--project",
+        required=False,
+        help=(
+            "Project slug under projects/. Required for the pipeline phase; "
+            "optional with --steganography-only (omit to sweep all projects)."
+        ),
+    )
+    secure.add_argument(
+        "--steganography-only",
+        action="store_true",
+        help=(
+            "Skip the pipeline phase and only run steganography on existing "
+            "PDFs. Use after a prior pipeline run to re-apply or refresh "
+            "watermarks without re-rendering."
+        ),
+    )
+    secure.add_argument(
+        "--skip-infra",
+        action="store_true",
+        help="Skip Layer-1 infrastructure tests during the pipeline phase.",
+    )
+    secure.add_argument(
+        "--core-only",
+        action="store_true",
+        help="Run the 8-stage core pipeline (no LLM review / translations).",
+    )
+    secure.add_argument(
+        "--resume",
+        action="store_true",
+        help="Resume the pipeline from the last checkpoint.",
+    )
+    secure.add_argument(
+        "--deterministic",
+        action="store_true",
+        help=(
+            "Pin steganography build timestamp to the latest commit's "
+            "author date (sets STEGANOGRAPHY_DETERMINISTIC=1) so two "
+            "consecutive runs emit byte-identical PDFs."
+        ),
+    )
 
     # 'menu' subcommand (diagnostic only)
     menu_p = sub.add_parser("menu", help="Render the interactive menu.")
@@ -118,6 +187,18 @@ def _resolve_repo_root(ns: argparse.Namespace) -> Path:
     return Path(ns.repo_root) if ns.repo_root else _default_repo_root()
 
 
+def _default_project_name(names: list[str]) -> str:
+    """Pick the canonical template project when present, else the first name.
+
+    This mirrors the behaviour of the interactive menu in ``_interactive``,
+    which always displays the exemplar project first (sorted list).
+    """
+    canon = "template_code_project"
+    if canon in names:
+        return canon
+    return names[0]
+
+
 def _cmd_pipeline(ns: argparse.Namespace) -> int:
     repo_root = _resolve_repo_root(ns)
     runner = PipelineRunner(repo_root=repo_root)
@@ -129,13 +210,14 @@ def _cmd_pipeline(ns: argparse.Namespace) -> int:
             )
         )
     if not ns.project:
-        # Default to the first discovered project (parity with run.sh
-        # picking template_code_project when present).
+        # Default to the canonical template project if present (parity with
+        # run.sh interactive menu), otherwise fall back to the first
+        # discovered project alphabetically.
         names = discover_qualified_names(repo_root)
         if not names:
             print("No projects discovered.", file=sys.stderr)
             return 1
-        project = "template_code_project" if "template_code_project" in names else names[0]
+        project = _default_project_name(names)
     else:
         project = validate_project_slug(ns.project, repo_root)
 
@@ -164,6 +246,11 @@ def _cmd_multi(ns: argparse.Namespace) -> int:
 
 def _cmd_secure(ns: argparse.Namespace) -> int:
     repo_root = _resolve_repo_root(ns)
+    # --deterministic is honoured by infrastructure.steganography.config at
+    # call time (not import time), so setting the env var here propagates
+    # to the downstream processor without touching the shell wrapper.
+    if getattr(ns, "deterministic", False):
+        os.environ["STEGANOGRAPHY_DETERMINISTIC"] = "1"
     return run_secure_pipeline(
         repo_root,
         SecureRunOptions(
@@ -181,7 +268,7 @@ def _cmd_menu(ns: argparse.Namespace) -> int:
     project = ns.project
     if project is None:
         names = discover_qualified_names(repo_root)
-        project = "template_code_project" if "template_code_project" in names else (names[0] if names else "(none)")
+        project = names[0] if names else "(none)"
     print(render_menu(project))
     return 0
 
@@ -216,10 +303,15 @@ def _interactive(
         return 1
 
     qualified = [p.qualified_name for p in projects]
-    current = "template_code_project" if "template_code_project" in qualified else qualified[0]
+    current = qualified[0]
 
     while True:
         print(render_menu(current))
+        print(
+            "  Keys: 0-9, a-d, f, p, i, q  |  chain digits (e.g. 234)  |  comma or space  |  p project  i info  q quit",
+        )
+        print()
+        print("Choice: ", end="", flush=True)
         try:
             raw = reader().strip()
         except (EOFError, KeyboardInterrupt):
@@ -229,7 +321,12 @@ def _interactive(
         if raw in {"q", "Q"}:
             return 0
         if raw in {"p", "P"}:
-            picked = select_project_interactive(projects, current=current, reader=reader)
+            picked = select_project_interactive(
+                projects,
+                current=current,
+                reader=reader,
+                writer=sys.stdout,
+            )
             if picked is None:
                 return 0
             if picked != "all":
@@ -250,13 +347,16 @@ def _interactive(
 
         for key in keys:
             rc = _dispatch_menu_key(key, current, repo_root, runner, stage_runner=stage_runner)
+            # Sole "All projects core (fast)" — exit the menu loop after the
+            # detailed end-of-run report is printed, regardless of pass/fail.
+            # The user does not want the menu redrawn after option d.
+            if len(keys) == 1 and key == "d":
+                if rc != 0:
+                    print(f"Last operation exited with code {rc}", file=sys.stderr)
+                return rc
             if rc != 0:
                 print(f"Last operation exited with code {rc}", file=sys.stderr)
                 break
-            # Sole "All projects core (fast)" succeeds — show runner summary only,
-            # do not redraw the interactive menu (matches ./run.sh option d UX).
-            if len(keys) == 1 and key == "d":
-                return 0
 
 
 _STAGE_KEY_MAP: dict[str, str] = {

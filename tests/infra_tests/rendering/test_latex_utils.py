@@ -1,3 +1,4 @@
+"""Tests for latex_utils module."""
 import pytest
 
 from infrastructure.core.exceptions import CompilationError

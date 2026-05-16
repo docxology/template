@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Unified repository health check command.
 
 This module wires together every quality gate that lives behind its own
@@ -27,8 +28,6 @@ table uses bare ANSI escape codes, falling back to plain text when stdout
 is not a TTY.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import os
@@ -49,7 +48,6 @@ __all__ = [
     "format_report_table",
     "main",
 ]
-
 
 # ---------------------------------------------------------------------------
 # Public dataclasses
@@ -99,6 +97,17 @@ class HealthReport:
 _OUTPUT_TAIL_BYTES = 4000
 
 
+def _discover_project_src_dirs(repo_root: Path) -> list[str]:
+    """Discover ``src/`` directories under ``projects/`` for linting."""
+    projects_dir = repo_root / "projects"
+    if not projects_dir.is_dir():
+        return []
+    return [
+        str(projects_dir / name / "src")
+        for name in sorted(d.name for d in projects_dir.iterdir() if d.is_dir() and (d / "src").is_dir())
+    ]
+
+
 def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
     """Return the canonical ``(name, argv)`` list for every gate.
 
@@ -129,28 +138,18 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         ),
     ]
 
+    project_src_dirs = _discover_project_src_dirs(repo_root)
+    ruff_targets = ["infrastructure/"] + project_src_dirs
+
     return [
         ("mypy", ["uv", "run", "mypy", "--strict", "infrastructure/"]),
         (
             "ruff",
-            [
-                "uvx",
-                "ruff",
-                "check",
-                "infrastructure/",
-                "projects/template_code_project/src/",
-            ],
+            ["uvx", "ruff", "check", *ruff_targets],
         ),
         (
             "ruff-format",
-            [
-                "uvx",
-                "ruff",
-                "format",
-                "--check",
-                "infrastructure/",
-                "projects/template_code_project/src/",
-            ],
+            ["uvx", "ruff", "format", "--check", *ruff_targets],
         ),
         (
             "bandit",
@@ -217,7 +216,6 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
 # the names do not depend on the repo root.
 GATE_NAMES: tuple[str, ...] = tuple(name for name, _ in build_gate_specs(Path(".")))
 
-
 # ---------------------------------------------------------------------------
 # Special-case post-processing
 # ---------------------------------------------------------------------------
@@ -252,7 +250,6 @@ def _stage_table_passed(returncode: int, combined_output: str) -> bool:
 _CUSTOM_PASS_PREDICATES = {
     "stage-table": _stage_table_passed,
 }
-
 
 # ---------------------------------------------------------------------------
 # Execution
@@ -334,7 +331,6 @@ def run_health_checks(
 # Rendering
 # ---------------------------------------------------------------------------
 
-
 _ANSI_RESET = "\033[0m"
 _ANSI_GREEN = "\033[32m"
 _ANSI_RED = "\033[31m"
@@ -378,10 +374,7 @@ def format_report_table(report: HealthReport, *, color: bool = True) -> str:
 
     for result in report.results:
         status = "PASS" if result.passed else "FAIL"
-        status_colored = colorize(
-            status,
-            _ANSI_GREEN if result.passed else _ANSI_RED,
-        )
+        status_colored = colorize(status, _ANSI_GREEN if result.passed else _ANSI_RED)
         elapsed = f"{result.elapsed_ms / 1000.0:6.2f}s"
         rows.append((result.name, status_colored, elapsed))
 
@@ -398,10 +391,7 @@ def format_report_table(report: HealthReport, *, color: bool = True) -> str:
         lines.append(f"{name.ljust(name_width)}  {status.ljust(6 + (len(status) - 4))}  {elapsed}")
     lines.append(sep)
     overall = "PASS" if report.passed else "FAIL"
-    overall_colored = colorize(
-        overall,
-        _ANSI_GREEN if report.passed else _ANSI_RED,
-    )
+    overall_colored = colorize(overall, _ANSI_GREEN if report.passed else _ANSI_RED)
     total_s = report.total_elapsed_ms / 1000.0
     lines.append(f"Overall: {overall_colored}  ({total_s:.2f}s total, {len(report.results)} gates)")
     return "\n".join(lines)

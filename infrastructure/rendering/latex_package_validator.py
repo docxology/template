@@ -5,8 +5,6 @@ This module serves as the entry point, re-exporting from focused submodules:
 - latex_validation: Bulk validation, preamble checking, reports
 """
 
-from __future__ import annotations
-
 # Re-exports for backwards compatibility
 from infrastructure.rendering.latex_discovery import (  # noqa: F401
     PackageStatus,

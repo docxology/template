@@ -54,7 +54,7 @@ This index lists documentation files in the Research Project Template by categor
 
 ## Development rules
 
-Development standards (formerly in `.cursorrules/`) are documented in the `rules/` directory:
+Development standards are documented in **`docs/rules/`**. The Cursor IDE entry rule is the repository root **[`.cursorrules`](../.cursorrules)** file:
 
 - **[`rules/AGENTS.md`](rules/AGENTS.md)** - Overview and navigation guide
 - **[`rules/README.md`](rules/README.md)** - Quick reference and patterns
@@ -89,6 +89,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **Agent skills manifest** — `uv run python -m infrastructure.skills write` (default output: `.cursor/skill_manifest.json`) · `uv run python -m infrastructure.skills check` — see [modules/guides/skills-module.md](modules/guides/skills-module.md)
 - **Open Gauss naming** — [reference/opengauss-naming.md](reference/opengauss-naming.md) (math-inc `gauss` CLI vs Huawei DBMS; does not require `fep_lean` on disk)
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
+- **[core/literature-data-flow.md](core/literature-data-flow.md)** - Literature search and data pipeline overview
 
 ### Quick Reference
 
@@ -110,7 +111,14 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[architecture/two-layer-architecture.md](architecture/two-layer-architecture.md)** - Two-layer architecture guide
 - **[architecture/thin-orchestrator-summary.md](architecture/thin-orchestrator-summary.md)** - Thin orchestrator pattern
 - **[architecture/decision-tree.md](architecture/decision-tree.md)** - Code placement decisions
+- **[architecture/adrs/000-two-layer-architecture.md](architecture/adrs/000-two-layer-architecture.md)** - ADR-000: Two-layer architecture
+- **[architecture/adrs/001-thin-orchestrator-pattern.md](architecture/adrs/001-thin-orchestrator-pattern.md)** - ADR-001: Thin orchestrator pattern
+- **[architecture/adrs/002-declarative-dag-pipeline.md](architecture/adrs/002-declarative-dag-pipeline.md)** - ADR-002: Declarative DAG pipeline
+- **[architecture/adrs/004-zero-mock-testing-policy.md](architecture/adrs/004-zero-mock-testing-policy.md)** - ADR-004: Zero-mock testing policy
 - **[core/workflow.md](core/workflow.md)** - Development workflow
+- **[architecture/testing-strategy.md](architecture/testing-strategy.md)** - Testing strategy overview
+- **[architecture/discovery-export-synthesis.md](architecture/discovery-export-synthesis.md)** - Discovery and export patterns
+- **[architecture/migration-from-flat.md](architecture/migration-from-flat.md)** - Migration from flat layout
 
 ---
 
@@ -144,6 +152,8 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 ### Scientific Computing
 
 - **[modules/scientific-simulation-guide.md](modules/scientific-simulation-guide.md)** - Simulation system
+- **[best-practices/literature-search-best-practices.md](best-practices/literature-search-best-practices.md)** - Literature search patterns and best practices
+- **[guides/literature-workflow-guide.md](guides/literature-workflow-guide.md)** - Literature workflow step-by-step
 
 ---
 
@@ -156,6 +166,9 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[development/coverage-gaps.md](development/coverage-gaps.md)** - Coverage analysis
 - **[development/testing/testing-guide.md](development/testing/testing-guide.md)** - Testing framework
 - **[development/testing/testing-with-credentials.md](development/testing/testing-with-credentials.md)** - Credential testing
+- **[development/no-mocks-http-testing.md](development/no-mocks-http-testing.md)** - HTTP testing without mocks
+- **[development/validation_gates.md](development/validation_gates.md)** - Validation gates
+- **[development/code-review-checklist.md](development/code-review-checklist.md)** - Eight-criterion review checklist (clarity, composability, functionality/SSOT, testability, validation, documentation, conventions, reproducibility)
 
 ---
 
@@ -164,6 +177,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[modules/modules-guide.md](modules/modules-guide.md)** - **16** documented infrastructure areas (includes Orchestration and Prose; see the counting note in that file and [`infrastructure/AGENTS.md`](../infrastructure/AGENTS.md))
 - **[reference/api-reference.md](reference/api-reference.md)** - Unified API documentation
 - **[modules/pdf-validation.md](modules/pdf-validation.md)** - PDF validation system
+- **[modules/literature-search-and-references.md](modules/literature-search-and-references.md)** - Literature search and reference pipeline
 
 ### Per-Module Guides (`modules/guides/`)
 
@@ -200,7 +214,10 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[operational/build/build-history.md](operational/build/build-history.md)** - Build history
 - **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - CI/CD integration
 - **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - Dependency management
+- **[plans/README.md](plans/README.md)** - Strategic plans and architecture decisions
 - **Filepath audit** — `scripts/audit_filepaths.py`: `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md` ([script entrypoint](../scripts/audit_filepaths.py)); overview [audit/README.md](audit/README.md)
+- **[audit/literature-modules-audit.md](audit/literature-modules-audit.md)** - Literature module audit
+- **[audit/triple-check-report.md](audit/triple-check-report.md)** - Triple check audit report
 
 ### Configuration & Performance (`operational/config/`)
 
@@ -230,7 +247,10 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 ### Other Operational Guides
 
 - **[operational/reporting-guide.md](operational/reporting-guide.md)** - Reporting system
+- **[operational/overview.md](operational/overview.md)** - Operational overview
+- **[operational/runbook.md](operational/runbook.md)** - Runbook for operational procedures
 - **[operational/error-handling-guide.md](operational/error-handling-guide.md)** - Error handling patterns
+- **[operational/docker.md](operational/docker.md)** - Docker containerization
 
 ---
 
@@ -250,6 +270,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 - **[security/steganography.md](security/steganography.md)** - Alpha-channel watermarking and QR codes
 - **[security/hashing_and_manifests.md](security/hashing_and_manifests.md)** - SHA-256/512 hashing and manifests
 - **[security/secure_execution.md](security/secure_execution.md)** - `secure_run.sh` orchestration and threat model
+- **[security/literature-fetch-security.md](security/literature-fetch-security.md)** - Security for literature fetching
 
 ---
 
@@ -274,6 +295,7 @@ Development standards (formerly in `.cursorrules/`) are documented in the `rules
 
 - **[streams/README.md](streams/README.md)** - Navigation index for livestream/talk notes
 - **[streams/inferant-stream-018-1.md](streams/inferant-stream-018-1.md)** - InferAnt #018.1 — March 2026 stream on the Zenodo paper
+- **[streams/inferant-stream-019-literature-search.md](streams/inferant-stream-019-literature-search.md)** - InferAnt #019 — Literature search pipeline and tools
 
 ---
 

@@ -32,7 +32,12 @@ class TestEncryption:
         assert isinstance(doc_id, str)
         assert len(doc_id) == 32
 
-    def test_generate_document_id_unique(self):
+    def test_generate_document_id_unique(self, monkeypatch):
+        # Uniqueness only holds in the random branch. Defensively ensure
+        # the deterministic-mode env flag is not set — earlier tests in
+        # the suite that set it via process-level os.environ (rather than
+        # monkeypatch) can otherwise pollute this one.
+        monkeypatch.delenv("STEGANOGRAPHY_DETERMINISTIC", raising=False)
         from infrastructure.steganography.encryption import generate_document_id
 
         ids = {generate_document_id() for _ in range(100)}

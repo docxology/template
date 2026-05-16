@@ -62,46 +62,46 @@ data: dict = load_from_file()
 ```python
 class DataProcessor:
     """Example class with type hints."""
-    
+
     def __init__(self, config: dict) -> None:
         """Initialize processor.
-        
+
         Args:
             config: Configuration dictionary
         """
         self.config: dict = config
-    
+
     def process(self, data: str) -> dict:
         """Process data.
-        
+
         Args:
             data: Input data
-            
+
         Returns:
             Processed result
         """
         return {"result": data}
-    
+
     @classmethod
     def from_file(cls, filepath: str) -> "DataProcessor":
         """Create processor from file.
-        
+
         Args:
             filepath: Path to config file
-            
+
         Returns:
             New DataProcessor instance
         """
         config = load_config(filepath)
         return cls(config)
-    
+
     @staticmethod
     def validate(data: dict) -> bool:
         """Validate data format.
-        
+
         Args:
             data: Data to validate
-            
+
         Returns:
             True if valid
         """
@@ -226,10 +226,10 @@ first_str = first_item(["a", "b"])     # str
 # ✅ GOOD: Generic class
 class Container(Generic[T]):
     """Container for any type."""
-    
+
     def __init__(self, item: T) -> None:
         self.item = item
-    
+
     def get(self) -> T:
         """Get the contained item."""
         return self.item
@@ -304,21 +304,21 @@ from typing import Protocol
 # ✅ GOOD: Define interface without inheritance
 class Drawable(Protocol):
     """Anything that can be drawn."""
-    
+
     def draw(self) -> None:
         """Draw the object."""
         ...
 
 class Circle:
     """Circle that implements Drawable."""
-    
+
     def draw(self) -> None:
         """Draw circle."""
         print("Drawing circle")
 
 class Square:
     """Square that implements Drawable."""
-    
+
     def draw(self) -> None:
         """Draw square."""
         print("Drawing square")
@@ -342,17 +342,17 @@ from typing import Self
 # ✅ GOOD: Builder pattern with fluent API
 class QueryBuilder:
     """Query builder with fluent API."""
-    
+
     def filter(self, condition: str) -> Self:
         """Add filter and return self."""
         # ... add filter ...
         return self
-    
+
     def limit(self, count: int) -> Self:
         """Add limit and return self."""
         # ... add limit ...
         return self
-    
+
     def execute(self) -> list[dict]:
         """Execute query."""
         # ... execute ...
@@ -368,12 +368,12 @@ query = QueryBuilder().filter("active=true").limit(10).execute()
 # ✅ GOOD: Use quotes for forward references
 class Node:
     """Tree node."""
-    
+
     def __init__(self, value: int) -> None:
         self.value: int = value
         self.left: "Node | None" = None
         self.right: "Node | None" = None
-    
+
     def add_child(self, child: "Node") -> None:
         """Add child node."""
         pass
@@ -383,7 +383,7 @@ from __future__ import annotations
 
 class Node:
     """Tree node (with future annotations)."""
-    
+
     def __init__(self, value: int) -> None:
         self.value: int = value
         self.left: Node | None = None
@@ -465,11 +465,11 @@ from contextlib import contextmanager
 # ✅ GOOD: Context manager
 class Connection:
     """Database connection."""
-    
+
     def __enter__(self) -> "Connection":
         """Enter context."""
         return self
-    
+
     def __exit__(self, *args: object) -> None:
         """Exit context."""
         pass

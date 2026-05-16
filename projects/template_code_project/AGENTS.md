@@ -1,6 +1,6 @@
 # Code Project - Optimization Research Exemplar
 
-**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Sister exemplars: [`template_prose_project`](../template_prose_project) (prose-review pipeline) and [`template_search_project`](../template_search_project) (literature discovery + auto-populated BibTeX). All three exemplars share the canonical [`docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md).
+**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Permanent sibling exemplar: [`template_prose_project`](../template_prose_project) (prose-review pipeline). Optional add-on exemplar: [`template_search_project`](../../projects_archive/template_search_project) (literature discovery + auto-populated BibTeX, restored under `projects/` when needed). The exemplars share the canonical [`docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md).
 
 ## Overview
 
@@ -17,7 +17,7 @@ A research project exemplifying mathematical optimization algorithms with rigoro
 
 ### Research Quality Assurance
 
-- **Test suite**: 96 tests covering edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/template_code_project/src/` typically measures **~99.5%** line/branch coverage (90% minimum gate enforced by the root pipeline; project `pyproject.toml` configures a 70% floor for ad-hoc runs)
+- **Test suite**: 117 tests covering edge cases, stability analysis, performance benchmarks, dashboard invariants, and full dashboard build; `projects/template_code_project/src/` typically measures **~99.5%** line/branch coverage (90% minimum gate enforced by both the project `pyproject.toml` and the root pipeline). Current counts: [`docs/_generated/canonical_facts.md`](../../docs/_generated/canonical_facts.md).
 - **Deterministic algorithms**: Reproducible results; tests avoid nondeterministic RNG unless documented (see `docs/agent_instructions.md`)
 - **Documentation**: Complete type hints, docstrings, and examples
 - **Parameter Validation**: Robust input checking and error handling
@@ -353,11 +353,11 @@ These issues were discovered during development and are documented here for futu
 
 > **See also**: [New Project Setup Guide](../../docs/guides/new-project-setup.md) for the full checklist.
 
-This project complies with the template's development standards defined in `.cursorrules/`.
+This project complies with the template development standards in **[`docs/rules/`](../../docs/rules/)** and the root **[`.cursorrules`](../../.cursorrules)** file.
 
 ### ✅ **Testing Standards Compliance**
 
-- **90%+ coverage**: 96 tests; `src/` line/branch coverage is typically ~99.5% with the current suite (exceeds 90% requirement)
+- **90%+ coverage**: 117 tests (see [`canonical_facts.md`](../../docs/_generated/canonical_facts.md)); `src/` line/branch coverage is typically ~99.5% with the current suite (exceeds 90% requirement)
 - **Real data only**: All tests use computations, no mocks
 - **Full integration**: Tests cover algorithm convergence, stability analysis, and performance benchmarking
 - **Deterministic results**: Tests use fixed inputs; any use of random draws should be justified or seeded (see `docs/agent_instructions.md`)
@@ -390,7 +390,7 @@ This project complies with the template's development standards defined in `.cur
 
 ### ✅ **Code Style Standards Compliance**
 
-- **Black formatting**: 88-character line limits, consistent formatting
+- **Ruff formatting** (`uvx ruff format`): 88-character line length (default alignment), consistent formatting — mirrors CI
 - **Descriptive names**: Clear variable and function names
 - **Import organization**: Standard library, third-party, local imports properly organized
 
@@ -532,5 +532,5 @@ Step sizes: 100%|██████████████████| 4/4 [00
 - [Root AGENTS.md](../../AGENTS.md) - Template documentation
 - [infrastructure/scientific/](../../infrastructure/scientific/AGENTS.md) - Scientific utilities
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — Pandoc citation/cross-reference syntax for this project
-- [`../../docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by all three template exemplars
-- Sister exemplars: [`template_prose_project`](../template_prose_project), [`template_search_project`](../template_search_project)
+- [`../../docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars and optional search add-on
+- Permanent sibling: [`template_prose_project`](../template_prose_project); optional search add-on: [`template_search_project`](../../projects_archive/template_search_project)

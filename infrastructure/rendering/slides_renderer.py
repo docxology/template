@@ -25,8 +25,6 @@ single section in isolation and have a different acceptable-citation
 set than the full manuscript.
 """
 
-from __future__ import annotations
-
 import re
 import subprocess
 from pathlib import Path
@@ -39,6 +37,12 @@ from infrastructure.rendering._pdf_latex_helpers import (
 )
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
+from infrastructure.rendering.latex_texttt import (
+    constrain_includegraphics_textheight,
+    make_known_literals_breakable,
+    make_long_texttt_breakable,
+    make_pandoc_reference_tokens_breakable,
+)
 
 logger = get_logger(__name__)
 
@@ -180,6 +184,25 @@ class SlidesRenderer:
             if figures_dir:
                 tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
 
+            tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
+            if texttt_replacements:
+                logger.info("Made %d long monospace path span(s) breakable in slides", texttt_replacements)
+
+            tex_content, literal_replacements = make_known_literals_breakable(tex_content)
+            if literal_replacements:
+                logger.info("Made %d recurring long label(s) breakable in slides", literal_replacements)
+
+            tex_content, reference_replacements = make_pandoc_reference_tokens_breakable(tex_content)
+            if reference_replacements:
+                logger.info(
+                    "Made %d unresolved cross-reference token(s) breakable in slides",
+                    reference_replacements,
+                )
+
+            tex_content, graphics_replacements = constrain_includegraphics_textheight(tex_content, "0.46")
+            if graphics_replacements:
+                logger.info("Constrained %d slide figure height bound(s)", graphics_replacements)
+
             # Write fixed LaTeX back
             _tmp = temp_tex.with_suffix(temp_tex.suffix + ".tmp")
             try:
@@ -190,7 +213,7 @@ class SlidesRenderer:
                 raise
 
             # Compile LaTeX to PDF
-            compile_latex(temp_tex, output_dir, compiler=self.config.latex_compiler)
+            compile_latex(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
 
             # Check if PDF was created
             if output_file.exists():
@@ -248,7 +271,8 @@ class SlidesRenderer:
             ) from e
 
     def _maybe_write_math_header(self, manuscript_dir: Path | None, output_dir: Path) -> Path | None:
-        """Write a Pandoc ``-H`` header file for Unicode math, if needed.
+        """Write a Pandoc ``-H`` header file for Unicode math + citation
+        fallbacks, if needed.
 
         Looks up ``preamble.md`` next to the manuscript, extracts any
         ``\\usepackage{unicode-math}`` block, and writes a minimal
@@ -256,25 +280,65 @@ class SlidesRenderer:
         rewritten on every render so it always reflects the current
         ``preamble.md``; consumers should treat it as a build artefact.
 
+        The header also defines ``\\providecommand`` fallbacks for natbib
+        commands (``\\citep``, ``\\citet``, ``\\citealp``) so that
+        manuscripts whose ``[@key]`` tokens were resolved to natbib calls
+        for the combined PDF still typeset cleanly in slides (which load
+        Beamer's default citation engine, not natbib). The fallback
+        renders a citation as ``[key]`` — readable, distinct, and
+        survives without an undefined-control-sequence error.
+
         Returns the header path when a snippet was produced, or ``None``
-        when ``preamble.md`` doesn't load ``unicode-math`` (Beamer keeps
-        its default fonts in that case).
+        when neither a math snippet nor a citation fallback is needed.
         """
         if manuscript_dir is None:
             return None
         preamble_file = manuscript_dir / "preamble.md"
-        if not preamble_file.exists():
-            return None
 
-        preamble = extract_preamble(preamble_file)
-        snippet = extract_math_font_preamble(preamble)
-        if snippet is None:
-            logger.debug("preamble.md does not load unicode-math; skipping slides math header")
+        snippet_parts: list[str] = []
+        if preamble_file.exists():
+            preamble = extract_preamble(preamble_file)
+            math_snippet = extract_math_font_preamble(preamble)
+            if math_snippet is not None:
+                snippet_parts.append(math_snippet)
+
+        # Natbib fallback definitions for slide rendering. \providecommand
+        # is a no-op when natbib is loaded (real definition wins). The layout
+        # defaults keep dense scientific prose and longtable-heavy sections
+        # within Beamer's narrower text block.
+        snippet_parts.append(
+            "% Slide layout defaults for warning-clean scientific decks.\n"
+            "\\usepackage{etoolbox}\n"
+            "\\IfFileExists{xurl.sty}{\\usepackage{xurl}}{}\n"
+            "\\IfFileExists{seqsplit.sty}{\\usepackage{seqsplit}}{\\newcommand{\\seqsplit}[1]{#1}}\n"
+            "\\protected\\def\\breakseq#1{\\seqsplit{#1}}\n"
+            "\\protected\\def\\breaktt#1{\\begingroup\\ttfamily\\seqsplit{#1}\\endgroup}\n"
+            "\\setlength{\\emergencystretch}{6em}\n"
+            "\\tolerance=5000\n"
+            "\\hbadness=10000\n"
+            "\\hfuzz=1pt\n"
+            "\\setlength{\\tabcolsep}{2pt}\n"
+            "\\AtBeginEnvironment{longtable}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n"
+            "\\AtBeginEnvironment{tabular}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n\n"
+            "% Natbib fallbacks — slides don't load natbib, but combined-PDF\n"
+            "% renderer emits \\citep / \\citet for clickable citations. The\n"
+            "% fallback renders a citation as a bracketed key list so slides\n"
+            "% don't fail on undefined control sequence. \\providecommand is\n"
+            "% a no-op if natbib is loaded later.\n"
+            "\\providecommand{\\citep}[1]{[#1]}\n"
+            "\\providecommand{\\citet}[1]{#1}\n"
+            "\\providecommand{\\citealp}[1]{#1}\n"
+            "\\providecommand{\\citeauthor}[1]{#1}\n"
+            "\\providecommand{\\citeyear}[1]{#1}\n"
+        )
+
+        if not snippet_parts:
+            logger.debug("preamble.md does not need a slides header; skipping")
             return None
 
         output_dir.mkdir(parents=True, exist_ok=True)
         header_path = output_dir / "_slides_math_header.tex"
-        header_path.write_text(snippet, encoding="utf-8")
+        header_path.write_text("\n".join(snippet_parts), encoding="utf-8")
         logger.debug(f"Wrote slides math header: {header_path}")
         return header_path
 
@@ -294,9 +358,6 @@ class SlidesRenderer:
         Returns:
             LaTeX content with corrected figure paths
         """
-        # Pattern to match \includegraphics with or without options
-        # Handles both \includegraphics{path} and \includegraphics[options]{path}
-        pattern = r"\\includegraphics(?:\[([^\]]*)\])?\{([^}]+)\}"
 
         def extract_filename(path_str: str) -> str:
             """Extract filename from various path formats."""
@@ -319,43 +380,105 @@ class SlidesRenderer:
                 # No separators — path_str is already a bare filename
                 return path_str
 
-        def fix_path(match: re.Match[str]) -> str:
-            r"""Fix a single includegraphics path to be relative to the slides compilation directory.
+        def matching_delimiter(start: int, opener: str, closer: str) -> int | None:
+            """Return the index just after a balanced delimiter group.
 
-            Transforms figure paths from various formats (absolute, manuscript-relative,
-            etc.) to paths relative to the LaTeX compilation directory (output/slides/).
-            Preserves any optional parameters like width, height, or scale specifications.
-
-            Args:
-                match: Regular expression match object containing:
-                    - group(1): Optional parameters in square brackets (e.g., width=0.8\\textwidth)
-                    - group(2): The figure path within braces
-
-            Returns:
-                The corrected \\includegraphics command with path relative to ../figures/
-                and any optional parameters preserved.
+            Pandoc commonly emits ``\\includegraphics[alt={... [ ...]}]{...}``.
+            A regex like ``\\[([^\\]]*)\\]`` stops at the first bracket inside
+            the alt text and therefore misses the real path argument.  This
+            scanner tracks braces while looking for the closing option
+            bracket, which is enough for Pandoc's generated Beamer LaTeX.
             """
-            options = match.group(1)  # Optional [options] parameter
-            old_path = match.group(2)  # Path in braces
+            depth = 0
+            brace_depth = 0
+            escaped = False
+            for idx in range(start, len(tex_content)):
+                ch = tex_content[idx]
+                if escaped:
+                    escaped = False
+                    continue
+                if ch == "\\":
+                    escaped = True
+                    continue
+                if ch == "{":
+                    brace_depth += 1
+                    continue
+                if ch == "}":
+                    brace_depth = max(0, brace_depth - 1)
+                    continue
+                if ch == opener and brace_depth == 0:
+                    depth += 1
+                    continue
+                if ch == closer and brace_depth == 0:
+                    depth -= 1
+                    if depth == 0:
+                        return idx + 1
+            return None
 
-            # Check if already in correct format
+        def matching_brace(start: int) -> int | None:
+            depth = 0
+            escaped = False
+            for idx in range(start, len(tex_content)):
+                ch = tex_content[idx]
+                if escaped:
+                    escaped = False
+                    continue
+                if ch == "\\":
+                    escaped = True
+                    continue
+                if ch == "{":
+                    depth += 1
+                    continue
+                if ch == "}":
+                    depth -= 1
+                    if depth == 0:
+                        return idx + 1
+            return None
+
+        pieces: list[str] = []
+        cursor = 0
+        command = r"\includegraphics"
+        while True:
+            start = tex_content.find(command, cursor)
+            if start == -1:
+                pieces.append(tex_content[cursor:])
+                break
+
+            pieces.append(tex_content[cursor:start])
+            pos = start + len(command)
+            while pos < len(tex_content) and tex_content[pos].isspace():
+                pos += 1
+
+            if pos < len(tex_content) and tex_content[pos] == "[":
+                opt_end = matching_delimiter(pos, "[", "]")
+                if opt_end is None:
+                    pieces.append(tex_content[start:])
+                    cursor = len(tex_content)
+                    break
+                pos = opt_end
+                while pos < len(tex_content) and tex_content[pos].isspace():
+                    pos += 1
+
+            if pos >= len(tex_content) or tex_content[pos] != "{":
+                pieces.append(tex_content[start:pos])
+                cursor = pos
+                continue
+
+            arg_end = matching_brace(pos)
+            if arg_end is None:
+                pieces.append(tex_content[start:])
+                cursor = len(tex_content)
+                break
+
+            old_path = tex_content[pos + 1 : arg_end - 1]
             if old_path.startswith("../figures/"):
-                return match.group(0)
-
-            # Extract filename from various path formats
-            filename = extract_filename(old_path)
-
-            # Build new path relative to compilation directory
-            # Since we're compiling in output_dir (output/slides), figures are in ../figures/
-            new_path = f"../figures/{filename}"
-
-            # Reconstruct command with optional parameters preserved
-            if options:
-                return f"\\includegraphics[{options}]{{{new_path}}}"
+                pieces.append(tex_content[start:arg_end])
             else:
-                return f"\\includegraphics{{{new_path}}}"
+                filename = extract_filename(old_path)
+                new_path = f"../figures/{filename}"
+                pieces.append(tex_content[start : pos + 1])
+                pieces.append(new_path)
+                pieces.append("}")
+            cursor = arg_end
 
-        # Apply path fixes
-        tex_content = re.sub(pattern, fix_path, tex_content)
-
-        return tex_content
+        return "".join(pieces)

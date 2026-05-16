@@ -35,7 +35,7 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 
 ### Phase 2 — Generate Manuscript Variables
 
-**Script**: `scripts/z_generate_manuscript_variables.py` (from repository root)
+**Script**: `scripts/z_generate_manuscript_variables.py` (thin orchestrator; logic lives in `src/manuscript_variables.py`)
 
 **Command**:
 ```bash
@@ -44,7 +44,7 @@ uv run python projects/template_code_project/scripts/z_generate_manuscript_varia
 
 **Inputs**: `manuscript/config.yaml` + `output/data/optimization_results.csv` + `output/reports/*.json`
 
-**What it does**: Reads each `manuscript/*.md` template file, replaces every `{{VARIABLE_NAME}}` token with a computed value, and writes the substituted copy to `output/manuscript/`. It also writes the full mapping to `output/data/manuscript_variables.json`.
+**What it does**: Calls `src/manuscript_variables.py::generate_variables()` to compute all token values, then calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` to write substituted copies of `manuscript/*.md` to `output/manuscript/`. It also writes the full mapping to `output/data/manuscript_variables.json`.
 
 **Critical**: ALL `{{VARIABLE}}` tokens must resolve to non-empty strings before Phase 3. If any token is unresolved, the literal `{{TOKEN_NAME}}` string will appear in the rendered PDF.
 
@@ -87,20 +87,20 @@ uv run python scripts/03_render_pdf.py --project template_code_project
 uv run python scripts/05_copy_outputs.py --project template_code_project
 ```
 
-**Output**: Final PDF and figures copied to `output/code_project/` at the repository root (used by CI artifact upload and the multi-project executive report).
+**Output**: Final PDF and figures copied to `output/template_code_project/` at the repository root (used by CI artifact upload and the multi-project executive report).
 
 ## config.yaml Controls
 
 | YAML Key | Controls | Consumed by |
 |---|---|---|
 | `paper.title` | PDF title page and page headers | `infrastructure/core/config/loader.py` → `pdf_renderer.py` |
-| `paper.version` | `{{CONFIG_VERSION}}` token | `z_generate_manuscript_variables.py` |
+| `paper.version` | `{{CONFIG_VERSION}}` token | `src/manuscript_variables.py` |
 | `authors[*]` | Author list on title page | `pdf_renderer.py` + `{{CONFIG_FIRST_AUTHOR}}` |
 | `publication.doi` | DOI on title page and citations | `pdf_renderer.py` |
-| `keywords` | `{{CONFIG_KEYWORDS}}` count | `z_generate_manuscript_variables.py` |
+| `keywords` | `{{CONFIG_KEYWORDS}}` count | `src/manuscript_variables.py` |
 | `experiment.step_sizes` | Drives ALL convergence experiments | `optimization_analysis.py` |
-| `experiment.max_iterations` | `{{CONFIG_MAX_ITERATIONS}}` | `z_generate_manuscript_variables.py` |
-| `experiment.tolerance` | `{{CONFIG_TOLERANCE}}` | `z_generate_manuscript_variables.py` |
+| `experiment.max_iterations` | `{{CONFIG_MAX_ITERATIONS}}` | `src/manuscript_variables.py` |
+| `experiment.tolerance` | `{{CONFIG_TOLERANCE}}` | `src/manuscript_variables.py` |
 | `experiment.stability_starting_points` | Stability grid rows | `optimization_analysis.py` |
 | `experiment.stability_step_sizes` | Stability grid columns | `optimization_analysis.py` |
 | `experiment.benchmark_dimensions` | Performance benchmark dimensions | `optimization_analysis.py` |
@@ -112,7 +112,7 @@ uv run python scripts/05_copy_outputs.py --project template_code_project
 
 **Symptom**: The rendered PDF contains literal `{{TOKEN_NAME}}` text.
 
-**Cause**: Phase 2 (`z_generate_manuscript_variables.py`) did not run, failed silently, or the token is not defined in the script.
+**Cause**: Phase 2 (`scripts/z_generate_manuscript_variables.py`) did not run, failed silently, or the token is not defined in `src/manuscript_variables.py::generate_variables()`.
 
 **Fix**:
 ```bash

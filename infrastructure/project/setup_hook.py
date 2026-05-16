@@ -37,8 +37,6 @@ The module follows the No-Mocks policy: tests exercise real ``tmp_path`` project
 and real subprocesses.
 """
 
-from __future__ import annotations
-
 import os
 import platform
 import shutil

@@ -2,7 +2,7 @@
 
 > **Containerized development and Ollama integration**
 
-**Location:** `infrastructure/docker/`  
+**Location:** `infrastructure/docker/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [Cloud Deploy](../../CLOUD_DEPLOY.md)
 
 ---

@@ -2,7 +2,7 @@
 
 > **Multi-project discovery, validation, and metadata extraction**
 
-**Location:** `infrastructure/project/`  
+**Location:** `infrastructure/project/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---

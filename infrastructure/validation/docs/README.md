@@ -7,6 +7,11 @@ Repository documentation scanning, quality, completeness, discovery, and accurac
 - `models.py`
 - `scanner.py`
 - `discovery.py`
+- `scan_scope.py`
+- `mermaid_lint.py`
+- `cross_link_lint.py`
+- `consistency_lint.py`
+- `doc_pair_lint.py`
 - `accuracy.py`
 - `completeness.py`
 - `quality.py`

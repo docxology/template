@@ -5,8 +5,6 @@ deterministic feedback. None of these is a replacement for human
 review; all are heuristics tuned for academic prose.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass, field
 

@@ -27,6 +27,9 @@ validation globally:
 `loader.validate_config_keys` and `loader.load_config` accept an
 optional `project_name=` argument; the loader also infers the name
 from a standard `…/projects/<name>/manuscript/config.yaml` path.
+Both functions support `strict=True` for CI/tooling paths that should
+raise on unknown top-level keys. `schema.generate_manuscript_config_schema`
+exports a JSON Schema for editors and fork setup automation.
 Full usage example:
 [`docs/operational/config/configuration.md`](../../../docs/operational/config/configuration.md#per-project-schema-extensions).
 

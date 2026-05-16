@@ -5,8 +5,6 @@ and generating quality summaries from review text. Split from io.py
 to keep each module under 300 LOC.
 """
 
-from __future__ import annotations
-
 import re
 
 from infrastructure.llm.validation.format import detect_conversational_phrases

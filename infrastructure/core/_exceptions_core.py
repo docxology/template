@@ -8,8 +8,6 @@ Boundary rule:
   errors.py     → log message constants (format and print, never raise)
 """
 
-from __future__ import annotations
-
 import builtins
 from pathlib import Path
 from typing import Any

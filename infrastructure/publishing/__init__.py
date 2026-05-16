@@ -12,8 +12,6 @@ Modules:
     api: API clients for Zenodo, arXiv, GitHub
 """
 
-from __future__ import annotations
-
 from .api import ZenodoClient, ZenodoConfig
 from .citations import (
     extract_citations_from_markdown,

@@ -18,7 +18,7 @@
 
 ### Two-Level Logging System
 
-1. **Infrastructure Logging** (`infrastructure.core.logging.logging_utils`)
+1. **Infrastructure Logging** (`infrastructure.core.logging.utils`)
    - Logging utilities
    - Environment-based configuration
    - Context managers and decorators
@@ -169,10 +169,11 @@ with log.timing("Complex calculation"):
 ### File Logging
 
 ```python
-from infrastructure.core.logging.logging_utils import setup_project_logging
+from infrastructure.core.logging.utils import setup_logger
+from pathlib import Path
 
 # Log to file in addition to console
-log = setup_project_logging(__name__, log_file="analysis.log")
+log = setup_logger(__name__, log_file=Path("analysis.log"))
 log.info("This goes to both console and file")
 ```
 

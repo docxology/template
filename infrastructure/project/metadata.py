@@ -4,8 +4,6 @@ This module reads project metadata from pyproject.toml and
 manuscript/config.yaml files.
 """
 
-from __future__ import annotations
-
 import tomllib
 from pathlib import Path
 from typing import Any

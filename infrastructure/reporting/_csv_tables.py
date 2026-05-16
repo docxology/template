@@ -4,8 +4,6 @@ Contains the recommendation prioritizer and the bulk CSV data-table generator
 (project metrics, aggregate metrics, health scores).
 """
 
-from __future__ import annotations
-
 import csv
 from pathlib import Path
 from typing import Any

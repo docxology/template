@@ -28,7 +28,7 @@ Core validation module containing all business logic:
 - `scan_for_issues(text)`: Scan for rendering problems
   - Unresolved references (??)
   - Warnings
-  - Errors  
+  - Errors
   - Missing citations [?]
 - `extract_first_n_words(text, n)`: Extract first N words for structure verification
 - `validate_pdf_rendering(pdf_path, n_words)`: validation report
@@ -95,8 +95,8 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ----------------------------------------------------------------------
 📖 First 200 words of document:
 ----------------------------------------------------------------------
-References 1 [1] Alice Brown and Robert Wilson. Advanced optimization 
-techniques for machine learning. In Proceedings of the International 
+References 1 [1] Alice Brown and Robert Wilson. Advanced optimization
+techniques for machine learning. In Proceedings of the International
 Conference on Machine Learning, pages 456–467. ICML, 2022...
 ----------------------------------------------------------------------
 ======================================================================

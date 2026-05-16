@@ -21,13 +21,14 @@ flowchart LR
     T --> TEST[test_optimizer.py<br/>Optimizer correctness · 52 tests]
     T --> TINV[test_invariants.py<br/>Numerical invariant builders · 27 tests]
     T --> TIDA[test_invariants_and_dashboard.py<br/>build_dashboard CLI smoke · 17 tests]
+    T --> TMV[test_manuscript_variables.py<br/>Manuscript variable injection · 21 tests]
     T --> DOCS[PATTERNS.md · AGENTS.md · README.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class INIT,CFG,TEST,TINV,TIDA code
+    class INIT,CFG,TEST,TINV,TIDA,TMV code
     class DOCS doc
 ```
 

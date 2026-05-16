@@ -4,15 +4,28 @@
 import infrastructure.validation.output.pipeline as mod
 
 
+def _minimal_structural_pdf() -> bytes:
+    return b"%PDF-1.4\n1 0 obj\n<<>>\nendobj\nstartxref\n0\n%%EOF\n"
+
+
 class TestValidatePdfs:
     def test_valid_pdfs(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
         pdf_dir = tmp_path / "projects" / "test" / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
-        (pdf_dir / "section1.pdf").write_bytes(b"%PDF-1.4 valid content here")
-        (pdf_dir / "section2.pdf").write_bytes(b"%PDF-1.4 another valid pdf")
+        (pdf_dir / "section1.pdf").write_bytes(_minimal_structural_pdf())
+        (pdf_dir / "section2.pdf").write_bytes(_minimal_structural_pdf())
 
         result = mod.validate_pdfs("test")
+        assert result is True
+
+    def test_valid_pdfs_resolves_wip_project(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        pdf_dir = tmp_path / "projects_in_progress" / "draft" / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / "draft_combined.pdf").write_bytes(_minimal_structural_pdf())
+
+        result = mod.validate_pdfs("draft")
         assert result is True
 
     def test_no_pdf_directory(self, tmp_path, monkeypatch):
@@ -42,7 +55,7 @@ class TestValidatePdfs:
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
         pdf_dir = tmp_path / "projects" / "test" / "output" / "pdf"
         pdf_dir.mkdir(parents=True)
-        (pdf_dir / "valid.pdf").write_bytes(b"%PDF content")
+        (pdf_dir / "valid.pdf").write_bytes(_minimal_structural_pdf())
         (pdf_dir / "empty.pdf").write_bytes(b"")
 
         result = mod.validate_pdfs("test")
@@ -75,3 +88,33 @@ class TestValidateMarkdown:
 
         result = mod.validate_markdown("test")
         assert result is True
+
+    def test_markdown_resolves_wip_project(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        project = tmp_path / "projects_in_progress" / "draft"
+        ms_dir = project / "manuscript"
+        ms_dir.mkdir(parents=True)
+        (project / "output").mkdir(parents=True)
+        (ms_dir / "01_intro.md").write_text("# Introduction\n\nHello world.")
+
+        result = mod.validate_markdown("draft")
+        assert result is True
+
+    def test_clean_markdown_clears_stale_diagnostics(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        project = tmp_path / "projects" / "test"
+        ms_dir = project / "manuscript"
+        report_dir = project / "output" / "reports"
+        ms_dir.mkdir(parents=True)
+        report_dir.mkdir(parents=True)
+        (ms_dir / "01_intro.md").write_text("# Introduction\n\nHello world.")
+        stale = report_dir / "diagnostics.json"
+        stale.write_text(
+            '{"project_name":"test","total_events":1,"errors":0,"warnings":1,"events":[]}',
+            encoding="utf-8",
+        )
+
+        result = mod.validate_markdown("test")
+
+        assert result is True
+        assert not stale.exists()

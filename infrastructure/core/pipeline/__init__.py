@@ -3,8 +3,6 @@
 Re-exports primary symbols for ``from infrastructure.core.pipeline import …`` usage.
 """
 
-from __future__ import annotations
-
 from infrastructure.core.pipeline.executor import (
     PipelineConfig,
     PipelineExecutor,
@@ -14,6 +12,8 @@ from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,
     MultiProjectResult,
+    format_multi_project_detailed_report,
+    format_multi_project_outcome_lines,
 )
 from infrastructure.core.pipeline.stage_monitor import (
     PerformanceMonitor,
@@ -29,6 +29,8 @@ __all__ = [
     "MultiProjectConfig",
     "MultiProjectOrchestrator",
     "MultiProjectResult",
+    "format_multi_project_detailed_report",
+    "format_multi_project_outcome_lines",
     "PerformanceMetrics",
     "PerformanceMonitor",
     "PipelineConfig",

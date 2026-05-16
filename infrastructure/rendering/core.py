@@ -1,7 +1,5 @@
 """Core logic for rendering module."""
 
-from __future__ import annotations
-
 import subprocess
 from pathlib import Path
 
@@ -76,43 +74,54 @@ class RenderManager:
             elif source_file.suffix == ".md":
                 # Markdown supports slides and web formats
                 logger.info(f"Rendering Markdown file: {source_file.name}")
+                source_text = source_file.read_text(encoding="utf-8")
+                skip_beamer = "<!-- render:skip-beamer -->" in source_text
 
                 # 1. Beamer slides for presentation
-                try:
-                    logger.debug("Rendering Beamer slides...")
-                    rendered_paths.append(self.render_slides(source_file, output_format="beamer"))
-                    logger.debug("Beamer slides rendered successfully")
-                except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
-                    format_errors.append(("beamer", e))
-                    # Enhanced error reporting for Beamer slide failures
-                    error_msg = f"Failed to render Beamer slides: {str(e)}"
-
-                    # Check if PDF was created but is empty (0.0 KB)
-                    # Derive expected path from config — do NOT re-invoke the renderer
+                if skip_beamer:
+                    logger.info(f"Skipping Beamer slides for {source_file.name} (render:skip-beamer)")
+                    slides_dir = Path(self.config.slides_dir)
+                    for stale in slides_dir.glob(f"{source_file.stem}_slides.*"):
+                        try:
+                            stale.unlink()
+                        except OSError as cleanup_error:
+                            logger.debug(f"Could not remove stale slide artefact {stale}: {cleanup_error}")
+                else:
                     try:
-                        beamer_pdf = Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
-                        if beamer_pdf.exists():
-                            size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
-                            if size_mb < _MIN_VALID_PDF_MB:
-                                error_msg += f" (PDF created but empty: {size_mb:.3f} MB)"
-                                error_msg += (
-                                    f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
-                                )
-                            else:
-                                error_msg += f" (PDF created: {size_mb:.2f} MB)"
-                    except (OSError, AttributeError) as pdf_check_err:
-                        logger.debug(f"Failed to check PDF status: {pdf_check_err}")
+                        logger.debug("Rendering Beamer slides...")
+                        rendered_paths.append(self.render_slides(source_file, output_format="beamer"))
+                        logger.debug("Beamer slides rendered successfully")
+                    except (OSError, subprocess.SubprocessError, ValueError, TemplateError) as e:  # noqa: BLE001 — tracked in format_errors; raises if any required format fails
+                        format_errors.append(("beamer", e))
+                        # Enhanced error reporting for Beamer slide failures
+                        error_msg = f"Failed to render Beamer slides: {str(e)}"
 
-                    logger.warning(error_msg)
+                        # Check if PDF was created but is empty (0.0 KB)
+                        # Derive expected path from config — do NOT re-invoke the renderer
+                        try:
+                            beamer_pdf = Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
+                            if beamer_pdf.exists():
+                                size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
+                                if size_mb < _MIN_VALID_PDF_MB:
+                                    error_msg += f" (PDF created but empty: {size_mb:.3f} MB)"
+                                    error_msg += (
+                                        f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"  # noqa: E501
+                                    )
+                                else:
+                                    error_msg += f" (PDF created: {size_mb:.2f} MB)"
+                        except (OSError, AttributeError) as pdf_check_err:
+                            logger.debug(f"Failed to check PDF status: {pdf_check_err}")
 
-                    # Provide additional context if available
-                    if hasattr(e, "context") and e.context:
-                        log_file = e.context.get("log_file")
-                        if log_file:
-                            logger.warning(f"  LaTeX log file: {log_file}")
+                        logger.warning(error_msg)
 
-                    logger.warning("  Continuing with other formats...")
-                    # Continue with other formats
+                        # Provide additional context if available
+                        if hasattr(e, "context") and e.context:
+                            log_file = e.context.get("log_file")
+                            if log_file:
+                                logger.warning(f"  LaTeX log file: {log_file}")
+
+                        logger.warning("  Continuing with other formats...")
+                        # Continue with other formats
 
                 # 2. HTML web version
                 try:
@@ -132,10 +141,11 @@ class RenderManager:
 
             if format_errors:
                 failed_names = ", ".join(fmt for fmt, _ in format_errors)
-                logger.warning(
-                    f"Partial success for {source_file.name}: "
+                failed_formats = "; ".join(f"{fmt}: {err}" for fmt, err in format_errors)
+                raise TemplateError(
+                    f"Partial rendering failure for {source_file.name}: "
                     f"{len(rendered_paths)} format(s) succeeded, "
-                    f"{len(format_errors)} failed ({failed_names})"
+                    f"{len(format_errors)} failed ({failed_names}). {failed_formats}"
                 )
 
             logger.info(f"Successfully rendered {len(rendered_paths)} format(s) for {source_file.name}")

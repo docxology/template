@@ -5,8 +5,6 @@ science communication narratives, comparative analysis, research gap
 identification, and citation network analysis.
 """
 
-from __future__ import annotations
-
 from infrastructure.llm.templates.base import ResearchTemplate
 
 

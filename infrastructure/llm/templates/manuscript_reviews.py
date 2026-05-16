@@ -1,7 +1,5 @@
 """Manuscript review templates: executive summary and quality review."""
 
-from __future__ import annotations
-
 from string import Template
 from typing import Any
 

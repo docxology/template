@@ -108,14 +108,12 @@ client.set_system_prompt("You are an expert in data science")
 ## Error Handling
 
 ```python
-from infrastructure.llm.core.exceptions import LLMConnectionError, LLMTimeoutError
+from infrastructure.core.exceptions import LLMConnectionError
 
 try:
     response = client.query("Test query")
 except LLMConnectionError:
     print("Cannot connect to Ollama server")
-except LLMTimeoutError:
-    print("Request timed out")
 except Exception as e:
     print(f"Unexpected error: {e}")
 ```

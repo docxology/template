@@ -19,11 +19,12 @@ flowchart TB
     SCI --> DOC[documentation.py<br/>Scientific documentation generation]
     SCI --> VAL[validation.py<br/>Implementation validation]
     SCI --> TPL[templates.py<br/>Module &amp; workflow templates]
+    SCI --> COG[cogsec_improver.py<br/>AST-based source improvement for cogsec modules]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#1e3a8a,stroke:#0f172a,color:#fff
     class SCI d
-    class INIT,STAB,BEN,DOC,VAL,TPL f
+    class INIT,STAB,BEN,DOC,VAL,TPL,COG f
 ```
 
 **stability.py** (~100 lines)
@@ -122,7 +123,7 @@ template = create_scientific_module_template("my_algorithm")
 
 Run scientific tests with:
 ```bash
-pytest tests/infra_tests/test_scientific/
+uv run pytest tests/infra_tests/test_scientific/
 ```
 
 ## Configuration

@@ -149,9 +149,9 @@ python3 scripts/03_render_pdf.py --project {name}
 - ✅ Figure generation and visualization
 - ✅ Manuscript content and academic writing
 
-## .cursorrules Compliance as Paradigm Requirement
+## Template standards compliance as paradigm requirement
 
-The standalone project paradigm requires **compliance** with template development standards defined in `.cursorrules/`. This compliance is not optional - it's a core requirement of the paradigm.
+The standalone project paradigm requires alignment with the repository root **[`.cursorrules`](../../.cursorrules)** file (Cursor / IDE routing) and with **[`docs/rules/`](../../docs/rules/)** (normative Markdown guides). This alignment is not optional — it is a core requirement of the paradigm.
 
 ### ✅ **Testing Standards Compliance (Required)**
 
@@ -169,7 +169,7 @@ The standalone project paradigm requires **compliance** with template developmen
 
 ### ✅ **Code Quality Standards Compliance (Required)**
 
-- **Black formatting**: 88-character limits, consistent formatting
+- **Ruff format/check**: CI-scoped lint/format (`uvx ruff check`, `uvx ruff format`; line length 88 by default)
 - **Descriptive naming**: Clear variable and function names
 - **Import organization**: Proper organization of imports
 - **Error handling**: Context preservation and informative messages
@@ -178,16 +178,22 @@ The standalone project paradigm requires **compliance** with template developmen
 ### Compliance Verification
 
 ```bash
-# Paradigm compliance verification
-python3 -m pytest projects/*/tests/ --cov=projects/*/src --cov-fail-under=90
-find projects/ -name "*.py" -exec grep -L '"""' {} \;  # Check for missing docstrings
+# Run tests via orchestrator (one pytest invocation per discovered project):
+uv run python scripts/01_run_tests.py --project-only --all-projects
+
+# Manual coverage spot-check — replace NAME with an active project (never aggregate glob SRC paths):
+uv run pytest projects/template_code_project/tests/ \
+  --cov=projects/template_code_project/src \
+  --cov-fail-under=90
+
+find projects/ -name "*.py" -exec grep -L '"""' {} \;  # Check for missing docstrings (representative)
 ```
 
 ## Compliance Framework
 
-### Alignment with .cursorrules Standards
+### Alignment with docs/rules standards
 
-Every standalone project must comply with development standards defined in `.cursorrules/`:
+Every standalone project must comply with development standards documented under **[`docs/rules/`](../../docs/rules/)**, guided by the root **[`.cursorrules`](../../.cursorrules)** entry rule:
 
 #### ✅ **Testing Standards Compliance**
 

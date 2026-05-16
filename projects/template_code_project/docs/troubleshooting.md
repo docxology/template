@@ -6,7 +6,7 @@ Symptom-driven recipes for the most common breakage modes when running this proj
 
 **Cause.** A placeholder in `manuscript/*.md` was not substituted because
 `scripts/z_generate_manuscript_variables.py` was not (re)run after the
-analysis stage, or the token is not defined in `generate_variables()`.
+analysis stage, or the token is not defined in `src/manuscript_variables.py::generate_variables()`.
 
 **Fix.**
 
@@ -23,7 +23,7 @@ analysis stage, or the token is not defined in `generate_variables()`.
    uv run python scripts/03_render_pdf.py --project template_code_project
    ```
 4. If the token is still literal, add it to `generate_variables()` in
-   `scripts/z_generate_manuscript_variables.py`.
+   `src/manuscript_variables.py`.
 
 ## Edited `manuscript/config.yaml` but the figures or PDF didn't change
 

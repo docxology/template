@@ -89,8 +89,8 @@ from example import add_numbers, calculate_average
 
 **Maintain coverage:**
 
-- **Project code**: 90% minimum (currently achieving 100% - coverage!)
-- **Infrastructure**: 60% minimum (currently achieving 83.33% - exceeds stretch goal!)
+- **Project code**: 90% minimum (current measured % — see [canonical_facts.md](../_generated/canonical_facts.md))
+- **Infrastructure**: 60% minimum (current measured % — see [coverage-gaps.md](../development/coverage-gaps.md))
 - Test all critical code paths
 - Include edge cases
 - Test error handling
@@ -174,20 +174,20 @@ def test_calculate_average():
 ```python
 def calculate_statistics(data: List[float]) -> Dict[str, float]:
     """Calculate descriptive statistics for data.
-    
+
     Args:
         data: List of numerical values
-        
+
     Returns:
         Dictionary with statistics:
         - mean: Average value
         - std: Standard deviation
         - min: Minimum value
         - max: Maximum value
-        
+
     Raises:
         ValueError: If data is empty
-        
+
     Example:
         >>> calculate_statistics([1, 2, 3, 4])
         {'mean': 2.5, 'std': 1.29, 'min': 1.0, 'max': 4.0}

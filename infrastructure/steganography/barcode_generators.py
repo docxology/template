@@ -6,8 +6,6 @@ barcode images in PNG and SVG formats.
 Part of the infrastructure steganography layer (Layer 1).
 """
 
-from __future__ import annotations
-
 import io
 
 from infrastructure.core.logging.utils import get_logger

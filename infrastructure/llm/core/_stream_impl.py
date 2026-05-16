@@ -5,8 +5,6 @@ from an Ollama-compatible LLM endpoint with retry logic, progress tracking,
 stall detection, and error recovery.
 """
 
-from __future__ import annotations
-
 import json
 import time as time_module
 from pathlib import Path

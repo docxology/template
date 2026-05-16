@@ -7,14 +7,15 @@ description: Skill for the reporting infrastructure module providing pipeline re
 
 Pipeline reporting, error aggregation, and executive dashboard generation.
 
-## Pipeline Reports (`pipeline_reporter.py`)
+## Pipeline Reports (`pipeline_report_model.py`, `pipeline_io.py`)
 
 ```python
 from infrastructure.reporting import (
-    generate_pipeline_report, generate_test_report,
-    generate_validation_report, generate_performance_report,
-    generate_error_summary, save_pipeline_report,
+    generate_pipeline_report, save_pipeline_report,
+    save_validation_report, save_test_results,
+    save_performance_report, save_error_summary,
 )
+from infrastructure.reporting.report_generator import generate_test_report
 
 # Generate comprehensive pipeline report
 report = generate_pipeline_report(
@@ -29,9 +30,7 @@ save_pipeline_report(report, output_dir)
 
 # Individual report sections
 test_report = generate_test_report(test_data)
-validation_report = generate_validation_report(validation_data)
-performance_report = generate_performance_report(perf_data)
-error_summary = generate_error_summary(error_list)
+saved_files = save_validation_report(validation_data, output_dir)
 ```
 
 ## Error Aggregation (`error_aggregator.py`)
@@ -85,23 +84,24 @@ generate_matplotlib_dashboard(summary, output_dir)
 generate_plotly_dashboard(summary, output_dir)
 ```
 
-## Test Reporting (`test_reporter.py`)
+## Test Reporting (`pytest_output_parser.py`, `report_generator.py`)
 
 ```python
-from infrastructure.reporting import parse_pytest_output, save_test_report
+from infrastructure.reporting.pytest_output_parser import parse_pytest_output
+from infrastructure.reporting.report_generator import save_test_report_to_files
 
 # Parse pytest output into structured data
-results = parse_pytest_output(pytest_output_text)
-save_test_report(results, output_path)
+results = parse_pytest_output(pytest_output_text, stderr="", exit_code=0)
+save_test_report_to_files(results, output_path)
 ```
 
-## Output Reporting (`output_reporter.py`)
+## Output Reporting (`output_statistics.py`)
 
 ```python
-from infrastructure.reporting import collect_output_statistics, generate_output_summary
+from infrastructure.reporting import collect_output_statistics, log_output_summary
 
 stats = collect_output_statistics(output_dir)
-summary = generate_output_summary(stats)
+log_output_summary(stats)
 ```
 
 ## Multi-Project Reports
@@ -117,10 +117,10 @@ files = generate_multi_project_report(
 )
 ```
 
-## Test Summary Generation (`suite_summary_generator.py`)
+## Test Summary Generation (`markdown_formatter.py`)
 
 ```python
-from infrastructure.reporting.suite_summary_generator import run_test_summary_generation
+from infrastructure.reporting.markdown_formatter import run_test_summary_generation
 run_test_summary_generation()
 ```
 
@@ -134,6 +134,6 @@ overview = generate_manuscript_overview(project_path)
 ## Coverage Parsing (`coverage_parser.py`)
 
 ```python
-from infrastructure.reporting.coverage_parser import parse_coverage_report
-coverage = parse_coverage_report(coverage_output)
+from infrastructure.reporting.coverage_parser import extract_coverage_percentage
+passed, pct = extract_coverage_percentage(stdout_text, coverage_json_paths)
 ```

@@ -15,8 +15,6 @@ Model Selection:
         select_best_model(["llama3-gradient", "gemma3:4b"])
 """
 
-from __future__ import annotations
-
 import time
 from typing import Any
 

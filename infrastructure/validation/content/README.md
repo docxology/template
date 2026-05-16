@@ -7,6 +7,7 @@ Markdown, PDF, and figure validation helpers.
 - `pdf_validator.py`
 - `markdown_validator.py`
 - `figure_validator.py`
+- `diagnostic_codes.py`
 
 ## See Also
 

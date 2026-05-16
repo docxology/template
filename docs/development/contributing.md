@@ -39,11 +39,11 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "no
 uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-fail-under=90 -m "not requires_ollama"
 ```
 
-Legacy one-liners (if not using `uv`):
+Legacy one-liners (without `uv`; not recommended):
 
 ```bash
-pytest
-pytest --cov=src --cov-report=html
+python -m pytest
+python -m pytest --cov=src --cov-report=html
 ```
 
 ## 📋 **Contribution Guidelines**
@@ -94,10 +94,10 @@ git checkout -b fix/issue-description
 ### 3. **Test Your Changes**
 ```bash
 # Run the full test suite
-pytest
+uv run python scripts/01_run_tests.py --project {name}
 
 # Check coverage
-pytest --cov=src --cov-report=html
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 # Test the build pipeline
 uv run python scripts/execute_pipeline.py --project {name} --core-only

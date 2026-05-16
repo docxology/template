@@ -16,8 +16,6 @@ Public API:
   helpers.
 """
 
-from __future__ import annotations
-
 from infrastructure.reference.citation.bibtex_parser import (
     BibParseError,
     parse_bibfile,

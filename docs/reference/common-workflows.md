@@ -40,7 +40,7 @@
 
    ```markdown
    # Abstract {#sec:abstract}
-   
+
    Your research summary goes here. Keep it concise (150-250 words).
    ```
 
@@ -86,9 +86,9 @@
 
    ```markdown
    # Limitations {#sec:limitations}
-   
+
    ## Study Limitations
-   
+
    This research has several limitations...
    ```
 
@@ -145,7 +145,7 @@
 
    ```python
    from data_analysis import analyze_data
-   
+
    def test_analyze_data():
        result = analyze_data([1, 2, 3, 4, 5])
        assert result['mean'] == 3.0
@@ -156,7 +156,7 @@
 3. **Run tests**
 
    ```bash
-   pytest projects/template_code_project/tests/test_data_analysis.py --cov=projects.template_code_project.src.data_analysis
+   uv run pytest projects/template_code_project/tests/test_data_analysis.py --cov=projects/template_code_project/src/data_analysis
    ```
 
 4. **Create thin orchestrator script**
@@ -170,17 +170,17 @@
    import os
    import matplotlib.pyplot as plt
    from projects.template_code_project.src.data_analysis import analyze_data  # Import from project src/
-   
+
    # Use src/ method for computation
    data = [1, 2, 3, 4, 5]
    stats = analyze_data(data)
-   
+
    # Script handles visualization only
    fig, ax = plt.subplots()
-   ax.bar(['Mean', 'Max', 'Min'], 
+   ax.bar(['Mean', 'Max', 'Min'],
           [stats['mean'], stats['max'], stats['min']])
    ax.set_title('Data Analysis')
-   
+
    # Save to output
    output_path = 'projects/{name}/output/figures/my_analysis.png'
    os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -242,7 +242,7 @@
    f(x) &= x^2 + 2x + 1 \label{eq:first} \\
    g(x) &= x^3 - x \label{eq:second}
    \end{align}
-   
+
    Equations \eqref{eq:first} and \eqref{eq:second} are related.
    ```
 
@@ -341,12 +341,12 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 
    ```python
    """Statistical analysis functions."""
-   
+
    def calculate_variance(values):
        """Calculate sample variance."""
        mean = sum(values) / len(values)
        return sum((x - mean) ** 2 for x in values) / (len(values) - 1)
-   
+
    def calculate_std_dev(values):
        """Calculate standard deviation."""
        return calculate_variance(values) ** 0.5
@@ -360,12 +360,12 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 
    ```python
    from projects.template_code_project.src.statistics import calculate_variance, calculate_std_dev
-   
+
    def test_calculate_variance():
        values = [1, 2, 3, 4, 5]
        var = calculate_variance(values)
        assert abs(var - 2.5) < 1e-10
-   
+
    def test_calculate_std_dev():
        values = [1, 2, 3, 4, 5]
        std = calculate_std_dev(values)
@@ -375,14 +375,14 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 3. **Ensure coverage**
 
    ```bash
-   pytest projects/template_code_project/tests/test_statistics.py --cov=projects.template_code_project.src.statistics --cov-report=term-missing
+   uv run pytest projects/template_code_project/tests/test_statistics.py --cov=projects/template_code_project/src/statistics --cov-report=term-missing
    ```
 
 4. **Use in scripts (thin orchestrator)**
 
    ```python
    from statistics import calculate_std_dev
-   
+
    data = [1, 2, 3, 4, 5]
    std = calculate_std_dev(data)  # Use src/ method
    # Script handles visualization...
@@ -427,12 +427,12 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
        """Test basic functionality."""
        result = my_function([1, 2, 3])
        assert result == expected_value
-   
+
    def test_my_function_edge_cases():
        """Test edge cases."""
        assert my_function([]) == default_value
        assert my_function([1]) == single_value
-   
+
    def test_my_function_errors():
        """Test error handling."""
        with pytest.raises(ValueError):
@@ -442,7 +442,7 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 4. **Run tests with coverage**
 
    ```bash
-   pytest projects/template_code_project/tests/test_my_module.py --cov=projects.template_code_project.src.my_module --cov-report=term-missing
+   uv run pytest projects/template_code_project/tests/test_my_module.py --cov=projects/template_code_project/src/my_module --cov-report=term-missing
    ```
 
 5. **Check for missing lines**
@@ -472,25 +472,25 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 1. **Run tests verbosely**
 
    ```bash
-   pytest tests/ -v
+   uv run pytest tests/ -v
    ```
 
 2. **Run specific test**
 
    ```bash
-   pytest projects/template_code_project/tests/test_my_module.py::test_specific_function -v
+   uv run pytest projects/template_code_project/tests/test_my_module.py::test_specific_function -v
    ```
 
 3. **Use debugger**
 
    ```bash
-   pytest projects/template_code_project/tests/test_my_module.py --pdb
+   uv run pytest projects/template_code_project/tests/test_my_module.py --pdb
    ```
 
 4. **Check detailed output**
 
    ```bash
-   pytest tests/ -vv --tb=long
+   uv run pytest tests/ -vv --tb=long
    ```
 
 5. **Common issues**:
@@ -502,16 +502,16 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
 
 ```bash
 # Show test discovery
-pytest --collect-only
+uv run pytest --collect-only
 
 # Run with maximum verbosity
-pytest -vvv
+uv run pytest -vvv
 
 # Show local variables on failure
-pytest -l
+uv run pytest -l
 
 # Stop at first failure
-pytest -x
+uv run pytest -x
 ```
 
 **See Also**: [FAQ](faq.md#q-how-do-i-debug-test-failures)
@@ -527,7 +527,7 @@ pytest -x
 1. **Generate coverage report**
 
    ```bash
-   pytest tests/ --cov=src --cov-report=term-missing
+   uv run pytest tests/ --cov=src --cov-report=term-missing
    ```
 
 2. **Identify missing lines**
@@ -537,7 +537,7 @@ pytest -x
 3. **Analyze uncovered code**
 
    ```bash
-   pytest tests/ --cov=src --cov-report=html
+   uv run pytest tests/ --cov=src --cov-report=html
    open htmlcov/index.html
    ```
 
@@ -549,7 +549,7 @@ pytest -x
 5. **Verify improvement**
 
    ```bash
-   pytest tests/ --cov=src --cov-report=term-missing
+   uv run pytest tests/ --cov=src --cov-report=term-missing
    ```
 
 **Example - Covering Conditional**:
@@ -582,10 +582,10 @@ def test_process_negative():
    ```bash
    # Standard core build (eight executor stages by default; no LLM)
    uv run python scripts/execute_pipeline.py --project {name} --core-only
-   
+
    # Or use unified interactive menu
    ./run.sh
-   
+
    # Run individual stage scripts (each requires --project {name})
    uv run python scripts/00_setup_environment.py --project {name}
    uv run python scripts/01_run_tests.py --project {name}
@@ -607,7 +607,7 @@ def test_process_negative():
    ```bash
    # Combined PDF after copy outputs
    open output/{name}/pdf/{name}_combined.pdf
-   
+
    # Or working copy under the project tree
    open projects/{name}/output/pdf/{name}_combined.pdf
    ```
@@ -679,7 +679,7 @@ def test_process_negative():
 - Generated file headers
 - Cross-reference systems
 
-**See Also**: [AGENTS.md Configuration](../AGENTS.md#configuration-system)
+**See Also**: [AGENTS.md Configuration](../AGENTS.md#directory-structure)
 
 ---
 
@@ -699,9 +699,9 @@ def test_process_negative():
 
    ```markdown
    # Supplemental Figures {#sec:supplemental_figures}
-   
+
    ## Additional Visualizations
-   
+
    This section contains extended visualizations...
    ```
 
@@ -762,7 +762,7 @@ def test_process_negative():
 4. **Run tests**
 
    ```bash
-   pytest tests/ --cov=src --cov-report=term-missing
+   uv run pytest tests/ --cov=src --cov-report=term-missing
    ```
 
 5. **Run build**
@@ -770,7 +770,7 @@ def test_process_negative():
    ```bash
    # Core pipeline (ten stages by default)
    uv run python scripts/execute_pipeline.py --project {name} --core-only
-   
+
    # Or use unified interactive menu
    ./run.sh
    ```

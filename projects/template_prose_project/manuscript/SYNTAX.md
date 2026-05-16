@@ -47,7 +47,7 @@ The Pandoc renderer uses `--number-sections`, so **never write manual numbers** 
 
 ## `{{TOKEN}}` substitution
 
-`scripts/z_generate_manuscript_variables.py` replaces these tokens at render time:
+`scripts/z_generate_manuscript_variables.py` computes token values via `src/manuscript_variables.py::compute_variables()` and writes substituted copies of `manuscript/*.md` to `output/manuscript/` via `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()`. This file (`SYNTAX.md`), `AGENTS.md`, and `README.md` are excluded from `output/manuscript/` so their literal `{{TOKEN}}` examples are never substituted.
 
 | Token | Source |
 |---|---|

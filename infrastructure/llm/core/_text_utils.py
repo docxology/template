@@ -1,7 +1,5 @@
 """Text utility functions for LLM response processing."""
 
-from __future__ import annotations
-
 import re
 
 

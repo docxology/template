@@ -10,8 +10,6 @@ existing :mod:`infrastructure.core.pipeline.multi_project` orchestrator
 for ``--all-projects`` runs.
 """
 
-from __future__ import annotations
-
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -23,6 +21,10 @@ from infrastructure.core.pipeline import (
     MultiProjectOrchestrator,
     PipelineConfig,
     PipelineExecutor,
+)
+from infrastructure.core.pipeline.multi_project import (
+    format_multi_project_detailed_report,
+    format_multi_project_outcome_lines,
 )
 from infrastructure.orchestration.menu import STAGE_NAMES
 from infrastructure.orchestration.stage_logger import (
@@ -155,4 +157,15 @@ class PipelineRunner:
             f"=== MULTI-PROJECT {'COMPLETE' if success else 'FAILED'} === "
             f"{getattr(result, 'successful_projects', 0)}/{len(projects)} succeeded"
         )
+        outcome_lines = format_multi_project_outcome_lines(projects, result)
+        if outcome_lines:
+            self._emit("")
+            for line in outcome_lines:
+                self._emit(line)
+
+        detailed_lines = format_multi_project_detailed_report(projects, result, repo_root=self.repo_root)
+        if detailed_lines:
+            self._emit("")
+            for line in detailed_lines:
+                self._emit(line)
         return 0 if success else 1

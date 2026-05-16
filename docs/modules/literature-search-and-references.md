@@ -127,4 +127,4 @@ The BibTeX writer is byte-compatible with
 
 * Module skills: [`infrastructure/search/SKILL.md`](../../infrastructure/search/SKILL.md), [`infrastructure/reference/SKILL.md`](../../infrastructure/reference/SKILL.md).
 * Module agents: [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md), [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md).
-* Exemplar project: [`projects/template_search_project/`](../../projects/template_search_project/).
+* Exemplar project: [`projects_archive/template_search_project/`](../../projects_archive/template_search_project/).

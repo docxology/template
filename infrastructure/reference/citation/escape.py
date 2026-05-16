@@ -10,8 +10,6 @@ Business Media``) and bare unicode for accented characters (e.g.
 handle it), only the seven LaTeX special characters are touched.
 """
 
-from __future__ import annotations
-
 # Single-character → escape mapping. Multi-pass replace is unsafe (the
 # escape for ``\`` would itself contain ``{``/``}`` that subsequent passes
 # would re-escape), so we walk the input once.

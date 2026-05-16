@@ -4,8 +4,6 @@ Standalone module with no infrastructure dependencies — safe to import from
 exceptions.py without creating circular import cycles.
 """
 
-from __future__ import annotations
-
 import shutil
 
 

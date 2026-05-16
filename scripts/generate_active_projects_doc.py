@@ -8,8 +8,13 @@ Run from repository root:
 
 from __future__ import annotations
 
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.project.discovery import discover_projects
@@ -19,12 +24,11 @@ logger = get_logger(__name__)
 
 def main() -> None:
     log_header("Generate Active Projects Documentation", logger)
-    repo_root = Path(__file__).resolve().parents[1]
-    out_dir = repo_root / "docs" / "_generated"
+    out_dir = REPO_ROOT / "docs" / "_generated"
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "active_projects.md"
 
-    projects = discover_projects(repo_root)
+    projects = discover_projects(REPO_ROOT)
     names = [p.qualified_name for p in projects]
     lines = [
         "# Active projects (`discover_projects`)",

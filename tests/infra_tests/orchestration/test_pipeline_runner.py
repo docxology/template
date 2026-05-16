@@ -63,7 +63,7 @@ def test_run_full_pipeline_emits_banners(patched_runner: PipelineRunner) -> None
     assert rc == 0
     text = patched_runner.stream.getvalue()
     assert "FULL PIPELINE" in text
-    assert "Setup Environment" in text
+    assert "Environment Setup" in text
     assert "Copy Outputs" in text
     assert _StubExecutor.last_instance is not None
     assert _StubExecutor.last_instance.full_calls == 1
@@ -156,10 +156,48 @@ class _StubMulti:
         type(self).last_instance = self
 
     def _ok(self):
-        # Match attributes used by run_multi
-        from types import SimpleNamespace
+        from infrastructure.core.pipeline.multi_project import MultiProjectResult
+        from infrastructure.core.pipeline.types import PipelineStageResult
 
-        return SimpleNamespace(successful_projects=len(self.config.projects))
+        names = [p.qualified_name for p in self.config.projects]
+        stage = PipelineStageResult(1, "Copy Outputs", True, 0.0)
+        project_results = {n: [stage] for n in names}
+        return MultiProjectResult(
+            project_results=project_results,
+            successful_projects=len(names),
+            failed_projects=0,
+            total_duration=0.5,
+            infra_test_duration=0.0,
+        )
+
+    def _one_failure(self):
+        from infrastructure.core.pipeline.multi_project import MultiProjectResult
+        from infrastructure.core.pipeline.types import PipelineStageResult
+
+        names = [p.qualified_name for p in self.config.projects]
+        ok = PipelineStageResult(1, "Environment Setup", True, 0.0)
+        bad = PipelineStageResult(
+            2,
+            "Run Tests",
+            False,
+            0.1,
+            exit_code=1,
+            error_message="tests failed",
+        )
+        project_results: dict[str, list[Any]] = {}
+        for i, n in enumerate(names):
+            project_results[n] = [ok, bad] if i == 0 else [ok]
+        successes = sum(
+            1
+            for n in names
+            if project_results[n] and all(s.success for s in project_results[n])
+        )
+        return MultiProjectResult(
+            project_results=project_results,
+            successful_projects=successes,
+            failed_projects=len(names) - successes,
+            total_duration=1.0,
+        )
 
     def execute_all_projects_full(self):
         self.calls.append("full")
@@ -209,6 +247,38 @@ def test_run_multi_core_no_infra(patched_multi_runner: PipelineRunner) -> None:
         MultiProjectInvocation(skip_infra=True, skip_llm=True)
     )
     assert _StubMulti.last_instance.calls == ["core_no_infra"]
+
+
+def test_run_multi_emits_succeeded_project_names(patched_multi_runner: PipelineRunner) -> None:
+    patched_multi_runner.run_multi(
+        MultiProjectInvocation(skip_infra=True, skip_llm=True)
+    )
+    text = patched_multi_runner.stream.getvalue()
+    assert "Succeeded:" in text
+    assert "template_code_project" in text
+    assert "some_rotating_project" in text
+
+
+class _StubMultiOneFail(_StubMulti):
+    def execute_all_projects_core_no_infra(self):
+        self.calls.append("core_no_infra")
+        return self._one_failure()
+
+
+def test_run_multi_emits_failure_detail(
+    monkeypatch: pytest.MonkeyPatch, fake_repo: Path
+) -> None:
+    monkeypatch.setattr(
+        "infrastructure.orchestration.pipeline_runner.MultiProjectOrchestrator",
+        _StubMultiOneFail,
+    )
+    runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
+    rc = runner.run_multi(MultiProjectInvocation(skip_infra=True, skip_llm=True))
+    assert rc == 1
+    txt = runner.stream.getvalue()
+    assert "Failed:" in txt
+    assert "Run Tests" in txt
+    assert "tests failed" in txt
 
 
 def test_run_multi_no_projects(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

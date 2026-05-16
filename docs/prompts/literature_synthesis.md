@@ -144,6 +144,6 @@ for paper in papers:
     Path(f"output/llm/per_paper/{paper.id}.md").write_text(response.text)
 ```
 
-See [`projects/template_search_project/`](../../projects/template_search_project/)
+See [`projects_archive/template_search_project/`](../../projects_archive/template_search_project/)
 for a fully wired implementation including caching, error handling, and
 markdown rendering.

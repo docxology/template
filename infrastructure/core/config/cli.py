@@ -16,9 +16,8 @@ Usage:
     eval "$(python3 infrastructure/core/config_cli.py --project act_inf_metaanalysis)"
 """
 
-from __future__ import annotations
-
 import argparse
+import json
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
@@ -31,7 +30,11 @@ repo_root = Path(__file__).parent.parent.parent
 def main() -> None:
     """Main function to load and export configuration."""
     try:
-        from infrastructure.core.config.loader import YAML_AVAILABLE, get_config_as_dict
+        from infrastructure.core.config.loader import (
+            YAML_AVAILABLE,
+            generate_manuscript_config_schema,
+            get_config_as_dict,
+        )
     except ImportError as e:
         logger.error(f"Failed to import from infrastructure/core/config_loader.py: {e}")
         logger.error("Falling back to environment variables only")
@@ -57,8 +60,17 @@ Examples:
         type=str,
         help="Project name (default: auto-detect from current directory or use 'project')",
     )
+    parser.add_argument(
+        "--schema-json",
+        action="store_true",
+        help="Print the manuscript config JSON Schema instead of shell exports.",
+    )
 
-    parser.parse_args()
+    args = parser.parse_args()
+
+    if args.schema_json:
+        print(json.dumps(generate_manuscript_config_schema(args.project or ""), indent=2))
+        return
 
     if not YAML_AVAILABLE:
         logger.error("PyYAML not installed. Install with: pip install pyyaml")

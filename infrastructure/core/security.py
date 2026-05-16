@@ -13,8 +13,6 @@ Implementation split:
 - security.py       — HTTP headers, singletons, backwards-compat re-exports
 """
 
-from __future__ import annotations
-
 import functools
 
 # Re-export from submodules for backwards compatibility

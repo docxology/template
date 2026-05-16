@@ -38,6 +38,12 @@
       "cursor_at": "infrastructure/docker/SKILL.md"
     },
     {
+      "name": "infrastructure-doctor",
+      "description": "Skill for the doctor infrastructure module providing repository-level diagnostics and safe, reversible automated repair. Use when the local checkout is acting up, before opening a bug, when onboarding a fresh clone, or as a periodic health probe. Every mutation is backed up under .doctor/backups/ and journalled in .doctor/actions.jsonl so any change can be undone byte-for-byte.",
+      "path": "infrastructure/doctor/SKILL.md",
+      "cursor_at": "infrastructure/doctor/SKILL.md"
+    },
+    {
       "name": "infrastructure-documentation",
       "description": "Skill for the documentation infrastructure module providing figure management, image handling, markdown integration, and API glossary generation. Use when managing research figures, inserting images into manuscripts, auto-numbering figures, or generating API documentation.",
       "path": "infrastructure/documentation/SKILL.md",

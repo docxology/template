@@ -6,8 +6,6 @@ This module serves as the entry point, re-exporting from focused submodules:
 - readiness: Publication readiness validation
 """
 
-from __future__ import annotations
-
 import hashlib
 from dataclasses import asdict
 from datetime import datetime

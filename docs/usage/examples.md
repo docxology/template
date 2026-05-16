@@ -90,28 +90,28 @@ graph TB
         MANUSCRIPT[manuscript<br/>Research manuscript]
         OUTPUT[output<br/>Generated files]
     end
-    
+
     subgraph "Key Files"
         PYPROJECT[pyproject.toml<br/>Project config]
         README[README.md<br/>Project docs]
         CURSORRULES[.cursorrules<br/>Development rules]
         RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
     end
-    
+
     ROOT --> SRC
     ROOT --> TESTS
     ROOT --> SCRIPTS
     ROOT --> MANUSCRIPT
     ROOT --> OUTPUT
-    
+
     ROOT --> PYPROJECT
     ROOT --> README
     ROOT --> CURSORRULES
     SCRIPTS --> RENDER
-    
+
     classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef file fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class ROOT,SRC,TESTS,SCRIPTS,MANUSCRIPT,OUTPUT dir
     class PYPROJECT,README,CURSORRULES,RENDER file
 ```
@@ -207,7 +207,7 @@ graph LR
         NEW2[data_processor.py<br/>Data utilities]
         NEW3[visualization.py<br/>Plotting tools]
     end
-    
+
     subgraph SCRINT["Scripts Integration"]
         SCRIPT[ml_training.py]
         IMPORT["Import from projects/{name}/src/"]
@@ -215,21 +215,21 @@ graph LR
         USE2[Use data_processor]
         USE3[Use visualization]
     end
-    
+
     EXISTING --> SCRIPT
     NEW1 --> SCRIPT
     NEW2 --> SCRIPT
     NEW3 --> SCRIPT
-    
+
     SCRIPT --> IMPORT
     IMPORT --> USE
     IMPORT --> USE2
     IMPORT --> USE3
-    
+
     classDef existing fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef new fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef script fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class EXISTING existing
     class NEW1,NEW2,NEW3 new
     class SCRIPT,IMPORT,USE,USE2,USE3 script
@@ -280,10 +280,10 @@ def main():
     # Use projects/{name}/src/ methods for computation
     data = load_data("dataset.csv")
     processed_data = preprocess_data(data)
-    
+
     # Train using projects/{name}/src/ optimization methods
     params = gradient_descent(loss_fn, initial_params)
-    
+
     # Generate and save results
     # ... visualization code ...
 ```

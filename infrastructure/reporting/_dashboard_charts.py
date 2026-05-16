@@ -6,8 +6,6 @@ size/complexity, performance timeline, summary table) plus the multi-panel
 ``generate_matplotlib_dashboard()`` generator.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Any
 
@@ -21,7 +19,11 @@ except ImportError:
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting._dashboard_constants import COLORS
-from infrastructure.reporting.executive_reporter import ExecutiveSummary, ProjectMetrics
+from infrastructure.reporting.executive_reporter import (
+    ExecutiveSummary,
+    ProjectMetrics,
+    calculate_project_health_score,
+)
 from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 
 logger = get_logger(__name__)
@@ -502,10 +504,6 @@ def create_summary_table(projects: list[ProjectMetrics], aggregate: dict[str, An
     fig, ax = plt.subplots(figsize=(16, 8))
     ax.axis("off")
 
-    # Import health score calculation
-    from infrastructure.reporting.executive_reporter import calculate_project_health_score
-
-    # Prepare table data with more columns
     headers = [
         "Project",
         "Health\nScore",
@@ -798,7 +796,6 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
         # Row 3: Comparative analysis and summary
         # Health scores comparison
         ax7 = axes[2, 0]
-        from infrastructure.reporting.executive_reporter import calculate_project_health_score
 
         health_scores = [calculate_project_health_score(p)["percentage"] for p in projects]
         ax7.bar(x, health_scores, color=COLORS["primary"], alpha=0.8)

@@ -1,6 +1,6 @@
-# Manuscript Syntax Reference (code_project)
+# Manuscript Syntax Reference (template_code_project)
 
-Project-specific overlay on the canonical [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — read that file first; this file documents the **code_project**-specific figure registry, equation labels, and `{{TOKEN}}` table.
+Project-specific overlay on the canonical [`docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — read that file first; this file documents the **template_code_project**-specific figure registry, equation labels, and `{{TOKEN}}` table.
 
 ## Citation Syntax (Pandoc)
 

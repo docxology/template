@@ -16,8 +16,6 @@ Error contract:
   and returns bool for format/length problems.
 """
 
-from __future__ import annotations
-
 import json
 import re
 from typing import Any, Literal

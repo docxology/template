@@ -8,7 +8,7 @@ with layered security and steganographic techniques.
 
 | File | Purpose |
 |------|---------|
-| `__init__.py` | Public API: `SteganographyProcessor`, `SteganographyConfig`, `process_pdf`, `resolve_build_timestamp` |
+| `__init__.py` | Public API: `SteganographyProcessor`, `SteganographyConfig`, `embed_steganography`, `process_pdf`, `resolve_build_timestamp` |
 | `config.py` | `SteganographyConfig` dataclass with per-technique toggles |
 | `core.py` | `SteganographyProcessor` orchestrator class |
 | `overlays.py` | Diagonal watermark + footer + invisible text overlays (reportlab) |
@@ -51,13 +51,14 @@ steganography:
 ### CLI (recommended)
 
 ```bash
-# Full pipeline + steganography
-./secure_run.sh
-
-# Specific project
+# Full pipeline + steganography (requires --project)
 ./secure_run.sh --project template_code_project
 
-# Post-process existing PDFs only (skip pipeline)
+# Interactive path → secure subcommand (same orchestrator as ./run.sh)
+./run.sh --secure-run
+
+# Post-process existing PDFs only — all discovered projects if --project omitted
+./secure_run.sh --steganography-only --project template_code_project
 ./secure_run.sh --steganography-only
 ```
 

@@ -5,8 +5,6 @@ This module provides intelligent categorization of audit issues, severity assign
 false positive filtering, and issue grouping for better analysis and reporting.
 """
 
-from __future__ import annotations
-
 import re
 from typing import Any, Union
 

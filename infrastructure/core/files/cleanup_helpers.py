@@ -6,8 +6,6 @@ used by the public clean_output_directories function.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 import shutil
 from datetime import datetime
 from pathlib import Path

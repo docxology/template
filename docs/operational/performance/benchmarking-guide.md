@@ -25,9 +25,9 @@ Benchmark when:
 **Function-level:** Use `@profile` decorator from `infrastructure.core.runtime.function_profiler`
 
 ```python
-from infrastructure.core.runtime.function_profiler import profile
+from infrastructure.core.runtime.function_profiler import monitor_performance
 
-@profile
+@monitor_performance("compute_expensive_operation")
 def compute_expensive_operation(data: np.ndarray) -> Result:
     # This function's time and memory will be tracked
     return heavy_computation(data)

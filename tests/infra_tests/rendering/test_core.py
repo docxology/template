@@ -1,3 +1,4 @@
+"""Tests for core module."""
 from pathlib import Path
 
 import pytest
@@ -55,3 +56,32 @@ Content here
         assert all(isinstance(r, Path) for r in results)
     except Exception as e:
         pytest.skip(f"Rendering not fully functional: {e}")
+
+
+def test_render_all_md_skip_beamer_marker(render_manager, tmp_path):
+    """Markdown can opt out of Beamer while still rendering HTML."""
+    import shutil
+
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+
+    md_file = tmp_path / "appendix.md"
+    md_file.write_text(
+        """# Appendix
+
+<!-- render:skip-beamer -->
+
+Large generated appendix content.
+""",
+        encoding="utf-8",
+    )
+    slides_dir = Path(render_manager.config.slides_dir)
+    slides_dir.mkdir(parents=True, exist_ok=True)
+    stale_slide = slides_dir / "appendix_slides.pdf"
+    stale_slide.write_bytes(b"%PDF-1.7 stale\n%%EOF\n")
+
+    results = render_manager.render_all(md_file)
+
+    assert len(results) == 1
+    assert results[0].suffix == ".html"
+    assert not stale_slide.exists()

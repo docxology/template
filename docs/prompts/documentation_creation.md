@@ -172,16 +172,16 @@ graph TD
 
 Create concise quick reference guide following README.md standards:
 
-### Required Structure
+### README Overview
 
 ```markdown
-# [Target Name]
+# [Target Name] — Complete Template
 
 > **[Brief description]** - [Purpose and key features]
 
 **[Quick Reference:** [Essential links and commands]
 
-## Overview
+## Overview — Completed Document
 
 [2-3 sentence description of what this is and why it's useful.]
 
@@ -206,7 +206,7 @@ Create concise quick reference guide following README.md standards:
 
 See [`AGENTS.md`](AGENTS.md) for technical documentation.
 
-## See Also
+## See Also — Template-Specific
 
 [Links to related documentation and resources.]
 ```

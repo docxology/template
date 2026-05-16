@@ -15,6 +15,9 @@ Reports here are **historical snapshots**: file paths and line numbers refer to 
 | [`filepath-audit-report.md`](filepath-audit-report.md) | Filepath and reference audit report (regenerate with `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md`) | Developers |
 | [`documentation-review-report.md`](documentation-review-report.md) | Documentation completeness review report | All users |
 | [`documentation-review-summary.md`](documentation-review-summary.md) | Documentation review executive summary | All users |
+| [`triple-check-report.md`](triple-check-report.md) | 15-pass deep review and fix log (2026-04-27, re-verified 2026-05-04) | Developers |
+| [`literature-modules-audit.md`](literature-modules-audit.md) | Acceptance-criteria audit for `infrastructure/search/` and `infrastructure/reference/` (2026-05-01) | Developers |
+| [`pai-v5-upgrade-audit.md`](pai-v5-upgrade-audit.md) | PAI v5.0.0 upgrade audit and template-repo alignment (2026-05-15) | Developers |
 
 ## Usage
 

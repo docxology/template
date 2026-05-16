@@ -6,8 +6,6 @@ reportlab (high-quality) or simple text-based rendering (fallback).
 Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import TYPE_CHECKING
 

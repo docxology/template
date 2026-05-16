@@ -6,8 +6,6 @@ resolve correctly when the LaTeX compiler runs from output/pdf/.
 Extracted from _pdf_tex_transforms.py for file-size health.
 """
 
-from __future__ import annotations
-
 import re
 import unicodedata
 from pathlib import Path

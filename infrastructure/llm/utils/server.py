@@ -11,8 +11,6 @@ Note:
     alongside model-discovery utilities under a stable, consolidated API.
 """
 
-from __future__ import annotations
-
 import shutil
 import subprocess  # nosec B404 — used only for fixed-list Popen (no shell=True)
 import time

@@ -20,24 +20,24 @@ graph TB
         PIPE["scripts/<br/><br/>Build pipeline<br/>Stage scripts"]
         OUTPUT["projects/{name}/output<br/>Generated files<br/>PDFs, figures, data"]
     end
-    
+
     SRC -->|"provides tested methods"| SCRIPTS
     SCRIPTS -->|"import and use"| SRC
     SCRIPTS -->|"generate"| OUTPUT
     TESTS -->|"validate"| SRC
-    
+
     subgraph BPL["Build Pipeline"]
         RENDER["execute_pipeline.py<br/>Pipeline Orchestrator"]
         RENDER -->|"runs tests"| TESTS
         RENDER -->|"executes scripts"| SCRIPTS
         RENDER -->|"builds PDFs"| OUTPUT
     end
-    
+
     classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef pattern fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class SRC,TESTS,SCRIPTS,MANUSCRIPT,PIPE core
     class SRC,SCRIPTS pattern
     class RENDER pipeline
@@ -57,11 +57,11 @@ flowchart TD
     INTEGRATION --> DOCS["Update Documentation"]
     DOCS --> PIPELINE["Run Pipeline"]
     PIPELINE --> SUCCESS["Development complete"]
-    
+
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    
+
     class TESTS,IMPLEMENT,VALIDATE,ADD_TESTS,INTEGRATION,DOCS,PIPELINE process
     class START,SUCCESS success
 ```
@@ -75,21 +75,21 @@ graph LR
         MD["Markdown files"]
         PREAMBLE["LaTeX preamble"]
     end
-    
+
     subgraph PROC["Processing Pipeline"]
         TESTS["Test validation"]
         SCRIPTS["Script execution"]
         VALIDATION["Markdown validation"]
         GLOSSARY["Glossary generation"]
     end
-    
+
     subgraph GO["Generated Outputs"]
         FIGS["Figures"]
         DATA["Data files"]
         PDFS["PDFs"]
         TEX["LaTeX exports"]
     end
-    
+
     SRC --> TESTS
     SRC --> SCRIPTS
     MD --> VALIDATION
@@ -98,11 +98,11 @@ graph LR
     SCRIPTS --> DATA
     MD --> PDFS
     MD --> TEX
-    
+
     classDef input fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class SRC,MD,PREAMBLE input
     class TESTS,SCRIPTS,VALIDATION,GLOSSARY process
     class FIGS,DATA,PDFS,TEX output
@@ -129,32 +129,32 @@ graph LR
 
 ### 🌐 Essential URLs
 
-🔗 **[GitHub Template](https://github.com/docxology/template)** — Click "Use this template"  
-📚 **[Documentation](https://github.com/docxology/template#readme)** — Project overview  
-🐛 **[Issues](https://github.com/docxology/template/issues)** — Report bugs & request features  
-💬 **[Discussions](https://github.com/docxology/template/discussions)** — Join the community  
+🔗 **[GitHub Template](https://github.com/docxology/template)** — Click "Use this template"
+📚 **[Documentation](https://github.com/docxology/template#readme)** — Project overview
+🐛 **[Issues](https://github.com/docxology/template/issues)** — Report bugs & request features
+💬 **[Discussions](https://github.com/docxology/template/discussions)** — Join the community
 
 ### 🚀 Key Features to Highlight
 
-✅ **Test-driven development** with coverage  
-✅ **Automated PDF generation** from markdown  
-✅ **Professional LaTeX output** with cross-referencing  
-✅ **Automated figure generation** from Python scripts  
-✅ **Cross-referencing system** for equations & figures  
-✅ **Standardized project structure** for consistency  
-✅ **Thin orchestrator pattern** for maintainability  
-✅ **Publication-ready outputs** for academic use  
+✅ **Test-driven development** with coverage
+✅ **Automated PDF generation** from markdown
+✅ **Professional LaTeX output** with cross-referencing
+✅ **Automated figure generation** from Python scripts
+✅ **Cross-referencing system** for equations & figures
+✅ **Standardized project structure** for consistency
+✅ **Thin orchestrator pattern** for maintainability
+✅ **Publication-ready outputs** for academic use
 
 ### 📖 Documentation Navigation
 
-🚀 **[How To Use Guide](../core/how-to-use.md)** — Usage guide from basic to advanced  
-🏗️ **[Architecture Guide](../core/architecture.md)** — System design overview  
-⚡ **[Workflow Guide](../core/workflow.md)** — Development process  
-📝 **[Markdown Guide](../usage/markdown-template-guide.md)** — Writing & formatting  
-🎯 **[Examples Showcase](../usage/examples-showcase.md)** — Real-world usage  
-🔧 **[Thin Orchestrator Summary](../architecture/thin-orchestrator-summary.md)** — Pattern implementation  
-🗺️ **[Development Roadmap](../development/roadmap.md)** — Future plans  
-🤝 **[Contributing Guide](../development/contributing.md)** — How to contribute  
+🚀 **[How To Use Guide](../core/how-to-use.md)** — Usage guide from basic to advanced
+🏗️ **[Architecture Guide](../core/architecture.md)** — System design overview
+⚡ **[Workflow Guide](../core/workflow.md)** — Development process
+📝 **[Markdown Guide](../usage/markdown-template-guide.md)** — Writing & formatting
+🎯 **[Examples Showcase](../usage/examples-showcase.md)** — Real-world usage
+🔧 **[Thin Orchestrator Summary](../architecture/thin-orchestrator-summary.md)** — Pattern implementation
+🗺️ **[Development Roadmap](../development/roadmap.md)** — Future plans
+🤝 **[Contributing Guide](../development/contributing.md)** — How to contribute
 ❓ **[FAQ](../reference/faq.md)** — Common questions
 
 ---

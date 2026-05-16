@@ -7,6 +7,7 @@ Modules:
     config: Repository templates (.env.template, secure_config.yaml); see config/SKILL.md
     core: Foundation utilities (config, logging, exceptions, pipeline, telemetry, progress, checkpoint)
     docker: Dockerfile and docker-compose for container runs; see docker/SKILL.md
+    doctor: Diagnostic + audited resolution engine for repo state; see doctor/SKILL.md
     validation: Quality & validation tools (PDF, Markdown, integrity)
     documentation: Documentation & figure management
     scientific: Scientific computing utilities
@@ -26,8 +27,6 @@ Each subpackage includes SKILL.md (YAML frontmatter) for agent-oriented discover
 
 Runtime note: Python may create __pycache__/ directories under each subpackage; they are bytecode caches, gitignored, and not part of the public API.
 """
-
-from __future__ import annotations
 
 __version__ = "2.0.0"
 __layer__ = "infrastructure"

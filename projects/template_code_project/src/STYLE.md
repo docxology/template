@@ -1,6 +1,6 @@
 # Source Code Style Guide
 
-Code style and design conventions for `src/` modules in the `code_project` exemplar.
+Code style and design conventions for `src/` modules in the `template_code_project` exemplar.
 
 ## Pure Function Design
 

@@ -51,7 +51,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 ## Available Modules
 
-Same **14** named areas as [modules-guide.md](modules-guide.md): **Core**, **Documentation**, **Validation**, **Publishing**, **Scientific**, **LLM**, **Rendering**, **Reporting**, **Project**, **Steganography**, **Config**, **Docker**, **Skills** (SKILL.md manifest), **Telemetry** (under `core/telemetry/`). Per-module deep dives: [guides/](guides/).
+**16** importable packages (see [canonical_facts.md](../_generated/canonical_facts.md)): **core**, **doctor**, **documentation**, **llm**, **orchestration**, **project**, **prose**, **publishing**, **reference**, **rendering**, **reporting**, **scientific**, **search**, **skills**, **steganography**, **validation** — plus `config/` and `docker/` (configuration directories, not Python packages). Per-module deep dives: [guides/](guides/).
 
 ## Related Documentation
 

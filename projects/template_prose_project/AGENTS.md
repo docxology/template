@@ -4,9 +4,9 @@
 
 Prose-focused exemplar demonstrating end-to-end use of
 `infrastructure/prose/` and `infrastructure/reference/`. Mirrors the
-structure of `template_code_project` and `template_search_project` so
-the pipeline runner discovers and executes all three with the same
-code.
+structure of the permanent `template_code_project` exemplar and the
+optional `projects_archive/template_search_project` add-on, while staying
+fast and offline by default.
 
 ## Layout
 
@@ -73,7 +73,7 @@ mocks.
 
 * `template_code_project` — has its own algorithm (`src/optimizer.py`)
   and generates figures from numerical experiments.
-* `template_search_project` — runs literature search and *populates*
+* Optional `template_search_project` add-on — runs literature search and *populates*
   `manuscript/references.bib` from a query.
 * `template_prose_project` — runs no algorithm and *validates* the
   hand-curated `manuscript/references.bib`. The "experiment" is the

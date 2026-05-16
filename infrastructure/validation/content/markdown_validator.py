@@ -9,8 +9,6 @@ This module provides comprehensive validation of markdown files including:
 This is part of the infrastructure layer (generic, reusable validation).
 """
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 
@@ -273,6 +271,53 @@ def validate_refs(
     return problems
 
 
+def _strip_markdown_code_regions(text: str) -> str:
+    """Remove Markdown code regions before style-scanning prose/math."""
+    text = re.sub(r"```[\s\S]*?```", "", text)
+    text = re.sub(r"~~~[\s\S]*?~~~", "", text)
+    text = re.sub(r"`[^`\n]+`", "", text)
+    text = re.sub(
+        r"(?:\A|\n)(?:[ ]{4,}|\t)[^\n]*(?:\n(?:[ ]{4,}|\t)[^\n]*)*",
+        "\n",
+        text,
+    )
+    return text
+
+
+def _has_invalid_dollar_display_math(text: str) -> bool:
+    """Return true for inline, nested, or unbalanced ``$$`` delimiters.
+
+    Pandoc's native ``$$`` display math is the only form that renders
+    faithfully to both HTML and LaTeX in the template pipeline.  The
+    strictness here is about *shape*: display math must be isolated on
+    its own line(s), either as a same-line block
+    ``$$x = y$$`` or as paired delimiter lines.
+    """
+    text = _strip_markdown_code_regions(text)
+    open_block = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if "$$" not in stripped:
+            continue
+
+        delimiter_count = stripped.count("$$")
+        if stripped == "$$" or re.fullmatch(r"\$\$\s+\{#eq:[A-Za-z0-9_-]+(?:\s+[^}]*)?\}", stripped):
+            open_block = not open_block
+            continue
+
+        if (
+            not open_block
+            and delimiter_count == 2
+            and stripped.startswith("$$")
+            and stripped.endswith("$$")
+            and stripped[2:-2].strip()
+        ):
+            continue
+
+        return True
+    return open_block
+
+
 def validate_math(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]:
     """Validate mathematical equation formatting and labeling.
 
@@ -297,16 +342,19 @@ def validate_math(md_paths: list[str], repo_root: str | Path) -> list[Diagnostic
 
         rel_str = str(rel)
 
-        # Disallow $$ and \[ \] display math in sources
-        if "$$" in text:
+        # Pandoc-native $$ display math is allowed when isolated on its
+        # own line(s). Inline, nested, or unbalanced $$ is fragile and
+        # gets flagged. Raw \[...\] is still banned because Pandoc emits
+        # literal brackets in HTML for that form.
+        if _has_invalid_dollar_display_math(text):
             problems.append(
                 DiagnosticEvent(
                     severity=DiagnosticSeverity.WARNING,
                     category="MARKDOWN_MATH",
-                    message="Use equation environment instead of $$",
+                    message="Use isolated $$ display blocks; inline or unbalanced $$ is not allowed",
                     code=MarkdownCode.MATH_DOLLAR_DISPLAY,
                     file_path=rel_str,
-                    fix_suggestion="Replace $$...$$ with \\begin{equation}...\\end{equation}",
+                    fix_suggestion=("Put display math on its own line(s), for example $$x = y$$ or a paired $$ block."),
                 )
             )
         if "\\[" in text or "\\]" in text:

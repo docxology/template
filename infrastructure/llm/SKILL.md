@@ -48,7 +48,7 @@ response = client.query("Summarize this paper...", options=GenerationOptions(
 ## Conversation Context (`core/context.py`)
 
 ```python
-from infrastructure.llm import ConversationContext, Message
+from infrastructure.llm.core import ConversationContext, Message
 
 context = ConversationContext()
 context.add(Message(role="user", content="What is active inference?"))
@@ -60,8 +60,9 @@ context.add(Message(role="assistant", content="Active inference is..."))
 Pre-built research task templates:
 
 ```python
-from infrastructure.llm import (
-    get_template, ResearchTemplate, PaperSummarization,
+from infrastructure.llm import get_template
+from infrastructure.llm.templates import (
+    ResearchTemplate, PaperSummarization,
     ManuscriptExecutiveSummary, ManuscriptQualityReview,
     ManuscriptMethodologyReview, ManuscriptImprovementSuggestions,
     ManuscriptTranslationAbstract,
@@ -82,8 +83,9 @@ previous `OutputValidator` class is gone; call the individual checks
 directly.
 
 ```python
-from infrastructure.llm import (
-    detect_repetition, is_off_topic,
+from infrastructure.llm import is_off_topic
+from infrastructure.llm.validation import (
+    detect_repetition,
     check_format_compliance, validate_section_completeness,
     calculate_unique_content_ratio, deduplicate_sections,
 )
@@ -101,12 +103,14 @@ ratio = calculate_unique_content_ratio(response_text)
 ## Manuscript Review Generation (`review/`)
 
 ```python
-from infrastructure.llm import (
+from infrastructure.llm.review import (
     create_review_client, select_and_start_ollama_model, warmup_model,
     extract_manuscript_text, generate_review_with_metrics,
-    generate_executive_summary, generate_quality_review,
-    generate_methodology_review, generate_improvement_suggestions,
+    generate_llm_executive_summary, generate_improvement_suggestions,
     generate_translation, save_review_outputs,
+)
+from infrastructure.llm.review.generator import (
+    generate_quality_review, generate_methodology_review,
 )
 
 # Full review workflow
@@ -114,7 +118,7 @@ client = create_review_client()
 warmup_model(client)
 text = extract_manuscript_text(manuscript_dir)
 
-executive = generate_executive_summary(client, text)
+executive = generate_llm_executive_summary(client, text)
 quality = generate_quality_review(client, text)
 methodology = generate_methodology_review(client, text)
 suggestions = generate_improvement_suggestions(client, text)
@@ -126,7 +130,7 @@ save_review_outputs(output_dir, executive=executive, quality=quality,
 ## Ollama Utilities (`utils/`)
 
 ```python
-from infrastructure.llm import (
+from infrastructure.llm.utils import (
     is_ollama_running, start_ollama_server, ensure_ollama_ready,
     get_model_names, select_best_model,
     select_small_fast_model, preload_model, check_model_loaded,
@@ -144,7 +148,7 @@ best = select_best_model()
 ## Prompt Composition (`prompts/`)
 
 ```python
-from infrastructure.llm import PromptFragmentLoader, PromptComposer
+from infrastructure.llm.prompts import PromptFragmentLoader, PromptComposer
 
 loader = PromptFragmentLoader()
 composer = PromptComposer(loader)

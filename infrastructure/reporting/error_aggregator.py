@@ -4,8 +4,6 @@ Collects, categorizes, and provides actionable fixes for errors and warnings
 encountered during pipeline execution.
 """
 
-from __future__ import annotations
-
 import functools
 import json
 from dataclasses import dataclass, field
@@ -317,7 +315,7 @@ class ErrorAggregator:
 
 
 @functools.lru_cache(maxsize=1)
-def get_error_aggregator() -> ErrorAggregator:
+def get_error_aggregator() -> "ErrorAggregator":
     """Get global error aggregator instance (lazily initialized)."""
     return ErrorAggregator()
 

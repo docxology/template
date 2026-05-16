@@ -9,8 +9,12 @@ from pathlib import Path
 
 from infrastructure.validation.docs.consistency_lint import (
     Inconsistency,
+    check_canonical_count_singularity,
+    check_command_conventions,
+    check_doc_imports_resolve,
     check_module_count_claims,
     check_no_ghost_projects,
+    check_readme_files_list,
 )
 
 
@@ -169,6 +173,183 @@ def test_module_count_noqa_suppresses_warning(tmp_path: Path) -> None:
         "Historical: 99 Python packages. <!-- noqa: docs-lint -->\n",
     )
     assert check_module_count_claims(repo) == []
+
+
+def test_command_convention_bare_pytest_in_bash_is_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "guide.md",
+        "Run tests:\n\n```bash\npytest tests/ --cov=infrastructure\n```\n",
+    )
+    issues = check_command_conventions(repo)
+    assert len(issues) == 1
+    assert issues[0].category == "command-convention"
+    assert "pytest" in issues[0].detail
+    assert issues[0].line == 4
+
+
+def test_command_convention_bare_python3_in_sh_is_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(repo / "docs" / "g.md", "```sh\npython3 scripts/01_run_tests.py\n```\n")
+    issues = check_command_conventions(repo)
+    assert len(issues) == 1
+    assert "python3" in issues[0].detail
+
+
+def test_command_convention_uv_run_is_not_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "g.md",
+        "```bash\nuv run pytest tests/\nuv run python3 scripts/x.py\n```\n",
+    )
+    assert check_command_conventions(repo) == []
+
+
+def test_command_convention_python_block_is_ignored(tmp_path: Path) -> None:
+    """A ```python fence is code, not a shell command — never flagged."""
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(repo / "docs" / "g.md", "```python\npytest_plugins = []\npython3 = 1\n```\n")
+    assert check_command_conventions(repo) == []
+
+
+def test_command_convention_prose_and_nouns_not_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "g.md",
+        "We use pytest-httpserver. See pytest.ini.\n\n"
+        "```bash\n# pytest is invoked via uv\npytest-httpserver --help\n```\n",
+    )
+    assert check_command_conventions(repo) == []
+
+
+def test_command_convention_noqa_suppresses(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "g.md",
+        "Counter-example:\n\n```bash\npytest tests/  # noqa: docs-lint (deliberate)\n```\n",
+    )
+    assert check_command_conventions(repo) == []
+
+
+def test_command_convention_prompt_prefix_is_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(repo / "docs" / "g.md", "```console\n$ pytest -m security\n```\n")
+    issues = check_command_conventions(repo)
+    assert len(issues) == 1
+    assert issues[0].category == "command-convention"
+
+
+def test_doc_import_real_symbol_resolves(tmp_path: Path) -> None:
+    """A real `infrastructure...` import in a doc fence must NOT be flagged."""
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "g.md",
+        "```python\nfrom infrastructure.core.logging.utils import get_logger\n```\n",
+    )
+    assert check_doc_imports_resolve(repo) == []
+
+
+def test_doc_import_bad_symbol_is_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "g.md",
+        "```python\nfrom infrastructure.core import NoSuchSymbolXYZ\n```\n",
+    )
+    issues = check_doc_imports_resolve(repo)
+    assert len(issues) == 1
+    assert issues[0].category == "doc-import"
+    assert "NoSuchSymbolXYZ" in issues[0].detail
+
+
+def test_doc_import_noqa_suppresses(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "g.md",
+        "```python\nfrom infrastructure.new_feature import thing  # noqa: docs-lint\n```\n",
+    )
+    assert check_doc_imports_resolve(repo) == []
+
+
+def test_doc_import_dash_m_nonexistent_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(repo / "docs" / "g.md", "```bash\nuv run python -m infrastructure.totally.fake\n```\n")
+    issues = check_doc_imports_resolve(repo)
+    assert len(issues) == 1
+    assert "infrastructure.totally.fake" in issues[0].detail
+
+
+def test_doc_import_non_code_fence_ignored(tmp_path: Path) -> None:
+    """A fence whose language isn't code (e.g. ```yaml) is not scanned."""
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(repo / "docs" / "g.md", "```yaml\nfrom infrastructure.core import Bogus\n```\n")
+    assert check_doc_imports_resolve(repo) == []
+
+
+def test_doc_import_multiline_parenthesised(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "g.md",
+        "```python\nfrom infrastructure.core import (\n    NopeOne,\n    NopeTwo,\n)\n```\n",
+    )
+    issues = check_doc_imports_resolve(repo)
+    assert len(issues) == 1 and issues[0].category == "doc-import"
+
+
+def test_readme_files_list_missing_is_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=1)
+    pkg = repo / "infrastructure" / "pkg0"
+    _write(pkg / "real_mod.py", "x = 1\n")
+    _write(pkg / "README.md", "## Files\n\n- `real_mod.py` — present\n- `ghost_mod.py` — vanished\n")
+    issues = check_readme_files_list(repo)
+    assert len(issues) == 1
+    assert issues[0].category == "doc-files-list"
+    assert "ghost_mod.py" in issues[0].detail
+
+
+def test_readme_files_list_all_present_ok(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=1)
+    pkg = repo / "infrastructure" / "pkg0"
+    _write(pkg / "a.py", "")
+    _write(pkg / "README.md", "## Files\n\n- `a.py`\n")
+    assert check_readme_files_list(repo) == []
+
+
+def test_count_singularity_outside_canonical_is_flagged(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(repo / "docs" / "g.md", "The repo has 345 .py files in infrastructure.\n")
+    issues = check_canonical_count_singularity(repo)
+    assert len(issues) == 1
+    assert issues[0].category == "count-singularity"
+
+
+def test_count_singularity_canonical_facts_is_exempt(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(repo / "docs" / "_generated" / "canonical_facts.md", "Measured: 345 .py files.\n")
+    assert check_canonical_count_singularity(repo) == []
+
+
+def test_count_singularity_noqa_suppresses(tmp_path: Path) -> None:
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "docs" / "g.md",
+        "Historical note: 345 Python files (2026-05-15). <!-- noqa: docs-lint -->\n",
+    )
+    assert check_canonical_count_singularity(repo) == []
+
+
+def test_tests_dir_is_in_scope_blind_spot_closed(tmp_path: Path) -> None:
+    """Regression guard: a bad infra import under tests/**/AGENTS.md MUST be
+    caught (the 2026-05-15 triple-check found tests/ was a scope blind spot)."""
+    repo = _scaffold_repo(tmp_path, n_packages=15)
+    _write(
+        repo / "tests" / "infra_tests" / "x" / "AGENTS.md",
+        "```python\nfrom infrastructure.core import NoSuchSymbolABC\n```\n",
+    )
+    issues = check_doc_imports_resolve(repo)
+    assert any(
+        "tests/infra_tests/x/AGENTS.md" in str(i.file) and i.category == "doc-import"
+        for i in issues
+    ), "tests/ docs must be in consistency-lint scope"
 
 
 def test_inconsistency_format_contains_file_and_line(tmp_path: Path) -> None:

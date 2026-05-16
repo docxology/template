@@ -1,7 +1,5 @@
 """File I/O operations for saving and summarizing LLM review outputs."""
 
-from __future__ import annotations
-
 import json
 from datetime import datetime
 from pathlib import Path

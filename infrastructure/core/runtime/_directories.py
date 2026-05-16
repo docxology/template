@@ -4,8 +4,6 @@ Creates and validates the project output directory layout and verifies
 the source code directory structure.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_success

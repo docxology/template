@@ -1,12 +1,10 @@
-"""Locate combined-manuscript PDFs across the three canonical project output paths.
+"""Locate combined-manuscript PDFs across canonical project output paths.
 
 Stage 4 (validate) may run before or after Stage 5 (copy outputs), so the combined
 PDF can legitimately live in any of three places. This helper is the single source
 of truth for that search and is reused by output validators, reporters, and any
 future consumer that needs the same resolution rule.
 """
-
-from __future__ import annotations
 
 from pathlib import Path
 
@@ -35,13 +33,15 @@ def find_combined_pdf(output_dir: Path, project_name: str) -> tuple[Path, float]
     Search order:
     1. ``output_dir/{project_name}_combined.pdf`` (root, post-copy layout)
     2. ``output_dir/pdf/{project_name}_combined.pdf`` (original generation location)
-    3. ``projects/{project_name}/output/pdf/{project_name}_combined.pdf`` (source,
-       pre-copy — used by Stage 4 validation before Stage 5 runs)
+    3. ``projects/{project_name}/output/pdf/{project_name}_combined.pdf`` or
+       ``projects_in_progress/{project_name}/output/pdf/{project_name}_combined.pdf``
+       (source, pre-copy — used by Stage 4 validation before Stage 5 runs)
 
     Args:
         output_dir: The output directory to search. May be either the top-level
             ``output/{project_name}`` (post-copy) or a source
-            ``projects/{project_name}/output`` directory.
+            ``projects/{project_name}/output`` or
+            ``projects_in_progress/{project_name}/output`` directory.
         project_name: The project slug used to construct the PDF filename.
 
     Returns:
@@ -74,9 +74,18 @@ def find_combined_pdf(output_dir: Path, project_name: str) -> tuple[Path, float]
     else:
         source_pdf_dir = output_dir.parent.parent / "projects" / project_name / "output" / "pdf"
 
-    if source_pdf_dir.exists():
-        source_pdf = source_pdf_dir / filename
-        if source_pdf.exists() and source_pdf.stat().st_size > 0:
-            return source_pdf, source_pdf.stat().st_size / (1024 * 1024)
+    source_pdf_dirs = [source_pdf_dir]
+    if output_idx is not None:
+        repo_root = Path(*path_parts[:output_idx])
+        qualified_path = "/".join(path_parts[output_idx + 1 :])
+        source_pdf_dirs.append(repo_root / "projects_in_progress" / qualified_path / "output" / "pdf")
+    else:
+        source_pdf_dirs.append(output_dir.parent.parent / "projects_in_progress" / project_name / "output" / "pdf")
+
+    for candidate_dir in source_pdf_dirs:
+        if candidate_dir.exists():
+            source_pdf = candidate_dir / filename
+            if source_pdf.exists() and source_pdf.stat().st_size > 0:
+                return source_pdf, source_pdf.stat().st_size / (1024 * 1024)
 
     return None

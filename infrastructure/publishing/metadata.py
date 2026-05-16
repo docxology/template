@@ -3,8 +3,6 @@
 This module re-exports from focused sub-modules for backwards compatibility.
 """
 
-from __future__ import annotations
-
 from infrastructure.publishing._metadata_extraction import (
     extract_publication_metadata,
     validate_doi,

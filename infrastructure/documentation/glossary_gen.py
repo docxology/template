@@ -6,8 +6,6 @@ Functions:
 - inject_between_markers(text, begin_marker, end_marker, content): Replace content between markers
 """
 
-from __future__ import annotations
-
 import ast
 from dataclasses import dataclass
 from pathlib import Path

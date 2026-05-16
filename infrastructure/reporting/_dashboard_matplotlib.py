@@ -12,8 +12,6 @@ The Plotly interactive dashboard generator lives in this module because it
 has no other downstream consumers and is small enough not to warrant a file.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Any
 

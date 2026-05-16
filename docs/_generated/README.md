@@ -8,6 +8,7 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 | [architecture_overview.svg](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/generate_architecture_overview.py` |
 | [coverage_history.md](coverage_history.md) | **Generated** — `uv run python scripts/generate_coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
 | [canonical_facts.md](canonical_facts.md) | **Generated** — live test runs, discovery, and CI configuration (refresh with `generate_active_projects_doc.py` + measured pytest; see file footer) |
+| [skills_index.md](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
 | `README.md`, `AGENTS.md` | **Maintainer** — policy and conventions for linking to generated content |
 
 ## Policy
@@ -36,3 +37,9 @@ uv run python scripts/generate_coverage_history.py --from-gh --days=30
 ```
 
 **Canonical factsheet** — when CI gates, project counts, or fep_lean scale change, re-run the measurements cited in [`canonical_facts.md`](canonical_facts.md) (discovery tests, `projects/fep_lean` `pytest --collect-only`, optional full `pytest` with coverage) and edit that file so numbers stay ground-truthed.
+
+**Skills index** — after adding/removing `SKILL.md` descriptors:
+
+```bash
+uv run python -m infrastructure.skills write-index
+```

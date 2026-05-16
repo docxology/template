@@ -81,7 +81,7 @@ archive unchanged.
 
 ### Location
 
-**Location**: `projects/{name}/manuscript/config.yaml`  
+**Location**: `projects/{name}/manuscript/config.yaml`
 **Template**: `projects/{name}/manuscript/config.yaml.example`
 
 ### Structure
@@ -241,7 +241,7 @@ export PIPELINE_RESUME=1
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 
-### Performance Monitoring
+### Performance Monitoring — Configuration Examples
 
 ```bash
 # Enable performance tracking
@@ -258,7 +258,17 @@ The template validates configuration at startup:
 
 ```bash
 # Check configuration
-uv run python -c "from infrastructure.core.config.loader import load_config; print(load_config())"
+uv run python -c "from infrastructure.core.config.loader import load_config; print(load_config('projects/template_code_project/manuscript/config.yaml', strict=True))"
+```
+
+Permissive loading remains the default so partial project configs can fall
+back to defaults. Use `strict=True` in tooling, review scripts, or CI jobs
+when unknown top-level keys should fail fast.
+
+Export the current top-level JSON Schema for editor/tooling integration:
+
+```bash
+uv run python -m infrastructure.core.config.cli --schema-json
 ```
 
 ### Per-project schema extensions
@@ -309,6 +319,10 @@ explicitly via `load_config(path, project_name="my_project")`. Calling
 `register_project_schema_extension("", {...})` registers a key that
 applies to *all* projects (use sparingly).
 
+`generate_manuscript_config_schema(project_name="my_project")` includes
+registered project keys in the exported schema. Unknown keys are rejected
+by that schema and by `load_config(..., strict=True)`.
+
 The registry is process-local. Tests should call
 `clear_project_schema_extensions()` in a fixture to avoid state leakage.
 
@@ -334,7 +348,6 @@ The registry is process-local. Tests should call
 - [Troubleshooting Guide](../troubleshooting/) - Common issues and solutions
 - [Build System](../../RUN_GUIDE.md) - Build configuration
 - [Performance Optimization](performance-optimization.md) - Performance tuning
-
 
 
 

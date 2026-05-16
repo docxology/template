@@ -25,12 +25,14 @@ final_pdf = processor.process()
 
 ## Barcodes (`barcodes.py`)
 
-Responsible for generating dense Error-Correction Q-Level QR codes linking to the author pipeline.
+Responsible for generating dense Error-Correction Q-Level QR codes and Code128 barcode strips.
 
 ```python
-from infrastructure.steganography.barcodes import QRGenerator
-generator = QRGenerator()
-image = generator.generate_mailto(emails=["a@b.com", "c@d.com"], subject="Research Request")
+from infrastructure.steganography.barcodes import create_barcode_strip_overlay
+overlay_pdf_bytes = create_barcode_strip_overlay(
+    page_width=612, page_height=792,
+    qr_data="https://doi.org/...", code128_data="paper-id-001",
+)
 ```
 
 ## Setup & Hashing (`hashing.py`)
@@ -38,9 +40,9 @@ image = generator.generate_mailto(emails=["a@b.com", "c@d.com"], subject="Resear
 Provides deterministic SHA-256 and SHA-512 manifest exports alongside standard PDF payloads.
 
 ```python
-from infrastructure.steganography.hashing import DocumentHasher
-hasher = DocumentHasher()
-manifest = hasher.generate_manifest(Path("file.pdf"))
+from infrastructure.steganography.hashing import compute_file_hashes, write_hash_manifest
+hashes = compute_file_hashes(Path("file.pdf"))
+write_hash_manifest(Path("file.pdf"), hashes)
 ```
 
 ## Overlays (`overlays.py`)
@@ -48,8 +50,8 @@ manifest = hasher.generate_manifest(Path("file.pdf"))
 For applying visual steganographic traits like diagonally rendered strings across every page.
 
 ```python
-from infrastructure.steganography.overlays import create_text_overlay
-pdf_with_watermark = create_text_overlay(width=612, height=792, text="CONFIDENTIAL", opacity=0.08)
+from infrastructure.steganography.overlays import create_watermark_overlay
+overlay_bytes = create_watermark_overlay(page_width=612, page_height=792, text="CONFIDENTIAL", opacity=0.08)
 ```
 
 ## Documentation Signposting

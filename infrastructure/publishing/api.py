@@ -1,7 +1,5 @@
 """API clients for publishing platforms (Zenodo, arXiv, GitHub)."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any

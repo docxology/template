@@ -1,7 +1,5 @@
 """Manuscript translation template for abstract generation and translation."""
 
-from __future__ import annotations
-
 from string import Template
 from typing import Any
 

@@ -1,7 +1,5 @@
 """Progress bars, spinners, and ETA calculations for logging."""
 
-from __future__ import annotations
-
 import logging
 import sys
 import threading

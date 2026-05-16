@@ -1,6 +1,6 @@
 # Module Guides Directory
 
-> **Per-module documentation** for the 14 infrastructure areas (see counting note in [modules-guide.md](../modules-guide.md))
+> **Per-module documentation** for infrastructure modules (counting note in [modules-guide.md](../modules-guide.md))
 
 ## Quick Navigation
 

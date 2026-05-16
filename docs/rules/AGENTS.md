@@ -4,7 +4,7 @@
 
 This directory contains development standards, coding guidelines, and best practices for the Research Project Template system. All code must follow these standards.
 
-> **Note**: These rules were formerly stored in `.cursorrules/`. They now live in `docs/rules/`.
+> **Note**: Cursor reads the repository root **[`.cursorrules`](../../.cursorrules)** file for IDE/agent routing. Extended editorial standards live in **`docs/rules/`** (this directory).
 
 > **Project paths in examples**: default to [`projects/template_code_project/`](../../projects/template_code_project/). Authoritative active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md) (see [_generated/README.md](../_generated/README.md)).
 
@@ -39,14 +39,14 @@ This directory contains development standards, coding guidelines, and best pract
 - Location: `infrastructure/` (root level)
 - Domain-independent tools
 - Reusable across projects
-- 60% minimum test coverage required (currently 83.33% achieved - exceeds stretch goal!)
+- 60% minimum test coverage required (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
 
 **Layer 2: Project** (Specific, customizable)
 
 - Location: `projects/{name}/src/` (project-specific code)
 - Research-specific code
 - Uses generic infrastructure utilities
-- 90% minimum test coverage required (currently 100% achieved)
+- 90% minimum test coverage required (current % — see [canonical_facts.md](../_generated/canonical_facts.md))
 - Tests: `projects/{name}/tests/`
 - Scripts: `projects/{name}/scripts/` (thin orchestrators)
 
@@ -78,7 +78,7 @@ The template provides **two pipeline orchestrators** with different scope:
 **Python Orchestrator (`uv run python scripts/execute_pipeline.py`)**
 
 - **Use for**: Core or full pipeline, programmatic execution (`--core-only` skips LLM stages)
-- **Stages**: Default **core** run is **eight** executor stages (clean outputs, setup, infrastructure tests, project tests, analysis, PDF rendering, validation, copy outputs). With `--skip-infra`, infrastructure tests are omitted (seven stages). Full pipeline adds LLM review and translations before copy; see `infrastructure/core/pipeline/pipeline.py` (`PipelineExecutor._build_stage_list`).
+- **Stages**: Default **core** run is **eight** executor stages (clean outputs, setup, infrastructure tests, project tests, analysis, PDF rendering, validation, copy outputs). With `--skip-infra`, infrastructure tests are omitted (seven stages). Full pipeline adds LLM review and translations before copy; see [`executor.py`](../../infrastructure/core/pipeline/executor.py) (`PipelineExecutor._build_stage_list`).
 - **Features**: Checkpoint/resume; delegates to numbered scripts `scripts/00_*.py`–`scripts/05_*.py` plus optional `06`/`07` where applicable
 - **When to use**: Automated environments, CI/CD, or when you want explicit flags instead of the menu
 
@@ -179,7 +179,7 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 **Key Points**:
 
 - Generic and domain-independent only
-- 60% minimum test coverage required (currently 83.33% achieved)
+- 60% minimum test coverage required (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
 - AGENTS.md + README.md
 - Public API in `__init__.py`
 - Type hints on all functions
@@ -219,7 +219,8 @@ See [manuscript_style.md](manuscript_style.md)
 
 **Key Points**:
 
-- Use equation environment for display math (not `$$`)
+- Use isolated Pandoc `$$` display blocks or labelled equation environments,
+  depending on the project renderer and reference scheme.
 - Always label figures, tables, and equations
 - Use descriptive labels (e.g., `fig:convergence_plot`, `eq:objective`)
 - Reference using `\ref{}` for sections/figures/tables, `\eqref{}` for equations
@@ -247,8 +248,8 @@ As shown in \eqref{eq:objective}, the objective function...
 
 ### Coverage Requirements
 
-- **Infrastructure**: 60% minimum (currently achieving 83.33% - exceeds stretch goal!)
-- **Project code**: 90% minimum (currently achieving 100% - coverage!)
+- **Infrastructure**: 60% minimum (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- **Project code**: 90% minimum (current % — see [canonical_facts.md](../_generated/canonical_facts.md))
 - **Integration tests**: All critical workflows covered
 
 ### Test Organization
@@ -311,18 +312,18 @@ Detailed explanation of module purpose and contents.
 ```python
 def function(arg: str) -> str:
     """One-line summary.
-    
+
     Detailed description.
-    
+
     Args:
         arg: Description
-        
+
     Returns:
         Description
-        
+
     Raises:
         ExceptionType: When this happens
-        
+
     Example:
         >>> function("test")
         'result'
@@ -344,7 +345,7 @@ import pytest
 
 # Local infrastructure (Layer 1)
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.runtime.exceptions import TemplateError
+from infrastructure.core.exceptions import TemplateError
 from infrastructure.documentation import FigureManager
 
 # Local project (Layer 2)
@@ -361,9 +362,9 @@ import os
 @dataclass
 class ModuleConfig:
     """Module configuration."""
-    
+
     setting: str = "default"
-    
+
     @classmethod
     def from_env(cls) -> "ModuleConfig":
         """Load from environment variables."""
@@ -376,7 +377,7 @@ class ModuleConfig:
 
 ```python
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.runtime.exceptions import TemplateError
+from infrastructure.core.exceptions import TemplateError
 
 logger = get_logger(__name__)
 
@@ -401,7 +402,7 @@ flowchart TB
     ROOT --> DOC[/docs<br/>Documentation/]
     ROOT --> RULES[/docs/rules<br/>Development standards · this dir/]
 
-    INFRA --> INFRA_SUB[core · documentation · llm · project ·<br/>publishing · rendering · reporting ·<br/>scientific · validation · search · reference ·<br/>steganography · skills]
+    INFRA --> INFRA_SUB[core · doctor · documentation · llm · orchestration ·<br/>project · prose · publishing · reference · rendering ·<br/>reporting · scientific · search · skills · steganography · validation]
 
     PROJ --> P_NAME[/&lt;name&gt;/]
     P_NAME --> P_SUB[src/ · tests/ · scripts/ · manuscript/]
@@ -507,18 +508,18 @@ The `docs/rules/` standards align with and support the main documentation:
 ## Cross-Reference Guide
 
 **For Architecture Decisions:**
-→ Check [AGENTS.md](AGENTS.md) for decision criteria  
-→ Read [docs/core/architecture.md](../core/architecture.md) for full architectural overview  
+→ Check [AGENTS.md](AGENTS.md) for decision criteria
+→ Read [docs/core/architecture.md](../core/architecture.md) for full architectural overview
 → Consult [docs/architecture/thin-orchestrator-summary.md](../architecture/thin-orchestrator-summary.md) for pattern details
 
 **For Infrastructure Development:**
-→ Check [infrastructure_modules.md](infrastructure_modules.md) for standards  
-→ Study [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) for module organization  
+→ Check [infrastructure_modules.md](infrastructure_modules.md) for standards
+→ Study [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) for module organization
 → Review [infrastructure/README.md](../../infrastructure/README.md) for quick patterns
 
 **For Code Quality:**
-→ Check [error_handling.md](error_handling.md) and [python_logging.md](python_logging.md)  
-→ Read [docs/best-practices/best-practices.md](../best-practices/best-practices.md) for practices  
+→ Check [error_handling.md](error_handling.md) and [python_logging.md](python_logging.md)
+→ Read [docs/best-practices/best-practices.md](../best-practices/best-practices.md) for practices
 → See [docs/operational/error-handling-guide.md](../operational/error-handling-guide.md) for detailed patterns
 
 ## Quick Navigation Guide
@@ -610,8 +611,8 @@ When creating a new rules file:
 
 ---
 
-**Version**: 2.6.0  
-**Last Updated**: 2026-03-15  
-**Files**: 17 (AGENTS.md + README.md + 15 guideline files)  
-**Status**: All 15 guideline files cross-referenced  
+**Version**: 2.6.0
+**Last Updated**: 2026-03-15
+**Files**: 17 (AGENTS.md + README.md + 15 guideline files)
+**Status**: All 15 guideline files cross-referenced
 **Updates**: All development rules and standards synchronized with docs/

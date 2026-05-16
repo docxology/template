@@ -1,7 +1,5 @@
 """LaTeX executable discovery and per-package checking."""
 
-from __future__ import annotations
-
 import subprocess
 from pathlib import Path
 from typing import NamedTuple

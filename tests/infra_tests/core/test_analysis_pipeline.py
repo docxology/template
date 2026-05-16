@@ -52,6 +52,25 @@ def test_run_analysis_script_success(tmp_path: Path) -> None:
     assert marker.read_text() == "yes"
 
 
+def test_run_analysis_script_resolves_wip_project_env(tmp_path: Path) -> None:
+    project = tmp_path / "projects_in_progress" / "draft"
+    (project / "src").mkdir(parents=True, exist_ok=True)
+    (project / "scripts").mkdir(parents=True, exist_ok=True)
+    marker = tmp_path / "project_dir.txt"
+    script = _write_script(
+        project / "scripts",
+        "01_env.py",
+        f"""
+        import os
+        from pathlib import Path
+        Path({str(marker)!r}).write_text(os.environ["PROJECT_DIR"])
+        """,
+    )
+
+    assert run_analysis_script(script, tmp_path, "draft") == 0
+    assert marker.read_text() == str(project.resolve())
+
+
 def test_run_analysis_script_nonzero_exit(tmp_path: Path) -> None:
     project = _make_project(tmp_path)
     script = _write_script(

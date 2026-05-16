@@ -11,8 +11,6 @@ Implementation split across:
 - ``page_grid``: Grid layout and PDF export
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import TYPE_CHECKING
 

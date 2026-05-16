@@ -117,6 +117,20 @@ class TestVerifyOutputsExist:
         structure_valid, details = mod.verify_outputs_exist("test")
         assert isinstance(structure_valid, bool)
 
+    def test_verify_outputs_resolves_wip_project(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+        output_dir = tmp_path / "projects_in_progress" / "draft" / "output"
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / "draft_combined.pdf").write_bytes(
+            b"%PDF-1.4\n1 0 obj\n<<>>\nendobj\nstartxref\n0\n%%EOF\n"
+        )
+
+        structure_valid, details = mod.verify_outputs_exist("draft")
+
+        assert isinstance(structure_valid, bool)
+        assert details["structure"]["directory_structure"]["project_combined_pdf"]["exists"] is True
+
 
 class TestExecuteValidationPipeline:
     """Test execute_validation_pipeline."""

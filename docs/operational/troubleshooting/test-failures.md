@@ -134,10 +134,10 @@ def test_uv_sync_when_available(tmp_path):
 
 ```bash
 # Skip integration tests
-pytest tests/ -m "not integration"
+uv run pytest tests/ -m "not integration"
 
 # Run only integration tests
-pytest tests/ -m integration
+uv run pytest tests/ -m integration
 ```
 
 ---

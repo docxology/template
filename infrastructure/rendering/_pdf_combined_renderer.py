@@ -6,6 +6,7 @@ Each function handles one discrete preprocessing or injection step.
 
 from __future__ import annotations
 
+
 import os
 import re
 import shutil
@@ -24,9 +25,16 @@ from infrastructure.rendering._pdf_latex_helpers import (
     generate_title_page_preamble,
 )
 from infrastructure.rendering._pdf_math_delimiters import fix_math_delimiters
+from infrastructure.rendering._pdf_mermaid import replace_inline_mermaid
 from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
 from infrastructure.rendering._pdf_preflight import check_brace_balance
+from infrastructure.rendering._pdf_section_titles import sanitize_texorpdfstring
 from infrastructure.rendering._pdf_unicode_remap import remap_prose_unicode
+from infrastructure.rendering.latex_texttt import (
+    constrain_includegraphics_textheight,
+    make_known_literals_breakable,
+    make_long_texttt_breakable,
+)
 from infrastructure.validation.content.markdown_validator import (
     find_markdown_files,
     validate_citations,
@@ -37,8 +45,6 @@ if TYPE_CHECKING:
     from infrastructure.rendering.config import RenderingConfig
 
 logger = get_logger(__name__)
-
-_MERMAID_RE = re.compile(r"```\s*mermaid\s*\n.*?```", re.DOTALL | re.IGNORECASE)
 
 _FIG_PATH_REPLACEMENTS = [
     ("../../output/figures/", "../figures/"),
@@ -51,7 +57,7 @@ class CombinedMarkdownResult(NamedTuple):
     """Result of preprocess_combined_markdown."""
 
     content: str
-    mermaid_blocks_removed: int
+    mermaid_blocks_processed: int
     fig_paths_fixed: int
     manuscript_vars_substitutions: int
 
@@ -115,20 +121,23 @@ def preprocess_combined_markdown(
     combined_content: str,
     manuscript_dir: Path | None = None,
 ) -> CombinedMarkdownResult:
-    """Strip Mermaid fences, normalise figure paths, optional ``manuscript_vars.yaml`` substitution.
+    """Render Mermaid fences, normalise figure paths, and substitute variables.
 
     If ``manuscript_dir/manuscript_vars.yaml`` exists, ``{{dotted.key}}`` placeholders in the
     combined markdown are replaced with string values from the flattened YAML tree. Special
     keys ``{{maturity.*}}`` and ``{{verify.*}}`` expand to short summaries.
 
     Returns:
-        CombinedMarkdownResult with processed content and counts of removals/fixes/substitutions.
+        CombinedMarkdownResult with processed content and counts of Mermaid renders,
+        figure path fixes, and variable substitutions.
     """
-    content, n_mermaid = _MERMAID_RE.subn("", combined_content)
+    mermaid_result = replace_inline_mermaid(combined_content, manuscript_dir)
+    content = mermaid_result.content
+    n_mermaid = mermaid_result.diagrams_rendered
     if n_mermaid:
-        logger.info(f"✓ Removed {n_mermaid} Mermaid diagram block(s) from combined markdown")
+        logger.info(f"✓ Rendered {n_mermaid} Mermaid diagram block(s) into combined markdown")
     else:
-        logger.debug("No Mermaid blocks found in combined markdown")
+        logger.debug("No Mermaid blocks rendered in combined markdown")
 
     n_fig_paths = 0
     for old_prefix, new_prefix in _FIG_PATH_REPLACEMENTS:
@@ -302,17 +311,65 @@ def postprocess_latex(tex_content: str) -> str:
             rewritten_count,
         )
 
-    # Fix hidelinks → colorlinks (URLs distinct from in-doc links for non-color-only cue)
+    # Fix hidelinks → colorlinks=true with uniform red hyperlinks.
     if "hidelinks" in tex_content:
         tex_content = tex_content.replace(
             "hidelinks,",
-            "colorlinks=true,linkcolor=red,urlcolor=blue,citecolor=red,anchorcolor=red,",
+            "colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,",
         )
         tex_content = tex_content.replace(
             "  hidelinks,\n",
-            "  colorlinks=true,\n  linkcolor=red,\n  urlcolor=blue,\n  citecolor=red,\n",
+            "  colorlinks=true,\n  linkcolor=red,\n  urlcolor=red,\n  citecolor=red,\n",
         )
-        logger.info("✓ Patched hidelinks → colorlinks=true (red links/cites, blue URLs)")
+        logger.info("✓ Patched hidelinks → colorlinks=true (uniform red hyperlinks)")
+
+    # Normalise pandoc's default hypersetup colours to uniform red. Pandoc
+    # emits something like:
+    #   \hypersetup{
+    #     colorlinks=true,linkcolor=red,urlcolor=blue,citecolor=red,anchorcolor=red,
+    #     pdfcreator={LaTeX via pandoc}}
+    # Force every link colour to red so cross-refs, citations, and URLs
+    # share one visual treatment. Only rewrites blocks that already declare
+    # at least one link-colour key so we don't perturb unrelated metadata-
+    # only hypersetup blocks (e.g. ``\hypersetup{pdftitle={...}}``).
+    def _find_hypersetup_blocks(s: str) -> list[tuple[int, int, str]]:
+        """Return (start, end, body) for each balanced \\hypersetup{...}."""
+        out: list[tuple[int, int, str]] = []
+        marker = "\\hypersetup{"
+        i = 0
+        while True:
+            idx = s.find(marker, i)
+            if idx < 0:
+                return out
+            body_start = idx + len(marker)
+            depth = 1
+            j = body_start
+            while j < len(s) and depth > 0:
+                ch = s[j]
+                if ch == "{":
+                    depth += 1
+                elif ch == "}":
+                    depth -= 1
+                j += 1
+            if depth == 0:
+                out.append((idx, j, s[body_start : j - 1]))
+                i = j
+            else:
+                return out
+
+    blocks = _find_hypersetup_blocks(tex_content)
+    color_keys = ("linkcolor", "urlcolor", "citecolor", "anchorcolor", "filecolor")
+    hs_count = 0
+    for start, end, body in reversed(blocks):
+        if not any(re.search(rf"\b{k}\s*=", body) for k in color_keys):
+            continue  # metadata-only hypersetup, skip
+        new_body = body
+        for key in color_keys:
+            new_body = re.sub(rf"\b{key}\s*=\s*[A-Za-z][A-Za-z0-9]*", f"{key}=red", new_body)
+        tex_content = tex_content[:start] + "\\hypersetup{" + new_body + "}" + tex_content[end:]
+        hs_count += 1
+    if hs_count:
+        logger.info("✓ Normalised %d \\hypersetup block(s) to uniform red link colours", hs_count)
 
     # Fix broken math delimiters
     try:
@@ -321,14 +378,39 @@ def postprocess_latex(tex_content: str) -> str:
         logger.warning(f"Math delimiter fixing failed: {e}. Continuing with original LaTeX content.")
         logger.debug(f"Math delimiter fixing error details: {type(e).__name__}: {e}")
 
-    # Remap prose-only unicode glyphs (✓, ≈, α, σ, ≪, …) that lmroman cannot
-    # render to their LaTeX-command equivalents. Verbatim/Highlighting blocks
-    # are preserved byte-for-byte so Lean code listings keep their literal
-    # glyphs (rendered through DejaVuSansMono via \setmonofont).
+    # Sanitize Pandoc's auto-emitted \texorpdfstring bookmark arguments.
+    # When section titles contain math, Pandoc fills the bookmark arg with
+    # \textbackslash / \_ / {[} etc. that hyperref then tries to expand
+    # during the pdfstring serialize, which can blow the input stack
+    # ("TeX capacity exceeded, sorry [input stack size=10000]") on heavy
+    # math-laden headings and abort the build mid-section.
+    try:
+        tex_content, _ = sanitize_texorpdfstring(tex_content)
+    except (re.error, TypeError, ValueError) as e:
+        logger.warning(f"texorpdfstring sanitization failed: {e}. Continuing with original LaTeX content.")
+
+    # Remap unicode glyphs (✓, ≈, α, σ, ≪, …) that the active body/code
+    # fonts cannot render. Literal verbatim blocks are preserved; Pandoc
+    # Highlighting blocks receive an ASCII-safe code rewrite because their
+    # macro arguments are typeset through normal text fonts.
     try:
         tex_content = remap_prose_unicode(tex_content).content
     except (re.error, TypeError, ValueError) as e:
         logger.warning(f"Prose unicode remap failed: {e}. Continuing with original LaTeX content.")
+
+    try:
+        tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
+        if texttt_replacements:
+            logger.info("✓ Made %d long monospace path span(s) breakable", texttt_replacements)
+        tex_content, literal_replacements = make_known_literals_breakable(tex_content)
+        if literal_replacements:
+            logger.info("✓ Made %d recurring long label(s) breakable", literal_replacements)
+    except (re.error, TypeError, ValueError) as e:
+        logger.warning(f"Breakable texttt postprocessing failed: {e}. Continuing with original LaTeX content.")
+
+    tex_content, graphics_replacements = constrain_includegraphics_textheight(tex_content, "0.50")
+    if graphics_replacements:
+        logger.info("✓ Constrained %d Pandoc figure height bound(s)", graphics_replacements)
 
     return tex_content
 
@@ -361,6 +443,26 @@ def inject_latex_preamble(
         logger.info("⚠️  No preamble found, adding graphicx package")
         preamble_content = graphicx_required
 
+    # Ensure geometry package is present so margins are configurable in one
+    # place. Default to 0.75in margins (~half of the 1.5in article default)
+    # for a denser, more contemporary page that still leaves room for the
+    # title/TOC. Skip injection if a manuscript-supplied or pandoc-emitted
+    # geometry declaration is already present in either the user preamble
+    # or the assembled TeX preamble (the portion before ``\begin{document}``).
+    geometry_pkg_re = re.compile(r"\\usepackage(?:\[[^\]]*\])?\{geometry\}")
+    geometry_cmd_re = re.compile(r"\\geometry\s*\{")
+    tex_preamble_only = tex_content.split("\\begin{document}", 1)[0]
+    has_geometry_in_user_preamble = bool(geometry_pkg_re.search(preamble_content))
+    has_geometry_in_tex_preamble = bool(
+        geometry_pkg_re.search(tex_preamble_only) or geometry_cmd_re.search(tex_preamble_only)
+    )
+    if has_geometry_in_user_preamble or has_geometry_in_tex_preamble:
+        logger.debug("geometry already declared; not re-injecting")
+    else:
+        geometry_line = r"\usepackage[margin=0.75in]{geometry}"
+        preamble_content = geometry_line + "\n" + preamble_content
+        logger.info("✓ Injected geometry package (0.75in margins)")
+
     begin_doc_idx = tex_content.find("\\begin{document}")
 
     # Inject package declarations and title-page preamble before \begin{document}
@@ -378,7 +480,10 @@ def inject_latex_preamble(
     if not title_page_body or begin_doc_idx <= 0:
         return tex_content
 
-    full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
+    if "\\tableofcontents" in title_page_body:
+        full_title_body = title_page_body
+    else:
+        full_title_body = title_page_body + "\n\\tableofcontents\n\\newpage"
     tex_preamble = tex_content[:begin_doc_idx]
     tex_body = tex_content[begin_doc_idx:]
 
@@ -389,7 +494,7 @@ def inject_latex_preamble(
         end_of_begin_doc = tex_body.find("\n") + 1
         if end_of_begin_doc > 0:
             tex_body = tex_body[:end_of_begin_doc] + "\n" + full_title_body + "\n\n" + tex_body[end_of_begin_doc:]
-        logger.info(r"✓ Inserted title page (\maketitle), TOC, and newpage after \begin{document}")
+        logger.info(r"✓ Inserted title/opening matter after \begin{document}")
 
     return tex_preamble + tex_body
 
@@ -445,23 +550,36 @@ def verify_figure_references(tex_content: str, figures_dir: Path) -> None:
     missing_figures: list[str] = []
     found_figures: list[str] = []
 
-    for fig_ref in referenced_figures:
-        filename = fig_ref.split("/")[-1]
-        fig_path = figures_dir / filename
-        fig_normalized = figures_dir / unicodedata.normalize("NFC", filename)
+    def _figure_candidates(fig_ref: str) -> list[Path]:
+        ref = fig_ref.strip()
+        if ref.startswith(r"\detokenize{"):
+            ref = ref.removeprefix(r"\detokenize{").rstrip("}")
+        ref_path = Path(ref)
+        candidates: list[Path] = []
+        if ref_path.is_absolute():
+            candidates.append(ref_path)
+        parts = ref_path.parts
+        if "figures" in parts:
+            figure_index = parts.index("figures")
+            candidates.append(figures_dir.joinpath(*parts[figure_index + 1 :]))
+        candidates.extend([figures_dir / ref_path, figures_dir / ref_path.name])
+        return [Path(unicodedata.normalize("NFC", str(candidate))) for candidate in candidates]
 
-        if fig_path.exists():
-            found_figures.append(filename)
-            logger.debug(f"  ✓ Found: {filename}")
-        elif fig_normalized.exists():
-            found_figures.append(filename)
-            logger.debug(f"  ✓ Found (normalized): {filename}")
+    for fig_ref in referenced_figures:
+        display_name = fig_ref.split("/")[-1].rstrip("}")
+        existing_path = next((candidate for candidate in _figure_candidates(fig_ref) if candidate.exists()), None)
+
+        if existing_path is not None:
+            found_figures.append(display_name)
+            logger.debug(f"  ✓ Found: {display_name}")
         else:
-            missing_figures.append(filename)
-            logger.warning(f"  ✗ Missing: {filename}")
+            missing_figures.append(display_name)
+            logger.warning(f"  ✗ Missing: {display_name}")
             if figures_dir.exists():
                 similar = [
-                    f.name for f in figures_dir.iterdir() if f.name.lower().startswith(filename.split(".")[0].lower())
+                    f.name
+                    for f in figures_dir.rglob("*")
+                    if f.name.lower().startswith(display_name.split(".")[0].lower())
                 ]
                 if similar:
                     logger.debug(f"    Similar files found: {', '.join(similar)}")

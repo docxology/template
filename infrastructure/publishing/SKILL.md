@@ -95,8 +95,9 @@ from infrastructure.publishing import (
     generate_publication_summary, generate_publication_metrics,
     create_publication_package, create_publication_announcement,
     create_academic_profile_data, create_repository_metadata,
-    calculate_complexity_score, calculate_file_hash,
+    calculate_complexity_score,
 )
+from infrastructure.core.files.operations import calculate_file_hash
 
 # Check if ready to publish
 readiness = validate_publication_readiness(project_path)

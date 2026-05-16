@@ -74,8 +74,8 @@ renderer.render_combined(source_files, manuscript_dir, project_name="my_project"
 **CLI:**
 
 ```bash
-python3 -m infrastructure.rendering.cli render --project {name}
-python3 -m infrastructure.rendering.render_all_cli
+uv run python3 -m infrastructure.rendering.cli render --project {name}
+uv run python3 -m infrastructure.rendering.render_all_cli
 ```
 
 ## Slides Rendering (`slides_renderer.py`)

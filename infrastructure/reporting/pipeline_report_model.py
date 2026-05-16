@@ -4,8 +4,6 @@ Contains the PipelineReport dataclass and the generate_pipeline_report function
 that constructs reports from stage results.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path

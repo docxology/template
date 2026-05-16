@@ -4,8 +4,6 @@ Dataclasses representing the structured telemetry report produced at the
 end of a pipeline run.  These are serializable to JSON via ``to_dict()``.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from typing import Any
 

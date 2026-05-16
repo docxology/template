@@ -1,252 +1,148 @@
 # Prompt Templates - Quick Reference
 
-Template-based prompt generation for structured LLM interactions.
+JSON template definitions consumed by `PromptFragmentLoader.load_template()` and
+assembled into complete prompt strings by `PromptComposer.compose_template()`.
 
 ## Overview
 
-Prompt templates provide a template engine for generating prompts with variable substitution. They enable consistent prompt formatting while allowing dynamic content injection.
+This directory contains JSON data files only — there is no Python package here.
+Templates are not Python objects; they are JSON records that the loader and composer
+interpret at runtime. Each template defines a `base_template` string with `${variable}`
+placeholders, a `fragments` map that drives the fragment builder dispatch, default
+`variables`, and a `section_config` used by some builders.
 
-## Quick Start
+## Loading and Composing Templates
 
 ```python
-from infrastructure.llm.prompts.templates import apply_template
+from infrastructure.llm.prompts import PromptFragmentLoader, PromptComposer
 
-# Apply template with variables
-prompt = apply_template(
-    template="manuscript_review",
-    variables={
-        "manuscript": manuscript_text,
-        "focus": "methodology"
-    }
+loader = PromptFragmentLoader()
+
+# Inspect the raw template definition
+template_def = loader.load_template("manuscript_reviews.json#manuscript_executive_summary")
+# Returns the JSON dict: base_template, fragments, variables, section_config
+
+# Compose a ready-to-send prompt string
+composer = PromptComposer(loader=loader)
+prompt = composer.compose_template(
+    "manuscript_reviews.json#manuscript_executive_summary",
+    text=manuscript_text,
+    max_tokens=1000,
+)
+
+# Paper summarization (variables supplied inline)
+summary_prompt = composer.compose_template(
+    "paper_summarization.json#paper_summarization",
+    title="My Paper",
+    authors="Smith et al.",
+    year="2024",
+    source="arXiv",
+    text=paper_text,
 )
 ```
+
+`compose_template` raises `LLMTemplateError` if any `${variable}` referenced in
+`base_template` is not provided by the template's `variables` defaults, the
+resolved fragment values, or the caller-supplied keyword arguments.
 
 ## Available Templates
 
-### Manuscript Review Templates (`manuscript_reviews.json`)
+### `manuscript_reviews.json`
 
-Structured review templates:
+Five review-type templates. All share the same fragment set
+(`format_requirements`, `section_structure`, `token_budget_awareness`,
+`content_requirements`, `validation_hints`) with different `section_config` values:
 
-```python
-# review
-prompt = apply_template(
-    template="comprehensive_review",
-    variables={
-        "manuscript": text,
-        "reviewer_role": "expert in machine learning"
-    }
-)
+| Template key | Section structure | Sections |
+| --- | --- | --- |
+| `manuscript_executive_summary` | `executive_summary` | 5 |
+| `manuscript_quality_review` | `quality_review` | 7 |
+| `manuscript_methodology_review` | `methodology_review` | 5 |
+| `manuscript_improvement_suggestions` | `improvement_suggestions` | 5 |
+| `manuscript_translation_abstract` | `translation_abstract` | 2 |
 
-# Methodology-focused review
-prompt = apply_template(
-    template="methodology_review",
-    variables={
-        "methodology_section": methodology_text
-    }
-)
-```
+All review templates require a `text` variable (the manuscript content). The
+translation template additionally requires `target_language`.
 
-### Paper Summarization (`paper_summarization.json`)
+### `paper_summarization.json`
 
-Summarization templates:
+One template: `paper_summarization`. Requires `title`, `authors`, `year`, `source`,
+and `text`. Unlike the review templates it does not use the fragment system —
+its `base_template` is self-contained with all instructions inline, targeting
+400–700 words of structured paper summary.
 
-```python
-# Abstract summarization
-prompt = apply_template(
-    template="summarize_abstract",
-    variables={
-        "abstract": abstract_text,
-        "target_length": "150 words"
-    }
-)
-
-# Full paper summary
-prompt = apply_template(
-    template="full_paper_summary",
-    variables={
-        "paper": paper_text,
-        "sections": ["introduction", "methods", "results"]
-    }
-)
-```
-
-## Template Structure
-
-Templates use variable placeholders:
+## Template JSON Schema
 
 ```json
 {
-  "template_name": {
-    "template": "You are {role}. Review the following manuscript focusing on {focus_areas}:\n\n{manuscript}",
-    "variables": {
-      "role": {
-        "default": "research reviewer",
-        "description": "Reviewer role"
-      },
-      "focus_areas": {
-        "required": true,
-        "description": "Areas to focus review"
-      },
-      "manuscript": {
-        "required": true,
-        "description": "Manuscript text"
-      }
+  "template_key": {
+    "version": "1.0",
+    "base_template": "...${text}...\n\n${format_requirements}\n\n${section_structure}...",
+    "fragments": {
+      "format_requirements": "format_requirements.json",
+      "section_structure": "section_structures.json#executive_summary",
+      "token_budget_awareness": "token_budget_awareness.json",
+      "content_requirements": "content_requirements.json",
+      "validation_hints": "validation_hints.json"
     },
-    "metadata": {
-      "category": "review",
-      "version": "1.0"
+    "variables": {
+      "word_count_range": [400, 600],
+      "required_elements": ["all 5 section headers", "specific manuscript references"]
+    },
+    "section_config": {
+      "structure_key": "executive_summary",
+      "token_allocation": "equal",
+      "sections": 5
     }
   }
 }
 ```
 
-## Usage Examples
+### Fields
 
-### Basic Template Application
+| Field | Type | Role |
+| --- | --- | --- |
+| `version` | string | Traceability |
+| `base_template` | string | Prompt skeleton with `${key}` placeholders |
+| `fragments` | object | Maps placeholder names to loader references; resolved by `build_fragment()` |
+| `variables` | object | Default values merged with caller-supplied kwargs |
+| `section_config` | object | Passed to fragment builders (headers list, section count) |
 
-```python
-from infrastructure.llm.prompts.templates import apply_template
+### Variable Substitution Order
 
-# Simple variable substitution
-prompt = apply_template(
-    template="greeting",
-    variables={"name": "Alice", "topic": "research"}
-)
-# Result: "Hello Alice, let's discuss research"
-```
+1. `template["variables"]` provides defaults.
+2. Caller `**kwargs` to `compose_template()` override defaults.
+3. Resolved fragment strings (from `fragments` map) are merged in.
+4. All values are substituted into `base_template` using `${key}` replacement.
+5. Missing required placeholders raise `LLMTemplateError`.
 
-### Complex Template with Validation
+## Adding New Templates
 
-```python
-from infrastructure.llm.prompts.templates import TemplateEngine
+1. Add a new top-level key to an existing JSON file, or create a new `*.json` file
+   in this directory.
+2. Define `base_template` with `${placeholder}` markers for every dynamic value.
+3. Populate `fragments` with loader references for any fragment-built blocks.
+4. Populate `variables` with default values for optional placeholders.
+5. Reference the template in Python as `"filename.json#template_key"` passed to
+   `loader.load_template()` or `composer.compose_template()`.
 
-engine = TemplateEngine()
-
-# Apply with validation
-prompt = engine.apply(
-    template="manuscript_review",
-    variables={
-        "manuscript": text,
-        "focus": "methodology"
-    },
-    validate=True  # Check required variables
-)
-```
-
-### Template Chaining
-
-```python
-# Chain templates for complex workflows
-summary_template = apply_template("summarize", variables={"text": abstract})
-review_template = apply_template(
-    "review_summary",
-    variables={"summary": summary_template}
-)
-```
-
-## Creating Custom Templates
-
-### Define Template
-
-```json
-// custom_templates.json
-{
-  "custom_analysis": {
-    "template": "Analyze {text} focusing on {aspects}. Provide {output_format}.",
-    "variables": {
-      "text": {"required": true},
-      "aspects": {"default": "key points"},
-      "output_format": {"default": "structured analysis"}
-    }
-  }
-}
-```
-
-### Use Custom Template
-
-```python
-from infrastructure.llm.prompts.templates import load_template
-
-template = load_template("custom_analysis", path="custom_templates.json")
-
-prompt = template.apply({
-    "text": document_text,
-    "aspects": "methodology and results"
-})
-```
-
-## Template Validation
-
-### Variable Validation
-
-```python
-from infrastructure.llm.prompts.templates import validate_template
-
-# Check template validity
-is_valid, errors = validate_template(
-    template="manuscript_review",
-    variables={"manuscript": text}
-)
-
-if not is_valid:
-    print(f"Missing variables: {errors}")
-```
-
-### Template Syntax Checking
-
-```python
-# Validate template syntax
-from infrastructure.llm.prompts.templates import check_template_syntax
-
-is_valid = check_template_syntax(template_content)
-```
-
-## Integration
-
-### Pipeline Integration
-
-```python
-# scripts/06_llm_review.py
-from infrastructure.llm.prompts.templates import apply_template
-
-def generate_review(manuscript_path):
-    with open(manuscript_path) as f:
-        text = f.read()
-    
-    prompt = apply_template(
-        template="comprehensive_review",
-        variables={"manuscript": text}
-    )
-    
-    return llm_client.query(prompt)
-```
+No Python code changes are needed for new templates that use existing fragments.
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[Template Engine] --> B[Template Loading]
-    A --> C[Variable Substitution]
-    A --> D[Validation]
-
-    B --> E[JSON Templates]
-    B --> F[Template Registry]
-
-    C --> G[Variable Extraction]
-    C --> H[Value Injection]
-
-    D --> I[Required Check]
-    D --> J[Type Validation]
-
-    E --> K[Final Prompt]
-    F --> K
-    G --> K
-    H --> K
+    A[compose_template call] --> B[loader.load_template]
+    B --> C[templates/*.json]
+    A --> D[build_fragment per entry]
+    D --> E[fragments/*.json via loader]
+    A --> F[variable substitution]
+    F --> G[Final Prompt String]
 ```
 
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - templates documentation
 - [../README.md](../README.md) - Prompts module overview
-- [../fragments/README.md](../fragments/README.md) - Fragment system
-- [../compositions/README.md](../compositions/README.md) - Composition system
+- [../fragments/README.md](../fragments/README.md) - Fragment JSON files
+- [../compositions/README.md](../compositions/README.md) - Composition JSON files

@@ -9,8 +9,6 @@ The reference module is the export side of the literature workflow; see
 :mod:`infrastructure.search.literature` for the discovery side.
 """
 
-from __future__ import annotations
-
 from infrastructure.reference.citation import (
     BibDatabase,
     BibEntry,

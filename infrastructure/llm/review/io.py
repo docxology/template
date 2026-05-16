@@ -8,8 +8,6 @@ All existing imports (``from infrastructure.llm.review.io import ...``)
 continue to work unchanged.
 """
 
-from __future__ import annotations
-
 from infrastructure.llm.review.review_analysis import (
     calculate_format_compliance_summary,
     calculate_quality_summary,

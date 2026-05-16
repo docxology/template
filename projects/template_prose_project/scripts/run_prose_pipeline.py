@@ -15,8 +15,10 @@ import sys
 from pathlib import Path
 
 _project_root = Path(__file__).resolve().parent.parent
+_repo_root = _project_root.parent.parent
 sys.path.insert(0, str(_project_root))
 sys.path.insert(0, str(_project_root / "src"))
+sys.path.insert(0, str(_repo_root))
 
 from infrastructure.core.logging.utils import get_logger
 

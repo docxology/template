@@ -1,3 +1,4 @@
+"""Tests for context module."""
 import pytest
 
 from infrastructure.core.exceptions import ContextLimitError

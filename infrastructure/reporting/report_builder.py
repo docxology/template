@@ -4,8 +4,6 @@ This module builds the comprehensive test summary data structure by
 aggregating results from infrastructure and project test suites.
 """
 
-from __future__ import annotations
-
 import importlib.util
 from datetime import datetime
 from pathlib import Path

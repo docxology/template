@@ -33,15 +33,16 @@ Repository-wide agent rules for this exemplar live in [`../docs/agent_instructio
 Numeric values that come from analysis outputs **must** use `{{VARIABLE_NAME}}` syntax. Hardcoding a number that will change when `config.yaml` is edited or the analysis is re-run is the primary cause of inaccurate manuscripts.
 
 **The token pipeline**:
-1. `scripts/z_generate_manuscript_variables.py` reads `config.yaml` and `output/data/optimization_results.csv`
-2. It builds a `{TOKEN: value}` dict and writes it to `output/data/manuscript_variables.json`
-3. It copies each `manuscript/*.md` template to `output/manuscript/*.md`, substituting every `{{TOKEN}}` with its resolved value
+1. `scripts/z_generate_manuscript_variables.py` calls `src/manuscript_variables.py::generate_variables()` to compute all token values
+2. The script writes the full `{TOKEN: value}` mapping to `output/data/manuscript_variables.json`
+3. It calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` which copies each `manuscript/*.md` template to `output/manuscript/*.md`, substituting every `{{TOKEN}}` with its resolved value
 4. `scripts/03_render_pdf.py` renders the **substituted** copies (from `output/manuscript/`), not the originals
 
 **Adding a new token**:
-1. Add a key/value pair to the `variables` dict in `z_generate_manuscript_variables.py::generate_variables()`
-2. Verify: `python -c "import json; d=json.load(open('projects/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`
-3. Reference in a manuscript file as `{{MY_TOKEN}}`
+1. Add a key/value pair to the `variables` dict in `src/manuscript_variables.py::generate_variables()`
+2. Add a corresponding assertion in `tests/test_manuscript_variables.py` (the live cross-reference test `test_all_manuscript_tokens_are_generated` will fail automatically if a manuscript token is missing)
+3. Verify: `python -c "import json; d=json.load(open('projects/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`
+4. Reference in a manuscript file as `{{MY_TOKEN}}`
 
 **Detecting unresolved tokens** (run before rendering):
 ```bash
@@ -111,7 +112,8 @@ Final deliverables appear under `output/template_code_project/` after `scripts/0
 
 - [`README.md`](README.md) — Quick orientation
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc syntax reference for this manuscript
-- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by all three template exemplars
+- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars and optional search add-on
 - [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Manuscript → PDF flow (4 phases)
 - [`../docs/syntax_guide.md`](../docs/syntax_guide.md) — Complete `{{VARIABLE}}` token reference
-- [`../scripts/z_generate_manuscript_variables.py`](../scripts/z_generate_manuscript_variables.py) — Variable hydration script
+- [`../src/manuscript_variables.py`](../src/manuscript_variables.py) — Variable computation logic (`generate_variables()`)
+- [`../scripts/z_generate_manuscript_variables.py`](../scripts/z_generate_manuscript_variables.py) — Thin orchestrator that runs the above and writes output files

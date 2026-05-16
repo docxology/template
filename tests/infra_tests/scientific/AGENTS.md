@@ -9,10 +9,12 @@ The `tests/infra_tests/scientific/` directory contains tests for the scientific 
 ```mermaid
 flowchart LR
     T[/tests/infra_tests/scientific//]
-    T --> META[AGENTS.md · __init__.py · conftest.py]
+    T --> META[AGENTS.md · __init__.py]
     T --> BEN[test_benchmarking.py<br/>Performance benchmarking]
+    T --> COG[test_cogsec_improver.py<br/>Cognitive security improver]
     T --> DOC[test_documentation.py<br/>API documentation]
     T --> DEV[test_scientific_dev.py<br/>Scientific development]
+    T --> DEVE[test_scientific_dev_edge_cases.py<br/>Edge cases]
     T --> STAB[test_stability.py<br/>Numerical stability]
     T --> TPL[test_templates.py<br/>Research templates]
     T --> VAL[test_validation.py<br/>Scientific validation]
@@ -21,7 +23,7 @@ flowchart LR
     classDef test fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class BEN,DOC,DEV,STAB,TPL,VAL test
+    class BEN,COG,DOC,DEV,DEVE,STAB,TPL,VAL test
     class META doc
 ```
 
@@ -39,25 +41,22 @@ flowchart LR
 ```python
 def test_scientific_utilities():
     """Test scientific utility functions."""
-    from infrastructure.scientific.scientific_dev import (
-        check_numerical_stability,
-        validate_research_data,
-        optimize_performance
-    )
+    from infrastructure.scientific.stability import check_numerical_stability
+    from infrastructure.scientific.validation import validate_scientific_implementation
+    from infrastructure.scientific.benchmarking import benchmark_function
 
     # Test numerical stability checking
     stable_result = check_numerical_stability(lambda x: x**2 + 2*x + 1, [1, 2, 3])
-    assert stable_result['stable'] is True
+    assert stable_result.stability_score > 0.8
 
-    # Test data validation
-    valid_data = validate_research_data(test_dataset)
-    assert valid_data['valid'] is True
-    assert 'quality_score' in valid_data
+    # Test implementation validation
+    test_cases = [(1, 2), (2, 4), (3, 6)]
+    valid_data = validate_scientific_implementation(lambda x: x * 2, test_cases)
+    assert valid_data['accuracy_score'] == 1.0
 
-    # Test performance optimization
-    optimized_func = optimize_performance(slow_function)
-    result = optimized_func(test_input)
-    assert result == expected_output
+    # Test benchmarking
+    result = benchmark_function(lambda x: x**2, [1.0, 2.0, 3.0], iterations=10)
+    assert result.execution_time >= 0
 ```
 
 ### Benchmarking Tests
@@ -74,33 +73,24 @@ def test_performance_benchmarking():
     """Test performance benchmarking functionality."""
     from infrastructure.scientific.benchmarking import (
         benchmark_function,
-        analyze_performance,
-        compare_implementations
+        generate_performance_report,
+        format_benchmark_report,
+        BenchmarkResult,
     )
 
     # Benchmark single function
-    results = benchmark_function(target_function, test_inputs, iterations=100)
-    assert 'mean_time' in results
-    assert 'std_dev' in results
-    assert 'min_time' in results
-    assert 'max_time' in results
+    result = benchmark_function(lambda x: x**2, [1.0, 2.0, 3.0], iterations=100)
+    assert isinstance(result, BenchmarkResult)
+    assert result.execution_time >= 0
+    assert result.iterations == 100
 
-    # Analyze performance characteristics
-    analysis = analyze_performance(results)
-    assert 'performance_score' in analysis
-    assert 'stability_rating' in analysis
+    # Generate performance report from results list
+    report = generate_performance_report([result])
+    assert 'Performance Analysis Report' in report
 
-    # Compare multiple implementations
-    implementations = {
-        'version1': func_v1,
-        'version2': func_v2,
-        'optimized': func_opt
-    }
-
-    comparison = compare_implementations(implementations, test_data)
-    assert 'fastest' in comparison
-    assert 'relative_performance' in comparison
-    assert comparison['fastest'] == 'optimized'  # Expected result
+    # format_benchmark_report produces the same Markdown output
+    formatted = format_benchmark_report([result])
+    assert 'Performance Analysis Report' in formatted
 ```
 
 ### Documentation Tests
@@ -116,25 +106,19 @@ def test_performance_benchmarking():
 def test_api_documentation_generation():
     """Test API documentation generation."""
     from infrastructure.scientific.documentation import (
-        generate_api_docs,
-        validate_documentation,
-        check_doc_completeness
+        generate_api_documentation,
+        generate_scientific_documentation,
     )
+    import infrastructure.scientific.benchmarking as bench_module
 
-    # Generate documentation for test module
-    docs = generate_api_docs(test_module_path)
-    assert len(docs) > 0
-    assert 'functions' in docs
-    assert 'classes' in docs
+    # Generate API documentation for a module
+    docs = generate_api_documentation(bench_module)
+    assert 'benchmark_function' in docs
 
-    # Validate documentation structure
-    validation = validate_documentation(docs)
-    assert validation['valid'] is True
-    assert len(validation['errors']) == 0
-
-    # Check completeness
-    completeness = check_doc_completeness(docs)
-    assert completeness['score'] > 0.8  # At least 80% assert 'missing_docs' in completeness
+    # Generate function-level scientific documentation
+    func_doc = generate_scientific_documentation(bench_module.benchmark_function)
+    assert 'benchmark_function' in func_doc
+    assert 'Parameters' in func_doc
 ```
 
 ### Stability Tests
@@ -150,30 +134,22 @@ def test_api_documentation_generation():
 def test_numerical_stability():
     """Test numerical stability analysis."""
     from infrastructure.scientific.stability import (
-        analyze_stability,
-        test_edge_cases,
-        check_convergence
+        check_numerical_stability,
+        StabilityTest,
     )
 
-    # Analyze algorithm stability
-    stability_report = analyze_stability(
-        algorithm=unstable_algorithm,
-        test_inputs=problematic_inputs,
-        tolerance=1e-10
-    )
+    # Check stability of a well-behaved function
+    result = check_numerical_stability(lambda x: x**2, [1.0, 2.0, 3.0], tolerance=1e-10)
+    assert isinstance(result, StabilityTest)
+    assert result.stability_score >= 0.0
+    assert result.stability_score <= 1.0
+    assert 'numerical_stability' in result.test_name
 
-    assert stability_report['stable'] is False
-    assert 'condition_number' in stability_report
-    assert stability_report['condition_number'] > 1e10  # Very ill-conditioned
-
-    # Test edge cases
-    edge_case_results = test_edge_cases(algorithm, edge_cases)
-    assert len(edge_case_results['failures']) > 0
-
-    # Check convergence behavior
-    convergence = check_convergence(iterative_algorithm, initial_guess)
-    assert convergence['converged'] is True
-    assert convergence['iterations'] < 1000
+    # Check stability of an ill-behaved function (division by near-zero)
+    import numpy as np
+    unstable = lambda x: 1.0 / (x + 1e-15) if abs(x) < 1e-14 else x
+    unstable_result = check_numerical_stability(unstable, [0.0, 1e-15, 1.0])
+    assert isinstance(unstable_result, StabilityTest)
 ```
 
 ### Template Tests
@@ -189,38 +165,25 @@ def test_numerical_stability():
 def test_research_templates():
     """Test research workflow templates."""
     from infrastructure.scientific.templates import (
-        ResearchTemplate,
-        ExperimentTemplate,
-        AnalysisTemplate
+        create_scientific_module_template,
+        create_scientific_test_suite,
+        create_scientific_workflow_template,
     )
 
-    # Test experiment template
-    experiment = ExperimentTemplate()
-    experiment.configure(
-        hypothesis="New algorithm performs better",
-        variables=['dataset_size', 'algorithm_version'],
-        metrics=['accuracy', 'runtime', 'memory_usage']
-    )
+    # Test module template generation
+    module_tmpl = create_scientific_module_template('my_analysis')
+    assert 'my_analysis' in module_tmpl
+    assert 'function1' in module_tmpl
 
-    # Render template
-    rendered = experiment.render()
-    assert "hypothesis" in rendered.lower()
-    assert "dataset_size" in rendered.lower()
-    assert "accuracy" in rendered.lower()
+    # Test test-suite template generation
+    test_tmpl = create_scientific_test_suite('my_analysis')
+    assert 'my_analysis' in test_tmpl
+    assert 'TestNumericalStability' in test_tmpl
 
-    # Test analysis template
-    analysis = AnalysisTemplate()
-    analysis.set_data_characteristics(
-        data_type='tabular',
-        size=10000,
-        features=50,
-        target_variable='outcome'
-    )
-
-    rendered = analysis.render()
-    assert "tabular" in rendered
-    assert "10000" in rendered
-    assert "outcome" in rendered
+    # Test workflow template generation
+    workflow_tmpl = create_scientific_workflow_template('experiment_v1')
+    assert 'experiment_v1' in workflow_tmpl
+    assert 'setup_workflow_environment' in workflow_tmpl
 ```
 
 ### Validation Tests
@@ -236,41 +199,27 @@ def test_research_templates():
 def test_scientific_validation():
     """Test scientific validation functionality."""
     from infrastructure.scientific.validation import (
-        validate_research_data,
-        check_methodology,
-        verify_reproducibility
+        validate_scientific_implementation,
+        validate_scientific_best_practices,
+        check_research_compliance,
     )
+    import infrastructure.scientific.benchmarking as bench_module
 
-    # Validate research data
-    data_validation = validate_research_data(
-        dataset=test_dataset,
-        expected_format='tabular',
-        required_columns=['feature1', 'feature2', 'target']
-    )
+    # Validate implementation against known test cases: (input, expected_output)
+    test_cases = [(1, 1), (2, 4), (3, 9)]
+    result = validate_scientific_implementation(lambda x: x**2, test_cases)
+    assert result['accuracy_score'] == 1.0
+    assert result['passed_tests'] == 3
 
-    assert data_validation['valid'] is True
-    assert data_validation['completeness'] > 0.95
-    assert data_validation['quality_score'] > 0.8
+    # Validate best practices for a real module
+    bp = validate_scientific_best_practices(bench_module)
+    assert 'docstring_coverage' in bp
+    assert 'best_practices_score' in bp
 
-    # Check methodology
-    methodology_check = check_methodology(
-        description=research_description,
-        requirements=['statistical_analysis', 'validation_split', 'error_metrics']
-    )
-
-    assert methodology_check['complete'] is True
-    assert 'statistical_analysis' in methodology_check['covered_requirements']
-
-    # Verify reproducibility
-    reproducibility = verify_reproducibility(
-        code_version='v1.2.3',
-        random_seed=42,
-        environment_snapshot=env_snapshot
-    )
-
-    assert reproducibility['reproducible'] is True
-    assert reproducibility['seed_set'] is True
-    assert 'environment' in reproducibility
+    # Check research compliance for a single function
+    compliance = check_research_compliance(bench_module.benchmark_function)
+    assert 'has_docstring' in compliance
+    assert 'compliance_score' in compliance
 ```
 
 ## Test Design Principles
@@ -428,16 +377,16 @@ def validate_scientific_result(result, expected_properties):
 
 ```bash
 # Run all scientific tests
-pytest tests/infra_tests/scientific/
+uv run pytest tests/infra_tests/scientific/
 
 # Run specific scientific domain tests
-pytest tests/infra_tests/scientific/test_stability.py
+uv run pytest tests/infra_tests/scientific/test_stability.py
 
 # Run performance benchmarking tests
-pytest tests/infra_tests/scientific/test_benchmarking.py
+uv run pytest tests/infra_tests/scientific/test_benchmarking.py
 
 # Run with performance profiling
-pytest tests/infra_tests/scientific/ --durations=10
+uv run pytest tests/infra_tests/scientific/ --durations=10
 ```
 
 ### Specialized Test Execution
@@ -445,13 +394,13 @@ pytest tests/infra_tests/scientific/ --durations=10
 **Performance-Focused Testing:**
 ```bash
 # Run performance tests only
-pytest tests/infra_tests/scientific/ -k "benchmark or performance"
+uv run pytest tests/infra_tests/scientific/ -k "benchmark or performance"
 
 # Run with memory profiling
-pytest tests/infra_tests/scientific/ --memray
+uv run pytest tests/infra_tests/scientific/ --memray
 
 # Run scalability tests
-pytest tests/infra_tests/scientific/ -k "scalability"
+uv run pytest tests/infra_tests/scientific/ -k "scalability"
 ```
 
 ## Test Coverage and Quality
@@ -638,7 +587,7 @@ def debug_numerical_issues():
 **Performance Debugging:**
 ```bash
 # Profile scientific computations
-python3 -c "
+uv run python3 -c "
 import cProfile
 from tests.infrastructure.scientific.test_benchmarking import benchmark_function
 
@@ -656,7 +605,7 @@ stats.sort_stats('cumulative').print_stats(20)
 **Scientific Dependencies Check:**
 ```bash
 # Validate scientific computing environment
-python3 -c "
+uv run python3 -c "
 import sys
 print(f'Python: {sys.version}')
 

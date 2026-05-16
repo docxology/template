@@ -9,8 +9,6 @@ Usage:
         return {}
 """
 
-from __future__ import annotations
-
 import types as _module_types
 
 try:

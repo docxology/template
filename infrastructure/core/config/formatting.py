@@ -5,8 +5,6 @@ Functions for formatting author information for LaTeX output and display.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 from infrastructure.core.config.schema import AuthorConfig
 
 

@@ -1,10 +1,10 @@
 # Test Patterns Reference
 
-Testing conventions and patterns for the `code_project` exemplar's zero-mock test suite.
+Testing conventions and patterns for the `template_code_project` exemplar's zero-mock test suite.
 
 ## Zero-Mock Enforcement
 
-The following are **strictly forbidden** anywhere in the `code_project` exemplar:
+The following are **strictly forbidden** anywhere in the `template_code_project` exemplar:
 
 - Any mocking framework usage (including built-in mocking libraries and third-party monkeypatch helpers)
 - Any test strategy that fakes objects/attributes to avoid executing real code paths

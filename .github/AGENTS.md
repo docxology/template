@@ -24,10 +24,11 @@ flowchart TB
     GH --> ITPL[/ISSUE_TEMPLATE/]
     GH --> WF[/workflows/]
 
+    ITPL --> ITPL_DOCS[AGENTS.md · README.md]
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[ci.yml<br/>11 jobs + conditional fep-lean + setup-hook Windows]
+    WF --> WF_CI[ci.yml<br/>11 jobs — 2 conditional — fep-lean and setup-hook-windows-smoke]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
 
@@ -91,11 +92,13 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Writes a short g
 | mypy | no errors |
 | No-mocks policy | zero mock usage |
 | Infrastructure coverage | ≥ 60% |
-| Project coverage | ≥ 90% |
+| Project coverage (per-project standalone) | ≥ 90% |
+| Combined-union all-projects gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% (reconciled to measured reality; per-project floors authoritative) |
 | pip-audit | zero known vulns not listed in `.github/pip-audit-ignore.txt` |
 | Bandit MEDIUM+ (`-c bandit.yaml`) | zero findings |
 | Mermaid diagrams render under `mmdc` | zero failures |
 | Markdown cross-links resolve on disk | zero broken links |
+| Permanent-template folders carry `AGENTS.md` + `README.md` | zero missing pairs |
 | `N Python (sub)packages` claims match reality | zero stale counts |
 | Rotating projects in long-lived docs are conditional | zero ghost references |
 | Import time | ≤ 5 s |
@@ -160,6 +163,7 @@ required_pull_request_reviews:
 | Documentation Update | `documentation`, `needs-triage` | Incorrect or missing docs |
 
 Blank issues are disabled. General questions should go to **GitHub Discussions**.
+See [`ISSUE_TEMPLATE/AGENTS.md`](ISSUE_TEMPLATE/AGENTS.md) for local editing rules.
 
 ## Troubleshooting
 

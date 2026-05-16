@@ -6,8 +6,6 @@ that are not project-specific folders.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 import shutil
 from pathlib import Path
 

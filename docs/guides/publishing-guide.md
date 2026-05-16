@@ -2,7 +2,7 @@
 
 > **From manuscript to DOI: citations, Zenodo, arXiv, and GitHub Releases**
 
-**Skill Level**: 11-12  
+**Skill Level**: 11-12
 **Quick Reference:** [Modules Guide](../modules/modules-guide.md) | [Publishing Module](../modules/guides/publishing-module.md)
 
 ---

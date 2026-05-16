@@ -5,8 +5,6 @@ patterns, normalizes whitespace, and enforces length limits. Called by
 LLMClient before each outbound request.
 """
 
-from __future__ import annotations
-
 import functools
 import html
 import re

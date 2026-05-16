@@ -4,8 +4,6 @@ Provides ResourceUsage, PerformanceMetrics, and StageMetricsDict used
 by PerformanceMonitor and StagePerformanceTracker.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from typing import Any, TypedDict
 

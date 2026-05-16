@@ -21,7 +21,7 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ### Daily Workflow Commands
 ```bash
 # Run tests only
-pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
 
 # Generate figures only
 uv run python scripts/02_run_analysis.py --project template_code_project
@@ -110,7 +110,7 @@ vim projects/template_code_project/src/my_module.py
 vim projects/template_code_project/tests/test_my_module.py
 
 # 3. Run tests
-pytest projects/template_code_project/tests/test_my_module.py --cov=projects/template_code_project/src.my_module
+uv run pytest projects/template_code_project/tests/test_my_module.py --cov=projects/template_code_project/src/my_module
 
 # 4. Use in scripts (thin orchestrator pattern)
 # from projects.template_code_project.src.my_module import my_function
@@ -119,7 +119,7 @@ pytest projects/template_code_project/tests/test_my_module.py --cov=projects/tem
 ### Fix Test Coverage
 ```bash
 # 1. Check coverage
-pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=term-missing
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=term-missing
 
 # 2. Find missing lines (marked with ">>>>>")
 # 3. Add tests for uncovered code
@@ -165,14 +165,14 @@ Reference it: \ref{fig:my_figure}
 
 | Problem | Quick Fix |
 |---------|-----------|
-| **Tests fail** | `pytest projects/template_code_project/tests/ -v` to see details |
-| **Coverage < 100%** | `pytest --cov=projects/template_code_project/src --cov-report=term-missing` |
+| **Tests fail** | `uv run pytest projects/template_code_project/tests/ -v` to see details |
+| **Coverage < 100%** | `uv run pytest --cov=projects/template_code_project/src --cov-report=term-missing` |
 | **Import errors** | Check `PYTHONPATH` or use `uv run` |
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
 | **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project template_code_project` first |
 | **References show ??** | Check label spelling and existence |
 | **Project not discovered** | Ensure `manuscript/config.yaml` exists |
-| **Stage 4 fails silently** | Check root pyproject.toml has project deps ([details](../guides/new-project-setup.md#pitfall-6-root-venv)) |
+| **Stage 4 fails silently** | Check root pyproject.toml has project deps ([details](../guides/new-project-setup.md#pitfall-6-project-specific-packages-absent-from-root-venv--silent-stage-4-failure)) |
 | **Config warnings** | Nest custom keys under `project_config:` |
 
 ## 📊 Key Metrics
@@ -206,7 +206,7 @@ Reference it: \ref{fig:my_figure}
 
 ## 💡 Pro Tips
 
-1. **Always run tests first**: `pytest projects/template_code_project/tests/` before building
+1. **Always run tests first**: `uv run pytest projects/template_code_project/tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `projects/{name}/src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
 4. **Run pipeline**: `uv run python scripts/execute_pipeline.py --project {name} --core-only` executes all stages

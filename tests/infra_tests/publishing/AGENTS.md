@@ -71,7 +71,7 @@ flowchart TB
 **Full Integration Tests (`test_publishing_api_full.py`, `test_publishing_cli_full.py`)**
 - End-to-end publishing workflows
 - Cross-component integration
-- Real API interactions (with proper mocking)
+- Real API interactions through local test servers or explicitly marked live-service tests
 - user journey validation
 
 ### Edge Case and Error Testing
@@ -92,18 +92,13 @@ flowchart TB
 
 ### Safe Testing Approach
 
-**Mock-Heavy Testing:**
-Due to the nature of external API interactions, these tests use extensive mocking to:
-- Avoid actual API calls during testing
-- Prevent test interference with real accounts
-- Enable fast, reliable test execution
-- Test error conditions safely
+Publishing tests follow the repository no-mock policy:
 
-**Mocking Strategy:**
-- HTTP requests mocked at network level
-- API responses simulated with realistic data
-- Authentication tokens replaced with test tokens
-- File uploads virtualized
+- Exercise real request/response code against local HTTP test servers.
+- Use temporary files for upload/package workflows.
+- Use deterministic metadata dictionaries and fixture directories.
+- Mark live-service tests explicitly (for example `requires_network`) and skip them unless credentials are configured.
+- Use `pytest.monkeypatch` only to point clients at local test-server URLs or isolated environment variables.
 
 ### Coverage
 
@@ -119,31 +114,18 @@ Due to the nature of external API interactions, these tests use extensive mockin
 
 **Zenodo API Testing:**
 ```python
-def test_zenodo_deposition_creation():
-    """Test creating a new deposition on Zenodo."""
-    with mock.patch('requests.post') as mock_post:
-        # Mock successful API response
-        mock_post.return_value.json.return_value = {
-            'id': 12345,
-            'links': {'bucket': 'https://zenodo.org/api/files/bucket'}
-        }
+def test_zenodo_deposition_creation(zenodo_test_server, monkeypatch):
+    """Test creating a deposition through a local HTTP server."""
+    zenodo_test_server.expect_request("/api/deposit/depositions").respond_with_json({
+        "id": 12345,
+        "links": {"bucket": zenodo_test_server.url_for("/api/files/bucket")},
+    })
+    monkeypatch.setenv("ZENODO_API_BASE", zenodo_test_server.url_for("/api/"))
 
-        client = ZenodoClient(api_token='test_token')
-        deposition = client.create_deposition(metadata=test_metadata)
+    client = ZenodoClient(api_token="test_token")
+    deposition = client.create_deposition(metadata=test_metadata)
 
-        assert deposition['id'] == 12345
-        mock_post.assert_called_once()
-
-def test_zenodo_error_handling():
-    """Test error handling for Zenodo API failures."""
-    with mock.patch('requests.post') as mock_post:
-        # Mock API error response
-        mock_post.return_value.raise_for_status.side_effect = requests.HTTPError("401 Unauthorized")
-
-        client = ZenodoClient(api_token='invalid_token')
-
-        with pytest.raises(PublishingError, match="Failed to create deposition"):
-            client.create_deposition(metadata=test_metadata)
+    assert deposition["id"] == 12345
 ```
 
 ### CLI Testing
@@ -152,20 +134,22 @@ def test_zenodo_error_handling():
 ```python
 def test_cli_publish_command():
     """Test CLI publish command parsing and execution."""
-    with mock.patch('infrastructure.publishing.cli.publish_to_zenodo') as mock_publish:
-        mock_publish.return_value = {'doi': '10.5281/zenodo.12345'}
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "infrastructure.publishing.cli",
+            "checklist",
+            "--metadata",
+            str(metadata_file),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
 
-        # Test command execution
-        result = runner.invoke(cli, [
-            'publish-zenodo',
-            '--title', 'Test Publication',
-            '--token', 'test_token',
-            'path/to/files'
-        ])
-
-        assert result.exit_code == 0
-        assert '10.5281/zenodo.12345' in result.output
-        mock_publish.assert_called_once()
+    assert result.returncode == 0
+    assert "ready" in result.stdout.lower()
 ```
 
 ### Workflow Testing
@@ -185,58 +169,19 @@ def test_complete_publishing_workflow():
             'description': 'Test publication for validation'
         }
 
-        # Mock all external dependencies
-        with mock.patch('infrastructure.publishing.api.ZenodoClient') as mock_client:
-            mock_instance = mock_client.return_value
-            mock_instance.publish.return_value = {
-                'doi': '10.5281/zenodo.12345',
-                'url': 'https://zenodo.org/record/12345'
-            }
+        result = build_publication_package(metadata, test_files, output_dir=test_dir / "package")
 
-            # Execute publishing workflow
-            result = publish_to_zenodo(metadata, test_files, 'test_token')
-
-            # Verify workflow
-            assert result['doi'] == '10.5281/zenodo.12345'
-            mock_instance.create_deposition.assert_called_once()
-            mock_instance.upload_files.assert_called_once()
-            mock_instance.publish_deposition.assert_called_once()
+        assert result.metadata["title"] == "Test Research Publication"
+        assert all(path.exists() for path in result.files)
 ```
 
 ## Testing Infrastructure
 
-### Mock Setup
+### Local Service Fixtures
 
-**Mocking:**
-```python
-@pytest.fixture
-def mock_zenodo_api():
-    """Mock Zenodo API for testing."""
-    with mock.patch('requests.post') as mock_post, \
-         mock.patch('requests.put') as mock_put, \
-         mock.patch('requests.get') as mock_get:
-
-        # Setup mock responses
-        mock_post.return_value.json.return_value = {'id': 12345}
-        mock_put.return_value.status_code = 200
-        mock_get.return_value.json.return_value = {'state': 'done'}
-
-        yield {
-            'post': mock_post,
-            'put': mock_put,
-            'get': mock_get
-        }
-
-@pytest.fixture
-def mock_github_api():
-    """Mock GitHub API for testing."""
-    with mock.patch('github.Github') as mock_github:
-        mock_repo = mock.MagicMock()
-        mock_github.return_value.get_repo.return_value = mock_repo
-        mock_repo.create_release.return_value.tag_name = 'v1.0.0'
-
-        yield mock_github
-```
+Use `pytest-httpserver` or an equivalent local server fixture for API behavior.
+The client still performs real HTTP requests; only the destination is local and
+deterministic.
 
 ### Test Data
 
@@ -264,23 +209,23 @@ def sample_metadata():
 
 ```bash
 # Run all publishing tests
-pytest tests/infra_tests/publishing/
+uv run pytest tests/infra_tests/publishing/
 
 # Run specific test category
-pytest tests/infra_tests/publishing/test_api.py
+uv run pytest tests/infra_tests/publishing/test_api.py
 
-# Run with mocked network calls
-pytest tests/infra_tests/publishing/ -m "not requires_network"
+# Skip live-service tests
+uv run pytest tests/infra_tests/publishing/ -m "not requires_network"
 ```
 
 ### Coverage Analysis
 
 ```bash
 # Generate coverage report
-pytest tests/infra_tests/publishing/ --cov=infrastructure.publishing --cov-report=html
+uv run pytest tests/infra_tests/publishing/ --cov=infrastructure.publishing --cov-report=html
 
 # Check coverage threshold
-pytest tests/infra_tests/publishing/ --cov=infrastructure.publishing --cov-fail-under=95
+uv run pytest tests/infra_tests/publishing/ --cov=infrastructure.publishing --cov-fail-under=95
 ```
 
 ## Test Maintenance
@@ -290,14 +235,14 @@ pytest tests/infra_tests/publishing/ --cov=infrastructure.publishing --cov-fail-
 **Development Process:**
 1. Identify new publishing functionality
 2. Create appropriate test file
-3. Implement mocking
+3. Build real fixtures: temp files, metadata, local HTTP server routes
 4. Test both success and failure scenarios
 5. Ensure integration with existing tests
 
 ### Test Quality Standards
 
 **Test Checklist:**
-- [ ] All external APIs properly mocked
+- [ ] No mock frameworks or fake replacements for the unit under test
 - [ ] Error conditions tested
 - [ ] Authentication scenarios covered
 - [ ] File upload edge cases handled
@@ -314,22 +259,10 @@ def test_multi_platform_publishing():
     metadata = sample_metadata()
     test_files = ['paper.pdf', 'data.zip', 'code.tar.gz']
 
-    with mock.patch('infrastructure.publishing.api.ZenodoClient') as mock_zenodo, \
-         mock.patch('infrastructure.publishing.api.GitHubClient') as mock_github:
+    results = prepare_multi_platform_release(metadata, test_files, output_dir=tmp_path)
 
-        # Mock successful publishing
-        mock_zenodo.return_value.publish.return_value = {'doi': '10.5281/zenodo.123'}
-        mock_github.return_value.create_release.return_value = {'url': 'https://github.com/.../v1.0'}
-
-        # Test multi-platform workflow
-        results = publish_to_multiple_platforms(metadata, test_files, {
-            'zenodo_token': 'test_zenodo',
-            'github_token': 'test_github'
-        })
-
-        assert 'zenodo' in results
-        assert 'github' in results
-        assert results['zenodo']['doi'].startswith('10.5281')
+    assert 'zenodo' in results
+    assert 'github' in results
 ```
 
 ## Performance Considerations
@@ -337,15 +270,15 @@ def test_multi_platform_publishing():
 ### Test Efficiency
 
 **Fast Execution:**
-- All network calls mocked for speed
+- API behavior uses local HTTP servers for speed
 - File operations use temporary directories
 - Test setup minimized for CI/CD
 - Parallel test execution supported
 
 ### Resource Management
 
-**Mock Cleanup:**
-- All mocks properly reset between tests
+**Fixture Cleanup:**
+- Local HTTP servers stop after fixtures complete
 - Temporary files cleaned up automatically
 - No persistent state or external dependencies
 - Memory usage optimized for large test suites
@@ -354,31 +287,25 @@ def test_multi_platform_publishing():
 
 ### Common Issues
 
-**Mock Configuration Errors:**
-- Verify all API calls are properly mocked
-- Check mock return values match expected format
-- Ensure mock side effects are correctly configured
+**Local API Fixture Errors:**
+- Verify route paths match the client request exactly
+- Check JSON response shapes match the platform client model
+- Ensure test-server base URLs are injected through environment/config only
 
 **Test Interference:**
 - Isolate tests with proper fixtures
-- Reset mocks between test runs
 - Avoid shared state between tests
 
 **Coverage Gaps:**
-- Identify unmocked code paths
+- Identify untested code paths
 - Add tests for error conditions
 - Verify exception handling coverage
 
 ### Debug Tools
 
-**Verbose Mocking:**
+**Verbose Local-Service Debugging:**
 ```bash
-# Debug mock calls
-pytest tests/infra_tests/publishing/test_api.py -v -s --pdb
-
-# Inspect mock call history
-mock_api.assert_called_with(expected_args)
-print(mock_api.call_args_list)
+uv run pytest tests/infra_tests/publishing/test_api.py -v -s --pdb
 ```
 
 ## Test Metrics
@@ -410,7 +337,7 @@ print(mock_api.call_args_list)
 - Automated API schema validation
 
 **Test Infrastructure:**
-- mocking utilities
+- Local service fixtures
 - Test data generation tools
 - Result validation frameworks
 - Historical test performance tracking

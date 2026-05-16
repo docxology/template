@@ -21,7 +21,7 @@ This is a research project template with a test-driven development workflow, aut
 | Task | Command |
 | --- | --- |
 | Interactive menu | `./run.sh` |
-| Interactive secure menu | `./secure_run.sh` |
+| Secure workflow via main shell (`secure` subcommand) | `./run.sh --secure-run` |
 | Full pipeline | `./run.sh --pipeline` |
 | Core pipeline (no LLM) | `uv run python scripts/execute_pipeline.py --project {name} --core-only` |
 | All tests | `uv run python scripts/01_run_tests.py --project {name}` |
@@ -46,8 +46,15 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 # Interactive menu (recommended)
 ./run.sh
 
-# Interactive secure menu (pipeline + steganography)
-./secure_run.sh
+# Secure orchestration (same Python CLI as ./run.sh; forwards to `secure` subcommand)
+./run.sh --secure-run
+
+# Dedicated secure shell: ensures `uv sync --group steganography`, then `python -m infrastructure.orchestration secure`
+# Pipeline phase requires `--project`; omit `--project` only with `--steganography-only` (all discovered projects).
+./secure_run.sh --project {project_name}
+./secure_run.sh --project {project_name} --core-only
+./secure_run.sh --steganography-only --project {project_name}
+./secure_run.sh --steganography-only
 
 # Full pipeline (10 named stages: clean=stage 0, then nine numbered stages — setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
@@ -58,9 +65,8 @@ uv run python scripts/execute_pipeline.py --project {project_name} --core-only
 # Resume from checkpoint
 ./run.sh --pipeline --resume
 
-# Steganography operations
-./secure_run.sh --project {project_name}
-./secure_run.sh --steganography-only --project {project_name}
+# Deterministic steganography timestamps (also strips `--deterministic` in secure_run.sh)
+./secure_run.sh --deterministic --project {project_name}
 ```
 
 ### Testing
@@ -139,9 +145,15 @@ uv run python -c "from infrastructure.project.discovery import discover_projects
 **Canonical exemplars (always present in `projects/`):**
 - [`projects/template_code_project/`](projects/template_code_project/) — code-centric template
 - [`projects/template_prose_project/`](projects/template_prose_project/) — prose-centric template
-- [`projects/template_search_project/`](projects/template_search_project/) — literature-search template
 
-All other projects under `projects/` rotate between `projects_in_progress/`, `projects/`, and `projects_archive/` as work progresses; never hard-code their paths in long-lived docs — consult `_generated/active_projects.md` instead.
+The literature-search exemplar
+[`projects_archive/template_search_project/`](projects_archive/template_search_project/)
+is an optional third template that rotates between `projects/` (active)
+and `projects_archive/` (resting); restore it under `projects/` when
+exercising the literature-search workflow. All other projects under
+`projects/` rotate between `projects_in_progress/`, `projects/`, and
+`projects_archive/` as work progresses; never hard-code their paths in
+long-lived docs — consult `_generated/active_projects.md` instead.
 **In-progress projects:** `aii-org` and others in [`projects_in_progress/`](projects_in_progress/) (not discovered until moved under `projects/`)
 **Archived projects:** Located in `projects_archive/` (not executed by pipeline)
 
@@ -266,7 +278,7 @@ flowchart TB
 ### Full Pipeline (10-stage DAG)
 
 0. **Clean Output Directories** - Remove previous outputs for a fresh run
-1. **Setup Environment** - Validate dependencies, discover projects
+1. **Environment Setup** - Validate dependencies, discover projects
 2. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
 3. **Project Tests** - Project test suite (90% coverage minimum)
 4. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
@@ -298,8 +310,9 @@ flowchart TB
 ### Coverage Requirements
 
 - **Infrastructure**: 60% minimum (currently 83.33%)
-- **Projects**: 90% minimum (currently varies by project)
+- **Projects (per-project standalone)**: 90% minimum (currently varies by project; canonical exemplars meet it — `template_code_project` ~100%, `template_prose_project` ~94%). This is the real per-project quality gate: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90`.
   - **Rotating-project exceptions**: a CI matrix job may pin a lower floor for a checked-out rotating project (e.g. an 89% gate for a Lean-toolchain project) when its Lean build + live external CLI + Ollama-gated paths carry CI-only surface below the 90% floor. The exception applies only while that project is checked out under `projects/`; raise back to 90% once that surface is covered.
+- **Combined-union all-projects gate**: 75% (`scripts/01_run_tests.py --project-only --all-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans every active project's source (including research projects with animation/visualization/Lean-adjacent code intentionally not driven to 90%). 75 reflects the true sustained combined level — a reconciled, enforced gate replacing a previously unenforced aspirational 90. Per-project floors are unchanged and remain authoritative.
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducibility
 
@@ -502,7 +515,7 @@ def process_files(input_dir: Path) -> List[Path]:
 **Tests Failing**: Check coverage requirements met (60% infra, 90% project)
 
 ```bash
-pytest --cov=infrastructure --cov-report=term-missing
+uv run pytest --cov=infrastructure --cov-report=term-missing
 ```
 
 **PDF Generation Fails**: Validate LaTeX packages
@@ -537,7 +550,7 @@ uv run python scripts/03_render_pdf.py --project {name}
 - **.cursorrules** - Cursor agent rules (overlap with this file on commands and architecture)
 - **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
 - **.github/README.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates; local parity via **`.pre-commit-config.yaml`**
-- **RUN_GUIDE.md** - Pipeline execution documentation
+- **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** - Pipeline execution documentation
 - **docs/core/architecture.md** - Detailed architecture guide
 - **docs/core/workflow.md** - Development workflow details
 - **docs/core/how-to-use.md** - Usage guide (12 skill levels)

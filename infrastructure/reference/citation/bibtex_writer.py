@@ -17,8 +17,6 @@ A leading ``@comment{...}`` preamble is emitted before any entries when the
 caller provides one.
 """
 
-from __future__ import annotations
-
 from io import StringIO
 from pathlib import Path
 from typing import Iterable

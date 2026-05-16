@@ -15,6 +15,7 @@ The `tests/integration/` directory contains repository-level integration tests t
 
 - `conftest.py`
 - `test_bash_utils.sh`
+- `test_codebase_real.py`
 - `test_edge_cases_and_error_paths.py`
 - `test_environment_setup.py`
 - `test_execute_pipeline_cli.py`
@@ -25,6 +26,7 @@ The `tests/integration/` directory contains repository-level integration tests t
 - `test_module_interoperability.py`
 - `test_output_copying.py`
 - `test_run_sh.py`
+- `test_timeseries_benchmarks.py`
 
 ## Notes
 

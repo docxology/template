@@ -240,6 +240,27 @@ class TestFigurePathFixing:
         assert "../figures/fig2.png" in fixed
         assert "../figures/fig3.png" in fixed
 
+    def test_fix_figure_paths_handles_pandoc_alt_text_brackets(self, tmp_path):
+        """Pandoc Beamer alt text can contain brackets that defeat regex parsing."""
+        config = RenderingConfig(output_dir=tmp_path)
+        renderer = SlidesRenderer(config)
+
+        tex_content = (
+            r"\pandocbounded{\includegraphics[keepaspectratio,"
+            r"alt={Curve on {[}0, 6{]} with $I(q_\lambda)$}]"
+            r"{../output/figures/free_energy_curve.png}}"
+        )
+        output_dir = tmp_path / "slides"
+        figures_dir = tmp_path / "figures"
+        output_dir.mkdir()
+        figures_dir.mkdir()
+
+        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+
+        assert "{../figures/free_energy_curve.png}" in fixed
+        assert "alt={Curve on {[}0, 6{]} with $I(q_\\lambda)$}" in fixed
+        assert "../output/figures" not in fixed
+
 
 class TestSlidesRendererCore:
     """Test core slides renderer functionality."""
@@ -408,20 +429,38 @@ class TestSlidesMathHeaderInjection:
         assert "\\usepackage{unicode-math}" in content
         assert "\\setmathfont{latinmodern-math.otf}" in content
 
-    def test_helper_returns_none_without_preamble(self, tmp_path):
+    def test_helper_returns_header_with_citation_fallbacks_when_no_preamble(self, tmp_path):
+        """Even when ``preamble.md`` is missing, the helper writes a
+        header that defines ``\\providecommand{\\citep}{...}`` fallbacks
+        so slides survive natbib commands emitted for the combined PDF.
+        """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         renderer = self._make_renderer(tmp_path)
-        assert renderer._maybe_write_math_header(manuscript, tmp_path / "slides") is None
+        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        assert header.name == "_slides_math_header.tex"
+        content = header.read_text(encoding="utf-8")
+        assert "\\providecommand{\\citep}" in content
+        assert "\\providecommand{\\citet}" in content
+        # No math snippet expected (no preamble).
+        assert "unicode-math" not in content
 
-    def test_helper_returns_none_when_no_unicode_math(self, tmp_path):
+    def test_helper_returns_header_with_citation_fallbacks_when_no_unicode_math(self, tmp_path):
+        """When ``preamble.md`` exists but doesn't load unicode-math,
+        the helper still writes a header for the natbib fallbacks.
+        """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "preamble.md").write_text(
             "```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8"
         )
         renderer = self._make_renderer(tmp_path)
-        assert renderer._maybe_write_math_header(manuscript, tmp_path / "slides") is None
+        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        content = header.read_text(encoding="utf-8")
+        assert "\\providecommand{\\citep}" in content
+        assert "unicode-math" not in content
 
     def test_beamer_pandoc_cmd_includes_h_flag_when_math_required(
         self, tmp_path, monkeypatch
@@ -468,10 +507,13 @@ class TestSlidesMathHeaderInjection:
         assert cmd[h_idx + 1].endswith("_slides_math_header.tex")
         assert Path(cmd[h_idx + 1]).exists()
 
-    def test_beamer_pandoc_cmd_skips_h_flag_when_no_math(
+    def test_beamer_pandoc_cmd_includes_h_flag_for_citation_fallbacks(
         self, tmp_path, monkeypatch
     ):
-        """Back-compat: no -H flag when preamble lacks unicode-math."""
+        """The slides math header is now always written so natbib
+        citation fallbacks are in scope, even when the preamble doesn't
+        load unicode-math. Pandoc therefore always sees ``-H``.
+        """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "preamble.md").write_text(
@@ -505,4 +547,9 @@ class TestSlidesMathHeaderInjection:
         renderer._render_beamer_with_paths(
             source, output_file, manuscript_dir=manuscript, figures_dir=None
         )
-        assert "-H" not in captured["cmd"]
+        assert "-H" in captured["cmd"]
+        h_idx = captured["cmd"].index("-H")
+        header_path = Path(captured["cmd"][h_idx + 1])
+        assert header_path.name == "_slides_math_header.tex"
+        content = header_path.read_text(encoding="utf-8")
+        assert "\\providecommand{\\citep}" in content

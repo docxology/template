@@ -55,7 +55,7 @@ uv run python scripts/01_run_tests.py --project <project>
 uv run python -m infrastructure.validation.cli markdown projects/<project>/manuscript/
 
 # Optional: strict source gate
-uv run python -m infrastructure.validation.cli prerender <project>
+uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
 ```
 
 ## Manuscript cross-reference note

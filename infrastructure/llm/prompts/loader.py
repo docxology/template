@@ -4,8 +4,6 @@ Loads prompt fragments, templates, and compositions from JSON files
 with caching and validation support.
 """
 
-from __future__ import annotations
-
 import functools
 import json
 from pathlib import Path

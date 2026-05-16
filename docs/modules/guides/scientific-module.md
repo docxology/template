@@ -2,7 +2,7 @@
 
 > **Scientific computing best practices and tools**
 
-**Location:** `infrastructure/scientific/` (modular package)  
+**Location:** `infrastructure/scientific/` (modular package)
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
@@ -66,10 +66,10 @@ print(f"Memory Usage: {result.memory_usage or 'Not measured'} MB")
 
 ```bash
 # Validate scientific code quality
-uv run python -m infrastructure.scientific.cli validate-code src/
+uv run python -m infrastructure.scientific.cli validate-code src/  # noqa: docs-lint
 
 # Generate performance reports
-uv run python -m infrastructure.scientific.cli benchmark src/algorithms.py
+uv run python -m infrastructure.scientific.cli benchmark src/algorithms.py  # noqa: docs-lint
 ```
 
 ---

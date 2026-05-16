@@ -10,8 +10,6 @@ Sub-modules:
     inventory_reports -- Report generation (text, JSON, HTML)
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.files.inventory_entry import FileInventoryEntry, format_file_size

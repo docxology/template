@@ -7,8 +7,6 @@ Provides utilities for testing algorithmic stability across input ranges:
 - Stability scoring and recommendations
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import Any, Callable
 

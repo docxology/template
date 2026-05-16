@@ -1,7 +1,5 @@
 """Phase 1: Discovery and Inventory for documentation scanning."""
 
-from __future__ import annotations
-
 import re
 from collections import defaultdict
 from datetime import datetime
@@ -10,35 +8,21 @@ from typing import Any, Set
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.discovery import discover_projects
+from infrastructure.validation.docs.scan_scope import (
+    DEFAULT_EXCLUDE_PARTS,
+    iter_markdown_files,
+    should_exclude_path,
+)
 from infrastructure.validation.docs.models import DocumentationFile
 
 logger = get_logger(__name__)
 
-_DEFAULT_EXCLUDE_DIRS = {
-    "output",
-    "htmlcov",
-    ".venv",
-    "venv",
-    "__pycache__",
-    ".pytest_cache",
-    ".git",
-    "node_modules",
-    ".tox",
-    "dist",
-    "build",
-    ".mypy_cache",
-}
+_DEFAULT_EXCLUDE_DIRS = DEFAULT_EXCLUDE_PARTS
 
 
 def discover_markdown_files(repo_root: Path) -> list[Path]:
     """Find all markdown files excluding output/htmlcov and virtual environments."""
-    exclude_dirs = _DEFAULT_EXCLUDE_DIRS | {"projects_archive"}
-    md_files = []
-    for md_file in repo_root.rglob("*.md"):
-        # Skip if any part of the path is in exclude list
-        if not any(excluded in md_file.parts for excluded in exclude_dirs):
-            md_files.append(md_file)
-    return sorted(md_files)
+    return iter_markdown_files([repo_root], exclude_parts=_DEFAULT_EXCLUDE_DIRS)
 
 
 def find_markdown_files(repo_root: Path) -> list[Path]:
@@ -63,8 +47,7 @@ def find_config_files(repo_root: Path) -> dict[str, Path]:
 
     for pattern in config_patterns:
         for config_file in repo_root.rglob(pattern):
-            # Skip if any part of the path is in exclude list
-            if not any(excluded in config_file.parts for excluded in exclude_dirs):
+            if not should_exclude_path(config_file, exclude_dirs):
                 if config_file.name not in configs:
                     configs[config_file.name] = config_file
 
@@ -77,8 +60,7 @@ def find_script_files(repo_root: Path) -> list[Path]:
     scripts = []
     for ext in ["*.py", "*.sh"]:
         for script in repo_root.rglob(ext):
-            # Skip if any part of the path is in exclude list
-            if not any(excluded in script.parts for excluded in exclude_dirs):
+            if not should_exclude_path(script, exclude_dirs):
                 # Only include scripts in specific directories
                 if any(part in script.parts for part in ["scripts", "repo_utilities", "src"]):
                     scripts.append(script)

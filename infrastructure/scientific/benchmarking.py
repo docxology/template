@@ -7,8 +7,6 @@ Provides utilities for benchmarking function performance:
 - Multi-input benchmarking
 """
 
-from __future__ import annotations
-
 import os
 import time
 from dataclasses import dataclass

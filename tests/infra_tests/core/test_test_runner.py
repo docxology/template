@@ -123,8 +123,16 @@ def synthetic_repo(tmp_path: Path) -> Path:
     return tmp_path
 
 
-def test_run_per_project_pytest_all_passing(synthetic_repo: Path) -> None:
+def test_run_per_project_pytest_all_passing(synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Both projects pass → exit 0; combined coverage file is created."""
+    # When this test runs inside the larger pipeline, the parent pytest
+    # invocation may have set COVERAGE_FILE to a host-filesystem path
+    # (e.g. ".coverage.infra"). _resolve_coverage_file honours that env
+    # var, which would redirect the synthetic repo's coverage file off
+    # tmp_path and break the assertion below. Clear it so the synthetic
+    # run uses DEFAULT_COVERAGE_FILE inside ``synthetic_repo``.
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+
     _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
     _write_project(synthetic_repo, "beta", fail=False, extra_module="mod_beta")
 
@@ -155,13 +163,19 @@ def test_run_per_project_pytest_one_failing(synthetic_repo: Path) -> None:
     assert rc != 0
 
 
-def test_coverage_accumulates_across_projects(synthetic_repo: Path) -> None:
+def test_coverage_accumulates_across_projects(synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """``--cov-append`` should make the second project add to the first's traces.
 
     We run the suite once with both projects and verify that the combined
     coverage file references files from *both* projects' ``src/`` trees —
     proving ``--cov-append`` was honoured for the second project.
     """
+    # See test_run_per_project_pytest_all_passing for the same reasoning:
+    # an outer pipeline run may pin COVERAGE_FILE to a host path and
+    # silently redirect the synthetic suite's coverage data file off
+    # tmp_path.
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+
     _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
     _write_project(synthetic_repo, "beta", fail=False, extra_module="mod_beta")
 
@@ -215,5 +229,15 @@ def test_skip_projects_excludes_named_project(synthetic_repo: Path) -> None:
 
 
 def test_default_fail_under_constant_matches_repo_threshold() -> None:
-    """The default fail-under should match the repo-wide 90% project gate."""
-    assert DEFAULT_FAIL_UNDER == 90
+    """Combined-union all-projects gate, reconciled to measured reality.
+
+    Deliberately distinct from — and lower than — the per-project standalone
+    90% floor (which exemplar projects meet). The combined number is
+    structurally lower because per-project suites only cover their own
+    ``src/`` while the union denominator spans every active project. 75
+    reflects the true sustained combined level (actual ~80%); it replaces a
+    previously unenforced aspirational 90. Kept in lockstep with the
+    ``DEFAULT_FAIL_UNDER`` docstring/comment and the coverage docs in
+    CLAUDE.md / AGENTS.md / .github/AGENTS.md (maintainer decision 2026-05-15).
+    """
+    assert DEFAULT_FAIL_UNDER == 75

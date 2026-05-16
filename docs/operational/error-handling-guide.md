@@ -252,7 +252,7 @@ def validate_file(path: Path) -> None:
             file=str(path),
             expected_location=str(path.parent)
         )
-    
+
     if not path.suffix == '.csv':
         raise_with_context(
             InvalidFileFormatError,

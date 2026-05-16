@@ -6,10 +6,9 @@ Each handler receives parsed arguments and returns an exit code (0 for success,
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
+from collections.abc import Sequence
 
 from infrastructure.core.files.inventory import FileInventoryManager
 from infrastructure.core.logging.utils import get_logger
@@ -26,10 +25,40 @@ from infrastructure.core.errors import (
     PROJECTS_INCOMPLETE,
 )
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
-from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.core.pipeline.multi_project import (
+    MultiProjectConfig,
+    MultiProjectOrchestrator,
+    MultiProjectResult,
+    format_multi_project_outcome_lines,
+)
 from infrastructure.project.discovery import discover_projects
+from infrastructure.project.project_info import ProjectInfo
 
 logger = get_logger(__name__)
+
+
+def _emit_multi_project_outcome(
+    log_obj: object,
+    ordered_projects: Sequence[ProjectInfo],
+    result: MultiProjectResult,
+) -> None:
+    """Log per-project outcomes (mirrors PipelineRunner banner detail)."""
+    lines = format_multi_project_outcome_lines(ordered_projects, result)
+    section: str | None = None
+    for line in lines:
+        if line == "Succeeded:":
+            section = "succeeded"
+            log_obj.info(line)  # type: ignore[attr-defined]
+        elif line == "Failed:":
+            section = "failed"
+            log_obj.error(line)  # type: ignore[attr-defined]
+        elif line.startswith("  - "):
+            if section == "failed":
+                log_obj.error(line)  # type: ignore[attr-defined]
+            else:
+                log_obj.info(line)  # type: ignore[attr-defined]
+        else:
+            log_obj.error(line)  # type: ignore[attr-defined]
 
 
 def handle_pipeline_command(args: argparse.Namespace) -> int:
@@ -142,6 +171,8 @@ def handle_multi_project_command(args: argparse.Namespace) -> int:
 
         if result.infra_test_duration > 0:
             logger.info(f"  - Infrastructure tests: {result.infra_test_duration:.1f}s")
+
+        _emit_multi_project_outcome(logger, projects, result)
 
         if result.successful_projects == len(projects):
             logger.info("✅ All projects completed successfully")

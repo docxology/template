@@ -19,8 +19,6 @@ Quick start::
     report = collector.finalize(total_duration=42.0)
 """
 
-from __future__ import annotations
-
 from infrastructure.core.telemetry.collector import TelemetryCollector
 from infrastructure.core.telemetry.config import TelemetryConfig
 from infrastructure.core.telemetry.models import (

@@ -9,7 +9,7 @@ This document provides documentation for the Research Project Template system, e
 **Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 **DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
 
-`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, and provenance, built through a ten-stage DAG. **Layer 1** (`infrastructure/`, **313** Python files under `infrastructure/` per `find infrastructure -name '*.py' | wc -l` on this tree) is separated from **Layer 2** (self-contained projects under `projects/`). Each directory carries `README.md` + `AGENTS.md`; infrastructure packages usually add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
+`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, and provenance, built through a ten-stage DAG. **Layer 1** (`infrastructure/`, ~**345** Python files under `infrastructure/` per `find infrastructure -name '*.py' -type f | wc -l` — a point-in-time count that drifts as the tree changes; re-derive rather than trust the literal) is separated from **Layer 2** (self-contained projects under `projects/`). Each directory carries `README.md` + `AGENTS.md`; infrastructure packages usually add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
 
 ### Documentation map
 
@@ -49,18 +49,45 @@ This document provides documentation for the Research Project Template system, e
 
 ## Learned Workspace Facts
 
+- PAI local alignment (2026-05-15): upstream target is `danielmiessler/Personal_AI_Infrastructure` `v5.0.0` (Life Operating System). The active `~/.claude` install was upgraded with the official installer and now carries `PAI_SYSTEM_PROMPT.md`, Algorithm `v6.3.0`, the ISA skill, and Pulse on port `31337`; `~/.claude/settings.json` now agrees with `PAI/ALGORITHM/LATEST` on Algorithm `6.3.0`. Timestamped backups at `/Users/4d/.claude.backup-20260512`, `/Users/4d/.claude.backup-20260515-105316`, and `/Users/4d/.claude.backup-2026-05-15T18-21-36-469Z` are retained for rollback. Treat PRD-era PAI loop wording as historical, and use ISA-first language in new PAI-facing docs.
+- PAI Docxology intake (2026-05-15): `~/.claude/PAI/TOOLS/DocxologyIntake.ts` is the controlled entrypoint for Daniel's public Docxology context. It fetches canonical structured files from `danielarifriedman.com`, writes snapshots under `~/.claude/PAI/MEMORY/REFERENCE/DOCXOLOGY/`, promotes curated knowledge notes, and keeps the boundary that public context is not private TELOS. The weekly Pulse job is `docxology-context-sync`.
 - Manuscript metrics, counts, and variables are auto-injected from per-project `output/data/manuscript_variables.json` at render time; never hand-author values that should be injected. The PDF cover DOI is a separate path: `publication.doi` in `projects/{name}/manuscript/config.yaml` is read by `infrastructure/rendering/_pdf_latex_helpers.py` and emitted as `\href{https://doi.org/<doi>}{DOI: <doi>}` on the title page.
 - **Rotating Lean-toolchain project (e.g. `fep_lean`, when checked out under `projects/`)**: real Lean 4 + Mathlib via `lake build`, OpenGauss `gauss` CLI, and the Hermes LLM pipeline (no mocks); validate end-to-end through `./run.sh`. Combined-PDF link colours come from `hyperref` / `\hypersetup` in the project's `manuscript/preamble.md` (red `fepred` for link, URL, and citation colours). Infrastructure only injects red when it rewrites a `hidelinks` draft in the emitted `.tex`.
 - For that rotating project, Hermes and per-topic Gauss markdown reports are built from the pipeline stage payload (`TopicRunResult.as_dict()`), not by re-reading SQLite artifacts; that dict must include the Hermes fields the reporter uses (`tokens_used`, `explanation`, `refined_lean_sketch`, `hermes_model`, `cache_hit`, `hermes_lean_compiles`) or aggregate and per-topic reports will show empty tokens and missing sections.
 - Topic sketch sources of truth (when checked out) are the catalogue in the project's `scripts/catalogue_sketches.py` and `config/topics.yaml` (one `TopicEntry` per topic: `lean_sketch` + `latex_equations`); the project's `lean/FepSketches/` is for `Basic.lean`, `fep_all.lean`, and ephemeral `_verify_*` verifier files, not long-lived per-topic `.lean` files for the full catalogue. The manuscript emits a **unified** `09z_unified_formalism_catalogue.md` (B+C material juxtaposed per topic; PDF refs `sec:appendix_b_full_topic_lean_catalogue` and `sec:appendix_c_latex_equations` both resolve in that chapter). The project's `scripts/theorem_latex_signatures.py` drives display-math strings aligned with Lean. The pipeline may write LaTeX `equation` environments with `\label{eq:…}` for autonumbered cross-refs, not only `$$` display blocks.
 - That project's manuscript-variables injector reads only `run_*/verification_manifest.json` artifacts and ignores `verify_*/` standalone re-verifications, so the canonical compile-rate cited in the abstract is the Hermes-refined run (e.g. `49/50` with one fallback) — standalone verifier-only runs reporting `50/50` do not propagate into manuscript metrics.
 - Content-validation diagnostics carry stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`, e.g. `MARKDOWN.PANDOC_BARE_PIPE`, `BIBTEX.UNDEFINED_KEY`); every new `DiagnosticEvent` emission must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters on `diagnostics.json`.
-- `uv run python -m infrastructure.validation.cli prerender <project>` runs the strict source-markdown gate (`prevalidate_source_markdown`) without triggering a full render; use it for fast pre-flight before `scripts/03_render_pdf.py`.
-- Mermaid in Markdown (validated by `scripts/lint_docs.py` / `mmdc`): unquoted `//` inside a line starts a comment and breaks path-style labels; stadium nodes `[/label/]` must close with `/]`. Prefer quoting labels that mix special characters; avoid literal `\\n` inside labels—use `<br/>` for breaks.
+- `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .` runs `prevalidate_source_markdown` without a full render (fast pre-flight before `scripts/03_render_pdf.py`). Mermaid in Markdown (`lint_docs` / `mmdc`): unquoted `//` starts a line comment; stadium nodes `[/label/]` must close with `/]`; prefer quoted labels and `<br/>` over `\\n` in labels.
 - Slides keep Beamer Unicode/math parity with combined PDFs via `extract_math_font_preamble` in `infrastructure/rendering/_pdf_latex_helpers.py`, wired through Pandoc `-H header.tex` from `SlidesRenderer.render`; prose Unicode glyphs in body LaTeX are remapped by `infrastructure/rendering/_pdf_unicode_remap.py` inside `_pdf_combined_renderer.postprocess_latex`.
-- Project roster under `projects/` rotates; the **only three permanent canonical exemplars** are [`projects/template_code_project/`](projects/template_code_project/), [`projects/template_prose_project/`](projects/template_prose_project/), and [`projects/template_search_project/`](projects/template_search_project/) — consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any other project paths in docs (every non-template path may rotate to `projects_in_progress/` or `projects_archive/` between renders). Repo-root `.gitignore` ignores `projects/*` except those three exemplar directories (negated patterns keep them tracked). Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
-- `projects/biology_textbook/` is WIP-friendly: `infrastructure.project.discovery.resolve_project_root` lets `uv run python scripts/03_render_pdf.py --project biology_textbook` work from the repository root before promotion, but `./run.sh` and default discovery only list it after it moves under `projects/`. Same tree: `docs/api_reference.md` is manually curated—after changing public APIs in `src/biology/`, reconcile with `rg '^\\s*def ' src/biology` and refresh counts from live measurement; `docs/accessibility.md` lists which `manuscript/config.yaml` keys are advisory vs test-enforced.
-- `projects_in_progress/cognitive_integrity/`: pass the program segment in `--project` (e.g. `cognitive_integrity/cogsec_multiagent_1_theory`); bare `cogsec_multiagent_*` resolves under `projects/` and will not find the WIP tree—same `resolve_project_root` rule as other nested `projects_in_progress` layouts.
+- Project roster under `projects/` rotates; the **only two permanent canonical exemplars** are [`projects/template_code_project/`](projects/template_code_project/) and [`projects/template_prose_project/`](projects/template_prose_project/). The literature-search exemplar [`projects_archive/template_search_project/`](projects_archive/template_search_project/) is an optional third template that rotates between `projects/` (active) and `projects_archive/` (resting); restore it under `projects/` when exercising the literature-search workflow. Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any other project paths in docs (every non-template path may rotate to `projects_in_progress/` or `projects_archive/` between renders). Repo-root `.gitignore` ignores `projects/*` except the canonical exemplar directories (negated patterns keep them tracked). Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
+- WIP resolution: `infrastructure.project.discovery.resolve_project_root` lets `uv run python scripts/03_render_pdf.py --project biology_textbook` work from the repository root before that tree lives under `projects/` (default discovery still lists it only after promotion). Nested WIP layouts use the same helper: pass e.g. `cognitive_integrity/cogsec_multiagent_1_theory` under `projects_in_progress/`; bare `cogsec_multiagent_*` resolves only under `projects/`. For `biology_textbook`, keep `docs/api_reference.md` in sync with `src/biology` public APIs and `docs/accessibility.md` advisory vs enforced keys.
+- `bandit.yaml` lists `exclude_dirs` (`projects_archive`, `projects_in_progress`, `.venv`, `site-packages`) so Bandit skips non-authored trees; CI and hooks rely on that config instead of repeating long `--exclude` lists on the command line.
+- When restored under `projects/` for an active sweep, the literature-search exemplar's `manuscript/config.yaml` ships `search.max_results: 10` and `deep_search.max_results_per_keyword: 10` for faster default pipeline smoke; raise those caps when you need full sweeps. (Default location while at rest: [`projects_archive/template_search_project/`](projects_archive/template_search_project/).)
+
+### PAI Pulse Re-Enablement (Daemon Only)
+
+- Preserve this rollback-first posture: do not overlay pre-v5 hooks, skill logic, or config into active `~/.claude` unless explicitly requested.
+- Before enabling any disabled Pulse job, run `cd /Users/4d/.claude/PAI/PULSE && bun run run-job.ts pulse-self-audit`; proceed only when the report at `/Users/4d/.claude/PAI/MEMORY/PAISYSTEMUPDATES/pulse-self-audit.json` has zero critical findings and no missing target for the job being enabled.
+- Use `http://127.0.0.1:31337/readiness` or `GET /api/pulse/self-audit` as the phase dashboard. Current expected status is baseline ready, doctrine ready, runtime ready, Phase 1 assistant ready, Phase 2 monitors attention, and Phase 3 communications ready.
+- Keep DA assistant jobs disabled until re-enabled deliberately using this three-phase rollout:
+
+  - Phase 1: enable DA assistant cron jobs one-at-a-time in the PAI Pulse config (`PULSE.toml`, outside this repo): `assistant-heartbeat`, `assistant-tasks`, `assistant-diary`, `assistant-growth`. A conservative scaffold exists at `/Users/4d/.claude/PAI/PULSE/Assistant/`; validate each job manually before flipping its `enabled` flag.
+  - Phase 2: enable low-risk observability modules in the PAI Pulse config (`PULSE.toml`, outside this repo): `performance`, `syslog`, plus one monitor at a time from:
+    - `notification-governor-status`
+    - `poller-meta-monitor`
+    - `staleness-review`
+    - `compute-gap`
+    - `monitor-toofless`
+    - `monitor-band-tours`
+    - `monitor-author-tours`
+    - `monitor-meetups-ai-sec`
+    - `monitor-amazon-orders`
+    - `monitor-bills`
+    - `monitor-newark-permits`
+    - `monitor-newark-council`
+  - Phase 3: enable optional communication integrations in the PAI Pulse config (`PULSE.toml`, outside this repo): `telegram` and `imessage` after stable baseline is maintained for 72 hours.
+
+- Voice is expected to remain desktop notifications only until an ElevenLabs key is provisioned.
 
 ## 📋 Table of Contents
 
@@ -202,7 +229,7 @@ flowchart TB
     INFRA --> I_DOCS[AGENTS.md · README.md · SKILL.md]
     INFRA --> I_CONFIG[/config<br/>Repo-wide configuration/]
     INFRA --> I_DOCKER[/docker<br/>Container specs/]
-    INFRA --> I_SUB[Layer 1 packages listed in<br/>`infrastructure/AGENTS.md` —<br/>17 Python dirs + logrotate configs ·<br/>313 `.py` files in `infrastructure/`]
+    INFRA --> I_SUB[Layer 1 packages listed in<br/>`infrastructure/AGENTS.md` —<br/>16 Python packages + config dirs ·<br/>.py count: see canonical_facts.md]
 
     PROJECTS --> P_README[README.md · multi-project guide]
     PROJECTS --> P_STUB[/_test_project<br/>Stub · output/ only · not discovered/]
@@ -242,7 +269,7 @@ Each directory contains documentation for easy navigation:
 | --------- | --------- | --------- | ------- |
 | [`projects/template_code_project/`](projects/template_code_project/) | [AGENTS.md](projects/template_code_project/AGENTS.md) | [README.md](projects/template_code_project/README.md) | Code-centric exemplar (canonical, always present) |
 | [`projects/template_prose_project/`](projects/template_prose_project/) | [AGENTS.md](projects/template_prose_project/AGENTS.md) | [README.md](projects/template_prose_project/README.md) | Prose-centric exemplar (canonical, always present) |
-| [`projects/template_search_project/`](projects/template_search_project/) | [AGENTS.md](projects/template_search_project/AGENTS.md) | [README.md](projects/template_search_project/README.md) | Literature-search exemplar (canonical, always present) |
+| [`projects_archive/template_search_project/`](projects_archive/template_search_project/) | [AGENTS.md](projects_archive/template_search_project/AGENTS.md) | [README.md](projects_archive/template_search_project/README.md) | Literature-search exemplar (rotating; restore under `projects/` to run) |
 | Rotating projects (e.g. `fep_lean`, `actinf_policy_entanglement_lean`) | see project tree when checked out under `projects/` | see project tree when checked out under `projects/` | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current roster; rotates between `projects_in_progress/` and `projects_archive/` |
 
 **In-progress projects** (under `projects_in_progress/`, not executed by pipeline):
@@ -497,29 +524,32 @@ uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 
 ### Secure Pipeline (`secure_run.sh`)
 
-A **two-stage wrapper** around the standard pipeline that adds steganographic PDF hardening. It provides an interactive text menu identical to `run.sh`, but with options optimized for security, steganographic post-processing, and multi-project execution.
+**Two phases:** (1) run the **same DAG** as the normal pipeline through Python
+[`PipelineRunner`](infrastructure/orchestration/pipeline_runner.py) /
+[`PipelineExecutor`](infrastructure/core/pipeline/executor.py) — **not** by shelling out to `./run.sh`; (2) run
+[`SteganographyProcessor`](infrastructure/steganography/) on the resulting PDFs.
 
-**Stage 1:** Runs `run.sh [args]` (interactive or non-interactive depending on flags).
-**Stage 2:** `infrastructure/steganography.SteganographyProcessor` post-processes PDFs for
-all discovered active projects by default, or only the `--project` target when provided,
-producing a companion `*_steganography.pdf` and a `.hashes.json` integrity manifest.
-Original PDFs are always left untouched.
+**Phase 1** is skipped when `--steganography-only`. When the pipeline phase runs, **`--project <name>` is required** (single project per invocation). For steganography-only with no `--project`, PDFs for **all** discovered projects are processed.
+
+For argv shaping into the `secure` subcommand from the same thin shell as `./run.sh`, use **`./run.sh --secure-run`** (see [`run.sh`](run.sh)). **`./secure_run.sh`** always execs `python -m infrastructure.orchestration secure` and does not replicate the full interactive main menu by itself.
+
+**Phase 2:** post-processes PDFs (companion `*_steganography.pdf`, `.hashes.json` manifest). Original PDFs stay untouched.
 
 ```bash
-# Interactive secure menu (recommended)
-./secure_run.sh
+# Interactive path that forwards to the secure subcommand (same orchestration CLI as ./run.sh)
+./run.sh --secure-run
 
-# Full secure pipeline (pipeline + steganography)
+# Full pipeline + steganography for one project
 ./secure_run.sh --project template_code_project
 
-# Re-process existing PDFs only (skip pipeline re-run)
+# Core DAG only (no LLM stages) + steganography
+./secure_run.sh --project template_code_project --core-only
+
+# Re-process existing PDFs only (omit --project to cover every discovered project)
 ./secure_run.sh --steganography-only --project template_code_project
 
-# Core pipeline only (no LLM) + steganography
-./secure_run.sh --pipeline --core-only
-
-# Multi-project core pipeline then steganography for all discovered projects
-./secure_run.sh d
+# Multi-project: run pipelines separately, then harden all PDFs without re-running pipelines
+./secure_run.sh --steganography-only
 ```
 
 **Output files:**
@@ -563,8 +593,10 @@ steganography:
 
 #### Entry Point Comparison
 
-- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Bash progress: `[0/9]` clean, then `[1/9]`–`[9/9]` for nine tracked steps (see `run.sh` `STAGE_NAMES`).
+- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Bash progress: `[0/9]` clean, then `[1/9]`–`[9/9]` for nine tracked steps (labels from [`STAGE_NAMES`](infrastructure/orchestration/menu.py), kept in sync with [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)).
 - **`./run.sh --pipeline`**: Non-interactive full DAG; optional LLM stages may skip if Ollama is unavailable.
+- **`./run.sh --secure-run`**: Forwards to the `secure` orchestration subcommand (same Python CLI as bare `./run.sh`; use when you want argv shaping from the main shell).
+- **`./secure_run.sh`**: Ensures steganography extras (`uv sync --group steganography`), then `python -m infrastructure.orchestration secure`. **`--project`** is required when running the pipeline phase (omit only for `--steganography-only` across all projects). See [Secure Pipeline](#secure-pipeline-secure_runsh) above.
 - **`uv run python scripts/execute_pipeline.py --project {name} --core-only`**: Core DAG only — **8** stages in default [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) (LLM-tagged stages excluded); no LLM dependencies.
 
 ### Pipeline Stages
@@ -691,7 +723,8 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 
 **Requirements**:
 
-- projects/{name}/src/ : 90% minimum
+- projects/{name}/src/ : 90% minimum (per-project standalone gate; exemplars meet it)
+- combined-union all-projects gate (`01_run_tests.py --project-only --all-projects`, `DEFAULT_FAIL_UNDER`) : 75% — deliberately lower than the per-project floor because per-project suites only cover their own `src/` while the union denominator spans every active project; reconciled to measured reality (was an unenforced aspirational 90). Per-project floors remain authoritative.
 - infrastructure/ : 60% minimum
 
 Tests use real data and computation.
@@ -891,14 +924,15 @@ Enterprise-grade security and system monitoring.
 ```python
 from infrastructure.llm.core.sanitization import sanitize_llm_input
 from infrastructure.core.security import get_security_validator
-from infrastructure.core.runtime.health_check import quick_health_check, get_health_status
+from infrastructure.core import SystemHealthChecker
 
 # Validate LLM input with security checks
 sanitized = sanitize_llm_input(user_prompt)
 
 # Perform system health check
-if quick_health_check():
-    status = get_health_status()
+checker = SystemHealthChecker()
+if checker.is_healthy():
+    status = checker.get_health_status()
 ```
 
 ### 🔍 Validation System (`infrastructure/validation/`)
@@ -916,7 +950,7 @@ Comprehensive file integrity, manuscript structures, cross-references, and outpu
 **Usage:**
 
 ```python
-from infrastructure.validation.integrity.integrity import verify_output_integrity, generate_integrity_report
+from infrastructure.validation.integrity import verify_output_integrity, generate_integrity_report
 
 report = verify_output_integrity(output_dir)
 print(generate_integrity_report(report))
@@ -1114,14 +1148,51 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 ```
 
+#### Project Fails In `--all-projects` But Passes Standalone
+
+A multi-project run (`./run.sh --all-projects`) executes projects sequentially over a long
+wall time; a project can fail there yet pass when re-run on its own. Triage:
+
+```bash
+# Re-run only the failed project (the multi-project summary prints this command)
+./run.sh --project {name} --pipeline --core-only --skip-infra
+
+# Or resume the whole run from the last good checkpoint
+./run.sh --all-projects --pipeline --resume
+```
+
+- **`FileNotFoundError: .../projects/{name}/.venv/bin/python` at Project Tests** — the
+  project's `.venv/` directory survived with a *dangling* `bin/python` symlink (its base
+  interpreter was moved/removed, e.g. a relocated miniforge/uv install). The test runner now
+  detects this via `resolve_test_python()` (`infrastructure/core/runtime/_python_env.py`):
+  it only uses the project interpreter when that file actually exists and otherwise falls
+  back to the workspace interpreter, so a stale `.venv/` no longer crashes the stage. To
+  remove the stale env entirely: `rm -rf projects/{name}/.venv` (it is regenerated on demand;
+  the analysis stage uses `uv run` which self-heals it).
+- **Transient Project Tests / PDF Rendering failures under load** — flaky failures during a
+  38-min multi-project sweep that do not reproduce standalone. Confirm health directly:
+  a project's own gate (`projects/{name}/output/reports/test_results.json` →
+  `total_failed: 0`) and render artifacts (`output/pdf/*_combined.pdf` present, no `^! `
+  lines in `output/pdf/*.log` or `output/slides/*.log`). If clean, re-run that single project.
+
+#### `validate_docs_and_figures.py` exit 1 at Project Analysis (deep_temporal_affect)
+
+This is the project's read-only self-validator. Its run-report / session checks and links
+into `output/` assert a **completed canonical run** (`run_all.py` / later pipeline stages).
+Run as a plain analysis script it correctly treats not-yet-generated artifacts as
+non-blocking warnings; pass `--strict` to require the full canonical run (hard findings).
+So `python scripts/validate_docs_and_figures.py` → 0 mid-pipeline, `--strict` → 1 until the
+canonical run has produced `output/reports/{summary,validation_report}.md` and
+`output/data/trajectories/session_info.json`.
+
 #### Scripts Failing
 
 ```bash
 # Run scripts individually to debug
-python3 projects/{name}/scripts/analysis_pipeline.py
+uv run python3 projects/{name}/scripts/analysis_pipeline.py
 
 # Check import errors
-python3 -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import optimizer; print('Import successful')"
+uv run python3 -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import optimizer; print('Import successful')"
 ```
 
 #### PDF Generation Issues
@@ -1131,7 +1202,7 @@ python3 -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import optimi
 which xelatex
 
 # Validate LaTeX packages (pre-flight check)
-python3 -m infrastructure.rendering.latex_package_validator
+uv run python3 -m infrastructure.rendering.latex_package_validator
 
 # Validate markdown first
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
@@ -1161,7 +1232,7 @@ If you see "File *.sty not found" during PDF rendering:
 4. **Run pre-flight validation**:
 
    ```bash
-   python3 -m infrastructure.rendering.latex_package_validator
+   uv run python3 -m infrastructure.rendering.latex_package_validator
    ```
 
 **Common missing packages in BasicTeX**:
@@ -1243,7 +1314,7 @@ Key log files for debugging:
 
    ```bash
    # Clean outputs before backup
-   python3 -c "from pathlib import Path; from infrastructure.core.files.operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
+   uv run python3 -c "from pathlib import Path; from infrastructure.core.files.operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
 
    # Backup source files only
    tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/

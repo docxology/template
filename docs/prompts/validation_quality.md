@@ -30,7 +30,7 @@ VALIDATION REQUIREMENTS:
 ### Using Infrastructure Validation Modules
 ```python
 # Import validation infrastructure
-from infrastructure.validation import (
+from infrastructure.validation import (  # noqa: docs-lint
     validate_module_implementation,
     validate_project_structure,
     validate_manuscript_quality,
@@ -39,7 +39,7 @@ from infrastructure.validation import (
 )
 
 # validation result
-from infrastructure.validation.core import ValidationResult, ValidationReport
+from infrastructure.validation.core import ValidationResult, ValidationReport  # noqa: docs-lint
 
 def run_comprehensive_validation(target: str, scope: str) -> ValidationReport:
     """Run validation suite.
@@ -260,13 +260,9 @@ def validate_code_quality(module_path: Path) -> ValidationReport:
     type_check_result = run_mypy_check(module_path)
     report.add_result(type_check_result)
 
-    # Linting
-    lint_result = run_flake8_check(module_path)
+    # Linting, formatting, and import sorting (Ruff)
+    lint_result = run_ruff_check(module_path)
     report.add_result(lint_result)
-
-    # Import sorting
-    import_sort_result = run_isort_check(module_path)
-    report.add_result(import_sort_result)
 
     # Test coverage
     coverage_result = run_coverage_check(module_path)
@@ -298,6 +294,24 @@ def run_mypy_check(module_path: Path) -> ValidationResult:
 
     except Exception as e:
         result.add_error(f"MyPy check failed: {e}")
+
+    return result
+
+def run_ruff_check(module_path: Path) -> ValidationResult:
+    """Run Ruff lint/format gates on ``module_path``."""
+    result = ValidationResult("ruff_check")
+
+    try:
+        check_cmd = ["uv", "run", "ruff", "check", str(module_path)]
+        fmt_cmd = ["uv", "run", "ruff", "format", "--check", str(module_path)]
+        for cmd in (check_cmd, fmt_cmd):
+            process = subprocess.run(cmd, capture_output=True, text=True)
+            if process.returncode != 0:
+                result.add_error(f"Ruff failed ({cmd}): {process.stdout}{process.stderr}")
+                return result
+        result.mark_passed()
+    except Exception as e:
+        result.add_error(f"Ruff check failed: {e}")
 
     return result
 

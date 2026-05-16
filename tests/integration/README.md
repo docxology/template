@@ -15,6 +15,7 @@ uv run pytest tests/integration/test_full_pipeline.py -v
 
 - `conftest.py`
 - `test_bash_utils.sh`
+- `test_codebase_real.py`
 - `test_edge_cases_and_error_paths.py`
 - `test_environment_setup.py`
 - `test_execute_pipeline_cli.py`
@@ -25,6 +26,7 @@ uv run pytest tests/integration/test_full_pipeline.py -v
 - `test_module_interoperability.py`
 - `test_output_copying.py`
 - `test_run_sh.py`
+- `test_timeseries_benchmarks.py`
 
 ## Focus
 

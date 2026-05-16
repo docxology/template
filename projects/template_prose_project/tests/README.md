@@ -5,7 +5,7 @@ Real-data test suite for the prose-review pipeline. **No mocks.**
 ## Run
 
 ```bash
-# Full suite (66 tests, ~2 s)
+# Full suite (67 tests, ~2 s)
 uv run pytest projects/template_prose_project/tests/ -v
 
 # Coverage gate

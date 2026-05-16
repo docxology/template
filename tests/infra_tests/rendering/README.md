@@ -10,10 +10,10 @@ Tests for rendering module including PDF generation, HTML rendering, slide creat
 
 ```bash
 # Run all rendering tests
-pytest tests/infra_tests/rendering/ -v
+uv run pytest tests/infra_tests/rendering/ -v
 
 # Run PDF renderer tests
-pytest tests/infra_tests/rendering/test_pdf_renderer*.py -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer*.py -v
 ```
 
 ## Test Modules
@@ -23,7 +23,7 @@ pytest tests/infra_tests/rendering/test_pdf_renderer*.py -v
 PDF generation and LaTeX compilation:
 
 ```bash
-pytest tests/infra_tests/rendering/test_pdf_renderer*.py -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer*.py -v
 ```
 
 **Test Coverage:**
@@ -33,12 +33,12 @@ pytest tests/infra_tests/rendering/test_pdf_renderer*.py -v
 - Bibliography processing
 - Figure integration
 
-### HTML Renderer Tests (`test_html_renderer.py`)
+### HTML / Web Renderer Tests (`test_web_renderer_coverage.py`, `test_web_renderer_expanded_coverage.py`)
 
 HTML output generation:
 
 ```bash
-pytest tests/infra_tests/rendering/test_html_renderer.py -v
+uv run pytest tests/infra_tests/rendering/test_web_renderer_coverage.py tests/infra_tests/rendering/test_web_renderer_expanded_coverage.py -v
 ```
 
 **Test Coverage:**
@@ -47,12 +47,12 @@ pytest tests/infra_tests/rendering/test_html_renderer.py -v
 - Cross-reference handling
 - Style application
 
-### Slide Renderer Tests (`test_slides_renderer.py`)
+### Slide Renderer Tests (`test_slides_renderer_core.py`, `test_slides_renderer_comprehensive.py`, `test_slides_renderer_coverage.py`)
 
 Presentation slide generation:
 
 ```bash
-pytest tests/infra_tests/rendering/test_slides_renderer.py -v
+uv run pytest tests/infra_tests/rendering/test_slides_renderer_core.py tests/infra_tests/rendering/test_slides_renderer_comprehensive.py tests/infra_tests/rendering/test_slides_renderer_coverage.py -v
 ```
 
 **Test Coverage:**
@@ -69,7 +69,7 @@ Individual renderer testing:
 
 ```bash
 # Test PDF generation
-pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py::test_render_combined_pdf -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py::test_render_combined_pdf -v
 ```
 
 ### Integration Tests
@@ -78,7 +78,7 @@ End-to-end rendering workflows:
 
 ```bash
 # Full rendering pipeline
-pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py::test_full_pipeline -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py::test_full_pipeline -v
 ```
 
 ## Common Test Patterns
@@ -107,26 +107,26 @@ def test_compile_latex():
 ### All Rendering Tests
 
 ```bash
-pytest tests/infra_tests/rendering/ -v
+uv run pytest tests/infra_tests/rendering/ -v
 ```
 
 ### Specific Renderers
 
 ```bash
 # PDF tests only
-pytest tests/infra_tests/rendering/test_pdf*.py -v
+uv run pytest tests/infra_tests/rendering/test_pdf*.py -v
 
 # HTML tests only
-pytest tests/infra_tests/rendering/test_html*.py -v
+uv run pytest tests/infra_tests/rendering/test_html*.py -v
 
 # Slide tests only
-pytest tests/infra_tests/rendering/test_slides*.py -v
+uv run pytest tests/infra_tests/rendering/test_slides*.py -v
 ```
 
 ### With Coverage
 
 ```bash
-pytest tests/infra_tests/rendering/ \
+uv run pytest tests/infra_tests/rendering/ \
     --cov=infrastructure.rendering \
     --cov-report=html
 ```
@@ -136,7 +136,7 @@ pytest tests/infra_tests/rendering/ \
 ### Verbose Output
 
 ```bash
-pytest tests/infra_tests/rendering/ -vv -s
+uv run pytest tests/infra_tests/rendering/ -vv -s
 ```
 
 ### Check LaTeX Output

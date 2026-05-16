@@ -1,7 +1,5 @@
 """Helper functions for logging utilities."""
 
-from __future__ import annotations
-
 from typing import Any
 
 from infrastructure.core.exceptions import TemplateError

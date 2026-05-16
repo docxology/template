@@ -11,8 +11,6 @@ The search module is the discovery side of the literature workflow; see
 :mod:`infrastructure.reference.citation` for the export side.
 """
 
-from __future__ import annotations
-
 from infrastructure.search.literature import (
     AbstractFetcher,
     ArxivBackend,

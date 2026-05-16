@@ -85,8 +85,8 @@ Do not use any of the following patterns in tests:
 ### Coverage Validation
 ```bash
 # Validate coverage requirements
-pytest tests/ --cov=src --cov-fail-under=90  # Project layer
-pytest tests/ --cov=infrastructure --cov-fail-under=60  # Infrastructure layer
+uv run pytest tests/ --cov=src --cov-fail-under=90  # Project layer
+uv run pytest tests/ --cov=infrastructure --cov-fail-under=60  # Infrastructure layer
 ```
 
 ## 3. Test Structure and Organization
@@ -339,7 +339,7 @@ def real_dataset(test_data_dir):
 ### Coverage Validation
 ```bash
 # Generate detailed coverage report
-pytest tests/ --cov=src --cov-report=html --cov-report=term-missing
+uv run pytest tests/ --cov=src --cov-report=html --cov-report=term-missing
 
 # Analyze uncovered lines
 coverage report --show-missing

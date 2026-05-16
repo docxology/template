@@ -366,7 +366,7 @@ if SRC not in sys.path:
 
 **Solution**: Find uncovered lines and add tests:
 ```bash
-pytest --cov=src --cov-report=term-missing
+uv run pytest --cov=src --cov-report=term-missing
 ```
 
 ### Thin Orchestrator Violation

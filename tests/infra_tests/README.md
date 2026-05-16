@@ -11,25 +11,32 @@ uv run pytest tests/infra_tests/ -m "not requires_ollama"
 
 Floor: **60%** (currently ~83%). Coverage is measured over `infrastructure/` only.
 
-## Directory → Module Mapping
+## Directory -> Module Mapping
 
-| Directory | Infrastructure module | Approx. test files |
-|-----------|----------------------|-------------------|
-| `core/` | `infrastructure/core/` — logging, files, runtime, pipeline, telemetry, security | ~66 |
-| `documentation/` | `infrastructure/documentation/` — figures, API docs | ~7 |
-| `orchestration/` | `infrastructure/orchestration/` — CLI, menu, PipelineRunner, logs, secure wrapper | ~7 |
-| `project/` | `infrastructure/project/` — discovery, layout validation | ~2 |
-| `prose/` | `infrastructure/prose/` — readability, outline, editorial quality, reports | ~7 |
-| `reference/` | `infrastructure/reference/` — BibTeX parse/write, models, CLI | ~8 |
-| `search/` | `infrastructure/search/` — literature client, backends, cache, CLI | ~8 |
-| `llm/` | `infrastructure/llm/` — Ollama client, prompts, streaming, reviews, translations | ~66 |
-| `publishing/` | `infrastructure/publishing/` — metadata, citations, Zenodo, arXiv | ~21 |
-| `rendering/` | `infrastructure/rendering/` — PDF, LaTeX, web, slides | ~49 |
-| `reporting/` | `infrastructure/reporting/` — pipeline reports, dashboards, executive summaries | ~53 |
-| `scientific/` | `infrastructure/scientific/` — benchmarking, stability | ~8 |
-| `skills/` | `infrastructure/skills/` — SKILL.md discovery, manifest | ~5 |
-| `steganography/` | `infrastructure/steganography/` — watermarking, encryption | ~14 |
-| `validation/` | `infrastructure/validation/` — docs scanning, links, repo scanning, integrity | ~56 |
+| Directory | Focus |
+|-----------|-------|
+| `bench/` | Opt-in `pytest-benchmark` suites, skipped by default |
+| `core/` | `infrastructure/core/` — logging, files, runtime, pipeline, telemetry, security |
+| `core/config/` | Config schema extensions, strict loading, JSON schema |
+| `core/pipeline/` | Lower-level pipeline helpers such as multi-project parallelism |
+| `core/telemetry/` | Telemetry retention and report rotation |
+| `documentation/` | `infrastructure/documentation/` — figures, API docs |
+| `doctor/` | `infrastructure/doctor/` — diagnostics, safe fixes, undo, scorecards |
+| `git_hook_smoke/` | Fast pre-push smoke coverage |
+| `orchestration/` | `infrastructure/orchestration/` — CLI, menu, PipelineRunner, logs, secure wrapper |
+| `project/` | `infrastructure/project/` — discovery, layout validation |
+| `prose/` | `infrastructure/prose/` — readability, outline, editorial quality, reports |
+| `reference/` | `infrastructure/reference/` — BibTeX parse/write, models, CLI |
+| `search/` | `infrastructure/search/` — literature client, backends, cache, CLI |
+| `llm/` | `infrastructure/llm/` — Ollama client, prompts, streaming, reviews, translations |
+| `publishing/` | `infrastructure/publishing/` — metadata, citations, Zenodo, arXiv |
+| `rendering/` | `infrastructure/rendering/` — PDF, LaTeX, web, slides |
+| `reporting/` | `infrastructure/reporting/` — pipeline reports, dashboards, executive summaries |
+| `scientific/` | `infrastructure/scientific/` — benchmarking, stability |
+| `skills/` | `infrastructure/skills/` — SKILL.md discovery, manifest |
+| `steganography/` | `infrastructure/steganography/` — watermarking, encryption |
+| `validation/` | `infrastructure/validation/` — docs scanning, links, repo scanning, integrity |
+| `validation/docs/` | Documentation linter regressions: Mermaid, links, consistency, doc pairs |
 
 Top-level files outside subfolders include `test_docs_discovery_consistency.py`, `test_documentation_index_invariants.py` (documentation invariants), `test_cogant_coverage_table_check.py` (parses the COGANT staging `check_coverage_table.py` helper for manuscript Table 9 vs `coverage report`), and `test_cogant_manuscript_crossrefs_audit.py` (loads `audit_manuscript_crossrefs.py` against the staging manuscript tree).
 

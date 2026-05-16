@@ -5,8 +5,6 @@ logging_utils and logging_formatters, avoiding duplicate definitions
 and circular import issues.
 """
 
-from __future__ import annotations
-
 import os
 import sys
 

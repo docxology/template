@@ -11,8 +11,6 @@ Every public name that was previously importable from this module is still
 available via the re-exports below.
 """
 
-from __future__ import annotations
-
 from infrastructure.reporting._csv_comparative import (  # noqa: F401
     generate_comparative_analysis_csv,
 )

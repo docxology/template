@@ -16,8 +16,6 @@ that callers that historically used::
 continue to work unchanged.
 """
 
-from __future__ import annotations
-
 from infrastructure.reporting._dashboard_codebase import (
     generate_codebase_comparison_chart,
     generate_codebase_complexity_chart,

@@ -25,8 +25,6 @@ It performs no formatting, contains no business logic, and never imports
 the collector — the collector imports it.
 """
 
-from __future__ import annotations
-
 import time
 from dataclasses import dataclass
 from pathlib import Path

@@ -10,23 +10,31 @@ Tests for core infrastructure modules including configuration, logging, exceptio
 
 ```bash
 # Run all core tests
-pytest tests/infra_tests/core/ -v
+uv run pytest tests/infra_tests/core/ -v
 
 # Run specific test module
-pytest tests/infra_tests/core/test_config_loader.py -v
+uv run pytest tests/infra_tests/core/test_config_loader.py -v
 
 # Run with coverage
-pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=term
+uv run pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=term
 ```
 
 ## Test Modules
+
+### Focused Subdirectories
+
+| Directory | Purpose |
+| --- | --- |
+| `config/` | Schema-extension registry, strict config mode, generated JSON schema |
+| `pipeline/` | Multi-project parallel helpers and worker isolation |
+| `telemetry/` | Telemetry retention and archive rotation |
 
 ### Configuration Tests (`test_config_loader.py`)
 
 Configuration loading and environment variable integration:
 
 ```bash
-pytest tests/infra_tests/core/test_config_loader.py -v
+uv run pytest tests/infra_tests/core/test_config_loader.py -v
 ```
 
 **Test Coverage:**
@@ -40,7 +48,7 @@ pytest tests/infra_tests/core/test_config_loader.py -v
 Logging system functionality:
 
 ```bash
-pytest tests/infra_tests/core/test_logging*.py -v
+uv run pytest tests/infra_tests/core/test_logging*.py -v
 ```
 
 **Test Coverage:**
@@ -54,7 +62,7 @@ pytest tests/infra_tests/core/test_logging*.py -v
 Exception hierarchy and error handling:
 
 ```bash
-pytest tests/infra_tests/core/test_exceptions.py -v
+uv run pytest tests/infra_tests/core/test_exceptions.py -v
 ```
 
 **Test Coverage:**
@@ -68,8 +76,8 @@ pytest tests/infra_tests/core/test_exceptions.py -v
 Environment setup and validation moved to integration tests:
 
 ```bash
-pytest tests/integration/test_environment_setup.py -v
-pytest tests/integration/test_environment_setup.py -m integration
+uv run pytest tests/integration/test_environment_setup.py -v
+uv run pytest tests/integration/test_environment_setup.py -m integration
 ```
 
 **Test Coverage:**
@@ -83,7 +91,7 @@ pytest tests/integration/test_environment_setup.py -m integration
 File management utilities:
 
 ```bash
-pytest tests/infra_tests/core/test_file_operations.py -v
+uv run pytest tests/infra_tests/core/test_file_operations.py -v
 ```
 
 **Test Coverage:**
@@ -100,10 +108,10 @@ Individual function and class testing:
 
 ```bash
 # Test specific function
-pytest tests/infra_tests/core/test_config_loader.py::test_load_config -v
+uv run pytest tests/infra_tests/core/test_config_loader.py::test_load_config -v
 
 # Test specific class
-pytest tests/infra_tests/core/test_exceptions.py::TestTemplateError -v
+uv run pytest tests/infra_tests/core/test_exceptions.py::TestTemplateError -v
 ```
 
 ### Integration Tests
@@ -112,7 +120,7 @@ Cross-module functionality:
 
 ```bash
 # Test configuration + logging integration
-pytest tests/infra_tests/core/test_config_loader.py::test_config_with_logging -v
+uv run pytest tests/infra_tests/core/test_config_loader.py::test_config_with_logging -v
 ```
 
 ### Edge Case Tests
@@ -121,7 +129,7 @@ Boundary conditions and error paths:
 
 ```bash
 # Test error handling
-pytest tests/infra_tests/core/ -k "error" -v
+uv run pytest tests/infra_tests/core/ -k "error" -v
 ```
 
 ## Common Test Patterns
@@ -167,26 +175,26 @@ Core infrastructure tests maintain high coverage:
 ### All Core Tests
 
 ```bash
-pytest tests/infra_tests/core/ -v
+uv run pytest tests/infra_tests/core/ -v
 ```
 
 ### Specific Categories
 
 ```bash
 # Configuration tests only
-pytest tests/infra_tests/core/test_config*.py -v
+uv run pytest tests/infra_tests/core/test_config*.py -v
 
 # Logging tests only
-pytest tests/infra_tests/core/test_logging*.py -v
+uv run pytest tests/infra_tests/core/test_logging*.py -v
 
 # Exception tests only
-pytest tests/infra_tests/core/test_exceptions.py -v
+uv run pytest tests/infra_tests/core/test_exceptions.py -v
 ```
 
 ### With Coverage
 
 ```bash
-pytest tests/infra_tests/core/ \
+uv run pytest tests/infra_tests/core/ \
     --cov=infrastructure.core \
     --cov-report=html \
     --cov-report=term-missing
@@ -197,19 +205,19 @@ pytest tests/infra_tests/core/ \
 ### Verbose Output
 
 ```bash
-pytest tests/infra_tests/core/ -vv -s
+uv run pytest tests/infra_tests/core/ -vv -s
 ```
 
 ### Last Failed
 
 ```bash
-pytest tests/infra_tests/core/ --lf
+uv run pytest tests/infra_tests/core/ --lf
 ```
 
 ### Stop on First Failure
 
 ```bash
-pytest tests/infra_tests/core/ -x
+uv run pytest tests/infra_tests/core/ -x
 ```
 
 ## Architecture

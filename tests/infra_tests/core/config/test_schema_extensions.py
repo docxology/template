@@ -21,6 +21,7 @@ import yaml
 from infrastructure.core.config.loader import load_config, validate_config_keys
 from infrastructure.core.config.schema import (
     clear_project_schema_extensions,
+    generate_manuscript_config_schema,
     get_project_schema_extensions,
     register_project_schema_extension,
 )
@@ -195,3 +196,32 @@ def test_register_rejects_non_string_project_name() -> None:
     """``register_project_schema_extension`` raises TypeError for non-str names."""
     with pytest.raises(TypeError):
         register_project_schema_extension(123, {"k": dict})  # type: ignore[arg-type]
+
+
+def test_validate_config_keys_strict_raises_for_unknown_key() -> None:
+    """Strict validation turns unknown top-level keys into a hard failure."""
+    with pytest.raises(ValueError, match="papr"):
+        validate_config_keys({"papr": {"title": "T"}}, "test.yaml", strict=True)
+
+
+def test_load_config_strict_raises_for_unknown_key(tmp_path: object) -> None:
+    """``load_config(strict=True)`` surfaces schema drift for tooling."""
+    from pathlib import Path
+
+    assert isinstance(tmp_path, Path)
+    config_path = tmp_path / "config.yaml"
+    _write_config(str(config_path), {"unknown_block": {"k": "v"}})
+
+    with pytest.raises(ValueError, match="unknown_block"):
+        load_config(config_path, strict=True)
+
+
+def test_generate_manuscript_config_schema_includes_registered_extension() -> None:
+    """JSON Schema export includes registered project keys."""
+    register_project_schema_extension("alpha", {"alpha_block": dict})
+
+    schema = generate_manuscript_config_schema("alpha")
+
+    assert schema["additionalProperties"] is False
+    assert "paper" in schema["properties"]
+    assert "alpha_block" in schema["properties"]

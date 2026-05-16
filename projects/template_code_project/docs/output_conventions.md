@@ -77,7 +77,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 ## Version-Control Policy
 
-- **`output/` is gitignored** (`**/projects/*/output/` in `.gitignore`). Committed outputs are exceptional: the control-positive exemplar (`code_project`) may retain a curated subset (PDF, figures) to demonstrate successful pipeline execution. Delete and regenerate anytime.
+- **`output/` is gitignored** (`**/projects/*/output/` in `.gitignore`). Committed outputs are exceptional: the control-positive exemplar (`template_code_project`) may retain a curated subset (PDF, figures) to demonstrate successful pipeline execution. Delete and regenerate anytime.
 
 - **Do not edit files in `output/` manually** — changes will be overwritten on the next pipeline run.
 

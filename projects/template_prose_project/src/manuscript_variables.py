@@ -1,7 +1,7 @@
 """Hydrate manuscript variables for the prose project.
 
-Mirrors the pattern in ``template_code_project`` and
-``template_search_project``: read the manuscript-report JSON, compute a
+Mirrors the pattern in ``template_code_project`` and the optional
+``template_search_project`` add-on: read the manuscript-report JSON, compute a
 small set of substitution variables, write them to JSON, and (when used
 with :func:`substitute_in_text`) replace ``{{UPPER_NAME}}`` markers in
 the manuscript markdown.
@@ -10,7 +10,6 @@ the manuscript markdown.
 from __future__ import annotations
 
 import json
-import shutil
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Mapping
@@ -83,11 +82,17 @@ def write_variables(variables: ManuscriptVariables, output_path: Path | str) -> 
 
 
 def substitute_in_text(text: str, variables: ManuscriptVariables) -> str:
-    """Replace ``{{KEY}}`` markers in *text* with the variable values."""
-    out = text
-    for marker, value in variables.as_uppercase_keys().items():
-        out = out.replace(marker, value)
-    return out
+    """Replace ``{{KEY}}`` markers in *text* with the variable values.
+
+    Delegates to :func:`infrastructure.rendering.manuscript_injection.substitute_manuscript_text`
+    so the substitution regex and unresolved-token semantics are identical
+    across all projects.
+    """
+    from infrastructure.rendering.manuscript_injection import substitute_manuscript_text
+
+    plain = {k.upper(): str(v) for k, v in asdict(variables).items()}
+    resolved, _ = substitute_manuscript_text(text, plain)
+    return resolved
 
 
 def write_resolved_manuscript_tree(
@@ -97,27 +102,16 @@ def write_resolved_manuscript_tree(
     """Write ``manuscript/*.md`` with substitutions plus aux files into ``output/manuscript``.
 
     PDF rendering prefers ``output/manuscript`` when it contains markdown
-    (see :func:`infrastructure.rendering.pipeline._resolve_manuscript_dir`),
-    matching the contract used by the code and search exemplars.
+    (see :func:`infrastructure.rendering.pipeline._resolve_manuscript_dir`).
+
+    Delegates to
+    :func:`infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`
+    so documentation-only files (``AGENTS.md``, ``README.md``, ``SYNTAX.md``)
+    are excluded from the output tree and unresolved tokens are logged.
     """
-    root = Path(project_root)
-    manuscript_dir = root / "manuscript"
-    out_dir = root / "output" / "manuscript"
-    out_dir.mkdir(parents=True, exist_ok=True)
+    from infrastructure.rendering.manuscript_injection import (
+        write_resolved_manuscript_tree as _write,
+    )
 
-    for md_file in sorted(manuscript_dir.glob("*.md")):
-        text = md_file.read_text(encoding="utf-8")
-        out_dir.joinpath(md_file.name).write_text(
-            substitute_in_text(text, variables),
-            encoding="utf-8",
-        )
-
-    for aux in ["config.yaml"]:
-        src = manuscript_dir / aux
-        if src.is_file():
-            shutil.copy2(src, out_dir / aux)
-
-    for bib in sorted(manuscript_dir.glob("*.bib")):
-        shutil.copy2(bib, out_dir / bib.name)
-
-    return out_dir
+    plain = {k.upper(): str(v) for k, v in asdict(variables).items()}
+    return _write(project_root, plain)

@@ -66,10 +66,10 @@ time uv run python scripts/02_run_analysis.py
 
 ```bash
 # Parallel test execution
-pytest tests/ -n auto
+uv run pytest tests/ -n auto
 
 # Skip slow tests
-pytest tests/ -m "not slow"
+uv run pytest tests/ -m "not slow"
 ```
 
 ### 2. PDF Rendering
@@ -217,8 +217,8 @@ uv run python -m memory_profiler scripts/execute_pipeline.py --project {name} --
 
 ```bash
 # Enable pytest cache
-pytest tests/ --cache-clear  # Clear cache
-pytest tests/  # Uses cache for faster runs
+uv run pytest tests/ --cache-clear  # Clear cache
+uv run pytest tests/  # Uses cache for faster runs
 ```
 
 ### Build Artifact Caching

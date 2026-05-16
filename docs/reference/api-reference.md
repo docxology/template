@@ -290,7 +290,7 @@ Entry point. Returns process exit code.
 *constant — defined in `infrastructure.orchestration.menu`*
 
 ```python
-MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Setup Environment', '00_setup_environment.py'), ('1', 'Run Tests', '0...
+MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Environment Setup', '00_setup_environment.py'), ('1', 'Run Tests', '0...
 ```
 
 ### `PipelineRunner`
@@ -1103,6 +1103,14 @@ discover_manuscript_files(manuscript_dir: Path) -> list[Path]
 
 Discover manuscript files with proper ordering and filtering.
 
+### `EXCLUDED_DOC_FILENAMES`
+
+*constant — defined in `infrastructure.rendering.manuscript_injection`*
+
+```python
+EXCLUDED_DOC_FILENAMES: frozenset[str] = frozenset({'AGENTS.md', 'README.md', 'SYNTAX.md'})
+```
+
 ### `RenderingConfig`
 
 *class — defined in `infrastructure.rendering.config`*
@@ -1123,6 +1131,16 @@ class RenderManager(config: RenderingConfig | None=None, manuscript_dir: Path | 
 
 Orchestrates rendering of all output formats.
 
+### `substitute_manuscript_text`
+
+*function — defined in `infrastructure.rendering.manuscript_injection`*
+
+```python
+substitute_manuscript_text(text: str, variables: dict[str, str]) -> tuple[str, list[str]]
+```
+
+Replace ``{{KEY}}`` placeholders in *text* with values from *variables*.
+
 ### `verify_figures_exist`
 
 *function — defined in `infrastructure.rendering.manuscript_discovery`*
@@ -1132,6 +1150,16 @@ verify_figures_exist(project_root: Path, manuscript_dir: Path) -> dict[str, Any]
 ```
 
 Verify expected figures exist, return status.
+
+### `write_resolved_manuscript_tree`
+
+*function — defined in `infrastructure.rendering.manuscript_injection`*
+
+```python
+write_resolved_manuscript_tree(project_root: Path | str, variables: dict[str, str]) -> Path
+```
+
+Write resolved copies of ``manuscript/*.md`` into ``output/manuscript/``.
 
 ## Package: `infrastructure.reporting`
 
@@ -1154,6 +1182,16 @@ collect_project_metrics(repo_root: Path, project_name: str, project_dir: Path | 
 ```
 
 Collect all metrics for a single project.
+
+### `Control`
+
+*class — defined in `infrastructure.reporting.interactive_dashboard`*
+
+```python
+class Control
+```
+
+One interactive control (slider / dropdown / toggle).
 
 ### `DASHBOARD_AVAILABLE`
 
@@ -1273,6 +1311,26 @@ get_error_aggregator() -> ErrorAggregator
 
 Get global error aggregator instance (lazily initialized).
 
+### `InteractiveDashboard`
+
+*class — defined in `infrastructure.reporting.interactive_dashboard`*
+
+```python
+class InteractiveDashboard(title: str, subtitle: str='', project_name: str='', repo_root: Path | None=None)
+```
+
+Build a single self-contained interactive simulation dashboard.
+
+### `Invariant`
+
+*class — defined in `infrastructure.reporting.interactive_dashboard`*
+
+```python
+class Invariant
+```
+
+A single numerical invariant to validate.
+
 ### `load_infrastructure_results`
 
 *function — defined in `infrastructure.reporting.result_loaders`*
@@ -1312,6 +1370,16 @@ class OutputOrganizer
 ```
 
 Centralized organizer for executive summary and multi-project outputs.
+
+### `Panel`
+
+*class — defined in `infrastructure.reporting.interactive_dashboard`*
+
+```python
+class Panel
+```
+
+One Plotly figure on the dashboard.
 
 ### `ProjectMetrics`
 

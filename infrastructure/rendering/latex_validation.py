@@ -1,7 +1,5 @@
 """LaTeX package validation and preamble checking."""
 
-from __future__ import annotations
-
 import os
 import subprocess
 from dataclasses import dataclass
@@ -135,7 +133,6 @@ def get_missing_packages_command(missing: list[str]) -> str:
     """
     if not missing:
         return ""
-
     return f"sudo tlmgr install {' '.join(missing)}"
 
 

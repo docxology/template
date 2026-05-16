@@ -13,8 +13,6 @@ and the top-level ExecutiveSummary container.
   passed by value in a hot timing loop.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from typing import Any
 

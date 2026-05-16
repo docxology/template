@@ -1,7 +1,5 @@
 """Combine manuscript markdown sections for combined PDF rendering."""
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 

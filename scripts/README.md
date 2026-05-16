@@ -38,15 +38,25 @@ uv run python scripts/07_generate_executive_report.py
 
 ## Key Files
 
-- `bash_utils.sh` - shared shell helpers used by `run.sh` and `secure_run.sh`
-- `execute_pipeline.py` - single-project pipeline runner
-- `execute_multi_project.py` - multi-project pipeline runner
+- `execute_pipeline.py` / `execute_multi_project.py` - single- and multi-project pipeline runners
 - `generate_active_projects_doc.py` - regenerates `docs/_generated/active_projects.md`
+- `generate_api_reference_doc.py` - regenerates the API reference (CI `validate --check`)
+- `generate_architecture_overview.py` - regenerates `docs/_generated/architecture_overview.{mmd,svg}`
+- `generate_coverage_history.py` - regenerates the coverage-history page from CI artefacts
+- `generate_stage_table_doc.py` - regenerates the canonical stage-table marker block
+- `lint_docs.py` - runs Mermaid, link, consistency, and doc-pair documentation checks
+- `verify_no_mocks.py` - checks tests for mock usage
 - `audit_filepaths.py` - repository filepath and reference audit
-- `organize_executive_outputs.py` - reorganizes executive report outputs by file type
+- `check_tracked_generated_artifacts.py` - rejects tracked generated outputs and package metadata
+- `setup_pre_commit.py` - installs and validates pre-commit hooks
 - `manage_workspace.py` - workspace management helper
 - `show_project_info.py` - project metadata helper (used by `run.sh` interactive menu)
-- `verify_no_mocks.py` - checks tests for mock usage
+- `organize_executive_outputs.py` - reorganizes executive report outputs by file type
+- `batch_cogsec_improve.py` - thin orchestrator applying mechanical source improvements
+- `bash_utils.sh` - shared shell helpers used by `run.sh` and `secure_run.sh`
+- `backup-daily.sh` / `backup-weekly.sh` / `backup-full.sh` - rsync backup tiers
+- `restore-test.sh` - non-destructive backup-restore verification
+- `health-check.sh` - pre-flight system health check (Python, uv, disk, Docker, repo)
 
 ## Output Names
 

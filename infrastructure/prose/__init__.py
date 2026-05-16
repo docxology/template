@@ -14,8 +14,6 @@ Public API:
   links — applied automatically by the higher-level helpers.
 """
 
-from __future__ import annotations
-
 from infrastructure.prose.analysis import (
     Heading,
     ProseMetrics,

@@ -51,7 +51,7 @@ mv projects_archive/old_paper projects_in_progress/old_paper
 **Advanced: running the pipeline against a different directory:**
 
 ```python
-from infrastructure.core.pipeline.pipeline import PipelineConfig, PipelineExecutor
+from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from pathlib import Path
 
 # Test an in-progress project without moving it
@@ -191,14 +191,14 @@ git pull origin main
 # 2. For each project
 for project in ../../projects/*/; do
     cd "$project"
-    
+
     # Copy updated files
     cp -r ../../template/scripts/* scripts/
     cp ../../template/pyproject.toml pyproject.toml.new
-    
+
     # Review changes
     diff pyproject.toml pyproject.toml.new
-    
+
     # Apply if compatible
     # mv pyproject.toml.new pyproject.toml
 done
@@ -543,7 +543,7 @@ done
 cat projects/<name>/output/logs/pipeline.log
 
 # 2. Run analysis stage standalone to see errors:
-python3 scripts/02_run_analysis.py --project <name>
+uv run python3 scripts/02_run_analysis.py --project <name>
 
 # 3. Run first analysis script directly with root Python:
 .venv/bin/python projects/<name>/scripts/01_*.py
@@ -600,16 +600,16 @@ TEMPLATE_DIR="../template"
 for project in */; do
     echo "Updating $project..."
     cd "$project"
-    
+
     # Backup
     git tag backup-before-update
-    
+
     # Update files
     cp -r "$TEMPLATE_DIR/scripts/" scripts/
-    
+
     # Test
     uv run python scripts/execute_pipeline.py --project "$project" --core-only || echo "Failed: $project"
-    
+
     cd ..
 done
 ```

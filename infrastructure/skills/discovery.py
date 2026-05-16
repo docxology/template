@@ -1,7 +1,5 @@
 """Discover and parse agent-oriented SKILL.md descriptors in the repository."""
 
-from __future__ import annotations
-
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -9,10 +7,15 @@ from typing import Any, Iterator, Sequence
 
 import yaml
 
+from infrastructure.validation.docs.scan_scope import (
+    DEFAULT_EXCLUDE_PARTS,
+    should_exclude_path,
+)
+
 # Roots (relative to repository root) searched recursively for **/SKILL.md
 DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     "infrastructure",
-    "projects/template_code_project/src",
+    "projects",  # Covers all projects (only permanent exemplars have src/ dirs)
     ".cursor/skills",
 )
 
@@ -64,7 +67,15 @@ def split_yaml_frontmatter(source: str) -> tuple[dict[str, Any] | None, str]:
 
 
 def load_skill_descriptor(skill_path: Path, repo_root: Path) -> SkillDescriptor:
-    """Read a SKILL.md file and return a :class:`SkillDescriptor`."""
+    """Read a SKILL.md file and return a :class:`SkillDescriptor`.
+
+    Args:
+        skill_path: Path to the SKILL.md file.
+        repo_root: Repository root directory.
+
+    Returns:
+        Parsed SkillDescriptor.
+    """
     resolved_skill = skill_path.resolve()
     resolved_root = repo_root.resolve()
     text = resolved_skill.read_text(encoding="utf-8")
@@ -93,8 +104,18 @@ def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
         if not base.is_dir():
             continue
         for p in sorted(base.rglob("SKILL.md")):
-            if p.is_file():
-                yield p
+            if not p.is_file():
+                continue
+            try:
+                rel_path: Path = p.relative_to(root_resolved)
+            except ValueError:
+                rel_path = p
+            # Skip vendored / tool-managed skill trees (.venv, site-packages,
+            # .claude, .agents, projects_archive, …) so discovery only sees
+            # first-party repo skills — same scope convention as doc scanning.
+            if should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS):
+                continue
+            yield p
 
 
 def _ensure_unique_names(skills: Sequence[SkillDescriptor]) -> None:
@@ -150,6 +171,28 @@ def build_manifest_payload(skills: Sequence[SkillDescriptor]) -> dict[str, Any]:
             for s in skills
         ],
     }
+
+
+def build_skill_index_markdown(skills: Sequence[SkillDescriptor]) -> str:
+    """Build a human-readable Markdown index for discovered skills."""
+    lines = [
+        "# Skill Index",
+        "",
+        "Generated from live `SKILL.md` discovery.",
+        "",
+        "Default discovery roots: `infrastructure/`, `projects/`, and `.cursor/skills/`.",
+        "Project-level skills are opt-in: they are discovered only when a project "
+        "ships a `SKILL.md` under those roots.",
+        "",
+        "| Skill | Path | Description |",
+        "| --- | --- | --- |",
+    ]
+    for skill in sorted(skills, key=lambda s: (s.name or "", s.path_posix)):
+        name = skill.name or "(unnamed)"
+        description = (skill.description or "").replace("\n", " ").replace("|", "\\|")
+        lines.append(f"| `{name}` | `{skill.path_posix}` | {description} |")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def write_skill_manifest(
@@ -244,6 +287,7 @@ def skill_descriptors_as_json_serializable(
 __all__ = [
     "DEFAULT_SKILL_SEARCH_ROOTS",
     "SkillDescriptor",
+    "build_skill_index_markdown",
     "build_manifest_payload",
     "discover_skills",
     "iter_skill_paths",

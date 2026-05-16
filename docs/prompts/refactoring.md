@@ -550,7 +550,7 @@ class RefactoringCheckpoint:
 
 ### Code Quality Standards ([`../rules/code_style.md`](../rules/code_style.md))
 - [ ] Type hints on all new APIs
-- [ ] Black formatting and isort compliance
+- [ ] Ruff format/check (CI scope) and mypy clean on touched paths
 - [ ] Google-style docstrings
 - [ ] Error handling with custom exceptions
 - [ ] Unified logging system

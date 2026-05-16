@@ -14,8 +14,6 @@ All functions follow the thin orchestrator pattern and maintain
 comprehensive test coverage requirements.
 """
 
-from __future__ import annotations
-
 # Import benchmarking functions
 from infrastructure.scientific.benchmarking import (
     BenchmarkResult,

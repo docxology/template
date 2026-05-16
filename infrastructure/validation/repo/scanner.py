@@ -8,8 +8,6 @@ This script performs comprehensive checks for:
 - Configuration accuracy (dependencies, configs match reality)
 """
 
-from __future__ import annotations
-
 import re
 import subprocess
 import sys

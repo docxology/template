@@ -4,8 +4,6 @@ Implementation of fragment building is in _fragment_builders.py.
 This module provides the PromptComposer public API.
 """
 
-from __future__ import annotations
-
 import re
 from typing import Any
 

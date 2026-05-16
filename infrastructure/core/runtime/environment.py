@@ -9,8 +9,6 @@ Implementation is split across focused submodules:
 - ``_packages``: Package installation, env vars, build tools
 """
 
-from __future__ import annotations
-
 # Re-export from _python_env
 from infrastructure.core.runtime._python_env import (  # noqa: F401
     build_analysis_script_cmd_and_env,
@@ -18,6 +16,7 @@ from infrastructure.core.runtime._python_env import (  # noqa: F401
     check_uv_available,
     get_python_command,
     get_subprocess_env,
+    resolve_test_python,
     validate_interpreter,
 )
 
@@ -47,6 +46,7 @@ __all__ = [
     "check_uv_available",
     "get_python_command",
     "get_subprocess_env",
+    "resolve_test_python",
     "validate_interpreter",
     # _directories
     "setup_directories",

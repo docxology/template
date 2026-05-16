@@ -6,8 +6,6 @@ and sub-stage progress tracking for long-running operations.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 import sys
 import time
 

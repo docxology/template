@@ -11,8 +11,6 @@ All functions follow the thin orchestrator pattern and maintain
 100% test coverage requirements.
 """
 
-from __future__ import annotations
-
 import json
 import os
 import pickle  # noqa: S403 — used for pickle file validation

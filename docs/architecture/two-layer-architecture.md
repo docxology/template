@@ -14,7 +14,7 @@ This research template implements a clear two-layer architecture separating gene
 | **Test Coverage** | 60% minimum for `infrastructure/` | 90% minimum for `projects/{name}/src/` |
 | **Scripts** | `scripts/` (root, generic orchestrators) | `projects/{name}/scripts/` (project orchestrators) |
 | **Tests** | `tests/infra_tests/` (root level) | `projects/{name}/tests/` (project-specific) |
-| **Imports** | `from infrastructure.module import` | `from project.src.module import` |
+| **Imports** | `from infrastructure.module import` | `from projects.{name}.src.module import` |
 | **Dependencies** | No project dependencies | Can import from infrastructure |
 | **Examples** | PDF generation, validation, figure management | Algorithms, simulations, analysis |
 
@@ -132,8 +132,8 @@ flowchart LR
 
 ```python
 # Project-specific usage from scripts
-from project.src.simulation import SimpleSimulation
-from project.src.statistics import calculate_descriptive_stats
+from projects.name.src.simulation import SimpleSimulation
+from projects.name.src.statistics import calculate_descriptive_stats
 from infrastructure.documentation import FigureManager
 
 # Science: Run simulation and analysis
@@ -163,34 +163,34 @@ graph TB
             RUN_ALL[execute_pipeline.py<br/>10-stage DAG pipeline]
             SCRIPT_LIST[scripts/*.py<br/>- 00_setup_environment.py<br/>- 01_run_tests.py<br/>- 02_run_analysis.py<br/>- 03_render_pdf.py<br/>- 04_validate_output.py<br/>- 05_copy_outputs.py]
         end
-        
+
         subgraph INFRA["infrastructure/"]
             INFRA_MODS[core/, validation/,<br/>documentation/, publishing/,<br/>llm/, rendering/,<br/>scientific/, skills/, steganography/]
         end
     end
-    
+
     subgraph L2["LAYER 2: SCIENTIFIC<br/>(Algorithms, analysis, visualization, data)"]
         subgraph SRC["projects/{name}/src/"]
             SRC_MODS[simulation, statistics,<br/>data_processing, metrics,<br/>parameters, performance,<br/>plots, reporting, validation,<br/>visualization, data_generator,<br/>example]
         end
-        
+
         subgraph PROJ_SCRIPTS["projects/{name}/scripts<br/>(thin orchestrators)"]
             PROJ_SCRIPT_LIST[example_figure.py<br/>generate_research_figures.py<br/>analysis_pipeline.py<br/>scientific_simulation.py<br/>generate_scientific_figures.py]
         end
     end
-    
+
     subgraph MANUSCRIPT["manuscript<br/>(research content)"]
         MANUSCRIPT_FILES[01_abstract.md through<br/>99_references.md]
     end
-    
+
     L1 -->|"Manages structure and<br/>validates outputs"| L2
     L1 -->|"Validates science"| L2
     L2 -->|"Input: Manuscripts, configurations<br/>Output: Figures, data, reports"| MANUSCRIPT
-    
+
     classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:3px
     classDef layer2 fill:#f1f8e9,stroke:#33691e,stroke-width:3px
     classDef manuscript fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class L1,SCRIPTS,INFRA,RUN_ALL,SCRIPT_LIST,INFRA_MODS layer1
     class L2,SRC,PROJ_SCRIPTS,SRC_MODS,PROJ_SCRIPT_LIST layer2
     class MANUSCRIPT,MANUSCRIPT_FILES manuscript
@@ -208,7 +208,7 @@ from infrastructure.documentation import ImageManager
 **✅ Layer 2 → Layer 1:** Project code can import infrastructure
 
 ```python
-from project.src.visualization import plot_results
+from projects.name.src.visualization import plot_results
 from infrastructure.documentation import FigureManager
 
 # Use infrastructure for figure management
@@ -226,16 +226,16 @@ fm.register_figure(
 **✅ Layer 2 → Layer 2:** Project modules can import from other project modules
 
 ```python
-from project.src.simulation import SimpleSimulation
-from project.src.statistics import calculate_descriptive_stats
+from projects.name.src.simulation import SimpleSimulation
+from projects.name.src.statistics import calculate_descriptive_stats
 ```
 
 **❌ Layer 1 → Layer 2:** Infrastructure should NOT import project code
 
 ```python
 # BAD: Build tools shouldn't depend on project-specific code
-from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
-from project.src.simulation import SimpleSimulation  # ❌ WRONG
+from infrastructure.validation.integrity.checks import verify_output_integrity
+from projects.name.src.simulation import SimpleSimulation  # ❌ WRONG
 
 # This breaks the abstraction and makes infrastructure project-specific
 ```
@@ -248,14 +248,15 @@ from project.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure<br/>Layer 1 · 15 subpackages/]
+    INFRA[/infrastructure<br/>Layer 1 · 16 importable packages/]
     INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
-    INFRA --> CFG[/config<br/>Shared configuration/]
     INFRA --> CORE[/core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
-    INFRA --> DOCK[/docker<br/>Container specs/]
     INFRA --> DOC[/documentation<br/>figure manager · glossary gen/]
+    INFRA --> DOCTOR[/doctor<br/>repo health checks/]
     INFRA --> LLM[/llm<br/>Ollama integration · prompts/]
+    INFRA --> ORCH[/orchestration<br/>pipeline runner · menu/]
     INFRA --> PROJ[/project<br/>multi-project discovery/]
+    INFRA --> PROSE[/prose<br/>markdown analysis/]
     INFRA --> PUB[/publishing<br/>Zenodo · arXiv · GitHub/]
     INFRA --> REND[/rendering<br/>PDF · HTML · slides/]
     INFRA --> REP[/reporting<br/>pipeline · executive reports/]
@@ -270,7 +271,7 @@ flowchart TB
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef meta fill:#0f766e,stroke:#0f172a,color:#fff
     class INFRA root
-    class CFG,CORE,DOCK,DOC,LLM,PROJ,PUB,REND,REP,SCI,SK,STEG,VAL,SEARCH,REF pkg
+    class CORE,DOC,DOCTOR,LLM,ORCH,PROJ,PROSE,PUB,REND,REP,SCI,SK,STEG,VAL,SEARCH,REF pkg
     class META meta
 ```
 
@@ -329,25 +330,25 @@ flowchart TB
 ```mermaid
 flowchart TD
     START(["User runs:<br/>uv run python scripts/execute_pipeline.py --project {name} --core-only"]) --> CLEAN["STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build"]
-    CLEAN --> STAGE00["STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools"]
-    
+    CLEAN --> STAGE00["STAGE 00: LAYER 1<br/>Environment Setup<br/>- Validate Python, dependencies<br/>- Check build tools"]
+
     STAGE00 --> PHASE1["PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infra_tests<br/>- Run projects/{name}/tests<br/>- Run tests/integration<br/>- Validate coverage requirements<br/>Report: LAYER-1-INFRASTRUCTURE Running"]
-    
+
     PHASE1 --> PHASE2["PHASE 2: LAYER 2<br/>Project Execution<br/>- Run projects/{name}/scripts/*.py<br/>- Generate figures<br/>- Process data<br/>- Create outputs<br/>Report: LAYER-2-PROJECT Running"]
-    
+
     PHASE2 --> PHASE2_5["PHASE 2.5: LAYER 1<br/>Utilities<br/>- Generate API glossary<br/>- Validate markdown<br/>- Check cross-references<br/>Report: LAYER-1-INFRASTRUCTURE Running"]
-    
+
     PHASE2_5 --> PHASE3_5["PHASE 3-5: LAYER 1<br/>Document Generation<br/>- Generate LaTeX preamble<br/>- Build individual PDFs<br/>- Build combined PDF<br/>- Create HTML version<br/>Report: LAYER-1-INFRASTRUCTURE Building"]
-    
+
     PHASE3_5 --> PHASE6["PHASE 6: LAYER 1<br/>Validation<br/>- Validate PDF quality<br/>- Check for rendering issues<br/>Report: LAYER-1-INFRASTRUCTURE Done"]
-    
+
     PHASE6 --> SUCCESS(["Success:<br/>All PDFs generated,<br/>all layers working"])
-    
+
     classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef layer2 fill:#f1f8e9,stroke:#33691e,stroke-width:2px
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
     classDef start fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class STAGE00,PHASE1,PHASE2_5,PHASE3_5,PHASE6 layer1
     class PHASE2 layer2
     class SUCCESS success
@@ -422,13 +423,13 @@ flowchart TB
    ```python
    """New algorithm implementation."""
    from typing import List, Optional
-   
+
    def analyze_data(data: List[float]) -> Optional[float]:
        """Analyze data.
-       
+
        Args:
            data: Input data
-           
+
        Returns:
            Analysis result
        """
@@ -450,7 +451,7 @@ flowchart TB
 5. **Use in scripts:**
 
    ```python
-   from project.src.new_algorithm import analyze_data
+   from projects.name.src.new_algorithm import analyze_data
    ```
 
 6. **Update documentation:**
@@ -469,7 +470,7 @@ flowchart TB
 
    ```python
    """New validation tool."""
-   
+
    def validate_output_structure(output_dir: str) -> bool:
        """Validate output directory structure."""
        pass
@@ -504,7 +505,7 @@ flowchart TB
 **Command:**
 
 ```bash
-pytest tests/infra_tests/ --cov=infrastructure
+uv run pytest tests/infra_tests/ --cov=infrastructure
 ```
 
 ### [LAYER 2] Project Tests (projects/{name}/tests/)
@@ -518,7 +519,7 @@ pytest tests/infra_tests/ --cov=infrastructure
 **Command:**
 
 ```bash
-pytest projects/{name}/tests/ --cov=projects/{name}/src
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src
 ```
 
 ### Integration Tests (tests/integration/)
@@ -531,17 +532,17 @@ pytest projects/{name}/tests/ --cov=projects/{name}/src
 **Command:**
 
 ```bash
-pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
+uv run pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
 ```
 
 ### Full Test Suite
 
 ```bash
-# All tests with coverage
-pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=70
+# All tests with coverage (70% is the global fallback; per-suite gates are 60% infra / 90% project)
+uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=70
 
 # Generate coverage report
-pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
+uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -630,7 +631,7 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 5. **Validate:**
 
    ```bash
-   pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src
+   uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src
    uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
 

@@ -1,6 +1,6 @@
 # Manuscript Semantics & Syntax (Canonical)
 
-This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The three template exemplars — [`projects/template_code_project`](../../projects/template_code_project/), [`projects/template_prose_project`](../../projects/template_prose_project/), and [`projects/template_search_project`](../../projects/template_search_project/) — all conform to the conventions below. New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
+This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The three template exemplars — `projects/template_code_project/`, `projects/template_prose_project/`, and `projects_archive/template_search_project/` — all conform to the conventions below. New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
 
 The PDF rendering pipeline uses **two cooperating tools**:
 
@@ -13,7 +13,7 @@ Because these tools cooperate, **all citations must use Pandoc bracket-cite synt
 
 ## 1. Citations
 
-### Syntax
+### Syntax — 1. Citations
 
 ```markdown
 <!-- Parenthetical (renders as "(Knuth, 1997)" or "[1]" depending on style) -->
@@ -32,7 +32,7 @@ Because these tools cooperate, **all citations must use Pandoc bracket-cite synt
 [-@knuth1997]
 ```
 
-### Rules
+### Rules — 1. Citations
 
 1. **Never use raw `\cite{key}`, `\citep{key}`, or `\citet{key}`** in Markdown — Pandoc emits the right LaTeX automatically under `--natbib`.
 2. Every citation key must resolve in `manuscript/references.bib` (or `manuscript/references_deep.bib` in `template_search_project`). Undefined keys surface as `[?]` in the PDF and as warnings in the build log.
@@ -41,7 +41,7 @@ Because these tools cooperate, **all citations must use Pandoc bracket-cite synt
 
 ## 2. Equations
 
-### Syntax
+### Syntax — 2. Equations
 
 ```markdown
 <!-- Display equation with label -->
@@ -59,7 +59,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 [@eq:gradient] gives the gradient; iteration follows [@eq:gradient_descent].
 ```
 
-### Rules
+### Rules — 2. Equations
 
 1. Either form works — `$$ … $$ {#eq:label}` is the preferred pure-Pandoc form, and `\begin{equation}\label{eq:label}…\end{equation}` is an acceptable raw-LaTeX form that pandoc-crossref still picks up.
 2. **Reference equations with `[@eq:label]`**, not `\ref{eq:label}`. The bracketed form renders as "eq. 1" and is portable; the raw form requires LaTeX-only output.
@@ -67,7 +67,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 ## 3. Figures
 
-### Syntax
+### Syntax — 3. Figures
 
 ```markdown
 ![Convergence plot showing objective value vs iteration. Reference line at $f(x^\ast)=0$.](../output/figures/convergence_plot.png){#fig:convergence width=80%}
@@ -76,7 +76,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 [@fig:convergence] shows that smaller step sizes converge slower.
 ```
 
-### Rules
+### Rules — 3. Figures
 
 1. Image paths are **relative to `manuscript/`** (Pandoc resolves them via `--resource-path`). Use `../output/figures/<name>.png` for figures the analysis pipeline writes.
 2. Labels follow the pattern `{#fig:<lowercase_underscore_name>}`. Do not use dashes (`fig:per-source` is allowed; `fig:per-source-2` invites confusion with the autonumber).
@@ -86,7 +86,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 ## 4. Tables
 
-### Syntax
+### Syntax — 4. Tables
 
 ```markdown
 | Step Size (α) | Iterations | Converged |
@@ -100,7 +100,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 [@tbl:opt_results] reports the per-step iteration counts.
 ```
 
-### Rules
+### Rules — 4. Tables
 
 1. Use Markdown pipe-tables; the caption attaches via `: <caption text> {#tbl:label}` placed **directly below the table** (no blank line).
 2. Reference with `[@tbl:label]`, not `\ref{tab:label}` or `Table 1`.
@@ -108,7 +108,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 ## 5. Sections
 
-### Syntax
+### Syntax — 5. Sections
 
 ```markdown
 # Methodology {#sec:methodology}
@@ -116,12 +116,12 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 Cross-reference: see [@sec:methodology] for the full pipeline.
 ```
 
-### Rules
+### Rules — 5. Sections
 
 1. **Every top-level section heading carries a `{#sec:<short_name>}` label.** This enables `[@sec:methodology]` cross-references that are stable under section reordering.
 2. Section files use a single H1; subsequent depth-2/3 headings use `## Heading` and `### Heading` (no manual numbering — Pandoc's `--number-sections` autonumbers).
 3. **Never use manual numbering like `## 2.1 Search`** — write `## Search` and let `--number-sections` apply the prefix.
-4. **Cross-section references use `[@sec:label]`**, not Markdown links to the file. `[§2](02_methodology.md)` works in GitHub preview but renders as a broken hyperlink in the PDF.
+4. **Cross-section references** use `[@sec:label]`, not Markdown filename links
 
 ## 6. Bibliography Section (`99_references.md`)
 
@@ -143,12 +143,14 @@ Numeric values that come from analysis outputs **must** use `{{TOKEN_NAME}}` syn
 The algorithm took {{RESULT_MAX_ITERATIONS}} iterations on the configured grid.
 ```
 
-The pipeline:
+The pipeline (thin orchestrator pattern):
 
-1. `scripts/z_generate_manuscript_variables.py` (or each project's equivalent) builds a `{TOKEN: value}` dict.
-2. Writes `output/data/manuscript_variables.json`.
-3. Copies `manuscript/*.md` to `output/manuscript/*.md` with every `{{TOKEN}}` substituted.
+1. `scripts/z_generate_manuscript_variables.py` delegates to `src/manuscript_variables.py` to compute all token values (pure computation — no I/O).
+2. The script writes `output/data/manuscript_variables.json` (the full `{TOKEN: value}` mapping).
+3. `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` writes substituted copies of `manuscript/*.md` to `output/manuscript/`. **Documentation-only files (`AGENTS.md`, `README.md`, `SYNTAX.md`) are excluded from the output tree** — their literal `{{TOKEN}}` examples remain unsubstituted in the source.
 4. PDF renderer (stage 03) reads from `output/manuscript/` if present, falling back to `manuscript/`.
+
+The live cross-reference test `test_all_manuscript_tokens_are_generated` in each project's test suite enforces that every `{{TOKEN}}` used in `manuscript/*.md` is produced by the variables module. This catches drift before it ever reaches a PDF.
 
 To verify all tokens resolved before rendering:
 
@@ -184,7 +186,7 @@ Do not duplicate packages already loaded by `infrastructure/rendering/pdf_render
 | `Figure ??` in PDF | `pandoc-crossref` not on `PATH` | `brew install pandoc-crossref` (macOS) or [build from source](https://github.com/lierdakil/pandoc-crossref) |
 | Section autonumbers like "2 2.1 Search" | Manual `## 2.1` heading prefix collides with `--number-sections` | Remove manual prefix; use plain `## Search` |
 | Broken markdown link to `02_methodology.md` in PDF | Markdown filename links don't resolve in PDF | Replace with `[@sec:methodology]` |
-| `{{TOKEN}}` literally in PDF | Substitution script not run, or token missing from `build_variables()` | Run `z_generate_manuscript_variables.py`; check the dict key |
+| `{{TOKEN}}` literally in PDF | Substitution script not run, or token not defined in `src/manuscript_variables.py::generate_variables()` (code project) / `compute_variables()` (prose/search) | Run `z_generate_manuscript_variables.py`; add missing key to `src/manuscript_variables.py` |
 
 ## 10. Per-project checklist for new authors
 
@@ -203,5 +205,5 @@ Before committing a manuscript change:
 
 - [`projects/template_code_project/manuscript/SYNTAX.md`](../../projects/template_code_project/manuscript/SYNTAX.md) — code-exemplar-specific token table and figure registry.
 - [`projects/template_prose_project/manuscript/SYNTAX.md`](../../projects/template_prose_project/manuscript/SYNTAX.md) — prose-exemplar-specific syntax notes.
-- [`projects/template_search_project/manuscript/SYNTAX.md`](../../projects/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
+- [`projects_archive/template_search_project/manuscript/SYNTAX.md`](../../projects_archive/template_search_project/manuscript/SYNTAX.md) — search-exemplar-specific BibTeX-automation notes.
 - [`infrastructure/rendering/_pdf_combined_renderer.py`](../../infrastructure/rendering/_pdf_combined_renderer.py) — Pandoc invocation source.

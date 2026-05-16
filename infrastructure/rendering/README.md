@@ -93,10 +93,10 @@ sudo tlmgr install multirow cleveref doi newunicodechar
 
 ```bash
 # Validate packages before rendering
-python3 -m infrastructure.rendering.latex_package_validator
+uv run python3 -m infrastructure.rendering.latex_package_validator
 
 # Or run as part of pipeline (automatic)
-python3 scripts/03_render_pdf.py
+uv run python3 scripts/03_render_pdf.py
 ```
 
 **Common issues**:
@@ -205,20 +205,20 @@ Reference in text: Figure \ref{fig:your_figure}
 ### Render to All Formats
 
 ```bash
-python3 -m infrastructure.rendering.cli all manuscript.tex
+uv run python3 -m infrastructure.rendering.cli all manuscript.tex
 ```
 
 ### Render PDF Only
 
 ```bash
-python3 -m infrastructure.rendering.cli pdf manuscript.tex
+uv run python3 -m infrastructure.rendering.cli pdf manuscript.tex
 ```
 
 ### Generate Slides
 
 ```bash
-python3 -m infrastructure.rendering.cli slides presentation.md --format beamer
-python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
+uv run python3 -m infrastructure.rendering.cli slides presentation.md --format beamer
+uv run python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
 ```
 
 ## Supported Formats
@@ -312,6 +312,7 @@ graph TD
 | **latex_utils.py** | LaTeX compilation utilities | `compile_latex()` - Multi-pass compilation | LaTeX distribution |
 | **latex_package_validator.py** | Package dependency checking | `validate_packages()` - Pre-flight validation | kpsewhich |
 | **manuscript_discovery.py** | Content discovery | `discover_manuscript_files()` - File enumeration | pathlib |
+| **manuscript_injection.py** | Variable substitution | `substitute_manuscript_text()`, `write_resolved_manuscript_tree()` - `{{TOKEN}}` hydration shared by all projects | pathlib, re |
 | **config.py** | Configuration management | `RenderingConfig` - Settings management | environment variables |
 | **cli.py** | Command-line interface | CLI commands for all renderers | All renderer modules |
 
@@ -476,12 +477,12 @@ manager = RenderManager(config)
 
 ```bash
 # Render to all formats
-python3 -m infrastructure.rendering.cli all manuscript.tex
+uv run python3 -m infrastructure.rendering.cli all manuscript.tex
 
 # Render specific formats
-python3 -m infrastructure.rendering.cli pdf manuscript.tex
-python3 -m infrastructure.rendering.cli slides presentation.md --format beamer
-python3 -m infrastructure.rendering.cli web manuscript.md
+uv run python3 -m infrastructure.rendering.cli pdf manuscript.tex
+uv run python3 -m infrastructure.rendering.cli slides presentation.md --format beamer
+uv run python3 -m infrastructure.rendering.cli web manuscript.md
 
 # With custom output directory
 OUTPUT_DIR=/custom/path python3 -m infrastructure.rendering.cli pdf manuscript.tex
@@ -491,7 +492,7 @@ OUTPUT_DIR=/custom/path python3 -m infrastructure.rendering.cli pdf manuscript.t
 
 ```bash
 # Validate LaTeX packages before rendering
-python3 -m infrastructure.rendering.latex_package_validator
+uv run python3 -m infrastructure.rendering.latex_package_validator
 
 # This will show:
 # - Which packages are available
@@ -514,7 +515,7 @@ The rendering module is deeply integrated with the build pipeline:
 # 5. Handles figure path resolution
 # 6. Performs cross-reference resolution
 
-python3 scripts/03_render_pdf.py --project {project_name}
+uv run python3 scripts/03_render_pdf.py --project {project_name}
 ```
 
 ### Pipeline Data Flow
@@ -623,23 +624,23 @@ print(f"Peak memory: {monitor.resource_usage.peak_memory_mb:.1f} MB")
 
 ```bash
 # Run all rendering tests
-pytest tests/infra_tests/rendering/ -v
+uv run pytest tests/infra_tests/rendering/ -v
 
 # Test specific components
-pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
-pytest tests/infra_tests/rendering/test_latex_package_validator.py -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
+uv run pytest tests/infra_tests/rendering/test_latex_package_validator.py -v
 
 # Test with different LaTeX configurations
-pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
 
 # Integration tests
-pytest tests/integration/test_rendering_pipeline.py -v
+uv run pytest tests/integration/test_rendering_pipeline.py -v
 
 # Performance benchmarking
-pytest tests/infra_tests/rendering/test_performance.py -v
+uv run pytest tests/infra_tests/rendering/test_performance.py -v
 
 # Coverage analysis
-pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-report=html
+uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-report=html
 ```
 
 ## Troubleshooting Guide
@@ -652,7 +653,7 @@ pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-report=
 
 ```bash
 # Check which packages are available
-python3 -m infrastructure.rendering.latex_package_validator
+uv run python3 -m infrastructure.rendering.latex_package_validator
 
 # Install missing packages
 sudo tlmgr install multirow cleveref doi newunicodechar
@@ -678,7 +679,7 @@ kpsewhich multirow.sty
 
 ```bash
 # Check figure discovery
-python3 -c "
+uv run python3 -c "
 from infrastructure.rendering.manuscript_discovery import verify_figures_exist
 report = verify_figures_exist(Path('.'), Path('projects/{project_name}/manuscript'))
 print('Figure verification:', report)
@@ -852,7 +853,7 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 2. **Generate missing figures**:
 
    ```bash
-   python3 scripts/02_run_analysis.py
+   uv run python3 scripts/02_run_analysis.py
    ```
 
 3. **Verify figures are in correct location**:
@@ -907,14 +908,14 @@ For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 
 ```bash
 # Run all rendering tests
-pytest tests/infra_tests/rendering/ -v
+uv run pytest tests/infra_tests/rendering/ -v
 
 # Run combined PDF tests specifically
-pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
 
 # Run bibliography and figure fix tests
-pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_fixes.py -v
 
 # Run with coverage
-pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering
+uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering
 ```

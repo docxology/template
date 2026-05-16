@@ -6,8 +6,6 @@ Each QR builder targets <=100 characters for reliable phone scanning.
 Part of the infrastructure steganography layer (Layer 1).
 """
 
-from __future__ import annotations
-
 from datetime import datetime, timezone
 
 from infrastructure.core.logging.utils import get_logger

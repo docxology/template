@@ -19,9 +19,12 @@ flowchart TB
     REP --> ORG[output_organizer.py]
     REP --> MULTI[multi_project_reporter.py]
     REP --> MAN[manuscript_overview.py]
-    REP --> COV[coverage_reporter.py · coverage_parser.py]
-    REP --> HTML[html_templates.py]
-    REP --> SUITE[suite_runner.py]
+    REP --> COV[coverage_reporter.py · coverage_parser.py ·<br/>coverage_analysis.py · coverage_history.py ·<br/>coverage_json_parser.py]
+    REP --> HTML[html_templates.py · markdown_formatter.py]
+    REP --> SUITE[suite_runner.py · result_loaders.py ·<br/>pipeline_test_runner.py · pytest_output_parser.py]
+    REP --> LOG[log_analysis.py]
+    REP --> STAT[output_statistics.py · page_grid.py · page_rendering.py]
+    REP --> DASH[interactive_dashboard.py]
     REP --> PRIV[_dashboard_*.py · _executive_*.py · _csv_*.py]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -29,7 +32,7 @@ flowchart TB
     classDef priv fill:#7c2d12,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class REP d
-    class ERR,EXEC,GEN,PIPE,ORG,MULTI,MAN,COV,HTML,SUITE code
+    class ERR,EXEC,GEN,PIPE,ORG,MULTI,MAN,COV,HTML,SUITE,LOG,STAT,DASH code
     class PRIV priv
     class META doc
 ```
@@ -160,7 +163,7 @@ uv run python scripts/organize_executive_outputs.py --executive-only
 
 ## Core Components
 
-### Pipeline Reporter (`pipeline_reporter.py`)
+### Pipeline Reporter (`pipeline_report_model.py`)
 
 Generates consolidated reports from pipeline execution data.
 
@@ -1011,7 +1014,7 @@ Executive reporting can also be run manually:
 
 ```bash
 # From any directory
-python3 scripts/07_generate_executive_report.py
+uv run python3 scripts/07_generate_executive_report.py
 
 # Or programmatically
 from infrastructure.reporting import generate_multi_project_report
@@ -1161,7 +1164,7 @@ Markdown report at `docs/_generated/coverage_history.md`.
 ### Public API
 
 ```python
-from infrastructure.reporting.coverage_history import (
+from infrastructure.reporting.coverage_history import (  # noqa: docs-lint
     CoveragePoint,            # frozen dataclass: date, suite, percentage, lines_covered, lines_total
     parse_coverage_xml,       # Path → CoveragePoint (defusedxml-based)
     collect_history_from_dir, # Path → list[CoveragePoint], recursive
@@ -1197,13 +1200,13 @@ The reporting module has test coverage:
 
 ```bash
 # Run reporting module tests
-pytest tests/infra_tests/reporting/ -v
+uv run pytest tests/infra_tests/reporting/ -v
 
 # Coverage history specifically
-pytest tests/infra_tests/reporting/test_coverage_history.py -q --timeout=60
+uv run pytest tests/infra_tests/reporting/test_coverage_history.py -q --timeout=60
 
 # With coverage
-pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting
+uv run pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting
 ```
 
 ## See Also

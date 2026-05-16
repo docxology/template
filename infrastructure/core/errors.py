@@ -13,8 +13,6 @@ Error messages follow a standardized format: ❌ [CODE] message — suggestion.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import Any
 
@@ -93,7 +91,6 @@ SCRIPT_EXECUTION_FAILED = InfraError(
     suggestion="Verify script exists and has correct permissions",
 )
 
-
 # =============================================================================
 # CLI ERRORS
 # =============================================================================
@@ -115,7 +112,6 @@ CLI_UNKNOWN_EXECUTION_TYPE = InfraError(
     message="Unknown execution type: {execution_type}",
     suggestion="Use one of: full, core, full-no-infra, core-no-infra",
 )
-
 
 # =============================================================================
 # PROJECT ERRORS
@@ -163,7 +159,6 @@ MULTI_PROJECT_FAILED = InfraError(
     suggestion="Check logs for details",
 )
 
-
 # =============================================================================
 # INVENTORY / SUMMARY ERRORS
 # =============================================================================
@@ -186,7 +181,6 @@ DISCOVER_FAILED = InfraError(
     suggestion="Check repository root path",
 )
 
-
 # =============================================================================
 # CONFIG ERRORS
 # =============================================================================
@@ -202,7 +196,6 @@ CONFIG_YAML_MISSING = InfraError(
     message="PyYAML not installed",
     suggestion="Install with: pip install pyyaml",
 )
-
 
 # =============================================================================
 # VALIDATION ERRORS

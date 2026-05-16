@@ -4,8 +4,6 @@ Provides real-time monitoring of streaming LLM operations to detect stalls,
 provide progress updates, and warn about potential hangs.
 """
 
-from __future__ import annotations
-
 import logging
 import threading
 import time

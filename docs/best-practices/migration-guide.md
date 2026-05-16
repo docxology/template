@@ -139,7 +139,7 @@ Migration involves adapting your existing project structure to match the templat
    ```bash
    # Convert LaTeX to Markdown
    pandoc document.tex -o projects/my_project/manuscript/01_introduction.md
-   
+
    # Or convert Word
    pandoc document.docx -o projects/my_project/manuscript/01_introduction.md
    ```
@@ -548,7 +548,7 @@ diff -r old_project/output/ new_project/output/
    ```bash
    # Restore files
    tar -xzf project_backup.tar.gz
-   
+
    # Or use git
    git checkout backup-before-migration
    ```

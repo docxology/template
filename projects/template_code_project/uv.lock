@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [[package]]
-name = "code-project"
+name = "template-code-project"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

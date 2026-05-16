@@ -23,7 +23,7 @@ cloud server — no display, no browser, no GUI.
 ```bash
 sudo apt-get update && sudo apt-get install -y \
     curl git \
-    python3 python3-pip \
+    uv run python3 python3-pip \
     pandoc \
     texlive-xetex \
     texlive-latex-extra \
@@ -42,7 +42,7 @@ brew install --cask mactex-no-gui   # smaller LaTeX install without GUI apps
 ### Python version check
 
 ```bash
-python3 --version   # requires 3.10+
+uv run python3 --version   # requires 3.10+
 ```
 
 ---

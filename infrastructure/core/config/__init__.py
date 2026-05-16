@@ -3,11 +3,10 @@
 Re-exports primary symbols for ``from infrastructure.core.config import …`` usage.
 """
 
-from __future__ import annotations
-
 from infrastructure.core.config.loader import (
     YAML_AVAILABLE,
     find_config_file,
+    generate_manuscript_config_schema,
     get_config_as_dict,
     load_config,
 )
@@ -25,6 +24,7 @@ __all__ = [
     "YAML_AVAILABLE",
     "clear_project_schema_extensions",
     "find_config_file",
+    "generate_manuscript_config_schema",
     "get_config_as_dict",
     "get_project_schema_extensions",
     "get_review_types",

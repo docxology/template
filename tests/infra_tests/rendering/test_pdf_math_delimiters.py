@@ -88,8 +88,16 @@ class TestFixMathDelimiters:
 
     def test_preserves_non_math_content(self):
         """Text between math blocks should be preserved."""
-        content = "Before\n{[}x{]}\nBetween\n{[}y{]}\nAfter"
+        content = "Before\n{[}x = 1{]}\nBetween\n{[}y = 2{]}\nAfter"
         result = fix_math_delimiters(content)
         assert "Before" in result
         assert "Between" in result
         assert "After" in result
+
+    def test_preserves_literal_square_brackets(self):
+        """Literal bracketed prose must not become display math."""
+        content = r"Normal {[}HCO\(_3^-\){]}/{[}CO\(_2\){]} ratio and {[}inside{]} table text."
+        result = fix_math_delimiters(content)
+        assert result == content
+        assert r"\[HCO" not in result
+        assert r"\[inside\]" not in result

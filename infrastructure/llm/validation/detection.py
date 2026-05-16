@@ -4,8 +4,6 @@ Contains the core detection logic (detect_repetition, calculate_unique_content_r
 and section/paragraph deduplication (deduplicate_sections).
 """
 
-from __future__ import annotations
-
 import re
 from typing import NamedTuple
 

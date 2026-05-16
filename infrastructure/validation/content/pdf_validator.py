@@ -10,11 +10,11 @@ This module provides functions to:
 All functions are pure business logic with no I/O side effects.
 """
 
-from __future__ import annotations
-
 import contextlib
 import io
 import re
+import shutil
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -57,6 +57,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
     extraction_methods = [
         ("pypdf", _extract_with_pypdf),
         ("pdfplumber", _extract_with_pdfplumber),
+        ("pdftotext", _extract_with_pdftotext),
     ]
 
     last_error = None
@@ -96,7 +97,7 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
         error_details.append(f"Could not read PDF header: {diag_error}")
 
     error_details.append(f"File size: {file_size} bytes")
-    error_details.append("Tried extraction methods: pypdf, pdfplumber")
+    error_details.append("Tried extraction methods: pypdf, pdfplumber, pdftotext")
 
     raise PDFValidationError(
         f"Failed to extract text from PDF after trying all available methods. "
@@ -125,7 +126,7 @@ def _extract_with_pypdf(pdf_path: Path) -> str:
 
 def _extract_with_pdfplumber(pdf_path: Path) -> str:
     """Extract text using pdfplumber library."""
-    import pdfplumber
+    import pdfplumber  # type: ignore[import-not-found]
 
     text_parts = []
     with pdfplumber.open(pdf_path) as pdf:
@@ -135,6 +136,25 @@ def _extract_with_pdfplumber(pdf_path: Path) -> str:
                 text_parts.append(page_text)
 
     return "\n\n".join(text_parts)
+
+
+def _extract_with_pdftotext(pdf_path: Path) -> str:
+    """Extract text using the Poppler ``pdftotext`` CLI when available."""
+    if shutil.which("pdftotext") is None:
+        raise ImportError("pdftotext CLI is not available")
+
+    result = subprocess.run(
+        ["pdftotext", "-layout", str(pdf_path), "-"],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    if result.returncode != 0:
+        stderr = result.stderr.strip()
+        raise PDFValidationError(f"pdftotext failed with exit code {result.returncode}: {stderr}")
+
+    return result.stdout
 
 
 def scan_for_issues(text: str) -> dict[str, int]:

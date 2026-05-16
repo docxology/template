@@ -24,12 +24,12 @@ Excited to share this **[research project template](https://github.com/docxology
 
 I've created a **[GitHub template](https://github.com/docxology/template)** for research projects that I think could be really useful for the community. It includes:
 
-✅ **Test-driven development** with coverage requirements  
-✅ **Automated PDF generation** from markdown with LaTeX  
-✅ **Thin orchestrator pattern** for maintainable code  
-✅ **Professional documentation** structure  
-✅ **Automated figure generation** from Python scripts  
-✅ **Cross-referencing system** for complex documents  
+✅ **Test-driven development** with coverage requirements
+✅ **Automated PDF generation** from markdown with LaTeX
+✅ **Thin orchestrator pattern** for maintainable code
+✅ **Professional documentation** structure
+✅ **Automated figure generation** from Python scripts
+✅ **Cross-referencing system** for complex documents
 
 The template is designed for academic papers, scientific documentation, thesis projects, and any research requiring professional output. It automatically validates code quality, generates figures, and creates publication-ready PDFs. Check out the **[examples showcase](../usage/examples-showcase.md)** for real-world usage patterns.
 
@@ -44,11 +44,11 @@ Would love feedback from researchers and developers who might use this!
 Here's a **[research project template](https://github.com/docxology/template)** that handles exactly what you're looking for:
 
 **🚀 Key Features:**
-✅ Test-driven development with coverage  
-✅ Automated PDF generation from markdown  
-✅ Professional LaTeX output with cross-referencing  
-✅ Automated figure generation from Python scripts  
-✅ Thin orchestrator pattern for maintainable code  
+✅ Test-driven development with coverage
+✅ Automated PDF generation from markdown
+✅ Professional LaTeX output with cross-referencing
+✅ Automated figure generation from Python scripts
+✅ Thin orchestrator pattern for maintainable code
 
 **⚡ Quick Start:**
 
@@ -65,11 +65,11 @@ The template automatically handles LaTeX compilation, figure integration, and ge
 
 This **[template](https://github.com/docxology/template)** solves exactly the problem you're describing! It provides:
 
-🔧 **1. Standardized Structure**: Clear separation between source code, tests, scripts, and documentation  
-🧪 **2. Automated Quality**: test coverage and automated validation  
-📚 **3. Professional Output**: Publication-ready PDFs with proper LaTeX formatting  
-🖼️ **4. Figure Integration**: Automated generation and integration of figures from Python scripts  
-🔗 **5. Cross-Referencing**: Built-in system for equations, figures, and sections  
+🔧 **1. Standardized Structure**: Clear separation between source code, tests, scripts, and documentation
+🧪 **2. Automated Quality**: test coverage and automated validation
+📚 **3. Professional Output**: Publication-ready PDFs with proper LaTeX formatting
+🖼️ **4. Figure Integration**: Automated generation and integration of figures from Python scripts
+🔗 **5. Cross-Referencing**: Built-in system for equations, figures, and sections
 
 The **[thin orchestrator pattern](../architecture/thin-orchestrator-summary.md)** ensures your scripts use tested methods from source modules, making the codebase maintainable and reliable.
 
@@ -78,18 +78,18 @@ The **[thin orchestrator pattern](../architecture/thin-orchestrator-summary.md)*
 I've developed a **[research project template](https://github.com/docxology/template)** that addresses many of the workflow issues we discuss here. It implements:
 
 **🔬 Core Principles:**
-✅ Test-driven development with enforced coverage requirements  
-✅ Automated documentation generation from source code  
-✅ Professional PDF output with LaTeX compilation  
-✅ Integrated figure and data generation  
-✅ Cross-referencing and glossary systems  
+✅ Test-driven development with enforced coverage requirements
+✅ Automated documentation generation from source code
+✅ Professional PDF output with LaTeX compilation
+✅ Integrated figure and data generation
+✅ Cross-referencing and glossary systems
 
 **🎯 Benefits for Researchers:**
-✅ Consistent project structure across teams  
-✅ Automated quality assurance  
-✅ Publication-ready outputs  
-✅ Reproducible research workflows  
-✅ Integration with existing Python ecosystems  
+✅ Consistent project structure across teams
+✅ Automated quality assurance
+✅ Publication-ready outputs
+✅ Reproducible research workflows
+✅ Integration with existing Python ecosystems
 
 ---
 
@@ -143,26 +143,26 @@ Thanks!
 
 ### 📢 Headline Options
 
-🚀 "Transform Your Research Workflow with Automated Quality Assurance"  
-⚡ "Professional Research Outputs with Zero Configuration"  
-🧪 "Test-Driven Development Meets Academic Publishing"  
-📚 "Automated PDF Generation for Research Projects"  
-✅ "Research Template with Test Coverage"  
+🚀 "Transform Your Research Workflow with Automated Quality Assurance"
+⚡ "Professional Research Outputs with Zero Configuration"
+🧪 "Test-Driven Development Meets Academic Publishing"
+📚 "Automated PDF Generation for Research Projects"
+✅ "Research Template with Test Coverage"
 
 ### 💎 Value Propositions
 
-⏰ **Save Time**: Automated PDF generation eliminates manual formatting  
-🔒 **Ensure Quality**: test coverage enforced automatically  
-📖 **Professional Output**: Publication-ready LaTeX and PDF generation  
-🔄 **Maintain Consistency**: Standardized structure across all projects  
-🤝 **Enable Collaboration**: Clear workflows for team research projects  
+⏰ **Save Time**: Automated PDF generation eliminates manual formatting
+🔒 **Ensure Quality**: test coverage enforced automatically
+📖 **Professional Output**: Publication-ready LaTeX and PDF generation
+🔄 **Maintain Consistency**: Standardized structure across all projects
+🤝 **Enable Collaboration**: Clear workflows for team research projects
 
 ### 🎬 Call-to-Action Options
 
-🚀 "Click 'Use this template' and start building in minutes"  
-⚡ "Transform your research workflow today"  
-🤝 "Join the community of researchers using this template"  
-📚 "Get started with professional research outputs"  
+🚀 "Click 'Use this template' and start building in minutes"
+⚡ "Transform your research workflow today"
+🤝 "Join the community of researchers using this template"
+📚 "Get started with professional research outputs"
 
 ---
 

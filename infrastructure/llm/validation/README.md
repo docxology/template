@@ -1,301 +1,254 @@
 # LLM Validation - Quick Reference
 
-Input validation and quality checks for LLM interactions.
+Output validation and quality checks for LLM-generated responses.
 
 ## Overview
 
-The validation module provides validation for LLM inputs, outputs, and interactions. It ensures prompt quality, response validation, and security checks.
+The validation module validates LLM *output* — not prompts. It checks response length,
+JSON structure, formatting quality, repetition, topic drift, and section completeness.
+All public symbols are importable directly from `infrastructure.llm.validation`.
 
 ## Quick Start
 
 ```python
 from infrastructure.llm.validation import (
-    validate_prompt,
-    validate_response,
-    check_prompt_quality
+    validate_complete,
+    validate_no_repetition,
+    is_off_topic,
 )
+from infrastructure.llm.core.config import ResponseMode
 
-# Validate prompt before sending
-is_valid, errors = validate_prompt(prompt_text)
+# Validate a standard LLM response
+ok = validate_complete(response_text, mode=ResponseMode.STANDARD)
 
-# Validate LLM response
-is_valid, issues = validate_response(response_text)
+# Check for excessive repetition
+is_valid, details = validate_no_repetition(response_text)
 
-# Check prompt quality
-quality_score = check_prompt_quality(prompt_text)
+# Detect off-topic / hallucinated output
+if is_off_topic(response_text):
+    print("Response appears off-topic")
 ```
 
 ## Key Functions
 
-### Prompt Validation
+### Core Validation (`core.py`)
 
 ```python
-from infrastructure.llm.validation.core import validate_prompt
-
-# Basic validation
-is_valid, errors = validate_prompt(
-    prompt="Your prompt text",
-    max_length=4000,
-    require_context=True
+from infrastructure.llm.validation.core import (
+    validate_json,
+    validate_length,
+    validate_short_response,
+    validate_long_response,
+    validate_structure,
+    validate_citations,
+    validate_formatting,
+    validate_complete,
+    validate_no_repetition,
+    clean_repetitive_output,
+    estimate_tokens,
 )
+from infrastructure.llm.core.config import ResponseMode
 
-if not is_valid:
-    for error in errors:
-        print(f"Validation error: {error}")
-```
+# Parse and validate JSON output (raises ValidationError on bad JSON)
+data = validate_json(response_text)
 
-### Response Validation
+# Check length bounds (returns bool)
+ok = validate_length(response_text, min_len=50, max_len=5000)
 
-```python
-from infrastructure.llm.validation.core import validate_response
+# Estimate token count (heuristic: 1 token ≈ 4 chars)
+tokens = estimate_tokens(response_text)
 
-# Validate response quality
-is_valid, issues = validate_response(
-    response=llm_response,
-    min_length=100,
-    require_structure=True
-)
-
-if not is_valid:
-    print(f"Response issues: {issues}")
-```
-
-### Format Validation
-
-```python
-from infrastructure.llm.validation.format import validate_format
-
-# Check JSON format
-is_valid, parsed = validate_format(
-    text=response_text,
-    format_type="json"
-)
-
-# Check structured format
-is_valid, structure = validate_format(
-    text=response_text,
-    format_type="structured",
-    required_keys=["summary", "analysis"]
+# Mode-specific composite check
+# Returns True / False for SHORT and LONG modes.
+# Returns True or raises ValidationError for STRUCTURED, RAW, STANDARD.
+ok = validate_complete(
+    response_text,
+    mode=ResponseMode.STRUCTURED,
+    schema={"required": ["summary"], "properties": {"summary": {"type": "string"}}}
 )
 ```
 
-### Repetition Detection
+### Repetition Detection (`repetition.py`)
 
 ```python
-from infrastructure.llm.validation.repetition import check_repetition
-
-# Detect repetitive content
-has_repetition, segments = check_repetition(
-    text=response_text,
-    threshold=0.8
+from infrastructure.llm.validation.repetition import (
+    RepetitionResult,
+    detect_repetition,
+    calculate_unique_content_ratio,
+    deduplicate_sections,
 )
 
-if has_repetition:
-    print(f"Repetitive segments: {segments}")
+# Detect repetitive content — returns a NamedTuple
+result: RepetitionResult = detect_repetition(response_text)
+found, examples, unique_ratio = result  # positional unpacking also works
+
+# Unique content ratio (0.0–1.0; lower means more repetition)
+ratio = calculate_unique_content_ratio(response_text)
+
+# Remove repeated sections in-place
+cleaned = deduplicate_sections(response_text, mode="conservative")
+# mode options: "conservative" (default), "balanced", "aggressive"
 ```
 
-### Structure Validation
+### Format Compliance (`format.py`)
 
 ```python
-from infrastructure.llm.validation.structure import validate_structure
-
-# Validate response structure
-is_valid, structure = validate_structure(
-    text=response_text,
-    required_sections=["introduction", "analysis", "conclusion"]
+from infrastructure.llm.validation.format import (
+    is_off_topic,
+    has_on_topic_signals,
+    detect_conversational_phrases,
+    check_format_compliance,
+    OFF_TOPIC_PATTERNS_START,
+    OFF_TOPIC_PATTERNS_ANYWHERE,
+    CONVERSATIONAL_PATTERNS,
+    ON_TOPIC_SIGNALS,
 )
 
-if is_valid:
-    print(f"Structure: {structure}")
+# Two-tier off-topic detection (checks start + anywhere patterns,
+# overridden if ≥2 on-topic signals are present)
+if is_off_topic(response_text):
+    print("LLM went off-topic or hallucinated")
+
+# Check for on-topic signals (requires ≥2 matches to return True)
+on_topic = has_on_topic_signals(response_text)
+
+# List conversational AI phrases found in the response
+phrases = detect_conversational_phrases(response_text)
+
+# Full format compliance check (returns is_compliant, issues, details)
+is_compliant, issues, details = check_format_compliance(response_text)
+```
+
+### Structure Validation (`structure.py`)
+
+```python
+from infrastructure.llm.validation.structure import (
+    validate_section_completeness,
+    extract_structured_sections,
+    validate_response_structure,
+)
+
+# Check that required markdown headers are present
+is_complete, missing, details = validate_section_completeness(
+    response_text,
+    required_headers=["## Overview", "## Results"],
+    flexible=True,  # accepts semantic equivalents
+)
+
+# Extract markdown sections into a dict
+sections: dict[str, str] = extract_structured_sections(response_text)
+
+# Comprehensive check: headers + word count
+is_valid, issues, details = validate_response_structure(
+    response_text,
+    required_headers=["## Overview", "## Results"],
+    min_word_count=200,
+    max_word_count=5000,
+)
 ```
 
 ## Common Usage Patterns
 
-### Pre-Query Validation
-
-```python
-from infrastructure.llm.validation import validate_prompt
-
-def safe_query(prompt_text):
-    # Validate before sending
-    is_valid, errors = validate_prompt(
-        prompt_text,
-        max_length=4000,
-        check_security=True
-    )
-    
-    if not is_valid:
-        raise ValueError(f"Invalid prompt: {errors}")
-    
-    # Proceed with query
-    return llm_client.query(prompt_text)
-```
-
 ### Post-Response Validation
 
 ```python
-from infrastructure.llm.validation import validate_response
+from infrastructure.llm.validation import (
+    validate_complete,
+    validate_no_repetition,
+    is_off_topic,
+    clean_repetitive_output,
+)
+from infrastructure.llm.core.config import ResponseMode
+from infrastructure.core.exceptions import ValidationError
 
-def get_validated_response(prompt):
+def get_validated_response(llm_client, prompt):
     response = llm_client.query(prompt)
-    
-    # Validate response
-    is_valid, issues = validate_response(
-        response,
-        min_length=50,
-        check_format=True
-    )
-    
+
+    # Reject off-topic output immediately
+    if is_off_topic(response):
+        raise ValueError("Response is off-topic")
+
+    # Check for excessive repetition; clean if needed
+    is_valid, details = validate_no_repetition(response)
     if not is_valid:
-        # Retry or handle issues
-        return handle_invalid_response(issues)
-    
+        response = clean_repetitive_output(response)
+
+    # Structural validation (raises ValidationError on empty / bad schema)
+    try:
+        validate_complete(response, mode=ResponseMode.STANDARD)
+    except ValidationError as e:
+        raise ValueError(f"Invalid response: {e}") from e
+
     return response
 ```
 
-### Quality Scoring
+### JSON Response Validation
 
 ```python
-from infrastructure.llm.validation import check_prompt_quality
+from infrastructure.llm.validation import validate_json, validate_structure
+from infrastructure.core.exceptions import ValidationError
 
-# Score prompt quality
-score = check_prompt_quality(
-    prompt_text,
-    factors=["clarity", "specificity", "completeness"]
-)
+schema = {
+    "required": ["title", "summary"],
+    "properties": {
+        "title": {"type": "string"},
+        "summary": {"type": "string"},
+    },
+}
 
-if score < 0.7:
-    print("Prompt quality below threshold")
-    # Improve prompt...
-```
-
-## Validation Rules
-
-### Prompt Rules
-
-- **Length**: Maximum token count (default: 4000)
-- **Clarity**: Clear instructions and context
-- **Security**: No injection attempts or malicious content
-- **Completeness**: Required context provided
-
-### Response Rules
-
-- **Length**: Minimum/maximum length requirements
-- **Format**: Adherence to requested format
-- **Structure**: Required sections present
-- **Quality**: No excessive repetition or errors
-
-## Configuration
-
-### Validation Settings
-
-```python
-from infrastructure.llm.validation.core import ValidationConfig
-
-config = ValidationConfig(
-    max_prompt_length=4000,
-    min_response_length=50,
-    require_structure=True,
-    check_security=True
-)
-
-# Use config
-is_valid = validate_prompt(prompt, config=config)
-```
-
-### Custom Rules
-
-```python
-from infrastructure.llm.validation.core import add_validation_rule
-
-# Add custom validation rule
-def custom_rule(text):
-    return "required_keyword" in text
-
-add_validation_rule("custom_check", custom_rule)
-
-# Use in validation
-is_valid = validate_prompt(prompt, custom_rules=["custom_check"])
+try:
+    data = validate_json(response_text)       # parse JSON (strips markdown fences)
+    validate_structure(data, schema)           # check required fields + types
+except ValidationError as e:
+    print(f"Structured response invalid: {e}")
 ```
 
 ## Error Handling
 
-### Validation Errors
+`ValidationError` is raised by schema-level validators (`validate_json`,
+`validate_structure`, `validate_complete` in STRUCTURED mode, and
+`validate_complete` when content is empty). It lives in
+`infrastructure.core.exceptions` and is re-exported by the LLM core.
+
+Signal validators (`validate_length`, `validate_short_response`,
+`validate_long_response`, `validate_formatting`) return `bool` — callers
+choose whether to warn, log, or retry.
 
 ```python
-from infrastructure.llm.validation.core import ValidationError
+from infrastructure.core.exceptions import ValidationError
 
 try:
-    validate_prompt(prompt_text)
+    data = validate_json(response_text)
 except ValidationError as e:
-    print(f"Validation failed: {e.message}")
-    print(f"Errors: {e.errors}")
+    print(f"JSON parse failed: {e}")
 ```
 
-### Response Issues
+## Validation Rules
 
-```python
-from infrastructure.llm.validation.core import ResponseValidationError
+### Response Rules
 
-try:
-    validate_response(response_text)
-except ResponseValidationError as e:
-    print(f"Response issues: {e.issues}")
-    # Handle issues...
-```
-
-## Integration
-
-### Pipeline Integration
-
-```python
-# scripts/06_llm_review.py
-from infrastructure.llm.validation import validate_prompt, validate_response
-
-def generate_review(manuscript_text):
-    prompt = build_review_prompt(manuscript_text)
-    
-    # Validate prompt
-    if not validate_prompt(prompt)[0]:
-        raise ValueError("Invalid prompt")
-    
-    # Generate response
-    response = llm_client.query(prompt)
-    
-    # Validate response
-    if not validate_response(response)[0]:
-        # Retry or handle...
-        response = retry_query(prompt)
-    
-    return response
-```
+- **Length**: `validate_length` (min/max chars), `estimate_tokens` (heuristic)
+- **Format**: `validate_formatting` checks for LLM over-emphasis artifacts (`!!!`, `???`) and double spaces
+- **Structure**: Required markdown sections via `validate_section_completeness`
+- **Repetition**: `detect_repetition` uses hybrid Jaccard/TF-cosine/n-gram similarity
+- **Topic drift**: `is_off_topic` uses pattern lists (`OFF_TOPIC_PATTERNS_START`, `OFF_TOPIC_PATTERNS_ANYWHERE`) with on-topic signal override
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[Validation Module] --> B[Core Validation]
-    A --> C[Format Validation]
-    A --> D[Structure Validation]
-    A --> E[Repetition Detection]
+    A[infrastructure.llm.validation] --> B[core.py<br/>JSON · length · structure · repetition · formatting]
+    A --> C[format.py<br/>Off-topic · conversational phrase detection]
+    A --> D[structure.py<br/>Section completeness · section extraction]
+    A --> E[repetition.py<br/>Re-exports detection.py public API]
 
-    B --> F[Prompt Validation]
-    B --> G[Response Validation]
-    B --> H[Security Checks]
-
-    C --> I[JSON Validation]
-    C --> J[Structured Format]
-    C --> K[Format Parsing]
-
-    D --> L[Section Detection]
-    D --> M[Structure Analysis]
-
-    E --> N[Repetition Scoring]
-    E --> O[Segment Detection]
+    E --> F[detection.py<br/>detect_repetition · deduplicate_sections · unique ratio]
+    F --> G[similarity.py<br/>Internal: Jaccard · TF-cosine · n-gram]
 ```
+
+`similarity.py` is an internal module; import from `repetition` instead.
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - validation documentation
+- [AGENTS.md](AGENTS.md) - full module reference
 - [../core/README.md](../core/README.md) - LLM core functionality
-- [../utils/README.md](../utils/README.md) - Utility functions

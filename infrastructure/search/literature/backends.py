@@ -18,8 +18,6 @@ All HTTP backends accept an injectable ``http_client`` (anything with a
 that tests can use ``pytest-httpserver`` instead of mocks.
 """
 
-from __future__ import annotations
-
 import abc
 import json
 import re
@@ -28,6 +26,7 @@ import urllib.parse
 import urllib.request
 
 import defusedxml.ElementTree as ET
+from xml.etree.ElementTree import Element as XMLElement
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Protocol
@@ -36,7 +35,6 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.search.literature.models import Paper, SearchQuery
 
 logger = get_logger(__name__)
-
 
 # ---------------------------------------------------------------------------
 # HTTP client protocol — kept minimal so callers can inject `requests`,
@@ -425,7 +423,7 @@ class ArxivBackend(SearchBackend):
                 papers.append(paper)
         return papers
 
-    def _entry_to_paper(self, entry: ET.Element) -> Paper | None:
+    def _entry_to_paper(self, entry: XMLElement) -> Paper | None:
         def text(tag: str, ns: str = "atom") -> str | None:
             el = entry.find(f"{ns}:{tag}", self._ATOM_NS)
             return el.text.strip() if (el is not None and el.text) else None

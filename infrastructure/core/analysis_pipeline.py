@@ -14,8 +14,6 @@ This module exists so that ``scripts/02_run_analysis.py`` can stay a thin
 orchestrator that only parses CLI arguments and dispatches here.
 """
 
-from __future__ import annotations
-
 import shlex
 import subprocess  # nosec B404
 import time
@@ -30,6 +28,7 @@ from infrastructure.core.logging.utils import (
 )
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.runtime.environment import build_analysis_script_cmd_and_env
+from infrastructure.project.discovery import resolve_project_root
 
 logger = get_logger(__name__)
 
@@ -53,7 +52,7 @@ def run_analysis_script(
         ScriptExecutionError: If subprocess invocation itself fails (not when the
             script exits non-zero — that is reported via the return value).
     """
-    project_root = repo_root / "projects" / project_name
+    project_root = resolve_project_root(repo_root, project_name)
     logger.info("")
     logger.info("  Script: %s", script_path.resolve())
     logger.info("  Project root: %s", project_root.resolve())

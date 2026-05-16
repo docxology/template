@@ -11,8 +11,6 @@ and hash manifests. When ``STEGANOGRAPHY_DETERMINISTIC=1`` is set (or the
 secure-pipeline runs produce byte-identical PDFs.
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
 from dataclasses import dataclass, field

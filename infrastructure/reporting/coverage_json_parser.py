@@ -4,8 +4,6 @@ Reads the JSON output from pytest-cov and extracts file-level and
 overall coverage statistics.
 """
 
-from __future__ import annotations
-
 import json
 from pathlib import Path
 from typing import Any

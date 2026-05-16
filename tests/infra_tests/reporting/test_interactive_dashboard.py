@@ -23,7 +23,6 @@ import pytest
 
 
 from infrastructure.reporting import (  # re-export sanity
-    Control,
     InteractiveDashboard,
     Invariant,
     Panel,

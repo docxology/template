@@ -4,8 +4,6 @@ Populates the PDF Info dictionary and embeds XMP metadata packets with
 document provenance, hash values, timestamps, and encrypted payloads.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Any
 

@@ -11,12 +11,12 @@ flowchart TD
     Q1 -->|NO| Q2{Does it implement research<br/>algorithms/analysis?}
     Q2 -->|YES| L2["LAYER 2: PROJECT<br/>Add to projects/{name}/src/"]
     Q2 -->|NO| RECONSIDER[Reconsider scope<br/>or ask team]
-    
+
     classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef layer2 fill:#f1f8e9,stroke:#33691e,stroke-width:2px
     classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef warning fill:#ffebee,stroke:#c62828,stroke-width:2px
-    
+
     class L1 layer1
     class L2 layer2
     class Q1,Q2,START decision
@@ -76,7 +76,7 @@ flowchart TD
 
 class FigureManager:
     """Manage figure numbering and references.
-    
+
     This is infrastructure - works for ANY research project.
     """
     def register_figure(
@@ -89,7 +89,7 @@ class FigureManager:
     ) -> FigureMetadata:
         """Register a figure with automatic numbering."""
         pass
-    
+
     def generate_latex_figure_block(self, label: str) -> str:
         """Generate LaTeX figure block."""
         pass
@@ -119,7 +119,7 @@ def verify_output_integrity(
     expected_files: List[str]
 ) -> bool:
     """Verify expected build artifacts exist.
-    
+
     This is infrastructure - validates ANY project's outputs.
     """
     pass
@@ -154,7 +154,7 @@ def verify_output_integrity(
 
 class MySimulation(SimulationBase):
     """Specific simulation for our research.
-    
+
     This is scientific - implements OUR algorithm.
     """
     def step(self) -> None:
@@ -187,7 +187,7 @@ def analyze_convergence(
     tolerance: float
 ) -> Dict[str, Any]:
     """Analyze convergence of OUR algorithm.
-    
+
     This is scientific - domain-specific analysis.
     """
     pass
@@ -209,7 +209,7 @@ def plot_experimental_results(
     data: Dict[str, np.ndarray]
 ) -> plt.Figure:
     """Plot results specific to our experiments.
-    
+
     This is scientific - domain-specific visualization.
     """
     pass
@@ -253,8 +253,8 @@ def plot_experimental_results(
 
    ```python
    # Infrastructure: Generic normalization
-   from infrastructure.data_processing import normalize_data
-   
+   from infrastructure.data_processing import normalize_data  # noqa: docs-lint
+
    # Scientific: Use generic + add domain logic
    def preprocess_our_data(raw_data):
        normalized = normalize_data(raw_data)
@@ -418,7 +418,7 @@ from infrastructure.documentation import FigureManager, MarkdownIntegration
 def analyze_and_report(data):
     # Scientific computation
     results = run_analysis(data)
-    
+
     # Use infrastructure for document management
     fm = FigureManager()
     fm.register_figure(
@@ -426,7 +426,7 @@ def analyze_and_report(data):
         caption="Analysis results",
         label="fig:results"
     )
-    
+
     return results
 ```
 

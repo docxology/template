@@ -28,6 +28,8 @@ spec = importlib.util.spec_from_file_location(
     "copy_outputs",
     Path(__file__).parent.parent.parent / "scripts" / "05_copy_outputs.py",
 )
+assert spec is not None
+assert spec.loader is not None
 copy_outputs = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(copy_outputs)
 
@@ -198,6 +200,34 @@ class TestCopyFinalDeliverables:
         # Should still copy PDF and handle missing slides gracefully
         assert stats["combined_pdf"] == 1
         assert stats["slides_files"] == 0
+
+    def test_copy_wip_project_with_explicit_project_dir(self, tmp_path):
+        """Copying a WIP project should not require a projects/<name> shadow."""
+        repo_root = tmp_path / "repo"
+        project_dir = repo_root / "projects_in_progress" / "biology_textbook"
+        pdf_dir = project_dir / "output" / "pdf"
+        web_dir = project_dir / "output" / "web"
+        pdf_dir.mkdir(parents=True)
+        web_dir.mkdir(parents=True)
+        (pdf_dir / "biology_textbook_combined.pdf").write_text("mock pdf content")
+        (web_dir / "index.html").write_text("<html>mock</html>")
+
+        output_dir = repo_root / "output" / "biology_textbook"
+        output_dir.mkdir(parents=True)
+
+        stats = copy_final_deliverables(
+            repo_root,
+            output_dir,
+            "biology_textbook",
+            project_dir=project_dir,
+        )
+
+        assert stats["combined_pdf"] == 1
+        assert stats["pdf_files"] == 1
+        assert stats["web_files"] == 1
+        assert (output_dir / "pdf" / "biology_textbook_combined.pdf").exists()
+        assert (output_dir / "biology_textbook_combined.pdf").exists()
+        assert not (repo_root / "projects" / "biology_textbook").exists()
 
 
 class TestValidateCopiedOutputs:

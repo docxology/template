@@ -9,7 +9,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -226,7 +226,11 @@ def test_driver_from_dir_writes_valid_markdown(tmp_path: Path) -> None:
     """Run scripts/generate_coverage_history.py --from-dir end-to-end."""
     artefacts = tmp_path / "artefacts"
     artefacts.mkdir()
-    when = datetime(2026, 5, 3, tzinfo=UTC)
+    # Anchor the synthetic CI timestamp to "now - 2 days" so the data
+    # point always falls inside the rolling --days window, regardless of
+    # when the test runs. A fixed historical date drifts out of range as
+    # wall-clock time advances.
+    when = datetime.now(UTC) - timedelta(days=2)
     _write_cobertura(artefacts / "coverage-infra.xml", line_rate=0.84, lines_covered=84, lines_total=100, when=when)
     _write_cobertura(artefacts / "coverage-project.xml", line_rate=0.93, lines_covered=93, lines_total=100, when=when)
 

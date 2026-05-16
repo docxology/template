@@ -4,8 +4,6 @@ This module provides LaTeX figure block generation, section detection,
 reference insertion, table of figures generation, and figure list maintenance.
 """
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 from typing import Any

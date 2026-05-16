@@ -168,9 +168,6 @@ logger.info("Solution: %s, Converged: %s", result.solution, result.converged)
 See `projects/template_code_project/src/optimizer.py` for the full implementation and `projects/template_code_project/scripts/optimization_analysis.py` for orchestration.
 
 All other Layer 2 documentation defaults to this exemplar. See `docs/_generated/active_projects.md` for discovery.
-stats = calculate_descriptive_stats(data)
-print(f"Mean: {stats.mean}, Std: {stats.std}")
-```
 
 ---
 

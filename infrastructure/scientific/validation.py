@@ -7,8 +7,6 @@ Provides comprehensive validation for scientific code:
 - Code quality metrics and recommendations
 """
 
-from __future__ import annotations
-
 import inspect
 from typing import Any, Callable, TypedDict
 

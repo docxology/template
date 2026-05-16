@@ -7,6 +7,7 @@ import pytest
 from infrastructure.orchestration.menu import (
     MENU_OPTIONS,
     STAGE_NAMES,
+    _menu_row,
     menu_keys,
     parse_choice_sequence,
     render_menu,
@@ -27,9 +28,15 @@ def test_render_menu_includes_project_name() -> None:
 
 def test_render_menu_lists_all_keys() -> None:
     rendered = render_menu("template_code_project")
-    for key, label, _ in MENU_OPTIONS:
-        # Each key appears at least once with its label.
-        assert f"  {key}  {label}" in rendered, f"missing key={key} label={label}"
+    for key, label, desc in MENU_OPTIONS:
+        assert _menu_row(key, label, desc) in rendered, f"missing key={key} label={label}"
+
+
+def test_render_menu_includes_subtitle_and_legend() -> None:
+    rendered = render_menu("x")
+    assert "Single stages 0-7" in rendered
+    assert "Infra tests: Layer-1 pytest" in rendered
+    assert "Executive report:" in rendered
 
 
 def test_render_menu_no_ansi_codes() -> None:
@@ -41,7 +48,7 @@ def test_render_menu_no_ansi_codes() -> None:
 def test_stage_names_align_with_pipeline() -> None:
     # 9 named stages (numbered [1/9]..[9/9])
     assert len(STAGE_NAMES) == 9
-    assert STAGE_NAMES[0] == "Setup Environment"
+    assert STAGE_NAMES[0] == "Environment Setup"
     assert STAGE_NAMES[-1] == "Copy Outputs"
 
 

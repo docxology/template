@@ -16,8 +16,6 @@ The parser is forgiving about whitespace, trailing commas, and unknown entry
 types — the goal is round-tripping, not strict validation.
 """
 
-from __future__ import annotations
-
 from collections import OrderedDict
 from pathlib import Path
 

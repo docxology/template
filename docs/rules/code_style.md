@@ -4,13 +4,15 @@
 
 Consistent code formatting ensures readability, maintainability, and reduces merge conflicts. All Python code must follow these standards.
 
+**Automation**: CI and local hooks enforce **Ruff** (lint, format, import sorting) and **mypy** on `infrastructure/` and `projects/*/src/`. Mirror commands live in root [`CLAUDE.md`](../../CLAUDE.md); hook IDs are declared in [`/.pre-commit-config.yaml`](../../.pre-commit-config.yaml).
+
 ## Python Code Style (PEP 8)
 
 ### Core PEP 8 Rules
 
 #### Line Length
 ```python
-# ✅ GOOD: Under 88 characters (Black default)
+# ✅ GOOD: Under 88 characters (Ruff default line length)
 result = some_function_with_long_name(argument_one, argument_two)
 
 # ❌ BAD: Too long
@@ -43,7 +45,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from project.src.data_processing import clean_data
 
 # ❌ BAD: Not grouped or ordered
@@ -112,173 +114,38 @@ error_msg = "Don't do that"
 message = "Hello, world!'
 ```
 
-## Code Formatting with Black
+## Formatting and linting (Ruff)
 
-### Black Configuration
+Ruff subsumes the roles historically filled by separate formatters (Black), import sorters (isort), and many flake8 rules. Configuration lives under **`[tool.ruff]`** in the repository root **`pyproject.toml`**.
 
-Use Black with these settings:
-- **Line length**: 88 characters
-- **Target Python version**: 3.10+
-- **String normalization**: Yes
-
-### Running Black
+### Commands (CI parity)
 
 ```bash
-# Format specific file
-black infrastructure/core/config/loader.py
-
-# Format directory
-black infrastructure/core/
-
-# Check formatting without changing files
-black --check infrastructure/
-
-# Format entire project
-black .
+uvx ruff check infrastructure/ projects/*/src/ --fix
+uvx ruff format infrastructure/ projects/*/src/
+uv run mypy infrastructure/ projects/*/src/
 ```
 
-### Black Integration
+### Line length
 
-Add to `pyproject.toml`:
-```toml
-[tool.black]
-line-length = 88
-target-version = ['py310', 'py311', 'py312']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-  | htmlcov
-  | __pycache__
-)/
-'''
-```
+Keep wrapping aligned with the **88**-character default unless `pyproject.toml` overrides Ruff.
 
-## Import Sorting with isort
+#### Legacy tooling (optional locally)
 
-### isort Configuration
-
-```python
-# ✅ GOOD: isort maintains import order
-import os
-import sys
-from pathlib import Path
-from typing import Dict, List, Optional
-
-import numpy as np
-import pandas as pd
-
-from infrastructure.core.runtime.exceptions import ValidationError
-from infrastructure.core.logging.logging_utils import get_logger
-```
-
-### isort Settings
-
-Add to `pyproject.toml`:
-```toml
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-line_length = 88
-known_first_party = ["infrastructure", "project"]
-known_third_party = ["numpy", "pandas", "pytest"]
-```
-
-### Running isort
-
-```bash
-# Sort imports in file
-isort infrastructure/core/config/loader.py
-
-# Sort imports in directory
-isort infrastructure/core/
-
-# Check without changing
-isort --check-only infrastructure/
-```
-
-## Linting with flake8
-
-### flake8 Configuration
-
-```ini
-# .flake8 or setup.cfg
-[flake8]
-max-line-length = 88
-extend-ignore = E203, W503, E501
-exclude =
-    .git,
-    __pycache__,
-    build,
-    dist,
-    .venv,
-    .tox,
-    htmlcov
-per-file-ignores =
-    __init__.py:F401
-    tests/*:S101
-```
-
-### Running flake8
-
-```bash
-# Lint specific file
-flake8 infrastructure/core/config/loader.py
-
-# Lint directory
-flake8 infrastructure/core/
-
-# Lint entire project
-flake8 .
-```
+Black, isort, and flake8 are **not** the CI source of truth for this repository; use them only if you intentionally duplicate checks outside Ruff.
 
 ## Pre-commit Hooks
 
 ### pre-commit Configuration
 
-Create `.pre-commit-config.yaml`:
+The repository ships **[`.pre-commit-config.yaml`](../../.pre-commit-config.yaml)** at the repo root. **Do not** paste alternate Black/isort/flake8-only configs here — extend the existing hooks instead.
+
+Illustrative hook IDs (authoritative YAML lives at repo root):
 
 ```yaml
-repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
-    hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-added-large-files
-
-  - repo: https://github.com/psf/black
-    rev: 23.7.0
-    hooks:
-      - id: black
-        language_version: python3
-
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-        args: ["--profile", "black"]
-
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-        args: ["--max-line-length=88"]
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.1
-    hooks:
-      - id: mypy
-        additional_dependencies: [types-all]
+# See /.pre-commit-config.yaml — commit-stage hooks include:
+#   ruff-ci  → uvx ruff check … && uvx ruff format …
+#   mypy-ci  → uv run mypy …
 ```
 
 ### Installing pre-commit
@@ -293,8 +160,8 @@ pre-commit install
 # Run on all files
 pre-commit run --all-files
 
-# Run specific hook
-pre-commit run black --all-files
+# Run specific hook (see .pre-commit-config.yaml for ids)
+pre-commit run ruff-ci --all-files
 ```
 
 ## Docstring Standards
@@ -386,7 +253,7 @@ __all__ = ["process_data", "validate_input", "DataConfig"]
 # core.py - Main implementation
 """Core data processing functionality."""
 
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -443,10 +310,9 @@ def test_error_conditions():
 
 ### Do's ✅
 
-- ✅ **Use Black** for consistent formatting
-- ✅ **Use isort** for import organization
-- ✅ **Use flake8** for linting
-- ✅ **Use pre-commit hooks** to automate checks
+- ✅ **Use Ruff** (`uvx ruff check`, `uvx ruff format`) for lint/format/import sorting — CI parity
+- ✅ **Use mypy** (`uv run mypy`) on `infrastructure/` and `projects/*/src/`
+- ✅ **Use pre-commit hooks** (`ruff-ci`, `mypy-ci`) to automate checks
 - ✅ **Follow PEP 8** guidelines
 - ✅ **Use descriptive names** for variables and functions
 - ✅ **Keep functions small** (under 50 lines)
@@ -475,38 +341,36 @@ Add to `.vscode/settings.json`:
 
 ```json
 {
-  "python.formatting.provider": "black",
-  "python.formatting.blackArgs": ["--line-length", "88"],
-  "python.linting.enabled": true,
-  "python.linting.flake8Enabled": true,
-  "python.linting.mypyEnabled": true,
-  "python.sortImports.args": ["--profile", "black"],
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
-  }
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+  "python.analysis.typeCheckingMode": "basic"
 }
 ```
 
-### PyCharm Settings
+Use **`uv run mypy`** from the terminal for CI-parity typing; enable **mypy** or **basedpyright** in the IDE if you want inline diagnostics.
 
-- **Editor → Code Style → Python**: Set line length to 88
-- **Tools → Black**: Enable with line length 88
-- **Tools → External Tools**: Configure isort and flake8
+### PyCharm / IntelliJ
+
+- **Editor → Code Style → Python**: Line length **88** to match Ruff.
+- Enable **Ruff** plugin (or configure external tool `uvx ruff`) for format/on-save.
+- Run **`uv run mypy`** as an external tool or use bundled typing support.
 
 ## Enforcement
 
 ### CI/CD Checks
 
-Add to GitHub Actions workflow:
+Mirror **[`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)** `lint` job locally:
 
-```yaml
-- name: Code Quality Checks
-  run: |
-    black --check .
-    isort --check-only .
-    flake8 .
-    mypy .
+```bash
+uvx ruff check infrastructure/ projects/*/src/
+uvx ruff format --check infrastructure/ projects/*/src/
+uv run mypy infrastructure/ projects/*/src/
 ```
 
 ### Development Workflow

@@ -1,3 +1,4 @@
+"""Tests for pipeline_reporter module."""
 from __future__ import annotations
 
 import json

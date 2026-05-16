@@ -127,6 +127,23 @@ class TestFindCombinedPdfSourceLayout:
         found_path, _ = result
         assert found_path == source_pdf
 
+    def test_finds_pdf_in_wip_source_project_layout(self, tmp_path: Path) -> None:
+        repo_root = tmp_path
+        source_output = repo_root / "projects_in_progress" / PROJECT_NAME / "output"
+        source_output.mkdir(parents=True)
+        source_pdf = _make_pdf(
+            source_output / "pdf" / f"{PROJECT_NAME}_combined.pdf"
+        )
+
+        copied_output = repo_root / "output" / PROJECT_NAME
+        copied_output.mkdir(parents=True)
+
+        result = find_combined_pdf(copied_output, PROJECT_NAME)
+
+        assert result is not None
+        found_path, _ = result
+        assert found_path == source_pdf
+
     def test_returns_none_when_pdf_missing_from_all_locations(self, tmp_path: Path) -> None:
         output_dir = tmp_path / "output" / PROJECT_NAME
         output_dir.mkdir(parents=True)
@@ -195,7 +212,7 @@ class TestFindCombinedPdfMatchesLegacyName:
     continues to work."""
 
     def test_validator_reexport_still_importable(self) -> None:
-        from infrastructure.validation.output.validator import (  # noqa: WPS433 - test-only deep import
+        from infrastructure.validation.output.validator import (
             _find_combined_pdf,
         )
 

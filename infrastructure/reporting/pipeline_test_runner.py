@@ -6,6 +6,7 @@ on the tests for both infrastructure and project suites.
 
 from __future__ import annotations
 
+
 import os
 import re
 import shutil
@@ -13,6 +14,8 @@ import subprocess
 import time
 from pathlib import Path
 from typing import TypedDict
+
+import tempfile
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep
 from infrastructure.core.config.queries import get_testing_config
@@ -26,7 +29,7 @@ from infrastructure.reporting.coverage_reporter import (
 )
 from infrastructure.core.logging.helpers import format_duration as _format_duration
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
-from infrastructure.core.runtime.environment import get_python_command
+from infrastructure.core.runtime.environment import resolve_test_python
 from infrastructure.reporting.coverage_parser import check_cov_datafile_support
 from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite
 
@@ -116,12 +119,7 @@ def run_infrastructure_tests(
     logger.info(f"Test path: {repo_root / 'tests' / 'infra_tests'}")
     logger.info("Coverage target: infrastructure (60% minimum)")
 
-    root_venv = repo_root / ".venv"
-    if root_venv.is_dir():
-        python_exe = str(root_venv / "Scripts" / "python.exe" if os.name == "nt" else root_venv / "bin" / "python")
-        cmd = [python_exe]
-    else:
-        cmd = get_python_command()
+    cmd = resolve_test_python(repo_root / ".venv")
 
     cmd += [
         "-m",
@@ -138,8 +136,6 @@ def run_infrastructure_tests(
     )
     if infra_marker:
         cmd.extend(["-m", infra_marker])
-
-    import tempfile
 
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
@@ -224,14 +220,7 @@ def run_project_tests(
     logger.info(f"Coverage target: projects/{project_name}/src ({project_threshold}% minimum)")
 
     project_cov_config = project_root / "pyproject.toml"
-    project_venv = project_root / ".venv"
-    if project_venv.is_dir():
-        python_exe = str(
-            project_venv / "Scripts" / "python.exe" if os.name == "nt" else project_venv / "bin" / "python"
-        )
-        cmd = [python_exe]
-    else:
-        cmd = get_python_command()
+    cmd = resolve_test_python(project_root / ".venv")
 
     cmd += [
         "-m",
@@ -240,8 +229,6 @@ def run_project_tests(
         f"--cov=projects/{project_name}/src",
         f"--cov-config={project_cov_config}",
     ]
-
-    import tempfile
 
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))

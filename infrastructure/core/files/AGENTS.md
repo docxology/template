@@ -14,6 +14,7 @@ The `infrastructure/core/files/` package contains file cleanup, inventory, and o
 - `inventory.py` - file inventory collection
 - `inventory_entry.py` - inventory entries
 - `inventory_reports.py` - inventory reporting
+- `pdf_locator.py` - locate generated PDFs for validation and copy stages
 
 ## See Also
 

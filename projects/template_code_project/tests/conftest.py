@@ -1,4 +1,4 @@
-"""Pytest configuration for code_project tests."""
+"""Pytest configuration for template_code_project tests."""
 
 import os
 import sys

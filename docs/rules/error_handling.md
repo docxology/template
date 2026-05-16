@@ -7,7 +7,7 @@ All custom exceptions inherit from `TemplateError` in `infrastructure/core/runti
 ### Import Pattern
 
 ```python
-from infrastructure.core.runtime.exceptions import (
+from infrastructure.core.exceptions import (
     ValidationError,
     ConfigurationError,
     BuildError,
@@ -79,10 +79,10 @@ except TemplateError:
 ```python
 class TemplateError(Exception):
     """Base exception for all template errors."""
-    
+
     def __init__(self, message: str, context: dict | None = None):
         """Initialize exception.
-        
+
         Args:
             message: Error message
             context: Additional context information
@@ -90,7 +90,7 @@ class TemplateError(Exception):
         self.message = message
         self.context = context or {}
         super().__init__(self._format_message())
-    
+
     def _format_message(self) -> str:
         """Format message with context."""
         if self.context:
@@ -163,17 +163,17 @@ class IntegrationError(TemplateError):
 ### Exception Context Pattern
 
 ```python
-from infrastructure.core.runtime.exceptions import ValidationError
+from infrastructure.core.exceptions import ValidationError
 import logging
 
 logger = logging.getLogger(__name__)
 
 def process_user_data(data: dict) -> None:
     """Process user data with context in exceptions.
-    
+
     Args:
         data: User data dictionary
-        
+
     Raises:
         ValidationError: If data is invalid
     """
@@ -198,33 +198,33 @@ def process_user_data(data: dict) -> None:
 ```python
 def load_config_with_fallback(primary_path: str, fallback_path: str) -> dict:
     """Load config with fallback.
-    
+
     Args:
         primary_path: Primary config file path
         fallback_path: Fallback config file path
-        
+
     Returns:
         Configuration dictionary
-        
+
     Raises:
         ConfigurationError: If both paths fail
     """
     errors = []
-    
+
     # Try primary path
     try:
         return load_config(primary_path)
     except FileOperationError as e:
         logger.warning(f"Primary config failed: {e}")
         errors.append(e)
-    
+
     # Try fallback path
     try:
         return load_config(fallback_path)
     except FileOperationError as e:
         logger.warning(f"Fallback config failed: {e}")
         errors.append(e)
-    
+
     # Both failed
     logger.error(f"Both config paths failed: {errors}")
     raise ConfigurationError(
@@ -242,18 +242,18 @@ def load_config_with_fallback(primary_path: str, fallback_path: str) -> dict:
 ```python
 def safe_api_call(url: str) -> dict:
     """Call API with exception translation.
-    
+
     Args:
         url: API endpoint URL
-        
+
     Returns:
         API response
-        
+
     Raises:
         IntegrationError: If API call fails
     """
     import requests
-    
+
     try:
         response = requests.get(url, timeout=5)
         response.raise_for_status()
@@ -273,33 +273,33 @@ def safe_api_call(url: str) -> dict:
 ```python
 def validate_user_registration(data: dict) -> None:
     """Validate user registration data.
-    
+
     Collects all validation errors before raising.
-    
+
     Args:
         data: User registration data
-        
+
     Raises:
         ValidationError: If any validation fails
     """
     errors: list[str] = []
-    
+
     # Check all fields
     if not data.get("username"):
         errors.append("username is required")
     elif len(data["username"]) < 3:
         errors.append("username must be at least 3 characters")
-    
+
     if not data.get("email"):
         errors.append("email is required")
     elif "@" not in data["email"]:
         errors.append("email format invalid")
-    
+
     if not data.get("password"):
         errors.append("password is required")
     elif len(data["password"]) < 8:
         errors.append("password must be at least 8 characters")
-    
+
     # Raise with all errors
     if errors:
         raise ValidationError(
@@ -317,13 +317,13 @@ def validate_user_registration(data: dict) -> None:
 
 ```python
 import pytest
-from infrastructure.core.runtime.exceptions import ValidationError
+from infrastructure.core.exceptions import ValidationError
 
 def test_validation_error_raised():
     """Test that validation error is raised."""
     with pytest.raises(ValidationError) as exc_info:
         validate_email("invalid")
-    
+
     # Verify error message
     assert "invalid" in str(exc_info.value).lower()
 
@@ -331,7 +331,7 @@ def test_validation_error_context():
     """Test that error includes context."""
     with pytest.raises(ValidationError) as exc_info:
         validate_email("invalid")
-    
+
     error = exc_info.value
     assert error.context.get("invalid_value") == "invalid"
 
@@ -339,12 +339,12 @@ def test_exception_chaining():
     """Test that exceptions are properly chained."""
     with pytest.raises(ValidationError) as exc_info:
         validate_email("invalid")
-    
+
     # Check that original exception is preserved
     assert exc_info.value.__cause__ is not None
 ```
 
-## Best Practices
+## Exception Handling Best Practices
 
 - Use specific exception types (not generic `Exception`)
 - Always chain exceptions to preserve traceback (`raise ... from e`)

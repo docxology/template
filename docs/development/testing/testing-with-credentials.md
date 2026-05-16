@@ -20,13 +20,13 @@ The test suite includes tests that make real API calls to external services. The
 3. **Run all tests** (external service tests will be skipped if credentials not configured):
 
    ```bash
-   pytest tests/
+   uv run pytest tests/
    ```
 
 4. **Run only tests that don't require external services:**
 
    ```bash
-   pytest tests/ -m "not requires_credentials"
+   uv run pytest tests/ -m "not requires_credentials"
    ```
 
 ## Credential Configuration
@@ -55,10 +55,10 @@ Optionally, create `test_credentials.yaml` for additional configuration:
 ```yaml
 zenodo:
   use_sandbox: true  # Always use sandbox for tests!
-  
+
 github:
   test_tag_prefix: "test-release-"
-  
+
 cleanup:
   auto_cleanup: true  # Automatically delete test artifacts
 ```
@@ -162,25 +162,25 @@ Tests are marked with the following markers:
 ### Run all tests (skipping those without credentials)
 
 ```bash
-pytest tests/
+uv run pytest tests/
 ```
 
 ### Run only tests that don't need credentials
 
 ```bash
-pytest tests/ -m "not requires_credentials"
+uv run pytest tests/ -m "not requires_credentials"
 ```
 
 ### Run only Zenodo tests
 
 ```bash
-pytest tests/ -m requires_zenodo
+uv run pytest tests/ -m requires_zenodo
 ```
 
 ### Run only GitHub tests
 
 ```bash
-pytest tests/ -m requires_github
+uv run pytest tests/ -m requires_github
 ```
 
 ### Run only Ollama tests
@@ -190,29 +190,29 @@ pytest tests/ -m requires_github
 ollama serve
 
 # Then run tests
-pytest tests/ -m requires_ollama
+uv run pytest tests/ -m requires_ollama
 ```
 
 ### Run only local tests (no network)
 
 ```bash
-pytest tests/ -m "not requires_network"
+uv run pytest tests/ -m "not requires_network"
 ```
 
 ### Run tests without LaTeX
 
 ```bash
-pytest tests/ -m "not requires_latex"
+uv run pytest tests/ -m "not requires_latex"
 ```
 
 ### Combine markers
 
 ```bash
 # Run tests that need neither credentials nor LaTeX
-pytest tests/ -m "not requires_credentials and not requires_latex"
+uv run pytest tests/ -m "not requires_credentials and not requires_latex"
 
 # Run all external service tests
-pytest tests/ -m "requires_zenodo or requires_github"
+uv run pytest tests/ -m "requires_zenodo or requires_github"
 ```
 
 ## Test Cleanup
@@ -277,7 +277,7 @@ git push --delete origin test-release-12345678
 
 - Check `.env` file exists and has correct credentials
 - Verify environment variables are loaded: `echo $ZENODO_SANDBOX_TOKEN`
-- Run with `-v` to see skip reasons: `pytest tests/ -v`
+- Run with `-v` to see skip reasons: `uv run pytest tests/ -v`
 
 ### Zenodo API errors
 
@@ -308,7 +308,7 @@ git push --delete origin test-release-12345678
 
 - Install LaTeX: `sudo apt-get install texlive-latex-base texlive-xetex` (Ubuntu) or `brew install mactex` (macOS)
 - Verify installation: `which pdflatex`
-- Skip LaTeX tests: `pytest tests/ -m "not requires_latex"`
+- Skip LaTeX tests: `uv run pytest tests/ -m "not requires_latex"`
 
 ### Cleanup failures
 
@@ -337,7 +337,7 @@ cp .env.example .env
 nano .env  # Add your credentials
 
 # Run tests
-pytest tests/
+uv run pytest tests/
 ```
 
 ### macOS
@@ -355,7 +355,7 @@ cp .env.example .env
 nano .env  # Add your credentials
 
 # Run tests
-pytest tests/
+uv run pytest tests/
 ```
 
 ### Windows
@@ -372,7 +372,7 @@ copy .env.example .env
 notepad .env  # Add your credentials
 
 # Run tests
-pytest tests/
+uv run pytest tests/
 ```
 
 ## CI/CD Integration
@@ -390,20 +390,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup credentials
         run: |
           echo "ZENODO_SANDBOX_TOKEN=${{ secrets.ZENODO_SANDBOX_TOKEN }}" >> .env
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
           echo "GITHUB_REPO=${{ secrets.GITHUB_REPO }}" >> .env
-      
+
       - name: Install LaTeX
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-latex-base pandoc
-      
+
       - name: Run tests
-        run: pytest tests/
+        run: uv run pytest tests/
 ```
 
 ## Support

@@ -27,8 +27,6 @@ Usage::
     embed_steganography(Path("paper.pdf"), config=config, title="My Paper")
 """
 
-from __future__ import annotations
-
 from infrastructure.steganography.config import (
     SteganographyConfig,
     resolve_build_timestamp,

@@ -4,8 +4,6 @@ Handles installing missing packages via uv, setting pipeline environment
 variables, and validating uv sync results.
 """
 
-from __future__ import annotations
-
 import os
 import subprocess
 from pathlib import Path

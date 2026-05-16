@@ -6,8 +6,6 @@ sibling sub-modules (``metadata``, ``validation``, ``project_info``) or from the
 ``infrastructure.project`` package, which re-exports the full public API.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
@@ -104,11 +102,13 @@ def discover_projects(
 
 
 def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
-    """Return the directory for *project_name*, preferring ``projects/`` over ``projects_in_progress/``.
+    """Return the directory for *project_name*, preferring real active projects over WIP trees.
 
     Use this when a tool should find a work-in-progress tree (for example COGANT) that has not
-    been moved into ``projects/`` yet. If ``projects/<project_name>`` exists, that path wins;
-    otherwise ``projects_in_progress/<project_name>`` is used when present.
+    been moved into ``projects/`` yet. If ``projects/<project_name>`` exists and looks like a
+    project source tree, that path wins; otherwise ``projects_in_progress/<project_name>`` is
+    used when present. A skeletal generated-output directory under ``projects/`` does not shadow
+    an actual WIP source tree.
 
     If neither directory exists, returns ``projects/<project_name>`` so callers get a stable
     path for error messages.
@@ -122,12 +122,18 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     """
     if isinstance(repo_root, str):
         repo_root = Path(repo_root)
+
+    def has_project_markers(path: Path) -> bool:
+        return any((path / marker).exists() for marker in ("src", "tests", "scripts", "manuscript"))
+
     primary = repo_root / "projects" / project_name
-    if primary.is_dir():
+    if primary.is_dir() and has_project_markers(primary):
         return primary.resolve()
     wip = repo_root / "projects_in_progress" / project_name
     if wip.is_dir():
         return wip.resolve()
+    if primary.is_dir():
+        return primary.resolve()
     return primary
 
 

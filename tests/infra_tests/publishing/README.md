@@ -10,13 +10,13 @@ Tests for publishing module including platform API clients (Zenodo, arXiv, GitHu
 
 ```bash
 # Run all publishing tests
-pytest tests/infra_tests/publishing/ -v
+uv run pytest tests/infra_tests/publishing/ -v
 
 # Run API tests
-pytest tests/infra_tests/publishing/test_api.py -v
+uv run pytest tests/infra_tests/publishing/test_api.py -v
 
 # Run CLI tests
-pytest tests/infra_tests/publishing/test_cli.py -v
+uv run pytest tests/infra_tests/publishing/test_cli.py -v
 ```
 
 ## Test Modules
@@ -26,7 +26,7 @@ pytest tests/infra_tests/publishing/test_cli.py -v
 Platform API client functionality:
 
 ```bash
-pytest tests/infra_tests/publishing/test_api.py -v
+uv run pytest tests/infra_tests/publishing/test_api.py -v
 ```
 
 **Test Coverage:**
@@ -40,7 +40,7 @@ pytest tests/infra_tests/publishing/test_api.py -v
 Command-line interface testing:
 
 ```bash
-pytest tests/infra_tests/publishing/test_cli*.py -v
+uv run pytest tests/infra_tests/publishing/test_cli*.py -v
 ```
 
 **Test Coverage:**
@@ -54,7 +54,7 @@ pytest tests/infra_tests/publishing/test_cli*.py -v
 Core publishing functionality:
 
 ```bash
-pytest tests/infra_tests/publishing/test_publishing.py -v
+uv run pytest tests/infra_tests/publishing/test_publishing.py -v
 ```
 
 **Test Coverage:**
@@ -71,10 +71,10 @@ Individual function testing:
 
 ```bash
 # Test metadata extraction
-pytest tests/infra_tests/publishing/test_publishing.py::test_extract_metadata -v
+uv run pytest tests/infra_tests/publishing/test_publishing.py::test_extract_metadata -v
 
 # Test citation generation
-pytest tests/infra_tests/publishing/test_publishing.py::test_generate_citation -v
+uv run pytest tests/infra_tests/publishing/test_publishing.py::test_generate_citation -v
 ```
 
 ### Integration Tests
@@ -83,7 +83,7 @@ End-to-end workflows:
 
 ```bash
 # Full publishing workflow
-pytest tests/infra_tests/publishing/test_publishing_api_full.py -v
+uv run pytest tests/infra_tests/publishing/test_publishing_api_full.py -v
 ```
 
 ### Edge Case Tests
@@ -92,7 +92,7 @@ Error conditions and boundaries:
 
 ```bash
 # Error handling tests
-pytest tests/infra_tests/publishing/test_publishing_edge_cases.py -v
+uv run pytest tests/infra_tests/publishing/test_publishing_edge_cases.py -v
 ```
 
 ## Common Test Patterns
@@ -129,26 +129,26 @@ def test_generate_citation():
 ### All Publishing Tests
 
 ```bash
-pytest tests/infra_tests/publishing/ -v
+uv run pytest tests/infra_tests/publishing/ -v
 ```
 
 ### Specific Test Files
 
 ```bash
 # API tests only
-pytest tests/infra_tests/publishing/test_api.py -v
+uv run pytest tests/infra_tests/publishing/test_api.py -v
 
 # CLI tests only
-pytest tests/infra_tests/publishing/test_cli*.py -v
+uv run pytest tests/infra_tests/publishing/test_cli*.py -v
 
 # Core functionality
-pytest tests/infra_tests/publishing/test_publishing.py -v
+uv run pytest tests/infra_tests/publishing/test_publishing.py -v
 ```
 
 ### With Coverage
 
 ```bash
-pytest tests/infra_tests/publishing/ \
+uv run pytest tests/infra_tests/publishing/ \
     --cov=infrastructure.publishing \
     --cov-report=html
 ```
@@ -158,13 +158,13 @@ pytest tests/infra_tests/publishing/ \
 ### Verbose Output
 
 ```bash
-pytest tests/infra_tests/publishing/ -vv -s
+uv run pytest tests/infra_tests/publishing/ -vv -s
 ```
 
 ### Test Specific Function
 
 ```bash
-pytest tests/infra_tests/publishing/test_publishing.py::test_extract_metadata -v
+uv run pytest tests/infra_tests/publishing/test_publishing.py::test_extract_metadata -v
 ```
 
 ## Architecture

@@ -13,8 +13,6 @@ skipped so titles like *On Convex Optimization* still produce ``…convex``
 rather than ``…on``.
 """
 
-from __future__ import annotations
-
 import re
 import unicodedata
 from collections import OrderedDict

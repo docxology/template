@@ -4,8 +4,6 @@ Provides formatting for coverage status, gap analysis with actionable
 suggestions, and failure classification with debug recommendations.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Any
 from infrastructure.core.logging.utils import get_logger

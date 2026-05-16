@@ -34,8 +34,6 @@ Module-level ``logger = get_logger(__name__)`` is the approved pattern — get_l
 initialises lazily and is safe to call at import time.
 """
 
-from __future__ import annotations
-
 # Re-export from setup.py — logger configuration and retrieval
 from infrastructure.core.logging.setup import (  # noqa: F401
     LOG_LEVEL_MAP,

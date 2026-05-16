@@ -1,3 +1,4 @@
+"""Tests for output_reporter module."""
 from __future__ import annotations
 
 from pathlib import Path

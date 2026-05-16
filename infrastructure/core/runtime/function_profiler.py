@@ -6,8 +6,6 @@ fine-grained function call profiling and memory tracking.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 import cProfile
 import functools
 import io

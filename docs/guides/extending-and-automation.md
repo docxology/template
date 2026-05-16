@@ -65,8 +65,8 @@ set -e
 echo "ML Project Build Pipeline"
 
 # 1. Run ML-specific tests
-pytest tests/ --cov=src --cov-report=html \
-    --markers="ml"  # Only ML tests
+uv run pytest tests/ --cov=src --cov-report=html \
+    -m "ml"  # Only ML tests
 
 # 2. Train models
 uv run python scripts/train_models.py
@@ -100,11 +100,11 @@ from custom_projects.machine_learning.src.analysis import process_simulation_res
 
 def run_external_tool(config_file):
     """Run external simulation tool."""
-    
+
     # Prepare configuration
     with open(config_file, 'r') as f:
         config = json.load(f)
-    
+
     # Run external tool
     result = subprocess.run(
         ['external_simulator', '--config', config_file, '--output', 'raw_results.json'],
@@ -112,22 +112,22 @@ def run_external_tool(config_file):
         text=True,
         check=True
     )
-    
+
     # Load raw results
     with open('raw_results.json', 'r') as f:
         raw_data = json.load(f)
-    
+
     # Use src/ methods for analysis
     processed = process_simulation_results(raw_data)
-    
+
     # Generate visualization
     create_simulation_plots(processed)
-    
+
     return processed
 
 def main():
     configs = ['config1.json', 'config2.json', 'config3.json']
-    
+
     for config in configs:
         print(f"Running simulation: {config}")
         results = run_external_tool(config)
@@ -164,55 +164,55 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11']
-    
+        python-version: ['3.10', '3.11', '3.12']
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    
+
     - name: Install dependencies
       run: |
         uv sync
-    
+
     - name: Run tests
       run: |
-        uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=xml
-    
+        uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=xml --cov-fail-under=90
+
     - name: Upload coverage
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
         fail_ci_if_error: true
-  
+
   build:
     runs-on: ubuntu-latest
     needs: test
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y pandoc texlive-xetex
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-    
+
     - name: Install Python dependencies
       run: |
         uv sync
-    
+
     - name: Run build pipeline
       run: |
         uv run python scripts/execute_pipeline.py --project {name} --core-only
-    
+
     - name: Upload PDFs
       uses: actions/upload-artifact@v3
       with:
@@ -236,10 +236,10 @@ def extract_module_info(module_path):
     """Extract documentation from Python module."""
     with open(module_path, 'r') as f:
         tree = ast.parse(f.read())
-    
+
     functions = []
     classes = []
-    
+
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
             if not node.name.startswith('_'):
@@ -248,23 +248,23 @@ def extract_module_info(module_path):
                     'docstring': ast.get_docstring(node),
                     'args': [arg.arg for arg in node.args.args],
                 })
-        
+
         elif isinstance(node, ast.ClassDef):
             if not node.name.startswith('_'):
                 classes.append({
                     'name': node.name,
                     'docstring': ast.get_docstring(node),
-                    'methods': [m.name for m in node.body 
-                               if isinstance(m, ast.FunctionDef) 
+                    'methods': [m.name for m in node.body
+                               if isinstance(m, ast.FunctionDef)
                                and not m.name.startswith('_')]
                 })
-    
+
     return {'functions': functions, 'classes': classes}
 
 def generate_markdown_docs(module_name, info):
     """Generate markdown documentation."""
     md = f"# {module_name} API Reference\n\n"
-    
+
     if info['classes']:
         md += "## Classes\n\n"
         for cls in info['classes']:
@@ -276,7 +276,7 @@ def generate_markdown_docs(module_name, info):
                 for method in cls['methods']:
                     md += f"- `{method}()`\n"
                 md += "\n"
-    
+
     if info['functions']:
         md += "## Functions\n\n"
         for func in info['functions']:
@@ -284,7 +284,7 @@ def generate_markdown_docs(module_name, info):
             md += f"### `{func['name']}({args})`\n\n"
             if func['docstring']:
                 md += f"{func['docstring']}\n\n"
-    
+
     return md
 
 def main():
@@ -292,20 +292,20 @@ def main():
     src_dir = 'projects/template_code_project/src'
     output_dir = 'output/api_docs'
     os.makedirs(output_dir, exist_ok=True)
-    
+
     for filename in os.listdir(src_dir):
         if filename.endswith('.py') and not filename.startswith('_'):
             module_path = os.path.join(src_dir, filename)
             module_name = filename[:-3]
-            
+
             print(f"Documenting {module_name}...")
             info = extract_module_info(module_path)
             md = generate_markdown_docs(module_name, info)
-            
+
             output_path = os.path.join(output_dir, f'{module_name}.md')
             with open(output_path, 'w') as f:
                 f.write(md)
-            
+
             print(output_path)
 
 if __name__ == '__main__':
@@ -367,23 +367,23 @@ def fetch_papers(query, max_results=100):
 
 def analyze_research_trends(query):
     """Analyze trends in research literature."""
-    
+
     # Fetch papers
     papers = fetch_papers(query)
-    
+
     # Extract abstracts
     abstracts = [p['abstract'] for p in papers]
-    
+
     # Use projects/{name}/src/ methods for analysis
     all_keywords = []
     for abstract in abstracts:
         keywords = extract_keywords(abstract)
         all_keywords.extend(keywords)
-    
+
     # Analyze trends
     keyword_counts = Counter(all_keywords)
     trends = analyze_trends(keyword_counts, papers)
-    
+
     return trends
 
 def generate_trend_report(trends):
@@ -406,7 +406,7 @@ vim projects/template_code_project/src/new_algorithm.py
 vim projects/template_code_project/tests/test_new_algorithm.py
 
 # Ensure coverage requirements met
-pytest projects/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
+uv run pytest projects/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
 
 # Commit with conventional commit messages
 git add projects/template_code_project/src/new_algorithm.py projects/template_code_project/tests/test_new_algorithm.py

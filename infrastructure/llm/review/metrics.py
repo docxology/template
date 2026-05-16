@@ -1,7 +1,5 @@
 """Metrics classes and calculations for LLM review generation."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 
 from infrastructure.core.logging.utils import get_logger

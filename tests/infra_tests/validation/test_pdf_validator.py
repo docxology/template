@@ -5,11 +5,12 @@ Following TDD principles with NO MOCK METHODS - uses real PDF operations.
 """
 
 import tempfile
+import shutil
 from pathlib import Path
 
 import pytest
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter  # type: ignore[import-untyped]
+from reportlab.pdfgen import canvas  # type: ignore[import-untyped]
 
 from infrastructure.validation.content.pdf_validator import (
     PDFValidationError,
@@ -82,6 +83,19 @@ def test_extract_text_from_pdf_exists(temp_pdf_clean):
     assert len(text) > 0
     assert "Research Paper Title" in text
     assert "Author Name" in text
+    assert "Introduction" in text
+
+
+def test_extract_with_pdftotext_cli_when_available(temp_pdf_clean):
+    """Test the Poppler fallback directly when the local CLI is installed."""
+    if shutil.which("pdftotext") is None:
+        pytest.skip("pdftotext CLI is not installed")
+
+    from infrastructure.validation.content.pdf_validator import _extract_with_pdftotext
+
+    text = _extract_with_pdftotext(temp_pdf_clean)
+
+    assert "Research Paper Title" in text
     assert "Introduction" in text
 
 

@@ -18,7 +18,7 @@ from infrastructure.project.discovery import discover_projects, get_default_proj
 
 def test_project_package_exports_match_docs() -> None:
     """`infrastructure.project` exports convenience public API."""
-    from infrastructure.project import (  # noqa: WPS433 (import inside test)
+    from infrastructure.project import (
         ProjectInfo as ExportedProjectInfo,
         discover_projects as exported_discover_projects,
         get_project_metadata as exported_get_project_metadata,
@@ -1301,6 +1301,17 @@ def test_resolve_project_root_prefers_projects_over_wip(tmp_path: Path) -> None:
 
 def test_resolve_project_root_falls_back_to_projects_in_progress(tmp_path: Path) -> None:
     """When not under ``projects/``, use ``projects_in_progress/<name>``."""
+    wip = tmp_path / "projects_in_progress" / "staged"
+    (wip / "manuscript").mkdir(parents=True)
+    (wip / "manuscript" / "config.yaml").write_text("paper:\n  title: T\n")
+
+    resolved = resolve_project_root(tmp_path, "staged")
+    assert resolved == wip.resolve()
+
+
+def test_resolve_project_root_ignores_output_only_projects_shadow(tmp_path: Path) -> None:
+    """A generated output stub under projects/ must not hide a WIP source tree."""
+    (tmp_path / "projects" / "staged" / "output" / "reports").mkdir(parents=True)
     wip = tmp_path / "projects_in_progress" / "staged"
     (wip / "manuscript").mkdir(parents=True)
     (wip / "manuscript" / "config.yaml").write_text("paper:\n  title: T\n")

@@ -56,12 +56,12 @@ flowchart TD
     RUN_TEST3 --> REPEAT{Continue?}
     REPEAT -->|Yes| WRITE_TEST
     REPEAT -->|No| DONE([Complete])
-    
+
     classDef red fill:#ffebee,stroke:#c62828,stroke-width:2px
     classDef green fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class WRITE_TEST,RUN_TEST1 red
     class WRITE_CODE,RUN_TEST2,REFACTOR,RUN_TEST3 green
     class START,DONE process
@@ -81,15 +81,15 @@ from projects.template_code_project.src.optimization import gradient_descent
 
 def test_gradient_descent_converges():
     """Test that gradient descent converges for quadratic function."""
-    
+
     def objective(x):
         return x[0]**2 + x[1]**2
-    
+
     def gradient(x):
         return [2*x[0], 2*x[1]]
-    
+
     result = gradient_descent(objective, gradient, [1.0, 1.0])
-    
+
     # Test convergence
     assert result.converged == True
     assert result.iterations < 100
@@ -120,18 +120,18 @@ def gradient_descent(objective_fn, gradient_fn, initial_x,
                     learning_rate=0.01, max_iter=1000, tolerance=1e-6):
     """Gradient descent optimization."""
     x = list(initial_x)
-    
+
     for iteration in range(max_iter):
         grad = gradient_fn(x)
         x_new = [x[i] - learning_rate * grad[i] for i in range(len(x))]
-        
+
         # Check convergence
         if all(abs(x_new[i] - x[i]) < tolerance for i in range(len(x))):
             f_x = objective_fn(x_new)
             return OptimizationResult(x_new, f_x, True, iteration + 1)
-        
+
         x = x_new
-    
+
     # Max iterations reached
     f_x = objective_fn(x)
     return OptimizationResult(x, f_x, False, max_iter)
@@ -153,7 +153,7 @@ def test_gradient_descent_different_learning_rates():
         return x[0]**2 + x[1]**2
     def gradient(x):
         return [2*x[0], 2*x[1]]
-    
+
     for lr in [0.001, 0.01, 0.1]:
         result = gradient_descent(objective, gradient, [1.0, 1.0], learning_rate=lr)
         assert result.converged
@@ -164,7 +164,7 @@ def test_gradient_descent_max_iterations():
         return x[0]**2
     def gradient(x):
         return [2*x[0]]
-    
+
     result = gradient_descent(objective, gradient, [1.0], max_iter=5, learning_rate=0.001)
     assert result.iterations == 5
     assert result.converged == False
@@ -175,7 +175,7 @@ def test_gradient_descent_tolerance():
         return x[0]**2
     def gradient(x):
         return [2*x[0]]
-    
+
     result = gradient_descent(objective, gradient, [1.0], tolerance=1e-8)
     assert result.converged
     assert abs(result.x[0]) < 1e-8
@@ -221,8 +221,8 @@ open htmlcov/index.html
 
 This template enforces:
 
-- ✅ **Statement coverage**: 100% of code lines
-- ✅ **Branch coverage**: 100% of conditionals  
+- ✅ **Project code coverage**: ≥90% (enforced by CI)
+- ✅ **Infrastructure coverage**: ≥60% (enforced by CI)
 - ✅ **No mocks**: data only
 - ✅ **Deterministic**: Fixed seeds for reproducibility
 
@@ -271,27 +271,27 @@ def gradient_descent_with_momentum(
     x = list(initial_x)
     velocity = [0.0] * len(x)
     history = []
-    
+
     for iteration in range(config.max_iterations):
         grad = gradient_fn(x)
         f_x = objective_fn(x)
         history.append((list(x), f_x))
-        
+
         # Update velocity and position
         velocity = [
             config.momentum * v - config.learning_rate * g
             for v, g in zip(velocity, grad)
         ]
         x_new = [xi + vi for xi, vi in zip(x, velocity)]
-        
+
         # Check convergence
         if all(abs(x_new[i] - x[i]) < config.tolerance for i in range(len(x))):
             f_x_new = objective_fn(x_new)
             history.append((x_new, f_x_new))
             return OptimizationResult(x_new, f_x_new, True, iteration + 1, history)
-        
+
         x = x_new
-    
+
     f_x = objective_fn(x)
     return OptimizationResult(x, f_x, False, config.max_iterations, history)
 
@@ -309,34 +309,34 @@ def adam_optimizer(
     m = [0.0] * len(x)  # First moment
     v = [0.0] * len(x)  # Second moment
     history = []
-    
+
     for t in range(1, config.max_iterations + 1):
         grad = gradient_fn(x)
         f_x = objective_fn(x)
         history.append((list(x), f_x))
-        
+
         # Update biased moments
         m = [beta1 * mi + (1 - beta1) * gi for mi, gi in zip(m, grad)]
         v = [beta2 * vi + (1 - beta2) * gi**2 for vi, gi in zip(v, grad)]
-        
+
         # Bias correction
         m_hat = [mi / (1 - beta1**t) for mi in m]
         v_hat = [vi / (1 - beta2**t) for vi in v]
-        
+
         # Update parameters
         x_new = [
             xi - config.learning_rate * mh / (vh**0.5 + epsilon)
             for xi, mh, vh in zip(x, m_hat, v_hat)
         ]
-        
+
         # Check convergence
         if all(abs(x_new[i] - x[i]) < config.tolerance for i in range(len(x))):
             f_x_new = objective_fn(x_new)
             history.append((x_new, f_x_new))
             return OptimizationResult(x_new, f_x_new, True, t, history)
-        
+
         x = x_new
-    
+
     f_x = objective_fn(x)
     return OptimizationResult(x, f_x, False, config.max_iterations, history)
 ```
@@ -355,20 +355,20 @@ from projects.template_code_project.src.optimizers import (
 
 class TestObjectiveFunctions:
     """Test functions for optimization."""
-    
+
     @staticmethod
     def quadratic(x):
         return sum(xi**2 for xi in x)
-    
+
     @staticmethod
     def quadratic_gradient(x):
         return [2*xi for xi in x]
-    
+
     @staticmethod
     def rosenbrock(x):
-        return sum(100*(x[i+1] - x[i]**2)**2 + (1 - x[i])**2 
+        return sum(100*(x[i+1] - x[i]**2)**2 + (1 - x[i])**2
                   for i in range(len(x)-1))
-    
+
     @staticmethod
     def rosenbrock_gradient(x):
         grad = [0.0] * len(x)
@@ -435,7 +435,7 @@ from projects.template_code_project.src.optimizers import (
 )
 
 def rosenbrock(x):
-    return sum(100*(x[i+1] - x[i]**2)**2 + (1 - x[i])**2 
+    return sum(100*(x[i+1] - x[i]**2)**2 + (1 - x[i])**2
               for i in range(len(x)-1))
 
 def rosenbrock_gradient(x):
@@ -448,23 +448,23 @@ def rosenbrock_gradient(x):
 def main():
     initial_x = [0.0, 0.0]
     config = OptimizerConfig(learning_rate=0.001, max_iterations=2000)
-    
+
     # Use src/ methods for computation
     result_momentum = gradient_descent_with_momentum(
         rosenbrock, rosenbrock_gradient, initial_x, config
     )
-    
+
     result_adam = adam_optimizer(
         rosenbrock, rosenbrock_gradient, initial_x, config
     )
-    
+
     # Script handles visualization only
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
-    
+
     # Plot convergence
     momentum_history = [f_x for _, f_x in result_momentum.history]
     adam_history = [f_x for _, f_x in result_adam.history]
-    
+
     ax1.semilogy(momentum_history, label='Momentum')
     ax1.semilogy(adam_history, label='Adam')
     ax1.set_xlabel('Iteration')
@@ -472,13 +472,13 @@ def main():
     ax1.set_title('Convergence Comparison')
     ax1.legend()
     ax1.grid(True, alpha=0.3)
-    
+
     # Plot trajectory
     momentum_x = [x[0] for x, _ in result_momentum.history]
     momentum_y = [x[1] for x, _ in result_momentum.history]
     adam_x = [x[0] for x, _ in result_adam.history]
     adam_y = [x[1] for x, _ in result_adam.history]
-    
+
     ax2.plot(momentum_x, momentum_y, 'o-', label='Momentum', alpha=0.5)
     ax2.plot(adam_x, adam_y, 's-', label='Adam', alpha=0.5)
     ax2.plot(1, 1, 'r*', markersize=20, label='Optimum')
@@ -487,15 +487,15 @@ def main():
     ax2.set_title('Optimization Trajectory')
     ax2.legend()
     ax2.grid(True, alpha=0.3)
-    
+
     plt.tight_layout()
-    
+
     # Save
     output_path = 'output/figures/optimizer_comparison.png'
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
-    
+
     # Print for manifest
     print(output_path)
 
@@ -544,14 +544,14 @@ def save_with_metadata(data, filename, description=""):
     import numpy as np
     import sys
     import platform
-    
+
     # Save data
     np.savez(filename, data=data)
-    
+
     # Calculate hash for integrity
     with open(filename, 'rb') as f:
         file_hash = hashlib.sha256(f.read()).hexdigest()
-    
+
     # Create metadata
     metadata = {
         'filename': filename,
@@ -563,15 +563,15 @@ def save_with_metadata(data, filename, description=""):
         'numpy_version': np.__version__,
         'platform': platform.platform(),
     }
-    
+
     # Save metadata
     meta_file = filename.replace('.npz', '_metadata.json')
     with open(meta_file, 'w') as f:
         json.dump(metadata, f, indent=2)
-    
+
     print(filename)
     print(meta_file)
-    
+
     return metadata
 ```
 
@@ -653,7 +653,7 @@ This creates a tamper-detectable PDF with embedded provenance metadata. See the 
 **Solution**:
 ```bash
 # Find uncovered lines
-pytest --cov=projects.template_code_project.src --cov-report=term-missing
+uv run pytest --cov=projects.template_code_project.src --cov-report=term-missing
 # Add tests for lines marked as "Missing"
 ```
 
@@ -717,7 +717,7 @@ After completing this guide, you should be able to:
 - [x] Practice test-driven development effectively
 - [x] Achieve and maintain test coverage
 - [x] Build complex mathematical workflows
-- [x] Implement testing strategies  
+- [x] Implement testing strategies
 - [x] Ensure reproducible research results
 - [x] Manage data versioning and environments
 

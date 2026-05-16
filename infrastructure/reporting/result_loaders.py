@@ -6,6 +6,7 @@ produced by the test runner and coverage tools.
 
 from __future__ import annotations
 
+
 import json
 from pathlib import Path
 from typing import Any, TypedDict, cast
@@ -30,7 +31,7 @@ class InfraResults(TypedDict):
     exit_code: int
 
 
-_EMPTY_INFRA_RESULTS: InfraResults = {
+_EMPTY_INFRA_RESULTS: "InfraResults" = {
     "passed": 0,
     "failed": 0,
     "skipped": 0,
@@ -85,7 +86,7 @@ def load_test_results(
 def load_infrastructure_results(repo_root: Path | None = None) -> InfraResults:
     """Load infrastructure test results from root coverage files."""
     root = repo_root or Path.cwd()
-    base: InfraResults = cast(InfraResults, dict(_EMPTY_INFRA_RESULTS))
+    base: "InfraResults" = cast(InfraResults, dict(_EMPTY_INFRA_RESULTS))
 
     infra_results_file = root / "infrastructure_validation_report.json"
     if infra_results_file.exists():

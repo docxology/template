@@ -1,226 +1,196 @@
 # LLM Templates - Quick Reference
 
-High-level template system for common research tasks.
+Prompt templates for research tasks, backed by a simple string-substitution engine.
 
 ## Overview
 
-The templates module provides high-level abstractions for common LLM tasks in research workflows. It includes specialized templates for manuscript review, research assistance, and academic writing.
+The templates module provides reusable prompt classes for common LLM research workflows: manuscript review, translation, paper summarisation, and literature analysis. Each template class subclasses `ResearchTemplate` and renders a prompt string via Python's `string.Template`.
 
 ## Quick Start
 
 ```python
-from infrastructure.llm.templates import ManuscriptReviewTemplate
+from infrastructure.llm.templates import get_template
 
-# Create template instance
-template = ManuscriptReviewTemplate()
+# Retrieve a template by registry key
+template = get_template("manuscript_quality_review")
 
-# Generate review
-review = template.generate_review(
-    manuscript_path=Path("manuscript.pdf"),
-    focus_areas=["methodology", "results"]
-)
+# Render to a prompt string
+prompt = template.render(text=manuscript_text, max_tokens=2048)
 ```
 
 ## Available Templates
 
-### Manuscript Review Template
+Templates are keyed in the `TEMPLATES` registry (see `__init__.py`). Use `get_template(name)` to instantiate any of them.
 
-manuscript review:
+### Manuscript Review Templates
+
+Four templates cover the manuscript review pipeline:
 
 ```python
-from infrastructure.llm.templates import ManuscriptReviewTemplate
-
-template = ManuscriptReviewTemplate()
-
-# Full review
-review = template.generate_review(
-    manuscript_path=Path("manuscript.pdf"),
-    review_type="comprehensive"
+from infrastructure.llm.templates import (
+    ManuscriptExecutiveSummary,
+    ManuscriptQualityReview,
+    ManuscriptMethodologyReview,
+    ManuscriptImprovementSuggestions,
 )
 
-# Focused review
-methodology_review = template.review_methodology(
-    manuscript_text=text
+# Instantiate directly or via get_template()
+template = ManuscriptQualityReview()
+prompt = template.render(text=manuscript_text, max_tokens=2048)
+```
+
+### Manuscript Translation Template
+
+```python
+from infrastructure.llm.templates import ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES
+
+# TRANSLATION_LANGUAGES maps language codes to full names
+# e.g. {"zh": "Chinese", "hi": "Hindi", "ru": "Russian"}
+template = ManuscriptTranslationAbstract()
+prompt = template.render(
+    text=abstract_text,
+    target_language=TRANSLATION_LANGUAGES["zh"],
+    max_tokens=2048,
 )
 ```
 
-### Research Assistant Template
-
-General research assistance:
+### Research and Summarisation Templates
 
 ```python
-from infrastructure.llm.templates import ResearchAssistantTemplate
-
-assistant = ResearchAssistantTemplate()
-
-# Answer research question
-answer = assistant.answer_question(
-    question="What are the key challenges in X?",
-    context=relevant_papers
+from infrastructure.llm.templates import (
+    SummarizeAbstract,
+    LiteratureReview,
+    CodeDocumentation,
+    DataInterpretation,
+    PaperSummarization,
+    LiteratureReviewSynthesis,
+    ScienceCommunicationNarrative,
+    ComparativeAnalysis,
+    ResearchGapIdentification,
+    CitationNetworkAnalysis,
 )
 
-# Generate outline
-outline = assistant.generate_outline(
-    topic="Machine learning applications",
-    sections=["introduction", "methods", "results"]
-)
-```
+# Simple single-variable templates
+prompt = SummarizeAbstract().render(text=abstract_text)
+prompt = LiteratureReview().render(summaries=paper_summaries)
+prompt = CodeDocumentation().render(code=source_code)
+prompt = DataInterpretation().render(stats=statistics_text)
 
-### Academic Writing Template
+# PaperSummarization has a richer render() signature
+from infrastructure.llm.templates import PaperSummarization
 
-Academic writing assistance:
-
-```python
-from infrastructure.llm.templates import AcademicWritingTemplate
-
-writer = AcademicWritingTemplate()
-
-# Improve writing
-improved = writer.improve_section(
-    text=section_text,
-    style="academic",
-    focus="clarity"
-)
-
-# Generate abstract
-abstract = writer.generate_abstract(
-    paper_content=full_paper_text
+prompt = PaperSummarization().render(
+    title="Paper Title",
+    authors="Author Names",
+    year="2024",
+    source="arXiv",
+    text=paper_text,
+    domain="computer_science",        # optional
+    domain_instructions=None,         # optional; defaults to built-in hints
+    reference_count=42,               # optional
+    references_section_found=True,    # optional
 )
 ```
 
-## Template Methods
+## Template Registry
 
-### Manuscript Review Methods
+The module exposes a `TEMPLATES` dict and `get_template()` factory:
 
 ```python
-template = ManuscriptReviewTemplate()
+from infrastructure.llm.templates import TEMPLATES, get_template
 
-# Executive summary
-summary = template.generate_executive_summary(manuscript_text)
+# List all available template keys
+print(list(TEMPLATES.keys()))
+# ['summarize_abstract', 'literature_review', 'code_doc', 'data_interpret',
+#  'paper_summarization', 'manuscript_executive_summary', 'manuscript_quality_review',
+#  'manuscript_methodology_review', 'manuscript_improvement_suggestions',
+#  'manuscript_translation_abstract', 'literature_review_synthesis',
+#  'science_communication_narrative', 'comparative_analysis',
+#  'research_gap_identification', 'citation_network_analysis']
 
-# Methodology review
-methodology = template.review_methodology(manuscript_text)
-
-# Results evaluation
-results = template.evaluate_results(manuscript_text)
-
-# Improvement suggestions
-suggestions = template.suggest_improvements(manuscript_text)
+template = get_template("paper_summarization")  # returns PaperSummarization()
 ```
 
-### Research Assistant Methods
+`get_template` raises `LLMTemplateError` for unknown keys.
+
+## Prompt-Building Helpers
+
+`helpers.py` exports four functions that return formatted instruction blocks for injection into prompt strings:
 
 ```python
-assistant = ResearchAssistantTemplate()
-
-# Literature search assistance
-papers = assistant.suggest_papers(topic="quantum computing")
-
-# Concept explanation
-explanation = assistant.explain_concept(
-    concept="quantum entanglement",
-    level="graduate"
+from infrastructure.llm.templates import (
+    format_requirements,
+    token_budget_awareness,
+    content_requirements,
+    section_structure,
+    validation_hints,
 )
 
-# Comparison analysis
-comparison = assistant.compare_approaches(
-    approach1="method A",
-    approach2="method B"
+fmt_block = format_requirements(
+    required_headers=["## Summary", "## Methods", "## Results"],
+    section_requirements={"## Methods": "at least 100 words"},
 )
-```
 
-## Configuration
-
-### Template Settings
-
-```python
-from infrastructure.llm.templates import ManuscriptReviewTemplate
-
-template = ManuscriptReviewTemplate(
-    model_name="gemma3:4b",
-    temperature=0.7,
-    max_tokens=2000,
-    review_depth="comprehensive"
+budget_block = token_budget_awareness(
+    total_tokens=2048,
+    word_targets={"## Summary": (50, 100)},
 )
-```
 
-### Custom Prompts
+quality_block = content_requirements(
+    no_hallucination=True,
+    cite_sources=True,
+    evidence_based=True,
+    no_meta_commentary=True,
+)
 
-```python
-# Override default prompts
-template = ManuscriptReviewTemplate()
-template.set_custom_prompt(
-    section="methodology",
-    prompt="Custom methodology review prompt..."
+struct_block = section_structure(
+    sections=["Summary", "Methods", "Results"],
+    section_descriptions={"Methods": "describe experimental design"},
+)
+
+hints_block = validation_hints(
+    word_count_range=(300, 800),
+    required_elements=["numerical results"],
 )
 ```
 
-## Integration
+## Minimum Word Counts
 
-### Pipeline Integration
-
-```python
-# scripts/06_llm_review.py
-from infrastructure.llm.templates import ManuscriptReviewTemplate
-
-def run_review(manuscript_path):
-    template = ManuscriptReviewTemplate()
-    review = template.generate_review(manuscript_path)
-    
-    # Save review
-    save_review(review, output_path)
-    return review
-```
-
-### Batch Processing
+`REVIEW_MIN_WORDS` defines the minimum acceptable word counts for quality validation of each manuscript review type:
 
 ```python
-from infrastructure.llm.templates import ManuscriptReviewTemplate
+from infrastructure.llm.templates import REVIEW_MIN_WORDS
 
-template = ManuscriptReviewTemplate()
-
-# Review multiple manuscripts
-manuscripts = list(Path("manuscripts/").glob("*.pdf"))
-
-for manuscript in manuscripts:
-    review = template.generate_review(manuscript)
-    save_review(review, f"reviews/{manuscript.stem}.json")
+# {"executive_summary": 250, "quality_review": 300,
+#  "methodology_review": 300, "improvement_suggestions": 200,
+#  "translation": 400}
 ```
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[Template System] --> B[Manuscript Review]
-    A --> C[Research Assistant]
-    A --> D[Academic Writing]
+    A[templates/__init__.py] --> B[ResearchTemplate base.py]
+    A --> C[manuscript.py re-exports]
+    A --> D[research.py re-exports]
+    A --> E[helpers.py]
 
-    B --> E[Review Generation]
-    B --> F[Section Analysis]
-    B --> G[Quality Assessment]
+    C --> C1[ManuscriptExecutiveSummary]
+    C --> C2[ManuscriptQualityReview]
+    C --> C3[ManuscriptMethodologyReview]
+    C --> C4[ManuscriptImprovementSuggestions]
+    C --> C5[ManuscriptTranslationAbstract]
 
-    C --> H[Question Answering]
-    C --> I[Literature Assistance]
-    C --> J[Concept Explanation]
+    D --> D1[SummarizeAbstract / LiteratureReview / CodeDocumentation / DataInterpretation]
+    D --> D2[PaperSummarization]
+    D --> D3[LiteratureReviewSynthesis / ComparativeAnalysis / etc.]
 
-    D --> K[Writing Improvement]
-    D --> L[Abstract Generation]
-    D --> M[Section Drafting]
-
-    E --> N[LLM Client]
-    F --> N
-    G --> N
-    H --> N
-    I --> N
-    J --> N
-    K --> N
-    L --> N
-    M --> N
+    B --> F[LLMClient via review/generator.py]
 ```
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - templates documentation
-- [../core/README.md](../core/README.md) - LLM core functionality
+- [AGENTS.md](AGENTS.md) - templates module reference
+- [../core/README.md](../core/README.md) - LLM core client
 - [../prompts/README.md](../prompts/README.md) - Prompt system
 - [../review/README.md](../review/README.md) - Review generation

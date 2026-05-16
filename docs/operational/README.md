@@ -20,7 +20,7 @@
 | [reporting-guide.md](reporting-guide.md) | Pipeline reporting system and report interpretation |
 | [error-handling-guide.md](error-handling-guide.md) | Error handling patterns and custom exceptions |
 
-## Quick Navigation
+## Operations Quick Navigation
 
 | Need | Go to |
 |------|-------|
@@ -32,9 +32,19 @@
 | System configuration | [config/configuration.md](config/configuration.md) |
 | Resume a failed pipeline | [config/checkpoint-resume.md](config/checkpoint-resume.md) |
 | Optimize performance | [config/performance-optimization.md](config/performance-optimization.md) |
+| First time setup? | [config-wizard.md](config-wizard.md) · [CLAUDE.md](../../CLAUDE.md) |
+| Deploy with Docker? | [docker.md](docker.md) |
+| Incident response? | [runbook.md](runbook.md) |
+| Routine maintenance? | [maintenance.md](maintenance.md) |
 
 ## See Also
 
 - [Architecture](../core/architecture.md) — System design overview
 - [Common Workflows](../reference/common-workflows.md) — Step-by-step recipes
 - [FAQ](../reference/faq.md) — Common questions
+- [Overview](overview.md) — High-level overview of operations documentation
+- [Diagrams](diagrams.md) — Architecture and workflow diagrams
+
+---
+
+> Migrated from `operations/README.md`

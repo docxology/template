@@ -4,8 +4,6 @@ This module exists to keep menu parsing logic testable and reusable across
 CLI entry points. It intentionally avoids any business logic.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import Sequence
 

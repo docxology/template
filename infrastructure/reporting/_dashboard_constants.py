@@ -1,7 +1,5 @@
 """Shared constants for dashboard chart generation."""
 
-from __future__ import annotations
-
 COLORS = {
     "primary": "#2E86AB",
     "success": "#06A77D",

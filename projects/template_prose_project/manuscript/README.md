@@ -39,4 +39,4 @@ See [AGENTS.md](AGENTS.md) for the substitution markers and editing checklist, a
 ## See also
 
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc citation/cross-reference syntax for this manuscript.
-- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by all three template exemplars.
+- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars and optional search add-on.

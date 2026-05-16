@@ -22,8 +22,6 @@ Model Selection:
         select_best_model(["llama3-gradient", "gemma3:4b"])
 """
 
-from __future__ import annotations
-
 from infrastructure.llm.utils.models import (
     DEFAULT_MODEL_PREFERENCES,
     SMALL_FAST_MODEL_PREFERENCES,

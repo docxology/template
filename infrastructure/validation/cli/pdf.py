@@ -12,28 +12,17 @@ All business logic is in src/pdf_validator.py
 This script handles only I/O and orchestration.
 """
 
-from __future__ import annotations
-
 import sys
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.exceptions import PDFValidationError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
 
 logger = get_logger(__name__)
 
-# Add src to path for imports
 repo_root = Path(__file__).parent.parent
-sys.path.insert(0, str(repo_root / "src"))
-
-try:
-    from infrastructure.core.exceptions import PDFValidationError
-    from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
-except ImportError as e:
-    logger.error("Failed to import from infrastructure/validation/pdf_validator.py")
-    logger.error(f"   {e}")
-    logger.error("   Ensure infrastructure/validation/pdf_validator.py exists and is properly formatted")
-    raise SystemExit(1) from e
 
 
 def print_validation_report(report: dict[str, Any], verbose: bool = False) -> None:
@@ -141,13 +130,13 @@ if __name__ == "__main__":
 Examples:
   # Validate default combined PDF
   python validate_pdf_output.py
-  
+
   # Validate specific PDF
   python validate_pdf_output.py output/pdf/01_abstract.pdf
-  
+
   # Show more words (default: 200)
   python validate_pdf_output.py --words 500
-  
+
   # Verbose output
   python validate_pdf_output.py --verbose
         """,

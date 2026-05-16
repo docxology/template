@@ -6,8 +6,6 @@ explicit ``-m`` must pass the full expression (including ``not bench`` when
 benchmarks are opt-in).
 """
 
-from __future__ import annotations
-
 
 def build_pytest_marker_expression(
     *,

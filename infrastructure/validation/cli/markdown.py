@@ -11,8 +11,6 @@ All business logic is in infrastructure/markdown_validator.py
 This script handles only CLI argument parsing and I/O.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger

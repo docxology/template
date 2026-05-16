@@ -5,8 +5,6 @@ manuscript files match the figure registry. Part of the infrastructure
 layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 import json
 import re
 from pathlib import Path
@@ -25,11 +23,12 @@ def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
     referenced: set[str] = set()
     if not manuscript_dir.exists():
         return referenced
-    for md_file in manuscript_dir.glob("*.md"):
+    for md_file in manuscript_dir.rglob("*.md"):
         if md_file.name in _SKIP_DOCS:
             continue
         try:
-            referenced.update(_FIGURE_REF_PATTERN.findall(md_file.read_text()))
+            text = "\n".join(line for line in md_file.read_text().splitlines() if not line.lstrip().startswith("%"))
+            referenced.update(_FIGURE_REF_PATTERN.findall(text))
         except (OSError, UnicodeDecodeError) as e:
             logger.warning(f"Could not read {md_file.name}: {e}")
     return referenced

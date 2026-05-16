@@ -6,8 +6,6 @@ inventory, and discovery operations.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 import argparse
 from pathlib import Path
 

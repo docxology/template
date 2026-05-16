@@ -11,7 +11,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 
 - **Hub:** This file lists every subpackage skill and a module map.
 - **Manifest:** `.cursor/skill_manifest.json` lists every skill (`name`, `description`, `path`); regenerate with `uv run python -m infrastructure.skills write`.
-- **Search:** `infrastructure/**/SKILL.md` (15 files: hub `infrastructure/SKILL.md` + 13 top-level subpackage skills + `infrastructure/core/telemetry/SKILL.md`).
+- **Search:** `infrastructure/**/SKILL.md` (22 files: hub `infrastructure/SKILL.md` + 18 top-level subpackage skills + deeper nested skills `infrastructure/core/telemetry/SKILL.md`, `infrastructure/reference/citation/SKILL.md`, `infrastructure/search/literature/SKILL.md`).
 - **In Cursor:** `@infrastructure/SKILL.md` or `@infrastructure/<module>/SKILL.md` to load context; pair with the matching `AGENTS.md` for API tables.
 - **Frontmatter:** Each `SKILL.md` has YAML `name` and `description` for routing (see also the table in `infrastructure/README.md`).
 
@@ -35,7 +35,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 | `scientific/` | Benchmarking, numerical stability, scientific templates | `benchmark_function`, `check_numerical_stability` |
 | `project/` | Multi-project discovery and validation | `discover_projects`, `validate_project_structure` |
 | `skills/` | Enumerate and parse `SKILL.md`; maintain Cursor manifest | `discover_skills`, `write_skill_manifest` |
-| `steganography/` | Cryptographic PDF watermarking and verification | `SteganographyProcessor`, `StegoParams` |
+| `steganography/` | Cryptographic PDF watermarking and verification | `SteganographyProcessor`, `SteganographyConfig`, `embed_steganography` |
 | `core/telemetry/` | Unified pipeline telemetry (stage resources + diagnostics, JSON/text reports) | `TelemetryCollector`, `TelemetryConfig` |
 
 ## Import Patterns
@@ -76,14 +76,14 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
 ### Using the Pipeline
 
 ```bash
-python3 scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python3 scripts/execute_pipeline.py --project template_code_project --core-only
 ```
 
 ### Validating Outputs
 
 ```bash
-python3 -m infrastructure.validation.cli.main markdown projects/template_code_project/manuscript/
-python3 -m infrastructure.validation.cli.main pdf output/template_code_project/pdf/
+uv run python3 -m infrastructure.validation.cli.main markdown projects/template_code_project/manuscript/
+uv run python3 -m infrastructure.validation.cli.main pdf output/template_code_project/pdf/
 ```
 
 ## Submodule Skills

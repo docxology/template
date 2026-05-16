@@ -49,8 +49,6 @@ Determinism
 * Empty packages (``__all__ == []``) are omitted from the output.
 """
 
-from __future__ import annotations
-
 import ast
 from dataclasses import dataclass
 from pathlib import Path

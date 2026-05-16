@@ -4,8 +4,6 @@ Extracted from security.py for single-responsibility. Import via security.py
 for backwards compatibility.
 """
 
-from __future__ import annotations
-
 import functools
 import threading
 import time

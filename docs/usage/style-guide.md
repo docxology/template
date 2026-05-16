@@ -47,10 +47,10 @@ where $\lambda$ controls regularization strength.
 
 **Key rules:**
 
-- ✅ Use `\begin{equation}` … `\end{equation}`
-- ✅ Always add `\label{eq:descriptive_name}`
-- ❌ **Never** use `$$ ... $$` — it produces unnumbered, unlabellable equations
-- ❌ **Never** use `\[ ... \]` — same problem
+- ✅ Use isolated Pandoc display math blocks: `$$ ... $$` on their own line(s)
+- ✅ For numbered equations, use the project's registry/crossref syntax or a labelled `equation` environment when the target is PDF-only
+- ❌ **Never** use inline `$$ ... $$` inside prose
+- ❌ **Never** use `\[ ... \]` — Pandoc emits literal brackets in HTML
 
 ### Multi-Line Equations
 
@@ -322,7 +322,7 @@ The hyperparameters (Table \ref{tab:hyperparameters}) were tuned via grid search
 
 | ❌ Mistake                           | ✅ Correct                                                             | Why                                          |
 | ------------------------------------ | ---------------------------------------------------------------------- | -------------------------------------------- |
-| `$$ f(x) = x^2 $$`                  | `\begin{equation}\label{eq:name} ... \end{equation}`                 | `$$` produces unnumbered equations           |
+| `Prose $$ f(x)=x^2 $$`              | `$$ f(x)=x^2 $$` on its own line or registered equation syntax       | Inline `$$` is fragile across render targets |
 | `\includegraphics{figures/fig.png}` | `\includegraphics{../output/figures/fig.png}`                         | Paths are relative to `manuscript/`          |
 | `\caption{results}`                 | `\caption{Comparison of model accuracy across three benchmarks.}`     | Captions must be complete sentences          |
 | `\label{eq:1}`                      | `\label{eq:convergence_rate}`                                         | Labels must be descriptive                   |

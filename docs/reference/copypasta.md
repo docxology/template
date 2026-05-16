@@ -61,9 +61,6 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```bash
 # Run tests with coverage
 uv run pytest tests/ --cov=src --cov-report=term-missing
-
-# Or with pip
-pytest tests/ --cov=src --cov-report=term-missing
 ```
 
 ### **🏷️ Customizing the Project**
@@ -124,12 +121,12 @@ Excited to share this **[research project template](https://github.com/docxology
 
 I've created a **[GitHub template](https://github.com/docxology/template)** for research projects that I think could be really useful for the community. It includes:
 
-✅ **Test-driven development** with coverage requirements  
-✅ **Automated PDF generation** from markdown with LaTeX  
-✅ **Thin orchestrator pattern** for maintainable code  
-✅ **Professional documentation** structure  
-✅ **Automated figure generation** from Python scripts  
-✅ **Cross-referencing system** for complex documents  
+✅ **Test-driven development** with coverage requirements
+✅ **Automated PDF generation** from markdown with LaTeX
+✅ **Thin orchestrator pattern** for maintainable code
+✅ **Professional documentation** structure
+✅ **Automated figure generation** from Python scripts
+✅ **Cross-referencing system** for complex documents
 
 The template is designed for academic papers, scientific documentation, thesis projects, and any research requiring professional output. It automatically validates code quality, generates figures, and creates publication-ready PDFs. Check out the **[examples showcase](../usage/examples-showcase.md)** for real-world usage patterns.
 
@@ -142,11 +139,11 @@ Would love feedback from researchers and developers who might use this!
 Here's a **[research project template](https://github.com/docxology/template)** that handles exactly what you're looking for:
 
 **🚀 Key Features:**
-✅ Test-driven development with coverage  
-✅ Automated PDF generation from markdown  
-✅ Professional LaTeX output with cross-referencing  
-✅ Automated figure generation from Python scripts  
-✅ Thin orchestrator pattern for maintainable code  
+✅ Test-driven development with coverage
+✅ Automated PDF generation from markdown
+✅ Professional LaTeX output with cross-referencing
+✅ Automated figure generation from Python scripts
+✅ Thin orchestrator pattern for maintainable code
 
 **⚡ Quick Start:**
 
@@ -166,11 +163,11 @@ The template automatically handles LaTeX compilation, figure integration, and ge
 
 This **[template](https://github.com/docxology/template)** solves exactly the problem you're describing! It provides:
 
-🔧 **1. Standardized Structure**: Clear separation between source code, tests, scripts, and documentation  
-🧪 **2. Automated Quality**: test coverage and automated validation  
-📚 **3. Professional Output**: Publication-ready PDFs with proper LaTeX formatting  
-🖼️ **4. Figure Integration**: Automated generation and integration of figures from Python scripts  
-🔗 **5. Cross-Referencing**: Built-in system for equations, figures, and sections  
+🔧 **1. Standardized Structure**: Clear separation between source code, tests, scripts, and documentation
+🧪 **2. Automated Quality**: test coverage and automated validation
+📚 **3. Professional Output**: Publication-ready PDFs with proper LaTeX formatting
+🖼️ **4. Figure Integration**: Automated generation and integration of figures from Python scripts
+🔗 **5. Cross-Referencing**: Built-in system for equations, figures, and sections
 
 The **[thin orchestrator pattern](../architecture/thin-orchestrator-summary.md)** ensures your scripts use tested methods from source modules, making the codebase maintainable and reliable. for research projects where accuracy and reproducibility matter. The **[how to use guide](../core/how-to-use.md)** provides step-by-step instructions, and the **[workflow guide](../core/workflow.md)** shows the development process.
 
@@ -179,18 +176,18 @@ The **[thin orchestrator pattern](../architecture/thin-orchestrator-summary.md)*
 I've developed a **[research project template](https://github.com/docxology/template)** that addresses many of the workflow issues we discuss here. It implements:
 
 **🔬 Core Principles:**
-✅ Test-driven development with enforced coverage requirements  
-✅ Automated documentation generation from source code  
-✅ Professional PDF output with LaTeX compilation  
-✅ Integrated figure and data generation  
-✅ Cross-referencing and glossary systems  
+✅ Test-driven development with enforced coverage requirements
+✅ Automated documentation generation from source code
+✅ Professional PDF output with LaTeX compilation
+✅ Integrated figure and data generation
+✅ Cross-referencing and glossary systems
 
 **🎯 Benefits for Researchers:**
-✅ Consistent project structure across teams  
-✅ Automated quality assurance  
-✅ Publication-ready outputs  
-✅ Reproducible research workflows  
-✅ Integration with existing Python ecosystems  
+✅ Consistent project structure across teams
+✅ Automated quality assurance
+✅ Publication-ready outputs
+✅ Reproducible research workflows
+✅ Integration with existing Python ecosystems
 
 The template is designed for academic papers, thesis projects, and scientific documentation. It automatically validates code quality and generates professional outputs, saving significant time on formatting and quality assurance. The **[how to use guide](../core/how-to-use.md)** provides step-by-step instructions, and the **[examples showcase](../usage/examples-showcase.md)** demonstrates real-world applications across different research domains.
 
@@ -250,27 +247,27 @@ Thanks!
 
 ### **📢 Headline Options**
 
-🚀 "Transform Your Research Workflow with Automated Quality Assurance"  
-⚡ "Professional Research Outputs with Zero Configuration"  
-🧪 "Test-Driven Development Meets Academic Publishing"  
-📚 "Automated PDF Generation for Research Projects"  
-✅ "Research Template with Test Coverage"  
+🚀 "Transform Your Research Workflow with Automated Quality Assurance"
+⚡ "Professional Research Outputs with Zero Configuration"
+🧪 "Test-Driven Development Meets Academic Publishing"
+📚 "Automated PDF Generation for Research Projects"
+✅ "Research Template with Test Coverage"
 
 ### **💎 Value Propositions**
 
-⏰ **Save Time**: Automated PDF generation eliminates manual formatting  
-🔒 **Ensure Quality**: test coverage enforced automatically  
-📖 **Professional Output**: Publication-ready LaTeX and PDF generation  
-🔄 **Maintain Consistency**: Standardized structure across all projects  
-🤝 **Enable Collaboration**: Clear workflows for team research projects  
+⏰ **Save Time**: Automated PDF generation eliminates manual formatting
+🔒 **Ensure Quality**: test coverage enforced automatically
+📖 **Professional Output**: Publication-ready LaTeX and PDF generation
+🔄 **Maintain Consistency**: Standardized structure across all projects
+🤝 **Enable Collaboration**: Clear workflows for team research projects
 
 ### **🎬 Call-to-Action Options**
 
-🚀 "Click 'Use this template' and start building in minutes"  
-⚡ "Transform your research workflow today"  
-🤝 "Join the community of researchers using this template"  
-📚 "Get started with professional research outputs"  
-🔮 "Experience the future of research project management"  
+🚀 "Click 'Use this template' and start building in minutes"
+⚡ "Transform your research workflow today"
+🤝 "Join the community of researchers using this template"
+📚 "Get started with professional research outputs"
+🔮 "Experience the future of research project management"
 
 ## 🗺️ **System Architecture Diagrams**
 
@@ -286,26 +283,26 @@ graph TB
         SCRIPTS[📊 scripts/<br/><br/>Build pipeline<br/>Stage scripts]
         OUTPUT[📤 output<br/>Generated files<br/>PDFs, figures, data]
     end
-    
+
     subgraph "Thin Orchestrator Pattern"
         SRC -->|"provides tested methods"| SCRIPTS
         SCRIPTS -->|"import & use"| SRC
         SCRIPTS -->|"generate"| OUTPUT
         TESTS -->|"validate"| SRC
     end
-    
+
     subgraph "Build Pipeline"
         RENDER[🚀 execute_pipeline.py<br/>Pipeline Orchestrator]
         RENDER -->|"runs tests"| TESTS
         RENDER -->|"executes scripts"| SCRIPTS
         RENDER -->|"builds PDFs"| OUTPUT
     end
-    
+
     classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef pattern fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class SRC,TESTS,SCRIPTS,MANUSCRIPT,REPO_UTILS core
     class SRC,SCRIPTS pattern
     class RENDER pipeline
@@ -325,11 +322,11 @@ flowchart TD
     INTEGRATION --> DOCS[📚 Update Documentation]
     DOCS --> PIPELINE[🚀 Run Pipeline]
     PIPELINE --> SUCCESS[🎉 Development]
-    
+
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    
+
     class TESTS,IMPLEMENT,VALIDATE,ADD_TESTS,INTEGRATION,DOCS,PIPELINE process
     class START,SUCCESS success
 ```
@@ -343,21 +340,21 @@ graph LR
         MD[📚 Markdown files]
         PREAMBLE[📝 LaTeX preamble]
     end
-    
+
     subgraph "Processing Pipeline"
         TESTS[🧪 Test validation]
         SCRIPTS[📜 Script execution]
         VALIDATION[✅ Markdown validation]
         GLOSSARY[📖 Glossary generation]
     end
-    
+
     subgraph "Generated Outputs"
         FIGS[🖼️ Figures]
         DATA[📊 Data files]
         PDFS[📄 PDFs]
         TEX[🔤 LaTeX exports]
     end
-    
+
     SRC --> TESTS
     SRC --> SCRIPTS
     MD --> VALIDATION
@@ -366,11 +363,11 @@ graph LR
     SCRIPTS --> DATA
     MD --> PDFS
     MD --> TEX
-    
+
     classDef input fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class SRC,MD,PREAMBLE input
     class TESTS,SCRIPTS,VALIDATION,GLOSSARY process
     class FIGS,DATA,PDFS,TEX output
@@ -380,32 +377,32 @@ graph LR
 
 ### **🌐 Essential URLs**
 
-🔗 **[GitHub Template](https://github.com/docxology/template)** - Click "Use this template"  
-📚 **[Documentation](https://github.com/docxology/template#readme)** - project overview  
-🐛 **[Issues](https://github.com/docxology/template/issues)** - Report bugs & request features  
-💬 **[Discussions](https://github.com/docxology/template/discussions)** - Join the community  
+🔗 **[GitHub Template](https://github.com/docxology/template)** - Click "Use this template"
+📚 **[Documentation](https://github.com/docxology/template#readme)** - project overview
+🐛 **[Issues](https://github.com/docxology/template/issues)** - Report bugs & request features
+💬 **[Discussions](https://github.com/docxology/template/discussions)** - Join the community
 
 ### **🚀 Key Features to Highlight**
 
-✅ **Test-driven development** with coverage  
-✅ **Automated PDF generation** from markdown  
-✅ **Professional LaTeX output** with cross-referencing  
-✅ **Automated figure generation** from Python scripts  
-✅ **Cross-referencing system** for equations & figures  
-✅ **Standardized project structure** for consistency  
-✅ **Thin orchestrator pattern** for maintainability  
-✅ **Publication-ready outputs** for academic use  
+✅ **Test-driven development** with coverage
+✅ **Automated PDF generation** from markdown
+✅ **Professional LaTeX output** with cross-referencing
+✅ **Automated figure generation** from Python scripts
+✅ **Cross-referencing system** for equations & figures
+✅ **Standardized project structure** for consistency
+✅ **Thin orchestrator pattern** for maintainability
+✅ **Publication-ready outputs** for academic use
 
 ### **📖 Documentation Navigation**
 
-🚀 **[How To Use Guide](../core/how-to-use.md)** - **usage guide** from basic to advanced  
-🏗️ **[Architecture Guide](../core/architecture.md)** - System design overview  
-⚡ **[Workflow Guide](../core/workflow.md)** - Development process  
-📝 **[Markdown Guide](../usage/markdown-template-guide.md)** - Writing & formatting  
-🎯 **[Examples Showcase](../usage/examples-showcase.md)** - Real-world usage  
-🔧 **[Thin Orchestrator Summary](../architecture/thin-orchestrator-summary.md)** - Pattern implementation  
-🗺️ **[Development Roadmap](../development/roadmap.md)** - Future plans  
-🤝 **[Contributing Guide](../development/contributing.md)** - How to contribute  
+🚀 **[How To Use Guide](../core/how-to-use.md)** - **usage guide** from basic to advanced
+🏗️ **[Architecture Guide](../core/architecture.md)** - System design overview
+⚡ **[Workflow Guide](../core/workflow.md)** - Development process
+📝 **[Markdown Guide](../usage/markdown-template-guide.md)** - Writing & formatting
+🎯 **[Examples Showcase](../usage/examples-showcase.md)** - Real-world usage
+🔧 **[Thin Orchestrator Summary](../architecture/thin-orchestrator-summary.md)** - Pattern implementation
+🗺️ **[Development Roadmap](../development/roadmap.md)** - Future plans
+🤝 **[Contributing Guide](../development/contributing.md)** - How to contribute
 ❓ **[FAQ](../reference/faq.md)** - Common questions
 
 ## 📊 **Feature Comparison Table**
@@ -479,7 +476,7 @@ graph LR
 
 All content in this file is ready for copy-paste use. Customize as needed for your specific context and audience. The **[Research Project Template](https://github.com/docxology/template)** is available at: <https://github.com/docxology/template>
 
-**🔗 Quick Start**: Click "Use this template" and start building in minutes!  
-**📚 Documentation**: guides for every aspect of the system  
-**🤝 Community**: Join discussions and contribute to the project  
+**🔗 Quick Start**: Click "Use this template" and start building in minutes!
+**📚 Documentation**: guides for every aspect of the system
+**🤝 Community**: Join discussions and contribute to the project
 **⭐ Support**: Star the repository if you find it useful!

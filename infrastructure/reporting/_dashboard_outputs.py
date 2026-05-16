@@ -5,8 +5,6 @@ responsible for output-artifact visualizations only; health, pipeline, and
 codebase charts live in sibling modules.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 try:

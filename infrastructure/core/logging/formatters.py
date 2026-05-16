@@ -1,7 +1,5 @@
 """Logging formatters for structured and template-based output."""
 
-from __future__ import annotations
-
 import json
 import logging
 from datetime import datetime

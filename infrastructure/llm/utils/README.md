@@ -181,16 +181,13 @@ except RuntimeError as e:
 ### Model Errors
 
 ```python
-from infrastructure.llm.utils.ollama import (
-    select_best_model,
-    ModelNotFoundError
-)
+from infrastructure.llm.utils.ollama import select_best_model
 
-try:
-    model = select_best_model()
-except ModelNotFoundError:
-    print("No models available")
-    # Handle error...
+# select_best_model() returns an empty string when no models match preferences.
+# Check for that case rather than catching an exception:
+model = select_best_model()
+if not model:
+    print("No models available — install one with: ollama pull gemma3:4b")
 ```
 
 ## Integration

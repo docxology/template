@@ -4,8 +4,6 @@ Contains the low-level generation machinery used by the convenience wrappers
 in generator.py. Separated to keep each module under 300 LOC.
 """
 
-from __future__ import annotations
-
 import time
 from typing import TYPE_CHECKING
 
@@ -201,7 +199,7 @@ def generate_review_with_metrics(
     text: str,
     review_type: ReviewType,
     review_name: str,
-    template_class: type[ResearchTemplate],
+    template_class: "type[ResearchTemplate]",
     model_name: str = "",
     temperature: float = 0.3,
     max_tokens: int | None = None,

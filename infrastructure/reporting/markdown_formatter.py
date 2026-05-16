@@ -4,8 +4,6 @@ This module converts test summary data dictionaries into
 human-readable Markdown and console output formats.
 """
 
-from __future__ import annotations
-
 import json
 from pathlib import Path
 from typing import Any

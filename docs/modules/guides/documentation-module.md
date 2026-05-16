@@ -2,7 +2,7 @@
 
 > **Figure management, image handling, and API glossary generation**
 
-**Location:** `infrastructure/documentation/`  
+**Location:** `infrastructure/documentation/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---

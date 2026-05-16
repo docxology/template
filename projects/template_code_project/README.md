@@ -1,6 +1,6 @@
 # Code Project — Optimization Research Exemplar
 
-Research project demonstrating optimization algorithms with automated figure generation and publication-quality output. Sister exemplar to [`template_prose_project`](../template_prose_project) (prose-review pipeline) and [`template_search_project`](../template_search_project) (literature discovery).
+Research project demonstrating optimization algorithms with automated figure generation and publication-quality output. Permanent sibling exemplar: [`template_prose_project`](../template_prose_project) (prose-review pipeline). Optional add-on exemplar: [`template_search_project`](../../projects_archive/template_search_project) (literature discovery).
 
 ## Quick Start
 
@@ -50,50 +50,51 @@ Tests optimization algorithms and numerical accuracy.
 ### View Results
 
 ```bash
-open output/figures/convergence_plot.png
-cat output/data/optimization_results.csv
+open projects/template_code_project/output/figures/convergence_plot.png
+cat projects/template_code_project/output/data/optimization_results.csv
 ```
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[scripts/optimization_analysis.py] --> B[src/optimizer.py]
-    A --> C[Scientific Analysis]
-    A --> D[Generate Figures]
-    A --> E[Export Data]
-    A --> F[Create Dashboard]
+    A[scripts/optimization_analysis.py] --> B[src/analysis.py]
+    B --> C[src/optimizer.py]
+    B --> D[Scientific Analysis]
+    B --> E[Generate Figures]
+    B --> F[Export Data]
+    B --> G[Create Dashboard]
 
     AA[scripts/generate_api_docs.py] --> AB[API Documentation]
     AA --> AC[Code Quality Report]
 
-    B --> G[Gradient Descent]
-    B --> H[Quadratic Functions]
-    B --> I[Convergence Analysis]
+    C --> H[Gradient Descent]
+    C --> I[Quadratic Functions]
+    C --> J[Convergence Analysis]
 
-    C --> J[Stability Assessment]
-    C --> K[Performance Benchmarking]
-    C --> L[Progress Monitoring]
+    D --> K[Stability Assessment]
+    D --> L[Performance Benchmarking]
+    D --> M[Progress Monitoring]
 
-    D --> M[Convergence Plots]
-    D --> N[Stability Visualizations]
-    D --> O[Benchmark Charts]
+    E --> N[Convergence Plots]
+    E --> O[Stability Visualizations]
+    E --> P[Benchmark Charts]
 
-    F --> P[HTML Dashboard]
-    F --> Q[Analysis Reports]
+    G --> Q[HTML Dashboard]
+    G --> R[Analysis Reports]
 
-    E --> R[CSV Results]
-    E --> S[JSON Reports]
+    F --> S[CSV Results]
+    F --> T[JSON Reports]
 ```
 
 ## .cursorrules Compliance
 
 ✅ **Fully compliant** with template development standards:
 
-- **Testing**: ~99.5% coverage on `src/` (96 tests across `test_optimizer.py`, `test_invariants.py`, `test_invariants_and_dashboard.py`), real data only, no mocks
+- **Testing**: `src/` coverage is gated at 90%; live counts are tracked in [`../../docs/_generated/canonical_facts.md`](../../docs/_generated/canonical_facts.md)
 - **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
-- **Code Quality**: Black formatting, descriptive naming, proper imports
+- **Code Quality**: Ruff format/check (CI parity), descriptive naming, proper imports
 - **Error Handling**: Context preservation, informative messages
 - **Logging**: Unified logging system throughout
 
@@ -102,7 +103,7 @@ graph TD
 When editing manuscript markdown:
 
 - [`manuscript/SYNTAX.md`](manuscript/SYNTAX.md) — citation, equation, figure, table, and section conventions specific to this project (label registries for all 6 figures and 8 equations).
-- [`../../docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics shared by all three template exemplars.
+- [`../../docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md) — repository-wide canonical manuscript semantics shared by the permanent exemplars and optional search add-on.
 - [`manuscript/AGENTS.md`](manuscript/AGENTS.md) — `{{TOKEN}}` substitution protocol and section-modification workflow.
 
 ## More Information

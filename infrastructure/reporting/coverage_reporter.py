@@ -7,8 +7,6 @@ reusable across all projects.
 This module re-exports from focused submodules for backwards compatibility.
 """
 
-from __future__ import annotations
-
 # Re-export coverage JSON parsing
 from .coverage_json_parser import parse_coverage_json
 

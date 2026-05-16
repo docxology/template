@@ -4,6 +4,8 @@
 
 This guide covers the visualization system for generating publication-quality figures with automatic management and integration.
 
+> **Note:** `VisualizationEngine`, `plot_line`, and similar module examples below are illustrative patterns for project-specific (`projects/{name}/src/`) code; they are not present in the canonical exemplar (`template_code_project`). `FigureManager` and `ImageManager` are real infrastructure classes importable from `infrastructure.documentation`.
+
 ## Visualization Engine
 
 The `VisualizationEngine` class provides consistent styling and export capabilities:

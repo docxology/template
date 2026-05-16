@@ -11,7 +11,8 @@
 ### Simple Progress
 
 ```python
-from infrastructure.core.logging.logging_utils import log_progress, log_progress_bar
+from infrastructure.core.logging.utils import log_progress
+from infrastructure.core.logging import log_progress_bar
 
 # Simple progress
 for i, file_path in enumerate(files, 1):
@@ -25,7 +26,7 @@ log_progress_bar(current=15, total=100, message="Processing files")
 ### Advanced Progress with ETA
 
 ```python
-from infrastructure.core.pipeline.progress import SubStageProgress, ProgressBar
+from infrastructure.core.progress import SubStageProgress, ProgressBar
 
 # Sub-stage progress with EMA-based ETA
 progress = SubStageProgress(
@@ -46,7 +47,7 @@ realistic, optimistic, pessimistic = progress.get_eta_with_confidence()
 ### LLM Progress Tracking
 
 ```python
-from infrastructure.core.pipeline.progress import LLMProgressTracker
+from infrastructure.core.progress import LLMProgressTracker
 
 tracker = LLMProgressTracker(
     total_tokens=1000,
@@ -65,21 +66,21 @@ tracker.finish()
 ## ETA Calculation Methods
 
 ```python
-from infrastructure.core.logging.logging_utils import (
+from infrastructure.core.runtime.eta import (
     calculate_eta,            # Simple linear ETA
     calculate_eta_ema,        # Exponential moving average
     calculate_eta_with_confidence  # With confidence intervals
 )
 
 # Simple linear
-eta = calculate_eta(elapsed=30.0, completed=3, total=10)
+eta = calculate_eta(elapsed_time=30.0, completed_items=3, total_items=10)
 
 # EMA (smoother)
-eta = calculate_eta_ema(elapsed=30.0, completed=3, total=10, previous_eta=70.0, alpha=0.3)
+eta = calculate_eta_ema(elapsed_time=30.0, completed_items=3, total_items=10, previous_eta=70.0, alpha=0.3)
 
 # With confidence intervals
 realistic, optimistic, pessimistic = calculate_eta_with_confidence(
-    elapsed=30.0, completed=3, total=10, item_durations=[8.0, 12.0, 10.0]
+    elapsed_time=30.0, completed_items=3, total_items=10, item_durations=[8.0, 12.0, 10.0]
 )
 ```
 

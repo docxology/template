@@ -11,6 +11,7 @@ import pytest
 from infrastructure.skills.cli import main as skills_cli_main
 from infrastructure.skills.discovery import (
     DEFAULT_SKILL_SEARCH_ROOTS,
+    build_skill_index_markdown,
     build_manifest_payload,
     discover_skills,
     iter_skill_paths,
@@ -105,12 +106,25 @@ class TestManifestRoundTrip:
         assert len(data["skills"]) == 1
         assert data["skills"][0]["name"] == "m1"
 
+    def test_build_skill_index_markdown(self, tmp_path: Path) -> None:
+        (tmp_path / "infrastructure" / "m").mkdir(parents=True)
+        (tmp_path / "infrastructure" / "m" / "SKILL.md").write_text(
+            "---\nname: m1\ndescription: M\n---\n",
+            encoding="utf-8",
+        )
+        skills = discover_skills(tmp_path)
+        index = build_skill_index_markdown(skills)
+
+        assert "# Skill Index" in index
+        assert "`m1`" in index
+        assert "project ships a `SKILL.md`" in index
+
 
 class TestTemplateRepository:
-    def test_default_roots_includes_infrastructure_and_code_project_src(self) -> None:
+    def test_default_roots_includes_infrastructure_and_projects(self) -> None:
         assert DEFAULT_SKILL_SEARCH_ROOTS == (
             "infrastructure",
-            "projects/template_code_project/src",
+            "projects",
             ".cursor/skills",
         )
 
@@ -201,6 +215,24 @@ class TestCliModule:
         assert out.is_file()
         ok, msg = manifest_matches_discovery(tmp_path, out)
         assert ok, msg
+
+    def test_write_index_subcommand(self, tmp_path: Path) -> None:
+        (tmp_path / "infrastructure" / "pkg").mkdir(parents=True)
+        (tmp_path / "infrastructure" / "pkg" / "SKILL.md").write_text(
+            "---\nname: pkg-s\ndescription: P\n---\n",
+            encoding="utf-8",
+        )
+        out = tmp_path / "skills.md"
+
+        assert (
+            skills_cli_main(
+                ["write-index", "--repo-root", str(tmp_path), "--output", str(out)]
+            )
+            == 0
+        )
+
+        text = out.read_text(encoding="utf-8")
+        assert "| `pkg-s` | `infrastructure/pkg/SKILL.md` | P |" in text
 
     def test_check_fails_when_manifest_stale(self, tmp_path: Path) -> None:
         (tmp_path / "infrastructure" / "a").mkdir(parents=True)

@@ -4,8 +4,6 @@ Generates structured test reports from infrastructure and project test results,
 and saves them in JSON and Markdown formats.
 """
 
-from __future__ import annotations
-
 import json
 from datetime import datetime
 from pathlib import Path

@@ -8,7 +8,8 @@ These files are archival context, not normative build or API documentation.
 ## Contents
 
 - `README.md` — Navigation index for stream notes.
-- `inferant-stream-018-1.md` — Notes for InferAnt stream 018.1.
+- `inferant-stream-018-1.md` — Notes for InferAnt stream 018.1 (March 2026, Zenodo paper).
+- `inferant-stream-019-literature-search.md` — Notes for InferAnt stream 019 (literature search and synthesis infrastructure).
 
 ## Conventions
 

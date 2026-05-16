@@ -10,9 +10,9 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 
 | File | Role |
 | --- | --- |
-| `cli.py` | Argument parser and `main()` entry wired from `__main__.py`. |
-| `discovery.py` | `validate_project_slug`, `select_project_interactive`, `discover_qualified_names` — wraps `discover_projects()`. |
-| `menu.py` | `MENU_OPTIONS`, `render_menu` — deterministic menu text for TTY workflows. |
+| `cli.py` | Argument parser and `main()` entry wired from `__main__.py`. Bare invocation runs `_interactive()` — prints a choice prompt each turn and passes `writer=sys.stdout` into `select_project_interactive`. |
+| `discovery.py` | `validate_project_slug`, `select_project_interactive`, `discover_qualified_names` — wraps `discover_projects()`. When `writer` is set, the picker lists projects and prints `Choice [index / a=all / q=quit]: ` before reading input. |
+| `menu.py` | `MENU_OPTIONS`, `render_menu`, `_menu_row` — deterministic, ANSI-free menu text. Framing and section rules use ASCII (`+`, `=`, `-`, `|`) for TTY compatibility; option rows stay column-aligned. [`tests/infra_tests/orchestration/test_menu.py`](../../tests/infra_tests/orchestration/test_menu.py) asserts stable legend substrings and each `_menu_row` line. Used by `_interactive` and the `menu` subcommand. |
 | `pipeline_runner.py` | `PipelineRunner` — thin adapter over `PipelineExecutor`. |
 | `stage_logger.py` | `setup_stage_log`, `stage_log_path` — append-only banners under project log paths. |
 | `secure_run.py` | `run_secure_pipeline` — pipeline + steganography post-processing. |

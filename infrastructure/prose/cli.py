@@ -10,8 +10,6 @@ Subcommands:
 * ``report`` — full :class:`ManuscriptReport` over a manuscript directory.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys

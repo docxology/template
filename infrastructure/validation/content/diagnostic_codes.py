@@ -16,8 +16,6 @@ Codes are intentionally orthogonal to ``DiagnosticEvent.category``:
   suitable for programmatic suppression / pattern matching.
 """
 
-from __future__ import annotations
-
 
 class MarkdownCode:
     """Stable IDs for findings emitted by ``markdown_validator``."""

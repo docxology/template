@@ -16,11 +16,9 @@ This module is project-agnostic: every project that ships configurable
 simulations can reuse it by building a list of ``Panel`` objects, a list of
 ``Control`` objects, and a list of ``Invariant`` checks. See
 ``projects/actinf_policy_entanglement_lean/scripts/build_dashboard.py``
-and ``projects/template_code_project/scripts/optimization_analysis.py``
-for end-to-end examples.
+|``projects/actinf_policy_entanglement_lean/scripts/build_dashboard.py``
+for end-to-end examples. |
 """
-
-from __future__ import annotations
 
 import html as _html
 import json
@@ -324,13 +322,13 @@ class InteractiveDashboard:
         self.tables[name] = [_to_jsonable(r) for r in rows]  # type: ignore[misc]
         return self
 
-    def add_panel(self, panel: Panel) -> "InteractiveDashboard":
+    def add_panel(self, panel: "Panel") -> "InteractiveDashboard":
         if any(p.panel_id == panel.panel_id for p in self.panels):
             raise ValueError(f"duplicate panel_id: {panel.panel_id!r}")
         self.panels.append(panel)
         return self
 
-    def add_control(self, control: Control) -> "InteractiveDashboard":
+    def add_control(self, control: "Control") -> "InteractiveDashboard":
         if any(c.control_id == control.control_id for c in self.controls):
             raise ValueError(f"duplicate control_id: {control.control_id!r}")
         self.controls.append(control)
@@ -397,7 +395,7 @@ class InteractiveDashboard:
             )
         )
 
-    def add_invariant(self, inv: Invariant) -> "InteractiveDashboard":
+    def add_invariant(self, inv: "Invariant") -> "InteractiveDashboard":
         self.invariants.append(inv)
         return self
 

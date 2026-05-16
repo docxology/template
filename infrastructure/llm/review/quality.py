@@ -5,8 +5,6 @@ across different review types (executive summary, quality, methodology,
 improvement suggestions, translation).
 """
 
-from __future__ import annotations
-
 import re
 from typing import Any, Callable, Literal, TypedDict
 

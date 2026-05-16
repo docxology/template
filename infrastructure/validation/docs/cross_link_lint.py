@@ -9,8 +9,6 @@ Public API:
     - :func:`find_broken_links`
 """
 
-from __future__ import annotations
-
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass
@@ -18,27 +16,12 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, iter_markdown_files
 
 logger = get_logger(__name__)
 
 
-_DEFAULT_EXCLUDE_PARTS: frozenset[str] = frozenset(
-    {
-        ".git",
-        ".venv",
-        ".tox",
-        ".mypy_cache",
-        ".pytest_cache",
-        "__pycache__",
-        "node_modules",
-        "output",
-        "htmlcov",
-        "dist",
-        "build",
-        "projects_archive",
-        "projects_in_progress",
-    }
-)
+_DEFAULT_EXCLUDE_PARTS = DEFAULT_EXCLUDE_PARTS
 
 # Default file globs to skip even within scanned roots.
 _DEFAULT_EXCLUDE_GLOBS: tuple[str, ...] = (
@@ -84,28 +67,11 @@ class BrokenLink:
 
 def _iter_markdown_files(roots: Iterable[Path], exclude_globs: Iterable[str]) -> list[Path]:
     """Walk *roots*, return Markdown files, honour exclude globs and dirs."""
-    seen: set[Path] = set()
-    out: list[Path] = []
-    exclude_globs = tuple(exclude_globs)
-    for root in roots:
-        root = root.resolve()
-        if root.is_file() and root.suffix.lower() == ".md":
-            if root not in seen:
-                seen.add(root)
-                out.append(root)
-            continue
-        if not root.is_dir():
-            continue
-        for md in root.rglob("*.md"):
-            if any(part in _DEFAULT_EXCLUDE_PARTS for part in md.parts):
-                continue
-            if any(md.match(glob) for glob in exclude_globs):
-                continue
-            if md in seen:
-                continue
-            seen.add(md)
-            out.append(md)
-    return sorted(out)
+    return iter_markdown_files(
+        roots,
+        exclude_parts=_DEFAULT_EXCLUDE_PARTS,
+        exclude_globs=exclude_globs,
+    )
 
 
 def _strip_code(text: str) -> str:

@@ -2,7 +2,7 @@
 
 > **Foundation utilities for logging, configuration, exceptions, pipeline execution, and runtime monitoring**
 
-**Location:** `infrastructure/core/`  
+**Location:** `infrastructure/core/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
@@ -14,7 +14,7 @@
 - **Configuration**: YAML config loading (`load_config`) with auto-discovery (`find_config_file`)
 - **Pipeline**: DAG-based pipeline execution (`PipelineExecutor`, `PipelineConfig`) with multi-project orchestration
 - **Checkpoint**: Resumable execution via `CheckpointManager` for long-running pipelines
-- **Health Checks**: Dependency and environment validation (`SystemHealthChecker`, `quick_health_check`)
+- **Health Checks**: Dependency and environment validation (`SystemHealthChecker`, `get_health_status`, `is_healthy`)
 - **Performance**: Function-level profiling (`monitor_performance`) and system resource monitoring
 - **Progress**: Terminal progress bars (`ProgressBar`) for pipeline stage reporting
 - **Telemetry**: Stage-level resource metrics collection (`TelemetryCollector`)
@@ -125,14 +125,13 @@ checkpoint = manager.load()
 
 ```python
 from infrastructure.core import SystemHealthChecker
-from infrastructure.core.runtime.health_check import quick_health_check, get_health_status
 
 # Quick validation of environment
-status = quick_health_check()
-
-# Detailed system health
 checker = SystemHealthChecker()
-report = checker.run()
+status = checker.get_health_status()
+
+# Check overall pass/fail
+is_ok = checker.is_healthy()
 ```
 
 ### Performance Monitoring

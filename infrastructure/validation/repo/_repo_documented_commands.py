@@ -1,7 +1,5 @@
 """Verify documented shell/Python script references exist on disk."""
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 

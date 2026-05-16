@@ -4,8 +4,6 @@ Extracts test counts, coverage percentages, timing phases, and
 test categories from pytest console output.
 """
 
-from __future__ import annotations
-
 import re
 from typing import Any
 

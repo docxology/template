@@ -4,8 +4,6 @@ Contains the PaperSummarization template class with its extensive prompt
 engineering for accurate, non-repetitive scientific paper summarization.
 """
 
-from __future__ import annotations
-
 import re
 
 from infrastructure.llm.templates.base import ResearchTemplate

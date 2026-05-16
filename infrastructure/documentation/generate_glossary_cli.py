@@ -5,8 +5,6 @@ This module provides functionality to automatically generate a glossary of
 public APIs from the src/ directory and inject it into markdown files.
 """
 
-from __future__ import annotations
-
 import sys
 from pathlib import Path
 

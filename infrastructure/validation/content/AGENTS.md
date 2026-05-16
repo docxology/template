@@ -24,7 +24,7 @@ LaTeX/pandoc warnings.
 | `collect_symbols(paths)` | — | Set of `\label{}` and `{#anchor}` names. |
 | `validate_images(paths, root)` | ERROR | Referenced images resolve on disk. |
 | `validate_refs(paths, root, labels, anchors)` | ERROR / WARNING | `\eqref` and `(#anchor)` resolve; bare URLs / non-informative link text. |
-| `validate_math(paths, root)` | WARNING / ERROR | Bans `$$`/`\[`/`\]`; equation labels present and unique. |
+| `validate_math(paths, root)` | WARNING / ERROR | Allows isolated Pandoc `$$` display blocks; flags inline/unbalanced `$$`, raw `\[`/`\]`, and equation-label issues. |
 | `validate_pandoc_pitfalls(paths, root)` | WARNING | Bare `\|word\|` in prose and `\|` inside Markdown table cells (Pandoc converts both to `\mid`). |
 | `validate_citations(paths, root, bib_file=None)` | ERROR | Every `[@key]` resolves across the manuscript ``*.bib`` union (or explicit ``bib_file`` list). |
 | `validate_markdown(dir, root, strict=False)` | aggregate | Runs all of the above. |
@@ -49,8 +49,8 @@ specific findings without parsing prose.
 | `MARKDOWN.LINK_ANCHOR_MISSING`        | ERROR    | `validate_refs`                    | `(#anchor)` has no matching heading or label               |
 | `MARKDOWN.LINK_BARE_URL`              | WARNING  | `validate_refs`                    | Bare URL outside a Markdown link                           |
 | `MARKDOWN.LINK_BAD_TEXT`              | WARNING  | `validate_refs`                    | Link text is the URL itself or otherwise non-informative   |
-| `MARKDOWN.MATH_DOLLAR_DISPLAY`        | WARNING  | `validate_math`                    | `$$ ... $$` display math (use `equation` env)              |
-| `MARKDOWN.MATH_BRACKET_DISPLAY`       | WARNING  | `validate_math`                    | `\[ ... \]` display math (use `equation` env)              |
+| `MARKDOWN.MATH_DOLLAR_DISPLAY`        | WARNING  | `validate_math`                    | Inline, nested, or unbalanced `$$`; display math must be isolated on its own line(s) |
+| `MARKDOWN.MATH_BRACKET_DISPLAY`       | WARNING  | `validate_math`                    | `\[ ... \]` display math; Pandoc emits literal brackets in HTML |
 | `MARKDOWN.MATH_LABEL_MISSING`         | WARNING  | `validate_math`                    | `equation` block without `\label{}`                        |
 | `MARKDOWN.MATH_LABEL_DUPLICATE`       | ERROR    | `validate_math`                    | Same `\label{}` used twice                                 |
 | `MARKDOWN.PANDOC_BARE_PIPE`           | WARNING  | `validate_pandoc_pitfalls`         | Bare `\|word\|` in prose -> Pandoc `\mid`                  |

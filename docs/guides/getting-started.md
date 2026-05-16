@@ -134,7 +134,7 @@ flowchart TB
 
    ```markdown
    # Abstract {#sec:abstract}
-   
+
    This template demonstrates...
    ```
 
@@ -142,9 +142,9 @@ flowchart TB
 
    ```markdown
    # Abstract {#sec:abstract}
-   
-   This research investigates the impact of machine learning on climate 
-   prediction accuracy. We developed a novel ensemble method combining 
+
+   This research investigates the impact of machine learning on climate
+   prediction accuracy. We developed a novel ensemble method combining
    neural networks with traditional models...
    ```
 
@@ -155,24 +155,24 @@ flowchart TB
 1. **Open the introduction**
 
    ```bash
-   vim projects/template_code_project/manuscript/02_introduction.md
+   vim projects/template_code_project/manuscript/01_introduction.md
    ```
 
 2. **Add your content**:
 
    ```markdown
    # Introduction {#sec:introduction}
-   
+
    ## Background
-   
+
    Climate change poses significant challenges...
-   
+
    ## Motivation
-   
+
    Current prediction methods have limitations...
-   
+
    ## Objectives
-   
+
    This research aims to:
    1. Develop improved prediction models
    2. Validate accuracy across multiple datasets
@@ -188,7 +188,7 @@ flowchart TB
    ```bash
    # Core pipeline (ten stages by default: clean through copy outputs)
    uv run python scripts/execute_pipeline.py --project {name} --core-only
-   
+
    # Or use unified interactive menu
    ./run.sh
    ```
@@ -212,8 +212,9 @@ Continue editing other sections:
 
 - **Methodology** (`02_methodology.md`): Your research methods
 - **Results** (`03_results.md`): Your findings
-- **Discussion** (`05_discussion.md`): Analysis and interpretation
-- **Conclusion** (`06_conclusion.md`): Summary and future work
+- **Conclusion** (`04_conclusion.md`): Summary and future work
+- **Experimental Setup** (`05_experimental_setup.md`): Setup and configuration
+- **Reproducibility** (`06_reproducibility.md`): Reproducibility notes
 
 **After each major change**, regenerate the PDF to see your progress.
 
@@ -340,12 +341,12 @@ The iterative update follows:
 x_{k+1} = x_k - \alpha_k \nabla f(x_k)
 \end{equation}
 
-As shown in Equation \eqref{eq:update}, we use gradient descent with 
+As shown in Equation \eqref{eq:update}, we use gradient descent with
 step size $\alpha_k$.
 
 ## Convergence Analysis
 
-From equations \eqref{eq:objective} and \eqref{eq:update}, we can prove 
+From equations \eqref{eq:objective} and \eqref{eq:update}, we can prove
 convergence under standard assumptions (see Section \ref{sec:results}).
 ```
 
@@ -478,7 +479,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
      pages={123--130},
      year={2020}
    }
-   
+
    @book{jones2019ai,
      title={Artificial Intelligence in Environmental Science},
      author={Jones, Alice},
@@ -491,7 +492,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 
    ```markdown
    Recent advances \cite{smith2020climate} demonstrate...
-   
+
    For review, see \cite{jones2019ai}.
    ```
 

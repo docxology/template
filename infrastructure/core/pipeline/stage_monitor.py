@@ -11,8 +11,6 @@ Implementation split across submodules:
     _stage_tracker          - StagePerformanceTracker
 """
 
-from __future__ import annotations
-
 from infrastructure.core.pipeline._monitor_types import (
     PerformanceMetrics,
     PerformanceWarningDict,

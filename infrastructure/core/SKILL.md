@@ -10,7 +10,9 @@ Foundation utilities used across the entire infrastructure layer and all project
 ## Logging (`logging_utils.py`)
 
 ```python
-from infrastructure.core import get_logger, setup_logger, log_operation, log_timing
+from infrastructure.core import get_logger, log_operation, log_stage, format_duration
+from infrastructure.core.logging.setup import setup_logger
+from infrastructure.core.logging.utils import log_timing, log_substep
 
 logger = get_logger(__name__)
 logger.info("Processing started")
@@ -25,20 +27,17 @@ def expensive_operation():
     pass
 
 # Structured progress logging
-from infrastructure.core import log_stage, log_substep, log_progress_bar, log_header
-log_header("Pipeline Execution")
 log_stage(1, 10, "Running Tests")
 log_substep("Unit tests passed")
-log_progress_bar(5, 10, prefix="Progress")
 
 # ETA calculation
-from infrastructure.core import calculate_eta, log_stage_with_eta, format_duration
+from infrastructure.core.runtime import calculate_eta
 ```
 
 ## Configuration (`config_loader.py`)
 
 ```python
-from infrastructure.core import load_config, find_config_file, get_config_as_dict
+from infrastructure.core.config.loader import load_config, find_config_file, get_config_as_dict
 
 # Load project config.yaml
 config = load_config(project_path / "manuscript" / "config.yaml")
@@ -52,8 +51,9 @@ config_path = find_config_file(project_root)
 All exceptions extend `TemplateError`. Use context-preserving helpers:
 
 ```python
-from infrastructure.core import (
-    TemplateError, ConfigurationError, ValidationError, BuildError,
+from infrastructure.core import TemplateError
+from infrastructure.core.exceptions import (
+    ConfigurationError, ValidationError, BuildError,
     RenderingError, LLMError, PublishingError,
     raise_with_context, chain_exceptions, format_file_context,
 )
@@ -73,7 +73,7 @@ except RenderingError as e:
 ## Pipeline Execution (`pipeline.py`)
 
 ```python
-from infrastructure.core import PipelineExecutor, PipelineConfig
+from infrastructure.core.pipeline import PipelineExecutor, PipelineConfig
 
 config = PipelineConfig(project_name="my_project", core_only=True)
 executor = PipelineExecutor(config)
@@ -83,7 +83,8 @@ result = executor.run()
 ## Checkpoint & Resume (`checkpoint.py`)
 
 ```python
-from infrastructure.core import CheckpointManager, PipelineCheckpoint
+from infrastructure.core import CheckpointManager
+from infrastructure.core.runtime.checkpoint import PipelineCheckpoint
 
 manager = CheckpointManager(checkpoint_dir)
 manager.save(PipelineCheckpoint(stage=5, status="complete"))
@@ -93,7 +94,8 @@ checkpoint = manager.load()  # Resume from saved state
 ## Progress Tracking (`progress.py`)
 
 ```python
-from infrastructure.core import ProgressBar, SubStageProgress
+from infrastructure.core import ProgressBar
+from infrastructure.core.progress import SubStageProgress
 
 progress = ProgressBar(total=100, prefix="Rendering")
 progress.update(10)
@@ -102,14 +104,10 @@ progress.update(10)
 ## Retry Logic (`retry.py`)
 
 ```python
-from infrastructure.core import retry_with_backoff, retry_on_transient_failure
+from infrastructure.core.runtime import retry_with_backoff
 
 @retry_with_backoff(max_retries=3, base_delay=1.0)
 def flaky_operation():
-    pass
-
-@retry_on_transient_failure
-def network_call():
     pass
 ```
 
@@ -149,7 +147,7 @@ def api_call():
 ## Environment Setup (`environment.py`)
 
 ```python
-from infrastructure.core import (
+from infrastructure.core.runtime.environment import (
     check_python_version, check_dependencies, check_build_tools,
     setup_directories, verify_source_structure,
 )
@@ -158,7 +156,8 @@ from infrastructure.core import (
 ## File Operations (`file_operations.py`)
 
 ```python
-from infrastructure.core import clean_output_directory, copy_final_deliverables
+from infrastructure.core.files.cleanup import clean_output_directory
+from infrastructure.core.files.operations import copy_final_deliverables
 clean_output_directory(output_path)
 copy_final_deliverables(source, destination)
 ```
@@ -175,6 +174,7 @@ result = orchestrator.run()
 ## Health Checks (`health_check.py`)
 
 ```python
-from infrastructure.core import quick_health_check, get_health_status
-status = quick_health_check()
+from infrastructure.core import SystemHealthChecker
+checker = SystemHealthChecker()
+status = checker.get_health_status()
 ```

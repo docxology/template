@@ -32,17 +32,17 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 - **References**: Own cross-reference system and bibliography
 - **Metadata**: Project-specific publication information
 
-## Exemplar Trio (Permanent Canonical Projects)
+## Permanent Canonical Exemplars and Optional Search Add-On
 
-Three projects under `projects/` are **permanent canonical exemplars** — they are guaranteed to remain present, are tracked in git (everything else under `projects/*` is gitignored), and together cover the three dominant shapes of academic research projects:
+Two projects under `projects/` are **permanent canonical exemplars** — they are guaranteed to remain present and tracked in git. Other active project directories can rotate by checkout; new non-exemplar directories are ignored by default unless intentionally tracked. Together, the permanent exemplars cover the computational and prose-review paths. The search exemplar is an optional add-on kept under `projects_archive/template_search_project/` until restored for literature-search workflows:
 
 | Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
 |---|---|---|---|---|---|---|
-| [`template_code_project/`](template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | 96 | ~99.5% |
-| [`template_prose_project/`](template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | 66 | 100.00% |
-| [`template_search_project/`](template_search_project/) | Search-centric (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | 266 | ~99.5% |
+| [`template_code_project/`](template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | 117 | ~99.5% |
+| [`template_prose_project/`](template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | 67 | 100.00% |
+| [`../projects_archive/template_search_project/`](../projects_archive/template_search_project/) | Optional search-centric add-on (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | 267 | ~99.5% |
 
-All three share the **same** structural conventions:
+The two permanent exemplars, and the optional search add-on when restored, share the **same** structural conventions:
 
 - `src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`, `output/`, `pyproject.toml`, root `README.md` + `AGENTS.md`.
 - The same 12-file `docs/` hub: `AGENTS.md`, `README.md`, `agent_instructions.md`, `architecture.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `style_guide.md`, `syntax_guide.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`.
@@ -50,7 +50,7 @@ All three share the **same** structural conventions:
 - Manuscript files `00_abstract.md` … `99_references.md` plus `config.yaml`, `preamble.md`, `references.bib`, `SYNTAX.md`, and a manuscript-level `AGENTS.md`/`README.md`.
 - The same verification checklist: `pytest --cov`, no-mocks grep, layer-purity grep.
 
-When a new project is bootstrapped, copy whichever exemplar is closest in shape and adjust from there. Examples in repo-wide docs default to `projects/template_code_project/` unless the doc explicitly compares the trio.
+When a new project is bootstrapped, copy whichever exemplar is closest in shape and adjust from there. Examples in repo-wide docs default to `projects/template_code_project/` unless the doc explicitly compares project shapes.
 
 ## Active vs Archived Projects
 
@@ -81,14 +81,13 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[template_code_project<br/>Code exemplar · 96 tests · ~99.5% cov]
-        P2[template_prose_project<br/>Prose exemplar · 66 tests · 100% cov]
-        P3[template_search_project<br/>Search exemplar · 266 tests · ~99.5% cov]
+        P1[template_code_project<br/>Code exemplar · 117 tests · ~99.5% cov]
+        P2[template_prose_project<br/>Prose exemplar · 67 tests · 100% cov]
         Pn[other rotating workspaces<br/>see docs/_generated/active_projects.md]
     end
 
     subgraph InProgress["In-Progress Projects (projects_in_progress/)"]
-        IP[biology_textbook · cogant · corym ·<br/>template · trsc<br/>(rotates)]
+        IP["biology_textbook · cogant · corym ·<br/>template · trsc<br/>(rotates)"]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]
@@ -103,7 +102,6 @@ graph TD
 
     P1 -->|Discovered| DISCOVER
     P2 -->|Discovered| DISCOVER
-    P3 -->|Discovered| DISCOVER
     Pn -->|Discovered| DISCOVER
     IP -.->|NOT Scanned| DISCOVER
     A -.->|NOT Scanned| DISCOVER
@@ -112,7 +110,7 @@ graph TD
     RUNSH -->|Selected Project| PIPELINE
     PIPELINE -->|Executes| P1
     PIPELINE -->|Executes| P2
-    PIPELINE -->|Executes| P3
+    PIPELINE -->|Executes| Pn
 ```
 
 ### Project Lifecycle
@@ -182,7 +180,7 @@ flowchart TB
 
 ### Stub directory (not discovered)
 
-[`projects/_test_project/`](_test_project/) contains only `output/` for validation tests that reference a fixed project name. It does **not** satisfy the required `src/` + `tests/` layout and is omitted from `discover_projects()`. See [`_test_project/AGENTS.md`](_test_project/AGENTS.md).
+[`projects/_test_project/`](_test_project/) contains only `output/` for validation tests that reference a fixed project name. It does **not** satisfy the required `src/` + `tests/` layout and is omitted from `discover_projects()`.
 
 ## Infrastructure Compliance
 
@@ -218,7 +216,7 @@ assert is_valid  # (True, "Valid project structure")
 
 ```bash
 # Execute project tests via infrastructure
-python3 scripts/01_run_tests.py --project {name}
+uv run python scripts/01_run_tests.py --project {name}
 
 # Infrastructure performs:
 # 1. Validates project structure
@@ -238,7 +236,7 @@ python3 scripts/01_run_tests.py --project {name}
 
 ```bash
 # Execute project analysis scripts via infrastructure
-python3 scripts/02_run_analysis.py --project {name}
+uv run python scripts/02_run_analysis.py --project {name}
 
 # Infrastructure discovers and runs:
 # - projects/{name}/scripts/analysis_pipeline.py
@@ -257,7 +255,7 @@ python3 scripts/02_run_analysis.py --project {name}
 
 ```bash
 # Render project manuscript via infrastructure
-python3 scripts/03_render_pdf.py --project {name}
+uv run python scripts/03_render_pdf.py --project {name}
 
 # Infrastructure processes:
 # - Validates markdown references and structure
@@ -280,7 +278,7 @@ python3 scripts/03_render_pdf.py --project {name}
 
 ```bash
 # Validate project outputs via infrastructure
-python3 scripts/04_validate_output.py --project project
+uv run python scripts/04_validate_output.py --project {name}
 
 # Infrastructure validates:
 # - PDF rendering quality (no unresolved references)
@@ -299,7 +297,7 @@ python3 scripts/04_validate_output.py --project project
 
 ```bash
 # Organize final deliverables via infrastructure
-python3 scripts/05_copy_outputs.py --project {name}
+uv run python scripts/05_copy_outputs.py --project {name}
 
 # Infrastructure operations:
 # - Cleans root-level output/ directories (keeps only project folders)
@@ -573,9 +571,9 @@ flowchart LR
 - **Ready for distribution**: Can be archived or shared independently
 - **Cross-project**: Multiple projects in `output/` directory
 
-## .cursorrules Compliance Verification
+## Repository standards compliance
 
-All projects in this directory comply with the template's development standards defined in `.cursorrules/`.
+Project trees follow the template discipline described in the root **[`.cursorrules`](../.cursorrules)** file (Cursor / IDE agents) and the expanded norms under **[`docs/rules/`](../docs/rules/)** (testing, code style, logging, and related guides — not a `.cursorrules/` directory).
 
 ### ✅ **Testing Standards Compliance**
 
@@ -611,7 +609,7 @@ All projects in this directory comply with the template's development standards 
 
 ### ✅ **Code Style Standards Compliance**
 
-- **Black formatting**: 88-character line limits, consistent formatting
+- **Ruff format + Ruff lint** (mirrors CI): consistent formatting and import order
 - **Descriptive names**: Clear variable and function names
 - **Import organization**: Standard library, third-party, local imports properly organized
 
@@ -623,7 +621,7 @@ All projects follow the standalone paradigm, thin orchestrator pattern, no-mocks
 
 Authoritative project names: `docs/_generated/active_projects.md` (regenerate with `uv run python scripts/generate_active_projects_doc.py`).
 
-- **Black formatting**: Applied consistently across all projects ✅
+- **Ruff formatting and lint**: Applied consistently across exemplar projects ✅
 - **Import organization**: Standard library, third-party, local imports properly organized ✅
 - **Error handling**: Context preservation with `from` keyword usage ✅
 - **Logging**: Unified logging system throughout ✅
@@ -635,55 +633,25 @@ Authoritative project names: `docs/_generated/active_projects.md` (regenerate wi
 - **Manuscript integration**: Equations and figures referenced per project manuscript ✅
 
 ```bash
-# Compliance verification commands (all pass):
-python3 -m pytest projects/*/tests/ --cov=projects/*/src --cov-report=html
-find projects/ -name "*.py" -exec grep -L '"""' {} \;  # Returns empty (all have docstrings)
-python3 -c "from infrastructure.validation.output.validator import validate_output_structure"  # Imports successfully
+# Canonical — one pytest process per project (avoids tests/conftest.py basename collisions):
+uv run python scripts/01_run_tests.py --project template_code_project
+
+# Manual single-workspace example:
+uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=html
 ```
 
 ## Best Practices and Compliance
 
-### .cursorrules Standards Compliance
+### Standards index (`docs/rules/`)
 
-All projects must follow standards defined in `.cursorrules/`:
+Use **[`docs/rules/`](../docs/rules/)** for checklists and conventions: [testing_standards.md](../docs/rules/testing_standards.md), [documentation_standards.md](../docs/rules/documentation_standards.md), [type_hints_standards.md](../docs/rules/type_hints_standards.md), [error_handling.md](../docs/rules/error_handling.md), [python_logging.md](../docs/rules/python_logging.md), [code_style.md](../docs/rules/code_style.md).
 
-#### ✅ **Testing Standards** (`.cursorrules/testing_standards.md`)
+At minimum for a project under `projects/`:
 
-- [ ] 90%+ coverage for project code
-- [ ] data only (no mocks)
-- [ ] integration tests
-- [ ] Deterministic results with seeded randomness
-
-#### ✅ **Documentation Standards** (`.cursorrules/documentation_standards.md`)
-
-- [ ] `AGENTS.md` in each directory with technical docs
-- [ ] `README.md` in each directory with quick reference
-- [ ] docstrings with examples for public APIs
-- [ ] Cross-references to related documentation
-
-#### ✅ **Type Hints Standards** (`.cursorrules/type_hints_standards.md`)
-
-- [ ] type annotations on all public functions
-- [ ] Generic types (List, Dict, Optional, etc.)
-- [ ] Consistent patterns across modules
-
-#### ✅ **Error Handling Standards** (`.cursorrules/error_handling.md`)
-
-- [ ] Custom exception hierarchy from `infrastructure.core.exceptions`
-- [ ] Exception chaining with context preservation
-- [ ] Informative error messages with actionable guidance
-
-#### ✅ **Logging Standards** (`.cursorrules/python_logging.md`)
-
-- [ ] Unified logging via `infrastructure.core.logging.utils.get_logger(__name__)`
-- [ ] Appropriate log levels (DEBUG, INFO, WARNING, ERROR)
-- [ ] Context-rich log messages for debugging
-
-#### ✅ **Code Style Standards** (`.cursorrules/code_style.md`)
-
-- [ ] Black formatting with 88-character line limits
-- [ ] Descriptive variable names and function signatures
-- [ ] Consistent import organization (stdlib, third-party, local)
+- [ ] 90%+ coverage for `src/`; real data / subprocess / HTTP fixtures — no mocks ([testing standards](../docs/rules/testing_standards.md))
+- [ ] `AGENTS.md` + `README.md` where this repo expects directory-level docs ([documentation standards](../docs/rules/documentation_standards.md))
+- [ ] Type hints and unified logging per [type hints](../docs/rules/type_hints_standards.md) / [python_logging](../docs/rules/python_logging.md)
+- [ ] Ruff + mypy clean on paths enforced in CI ([code style](../docs/rules/code_style.md), root [CLAUDE.md](../CLAUDE.md))
 
 ### Thin Orchestrator Pattern
 
@@ -820,7 +788,7 @@ touch projects/myproject/src/__init__.py
 echo '"""Research algorithms."""' > projects/myproject/src/example.py
 
 # Validate
-python3 -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/myproject')))"
+uv run python -c "from infrastructure.project import validate_project_structure; print(validate_project_structure(Path('projects/myproject')))"
 ```
 
 ### "src/ directory contains no Python files"
@@ -855,7 +823,7 @@ find projects/myproject/src/ -not -name "*.py" -type f
 
 ```bash
 # Run tests with coverage report
-pytest projects/myproject/tests/ --cov=projects/myproject/src --cov-report=html
+uv run pytest projects/myproject/tests/ --cov=projects/myproject/src --cov-report=html
 
 # Open coverage report to identify gaps
 open htmlcov/index.html
@@ -864,7 +832,7 @@ open htmlcov/index.html
 vim projects/myproject/tests/test_missing_functionality.py
 
 # Verify coverage meets requirements
-pytest projects/myproject/tests/ --cov=projects/myproject/src --cov-fail-under=90
+uv run pytest projects/myproject/tests/ --cov=projects/myproject/src --cov-fail-under=90
 ```
 
 ### "No analysis scripts found"
@@ -919,7 +887,7 @@ chmod +x projects/myproject/scripts/analysis_pipeline.py
 # Infrastructure sets: repo_root + infrastructure/ + project/src/
 
 # Verify imports in script
-python3 -c "
+uv run python -c "
 import sys
 sys.path.insert(0, '.')
 sys.path.insert(0, 'infrastructure')
@@ -943,13 +911,13 @@ print('Import successful')
 
 ```bash
 # Validate markdown before rendering
-python3 -m infrastructure.validation.cli.main markdown projects/myproject/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/myproject/manuscript/
 
 # Check for missing figure registrations
-python3 -m infrastructure.validation.cli.main integrity projects/myproject/output/
+uv run python -m infrastructure.validation.cli pdf projects/myproject/output/pdf/
 
 # Render with verbose logging
-LOG_LEVEL=0 python3 scripts/03_render_pdf.py --project myproject
+LOG_LEVEL=0 uv run python scripts/03_render_pdf.py --project myproject
 
 # Check LaTeX compilation logs
 ls projects/myproject/output/pdf/*_compile.log
@@ -978,9 +946,9 @@ ls projects/myproject/output/pdf/*_compile.log
 **Infrastructure Operations:**
 
 ```bash
-python3 scripts/01_run_tests.py --project template_code_project
-python3 scripts/02_run_analysis.py --project template_code_project
-python3 scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/02_run_analysis.py --project template_code_project
+uv run python scripts/03_render_pdf.py --project template_code_project
 ```
 
 ### Area handbook (archived: `projects_archive/area_handbook/`)
@@ -993,9 +961,9 @@ python3 scripts/03_render_pdf.py --project template_code_project
 
 ```bash
 # After moving the project back to projects/area_handbook/
-python3 scripts/01_run_tests.py --project area_handbook
-python3 scripts/02_run_analysis.py --project area_handbook
-python3 scripts/03_render_pdf.py --project area_handbook
+uv run python scripts/01_run_tests.py --project area_handbook
+uv run python scripts/02_run_analysis.py --project area_handbook
+uv run python scripts/03_render_pdf.py --project area_handbook
 ```
 
 ## See Also
@@ -1026,7 +994,7 @@ The `projects/` directory implements **standalone project paradigm** with infras
 
 ### 📋 **Compliance Framework**
 
-- **.cursorrules Standards**: adherence to testing, documentation, type hints, error handling, and logging standards
+- **Repository standards**: [`.cursorrules`](../.cursorrules) and [`docs/rules/`](../docs/rules/) for testing, documentation, type hints, error handling, and logging
 - **Quality Gates**: Automated coverage checks, documentation validation, type safety verification
 - **Operational Patterns**: Thin orchestrator scripts, infrastructure utility imports, project isolation
 

@@ -59,6 +59,13 @@ The Documentation module provides tools for managing figures, images, and markdo
   symbols. Idempotent: regenerating with no `__all__` change produces
   no diff.
 
+**architecture_overview.py**
+- Generates a one-page architecture diagram from live repository state
+  (modules, projects, pipeline stages).
+- Exposes `build_architecture_mermaid()` and `render_architecture_svg()`.
+- Driven by `scripts/generate_architecture_overview.py`, which writes
+  `docs/_generated/architecture_overview.{mmd,svg}`.
+
 ## Function Signatures
 
 ### figure_manager.py
@@ -620,7 +627,7 @@ markdown = generate_markdown_table(entries)
 
 Run documentation tests with:
 ```bash
-pytest tests/infra_tests/test_documentation/
+uv run pytest tests/infra_tests/test_documentation/
 ```
 
 ## Configuration

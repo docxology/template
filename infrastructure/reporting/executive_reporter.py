@@ -12,8 +12,6 @@ All implementation lives in the _executive_* submodules:
 Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
 """
 
-from __future__ import annotations
-
 from infrastructure.reporting._executive_analysis import (  # noqa: F401 — re-exported
     generate_aggregate_metrics,
     generate_comparative_tables,

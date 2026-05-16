@@ -4,8 +4,6 @@ Each builder loads a fragment via the PromptFragmentLoader and assembles
 it into a formatted string suitable for inclusion in a composed prompt.
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 from infrastructure.core.exceptions import LLMTemplateError

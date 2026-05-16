@@ -32,7 +32,7 @@ The methodology described in Section \ref{sec:methodology} shows...
 **Available section labels:**
 
 - `{#sec:introduction}` - Introduction
-- `{#sec:methodology}` - Methodology  
+- `{#sec:methodology}` - Methodology
 - `{#sec:experimental_results}` - Experimental Results
 - `{#sec:discussion}` - Discussion
 - `{#sec:conclusion}` - Conclusion
@@ -160,7 +160,7 @@ def generate_figure():
     # Use projects/{name}/src/ methods for all computation
     data = [1, 2, 3, 4, 5]
     avg = calculate_average(data)  # From projects/{name}/src/example.py
-    
+
     # Script handles visualization and output
     fig, ax = plt.subplots()
     ax.plot(data)
@@ -337,7 +337,7 @@ The validation system will report:
 
 ## Architecture Compliance
 
-### Thin Orchestrator Pattern
+### Thin Orchestrator Pattern — File Structure
 
 This template enforces the **thin orchestrator pattern** where:
 

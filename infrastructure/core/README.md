@@ -5,12 +5,8 @@ Foundation utilities: exceptions, logging, and configuration.
 ## Quick Start
 
 ```python
-from infrastructure.core import (
-    get_logger,
-    TemplateError,
-    load_config,
-    log_operation
-)
+from infrastructure.core import get_logger, TemplateError, log_operation
+from infrastructure.core.config.loader import load_config, get_config_as_dict
 
 # Logging
 logger = get_logger(__name__)
@@ -195,11 +191,11 @@ flowchart TD
 | **runtime/environment.py** | System validation and dependency checking | `check_python_version()`, `check_dependencies()`, `setup_directories()` |
 | **script_discovery.py** | Dynamic script finding and execution coordination | `discover_analysis_scripts()`, `discover_orchestrators()` |
 | **files/operations.py** | File management and output handling | `clean_output_directory()`, `copy_final_deliverables()` |
-| **config/credentials.py** | Credential management from multiple sources | `CredentialManager` |
-| **logging/logging_progress.py** | Advanced progress logging utilities | `calculate_eta()`, `log_with_spinner()`, `StreamingProgress` |
-| **logging/logging_formatters.py** | Specialized logging formatters | `JSONFormatter`, `TemplateFormatter` |
+| **credentials.py** | Credential management from multiple sources | `CredentialManager` |
+| **logging/progress.py** | Advanced progress logging utilities | `calculate_eta()`, `log_with_spinner()`, `StreamingProgress` |
+| **logging/formatters.py** | Specialized logging formatters | `JSONFormatter`, `TemplateFormatter` |
 | **runtime/function_profiler.py** | Function-level profiling and memory snapshots | `CodeProfiler`, `monitor_performance()`, `profile_memory_usage()` |
-| **config/config_cli.py** | Configuration command-line interface | `main()` |
+| **config/cli.py** | Configuration command-line interface | `main()` |
 
 ### Module Dependencies
 
@@ -359,8 +355,9 @@ with log_operation("Stage execution", logger):
 ### Error Handling Integration
 ```python
 # error handling pattern
-from infrastructure.core import (
-    TemplateError, ValidationError,
+from infrastructure.core import TemplateError
+from infrastructure.core.exceptions import (
+    ValidationError,
     raise_with_context, chain_exceptions
 )
 
@@ -385,7 +382,8 @@ def validate_input(data: dict) -> None:
 ### Performance Monitoring Integration
 ```python
 # Performance-aware operation
-from infrastructure.core import monitor_performance, get_system_resources
+from infrastructure.core import monitor_performance
+from infrastructure.core.pipeline import get_system_resources
 
 def heavy_computation(data_size: int):
     with monitor_performance("Data processing") as monitor:
@@ -402,7 +400,7 @@ def heavy_computation(data_size: int):
 ### Configuration Integration
 ```python
 # Configuration-aware module initialization
-from infrastructure.core import load_config, get_config_as_dict
+from infrastructure.core.config.loader import load_config, get_config_as_dict
 
 def initialize_module():
     """Initialize with configuration."""
@@ -432,7 +430,7 @@ export NO_EMOJI=1
 ## Testing
 
 ```bash
-pytest tests/infra_tests/test_core/
+uv run pytest tests/infra_tests/test_core/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

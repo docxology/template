@@ -1,7 +1,5 @@
 """Submission checklist generation for academic conferences and journals."""
 
-from __future__ import annotations
-
 from infrastructure.publishing.models import PublicationMetadata
 
 

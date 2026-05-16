@@ -470,7 +470,7 @@ sys.exit(0)
             pipeline_start_time=0.0,
             last_stage_completed=1,
             stage_results=[
-                StageResult(name="Setup Environment", exit_code=0, duration=0.1, completed=True)
+                StageResult(name="Environment Setup", exit_code=0, duration=0.1, completed=True)
             ],
             total_stages=executor.config.total_stages,
         )

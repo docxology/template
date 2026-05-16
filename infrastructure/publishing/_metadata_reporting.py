@@ -6,8 +6,6 @@ and repository metadata JSON from PublicationMetadata objects.
 Extracted from metadata.py for file-size health.
 """
 
-from __future__ import annotations
-
 import json
 from typing import Any
 

@@ -39,8 +39,8 @@ flowchart TB
   inline code, and link URLs before measuring readability.
 * **`references.bib` is hand-curated and read-only.** This project
   *validates* citations against it but never writes to it. (Contrast
-  with `template_search_project`, which auto-populates the bib from a
-  literature query.)
+  with the optional `projects_archive/template_search_project` add-on,
+  which auto-populates the bib from a literature query.)
 * **`preamble.md`** is injected into Pandoc before LaTeX compilation.
   Do not put prose here.
 
@@ -48,7 +48,12 @@ flowchart TB
 
 `scripts/z_generate_manuscript_variables.py` replaces
 ``{{UPPER_NAME}}`` markers in any file under this directory at render
-time. Current markers (defined in
+time. Substitution is performed via
+`infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()`,
+which writes resolved copies to `output/manuscript/` and excludes
+documentation-only files (`AGENTS.md`, `README.md`, `SYNTAX.md`) from
+the output tree so their literal `{{TOKEN}}` examples are never substituted.
+Current markers (defined in
 [`src/manuscript_variables.py`](../src/manuscript_variables.py)):
 
 | Marker | Source |

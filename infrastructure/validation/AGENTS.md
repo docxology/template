@@ -703,7 +703,7 @@ def validate_figure_registry(
     """
 ```
 
-### docs/link_validator.py
+### integrity/link_validator.py
 
 #### LinkValidator (class)
 ```python
@@ -1435,7 +1435,8 @@ report = validate_pdf_rendering(Path("output/{project_name}/pdf/{project_name}_c
 
 ### Markdown Validation
 ```python
-from infrastructure.validation import validate_markdown, find_manuscript_directory
+from infrastructure.validation import validate_markdown
+from infrastructure.validation.content.markdown_validator import find_manuscript_directory
 
 # Find manuscript directory at standard location
 manuscript_dir = find_manuscript_directory(Path("."))
@@ -1593,7 +1594,7 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
 
 Run validation tests with:
 ```bash
-pytest tests/infra_tests/test_validation/
+uv run pytest tests/infra_tests/test_validation/
 ```
 
 ## Configuration

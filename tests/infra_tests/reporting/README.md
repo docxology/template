@@ -10,10 +10,10 @@ Tests for reporting module including pipeline report generation, error aggregati
 
 ```bash
 # Run all reporting tests
-pytest tests/infra_tests/reporting/ -v
+uv run pytest tests/infra_tests/reporting/ -v
 
 # Run specific test module
-pytest tests/infra_tests/reporting/test_error_aggregator.py -v
+uv run pytest tests/infra_tests/reporting/test_error_aggregator.py -v
 ```
 
 ## Test Modules
@@ -23,7 +23,7 @@ pytest tests/infra_tests/reporting/test_error_aggregator.py -v
 Error collection and aggregation:
 
 ```bash
-pytest tests/infra_tests/reporting/test_error_aggregator.py -v
+uv run pytest tests/infra_tests/reporting/test_error_aggregator.py -v
 ```
 
 **Test Coverage:**
@@ -38,7 +38,7 @@ pytest tests/infra_tests/reporting/test_error_aggregator.py -v
 Pipeline report generation:
 
 ```bash
-pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
+uv run pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
 ```
 
 **Test Coverage:**
@@ -56,7 +56,7 @@ Individual component testing:
 
 ```bash
 # Test error aggregation
-pytest tests/infra_tests/reporting/test_error_aggregator.py::test_aggregate_errors -v
+uv run pytest tests/infra_tests/reporting/test_error_aggregator.py::test_aggregate_errors -v
 ```
 
 ### Integration Tests
@@ -65,7 +65,7 @@ End-to-end reporting workflows:
 
 ```bash
 # Full reporting pipeline
-pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
+uv run pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v
 ```
 
 ### Additional Test Modules
@@ -108,13 +108,13 @@ def test_generate_report():
 ### All Reporting Tests
 
 ```bash
-pytest tests/infra_tests/reporting/ -v
+uv run pytest tests/infra_tests/reporting/ -v
 ```
 
 ### With Coverage
 
 ```bash
-pytest tests/infra_tests/reporting/ \
+uv run pytest tests/infra_tests/reporting/ \
     --cov=infrastructure.reporting \
     --cov-report=term
 ```

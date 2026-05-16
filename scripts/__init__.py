@@ -48,7 +48,7 @@ MENU_SCRIPT_MAPPING = {
     0: PipelineStageDefinition(
         script="00_setup_environment.py",
         requires_ollama=False,
-        description="Setup Environment",
+        description="Environment Setup",
     ),
     1: PipelineStageDefinition(
         script="01_run_tests.py",

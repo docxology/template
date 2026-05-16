@@ -1,6 +1,6 @@
 # Script Conventions
 
-Orchestration rules and integration patterns for `scripts/` in the `code_project` exemplar.
+Orchestration rules and integration patterns for `scripts/` in the `template_code_project` exemplar.
 
 ## Thin Orchestrator Rules
 

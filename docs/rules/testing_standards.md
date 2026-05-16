@@ -8,8 +8,8 @@ All code in this repository requires **test coverage** with **data only** (no mo
 
 ### Mandatory Standards
 
-- **Infrastructure modules**: 60% minimum coverage (currently achieving 83.33% - exceeds stretch goal!)
-- **Project code**: 90% minimum coverage (currently achieving 100% - coverage!)
+- **Infrastructure modules**: 60% minimum coverage (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- **Project code**: 90% minimum coverage (current % — see [canonical_facts.md](../_generated/canonical_facts.md))
 - **Integration tests**: All critical workflows covered
 - **Edge cases**: All error paths tested
 
@@ -17,14 +17,14 @@ All code in this repository requires **test coverage** with **data only** (no mo
 
 ```bash
 # Run tests with coverage report
-python3 -m pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
 
 # View coverage report
 open htmlcov/index.html
 
 # Verify coverage meets requirements
-python3 -m pytest tests/ --cov=infrastructure --cov-fail-under=60
-python3 -m pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
+uv run pytest tests/ --cov=infrastructure --cov-fail-under=60
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 ```
 
 ## Test Organization
@@ -116,7 +116,7 @@ class TestLLMIntegration:
         client = LLMClient()
         if not client.check_connection():
             pytest.skip("Ollama server not available")
-    
+
     def test_query(self):
         client = LLMClient()
         response = client.query("Hello")
@@ -198,10 +198,10 @@ def test_add():
 def test_user_creation():
     # Arrange: Set up test data
     user_data = {"name": "Alice", "email": "alice@example.com"}
-    
+
     # Act: Perform the action
     user = create_user(**user_data)
-    
+
     # Assert: Verify the result
     assert user.name == "Alice"
     assert user.email == "alice@example.com"
@@ -225,7 +225,7 @@ def test_validation_error_with_pytest_raises():
     """Cleaner approach using pytest.raises."""
     with pytest.raises(ValidationError) as exc_info:
         validate_email("invalid-email")
-    
+
     assert "invalid" in str(exc_info.value).lower()
 ```
 
@@ -296,9 +296,9 @@ def test_operation_is_logged(caplog):
     """Test that operation is properly logged."""
     import logging
     caplog.set_level(logging.INFO)
-    
+
     perform_operation()
-    
+
     assert "Operation started" in caplog.text
     assert "Operation completed" in caplog.text
 ```
@@ -313,14 +313,14 @@ def test_full_validation_pipeline():
     """Test validation workflow."""
     # 1. Load data from file
     data = load_test_data("sample.csv")
-    
+
     # 2. Validate all records
     results = validate_all(data)
-    
+
     # 3. Check results
     assert results.valid_count == 95
     assert results.error_count == 5
-    
+
     # 4. Generate report
     report = generate_report(results)
     assert "95 valid" in report
@@ -333,20 +333,20 @@ def test_full_validation_pipeline():
 def test_analysis_script_generates_output(tmp_path):
     """Test that analysis script produces expected output."""
     import subprocess
-    
+
     output_dir = tmp_path / "output"
     output_dir.mkdir()
-    
+
     # Run script
     result = subprocess.run(
         ["python3", "scripts/example_figure.py", str(output_dir)],
         capture_output=True,
         text=True
     )
-    
+
     # Check execution
     assert result.returncode == 0
-    
+
     # Check output files
     assert (output_dir / "figure.png").exists()
 ```
@@ -393,41 +393,41 @@ def logger_fixture(caplog):
 
 ```bash
 # Run all tests
-python3 -m pytest tests/
+uv run pytest tests/
 
 # Run specific test file
-python3 -m pytest tests/infra_tests/test_core/test_basic.py
+uv run pytest tests/infra_tests/test_core/test_basic.py
 
 # Run specific test function
-python3 -m pytest tests/infra_tests/test_core/test_basic.py::test_validation_passes
+uv run pytest tests/infra_tests/test_core/test_basic.py::test_validation_passes
 
 # Run with verbose output
-python3 -m pytest tests/ -v
+uv run pytest tests/ -v
 
 # Run with coverage
-python3 -m pytest tests/ --cov=infrastructure --cov=projects/{name}/src
+uv run pytest tests/ --cov=infrastructure --cov=projects/{name}/src
 
 # Run with coverage and HTML report
-python3 -m pytest tests/ --cov=infrastructure --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov-report=html
 
 # Stop at first failure
-python3 -m pytest tests/ -x
+uv run pytest tests/ -x
 
 # Show print statements
-python3 -m pytest tests/ -s
+uv run pytest tests/ -s
 ```
 
 ### Filtering Tests
 
 ```bash
 # Run only tests matching a pattern
-python3 -m pytest tests/ -k "validation"
+uv run pytest tests/ -k "validation"
 
 # Run all error tests
-python3 -m pytest tests/ -k "error"
+uv run pytest tests/ -k "error"
 
 # Run excluding certain tests
-python3 -m pytest tests/ --ignore=tests/integration/
+uv run pytest tests/ --ignore=tests/integration/
 ```
 
 ## CI/CD Integration
@@ -447,7 +447,7 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.11"
-      
+
       - name: Install dependencies
         run: uv sync
 
@@ -455,7 +455,7 @@ jobs:
         run: |
           uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
           uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v2
 ```
@@ -466,33 +466,33 @@ jobs:
 
 ```bash
 # Show print statements in passing tests
-python3 -m pytest tests/ -s
+uv run pytest tests/ -s
 
 # Show print statements only for failures
-python3 -m pytest tests/ --tb=short
+uv run pytest tests/ --tb=short
 ```
 
 ### Interactive Debugging
 
 ```bash
 # Use pdb (Python debugger)
-python3 -m pytest tests/ --pdb
+uv run pytest tests/ --pdb
 
 # Drop to debugger on failure
-python3 -m pytest tests/ --pdb --lf
+uv run pytest tests/ --pdb --lf
 ```
 
 ### Viewing Test Output
 
 ```bash
 # Show full traceback
-python3 -m pytest tests/ --tb=long
+uv run pytest tests/ --tb=long
 
 # Short traceback
-python3 -m pytest tests/ --tb=short
+uv run pytest tests/ --tb=short
 
 # No traceback
-python3 -m pytest tests/ --tb=no
+uv run pytest tests/ --tb=no
 ```
 
 ## Quality Checklist

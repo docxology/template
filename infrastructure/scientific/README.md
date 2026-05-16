@@ -103,7 +103,7 @@ The scientific module is a library module. Import functions from `infrastructure
 ## Testing
 
 ```bash
-pytest tests/infra_tests/test_scientific/
+uv run pytest tests/infra_tests/test_scientific/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

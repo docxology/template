@@ -90,7 +90,7 @@ brew services list | grep ollama  # macOS
    ```bash
    # Test connection
    curl http://localhost:11434/api/tags
-   
+
    # Should return JSON with available models
    ```
 
@@ -137,7 +137,7 @@ uv run python -c "from infrastructure.llm.utils.ollama import DEFAULT_MODEL_PREF
    ```bash
    # List installed models
    ollama list
-   
+
    # Test model directly
    ollama run llama3-gradient "Test query"
    ```
@@ -197,7 +197,7 @@ time ollama run llama3-gradient "Generate a short test response"
    # Check CPU/memory usage
    top
    htop  # If available
-   
+
    # Check disk space
    df -h
    ```
@@ -230,7 +230,7 @@ uv run python scripts/03_render_pdf.py
    ```bash
    # Run PDF rendering stage
    uv run python scripts/03_render_pdf.py
-   
+
    # Or run full pipeline up to PDF stage
    uv run python scripts/execute_pipeline.py --project {name} --core-only
    ```
@@ -239,7 +239,7 @@ uv run python scripts/03_render_pdf.py
    ```bash
    # Check expected location
    ls -la projects/{name}/output/pdf/
-   
+
    # Check for alternative names
    ls -la projects/{name}/output/pdf/*.pdf
    ```
@@ -324,7 +324,7 @@ ollama ps
    ```bash
    # List loaded models
    ollama ps
-   
+
    # Preload model
    ollama run llama3-gradient "test"
    ```
@@ -341,7 +341,7 @@ ollama ps
    # Check available memory
    free -h  # Linux
    vm_stat  # macOS
-   
+
    # Use smaller model if memory constrained
    ollama pull gemma2:2b
    ```
@@ -600,7 +600,7 @@ uv run python scripts/06_llm_review.py --reviews-only
 
 ## Diagnostic Commands
 
-### Check Ollama Status
+### Check Ollama Status — Diagnostic Commands
 
 ```bash
 # Basic status check

@@ -8,8 +8,6 @@ Implementation is split across:
 - ``formatting``: author formatting utilities
 """
 
-from __future__ import annotations
-
 import difflib
 import os
 from pathlib import Path
@@ -30,6 +28,7 @@ from infrastructure.core.config.schema import (  # noqa: F401
     TestingConfig,
     TranslationsConfig,
     clear_project_schema_extensions,
+    generate_manuscript_config_schema,
     get_project_schema_extensions,
     register_project_schema_extension,
 )
@@ -54,6 +53,8 @@ def validate_config_keys(
     config: dict[str, Any],
     config_path: Path | str = "",
     project_name: str = "",
+    *,
+    strict: bool = False,
 ) -> list[str]:
     """Validate top-level config keys against known schema.
 
@@ -69,6 +70,8 @@ def validate_config_keys(
         config_path: Path to config file (for log messages)
         project_name: Name of the project being validated. Optional;
             defaults to "" (no per-project extensions applied).
+        strict: If True, raise ``ValueError`` after collecting unknown-key
+            warnings. The default remains permissive for existing pipelines.
 
     Returns:
         List of warning messages for unknown keys
@@ -94,10 +97,18 @@ def validate_config_keys(
             logger.warning(msg)
             warnings.append(msg)
 
+    if strict and warnings:
+        raise ValueError("\n".join(warnings))
+
     return warnings
 
 
-def load_config(config_path: Path | str, project_name: str = "") -> ManuscriptConfig | None:
+def load_config(
+    config_path: Path | str,
+    project_name: str = "",
+    *,
+    strict: bool = False,
+) -> ManuscriptConfig | None:
     """Load configuration from YAML file.
 
     Validates top-level keys and logs warnings for unrecognized keys.
@@ -118,6 +129,8 @@ def load_config(config_path: Path | str, project_name: str = "") -> ManuscriptCo
             Optional. When empty, the loader attempts to infer it from
             the path layout ``…/projects/<name>/manuscript/config.yaml``;
             when that fails, no per-project extensions are applied.
+        strict: If True, unknown top-level keys raise ``ValueError`` instead
+            of only logging warnings.
 
     Returns:
         ManuscriptConfig dictionary, or None if file doesn't exist or cannot be parsed
@@ -135,7 +148,12 @@ def load_config(config_path: Path | str, project_name: str = "") -> ManuscriptCo
         with open(config_path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
             if isinstance(data, dict):
-                validate_config_keys(data, config_path, project_name=resolved_project)
+                validate_config_keys(
+                    data,
+                    config_path,
+                    project_name=resolved_project,
+                    strict=strict,
+                )
             return cast(ManuscriptConfig, data)
     except FileNotFoundError:
         return None
@@ -262,6 +280,7 @@ __all__ = [
     "TestingConfig",
     "TranslationsConfig",
     "clear_project_schema_extensions",
+    "generate_manuscript_config_schema",
     "get_project_schema_extensions",
     "register_project_schema_extension",
     # Re-exports from formatting

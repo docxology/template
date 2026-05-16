@@ -1,15 +1,36 @@
 """LaTeX compilation utilities."""
 
-from __future__ import annotations
-
 import subprocess
 import time
 from pathlib import Path
 
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 
 logger = get_logger(__name__)
+
+_STALE_AUX_EXTENSIONS = (
+    ".aux",
+    ".bbl",
+    ".blg",
+    ".lof",
+    ".lot",
+    ".nav",
+    ".out",
+    ".snm",
+    ".toc",
+    ".vrb",
+)
+
+
+def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
+    """Remove stale LaTeX sidecar files before a fresh compile."""
+    for ext in _STALE_AUX_EXTENSIONS:
+        stale_file = output_dir / f"{tex_stem}{ext}"
+        if stale_file.exists():
+            stale_file.unlink()
+            logger.debug(f"Removed stale LaTeX sidecar: {stale_file.name}")
 
 
 def compile_latex(
@@ -37,6 +58,7 @@ def compile_latex(
         raise CompilationError("LaTeX file not found", context={"file": str(tex_file)})
 
     out_dir.mkdir(parents=True, exist_ok=True)
+    _clean_stale_aux_files(out_dir, tex_path.stem)
 
     # IMPORTANT: -shell-escape is required for XeTeX to properly determine PNG image
     # dimensions. Without this flag, XeTeX cannot read PNG bounding box information
@@ -70,13 +92,15 @@ def compile_latex(
             pass_duration = time.time() - pass_start
             logger.debug(f"Pass {i + 1} completed in {pass_duration:.2f}s")
 
-            # Note: xelatex may return non-zero exit code even when PDF is generated (due to warnings)  # noqa: E501
-            # So we check for PDF existence rather than just exit code
             pdf_file_temp = out_dir / f"{tex_path.stem}.pdf"
-            if not pdf_file_temp.exists():
-                # Only raise error if PDF was NOT generated
-                log_file = out_dir / f"{tex_path.stem}.log"
-                log_content = log_file.read_text() if log_file.exists() else "No log file"
+            log_file = out_dir / f"{tex_path.stem}.log"
+            log_content = log_file.read_text(encoding="utf-8", errors="replace") if log_file.exists() else ""
+            pdf_exists = pdf_file_temp.exists()
+            pdf_valid = validate_pdf_structure(pdf_file_temp) if pdf_exists else False
+
+            if result.returncode != 0 or not pdf_exists or not pdf_valid:
+                if not log_content:
+                    log_content = "No log file"
 
                 # Enhanced error analysis for better troubleshooting
                 error_hints = []
@@ -96,6 +120,8 @@ def compile_latex(
                     error_hints.append("Missing \\begin{document} command - check document structure")
                 if "Division by 0" in log_content and "graphics" in log_content.lower():
                     error_hints.append("Graphics error - ensure PNG files are valid and -shell-escape flag is used")
+                if pdf_exists and not pdf_valid:
+                    error_hints.append("PDF was written but is structurally invalid/truncated")
 
                 # Extract the most recent error messages for context
                 error_lines = []
@@ -122,6 +148,8 @@ def compile_latex(
                     f"LaTeX compilation failed (exit code: {result.returncode})",
                     context={
                         "exit_code": result.returncode,
+                        "pdf_exists": pdf_exists,
+                        "pdf_structure_valid": pdf_valid,
                         "stderr": result.stderr[:300] if result.stderr else "",
                         "log_file": str(log_file),
                         "log_tail": (log_content[-800:] if len(log_content) > 800 else log_content),
@@ -134,6 +162,8 @@ def compile_latex(
         pdf_file = out_dir / f"{tex_path.stem}.pdf"
         if not pdf_file.exists():
             raise CompilationError("PDF not generated", context={"expected": str(pdf_file)})
+        if not validate_pdf_structure(pdf_file):
+            raise CompilationError("PDF generated but failed structural validation", context={"pdf": str(pdf_file)})
 
         total_duration = time.time() - start_time
         logger.info(f"LaTeX compilation completed in {total_duration:.2f}s")

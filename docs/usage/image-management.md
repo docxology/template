@@ -50,7 +50,7 @@ for label, error in errors:
 The `MarkdownIntegration` class provides high-level integration:
 
 ```python
-from markdown_integration import MarkdownIntegration
+from infrastructure.documentation import MarkdownIntegration
 
 integration = MarkdownIntegration(manuscript_dir="manuscript")
 ```

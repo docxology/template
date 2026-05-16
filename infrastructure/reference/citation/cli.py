@@ -10,8 +10,6 @@ Subcommands:
   records and emit a BibTeX file with auto-generated citation keys.
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys

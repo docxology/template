@@ -131,13 +131,13 @@ graph TD
 
 ```bash
 # Extract metadata
-python3 -m infrastructure.publishing.cli extract-metadata manuscript/
+uv run python3 -m infrastructure.publishing.cli extract-metadata manuscript/
 
 # Generate citations
-python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
+uv run python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
 
 # Prepare Zenodo upload
-python3 -m infrastructure.publishing.cli publish-zenodo output/ --token $ZENODO_TOKEN
+uv run python3 -m infrastructure.publishing.cli publish-zenodo output/ --token $ZENODO_TOKEN
 ```
 
 ## Environment Variables
@@ -150,7 +150,7 @@ export GITHUB_TOKEN="your-token"
 ## Testing
 
 ```bash
-pytest tests/infra_tests/test_publishing/
+uv run pytest tests/infra_tests/test_publishing/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

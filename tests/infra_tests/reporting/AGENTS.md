@@ -10,12 +10,12 @@ The `tests/infra_tests/reporting/` directory contains tests for the pipeline rep
 flowchart TB
     T[/tests/infra_tests/reporting//]
     T --> META[AGENTS.md · __init__.py · conftest.py]
-    T --> CORE[Core<br/>test_core · test_config · test_reporting]
+    T --> CORE[Report builders<br/>test_report_builder · test_report_generator ·<br/>test_summary_generator]
     T --> ERR[Errors<br/>test_error_aggregator]
-    T --> HTML[HTML<br/>test_html_templates]
-    T --> PIPE[Pipeline<br/>test_pipeline_reporter]
-    T --> CLI[CLI<br/>test_cli · test_reporting_cli ·<br/>test_reporting_cli_full]
-    T --> INTEG[Integration<br/>test_reporting_integration]
+    T --> HTML[HTML / Dashboards<br/>test_html_templates · test_dashboard_generator ·<br/>test_interactive_dashboard]
+    T --> PIPE[Pipeline<br/>test_pipeline_reporter · test_pipeline_io ·<br/>test_pipeline_markdown · test_pipeline_html]
+    T --> CLI[Executive / Multi-project<br/>test_executive_reporter · test_multi_project_reporter ·<br/>test_output_reporter]
+    T --> INTEG[Coverage / Parsers<br/>test_coverage_parser · test_coverage_analysis ·<br/>test_pytest_output_parser · test_result_loaders]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -170,26 +170,27 @@ def test_html_template_error_handling():
         assert 'missing' in str(e).lower() or 'required' in str(e).lower()
 ```
 
-### CLI and Configuration Tests
+### Executive and Multi-Project Tests
 
-**CLI Interface Tests (`test_cli.py`, `test_reporting_cli*.py`)**
-- Command-line argument parsing for reporting commands
+**Executive Reporting (`test_executive_reporter.py`, `test_executive_analysis.py`, `test_executive_collectors.py`, `test_executive_renderers.py`)**
+- Cross-project executive summary aggregation
 - Output format selection (JSON, HTML, Markdown)
 - Report generation and file output
-- Error handling and user feedback
+- Health and readiness collectors
 
-**Configuration Tests (`test_config.py`)**
-- Reporting configuration validation
-- Default value handling and overrides
-- Environment variable integration
-- Configuration file parsing
+**Multi-Project and Output (`test_multi_project_reporter.py`, `test_output_reporter.py`, `test_output_organizer.py`, `test_output_statistics.py`)**
+- Multi-project roll-up and roster handling
+- Output directory organization and statistics
 
-### Integration Tests
+### Coverage and Pipeline Tests
 
-**Integration Tests (`test_reporting_integration.py`)**
-- End-to-end reporting workflow validation
-- Cross-component integration testing
-- Data flow verification between components
+**Coverage Parsers (`test_coverage_parser.py`, `test_coverage_analysis.py`, `test_coverage_json_parser.py`, `test_pytest_output_parser.py`)**
+- Coverage XML/JSON parsing and analysis
+- pytest output parsing into structured results
+
+**Pipeline Reporting (`test_pipeline_reporter.py`, `test_pipeline_io.py`, `test_pipeline_markdown.py`, `test_pipeline_html.py`)**
+- End-to-end pipeline report assembly
+- Markdown and HTML pipeline report rendering
 - Real-world usage scenario simulation
 
 ## Test Design Principles
@@ -380,16 +381,16 @@ def validate_html_report_structure(html_content: str):
 
 ```bash
 # Run all reporting tests
-pytest tests/infra_tests/reporting/
+uv run pytest tests/infra_tests/reporting/
 
 # Run specific component tests
-pytest tests/infra_tests/reporting/test_pipeline_reporter.py
+uv run pytest tests/infra_tests/reporting/test_pipeline_reporter.py
 
-# Run integration tests
-pytest tests/infra_tests/reporting/test_reporting_integration.py
+# Run executive and coverage tests
+uv run pytest tests/infra_tests/reporting/test_executive_reporter.py tests/infra_tests/reporting/test_coverage_parser.py
 
 # Run with coverage
-pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-report=html
+uv run pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-report=html
 ```
 
 ### Test Filtering
@@ -397,13 +398,13 @@ pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-report=
 **Category-Based Execution:**
 ```bash
 # CLI tests only
-pytest tests/infra_tests/reporting/ -k "cli"
+uv run pytest tests/infra_tests/reporting/ -k "cli"
 
 # Error handling tests
-pytest tests/infra_tests/reporting/ -k "error"
+uv run pytest tests/infra_tests/reporting/ -k "error"
 
 # HTML template tests
-pytest tests/infra_tests/reporting/ -k "html"
+uv run pytest tests/infra_tests/reporting/ -k "html"
 ```
 
 ## Test Coverage and Quality
@@ -556,10 +557,10 @@ def debug_error_categorization():
 **Verbose Execution:**
 ```bash
 # Run with detailed output
-pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v -s
+uv run pytest tests/infra_tests/reporting/test_pipeline_reporter.py -v -s
 
 # Debug specific assertion
-pytest tests/infra_tests/reporting/ --pdb -k "test_pipeline_reporter_basic"
+uv run pytest tests/infra_tests/reporting/ --pdb -k "test_pipeline_reporter_basic"
 ```
 
 **Log Analysis:**
@@ -568,7 +569,7 @@ pytest tests/infra_tests/reporting/ --pdb -k "test_pipeline_reporter_basic"
 grep "ERROR\|FAIL" test_results.log
 
 # Analyze coverage gaps
-pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-report=html
+uv run pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-report=html
 # Open htmlcov/index.html to see uncovered lines
 ```
 
@@ -577,12 +578,12 @@ pytest tests/infra_tests/reporting/ --cov=infrastructure.reporting --cov-report=
 **Pre-Test Setup:**
 ```bash
 # Validate test environment
-python3 -c "
+uv run python3 -c "
 import sys
 print(f'Python: {sys.version}')
 
 try:
-    from infrastructure.reporting import PipelineReporter, ErrorAggregator
+    from infrastructure.reporting import ErrorAggregator
     print('Reporting modules: ✓')
 except ImportError as e:
     print(f'Reporting modules: ✗ - {e}')

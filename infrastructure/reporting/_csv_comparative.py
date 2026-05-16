@@ -4,8 +4,6 @@ Computes per-metric percentiles, ranks, and performance ratings across all
 projects in the executive summary.
 """
 
-from __future__ import annotations
-
 import csv
 from pathlib import Path
 

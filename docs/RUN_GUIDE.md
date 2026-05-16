@@ -64,8 +64,8 @@ graph TD
     D --> H[scripts/03_render_pdf.py]
 
     E --> I[infrastructure.core.runtime.environment]
-    F --> J[infrastructure.reporting.test_reporter]
-    G --> K[infrastructure.core.runtime.script_discovery]
+    F --> J[infrastructure.reporting.pytest_output_parser]
+    G --> K[infrastructure.core.script_discovery]
     H --> L[infrastructure.rendering.RenderManager]
 
     K --> M["projects/{name}/scripts/*.py"]
@@ -149,40 +149,66 @@ uv run scripts/execute_multi_project.py
 
 ### Manuscript Menu
 
+The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.py) (`template_code_project` shown as an example project name):
+
 ```text
-INDIVIDUAL STAGES
-    0  Setup Environment          00_setup_environment.py
-    1  Run Tests                  01_run_tests.py
-    2  Run Analysis               02_run_analysis.py
-    3  Render PDF                 03_render_pdf.py
-    4  Validate Output            04_validate_output.py
-    5  Copy Outputs               05_copy_outputs.py
-    6  LLM Review                 06_llm_review.py
-    7  LLM Translations           06_llm_review.py
++========================================================================+
+|    MANUSCRIPT PIPELINE  ·  thin orchestrator template                  |
+|    project > template_code_project                                     |
++========================================================================+
 
-ORCHESTRATION
-    8  Core Pipeline              [+infra] [-LLM] Core stages
-    9  Full Pipeline              [+infra] [+LLM] All 10 stages
-    f  Full Pipeline (fast)       [-infra] [+LLM] Skip infra tests
+   Single stages 0-7   ·   Presets 8 / 9 / f   ·   Multi a-d   ·   p · i · q
+   Keys 0-5: setup, tests, analysis, render, validate, copy  |  6-7: LLM (Ollama)  |  8/9/f: pipelines  |  a-d: all projects
+   Flow:  [0..5] script chain  +  (6,7) LLM  |  8/9/f DAG presets  |  a-d multi-project
 
-MULTI-PROJECT
-    a  All projects full          [+infra] [+LLM] [+report]
-    b  All projects full (fast)   [-infra] [+LLM] [+report]
-    c  All projects core          [+infra] [-LLM] [+report]
-    d  All projects core (fast)   [-infra] [-LLM] [+report]
 
-PROJECT
-    p  Change Active Project      i  Show Project Info
-    q  Quit
+  -- INDIVIDUAL STAGES - one script per key --------------------------------
+
+   0  | Environment Setup              | 00_setup_environment.py
+   1  | Run Tests                      | 01_run_tests.py (infra + project)
+   2  | Run Analysis                   | 02_run_analysis.py
+   3  | Render PDF                     | 03_render_pdf.py
+   4  | Validate Output                | 04_validate_output.py
+   5  | Copy Outputs                   | 05_copy_outputs.py
+   6  | LLM Review                     | 06_llm_review.py reviews (Ollama)
+   7  | LLM Translations               | 06_llm_review.py translations (Ollama)
+
+  -- ORCHESTRATION - full DAG, current project -----------------------------
+
+   8  | Core Pipeline                  | current project · infra on · LLM off · 8 stages
+   9  | Full Pipeline                  | current project · infra on · LLM on · 10 stages
+   f  | Full Pipeline (fast)           | current project · skip infra · LLM on
+
+  -- MULTI-PROJECT - every discovered project ------------------------------
+
+   a  | All projects full              | all projects · infra on · LLM on · report
+   b  | All projects full (fast)       | all projects · skip infra · LLM on · report
+   c  | All projects core              | all projects · infra on · LLM off · report
+   d  | All projects core (fast)       | all projects · skip infra · LLM off · report
+
+  -- PROJECT ---------------------------------------------------------------
+
+   p  | Change Project                
+   i  | Show Project Info             
+   q  | Quit                          
+
+--------------------------------------------------------------------------
+  Infra tests: Layer-1 pytest (tests/infra_tests/), then project tests.
+  LLM: optional Ollama stages; pipeline skips them when Ollama is unavailable.
+  Executive report: written after all projects finish (keys a-d only).
+--------------------------------------------------------------------------
+
+  Tip: chain stage digits (e.g. 234 = analyze -> render -> validate); comma or space also work.
+       use  p  to switch project  ·  i  for current name  ·  q  to quit.
 ```
 
-The interactive `run.sh` menu may add decorative characters to these headings; the keys and script names are as above.
+After the menu, the interactive loop prints a one-line key legend, a blank line, then `Choice: ` before reading input. Choosing **p** prints the project list to stdout and then `Choice [index / a=all / q=quit]: ` before reading the picker line.
 
 Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) (10 named stages, including clean and both LLM steps).
 
 ### Manuscript Menu Options
 
-#### Option 0: Setup Environment
+#### Option 0: Environment Setup
 
 Verifies the environment is ready for the pipeline.
 

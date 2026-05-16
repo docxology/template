@@ -13,8 +13,6 @@ intended for single-agent reproducibility (run a search once, replay in
 tests, ship in CI artifacts).
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
 import time

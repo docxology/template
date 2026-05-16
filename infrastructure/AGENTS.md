@@ -253,10 +253,9 @@ flowchart TB
 
 ### Reporting Module
 
-#### pipeline_reporter.py
+#### pipeline_report_model.py
 
-- `def generate_pipeline_report(checkpoint_dir: Path, output_dir: Path) -> Path:`
-- `def generate_stage_report(stage_name: str, duration: float, ...) -> str:`
+- `def generate_pipeline_report(stage_results: List[Dict[str, Any]], total_duration: float, repo_root: Path, ...) -> PipelineReport:`
 
 #### error_aggregator.py
 
@@ -396,9 +395,10 @@ See [`docs/rules/api_design.md`](../docs/rules/api_design.md#mandatory-__all__-f
 
 ```python
 from infrastructure.core import (
-    get_logger, TemplateError, load_config,
+    get_logger, TemplateError,
     CheckpointManager, ProgressBar
 )
+from infrastructure.core.config.loader import load_config
 from infrastructure.core.runtime.function_profiler import CodeProfiler
 ```
 
@@ -426,9 +426,9 @@ from infrastructure.core.runtime.function_profiler import CodeProfiler
 **CLI:**
 
 ```bash
-python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf
-python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
-python3 -m infrastructure.validation.cli.main integrity output/{project_name}/
+uv run python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf
+uv run python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
+uv run python3 -m infrastructure.validation.cli.main integrity output/{project_name}/
 ```
 
 ### Documentation Module (`documentation/`)
@@ -506,9 +506,9 @@ Supports:
 **CLI:**
 
 ```bash
-python3 -m infrastructure.rendering.cli pdf manuscript.tex
-python3 -m infrastructure.rendering.cli all manuscript.tex
-python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
+uv run python3 -m infrastructure.rendering.cli pdf manuscript.tex
+uv run python3 -m infrastructure.rendering.cli all manuscript.tex
+uv run python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
 ```
 
 ### Reporting Module (`reporting/`)
@@ -540,10 +540,9 @@ from infrastructure.reporting import (
     generate_pipeline_report,
     save_pipeline_report,
     get_error_aggregator,
-    generate_test_report,
-    generate_validation_report,
     generate_multi_project_report
 )
+from infrastructure.reporting.coverage_reporter import generate_test_report
 
 # Generate pipeline report
 report = generate_pipeline_report(
@@ -588,10 +587,10 @@ Features:
 **CLI:**
 
 ```bash
-python3 -m infrastructure.publishing.cli extract-metadata manuscript/
-python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
-python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
-python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOKEN
+uv run python3 -m infrastructure.publishing.cli extract-metadata manuscript/
+uv run python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
+uv run python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
+uv run python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOKEN
 ```
 
 ## Design Principles
@@ -733,8 +732,8 @@ print(f"Published with DOI: {doi}")
 
 ```bash
 # Validate manuscript
-python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
-python3 -m infrastructure.validation.cli.main integrity output/{project_name}/
+uv run python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
+uv run python3 -m infrastructure.validation.cli.main integrity output/{project_name}/
 
 # Generate API documentation
 uv run python infrastructure/documentation/generate_glossary_cli.py \
@@ -742,11 +741,11 @@ uv run python infrastructure/documentation/generate_glossary_cli.py \
   projects/{project_name}/manuscript/98_symbols_glossary.md
 
 # Render to multiple formats
-python3 -m infrastructure.rendering.cli all manuscript.tex
+uv run python3 -m infrastructure.rendering.cli all manuscript.tex
 
 # Publish release
-python3 -m infrastructure.publishing.cli publish-zenodo output/{project_name}/ --title "My Research"
-python3 -m infrastructure.publishing.cli create-release v1.0 output/{project_name}/ $GITHUB_TOKEN
+uv run python3 -m infrastructure.publishing.cli publish-zenodo output/{project_name}/ --title "My Research"
+uv run python3 -m infrastructure.publishing.cli create-release v1.0 output/{project_name}/ $GITHUB_TOKEN
 ```
 
 ## Testing
@@ -755,13 +754,13 @@ python3 -m infrastructure.publishing.cli create-release v1.0 output/{project_nam
 
 ```bash
 # All infrastructure tests
-pytest tests/infra_tests/ -v
+uv run pytest tests/infra_tests/ -v
 
 # Specific module
-pytest tests/infra_tests/test_validation/ -v
+uv run pytest tests/infra_tests/test_validation/ -v
 
 # With coverage
-pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
+uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 ```
 
 ### Coverage Status

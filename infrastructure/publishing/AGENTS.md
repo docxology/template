@@ -12,6 +12,15 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 - Publication metadata extraction and normalization
 - DOI handling and validation helpers (where applicable)
 
+**_metadata_extraction.py**
+- Internal metadata extraction helpers
+
+**_metadata_reporting.py**
+- Internal metadata reporting helpers
+
+**models.py**
+- Publication data models and dataclasses
+
 **citations.py**
 - Citation generation (BibTeX, APA, MLA formats)
 
@@ -27,6 +36,15 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 - GitHub release creation and automation
 - DOI minting and archival
 - Metrics tracking and reporting
+
+**announcement.py**
+- Publication announcement helpers
+
+**checklist.py**
+- Pre-publication checklist validation
+
+**readiness.py**
+- Publishing readiness checks
 
 **cli.py** / **publish_cli.py**
 - CLI entry points for publishing workflows
@@ -77,7 +95,7 @@ url = create_github_release(
 
 Run publishing tests with:
 ```bash
-pytest tests/infra_tests/test_publishing/
+uv run pytest tests/infra_tests/test_publishing/
 ```
 
 ## Configuration

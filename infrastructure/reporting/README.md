@@ -122,10 +122,10 @@ Reorganize existing outputs with the provided script:
 
 ```bash
 # Preview changes
-python3 scripts/organize_executive_outputs.py --dry-run
+uv run python3 scripts/organize_executive_outputs.py --dry-run
 
 # Apply organization
-python3 scripts/organize_executive_outputs.py
+uv run python3 scripts/organize_executive_outputs.py
 ```
 
 ## Quick Start
@@ -230,7 +230,7 @@ for fmt, path in files.items():
 ### Generate Validation Report
 
 ```python
-from infrastructure.reporting import generate_validation_report
+from infrastructure.reporting import save_validation_report
 
 validation_results = {
     'checks': {
@@ -243,7 +243,7 @@ validation_results = {
     ],
 }
 
-saved_files = generate_validation_report(validation_results, Path("output/reports"))
+saved_files = save_validation_report(validation_results, Path("output/reports"))
 ```
 
 ## Module Functions
@@ -334,7 +334,7 @@ Reports are saved to `project/output/reports/` by default.
 **Visual manuscript previews** for executive reporting. Automatically extracts all pages from each project's manuscript PDF and arranges them as thumbnails in a 4-column grid layout.
 
 ```python
-from infrastructure.reporting import generate_all_manuscript_overviews
+from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews
 
 # Generate manuscript overviews for all projects
 overview_files = generate_all_manuscript_overviews(summary, output_dir, repo_root)

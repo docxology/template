@@ -3,8 +3,6 @@
 Provides reusable HTML templates for various report types.
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger

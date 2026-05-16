@@ -6,6 +6,8 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 
 ## Current Entry Points
 
+**Pipeline orchestrators (numbered stages + runners):**
+
 - `00_setup_environment.py` - environment and dependency validation
 - `01_run_tests.py` - infrastructure and project test orchestration
 - `02_run_analysis.py` - project-script discovery and execution
@@ -15,13 +17,37 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `06_llm_review.py` - LLM review and translation orchestration
 - `07_generate_executive_report.py` - multi-project executive reporting
 - `execute_pipeline.py` - single-project pipeline runner
-- `execute_multi_project.py` - multi-project pipeline runner
-- `audit_filepaths.py` - repository filepath audit
-- `generate_active_projects_doc.py` - derived project inventory documentation
-- `organize_executive_outputs.py` - executive output organizer
-- `manage_workspace.py` - workspace helper
-- `show_project_info.py` - project metadata helper (used by `run.sh` interactive menu)
+- `execute_multi_project.py` - multi-project pipeline runner (serial; `--parallel` for process-pool)
+
+**Derived-doc generators (write `docs/_generated/` and in-place doc blocks):**
+
+- `generate_active_projects_doc.py` - derived active-project inventory
+- `generate_api_reference_doc.py` - API reference from `__all__` (CI `validate --check`)
+- `generate_architecture_overview.py` - architecture `.mmd`/`.svg` from live state
+- `generate_coverage_history.py` - coverage-history page from CI artefacts
+- `generate_stage_table_doc.py` - canonical pipeline stage table (marker block)
+
+**Quality gates / audits:**
+
+- `lint_docs.py` - documentation lint orchestrator (Mermaid, links, consistency, doc pairs)
 - `verify_no_mocks.py` - mock-usage checker
+- `audit_filepaths.py` - repository filepath audit
+- `check_tracked_generated_artifacts.py` - git-index hygiene guard for generated outputs (untracked helper; exercised by `tests/infra_tests/git_hook_smoke/`)
+
+**Setup / workspace / helpers:**
+
+- `setup_pre_commit.py` - install and validate pre-commit hooks
+- `manage_workspace.py` - workspace helper (status, per-project deps)
+- `show_project_info.py` - project metadata helper (used by `run.sh` interactive menu)
+- `organize_executive_outputs.py` - executive output organizer
+- `batch_cogsec_improve.py` - thin orchestrator applying mechanical source improvements
+
+**Backup / operations (shell):**
+
+- `backup-daily.sh`, `backup-weekly.sh`, `backup-full.sh` - rsync backup tiers
+- `restore-test.sh` - non-destructive backup-restore verification
+- `health-check.sh` - pre-flight system health check (Python, uv, disk, Docker, repo)
+- `bash_utils.sh` - shared shell helpers sourced by `run.sh` / `secure_run.sh`
 
 > **Unified health command** — every quality gate listed below (mypy,
 > ruff, ruff-format, bandit, `verify_no_mocks.py`,
@@ -77,7 +103,7 @@ Typed mapping used by `scripts/__init__.py` to document the interactive menu-to-
 ## Execution Details
 
 - `run.sh` is the primary user entry point.
-- `secure_run.sh` runs the pipeline and then steganographic PDF post-processing.
+- `secure_run.sh` runs the same pipeline DAG via Python (`PipelineRunner`), then steganographic PDF post-processing (`run_secure_pipeline`).
 - `execute_pipeline.py` uses `PipelineExecutor` from `infrastructure.core.pipeline`.
 - `execute_multi_project.py` uses `MultiProjectOrchestrator` from
   `infrastructure.core.pipeline.multi_project` for the default serial path.

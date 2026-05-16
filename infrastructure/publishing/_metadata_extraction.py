@@ -6,8 +6,6 @@ information from markdown content.
 Extracted from metadata.py for file-size health.
 """
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 

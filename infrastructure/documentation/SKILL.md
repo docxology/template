@@ -59,10 +59,8 @@ integrator.insert_figures(manuscript_path, figure_manager)
 Generate API documentation and glossaries from source code:
 
 ```python
-from infrastructure.documentation import (
-    build_api_index, generate_markdown_table,
-    inject_between_markers, ApiEntry,
-)
+from infrastructure.documentation import build_api_index, generate_markdown_table, ApiEntry
+from infrastructure.documentation.glossary_gen import inject_between_markers
 
 # Build API index from source
 api_entries = build_api_index(source_dir)
@@ -70,10 +68,10 @@ api_entries = build_api_index(source_dir)
 # Generate markdown table
 table = generate_markdown_table(api_entries)
 
-# Inject between markers in a markdown file
-inject_between_markers(
-    file_path,
-    start_marker="<!-- API_START -->",
+# Inject between markers in a markdown file (operates on text, not a file path)
+updated_text = inject_between_markers(
+    text=original_text,
+    begin_marker="<!-- API_START -->",
     end_marker="<!-- API_END -->",
     content=table,
 )
@@ -82,5 +80,5 @@ inject_between_markers(
 **CLI:**
 
 ```bash
-python3 -m infrastructure.documentation.generate_glossary_cli --project {name}
+uv run python3 -m infrastructure.documentation.generate_glossary_cli --project {name}
 ```

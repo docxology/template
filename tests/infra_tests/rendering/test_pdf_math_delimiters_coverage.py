@@ -106,6 +106,10 @@ class TestFixMathDelimiters:
         assert "Some text before." in result
         assert "Some text after." in result
 
+    def test_preserves_literal_bracketed_inline_math(self):
+        tex = r"literal concentration {[}CO\(_2\){]} and table column {[}outside{]}"
+        assert fix_math_delimiters(tex) == tex
+
     def test_empty_input(self):
         assert fix_math_delimiters("") == ""
 

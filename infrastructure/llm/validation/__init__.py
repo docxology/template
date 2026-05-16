@@ -1,7 +1,5 @@
 """Output validation for LLM responses."""
 
-from __future__ import annotations
-
 from infrastructure.llm.validation.core import (
     clean_repetitive_output,
     estimate_tokens,

@@ -7,6 +7,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `executor.py`
 - `dag.py`
 - `multi_project.py`
+- `multi_project_parallel.py`
 - `resume.py`
 - `stages.py`
 - `stage_monitor.py`
@@ -18,6 +19,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `summary_helpers.py`
 - `summary_models.py`
 - `types.py`
+- `pipeline.yaml` — default 10-stage DAG definition consumed by the executor
 
 ## See Also
 

@@ -2,7 +2,7 @@
 
 > **Repository-scoped configuration defaults**
 
-**Location:** `infrastructure/config/`  
+**Location:** `infrastructure/config/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [Configuration Guide](../../operational/config/configuration.md)
 
 ---
@@ -47,12 +47,15 @@ cp infrastructure/config/.env.template .env
 **From Python** (via steganography module):
 
 ```python
+import yaml
 from pathlib import Path
-from infrastructure.steganography import apply_steganography
+from infrastructure.steganography import embed_steganography, SteganographyConfig
 
-apply_steganography(
-    pdf_path=Path("output/template_code_project/pdf/paper.pdf"),
-    config_path=Path("infrastructure/config/secure_config.yaml"),
+raw = yaml.safe_load(Path("infrastructure/config/secure_config.yaml").read_text())
+config = SteganographyConfig.from_dict(raw.get("steganography", {}))
+embed_steganography(
+    Path("output/template_code_project/pdf/paper.pdf"),
+    config=config,
 )
 ```
 

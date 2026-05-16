@@ -1,8 +1,8 @@
-# AI Agent Instructions — code_project Exemplar
+# AI Agent Instructions — template_code_project Exemplar
 
 ## Why This File Exists
 
-`code_project` is the **control positive** for the template repository: the canonical example proving that every template feature works correctly. Deviating from the rules below — introducing a mock, moving math to scripts/, breaking the src/infrastructure boundary — breaks the exemplar purpose and misleads future users who study this project to understand how the template works.
+`template_code_project` is the **control positive** for the template repository: the canonical example proving that the computational-research path works correctly. Deviating from the rules below — introducing a mock, moving math to scripts/, breaking the src/infrastructure boundary — breaks the exemplar purpose and misleads future users who study this project to understand how the template works.
 
 Read this file before touching any other file in this project.
 
@@ -23,9 +23,9 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 ---
 
-## Rule 2: Coverage Gate — 96 Tests, ≥90% on `src/`
+## Rule 2: Coverage Gate — 117 Tests, ≥90% on `src/`
 
-The current test suite has **96 collected tests** across `test_optimizer.py`, `test_invariants.py`, and `test_invariants_and_dashboard.py`, and achieves approximately **99.5% line/branch coverage** on `projects/template_code_project/src/`. The gate is 90% (`fail_under = 90` in `pyproject.toml`); the project's own `pyproject.toml` configures a 70% floor and the root pipeline raises that to 90%.
+The current test suite has **117 collected tests** across `test_optimizer.py`, `test_invariants.py`, `test_invariants_and_dashboard.py`, and `test_manuscript_variables.py`, and achieves approximately **99.5% line/branch coverage** on `projects/template_code_project/src/`. Both the project `pyproject.toml` and the root pipeline gate coverage at 90%.
 
 Before modifying `src/optimizer.py`, count the existing tests for the function you are changing. After modifying, run:
 

@@ -9,8 +9,6 @@ Simple single-purpose templates (SummarizeAbstract, LiteratureReview,
 CodeDocumentation, DataInterpretation) are defined directly here.
 """
 
-from __future__ import annotations
-
 from infrastructure.llm.templates.base import ResearchTemplate
 from infrastructure.llm.templates.literature_analysis import (
     CitationNetworkAnalysis,

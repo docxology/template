@@ -150,7 +150,7 @@ def test_figure_registry_persistence():
 ```python
 def test_api_extraction_from_module():
     """Test API extraction from actual Python module."""
-    from infrastructure.core import config_loader  # Real module
+    from infrastructure.core.config import loader as config_loader  # Real module
 
     functions, classes = extract_api_from_module(config_loader)
 
@@ -238,13 +238,13 @@ class SampleClass:
 
 ```bash
 # Run all documentation tests
-pytest tests/infra_tests/documentation/
+uv run pytest tests/infra_tests/documentation/
 
 # Run specific test file
-pytest tests/infra_tests/documentation/test_glossary_gen.py
+uv run pytest tests/infra_tests/documentation/test_glossary_gen.py
 
 # Run with coverage
-pytest tests/infra_tests/documentation/ --cov=infrastructure.documentation --cov-report=html
+uv run pytest tests/infra_tests/documentation/ --cov=infrastructure.documentation --cov-report=html
 ```
 
 ### Coverage Analysis
@@ -355,10 +355,10 @@ class ResearchAnalyzer:
 **Verbose Testing:**
 ```bash
 # Debug specific test
-pytest tests/infra_tests/documentation/test_glossary_gen.py::test_api_extraction -v -s
+uv run pytest tests/infra_tests/documentation/test_glossary_gen.py::test_api_extraction -v -s
 
 # Profile test performance
-pytest tests/infra_tests/documentation/ --durations=5
+uv run pytest tests/infra_tests/documentation/ --durations=5
 ```
 
 ## Test Metrics

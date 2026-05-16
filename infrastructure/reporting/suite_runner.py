@@ -4,8 +4,6 @@ Provides pytest streaming execution and a common retry/coverage-conflict
 loop used by both infrastructure and project test suites.
 """
 
-from __future__ import annotations
-
 import collections
 import os
 import select
@@ -172,7 +170,7 @@ class TestSuiteConfig:
             self.spinner_label = f"Running {self.label.lower()} tests"
 
 
-def run_test_suite(config: TestSuiteConfig) -> tuple[int, dict[str, Any]]:
+def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
     """Execute a test suite with retry on coverage conflicts.
 
     Handles:

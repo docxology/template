@@ -22,14 +22,14 @@
 ### DOI Validation and Citation Generation
 
 ```python
-from infrastructure.publishing.core import validate_doi, generate_citation_bibtex, PublicationMetadata
+from infrastructure.publishing import validate_doi, generate_citation_bibtex, PublicationMetadata
 
 # Validate DOI
 doi = "10.5281/zenodo.12345678"
 if validate_doi(doi):
-    print("✅ Valid DOI")
+    print("Valid DOI")
 else:
-    print("❌ Invalid DOI")
+    print("Invalid DOI")
 
 # Generate BibTeX citation — construct PublicationMetadata (not a plain dict)
 metadata = PublicationMetadata(
@@ -59,7 +59,7 @@ print(bibtex)
 ### Metadata Extraction
 
 ```python
-from infrastructure.publishing.core import extract_publication_metadata
+from infrastructure.publishing import extract_publication_metadata
 
 # Extract metadata from manuscript
 markdown_files = ["manuscript/01_abstract.md", "manuscript/02_introduction.md"]

@@ -1,3 +1,4 @@
+"""Tests for templates module."""
 import pytest
 
 from infrastructure.llm.templates import (

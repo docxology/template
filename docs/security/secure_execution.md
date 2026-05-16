@@ -1,79 +1,77 @@
 # Secure Execution
 
-The Secure Execution orchestrator (`secure_run.sh`) is an alternative launch point to the standard pipeline. It is a superset orchestrator: it executes the standard pipeline seamlessly, but then appends critical steganographic and cryptographic payloading post-processes.
+The Secure Execution entry point ([`secure_run.sh`](../../secure_run.sh)) runs the **same pipeline DAG** as `./run.sh` via Python [`PipelineRunner`](../../infrastructure/orchestration/pipeline_runner.py) / [`PipelineExecutor`](../../infrastructure/core/pipeline/executor.py), then applies steganographic post-processing. It does **not** shell out to `./run.sh`.
 
-## Verified Multi-Project Results
+Before invoking Python, `secure_run.sh` runs `uv sync --group steganography` so ReportLab / QR dependencies are present.
 
-Post-processing is the same for every workspace returned by `discover_projects()`. **Representative row** (control-positive exemplar):
+## Multi-project behaviour
 
-| Project | Pages | Overlays | Barcodes | Metadata | XMP | Manifest |
-|---------|-------|----------|----------|----------|-----|----------|
-| `template_code_project` | varies by manuscript build | ✅ | ✅ | ✅ | ✅ | ✅ |
+When **`--steganography-only`** is set and **`--project`** is omitted, every workspace returned by `discover_projects()` is scanned for PDFs and hardened.
 
-**All other active `projects/` names:** [_generated/active_projects.md](../_generated/active_projects.md). Anything under `projects_archive/` or `projects_in_progress/` is not processed until moved into `projects/`.
+When the **pipeline phase** runs (`--steganography-only` not set), **`--project <name>` is required** — one project per invocation (see [`run_secure_pipeline`](../../infrastructure/orchestration/secure_run.py)).
 
-The `secure_run.sh` script discovers all active projects and processes each one in sequence. Steganographic outputs include:
+For multi-project **pipeline + steganography**, run `./run.sh --all-projects --pipeline` (or per-project pipelines), then `./secure_run.sh --steganography-only` with no `--project` to harden all discovered PDFs.
+
+**Active `projects/` names:** [_generated/active_projects.md](../_generated/active_projects.md). Trees under `projects_archive/` or `projects_in_progress/` are not discovered until moved into `projects/`.
+
+Post-processing outputs:
 
 - `*_steganography.pdf` — augmented PDF with overlays, barcodes, and metadata
 - `*.hashes.json` — SHA-256/512 hash manifest sidecar
 
-## Interactive Mode
+## Interactive orchestration
 
-If you run `./secure_run.sh` with no arguments, you enter an interactive UI (similar to `./run.sh`).
+The **full interactive menu** (project picker, stage keys, multi-project shortcuts) lives under `python -m infrastructure.orchestration` with **no** subcommand — same as bare `./run.sh`.
 
-The UI immediately details your active `infrastructure/config/secure_config.yaml` parameters and allows you to select which permutation to run (Fast, Core, Full, etc) with Steganography automatically affixed at the end.
+To reach the **`secure` subcommand** from the main thin shell, use **`./run.sh --secure-run`** (see [`run.sh`](../../run.sh) argv shaping). `./secure_run.sh` alone always invokes `… orchestration secure` and does not show that menu.
 
-### Project Selection
+## Non-interactive CLI (`secure` subcommand)
 
-By default, `secure_run.sh` will target `all` discovered projects.
-
-If you wish to only run the pipeline on one project, press `p` in the interactive menu, type the index number of the project you wish to target, and hit Enter. The subsequent run will only generate and secure PDFs for that singular project.
-
-## Non-Interactive (CLI) Mode
-
-For automated deployments or rapid iteration, `secure_run.sh` supports standard pipeline bypass flags:
+Forwarded by `./secure_run.sh` after optional `--deterministic` stripping:
 
 ```bash
-# Run the pipeline across all projects, but skip the LLM queries and infrastructure test bottlenecks
-./secure_run.sh --project all --skip-infra --core-only --pipeline
+# Pipeline + steganography for one project
+./secure_run.sh --project template_code_project
+
+# Core DAG (no LLM stages) + steganography
+./secure_run.sh --project template_code_project --core-only
+
+# Resume checkpoint after pipeline phase
+./secure_run.sh --project template_code_project --resume
+
+# Only harden existing PDFs (single project)
+./secure_run.sh --steganography-only --project template_code_project
+
+# Harden PDFs for every discovered project (pipeline skipped)
+./secure_run.sh --steganography-only
+
+# Skip infrastructure tests during pipeline phase (passed through to runner)
+./secure_run.sh --project template_code_project --skip-infra
 ```
 
-```bash
-# Don't run the pipeline at all, just search for existing PDF files and apply Steganography to them for the specific template_code_project
-./secure_run.sh --project template_code_project --steganography-only
-```
+There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--steganography-only` already runs the pipeline before steganography.
 
-### Full Flag List
+### Flag summary
 
 | Flag | Effect |
 |------|--------|
-| `--project <name>` | Select a specific project, or omit to run a multi-project sweep. |
-| `--pipeline` | Bypasses the UI completely and automatically commences running. |
-| `--skip-infra` | Skips running the `infra_tests/` suite (Stage 3 bottleneck). |
-| `--core-only` | Skips running the `requires_ollama` LLM processing loop (Stage 7/8 bottleneck). |
-| `--steganography-only` | Skips pipeline execution completely and only performs the Steganography loops. |
-| `--deterministic` | Pin every embedded timestamp to `git log -1 --format=%cI` so two consecutive runs produce byte-identical PDFs. Equivalent to `STEGANOGRAPHY_DETERMINISTIC=1`. |
+| `--project <name>` | Required when running the pipeline phase. Optional when `--steganography-only`; if omitted in steg-only mode, all discovered projects are processed. |
+| `--steganography-only` | Skip pipeline; only run `SteganographyProcessor` on existing PDFs. |
+| `--skip-infra` | Skip infrastructure tests stage during pipeline phase. |
+| `--core-only` | Omit LLM-tagged stages during pipeline phase. |
+| `--resume` | Resume pipeline from checkpoint (pipeline phase only). |
+| `--deterministic` | Parsed only by `secure_run.sh`: sets `STEGANOGRAPHY_DETERMINISTIC=1` so timestamps align with `git log -1 --format=%cI` (byte-identical `*_steganography.pdf` across runs at same `HEAD`). |
 
 ### Deterministic / reproducible mode
 
-For provenance audits and content-hash pinning, run with
-`--deterministic`:
-
 ```bash
-# Reproducible build — byte-identical *_steganography.pdf across runs
-./secure_run.sh --deterministic --pipeline --project template_code_project
-
-# Equivalent via env var
-STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh --pipeline --project template_code_project
+./secure_run.sh --deterministic --project template_code_project
+STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh --project template_code_project
 ```
 
-The flag pins every timestamp inside the steganography overlay (footer,
-barcode payload, metadata, XMP packet, hash manifest) and the document
-ID to a function of the latest commit's `%cI`. See
-[`steganography.md` § Deterministic mode](steganography.md#deterministic-mode)
-for trade-offs.
+Trade-offs and internals: [steganography.md § Deterministic mode](steganography.md#deterministic-mode).
 
+## See also
 
-## See Also
-
-- **[Security Index](../security/README.md)** — Security policies and procedures
+- **[Security Index](README.md)** — Security policies and procedures
+- **[Root AGENTS.md](../../AGENTS.md)** — Secure Pipeline section

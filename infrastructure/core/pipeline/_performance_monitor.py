@@ -4,8 +4,6 @@ Provides the PerformanceMonitor class, performance_context context manager,
 and get_system_resources helper.
 """
 
-from __future__ import annotations
-
 import os
 import time
 from contextlib import contextmanager

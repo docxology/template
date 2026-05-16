@@ -266,8 +266,8 @@ f(x) &= \sum_{i=1}^{n} w_i \phi_i(x) \\
 **Never use these for display math:**
 
 ```markdown
-$$ f(x) = x^2 $$           # ❌ BAD: Double dollar signs
-\[ f(x) = x^2 \]          # ❌ BAD: Backslash square brackets
+Prose $$ f(x) = x^2 $$     # ❌ BAD: inline display delimiter
+\[ f(x) = x^2 \]          # ❌ BAD: raw bracket display math
 ```
 
 **Always use:**
@@ -1002,12 +1002,12 @@ Figure \ref{fig:results}. Shows results.         # ❌ Fragmented
 
 ## Common Mistakes to Avoid
 
-### Using `$$` for Display Math
+### Using Inline `$$` for Display Math
 
-**Never:**
+**Never place display delimiters inline in prose:**
 
 ```markdown
-$$ f(x) = x^2 $$
+Prose $$ f(x) = x^2 $$ continues here.
 ```
 
 **Always:**

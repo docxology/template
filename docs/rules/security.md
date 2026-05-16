@@ -10,7 +10,7 @@ This guide covers **development security standards** for the Research Project Te
 
 ```python
 # ✅ GOOD: Validate all external inputs
-from infrastructure.core.runtime.exceptions import ValidationError
+from infrastructure.core.exceptions import ValidationError
 
 def process_user_data(data: dict) -> dict:
     """Process user data with validation."""
@@ -534,11 +534,11 @@ markers =
     integration: marks tests as integration tests
 
 # Run security tests
-pytest -m security
+uv run pytest -m security
 
 # Run all tests including security
-pytest --cov --cov-report=html -m "not integration"  # Fast tests first
-pytest -m integration  # Slower integration tests
+uv run pytest --cov --cov-report=html -m "not integration"  # Fast tests first
+uv run pytest -m integration  # Slower integration tests
 ```
 
 ## See Also

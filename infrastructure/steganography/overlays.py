@@ -6,8 +6,6 @@ tiled QR code overlays, invisible Unicode metadata layers, and page-footer
 document-ID stamps.
 """
 
-from __future__ import annotations
-
 import io
 from dataclasses import dataclass
 

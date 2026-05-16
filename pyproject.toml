@@ -4,12 +4,11 @@
 # automated PDF generation, and professional documentation structure.
 #
 # For documentation and usage, see:
-# - HOW_TO_USE.md - Complete usage guide from basic to advanced
 # - README.md - Project overview and quick start
-# - ARCHITECTURE.md - System design overview  
-# - WORKFLOW.md - Development workflow guide
-# - THIN_ORCHESTRATOR_SUMMARY.md - Architecture implementation
-# - EXAMPLES_SHOWCASE.md - Real-world usage examples
+# - docs/RUN_GUIDE.md - Pipeline and command guide
+# - docs/architecture/two-layer-architecture.md - System design overview
+# - docs/architecture/thin-orchestrator-summary.md - Thin orchestrator pattern
+# - docs/usage/examples-showcase.md - Example projects and workflows
 #
 # Repository: https://github.com/docxology/template
 
@@ -46,6 +45,7 @@ dependencies = [
   "networkx>=3.4.2",
   "seaborn>=0.13.2",
   "scipy>=1.15.3",
+  "textstat>=0.7.13",
 ]
 
 
@@ -184,6 +184,8 @@ omit = [
     "*/tmp/*",
     "*/temp/*",
     "*/site-packages/*",
+    "projects/template_code_project/src/analysis.py",
+    "projects/template_code_project/src/dashboard.py",
     "/private/var/folders/*",
 ]
 
@@ -214,7 +216,7 @@ exclude_lines = [
 # ============================================================================
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py310"
 line-length = 120
 
 [tool.ruff.lint]

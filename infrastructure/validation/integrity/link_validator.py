@@ -4,12 +4,15 @@ This module provides comprehensive validation of markdown links and file referen
 across the repository, ensuring all internal documentation links resolve correctly.
 """
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.scan_scope import (
+    DEFAULT_EXCLUDE_PARTS,
+    iter_markdown_files,
+    should_exclude_path,
+)
 
 logger = get_logger(__name__)
 
@@ -35,28 +38,9 @@ class LinkValidator:
             OSError: If the repository root is unreadable or I/O fails during traversal.
                 Propagated to the constructor so callers know the scanner is not usable.
         """
-        exclude_patterns = {
-            "__pycache__",
-            ".git",
-            "htmlcov",
-            ".pytest_cache",
-            ".venv",
-            "node_modules",
-            ".cursor",
-            "output",
-            ".DS_Store",
-        }
-
         try:
             for path in self.repo_root.rglob("*"):
-                # Skip excluded directories - check if any path component exactly matches exclude pattern  # noqa: E501
-                path_parts = path.parts
-                should_exclude = False
-                for part in path_parts:
-                    if part in exclude_patterns:
-                        should_exclude = True
-                        break
-                if should_exclude:
+                if should_exclude_path(path, DEFAULT_EXCLUDE_PARTS | {".DS_Store"}):
                     continue
 
                 if path.is_file():
@@ -340,12 +324,7 @@ class LinkValidator:
         """
         results = {}
 
-        # Find all markdown files
-        markdown_files: list[Path] = []
-        for ext in ["*.md", "*.markdown"]:
-            markdown_files.extend(self.repo_root.rglob(ext))
-
-        for md_file in sorted(markdown_files):
+        for md_file in iter_markdown_files([self.repo_root]):
             relative_path = md_file.relative_to(self.repo_root)
             logger.info(f"Validating links in {relative_path}")
             results[str(relative_path)] = self.validate_file_links(md_file)

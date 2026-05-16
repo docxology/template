@@ -5,8 +5,6 @@ collector (DiagnosticReporter) that generates compiler-style summary tables
 (e.g. Red Flags, Yellow Flags, Line Numbers, Fix Suggestions).
 """
 
-from __future__ import annotations
-
 import json
 from dataclasses import asdict, dataclass, field
 from enum import Enum

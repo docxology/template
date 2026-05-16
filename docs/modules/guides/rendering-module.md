@@ -2,7 +2,7 @@
 
 > **Multi-format output generation from single source**
 
-**Location:** `infrastructure/rendering/core.py`  
+**Location:** `infrastructure/rendering/core.py`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
@@ -47,13 +47,13 @@ pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
 # Beamer slides
 slides_pdf = manager.render_slides(
     Path("presentation.md"),
-    format="beamer"
+    output_format="beamer"
 )
 
 # Reveal.js HTML slides
 slides_html = manager.render_slides(
     Path("presentation.md"),
-    format="revealjs"
+    output_format="revealjs"
 )
 
 # Web version

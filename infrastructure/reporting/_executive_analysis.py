@@ -4,8 +4,6 @@ Contains aggregate metric generation and comparative table building
 across multiple projects.
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 from ._executive_models import ProjectMetrics

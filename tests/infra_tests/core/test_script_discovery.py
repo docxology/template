@@ -66,6 +66,40 @@ class TestDiscoverAnalysisScripts:
         assert scripts[1].name == "beta.py"
         assert scripts[2].name == "zebra.py"
 
+    def test_discover_analysis_scripts_respects_config_allowlist(self, tmp_path):
+        """Configured projects run only build-producing scripts, in config order."""
+        repo_root = tmp_path / "repo"
+        project_dir = repo_root / "projects" / "project"
+        scripts_dir = project_dir / "scripts"
+        scripts_dir.mkdir(parents=True)
+        manuscript_dir = project_dir / "manuscript"
+        manuscript_dir.mkdir()
+
+        (scripts_dir / "biology_analysis.py").write_text("# analysis")
+        (scripts_dir / "generate_figures.py").write_text("# figures")
+        (scripts_dir / "maintenance_rewrite.py").write_text("# maintenance")
+        (manuscript_dir / "config.yaml").write_text(
+            "analysis:\n"
+            "  scripts:\n"
+            "    - generate_figures.py\n"
+            "    - biology_analysis.py\n"
+        )
+
+        scripts = discover_analysis_scripts(repo_root, project_name="project")
+
+        assert [script.name for script in scripts] == ["generate_figures.py", "biology_analysis.py"]
+
+    def test_discover_analysis_scripts_resolves_wip_project(self, tmp_path):
+        """Stage 02 can run a project before promotion from projects_in_progress/."""
+        repo_root = tmp_path / "repo"
+        scripts_dir = repo_root / "projects_in_progress" / "draft_project" / "scripts"
+        scripts_dir.mkdir(parents=True)
+        (scripts_dir / "analysis.py").write_text("# analysis")
+
+        scripts = discover_analysis_scripts(repo_root, project_name="draft_project")
+
+        assert [script.name for script in scripts] == ["analysis.py"]
+
     def test_discover_analysis_scripts_empty_directory(self, tmp_path):
         """Test discovering scripts in empty directory."""
         repo_root = tmp_path / "repo"

@@ -23,8 +23,6 @@ Both fetchers cache content on disk by paper id (``arxiv:1234.5678`` →
 LLM-prompt synthesis can replay against frozen text.
 """
 
-from __future__ import annotations
-
 import json
 import re
 

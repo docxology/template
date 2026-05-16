@@ -148,8 +148,8 @@ from infrastructure.documentation import (
     MarkdownIntegration,
     build_api_index,
     generate_markdown_table,
-    inject_between_markers
 )
+from infrastructure.documentation.glossary_gen import inject_between_markers
 
 # Figure management workflow
 fm = FigureManager()
@@ -211,6 +211,7 @@ if validation_results['errors']:
 | **markdown_integration.py** | Section-aware figure placement | `MarkdownIntegration` | Manuscript structure management |
 | **glossary_gen.py** | API documentation from source | `build_api_index()`, `generate_markdown_table()` | Automatic glossary generation |
 | **generate_glossary_cli.py** | CLI for glossary generation | `main()` | Pipeline integration script |
+| **architecture_overview.py** | One-page architecture diagram from live repo state | `build_architecture_mermaid()`, `render_architecture_svg()` | Driven by `scripts/generate_architecture_overview.py` |
 
 ## Figure Management
 
@@ -402,7 +403,7 @@ updated_content = inject_between_markers(
 
 ```bash
 # Generate API glossary for manuscript
-python3 infrastructure/documentation/generate_glossary_cli.py
+uv run python3 infrastructure/documentation/generate_glossary_cli.py
 
 # This updates manuscript/98_symbols_glossary.md with current API
 ```
@@ -413,12 +414,12 @@ The documentation module integrates with the build pipeline:
 
 ```bash
 # scripts/02_run_analysis.py - Figure generation and registration
-python3 scripts/02_run_analysis.py --project project
+uv run python3 scripts/02_run_analysis.py --project project
 # - Runs project figure generation scripts
 # - Registers generated figures automatically
 
 # scripts/03_render_pdf.py - Documentation generation
-python3 scripts/03_render_pdf.py --project project
+uv run python3 scripts/03_render_pdf.py --project project
 # - Generates API glossary
 # - Updates manuscript with current documentation
 ```
@@ -499,17 +500,17 @@ mi = MarkdownIntegration(
 
 ```bash
 # Run all documentation tests
-pytest tests/infra_tests/test_documentation/ -v
+uv run pytest tests/infra_tests/test_documentation/ -v
 
 # Test specific components
-pytest tests/infra_tests/test_documentation/test_figure_manager.py -v
-pytest tests/infra_tests/test_documentation/test_glossary_gen.py -v
+uv run pytest tests/infra_tests/test_documentation/test_figure_manager.py -v
+uv run pytest tests/infra_tests/test_documentation/test_glossary_gen.py -v
 
 # Integration tests
-pytest tests/integration/test_documentation_pipeline.py -v
+uv run pytest tests/integration/test_documentation_pipeline.py -v
 
 # With coverage
-pytest tests/infra_tests/test_documentation/ --cov=infrastructure.documentation --cov-report=html
+uv run pytest tests/infra_tests/test_documentation/ --cov=infrastructure.documentation --cov-report=html
 ```
 
 ## Performance Considerations
@@ -693,7 +694,7 @@ The module includes a script for generating API documentation:
 
 ```bash
 # Generate API glossary from source code
-python3 infrastructure/documentation/generate_glossary_cli.py
+uv run python3 infrastructure/documentation/generate_glossary_cli.py
 ```
 
 This script automatically scans `projects/{name}/src/` for public APIs and updates `projects/{name}/manuscript/98_symbols_glossary.md`.
@@ -701,7 +702,7 @@ This script automatically scans `projects/{name}/src/` for public APIs and updat
 ## Testing
 
 ```bash
-pytest tests/infra_tests/test_documentation/
+uv run pytest tests/infra_tests/test_documentation/
 ```
 
 For detailed documentation, see [AGENTS.md](AGENTS.md).

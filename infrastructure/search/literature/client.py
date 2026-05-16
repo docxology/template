@@ -9,8 +9,6 @@ Per-backend errors are captured into :attr:`SearchResult.errors` rather than
 raised so a single offline source never breaks a search.
 """
 
-from __future__ import annotations
-
 from typing import Iterable
 
 from infrastructure.core.logging.utils import get_logger

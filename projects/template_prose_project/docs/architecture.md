@@ -63,16 +63,16 @@ sequenceDiagram
     REP->>FS: write review_report.md
 ```
 
-## Why three siblings?
+## Why These Exemplar Shapes?
 
-The trio of `template_*_project` exemplars covers the three dominant
-shapes of academic research projects:
+The permanent `template_*_project` exemplars cover the always-on computational
+and prose-review paths; the optional search add-on covers literature discovery:
 
 | Project | Workflow | Algorithm? | Mutates `references.bib`? |
 |---|---|---|---|
 | `template_code_project` | Numerical experiment + analysis | yes (`src/optimizer.py`) | no |
-| `template_search_project` | Literature discovery → BibTeX → LLM synthesis | no | yes (auto-populates) |
 | `template_prose_project` | Editorial review (readability + structure + bibliography) | no | no (read-only validation) |
+| `projects_archive/template_search_project` | Literature discovery → BibTeX → LLM synthesis | no | yes (auto-populates) |
 
 The infrastructure modules are deliberately small and stable; each
 exemplar is small and explicit. New projects pick whichever shape is

@@ -20,8 +20,6 @@ parallelogram syntax is intentionally avoided (GitHub's parser has rejected it
 in the past for this repo's other generated diagrams).
 """
 
-from __future__ import annotations
-
 import json
 import shutil
 import subprocess

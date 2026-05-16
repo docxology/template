@@ -4,8 +4,6 @@ Separated from summary.py so that summary_formatters.py can import
 PipelineSummary without creating an import cycle through summary.py.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from pathlib import Path
 

@@ -10,10 +10,10 @@ Tests for documentation module including figure management, image handling, glos
 
 ```bash
 # Run all documentation tests
-pytest tests/infra_tests/documentation/ -v
+uv run pytest tests/infra_tests/documentation/ -v
 
 # Run specific test module
-pytest tests/infra_tests/documentation/test_figure_manager.py -v
+uv run pytest tests/infra_tests/documentation/test_figure_manager.py -v
 ```
 
 ## Test Modules
@@ -23,7 +23,7 @@ pytest tests/infra_tests/documentation/test_figure_manager.py -v
 Figure registration and management:
 
 ```bash
-pytest tests/infra_tests/documentation/test_figure_manager.py -v
+uv run pytest tests/infra_tests/documentation/test_figure_manager.py -v
 ```
 
 **Test Coverage:**
@@ -37,7 +37,7 @@ pytest tests/infra_tests/documentation/test_figure_manager.py -v
 Image handling in markdown:
 
 ```bash
-pytest tests/infra_tests/documentation/test_image_manager.py -v
+uv run pytest tests/infra_tests/documentation/test_image_manager.py -v
 ```
 
 **Test Coverage:**
@@ -51,7 +51,7 @@ pytest tests/infra_tests/documentation/test_image_manager.py -v
 API glossary generation:
 
 ```bash
-pytest tests/infra_tests/documentation/test_glossary_gen.py -v
+uv run pytest tests/infra_tests/documentation/test_glossary_gen.py -v
 ```
 
 **Test Coverage:**
@@ -68,7 +68,7 @@ Individual function testing:
 
 ```bash
 # Test figure registration
-pytest tests/infra_tests/documentation/test_figure_manager.py::test_register_figure -v
+uv run pytest tests/infra_tests/documentation/test_figure_manager.py::test_register_figure -v
 ```
 
 ### Integration Tests
@@ -77,7 +77,7 @@ End-to-end workflows:
 
 ```bash
 # Full glossary generation
-pytest tests/infra_tests/documentation/test_glossary_gen.py::test_generate_glossary -v
+uv run pytest tests/infra_tests/documentation/test_glossary_gen.py::test_generate_glossary -v
 ```
 
 ## Common Test Patterns
@@ -106,13 +106,13 @@ def test_resolve_image_path():
 ### All Documentation Tests
 
 ```bash
-pytest tests/infra_tests/documentation/ -v
+uv run pytest tests/infra_tests/documentation/ -v
 ```
 
 ### With Coverage
 
 ```bash
-pytest tests/infra_tests/documentation/ \
+uv run pytest tests/infra_tests/documentation/ \
     --cov=infrastructure.documentation \
     --cov-report=term
 ```

@@ -175,7 +175,7 @@ Brief description of changes and why they're needed.
 
 ## Checklist
 
-- [ ] Code follows style guidelines (Black, isort, flake8)
+- [ ] Code follows style guidelines (Ruff format/check, mypy on public APIs)
 - [ ] Type hints added to all public APIs
 - [ ] Documentation updated (AGENTS.md, README.md)
 - [ ] No breaking changes without migration guide

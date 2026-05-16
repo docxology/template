@@ -62,6 +62,9 @@ jobs:
       - name: Audit __all__ on re-exporting modules
         run: uv run python -m infrastructure.skills check-all-exports
 
+      - name: Reject tracked generated artifacts
+        run: uv run python scripts/check_tracked_generated_artifacts.py
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 1b — Unified health report (informational, no fail)
 #
@@ -497,7 +500,7 @@ jobs:
           projects/
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Job 6b — Documentation Lint (mermaid + cross-links + consistency)
+# Job 6b — Documentation Lint (mermaid + cross-links + consistency + doc pairs)
 #
 # Rules enforced:
 #   1. Every fenced ```mermaid block in long-lived docs must render with the
@@ -507,6 +510,8 @@ jobs:
 #   3. ``N Python (sub)packages`` claims in long-lived docs must match the
 #      live count under ``infrastructure/``; rotating project names must not
 #      appear unconditionally hard-coded outside ``docs/_generated/``.
+#   4. Permanent-template content folders must carry paired ``AGENTS.md`` and
+#      ``README.md`` files.
 #
 # This job intentionally fails LOUDLY when mmdc / chrome-headless-shell is
 # missing instead of skipping — see ``infrastructure/validation/docs/mermaid_lint.py``.
@@ -555,7 +560,7 @@ jobs:
           echo "CHROME_EXECUTABLE_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
           echo "Resolved chrome at: $CHROME_PATH"
 
-      - name: Run docs linters (mermaid + cross-links + consistency)
+      - name: Run docs linters (mermaid + cross-links + consistency + doc pairs)
         run: uv run python scripts/lint_docs.py --quiet
 
 # ─────────────────────────────────────────────────────────────────────────────

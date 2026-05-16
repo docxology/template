@@ -9,8 +9,6 @@ Idempotent: the directory is created with ``parents=True, exist_ok=True``
 and prior log content is preserved (the function appends, never clobbers).
 """
 
-from __future__ import annotations
-
 from datetime import datetime, timezone
 from pathlib import Path
 

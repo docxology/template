@@ -6,8 +6,6 @@ charts live in sibling modules (``_dashboard_pipeline``, ``_dashboard_outputs``,
 ``_dashboard_codebase``).
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 try:

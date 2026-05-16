@@ -2,12 +2,13 @@
 
 ## Overview
 
-The `src/` directory contains the **Pure Scientific Logic** of the research project. In the Generalized Research Template, this directory is strictly isolated from side-effects. Modules here implement mathematical optimization algorithms and data structures, but they *never* perform file I/O, network requests, or direct printing. State is managed externally by the `scripts/` orchestrators.
+The `src/` directory contains the importable project logic for the research project. The mathematical layer (`optimizer.py`, `invariants.py`) remains pure and deterministic; generated-output workflows (`analysis.py`, `dashboard.py`, `manuscript_variables.py`) are also kept here so scripts can stay thin CLI wrappers.
 
 ## Key Concepts
 
-- **Pure Scientific Logic**: Functions here must be side-effect-free. They solely take inputs and return outputs.
-- **Zero-Mock Testability**: Because functions are pure, they can be tested exhaustively without mocks, fulfilling the Template's strict validation requirements.
+- **Pure Scientific Core**: Optimizer functions must be side-effect-free. They solely take inputs and return outputs.
+- **Importable Project Workflows**: Analysis/dashboard/manuscript-variable modules may perform explicit file I/O and infrastructure calls, but scripts should only delegate to them.
+- **Zero-Mock Testability**: Pure functions are tested exhaustively with real data; workflow modules are tested through real temp files, subprocesses, and generated artifacts.
 - **Mathematical optimization** algorithms for parameter tuning
 - **Reproducible research** via deterministic, functional design
 - **Numerical stability** and convergence analysis
@@ -21,13 +22,16 @@ flowchart LR
     SRC --> INIT[__init__.py<br/>Module exports]
     SRC --> OPT[optimizer.py<br/>Core optimization algorithms]
     SRC --> INV[invariants.py<br/>Numerical invariant builders<br/>consumed by scripts/build_dashboard.py]
+    SRC --> ANA[analysis.py<br/>Experiment + figure generation]
+    SRC --> DASH[dashboard.py<br/>Dashboard payload + HTML builder]
+    SRC --> VARS[manuscript_variables.py<br/>Generated manuscript variables]
     SRC --> AG[AGENTS.md · README.md · STYLE.md<br/>documentation]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class SRC d
-    class INIT,OPT,INV code
+    class INIT,OPT,INV,ANA,DASH,VARS code
     class AG doc
 ```
 
@@ -41,7 +45,7 @@ This module uses standard scientific Python libraries:
 
 ## Infrastructure Integration
 
-`src/` code is **infrastructure-independent**: it must not import `infrastructure.*`. Any coupling to infrastructure (logging configuration, benchmarking, stability analysis, validation, rendering) happens in `projects/template_code_project/scripts/` and the repository pipeline.
+The optimizer core is **infrastructure-independent**: `optimizer.py` and `invariants.py` must not import `infrastructure.*`. Coupling to infrastructure (logging configuration, benchmarking, stability analysis, validation, rendering) belongs in importable workflow modules such as `analysis.py` and `dashboard.py`, with `scripts/` acting as wrappers.
 
 ### Available Infrastructure Capabilities
 

@@ -4,8 +4,6 @@ Provides the partial-response save helper and the TIMEOUT_WARNING_FRACTION const
 ``requests`` is used directly in ``_stream_impl.py`` and ``_connection.py``.
 """
 
-from __future__ import annotations
-
 from typing import Callable
 
 from infrastructure.core.logging.utils import get_logger

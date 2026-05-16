@@ -4,8 +4,6 @@ This module provides functions for copying and inventorying
 output files. Cleanup functions live in file_cleanup.py.
 """
 
-from __future__ import annotations
-
 import hashlib
 import shutil
 from pathlib import Path
@@ -130,7 +128,12 @@ def _copy_combined_pdf(
         logger.debug(f"Combined PDF not found at: {combined_pdf_src}")
 
 
-def copy_final_deliverables(project_root: Path, output_dir: Path, project_name: str = "project") -> CopyStats:
+def copy_final_deliverables(
+    project_root: Path,
+    output_dir: Path,
+    project_name: str = "project",
+    project_dir: Path | None = None,
+) -> CopyStats:
     """Copy all project outputs to top-level output directory.
 
     Recursively copies entire projects/{project_name}/output/ directory structure, preserving:
@@ -150,13 +153,21 @@ def copy_final_deliverables(project_root: Path, output_dir: Path, project_name: 
         project_root: Path to repository root
         output_dir: Path to top-level output directory (should be output/{project_name}/)
         project_name: Name of project in projects/ directory (default: "project")
+        project_dir: Resolved project directory. When provided, this overrides
+            ``project_root / "projects" / project_name`` so WIP projects under
+            ``projects_in_progress/`` can be copied without creating an
+            output-only shadow under ``projects/``.
 
     Returns:
         Dictionary with copy statistics including counts and any errors.
     """
     logger.info(f"Copying all outputs for project '{project_name}'...")
 
-    project_output = project_root / "projects" / project_name / "output"
+    if project_dir is None:
+        from infrastructure.project.discovery import resolve_project_root
+
+        project_dir = resolve_project_root(project_root, project_name)
+    project_output = project_dir / "output"
 
     stats: CopyStats = {
         "pdf_files": 0,

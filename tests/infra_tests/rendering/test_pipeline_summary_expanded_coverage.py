@@ -169,6 +169,58 @@ class TestVerifyPdfOutputs:
         result = verify_pdf_outputs("myproj")
         assert result is True
 
+    def test_strict_latex_warning_policy_fails_on_layout_log(self, tmp_path, monkeypatch):
+        import infrastructure.rendering._pipeline_summary as mod
+        infra_dir = tmp_path / "infrastructure" / "rendering"
+        infra_dir.mkdir(parents=True)
+        fake_file = infra_dir / "_pipeline_summary.py"
+        fake_file.write_text("")
+        monkeypatch.setattr(mod, "__file__", str(fake_file))
+
+        project = tmp_path / "projects" / "strictproj"
+        pdf_dir = project / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        ms_dir = project / "manuscript"
+        ms_dir.mkdir(parents=True)
+        (ms_dir / "config.yaml").write_text(
+            "rendering:\n  fail_on_latex_warnings: true\n",
+            encoding="utf-8",
+        )
+        (pdf_dir / "strictproj_combined.pdf").write_bytes(b"A" * 15000)
+        (pdf_dir / "_combined_manuscript.log").write_text(
+            "Overfull \\hbox (2pt too wide) in paragraph at lines 1--2\n",
+            encoding="utf-8",
+        )
+
+        result = verify_pdf_outputs("strictproj")
+        assert result is False
+
+    def test_strict_latex_warning_policy_passes_clean_logs(self, tmp_path, monkeypatch):
+        import infrastructure.rendering._pipeline_summary as mod
+        infra_dir = tmp_path / "infrastructure" / "rendering"
+        infra_dir.mkdir(parents=True)
+        fake_file = infra_dir / "_pipeline_summary.py"
+        fake_file.write_text("")
+        monkeypatch.setattr(mod, "__file__", str(fake_file))
+
+        project = tmp_path / "projects" / "strictclean"
+        pdf_dir = project / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        ms_dir = project / "manuscript"
+        ms_dir.mkdir(parents=True)
+        (ms_dir / "config.yaml").write_text(
+            "rendering:\n  fail_on_latex_warnings: true\n",
+            encoding="utf-8",
+        )
+        (pdf_dir / "strictclean_combined.pdf").write_bytes(b"A" * 15000)
+        (pdf_dir / "_combined_manuscript.log").write_text(
+            "Package pdftexcmds Info: \\pdfdraftmode not found.\n",
+            encoding="utf-8",
+        )
+
+        result = verify_pdf_outputs("strictclean")
+        assert result is True
+
     def test_failed_compilation(self, tmp_path, monkeypatch):
         import infrastructure.rendering._pipeline_summary as mod
         infra_dir = tmp_path / "infrastructure" / "rendering"

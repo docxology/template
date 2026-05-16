@@ -4,8 +4,6 @@ Transforms an ``ExecutiveSummary`` instance into human-readable Markdown
 and styled HTML reports.
 """
 
-from __future__ import annotations
-
 from ._executive_models import ExecutiveSummary
 from infrastructure.core.logging.utils import get_logger
 

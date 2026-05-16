@@ -7,8 +7,6 @@ word counts. This is what an editor cares about when checking that a
 manuscript is well-paced.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass, field
 

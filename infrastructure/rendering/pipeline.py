@@ -8,8 +8,6 @@ This module coordinates the PDF rendering stage by:
 5. Verifying output quality
 """
 
-from __future__ import annotations
-
 import subprocess
 from pathlib import Path
 
@@ -43,12 +41,32 @@ def _resolve_manuscript_dir(project_root: Path) -> Path:
 
     Prefers the injected output/manuscript/ directory when it exists and
     contains markdown files; falls back to the source manuscript/ directory.
+
+    When the injected dir is selected, this function also mirrors the
+    rendering-critical auxiliary files (``config.yaml`` and ``*.bib``) from
+    the source ``manuscript/`` directory if they are missing. Without
+    ``config.yaml``, title-page and TOC injection silently no-ops because
+    :func:`generate_title_page_preamble` cannot locate paper metadata.
     """
+    import shutil as _shutil
+
+    source_dir = project_root / "manuscript"
     injected_dir = project_root / "output" / "manuscript"
     if injected_dir.exists() and any(injected_dir.glob("*.md")):
+        if source_dir.is_dir():
+            cfg_src = source_dir / "config.yaml"
+            cfg_dst = injected_dir / "config.yaml"
+            if cfg_src.is_file() and not cfg_dst.exists():
+                _shutil.copy2(cfg_src, cfg_dst)
+                logger.info(f"Mirrored config.yaml into injected manuscript: {cfg_dst}")
+            for bib in sorted(source_dir.glob("*.bib")):
+                bib_dst = injected_dir / bib.name
+                if not bib_dst.exists():
+                    _shutil.copy2(bib, bib_dst)
+                    logger.info(f"Mirrored {bib.name} into injected manuscript: {bib_dst}")
         logger.info(f"Rendering from injected manuscript directory: {injected_dir}")
         return injected_dir
-    return project_root / "manuscript"
+    return source_dir
 
 
 def _run_override_script(project_root: Path, override_script: Path) -> int:
@@ -71,6 +89,29 @@ def _run_override_script(project_root: Path, override_script: Path) -> int:
     except (subprocess.SubprocessError, OSError) as e:
         logger.error(f"Failed to execute custom renderer: {e}")
         return 1
+
+
+def _run_manuscript_variable_script(project_root: Path) -> int:
+    """Hydrate project manuscript variables before rendering, when available."""
+    from infrastructure.core.runtime.environment import get_python_command
+
+    script = project_root / "scripts" / "z_generate_manuscript_variables.py"
+    if not script.is_file():
+        return 0
+
+    logger.info("Hydrating manuscript variables before render: %s", script.name)
+    cmd = get_python_command() + [str(script)]
+    try:
+        result = subprocess.run(cmd, cwd=str(project_root), check=False, timeout=300)  # nosec B603
+    except (subprocess.SubprocessError, OSError) as exc:
+        logger.error("Manuscript variable hydration failed to execute: %s", exc)
+        return 1
+
+    if result.returncode != 0:
+        logger.error("Manuscript variable hydration failed (exit code %s)", result.returncode)
+        return 1
+    log_success("Manuscript variables hydrated", logger)
+    return 0
 
 
 def _validate_latex_packages(report: ValidationReport | None = None) -> int:
@@ -245,6 +286,9 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
     )
     reporter.clear_report()
 
+    if _run_manuscript_variable_script(project_root) != 0:
+        return 1
+
     manuscript_dir = _resolve_manuscript_dir(project_root)
 
     override_script = project_root / "scripts" / "_render_pdf_override.py"
@@ -306,6 +350,9 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
 
     summary = generate_rendering_summary(project_name)
     log_rendering_summary(summary)
+    if failed_files:
+        logger.error(f"PDF rendering pipeline failed: {len(failed_files)} manuscript file(s) had render errors")
+        return 1
     log_success("PDF rendering pipeline completed", logger)
     return 0
 
@@ -324,7 +371,8 @@ def execute_render_pipeline(project_name: str = "project") -> int:
             if outputs_valid:
                 log_success("PDF rendering complete - ready for validation", logger)
             else:
-                logger.warning("PDF rendering completed but output verification failed")
+                logger.error("PDF rendering completed but output verification failed")
+                exit_code = 1
         else:
             logger.error("PDF rendering failed - check logs for details")
 

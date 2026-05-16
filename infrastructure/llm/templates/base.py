@@ -1,7 +1,5 @@
 """Base template class for LLM operations."""
 
-from __future__ import annotations
-
 from string import Template
 from typing import Any
 

@@ -18,5 +18,5 @@ Gates are invoked by the pipeline orchestrator (`scripts/execute_pipeline.py`) o
 
 ## See also
 
-- [`scripts/` ..](../../) — Pipeline orchestration scripts
+- [`scripts/`](../) — Pipeline orchestration scripts
 - [`infrastructure/validation/`](../../infrastructure/validation/) — Validation infrastructure

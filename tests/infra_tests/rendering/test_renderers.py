@@ -1,3 +1,4 @@
+"""Tests for renderers module."""
 import shutil
 
 import pytest

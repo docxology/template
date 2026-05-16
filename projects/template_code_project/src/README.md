@@ -1,6 +1,6 @@
-# src/ - Pure Scientific Logic
+# src/ - Project Logic
 
-Core optimization algorithms implemented as pure, side-effect-free functions. This functional design guarantees 100% testability and strict separation from the `infrastructure/` operational layer.
+Core optimization algorithms, analysis builders, dashboard payloads, and manuscript-variable extraction for the code exemplar. Mathematical primitives stay pure; generated-output workflows live in importable modules so scripts can remain thin wrappers.
 
 ## Quick Start
 
@@ -25,6 +25,8 @@ logger.info(f"Optimal solution: {result.solution}")
 
 - **Gradient descent** optimization algorithm
 - **Quadratic function** evaluation and gradients
+- **Importable analysis pipeline** in `analysis.py`
+- **Importable dashboard builder** in `dashboard.py`
 - **Reproducible results** with deterministic behavior
 - **Type-safe** with type hints
 

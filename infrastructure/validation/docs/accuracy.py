@@ -1,7 +1,5 @@
 """Phase 2: Accuracy Verification for documentation scanning."""
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 from typing import Any

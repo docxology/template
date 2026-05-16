@@ -30,7 +30,7 @@ flowchart LR
 
 1. **Generic First**: Reusable across all projects
 2. **Domain-Independent**: No research-specific assumptions
-3. **Well-Tested**: 60% minimum coverage with data (currently 83.33% achieved - exceeds stretch goal!)
+3. **Well-Tested**: 60% minimum coverage with data (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
 4. **Well-Documented**: AGENTS.md and README.md
 5. **Type-Hinted**: All public APIs have type annotations
 
@@ -55,7 +55,7 @@ flowchart LR
 
 ### Coverage Requirements
 
-- **60% minimum coverage** required for infrastructure code (currently 83.33% achieved - exceeds stretch goal!)
+- **60% minimum coverage** required for infrastructure code (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
 - **No mock methods** - test with data
 - **Integration tests** demonstrating workflows
 - **Edge cases** and error conditions tested
@@ -79,8 +79,8 @@ from ..reporting import generate_pipeline_report  # DON'T
 
 ```python
 # Good: Use infrastructure exceptions
-from infrastructure.core.runtime.exceptions import (
-    ReportingError, 
+from infrastructure.core.exceptions import (  # noqa: docs-lint
+    ReportingError,
     LLMConnectionError,
     RenderingError
 )
@@ -96,7 +96,7 @@ raise ReportingError(
 
 ```python
 # Good: Use infrastructure logging
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 logger.info(f"Processing {count} items")
@@ -160,7 +160,7 @@ logger.info(f"Processing {count} items")
 @dataclass
 class ModuleConfig:
     setting: str = "default"
-    
+
     @classmethod
     def from_env(cls) -> ModuleConfig:
         return cls(
@@ -225,19 +225,19 @@ except RequestException as e:
 ```python
 def function_name(arg: str) -> str:
     """One-line summary.
-    
+
     Detailed description of what the function does,
     including any important behavior or edge cases.
-    
+
     Args:
         arg: Description of argument
-        
+
     Returns:
         Description of return value
-        
+
     Raises:
         ExceptionType: When this happens
-        
+
     Example:
         >>> function_name("input")
         'output'
@@ -267,7 +267,7 @@ Update these scripts to discover and use new infrastructure modules as needed.
 
 Before committing:
 
-- [ ] Test coverage requirements met (60% minimum, currently 83.33% achieved - exceeds stretch goal!)
+- [ ] Test coverage requirements met (60% minimum for infrastructure)
 - [ ] All tests pass
 - [ ] AGENTS.md - [ ] README.md written
 - [ ] Type hints on all public APIs
@@ -346,8 +346,8 @@ __all__ = [
 ```python
 """Core functionality for example module."""
 
-from infrastructure.core.logging.logging_utils import get_logger
-from infrastructure.core.runtime.exceptions import ValidationError
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.exceptions import ValidationError
 
 logger = get_logger(__name__)
 
@@ -357,22 +357,22 @@ class ExampleError(Exception):
 
 def process_data(data: str) -> str:
     """Process data.
-    
+
     Args:
         data: Input data
-        
+
     Returns:
         Processed result
-        
+
     Raises:
         ValidationError: If data is invalid
-        
+
     Example:
         >>> process_data("hello")
         'HELLO'
     """
     logger.debug(f"Processing data: {data}")
-    
+
     try:
         result = validate_input(data)
         logger.info(f"Processing completed: {result}")
@@ -383,13 +383,13 @@ def process_data(data: str) -> str:
 
 def validate_input(data: str) -> str:
     """Validate input data.
-    
+
     Args:
         data: Input to validate
-        
+
     Returns:
         Validated data
-        
+
     Raises:
         ValueError: If invalid
     """
@@ -411,20 +411,20 @@ import os
 @dataclass
 class ExampleConfig:
     """Example module configuration."""
-    
+
     timeout: int = 30
     retries: int = 3
     debug: bool = False
-    
+
     @classmethod
     def from_env(cls) -> "ExampleConfig":
         """Load configuration from environment variables.
-        
+
         Environment variables:
             EXAMPLE_TIMEOUT: Request timeout in seconds (default: 30)
             EXAMPLE_RETRIES: Number of retries (default: 3)
             EXAMPLE_DEBUG: Enable debug mode (default: false)
-        
+
         Returns:
             ExampleConfig instance
         """
@@ -441,7 +441,7 @@ class ExampleConfig:
 """Command-line interface for example module."""
 
 import argparse
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 from .core import process_data
 from .config import ExampleConfig
 
@@ -449,16 +449,16 @@ logger = get_logger(__name__)
 
 def main() -> int:
     """Main entry point.
-    
+
     Returns:
         Exit code
     """
     parser = argparse.ArgumentParser(description="Example module CLI")
     parser.add_argument("data", help="Data to process")
     parser.add_argument("--debug", action="store_true", help="Enable debug mode")
-    
+
     args = parser.parse_args()
-    
+
     try:
         config = ExampleConfig(debug=args.debug)
         result = process_data(args.data)
@@ -477,7 +477,7 @@ if __name__ == "__main__":
 Before merging a new infrastructure module:
 
 - [ ] Module structure matches recommended organization
-- [ ] Test coverage requirements met (60% minimum, currently 83.33% achieved - exceeds stretch goal!)
+- [ ] Test coverage requirements met (60% minimum for infrastructure)
 - [ ] All public APIs have type hints
 - [ ] AGENTS.md covers all features
 - [ ] README.md has working quick-start

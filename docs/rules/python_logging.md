@@ -7,7 +7,7 @@ All Python scripts use `infrastructure/core/logging/utils.py`.
 ### Import Pattern
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger, log_operation, log_success
+from infrastructure.core.logging.utils import get_logger, log_operation, log_success
 
 logger = get_logger(__name__)
 ```
@@ -113,7 +113,7 @@ print("Processing started")  # Should use logger.info()
 
 ```python
 from contextlib import contextmanager
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 import time
 
 logger = get_logger(__name__)
@@ -121,7 +121,7 @@ logger = get_logger(__name__)
 @contextmanager
 def log_operation(operation_name: str):
     """Context manager for logging operations.
-    
+
     Usage:
         with log_operation("Data processing"):
             process_data()
@@ -146,13 +146,13 @@ with log_operation("Data validation"):
 
 ```python
 import json
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
 def log_structured(message: str, **context):
     """Log with structured context.
-    
+
     Args:
         message: Log message
         **context: Structured context data
@@ -175,27 +175,27 @@ log_structured(
 ### Progress Logging Pattern
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
 def process_items(items: list, callback):
     """Process items with progress logging.
-    
+
     Args:
         items: Items to process
         callback: Callback for each item
     """
     total = len(items)
     logger.info(f"Processing {total} items")
-    
+
     for i, item in enumerate(items, 1):
         callback(item)
-        
+
         # Log progress every 10%
         if i % max(1, total // 10) == 0:
             logger.info(f"Progress: {i}/{total} ({100*i//total}%)")
-    
+
     logger.info(f"Completed: processed {total} items")
 
 # Usage
@@ -209,7 +209,7 @@ process_items(users, process_user)
 ### Conditional Logging
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 import os
 
 logger = get_logger(__name__)
@@ -217,17 +217,17 @@ logger = get_logger(__name__)
 def debug_function():
     """Function with debug logging."""
     is_debug = os.getenv("DEBUG", "0") == "1"
-    
+
     if is_debug:
         logger.debug("Debug mode enabled")
         logger.debug(f"Variable x = {x}")
         logger.debug(f"Function input: {input_data}")
-    
+
     result = perform_calculation()
-    
+
     if is_debug:
         logger.debug(f"Result: {result}")
-    
+
     return result
 ```
 
@@ -258,7 +258,7 @@ print(f"Processing {count} items")
 ### Formatting Best Practices
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -280,20 +280,20 @@ logger.error("Failed to save data", exc_info=True)  # Error occurred
 ## Integrating with Error Handling
 
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
-from infrastructure.core.runtime.exceptions import ValidationError
+from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.exceptions import ValidationError
 
 logger = get_logger(__name__)
 
 def validate_and_log(data: dict) -> bool:
     """Validate data with logging.
-    
+
     Args:
         data: Data to validate
-        
+
     Returns:
         True if valid
-        
+
     Raises:
         ValidationError: If invalid
     """
@@ -356,15 +356,15 @@ logger.error("User authentication failed")
 
 ```python
 import pytest
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 def test_operation_logs_correctly(caplog):
     """Test that operation logs expected messages."""
     import logging
     caplog.set_level(logging.INFO)
-    
+
     perform_operation()
-    
+
     assert "Operation started" in caplog.text
     assert "Operation completed" in caplog.text
     assert "ERROR" not in caplog.text
@@ -373,10 +373,10 @@ def test_error_logging(caplog):
     """Test error logging."""
     import logging
     caplog.set_level(logging.ERROR)
-    
+
     with pytest.raises(Exception):
         failing_operation()
-    
+
     assert "failed" in caplog.text.lower()
 ```
 

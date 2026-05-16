@@ -23,8 +23,6 @@ should call :func:`clear_project_schema_extensions` in a fixture.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import Any, Mapping, TypedDict
 
@@ -121,6 +119,71 @@ class ManuscriptConfig(TypedDict, total=False):
     experiment: dict[str, Any]  # passthrough for project experimental parameters
 
 
+def generate_manuscript_config_schema(
+    project_name: str = "",
+    *,
+    include_registered_extensions: bool = True,
+) -> dict[str, Any]:
+    """Return a JSON Schema for top-level manuscript config keys.
+
+    The schema is intentionally permissive inside each known block because
+    projects can add domain-specific knobs. Strictness is applied at the
+    top-level key boundary, where misspellings are easiest to catch.
+    """
+    properties: dict[str, Any] = {
+        "paper": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string"},
+            },
+            "additionalProperties": True,
+        },
+        "authors": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "corresponding": {"type": "boolean"},
+                    "orcid": {"type": "string"},
+                    "email": {"type": "string"},
+                },
+                "additionalProperties": True,
+            },
+        },
+        "publication": {
+            "type": "object",
+            "properties": {
+                "doi": {"type": "string"},
+            },
+            "additionalProperties": True,
+        },
+        "llm": {"type": "object", "additionalProperties": True},
+        "testing": {"type": "object", "additionalProperties": True},
+        "steganography": {"type": "object", "additionalProperties": True},
+        "keywords": {"type": "array", "items": {"type": "string"}},
+        "metadata": {"type": "object", "additionalProperties": {"type": "string"}},
+        "project_config": {"type": "object", "additionalProperties": True},
+        "experiment": {"type": "object", "additionalProperties": True},
+    }
+    if include_registered_extensions:
+        extensions = {}
+        extensions.update(get_project_schema_extensions(""))
+        if project_name:
+            extensions.update(get_project_schema_extensions(project_name))
+        for key in extensions:
+            properties.setdefault(key, {"description": "Registered project-specific extension"})
+
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://docxology.github.io/template/manuscript-config.schema.json",
+        "title": "Research Template Manuscript Config",
+        "type": "object",
+        "properties": properties,
+        "additionalProperties": False,
+    }
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Per-project schema extensions
 #
@@ -128,7 +191,6 @@ class ManuscriptConfig(TypedDict, total=False):
 # global validation. The registry is module-local (process-scoped); tests must
 # use ``clear_project_schema_extensions()`` in a fixture to avoid leakage.
 # ─────────────────────────────────────────────────────────────────────────────
-
 
 _PROJECT_SCHEMA_EXTENSIONS: dict[str, dict[str, Any]] = {}
 
@@ -194,6 +256,7 @@ __all__ = [
     "TestingConfig",
     "TranslationsConfig",
     "clear_project_schema_extensions",
+    "generate_manuscript_config_schema",
     "get_project_schema_extensions",
     "register_project_schema_extension",
 ]

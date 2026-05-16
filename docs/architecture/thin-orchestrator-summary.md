@@ -29,7 +29,7 @@ Root-level scripts in `scripts/` are **maximally thin orchestrators** that:
 - Handle I/O and orchestration only
 - Work with ANY project structure
 
-**Example**: `scripts/01_run_tests.py` imports `parse_pytest_output()` and `generate_test_report()` from `infrastructure.reporting.test_reporter`, not implementing them locally.
+**Example**: `scripts/01_run_tests.py` imports `parse_pytest_output()` from `infrastructure.reporting.pytest_output_parser` and `generate_test_report()` from `infrastructure.reporting.report_generator`, not implementing them locally.
 
 ### Project Scripts (projects/{name}/scripts/)
 
@@ -88,16 +88,13 @@ Project-specific scripts in `projects/{name}/scripts/` are thin orchestrators th
 
 ```python
 # scripts/01_run_tests.py - Root orchestrator
-from infrastructure.reporting.test_reporter import (
-    parse_pytest_output,
-    generate_test_report,
-    save_test_report,
-)
+from infrastructure.reporting.pytest_output_parser import parse_pytest_output
+from infrastructure.reporting.report_generator import generate_test_report, save_test_report_to_files
 
 # Use infrastructure methods for business logic
 test_results = parse_pytest_output(stdout, stderr, exit_code)
 report = generate_test_report(infra_results, project_results, repo_root)
-save_test_report(report, output_dir)
+save_test_report_to_files(report, output_dir)
 ```
 
 ### 2. **Project Script Import Pattern (projects/{name}/scripts/)**
@@ -165,7 +162,7 @@ The `scripts/execute_pipeline.py` orchestrator automatically:
 
 ```python
 # scripts/01_run_tests.py - Root orchestrator
-from infrastructure.reporting.test_reporter import parse_pytest_output
+from infrastructure.reporting.pytest_output_parser import parse_pytest_output
 
 # Use infrastructure methods for business logic
 test_results = parse_pytest_output(stdout, stderr, exit_code)
@@ -187,13 +184,13 @@ avg = calculate_average([1, 2, 3, 4, 5])
 ```python
 # scripts/01_run_tests.py - DON'T implement parsing logic
 def parse_test_output(stdout, stderr, exit_code):
-    # This should be in infrastructure.reporting.test_reporter
+    # This should be in infrastructure.reporting.pytest_output_parser
     results = {'passed': 0, 'failed': 0}
     # ... parsing logic ...
     return results
 
 # Should import from infrastructure instead:
-from infrastructure.reporting.test_reporter import parse_pytest_output
+from infrastructure.reporting.pytest_output_parser import parse_pytest_output
 ```
 
 ## Current Status

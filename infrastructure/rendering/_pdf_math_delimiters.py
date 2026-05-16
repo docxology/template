@@ -6,8 +6,6 @@ introduces when converting Markdown to LaTeX.
 Extracted from _pdf_tex_transforms.py for file-size health.
 """
 
-from __future__ import annotations
-
 import re
 
 from infrastructure.core.logging.utils import get_logger
@@ -55,6 +53,38 @@ def fix_math_delimiters(tex_content: str) -> str:
 
         return content
 
+    def is_display_math_candidate(math_content: str) -> bool:
+        r"""Return true when escaped brackets likely represent display math.
+
+        Pandoc also emits ``{[}`` and ``{]}`` for literal square brackets in
+        prose and tables. Treating every such pair as ``\[...\]`` turns
+        concentration notation like ``[CO2]`` into illegal display math,
+        especially when the bracketed text contains nested inline math.
+        """
+        content = math_content.strip()
+        if not content:
+            return False
+        if r"\(" in content or r"\)" in content:
+            return False
+        math_markers = (
+            "=",
+            r"\frac",
+            r"\sum",
+            r"\int",
+            r"\prod",
+            r"\mathbb",
+            r"\Delta",
+            r"\nabla",
+            r"\cdot",
+            r"\times",
+            r"\textbar",
+            r"\emph",
+            "^",
+            "_",
+            "+",
+        )
+        return any(marker in content for marker in math_markers)
+
     # Step 1: Fix display math with labels: {[} ... {]}\label{eq:...}{]}
     # Use greedy matching to find the LAST {]} before \label
     # Pattern: {[} ... (everything) ... {]}\label{...}{]}
@@ -77,6 +107,9 @@ def fix_math_delimiters(tex_content: str) -> str:
         nonlocal fixed_count
         math_content = match.group(1)
         label_name = match.group(2)
+
+        if not is_display_math_candidate(math_content):
+            return match.group(0)
 
         math_content = fix_math_content(math_content)
         fixed_count += 1
@@ -101,6 +134,9 @@ def fix_math_delimiters(tex_content: str) -> str:
         """
         nonlocal fixed_count
         math_content = match.group(1)
+
+        if not is_display_math_candidate(math_content):
+            return match.group(0)
 
         math_content = fix_math_content(math_content)
         fixed_count += 1

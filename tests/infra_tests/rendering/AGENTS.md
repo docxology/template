@@ -308,16 +308,16 @@ def validate_pdf_structure(pdf_path: Path) -> bool:
 
 ```bash
 # Run all rendering tests
-pytest tests/infra_tests/rendering/
+uv run pytest tests/infra_tests/rendering/
 
 # Run specific renderer tests
-pytest tests/infra_tests/rendering/test_pdf_renderer_full.py
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_full.py
 
 # Run CLI tests only
-pytest tests/infra_tests/rendering/ -k "cli"
+uv run pytest tests/infra_tests/rendering/ -k "cli"
 
 # Run with LaTeX requirement check
-pytest tests/infra_tests/rendering/ --ignore-glob="*latex*"  # Skip if no LaTeX
+uv run pytest tests/infra_tests/rendering/ --ignore-glob="*latex*"  # Skip if no LaTeX
 ```
 
 ### Conditional Test Execution
@@ -337,7 +337,7 @@ def pytest_collection_modifyitems(config, items):
 **External Dependency Checks:**
 ```bash
 # Check test requirements
-python3 -c "
+uv run python3 -c "
 import shutil
 print('LaTeX available:', bool(shutil.which('xelatex')))
 print('Pandoc available:', bool(shutil.which('pandoc')))
@@ -456,10 +456,10 @@ def debug_test_paths():
 **Coverage Reporting:**
 ```bash
 # Generate coverage for rendering module
-pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-report=html
+uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-report=html
 
 # Check coverage thresholds
-pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-fail-under=90
+uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-fail-under=90
 ```
 
 ## Future Test Enhancements
@@ -485,10 +485,10 @@ pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-fail-un
 **Verbose Test Output:**
 ```bash
 # Run with detailed output
-pytest tests/infra_tests/rendering/test_pdf_renderer_full.py -v -s
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_full.py -v -s
 
 # Debug LaTeX compilation
-pytest tests/infra_tests/rendering/ --pdb --tb=long
+uv run pytest tests/infra_tests/rendering/ --pdb --tb=long
 ```
 
 **Log Analysis:**
@@ -506,7 +506,7 @@ find . -name "*.log" -exec grep -l "Error" {} \;
 **Pre-Test Setup:**
 ```bash
 # Validate test environment
-python3 -c "
+uv run python3 -c "
 import sys
 print(f'Python: {sys.version}')
 

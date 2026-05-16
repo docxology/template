@@ -8,9 +8,10 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 
 | File | Purpose |
 |------|---------|
-| `modules-guide.md` | Overview table (16 documented areas; links into `guides/` plus Orchestration / Prose hub docs) |
+| `modules-guide.md` | Overview table (18 rows: 16 importable packages + Telemetry sub-row + Config/Docker config dirs; links into `guides/` plus hub AGENTS for Orchestration, Prose, Search, Reference) |
 | `scientific-simulation-guide.md` | Scientific simulation and analysis system |
 | `pdf-validation.md` | PDF validation system documentation |
+| `literature-search-and-references.md` | Literature search and reference management module |
 | `guides/config-module.md` | Config schemas / templates module |
 | `guides/core-module.md` | Core utilities module |
 | `guides/docker-module.md` | Docker / compose module |
@@ -32,6 +33,8 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 |---|---|
 | [`infrastructure/prose/AGENTS.md`](../../infrastructure/prose/AGENTS.md) | Readability metrics, outline, editorial heuristics, CLI |
 | [`infrastructure/orchestration/AGENTS.md`](../../infrastructure/orchestration/AGENTS.md) | `python -m infrastructure.orchestration` CLI and menu delegation |
+| [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) | Literature discovery, indexing, orchestrated retrieval |
+| [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md) | BibTeX / citations toolkit shared across prose and search |
 
 ## Key Conventions
 

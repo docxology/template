@@ -105,9 +105,9 @@
 
 **A:**
 
-1. Run tests with verbose output: `pytest projects/{name}/tests/ -v`
-2. Use pytest's debugging features: `pytest --pdb`
-3. Check coverage reports: `pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html`
+1. Run tests with verbose output: `uv run pytest projects/{name}/tests/ -v`
+2. Use pytest's debugging features: `uv run pytest --pdb`
+3. Check coverage reports: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html`
 4. Review the test output for specific error messages
 
 ## 🌟 **Advanced Usage**
@@ -132,7 +132,7 @@
 
 ### **Q: What are the advanced modules?**
 
-**A:** Documentation names **14** infrastructure areas; the repo has **13** top-level packages under `infrastructure/` because **telemetry** lives under `core/telemetry/` (same counting note as [Modules Guide](../modules/modules-guide.md)). Areas: core (including telemetry), documentation, validation, publishing, scientific, llm, rendering, reporting, project, steganography, config, docker, skills. See [Modules Guide](../modules/modules-guide.md) for documentation.
+**A:** The repo has **16** Python packages under `infrastructure/` (each has `__init__.py`): core, doctor, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation. See [canonical_facts.md](../_generated/canonical_facts.md) and [Modules Guide](../modules/modules-guide.md) for details.
 
 ### **Q: How do I use the advanced modules?**
 

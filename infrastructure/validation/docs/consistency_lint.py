@@ -14,8 +14,9 @@ Two checks:
 Both functions return :class:`Inconsistency` records and never mutate state.
 """
 
-from __future__ import annotations
-
+import ast
+import importlib
+import importlib.util
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass
@@ -23,35 +24,23 @@ from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.discovery import discover_projects
+from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS
 
 logger = get_logger(__name__)
 
 
-_DEFAULT_LONG_LIVED_DOC_ROOTS: tuple[str, ...] = ("docs", "infrastructure", ".github")
-"""Top-level dirs that contain long-lived docs subject to ghost-project checks.
+_DEFAULT_LONG_LIVED_DOC_ROOTS: tuple[str, ...] = ("docs", "infrastructure", ".github", "tests")
+"""Top-level dirs that contain long-lived docs subject to the consistency checks.
 
-Note: ``docs/_generated/``, ``docs/audit/``, and ``docs/streams/`` are excluded by
-:data:`_DEFAULT_GHOST_EXCLUDE_PARTS` because those are historical/audit records,
-not authoritative current docs.
+``tests`` was added 2026-05-15 after a repo-wide triple-check found real import
+and command-convention rot in ``tests/**/AGENTS.md`` that this gate had never
+covered (it was a structural scope blind spot). ``docs/_generated/``,
+``docs/audit/``, and ``docs/streams/`` remain excluded by
+:data:`_DEFAULT_GHOST_EXCLUDE_PARTS` by deliberate policy — they are
+historical/audit/generated records, not authoritative current docs.
 """
 
-_DEFAULT_GHOST_EXCLUDE_PARTS: frozenset[str] = frozenset(
-    {
-        "_generated",
-        "audit",
-        "streams",
-        ".git",
-        ".venv",
-        "__pycache__",
-        ".mypy_cache",
-        ".pytest_cache",
-        "node_modules",
-        "output",
-        "htmlcov",
-        "projects_archive",
-        "projects_in_progress",
-    }
-)
+_DEFAULT_GHOST_EXCLUDE_PARTS: frozenset[str] = DEFAULT_EXCLUDE_PARTS | frozenset({"_generated", "audit", "streams"})
 
 # Phrases that contextualize a project mention as conditional/historical.
 _CONDITIONAL_PHRASES: tuple[str, ...] = (
@@ -374,8 +363,286 @@ def check_no_ghost_projects(
     return issues
 
 
+# ---------------------------------------------------------------------------
+# Command-convention check
+#
+# canonical_facts.md mandates `uv run` for reproducibility and explicitly says
+# "Avoid raw `python3` or `pytest` in documentation." This was the one defect
+# class the 2026-05-15 comprehensive audit found *recurring* and *not* caught by
+# any existing harness rule (11 parallel zone agents still left 15 command-line
+# `pytest` invocations). This rule closes that ingestion point.
+#
+# Scope is deliberately narrow to avoid false positives:
+#   - only shell-tagged fences (```bash / sh / shell / console / zsh) are scanned;
+#     prose and ```python blocks are ignored.
+#   - only a command-line *invocation* (line's first token is `pytest`/`python3`,
+#     optionally behind a `$ ` prompt) is flagged — not nouns like
+#     `pytest-httpserver`, `pytest.ini`, or `# pytest ...` comments.
+#   - an inline `noqa: docs-lint` comment on the line suppresses the finding
+#     (for legitimate "BAD example" / contrast snippets).
+# ---------------------------------------------------------------------------
+
+_SHELL_FENCE_RE = re.compile(
+    r"^[ \t]*(?P<fence>`{3,}|~{3,})[ \t]*(?P<lang>[A-Za-z0-9_+-]*)[ \t]*\n"
+    r"(?P<body>.*?)\n[ \t]*(?P=fence)[ \t]*$",
+    re.MULTILINE | re.DOTALL,
+)
+_SHELL_LANGS: frozenset[str] = frozenset({"bash", "sh", "shell", "console", "zsh"})
+_BARE_CMD_RE = re.compile(r"^\s*(?:\$\s+)?(?P<cmd>pytest|python3)(?:\s|$)")
+# Inside a shell fence an HTML comment is impossible, so a shell-comment
+# a `noqa: docs-lint` shell comment is the usable escape hatch for counter-examples.
+_SHELL_NOQA_RE = re.compile(r"#\s*noqa:\s*docs-lint", re.IGNORECASE)
+
+
+def check_command_conventions(repo_root: Path) -> list[Inconsistency]:
+    """Flag command-line ``pytest``/``python3`` in shell fences lacking ``uv run``.
+
+    Mirrors :func:`check_module_count_claims` shape; never mutates state.
+    """
+    issues: list[Inconsistency] = []
+    for md in _iter_long_lived_docs(repo_root):
+        try:
+            raw = md.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as e:
+            logger.debug("skipping %s: %s", md, e)
+            continue
+        for fence in _SHELL_FENCE_RE.finditer(raw):
+            if fence.group("lang").lower() not in _SHELL_LANGS:
+                continue
+            body_start_line = raw[: fence.start("body")].count("\n") + 1
+            for offset, line in enumerate(fence.group("body").splitlines()):
+                m = _BARE_CMD_RE.match(line)
+                if not m or "uv run" in line or _line_has_noqa(line) or _SHELL_NOQA_RE.search(line):
+                    continue
+                issues.append(
+                    Inconsistency(
+                        file=md,
+                        line=body_start_line + offset,
+                        category="command-convention",
+                        detail=(
+                            f"command-line `{m.group('cmd')}` without `uv run` — "
+                            "canonical_facts.md mandates `uv run` (append "
+                            "`# noqa: docs-lint` to allow a deliberate counter-example)"
+                        ),
+                    )
+                )
+    return issues
+
+
+# ---------------------------------------------------------------------------
+# Executable-doc checks (NEW — "make the documentation true against the code")
+#
+# Every defect class the 2026-05-15 audit hit shared one root cause: docs assert
+# things the code already knows and nothing executes the documentation. These
+# two checks close that ingestion point deterministically:
+#   * check_doc_imports_resolve  — every ``infrastructure...`` import shown in a
+#     doc code-fence (and every ``-m infrastructure.X`` invocation) must resolve.
+#   * check_readme_files_list    — every ``foo.py`` a package README/AGENTS lists
+#     must exist somewhere in that package (kills the vanished-file class).
+# Both honor a ``noqa: docs-lint`` shell/HTML comment for deliberate
+# illustrative snippets.
+# ---------------------------------------------------------------------------
+
+_ANY_FENCE_RE = re.compile(
+    r"^[ \t]*(?P<fence>`{3,}|~{3,})[ \t]*(?P<lang>[A-Za-z0-9_+-]*)[ \t]*\n"
+    r"(?P<body>.*?)\n[ \t]*(?P=fence)[ \t]*$",
+    re.MULTILINE | re.DOTALL,
+)
+_CODE_LANGS: frozenset[str] = frozenset({"python", "py", "python3", "", "text", "console", "bash", "sh", "shell"})
+_DASH_M_RE = re.compile(r"-m\s+(?P<mod>infrastructure(?:\.[A-Za-z_]\w*)+)")
+_IMPORT_START_RE = re.compile(r"^\s*(?:from\s+infrastructure|import\s+infrastructure)\b")
+
+
+def _module_member_exists(module: str, name: str) -> bool:
+    """True if ``name`` is an attribute of ``module`` or an importable submodule."""
+    try:
+        mod = importlib.import_module(module)
+    except BaseException:  # noqa: BLE001 - any import failure = unresolved
+        return False
+    if name == "*" or hasattr(mod, name):
+        return True
+    try:
+        importlib.import_module(f"{module}.{name}")
+        return True
+    except BaseException:  # noqa: BLE001
+        return False
+
+
+def _resolve_import_statement(stmt: str) -> str | None:
+    """Return an error string if an ``infrastructure`` import does not resolve, else None."""
+    try:
+        tree = ast.parse(stmt.strip())
+    except SyntaxError as e:
+        return f"unparseable import: {e.msg}"
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            mod = node.module or ""
+            if not mod.startswith("infrastructure"):
+                continue
+            try:
+                importlib.import_module(mod)
+            except BaseException as e:  # noqa: BLE001
+                return f"module '{mod}' not importable ({type(e).__name__})"
+            for alias in node.names:
+                if not _module_member_exists(mod, alias.name):
+                    return f"cannot import '{alias.name}' from '{mod}'"
+        elif isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name.startswith("infrastructure"):
+                    try:
+                        importlib.import_module(alias.name)
+                    except BaseException as e:  # noqa: BLE001
+                        return f"module '{alias.name}' not importable ({type(e).__name__})"
+    return None
+
+
+def check_doc_imports_resolve(repo_root: Path) -> list[Inconsistency]:
+    """Flag ``infrastructure`` imports / ``-m infrastructure.X`` in docs that don't resolve."""
+    issues: list[Inconsistency] = []
+    for md in _iter_long_lived_docs(repo_root):
+        try:
+            raw = md.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as e:
+            logger.debug("skipping %s: %s", md, e)
+            continue
+        for fence in _ANY_FENCE_RE.finditer(raw):
+            if fence.group("lang").lower() not in _CODE_LANGS:
+                continue
+            body = fence.group("body")
+            base_line = raw[: fence.start("body")].count("\n") + 1
+            body_lines = body.splitlines()
+            i = 0
+            while i < len(body_lines):
+                line = body_lines[i]
+                line_no = base_line + i
+                if _line_has_noqa(line) or _SHELL_NOQA_RE.search(line):
+                    i += 1
+                    continue
+                for m in _DASH_M_RE.finditer(line):
+                    mod = m.group("mod")
+                    try:
+                        if importlib.util.find_spec(mod) is None:
+                            raise ModuleNotFoundError(mod)
+                    except BaseException:  # noqa: BLE001
+                        issues.append(
+                            Inconsistency(
+                                file=md,
+                                line=line_no,
+                                category="doc-import",
+                                detail=f"`-m {mod}` is not an importable module",
+                            )
+                        )
+                if _IMPORT_START_RE.match(line):
+                    stmt = line
+                    j = i
+                    # stitch parenthesised / backslash multi-line imports
+                    while ("(" in stmt and ")" not in stmt) or stmt.rstrip().endswith("\\"):
+                        j += 1
+                        if j >= len(body_lines):
+                            break
+                        stmt += "\n" + body_lines[j]
+                    if not (_line_has_noqa(stmt) or _SHELL_NOQA_RE.search(stmt)):
+                        err = _resolve_import_statement(stmt.replace("\\\n", "\n"))
+                        if err:
+                            issues.append(
+                                Inconsistency(
+                                    file=md,
+                                    line=line_no,
+                                    category="doc-import",
+                                    detail=f"{err} (append `# noqa: docs-lint` for an intentional example)",
+                                )
+                            )
+                    i = j
+                i += 1
+    return issues
+
+
+_FILES_LIST_RE = re.compile(r"^\s*[-*]\s*`?(?P<f>[A-Za-z_]\w*\.py)`?\s*(?:[—:-].*)?$")
+
+
+def check_readme_files_list(repo_root: Path) -> list[Inconsistency]:
+    """Flag ``foo.py`` listed in a package README/AGENTS that exists nowhere in that package."""
+    infra = repo_root / "infrastructure"
+    if not infra.is_dir():
+        return []
+    issues: list[Inconsistency] = []
+    for doc_name in ("README.md", "AGENTS.md"):
+        for doc in infra.rglob(doc_name):
+            pkg_dir = doc.parent
+            if not (pkg_dir / "__init__.py").is_file():
+                continue
+            present = {p.name for p in pkg_dir.rglob("*.py")}
+            try:
+                lines = doc.read_text(encoding="utf-8").splitlines()
+            except (OSError, UnicodeDecodeError):
+                continue
+            in_fence = False
+            for n, line in enumerate(lines, 1):
+                if re.match(r"^[ \t]*(`{3,}|~{3,})", line):
+                    in_fence = not in_fence
+                    continue
+                if in_fence or _line_has_noqa(line):
+                    continue
+                fm = _FILES_LIST_RE.match(line)
+                if fm and fm.group("f") not in present:
+                    issues.append(
+                        Inconsistency(
+                            file=doc,
+                            line=n,
+                            category="doc-files-list",
+                            detail=(
+                                f"lists `{fm.group('f')}` but no such file exists under "
+                                f"{pkg_dir.relative_to(repo_root)}/ (vanished or renamed)"
+                            ),
+                        )
+                    )
+    return issues
+
+
+# ---------------------------------------------------------------------------
+# SSOT count-singularity (Track 2 decay-proofing): the volatile infrastructure
+# ``.py`` file-count literal may live only in docs/_generated/canonical_facts.md
+# (the hand-maintained single source of truth). Anywhere else it must link, not
+# duplicate — a hard-coded "NNN .py files" elsewhere is drift waiting to happen.
+# ---------------------------------------------------------------------------
+
+_PY_COUNT_RE = re.compile(r"\b\d{3}\s*(?:`?\.py`?|Python)\s+files\b", re.IGNORECASE)
+
+
+def check_canonical_count_singularity(repo_root: Path) -> list[Inconsistency]:
+    """Flag a bare ``NNN .py files`` literal outside canonical_facts.md."""
+    canonical = repo_root / "docs" / "_generated" / "canonical_facts.md"
+    issues: list[Inconsistency] = []
+    for md in _iter_long_lived_docs(repo_root):
+        if md.resolve() == canonical.resolve():
+            continue
+        try:
+            raw = md.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        for n, line in enumerate(raw.splitlines(), 1):
+            if _PY_COUNT_RE.search(line) and not (_line_has_noqa(line) or _SHELL_NOQA_RE.search(line)):
+                issues.append(
+                    Inconsistency(
+                        file=md,
+                        line=n,
+                        category="count-singularity",
+                        detail=(
+                            "hard-codes a volatile infrastructure .py-file count — link to "
+                            "docs/_generated/canonical_facts.md instead (it drifts as the tree "
+                            "changes); add `# noqa: docs-lint` only for a measured, dated note"
+                        ),
+                    )
+                )
+    return issues
+
+
 __all__ = [
     "Inconsistency",
+    "check_canonical_count_singularity",
+    "check_command_conventions",
+    "check_doc_imports_resolve",
     "check_module_count_claims",
     "check_no_ghost_projects",
+    "check_readme_files_list",
 ]

@@ -1,1 +1,67 @@
-{'ADR': "1"}], 'decision': "Scripts in `scripts/` and `projects/{name}/scripts/` must be thin wrappers that import logic from `infrastructure/` modules or `projects/{name}/src/`. Scripts contain no business logic themselves.", 'options': '[["Monolithic scripts (containing algorithm implementations)", "Rejected — leads to duplicated logic, hard to test, violates separation of concerns"], ["Thin wrapper pattern", "Accepted — clear boundaries, reusable code, testable units"]]', 'rationale': '### Why This Matters\n\n- **Testability:** Algorithms in `src/` can be unit tested directly.\n- **Reusability:** Infrastructure functions are callable from multiple scripts.\n- **Clarity:** Easy to locate implementation — always in `src/` or `infrastructure/`.\n- **Agent routing:** Cursor/Claude can map skills to actual modules via SKILL.md.\n\n### Enforcement\n\n- Code reviews check for business logic in scripts.\n- `scripts/verify_no_mocks.py` ensures no mock usage; similar checks could be added for orchestrator purity.\n\n---\n\n## Consequences\n\n### Positive\n\n- Single source of truth for each algorithm\n- Scripts become simple\n"prove: thing is to orchestrate"\n- Faster onboarding: new contributors know where to look\n\n### Negative\n\n- More files (separate `src/` and `scripts/`)\n- Requires import discipline (circular imports possible if misused)\n- Slightly more verbose for trivial tasks\n\n---\n\n## Examples\n\nGood — thin script:\n\n```python\n# scripts/02_run_analysis.py\nfrom projects.template_code_project.src.optimizer import gradient_descent\nfrom infrastructure.scientific.benchmarking import benchmark\n\nresult = gradient_descent(...)\nreport = benchmark(result)\nreport.save(\n  Path(\"output/report.json\")\n)\n```\n\nBad — logic in script:\n\n```python\n# ANTI-PATTERN\ndef gradient_descent(...):\n    # Implementation here — WRONG\n    ...\n\nresult = gradient_descent(...)  # This belongs in src/\n```\n\n---\n\n## References\n\n- `docs/architecture/thin-orchestrator-summary.md`\n- `projects/template_code_project/AGENTS.md` (exemplar)\n- `scripts/AGENTS.md` (orchestrator guidelines)\n- `infrastructure/AGENTS.md` (module overview)\n'}
+# ADR 001: Thin Orchestrator Pattern
+
+## Status
+
+Accepted
+
+## Context
+
+Scripts in `scripts/` (root level) and `projects/{name}/scripts/` need a clear contract about their role. Without enforcement, scripts tend to accumulate business logic, making code harder to test, reuse, and maintain.
+
+## Decision
+
+Scripts must be **thin wrappers** that import logic from `infrastructure/` modules or `projects/{name}/src/`. Scripts contain no business logic themselves.
+
+### Enforcement
+
+- Code reviews check for business logic in scripts
+- `scripts/verify_no_mocks.py` ensures no mock usage; similar checks could be added for orchestrator purity
+- The "thin orchestrator" pattern is enforced by convention and the project's AGENTS.md documentation
+
+## Consequences
+
+### Positive
+
+- **Testability:** Algorithms in `src/` can be unit tested directly without running the full pipeline
+- **Reusability:** Infrastructure functions are callable from multiple scripts
+- **Clarity:** Easy to locate implementation — always in `src/` or `infrastructure/`
+- **Agent routing:** Cursor/Claude can map skills to actual modules via SKILL.md
+- **Scripts become simple** — "prove: thing is to orchestrate"
+- **Faster onboarding:** new contributors know where to look
+
+### Negative
+
+- More files (separate `src/` and `scripts/`)
+- Requires import discipline (circular imports possible if misused)
+- Slightly more verbose for trivial tasks
+
+## Examples
+
+Good — thin script:
+
+```python
+# scripts/02_run_analysis.py
+from projects.template_code_project.src.optimizer import gradient_descent
+from infrastructure.scientific.benchmarking import benchmark_function
+
+result = gradient_descent(...)
+report = benchmark_function(result, test_inputs=[result])
+report.save(Path("output/report.json"))
+```
+
+Bad — logic in script (anti-pattern):
+
+```python
+# ANTI-PATTERN
+def gradient_descent(initial_point, objective_func, ...):
+    # Implementation here — WRONG
+    ...
+
+result = gradient_descent(...)  # This belongs in src/
+```
+
+## References
+
+- [`docs/architecture/two-layer-architecture.md`](../two-layer-architecture.md) — Full two-layer architecture
+- [`infrastructure/orchestration/pipeline_runner.py`](../../../infrastructure/orchestration/pipeline_runner.py) — Pipeline executor
+- [`core/workflow.md`](../../core/workflow.md) — Development workflow

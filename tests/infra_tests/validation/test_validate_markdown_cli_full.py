@@ -144,16 +144,16 @@ class TestValidateMarkdownCliFunctions:
         assert len(issues) == 0
 
     def test_validate_math_double_dollar(self, tmp_path):
-        """Test validate_math flags $$ display math (use equation env instead)."""
+        """Test validate_math flags inline $$ display math misuse."""
         from infrastructure.validation.cli.markdown import validate_math
 
         md = tmp_path / "doc.md"
-        md.write_text("$$E = mc^2$$")
+        md.write_text("Inline misuse: $$E = mc^2$$")
 
         issues = validate_math([str(md)], str(tmp_path))
 
         assert len(issues) >= 1
-        assert any("equation" in i.lower() or "$$" in i for i in issues)
+        assert any("isolated" in i.lower() and "$$" in i for i in issues)
 
 
 class TestValidateMarkdownMain:

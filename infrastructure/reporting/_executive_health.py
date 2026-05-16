@@ -4,8 +4,6 @@ Provides project health score calculation and actionable recommendation
 generation based on comprehensive project metrics analysis.
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 from ._executive_models import ProjectMetrics

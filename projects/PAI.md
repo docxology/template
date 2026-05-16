@@ -4,15 +4,22 @@
 
 This directory contains the **Layer 2** domain-specific research projects. Each subdirectory is a self-contained research environment operated upon by shared infrastructure.
 
+## PAI v5 Project Framing
+
+For substantial project work, use an ISA as the live statement of ideal state, verification criteria, decisions, and done condition. PRD references should be treated as archival wording unless a project explicitly preserves them as historical material.
+
 ## 📊 Active Projects
 
-| Project           | Domain                          | Status |
-|-------------------|---------------------------------|--------|
-| `template_code_project`         | Optimization research exemplar  | ✅ Active |
-| `fep_lean`             | FEP / Lean4 formalization       | ✅ Active |
-| `act_inf_metaanalysis` | Active Inference meta-analysis  | ✅ Active |
+Always-present permanent exemplars under `projects/`:
 
-Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerated from `discover_projects()`).
+| Project | Domain | Status |
+|---|---|---|
+| `template_code_project` | Optimization research exemplar | ✅ Permanent exemplar |
+| `template_prose_project` | Prose-review exemplar | ✅ Permanent exemplar |
+
+Rotating projects (e.g. `actinf_policy_entanglement_lean`, `crescent_city`) appear under `projects/` in some checkouts and under `projects_archive/` or `projects_in_progress/` in others. `fep_lean` and `act_inf_metaanalysis` are currently archived.
+
+Authoritative active roster: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerated from `discover_projects()`).
 
 ## 📂 Structure Per Project
 

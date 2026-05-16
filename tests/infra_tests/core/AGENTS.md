@@ -10,12 +10,15 @@ The `tests/infra_tests/core/` directory contains test suites for the core infras
 flowchart TB
     T[/tests/infra_tests/core//]
     T --> META[AGENTS.md · __init__.py]
+    T --> CFG_DIR[/config<br/>schema extensions/]
+    T --> PIPE_DIR[/pipeline<br/>parallel helpers/]
+    T --> TEL_DIR[/telemetry<br/>retention/]
 
     T --> CFG[Configuration / Environment<br/>test_config_cli_coverage · test_config_loader ·<br/>test_credentials · test_credentials_module ·<br/>test_environment]
     T --> EXC[Exceptions<br/>test_exceptions]
-    T --> LOG[Logging<br/>test_logging_helpers · test_logging_progress ·<br/>test_logging_utils · test_project_logger]
+    T --> LOG[Logging<br/>test_logging_helpers · test_logging_progress ·<br/>test_logging_utils · test_logging_formatters]
     T --> FILES[Files / Filesystem<br/>test_file_inventory · test_file_operations]
-    T --> MENU[Menu / Performance / Progress<br/>test_menu · test_performance · test_progress]
+    T --> MENU[Menu / Performance / Progress<br/>test_menu · test_performance_monitor · test_progress]
     T --> PIPE[Pipeline / Orchestration<br/>test_checkpoint · test_pipeline · test_pipeline_summary ·<br/>test_multi_project · test_retry]
     T --> DISC[Discovery<br/>test_project_discovery · test_script_discovery]
     T --> CLI[CLI<br/>test_cli]
@@ -24,11 +27,17 @@ flowchart TB
     classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class CFG,EXC,LOG,FILES,MENU,PIPE,DISC,CLI cat
+    class CFG,EXC,LOG,FILES,MENU,PIPE,DISC,CLI,CFG_DIR,PIPE_DIR,TEL_DIR cat
     class META doc
 ```
 
 ## Test Categories
+
+### Focused Subdirectories
+
+- [`config/`](config/) — config schema-extension registry, strict loading, and schema output.
+- [`pipeline/`](pipeline/) — multi-project parallel helper behavior and worker isolation.
+- [`telemetry/`](telemetry/) — telemetry retention and archive rotation.
 
 ### Configuration and Environment
 
@@ -130,7 +139,7 @@ def test_translation_languages(tmp_path, sample_project_config):
 
 ### Performance and Monitoring
 
-**Performance Monitoring (`test_performance.py`)**
+**Performance Monitoring (`test_performance_monitor.py`)**
 - Resource usage tracking
 - Performance timer accuracy
 - Memory and CPU monitoring
@@ -222,7 +231,7 @@ def test_exception_context_preservation():
 
 ### Performance Testing
 
-**`test_performance.py`:**
+**`test_performance_monitor.py`:**
 ```python
 def test_performance_monitor():
     """Test performance monitoring accuracy."""
@@ -271,33 +280,33 @@ def test_config():
 
 ```bash
 # Run all core tests
-pytest tests/infra_tests/core/
+uv run pytest tests/infra_tests/core/
 
 # Run specific test file
-pytest tests/infra_tests/core/test_config_loader.py
+uv run pytest tests/infra_tests/core/test_config_loader.py
 
 # Run specific test function
-pytest tests/infra_tests/core/test_config_loader.py::test_load_config_from_file
+uv run pytest tests/infra_tests/core/test_config_loader.py::test_load_config_from_file
 ```
 
 ### Coverage Analysis
 
 ```bash
 # Generate coverage report
-pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=html
+uv run pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=html
 
 # Check coverage threshold
-pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-fail-under=95
+uv run pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-fail-under=95
 ```
 
 ### Debug Testing
 
 ```bash
 # Verbose output
-pytest tests/infra_tests/core/ -v
+uv run pytest tests/infra_tests/core/ -v
 
 # Debug specific failure
-pytest tests/infra_tests/core/test_logging_utils.py -s --pdb
+uv run pytest tests/infra_tests/core/test_logging_utils.py -s --pdb
 ```
 
 ## Test Maintenance
@@ -316,7 +325,7 @@ pytest tests/infra_tests/core/test_logging_utils.py -s --pdb
 ```python
 """Tests for module_name functionality."""
 import pytest
-from infrastructure.core.module_name import function_to_test
+from infrastructure.core.module_name import function_to_test  # noqa: docs-lint
 
 
 class TestModuleName:
@@ -390,13 +399,13 @@ class TestModuleName:
 **Test Debugging:**
 ```bash
 # Run with detailed output
-pytest tests/infra_tests/core/ -v -s
+uv run pytest tests/infra_tests/core/ -v -s
 
 # Debug specific test
-pytest tests/infra_tests/core/test_config_loader.py::TestConfigLoader::test_load_config -x --pdb
+uv run pytest tests/infra_tests/core/test_config_loader.py::TestConfigLoader::test_load_config -x --pdb
 
 # Profile test performance
-pytest tests/infra_tests/core/ --durations=10
+uv run pytest tests/infra_tests/core/ --durations=10
 ```
 
 ## Test Metrics

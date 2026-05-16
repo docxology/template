@@ -14,8 +14,6 @@ The CLI never raises on per-backend failures; it surfaces them as a
 BibTeX output) so agents can detect partial coverage.
 """
 
-from __future__ import annotations
-
 import argparse
 import os
 import sys

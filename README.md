@@ -19,13 +19,15 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/<project>/pdf/`. Logs in `output/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_code_project`, `template_prose_project`, `template_search_project`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_code_project`, `template_prose_project`. The search exemplar is an optional add-on under `projects_archive/template_search_project/`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
 **Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration).
 
 **Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) (overview) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
+
+<a id="migration-from-quadmath"></a>
 
 **Local hooks:** After `uv sync`, run `pre-commit install` and `pre-commit install --hook-type pre-push` to mirror Ruff, mypy, Bandit, and smoke tests locally (see [`.pre-commit-config.yaml`](.pre-commit-config.yaml)).
 
@@ -96,15 +98,16 @@ The repo can host multiple research projects in parallel. Each project owns its
 own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 `projects/<name>/`. Layer-1 infrastructure is shared.
 
-**Canonical exemplar trio — always present and tracked in git:**
+**Permanent canonical exemplars — always present and tracked in git:**
 
 | Exemplar | Shape | Tests | Coverage |
 |---|---|---|---|
-| [`projects/template_code_project/`](projects/template_code_project/) | Code-centric (optimization + dashboard) | 96 | ~99.5% |
-| [`projects/template_prose_project/`](projects/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | 66 | 100.00% |
-| [`projects/template_search_project/`](projects/template_search_project/) | Search-centric (literature discovery + auto-populated BibTeX + LLM synthesis) | 266 | ~99.5% |
+| [`projects/template_code_project/`](projects/template_code_project/) | Code-centric (optimization + dashboard) | 117 | ~99.5% |
+| [`projects/template_prose_project/`](projects/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | 67 | 100.00% |
 
-All three share the same directory layout, the same 12-file `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`), and the same verification checklist. New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#exemplar-trio-permanent-canonical-projects) for the full comparison.
+*Test and coverage figures are representative; confirm against [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) after substantive changes.*
+
+Both permanent exemplars share the same directory layout, the same 12-file `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`), and the same verification checklist. The optional search exemplar lives at [`projects_archive/template_search_project/`](projects_archive/template_search_project/) and can be restored under `projects/` when exercising literature discovery. New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) for the full comparison.
 
 Other entries in `projects/` rotate between `projects_in_progress/`,
 `projects/`, and `projects_archive/` as work progresses (Lean toolchain
@@ -184,15 +187,15 @@ Two-layer architecture:
 
 A short summary lives here; full architecture diagrams (system overview,
 module-dependency graph, per-stage data flow, configuration-system flow) are
-maintained in [`AGENTS.md`](AGENTS.md#architecture) and
+maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
 [`docs/core/architecture.md`](docs/core/architecture.md). In short:
 
 - **Entry points:** `./run.sh` (interactive or `--pipeline`) and
   `uv run python scripts/execute_pipeline.py --project <name> [--core-only]`;
-  individual stages are invokable as `scripts/00_*.py` … `scripts/05_*.py`.
+  numbered orchestrators under `scripts/` include `00_*.py` through `07_*.py` (setup → copy, LLM, executive report — see [`scripts/AGENTS.md`](scripts/AGENTS.md)).
 - **Orchestration:** the pipeline runs Setup → Tests → Analysis → Render →
   Validate → Copy, with optional LLM Review and LLM Translations stages.
-- **Core systems:** 17 `infrastructure/` Python subpackages (Layer 1) plus
+- **Core systems:** 16 `infrastructure/` Python subpackages (Layer 1) plus
   per-project `projects/{name}/src/` algorithms (Layer 2); see
   [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) for
   the live module list.
@@ -276,7 +279,7 @@ Two configuration paths exist: edit `projects/{name}/manuscript/config.yaml`
 The YAML schema (paper title, authors with ORCID, publication DOI, keywords,
 optional LLM translations block) and a worked example are documented once in
 [`CLAUDE.md`](CLAUDE.md#configuration) and
-[`AGENTS.md`](AGENTS.md#-configuration-system); both files also list every
+[`AGENTS.md`](AGENTS.md#configuration-system); both files also list every
 available field. See `projects/{name}/manuscript/config.yaml.example` for the full
 template. Applied configuration drives PDF metadata, LaTeX document properties
 (see [`docs/reference/copypasta.md`](docs/reference/copypasta.md) for preamble
@@ -431,7 +434,7 @@ flags: [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md). PDF validator:
 
 To adapt this template: copy `infrastructure/` and `scripts/`, mirror the
 `projects/{name}/{src,tests,scripts,manuscript}/` layout, adopt
-`config.yaml` (see [`AGENTS.md`](AGENTS.md#-configuration-system)), and validate by
+`config.yaml` (see [`AGENTS.md`](AGENTS.md#configuration-system)), and validate by
 running the pipeline. Worked examples:
 [`docs/usage/examples.md`](docs/usage/examples.md),
 [`docs/best-practices/migration-guide.md`](docs/best-practices/migration-guide.md).

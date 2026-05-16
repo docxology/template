@@ -24,14 +24,52 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 
 ---
 
+## PAI v5 Alignment
+
+As of 2026-05-15, this repository treats upstream PAI `v5.0.0` as the current Life Operating System doctrine: DA-centered operation, Pulse on port `31337`, Algorithm `v6.3.0`, and ISA-first execution. For non-trivial work, articulate the Ideal State Artifact before implementation; PRD language is historical only and should not be presented as current PAI doctrine.
+
+Operational smoke checks for the local PAI install live outside this template's Python APIs:
+
+- `~/.claude/PAI/PAI_SYSTEM_PROMPT.md`
+- `~/.claude/PAI/ALGORITHM/v6.3.0.md`
+- `~/.claude/skills/ISA/SKILL.md`
+- `http://localhost:31337/api/pulse/health`
+- `http://localhost:31337/readiness`
+
+The active local PAI also has a controlled Docxology public-context intake at `~/.claude/PAI/TOOLS/DocxologyIntake.ts`. It refreshes canonical public data from `danielarifriedman.com`, writes snapshots under `~/.claude/PAI/MEMORY/REFERENCE/DOCXOLOGY/`, and promotes only curated notes into `MEMORY/KNOWLEDGE/`.
+
+See [`audit/pai-v5-upgrade-audit.md`](audit/pai-v5-upgrade-audit.md) for the 2026-05-15 preflight, installer, migration, and verification notes. No template Python API changed as part of the PAI upgrade.
+
+## Weekly Pulse Runbook
+
+Use the following external checks to validate the runtime baseline:
+
+```bash
+curl -s http://127.0.0.1:31337/api/pulse/health | jq '{status, jobs: [.subsystems.cron.jobs[] | {name,result,failures}]}'
+curl -s -X POST http://127.0.0.1:31337/notify -H "Content-Type: application/json" -d '{"message":"PAI v5 validation"}'
+curl -s http://127.0.0.1:31337/api/pulse/health | jq '.subsystems.cron.jobs | map(select(.failures > 0))'
+cd ~/.claude/PAI/PULSE && bun run run-job.ts pulse-self-audit
+curl -s http://127.0.0.1:31337/api/pulse/self-audit | jq '{ready,counts,pointers,phaseStatuses:[.phases[] | {id,status,warn,critical}]}'
+```
+
+`subsystems.cron` should report no active failure rows after the 2026-05-15 assistant scaffold validation; any new failure row should be treated as a fresh regression.
+
+The `pulse-self-audit` job runs daily at 06:00 and writes its latest report to `~/.claude/PAI/MEMORY/PAISYSTEMUPDATES/pulse-self-audit.json`. Re-enable staged jobs only when this report has zero critical findings and the specific job target exists. The report also checks backup retention and confirms that `settings.json` and `PAI/ALGORITHM/LATEST` agree on Algorithm `6.3.0`.
+
+Pulse process management runs this self-audit before `start` and `install`; a future critical finding blocks daemon launch until the missing enabled target or v5 baseline issue is fixed.
+
+When re-enabling DA assistant capabilities, apply the staged rollout documented in root [AGENTS.md](../AGENTS.md) and stop after failures exceed your tolerance in the current phase. The dashboard route `http://127.0.0.1:31337/readiness` groups the same readiness data by baseline, doctrine, runtime, assistant, monitor, and communication phases.
+
+---
+
 ## Architecture
 
-**Counting note:** the tree below lists **15** Python packages under `infrastructure/` (core, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). The `config/`, `docker/`, and `logrotate.d/` directories ship config files rather than `__init__.py`, so they aren't Python packages. For a live count run `for d in infrastructure/*/; do [ -f "$d/__init__.py" ] && echo "$d"; done | wc -l`. See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
+**Counting note:** the tree below lists **16** Python packages under `infrastructure/` (core, doctor, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). The `config/`, `docker/`, and `logrotate.d/` directories ship configuration/docs rather than `__init__.py`, so they are not Python packages. For live counts, use [`docs/_generated/canonical_facts.md`](_generated/canonical_facts.md). See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
 
 ```mermaid
 flowchart TB
     ROOT[/template/]
-    ROOT --> INFRA[/infrastructure<br/>Layer 1 · 17 subpackages/]
+    ROOT --> INFRA[/infrastructure<br/>Layer 1 · 16 Python packages/]
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
     ROOT --> SCR[/scripts<br/>Entry-point orchestrators · thin wrappers/]
     ROOT --> PROJ[/projects<br/>Active research projects · Layer 2/]
@@ -41,7 +79,7 @@ flowchart TB
     ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
     ROOT --> DOCKER[infrastructure/docker<br/>Dockerfile · docker-compose.yml]
 
-    INFRA --> INFRA_PKGS[config · core · docker · documentation ·<br/>llm · orchestration · project · prose · publishing ·<br/>reference · rendering · reporting · scientific ·<br/>search · skills · steganography · validation]
+    INFRA --> INFRA_PKGS[core · doctor · documentation · llm · orchestration ·<br/>project · prose · publishing · reference · rendering ·<br/>reporting · scientific · search · skills · steganography · validation]
 
     SCR --> SCR_FILES[bash_utils.sh ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 

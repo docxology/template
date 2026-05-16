@@ -18,8 +18,6 @@ so that ``from infrastructure.reporting import X`` works for the typical caller.
 Prefer importing from the specific submodule when only one subsystem is needed.
 """
 
-from __future__ import annotations
-
 # Pipeline stage reporters (used during pipeline execution)
 from .error_aggregator import (
     ErrorAggregator,

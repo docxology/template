@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import json
+import re
+from dataclasses import asdict
 from pathlib import Path
+
+import pytest
 
 from src.manuscript_variables import (
     compute_variables,
@@ -12,6 +16,9 @@ from src.manuscript_variables import (
     write_resolved_manuscript_tree,
     write_variables,
 )
+
+_DOC_ONLY = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
+_TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
 
 
 def _payload(files: list[dict] | None = None, citation_keys: list[str] | None = None):
@@ -149,3 +156,41 @@ def test_write_resolved_manuscript_tree_no_aux(tmp_path: Path):
     out_dir = write_resolved_manuscript_tree(project_root, vars_)
     assert (out_dir / "00_abstract.md").exists()
     assert not (out_dir / "config.yaml").exists()
+
+
+# ---------------------------------------------------------------------------
+# Live cross-reference: every {{TOKEN}} in the actual manuscript must be
+# produced by compute_variables()
+# ---------------------------------------------------------------------------
+
+def test_all_manuscript_tokens_are_generated():
+    """Regression guard: every {{TOKEN}} used in manuscript/*.md must be
+    produced by compute_variables() so no placeholder can appear in a
+    rendered PDF.
+
+    This test reads the *real* manuscript source tree so it catches drift
+    introduced by manuscript edits.
+    """
+    vars_ = compute_variables(config_title="T", manuscript_report={})
+    produced = {k.upper() for k in asdict(vars_).keys()}
+
+    project_root = Path(__file__).resolve().parent.parent
+    manuscript_dir = project_root / "manuscript"
+    if not manuscript_dir.is_dir():
+        pytest.skip("manuscript/ directory not found; skipping cross-reference check")
+
+    unresolved: dict[str, list[str]] = {}
+    for md_file in sorted(manuscript_dir.glob("*.md")):
+        if md_file.name in _DOC_ONLY:
+            continue
+        text = md_file.read_text(encoding="utf-8")
+        for token in _TOKEN_RE.findall(text):
+            if token not in produced:
+                unresolved.setdefault(token, []).append(md_file.name)
+
+    assert not unresolved, (
+        "Manuscript tokens not produced by compute_variables():\n"
+        + "\n".join(
+            f"  {{{{{t}}}}}: {files}" for t, files in sorted(unresolved.items())
+        )
+    )

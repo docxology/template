@@ -48,7 +48,8 @@ LOG_LEVEL=0 uv run python scripts/execute_pipeline.py --project {name} --core-on
 ## Context Managers
 
 ```python
-from infrastructure.core.logging.utils import log_operation, log_timing, log_with_spinner
+from infrastructure.core.logging.utils import log_operation, log_timing
+from infrastructure.core.logging import log_with_spinner
 
 # Log operation start and completion
 with log_operation("Processing data", logger):
@@ -166,7 +167,7 @@ logger = get_logger(__name__)
 
 def main() -> int:
     log_header("SCRIPT NAME", logger)
-    
+
     try:
         logger.info("Processing...")
         log_success("Complete", logger)
@@ -187,17 +188,17 @@ if __name__ == "__main__":
 def process_file(file_path: Path) -> dict:
     """Process a file and return results."""
     logger.info(f"Processing: {file_path}")
-    
+
     try:
         with log_operation(f"Load {file_path.name}", logger):
             data = load_file(file_path)
-        
+
         with log_timing("Process data", logger):
             result = process_data(data)
-        
+
         log_success(f"Processed {file_path.name}", logger)
         return result
-        
+
     except FileNotFoundError as e:
         logger.error(f"File not found: {file_path}", exc_info=True)
         raise

@@ -10,22 +10,29 @@ The `tests/infra_tests/validation/` directory contains tests for the validation 
 flowchart TB
     T[/tests/infra_tests/validation//]
     T --> META[AGENTS.md · __init__.py · conftest.py]
-    T --> CFG[Configuration<br/>test_config]
-    T --> DOC[Documentation<br/>test_doc_completeness · test_doc_scanner]
-    T --> CONTENT[Content validators<br/>test_figure_validator · test_markdown_validator ·<br/>test_pdf_validator · test_package_validator]
-    T --> INT[Integrity<br/>test_integrity]
-    T --> CLI[CLI<br/>test_cli · test_validation_cli]
-    T --> INTEG[Integration<br/>test_validation_integration]
+    T --> DOCS_DIR[/docs<br/>documentation linter tests/]
+    T --> CFG[Accuracy / Completeness<br/>test_accuracy · test_completeness · test_docs_completeness]
+    T --> DOC[Doc scanner / discovery<br/>test_doc_scanner · test_docs_scanner · test_doc_discovery]
+    T --> CONTENT[Content validators<br/>test_figure_validator · test_markdown_validator ·<br/>test_pdf_validator · test_output_validator]
+    T --> INT[Integrity<br/>test_integrity · test_integrity_edge_cases]
+    T --> CLI[CLI<br/>test_validation_cli · test_validate_markdown_cli ·<br/>test_validate_pdf_cli]
+    T --> INTEG[Links / scope<br/>test_check_links · test_link_validator ·<br/>test_cross_link_lint · test_mermaid_lint]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef cat fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class CFG,DOC,CONTENT,INT,CLI,INTEG cat
+    class CFG,DOC,CONTENT,INT,CLI,INTEG,DOCS_DIR cat
     class META doc
 ```
 
 ## Test Categories
+
+### Documentation Linter Tests
+
+[`docs/`](docs/) covers documentation-specific linting: Mermaid, cross-links,
+consistency checks, scan-scope exclusions, and permanent-template doc-pair
+coverage.
 
 ### PDF Validation Tests
 
@@ -600,16 +607,16 @@ def output_with_pdf(output_directory_structure, pdf_file_fixture):
 
 ```bash
 # Run all validation tests
-pytest tests/infra_tests/validation/
+uv run pytest tests/infra_tests/validation/
 
 # Run specific validation type tests
-pytest tests/infra_tests/validation/test_pdf_validator.py
+uv run pytest tests/infra_tests/validation/test_pdf_validator.py
 
-# Run integration tests
-pytest tests/infra_tests/validation/test_validation_integration.py
+# Run link and cross-reference tests
+uv run pytest tests/infra_tests/validation/test_check_links.py tests/infra_tests/validation/test_cross_link_lint.py
 
 # Run with detailed output
-pytest tests/infra_tests/validation/ -v
+uv run pytest tests/infra_tests/validation/ -v
 ```
 
 ### Conditional Test Execution
@@ -617,13 +624,13 @@ pytest tests/infra_tests/validation/ -v
 **Format-Specific Testing:**
 ```bash
 # PDF validation tests only
-pytest tests/infra_tests/validation/ -k "pdf"
+uv run pytest tests/infra_tests/validation/ -k "pdf"
 
 # Markdown validation tests only
-pytest tests/infra_tests/validation/ -k "markdown"
+uv run pytest tests/infra_tests/validation/ -k "markdown"
 
 # Integrity tests only
-pytest tests/infra_tests/validation/ -k "integrity"
+uv run pytest tests/infra_tests/validation/ -k "integrity"
 ```
 
 ## Test Coverage and Quality
@@ -848,7 +855,7 @@ def validate_cross_validator_consistency():
 **Validation Dependencies Check:**
 ```bash
 # Check validation test dependencies
-python3 -c "
+uv run python3 -c "
 # Core dependencies
 import sys
 print(f'Python: {sys.version}')

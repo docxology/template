@@ -179,8 +179,8 @@ using the thin orchestrator pattern.
 """
 
 from pathlib import Path
-from infrastructure.core import get_logger, load_config
-from infrastructure.new_feature import NewFeature
+from infrastructure.core import get_logger, load_config  # noqa: docs-lint
+from infrastructure.new_feature import NewFeature  # noqa: docs-lint
 
 logger = get_logger(__name__)
 
@@ -223,7 +223,7 @@ import pytest
 import numpy as np
 from pathlib import Path
 
-from infrastructure.new_feature import NewFeature, FeatureExecutionError
+from infrastructure.new_feature import NewFeature, FeatureExecutionError  # noqa: docs-lint
 
 class TestNewFeature:
     """test suite for feature."""
@@ -392,7 +392,7 @@ Raised when input validation fails.
 ### Basic Usage
 
 ```python
-from infrastructure.new_feature import NewFeature
+from infrastructure.new_feature import NewFeature  # noqa: docs-lint
 
 # Configure feature
 config = {
@@ -428,8 +428,8 @@ result = feature.execute(complex_data)
 
 ```python
 # Integration with research data processing
-from infrastructure.new_feature import NewFeature
-from infrastructure.data_processing import DataProcessor
+from infrastructure.new_feature import NewFeature  # noqa: docs-lint
+from infrastructure.data_processing import DataProcessor  # noqa: docs-lint
 
 class ResearchPipeline:
     """research pipeline with feature."""
@@ -542,7 +542,7 @@ classDiagram
 ## Quick Start
 
 ```python
-from infrastructure.new_feature import NewFeature
+from infrastructure.new_feature import NewFeature  # noqa: docs-lint
 
 feature = NewFeature()
 result = feature.execute(data)
@@ -562,7 +562,7 @@ See [`AGENTS.md`](AGENTS.md) for technical documentation.
 ### Validation Integration
 ```python
 # Integrate with template validation system
-from infrastructure.validation import validate_module_implementation
+from infrastructure.validation import validate_module_implementation  # noqa: docs-lint
 
 def validate_new_feature():
     """Validate feature implementation."""
@@ -626,7 +626,7 @@ def benchmark_feature():
 ### Code Quality Standards ([`../rules/code_style.md`](../rules/code_style.md))
 
 - [ ] Type hints on all public APIs
-- [ ] Black formatting and isort compliance
+- [ ] Ruff format/check (CI scope) and mypy clean on touched paths
 - [ ] Google-style docstrings
 - [ ] Error handling with custom exceptions
 - [ ] Unified logging system integration

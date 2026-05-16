@@ -1,12 +1,12 @@
 # docs/ — Project Documentation
 
-> **Operational rulebook** for the code_project exemplar
+> **Operational rulebook** for the template_code_project exemplar
 
 **Quick Reference:** [Agent Instructions](agent_instructions.md) | [Architecture](architecture.md) | [Testing](testing_philosophy.md) | [Rendering](rendering_pipeline.md) | [Style](style_guide.md) | [Syntax](syntax_guide.md) | [Index](AGENTS.md)
 
 ## Purpose
 
-The `docs/` directory contains the behavioral and architectural rules that govern modifications to the `code_project` exemplar. Every document here is a hard constraint — not a suggestion. The authoritative file index (including this `README.md` and `AGENTS.md`) lives in [`AGENTS.md`](AGENTS.md).
+The `docs/` directory contains the behavioral and architectural rules that govern modifications to the `template_code_project` exemplar. Every document here is a hard constraint — not a suggestion. The authoritative file index (including this `README.md` and `AGENTS.md`) lives in [`AGENTS.md`](AGENTS.md).
 
 ## Contents
 
@@ -14,7 +14,7 @@ The `docs/` directory contains the behavioral and architectural rules that gover
 |---|---|---|---|
 | [`agent_instructions.md`](agent_instructions.md) | 7 hard rules for AI agents; verification checklist | ~152 | AI agents, all developers |
 | [`architecture.md`](architecture.md) | Layer table, dependency direction, forbidden patterns, how-to-add-algorithm | ~78 | Developers |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, 42-test class inventory, coverage mechanics | ~106 | Developers, testers |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, 117-test inventory, coverage mechanics | ~106 | Developers, testers |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | 4-phase manuscript→PDF pipeline; config.yaml controls; troubleshooting | ~159 | Content authors, developers |
 | [`style_guide.md`](style_guide.md) | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | ~185 | Developers |
 | [`syntax_guide.md`](syntax_guide.md) | Markdown links, LaTeX refs, all 28 `{{VARIABLE}}` tokens, figure label registry | ~194 | Content authors |
@@ -56,6 +56,5 @@ grep -r "from infrastructure\|import infrastructure" projects/template_code_proj
 - [../AGENTS.md](../AGENTS.md) — Full project documentation (API reference, known issues, complete directory map)
 - [../README.md](../README.md) — Project quick start
 - [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory rules and `{{VARIABLE}}` protocol
- - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
-+ - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
+- [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
 - [../../../docs/](../../../docs/) — Repository-level documentation hub (127 files, 14 subdirectories)

@@ -37,12 +37,12 @@ flowchart LR
 
 ## AGENTS.md Requirements
 
-### Purpose
+### AGENTS.md - Purpose
 - **technical documentation** for understanding and working with directory contents
 - **AI agent friendly** - structured for automated parsing and comprehension
 - **Developer reference** - details for implementation and maintenance
+### AGENTS.md - Content Structure
 
-### Content Structure
 1. **Overview** (50-100 words) - What this directory does, why it exists, who uses it
 2. **Key Concepts** (optional) - Terminology, architecture, important principles
 3. **Directory Structure** - File organization and purpose of each file
@@ -55,7 +55,7 @@ flowchart LR
 10. **Best Practices** - Do's and don'ts, performance tips, security considerations
 11. **See Also / References** - Related documentation, external resources, cross-references
 
-### Length Guidelines
+### AGENTS.md - Length Guidelines
 - **Minimum**: 100 lines for simple directories
 - **Typical**: 200-500 lines for most directories
 - **Maximum**: 600 lines (split into specialized files if exceeded)
@@ -91,7 +91,8 @@ flowchart LR
 | `tests/` | ✅ Testing philosophy | ✅ Quick reference | Test suites |
 | `projects/` | ✅ Project structure guide | ✅ Quick reference | Research code |
 | `docs/` | ✅ Documentation organization | ✅ Quick reference | Documentation hub |
-| `.cursorrules/` | ✅ Standards overview | ✅ Quick reference | Development guidelines |
+| Root `.cursorrules` | — | — | Cursor IDE rule file (repository root) |
+| `docs/rules/` | ✅ Standards overview | ✅ Quick reference | Development guidelines (Markdown corpus) |
 
 ### Infrastructure Subdirectories
 
@@ -161,8 +162,8 @@ flowchart LR
 
 This standard integrates with:
 
-- [`.cursorrules/documentation_standards.md`](documentation_standards.md) - Detailed AGENTS.md/README.md writing guidelines
-- [`.cursorrules/AGENTS.md`](AGENTS.md) - System overview and navigation
+- [`documentation_standards.md`](documentation_standards.md) — AGENTS.md/README.md writing guidelines
+- [`AGENTS.md`](AGENTS.md) — Standards hub overview (this directory)
 - [Root `AGENTS.md`](../AGENTS.md) - Directory-level documentation section
 
 ### Quality Assurance

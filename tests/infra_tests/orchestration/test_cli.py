@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import subprocess
 import sys
 from pathlib import Path
@@ -26,9 +27,7 @@ def test_build_parser_help_works() -> None:
 
 def test_build_parser_recognizes_pipeline_subcommand() -> None:
     parser = build_parser()
-    ns = parser.parse_args(
-        ["pipeline", "--project", "template_code_project", "--core-only"]
-    )
+    ns = parser.parse_args(["pipeline", "--project", "template_code_project", "--core-only"])
     assert ns.command == "pipeline"
     assert ns.project == "template_code_project"
     assert ns.core_only is True
@@ -64,9 +63,7 @@ def test_resolve_repo_root_respects_override(tmp_path: Path) -> None:
 
 def test_cmd_menu_prints_to_stdout(fake_repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
     parser = build_parser()
-    ns = parser.parse_args(
-        ["--repo-root", str(fake_repo), "menu", "--project", "template_code_project"]
-    )
+    ns = parser.parse_args(["--repo-root", str(fake_repo), "menu", "--project", "template_code_project"])
     rc = _cmd_menu(ns)
     captured = capsys.readouterr()
     assert rc == 0
@@ -186,9 +183,11 @@ def patch_runner(monkeypatch: pytest.MonkeyPatch):
 def test_cmd_pipeline_with_explicit_project(fake_repo: Path, patch_runner) -> None:
     rc = main(
         [
-            "--repo-root", str(fake_repo),
+            "--repo-root",
+            str(fake_repo),
             "pipeline",
-            "--project", "template_code_project",
+            "--project",
+            "template_code_project",
         ]
     )
     assert rc == 0
@@ -225,9 +224,7 @@ def test_cmd_pipeline_no_projects(tmp_path: Path, patch_runner) -> None:
 
 
 def test_cmd_pipeline_all_projects_routes_to_multi(fake_repo: Path, patch_runner) -> None:
-    rc = main(
-        ["--repo-root", str(fake_repo), "pipeline", "--all-projects", "--core-only"]
-    )
+    rc = main(["--repo-root", str(fake_repo), "pipeline", "--all-projects", "--core-only"])
     assert rc == 0
     spy = patch_runner["last"]
     assert len(spy.multi_runs) == 1
@@ -237,10 +234,14 @@ def test_cmd_pipeline_all_projects_routes_to_multi(fake_repo: Path, patch_runner
 def test_cmd_pipeline_core_only(fake_repo: Path, patch_runner) -> None:
     rc = main(
         [
-            "--repo-root", str(fake_repo),
+            "--repo-root",
+            str(fake_repo),
             "pipeline",
-            "--project", "template_code_project",
-            "--core-only", "--skip-infra", "--resume",
+            "--project",
+            "template_code_project",
+            "--core-only",
+            "--skip-infra",
+            "--resume",
         ]
     )
     assert rc == 0
@@ -272,14 +273,76 @@ def test_cmd_secure_steg_only(fake_repo: Path, monkeypatch: pytest.MonkeyPatch) 
         captured["options"] = options
         return 0
 
-    monkeypatch.setattr(
-        "infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure
-    )
-    rc = main(
-        ["--repo-root", str(fake_repo), "secure", "--steganography-only"]
-    )
+    monkeypatch.setattr("infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure)
+    rc = main(["--repo-root", str(fake_repo), "secure", "--steganography-only"])
     assert rc == 0
     assert captured["options"].steganography_only is True
+
+
+def test_cmd_secure_deterministic_flag_sets_env_var(
+    fake_repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """--deterministic must set STEGANOGRAPHY_DETERMINISTIC=1 before run_secure_pipeline."""
+    monkeypatch.delenv("STEGANOGRAPHY_DETERMINISTIC", raising=False)
+    observed: dict[str, str | None] = {}
+
+    def _fake_run_secure(repo_root, options):
+        import os as _os
+
+        observed["env"] = _os.environ.get("STEGANOGRAPHY_DETERMINISTIC")
+        return 0
+
+    monkeypatch.setattr("infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure)
+    rc = main(
+        [
+            "--repo-root",
+            str(fake_repo),
+            "secure",
+            "--steganography-only",
+            "--deterministic",
+        ]
+    )
+    assert rc == 0
+    assert observed["env"] == "1"
+
+
+def test_cmd_secure_without_deterministic_does_not_set_env_var(
+    fake_repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Omitting --deterministic must leave STEGANOGRAPHY_DETERMINISTIC unset."""
+    monkeypatch.delenv("STEGANOGRAPHY_DETERMINISTIC", raising=False)
+    observed: dict[str, str | None] = {}
+
+    def _fake_run_secure(repo_root, options):
+        import os as _os
+
+        observed["env"] = _os.environ.get("STEGANOGRAPHY_DETERMINISTIC")
+        return 0
+
+    monkeypatch.setattr("infrastructure.orchestration.cli.run_secure_pipeline", _fake_run_secure)
+    rc = main(["--repo-root", str(fake_repo), "secure", "--steganography-only"])
+    assert rc == 0
+    assert observed["env"] is None
+
+
+def test_secure_help_advertises_both_modes() -> None:
+    """`secure --help` must document both modes plus --deterministic."""
+    parser = build_parser()
+    subparsers_action = next(
+        a for a in parser._actions if isinstance(a, argparse._SubParsersAction)
+    )
+    secure_parser = subparsers_action.choices["secure"]
+    text = secure_parser.format_help()
+    # Mode advertisement
+    assert "--steganography-only" in text
+    assert "--project" in text
+    # Examples in epilog
+    assert "Examples:" in text
+    # New flag documented
+    assert "--deterministic" in text
+    assert "STEGANOGRAPHY_DETERMINISTIC" in text
 
 
 def test_cmd_menu_default_project_no_canonical(tmp_path: Path, capsys) -> None:
@@ -360,9 +423,7 @@ def test_interactive_runs_full_pipeline_via_key_9(fake_repo: Path) -> None:
 
     spy = _SpyRunner(fake_repo)
     answers = iter(["9", "q"])
-    rc = _interactive(
-        fake_repo, reader=lambda: next(answers), runner=spy
-    )
+    rc = _interactive(fake_repo, reader=lambda: next(answers), runner=spy)
     assert rc == 0
     assert len(spy.runs) == 1
 
@@ -434,13 +495,16 @@ def test_interactive_multi_d_alone_exits_without_second_prompt(fake_repo: Path, 
     assert out.count("MANUSCRIPT PIPELINE") == 1
 
 
-def test_interactive_p_quit_returns_zero(fake_repo: Path) -> None:
+def test_interactive_p_quit_returns_zero(fake_repo: Path, capsys: pytest.CaptureFixture[str]) -> None:
     from infrastructure.orchestration.cli import _interactive
 
     # 'p' opens picker, then 'q' inside picker => returns None => loop returns 0
     answers = iter(["p", "q"])
     rc = _interactive(fake_repo, reader=lambda: next(answers))
     assert rc == 0
+    out = capsys.readouterr().out
+    assert "Available projects:" in out
+    assert "Choice [index / a=all / q=quit]:" in out
 
 
 def test_interactive_p_all_keeps_loop(fake_repo: Path) -> None:

@@ -4,8 +4,6 @@ This module provides a unified interface for running audits across all validatio
 categorizing issues, and generating structured reports.
 """
 
-from __future__ import annotations
-
 import time
 from pathlib import Path
 from typing import TypedDict

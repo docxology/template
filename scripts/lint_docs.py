@@ -5,11 +5,12 @@ Invokes:
     1. infrastructure.validation.docs.mermaid_lint    — fenced ```mermaid blocks
     2. infrastructure.validation.docs.cross_link_lint — relative Markdown links
     3. infrastructure.validation.docs.consistency_lint — module-count + ghost-project
+    4. infrastructure.validation.docs.doc_pair_lint   — folder-level doc pairs
 
 Exits non-zero if any linter reports a failure. Designed for CI integration.
 
 Usage:
-    uv run python scripts/lint_docs.py [--mermaid-only|--links-only|--consistency-only]
+    uv run python scripts/lint_docs.py [--mermaid-only|--links-only|--consistency-only|--doc-pairs-only]
                                       [--quiet] [--json]
 
 Examples:
@@ -22,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -39,12 +41,20 @@ from infrastructure.core.logging.utils import (  # noqa: E402
 )
 from infrastructure.validation.docs.consistency_lint import (  # noqa: E402
     Inconsistency,
+    check_canonical_count_singularity,
+    check_command_conventions,
+    check_doc_imports_resolve,
     check_module_count_claims,
     check_no_ghost_projects,
+    check_readme_files_list,
 )
 from infrastructure.validation.docs.cross_link_lint import (  # noqa: E402
     BrokenLink,
     find_broken_links,
+)
+from infrastructure.validation.docs.doc_pair_lint import (  # noqa: E402
+    DocPairIssue,
+    find_doc_pair_issues,
 )
 from infrastructure.validation.docs.mermaid_lint import (  # noqa: E402
     ValidationFailure,
@@ -98,8 +108,19 @@ def _run_consistency(repo_root: Path, *, quiet: bool) -> list[Inconsistency]:
     issues: list[Inconsistency] = []
     issues.extend(check_module_count_claims(repo_root))
     issues.extend(check_no_ghost_projects(repo_root))
+    issues.extend(check_command_conventions(repo_root))
+    issues.extend(check_doc_imports_resolve(repo_root))
+    issues.extend(check_readme_files_list(repo_root))
+    issues.extend(check_canonical_count_singularity(repo_root))
     if not quiet:
         logger.info("consistency: %d issues", len(issues))
+    return issues
+
+
+def _run_doc_pairs(repo_root: Path, *, quiet: bool) -> list[DocPairIssue]:
+    issues = find_doc_pair_issues(repo_root)
+    if not quiet:
+        logger.info("doc-pairs: %d issues", len(issues))
     return issues
 
 
@@ -108,6 +129,7 @@ def _emit_text(
     mermaid: list[ValidationFailure] | None,
     links: list[BrokenLink] | None,
     consistency: list[Inconsistency] | None,
+    doc_pairs: list[DocPairIssue] | None,
 ) -> None:
     if mermaid:
         log_header("MERMAID FAILURES", logger)
@@ -121,6 +143,10 @@ def _emit_text(
         log_header("CONSISTENCY ISSUES", logger)
         for ic in consistency:
             logger.error(ic.format())
+    if doc_pairs:
+        log_header("DOC-PAIR ISSUES", logger)
+        for issue in doc_pairs:
+            logger.error(issue.format())
 
 
 def _emit_json(
@@ -128,6 +154,7 @@ def _emit_json(
     mermaid: list[ValidationFailure] | None,
     links: list[BrokenLink] | None,
     consistency: list[Inconsistency] | None,
+    doc_pairs: list[DocPairIssue] | None,
     repo_root: Path,
 ) -> None:
     payload: dict[str, Any] = {
@@ -166,6 +193,14 @@ def _emit_json(
             }
             for i in (consistency or [])
         ],
+        "doc_pairs": [
+            {
+                "path": str(issue.path),
+                "missing_readme": issue.missing_readme,
+                "missing_agents": issue.missing_agents,
+            }
+            for issue in (doc_pairs or [])
+        ],
     }
     sys.stdout.write(json.dumps(payload, indent=2) + "\n")
 
@@ -185,8 +220,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mermaid-only", action="store_true")
     parser.add_argument("--links-only", action="store_true")
     parser.add_argument("--consistency-only", action="store_true")
+    parser.add_argument("--doc-pairs-only", action="store_true")
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument(
+        "--strict-mermaid",
+        action="store_true",
+        help=(
+            "Treat a missing mmdc binary as a hard failure (exit 2). Default: a "
+            "missing mmdc is a graceful skip locally, but is auto-strict under CI "
+            "(the `CI` env var) so the gate stays enforced where it matters."
+        ),
+    )
     parser.add_argument(
         "--repo-root",
         type=Path,
@@ -196,39 +241,67 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     only_flags = sum(
-        1 for f in (args.mermaid_only, args.links_only, args.consistency_only) if f
+        1
+        for f in (
+            args.mermaid_only,
+            args.links_only,
+            args.consistency_only,
+            args.doc_pairs_only,
+        )
+        if f
     )
     if only_flags > 1:
-        parser.error("pass at most one of --mermaid-only, --links-only, --consistency-only")
+        parser.error(
+            "pass at most one of --mermaid-only, --links-only, "
+            "--consistency-only, --doc-pairs-only"
+        )
 
-    run_mermaid = not (args.links_only or args.consistency_only)
-    run_links = not (args.mermaid_only or args.consistency_only)
-    run_consistency = not (args.mermaid_only or args.links_only)
+    run_mermaid = not (args.links_only or args.consistency_only or args.doc_pairs_only)
+    run_links = not (args.mermaid_only or args.consistency_only or args.doc_pairs_only)
+    run_consistency = not (args.mermaid_only or args.links_only or args.doc_pairs_only)
+    run_doc_pairs = not (args.mermaid_only or args.links_only or args.consistency_only)
 
     repo_root = args.repo_root.resolve()
 
     mermaid_failures: list[ValidationFailure] | None = None
     broken_links: list[BrokenLink] | None = None
     consistency: list[Inconsistency] | None = None
+    doc_pairs: list[DocPairIssue] | None = None
     runtime_error: str | None = None
 
+    # mmdc is an optional local tool: missing it must not make the whole harness
+    # unrunnable pre-push (that just gets the harness skipped, and rot creeps in
+    # between CI runs). Default = graceful skip + warning. Strict (hard exit 2)
+    # iff --strict-mermaid OR running under CI (`CI` env), so the gate stays
+    # enforced exactly where mmdc is provisioned (see .github/workflows/ci.yml).
+    mermaid_strict = bool(args.strict_mermaid or os.environ.get("CI"))
     if run_mermaid:
         try:
             mermaid_failures = _run_mermaid(repo_root, quiet=args.quiet)
         except RuntimeError as e:
-            runtime_error = str(e)
             mermaid_failures = []
-            if not args.quiet:
-                logger.error("mermaid lint cannot run: %s", e)
+            if mermaid_strict:
+                runtime_error = str(e)
+                if not args.quiet:
+                    logger.error("mermaid lint cannot run (strict): %s", e)
+            elif not args.quiet:
+                logger.warning(
+                    "mermaid lint SKIPPED (mmdc unavailable): %s — "
+                    "not failing locally; CI enforces it strictly.",
+                    e,
+                )
     if run_links:
         broken_links = _run_links(repo_root, quiet=args.quiet)
     if run_consistency:
         consistency = _run_consistency(repo_root, quiet=args.quiet)
+    if run_doc_pairs:
+        doc_pairs = _run_doc_pairs(repo_root, quiet=args.quiet)
 
     fail = bool(
         (mermaid_failures and len(mermaid_failures) > 0)
         or (broken_links and len(broken_links) > 0)
         or (consistency and len(consistency) > 0)
+        or (doc_pairs and len(doc_pairs) > 0)
         or runtime_error
     )
 
@@ -237,6 +310,7 @@ def main(argv: list[str] | None = None) -> int:
             mermaid=mermaid_failures,
             links=broken_links,
             consistency=consistency,
+            doc_pairs=doc_pairs,
             repo_root=repo_root,
         )
     elif not args.quiet or fail:
@@ -244,6 +318,7 @@ def main(argv: list[str] | None = None) -> int:
             mermaid=mermaid_failures,
             links=broken_links,
             consistency=consistency,
+            doc_pairs=doc_pairs,
         )
         if not fail:
             log_success("All documentation linters passed", logger)

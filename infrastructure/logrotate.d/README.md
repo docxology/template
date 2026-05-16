@@ -2,7 +2,7 @@
 
 > Log rotation configs for pipeline and agent logs
 
-**Quick Reference:** [template](template) | [Rotation Script](../../docs/operations/scripts/rotate-logs.sh)
+**Quick Reference:** [template](template) | [Rotation Script](../../docs/operational/scripts/rotate-logs.sh)
 
 ## Contents
 
@@ -22,5 +22,5 @@ logrotate -d /etc/logrotate.d/template
 
 ## See Also
 
-- [Maintenance Procedures](../../docs/operations/maintenance.md) — Full maintenance docs
-- [Rotation Script](../../docs/operations/scripts/rotate-logs.sh) — Manual log rotation
+- [Maintenance Procedures](../../docs/operational/maintenance.md) — Full maintenance docs
+- [Rotation Script](../../docs/operational/scripts/rotate-logs.sh) — Manual log rotation

@@ -1,7 +1,5 @@
 """PDF structure validation and auxiliary file repair utilities."""
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger

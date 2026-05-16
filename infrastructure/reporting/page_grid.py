@@ -5,8 +5,6 @@ Arranges page images in a grid layout and exports as PDF.
 Part of the infrastructure reporting layer (Layer 1) - reusable across projects.
 """
 
-from __future__ import annotations
-
 import math
 from pathlib import Path
 from typing import TYPE_CHECKING

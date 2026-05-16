@@ -29,7 +29,7 @@ graph TD
     B -->|Unknown error| F[Common Errors Guide]
     B -->|Everything broken| G[Recovery Procedures]
     B -->|LLM review| H[LLM Review Guide]
-    
+
     C --> I[environment-setup.md]
     D --> J[build-tools.md]
     E --> K[test-failures.md]

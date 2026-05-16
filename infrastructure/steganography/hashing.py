@@ -5,8 +5,6 @@ sidecar.  Hash values are also embedded in barcodes and PDF metadata by
 other submodules.
 """
 
-from __future__ import annotations
-
 import hashlib
 import json
 from pathlib import Path

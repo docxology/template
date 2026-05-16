@@ -1,6 +1,6 @@
 # Style Guide
 
-This document defines the coding and communication style for the `code_project` exemplar. Every rule here has a concrete consequence for test correctness, reproducibility, or manuscript accuracy.
+This document defines the coding and communication style for the `template_code_project` exemplar. Every rule here has a concrete consequence for test correctness, reproducibility, or manuscript accuracy.
 
 ---
 
@@ -49,7 +49,7 @@ Project code must delegate cross-cutting concerns to `infrastructure/`. The dele
 | `src/optimizer.py` | `numpy`, `dataclasses`, `logging` (stdlib), `typing` | **Anything from `infrastructure.*`** |
 | `scripts/optimization_analysis.py` | `src/optimizer`, `infrastructure.core.logging.utils`, `infrastructure.scientific.*`, `infrastructure.reporting.*`, `infrastructure.validation.*`, `infrastructure.core.progress` | Business logic (math, gradient update rules) |
 | `scripts/generate_api_docs.py` | `src/optimizer`, `infrastructure.core.logging.utils` | Math |
-| `scripts/z_generate_manuscript_variables.py` | `src/optimizer` (for computing analytical optimum), `infrastructure.core.logging.utils` | Infrastructure modules that write files |
+| `scripts/z_generate_manuscript_variables.py` | `src/manuscript_variables`, `infrastructure.rendering.manuscript_injection` | Business logic; direct infrastructure I/O (delegated via src) |
 | `tests/test_optimizer.py` | `src/optimizer`, `scripts/optimization_analysis` (via `INFRASTRUCTURE_AVAILABLE` guard) | `unittest.mock.*`, `infrastructure.*` directly |
 
 **Verify `src/` is clean**:
@@ -126,7 +126,8 @@ When AI agents or humans refer to files in logs, documentation, comments, or imp
 | test suite | `projects/template_code_project/tests/test_optimizer.py` |
 | conftest | `projects/template_code_project/tests/conftest.py` |
 | analysis script | `projects/template_code_project/scripts/optimization_analysis.py` |
-| variable hydration | `projects/template_code_project/scripts/z_generate_manuscript_variables.py` |
+| variable hydration (logic) | `projects/template_code_project/src/manuscript_variables.py` |
+| variable hydration (runner) | `projects/template_code_project/scripts/z_generate_manuscript_variables.py` |
 | config | `projects/template_code_project/manuscript/config.yaml` |
 | results CSV | `projects/template_code_project/output/data/optimization_results.csv` |
 | final PDF | `output/template_code_project/template_code_project_combined.pdf` |

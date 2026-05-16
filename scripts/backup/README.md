@@ -12,5 +12,5 @@ This directory is a placeholder for backup-specific scripts. Current backup scri
 
 ## See Also
 
-- [Maintenance Procedures](../../docs/operations/maintenance.md) — Backup strategy and schedule
+- [Maintenance Procedures](../../docs/operational/maintenance.md) — Backup strategy and schedule
 - [Scripts README](../README.md) — All pipeline scripts

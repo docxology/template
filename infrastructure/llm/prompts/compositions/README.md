@@ -1,189 +1,119 @@
 # Prompt Compositions - Quick Reference
 
-Pre-built prompt combinations for common research tasks.
+Retry and format-enforcement JSON entries loaded by `PromptFragmentLoader.load_composition()`
+and injected by `PromptComposer.add_retry_prompt()`.
 
 ## Overview
 
-Prompt compositions are pre-assembled combinations of fragments designed for specific research workflows. They provide ready-to-use prompts for common tasks like manuscript review, literature synthesis, and code analysis.
+This directory contains JSON data files only — there is no Python package here.
+Compositions are pre-written reinforcement strings prepended to an existing prompt
+when an LLM response fails a quality or relevance check. They are not assembled
+from fragments; each entry stores a ready-made `content` string directly.
 
-## Quick Start
+The only file currently present is `retry_prompts.json`.
 
-```python
-from infrastructure.llm.prompts.composer import load_composition
-
-# Load pre-built composition
-composition = load_composition("manuscript_review")
-
-# Apply with context
-prompt = composition.apply(context={
-    "manuscript": manuscript_text,
-    "focus_areas": ["methodology", "results"]
-})
-```
-
-## Available Compositions
-
-### Manuscript Review (`retry_prompts.json`)
-
-manuscript review with retry logic:
+## Loading Compositions
 
 ```python
-from infrastructure.llm.prompts.compositions import load_retry_composition
+from infrastructure.llm.prompts import PromptFragmentLoader, PromptComposer
 
-# Load review composition
-review = load_retry_composition("comprehensive_review")
+loader = PromptFragmentLoader()
 
-# Generate review prompt
-prompt = review.build_prompt(
-    manuscript=text,
-    review_type="comprehensive"
-)
+# Load a composition entry directly
+entry = loader.load_composition("retry_prompts.json#off_topic_reinforcement")
+# Returns: {"version": "1.0", "content": "IMPORTANT: You must review..."}
+
+# Prepend the appropriate reinforcement to an existing prompt
+composer = PromptComposer(loader=loader)
+reinforced_prompt = composer.add_retry_prompt(base_prompt, retry_type="off_topic")
+# Internally calls: loader.load_composition("retry_prompts.json#off_topic_reinforcement")
+# Prepends content to base_prompt; returns base_prompt unchanged if key not found.
 ```
 
-### Literature Synthesis
+## `retry_prompts.json` — Entries
 
-Synthesize multiple papers into coherent review:
+### `off_topic_reinforcement`
 
-```python
-composition = load_composition("literature_synthesis")
-
-prompt = composition.apply(context={
-    "papers": paper_summaries,
-    "focus": "methodological approaches"
-})
-```
-
-### Code Review
-
-Structured code quality assessment:
-
-```python
-composition = load_composition("code_review")
-
-prompt = composition.apply(context={
-    "code": code_snippet,
-    "focus": ["performance", "readability"]
-})
-```
-
-## Composition Structure
-
-Compositions are defined in JSON:
+Prepended when the LLM generates generic or hypothetical content instead of
+analyzing the supplied manuscript:
 
 ```json
 {
-  "composition_name": {
-    "fragments": [
-      "system_prompts.research_reviewer",
-      "content_requirements.comprehensive_analysis",
-      "format_requirements.structured_output"
-    ],
-    "context_variables": ["manuscript", "focus_areas"],
-    "metadata": {
-      "description": "manuscript review",
-      "version": "1.0"
-    }
+  "off_topic_reinforcement": {
+    "version": "1.0",
+    "content": "IMPORTANT: You must review the ACTUAL manuscript text provided below..."
   }
 }
 ```
 
-## Creating Custom Compositions
+`add_retry_prompt(prompt, retry_type="off_topic")` selects this entry.
 
-### Define Composition
+### `format_enforcement` (nested object)
+
+Four sub-keys targeting specific review types. Referenced as
+`"retry_prompts.json#format_enforcement.executive_summary"` etc. using dot-notation:
+
+| Sub-key | Prepended instruction |
+| --- | --- |
+| `format_enforcement.executive_summary` | Exact headers: Overview, Key Contributions, Methodology Summary, Principal Results, Significance and Impact |
+| `format_enforcement.quality_review` | Include `**Score: [1-5]**` in every scoring section |
+| `format_enforcement.methodology_review` | Include all required sections with proper markdown headers |
+| `format_enforcement.improvement_suggestions` | Each improvement must include WHAT / WHY / HOW |
+
+## How `add_retry_prompt` Works
+
+```python
+# Simplified logic from composer.py
+def add_retry_prompt(self, base_prompt: str, retry_type: str = "off_topic") -> str:
+    retry_entry = self.loader.load_composition(
+        f"retry_prompts.json#{retry_type}_reinforcement"
+    )
+    content = retry_entry.get("content", "") if isinstance(retry_entry, dict) else str(retry_entry)
+    if content.strip():
+        return f"{content}\n\n{base_prompt}"
+    return base_prompt  # silently returns base if key not found
+```
+
+The `retry_type` argument maps to a `{retry_type}_reinforcement` key in
+`retry_prompts.json`. If the key does not exist, `load_composition` raises
+`LLMTemplateError` which `add_retry_prompt` catches and silently swallows,
+returning the original prompt unchanged.
+
+## Composition JSON Schema
 
 ```json
-// custom_compositions.json
 {
-  "custom_review": {
-    "fragments": [
-      "system_prompts.research_assistant",
-      "content_requirements.brief_summary",
-      "format_requirements.bullet_points"
-    ],
-    "context_variables": ["text"],
-    "metadata": {
-      "description": "Quick summary composition",
-      "version": "1.0"
-    }
+  "entry_name": {
+    "version": "1.0",
+    "content": "IMPORTANT: Reinforcement text prepended to the original prompt.\n\n"
   }
 }
 ```
 
-### Use Custom Composition
+Nested sub-objects use the same shape and are accessed via dot-notation in the
+loader reference string.
 
-```python
-from infrastructure.llm.prompts.composer import load_composition
+## Adding New Compositions
 
-composition = load_composition(
-    "custom_review",
-    custom_path="custom_compositions.json"
-)
-
-prompt = composition.apply(context={"text": document_text})
-```
-
-## Retry Compositions
-
-Special compositions with built-in retry logic:
-
-```python
-from infrastructure.llm.prompts.compositions import RetryComposition
-
-# Create retry composition
-retry_comp = RetryComposition(
-    base_composition="manuscript_review",
-    retry_strategies=["clarify", "simplify", "expand"]
-)
-
-# Apply with automatic retry
-result = retry_comp.apply_with_retry(
-    context={"manuscript": text},
-    max_retries=3
-)
-```
-
-## Integration
-
-### Pipeline Usage
-
-```python
-# scripts/06_llm_review.py
-from infrastructure.llm.prompts.composer import load_composition
-
-def generate_review(manuscript_path):
-    composition = load_composition("manuscript_review")
-    
-    with open(manuscript_path) as f:
-        text = f.read()
-    
-    prompt = composition.apply(context={"manuscript": text})
-    return llm_client.query(prompt)
-```
+1. Add a new top-level key (or nested object) to `retry_prompts.json` following
+   the `{"version": "...", "content": "..."}` schema.
+2. Call it via `loader.load_composition("retry_prompts.json#your_key")`, or define
+   a new `retry_type` string and rely on `add_retry_prompt`'s `{retry_type}_reinforcement`
+   naming convention.
+3. No Python code changes are needed for new entries that follow the existing schema.
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[Composition System] --> B[Fragment Loading]
-    A --> C[Context Injection]
-    A --> D[Prompt Assembly]
-
-    B --> E[System Prompts]
-    B --> F[Content Requirements]
-    B --> G[Format Requirements]
-
-    C --> H[Variable Substitution]
-    C --> I[Context Validation]
-
-    D --> J[Final Prompt]
-    E --> J
-    F --> J
-    G --> J
-    H --> J
+    A[add_retry_prompt] --> B[loader.load_composition]
+    B --> C[compositions/retry_prompts.json]
+    A --> D[prepend content to base_prompt]
+    D --> E[Reinforced Prompt String]
 ```
 
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - compositions documentation
 - [../README.md](../README.md) - Prompts module overview
-- [../fragments/README.md](../fragments/README.md) - Fragment library
+- [../fragments/README.md](../fragments/README.md) - Fragment JSON files

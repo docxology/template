@@ -33,13 +33,13 @@ Development standards and coding guidelines for the Research Project Template.
 
 - **Layer 1: Infrastructure** (`infrastructure/`): Generic, reusable tools
   - Works with any project
-  - 60% minimum test coverage required (currently achieving 83.33% - exceeds stretch goal!)
+  - 60% minimum test coverage required (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
   - Can be copied to other repositories
 
 - **Layer 2: Project** (`projects/`): Research-specific code
   - Domain-specific algorithms and analysis
   - Uses Layer 1 tools
-  - 90% minimum test coverage required (currently achieving 100% - coverage!)
+  - 90% minimum test coverage required (current % — see [canonical_facts.md](../_generated/canonical_facts.md))
 
 ### Thin Orchestrator Pattern
 
@@ -50,10 +50,10 @@ Development standards and coding guidelines for the Research Project Template.
 
 ### Quality Standards
 
-- **Tests**: 60% infrastructure minimum, 90% project minimum (currently 83.33% infra, 100% project) with data (no mocks)
+- **Tests**: 60% infrastructure minimum, 90% project minimum (current % — see [coverage-gaps.md](../development/coverage-gaps.md)) with data (no mocks)
 - **Types**: Type hints on all public APIs and functions
 - **Docs**: AGENTS.md + README.md for every directory
-- **Errors**: Use custom exception hierarchy from `infrastructure.core.runtime.exceptions`
+- **Errors**: Use custom exception hierarchy from `infrastructure.core.exceptions`
 - **Logging**: Unified logging via `infrastructure.core.logging.utils`
 
 ### Terminology Standards
@@ -80,7 +80,7 @@ from pathlib import Path
 
 # Infrastructure core utilities
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.runtime.exceptions import TemplateError
+from infrastructure.core.exceptions import TemplateError
 
 # Type hints
 from typing import List, Dict, Optional
@@ -101,7 +101,7 @@ logger.error("Operation failed", exc_info=True)
 ### Errors
 
 ```python
-from infrastructure.core.runtime.exceptions import ValidationError
+from infrastructure.core.exceptions import ValidationError
 
 try:
     result = operation()
@@ -114,11 +114,11 @@ except ValueError as e:
 ```python
 def process_data(items: list[str], count: int = 10) -> dict[str, int]:
     """Process data with type hints.
-    
+
     Args:
         items: List of strings to process
         count: Number of items to process (default 10)
-        
+
     Returns:
         Dictionary mapping item to processed count
     """

@@ -4,7 +4,7 @@ Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
-**Counting:** The overview table lists **16** documented areas — including **Orchestration** (CLI/menu runner) and **Prose** (editorial analytics) alongside Skills and Telemetry-as-first-class. **Reference**, **Search**, and **Orchestration** are distinct Python trees under [`infrastructure/`](../../infrastructure/); older guides that cite *13 subpackages* reflect an earlier rollup (often folding telemetry into `core/`). See [`infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) for the current diagram. <!-- noqa: docs-lint — historical-context reference to a prior rollup count -->
+**Counting:** **18** overview rows below cover the **16** importable Python packages under `infrastructure/` (see [canonical_facts.md](../_generated/canonical_facts.md)) plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). `infrastructure/config/`, `infrastructure/docker/`, and `infrastructure/logrotate.d/` have no `__init__.py`.
 
 ---
 
@@ -20,6 +20,8 @@ Reference for Layer-1 infrastructure modules.
 | **LLM** | Local LLM & literature | Ollama integration, templates, literature search | [Details](guides/llm-module.md) |
 | **Rendering** | Multi-format output | PDF, slides, web, poster | [Details](guides/rendering-module.md) |
 | **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
+| **Search** | Literature backends | Discovery, caches, full-text helpers | [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) |
+| **Reference** | Bibliographic utilities | BibTeX models, parser/writer | [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md) |
 | **Project** | Project discovery | Multi-project orchestration | [Details](guides/project-module.md) |
 | **Steganography** | Provenance & watermarking | Alpha-channel overlays, QR barcodes, PDF metadata | [Details](guides/steganography-module.md) |
 | **Config** | Configuration schemas | Secure config, environment templates | [Details](guides/config-module.md) |

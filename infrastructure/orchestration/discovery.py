@@ -11,13 +11,11 @@ additions used by the interactive menu and CLI:
   callable and an output callable so tests can drive it without stdin.
 
 The 3 always-present canonical projects are
-``template_code_project``, ``template_prose_project``, and
-``template_search_project``. All other names rotate and must NEVER be
+``projects/template_code_project``, ``projects/template_prose_project``, and
+    other active projects listed in ``docs/_generated/active_projects.md``
 hard-coded; they come from
 :func:`infrastructure.project.discovery.discover_projects` at runtime.
 """
-
-from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -105,6 +103,10 @@ def select_project_interactive(
             _emit(f"  {marker} {idx}. {info.qualified_name}")
         _emit("  a. Run all projects")
         _emit("  q. Quit")
+
+        if writer is not None:
+            writer.write("Choice [index / a=all / q=quit]: ")
+            writer.flush()
 
         try:
             choice = reader().strip()

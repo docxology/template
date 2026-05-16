@@ -4,10 +4,7 @@ Extracted from exceptions.py for single-responsibility. Import via exceptions.py
 for backwards compatibility.
 """
 
-from __future__ import annotations
-
 from infrastructure.core._exceptions_core import TemplateError
-
 
 # LITERATURE SEARCH ERRORS
 # =============================================================================

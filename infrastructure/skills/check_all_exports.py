@@ -49,8 +49,6 @@ From the CLI (wired into the existing skills CLI)::
     uv run python -m infrastructure.skills check-all-exports
 """
 
-from __future__ import annotations
-
 import ast
 from dataclasses import dataclass
 from pathlib import Path
@@ -59,7 +57,6 @@ from typing import Iterator, Sequence
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
-
 
 __all__ = [
     "AllExportViolation",
@@ -70,7 +67,6 @@ __all__ = [
     "module_has_dunder_all",
     "is_top_level_reexport_node",
 ]
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Public dataclass

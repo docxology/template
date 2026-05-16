@@ -1,7 +1,5 @@
 """Helper functions for prompt template generation."""
 
-from __future__ import annotations
-
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)

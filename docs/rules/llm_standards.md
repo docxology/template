@@ -149,7 +149,7 @@ opts = GenerationOptions(
 ### Output Validation
 
 ```python
-from infrastructure.llm import OutputValidator
+from infrastructure.llm import OutputValidator  # noqa: docs-lint
 
 # Validate JSON
 data = OutputValidator.validate_json(response)
@@ -224,7 +224,7 @@ from scripts import (
 if is_off_topic(response):
     client.reset()  # Reset context
     # Retry with reinforced prompt
-    
+
 # Check conversational phrases (warning only)
 phrases = detect_conversational_phrases(response)
 
@@ -309,12 +309,12 @@ This structure ensures the LLM focuses on the actual manuscript content.
 ```python
 def validate_review_quality(response: str, review_type: str) -> Tuple[bool, List[str]]:
     issues = []
-    
+
     # Always check off-topic first
     if is_off_topic(response):
         issues.append("Response appears off-topic or confused")
         return False, issues
-    
+
     # Type-specific validation
     if review_type == "executive_summary":
         # Check for required sections
@@ -322,19 +322,19 @@ def validate_review_quality(response: str, review_type: str) -> Tuple[bool, List
         found = sum(1 for h in headers if h.lower() in response.lower())
         if found < 3:
             issues.append(f"Missing expected structure (found {found}/5)")
-    
+
     elif review_type == "quality_review":
         # Check for scoring
         if not re.search(r'\*\*Score:\s*\d\*\*|Score:\s*\d', response, re.I):
             issues.append("Missing scoring rubric")
-    
+
     elif review_type == "improvement_suggestions":
         # Check for priority sections
         priorities = ["high priority", "medium priority", "low priority"]
         found = sum(1 for p in priorities if p in response.lower())
         if found < 2:
             issues.append(f"Missing priority sections (found {found}/3)")
-    
+
     elif review_type == "translation":
         # Check for English abstract and translation sections
         has_english = any([
@@ -351,7 +351,7 @@ def validate_review_quality(response: str, review_type: str) -> Tuple[bool, List
             issues.append("Missing English abstract section")
         if not has_translation:
             issues.append("Missing translation section")
-    
+
     return len(issues) == 0, issues
 ```
 
@@ -360,7 +360,7 @@ def validate_review_quality(response: str, review_type: str) -> Tuple[bool, List
 ### LLM-Specific Exceptions
 
 ```python
-from infrastructure.core.runtime.exceptions import (
+from infrastructure.core.exceptions import (
     LLMConnectionError,
     LLMTemplateError,
     ValidationError,
@@ -385,7 +385,7 @@ except ValidationError as e:
 ### Connection Checking
 
 ```python
-from infrastructure.llm import is_ollama_running, select_best_model, OllamaClientConfig
+from infrastructure.llm import is_ollama_running, select_best_model, OllamaClientConfig  # noqa: docs-lint
 
 # Check before starting
 if not is_ollama_running():
@@ -429,7 +429,7 @@ class TestLLMIntegration:
     def check_ollama(self):
         if not is_ollama_running():
             pytest.skip("Ollama not running")
-    
+
     def test_query(self):
         client = LLMClient()
         response = client.query("Hello")
@@ -506,7 +506,7 @@ summary = client.apply_template(
 )
 
 # List available templates
-from infrastructure.llm.templates import TEMPLATE_REGISTRY
+from infrastructure.llm.templates import TEMPLATE_REGISTRY  # noqa: docs-lint
 print(list(TEMPLATE_REGISTRY.keys()))
 ```
 
@@ -522,7 +522,7 @@ ${content}
 
 Provide your analysis with these sections:
 ## Strengths
-## Weaknesses  
+## Weaknesses
 ## Suggestions for Improvement
 """
 
@@ -536,7 +536,7 @@ result = template.render(content=methodology_text)
 The system includes a translation template for generating technical abstracts in multiple languages:
 
 ```python
-from infrastructure.llm import ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES
+from infrastructure.llm import ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES  # noqa: docs-lint
 
 # Supported languages
 TRANSLATION_LANGUAGES = {
@@ -623,7 +623,7 @@ LLMs can sometimes get stuck in output loops, repeating the same content. The va
 | < 50% | Error | Fail validation, retry |
 
 ```python
-from infrastructure.llm import detect_repetition, deduplicate_sections
+from infrastructure.llm import detect_repetition, deduplicate_sections  # noqa: docs-lint
 
 # Check for repetition
 has_rep, duplicates, unique_ratio = detect_repetition(response)
@@ -717,7 +717,7 @@ is_valid, issues = validate_review_quality(response, review_type)
 # Check off-topic before structural validation
 if is_off_topic(response):
     # Retry immediately
-    
+
 # Use format enforcement on retry
 if attempt > 0:
     prompt = FORMAT_ENFORCEMENT[type] + original_prompt
@@ -784,8 +784,8 @@ config = OllamaClientConfig(default_model="some-model")  # Use env vars or from_
 
 ---
 
-**Version**: 1.2.0  
-**Last Updated**: 2026-04-08  
-**Status**: (includes translation feature; testing guidance aligned with pytest_httpserver suite)  
+**Version**: 1.2.0
+**Last Updated**: 2026-04-08
+**Status**: (includes translation feature; testing guidance aligned with pytest_httpserver suite)
 **Maintainer**: Template Team
 

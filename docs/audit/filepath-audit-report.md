@@ -26,27 +26,27 @@
 
 **1038 critical issues** requiring immediate attention:
 
-**docs/operations/maintenance.md:250**
+**docs/operational/maintenance.md:250**
 - **Type:** broken_anchor
 - **Target:** `#weekly-operations`
 - **Issue:** Anchor 'weekly-operations' not found in file
 
-**docs/operations/maintenance.md:251**
+**docs/operational/maintenance.md:251**
 - **Type:** broken_anchor
 - **Target:** `#gate-duration-monitoring`
 - **Issue:** Anchor 'gate-duration-monitoring' not found in file
 
-**docs/operations/maintenance.md:252**
+**docs/operational/maintenance.md:252**
 - **Type:** broken_anchor
 - **Target:** `#security-scan-review`
 - **Issue:** Anchor 'security-scan-review' not found in file
 
-**docs/operations/maintenance.md:255**
+**docs/operational/maintenance.md:255**
 - **Type:** broken_anchor
 - **Target:** `#backup-verification`
 - **Issue:** Anchor 'backup-verification' not found in file
 
-**docs/operations/maintenance.md:256**
+**docs/operational/maintenance.md:256**
 - **Type:** broken_anchor
 - **Target:** `#disaster-recovery-drill`
 - **Issue:** Anchor 'disaster-recovery-drill' not found in file

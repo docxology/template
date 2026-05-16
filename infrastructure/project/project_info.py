@@ -4,8 +4,6 @@ This module defines the data structure used to represent a discovered
 project and its directory layout within the repository.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any

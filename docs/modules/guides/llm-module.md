@@ -2,7 +2,7 @@
 
 > **Local LLM assistance for research workflows**
 
-**Location:** `infrastructure/llm/core.py`  
+**Location:** `infrastructure/llm/core.py`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---

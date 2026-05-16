@@ -4,8 +4,6 @@ Handles server readiness checks, model selection, warmup, and client
 construction with review-specific configuration.
 """
 
-from __future__ import annotations
-
 import os
 import shutil
 import time

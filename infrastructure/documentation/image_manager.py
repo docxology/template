@@ -5,8 +5,6 @@ caption management, label generation, cross-reference creation,
 path management, and validation.
 """
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 

@@ -13,13 +13,14 @@ flowchart TB
     SK --> MAIN[__main__.py<br/>python -m infrastructure.skills]
     SK --> CLI[cli.py<br/>write · check · list-json]
     SK --> DISC[discovery.py<br/>discover_skills · manifest helpers]
+    SK --> CHK[check_all_exports.py<br/>AST audit: re-exporting modules must declare __all__]
     SK --> DOCS[SKILL.md · README.md · AGENTS.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class SK d
-    class INIT,MAIN,CLI,DISC code
+    class INIT,MAIN,CLI,DISC,CHK code
     class DOCS doc
 ```
 

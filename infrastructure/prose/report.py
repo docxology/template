@@ -5,8 +5,6 @@ a :class:`ManuscriptReport` whose JSON form is suitable for CI artefacts
 or downstream rendering.
 """
 
-from __future__ import annotations
-
 import json
 from dataclasses import dataclass, field
 from pathlib import Path

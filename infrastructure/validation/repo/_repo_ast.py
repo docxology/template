@@ -1,7 +1,5 @@
 """AST helpers for repository scanner import verification."""
 
-from __future__ import annotations
-
 import ast
 from pathlib import Path
 

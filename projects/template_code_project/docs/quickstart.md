@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-Get up and running with the `code_project` exemplar in 5 minutes.
+Get up and running with the `template_code_project` exemplar in 5 minutes.
 
 ## Prerequisites
 
@@ -24,13 +24,13 @@ uv run python --version
 
 ## Run the Test Suite
 
-Validate the environment and check that all 96 tests pass with ≥90% coverage:
+Validate the environment and check that the project test suite passes with the ≥90% coverage gate:
 
 ```bash
 uv run pytest projects/template_code_project/tests/ -v --tb=short
 ```
 
-Expected: **96 passed**, coverage ≥ 99% (gate: 90%).
+Expected: passing tests and coverage above the 90% gate. Live collection counts are tracked in [`../../../docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
 
 ## Execute the Analysis Pipeline
 

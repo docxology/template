@@ -1,7 +1,5 @@
 """Markdown report builder for DocumentationScanner results."""
 
-from __future__ import annotations
-
 from infrastructure.validation.docs.models import ScanResults
 
 

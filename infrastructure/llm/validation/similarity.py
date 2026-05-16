@@ -8,8 +8,6 @@ Provides multiple similarity methods (Jaccard, TF-cosine, n-gram sequence)
 and a hybrid combiner used by the repetition detection module.
 """
 
-from __future__ import annotations
-
 import math
 import re
 from collections import Counter

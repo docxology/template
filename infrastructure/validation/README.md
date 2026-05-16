@@ -159,8 +159,8 @@ from infrastructure.validation import (
     validate_pdf_rendering,
     validate_markdown,
     verify_output_integrity,
-    find_manuscript_directory
 )
+from infrastructure.validation.content.markdown_validator import find_manuscript_directory
 
 # Find manuscript directory at standard location
 manuscript_dir = find_manuscript_directory(Path("."))
@@ -353,47 +353,47 @@ print(f"Completeness gaps: {len(results.completeness_gaps)}")
 ### PDF Validation
 ```bash
 # Validate single PDF with verbose output
-python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
+uv run python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Validate with custom word preview length
-python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --words 300
+uv run python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --words 300
 
 # Validate PDF from different path
-python3 -m infrastructure.validation.cli.main pdf /path/to/document.pdf
+uv run python3 -m infrastructure.validation.cli.main pdf /path/to/document.pdf
 ```
 
 ### Markdown Validation
 ```bash
 # Validate markdown in manuscript directory
-python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
+uv run python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
 
 # Strict validation (fail on any issue)
-python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/ --strict
+uv run python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/ --strict
 
 # Validate specific markdown file
-python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/01_abstract.md
+uv run python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/01_abstract.md
 ```
 
 ### Integrity Validation
 ```bash
 # Full integrity check of output directory
-python3 -m infrastructure.validation.cli.main integrity output/
+uv run python3 -m infrastructure.validation.cli.main integrity output/
 
 # Check specific subdirectories
-python3 -m infrastructure.validation.cli.main integrity output/{project_name}/pdf/
-python3 -m infrastructure.validation.cli.main integrity output/data/
+uv run python3 -m infrastructure.validation.cli.main integrity output/{project_name}/pdf/
+uv run python3 -m infrastructure.validation.cli.main integrity output/data/
 
 # Generate integrity manifest for future comparison
-python3 -m infrastructure.validation.cli.main integrity output/ --manifest
+uv run python3 -m infrastructure.validation.cli.main integrity output/ --manifest
 ```
 
 ### Link Validation
 ```bash
 # Validate all links in repository
-python3 -m infrastructure.validation.cli.main links
+uv run python3 -m infrastructure.validation.cli.main links
 
 # Validate links in specific directory
-python3 -m infrastructure.validation.cli.main links docs/
+uv run python3 -m infrastructure.validation.cli.main links docs/
 ```
 
 ## Integration with Build Pipeline
@@ -404,15 +404,15 @@ The validation module is automatically integrated into the build pipeline:
 
 ```bash
 # scripts/03_render_pdf.py - Post-rendering validation
-python3 scripts/03_render_pdf.py --project project
+uv run python3 scripts/03_render_pdf.py --project project
 # Automatically validates generated PDFs
 
 # scripts/04_validate_output.py - Quality assurance
-python3 scripts/04_validate_output.py --project project
+uv run python3 scripts/04_validate_output.py --project project
 # Runs integrity and quality checks
 
 # scripts/05_copy_outputs.py - Final validation
-python3 scripts/05_copy_outputs.py --project project
+uv run python3 scripts/05_copy_outputs.py --project project
 # Validates copied outputs match originals
 ```
 
@@ -524,18 +524,18 @@ validation:
 
 ```bash
 # Run all validation tests
-pytest tests/infra_tests/test_validation/ -v
+uv run pytest tests/infra_tests/test_validation/ -v
 
 # Test specific validator
-pytest tests/infra_tests/test_validation/test_pdf_validator.py -v
-pytest tests/infra_tests/test_validation/test_markdown_validator.py -v
-pytest tests/infra_tests/test_validation/test_integrity.py -v
+uv run pytest tests/infra_tests/test_validation/test_pdf_validator.py -v
+uv run pytest tests/infra_tests/test_validation/test_markdown_validator.py -v
+uv run pytest tests/infra_tests/test_validation/test_integrity.py -v
 
 # Test with coverage
-pytest tests/infra_tests/test_validation/ --cov=infrastructure.validation --cov-report=html
+uv run pytest tests/infra_tests/test_validation/ --cov=infrastructure.validation --cov-report=html
 
 # Integration tests
-pytest tests/integration/test_validation_pipeline.py -v
+uv run pytest tests/integration/test_validation_pipeline.py -v
 ```
 
 ## Troubleshooting
@@ -568,7 +568,7 @@ pytest tests/integration/test_validation_pipeline.py -v
 export LOG_LEVEL=0
 
 # Run validation with verbose output
-python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
+uv run python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Check validation logs
 tail -f logs/validation_*.log

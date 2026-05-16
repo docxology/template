@@ -2,7 +2,7 @@
 
 ## Overview
 
-Technical guide for `projects/template_code_project/docs/` — the operational rulebook for AI agents and developers working inside the `code_project` exemplar. Every document in this directory is a hard constraint, not a suggestion.
+Technical guide for `projects/template_code_project/docs/` — the operational rulebook for AI agents and developers working inside the `template_code_project` exemplar. Every document in this directory is a hard constraint, not a suggestion.
 
 ## File Inventory
 
@@ -12,7 +12,7 @@ Technical guide for `projects/template_code_project/docs/` — the operational r
 | `AGENTS.md` | This index — technical overview of `docs/` | ~100 | Current |
 | `agent_instructions.md` | Behavioral constraints for AI agents (read-first priority) | ~80 | Comprehensive |
 | `architecture.md` | Thin orchestrator flow: layers, dependencies, forbidden patterns, how-to-add-algorithm | ~100 | Comprehensive |
-| `testing_philosophy.md` | Zero-mock policy; 96 collected tests; coverage mechanics; class inventory | ~110 | Comprehensive |
+| `testing_philosophy.md` | Zero-mock policy; 117 collected tests; coverage mechanics; class inventory | ~110 | Comprehensive |
 | `faq.md` | Frequently asked questions about architecture, testing, manuscripts | ~130 | Comprehensive |
 | `troubleshooting.md` | Symptom-driven recipes for common failures | ~170 | Comprehensive |
 | `quickstart.md` | 5-minute first-run walkthrough | ~90 | Comprehensive |

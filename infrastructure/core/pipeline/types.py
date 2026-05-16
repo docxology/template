@@ -5,8 +5,6 @@ other modules to import types without pulling in the full
 PipelineExecutor and its heavy dependency chain.
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, NamedTuple

@@ -71,7 +71,7 @@ Single PDF document containing all manuscript sections in proper order. Generate
 
 test coverage required: 90% minimum for project code, 60% minimum for infrastructure. Enforced by build pipeline before PDF generation.
 
-**Check**: `pytest tests/ --cov=src --cov-report=term-missing`
+**Check**: `uv run pytest tests/ --cov=src --cov-report=term-missing`
 
 **See**: [Test Coverage](#test-coverage)
 
@@ -300,7 +300,7 @@ Configuration information (author, title, DOI, etc.) applied to generated docume
 - `PROJECT_TITLE`
 - `DOI`
 
-**See**: [Configuration System](../AGENTS.md#configuration-system)
+**See**: [Configuration System](../AGENTS.md#directory-structure)
 
 ## R
 
@@ -410,7 +410,7 @@ Percentage of code executed during test runs. This template requires 90% minimum
 - Statement coverage (every line)
 - Branch coverage (every conditional)
 
-**Command**: `pytest tests/ --cov=src --cov-report=term-missing`
+**Command**: `uv run pytest tests/ --cov=src --cov-report=term-missing`
 
 **See**: [Testing](#testing)
 

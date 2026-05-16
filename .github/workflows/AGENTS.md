@@ -10,7 +10,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[/.github/workflows//]
     W --> META[AGENTS.md · README.md]
-    W --> CI[ci.yml<br/>11 jobs + conditional fep-lean + setup-hook Windows]
+    W --> CI[ci.yml<br/>11 jobs — 2 conditional — fep-lean and setup-hook-windows-smoke]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
 
@@ -146,9 +146,10 @@ flowchart TB
   1. **Mermaid** — every fenced \`\`\`mermaid block in `docs/`, `infrastructure/`, `.github/`, `scripts/`, and root `*.md` is rendered with the real `mmdc` binary. Failure exits non-zero.
   2. **Cross-links** — every relative Markdown link must resolve on disk; fenced and inline-code spans are skipped.
   3. **Consistency** — `N Python (sub)packages` claims must match the live count under `infrastructure/`; rotating project names (`fep_lean`, `cogant`, …) must be conditionally framed in long-lived docs.
+  4. **Doc pairs** — permanent-template content folders must carry paired `AGENTS.md` and `README.md`; generated/local paths and rotating projects are excluded.
 - **Escape hatch:** append `<!-- noqa: docs-lint -->` to a Markdown line to suppress consistency or broken-link warnings on that line.
-- **Scope guarantees:** the linter sweeps long-lived doc roots only; `output/`, `projects_archive/`, `projects_in_progress/`, `htmlcov/`, `node_modules/`, `_generated/`, and `audit/` are excluded.
-- **Module:** [`infrastructure/validation/docs/`](../../infrastructure/validation/docs/) — `mermaid_lint.py`, `cross_link_lint.py`, `consistency_lint.py`.
+- **Scope guarantees:** the linter skips generated/local paths such as `output/`, `.venv/`, `.claude/`, `projects_archive/`, `projects_in_progress/`, `htmlcov/`, and `node_modules/`.
+- **Module:** [`infrastructure/validation/docs/`](../../infrastructure/validation/docs/) — `mermaid_lint.py`, `cross_link_lint.py`, `consistency_lint.py`, `doc_pair_lint.py`.
 
 #### 10. Performance Check (`performance`)
 
@@ -255,7 +256,11 @@ uvx ruff format infrastructure/ projects/*/src/
 # Infrastructure
 uv run pytest tests/infra_tests/ -v --tb=long -s
 
-# Project
+# Project tests — prefer the orchestrator (runs one pytest per project; avoids conftest/package collisions):
+uv run python scripts/01_run_tests.py --project template_code_project
+
+# Advanced / blanket globs — running **all** `projects/*/tests/` in **one** pytest process can fail when multiple projects ship `tests/conftest` packages with identical names; use per-project directories instead.
+
 uv run pytest projects/*/tests/ -v --tb=long -s
 
 # Single test
@@ -269,8 +274,8 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
   --cov=infrastructure --cov-report=html
 open htmlcov/index.html
 
-# Project report
-COVERAGE_FILE=.coverage.project uv run pytest projects/*/tests/ \
+# Project report — replace SRC_PATH with `projects/<name>/src` from _generated/active_projects.md when benchmarking coverage manually:
+COVERAGE_FILE=.coverage.project uv run pytest projects/template_code_project/tests/ \
   --cov=projects/template_code_project/src --cov-report=html
 open htmlcov/index.html
 ```

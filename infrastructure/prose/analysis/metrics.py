@@ -17,8 +17,6 @@ linguistic toolkit — it is trying to give a writer-friendly signal during
 manuscript review.
 """
 
-from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 

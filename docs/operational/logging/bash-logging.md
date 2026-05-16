@@ -63,11 +63,11 @@ log_pipeline_error "PDF Rendering" "LaTeX compilation failed" 1 \
 
 ```bash
 # Log stage completion with timing
-log_resource_usage "Setup Environment" 45
+log_resource_usage "Environment Setup" 45
 log_resource_usage "PDF Rendering" 125 "memory: 2.1GB"
 
 # Output:
-# Stage 'Setup Environment' completed in 45s
+# Stage 'Environment Setup' completed in 45s
 # Stage 'PDF Rendering' completed in 2m 5s (memory: 2.1GB)
 ```
 

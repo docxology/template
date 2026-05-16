@@ -5,8 +5,6 @@ Provides the top-level ``generate_executive_summary`` and
 collection, analysis, and report rendering.
 """
 
-from __future__ import annotations
-
 import json
 from dataclasses import asdict
 from datetime import datetime

@@ -145,24 +145,25 @@ class TestSubstituteManuscriptVarPlaceholders:
 
 
 class TestPreprocessCombinedMarkdown:
-    def test_strips_mermaid_blocks(self):
+    def test_leaves_mermaid_blocks_without_manuscript_dir(self):
         content = "Before\n```mermaid\ngraph TD\nA-->B\n```\nAfter"
         result = preprocess_combined_markdown(content)
         assert isinstance(result, CombinedMarkdownResult)
-        assert "mermaid" not in result.content
-        assert result.mermaid_blocks_removed == 1
+        assert "mermaid" in result.content
+        assert result.mermaid_blocks_processed == 0
         assert "Before" in result.content
         assert "After" in result.content
 
-    def test_multiple_mermaid_blocks(self):
+    def test_multiple_mermaid_blocks_without_manuscript_dir_are_not_stripped(self):
         content = "```mermaid\nA\n```\ntext\n```Mermaid\nB\n```"
         result = preprocess_combined_markdown(content)
-        assert result.mermaid_blocks_removed == 2
+        assert result.mermaid_blocks_processed == 0
+        assert result.content == content
 
     def test_no_mermaid(self):
         content = "Regular markdown content"
         result = preprocess_combined_markdown(content)
-        assert result.mermaid_blocks_removed == 0
+        assert result.mermaid_blocks_processed == 0
         assert result.content == content
 
     def test_fixes_figure_paths(self):
@@ -296,13 +297,13 @@ class TestPostprocessLatex:
         result = postprocess_latex(tex)
         assert "hidelinks" not in result
         assert "colorlinks=true" in result
-        assert "urlcolor=blue" in result
+        assert "urlcolor=red" in result
 
     def test_replaces_hidelinks_with_newline(self):
         tex = "\\hypersetup{\n  hidelinks,\n  pdfborder={0 0 0}}"
         result = postprocess_latex(tex)
         assert "colorlinks=true" in result
-        assert "urlcolor=blue" in result
+        assert "urlcolor=red" in result
 
     def test_no_hidelinks_unchanged(self):
         tex = "\\hypersetup{colorlinks=true}"
@@ -330,7 +331,9 @@ class TestPostprocessLatex:
         result = postprocess_latex(tex)
         assert "\\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}" not in result
         assert "\\PassOptionsToPackage{colorlinks=true,linkcolor=blue,urlcolor=blue}{hyperref}" in result
-        assert "\\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}" in result
+        # The hypersetup colour-normaliser rewrites link colours to red after
+        # the duplicate-hyperref rewrite, ensuring a single visual treatment.
+        assert "\\hypersetup{colorlinks=true,linkcolor=red,urlcolor=red}" in result
 
     def test_leaves_plain_hyperref_usepackage_alone(self):
         """``\\usepackage{hyperref}`` without options is harmless — leave intact."""
@@ -406,6 +409,14 @@ class TestVerifyFigureReferences:
         figures_dir.mkdir()
         (figures_dir / "img.png").write_bytes(b"data")
         tex = r"\includegraphics[width=\textwidth]{figures/img.png}"
+        verify_figure_references(tex, figures_dir)
+
+    def test_nested_figures_found(self, tmp_path):
+        figures_dir = tmp_path / "figures"
+        nested_dir = figures_dir / "mermaid_inline"
+        nested_dir.mkdir(parents=True)
+        (nested_dir / "inline_mermaid.png").write_bytes(b"data")
+        tex = r"\includegraphics{../figures/mermaid_inline/inline_mermaid.png}"
         verify_figure_references(tex, figures_dir)
 
     def test_similar_files_logged(self, tmp_path):

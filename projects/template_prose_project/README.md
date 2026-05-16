@@ -2,10 +2,10 @@
 
 A configurable, reproducible **prose-review** pipeline built on
 `infrastructure/prose/` (readability + structure + quality) and
-`infrastructure/reference/` (BibTeX validation). Sister exemplar to
-[`template_code_project`](../template_code_project) (numerical research) and
-[`template_search_project`](../template_search_project) (literature
-discovery).
+`infrastructure/reference/` (BibTeX validation). Permanent sibling exemplar:
+[`template_code_project`](../template_code_project) (numerical research).
+Optional add-on exemplar: [`template_search_project`](../../projects_archive/template_search_project)
+(literature discovery).
 
 ## What it does
 
@@ -93,7 +93,7 @@ of the orchestrator scripts.
 
 * `template_code_project` has its own algorithm (`src/optimizer.py`)
   and runs numerical experiments.
-* `template_search_project` runs literature search and *populates*
+* The optional `template_search_project` add-on runs literature search and *populates*
   `references.bib` from a query.
 * `template_prose_project` runs no algorithm and *validates* an
   existing `references.bib`. Its "experiment" is the editorial-review

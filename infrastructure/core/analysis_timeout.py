@@ -5,8 +5,6 @@ Lean batches (e.g. ``fep_lean``). Override with ``ANALYSIS_SCRIPT_TIMEOUT_SEC`` 
 disable the timeout (``0`` / ``none`` / ``unlimited``).
 """
 
-from __future__ import annotations
-
 import os
 from typing import Mapping
 

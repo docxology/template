@@ -3,8 +3,6 @@
 Builds markdown content for review headers, combined reviews, and metadata.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.llm.core.config import OllamaClientConfig

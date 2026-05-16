@@ -1,7 +1,5 @@
 """Platform integration functions for academic publishing."""
 
-from __future__ import annotations
-
 import shutil
 import tarfile
 from datetime import datetime

@@ -24,7 +24,7 @@ in this project.
 | [`architecture.md`](architecture.md) | Two-layer compliance + data-flow sequence diagram | 79 |
 | [`style_guide.md`](style_guide.md) | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | ~255 |
 | [`syntax_guide.md`](syntax_guide.md) | Pandoc-crossref `[@sec:…]`, all eleven `{{TOKEN}}`s, code blocks, no-figures rationale | ~210 |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock standard; 66 tests; 100% src coverage; integration test | ~140 |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock standard; 67 tests; 100% src coverage; integration test | ~140 |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Four-phase manuscript→PDF flow; config.yaml controls; troubleshooting | ~225 |
 | [`output_conventions.md`](output_conventions.md) | Producer/consumer table for every artefact in `output/` | 64 |
 | [`quickstart.md`](quickstart.md) | 5-step first-run walkthrough | 81 |
@@ -50,7 +50,7 @@ delegation table.
 **Zero-mock enforcement.** No `unittest.mock`, `MagicMock`, `@patch`, or
 `create_autospec` anywhere in `tests/`. Tests use real Markdown, real
 BibTeX, real `tmp_path` directories, and real subprocess invocation. The
-suite collects 66 tests and achieves 100% line + branch coverage on `src/`.
+suite collects 67 tests and achieves 100% line + branch coverage on `src/`.
 
 **Show-not-tell.** Manuscript references must use explicit file paths and
 function names, not vague descriptions. A reader of `02_methodology.md`

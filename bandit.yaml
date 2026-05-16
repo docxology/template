@@ -9,6 +9,10 @@ exclude_dirs:
   - "projects_in_progress"
   - ".venv"
   - "site-packages"
+  # Vendored Lean/Lake package cache (e.g. actinf_policy_entanglement_lean's
+  # lean/MathlibProofs/.lake/packages/mathlib). Third-party, non-authored;
+  # same policy as .venv/site-packages. Harmless no-op on clean checkouts.
+  - ".lake"
 #
 # Policy: CI runs Bandit at MEDIUM+ severity (`-ll`) over `infrastructure/`,
 # `scripts/`, and `projects/` (minus `exclude_dirs` above). The skips below silence LOW-severity findings

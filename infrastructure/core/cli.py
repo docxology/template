@@ -10,16 +10,14 @@ Implementation is split across:
 - ``cli_handlers``: command handler functions
 """
 
-from __future__ import annotations
-
 import sys
 
 from infrastructure.core.logging.utils import get_logger, setup_logger
 from infrastructure.core.errors import CLI_COMMAND_FAILED, CLI_UNKNOWN_COMMAND
 
 # Re-export public API so existing imports continue to work
-from infrastructure.core.cli_parser import create_parser  # noqa: F401
-from infrastructure.core.cli_handlers import (  # noqa: F401
+from infrastructure.core.cli_parser import create_parser
+from infrastructure.core.cli_handlers import (
     handle_discover_command,
     handle_inventory_command,
     handle_multi_project_command,

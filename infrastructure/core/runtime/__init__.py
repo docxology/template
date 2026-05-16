@@ -3,8 +3,6 @@
 Re-exports primary symbols for ``from infrastructure.core.runtime import …`` usage.
 """
 
-from __future__ import annotations
-
 from infrastructure.core.runtime.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.runtime.environment import (
     check_python_version,

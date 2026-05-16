@@ -12,6 +12,7 @@ File cleanup, inventory, and output-copying helpers for `infrastructure.core`.
 - `inventory.py`
 - `inventory_entry.py`
 - `inventory_reports.py`
+- `pdf_locator.py`
 
 ## See Also
 

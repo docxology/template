@@ -1,1 +1,94 @@
-{'Clarity': 'DAG structure is human-readable in YAML\n- **Flexibility:** Easy to insert new stages or change order\n- **Extensibility:** Projects can override stage definitions\n- **Reusability:** Same executor runs any DAG configuration\n\n### Negative\n\n- **YAML syntax errors** possible (but caught early at load)\n- **Circular dependency risk** (validated during DAG construction)\n\n---\n\n## Examples\n\nDefault DAG (10 stages):\n\n```yaml\nstages:\n  - name: Clean Output Directories\n    method: _run_clean_outputs\n  - name: Environment Setup\n    script: 00_setup_environment.py\n    depends_on: [Clean Output Directories]\n  - name: Infrastructure Tests\n    script: 01_run_tests.py\n    args: [--infra-only', 'depends_on': ['Environment Setup]\n  - name: Project Tests\n    script: 01_run_tests.py\n    args: [--project-only, --verbose]\n    depends_on: [Environment Setup]\n  # ...\n  - name: LLM Scientific Review\n    script: 06_llm_review.py\n    args: [--reviews-only]\n    tags: [llm]\n    depends_on: [Output Validation]\n  - name: Copy Outputs\n    script: 05_copy_outputs.py\n    depends_on: [Output Validation]\n```\n\nRunning `--core-only` excludes stages with `llm` tag.\n\n---\n\n## References\n\n- `infrastructure/core/pipeline/dag.py` (DAG engine)\n- `infrastructure/core/pipeline/pipeline.yaml` (default definition)\n- `infrastructure/core/AGENTS.md` (pipeline module)\n- `docs/RUN_GUIDE.md` (user-facing stage guide)\n- `docs/core/workflow.md` (workflow explanation)']}
+# ADR 002: Declarative DAG Pipeline
+
+## Status
+
+Accepted
+
+## Context
+
+The research project template runs a multi-stage pipeline (e.g., clean → test → analyze → render → validate → publish). Hardcoding stage order and dependencies in imperative code makes the pipeline rigid and hard to modify. Different projects may need different stage configurations.
+
+## Decision
+
+Define the pipeline as a **declarative DAG in YAML** (`pipeline.yaml`). Each stage declares its name, script, dependencies, and optional tags. The DAG executor validates the graph (no cycles) and runs stages in topological order.
+
+### Key Benefits
+
+- **Clarity:** DAG structure is human-readable in YAML
+- **Flexibility:** Easy to insert new stages or change order
+- **Extensibility:** Projects can override stage definitions
+- **Reusability:** Same executor runs any DAG configuration
+
+### Example — Default DAG (10 stages)
+
+```yaml
+stages:
+  - name: Clean Output Directories
+    method: _run_clean_outputs
+    tags: [core, clean]
+  - name: Environment Setup
+    script: 00_setup_environment.py
+    depends_on: [Clean Output Directories]
+    tags: [core]
+  - name: Infrastructure Tests
+    script: 01_run_tests.py
+    args: [--infra-only, --verbose]
+    depends_on: [Environment Setup]
+    tags: [core, tests]
+  - name: Project Tests
+    script: 01_run_tests.py
+    args: [--project-only, --verbose]
+    depends_on: [Environment Setup]
+    tags: [core, tests]
+  - name: Project Analysis
+    script: 02_run_analysis.py
+    depends_on: [Project Tests]
+    tags: [core]
+  - name: PDF Rendering
+    script: 03_render_pdf.py
+    depends_on: [Project Analysis]
+    tags: [core]
+  - name: Output Validation
+    script: 04_validate_output.py
+    depends_on: [PDF Rendering]
+    tags: [core]
+  - name: LLM Scientific Review
+    script: 06_llm_review.py
+    args: [--reviews-only]
+    allow_skip: true
+    depends_on: [Output Validation]
+    tags: [llm]
+  - name: LLM Translations
+    script: 06_llm_review.py
+    args: [--translations-only]
+    allow_skip: true
+    depends_on: [Output Validation]
+    tags: [llm]
+  - name: Copy Outputs
+    script: 05_copy_outputs.py
+    depends_on: [Output Validation]
+    tags: [core]
+```
+
+Running `--core-only` excludes stages with the `llm` tag (leaving eight core stages).
+
+## Consequences
+
+### Positive
+
+- Pipeline structure is visible and auditable at a glance
+- Adding a stage requires only a YAML entry
+- Cycle detection is automatic (validated during DAG construction)
+
+### Negative
+
+- YAML syntax errors possible (but caught early at load time)
+- Circular dependency risk exists (validated during DAG construction)
+
+## References
+
+- [`infrastructure/core/pipeline/dag.py`](../../../infrastructure/core/pipeline/dag.py) — DAG engine
+- [`infrastructure/core/pipeline/pipeline.yaml`](../../../infrastructure/core/pipeline/pipeline.yaml) — Default definition
+- [`infrastructure/AGENTS.md`](../../../infrastructure/AGENTS.md#core-module) — Pipeline module docs
+- [`docs/RUN_GUIDE.md`](../../RUN_GUIDE.md) — User-facing stage guide
+- [`core/workflow.md`](../../core/workflow.md) — Workflow explanation

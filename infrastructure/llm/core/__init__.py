@@ -1,7 +1,5 @@
 """Core LLM functionality."""
 
-from __future__ import annotations
-
 from infrastructure.llm.core._text_utils import strip_thinking_tags
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig

@@ -7,7 +7,7 @@ flowchart LR
     HUB[/template_prose_project/docs//]
     HUB --> AI[agent_instructions.md<br/>7 hard rules · read-first]
     HUB --> ARCH[architecture.md<br/>two-layer compliance + sequence]
-    HUB --> TP[testing_philosophy.md<br/>zero-mock · 66 tests · 100% src]
+    HUB --> TP[testing_philosophy.md<br/>zero-mock · 67 tests · 100% src]
     HUB --> RP[rendering_pipeline.md<br/>4-phase manuscript → PDF]
     HUB --> SG[style_guide.md<br/>7 code-style rules]
     HUB --> SX[syntax_guide.md<br/>Pandoc + 11 tokens]
@@ -29,7 +29,7 @@ flowchart LR
 |---|---|
 | [`agent_instructions.md`](agent_instructions.md) | 7 hard rules for AI agents; verification checklist. |
 | [`architecture.md`](architecture.md) | Two-layer compliance and data-flow diagrams. |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock standard; 66 tests; 100% `src/` coverage. |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock standard; 67 tests; 100% `src/` coverage. |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Four phases of the manuscript → PDF flow; `config.yaml` controls. |
 | [`style_guide.md`](style_guide.md) | 7 code-style rules (Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages). |
 | [`syntax_guide.md`](syntax_guide.md) | Pandoc-crossref `[@sec:…]`, all eleven `{{TOKEN}}`s, code blocks. |

@@ -28,8 +28,6 @@ fires on stdlib :mod:`xml.etree`). Subprocess calls use ``shell=False``
 and a list-form argv.
 """
 
-from __future__ import annotations
-
 import re
 import shutil
 import subprocess
@@ -114,7 +112,7 @@ def _parse_timestamp(raw: str | None) -> datetime:
             return datetime.now(UTC)
 
 
-def parse_coverage_xml(path: Path) -> CoveragePoint:
+def parse_coverage_xml(path: Path) -> "CoveragePoint":
     """Parse a Cobertura-style ``coverage-*.xml`` file into a :class:`CoveragePoint`.
 
     Args:

@@ -12,15 +12,16 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `guides/` | Skill-level guides (Levels 1-12) + new project setup checklist |
 | `architecture/` | System design, two-layer architecture, thin orchestrator |
 | `usage/` | Content authoring, formatting, visualization patterns |
-| `operational/` | Build, config, logging, troubleshooting, reporting |
+| `operational/` | Runbooks, maintenance, configuration, Docker, logging, troubleshooting |
+| `plans/` | Strategic plans and architecture decision records |
 | `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
-| `modules/` | Infrastructure module guides (16 documented areas; see [modules/modules-guide.md](modules/modules-guide.md)) |
+| `modules/` | Infrastructure module guides (18 overview rows; see [modules/modules-guide.md](modules/modules-guide.md)) |
 | `development/` | Contributing, testing, security, roadmap |
 | `best-practices/` | Best practices, version control, migration |
 | `prompts/` | AI prompt templates (see [prompts/AGENTS.md](prompts/AGENTS.md)) |
 | `audit/` | Audit reports and findings |
 | `security/` | Security documentation and policies |
-| `rules/` | Development standards and guidelines (formerly .cursorrules) |
+| `rules/` | Contributor norms — expanded standards; repo-root [`.cursorrules`](../.cursorrules) is the Cursor-facing summary |
 | `streams/` | Timestamped notes for livestreams and recorded talks |
 | `_generated/` | Machine-generated snippets; authoritative active `projects/` names in `active_projects.md` — link there instead of duplicating rosters in guides |
 

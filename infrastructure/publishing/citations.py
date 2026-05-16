@@ -1,7 +1,5 @@
 """Citation generation functions for academic publishing."""
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 

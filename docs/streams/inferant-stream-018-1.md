@@ -2,8 +2,8 @@
 
 <https://www.youtube.com/live/YvnvWzHTQu8>
 
-**When:** 22 March 2026  
-**Host:** Daniel Friedman  
+**When:** 22 March 2026
+**Host:** Daniel Friedman
 **Paper:** *A `template/` approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 
 ---
@@ -45,7 +45,7 @@
 - **Two-layer layout:** reusable `infrastructure/` (generic tooling) vs `projects/<name>/` workspaces (domain code, tests, manuscript). Scripts stay thin; logic lives in importable modules under test.
 - **No-mock tests** and **coverage floors** (90% project `src/`, 60% infrastructure) use real files, subprocesses, and local HTTP where APIs matter — not stubbed collaborators.
 - **Rendering:** Pandoc + XeLaTeX PDFs, optional slides/HTML; **optional LLM** stages for review and translations when a local model endpoint is available.
-- **Provenance / hardening:** cryptographic manifests and steganographic PDF post-processing ship behind **`./secure_run.sh`** (wrapper around the same pipeline as `./run.sh`), not as an invisible side effect of `./run.sh --pipeline` alone.
+- **Provenance / hardening:** cryptographic manifests and steganographic PDF post-processing ship behind **`./secure_run.sh`** / **`./run.sh --secure-run`** (same DAG as `./run.sh`, then steganography — see [AGENTS.md](../../AGENTS.md)), not as an invisible side effect of `./run.sh --pipeline` alone.
 
 ---
 
@@ -56,7 +56,7 @@
 | 1 | Hook | ~3 | Why “reproducibility” fails without enforced invariants | Chat: *“What failed last time you tried to reproduce a paper?”* |
 | 2 | Design | ~8 | Two-layer architecture; thin orchestrators; `projects/` vs `projects_in_progress/` | *“Guess: where does business logic live — `scripts/` or `src/`?”* |
 | 3 | **Demo — `run.sh`** | ~12 | Interactive menu vs `./run.sh --pipeline`; logs `[0/9]` clean then `[1/9]`–`[9/9]` | *“Pause: tests, LaTeX, or validation — which breaks first on a dirty laptop?”* |
-| 4 | **Demo — `secure_run.sh`** | ~10 | Two-act wrapper: pipeline then stego; `--steganography-only` shortcut | Side-by-side: original PDF vs `*_steganography.pdf`; show `.hashes.json` |
+| 4 | **Demo — `secure_run.sh`** | ~10 | Pipeline via Python runner + stego phase; `--steganography-only` shortcut | Side-by-side: original PDF vs `*_steganography.pdf`; show `.hashes.json` |
 | 5 | Quality | ~7 | Coverage, no-mock policy, validation CLI; what actually fails the build | Quick: open a failing log path from chat |
 | 6 | Docs + agents | ~7 | README + AGENTS “duality”; `SKILL.md` on **major** infrastructure subpackages | *“Where would you point an agent first?”* |
 | 7 | Paper | ~10 | Comparative claims, figures, Zenodo artifact — **as argued in the paper** | *“Save deep uniqueness debates for the PDF.”* |
@@ -70,7 +70,7 @@
 | 0:05 | Problem frame + “one pipeline” promise |
 | 0:15 | Repo tree: `infrastructure/`, `projects/`, `output/` |
 | 0:25 | **`./run.sh`** — show menu, then or instead `--pipeline` |
-| 0:40 | **`./secure_run.sh`** — narrate STEP 1/2 vs STEP 2/2 |
+| 0:40 | **`./secure_run.sh --project <name>`** — narrate pipeline phase vs stego phase (`--project` required unless steg-only) |
 | 0:52 | Quality gates + docs map |
 | 0:62 | Paper pointer + Q&A |
 
@@ -85,7 +85,7 @@ Adjust spacing if you run **`uv run python scripts/execute_pipeline.py --project
 - **Interactive:** Running `./run.sh` with no pipeline flags opens the **menu** (environment, tests, analysis, render, validate, copy, optional LLM operations, full pipeline). Good for *showing* how operators slice the workflow.
 - **Non-interactive full pipeline:** `./run.sh --pipeline` runs the **full** sequence. Progress logs use **`[0/9]`** for the clean pre-step and **`[1/9]` … `[9/9]`** for the numbered stages (see [run.sh](../../run.sh) comments and help).
 - **Resume:** `./run.sh --pipeline --resume` continues from checkpoint (mention if you hit a long build).
-- **Core-only via secure entry:** `./secure_run.sh --core-only` forwards `--core-only` to `run.sh`, skipping LLM stages but still running the stego pass afterward.
+- **Core-only + steganography:** `./secure_run.sh --project <name> --core-only` runs the core DAG (no LLM stages), then the steganography pass. **`--project` is required** whenever the pipeline phase runs.
 
 **Host cues**
 
@@ -94,10 +94,10 @@ Adjust spacing if you run **`uv run python scripts/execute_pipeline.py --project
 
 ### Act 2 — `./secure_run.sh` (pipeline + hardening)
 
-[`secure_run.sh`](../../secure_run.sh) is intentionally a **two-step story**:
+[`secure_run.sh`](../../secure_run.sh) is a **two-phase** story:
 
-1. **STEP 1/2 —** Runs `bash run.sh` with any forwarded args (`--project`, `--core-only`, `--skip-infra`, etc.).
-2. **STEP 2/2 —** Steganographic post-processing on generated PDFs: companion **`*_steganography.pdf`** files and **`.hashes.json`** manifests; **original PDFs stay untouched**.
+1. **Phase 1 —** Runs the standard pipeline through **`PipelineRunner`** (same DAG as `./run.sh --pipeline`; **not** `bash ./run.sh`). Requires **`--project <name>`** for this phase.
+2. **Phase 2 —** Steganographic post-processing on generated PDFs: companion **`*_steganography.pdf`** files and **`.hashes.json`** manifests; **original PDFs stay untouched**.
 
 **Already built?** Use `./secure_run.sh --steganography-only --project <name>` to re-run **only** the hardening pass (useful if the stream ran the pipeline off-air).
 
@@ -132,7 +132,7 @@ The reproducibility crisis in computational work is structural as often as stati
 
 `template/` applies infrastructure-as-code to the research lifecycle: the manuscript, test suite, and build graph stay version-controlled, deterministically rebuildable, and independently checkable where the pipeline is configured to run.
 
-A **two-layer architecture** separates generic **`infrastructure/`** (many Python modules and subpackages) from **`projects/<name>/`** workspaces. An orchestrated flow runs **environment setup and cleanup**, **tests** (infrastructure + per-project), **analysis scripts**, **PDF (and related) rendering**, **output validation**, then **copy to `output/<name>/`**. That **core** path omits LLM stages. A **full** `./run.sh --pipeline` adds **optional LLM review and translations** when enabled and a local model endpoint is available. **Cryptographic hashing and steganographic PDF post-processing** are provided through **`./secure_run.sh`**, which runs the standard pipeline (via `run.sh`) and then hardens PDFs — see [AGENTS.md](../../AGENTS.md) and [scripts/AGENTS.md](../../scripts/AGENTS.md) for detail.
+A **two-layer architecture** separates generic **`infrastructure/`** (many Python modules and subpackages) from **`projects/<name>/`** workspaces. An orchestrated flow runs **environment setup and cleanup**, **tests** (infrastructure + per-project), **analysis scripts**, **PDF (and related) rendering**, **output validation**, then **copy to `output/<name>/`**. That **core** path omits LLM stages. A **full** `./run.sh --pipeline` adds **optional LLM review and translations** when enabled and a local model endpoint is available. **Cryptographic hashing and steganographic PDF post-processing** are provided through **`./secure_run.sh`** (or **`./run.sh --secure-run`**), which runs the standard pipeline in Python and then hardens PDFs — see [AGENTS.md](../../AGENTS.md) and [scripts/AGENTS.md](../../scripts/AGENTS.md) for detail.
 
 Documentation is organized so humans get **`README.md`** and tooling/agents get **`AGENTS.md`** across major directories. Major **`infrastructure/<area>/`** trees also ship **`SKILL.md`** files describing capabilities for agent workflows (aligned with common “skills” / MCP-style usage — not a claim that every `.py` file has its own skill file).
 
@@ -158,8 +158,8 @@ A tabular comparison against other tools appears **in the paper**; treat strong 
 
 ## Sources (entry points)
 
-- [Zenodo record 19139090](https://zenodo.org/records/19139090) — versioned paper + artifact context  
-- [template repository](https://github.com/docxology/template) — source, issues, `README.md` / `AGENTS.md`  
+- [Zenodo record 19139090](https://zenodo.org/records/19139090) — versioned paper + artifact context
+- [template repository](https://github.com/docxology/template) — source, issues, `README.md` / `AGENTS.md`
 - Further citations and comparison tables — **see the paper’s bibliography** (not duplicated here to avoid drift from the published PDF)
 
 

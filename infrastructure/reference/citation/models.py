@@ -19,8 +19,6 @@ Design notes:
   hand-edited entries does not silently mutate them.
 """
 
-from __future__ import annotations
-
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from typing import Iterable, Iterator, Mapping

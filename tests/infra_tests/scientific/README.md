@@ -10,20 +10,31 @@ Tests for scientific module including numerical stability checking, performance 
 
 ```bash
 # Run all scientific tests
-pytest tests/infra_tests/scientific/ -v
+uv run pytest tests/infra_tests/scientific/ -v
 
 # Run specific test module
-pytest tests/infra_tests/scientific/test_scientific_dev.py -v
+uv run pytest tests/infra_tests/scientific/test_scientific_dev.py -v
 ```
 
 ## Test Modules
+
+| File | Purpose |
+| --- | --- |
+| `test_benchmarking.py` | Performance benchmarking |
+| `test_cogsec_improver.py` | Cognitive security improver |
+| `test_documentation.py` | API documentation generation |
+| `test_scientific_dev.py` | Scientific development utilities |
+| `test_scientific_dev_edge_cases.py` | Edge cases for scientific dev utilities |
+| `test_stability.py` | Numerical stability checking |
+| `test_templates.py` | Research templates |
+| `test_validation.py` | Scientific validation rules |
 
 ### Scientific Development Tests (`test_scientific_dev.py`)
 
 Scientific computing utilities:
 
 ```bash
-pytest tests/infra_tests/scientific/test_scientific_dev.py -v
+uv run pytest tests/infra_tests/scientific/test_scientific_dev.py -v
 ```
 
 **Test Coverage:**
@@ -40,7 +51,7 @@ Individual function testing:
 
 ```bash
 # Test stability checking
-pytest tests/infra_tests/scientific/test_scientific_dev.py::test_check_stability -v
+uv run pytest tests/infra_tests/scientific/test_scientific_dev.py::test_check_stability -v
 ```
 
 ### Integration Tests
@@ -49,7 +60,7 @@ End-to-end scientific workflows:
 
 ```bash
 # Full benchmarking workflow
-pytest tests/infra_tests/scientific/test_scientific_dev.py::test_benchmark_function -v
+uv run pytest tests/infra_tests/scientific/test_scientific_dev.py::test_benchmark_function -v
 ```
 
 ## Common Test Patterns
@@ -77,13 +88,13 @@ def test_benchmark_function():
 ### All Scientific Tests
 
 ```bash
-pytest tests/infra_tests/scientific/ -v
+uv run pytest tests/infra_tests/scientific/ -v
 ```
 
 ### With Coverage
 
 ```bash
-pytest tests/infra_tests/scientific/ \
+uv run pytest tests/infra_tests/scientific/ \
     --cov=infrastructure.scientific \
     --cov-report=term
 ```

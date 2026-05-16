@@ -2,7 +2,7 @@
 
 > **Cryptographic integrity, steganographic watermarks, and tamper detection**
 
-**Skill Level**: 11  
+**Skill Level**: 11
 **Quick Reference:** [Modules Guide](../modules/modules-guide.md) | [Steganography Module](../modules/guides/steganography-module.md) | [Security Docs](../security/)
 
 ---
@@ -28,6 +28,9 @@ The simplest way to use steganography is via `secure_run.sh`:
 ```bash
 # Full pipeline + steganography
 ./secure_run.sh --project template_code_project
+
+# Same orchestrator CLI from the main thin shell
+./run.sh --secure-run
 
 # Steganography only (on existing PDFs)
 ./secure_run.sh --steganography-only --project template_code_project
@@ -125,7 +128,7 @@ To verify a PDF hasn't been tampered with:
 
 ```bash
 # Compare computed hash against manifest
-python3 -c "
+uv run python -c "
 import hashlib, json
 from pathlib import Path
 

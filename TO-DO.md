@@ -17,9 +17,9 @@ run when this file was last edited.
 | Gate | Value | Source |
 | --- | --- | --- |
 | `pyproject.toml` version | `3.0.0` | `pyproject.toml#[project].version` |
-| `mypy --strict infrastructure/` | **0 errors / 327 files** | `uv run mypy --strict infrastructure/` |
+| `mypy --strict infrastructure/` | **3 errors / ~345 files** (see `infrastructure/doctor/cli.py`; file count point-in-time) | `uv run mypy --strict infrastructure/` |
 | `ruff check` (infra + canonical project src) | **clean** | `uvx ruff check infrastructure/ projects/template_code_project/src/` |
-| `ruff format --check` | **325/325 already formatted** | `uvx ruff format --check infrastructure/ projects/template_code_project/src/` |
+| `ruff format --check` | run `uvx ruff format --check infrastructure/ projects/template_code_project/src/` for current count | `uvx ruff format --check infrastructure/ projects/template_code_project/src/` |
 | Bandit `-ll` (with `bandit.yaml` allow-list) | **HIGH 0 · MEDIUM 0 · LOW 0** | `uv run bandit -r -ll -c bandit.yaml infrastructure/ scripts/ projects/` (`exclude_dirs` in `bandit.yaml`) |
 | Bandit strict-LOW pass | **0 unsuppressed** | `uv run bandit -c bandit.yaml -r --severity-level low …` |
 | `pip-audit` CI gate | **blocking** (allow-list: `.github/pip-audit-ignore.txt`; retries in CI) | `.github/workflows/ci.yml` → job `security` |
@@ -27,8 +27,8 @@ run when this file was last edited.
 | `__all__` audit (`infrastructure.skills.check_all_exports`) | **0 violations** under live `infrastructure/` | `uv run python -m infrastructure.skills check-all-exports` |
 | `docs-lint` (mermaid + cross-links + consistency) | **all 3 pass** | `uv run python scripts/lint_docs.py` |
 | Stage-table generator | **idempotent** (5/5 docs in sync) | `uv run python scripts/generate_stage_table_doc.py` |
-| API-reference generator | **idempotent** (15 packages) | `uv run python scripts/generate_api_reference_doc.py --check` |
-| Architecture overview | **regenerable** (15 pkgs + 3 config dirs + active projects) | `uv run python scripts/generate_architecture_overview.py` |
+| API-reference generator | **idempotent** (16 packages) | `uv run python scripts/generate_api_reference_doc.py --check` |
+| Architecture overview | **regenerable** (16 pkgs + 3 config dirs + active projects) | `uv run python scripts/generate_architecture_overview.py` |
 | Unified `health` command | **10/10 gates PASS** | `uv run python -m infrastructure.core.health` |
 | Pre-push hooks | `ruff-ci`, `mypy-ci`, `pre-push-quick`, `bandit-quick`, `skills-check`, `all-exports-check` | `.pre-commit-config.yaml` |
 | Bench harness | **7 benches green** (opt-in via `-m bench`) | `tests/infra_tests/bench/` |
@@ -38,9 +38,9 @@ run when this file was last edited.
 | Coverage trend dashboard | regenerable via `--from-dir` / `--from-gh` | `scripts/generate_coverage_history.py` |
 | Project-config schema-extension API | `register_project_schema_extension(name, schema)` | `infrastructure/core/config/schema.py` |
 | `tests/infra_tests/` (no LLM, no bench) | **all pass** | `uv run pytest tests/infra_tests/ -q --ignore=tests/infra_tests/llm --timeout=60` |
-| `infrastructure/` Python packages | **15** + 3 non-Python config dirs (`config/`, `docker/`, `logrotate.d/`) | `ls infrastructure/` |
+| `infrastructure/` Python packages | **16** + 3 non-Python config dirs (`config/`, `docker/`, `logrotate.d/`) | `ls infrastructure/` |
 | Docs subdirectories with both `AGENTS.md` + `README.md` | **26 / 26** | sweep |
-| Infrastructure packages with `AGENTS.md` + `README.md` + `SKILL.md` | **15 / 15** | sweep |
+| Infrastructure packages with `AGENTS.md` + `README.md` + `SKILL.md` | **16 / 16** | sweep |
 
 ---
 
@@ -57,7 +57,7 @@ run when this file was last edited.
   | --- | --- |
   | Root / system | [`AGENTS.md`](AGENTS.md) (2), [`infrastructure/AGENTS.md`](infrastructure/AGENTS.md), [`infrastructure/README.md`](infrastructure/README.md) |
   | Docs hub | [`docs/PAI.md`](docs/PAI.md), [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md), [`docs/core/workflow.md`](docs/core/workflow.md), [`docs/core/literature-data-flow.md`](docs/core/literature-data-flow.md), [`docs/usage/examples.md`](docs/usage/examples.md), [`docs/architecture/decision-tree.md`](docs/architecture/decision-tree.md), [`docs/architecture/two-layer-architecture.md`](docs/architecture/two-layer-architecture.md) (4), [`docs/reference/copypasta-diagrams.md`](docs/reference/copypasta-diagrams.md) (2) |
-  | GitHub docs | [`projects/template_search_project/AGENTS.md`](projects/template_search_project/AGENTS.md), [`.github/README.md`](.github/README.md) |
+  | GitHub docs | [`projects_archive/template_search_project/AGENTS.md`](projects_archive/template_search_project/AGENTS.md), [`.github/README.md`](.github/README.md) |
   | Infrastructure READMEs | [`infrastructure/documentation/README.md`](infrastructure/documentation/README.md), [`infrastructure/project/README.md`](infrastructure/project/README.md), [`infrastructure/rendering/README.md`](infrastructure/rendering/README.md) (3), [`infrastructure/scientific/README.md`](infrastructure/scientific/README.md), [`infrastructure/validation/README.md`](infrastructure/validation/README.md) (3) |
 
   **In scope:** Fix or replace diagrams so each block parses cleanly; delete

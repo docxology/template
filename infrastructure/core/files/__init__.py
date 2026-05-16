@@ -3,8 +3,6 @@
 Re-exports primary symbols for ``from infrastructure.core.files import …`` usage.
 """
 
-from __future__ import annotations
-
 from infrastructure.core.files.cleanup import clean_output_directories
 from infrastructure.core.files.inventory import FileInventoryEntry, FileInventoryManager
 from infrastructure.core.files.operations import (

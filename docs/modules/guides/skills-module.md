@@ -2,7 +2,7 @@
 
 > **Agent skill discovery and manifest generation**
 
-**Location:** `infrastructure/skills/`  
+**Location:** `infrastructure/skills/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
@@ -11,6 +11,7 @@
 
 - **SKILL.md Discovery**: Scans infrastructure modules for `SKILL.md` files with YAML frontmatter
 - **Manifest Generation**: Writes the default manifest at repo-root `.cursor/skill_manifest.json` when you run `uv run python -m infrastructure.skills write` (the `.cursor/` directory is created if needed)
+- **Index Generation**: Writes [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) with `uv run python -m infrastructure.skills write-index`
 - **Manifest Validation**: Checks if manifest matches current on-disk skills
 - **MCP Alignment**: Skill descriptors follow Model Context Protocol conventions
 
@@ -56,6 +57,9 @@ if not is_fresh:
 ```bash
 # Write/refresh the skill manifest
 uv run python -m infrastructure.skills write
+
+# Write/refresh the human-readable skills index
+uv run python -m infrastructure.skills write-index
 
 # Check if manifest is up to date
 uv run python -m infrastructure.skills check

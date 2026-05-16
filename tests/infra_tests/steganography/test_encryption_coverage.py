@@ -127,6 +127,10 @@ class TestGenerateDocumentId:
         doc_id = generate_document_id()
         assert all(c in "0123456789abcdef" for c in doc_id)
 
-    def test_uniqueness(self):
+    def test_uniqueness(self, monkeypatch):
+        # Defensive: uniqueness only holds in the random branch, so
+        # ensure deterministic-mode is off regardless of upstream
+        # suite-level env state.
+        monkeypatch.delenv("STEGANOGRAPHY_DETERMINISTIC", raising=False)
         ids = {generate_document_id() for _ in range(50)}
         assert len(ids) == 50

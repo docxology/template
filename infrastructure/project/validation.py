@@ -4,8 +4,6 @@ This module provides validation for the required directory structure
 of projects within the repository.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger

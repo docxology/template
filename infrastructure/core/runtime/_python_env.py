@@ -4,8 +4,6 @@ Validates Python version, virtual environment interpreter, uv availability,
 and provides subprocess environment configuration.
 """
 
-from __future__ import annotations
-
 import os
 import platform
 import subprocess  # nosec B404
@@ -43,6 +41,47 @@ def check_uv_available() -> bool:
 def get_python_command() -> list[str]:
     """Get sys.executable for subprocess calls."""
     return [sys.executable]
+
+
+def resolve_test_python(venv_dir: Path) -> list[str]:
+    """Resolve the interpreter command for running a test suite.
+
+    Prefers the interpreter inside ``venv_dir`` (``bin/python`` on POSIX,
+    ``Scripts/python.exe`` on Windows) but only when that interpreter file
+    actually exists. A virtual-environment directory can survive on disk with
+    a dangling ``python`` symlink — e.g. the base interpreter it pointed at was
+    moved or removed. ``Path.exists()`` follows symlinks, so a broken link
+    resolves to ``False`` and we fall back to the current workspace
+    interpreter instead of crashing the caller with
+    ``FileNotFoundError: .../.venv/bin/python``.
+
+    Args:
+        venv_dir: Path to a ``.venv`` directory (need not exist).
+
+    Returns:
+        ``[str(venv_python)]`` when the venv interpreter exists, otherwise
+        :func:`get_python_command` (the running ``sys.executable``).
+    """
+    venv_python = venv_dir / "Scripts" / "python.exe" if os.name == "nt" else venv_dir / "bin" / "python"
+    if venv_python.exists():
+        return [str(venv_python)]
+    if venv_dir.is_dir():
+        # The venv directory exists but its interpreter does not — almost
+        # always a dangling symlink (base interpreter moved/removed). Fall
+        # back, but make it LOUD: a silent fallback to the workspace
+        # interpreter could otherwise mask a project whose pinned deps differ
+        # from the workspace. (A genuinely absent venv_dir is normal and stays
+        # quiet — that is the expected path for venv-less projects.)
+        logger.warning(
+            "Project venv at %s has no usable interpreter (%s is missing or a "
+            "broken symlink); falling back to the workspace interpreter %s. "
+            "Run `uv sync` or `rm -rf %s` if this project needs pinned deps.",
+            venv_dir,
+            venv_python,
+            sys.executable,
+            venv_dir,
+        )
+    return get_python_command()
 
 
 def validate_interpreter() -> bool:

@@ -1,7 +1,5 @@
 """Utility functions for LLM operations."""
 
-from __future__ import annotations
-
 from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
 from infrastructure.llm.utils.ollama import (
     SMALL_FAST_MODEL_PREFERENCES,

@@ -3,8 +3,6 @@
 Generates HTML-formatted reports from PipelineReport data.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.helpers import format_duration
@@ -13,7 +11,7 @@ if TYPE_CHECKING:
     from .pipeline_report_model import PipelineReport
 
 
-def generate_html_report(report: PipelineReport) -> str:
+def generate_html_report(report: "PipelineReport") -> str:
     """Generate HTML format pipeline report."""
     # Calculate summary statistics
     passed = sum(1 for s in report.stages if s.status == "passed")

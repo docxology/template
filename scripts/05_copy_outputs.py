@@ -42,6 +42,7 @@ from infrastructure.core.files.cleanup import (
     clean_root_output_directory,
 )
 from infrastructure.core.files.operations import copy_final_deliverables
+from infrastructure.project.discovery import resolve_project_root
 from infrastructure.validation.output.validator import (
     validate_copied_outputs,
     validate_output_structure,
@@ -78,6 +79,7 @@ def main() -> int:
     log_header(f"STAGE 05: Copy Outputs (Project: {args.project})", logger)
 
     repo_root = Path(__file__).parent.parent
+    project_root = resolve_project_root(repo_root, args.project)
     output_dir = repo_root / "output" / args.project
 
     try:
@@ -85,7 +87,7 @@ def main() -> int:
         from infrastructure.project.discovery import discover_projects
 
         projects = discover_projects(repo_root)
-        project_names = [p.qualified_name for p in projects]
+        project_names = sorted({p.qualified_name for p in projects} | {args.project})
         if not clean_root_output_directory(repo_root, project_names):
             logger.error("Failed to clean root output directory")
             return 1
@@ -94,7 +96,7 @@ def main() -> int:
         clean_output_directory(output_dir)
 
         # Step 2: Copy final deliverables
-        stats = copy_final_deliverables(repo_root, output_dir, args.project)
+        stats = copy_final_deliverables(repo_root, output_dir, args.project, project_dir=project_root)
 
         # Step 3: Validate copied files
         validation_passed = validate_copied_outputs(output_dir)
@@ -108,14 +110,14 @@ def main() -> int:
             generate_detailed_output_report,
         )
 
-        output_stats = collect_output_statistics(repo_root, args.project)
+        output_stats = collect_output_statistics(repo_root, args.project, project_dir=project_root)
         detailed_report = generate_detailed_output_report(output_dir, output_stats)
 
         # Log detailed report
         logger.info(detailed_report)
 
         # Save detailed report to file
-        reports_dir = repo_root / "projects" / args.project / "output" / "reports"
+        reports_dir = project_root / "output" / "reports"
         reports_dir.mkdir(parents=True, exist_ok=True)
         report_file = reports_dir / "output_statistics.txt"
         with open(report_file, "w") as f:
@@ -131,7 +133,7 @@ def main() -> int:
         logger.info(f"Output statistics JSON saved to: {json_file}")
 
         # Step 5: Generate original summary (for backward compatibility)
-        log_output_summary(output_dir, stats, structure_validation)
+        log_output_summary(output_dir, dict(stats), structure_validation)
 
         # Determine success/failure
         if stats.get("total_files", 0) > 0 and validation_passed:

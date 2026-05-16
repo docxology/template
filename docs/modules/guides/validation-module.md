@@ -2,7 +2,7 @@
 
 > **Comprehensive quality assurance for research outputs**
 
-**Location:** `infrastructure/validation/`  
+**Location:** `infrastructure/validation/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
@@ -160,13 +160,13 @@ results = validator.check_all(Path("docs"))
 
 ```bash
 # Validate PDFs in an output directory
-python3 -m infrastructure.validation.cli pdf output/{project}/pdf/
+uv run python -m infrastructure.validation.cli pdf output/{project}/pdf/
 
 # Validate markdown manuscript files
-python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # Both commands support the unified CLI entry point
-python3 -m infrastructure.validation.cli --help
+uv run python -m infrastructure.validation.cli --help
 ```
 
 ---

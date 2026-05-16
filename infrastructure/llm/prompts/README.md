@@ -4,187 +4,174 @@ Prompt composition system for structured LLM interactions.
 
 ## Overview
 
-The prompts module provides a flexible system for composing, managing, and applying prompts for LLM interactions. It supports fragments, compositions, and templates for consistent, high-quality prompt engineering.
+The prompts module provides `PromptFragmentLoader` and `PromptComposer` for loading
+JSON-based prompt fragments, templates, and compositions, then assembling them into
+complete prompts with `${variable}` substitution and fragment building.
+
+The two public symbols exported from `infrastructure.llm.prompts` are:
+
+| Symbol | Source | Purpose |
+| --- | --- | --- |
+| `PromptFragmentLoader` | `loader.py` | Load and cache JSON fragments, templates, and compositions |
+| `PromptComposer` | `composer.py` | Assemble complete prompts from a template definition |
 
 ## Quick Start
 
 ```python
-from infrastructure.llm.prompts import PromptComposer
+from infrastructure.llm.prompts import PromptFragmentLoader, PromptComposer
 
-# Create composer
-composer = PromptComposer()
+# Load a fragment directly
+loader = PromptFragmentLoader()
+system_prompt = loader.get_system_prompt("manuscript_review")
 
-# Compose prompt from fragments
-prompt = composer.compose(
-    fragments=["system_prompt", "task_description", "format_requirements"],
-    context={"topic": "machine learning", "length": "short"}
+# Compose a full prompt from a template
+composer = PromptComposer(loader=loader)
+prompt = composer.compose_template(
+    "manuscript_reviews.json#manuscript_executive_summary",
+    text=manuscript_text,
+    max_tokens=1000,
 )
-
-# Apply to LLM
-response = llm_client.query(prompt)
 ```
 
 ## Key Components
 
-### Prompt Fragments
+### PromptFragmentLoader
 
-Reusable prompt components stored in JSON:
+Loads JSON from `fragments/`, `templates/`, and `compositions/` subdirectories with
+in-process caching. References use the `"filename.json#key"` or `"filename.json#key.subkey"`
+dot-notation for nested lookups.
 
 ```python
-from infrastructure.llm.prompts.loader import load_fragments
+from infrastructure.llm.prompts import PromptFragmentLoader
 
-# Load fragment library
-fragments = load_fragments()
+loader = PromptFragmentLoader()
 
-# Access specific fragment
-system_prompt = fragments["system_prompts"]["research_assistant"]
+# Load a fragment by file + key reference
+system_prompt = loader.load_fragment("system_prompts.json#manuscript_review")
+
+# Load a template definition dict
+template = loader.load_template("manuscript_reviews.json#manuscript_executive_summary")
+
+# Load a composition entry (e.g. retry reinforcement)
+retry = loader.load_composition("retry_prompts.json#off_topic_reinforcement")
+
+# Convenience shorthand for system prompts
+prompt_str = loader.get_system_prompt("manuscript_review")
 ```
 
-### Prompt Compositions
+### PromptComposer
 
-Pre-built prompt combinations:
+Takes a template reference, resolves each `fragments` entry via `_fragment_builders`,
+substitutes all `${variable}` placeholders in `base_template`, and returns the final
+prompt string.
 
 ```python
-from infrastructure.llm.prompts.composer import compose_prompt
+from infrastructure.llm.prompts import PromptComposer
 
-# Use composition
-prompt = compose_prompt(
-    composition="manuscript_review",
-    context={"manuscript": manuscript_text}
+composer = PromptComposer()
+
+# Compose a manuscript executive summary prompt
+prompt = composer.compose_template(
+    "manuscript_reviews.json#manuscript_executive_summary",
+    text=manuscript_text,
+    max_tokens=1000,
 )
+
+# Prepend a retry reinforcement block when the LLM goes off-topic
+reinforced = composer.add_retry_prompt(prompt, retry_type="off_topic")
 ```
 
-### Prompt Templates
+## Data Directories
 
-Template-based prompt generation:
+### `fragments/` — Reusable prompt building blocks (JSON)
 
-```python
-from infrastructure.llm.prompts.templates import apply_template
+Each file is a JSON object whose values are consumed by `PromptFragmentLoader.load_fragment()`.
+The builder functions in `_fragment_builders.py` dispatch on the fragment reference string
+and call the matching builder:
 
-# Apply template
-prompt = apply_template(
-    template="summarize_abstract",
-    variables={"abstract": abstract_text}
-)
-```
+| File | Builder | Purpose |
+| --- | --- | --- |
+| `system_prompts.json` | loaded directly | Role definitions (e.g. `manuscript_review`) |
+| `format_requirements.json` | `build_format_requirements` | Markdown header list instructions |
+| `content_requirements.json` | `build_content_requirements` | Quality and anti-hallucination rules |
+| `section_structures.json` | `build_section_structure` | Per-review-type section headers + descriptions |
+| `token_budget_awareness.json` | `build_token_budget_awareness` | Token and word-count budget guidance |
+| `validation_hints.json` | `build_validation_hints` | Checklist of what will be validated |
 
-## Common Usage Patterns
+### `templates/` — Template definitions (JSON, data-only)
 
-### Research Review Prompts
+JSON files; no Python package. Each top-level key is a template definition consumed
+by `loader.load_template()` and then assembled by `PromptComposer.compose_template()`.
 
-```python
-# manuscript review
-review_prompt = composer.compose(
-    fragments=[
-        "system_prompts.research_reviewer",
-        "content_requirements.comprehensive_analysis",
-        "format_requirements.structured_output"
-    ],
-    context={"manuscript": text}
-)
-```
+| File | Templates defined |
+| --- | --- |
+| `manuscript_reviews.json` | `manuscript_executive_summary`, `manuscript_quality_review`, `manuscript_methodology_review`, `manuscript_improvement_suggestions`, `manuscript_translation_abstract` |
+| `paper_summarization.json` | `paper_summarization` |
 
-### Literature Synthesis
+### `compositions/` — Retry and format enforcement entries (JSON, data-only)
 
-```python
-# Literature review synthesis
-synthesis_prompt = composer.compose(
-    fragments=[
-        "system_prompts.literature_analyst",
-        "content_requirements.synthesis",
-        "validation_hints.citation_check"
-    ],
-    context={"papers": paper_summaries}
-)
-```
+JSON files; no Python package. Entries are loaded by `loader.load_composition()` and
+injected by `PromptComposer.add_retry_prompt()`.
 
-### Code Review Prompts
+| File | Keys |
+| --- | --- |
+| `retry_prompts.json` | `off_topic_reinforcement`, `format_enforcement.executive_summary`, `format_enforcement.quality_review`, `format_enforcement.methodology_review`, `format_enforcement.improvement_suggestions` |
 
-```python
-# Code review with quality focus
-code_review_prompt = composer.compose(
-    fragments=[
-        "system_prompts.code_reviewer",
-        "content_requirements.code_quality",
-        "format_requirements.bullet_points"
-    ],
-    context={"code": code_snippet}
-)
-```
+## Template JSON Schema
 
-## Fragment Library
+Each template definition in `templates/*.json` has this shape:
 
-### System Prompts
-
-Pre-defined system roles:
-- `research_assistant` - General research help
-- `research_reviewer` - Manuscript review
-- `code_reviewer` - Code quality assessment
-- `literature_analyst` - Paper analysis
-
-### Content Requirements
-
-Content specification fragments:
-- `comprehensive_analysis` - Detailed analysis requirements
-- `brief_summary` - Concise summary requirements
-- `structured_output` - Format specifications
-
-### Format Requirements
-
-Output formatting:
-- `structured_output` - JSON/structured format
-- `bullet_points` - Bullet point format
-- `paragraph_format` - Paragraph format
-
-## Template System
-
-### Available Templates
-
-```python
-# List available templates
-templates = list_templates()
-
-# Apply template
-prompt = apply_template(
-    template="manuscript_review",
-    variables={
-        "manuscript": text,
-        "focus_areas": ["methodology", "results"]
+```json
+{
+  "template_key": {
+    "version": "1.0",
+    "base_template": "...${variable}... ${fragment_key}...",
+    "fragments": {
+      "fragment_key": "fragment_file.json#optional_key"
+    },
+    "variables": {
+      "word_count_range": [400, 600],
+      "required_elements": ["..."]
+    },
+    "section_config": {
+      "structure_key": "section_structures_key",
+      "sections": 5
     }
-)
+  }
+}
 ```
+
+`base_template` uses `${key}` placeholders. `fragments` maps placeholder names to
+`PromptFragmentLoader` references; each is resolved via `_fragment_builders.build_fragment()`.
+Caller-supplied `**variables` override `variables` defaults before substitution.
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[Prompt System] --> B[Fragments]
-    A --> C[Compositions]
-    A --> D[Templates]
+    A[PromptComposer] --> B[PromptFragmentLoader]
+    A --> C[_fragment_builders]
 
-    B --> E[System Prompts]
-    B --> F[Content Requirements]
-    B --> G[Format Requirements]
-    B --> H[Validation Hints]
+    B --> D[fragments/*.json]
+    B --> E[templates/*.json]
+    B --> F[compositions/*.json]
 
-    C --> I[Pre-built Combinations]
-    C --> J[Context Injection]
+    C --> G[build_format_requirements]
+    C --> H[build_content_requirements]
+    C --> I[build_section_structure]
+    C --> J[build_token_budget_awareness]
+    C --> K[build_validation_hints]
 
-    D --> K[Template Variables]
-    D --> L[Template Rendering]
-
-    E --> M[Prompt Composition]
-    F --> M
-    G --> M
-    H --> M
-    I --> M
-    K --> M
-    L --> M
+    G --> L[Final Prompt String]
+    H --> L
+    I --> L
+    J --> L
+    K --> L
 ```
 
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - prompts module documentation
-- [fragments/README.md](fragments/README.md) - Fragment library details
-- [compositions/README.md](compositions/README.md) - Composition system
-- [templates/README.md](templates/README.md) - Template system
+- [fragments/README.md](fragments/README.md) - Fragment JSON files
+- [compositions/README.md](compositions/README.md) - Composition JSON files
+- [templates/README.md](templates/README.md) - Template JSON files

@@ -15,8 +15,6 @@ from their submodules:
     infrastructure.core.telemetry     — TelemetryCollector, TelemetryConfig
 """
 
-from __future__ import annotations
-
 # Checkpoint (used by orchestrator scripts)
 from infrastructure.core.runtime.checkpoint import CheckpointManager
 

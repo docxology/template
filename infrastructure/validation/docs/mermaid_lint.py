@@ -15,8 +15,6 @@ Public API:
     - :func:`mmdc_available`
 """
 
-from __future__ import annotations
-
 import json
 import os
 import re
@@ -28,27 +26,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.scan_scope import iter_markdown_files
 
 logger = get_logger(__name__)
-
-
-_DEFAULT_EXCLUDE_PARTS: frozenset[str] = frozenset(
-    {
-        ".git",
-        ".venv",
-        ".tox",
-        ".mypy_cache",
-        ".pytest_cache",
-        "__pycache__",
-        "node_modules",
-        "output",
-        "htmlcov",
-        "dist",
-        "build",
-        "projects_archive",
-        "projects_in_progress",
-    }
-)
 
 # Match fenced mermaid blocks. Captures the body. Multiline. Non-greedy.
 _MERMAID_FENCE = re.compile(
@@ -94,26 +74,8 @@ def mmdc_available(mmdc_path: str | None = None) -> bool:
 
 
 def _iter_markdown_files(roots: Iterable[Path]) -> list[Path]:
-    """Walk *roots* and yield Markdown files, skipping known-noisy directories."""
-    seen: set[Path] = set()
-    out: list[Path] = []
-    for root in roots:
-        root = root.resolve()
-        if root.is_file() and root.suffix.lower() == ".md":
-            if root not in seen:
-                seen.add(root)
-                out.append(root)
-            continue
-        if not root.is_dir():
-            continue
-        for md in root.rglob("*.md"):
-            if any(part in _DEFAULT_EXCLUDE_PARTS for part in md.parts):
-                continue
-            if md in seen:
-                continue
-            seen.add(md)
-            out.append(md)
-    return sorted(out)
+    """Walk *roots* using the shared documentation scan scope."""
+    return iter_markdown_files(roots)
 
 
 _NOQA_RE = re.compile(r"%%\s*noqa:\s*docs-lint", re.IGNORECASE)

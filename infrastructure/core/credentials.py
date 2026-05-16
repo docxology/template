@@ -1,7 +1,5 @@
 """Secure credential management for testing and operations."""
 
-from __future__ import annotations
-
 import os
 from pathlib import Path
 from typing import Any
@@ -20,7 +18,6 @@ try:
 except ImportError:
     DOTENV_AVAILABLE = False
     _load_dotenv = None  # type: ignore[assignment]
-
 
 # Platform API base URLs — extracted here so they are easy to override in tests
 # and visible to callers without instantiating CredentialManager.

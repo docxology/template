@@ -8,8 +8,6 @@ Dependencies are imported lazily so the module loads without error even when
 unavailable at runtime.
 """
 
-from __future__ import annotations
-
 import base64
 import hashlib
 import hmac

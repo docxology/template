@@ -10,8 +10,6 @@ all public names so that existing ``from infrastructure.core.pipeline.summary im
 statements continue to work unchanged.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.files.inventory import FileInventoryManager

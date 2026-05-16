@@ -31,6 +31,7 @@ This folder is the **GitHub integration surface**: Actions workflows, Dependabot
 | **This file** | Human overview while browsing the repo on GitHub |
 | [`AGENTS.md`](AGENTS.md) | Technical index: job names, triggers, coverage thresholds |
 | [`workflows/README.md`](workflows/README.md) | CI job graph and commands to mirror CI locally |
+| [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | Issue template inventory and editing notes |
 
 **Related (repo root):** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) lists agent `SKILL.md` descriptors. After adding or editing `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit the updated manifest (see [`infrastructure/skills/`](../infrastructure/skills/)).
 
@@ -88,7 +89,7 @@ graph TD
     Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 15 Python packages under infrastructure/ (+ logrotate.d templates) · 16 docs areas (see docs/modules/modules-guide.md)"
+    subgraph "Layer 1 · 16 Python packages under infrastructure/ (+ config/logrotate templates) · documented areas in docs/modules/"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -98,10 +99,9 @@ graph TD
     end
 
     subgraph "Layer 2 · Active Project Workspaces"
-        Projects --> CP["template_code_project/ ← Master numerical exemplar"]
-        Projects --> CCD["cognitive_case_diagrams/ ← Case diagrams manuscript"]
-        Projects --> TP["template/ ← Meta-documentation"]
-        Projects --> Dots["More under projects/ ← Auto-discovered"]
+        Projects --> CP["template_code_project/ ← Code exemplar"]
+        Projects --> PP["template_prose_project/ ← Prose exemplar"]
+        Projects --> Dots["Rotating projects ← Auto-discovered"]
     end
 ```
 
@@ -111,7 +111,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
-| `infrastructure/` | Permanent | **15** top-level Python packages under `infrastructure/` (plus `logrotate.d/` configs and a `docker/` config tree, neither a Python package); **16** documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
+| `infrastructure/` | Permanent | **16** top-level Python packages under `infrastructure/` (plus config/documentation-only directories); documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
@@ -126,7 +126,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ## 📁 Active Projects
 
-### `template_code_project` — Master Numerical Exemplar
+### `template_code_project` — Code Exemplar
 
 > **`projects/template_code_project/`** is the canonical example of a complete, working project. Use it as the reference when building your own.
 
@@ -134,7 +134,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 | --- | --- |
 | Gradient descent optimization | `projects/template_code_project/src/optimizer.py` |
 | Scientific benchmarking | uses `infrastructure.scientific` |
-| 45 tests, 100% coverage | `tests/` — Zero-Mock, real operations only |
+| Project test suite | `tests/` — real operations only, coverage gated at 90% |
 | 6 publication-quality figures | generated in `scripts/`, registered via `FigureManager` |
 | Full pipeline output | PDF rendered, validated, steganographically signed |
 | Complete documentation | `AGENTS.md` + `README.md` throughout |
@@ -211,7 +211,7 @@ graph TB
     end
 
     subgraph Core["🧠 Core Systems (DAG Engine)"]
-        INFRASTRUCTURE[Infrastructure Modules<br/>13 specialized modules<br/>Validation, rendering, LLM]
+        INFRASTRUCTURE[Infrastructure Modules<br/>16 Python packages<br/>Validation, rendering, LLM]
         BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
         CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
     end
@@ -707,7 +707,7 @@ See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-aud
 | Project coverage | pytest-cov | **≥ 90%** |
 | pip-audit | blocking | zero unignored vulns |
 | Security | Bandit `-c bandit.yaml` MEDIUM+ | zero findings |
-| Docs lint | `scripts/lint_docs.py` | clean |
+| Docs lint | `scripts/lint_docs.py` | Mermaid, links, consistency, and doc pairs clean |
 | Performance | import timer | **≤ 5 s** |
 
 ### Simulate CI Locally

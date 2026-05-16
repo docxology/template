@@ -30,7 +30,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Environment variable export
 - Translation language configuration
 
-**config/credentials.py**
+**credentials.py**
 - Credential management from .env and YAML config files
 - Environment variable loading
 - YAML configuration with environment variable substitution
@@ -84,7 +84,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Command-line interface utilities
 - CLI argument parsing and validation
 
-**config/config_cli.py**
+**config/cli.py**
 - Configuration CLI commands
 - Config file management from command line
 
@@ -92,15 +92,15 @@ The Core module provides fundamental foundation utilities used across the entire
 - Interactive menu system
 - Menu-driven user interfaces
 
-**logging/logging_formatters.py**
+**logging/formatters.py**
 - Logging formatter utilities
 - Custom log format definitions
 
-**logging/logging_helpers.py**
+**logging/helpers.py**
 - Logging helper functions
 - Additional logging utilities
 
-**logging/logging_progress.py**
+**logging/progress.py**
 - Progress logging utilities
 - Progress tracking with logging integration
 
@@ -120,13 +120,13 @@ The Core module provides fundamental foundation utilities used across the entire
 - Output directory cleanup
 - Final deliverable copying
 
-**files/file_inventory.py**
+**files/inventory.py**
 - File inventory generation and management
 - Directory scanning and categorization
 - File size calculation and formatting
 - Inventory reporting for pipeline summaries
 
-**pipeline/pipeline.py**
+**pipeline/executor.py**
 - PipelineExecutor class for single project execution
 - Pipeline configuration management
 - Stage execution orchestration
@@ -138,7 +138,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Parallel project pipeline execution
 - Executive reporting integration
 
-**pipeline/pipeline_summary.py**
+**pipeline/summary.py**
 - Pipeline summary generation and reporting
 - Performance metrics calculation
 - File inventory integration
@@ -877,7 +877,7 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
     """
 ```
 
-### config/credentials.py
+### credentials.py
 
 #### load_credentials (function)
 ```python
@@ -1384,7 +1384,7 @@ def copy_final_deliverables(
     """
 ```
 
-### files/file_inventory.py
+### files/inventory.py
 
 #### generate_file_inventory (function)
 ```python
@@ -1425,7 +1425,7 @@ def format_file_size(size_bytes: int) -> str:
     """
 ```
 
-### pipeline/pipeline.py
+### pipeline/executor.py
 
 #### PipelineExecutor (class)
 ```python
@@ -1549,7 +1549,7 @@ class MultiProjectOrchestrator:
         """
 ```
 
-### pipeline/pipeline_summary.py
+### pipeline/summary.py
 
 #### generate_pipeline_summary (function)
 ```python
@@ -1606,7 +1606,8 @@ def generate_executive_summary(
 
 ### Basic Logging Setup
 ```python
-from infrastructure.core import get_logger, setup_logger
+from infrastructure.core import get_logger
+from infrastructure.core.logging.setup import setup_logger
 
 # Get default logger
 logger = get_logger(__name__)
@@ -1619,7 +1620,8 @@ logger.debug("Debug message")
 
 ### Exception Handling
 ```python
-from infrastructure.core import raise_with_context, TemplateError
+from infrastructure.core import TemplateError
+from infrastructure.core.exceptions import raise_with_context
 
 try:
     # Some operation
@@ -1636,20 +1638,20 @@ except Exception as e:
 
 ### Configuration Management
 ```python
-from infrastructure.core import load_config, get_config_as_env_vars
+from infrastructure.core.config.loader import load_config, get_config_as_dict
 
 # Load from file
 config = load_config("config.yaml")
 
 # Get as environment variables
-env_vars = get_config_as_env_vars(Path("."))
+env_vars = get_config_as_dict(Path("."))
 for key, value in env_vars.items():
     os.environ[key] = value
 ```
 
 ### Pipeline Execution
 ```python
-from infrastructure.core import PipelineExecutor
+from infrastructure.core.pipeline import PipelineExecutor
 
 # Execute single project pipeline
 executor = PipelineExecutor(Path("."), "my_project")
@@ -1832,7 +1834,7 @@ def rate_limit(max_requests: int = 100, window_seconds: int = 60):
     """
 ```
 
-### logging/logging_formatters.py
+### logging/formatters.py
 
 #### JSONFormatter (class)
 ```python
@@ -1854,7 +1856,7 @@ class TemplateFormatter(logging.Formatter):
     """Template-aware formatter for logging."""
 ```
 
-### logging/logging_progress.py
+### logging/progress.py
 
 #### calculate_eta (function)
 ```python
@@ -2110,7 +2112,7 @@ def benchmark_function(
     """
 ```
 
-### config/config_cli.py
+### config/cli.py
 
 #### main (function)
 ```python
@@ -2118,7 +2120,7 @@ def main():
     """Main function for config CLI."""
 ```
 
-### config/credentials.py
+### credentials.py
 
 #### CredentialManager (class)
 ```python
@@ -3169,7 +3171,7 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
     """
 ```
 
-### files/file_inventory.py
+### files/inventory.py
 
 #### FileInventoryManager (class)
 ```python
@@ -3198,7 +3200,7 @@ class FileInventoryManager:
         """
 ```
 
-### pipeline/pipeline.py
+### pipeline/executor.py
 
 #### PipelineConfig (class)
 ```python
@@ -3534,7 +3536,7 @@ def handle_discover_command(args: argparse.Namespace) -> int:
     """
 ```
 
-### config/config_cli.py
+### config/cli.py
 
 This module provides CLI commands for configuration management. See `cli.py` for integration.
 
@@ -3542,15 +3544,15 @@ This module provides CLI commands for configuration management. See `cli.py` for
 
 This module provides interactive menu system utilities for menu-driven user interfaces.
 
-### logging/logging_formatters.py
+### logging/formatters.py
 
 This module provides logging formatter utilities and custom log format definitions.
 
-### logging/logging_helpers.py
+### logging/helpers.py
 
 This module provides additional logging helper functions beyond those in `logging_utils.py`.
 
-### logging/logging_progress.py
+### logging/progress.py
 
 This module provides progress logging utilities that integrate progress tracking with logging.
 
@@ -3558,7 +3560,7 @@ This module provides progress logging utilities that integrate progress tracking
 
 This module provides function-level profiling utilities (cProfile/tracemalloc) and benchmarking helpers. See `pipeline/stage_monitor.py` for stage-level resource monitoring.
 
-### pipeline/pipeline_summary.py
+### pipeline/summary.py
 
 #### generate_pipeline_summary (function)
 ```python
@@ -3585,11 +3587,8 @@ def generate_pipeline_summary(
 
 ### Exception Handling
 ```python
-from infrastructure.core import (
-    TemplateError,
-    raise_with_context,
-    chain_exceptions
-)
+from infrastructure.core import TemplateError
+from infrastructure.core.exceptions import raise_with_context, chain_exceptions
 
 try:
     risky_operation()
@@ -3602,7 +3601,8 @@ except ValueError as e:
 
 ### Logging
 ```python
-from infrastructure.core import get_logger, log_operation, log_timing
+from infrastructure.core import get_logger, log_operation
+from infrastructure.core.logging.utils import log_timing
 
 logger = get_logger(__name__)
 logger.info("Starting process")
@@ -3616,7 +3616,8 @@ with log_timing("Algorithm execution", logger):
 
 ### Configuration
 ```python
-from infrastructure.core import load_config, get_config_as_dict, get_translation_languages, find_config_file
+from infrastructure.core.config.loader import load_config, get_config_as_dict, find_config_file
+from infrastructure.core.config.queries import get_translation_languages
 
 config = load_config(Path("projects/{project_name}/manuscript/config.yaml"))
 env_dict = get_config_as_dict(Path("."))  # Loads from projects/{project_name}/manuscript/config.yaml
@@ -3648,7 +3649,8 @@ uv add python-dotenv
 
 ### Progress Tracking
 ```python
-from infrastructure.core import ProgressBar, SubStageProgress
+from infrastructure.core import ProgressBar
+from infrastructure.core.progress import SubStageProgress
 
 with ProgressBar(total=100, desc="Processing") as pbar:
     for i in range(100):
@@ -3657,7 +3659,8 @@ with ProgressBar(total=100, desc="Processing") as pbar:
 
 ### Checkpoint Management
 ```python
-from infrastructure.core import CheckpointManager, StageResult
+from infrastructure.core import CheckpointManager
+from infrastructure.core.runtime.checkpoint import StageResult
 
 checkpoint = CheckpointManager()
 if checkpoint.checkpoint_exists():
@@ -3669,7 +3672,7 @@ else:
 
 ### Retry Logic
 ```python
-from infrastructure.core import retry_with_backoff
+from infrastructure.core.runtime import retry_with_backoff
 
 @retry_with_backoff(max_attempts=3, base_delay=1.0)
 def risky_operation():
@@ -3679,7 +3682,7 @@ def risky_operation():
 
 ### Performance Monitoring
 ```python
-from infrastructure.core import PerformanceMonitor, get_system_resources
+from infrastructure.core.pipeline import PerformanceMonitor, get_system_resources
 
 with PerformanceMonitor() as monitor:
     # Your code here
@@ -3691,7 +3694,7 @@ print(f"CPU: {resources.cpu_percent}%, Memory: {resources.memory_percent}%")
 
 ### Environment Setup
 ```python
-from infrastructure.core import check_python_version, check_dependencies, setup_directories
+from infrastructure.core.runtime.environment import check_python_version, check_dependencies, setup_directories
 
 check_python_version(min_version=(3, 8))
 check_dependencies(["pandas", "numpy"])
@@ -3700,7 +3703,7 @@ setup_directories(["output", "output/figures"])
 
 ### Script Discovery
 ```python
-from infrastructure.core import discover_analysis_scripts, discover_orchestrators
+from infrastructure.core.script_discovery import discover_analysis_scripts, discover_orchestrators
 
 scripts = discover_analysis_scripts(Path("projects/project/scripts"))
 orchestrators = discover_orchestrators(Path("scripts"))
@@ -3708,7 +3711,8 @@ orchestrators = discover_orchestrators(Path("scripts"))
 
 ### File Operations
 ```python
-from infrastructure.core import clean_output_directory, copy_final_deliverables
+from infrastructure.core.files.cleanup import clean_output_directory
+from infrastructure.core.files.operations import copy_final_deliverables
 
 clean_output_directory(Path("output"))
 copy_final_deliverables(Path("projects/project/output"), Path("output/project"))
@@ -3716,7 +3720,7 @@ copy_final_deliverables(Path("projects/project/output"), Path("output/project"))
 
 ### File Inventory
 ```python
-from infrastructure.core import FileInventoryManager
+from infrastructure.core.files.inventory import FileInventoryManager
 
 manager = FileInventoryManager(Path("projects/project/output"))
 if manager.collect_files():
@@ -3725,7 +3729,7 @@ if manager.collect_files():
 
 ### Pipeline Execution
 ```python
-from infrastructure.core import PipelineExecutor, PipelineConfig
+from infrastructure.core.pipeline import PipelineExecutor, PipelineConfig
 
 config = PipelineConfig(
     project_name="my_project",
@@ -3762,7 +3766,7 @@ print(f"Successful: {result.successful_projects}, Failed: {result.failed_project
 
 ### Pipeline Summary
 ```python
-from infrastructure.core import generate_pipeline_summary
+from infrastructure.core.pipeline.summary import generate_pipeline_summary
 
 summary = generate_pipeline_summary(
     stage_results=results,
@@ -3777,7 +3781,7 @@ print(summary)
 
 Run core tests with:
 ```bash
-pytest tests/infra_tests/test_core/
+uv run pytest tests/infra_tests/test_core/
 ```
 
 ## Configuration

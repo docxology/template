@@ -2,7 +2,7 @@
 
 > **Use local LLMs for manuscript review, translation, and literature analysis**
 
-**Skill Level**: 11-12  
+**Skill Level**: 11-12
 **Quick Reference:** [Modules Guide](../modules/modules-guide.md) | [LLM Module](../modules/guides/llm-module.md) | [RUN_GUIDE](../RUN_GUIDE.md)
 
 ---

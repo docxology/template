@@ -6,7 +6,7 @@ This showcase demonstrates how the Research Project Template can be used for var
 
 ### 📊 **Statistical Analysis Study**
 **Project**: "Machine Learning Approaches to Climate Data Analysis"
-**Template Usage**: 
+**Template Usage**:
 - **`src/`**: Statistical algorithms, ML models, data processing functions
 - **`scripts/`**: Data visualization, model training, result analysis
 - **`manuscript/`**: Research paper with methodology, results, and discussion

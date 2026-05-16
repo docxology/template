@@ -63,9 +63,12 @@ More text.
 
 
 def test_find_mermaid_blocks_skips_excluded_dirs(tmp_path: Path) -> None:
-    # output/ is on the default exclude list
-    bad = tmp_path / "output" / "ignored.md"
-    _write_md(bad, "```mermaid\nflowchart\n```\n")
+    # Generated and local-agent trees are on the shared docs-scan exclude list.
+    for bad in (
+        tmp_path / "output" / "ignored.md",
+        tmp_path / ".claude" / "worktrees" / "ignored.md",
+    ):
+        _write_md(bad, "```mermaid\nflowchart\n```\n")
     good = tmp_path / "docs" / "live.md"
     _write_md(good, "```mermaid\nflowchart\n```\n")
     blocks = find_mermaid_blocks([tmp_path])

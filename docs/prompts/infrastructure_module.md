@@ -135,7 +135,7 @@ class ConfigurableProcessor(ABC, Generic[T]):
 # infrastructure/[module_name]/exceptions.py
 """Exception classes for infrastructure module."""
 
-from infrastructure.core.runtime.exceptions import TemplateError
+from infrastructure.core.exceptions import TemplateError
 
 class ModuleError(TemplateError):
     """Base exception for module errors."""
@@ -165,7 +165,7 @@ class ProcessingError(ModuleError):
 from typing import Any, Dict, List, Optional, Union
 from .exceptions import ValidationError, ConfigurationError, ProcessingError
 from .validators import validate_input
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -395,8 +395,8 @@ def validate_configuration(config: Dict[str, Any], schema: Dict[str, Any]) -> No
 import pytest
 import numpy as np
 
-from infrastructure.[module_name] import GenericProcessor, ModuleError
-from infrastructure.[module_name].exceptions import ValidationError, ConfigurationError
+from infrastructure.[module_name] import GenericProcessor, ModuleError  # noqa: docs-lint
+from infrastructure.[module_name].exceptions import ValidationError, ConfigurationError  # noqa: docs-lint
 
 class TestGenericProcessor:
     """Test suite for GenericProcessor class."""
@@ -578,7 +578,7 @@ Raised when processing operations fail.
 ### Basic Configuration
 
 ```python
-from infrastructure.[module_name] import GenericProcessor
+from infrastructure.[module_name] import GenericProcessor  # noqa: docs-lint
 
 config = {
     'algorithm': 'transform',
@@ -630,7 +630,7 @@ result = processor.process(dataset)
 
 ```python
 # In projects/my_research/src/analysis.py
-from infrastructure.[module_name] import GenericProcessor
+from infrastructure.[module_name] import GenericProcessor  # noqa: docs-lint
 
 class ResearchAnalyzer:
     """Domain-specific analyzer using generic infrastructure."""
@@ -714,7 +714,7 @@ class ResearchAnalyzer:
 - [ ] Type hints on all public APIs
 
 ### Code Quality Standards ([`../rules/code_style.md`](../rules/code_style.md))
-- [ ] Black formatting and isort compliance
+- [ ] Ruff format/check (CI scope) and mypy clean on touched paths
 - [ ] Google-style docstrings
 - [ ] Unified logging system
 - [ ] Consistent API design

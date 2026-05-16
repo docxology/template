@@ -13,6 +13,7 @@ Technical guide for `docs/architecture/` — system architecture, design pattern
 | `decision-tree.md` | Decision tree for code placement |
 | `migration-from-flat.md` | Migration guide from flat project structure |
 | `testing-strategy.md` | Testing strategy and coverage architecture |
+| `discovery-export-synthesis.md` | Discovery → Export → Synthesis three-module architecture |
 
 ## Key Conventions
 

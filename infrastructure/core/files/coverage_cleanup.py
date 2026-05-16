@@ -5,8 +5,6 @@ that can become corrupted during parallel test execution.
 Extracted from file_cleanup.py for file-size health.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_success

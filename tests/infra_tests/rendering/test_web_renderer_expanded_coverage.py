@@ -79,6 +79,24 @@ class TestCombineMarkdownFiles:
         with pytest.raises(RenderingError):
             renderer._combine_markdown_files([md])
 
+    def test_html_safe_markdown_preserves_raw_latex_visible_text(self, tmp_path):
+        renderer = _make_renderer(tmp_path)
+        source = (
+            "NumPy `\\citep{harris-2020}`{=latex}, SciPy "
+            "`\\citep{virtanen-2020}`{=latex}; see "
+            "`\\hyperref[sec:pymdp_validation]{§16}`{=latex}. "
+            "`\\phantomsection\\label{thm:demo}`{=latex}**Theorem.**"
+        )
+
+        result = renderer._html_safe_markdown(source)
+
+        assert "NumPy [harris-2020], SciPy [virtanen-2020]" in result
+        assert "see §16." in result
+        assert "`\\citep" not in result
+        assert "`\\hyperref" not in result
+        assert "label{thm:demo}" not in result
+        assert "**Theorem.**" in result
+
 
 class TestEmbedCss:
     def test_embed_in_head(self, tmp_path):

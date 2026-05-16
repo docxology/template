@@ -2,7 +2,7 @@
 
 > **File integrity and cross-reference validation**
 
-**Location:** `infrastructure/validation/integrity/checks.py`  
+**Location:** `infrastructure/validation/integrity/checks.py`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
@@ -22,33 +22,37 @@
 ### Integrity Check
 
 ```python
-from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_output_integrity
+from infrastructure.validation import verify_output_integrity
+from pathlib import Path
 
 # Verify entire output directory
-report = verify_output_integrity("output/")
+report = verify_output_integrity(Path("output/"))
 
 if report.overall_integrity:
-    print("✅ All integrity checks passed")
+    print("All integrity checks passed")
 else:
-    print("❌ Integrity issues found:")
+    print("Integrity issues found:")
     for issue in report.issues:
         print(f"- {issue}")
     for warning in report.warnings:
-        print(f"⚠️ {warning}")
+        print(f"  {warning}")
 ```
 
 ### Cross-Reference Validation
 
 ```python
-from infrastructure.validation.integrity.integrity.integrity.checks.checks import verify_cross_references
+from infrastructure.validation import verify_cross_references
+from pathlib import Path
 
 # Check markdown files for reference integrity
-markdown_files = ["manuscript/01_abstract.md", "manuscript/02_introduction.md"]
+markdown_files = [
+    Path("manuscript/01_abstract.md"),
+    Path("manuscript/02_introduction.md"),
+]
 integrity_status = verify_cross_references(markdown_files)
 
 for ref_type, is_valid in integrity_status.items():
-    status = "✅" if is_valid else "❌"
-    print(f"{status} {ref_type}")
+    print(f"{ref_type}: {'ok' if is_valid else 'FAIL'}")
 ```
 
 ---
@@ -56,11 +60,11 @@ for ref_type, is_valid in integrity_status.items():
 ## CLI Integration
 
 ```bash
-# Automatic integrity validation
-uv run python scripts/04_validate_output.py
+# Automatic integrity validation (via pipeline)
+uv run python scripts/04_validate_output.py --project template_code_project
 
 # Manual integrity check
-uv run python -m infrastructure.validation.integrity.integrity.integrity.checks.checks.cli output/
+uv run python -m infrastructure.validation.cli integrity output/template_code_project/
 ```
 
 ---

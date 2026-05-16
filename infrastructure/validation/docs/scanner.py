@@ -11,8 +11,6 @@ This script performs a systematic 7-phase documentation scan:
 7. Reporting
 """
 
-from __future__ import annotations
-
 import sys
 from collections import defaultdict
 from datetime import datetime

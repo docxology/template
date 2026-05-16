@@ -1,6 +1,6 @@
 # Syntax Guide
 
-This document defines the syntax conventions for documentation and manuscript content inside the `code_project` exemplar. Rules 1–5 are mandatory constraints; sections 6–8 are reference material for common operations.
+This document defines the syntax conventions for documentation and manuscript content inside the `template_code_project` exemplar. Rules 1–5 are mandatory constraints; sections 6–8 are reference material for common operations.
 
 ---
 
@@ -48,14 +48,14 @@ The table anchor used in `03_results.md`: `{#tbl:opt_results}`.
 
 ## 3. Variable Injection (Madlibs)
 
-When specifying numeric results in the manuscript, use the `{{VARIABLE_NAME}}` syntax. Values are hydrated dynamically by `scripts/z_generate_manuscript_variables.py`. Never hardcode a number that will change when the experiment parameters change.
+When specifying numeric results in the manuscript, use the `{{VARIABLE_NAME}}` syntax. Values are computed by `src/manuscript_variables.py::generate_variables()` and written to `output/manuscript/` by the thin orchestrator `scripts/z_generate_manuscript_variables.py`. Never hardcode a number that will change when the experiment parameters change.
 
 - **BAD**: The algorithm took 165 iterations.
 - **GOOD**: The algorithm took `{{RESULT_MAX_ITERATIONS}}` iterations.
 
 ### Complete {{VARIABLE}} Token Reference
 
-All tokens defined in `scripts/z_generate_manuscript_variables.py`:
+All tokens defined in `src/manuscript_variables.py::generate_variables()`:
 
 **CONFIG_* — Derived from `manuscript/config.yaml`**
 
@@ -118,9 +118,10 @@ All tokens defined in `scripts/z_generate_manuscript_variables.py`:
 
 ### Adding a New Variable
 
-1. Define the variable in `scripts/z_generate_manuscript_variables.py` — add a key/value pair to the `variables` dict in `generate_variables()`.
-2. Verify it produces a non-empty string: `python scripts/z_generate_manuscript_variables.py && python -c "import json; d=json.load(open('projects/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`.
-3. Reference it in a manuscript `.md` file as `{{MY_TOKEN}}`.
+1. Add a key/value pair to `generate_variables()` in `src/manuscript_variables.py`.
+2. Add a corresponding test assertion in `tests/test_manuscript_variables.py` (the live cross-reference test `test_all_manuscript_tokens_are_generated` will catch any gap automatically).
+3. Verify it produces a non-empty string: `python projects/template_code_project/scripts/z_generate_manuscript_variables.py && python -c "import json; d=json.load(open('projects/template_code_project/output/data/manuscript_variables.json')); print(d['MY_TOKEN'])"`.
+4. Reference it in a manuscript `.md` file as `{{MY_TOKEN}}`.
 
 ### Detecting Unresolved Tokens
 

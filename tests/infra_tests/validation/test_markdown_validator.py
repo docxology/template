@@ -255,9 +255,9 @@ class TestValidateRefs:
 class TestValidateMath:
     """Test validate_math function."""
 
-    def test_detects_dollar_math(self, tmp_path):
-        """Test validate_math detects dollar math notation."""
-        # Create test markdown file with $$ math
+    def test_detects_inline_dollar_display_math(self, tmp_path):
+        """Test validate_math detects inline dollar-display notation."""
+        # Create test markdown file with inline $$ math
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "test.md").write_text("Math: $$x^2 + y^2 = z^2$$")
@@ -265,7 +265,20 @@ class TestValidateMath:
         problems = validate_math([str(manuscript / "test.md")], tmp_path)
 
         assert len(problems) == 1
-        assert "Use equation environment instead of $$" in problems[0].message
+        assert "inline or unbalanced $$" in problems[0].message
+
+    def test_allows_isolated_dollar_display_math_blocks(self, tmp_path):
+        """Pandoc-native display math blocks are valid for PDF and HTML."""
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "test.md").write_text(
+            "$$x^2 + y^2 = z^2$$\n\n$$\na+b=c\n$$\n",
+            encoding="utf-8",
+        )
+
+        problems = validate_math([str(manuscript / "test.md")], tmp_path)
+
+        assert problems == []
 
     def test_detects_bracket_math(self, tmp_path):
         """Test validate_math detects bracket math notation."""
@@ -766,6 +779,11 @@ class TestDiagnosticCodes:
 
     def test_math_dollar_display_carries_code(self, tmp_path):
         paths = self._setup(tmp_path, {"test.md": "$$x = 1$$\n"})
+        problems = validate_math(paths, tmp_path)
+        assert not any(p.code == MarkdownCode.MATH_DOLLAR_DISPLAY for p in problems)
+
+    def test_inline_math_dollar_display_carries_code(self, tmp_path):
+        paths = self._setup(tmp_path, {"test.md": "Inline misuse: $$x = 1$$\n"})
         problems = validate_math(paths, tmp_path)
         assert any(p.code == MarkdownCode.MATH_DOLLAR_DISPLAY for p in problems)
 

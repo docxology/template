@@ -35,8 +35,6 @@ and ensuring data integrity across the research project.
     (output statistics live in infrastructure/reporting/output_reporter.py)
 """
 
-from __future__ import annotations
-
 # Content validators
 from .content import (
     extract_text_from_pdf,

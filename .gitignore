@@ -42,6 +42,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+coverage*.xml
 coverage.json
 *.cover
 .hypothesis/
@@ -81,8 +82,12 @@ Thumbs.db
 # Test artifacts
 invalid/
 
-# projects/: ignore all workspaces except the three canonical template exemplars
+# projects/: ignore all workspaces except the canonical template exemplars
 # (Tracked copies of other projects remain in the index until `git rm -r --cached projects/<name>`.)
+# template_code_project and template_prose_project are the two permanent
+# always-present exemplars. template_search_project rotates between
+# projects/ (active) and projects_archive/; the negation patterns below
+# keep it tracked whenever it is restored under projects/.
 projects/*
 !projects/template_code_project/
 !projects/template_code_project/**
@@ -90,10 +95,18 @@ projects/*
 !projects/template_prose_project/**
 !projects/template_search_project/
 !projects/template_search_project/**
+projects/*/.DS_Store
+projects/*/output/
+projects/*/output/**
+projects/*/*.egg-info/
+projects/*/src/*.egg-info/
 
 # Archived and in-progress projects (not executed by pipeline)
 projects_archive/
 projects_in_progress/
+
+# Doctor state (infrastructure.doctor) — local backups and audit log
+.doctor/
 
 # Desloppify
 .desloppify

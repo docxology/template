@@ -9,7 +9,7 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
 1. **`infrastructure/` Layer**: The code delegates all tracking, performance benchmarking, stability validation, and PDF rendering to the 16-module infrastructure cluster (located at the repository root).
-2. **`tests/` Integrity**: A zero-mock suite (`projects/template_code_project/tests/`, **52** collected tests) with **≥90%** coverage on `projects/template_code_project/src/` (typically ~99% line/branch with the current tests).
+2. **`tests/` Integrity**: A zero-mock suite (`projects/template_code_project/tests/`, **117** collected tests) with **≥90%** coverage on `projects/template_code_project/src/` (typically ~99% line/branch with the current tests).
 3. **`docs/` Orchestration**: Adherence to the Rigorous Agentic Scientific Protocol (RASP) ensuring total documentation-to-code parity (`projects/template_code_project/docs/`).
 
 ## Manuscript Structure
@@ -38,7 +38,7 @@ graph TD
     end
 
     subgraph "Template Ecosystem"
-        Tests["tests/ (52 tests, ~99% src)"]:::docs
+        Tests["tests/ (117 tests, ~99% src)"]:::docs
         Config["config.yaml & preamble.md"]:::docs
         
         subgraph "`infrastructure/`"
@@ -79,4 +79,4 @@ If you are an AI agent operating in this repository, you **MUST** read [`AGENTS.
 ## See also
 
 - [`SYNTAX.md`](SYNTAX.md) — Pandoc citation / cross-reference conventions for this manuscript.
-- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by all three template exemplars (`template_code_project`, `template_prose_project`, `template_search_project`).
+- [`../../../docs/guides/manuscript-semantics.md`](../../../docs/guides/manuscript-semantics.md) — Repository-wide canonical manuscript semantics shared by the permanent exemplars (`template_code_project`, `template_prose_project`) and the optional search add-on (`projects_archive/template_search_project`).

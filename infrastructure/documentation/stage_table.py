@@ -22,8 +22,6 @@ The caption notes this caveat explicitly so historical pitfalls are not
 re-introduced.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 import yaml

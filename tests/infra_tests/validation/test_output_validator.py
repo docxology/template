@@ -732,6 +732,17 @@ class TestValidateOutputStructure:
         assert result["valid"] is True
         assert len(result["missing_files"]) == 0
 
+    def test_validate_wip_source_output_structure(self, tmp_path):
+        """Source output validation detects projects_in_progress/ project names."""
+        project_output_dir = tmp_path / "projects_in_progress" / "draft_project" / "output"
+        pdf_dir = project_output_dir / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / "draft_project_combined.pdf").write_bytes(b"PDF" * 10000)
+
+        result = validate_output_structure(project_output_dir)
+
+        assert result["directory_structure"]["project_combined_pdf"]["exists"] is True
+
     def test_validate_nested_copied_output_structure(self, tmp_path):
         """Copied nested output validation uses the qualified output path."""
         project_output_dir = tmp_path / "output" / "my_program" / "nested_project"

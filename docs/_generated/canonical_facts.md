@@ -1,26 +1,26 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-03 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `pytest tests/infra_tests/project/test_discovery.py --collect-only` (57 tests), `ls` of `projects/` and `infrastructure/`. Counts below for `fep_lean` are from the archived `projects_archive/fep_lean/` tree (see commands).
+**Generated from live repo state on 2026-05-15 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `pytest tests/infra_tests/project/test_discovery.py -q` (**58** passed), `pytest projects/*/tests/ --collect-only` per exemplar below, `find infrastructure -name '*.py' -type f | wc -l` (**345** `.py` files, re-measured 2026-05-15 — point-in-time; this count drifts as the tree changes, always re-derive with the command rather than trusting the literal). Counts below for `fep_lean` are historical from archived/restored trees (see commands).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
 ## Project Roster
 
-**Always-present canonical exemplars** (the only three guaranteed to live under `projects/`):
+**Always-present canonical exemplars** (the only two guaranteed to live under `projects/`):
 
 - `template_code_project`
 - `template_prose_project`
-- `template_search_project`
 
-**Active projects this checkout** (`projects/`, from `discover_projects()`; rotates):
+Optional add-on: `projects_archive/template_search_project` can be restored under `projects/` for literature-search workflows.
 
+**Active projects this checkout** (`projects/`, from `discover_projects()`; rotates — authoritative snapshot → [`active_projects.md`](active_projects.md)):
+
+- `actinf_policy_entanglement_lean`
+- `crescent_city`
 - `template_code_project`
 - `template_prose_project`
-- `template_search_project`
-- `actinf_policy_entanglement_lean` (rotating)
-- `_test_project` (CI fixture; not a real research project)
 
-Authoritative list (regenerated): [`active_projects.md`](active_projects.md).
+`projects/_test_project/` is a stub layout used by validation tests only — omitted from `discover_projects()` (path may be absent in sparse checkouts; not a tracked exemplar tree).
 
 **In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`):
 
@@ -43,11 +43,10 @@ Default exemplar for paths: `projects/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current Python subpackages under `infrastructure/` (17):
+Current importable Python subpackages under `infrastructure/` (16):
 
-- config
 - core
-- docker
+- doctor
 - documentation
 - llm
 - orchestration
@@ -63,10 +62,11 @@ Current Python subpackages under `infrastructure/` (17):
 - steganography
 - validation
 
-Plus `infrastructure/logrotate.d/` (config dir, not a Python package). Recount with:
+Plus `infrastructure/config/`, `infrastructure/docker/`, and `infrastructure/logrotate.d/` (configuration/documentation directories, not Python packages). Recount with:
 
 ```bash
-find infrastructure -maxdepth 1 -type d ! -path infrastructure ! -path infrastructure/logrotate.d | wc -l
+find infrastructure -mindepth 1 -maxdepth 1 -type d -name '[!.]*' \
+  -exec sh -c 'test -f "$1/__init__.py" && basename "$1"' sh {} \; | wc -l
 ```
 
 Python modules on disk:
@@ -75,7 +75,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **313** on 2026-05-03.)
+(Last refreshed count: **345** on 2026-05-15 — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -85,7 +85,14 @@ See `infrastructure/AGENTS.md` for module-specific function signatures and entry
 uv run pytest tests/infra_tests/project/test_discovery.py -q
 ```
 
-Result: 57 passed in ~0.22s (real data, no mocks).
+Result: 58 passed in ~0.44s (real data, no mocks).
+
+**Exemplar `pytest --collect-only` totals** (2026-05-08):
+
+| Project | Tests collected |
+|---------|-----------------|
+| `template_code_project` | 117 |
+| `template_prose_project` | 67 |
 
 Coverage gates (enforced in CI):
 
@@ -160,7 +167,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```mermaid
 flowchart TD
-    Root[Root] --> Infra[infrastructure/ <br/>17 modules]
+    Root[Root] --> Infra[infrastructure/ <br/>16 importable packages]
     Root --> Projects[projects/ <br/>see active_projects.md]
     Root --> Tests[tests/infra_tests/]
     Infra --> Core[core/ <br/>pipeline, logging, files, config]

@@ -22,8 +22,10 @@ uv run python scripts/03_render_pdf.py --project template_code_project
 
 ## Pipeline Overview
 
-| Stage | Script | Purpose |
-|-------|--------|---------|
+Stage numbers below are script-prefix keys (0 = `00_setup_environment.py`). The canonical DAG has 10 named stages — Clean (stage 0) plus nine numbered stages — see [`docs/RUN_GUIDE.md`](RUN_GUIDE.md) for the authoritative table.
+
+| Key | Script | Purpose |
+|-----|--------|---------|
 | 0 | `00_setup_environment.py` | Dependency & environment checks |
 | 1 | `01_run_tests.py` | Infrastructure + project tests |
 | 2 | `02_run_analysis.py` | Data analysis, figures |
@@ -31,11 +33,11 @@ uv run python scripts/03_render_pdf.py --project template_code_project
 | 4 | `04_validate_output.py` | Output integrity checks |
 | 5 | `05_copy_outputs.py` | Copy to `output/`  directory |
 | 6 | `06_llm_review.py` | LLM scientific/translation review |
-| 7 | `07_generate_executive_report.py` | Executive summary |
+| 7 | `07_generate_executive_report.py` | Executive summary (multi-project) |
 
 ## Project Layout
 
-- `infrastructure/` — Reusable generic tooling (13 modules)
+- `infrastructure/` — Reusable generic tooling (16 packages)
 - `projects/{name}/` — Self-contained research project
   - `src/` — Domain algorithms
   - `tests/` — Test suite
@@ -56,7 +58,7 @@ uv run python scripts/generate_active_projects_doc.py
 
 ### Preflight validate before render
 ```bash
-uv run python -m infrastructure.validation.cli prerender projects/my_project
+uv run python -m infrastructure.validation.cli prerender projects/my_project/manuscript --repo-root .
 ```
 
 ### Debug failing tests

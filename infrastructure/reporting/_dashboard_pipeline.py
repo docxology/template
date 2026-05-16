@@ -5,8 +5,6 @@ responsible for pipeline-timing visualizations only; health, output, and codebas
 charts live in sibling modules.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Any
 

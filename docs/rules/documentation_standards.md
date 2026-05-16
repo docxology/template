@@ -33,7 +33,7 @@ This ensures information is available while also providing fast lookup.
 
 ## AGENTS.md Structure
 
-### Recommended Section Order
+### AGENTS.md - Recommended Section Order
 
 1. **Overview** (50-100 words)
    - What is this module/directory?
@@ -145,7 +145,7 @@ This ensures information is available while also providing fast lookup.
 
 ## README.md Structure
 
-### Recommended Section Order
+### README.md - Recommended Section Order
 
 1. **Title** - One-line description
 2. **Quick Start** - Minimal working example
@@ -206,17 +206,17 @@ and functions it provides. Explain the purpose and main use cases.
 
 Example:
     Import and use the main class:
-    
+
         from module import MainClass
         obj = MainClass()
         result = obj.method()
 
 Attributes:
     CONSTANT: Description
-    
+
 Classes:
     MainClass: Main functionality
-    
+
 Functions:
     helper_function: Helper description
 """
@@ -227,23 +227,23 @@ Functions:
 ```python
 class ClassName:
     """One-line summary of the class.
-    
+
     Detailed description of what the class does, its purpose,
     and how it should be used.
-    
+
     Attributes:
         attribute1 (str): Description
         attribute2 (int): Description
-        
+
     Example:
         >>> obj = ClassName()
         >>> obj.method()
         'result'
     """
-    
+
     def __init__(self, param: str) -> None:
         """Initialize the class.
-        
+
         Args:
             param: Description
         """
@@ -254,29 +254,29 @@ class ClassName:
 ```python
 def function_name(param1: str, param2: int = 10) -> str:
     """One-line summary (imperative form: "Do something").
-    
+
     Detailed description explaining what the function does,
     why you would use it, and any important behavior.
-    
+
     Args:
         param1: Description of first parameter
         param2: Description of second parameter (default: 10)
-        
+
     Returns:
         Description of return value
-        
+
     Raises:
         ValueError: When param1 is empty
         TypeError: When param2 is not an integer
-        
+
     Example:
         >>> result = function_name("input", 5)
         >>> print(result)
         'output'
-        
+
     Note:
         This function requires X permission.
-        
+
     See Also:
         related_function: For similar operation
     """
@@ -306,7 +306,7 @@ Show, don't just tell:
 # ✅ GOOD: Show what you mean
 def process_data(data: List[str]) -> List[str]:
     """Convert strings to uppercase.
-    
+
     Example:
         >>> process_data(["hello", "world"])
         ['HELLO', 'WORLD']
@@ -322,7 +322,7 @@ def process_data(data: List[str]) -> List[str]:
 ```python
 def divide(a: int, b: int) -> float:
     """Divide a by b.
-    
+
     Note:
         Returns inf if b is 0 (doesn't raise error).
     """

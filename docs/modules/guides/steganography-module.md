@@ -66,24 +66,22 @@ result = processor.process(
 ### QR Code Generation
 
 ```python
-from infrastructure.steganography.barcodes import QRGenerator
+from infrastructure.steganography.barcode_generators import generate_qr_code
 
-generator = QRGenerator()
-qr_image = generator.generate_mailto(
-    emails=["alice@example.com", "bob@example.com"],
-    subject="Research Inquiry",
+qr_png_bytes = generate_qr_code(
+    data="mailto:alice@example.com?subject=Research+Inquiry",
 )
 ```
 
 ### Document Hashing
 
 ```python
-from infrastructure.steganography.hashing import DocumentHasher
+from infrastructure.steganography.hashing import compute_file_hashes, write_hash_manifest
 from pathlib import Path
 
-hasher = DocumentHasher()
-manifest = hasher.generate_manifest(Path("paper.pdf"))
+hashes = compute_file_hashes(Path("paper.pdf"))
 # Returns dict with sha256 and sha512 digests
+manifest_path = write_hash_manifest(Path("paper.pdf"), hashes)
 ```
 
 ### Text Overlay (Low-Level)

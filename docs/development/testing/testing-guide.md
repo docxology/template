@@ -21,13 +21,13 @@ uv run python scripts/01_run_tests.py --verbose
 uv run python scripts/01_run_tests.py --include-slow
 
 # Run specific test suite
-pytest tests/infra_tests/ -v
+uv run pytest tests/infra_tests/ -v
 
 # Run with coverage report
-pytest tests/ --cov=src --cov-report=html
+uv run pytest tests/ --cov=src --cov-report=html
 
 # Run only slow tests (requires Ollama for LLM tests)
-pytest -m slow
+uv run pytest -m slow
 ```
 
 ## Slow Test Handling
@@ -47,7 +47,7 @@ By default, slow tests are **automatically skipped** to ensure fast test runs:
 uv run python scripts/01_run_tests.py
 
 # pytest directly (also skips slow tests due to addopts)
-pytest tests/
+uv run pytest tests/
 ```
 
 ### Running Slow Tests
@@ -59,10 +59,10 @@ To include slow tests when needed:
 uv run python scripts/01_run_tests.py --include-slow
 
 # Run only slow tests (useful for LLM testing)
-pytest -m slow
+uv run pytest -m slow
 
 # Run slow tests with verbose output
-pytest -m slow -v
+uv run pytest -m slow -v
 ```
 
 ### Test Timeout Protection
@@ -111,12 +111,12 @@ from module_name import function_to_test
 
 class TestFunctionName:
     """Test suite for function_to_test."""
-    
+
     def test_basic_functionality(self):
         """Test basic usage."""
         result = function_to_test("input")
         assert result == "expected"
-    
+
     def test_error_handling(self):
         """Test error conditions."""
         with pytest.raises(ValueError):
@@ -129,10 +129,10 @@ class TestFunctionName:
 def test_logging_output(caplog):
     """Test function logs correctly."""
     logger = get_logger("test")
-    
+
     with caplog.at_level(logging.INFO):
         function_that_logs()
-    
+
     messages = [rec.message for rec in caplog.records]
     assert any("Expected message" in msg for msg in messages)
 ```
@@ -144,7 +144,7 @@ def test_raises_specific_exception():
     """Test function raises correct exception."""
     with pytest.raises(ValidationError) as exc_info:
         validate_invalid_data()
-    
+
     error = exc_info.value
     assert "expected message" in error.message
     assert error.context["file"] == "data.csv"
@@ -168,14 +168,14 @@ def test_with_fixture(temp_data_file):
 
 ## Coverage Requirements
 
-- **90% minimum** for projects/{name}/src/ (currently achieving 100% - coverage!)
-- **60% minimum** for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
+- **90% minimum** for projects/{name}/src/ (see [canonical_facts.md](../../_generated/canonical_facts.md) for current %)
+- **60% minimum** for infrastructure/ (see [coverage-gaps.md](../coverage-gaps.md) for current %)
 - **ABSOLUTE PROHIBITION**: Never use mock methods - use data only
 - Test all error paths
 
 ```bash
 # Generate coverage report
-pytest tests/ --cov=src --cov-report=html
+uv run pytest tests/ --cov=src --cov-report=html
 open htmlcov/index.html
 ```
 

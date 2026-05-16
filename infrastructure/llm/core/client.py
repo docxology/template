@@ -8,8 +8,6 @@ Provides LLMClient for interacting with Ollama local LLMs with:
 - Template support for research tasks
 """
 
-from __future__ import annotations
-
 import time as time_module
 from pathlib import Path
 from typing import Any, Callable, Iterator, TypeVar

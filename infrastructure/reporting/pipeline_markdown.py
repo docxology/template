@@ -3,8 +3,6 @@
 Generates Markdown-formatted reports from PipelineReport data.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.helpers import format_duration
@@ -13,7 +11,7 @@ if TYPE_CHECKING:
     from .pipeline_report_model import PipelineReport
 
 
-def _generate_pipeline_markdown(report: PipelineReport) -> str:
+def _generate_pipeline_markdown(report: "PipelineReport") -> str:
     """Generate Markdown format pipeline report."""
     lines = [
         "# Pipeline Execution Report",

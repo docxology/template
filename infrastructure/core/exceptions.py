@@ -14,8 +14,6 @@ Implementation split:
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Any
 

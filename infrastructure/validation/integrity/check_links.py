@@ -17,8 +17,6 @@ This module validates:
 - Consistency of {name} placeholders vs actual project names
 """
 
-from __future__ import annotations
-
 import ast
 import re
 import sys
@@ -605,7 +603,7 @@ def validate_placeholder_consistency(content: str, file_path: Path, repo_root: P
     # Skip validation for certain file types that naturally use templates
     file_path_str = str(file_path)
     skip_files = [
-        ".cursorrules/",  # Development rules naturally use templates
+        "docs/rules/",  # Standards corpus uses `{name}` placeholders in examples
         "docs/architecture/",  # Architecture docs explain templates
         "docs/core/",  # Core docs explain system structure
         "infrastructure/AGENTS.md",  # Infrastructure docs use templates

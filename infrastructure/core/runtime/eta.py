@@ -4,8 +4,6 @@ Pure functions for calculating time estimates during long-running operations.
 Split from logging_progress.py to keep each module under 300 LOC.
 """
 
-from __future__ import annotations
-
 from typing import NamedTuple
 
 

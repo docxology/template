@@ -73,7 +73,7 @@ mkdir -p projects/{name}/manuscript
 ### 5. Validate
 
 ```bash
-pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src
+uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 ```
 

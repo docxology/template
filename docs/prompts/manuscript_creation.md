@@ -13,7 +13,7 @@ Create a compliant research manuscript and project layout from a research descri
 - [`../core/workflow.md`](../core/workflow.md) — How manuscript, scripts, and pipeline connect.
 - [`../usage/markdown-template-guide.md`](../usage/markdown-template-guide.md) — Markdown authoring details.
 
-**Before choosing filenames:** copy the closest exemplar under [`projects/template_code_project/`](../../projects/template_code_project/), [`projects/template_prose_project/`](../../projects/template_prose_project/), or [`projects/template_search_project/`](../../projects/template_search_project/); do not assume the generic `01_abstract` / `02_introduction` skeleton below if your exemplar uses different numbering (`00_abstract`, themed sections, etc.).
+**Before choosing filenames:** copy the closest exemplar under [`projects/template_code_project/`](../../projects/template_code_project/), [`projects/template_prose_project/`](../../projects/template_prose_project/), or [`projects_archive/template_search_project/`](../../projects_archive/template_search_project/); do not assume the generic `01_abstract` / `02_introduction` skeleton below if your exemplar uses different numbering (`00_abstract`, themed sections, etc.).
 
 ## Prompt Template
 
@@ -232,7 +232,7 @@ Ensure all output meets standards:
 
 ### Code Standards ([`../rules/code_style.md`](../rules/code_style.md))
 - [ ] Type hints on all public APIs
-- [ ] Black formatting and isort imports
+- [ ] Ruff format/check on any touched Python helpers
 - [ ] Google-style docstrings
 - [ ] Error handling with custom exceptions
 - [ ] Unified logging system

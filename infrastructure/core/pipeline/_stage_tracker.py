@@ -4,8 +4,6 @@ Provides the StagePerformanceTracker class that collects per-stage timing,
 memory, CPU, and I/O metrics and generates warnings and summaries.
 """
 
-from __future__ import annotations
-
 import os
 import time
 from typing import Any

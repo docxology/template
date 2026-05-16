@@ -1,7 +1,5 @@
 """Prompt templates for research tasks."""
 
-from __future__ import annotations
-
 from infrastructure.core.exceptions import LLMTemplateError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.templates.base import ResearchTemplate
@@ -33,8 +31,6 @@ from infrastructure.llm.templates.research import (
     ScienceCommunicationNarrative,
     SummarizeAbstract,
 )
-
-from infrastructure.llm.core._prompt_availability import PROMPT_COMPOSER_AVAILABLE  # noqa: F401
 
 logger = get_logger(__name__)
 

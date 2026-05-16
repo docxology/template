@@ -7,8 +7,6 @@ be imported directly by callers — use summary.py as the entry point.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.files.inventory import FileInventoryEntry

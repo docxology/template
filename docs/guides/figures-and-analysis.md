@@ -106,12 +106,12 @@ from projects.template_code_project.src.example import calculate_average, find_m
 def main():
     # Sample data
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
-    
+
     # USE projects/{name}/src/ methods for computation - NEVER implement here
     avg = calculate_average(data)  # From projects/template_code_project/src/example.py
     max_val = find_maximum(data)   # From projects/template_code_project/src/example.py
     min_val = find_minimum(data)   # From projects/template_code_project/src/example.py
-    
+
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.plot(data, marker='o', label='Data')
@@ -122,14 +122,14 @@ def main():
     ax.set_title('Data Analysis')
     ax.set_xlabel('Index')
     ax.set_ylabel('Value')
-    
+
     # Save output
     output_dir = 'projects/template_code_project/output/figures'
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, 'my_analysis.png')
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
-    
+
     # Print path for build system manifest
     print(output_path)
 
@@ -209,10 +209,10 @@ def main():
     # Generate sample data
     np.random.seed(42)  # Reproducible
     data = np.random.normal(0, 1, 100)
-    
+
     # Use src/ method for computation
     std = calculate_std_dev(data.tolist())
-    
+
     # Script handles visualization only
     fig, ax = plt.subplots()
     ax.hist(data, bins=20, alpha=0.7, label='Data')
@@ -220,13 +220,13 @@ def main():
     ax.axvline(-std, color='r', linestyle='--')
     ax.legend()
     ax.set_title('Distribution with Standard Deviation')
-    
+
     # Save
     output_path = 'projects/template_code_project/output/figures/statistics_figure.png'
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
-    
+
     # Print for manifest
     print(output_path)
 
@@ -361,31 +361,31 @@ def test_linear_regression():
 
 def calculate_correlation(x: list[float], y: list[float]) -> float:
     """Calculate Pearson correlation coefficient.
-    
+
     Args:
         x: First variable
         y: Second variable
-    
+
     Returns:
         Correlation coefficient between -1 and 1
     """
     n = len(x)
     mean_x = sum(x) / n
     mean_y = sum(y) / n
-    
+
     numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
     denominator_x = sum((x[i] - mean_x) ** 2 for i in range(n)) ** 0.5
     denominator_y = sum((y[i] - mean_y) ** 2 for i in range(n)) ** 0.5
-    
+
     return numerator / (denominator_x * denominator_y)
 
 def calculate_r_squared(x: list[float], y: list[float]) -> float:
     """Calculate R-squared (coefficient of determination).
-    
+
     Args:
         x: Independent variable
         y: Dependent variable
-    
+
     Returns:
         R-squared value between 0 and 1
     """
@@ -394,24 +394,24 @@ def calculate_r_squared(x: list[float], y: list[float]) -> float:
 
 def linear_regression(x: list[float], y: list[float]) -> tuple[float, float]:
     """Perform simple linear regression.
-    
+
     Args:
         x: Independent variable
         y: Dependent variable
-    
+
     Returns:
         Tuple of (slope, intercept)
     """
     n = len(x)
     mean_x = sum(x) / n
     mean_y = sum(y) / n
-    
+
     numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
     denominator = sum((x[i] - mean_x) ** 2 for i in range(n))
-    
+
     slope = numerator / denominator
     intercept = mean_y - slope * mean_x
-    
+
     return slope, intercept
 ```
 
@@ -441,11 +441,11 @@ def main():
     np.random.seed(42)
     x = np.linspace(0, 10, 50)
     y = 2 * x + 1 + np.random.normal(0, 1, 50)
-    
+
     # Use projects/{name}/src/ methods for computation
     corr = calculate_correlation(x.tolist(), y.tolist())
     slope, intercept = linear_regression(x.tolist(), y.tolist())
-    
+
     # Script handles visualization only
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.scatter(x, y, alpha=0.5, label='Data')
@@ -455,13 +455,13 @@ def main():
     ax.set_ylabel('Y')
     ax.legend()
     ax.grid(True, alpha=0.3)
-    
+
     # Save
     output_path = 'projects/template_code_project/output/figures/correlation_analysis.png'
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
-    
+
     # Print for manifest
     print(output_path)
 
@@ -478,7 +478,7 @@ import numpy as np
 import csv
 
 # Save as NPZ (NumPy compressed)
-np.savez('projects/template_code_project/output/data/analysis_data.npz', 
+np.savez('projects/template_code_project/output/data/analysis_data.npz',
          x=x, y=y, correlation=corr)
 
 # Save as CSV (portable)
@@ -625,24 +625,24 @@ def process_dataset(filename):
     """Process single dataset."""
     # Load data
     data = load_data(filename)  # Implement as needed
-    
+
     # Use src/ methods
     corr = calculate_correlation(data['x'], data['y'])
     slope, intercept = linear_regression(data['x'], data['y'])
-    
+
     # Generate figure
     generate_figure(data, corr, slope, intercept, filename)
-    
+
     return corr, slope, intercept
 
 def main():
     datasets = ['data1.csv', 'data2.csv', 'data3.csv']
     results = {}
-    
+
     for dataset in datasets:
         print(f"Processing {dataset}...")
         results[dataset] = process_dataset(dataset)
-    
+
     # Save summary
     save_results_table(results)
 
@@ -711,7 +711,7 @@ fm = FigureManager()
 fm.register_figure(
     filename="my_figure.png",
     caption="Description",
-    label="fig:my_figure"  # Use in LaTeX as \ref{fig:my_figure}
+    label="fig:my_figure",  # Use in manuscript as [@fig:my_figure]
 )
 ```
 
@@ -787,15 +787,15 @@ with Pool() as pool:
 The infrastructure layer provides utilities that automate figure management:
 
 ```python
-from infrastructure.documentation import FigureManager, FigureMetadata
+from infrastructure.documentation import FigureManager
 
 # Register figures for automatic numbering and cross-referencing
 manager = FigureManager()
-manager.register(FigureMetadata(
-    label="fig:convergence",
+manager.register_figure(
+    filename="convergence.png",
     caption="Gradient descent convergence analysis",
-    path="output/figures/convergence.png",
-))
+    label="fig:convergence",
+)
 ```
 
 For performance measurement of your analysis code:

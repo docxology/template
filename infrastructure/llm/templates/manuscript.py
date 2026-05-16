@@ -10,8 +10,6 @@ Submodules:
     manuscript_translation: ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES
 """
 
-from __future__ import annotations
-
 from infrastructure.llm.templates.manuscript_reviews import (
     ManuscriptExecutiveSummary,
     ManuscriptQualityReview,

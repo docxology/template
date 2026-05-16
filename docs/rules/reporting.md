@@ -27,8 +27,8 @@ Guidelines for using and extending the reporting utilities (multi-format reports
 
 ## Logging & Errors
 
-- Use `infrastructure.core.logging.logging_utils.get_logger(__name__)`.
-- Raise module-specific errors from `infrastructure.core.runtime.exceptions` (e.g., `ValidationError`, `BuildError`) with context.
+- Use `infrastructure.core.logging.utils.get_logger(__name__)`.
+- Raise module-specific errors from `infrastructure.core.exceptions` (e.g., `ValidationError`, `BuildError`) with context.
 - Log summaries at INFO; detailed diagnostics at DEBUG.
 - Never swallow errors—propagate with `raise ... from e`.
 
@@ -48,7 +48,7 @@ Guidelines for using and extending the reporting utilities (multi-format reports
 ## Documentation
 
 - Update `infrastructure/AGENTS.md` and module README when APIs change.
-- Cross-link from `.cursorrules/AGENTS.md` and `.cursorrules/README.md`.
+- Cross-link from **[`docs/rules/AGENTS.md`](AGENTS.md)** and **[`docs/rules/README.md`](README.md)** (and root **[`AGENTS.md`](../../AGENTS.md)** when describing pipeline-wide behaviour).
 - Provide minimal runnable examples that generate a report file.
 
 ## Quick Example

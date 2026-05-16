@@ -14,11 +14,13 @@ Machine-readable discovery for all `SKILL.md` descriptors used by Cursor and sim
 - **Recursive scan**: `**/SKILL.md` under `infrastructure/` (configurable roots)
 - **Frontmatter parsing**: YAML `name` and `description` (full dict available)
 - **Manifest I/O**: Write or verify `.cursor/skill_manifest.json`
+- **Generated index**: Write `docs/_generated/skills_index.md` for human browsing
 
 ## CLI
 
 ```bash
 uv run python -m infrastructure.skills write
+uv run python -m infrastructure.skills write-index
 uv run python -m infrastructure.skills write --roots infrastructure docs
 uv run python -m infrastructure.skills check
 uv run python -m infrastructure.skills list-json

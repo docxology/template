@@ -141,14 +141,18 @@ export LLM_REVIEW_TIMEOUT="300"         # Review stage timeout
 
 ### Basic Review
 ```python
-from infrastructure.llm.templates import ManuscriptReviewTemplate
-from infrastructure.llm.core import LLMClient
+from infrastructure.llm import LLMClient, generate_review_with_metrics
+from infrastructure.llm.templates import ManuscriptQualityReview
 
 client = LLMClient()
-template = ManuscriptReviewTemplate(client)
-
-result = template.apply(manuscript="Your manuscript text here")
-print(result.content)
+review_text, metrics = generate_review_with_metrics(
+    client=client,
+    text="Your manuscript text here",
+    review_type="quality_review",
+    review_name="quality review",
+    template_class=ManuscriptQualityReview,
+)
+print(review_text)
 ```
 
 ### Custom Prompts

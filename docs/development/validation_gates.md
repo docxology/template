@@ -11,8 +11,8 @@ Before submitting a pull request or merging changes, contributors should ensure 
 | Gate | Purpose | How to Run | Status |
 |------|---------|-------------|--------|
 | **Unit & Integration Tests** | Verify correctness | `uv run pytest -m "not slow"` | ✅ Required |
-| **Type Checking (MyPy)** | Catch type errors | `uv run mypy --ignore-missing-imports infrastructure/ projects/` | ⚠️ Optional |
-| **Linting & Formatting (Ruff)** | Enforce style & fix common issues | `uv run ruff check --fix .` | ⚠️ Optional |
+| **Type Checking (MyPy)** | Catch type errors | `uv run mypy infrastructure/ projects/*/src/` | ⚠️ Optional |
+| **Linting & Formatting (Ruff)** | Enforce style & fix common issues | `uvx ruff check infrastructure/ projects/*/src/ --fix && uvx ruff format infrastructure/ projects/*/src/` | ⚠️ Optional |
 | **Coverage Thresholds** | Ensure sufficient test coverage | `uv run pytest --cov=...` | ✅ Required |
 | **No Mocks Policy** | Validate real-only testing | `uv run python scripts/verify_no_mocks.py` | ✅ Required |
 
@@ -58,8 +58,8 @@ pre-commit run --all-files --hook-stage manual
 
 | Hook | Files | Arguments | Notes |
 |------|-------|-----------|-------|
-| `ruff` | All Python files (`*.py`) | `--fix` | Auto-fixes formatting & lint issues |
-| `mypy` | Staged `.py` files | `--ignore-missing-imports` | Uses project type hints |
+| `ruff` | `infrastructure/ projects/*/src/` | `--fix` | Auto-fixes formatting & lint issues (CI scope) |
+| `mypy` | `infrastructure/ projects/*/src/` | (pyproject.toml config) | Uses project type hints (CI scope) |
 | `pytest-unit` | Changed `.py` files | `-m unit --maxfail=1` | Stops after first failure |
 
 These hooks respect `.pre-commit-config.yaml` at the repository root.
@@ -95,4 +95,6 @@ uv run pytest projects/template_code_project/tests/ --cov=projects/template_code
 
 - [Contributing Guide](contributing.md) — How to submit changes
 - [Testing Guide](testing/testing-guide.md) — Writing effective tests
+- [CI/CD Pipeline](../operational/build/ci-cd-integration.md) — Build and integration pipeline
+- [No-Mocks Policy](../development/no-mocks-http-testing.md) — Real-only testing policy
 - [Code of Conduct](code-of-conduct.md) — Community standards

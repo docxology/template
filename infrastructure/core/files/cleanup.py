@@ -10,8 +10,6 @@ Sub-modules:
     cleanup_root    -- root output directory cleanup
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.exceptions import FileOperationError

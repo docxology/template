@@ -25,8 +25,8 @@ issues = scan_for_issues(text)
 **CLI:**
 
 ```bash
-python3 -m infrastructure.validation.cli.main pdf output/{project}/pdf/
-python3 -m infrastructure.validation.cli.pdf output/{project}/pdf/
+uv run python3 -m infrastructure.validation.cli.main pdf output/{project}/pdf/
+uv run python3 -m infrastructure.validation.cli.pdf output/{project}/pdf/
 ```
 
 ## Markdown Validation (`markdown_validator.py`)
@@ -60,8 +60,8 @@ math_issues = validate_math(md_files, repo_root)
 **CLI:**
 
 ```bash
-python3 -m infrastructure.validation.cli.main markdown projects/{name}/manuscript/
-python3 -m infrastructure.validation.cli.markdown projects/{name}/manuscript/
+uv run python3 -m infrastructure.validation.cli.main markdown projects/{name}/manuscript/
+uv run python3 -m infrastructure.validation.cli.markdown projects/{name}/manuscript/
 ```
 
 ## Output Integrity (`integrity.py`)
@@ -141,28 +141,36 @@ prioritized = prioritize_issues(filtered)
 summary = generate_issue_summary(prioritized)
 ```
 
-## Documentation Scanning (`doc_scanner.py`, `doc_discovery.py`, `doc_accuracy.py`, `doc_completeness.py`, `doc_quality.py`)
+## Documentation Scanning (`docs/scanner.py`, `docs/accuracy.py`, `docs/completeness.py`)
 
 Comprehensive scanning of documentation for accuracy, completeness, and quality:
 
 ```python
-from infrastructure.validation.docs.scanner import scan_documentation
-from infrastructure.validation.docs.accuracy import check_accuracy
-from infrastructure.validation.docs.completeness import check_completeness
+from infrastructure.validation.docs.scanner import DocumentationScanner
+from infrastructure.validation.docs.accuracy import run_accuracy_phase
+from infrastructure.validation.docs.completeness import run_completeness_phase
+
+scanner = DocumentationScanner(repo_root)
+inventory = scanner.phase1_discovery()
+accuracy_report, link_issues, accuracy_issues, headings = run_accuracy_phase(
+    md_files, repo_root, config_files
+)
+completeness_report, gaps = run_completeness_phase(repo_root, documentation_files, config_files)
 ```
 
-## Repository Scanning (`repo_scanner.py`)
+## Repository Scanning (`repo/scanner.py`)
 
 ```python
-from infrastructure.validation.repo.scanner import scan_repository
-results = scan_repository(repo_root)
+from infrastructure.validation.repo.scanner import RepositoryScanner
+scanner = RepositoryScanner(repo_root)
+results = scanner.scan_all()
 ```
 
-## Mock Validation (`mock_validator.py`)
+## Mock Validation (`output/no_mock_enforcer.py`)
 
 Validates that no mock/fake methods are used in the codebase (enforces the no-mocks policy):
 
 ```python
-from infrastructure.validation.mock_validator import validate_no_mocks
-violations = validate_no_mocks(test_dir)
+from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
+violations = validate_no_mocks(tests_dir, repo_root)
 ```

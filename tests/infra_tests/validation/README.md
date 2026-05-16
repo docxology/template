@@ -10,20 +10,32 @@ Tests for validation module including PDF validation, markdown validation, integ
 
 ```bash
 # Run all validation tests
-pytest tests/infra_tests/validation/ -v
+uv run pytest tests/infra_tests/validation/ -v
 
 # Run PDF validator tests
-pytest tests/infra_tests/validation/test_pdf_validator.py -v
+uv run pytest tests/infra_tests/validation/test_pdf_validator.py -v
 ```
 
 ## Test Modules
+
+### Documentation Linter Tests (`docs/`)
+
+```bash
+uv run pytest tests/infra_tests/validation/docs/ -v
+```
+
+**Test Coverage:**
+- Mermaid block discovery and rendering
+- Relative Markdown link resolution
+- Documentation consistency claims
+- Folder-level `AGENTS.md` / `README.md` coverage
 
 ### PDF Validator Tests (`test_pdf_validator.py`)
 
 PDF quality validation:
 
 ```bash
-pytest tests/infra_tests/validation/test_pdf_validator.py -v
+uv run pytest tests/infra_tests/validation/test_pdf_validator.py -v
 ```
 
 **Test Coverage:**
@@ -37,7 +49,7 @@ pytest tests/infra_tests/validation/test_pdf_validator.py -v
 Markdown structure validation:
 
 ```bash
-pytest tests/infra_tests/validation/test_markdown_validator.py -v
+uv run pytest tests/infra_tests/validation/test_markdown_validator.py -v
 ```
 
 **Test Coverage:**
@@ -51,7 +63,7 @@ pytest tests/infra_tests/validation/test_markdown_validator.py -v
 File integrity and consistency:
 
 ```bash
-pytest tests/infra_tests/validation/test_integrity.py -v
+uv run pytest tests/infra_tests/validation/test_integrity.py -v
 ```
 
 **Test Coverage:**
@@ -68,7 +80,7 @@ Individual validator testing:
 
 ```bash
 # Test PDF validation
-pytest tests/infra_tests/validation/test_pdf_validator.py::test_validate_pdf -v
+uv run pytest tests/infra_tests/validation/test_pdf_validator.py::test_validate_pdf -v
 ```
 
 ### Integration Tests
@@ -77,7 +89,7 @@ End-to-end validation workflows:
 
 ```bash
 # Full validation pipeline
-pytest tests/infra_tests/validation/test_integrity.py::test_full_integrity_check -v
+uv run pytest tests/infra_tests/validation/test_integrity.py::test_full_integrity_check -v
 ```
 
 ## Common Test Patterns
@@ -105,26 +117,26 @@ def test_validate_markdown():
 ### All Validation Tests
 
 ```bash
-pytest tests/infra_tests/validation/ -v
+uv run pytest tests/infra_tests/validation/ -v
 ```
 
 ### Specific Validators
 
 ```bash
 # PDF tests only
-pytest tests/infra_tests/validation/test_pdf*.py -v
+uv run pytest tests/infra_tests/validation/test_pdf*.py -v
 
 # Markdown tests only
-pytest tests/infra_tests/validation/test_markdown*.py -v
+uv run pytest tests/infra_tests/validation/test_markdown*.py -v
 
 # Integrity tests only
-pytest tests/infra_tests/validation/test_integrity.py -v
+uv run pytest tests/infra_tests/validation/test_integrity.py -v
 ```
 
 ### With Coverage
 
 ```bash
-pytest tests/infra_tests/validation/ \
+uv run pytest tests/infra_tests/validation/ \
     --cov=infrastructure.validation \
     --cov-report=term
 ```

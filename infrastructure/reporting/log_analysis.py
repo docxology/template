@@ -4,8 +4,6 @@ This module provides functions for collecting statistics from log files
 and generating human-readable log summary reports.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Any
 

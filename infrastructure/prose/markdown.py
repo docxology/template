@@ -5,8 +5,6 @@ front-matter (YAML/TOML) and fenced code blocks so the metrics reflect
 prose, not embedded code or metadata.
 """
 
-from __future__ import annotations
-
 import re
 from pathlib import Path
 

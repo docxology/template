@@ -29,19 +29,19 @@ If you delete this file, the pipeline will fallback to conservative hard-coded d
 steganography:
   # Mode: text, qr, or none
   overlay_mode: text
-  
+
   # The text to display
   overlay_text: 'PROVENANCE PROTECTED'
-  
+
   # 0.0 to 1.0 (0.08 is recommended for disruption without visual clutter)
   overlay_opacity: 0.08
-  
+
   # RGB values (e.g. Red is [255, 0, 0])
   overlay_color_rgb: [128, 128, 128]
-  
+
   # Generate and append margin QR code emails
   barcodes_enabled: true
-  
+
   # Inject cryptographic SHA manifests
   hashing_enabled: true
 ```
@@ -64,8 +64,8 @@ so two consecutive runs against the same `HEAD` produce **byte-identical**
 
 ```bash
 # Reproducible build — byte-identical PDFs across consecutive runs
-STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh --pipeline --project template_code_project
-./secure_run.sh --deterministic --pipeline --project template_code_project
+STEGANOGRAPHY_DETERMINISTIC=1 ./secure_run.sh --project template_code_project
+./secure_run.sh --deterministic --project template_code_project
 ```
 
 Trade-offs:

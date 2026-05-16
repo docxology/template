@@ -10,6 +10,7 @@ Technical specification for the security documentation directory.
 | `steganography.md` | Alpha-channel watermarking and QR code injection |
 | `hashing_and_manifests.md` | SHA-256/512 hashing and manifest generation |
 | `secure_execution.md` | `secure_run.sh` orchestration and threat model |
+| `literature-fetch-security.md` | Security considerations for literature fetching |
 
 ## Key Concepts
 

@@ -1,0 +1,137 @@
+"""Validate folder-level ``AGENTS.md`` and ``README.md`` coverage.
+
+The permanent template surface is intentionally documented directory-by-directory:
+``README.md`` gives a quick human reference and ``AGENTS.md`` gives local
+automation guidance. This linter checks that every content-bearing directory in
+that permanent surface carries both files while skipping generated/local trees.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Iterable, Iterator, Sequence
+from dataclasses import dataclass
+from pathlib import Path
+
+from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS
+
+PERMANENT_TEMPLATE_ROOTS: tuple[str, ...] = (
+    ".github",
+    "docs",
+    "infrastructure",
+    "scripts",
+    "tests",
+    "projects/template_code_project",
+    "projects/template_prose_project",
+)
+
+DOC_PAIR_EXCLUDE_PARTS: frozenset[str] = frozenset(
+    {
+        *DEFAULT_EXCLUDE_PARTS,
+        ".benchmarks",
+        ".cache",
+        ".cursor",
+        ".hypothesis",
+        ".lake",
+    }
+)
+
+DOC_FILENAMES = {"AGENTS.md", "README.md"}
+
+
+@dataclass(frozen=True)
+class DocPairIssue:
+    """A content directory missing one or both folder-level docs."""
+
+    path: Path
+    missing_readme: bool
+    missing_agents: bool
+
+    def format(self) -> str:
+        """Return a human-readable one-line diagnostic."""
+        missing = []
+        if self.missing_readme:
+            missing.append("README.md")
+        if self.missing_agents:
+            missing.append("AGENTS.md")
+        return f"{self.path}: missing {', '.join(missing)}"
+
+
+def is_doc_pair_excluded_path(
+    path: Path,
+    *,
+    exclude_parts: Iterable[str] = DOC_PAIR_EXCLUDE_PARTS,
+) -> bool:
+    """Return True when *path* is outside permanent-template doc-pair scope."""
+    excluded = set(exclude_parts)
+    return any(part in excluded or part.endswith(".egg-info") for part in path.parts)
+
+
+def _has_content(path: Path) -> bool:
+    """Return True when *path* contains non-doc files or in-scope child dirs."""
+    for child in path.iterdir():
+        if is_doc_pair_excluded_path(child):
+            continue
+        if child.is_file() and child.name not in DOC_FILENAMES:
+            return True
+        if child.is_dir():
+            return True
+    return False
+
+
+def iter_doc_pair_candidate_dirs(
+    repo_root: Path | str,
+    *,
+    roots: Sequence[str] = PERMANENT_TEMPLATE_ROOTS,
+    include_repo_root: bool = True,
+) -> Iterator[Path]:
+    """Yield in-scope content directories that should carry a doc pair."""
+    repo = Path(repo_root).resolve()
+    seen: set[Path] = set()
+
+    if include_repo_root and _has_content(repo):
+        seen.add(repo)
+        yield repo
+
+    for rel_root in roots:
+        base = (repo / rel_root).resolve()
+        if not base.is_dir() or is_doc_pair_excluded_path(base):
+            continue
+        for directory in [base, *sorted(p for p in base.rglob("*") if p.is_dir())]:
+            if directory in seen or is_doc_pair_excluded_path(directory):
+                continue
+            if not _has_content(directory):
+                continue
+            seen.add(directory)
+            yield directory
+
+
+def find_doc_pair_issues(
+    repo_root: Path | str,
+    *,
+    roots: Sequence[str] = PERMANENT_TEMPLATE_ROOTS,
+) -> list[DocPairIssue]:
+    """Return missing doc-pair diagnostics for the permanent template surface."""
+    repo = Path(repo_root).resolve()
+    issues: list[DocPairIssue] = []
+    for directory in iter_doc_pair_candidate_dirs(repo, roots=roots):
+        missing_readme = not (directory / "README.md").is_file()
+        missing_agents = not (directory / "AGENTS.md").is_file()
+        if missing_readme or missing_agents:
+            issues.append(
+                DocPairIssue(
+                    path=directory.relative_to(repo),
+                    missing_readme=missing_readme,
+                    missing_agents=missing_agents,
+                )
+            )
+    return issues
+
+
+__all__ = [
+    "DOC_PAIR_EXCLUDE_PARTS",
+    "PERMANENT_TEMPLATE_ROOTS",
+    "DocPairIssue",
+    "find_doc_pair_issues",
+    "is_doc_pair_excluded_path",
+    "iter_doc_pair_candidate_dirs",
+]

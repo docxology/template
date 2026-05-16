@@ -1,7 +1,5 @@
 """Prose analysis subpackage — metrics, structure, quality."""
 
-from __future__ import annotations
-
 from .metrics import (
     ProseMetrics,
     compute_metrics,

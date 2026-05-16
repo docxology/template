@@ -1,7 +1,5 @@
 """Publication announcement and DOI badge generation."""
 
-from __future__ import annotations
-
 from infrastructure.publishing.citations import generate_citation_apa
 from infrastructure.publishing.models import PublicationMetadata
 

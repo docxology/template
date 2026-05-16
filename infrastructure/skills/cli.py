@@ -1,7 +1,5 @@
 """CLI for skill discovery and manifest generation."""
 
-from __future__ import annotations
-
 import argparse
 import json
 import sys
@@ -11,6 +9,8 @@ from infrastructure.core.logging.utils import get_logger
 
 from .check_all_exports import run_cli as run_all_exports_audit
 from .discovery import (
+    DEFAULT_SKILL_SEARCH_ROOTS,
+    build_skill_index_markdown,
     discover_skills,
     manifest_matches_discovery,
     skill_descriptors_as_json_serializable,
@@ -25,6 +25,7 @@ def _repo_root_from_args(args: argparse.Namespace) -> Path:
 
 
 def cmd_list_json(args: argparse.Namespace) -> int:
+    """Print all discovered SKILL.md files as JSON to stdout."""
     root = _repo_root_from_args(args)
     skills = discover_skills(root, search_roots=args.roots)
     payload = skill_descriptors_as_json_serializable(skills)
@@ -33,6 +34,7 @@ def cmd_list_json(args: argparse.Namespace) -> int:
 
 
 def cmd_write(args: argparse.Namespace) -> int:
+    """Write a skill manifest JSON file for all discovered SKILL.md files."""
     root = _repo_root_from_args(args)
     out = Path(args.output) if args.output else None
     path = write_skill_manifest(root, output_path=out, search_roots=args.roots)
@@ -40,7 +42,21 @@ def cmd_write(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_write_index(args: argparse.Namespace) -> int:
+    """Write a human-readable Markdown index for discovered skills."""
+    root = _repo_root_from_args(args)
+    out = Path(args.output) if args.output else root / "docs" / "_generated" / "skills_index.md"
+    if not out.is_absolute():
+        out = (root / out).resolve()
+    skills = discover_skills(root, search_roots=args.roots)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(build_skill_index_markdown(skills), encoding="utf-8")
+    logger.info("Wrote skill index: %s", out)
+    return 0
+
+
 def cmd_check(args: argparse.Namespace) -> int:
+    """Verify that the skill manifest matches live discovery results."""
     root = _repo_root_from_args(args)
     mpath = Path(args.manifest)
     if not mpath.is_absolute():
@@ -84,13 +100,14 @@ def _add_shared_cli_args(p: argparse.ArgumentParser) -> None:
         metavar="DIR",
         help=(
             "Override search roots relative to repo root "
-            "(default: infrastructure + projects/template_code_project/src + .cursor/skills). "
+            f"(default: {DEFAULT_SKILL_SEARCH_ROOTS}). "
             "Example: write --roots infrastructure docs"
         ),
     )
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """Create the argparse parser for the skill CLI."""
     parser = argparse.ArgumentParser(
         description="Discover SKILL.md files and maintain .cursor/skill_manifest.json",
     )
@@ -108,6 +125,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output file (default: .cursor/skill_manifest.json under repo root)",
     )
     p_write.set_defaults(func=cmd_write)
+
+    p_write_index = sub.add_parser("write-index", help="Write generated Markdown skills index")
+    _add_shared_cli_args(p_write_index)
+    p_write_index.add_argument(
+        "--output",
+        default=None,
+        help="Output file (default: docs/_generated/skills_index.md under repo root)",
+    )
+    p_write_index.set_defaults(func=cmd_write_index)
 
     p_check = sub.add_parser("check", help="Verify manifest matches discovery")
     _add_shared_cli_args(p_check)
@@ -139,6 +165,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Entry point for the skill CLI."""
     parser = build_parser()
     args = parser.parse_args(argv)
     if args.roots is not None and len(args.roots) == 0:

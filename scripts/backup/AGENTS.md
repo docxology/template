@@ -14,10 +14,10 @@ This directory exists to provide a future home for backup-specific scripts as th
 
 - Backup scripts follow `set -euo pipefail` shell conventions.
 - Scripts use `rsync` over SSH for remote backup targets.
-- Refer to [`docs/operations/maintenance.md`](../../docs/operations/maintenance.md) for the full backup strategy.
+- Refer to [`docs/operational/maintenance.md`](../../docs/operational/maintenance.md) for the full backup strategy.
 
 ## See Also
 
 - [README.md](README.md) — Quick navigation
 - [`../AGENTS.md`](../AGENTS.md) — Scripts directory documentation
-- [`../../docs/operations/maintenance.md`](../../docs/operations/maintenance.md) — Maintenance procedures
+- [`../../docs/operational/maintenance.md`](../../docs/operational/maintenance.md) — Maintenance procedures

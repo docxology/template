@@ -2,7 +2,7 @@
 
 > **Pipeline reporting and error aggregation**
 
-**Location:** `infrastructure/reporting/`  
+**Location:** `infrastructure/reporting/`
 **Quick Reference:** [Modules Guide](../modules-guide.md) | [API Reference](../../reference/api-reference.md)
 
 ---
@@ -72,29 +72,6 @@ aggregator.add_error(
 # Generate summary
 summary = aggregator.get_summary()
 aggregator.save_report(Path("output/reports"))
-```
-
-### Generate Validation Report
-
-```python
-from infrastructure.reporting import generate_validation_report
-
-validation_results = {
-    'checks': {
-        'pdf_validation': True,
-        'markdown_validation': True,
-        'output_structure': False,
-    },
-    'recommendations': [
-        {
-            'priority': 'high',
-            'issue': 'Missing output directories',
-            'action': 'Ensure all analysis scripts completed successfully',
-        },
-    ],
-}
-
-saved_files = generate_validation_report(validation_results, Path("output/reports"))
 ```
 
 ---

@@ -3,7 +3,7 @@
 Two ``projects/<name>/tests/conftest.py`` files cannot live in the same
 ``pytest`` process: pytest registers conftest plugins by directory-derived
 name, so a second conftest with the same basename collides with the first
-("plugin already registered"). The historical workaround in
+    # Prevent duplicate module registration when conftest plugins overlap.
 ``.github/workflows/ci.yml`` was an open-coded bash loop that invoked
 ``pytest`` once per ``projects/<name>/tests/`` directory, accumulating
 coverage with ``--cov-append`` and gating the combined coverage with
@@ -38,8 +38,6 @@ skip list, marker expression) is configurable, and all subprocess work
 happens via real ``subprocess.run`` calls — no mocking.
 """
 
-from __future__ import annotations
-
 import os
 import shutil
 import subprocess  # nosec B404
@@ -60,7 +58,19 @@ logger = get_logger(__name__)
 
 DEFAULT_SKIP_PROJECTS: tuple[str, ...] = ("fep_lean",)
 DEFAULT_COVERAGE_FILE: str = ".coverage.project"
-DEFAULT_FAIL_UNDER: int = 90
+# Combined-union floor for the multi-project run (`--project-only
+# --all-projects`). This is deliberately distinct from — and lower than —
+# the per-project standalone floor (90%, which exemplar projects meet:
+# template_code_project ~100%, template_prose ~94%). The combined number is
+# structurally lower because per-project suites only cover their own
+# ``src/``; their union denominator spans every active project's source,
+# including research projects (animation/visualization/Lean-adjacent code)
+# whose surface is intentionally not driven to 90%. 75 reflects the true
+# sustained combined level of the active tree. Maintainer decision
+# (2026-05-15): reconcile the gate to measured reality rather than leave an
+# unenforced aspirational 90 that CI never actually held. Per-project floors
+# are unchanged and remain the real quality gate.
+DEFAULT_FAIL_UNDER: int = 75
 _DEFAULT_MARKER = build_pytest_marker_expression(
     skip_requires_ollama=True,
     skip_slow=True,

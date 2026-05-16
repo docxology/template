@@ -11,8 +11,6 @@ Implementation split across:
 - ``barcode_payload``: Compact text payload builders
 """
 
-from __future__ import annotations
-
 import io
 
 from infrastructure.core.logging.utils import get_logger

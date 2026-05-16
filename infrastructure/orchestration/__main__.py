@@ -1,7 +1,5 @@
 """Module entry point for ``python -m infrastructure.orchestration``."""
 
-from __future__ import annotations
-
 import sys
 
 from infrastructure.orchestration.cli import main

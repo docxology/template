@@ -4,6 +4,12 @@
 
 This directory contains the **Layer 1** generic tools that power the research template. Code here is **project-agnostic** and strictly separated from domain-specific logic.
 
+## PAI v5 Operating Context
+
+- Frame infrastructure changes through ISA criteria when the work is non-trivial; the old PRD-era PAI loop is historical, not current doctrine.
+- Current PAI doctrine is Life OS / DA / Pulse / Algorithm `v6.3.0`, with Pulse health at `http://localhost:31337/api/pulse/health`.
+- This upgrade does not change infrastructure public APIs. Keep Layer 1 changes scoped to generic behavior, tests, and docs.
+
 ## 🤖 Agent skills (`SKILL.md`)
 
 Every infrastructure subpackage ships a **`SKILL.md`** at its root with YAML frontmatter (`name`, `description`) plus usage notes—search **`infrastructure/**/SKILL.md`**, start from [`infrastructure/SKILL.md`](SKILL.md), read [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json), or in Cursor reference `@infrastructure/SKILL.md` / `@infrastructure/<module>/SKILL.md` / `@.cursor/skill_manifest.json`. Programmatic enumeration: `from infrastructure.skills import discover_skills`. Pair with the matching **`AGENTS.md`** for API tables.

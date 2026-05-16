@@ -11,6 +11,7 @@ Technical guide for `docs/core/` — essential documentation including system ar
 | `how-to-use.md` | Comprehensive usage guide (all 12 skill levels) |
 | `architecture.md` | System architecture overview (links to detailed docs) |
 | `workflow.md` | Development workflow and pipeline orchestration |
+| `literature-data-flow.md` | Literature discovery → manuscript data flow |
 
 ## Key Conventions
 

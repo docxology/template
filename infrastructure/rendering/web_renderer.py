@@ -1,7 +1,7 @@
 """Web/HTML rendering module."""
 
-from __future__ import annotations
-
+import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -14,6 +14,16 @@ logger = get_logger(__name__)
 
 class WebRenderer:
     """Handles HTML generation."""
+
+    _RAW_LATEX_INLINE_RE = re.compile(r"`([^`]+)`\{=latex\}")
+    _CITE_RE = re.compile(
+        r"\\cite(?:p|t|alp|alt|author|year|yearpar)?"
+        r"(?:\[[^\]]*\]\s*){0,2}\{([^{}]+)\}"
+    )
+    _HYPERREF_RE = re.compile(r"\\hyperref\[[^\]]+\]\{([^{}]+)\}")
+    _HREF_RE = re.compile(r"\\href\{[^{}]+\}\{([^{}]+)\}")
+    _LABEL_RE = re.compile(r"\\(?:phantomsection\s*)?\\?label\{[^{}]+\}")
+    _REF_RE = re.compile(r"\\(?:eqref|ref|autoref)\{([^{}]+)\}")
 
     def __init__(self, config: RenderingConfig):
         """Initialize the web renderer with configuration."""
@@ -95,7 +105,7 @@ class WebRenderer:
 
         # Combine markdown files
         combined_md = output_dir / "_combined_manuscript.md"
-        combined_content = self._combine_markdown_files(source_files)
+        combined_content = self._html_safe_markdown(self._combine_markdown_files(source_files))
         _tmp = combined_md.with_suffix(combined_md.suffix + ".tmp")
         try:
             _tmp.write_text(combined_content, encoding="utf-8")
@@ -133,6 +143,16 @@ class WebRenderer:
         # Add Lua filter for LaTeX image conversion
         if lua_filter.exists():
             cmd.extend(["--lua-filter", str(lua_filter)])
+
+        crossref = shutil.which("pandoc-crossref")
+        if crossref:
+            cmd.extend(["--filter", crossref])
+            logger.info("Using pandoc-crossref at %s for combined HTML", crossref)
+        else:
+            logger.warning(
+                "pandoc-crossref not on PATH; @sec:/@tbl:/@fig:/@eq: will not resolve in combined HTML. "
+                "Install: https://github.com/lierdakil/pandoc-crossref (e.g. brew install pandoc-crossref)"
+            )
 
         logger.info("Converting combined markdown to HTML...")
         logger.debug(f"Combined markdown file: {combined_md}")
@@ -260,6 +280,55 @@ class WebRenderer:
             combined = combined[1:]
 
         return combined
+
+    @classmethod
+    def _html_safe_markdown(cls, content: str) -> str:
+        """Convert PDF-only raw-LaTeX inline spans into readable HTML text.
+
+        The canonical manuscript uses Pandoc raw-LaTeX spans such as
+        ``\\citep{...}`` and ``\\hyperref[label]{visible text}`` because those
+        are the right primitives for the PDF build.  Pandoc's HTML writer drops
+        raw LaTeX, which can turn prose like "NumPy \\citep{...}, SciPy
+        \\citep{...}" into "NumPy , SciPy".  This web-only pass preserves the
+        visible text while leaving the source manuscript and PDF path unchanged.
+        """
+
+        def _citation_text(keys_csv: str) -> str:
+            keys = [key.strip() for key in keys_csv.split(",") if key.strip()]
+            return "[" + "; ".join(keys) + "]" if keys else ""
+
+        def _visible_ref(label: str) -> str:
+            return label.replace("_", " ")
+
+        def _clean_latex_text(text: str) -> str:
+            text = text.replace(r"\S", "§")
+            text = text.replace(r"\%", "%")
+            text = text.replace(r"\&", "&")
+            text = text.replace(r"\_", "_")
+            text = text.replace(r"~", " ")
+            text = text.replace(r"\ ", " ")
+            return re.sub(r"\s+", " ", text).strip()
+
+        def _replace_raw_span(match: re.Match[str]) -> str:
+            latex = match.group(1).strip()
+            latex = cls._HYPERREF_RE.sub(
+                lambda m: _clean_latex_text(m.group(1)),
+                latex,
+            )
+            latex = cls._HREF_RE.sub(
+                lambda m: _clean_latex_text(m.group(1)),
+                latex,
+            )
+            latex = cls._CITE_RE.sub(
+                lambda m: _citation_text(m.group(1)),
+                latex,
+            )
+            latex = cls._LABEL_RE.sub("", latex)
+            latex = latex.replace(r"\phantomsection", "")
+            latex = cls._REF_RE.sub(lambda m: _visible_ref(m.group(1)), latex)
+            return _clean_latex_text(latex)
+
+        return cls._RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content)
 
     def _embed_css(self, html_file: Path) -> None:
         """Embed CSS styling directly into HTML file.

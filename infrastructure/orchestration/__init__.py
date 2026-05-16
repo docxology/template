@@ -27,8 +27,6 @@ The package follows the repository's two-layer architecture:
 - All functions are unit-testable in isolation; no shell state assumed.
 """
 
-from __future__ import annotations
-
 from infrastructure.orchestration.cli import build_parser, main
 from infrastructure.orchestration.discovery import (
     select_project_interactive,

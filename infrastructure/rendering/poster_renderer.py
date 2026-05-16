@@ -1,7 +1,5 @@
 """Scientific poster rendering module."""
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger

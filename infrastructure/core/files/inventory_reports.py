@@ -6,8 +6,6 @@ These functions accept inventory entries and produce formatted reports.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 from infrastructure.core.files.inventory_entry import FileInventoryEntry, format_file_size

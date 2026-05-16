@@ -74,7 +74,7 @@ def process_data(
 
 ### Error Handling ([`../rules/error_handling.md`](../rules/error_handling.md))
 ```python
-from infrastructure.core.runtime.exceptions import TemplateError, ValidationError
+from infrastructure.core.exceptions import TemplateError, ValidationError
 
 class ResearchAlgorithmError(TemplateError):
     """Custom exception for research algorithm failures."""
@@ -102,7 +102,7 @@ def validate_algorithm_input(data: Any) -> None:
 
 ### Logging ([`../rules/python_logging.md`](../rules/python_logging.md))
 ```python
-from infrastructure.core.logging.logging_utils import get_logger
+from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -130,8 +130,7 @@ def research_algorithm(data: List[float]) -> Dict[str, Any]:
 ```
 
 ### Code Style ([`../rules/code_style.md`](../rules/code_style.md))
-- **Formatting**: Black code formatter (line length 88)
-- **Imports**: isort with section separation
+- **Formatting / lint / imports**: Ruff (`uvx ruff check`, `uvx ruff format`; line length 88 by default)
 - **Naming**: snake_case for functions/variables, PascalCase for classes
 - **Structure**: Clear function/method organization
 
@@ -274,8 +273,7 @@ flowchart LR
 
 ### Validation Checks
 - **Type Checking**: mypy validation passes
-- **Linting**: flake8/black compliance
-- **Import Sorting**: isort validation
+- **Linting / format / imports**: Ruff (`uvx ruff check`, `uvx ruff format`)
 - **Test Coverage**: pytest-cov meets requirements
 - **Documentation**: All public APIs documented
 
@@ -292,7 +290,7 @@ flowchart LR
 - [ ] Type hints on all public APIs
 - [ ] error handling with custom exceptions
 - [ ] Unified logging system integration
-- [ ] Black formatting and isort compliance
+- [ ] Ruff format/check (CI scope) and mypy clean on touched paths
 - [ ] Google-style docstrings with examples
 - [ ] No mocks testing with data
 - [ ] Coverage requirements met (90% project, 60% infrastructure)

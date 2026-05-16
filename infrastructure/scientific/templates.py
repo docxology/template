@@ -6,8 +6,6 @@ Provides templates for new scientific modules and workflows:
 - Workflow templates for reproducible research
 """
 
-from __future__ import annotations
-
 
 def create_scientific_module_template(module_name: str) -> str:
     """Create a template for a new scientific module."""

@@ -47,7 +47,7 @@ repos:
         verbose: true
 
       - id: pre-push-quick
-        name: verify no mocks + hook smoke pytest
+        name: generated-artifact guard + no mocks + hook smoke pytest
         entry: bash
         args:
           - -eo
@@ -55,6 +55,7 @@ repos:
           - -c
           - >-
             export PYTHONDONTWRITEBYTECODE=1 &&
+            uv run python scripts/check_tracked_generated_artifacts.py &&
             uv run python scripts/verify_no_mocks.py &&
             uv run pytest tests/infra_tests/git_hook_smoke/
             -q --maxfail=1 --import-mode=importlib

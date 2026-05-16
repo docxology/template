@@ -6,8 +6,6 @@ reports from disk.  ``collect_project_metrics`` orchestrates all of them
 for a single project.
 """
 
-from __future__ import annotations
-
 import json
 import re
 from pathlib import Path

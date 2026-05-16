@@ -3,8 +3,6 @@
 Provides atomic file writing helpers and report serialization functions.
 """
 
-from __future__ import annotations
-
 import json
 from datetime import datetime
 from pathlib import Path

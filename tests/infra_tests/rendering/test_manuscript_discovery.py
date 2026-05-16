@@ -68,6 +68,28 @@ class TestVerifyFiguresExist:
         assert "figure2.png" in result["found_figures"]
         assert "other.txt" not in result["found_figures"]
 
+    def test_verify_figures_with_nested_png_files(self, tmp_path):
+        """Test that nested experiment figure families are discovered."""
+        project_root = tmp_path / "project"
+        project_root.mkdir()
+        figures_dir = project_root / "output" / "figures"
+        nested_dir = figures_dir / "agency" / "cascade"
+        nested_dir.mkdir(parents=True)
+
+        (nested_dir / "waterfall.png").write_bytes(b"PNG data")
+        (figures_dir / "overview.png").write_bytes(b"PNG data")
+
+        manuscript_dir = project_root / "manuscript"
+        manuscript_dir.mkdir()
+
+        result = verify_figures_exist(project_root, manuscript_dir)
+
+        assert result["figures_dir_exists"] is True
+        assert result["found_figures"] == [
+            "agency/cascade/waterfall.png",
+            "overview.png",
+        ]
+
     def test_verify_figures_sorted(self, tmp_path):
         """Test that found figures are sorted."""
         project_root = tmp_path / "project"
@@ -319,6 +341,88 @@ class TestDiscoverManuscriptFiles:
         assert result[3].name == "S01_supplement.md"
         assert result[4].name == "98_glossary.md"
         assert result[5].name == "99_references.md"
+
+    def test_discover_configured_nested_textbook_order(self, tmp_path):
+        """Config-driven textbooks can order nested chapters, labs, and appendices."""
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "unit_I").mkdir()
+        (manuscript_dir / "labs" / "unit_I").mkdir(parents=True)
+        (manuscript_dir / "questions" / "unit_I").mkdir(parents=True)
+        (manuscript_dir / "appendices").mkdir()
+
+        for rel_path in [
+            "front_matter.md",
+            "preface.md",
+            "unit_I/unit_intro.md",
+            "unit_I/chapter_one.md",
+            "labs/unit_I/lab_chapter_one.md",
+            "questions/unit_I/questions_chapter_one.md",
+            "appendices/appendix_a.md",
+            "glossary.md",
+        ]:
+            path = manuscript_dir / rel_path
+            path.write_text(f"# {path.stem}")
+
+        (manuscript_dir / "config.yaml").write_text(
+            "front_matter:\n"
+            "  include_front_matter: true\n"
+            "  include_preface: true\n"
+            "  files:\n"
+            "    - file: front_matter.md\n"
+            "    - file: preface.md\n"
+            "units:\n"
+            "  - id: unit_I\n"
+            "    directory: unit_I\n"
+            "    chapters:\n"
+            "      - file: chapter_one.md\n"
+            "appendices:\n"
+            "  include_labs: true\n"
+            "  include_questions: true\n"
+            "  include_reference: true\n"
+            "  labs:\n"
+            "    - unit: unit_I\n"
+            "      files:\n"
+            "        - file: lab_chapter_one.md\n"
+            "  questions:\n"
+            "    - unit: unit_I\n"
+            "      files:\n"
+            "        - file: questions_chapter_one.md\n"
+            "  reference:\n"
+            "    - file: appendix_a.md\n"
+            "    - file: glossary.md\n"
+        )
+
+        result = discover_manuscript_files(manuscript_dir)
+
+        assert [path.relative_to(manuscript_dir).as_posix() for path in result] == [
+            "front_matter.md",
+            "preface.md",
+            "unit_I/unit_intro.md",
+            "unit_I/chapter_one.md",
+            "labs/unit_I/lab_chapter_one.md",
+            "questions/unit_I/questions_chapter_one.md",
+            "appendices/appendix_a.md",
+            "glossary.md",
+        ]
+
+    def test_numbered_injected_manuscript_takes_precedence_over_config(self, tmp_path):
+        """Injected output/manuscript trees keep legacy numbered-file ordering."""
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "01_front.md").write_text("# Front")
+        (manuscript_dir / "02_body.md").write_text("# Body")
+        (manuscript_dir / "config.yaml").write_text(
+            "units:\n"
+            "  - id: unit_I\n"
+            "    directory: unit_I\n"
+            "    chapters:\n"
+            "      - file: missing.md\n"
+        )
+
+        result = discover_manuscript_files(manuscript_dir)
+
+        assert [path.name for path in result] == ["01_front.md", "02_body.md"]
 
     def test_discover_other_files(self, tmp_path):
         """Test discovery of other markdown files."""

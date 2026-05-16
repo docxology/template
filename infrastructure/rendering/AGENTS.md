@@ -319,6 +319,44 @@ def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
     """
 ```
 
+### manuscript_injection.py
+
+Shared `{{TOKEN}}` substitution utility. All three template projects delegate to these functions so the regex, excluded-file logic, and unresolved-token behaviour are identical across projects.
+
+#### EXCLUDED_DOC_FILENAMES (constant)
+```python
+EXCLUDED_DOC_FILENAMES: frozenset[str] = frozenset({"AGENTS.md", "README.md", "SYNTAX.md"})
+```
+Files that contain literal `{{TOKEN}}` examples and must never be substituted or copied to `output/manuscript/`.
+
+#### substitute_manuscript_text (function)
+```python
+def substitute_manuscript_text(
+    text: str,
+    variables: dict[str, str],
+) -> tuple[str, list[str]]:
+    """Replace {{TOKEN}} markers in text.
+
+    Returns:
+        (resolved_text, [unresolved_key, ...])
+    """
+```
+Only tokens matching `\{\{([A-Z][A-Z0-9_]*)\}\}` are replaced; Mermaid labels like `{{For each keyword}}` and glob patterns like `{{CONFIG_*}}` never match.
+
+#### write_resolved_manuscript_tree (function)
+```python
+def write_resolved_manuscript_tree(
+    project_root: Path | str,
+    variables: dict[str, str],
+) -> Path:
+    """Write output/manuscript/ from manuscript/*.md with substitutions.
+
+    - Excludes EXCLUDED_DOC_FILENAMES from output
+    - Copies config.yaml and *.bib verbatim
+    - Returns the output/manuscript/ Path
+    """
+```
+
 ### web_renderer.py
 
 #### WebRenderer (class)
@@ -983,7 +1021,7 @@ If you see warnings about missing figures:
 
 Run tests with:
 ```bash
-pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer_combined.py -v
 ```
 
 ### Test Coverage

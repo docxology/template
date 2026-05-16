@@ -4,8 +4,6 @@ Generates a single CSV with every metric for every project, annotated with
 units, health impact, and recommended ranges.
 """
 
-from __future__ import annotations
-
 import csv
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -57,7 +55,7 @@ def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_di
 # ── Internal helpers ─────────────────────────────────────────────────────────
 
 
-def _write_manuscript_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
+def _write_manuscript_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
     """Write manuscript metric rows for a single project."""
     name = project.name
     m = project.manuscript
@@ -99,7 +97,7 @@ def _write_manuscript_rows(writer: csv.writer, project: ProjectMetrics) -> None:
         writer.writerow(row)
 
 
-def _write_codebase_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
+def _write_codebase_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
     """Write codebase metric rows for a single project."""
     name = project.name
     c = project.codebase
@@ -114,7 +112,7 @@ def _write_codebase_rows(writer: csv.writer, project: ProjectMetrics) -> None:  
         writer.writerow(row)
 
 
-def _write_test_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
+def _write_test_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
     """Write test metric rows for a single project."""
     name = project.name
     t = project.tests
@@ -146,7 +144,7 @@ def _write_test_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # ty
         writer.writerow(row)
 
 
-def _write_output_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
+def _write_output_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
     """Write output metric rows for a single project."""
     name = project.name
     o = project.outputs
@@ -161,7 +159,7 @@ def _write_output_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # 
         writer.writerow(row)
 
 
-def _write_pipeline_rows(writer: csv.writer, project: ProjectMetrics) -> None:  # type: ignore[type-arg]
+def _write_pipeline_rows(writer: csv.writer, project: "ProjectMetrics") -> None:  # type: ignore[type-arg]
     """Write pipeline metric rows for a single project."""
     name = project.name
     p = project.pipeline

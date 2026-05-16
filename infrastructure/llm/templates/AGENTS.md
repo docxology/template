@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `infrastructure/llm/templates/` directory contains specialized template classes that provide high-level interfaces for common LLM operations. These templates combine prompt engineering, context management, and response processing into reusable components for research workflows.
+The `infrastructure/llm/templates/` directory contains prompt template classes for LLM operations. Every template subclasses `ResearchTemplate` from `base.py` and renders a prompt string via Python's `string.Template` substitution. Manuscript templates are split across focused submodules and re-exported through `manuscript.py`; research templates live in `research.py` and its submodules.
 
 ## Directory Structure
 
@@ -10,779 +10,302 @@ The `infrastructure/llm/templates/` directory contains specialized template clas
 flowchart LR
     T[/infrastructure/llm/templates//]
     T --> META[AGENTS.md · __init__.py]
-    T --> BASE[base.py<br/>Base template classes &amp; interfaces]
-    T --> HELP[helpers.py<br/>Template utility functions]
-    T --> MAN[manuscript.py<br/>Manuscript-specific templates]
-    T --> RES[research.py<br/>General research workflow templates]
+    T --> BASE[base.py<br/>ResearchTemplate base class]
+    T --> HELP[helpers.py<br/>Prompt-building helper functions]
+    T --> MAN[manuscript.py<br/>Re-exports manuscript template classes + REVIEW_MIN_WORDS]
+    T --> MANR[manuscript_reviews.py<br/>ManuscriptExecutiveSummary · ManuscriptQualityReview]
+    T --> MANS[manuscript_suggestions.py<br/>ManuscriptMethodologyReview · ManuscriptImprovementSuggestions]
+    T --> MANT[manuscript_translation.py<br/>ManuscriptTranslationAbstract · TRANSLATION_LANGUAGES]
+    T --> LIT[literature_analysis.py<br/>LiteratureReviewSynthesis · ComparativeAnalysis · etc.]
+    T --> PAP["paper_summarization.py<br/>PaperSummarization with domain-aware render()"]
+    T --> RES[research.py<br/>SummarizeAbstract · LiteratureReview · CodeDocumentation · DataInterpretation + re-exports]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class BASE,HELP,MAN,RES code
+    class BASE,HELP,MAN,MANR,MANS,MANT,LIT,PAP,RES code
     class META doc
 ```
 
 ## Key Components
 
-### Base Template Classes (`base.py`)
+### Base Template Class (`base.py`)
 
-**Foundation classes for template implementation:**
-
-#### Template Base Class
-
-**Abstract Template Interface:**
+**`ResearchTemplate`** is the only base class in this package. It uses Python's `string.Template` to substitute named variables into `template_str`.
 
 ```python
-class BaseTemplate(ABC):
-    """Abstract base class for LLM templates."""
+from infrastructure.llm.templates.base import ResearchTemplate
+from infrastructure.core.exceptions import LLMTemplateError
 
-    def __init__(self, llm_client: LLMClient, config: TemplateConfig = None):
-        self.client = llm_client
-        self.config = config or TemplateConfig()
-        self._setup_template()
+class ResearchTemplate:
+    template_str: str = ""
 
-    @abstractmethod
-    def apply(self, **kwargs) -> TemplateResult:
-        """Apply the template with given parameters."""
-        pass
+    def render(self, **kwargs) -> str:
+        """Render template_str with the provided keyword arguments.
 
-    def _setup_template(self):
-        """Setup template-specific configuration."""
-        pass
-
-    def _validate_inputs(self, **kwargs) -> None:
-        """Validate template inputs."""
-        pass
-
-    def _preprocess_inputs(self, **kwargs) -> Dict[str, Any]:
-        """Preprocess inputs before template application."""
-        return kwargs
-
-    def _postprocess_result(self, result: Any) -> TemplateResult:
-        """Postprocess template results."""
-        return TemplateResult(
-            content=result,
-            metadata=self._extract_metadata(result),
-            template_name=self.__class__.__name__
-        )
+        Raises:
+            LLMTemplateError: if a required variable is missing.
+        """
 ```
 
-#### Template Configuration
-
-**Configuration Management:**
+**Subclassing:**
 
 ```python
-@dataclass
-class TemplateConfig:
-    """Configuration for template behavior."""
+from infrastructure.llm.templates.base import ResearchTemplate
 
-    # Response settings
-    max_tokens: int = 2048
-    temperature: float = 0.7
-    timeout: float = 60.0
+class MyTemplate(ResearchTemplate):
+    template_str = "Summarise: ${text}"
 
-    # Processing options
-    validate_inputs: bool = True
-    preprocess_inputs: bool = True
-    postprocess_results: bool = True
-
-    # Error handling
-    retry_on_failure: bool = True
-    max_retries: int = 2
-
-    # Logging
-    enable_logging: bool = True
-    log_level: str = "INFO"
+prompt = MyTemplate().render(text="paper content here")
 ```
 
 ### Template Helpers (`helpers.py`)
 
-**Utility functions for template operations:**
-
-#### Input Validation Helpers
-
-**Content Validation:**
+Five functions return formatted instruction blocks suitable for injection into prompt strings:
 
 ```python
-def validate_content_length(content: str, min_length: int = 10,
-                          max_length: int = 100000) -> None:
-    """Validate content length constraints."""
-
-    if len(content) < min_length:
-        raise TemplateError(f"Content too short: {len(content)} < {min_length}")
-
-    if len(content) > max_length:
-        raise TemplateError(f"Content too long: {len(content)} > {max_length}")
-
-def validate_research_content(content: str) -> List[str]:
-    """Validate research content for completeness."""
-
-    issues = []
-
-    # Check for required elements
-    if not content.strip():
-        issues.append("Content is empty")
-
-    # Check for minimum research indicators
-    research_indicators = ['method', 'result', 'analysis', 'conclusion']
-    content_lower = content.lower()
-
-    found_indicators = sum(1 for indicator in research_indicators
-                          if indicator in content_lower)
-
-    if found_indicators < 2:
-        issues.append("Content lacks research structure indicators")
-
-    return issues
+from infrastructure.llm.templates import (
+    format_requirements,
+    token_budget_awareness,
+    content_requirements,
+    section_structure,
+    validation_hints,
+)
 ```
 
-#### Response Processing Helpers
-
-**Result Formatting:**
+#### `format_requirements`
 
 ```python
-def format_template_result(content: Any, template_name: str,
-                          metadata: Dict[str, Any] = None) -> TemplateResult:
-    """Format template results consistently."""
-
-    return TemplateResult(
-        content=content,
-        metadata=metadata or {},
-        template_name=template_name,
-        timestamp=datetime.now().isoformat(),
-        success=True
-    )
-
-def extract_structured_response(response: str, expected_fields: List[str]) -> Dict[str, Any]:
-    """Extract structured data from LLM responses."""
-
-    extracted = {}
-
-    for field in expected_fields:
-        # Try different extraction patterns
-        patterns = [
-            rf"{field}:(.*?)(?=\n\w+:|$)",  # Field: value
-            rf"\*\*{field}\*\*:(.*?)(?=\n\*\*\w+\*\*:|$)",  # **Field**: value
-            rf"### {field}\n(.*?)(?=\n### |\Z)"  # ### Field\ncontent
-        ]
-
-        for pattern in patterns:
-            match = re.search(pattern, response, re.DOTALL | re.IGNORECASE)
-            if match:
-                extracted[field] = match.group(1).strip()
-                break
-
-    return extracted
+def format_requirements(
+    required_headers: list[str],
+    markdown_format: bool = True,
+    section_requirements: dict[str, str | None] | None = None,
+) -> str:
+    """Return a FORMAT REQUIREMENTS block listing required section headers."""
 ```
 
-### Manuscript Templates (`manuscript.py`)
-
-**Templates specialized for manuscript processing:**
-
-#### Manuscript Review Template
-
-**Review Generation:**
+#### `token_budget_awareness`
 
 ```python
-class ManuscriptReviewTemplate(BaseTemplate):
-    """Template for generating manuscript reviews."""
-
-    def apply(self, manuscript: str, review_type: str = "comprehensive",
-              focus_areas: List[str] = None) -> TemplateResult:
-        """Generate a review of the manuscript."""
-
-        # Validate inputs
-        self._validate_inputs(manuscript=manuscript, review_type=review_type)
-
-        # Prepare prompt
-        prompt = self._build_review_prompt(manuscript, review_type, focus_areas)
-
-        # Generate review
-        response = self.client.query_structured(
-            prompt,
-            schema=self._get_review_schema(),
-            options=GenerationOptions(max_tokens=self.config.max_tokens)
-        )
-
-        # Postprocess result
-        return self._postprocess_result(response)
-
-    def _build_review_prompt(self, manuscript: str, review_type: str,
-                           focus_areas: List[str]) -> str:
-        """Build the review prompt using prompt system."""
-
-        from infrastructure.llm.prompts import PromptComposer
-
-        composer = PromptComposer()
-        variables = {
-            'manuscript_content': manuscript,
-            'review_type': review_type,
-            'word_count': len(manuscript.split()),
-            'focus_areas': ', '.join(focus_areas or [])
-        }
-
-        return composer.compose_prompt('manuscript_reviews', variables)
+def token_budget_awareness(
+    total_tokens: int | None = None,
+    section_budgets: dict[str, int] | None = None,
+    word_targets: dict[str, tuple[int, int]] | None = None,
+) -> str:
+    """Return a TOKEN BUDGET AWARENESS block specifying output length targets."""
 ```
 
-#### Manuscript Summary Template
-
-**Executive Summary Generation:**
+#### `content_requirements`
 
 ```python
-class ManuscriptSummaryTemplate(BaseTemplate):
-    """Template for generating manuscript summaries."""
-
-    def apply(self, manuscript: str, summary_type: str = "executive",
-              max_length: int = 500) -> TemplateResult:
-        """Generate a summary of the manuscript."""
-
-        # Preprocess manuscript
-        processed_content = self._preprocess_manuscript(manuscript)
-
-        # Build summary prompt
-        prompt = self._build_summary_prompt(processed_content, summary_type, max_length)
-
-        # Generate summary
-        response = self.client.query(
-            prompt,
-            options=GenerationOptions(
-                max_tokens=min(max_length // 4, 1000),  # Estimate tokens
-                temperature=0.3  # Lower temperature for consistency
-            )
-        )
-
-        return self._postprocess_result(response)
+def content_requirements(
+    no_hallucination: bool = True,
+    cite_sources: bool = True,
+    evidence_based: bool = True,
+    no_meta_commentary: bool = True,
+) -> str:
+    """Return a CONTENT QUALITY REQUIREMENTS block."""
 ```
 
-### Research Templates (`research.py`)
-
-**General research workflow templates:**
-
-#### Research Question Refinement Template
-
-**Question Development and Refinement:**
+#### `section_structure`
 
 ```python
-class ResearchQuestionTemplate(BaseTemplate):
-    """Template for refining research questions."""
-
-    def apply(self, topic: str, current_questions: List[str] = None,
-              context: str = None) -> TemplateResult:
-        """Refine and improve research questions."""
-
-        variables = {
-            'topic': topic,
-            'current_questions': '\n'.join(current_questions or []),
-            'context': context or ''
-        }
-
-        prompt = self._build_question_prompt(variables)
-
-        response = self.client.query_structured(
-            prompt,
-            schema=self._get_question_schema()
-        )
-
-        return self._postprocess_result(response)
+def section_structure(
+    sections: list[str],
+    section_descriptions: dict[str, str | None] | None = None,
+    required_order: bool = True,
+) -> str:
+    """Return a SECTION STRUCTURE block listing required sections in order."""
 ```
 
-#### Methodology Review Template
-
-**Methodological Evaluation:**
+#### `validation_hints`
 
 ```python
-class MethodologyReviewTemplate(BaseTemplate):
-    """Template for reviewing research methodologies."""
-
-    def apply(self, methodology_description: str,
-              research_type: str = "empirical") -> TemplateResult:
-        """Review and provide feedback on research methodology."""
-
-        # Build methodology prompt
-        prompt = self._build_methodology_prompt(methodology_description, research_type)
-
-        # Get structured review
-        response = self.client.query_structured(
-            prompt,
-            schema=self._get_methodology_schema()
-        )
-
-        return self._postprocess_result(response)
+def validation_hints(
+    word_count_range: tuple[int, int] | None = None,
+    required_elements: list[str] | None = None,
+    format_checks: list[str] | None = None,
+) -> str:
+    """Return a VALIDATION HINTS block describing what will be checked post-generation."""
 ```
 
-## Template Architecture
+### Manuscript Templates (`manuscript.py` and submodules)
 
-### Template Result Structure
+`manuscript.py` re-exports all manuscript classes from three focused submodules and defines `REVIEW_MIN_WORDS`.
 
-**Standardized Result Format:**
+**`REVIEW_MIN_WORDS`** — minimum word counts for quality validation:
 
 ```python
-@dataclass
-class TemplateResult:
-    """Result from template application."""
+from infrastructure.llm.templates import REVIEW_MIN_WORDS
 
-    content: Any                    # Main result content
-    metadata: Dict[str, Any]        # Additional metadata
-    template_name: str             # Name of template used
-    timestamp: str                 # ISO timestamp
-    success: bool                  # Success indicator
-    error_message: Optional[str] = None  # Error details if failed
-    processing_time: Optional[float] = None  # Processing duration
-    token_usage: Optional[Dict[str, int]] = None  # Token consumption
+# {"executive_summary": 250, "quality_review": 300,
+#  "methodology_review": 300, "improvement_suggestions": 200,
+#  "translation": 400}
 ```
 
-### Template Categories
-
-**Manuscript Templates:**
-
-- **ManuscriptReviewTemplate**: manuscript evaluation
-- **ManuscriptSummaryTemplate**: Executive and technical summaries
-- **ManuscriptOutlineTemplate**: Structure and organization review
-
-**Research Templates:**
-
-- **ResearchQuestionTemplate**: Question development and refinement
-- **MethodologyReviewTemplate**: Methodological evaluation and feedback
-- **LiteratureReviewTemplate**: Literature synthesis and gap analysis
-
-## Integration with LLM System
-
-### Template Factory Pattern
-
-**Dynamic Template Instantiation:**
+**Manuscript template classes** — all share the same `render(text, max_tokens)` signature inherited from `ResearchTemplate`, except `ManuscriptTranslationAbstract` which additionally requires `target_language`:
 
 ```python
-class TemplateFactory:
-    """Factory for creating template instances."""
+from infrastructure.llm.templates import (
+    ManuscriptExecutiveSummary,      # manuscript_reviews.py
+    ManuscriptQualityReview,         # manuscript_reviews.py
+    ManuscriptMethodologyReview,     # manuscript_suggestions.py
+    ManuscriptImprovementSuggestions,# manuscript_suggestions.py
+    ManuscriptTranslationAbstract,   # manuscript_translation.py
+    TRANSLATION_LANGUAGES,           # manuscript_translation.py
+)
 
-    _templates = {
-        'manuscript_review': ManuscriptReviewTemplate,
-        'manuscript_summary': ManuscriptSummaryTemplate,
-        'research_question': ResearchQuestionTemplate,
-        'methodology_review': MethodologyReviewTemplate
-    }
+# Standard manuscript review
+prompt = ManuscriptQualityReview().render(text=manuscript_text, max_tokens=2048)
 
-    @classmethod
-    def create_template(cls, name: str, llm_client: LLMClient,
-                       config: TemplateConfig = None) -> BaseTemplate:
-        """Create a template instance by name."""
-
-        template_class = cls._templates.get(name)
-        if not template_class:
-            raise TemplateError(f"Unknown template: {name}")
-
-        return template_class(llm_client, config)
+# Translation (requires target_language)
+prompt = ManuscriptTranslationAbstract().render(
+    text=abstract_text,
+    target_language=TRANSLATION_LANGUAGES["zh"],
+    max_tokens=2048,
+)
 ```
 
-### Template Pipeline Integration
+### Research Templates (`research.py` and submodules)
 
-**Workflow Integration:**
+Simple single-variable templates defined directly in `research.py`:
 
 ```python
-# Integration with scripts/06_llm_review.py
-from infrastructure.llm.templates import TemplateFactory
+from infrastructure.llm.templates import (
+    SummarizeAbstract,     # template_str uses ${text}
+    LiteratureReview,      # template_str uses ${summaries}
+    CodeDocumentation,     # template_str uses ${code}
+    DataInterpretation,    # template_str uses ${stats}
+)
 
-def generate_manuscript_review(manuscript_path: Path) -> None:
-    """Generate manuscript review using templates."""
-
-    # Load manuscript
-    manuscript = load_manuscript(manuscript_path)
-
-    # Create LLM client
-    from infrastructure.llm.core import LLMClient
-    client = LLMClient()
-
-    # Create review template
-    template = TemplateFactory.create_template('manuscript_review', client)
-
-    # Apply template
-    result = template.apply(manuscript=manuscript.content)
-
-    # Process result
-    if result.success:
-        save_review_result(result, manuscript_path)
-        print(f"Review generated successfully in {result.processing_time:.2f}s")
-    else:
-        print(f"Review generation failed: {result.error_message}")
+prompt = SummarizeAbstract().render(text=abstract_text)
+prompt = LiteratureReview().render(summaries=combined_summaries)
+prompt = CodeDocumentation().render(code=source_code)
+prompt = DataInterpretation().render(stats=statistics_text)
 ```
 
-## Testing
+### Paper Summarisation Template (`paper_summarization.py`)
 
-### Template Testing Framework
-
-**Base Template Tests:**
+`PaperSummarization` has an extended `render()` that adds domain-aware instructions and reference information:
 
 ```python
-def test_base_template_interface():
-    """Test base template interface compliance."""
+from infrastructure.llm.templates import PaperSummarization
 
-    # Mock LLM client
-    mock_client = Mock()
-
-    # Create template instance
-    template = BaseTemplate(mock_client)
-
-    # Test abstract method (should raise NotImplementedError)
-    with pytest.raises(NotImplementedError):
-        template.apply()
-
-    # Test configuration
-    assert template.config is not None
-    assert template.client == mock_client
+prompt = PaperSummarization().render(
+    title="Paper Title",
+    authors="Author Names",
+    year="2024",
+    source="arXiv",
+    text=paper_text,
+    domain="computer_science",     # optional — e.g. "physics", "biology"
+    domain_instructions=None,      # optional; use None for built-in domain hints
+    reference_count=42,            # optional — detected citation count
+    references_section_found=True, # optional
+)
 ```
 
-**Manuscript Template Tests:**
+### Literature Analysis Templates (`literature_analysis.py`)
+
+Five templates for multi-paper analysis workflows:
 
 ```python
-def test_manuscript_review_template():
-    """Test manuscript review template functionality."""
-
-    # Mock client with structured response
-    mock_client = Mock()
-    mock_response = {
-        'overall_assessment': 'Good manuscript with strong methodology',
-        'strengths': ['Clear writing', 'Solid methods'],
-        'weaknesses': ['Limited discussion of limitations'],
-        'recommendations': ['Add more detail on limitations']
-    }
-    mock_client.query_structured.return_value = mock_response
-
-    # Create template
-    template = ManuscriptReviewTemplate(mock_client)
-
-    # Apply template
-    result = template.apply(manuscript="Sample manuscript content...")
-
-    # Verify result
-    assert result.success
-    assert result.template_name == 'ManuscriptReviewTemplate'
-    assert 'overall_assessment' in result.content
-    assert len(result.content['recommendations']) > 0
+from infrastructure.llm.templates import (
+    LiteratureReviewSynthesis,
+    ScienceCommunicationNarrative,
+    ComparativeAnalysis,
+    ResearchGapIdentification,
+    CitationNetworkAnalysis,
+)
 ```
 
-### Integration Testing
+## Template Registry and Factory
 
-**End-to-End Template Testing:**
+The module exposes a `TEMPLATES` dict and `get_template()` function as the preferred entry point:
 
 ```python
-def test_template_pipeline_integration():
-    """Test template pipeline."""
+from infrastructure.llm.templates import TEMPLATES, get_template
 
-    # Setup test environment
-    manuscript = create_test_manuscript()
-    client = create_test_llm_client()
+# All registered keys
+print(list(TEMPLATES.keys()))
+# ['summarize_abstract', 'literature_review', 'code_doc', 'data_interpret',
+#  'paper_summarization', 'manuscript_executive_summary', 'manuscript_quality_review',
+#  'manuscript_methodology_review', 'manuscript_improvement_suggestions',
+#  'manuscript_translation_abstract', 'literature_review_synthesis',
+#  'science_communication_narrative', 'comparative_analysis',
+#  'research_gap_identification', 'citation_network_analysis']
 
-    # Test review template
-    review_template = ManuscriptReviewTemplate(client)
-    review_result = review_template.apply(manuscript=manuscript)
-
-    assert review_result.success
-    assert isinstance(review_result.content, dict)
-
-    # Test summary template
-    summary_template = ManuscriptSummaryTemplate(client)
-    summary_result = summary_template.apply(manuscript=manuscript)
-
-    assert summary_result.success
-    assert isinstance(summary_result.content, str)
-    assert len(summary_result.content) > 50
+# Instantiate by key — raises LLMTemplateError for unknown keys
+template = get_template("manuscript_quality_review")
+prompt = template.render(text=manuscript_text, max_tokens=2048)
 ```
 
-## Performance Considerations
+## Integration with the Review Pipeline
 
-### Template Optimization
-
-**Efficient Template Execution:**
+The `review/generator.py` module uses manuscript template classes directly. The typical pipeline path:
 
 ```python
-def apply_with_performance_tracking(self, **kwargs) -> TemplateResult:
-    """Apply template with performance monitoring."""
+# Actual pipeline usage pattern (from review/generation.py)
+from infrastructure.llm.templates import ManuscriptQualityReview
+from infrastructure.llm.review import generate_review_with_metrics
+from infrastructure.llm.core.client import LLMClient
 
-    start_time = time.time()
-
-    try:
-        # Apply template
-        result = self.apply(**kwargs)
-
-        # Add performance metadata
-        processing_time = time.time() - start_time
-        result.processing_time = processing_time
-
-        # Log performance
-        logger.info(f"Template {self.__class__.__name__} completed in {processing_time:.2f}s")
-
-        return result
-
-    except Exception as e:
-        processing_time = time.time() - start_time
-        logger.error(f"Template {self.__class__.__name__} failed after {processing_time:.2f}s: {e}")
-        raise
-```
-
-### Caching and Reuse
-
-**Template Result Caching:**
-
-```python
-class TemplateCache:
-    """Cache template results for performance."""
-
-    def __init__(self, max_size: int = 100):
-        self.cache = {}
-        self.max_size = max_size
-
-    def get(self, key: str) -> Optional[TemplateResult]:
-        """Get cached result."""
-        return self.cache.get(key)
-
-    def put(self, key: str, result: TemplateResult) -> None:
-        """Cache result."""
-        if len(self.cache) >= self.max_size:
-            # Remove oldest entry
-            oldest_key = next(iter(self.cache))
-            del self.cache[oldest_key]
-
-        self.cache[key] = result
+client = LLMClient()
+review_text, metrics = generate_review_with_metrics(
+    client=client,
+    text=manuscript_text,
+    review_type="quality_review",
+    review_name="quality review",
+    template_class=ManuscriptQualityReview,
+    model_name="gemma3:4b",
+    temperature=0.3,
+)
 ```
 
 ## Error Handling
 
-### Template-Specific Errors
-
-**Error Management:**
+Template rendering raises `LLMTemplateError` (from `infrastructure.core.exceptions`) when a required variable is missing from `render()`:
 
 ```python
-class TemplateError(Exception):
-    """Base exception for template errors."""
-    pass
-
-class TemplateValidationError(TemplateError):
-    """Raised when template inputs are invalid."""
-    pass
-
-class TemplateExecutionError(TemplateError):
-    """Raised when template execution fails."""
-    pass
-
-def apply_with_error_handling(self, **kwargs) -> TemplateResult:
-    """Apply template with error handling."""
-
-    try:
-        # Validate inputs
-        if self.config.validate_inputs:
-            self._validate_inputs(**kwargs)
-
-        # Apply template
-        result = self.apply(**kwargs)
-
-        return result
-
-    except TemplateValidationError as e:
-        logger.error(f"Template validation failed: {e}")
-        return TemplateResult(
-            content=None,
-            metadata={'error_type': 'validation'},
-            template_name=self.__class__.__name__,
-            success=False,
-            error_message=str(e)
-        )
-
-    except Exception as e:
-        logger.error(f"Template execution failed: {e}")
-        return TemplateResult(
-            content=None,
-            metadata={'error_type': 'execution'},
-            template_name=self.__class__.__name__,
-            success=False,
-            error_message=str(e)
-        )
-```
-
-## Usage Examples
-
-### Basic Template Usage
-
-**Manuscript Review:**
-
-```python
-from infrastructure.llm.templates import ManuscriptReviewTemplate
-from infrastructure.llm.core import LLMClient
-
-# Initialize components
-client = LLMClient()
-template = ManuscriptReviewTemplate(client)
-
-# Generate review
-result = template.apply(
-    manuscript=manuscript_text,
-    review_type="technical",
-    focus_areas=["methodology", "results"]
-)
-
-print(f"Review: {result.content['overall_assessment']}")
-```
-
-### Advanced Template Configuration
-
-**Custom Configuration:**
-
-```python
-from infrastructure.llm.templates.base import TemplateConfig
-
-# Custom configuration
-config = TemplateConfig(
-    max_tokens=4096,
-    temperature=0.5,
-    timeout=120.0,
-    validate_inputs=True,
-    enable_logging=True
-)
-
-template = ManuscriptReviewTemplate(client, config)
-```
-
-### Template Factory Usage
-
-**Dynamic Template Creation:**
-
-```python
-from infrastructure.llm.templates import TemplateFactory
-
-# Create templates by name
-review_template = TemplateFactory.create_template('manuscript_review', client)
-summary_template = TemplateFactory.create_template('manuscript_summary', client)
-
-# Apply different templates
-review_result = review_template.apply(manuscript=text)
-summary_result = summary_template.apply(manuscript=text)
-```
-
-## Configuration
-
-### Template Configuration Options
-
-**Global Template Settings:**
-
-```bash
-# Template behavior settings
-export LLM_TEMPLATE_MAX_TOKENS=4096
-export LLM_TEMPLATE_TEMPERATURE=0.7
-export LLM_TEMPLATE_TIMEOUT=60.0
-
-# Validation settings
-export LLM_TEMPLATE_VALIDATE_INPUTS=true
-export LLM_TEMPLATE_ENABLE_LOGGING=true
-
-# Performance settings
-export LLM_TEMPLATE_MAX_RETRIES=2
-export LLM_TEMPLATE_CACHE_SIZE=50
-```
-
-### Template-Specific Configuration
-
-**Manuscript Template Settings:**
-
-```python
-# Manuscript-specific configuration
-manuscript_config = TemplateConfig(
-    max_tokens=3000,  # Longer for detailed reviews
-    temperature=0.6,  # Moderate creativity
-    validate_inputs=True,
-    preprocess_inputs=True  # Clean and format manuscript
-)
-```
-
-## Future Enhancements
-
-### Advanced Template Features
-
-**Planned Improvements:**
-
-- **Template Composition**: Combine multiple templates in workflows
-- **Template Versioning**: Version management and migration
-- **Template Metrics**: Performance tracking and optimization
-- **Template Learning**: Adaptive template improvement
-
-**Integration Features:**
-
-- **IDE Integration**: Direct template application in editors
-- **Batch Processing**: Process multiple documents with templates
-- **Template Chains**: Sequential template application pipelines
-- **Custom Template Marketplace**: User-created template sharing
-
-## Troubleshooting
-
-### Common Template Issues
-
-**Input Validation Failures:**
-
-```python
-# Check input requirements
-template = ManuscriptReviewTemplate(client)
+from infrastructure.core.exceptions import LLMTemplateError
 
 try:
-    result = template.apply(manuscript="")  # Empty manuscript
-except TemplateValidationError as e:
-    print(f"Validation failed: {e}")
-    print("Ensure manuscript content is provided and meets length requirements")
+    prompt = SummarizeAbstract().render()  # missing 'text'
+except LLMTemplateError as e:
+    print(f"Missing variable: {e}")
 ```
 
-**LLM Response Issues:**
+## Testing
+
+Follow the project no-mocks policy — use real template instances and string inputs:
 
 ```python
-# Check LLM client configuration
-client = LLMClient()
+from infrastructure.llm.templates import SummarizeAbstract, get_template
+from infrastructure.core.exceptions import LLMTemplateError
+import pytest
 
-# Test basic connectivity
-test_response = client.query("Hello")
-if not test_response:
-    print("LLM client not responding - check Ollama configuration")
+def test_summarize_abstract_renders():
+    prompt = SummarizeAbstract().render(text="Sample abstract text.")
+    assert "Sample abstract text." in prompt
 
-# Check model availability
-available_models = get_available_models()
-if not available_models:
-    print("No models available - install models with: ollama pull <model-name>")
-```
+def test_get_template_unknown_raises():
+    with pytest.raises(LLMTemplateError):
+        get_template("nonexistent_template")
 
-**Performance Issues:**
-
-```python
-# Monitor template performance
-import time
-
-start_time = time.time()
-result = template.apply(**kwargs)
-end_time = time.time()
-
-print(f"Template execution time: {end_time - start_time:.2f} seconds")
-
-if result.processing_time and result.processing_time > 30:
-    print("Template execution is slow - consider optimizing token limits or model selection")
-```
-
-### Debug Template Execution
-
-**Verbose Template Logging:**
-
-```python
-# Enable debug logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
-# Create template with debug config
-config = TemplateConfig(enable_logging=True, log_level="DEBUG")
-template = ManuscriptReviewTemplate(client, config)
-
-# Apply with detailed logging
-result = template.apply(manuscript=text)
+def test_paper_summarization_render():
+    prompt = PaperSummarization().render(
+        title="Test Paper", authors="Author A", year="2024",
+        source="arXiv", text="Paper body text."
+    )
+    assert "Test Paper" in prompt
+    assert "Paper body text." in prompt
 ```
 
 ## See Also
 
 **Related Documentation:**
 
-- [`../core/AGENTS.md`](../core/AGENTS.md) - LLM core functionality
+- [`../core/AGENTS.md`](../core/AGENTS.md) - LLM core client and configuration
 - [`../prompts/AGENTS.md`](../prompts/AGENTS.md) - Prompt engineering system
 - [`../review/AGENTS.md`](../review/AGENTS.md) - Review generation
 

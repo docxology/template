@@ -19,7 +19,7 @@ This document describes how tests are structured and run across both layers of t
 **Command:**
 
 ```bash
-pytest tests/infra_tests/ --cov=infrastructure
+uv run pytest tests/infra_tests/ --cov=infrastructure
 ```
 
 ## Project Tests (`projects/{name}/tests/`)
@@ -33,7 +33,7 @@ pytest tests/infra_tests/ --cov=infrastructure
 **Command:**
 
 ```bash
-pytest projects/{name}/tests/ --cov=projects/{name}/src
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src
 ```
 
 ## Integration Tests (`tests/integration/`)
@@ -46,17 +46,17 @@ pytest projects/{name}/tests/ --cov=projects/{name}/src
 **Command:**
 
 ```bash
-pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
+uv run pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
 ```
 
 ## Full Test Suite
 
 ```bash
-# All tests with coverage
-pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=70
+# All tests with coverage (70% is the global fallback; per-suite gates are 60% infra / 90% project)
+uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=70
 
 # Generate HTML coverage report
-pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
+uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
 open htmlcov/index.html
 ```
 
