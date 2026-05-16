@@ -98,6 +98,9 @@ jobs:
       - name: Reject tracked generated artifacts
         run: uv run python scripts/check_tracked_generated_artifacts.py
 
+      - name: Confidentiality guard — only template projects tracked
+        run: uv run python scripts/check_tracked_projects.py
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 1b — Unified health report (informational, no fail)
 #
@@ -446,9 +449,17 @@ jobs:
         run: uv sync
 
       - name: Validate manuscript markdown
-        run: >-
-          uv run python -m infrastructure.validation.cli markdown
-          projects/*/manuscript/
+        # The `markdown` subcommand takes ONE directory; `projects/*/manuscript/`
+        # shell-globs to multiple dirs (CLI then errors "unrecognized
+        # arguments"). Validate each tracked project's manuscript in turn.
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for d in projects/*/manuscript/; do
+            echo "::group::validate $d"
+            uv run python -m infrastructure.validation.cli markdown "$d"
+            echo "::endgroup::"
+          done
 
       - name: Verify api-reference.md is in sync with __all__
         # Auto-generated from each `infrastructure/<pkg>/__init__.py` `__all__`
