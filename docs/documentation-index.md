@@ -280,6 +280,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[prompts/README.md](prompts/README.md)** - Navigation guide
 - **[prompts/manuscript_creation.md](prompts/manuscript_creation.md)** - Manuscript creation
 - **[prompts/manuscript_cross_references.md](prompts/manuscript_cross_references.md)** - Registry/token manuscript cross-references
+- **[prompts/manuscript_claim_verification.md](prompts/manuscript_claim_verification.md)** - Triple-check manuscript claims (max effort/tools)
 - **[prompts/literature_synthesis.md](prompts/literature_synthesis.md)** - Literature synthesis LLM blocks
 - **[prompts/code_development.md](prompts/code_development.md)** - Code development
 - **[prompts/test_creation.md](prompts/test_creation.md)** - Test creation
@@ -289,6 +290,8 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[prompts/infrastructure_module.md](prompts/infrastructure_module.md)** - Infrastructure modules
 - **[prompts/validation_quality.md](prompts/validation_quality.md)** - Validation and QA
 - **[prompts/comprehensive_assessment.md](prompts/comprehensive_assessment.md)** - Assessment and review
+- **[prompts/reproducibility_audit.md](prompts/reproducibility_audit.md)** - Determinism and regenerate-from-clean audit
+- **[prompts/pipeline_debugging.md](prompts/pipeline_debugging.md)** - Pipeline DAG-stage failure triage
 
 ---
 

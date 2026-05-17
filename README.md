@@ -408,7 +408,9 @@ This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE
 
 ## 📚 Citation
 
-If you use this template in your research, please cite:
+The machine-readable [`CITATION.cff`](CITATION.cff) is the single source of
+truth (GitHub's "Cite this repository" widget reads it). If you use this
+template in your research, please cite:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 

@@ -10,6 +10,7 @@ Technical guide for `docs/prompts/` — copy-paste prompt templates aligned with
 |------|---------|
 | `manuscript_creation.md` | Manuscript scaffold from a research description |
 | `manuscript_cross_references.md` | Registry/token manuscripts (`labels.yaml`, `[[FIG:]]`, …) and cross-ref audits |
+| `manuscript_claim_verification.md` | Triple-check every manuscript claim against code/data/refs/renderer; improve text; keep AGENTS/README complete |
 | `code_development.md` | Standards-compliant code development |
 | `test_creation.md` | Tests under the no-mocks policy |
 | `feature_addition.md` | Feature work with architecture compliance |
@@ -18,6 +19,8 @@ Technical guide for `docs/prompts/` — copy-paste prompt templates aligned with
 | `infrastructure_module.md` | Generic `infrastructure/` module development |
 | `validation_quality.md` | Validation and QA workflows |
 | `comprehensive_assessment.md` | Full-repo or multi-area assessment (metrics measured, not assumed) |
+| `reproducibility_audit.md` | Determinism, regenerate-from-clean, double-run diff before release/Zenodo |
+| `pipeline_debugging.md` | Systematic DAG-stage failure triage (reproduce → isolate → classify → fix) |
 | `literature_synthesis.md` | LLM prompt blocks for literature search synthesis |
 
 ## Key conventions

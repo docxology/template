@@ -1,0 +1,32 @@
+# Citation File Format — https://citation-file-format.github.io/
+# Single source of truth for "Cite this repository". Keep the DOI in sync
+# with the README badge and the Zenodo concept record.
+cff-version: 1.2.0
+message: "If you use this template in your research, please cite it as below."
+title: >-
+  A template/ approach to Reproducible Generative Research:
+  Architecture and Ergonomics from Configuration through Publication
+type: software
+authors:
+  - given-names: "Daniel Ari"
+    family-names: "Friedman"
+repository-code: "https://github.com/docxology/template"
+url: "https://github.com/docxology/template"
+license: Apache-2.0
+version: "3.0.0"
+doi: "10.5281/zenodo.19139090"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.19139090"
+    description: "Concept DOI (always resolves to the latest release)"
+preferred-citation:
+  type: article
+  title: >-
+    A template/ approach to Reproducible Generative Research:
+    Architecture and Ergonomics from Configuration through Publication
+  authors:
+    - given-names: "Daniel Ari"
+      family-names: "Friedman"
+  year: 2026
+  doi: "10.5281/zenodo.19139090"
+  url: "https://zenodo.org/records/19139090"

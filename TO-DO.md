@@ -85,8 +85,8 @@ run when this file was last edited.
   | --- | --- | --- |
   | a | SHA-pin every `uses:` action in `ci.yml`/`release.yml`/`stale.yml` (full 40-char SHA + `# vX.Y.Z`), let Dependabot bump | Mutable tags are force-pushable (supply-chain) |
   | b | Add an `actionlint` CI job (`needs: []`, `contents: read`) | Would have caught the `hashFiles()`-in-job-`if:` outage; prevents regression |
-  | c | Add `.github/CODEOWNERS` (needs owner handle) | Activates the documented review routing |
-  | d | Add root `SECURITY.md` + `CITATION.cff` + `CONTRIBUTING.md` pointer | Lights up GitHub Security/Cite/Contributing tabs (DOI `10.5281/zenodo.19139090`); CITATION.cff becomes the single citation source (removes README DOI drift) |
+  | c | ~~Add `.github/CODEOWNERS`~~ **DONE** — `@docxology` default + path owners | Activates the documented review routing |
+  | d | ~~Add `SECURITY.md` + `CITATION.cff` + `CONTRIBUTING.md`~~ **DONE** — `.github/SECURITY.md`, root `CITATION.cff` (single citation source, DOI `10.5281/zenodo.19139090`), root `CONTRIBUTING.md` pointer | GitHub Security/Cite/Contributing tabs now populated |
   | e | Dependabot auto-merge workflow gated on green required checks | The 3 open safe action bumps need no manual toil |
   | f | Harden `release.yml` tag-name injection (pass `${{ steps.tag.outputs.name }}` via `env:`, not direct `run:` interpolation) | Textbook script-injection class |
   | g | Fix dead coverage-history step (`performance` job `gh run download` lacks `actions: read` → silent `|| true` no-op) | Either grant the permission or delete the dead step |

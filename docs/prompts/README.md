@@ -16,6 +16,7 @@ Copy-paste blocks that reference real standards and commands so assistants and h
 |--------|----------|
 | [manuscript_creation.md](manuscript_creation.md) | New manuscript + project layout from a research brief |
 | [manuscript_cross_references.md](manuscript_cross_references.md) | Registry-driven manuscripts (`refs/labels.yaml`, `[[FIG:]]`, `[[THMREF:]]`, …) or auditing cross-refs |
+| [manuscript_claim_verification.md](manuscript_claim_verification.md) | Maximum-effort triple-check of every manuscript claim; improve text, keep AGENTS/README complete, stay renderable |
 | [literature_synthesis.md](literature_synthesis.md) | LLM blocks for per-paper and corpus synthesis after a search pipeline |
 
 ### Code and tests
@@ -35,6 +36,8 @@ Copy-paste blocks that reference real standards and commands so assistants and h
 | [documentation_creation.md](documentation_creation.md) | AGENTS.md / README.md for a directory |
 | [validation_quality.md](validation_quality.md) | Validation CLI, gates, manuscript/output checks |
 | [comprehensive_assessment.md](comprehensive_assessment.md) | Wide audit: tests, docs, manuscript, pipeline |
+| [reproducibility_audit.md](reproducibility_audit.md) | Determinism + regenerate-from-clean + double-run diff before release/Zenodo |
+| [pipeline_debugging.md](pipeline_debugging.md) | Systematic DAG-stage triage when a pipeline run fails or stalls |
 
 ## Navigation map
 
@@ -43,6 +46,7 @@ graph TD
     subgraph Research["Research content"]
         MS[manuscript_creation.md]
         MX[manuscript_cross_references.md]
+        MCV[manuscript_claim_verification.md]
         LS[literature_synthesis.md]
     end
 
@@ -58,13 +62,18 @@ graph TD
         DC[documentation_creation.md]
         VQ[validation_quality.md]
         CA[comprehensive_assessment.md]
+        RA[reproducibility_audit.md]
+        PD[pipeline_debugging.md]
     end
 
     MS --> MX
+    MX --> MCV
     CD --> TC
     FA --> RF
     IM --> DC
     CA --> VQ
+    MCV --> RA
+    RA --> PD
 
     classDef r fill:#e3f2fd,stroke:#1565c0
     classDef c fill:#fff3e0,stroke:#e65100

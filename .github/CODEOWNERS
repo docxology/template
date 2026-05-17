@@ -1,0 +1,27 @@
+# Code owners — auto-requested for review on matching paths.
+# Activates the 1-approver branch-protection rule documented in
+# .github/AGENTS.md. Keep this in sync with the maintainer set.
+
+# Default owner for everything in the repo.
+*                       @docxology
+
+# Layer-1 infrastructure, orchestration, and the test suite — the
+# security/correctness-critical surface.
+/infrastructure/        @docxology
+/scripts/               @docxology
+/tests/                 @docxology
+
+# CI/CD, release, and repo policy — changes here gate every contributor.
+/.github/               @docxology
+/.gitignore             @docxology
+/.pre-commit-config.yaml @docxology
+/pyproject.toml         @docxology
+/bandit.yaml            @docxology
+
+# Canonical template exemplars (the only published projects) and the
+# top-level instruction-hierarchy docs.
+/projects/template_code_project/  @docxology
+/projects/template_prose_project/ @docxology
+/CLAUDE.md              @docxology
+/AGENTS.md              @docxology
+/README.md              @docxology
