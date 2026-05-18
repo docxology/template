@@ -48,7 +48,7 @@ jobs:
           echo "file=/tmp/changelog.txt" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.tag.outputs.name }}
           name: "Research Project Template ${{ steps.tag.outputs.name }}"
