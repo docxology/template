@@ -145,25 +145,53 @@ the conftest path setup first.
 
 ## Module Exports
 
-`__init__.py` should explicitly export public API:
+`src/__init__.py` re-exports the public API. The actual export set (kept
+in sync with `__init__.py` — drift is caught by
+`scripts/check_template_drift.py`'s `__all___doc_drift` rule):
 
 ```python
-"""Code Project — Optimization Algorithms."""
+"""template_code_project — gradient descent optimization research exemplar."""
 
 from .optimizer import (
     OptimizationResult,
-    gradient_descent,
-    quadratic_function,
     compute_gradient,
+    gradient_descent,
+    make_quadratic_problem,
+    quadratic_function,
+    simulate_trajectory,
+)
+from .invariants import (
+    InvariantResult,
+    OptimizerSweepConfig,
+    all_invariants,
+    convergence_invariants,
+    gradient_consistency_invariants,
+    trajectory_invariants,
 )
 
 __all__ = [
+    # Optimizer (pure mathematics)
     "OptimizationResult",
-    "gradient_descent",
-    "quadratic_function",
     "compute_gradient",
+    "gradient_descent",
+    "make_quadratic_problem",
+    "quadratic_function",
+    "simulate_trajectory",
+    # Invariants (dashboard panels)
+    "InvariantResult",
+    "OptimizerSweepConfig",
+    "all_invariants",
+    "convergence_invariants",
+    "gradient_consistency_invariants",
+    "trajectory_invariants",
 ]
 ```
+
+`src/analysis.py`, `src/dashboard.py`, and `src/manuscript_variables.py`
+expose their public callables directly via deep imports
+(`from src.analysis import generate_convergence_plot`); they are part of
+the orchestration layer, not the pure-math API, so they are
+intentionally NOT in `__init__.py.__all__`.
 
 ## See Also
 

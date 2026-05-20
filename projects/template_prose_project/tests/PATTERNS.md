@@ -104,15 +104,25 @@ own `output/`.
 
 ## Test Class Organisation
 
-| Class | Tests | Covers |
-|---|---|---|
-| `TestRunProsePipeline` | end-to-end calls | `src/pipeline.py::run_prose_pipeline` |
-| `TestCheckGradeLevel` | `_check_grade_level` | one check function per test class |
-| `TestCheckCitationDensity` | `_check_citation_density` | one check function per test class |
-| `TestBibliographyConsistency` | `_check_bibliography` | bib parsing + cross-reference |
-| `TestCheckHeadings` | `_check_h1_per_file`, `_check_no_skipped_levels` | structural checks |
-| `TestCheckResult` | dataclass shape | result-type invariants |
-| `TestLongSentenceThresholdWired` | config threading | proves YAML knob reaches `infrastructure.prose` |
+Actual class inventory of `tests/test_pipeline.py` (the largest test
+file in this project):
+
+| Class | Covers |
+|---|---|
+| `TestRunProsePipeline` | end-to-end `src/pipeline.py::run_prose_pipeline` calls, JSON/MD artifact emission |
+| `TestOptionalChecks` | `prose.require_h1_per_section` / `prose.forbid_skipped_levels` opt-out paths |
+| `TestCheckUnits` | every `_check_<name>` function in isolation — `_check_grade_level`, `_check_citation_density`, `_check_no_skipped_levels`, `_check_h1_per_file`, `_check_bibliography` |
+| `TestCitationExtractionViaPipeline` | citation-key extraction wired through `analyze_manuscript` |
+| `TestProseRunArtifacts` | result-container shape (`ProseRunArtifacts.all_passed` etc.) |
+| `TestCheckResult` | `CheckResult` dataclass shape (name, passed, message, details) |
+| `TestLongSentenceThresholdWired` | proves `prose.long_sentence_threshold` reaches `infrastructure.prose.analyze_quality` |
+
+Other test files use the same `Test<Concept>` convention:
+`tests/test_config.py` (free functions, no class), `tests/test_figures.py`
+(free functions), `tests/test_manuscript_variables.py` (free functions),
+`tests/test_pipeline_integration.py` (one end-to-end test on the bundled
+manuscript), `tests/test_report.py` (free functions),
+`tests/test_scripts.py` (subprocess invocations).
 
 Method naming: `test_<what_is_being_tested>` and every test method has
 a docstring.

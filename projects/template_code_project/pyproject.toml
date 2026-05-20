@@ -43,10 +43,14 @@ omit = [
     "tests/*",
     "*/__init__.py",
     "*/test_*.py",
-    # Workflow modules are exercised by integration/artifact tests; the 90% gate
-    # is for reusable mathematical/project primitives copied into new forks.
-    "src/analysis.py",
-    "src/dashboard.py",
+    # Workflow / orchestration / figure modules are exercised by integration
+    # tests (the full pipeline run); the 90% gate covers the reusable
+    # mathematical/project primitives copied into new forks. Glob-form covers
+    # both project-relative (when run from inside this dir) and repo-relative
+    # (when run from the workspace root) invocations.
+    "**/analysis.py",
+    "**/dashboard.py",
+    "**/figures.py",
 ]
 
 [tool.coverage.report]

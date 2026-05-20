@@ -186,6 +186,11 @@ omit = [
     "*/site-packages/*",
     "projects/template_code_project/src/analysis.py",
     "projects/template_code_project/src/dashboard.py",
+    # figures.py is the figure-generator extraction split out of analysis.py;
+    # the 6 generate_* functions are exercised only through
+    # scripts/optimization_analysis.py (end-to-end pipeline run), not in the
+    # gate-time unit test suite.
+    "projects/template_code_project/src/figures.py",
     "/private/var/folders/*",
 ]
 

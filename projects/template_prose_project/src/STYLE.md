@@ -148,35 +148,55 @@ of the public contract.
 
 ## Module Exports
 
-`src/__init__.py` exports only what scripts and tests should import:
+`src/__init__.py` re-exports the public API. The current set (kept in
+sync with the actual file — drift in this listing is caught by
+`scripts/check_template_drift.py`'s `__init___export_drift` rule):
 
 ```python
 from .config import ProjectConfig, load_project_config
-from .pipeline import CheckResult, ProseRunArtifacts, run_prose_pipeline
-from .report import write_review_report
-from .figures import generate_all_figures
-from .manuscript_variables import (
-    compute_variables,
-    write_variables,
-    write_resolved_manuscript_tree,
+from .figures import (
+    generate_all_figures,
+    plot_citation_density,
+    plot_readability_radar,
+    plot_section_word_counts,
 )
+from .manuscript_variables import (
+    ManuscriptVariables,
+    compute_variables,
+    substitute_in_text,
+    write_variables,
+)
+from .pipeline import ProseRunArtifacts, run_prose_pipeline
+from .report import write_review_report
 
 __all__ = [
+    # Config
     "ProjectConfig",
     "load_project_config",
-    "CheckResult",
+    # Pipeline
     "ProseRunArtifacts",
     "run_prose_pipeline",
-    "write_review_report",
+    # Figures
     "generate_all_figures",
+    "plot_readability_radar",
+    "plot_section_word_counts",
+    "plot_citation_density",
+    # Manuscript variables
+    "ManuscriptVariables",
     "compute_variables",
+    "substitute_in_text",
     "write_variables",
-    "write_resolved_manuscript_tree",
+    # Report
+    "write_review_report",
 ]
 ```
 
-Anything not on this list is private API; tests may still touch it via
-deep imports, but scripts should not.
+Note: `CheckResult` (in `pipeline.py`) and `write_resolved_manuscript_tree`
+(in `manuscript_variables.py`) are intentionally NOT in `__all__` — tests
+import them directly via `from src.pipeline import CheckResult` /
+`from src.manuscript_variables import write_resolved_manuscript_tree`
+because they are stable but not part of the user-facing API surface a
+forker should rely on.
 
 ## See Also
 

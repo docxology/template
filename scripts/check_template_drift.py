@@ -222,7 +222,20 @@ def check_no_blanket_except_in_src(project_root: Path, report: Report, project: 
             # Allow if the next 200 chars contain a noqa comment OR an `(ImportError`/specific filter.
             window = text[m.start(): m.start() + 200]
             if "# noqa: BLE001" in window or "(ImportError" in window or "Exception(\"" in window:
-                # noqa with explicit comment is acceptable but still flag as warning.
+                # If the surrounding comment marks this as an intentional
+                # top-level / safety-net handler, suppress the warning entirely
+                # — narrowing such handlers replaces honest breadth with silent
+                # gaps. Otherwise emit a "consider narrowing" hint.
+                if any(
+                    marker in window
+                    for marker in (
+                        "TOP-LEVEL MAIN SAFETY NET",
+                        "safety net",
+                        "final handler",
+                        "top-level main",
+                    )
+                ):
+                    continue
                 report.add(
                     "WARNING",
                     project,
@@ -254,6 +267,99 @@ def check_mocks_absent_from_tests(project_root: Path, report: Report, project: s
                 project,
                 "mock_in_tests",
                 f"{py.relative_to(REPO_ROOT)}: mock primitive `{m.group(0)}` found near offset {m.start()}",
+            )
+
+
+def _find_test_class_names(tests_dir: Path) -> set[str]:
+    """Return every `class TestXxx` declared anywhere under `tests/`."""
+    if not tests_dir.is_dir():
+        return set()
+    pat = re.compile(r"^class (Test[A-Za-z0-9_]*)\b", re.MULTILINE)
+    names: set[str] = set()
+    for py in tests_dir.rglob("*.py"):
+        names.update(pat.findall(_read(py)))
+    return names
+
+
+def check_test_class_drift(project_root: Path, report: Report, project: str) -> None:
+    """Every `TestXxx` named in a doc must exist under `tests/`.
+
+    Catches the May 2026 v2-audit finding: a sibling-parity `PATTERNS.md`
+    file inventoried `TestCheckGradeLevel`, `TestBibliographyConsistency`,
+    `TestCheckHeadings` — none of which exist in the actual test suite.
+    """
+    docs_dir = project_root / "docs"
+    if not docs_dir.is_dir():
+        return
+    # Also scan tests/PATTERNS.md and tests/AGENTS.md, which conventionally
+    # inventory test classes.
+    extra = [
+        project_root / "tests" / "PATTERNS.md",
+        project_root / "tests" / "AGENTS.md",
+    ]
+    real_classes = _find_test_class_names(project_root / "tests")
+    pat = re.compile(r"`(Test[A-Z][A-Za-z0-9_]*)`")
+    for md in list(docs_dir.rglob("*.md")) + [p for p in extra if p.is_file()]:
+        text = _strip_code_fences(_read(md))
+        for name in set(pat.findall(text)):
+            if name not in real_classes:
+                report.add(
+                    "ERROR",
+                    project,
+                    "test_class_drift",
+                    f"{md.relative_to(REPO_ROOT)} references `{name}` but tests/ has no such class. Real classes: {sorted(real_classes)}",
+                )
+
+
+def _parse_all_block(text: str) -> set[str] | None:
+    """Parse a single `__all__ = [...]` block. Returns the set of string entries.
+
+    Robust to multi-line block and either single or double quotes around
+    each entry. Returns None if no `__all__` block is present.
+    """
+    m = re.search(r"__all__\s*=\s*\[(.*?)\]", text, re.DOTALL)
+    if not m:
+        return None
+    body = m.group(1)
+    return set(re.findall(r"[\"']([A-Za-z_][A-Za-z0-9_]*)[\"']", body))
+
+
+def check_all_export_drift(project_root: Path, report: Report, project: str) -> None:
+    """Every `__all__ = [...]` block in a doc/STYLE/AGENTS file must match `src/__init__.py`.
+
+    Catches the May 2026 v2-audit finding: prose `src/STYLE.md` documented
+    an `__all__` list that didn't match `src/__init__.py` — claimed
+    `CheckResult` and `write_resolved_manuscript_tree` exported (false),
+    missed `ManuscriptVariables`, `plot_*`, `substitute_in_text` (true).
+    """
+    init_py = project_root / "src" / "__init__.py"
+    if not init_py.is_file():
+        return
+    actual = _parse_all_block(_read(init_py))
+    if actual is None:
+        return
+    # Scan files where __all__ is conventionally documented.
+    candidates = [
+        project_root / "src" / "STYLE.md",
+        project_root / "src" / "AGENTS.md",
+        project_root / "docs" / "style_guide.md",
+        project_root / "docs" / "AGENTS.md",
+    ]
+    for md in candidates:
+        if not md.is_file():
+            continue
+        text = _read(md)
+        claimed = _parse_all_block(text)
+        if claimed is None:
+            continue
+        missing_from_doc = sorted(actual - claimed)
+        invented_in_doc = sorted(claimed - actual)
+        if missing_from_doc or invented_in_doc:
+            report.add(
+                "ERROR",
+                project,
+                "__all___doc_drift",
+                f"{md.relative_to(REPO_ROOT)} __all__ block disagrees with src/__init__.py — invented: {invented_in_doc}; missing: {missing_from_doc}",
             )
 
 
@@ -292,6 +398,8 @@ def check_project(project: str, report: Report) -> None:
         return
     check_required_files_exist(project_root, report, project)
     check_function_name_drift(project_root, report, project)
+    check_test_class_drift(project_root, report, project)
+    check_all_export_drift(project_root, report, project)
     check_coverage_floor_consistency(project_root, report, project)
     check_referenced_files_exist(project_root, report, project)
     check_no_oversize_src_files(project_root, report, project)
