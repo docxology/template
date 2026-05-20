@@ -35,8 +35,8 @@ The suite covers `src/optimizer.py`, `src/invariants.py`, `src/manuscript_variab
 | `TestPerformanceBenchmarking` | 2 | Infrastructure-dependent; skipped if `infrastructure.scientific` unavailable |
 | `TestAnalysisDashboard` | 2 | Infrastructure-dependent; skipped if `infrastructure.reporting` unavailable |
 
-| `TestInvariants` (test_invariants.py) | 30+ | `src/invariants.py` invariant builders, `InvariantResult`/`Panel` schema, dashboard payload primitives |
-| `TestBuildDashboard` (test_invariants_and_dashboard.py) | 20+ | `scripts/build_dashboard.py` end-to-end: payload JSON, HTML emission, invariants.txt, summary.txt |
+| `TestConvergenceInvariants`, `TestGradientConsistencyInvariants`, `TestTrajectoryInvariants`, `TestAllInvariants`, `TestInvariantResult`, `TestOptimizerSweepConfig` (test_invariants.py) | — | `src/invariants.py` invariant builders, `InvariantResult` / `Panel` schema, dashboard payload primitives |
+| `TestBuildDashboardCLI`, `TestGradientConsistency` (test_invariants_and_dashboard.py) | — | `scripts/build_dashboard.py` end-to-end: payload JSON, HTML emission, invariants.txt, summary.txt |
 
 **Live test count:** see [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md) (or run `uv run pytest projects/template_code_project/tests/ --collect-only -q | tail -1`).
 

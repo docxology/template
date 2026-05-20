@@ -64,6 +64,20 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _rel(p: Path) -> str:
+    """Best-effort relative path against REPO_ROOT.
+
+    Falls back to the absolute path when ``p`` is outside the repository
+    (e.g., synthetic test fixtures under ``tmp_path``). Production calls
+    always pass repo-internal paths and stay short; tests call against
+    a temp tree and get the absolute path. Keeps the detectors testable.
+    """
+    try:
+        return str(p.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(p)
+
+
 def _find_check_function_names(pipeline_py: Path) -> set[str]:
     """Return the actual `_check_*` function names declared in a `pipeline.py`."""
     pat = re.compile(r"^def (_check_[A-Za-z0-9_]+)\s*\(", re.MULTILINE)
@@ -101,7 +115,7 @@ def check_function_name_drift(project_root: Path, report: Report, project: str) 
                     "ERROR",
                     project,
                     "function_name_drift",
-                    f"docs reference `{name}` but src/pipeline.py has {sorted(real_names)}; in {p.relative_to(REPO_ROOT)}",
+                    f"docs reference `{name}` but src/pipeline.py has {sorted(real_names)}; in {_rel(p)}",
                 )
 
 
@@ -127,23 +141,22 @@ def check_coverage_floor_consistency(project_root: Path, report: Report, project
                     "ERROR",
                     project,
                     "coverage_floor_drift",
-                    f"{md.relative_to(REPO_ROOT)} claims fail_under = {stated}; pyproject.toml has {actual}",
+                    f"{_rel(md)} claims fail_under = {stated}; pyproject.toml has {actual}",
                 )
 
 
 def _strip_code_fences(text: str) -> str:
-    """Remove fenced code blocks (```…```) and inline code (`…`) for link scanning.
+    """Remove fenced code blocks (```…```) so link/identifier scanning skips them.
 
-    Dead-link false positives come from illustrative examples inside code
-    blocks (e.g., a syntax_guide.md template showing how to reference a
-    hypothetical `new_figure.png`). The link checker should not warn about
-    those.
+    Dead-link false positives come from illustrative examples inside fenced
+    code blocks (e.g., a syntax_guide.md template showing how to reference a
+    hypothetical `new_figure.png` inside ``` ```). We intentionally do NOT
+    strip inline code spans (`...`) because that is exactly where the
+    drift detectors expect to find real identifier references — e.g.
+    ``the class `TestRunProsePipeline` covers …`` — and stripping them
+    would silently defeat `check_test_class_drift` and similar detectors.
     """
-    # Strip fenced blocks first (greedy across newlines).
-    text = re.sub(r"```[\s\S]*?```", "", text)
-    # Strip inline code spans on a single line.
-    text = re.sub(r"`[^`\n]+`", "", text)
-    return text
+    return re.sub(r"```[\s\S]*?```", "", text)
 
 
 def _is_example_filename(target: str) -> bool:
@@ -183,7 +196,7 @@ def check_referenced_files_exist(project_root: Path, report: Report, project: st
                     "WARNING",
                     project,
                     "dead_link",
-                    f"{md.relative_to(REPO_ROOT)} → {target!r} does not resolve (looked at {candidate})",
+                    f"{_rel(md)} → {target!r} does not resolve (looked at {candidate})",
                 )
 
 
@@ -203,7 +216,7 @@ def check_no_oversize_src_files(project_root: Path, report: Report, project: str
                 "WARNING",
                 project,
                 "oversize_src_file",
-                f"{py.relative_to(REPO_ROOT)} is {line_count} lines (> 1500 — consider splitting)",
+                f"{_rel(py)} is {line_count} lines (> 1500 — consider splitting)",
             )
 
 
@@ -240,14 +253,14 @@ def check_no_blanket_except_in_src(project_root: Path, report: Report, project: 
                     "WARNING",
                     project,
                     "blanket_except_with_noqa",
-                    f"{py.relative_to(REPO_ROOT)}: `except Exception` with noqa near offset {m.start()} — narrow if possible",
+                    f"{_rel(py)}: `except Exception` with noqa near offset {m.start()} — narrow if possible",
                 )
             else:
                 report.add(
                     "ERROR",
                     project,
                     "blanket_except",
-                    f"{py.relative_to(REPO_ROOT)}: `except Exception` near offset {m.start()} without noqa justification",
+                    f"{_rel(py)}: `except Exception` near offset {m.start()} without noqa justification",
                 )
 
 
@@ -266,7 +279,7 @@ def check_mocks_absent_from_tests(project_root: Path, report: Report, project: s
                 "ERROR",
                 project,
                 "mock_in_tests",
-                f"{py.relative_to(REPO_ROOT)}: mock primitive `{m.group(0)}` found near offset {m.start()}",
+                f"{_rel(py)}: mock primitive `{m.group(0)}` found near offset {m.start()}",
             )
 
 
@@ -307,7 +320,7 @@ def check_test_class_drift(project_root: Path, report: Report, project: str) -> 
                     "ERROR",
                     project,
                     "test_class_drift",
-                    f"{md.relative_to(REPO_ROOT)} references `{name}` but tests/ has no such class. Real classes: {sorted(real_classes)}",
+                    f"{_rel(md)} references `{name}` but tests/ has no such class. Real classes: {sorted(real_classes)}",
                 )
 
 
@@ -359,7 +372,7 @@ def check_all_export_drift(project_root: Path, report: Report, project: str) -> 
                 "ERROR",
                 project,
                 "__all___doc_drift",
-                f"{md.relative_to(REPO_ROOT)} __all__ block disagrees with src/__init__.py — invented: {invented_in_doc}; missing: {missing_from_doc}",
+                f"{_rel(md)} __all__ block disagrees with src/__init__.py — invented: {invented_in_doc}; missing: {missing_from_doc}",
             )
 
 

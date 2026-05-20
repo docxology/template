@@ -28,9 +28,12 @@ Files (`projects/template_prose_project/tests/`):
 - `test_manuscript_variables.py` — covers `src/manuscript_variables.py`
   substitution (approximately 9 tests).
 - `test_pipeline.py` — covers `src/pipeline.py` checks and
-  `run_prose_pipeline` (approximately 35 tests across `TestRunProsePipeline`,
-  `TestCheckGradeLevel`, `TestCheckCitationDensity`, `TestBibliographyConsistency`,
-  `TestCheckHeadings`, `TestCheckResult`, `TestLongSentenceThresholdWired`).
+  `run_prose_pipeline` (~35 tests across `TestRunProsePipeline`,
+  `TestOptionalChecks`, `TestCheckUnits` (covers every `_check_<name>` in
+  isolation — `_check_grade_level`, `_check_citation_density`,
+  `_check_no_skipped_levels`, `_check_h1_per_file`, `_check_bibliography`),
+  `TestCitationExtractionViaPipeline`, `TestProseRunArtifacts`,
+  `TestCheckResult`, `TestLongSentenceThresholdWired`).
 - `test_pipeline_integration.py` — runs the bundled `manuscript/` end-to-end
   against `run_prose_pipeline` (approximately 1 test).
 - `test_report.py` — covers `src/report.py::write_review_report`
