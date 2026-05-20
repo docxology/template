@@ -105,20 +105,34 @@ flowchart LR
 
 **Scripts (thin orchestrators):**
 
+> Each active exemplar has its own concrete `scripts/` layout — the names
+> below are the **template_code_project** canonical roster as of May 2026
+> (template_prose_project uses a parallel set: `run_prose_pipeline.py`,
+> `y_generate_prose_figures.py`, `z_generate_manuscript_variables.py`,
+> `00_preflight.py`).
+
 ```mermaid
 flowchart LR
-    SC[/projects/&lt;name&gt;/scripts/]
-    SC --> EF[example_figure.py<br/>basic figure generation]
-    SC --> RF[generate_research_figures.py<br/>complex figures]
-    SC --> AP[analysis_pipeline.py<br/>analysis workflow]
-    SC --> SS[scientific_simulation.py<br/>simulation execution]
-    SC --> SF[generate_scientific_figures.py<br/>automated figures]
+    SC[/projects/template_code_project/scripts//]
+    SC --> PF[00_preflight.py<br/>chrome-headless-shell preflight]
+    SC --> OA[optimization_analysis.py<br/>main analysis pipeline · thin wrapper around src/analysis.py]
+    SC --> BD[build_dashboard.py<br/>numerical-invariants HTML dashboard]
+    SC --> GD[generate_api_docs.py<br/>API documentation generator]
+    SC --> ZG[z_generate_manuscript_variables.py<br/>{{TOKEN}} substitution · runs LAST]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
     class SC d
-    class EF,RF,AP,SS,SF f
+    class PF,OA,BD,GD,ZG f
 ```
+
+The May 2026 hardening pass split `src/analysis.py` (was 1,718 lines)
+into `src/analysis.py` (orchestration, ~960 lines) and `src/figures.py`
+(the six `generate_*` plot functions + `apply_visualization_style` +
+`VIZ_CONFIG`, ~870 lines). `analysis.py` re-exports every public name
+from `figures.py` through a try/except shim so the existing
+`scripts/optimization_analysis.py` and infrastructure-dependent test
+classes keep working without changes.
 
 **Key Characteristics:**
 
@@ -174,8 +188,8 @@ graph TB
             SRC_MODS[simulation, statistics,<br/>data_processing, metrics,<br/>parameters, performance,<br/>plots, reporting, validation,<br/>visualization, data_generator,<br/>example]
         end
 
-        subgraph PROJ_SCRIPTS["projects/{name}/scripts<br/>(thin orchestrators)"]
-            PROJ_SCRIPT_LIST[example_figure.py<br/>generate_research_figures.py<br/>analysis_pipeline.py<br/>scientific_simulation.py<br/>generate_scientific_figures.py]
+        subgraph PROJ_SCRIPTS["projects/{name}/scripts<br/>(thin orchestrators · see active_projects.md for the live exemplar roster)"]
+            PROJ_SCRIPT_LIST[code: 00_preflight.py · optimization_analysis.py · build_dashboard.py · z_generate_manuscript_variables.py<br/>prose: 00_preflight.py · run_prose_pipeline.py · y_generate_prose_figures.py · z_generate_manuscript_variables.py]
         end
     end
 

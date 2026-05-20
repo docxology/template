@@ -430,8 +430,8 @@ Process of validating code correctness through automated test cases. **ABSOLUTE 
 
 **Requirements**:
 
-- 90% minimum for project code (currently 100% - coverage!)
-- 60% minimum for infrastructure (currently 83.33% - exceeds stretch goal!)
+- 90% minimum for project code (live percentage per exemplar → [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md))
+- 60% minimum for infrastructure (live percentage → `canonical_facts.md`)
 - data (no mocks)
 - Deterministic results
 - All tests must pass

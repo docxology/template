@@ -148,7 +148,7 @@ flowchart TD
 # Always start with tests
 uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=term-missing
 
-# Check coverage (must be 100%)
+# Check coverage (≥90% gate; live percentage per exemplar → docs/_generated/canonical_facts.md)
 coverage report
 
 # Make code changes in projects/{name}/src/
@@ -214,8 +214,8 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 
 ### Tests (`projects/{name}/tests/`)
 
-- **90% minimum coverage** for projects/{name}/src/ (currently achieving 100% - coverage!)
-- **60% minimum coverage** for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
+- **90% minimum coverage** for `projects/{name}/src/` (live percentages per exemplar → [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md))
+- **60% minimum coverage** for `infrastructure/` (live percentage → `canonical_facts.md`)
 - **Real numerical examples** (no mocks)
 - **Deterministic RNG seeds** for reproducibility
 - **Fast and hermetic** execution

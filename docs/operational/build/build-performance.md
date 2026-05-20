@@ -10,12 +10,12 @@ This document provides detailed performance analysis extracted from the build sy
 
 ## Detailed Stage Breakdowns
 
-### Test Execution — 26 seconds
+### Test Execution — wall-clock varies; live counts in `_generated/canonical_facts.md`
 
-**Breakdown:**
+**Indicative breakdown** (numbers drift with every commit; verify live counts in [`../../_generated/canonical_facts.md`](../../_generated/canonical_facts.md)):
 
-- Infrastructure Tests: 23 seconds (1796 tests, 2 skipped)
-- Project Tests: 3 seconds (320 tests)
+- Infrastructure Tests: ~25 seconds, runs against the entire `infrastructure/` package
+- Project Tests: ~5 seconds, matrix of all active exemplars (see `active_projects.md`)
 
 **Result:** ✅ **ALL TESTS PASSING**
 

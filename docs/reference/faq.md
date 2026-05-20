@@ -33,7 +33,7 @@
 
 ### **Q: What are the test coverage requirements?**
 
-**A:** Coverage requirements are: 90% minimum for project code (currently achieving 100% - coverage!) and 60% minimum for infrastructure (currently achieving 83.33% - exceeds stretch goal!). The build pipeline enforces these to maintain professional standards.
+**A:** Coverage requirements are: **90% minimum** for project code (`projects/{name}/src/`) and **60% minimum** for `infrastructure/`. The build pipeline enforces these via CI. Live achieved percentages per exemplar live in [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md) — don't hardcode them into prose; link to the canonical source.
 
 ## 📚 **Documentation & PDF Generation**
 

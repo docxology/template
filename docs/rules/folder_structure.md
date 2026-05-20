@@ -8,14 +8,33 @@ This document establishes the mandatory folder structure documentation pattern t
 
 ### Mandatory Files
 
-Every directory **must** contain exactly two documentation files:
+Every directory **must** contain at least two documentation files:
 
-1. **`AGENTS.md`** - technical documentation
-2. **`README.md`** - Quick human reference guide
+1. **`AGENTS.md`** — technical documentation (REQUIRED)
+2. **`README.md`** — quick human reference guide (REQUIRED)
+
+Per-subdirectory specialization files **may** also appear when the
+content warrants them — these are not optional decorations, they are
+load-bearing for the conventions they encode:
+
+| File | Where it appears | Purpose |
+|------|------------------|---------|
+| `STYLE.md` | `src/` | Source-code style + design conventions for the module |
+| `PATTERNS.md` | `tests/` | Copy-pasteable test patterns (fixtures, parametrize, error-paths) |
+| `CONVENTIONS.md` | `scripts/` | Thin-orchestrator rules + CLI / output / exit-code contracts |
+
+The two canonical exemplars (`projects/template_code_project/`,
+`projects/template_prose_project/`) ship all three at the appropriate
+locations as of the May 2026 sibling-parity hardening pass; new
+projects should mirror that layout.
 
 ### Pattern Enforcement
 
-This pattern is **mandatory** at all folder levels:
+The two-mandatory-file (AGENTS.md + README.md) rule is universal. The
+specialization files above are recommended at the `src/`/`tests/`/`scripts/`
+level. The drift checker (`scripts/check_template_drift.py`,
+`missing_canonical_file` detector) gates the mandatory files; the
+specialization files are AESTHETIC and enforced by audit only.
 
 ```mermaid
 flowchart LR

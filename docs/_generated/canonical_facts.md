@@ -16,7 +16,6 @@ Optional add-on: `projects_archive/template_search_project` can be restored unde
 **Active projects this checkout** (`projects/`, from `discover_projects()`; rotates — authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
 - `actinf_policy_entanglement_lean`
-- `crescent_city`
 - `template_code_project`
 - `template_prose_project`
 
@@ -87,12 +86,16 @@ uv run pytest tests/infra_tests/project/test_discovery.py -q
 
 Result: 58 passed in ~0.44s (real data, no mocks).
 
-**Exemplar `pytest --collect-only` totals** (2026-05-08):
+**Exemplar `pytest --collect-only` totals** (2026-05-19):
 
-| Project | Tests collected |
-|---------|-----------------|
-| `template_code_project` | 117 |
-| `template_prose_project` | 67 |
+| Project | Tests collected | `src/` line+branch coverage |
+|---------|-----------------|----------------------------|
+| `template_code_project` | 117 | 99.52 % |
+| `template_prose_project` | 76 | 100.00 % |
+
+The prose count grew from 67 → 76 during the May 2026 hardening pass: eight new `tests/test_config.py` cases that exercise the strict-key validator + `__post_init__` invariants in `src/config.py`, plus one new `tests/test_scripts.py::test_z_generate_manuscript_variables` subprocess test.
+
+Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_template_drift.py`): **20 passed**, gating the nine detectors that run against both exemplars (function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead link, oversize `src/*.py`, blanket `except Exception`, mocks in tests, canonical-file presence).
 
 Coverage gates (enforced in CI):
 
@@ -142,6 +145,13 @@ Avoid raw `python3` or `pytest` in documentation.
 **Thin orchestrator**:
 
 Scripts in `scripts/` and `projects/{name}/scripts/` import computation from `infrastructure.*` or `projects.{name}.src.*`. They handle only I/O, orchestration, and reporting.
+
+**`template_code_project/src/` layout (post-May-2026 split):**
+- `optimizer.py`, `invariants.py` — math primitives, infrastructure-free
+- `analysis.py` — orchestration (experiments + dashboard + validation + publishing + `main()`); re-exports figure generators from `figures.py` for back-compat
+- `figures.py` — the six `generate_*` plot/visualization functions + `apply_visualization_style` + `VIZ_CONFIG` + `_agency_category` + `_save_figure_data` + `_load_experiment_config`
+- `dashboard.py` — `scripts/build_dashboard.py` orchestration
+- `manuscript_variables.py` — `{{TOKEN}}` substitution generator
 
 **No-mocks policy**: Tests use real computation, temp files (`tmp_path`), `pytest-httpserver` for HTTP, and `reportlab` for PDF tests.
 

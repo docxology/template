@@ -2,7 +2,9 @@
 
 > **Documentation hub** for the Research Project Template
 
-**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md) | [GitHub / CI](../.github/README.md)
+**Forking the template?** Start here: the two canonical exemplars each ship a 5-minute walkthrough at [`projects/template_code_project/docs/forking_guide.md`](../projects/template_code_project/docs/forking_guide.md) (numerical research) and [`projects/template_prose_project/docs/forking_guide.md`](../projects/template_prose_project/docs/forking_guide.md) (editorial review). The drift checker that gates your fork against the template's contract is [`scripts/check_template_drift.py`](../scripts/check_template_drift.py) (run `uv run python scripts/check_template_drift.py` from the repo root).
+
+**Quick Reference:** [Documentation Index](documentation-index.md) | [How To Use](core/how-to-use.md) | [Architecture](core/architecture.md) | [FAQ](reference/faq.md) | [GitHub / CI](../.github/README.md) | [Canonical Facts](_generated/canonical_facts.md)
 
 ## Purpose
 

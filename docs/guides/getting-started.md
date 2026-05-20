@@ -79,7 +79,9 @@ uv sync
 ### Step 3: Generate Your First PDF
 
 ```bash
-# Run the unified interactive menu and select Option 8 (Full Pipeline)
+# Run the unified interactive menu and select Option 9 (Full Pipeline).
+# Option 8 is Core Pipeline (LLM stages skipped); Option 9 includes the
+# two LLM stages. See `docs/RUN_GUIDE.md` for the full menu map.
 ./run.sh
 
 # Open the result (example project template_code_project)
