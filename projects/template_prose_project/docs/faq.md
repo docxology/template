@@ -184,15 +184,28 @@ them in separate subprocess calls; this only affects ad-hoc combined runs.
 
 ### YAML loader rejects my new key
 
-`src/config.py::ProjectConfig.from_dict` is strict: only documented keys
-are recognised. To add a new knob:
+`src/config.py::ProjectConfig.from_dict` is strict: it validates the set
+of keys it sees against the closed registries `_KNOWN_TOP_LEVEL_KEYS`,
+`_KNOWN_PROSE_KEYS`, `_KNOWN_BIBLIOGRAPHY_KEYS`, `_KNOWN_REPORT_KEYS`
+and raises `ValueError` listing the unknown key(s) and the allowed set.
+Logical invariants (e.g., `target_grade_level_min < target_grade_level_max`,
+`long_sentence_threshold > 0`, `citation_density_min_per_1000 ≥ 0`) are
+enforced by `__post_init__` on the relevant dataclass and raise
+`ValueError` with both the offending value and the constraint quoted.
 
-1. Add a field to the relevant `frozen=True` dataclass
-   (`ProseAnalysisConfig`, `BibliographyConfig`, `ReportConfig`, or
-   `ProjectConfig` itself).
-2. Parse it in `from_dict` with an explicit default.
-3. Add a unit test in `tests/test_config.py`.
-4. Document it in the table in [`README.md`](../README.md) and in
+To add a new knob:
+
+1. Add a field to the relevant dataclass — configuration dataclasses
+   are **mutable** (the YAML loader populates them post-construction);
+   only `ManuscriptVariables` in `manuscript_variables.py` is `frozen=True`.
+2. Add the YAML key name to the matching `_KNOWN_*_KEYS` frozenset at
+   the top of `src/config.py`.
+3. Parse it in `from_dict` with an explicit default.
+4. If it has an invariant, encode it in `__post_init__` and raise a
+   message containing both the value and the constraint.
+5. Add a unit test in `tests/test_config.py` (both the happy path and
+   the rejection of an unknown key or violated invariant).
+6. Document it in the table in [`README.md`](../README.md) and in
    [`rendering_pipeline.md`](rendering_pipeline.md).
 
 ### I added a check and `output/checks.json` does not contain it

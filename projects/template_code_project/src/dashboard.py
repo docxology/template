@@ -240,7 +240,10 @@ def _compute_payload(args: argparse.Namespace) -> dict:
             final_dist.append(float(np.linalg.norm(r.solution - x_star)))
             final_obj.append(float(r.objective_value))
             diverged.append(bool(np.linalg.norm(r.solution - x_star) > 1e3))
-        except Exception:
+        # Divergent step sizes can raise OverflowError / FloatingPointError or
+        # propagate np.linalg errors; record-and-continue is the right per-α
+        # behavior so the sweep produces a row for every requested α.
+        except (OverflowError, FloatingPointError, ValueError, np.linalg.LinAlgError):  # noqa: BLE001
             iters.append(args.max_iter)
             final_dist.append(float("inf"))
             final_obj.append(float("inf"))

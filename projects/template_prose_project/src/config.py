@@ -1,4 +1,13 @@
-"""Typed access to ``manuscript/config.yaml`` for the prose project."""
+"""Typed access to ``manuscript/config.yaml`` for the prose project.
+
+The loader is **strict**: unknown top-level keys, unknown nested keys
+under ``prose``/``bibliography``/``report``, and out-of-band invariants
+(e.g. ``target_grade_level_min`` ≥ ``target_grade_level_max``) raise
+``ValueError`` with both the offending value and the allowed set quoted
+in the message. This is the public contract documented in
+``docs/faq.md``; ``tests/test_config.py`` asserts on substrings of those
+messages.
+"""
 
 from __future__ import annotations
 
@@ -7,6 +16,47 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+
+# ---------------------------------------------------------------------------
+# Known-key registries (kept here so the validator is the single source of
+# truth; if you add a field below, list its YAML key here too).
+# ---------------------------------------------------------------------------
+
+_KNOWN_TOP_LEVEL_KEYS: frozenset[str] = frozenset(
+    {
+        "paper",
+        "authors",
+        "publication",  # accepted-but-ignored (forward-compat with sibling)
+        "keywords",
+        "metadata",  # accepted-but-ignored (forward-compat with sibling)
+        "manuscript_dir",
+        "prose",
+        "bibliography",
+        "report",
+    }
+)
+_KNOWN_PROSE_KEYS: frozenset[str] = frozenset(
+    {
+        "target_grade_level_min",
+        "target_grade_level_max",
+        "long_sentence_threshold",
+        "citation_density_min_per_1000",
+        "require_h1_per_section",
+        "forbid_skipped_levels",
+    }
+)
+_KNOWN_BIBLIOGRAPHY_KEYS: frozenset[str] = frozenset({"references_path", "fail_on_missing", "fail_on_unused"})
+_KNOWN_REPORT_KEYS: frozenset[str] = frozenset(
+    {"output_path", "include_per_file_table", "include_outline", "include_quality_flags"}
+)
+
+
+def _validate_keys(section: str, raw: dict[str, Any], allowed: frozenset[str]) -> None:
+    """Raise ValueError if ``raw`` contains any key not in ``allowed``."""
+    unknown = sorted(set(raw) - allowed)
+    if unknown:
+        raise ValueError(f"Unknown {section} key(s) in config: {unknown}. Allowed: {sorted(allowed)}")
 
 
 @dataclass
@@ -19,6 +69,17 @@ class ProseAnalysisConfig:
     citation_density_min_per_1000: float = 0.0
     require_h1_per_section: bool = True
     forbid_skipped_levels: bool = True
+
+    def __post_init__(self) -> None:
+        if self.target_grade_level_min >= self.target_grade_level_max:
+            raise ValueError(
+                f"target_grade_level_min ({self.target_grade_level_min}) must be < "
+                f"target_grade_level_max ({self.target_grade_level_max})"
+            )
+        if self.long_sentence_threshold <= 0:
+            raise ValueError(f"long_sentence_threshold must be > 0, got {self.long_sentence_threshold}")
+        if self.citation_density_min_per_1000 < 0:
+            raise ValueError(f"citation_density_min_per_1000 must be ≥ 0, got {self.citation_density_min_per_1000}")
 
 
 @dataclass
@@ -54,10 +115,14 @@ class ProjectConfig:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ProjectConfig":
+        _validate_keys("top-level", data, _KNOWN_TOP_LEVEL_KEYS)
         paper = data.get("paper", {}) or {}
         prose_raw = data.get("prose", {}) or {}
         bib_raw = data.get("bibliography", {}) or {}
         report_raw = data.get("report", {}) or {}
+        _validate_keys("prose", prose_raw, _KNOWN_PROSE_KEYS)
+        _validate_keys("bibliography", bib_raw, _KNOWN_BIBLIOGRAPHY_KEYS)
+        _validate_keys("report", report_raw, _KNOWN_REPORT_KEYS)
 
         return cls(
             title=str(paper.get("title") or "Prose Review Project"),

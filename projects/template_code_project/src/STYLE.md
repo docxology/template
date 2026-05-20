@@ -115,6 +115,34 @@ def quadratic_function(x: np.ndarray, A: np.ndarray, b: np.ndarray) -> float:
 - Include actual values in error messages for debuggability
 - Never catch and silently swallow exceptions
 
+## Dual-Import Shim (`src.X` vs bare `X`)
+
+`src/optimizer.py` and `src/invariants.py` both contain a small pattern that
+new contributors should not delete:
+
+```python
+try:
+    from .optimizer import OptimizationResult     # invoked as `python -m src.optimizer`
+except ImportError:                                # noqa: E402
+    from optimizer import OptimizationResult      # invoked as a bare script from inside src/
+```
+
+The shim exists because the test suite, the analysis script, and humans
+running `python src/optimizer.py` all reach the module through three
+different import paths:
+
+| Caller | Resolution path |
+|---|---|
+| `tests/conftest.py` adds `src/` to `sys.path`, tests do `from optimizer import …` | Bare-module form (no `src.` prefix) |
+| Pipeline scripts do `from src.optimizer import …` | Package form |
+| `python -m src.invariants` invocation | Package form |
+
+The `try/except ImportError` covers both code paths. Deleting it breaks
+the bare-module form silently — the test suite still passes (it uses the
+bare path) but anything running `from src.optimizer import …` fails on
+the very first import. Do not "clean up" this pattern without re-thinking
+the conftest path setup first.
+
 ## Module Exports
 
 `__init__.py` should explicitly export public API:
