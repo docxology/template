@@ -5,7 +5,7 @@ Get up and running with the `template_code_project` exemplar in 5 minutes.
 ## Prerequisites
 
 - Python 3.10 or higher
-- [`uv`](https://github.com/astral-sh/uv) package manager (recommended) or `pip`
+- [`uv`](https://github.com/astral-sh/uv) package manager (repo invariant — see the root `CLAUDE.md`)
 - Git
 
 ## Setup (One-Time)

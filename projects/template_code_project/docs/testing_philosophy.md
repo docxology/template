@@ -18,7 +18,7 @@ Files:
 Configuration: `projects/template_code_project/pyproject.toml` (`fail_under = 90`, matching the root pipeline gate)
 Conftest: `projects/template_code_project/tests/conftest.py` (sets `MPLBACKEND=Agg`, adds `src/` to `sys.path`)
 
-The suite currently collects **117** tests covering `src/optimizer.py`, `src/invariants.py`, `src/manuscript_variables.py`, and the thin orchestration in `scripts/build_dashboard.py` plus `scripts/optimization_analysis.py` (via conditional imports). Line/branch coverage on `src/` typically lands at ~99.5%, well above the 90% gate.
+The suite covers `src/optimizer.py`, `src/invariants.py`, `src/manuscript_variables.py`, and the thin orchestration in `scripts/build_dashboard.py` plus `scripts/optimization_analysis.py` (via conditional imports). Live test count and coverage percentage are tracked in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md); both run well above the 90% gate.
 
 ## Test Class Inventory
 
@@ -38,7 +38,7 @@ The suite currently collects **117** tests covering `src/optimizer.py`, `src/inv
 | `TestInvariants` (test_invariants.py) | 30+ | `src/invariants.py` invariant builders, `InvariantResult`/`Panel` schema, dashboard payload primitives |
 | `TestBuildDashboard` (test_invariants_and_dashboard.py) | 20+ | `scripts/build_dashboard.py` end-to-end: payload JSON, HTML emission, invariants.txt, summary.txt |
 
-**Total: 117 collected tests** (run `pytest --collect-only -q | tail -1` for the live count).
+**Live test count:** see [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md) (or run `uv run pytest projects/template_code_project/tests/ --collect-only -q | tail -1`).
 
 ## Coverage Mechanics
 

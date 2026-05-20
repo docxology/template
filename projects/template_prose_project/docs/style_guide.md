@@ -59,32 +59,33 @@ The current repository state passes this check with no matches.
 ## 2. Infrastructure Delegation
 
 Project code must delegate the operational work — reading the manuscript,
-computing readability, parsing BibTeX — to `infrastructure/`. The delegation
-table is fine-grained; only `src/pipeline.py` may call infrastructure
-*operations*. Other modules may import infrastructure *types* (e.g.
-`ManuscriptReport`) and pure helpers (e.g. `render_outline`).
+computing readability, parsing BibTeX — to `infrastructure/`. The rule the
+suite actually enforces is "**no module under `src/` re-implements analysis
+that already exists in `infrastructure/`**". Modules may import infrastructure
+types, pure helpers, and operations as needed; logic must stay in
+`infrastructure/`, not be inlined under `src/`.
 
-| File | May import from infrastructure | Must NOT call |
+| File | May import from infrastructure | Must NOT do |
 |---|---|---|
-| `src/config.py` | nothing | anything from `infrastructure.*` |
+| `src/config.py` | (does not currently import infrastructure) | re-implement YAML parsing or schema validation |
 | `src/pipeline.py` | `infrastructure.prose.{ManuscriptReport, analyze_manuscript, write_report}`, `infrastructure.reference.citation.parse_bibfile` | I/O outside the documented `write_outputs=True` branch |
-| `src/figures.py` | `infrastructure.prose.ManuscriptReport` (type only) | `analyze_*`, `parse_*`, `write_*` |
+| `src/figures.py` | `infrastructure.prose.ManuscriptReport` (top-level) **and** deep `infrastructure.prose.report.*` / `infrastructure.prose.analysis.*` inside `load_manuscript_report` | re-implement readability/structure analysis; figure code may rehydrate types from JSON, never recompute them |
 | `src/report.py` | `infrastructure.prose.{ManuscriptReport, render_outline}` (type + pure helper) | `analyze_*`, `parse_*`, `write_*` |
-| `src/manuscript_variables.py` | nothing | anything from `infrastructure.*` |
+| `src/manuscript_variables.py` | `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` for the {{TOKEN}} substitution path | re-implement substitution; reads JSON written by `pipeline.py`, delegates writes to infrastructure |
 | `scripts/run_prose_pipeline.py` | `src.pipeline`, `src.config`, `src.report` | inline analysis logic, regex over prose, BibTeX parsing |
 | `scripts/y_generate_prose_figures.py` | `src.figures` | inline analysis logic |
 | `scripts/z_generate_manuscript_variables.py` | `src.manuscript_variables` | inline analysis logic |
 | `tests/test_*.py` | `src.*`, `infrastructure.*` (real) | `unittest.mock.*` |
 
-**Verify the boundary**:
+**Verify the boundary** (no analysis re-implemented under `src/`):
 ```bash
-# Only pipeline.py should call infrastructure operations
+# Operations originate from src/pipeline.py and src/manuscript_variables.py only;
+# figures.py loads infrastructure types from JSON but does not call analyze_*/parse_*/write_*.
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
     projects/template_prose_project/src/figures.py \
     projects/template_prose_project/src/report.py \
-    projects/template_prose_project/src/manuscript_variables.py \
     projects/template_prose_project/src/config.py \
-    || echo "Clean"
+    || echo "Clean — figures/report/config call no analysis operations"
 ```
 
 ---
@@ -152,7 +153,7 @@ Two additional BAD/GOOD pairs:
 | BAD (vague) | GOOD (concrete) |
 |---|---|
 | "The manuscript reads at a college level." | "The manuscript's weighted Flesch-Kincaid Grade Level is `{{AVG_GRADE_LEVEL}}`, falling inside the configured band `[prose.target_grade_level_min, prose.target_grade_level_max]` defined in `manuscript/config.yaml`." |
-| "We validated the bibliography." | "`_check_bibliography_consistency` in `src/pipeline.py` confirmed that all `{{CITATION_COUNT}}` cited keys appear in `manuscript/references.bib`; the `bibliography_consistency` entry of `output/checks.json` records `passed: true`." |
+| "We validated the bibliography." | "`_check_bibliography` in `src/pipeline.py` confirmed that all `{{CITATION_COUNT}}` cited keys appear in `manuscript/references.bib`; the `bibliography_consistency` entry of `output/checks.json` records `passed: true`." |
 
 ---
 
@@ -205,24 +206,33 @@ projects/template_prose_project/output/figures/section_word_counts.png
 Follow the patterns established in `src/config.py` and `src/pipeline.py`:
 
 - Use Python 3.10+ union syntax: `Path | None`, not `Optional[Path]`.
-- Prefer `frozen=True` dataclasses for configuration containers
-  (`ProseAnalysisConfig`, `BibliographyConfig`, `ProjectConfig` follow this
-  pattern).
+- Configuration dataclasses (`ProseAnalysisConfig`, `BibliographyConfig`, `ReportConfig`, `ProjectConfig`) are **mutable** because YAML parsing populates them after construction. `ManuscriptVariables` is `frozen=True` because it represents a fully-resolved substitution payload. The rule of thumb: freeze immutable result-types; leave config containers mutable.
 - All public functions must have complete type annotations on every
   parameter and the return value.
 - Container fields use the same union syntax: `details: dict[str, object] | None = None`.
 
-**Example** (mirroring `CheckResult` in `src/pipeline.py`):
+**Example** (mirroring `ManuscriptVariables` in `src/manuscript_variables.py`):
 
 ```python
 from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
-class CheckResult:
-    name: str
-    passed: bool
-    message: str = ""
-    details: dict[str, object] = field(default_factory=dict)
+class ManuscriptVariables:
+    files_analysed: int
+    total_words: int
+    avg_grade_level: float
+    # ... immutable result type, so frozen=True is correct here.
+```
+
+For a mutable config container (matching `ProjectConfig` in `src/config.py`):
+
+```python
+@dataclass
+class ProjectConfig:
+    manuscript_dir: Path
+    prose: ProseAnalysisConfig
+    bibliography: BibliographyConfig
+    # Mutable so from_dict() / loader hooks can populate fields post-construction.
 ```
 
 ---

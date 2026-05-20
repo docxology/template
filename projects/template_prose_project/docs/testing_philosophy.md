@@ -38,13 +38,14 @@ Files (`projects/template_prose_project/tests/`):
 - `test_scripts.py` — invokes the three orchestrator scripts via
   `subprocess.run` (approximately 3 tests).
 
-**Total: 66 collected tests** (run `pytest projects/template_prose_project/tests/
---collect-only -q | tail -1` for the live count).
+**Live test count + achieved coverage:** see
+[`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md)
+(or run `uv run pytest projects/template_prose_project/tests/ --collect-only -q | tail -1`).
 
 Conftest: `projects/template_prose_project/tests/conftest.py` (sets
-`MPLBACKEND=Agg`, adds `src/` to `sys.path`).
+`MPLBACKEND=Agg` at import time, adds `src/` to `sys.path`).
 Configuration: `projects/template_prose_project/pyproject.toml`
-(`fail_under = 70` locally; the root pipeline gates at 90).
+(`fail_under = 90`; the root pipeline gates at the same 90% number).
 
 ## Coverage
 
@@ -73,7 +74,6 @@ uv run pytest projects/template_prose_project/tests/ \
     --cov-fail-under=90
 ```
 
-The current 100% means there is a 10% buffer before the 90% gate is hit.
 Do not consume the buffer unnecessarily. Do not delete tests to make a
 coverage number work — fix the gap.
 
@@ -84,8 +84,9 @@ Every test uses real artefacts:
 - **Real Markdown.** Tests write `.md` files to `tmp_path` and pass them
   through `infrastructure.prose.analyze_manuscript`. No string-faking, no
   pre-built `ManuscriptReport` objects in production-path tests.
-- **Real BibTeX.** Tests covering `_check_bibliography_consistency` write
-  small but valid `.bib` files and parse them through
+- **Real BibTeX.** Tests covering `_check_bibliography` (emits
+  `CheckResult(name="bibliography_consistency")`) write small but valid
+  `.bib` files and parse them through
   `infrastructure.reference.citation.parse_bibfile`. This catches
   parser-level breakage that a mocked `BibDatabase` would hide.
 - **Real `tmp_path`.** No test writes into the project's own `output/`

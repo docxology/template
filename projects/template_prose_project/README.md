@@ -7,25 +7,41 @@ A configurable, reproducible **prose-review** pipeline built on
 Optional add-on exemplar: [`template_search_project`](../../projects_archive/template_search_project)
 (literature discovery).
 
+## Why this template — the transferable pattern
+
+The bundled `manuscript/config.yaml` is intentionally permissive (FKGL band
+10–18, citation floor 0.0) so the exemplar's *own abstract passes its own
+gate*. This is a self-referential pipeline: the document describing the
+gate runs *through* the gate. The transferable discipline is that the
+explanatory prose and the threshold settings co-evolve — a forker who
+tightens `prose.target_grade_level_max` to 14.0 without rewriting the
+methodology section will discover that the project's own methodology fails
+the methodology check. The pedagogy is "configuration drift is detected by
+the artifact itself, not by an external reviewer". A stricter starting
+point lives in
+[`manuscript/config.yaml.example`](manuscript/config.yaml.example).
+
 ## What it does
 
 ```mermaid
 flowchart LR
-    CFG[manuscript/config.yaml] --> READ[read manuscript]
+    CFG[manuscript/config.yaml] --> READ[src/pipeline.py · read manuscript]
     READ --> PROSE[infrastructure.prose<br/>metrics · structure · quality]
     READ --> BIB[infrastructure.reference<br/>BibTeX validation]
     PROSE --> CHECKS[evaluate threshold checks]
     BIB --> CHECKS
     CHECKS --> JSON[manuscript_report.json<br/>checks.json]
-    CHECKS --> MD[review_report.md]
-    PROSE --> FIG[figures<br/>word counts · readability ·<br/>citation density]
+    CHECKS --> RPT[src/report.py<br/>review_report.md]
+    PROSE --> FIG[src/figures.py<br/>word counts · readability ·<br/>citation density PNGs]
+    JSON --> MV[src/manuscript_variables.py<br/>{{TOKEN}} substitution]
+    MV --> SUB[output/manuscript/*.md<br/>tokens resolved]
 
     classDef io fill:#0f766e,stroke:#0f172a,color:#fff
     classDef proc fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef out fill:#7c2d12,stroke:#0f172a,color:#fff
     class CFG io
-    class READ,PROSE,BIB,CHECKS proc
-    class JSON,MD,FIG out
+    class READ,PROSE,BIB,CHECKS,MV proc
+    class JSON,RPT,FIG,SUB out
 ```
 
 ## Quick start

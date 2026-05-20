@@ -599,12 +599,21 @@ class TestPerformanceBenchmarks:
             assert timing_results[dim]["time"] < 1.0
 
     def test_function_evaluation_speed(self):
-        """Benchmark function and gradient evaluation speed."""
-        # Test with different problem sizes
+        """Benchmark function and gradient evaluation speed.
+
+        Timing tests check that BLAS-backed numpy arithmetic stays under a
+        reasonable per-call ceiling for the array sizes a typical quadratic
+        problem reaches in this template (n ≤ 1000). The assertion is on
+        a bound (`< 0.2s`), not on an exact value, so wall-clock jitter
+        on a loaded CI worker is fine. Inputs are seeded for reproducibility
+        per Rule 5 of `docs/agent_instructions.md`; the timing properties
+        being asserted do not depend on the specific random values.
+        """
+        rng = np.random.default_rng(seed=20260520)
         sizes = [10, 100, 1000]
 
         for n in sizes:
-            x = np.random.randn(n)
+            x = rng.standard_normal(n)
             A = np.eye(n)
             b = np.ones(n)
 

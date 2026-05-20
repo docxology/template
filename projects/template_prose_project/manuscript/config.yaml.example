@@ -1,0 +1,80 @@
+# template_prose_project — configuration TEMPLATE
+#
+# Copy this file to `config.yaml` and customize for your manuscript. The
+# bundled `config.yaml` is intentionally permissive (FKGL band 10–18,
+# citation floor 0.0) so the exemplar's own prose passes its own gate;
+# this example shows the *stricter* defaults a real editorial review
+# typically uses.
+
+paper:
+  title: "Your Manuscript Title"
+  subtitle: "Optional Subtitle"
+  version: "1.0"
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"   # Get one at https://orcid.org/
+    email: "you@your.institution"
+    affiliation: "Your Institution"
+    corresponding: true
+
+publication:
+  doi: ""    # Add after deposit (e.g., Zenodo)
+  year: "2026"
+
+keywords:
+  - "your"
+  - "manuscript"
+  - "keywords"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+# Path to the manuscript directory, relative to project root.
+manuscript_dir: "manuscript"
+
+# ---------------------------------------------------------------------------
+# Prose-analysis thresholds — STRICTER than the bundled config.
+#
+# These defaults reflect a typical "editorial review for a methods paper"
+# stance: the prose should land between graduate-coursework difficulty
+# (~grade 12) and dense-but-readable (~grade 16), and every 1000 words
+# should average at least three citations. Tighten or relax to match
+# your audience.
+# ---------------------------------------------------------------------------
+prose:
+  # FKGL band the manuscript should land within. Tighter than bundled
+  # (which is 10–18 so the exemplar's own methodological prose passes).
+  target_grade_level_min: 12.0
+  target_grade_level_max: 16.0
+
+  # Words-per-sentence cutoff above which a sentence is flagged as long.
+  # 30 is tighter than the bundled 35.
+  long_sentence_threshold: 30
+
+  # Minimum citations per 1000 words. 3.0 is a sane default for
+  # methods/results sections of empirical papers.
+  citation_density_min_per_1000: 3.0
+
+  # Structural rules. Both default true. Flip to false if your manuscript
+  # uses non-standard heading conventions.
+  require_h1_per_section: true
+  forbid_skipped_levels: true
+
+# ---------------------------------------------------------------------------
+# Bibliography cross-check.
+# ---------------------------------------------------------------------------
+bibliography:
+  references_path: "manuscript/references.bib"
+  fail_on_missing: true   # cited [@key] not in bib → fail
+  fail_on_unused: true    # bib entry never cited → fail (stricter than bundled)
+
+# ---------------------------------------------------------------------------
+# Final markdown review report.
+# ---------------------------------------------------------------------------
+report:
+  output_path: "output/review_report.md"
+  include_per_file_table: true
+  include_outline: true
+  include_quality_flags: true

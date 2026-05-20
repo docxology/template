@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Hydrate manuscript variables for the prose project.
 
-Reads ``output/manuscript_report.json``, computes a
+Reads ``<project_root>/output/manuscript_report.json``, computes a
 :class:`ManuscriptVariables` record, writes it to
-``output/data/manuscript_variables.json``.
+``<project_root>/output/data/manuscript_variables.json``, and writes
+token-substituted copies of every ``manuscript/*.md`` under
+``<project_root>/output/manuscript/``.
 
 Exit codes:
     0   variables written
@@ -12,19 +14,22 @@ Exit codes:
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
-_project_root = Path(__file__).resolve().parent.parent
-_repo_root = _project_root.parent.parent
-sys.path.insert(0, str(_project_root))
-sys.path.insert(0, str(_project_root / "src"))
-sys.path.insert(0, str(_repo_root))
+_SCRIPT_DIR = Path(__file__).resolve().parent
+_DEFAULT_PROJECT_ROOT = _SCRIPT_DIR.parent
+_REPO_ROOT = _DEFAULT_PROJECT_ROOT.parent.parent
 
-from infrastructure.core.logging.utils import get_logger
+sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT))
+sys.path.insert(0, str(_DEFAULT_PROJECT_ROOT / "src"))
+sys.path.insert(0, str(_REPO_ROOT))
 
-from src.config import load_project_config
-from src.manuscript_variables import (
+from infrastructure.core.logging.utils import get_logger  # noqa: E402
+
+from src.config import load_project_config  # noqa: E402
+from src.manuscript_variables import (  # noqa: E402
     compute_variables,
     load_manuscript_report,
     write_resolved_manuscript_tree,
@@ -34,22 +39,43 @@ from src.manuscript_variables import (
 logger = get_logger(__name__)
 
 
-def main() -> int:
-    report_path = _project_root / "output" / "manuscript_report.json"
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=_DEFAULT_PROJECT_ROOT,
+        help="Project root directory (default: the bundled template_prose_project).",
+    )
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=None,
+        help="Override path to config.yaml (default: <project_root>/manuscript/config.yaml).",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = _parse_args(argv)
+    project_root: Path = args.project_root.resolve()
+    config_path: Path = (args.config or (project_root / "manuscript" / "config.yaml")).resolve()
+
+    report_path = project_root / "output" / "manuscript_report.json"
     if not report_path.exists():
         logger.warning("No %s; skipping.", report_path)
         return 2
 
-    config = load_project_config(_project_root / "manuscript" / "config.yaml")
+    config = load_project_config(config_path)
     payload = load_manuscript_report(report_path)
     variables = compute_variables(
         config_title=config.title,
         manuscript_report=payload,
     )
 
-    out_path = _project_root / "output" / "data" / "manuscript_variables.json"
+    out_path = project_root / "output" / "data" / "manuscript_variables.json"
     write_variables(variables, out_path)
-    resolved_dir = write_resolved_manuscript_tree(_project_root, variables)
+    resolved_dir = write_resolved_manuscript_tree(project_root, variables)
     logger.info(
         "Wrote %d manuscript variables → %s; resolved manuscript → %s",
         len(variables.as_dict()),

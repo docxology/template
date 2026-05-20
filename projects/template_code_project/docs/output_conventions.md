@@ -82,7 +82,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 - **Do not edit files in `output/` manually** — changes will be overwritten on the next pipeline run.
 
 - **When adding a new output file** (e.g., a new figure or data product):
-  1. Document it in `output/AGENTS.md` (this directory's agent guide) with its generator function and path.
+  1. Document it in `docs/output_inventory.md` (this directory's agent guide) with its generator function and path.
   2. Include it in the appropriate pipeline stage (usually `optimization_analysis.py`).
   3. Add a regeneration step to the sequence above if needed.
 
@@ -91,11 +91,11 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 To add a new figure or data product:
 
 1. **Add the generator** in `scripts/optimization_analysis.py` — write to `output/figures/` or `output/data/` with a fixed, predictable filename.
-2. **Update `output/AGENTS.md`** — add an entry to the file inventory table (see below).
+2. **Update `docs/output_inventory.md`** — add an entry to the file inventory table (see below).
 3. **Update manuscript references** — reference the new file via `\\ref{fig:label}` or data table as appropriate.
 4. **Re-run the pipeline** (steps 2–5 above).
 
-## File Inventory Template (for `output/AGENTS.md`)
+## File Inventory Template (for `docs/output_inventory.md`)
 
 ```markdown
 # output/ — Generated Artifacts

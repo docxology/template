@@ -18,7 +18,7 @@ Repository-wide agent rules for this exemplar live in [`../docs/agent_instructio
 | `03_results.md` | All results; ALL figures; ALL numeric result tokens | `CONFIG_STEP_SIZES_CSV`, `CONFIG_MAX_ITERATIONS`, `CONFIG_TOLERANCE`, `CONFIG_CONVERGENCE_TOL`, `CONFIG_NUM_STEP_SIZES`, `CONFIG_NUM_STABILITY_STARTS`, `CONFIG_NUM_STABILITY_STEPS`, `CONFIG_STABILITY_CELLS`, `CONFIG_STABILITY_MIN_STEP`, `CONFIG_STABILITY_MAX_STEP`, `CONFIG_BENCHMARK_DIMS`, `RESULT_OPTIMUM_F`, `RESULT_MIN_ITERATIONS`, `RESULT_MAX_ITERATIONS`, `RESULT_AVG_ITERATIONS`, `RESULT_BEST_STEP_SIZE`, `RESULT_NUM_CONVERGED`, `RESULT_OPTIMUM_X`, `RESULT_TABLE_ROWS`, `RESULT_CONVERGENCE_FACTORS`, `STABILITY_SCORE` | All 6 figures |
 | `04_conclusion.md` | Summary of pipeline automation and template guarantees | None | None |
 | `05_experimental_setup.md` | Configuration parameters, software environment | `CONFIG_QUADRATIC_A`, `CONFIG_QUADRATIC_B`, `RESULT_OPTIMUM_X`, `RESULT_OPTIMUM_F`, `CONFIG_NUM_STEP_SIZES`, `CONFIG_STEP_SIZES_BULLETS`, `CONFIG_INITIAL_POINT`, `CONFIG_CONVERGENCE_TOL`, `CONFIG_MAX_ITERATIONS`, `CONFIG_NUM_STABILITY_STARTS`, `CONFIG_NUM_STABILITY_STEPS`, `CONFIG_STABILITY_CELLS`, `CONFIG_BENCHMARK_DIMS`, `CONFIG_BENCHMARK_MIN_DIM`, `CONFIG_BENCHMARK_MAX_DIM`, `PYTHON_VERSION`, `NUMPY_VERSION`, `PLATFORM`, `GENERATION_TIMESTAMP` | None |
-| `06_reproducibility.md` | Config hash, artifact inventory, test results | `CONFIG_HASH`, `CONFIG_VERSION`, `CONFIG_FIRST_AUTHOR`, `CONFIG_KEYWORDS`, `ARTIFACT_FIGURES`, `ARTIFACT_DATA_FILES` | None |
+| `06_reproducibility.md` | Config hash, artifact inventory, test results | `CONFIG_HASH`, `CONFIG_VERSION`, `CONFIG_FIRST_AUTHOR`, `CONFIG_KEYWORDS` (comma-joined string, not a count), `ARTIFACT_FIGURES`, `ARTIFACT_DATA_FILES` | None |
 | `07_scope_and_related_work.md` | Scope limitations, related literature | None | None |
 | `config.yaml` | Paper metadata and all experiment parameters | — | — |
 | `config.yaml.example` | Reference copy for new projects; shows all configurable fields | — | — |
@@ -70,7 +70,7 @@ All six figures must be referenced via Pandoc-crossref `[@fig:label]`, never wit
 1. Add a generator function to `scripts/optimization_analysis.py` that writes a new PNG under `projects/template_code_project/output/figures/`.
 2. In the appropriate manuscript section, add a Pandoc image line (alt, relative path under `../output/figures/`, and `{#fig:…}`) by copying the structure of any figure in `03_results.md` and updating the path to match the file your generator writes.
 3. Reference in prose: `[@fig:new_label]` (parenthetical) or `@fig:new_label` (narrative)
-4. Document in `output/AGENTS.md` regeneration table
+4. Document in [`../docs/output_inventory.md`](../docs/output_inventory.md) regeneration table
 
 ## Infrastructure Coupling (`scripts/`, not `src/`)
 

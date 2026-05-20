@@ -12,7 +12,7 @@ Technical guide for `projects/template_code_project/docs/` — the operational r
 | `AGENTS.md` | This index — technical overview of `docs/` | ~100 | Current |
 | `agent_instructions.md` | Behavioral constraints for AI agents (read-first priority) | ~80 | Comprehensive |
 | `architecture.md` | Thin orchestrator flow: layers, dependencies, forbidden patterns, how-to-add-algorithm | ~100 | Comprehensive |
-| `testing_philosophy.md` | Zero-mock policy; 117 collected tests; coverage mechanics; class inventory | ~110 | Comprehensive |
+| `testing_philosophy.md` | Zero-mock policy; coverage mechanics; class inventory (live counts in `docs/_generated/canonical_facts.md`) | ~110 | Comprehensive |
 | `faq.md` | Frequently asked questions about architecture, testing, manuscripts | ~130 | Comprehensive |
 | `troubleshooting.md` | Symptom-driven recipes for common failures | ~170 | Comprehensive |
 | `quickstart.md` | 5-minute first-run walkthrough | ~90 | Comprehensive |
@@ -25,7 +25,7 @@ Technical guide for `projects/template_code_project/docs/` — the operational r
 
 **Read-first protocol**: AI agents must read `agent_instructions.md` before modifying any project file. Skipping this document is the most common source of errors in this project — agents who skip it tend to: introduce mocks (violating Rule 1), write math in `scripts/` (violating Rule 3), or hardcode numbers in manuscript prose (violating Rule 4 of `style_guide.md`). The consequence of any one violation is a CI failure or a misleading exemplar for future users.
 
-**Architecture isolation**: `src/` is pure logic (no `infrastructure.*` imports), `scripts/` is orchestration (no math), `infrastructure/` is operations (cross-cutting). The dependency arrow is strictly one-directional: `scripts/` → `src/`; `scripts/` → `infrastructure/`; `tests/` → `src/`. Nothing imports upward. Violating isolation breaks the reproducibility guarantee: `src/` can be used in any Python environment without the pipeline installed.
+**Architecture isolation**: the **mathematical primitives** in `src/` (`optimizer.py`, `invariants.py`) are pure logic with no `infrastructure.*` imports; the **orchestration modules** (`analysis.py`, `dashboard.py`, `manuscript_variables.py`) live in `src/` for testability but may import `infrastructure.*` behind try/except fallbacks; `scripts/` is glue (no math); `infrastructure/` is operations (cross-cutting). The dependency arrow remains one-directional: `scripts/` → `src/`; `scripts/` → `infrastructure/`; `tests/` → `src/`. Nothing imports upward. The math-primitive purity is the load-bearing claim: `optimizer.py` and `invariants.py` can be lifted into any Python environment without the pipeline installed.
 
 **Zero-mock enforcement**: No `unittest.mock`, `MagicMock`, `@patch`, or `create_autospec` anywhere in `tests/`. CI enforces this via `scripts/verify_no_mocks.py` before the test stage runs. The enforcement exists because mock tests can pass even when the actual mathematical logic is wrong — they test call signatures, not convergence.
 
@@ -56,10 +56,56 @@ uv run pytest projects/template_code_project/tests/ \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/template_code_project/tests/ || echo "Clean"
 
-# src/ has no infrastructure imports
-grep -r "from infrastructure\|import infrastructure" \
-    projects/template_code_project/src/ || echo "Clean"
+# Mathematical primitives (optimizer.py, invariants.py) have no infrastructure imports
+# (orchestration modules analysis.py / dashboard.py / manuscript_variables.py are allowed
+# to import infrastructure behind try/except fallbacks — see src/AGENTS.md).
+grep -nE "^(from|import) infrastructure" \
+    projects/template_code_project/src/optimizer.py \
+    projects/template_code_project/src/invariants.py \
+    || echo "Clean — math primitives are infrastructure-free"
 ```
+
+## REQUIRED vs AESTHETIC
+
+A forker copying this exemplar should know which directories and files
+are pipeline-enforced (delete them and the gate fails) and which are
+convention only (delete them and nothing complains automatically). The
+distinction matters when you trim the template down to your minimum
+viable project.
+
+| Path | Status | Enforcing gate / source of truth |
+|------|--------|---------------------------------|
+| `src/optimizer.py` | REQUIRED | Coverage gate; `tests/test_optimizer.py` |
+| `src/invariants.py` | REQUIRED | `tests/test_invariants.py` + dashboard invariants check |
+| `src/analysis.py` | REQUIRED (orchestration) | Exercised by `scripts/optimization_analysis.py` and `tests/test_invariants_and_dashboard.py` |
+| `src/dashboard.py` | REQUIRED (orchestration) | Exercised by `scripts/build_dashboard.py` and `tests/test_invariants_and_dashboard.py` |
+| `src/manuscript_variables.py` | REQUIRED | `tests/test_manuscript_variables.py` + the live `{{TOKEN}}` cross-reference test |
+| `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |
+| `tests/conftest.py` | REQUIRED | Pins `MPLBACKEND=Agg` + `src/` `sys.path`; without it pytest cannot collect |
+| `scripts/optimization_analysis.py` | REQUIRED | Pipeline stage 4 entry point; PDF stage depends on its outputs |
+| `scripts/z_generate_manuscript_variables.py` | REQUIRED | Hydrates `{{TOKEN}}`s; PDF stage reads `output/manuscript/*.md` it writes |
+| `scripts/build_dashboard.py` | REQUIRED | Pipeline reads `output/reports/analysis_dashboard.html` |
+| `scripts/generate_api_docs.py` | AESTHETIC | Auxiliary docs generator; pipeline does not consume its output |
+| `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; pipeline still runs without it |
+| `manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering.pdf_renderer`; pipeline aborts without it |
+| `manuscript/*.md` | REQUIRED | Pandoc reads token-substituted copies during PDF stage |
+| `manuscript/references.bib` | REQUIRED | Pandoc citeproc reads it during PDF stage |
+| `manuscript/preamble.md` | REQUIRED | Injected at PDF compile; missing → LaTeX errors |
+| `manuscript/SYNTAX.md` | AESTHETIC | Authoring guide for humans; pipeline never reads it |
+| `manuscript/config.yaml.example` | AESTHETIC | Documentation; forkers copy → `config.yaml` |
+| `manuscript/AGENTS.md` | AESTHETIC | Agent guide; pipeline never reads it |
+| `docs/*.md` | AESTHETIC | Agent + human documentation; no gate parses these |
+| `src/STYLE.md`, `tests/PATTERNS.md`, `scripts/CONVENTIONS.md` | AESTHETIC | Per-subdir style/test/script conventions |
+| `src/AGENTS.md`, `tests/AGENTS.md`, `scripts/AGENTS.md` | AESTHETIC | Per-subdir agent guides |
+| `docs/output_inventory.md` | AESTHETIC | Producer/consumer graph for `output/`; lives in `docs/` because the repo `.gitignore` excludes `output/` |
+| `pyproject.toml` | REQUIRED | Coverage gate config, pytest options, dependency declarations |
+| `.gitignore` | REQUIRED | Public-repo confidentiality invariant (see root `CLAUDE.md`) |
+| `README.md`, `AGENTS.md` (root) | AESTHETIC (load-bearing for humans/agents) | Read by every newcomer; drift = a confused forker |
+
+"AESTHETIC" does NOT mean "throwaway" — drift in an aesthetic file
+typically rots over months and silently misleads future contributors. It
+means "no pre-commit hook will tell you when it rots." Treat the
+AESTHETIC list as the audit surface that lives outside automated CI.
 
 ## Cross-References
 

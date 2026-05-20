@@ -10,6 +10,7 @@ The `scripts/` directory contains **Thin Orchestrators**. In the context of the 
 - **Integration examples**: Demonstrates how to use `src/` modules securely in research workflows.
 - **Automated figure generation**: Scripts generate publication-ready figures via `infrastructure.rendering`.
 - **Data export**: Structured data output for deterministic tracking.
+- **Alphabetical ordering hints (`y_*`, `z_*`)**: scripts whose filenames start with a letter prefix run **after** any plainly-named script (alphabetical order). `z_generate_manuscript_variables.py` consumes outputs from `optimization_analysis.py` (figures, data, reports) and emits `{{TOKEN}}` substitutions — so it must run last. The alphabetical prefix is a human-readable hint for manual invocation; the canonical pipeline (`scripts/execute_pipeline.py`) enforces ordering via stage definitions, not filename. A forker introducing a script that should run between analysis and variable-hydration should name it `y_…` or rely on the pipeline stage list.
 
 ## Directory Structure
 
@@ -19,7 +20,7 @@ flowchart LR
     SC --> OA[optimization_analysis.py<br/>Main analysis pipeline]
     SC --> BD[build_dashboard.py<br/>Interactive HTML dashboard +<br/>numerical-invariants report]
     SC --> GD[generate_api_docs.py<br/>API documentation generator]
-    SC --> ZGEN[z_generate_manuscript_variables.py<br/>Manuscript variable hydration]
+    SC --> ZGEN[z_generate_manuscript_variables.py<br/>Manuscript variable hydration · z_ prefix = runs LAST]
     SC --> DOCS[AGENTS.md · README.md · CONVENTIONS.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

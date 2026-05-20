@@ -53,9 +53,17 @@ When specifying numeric results in the manuscript, use the `{{VARIABLE_NAME}}` s
 - **BAD**: The algorithm took 165 iterations.
 - **GOOD**: The algorithm took `{{RESULT_MAX_ITERATIONS}}` iterations.
 
-### Complete {{VARIABLE}} Token Reference
+### {{VARIABLE}} Token Reference
 
-All tokens defined in `src/manuscript_variables.py::generate_variables()`:
+> The authoritative list of substitution tokens is the return value of
+> `src/manuscript_variables.py::generate_variables()`. The regression
+> test `tests/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated`
+> reads every `manuscript/*.md` file and fails CI on any token used in prose
+> that the generator does not emit. **Treat the generator function — not this
+> table — as the single source of truth**; the table below is illustrative
+> and may lag behind the code.
+
+Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_variables()`:
 
 **CONFIG_* — Derived from `manuscript/config.yaml`**
 
@@ -82,7 +90,7 @@ All tokens defined in `src/manuscript_variables.py::generate_variables()`:
 | `{{CONFIG_BENCHMARK_MAX_DIM}}` | `50` | `max(experiment.benchmark_dimensions)` |
 | `{{CONFIG_VERSION}}` | `2.0` | `paper.version` |
 | `{{CONFIG_FIRST_AUTHOR}}` | First author name | `authors[0].name` |
-| `{{CONFIG_KEYWORDS}}` | `7` | `len(keywords)` |
+| `{{CONFIG_KEYWORDS}}` | `"optimization algorithms, gradient descent, …"` (comma-joined) | `", ".join(keywords)` |
 | `{{CONFIG_HASH}}` | SHA-256 of config.yaml (truncated) | Computed |
 
 **RESULT_* — Derived from `output/data/optimization_results.csv`**

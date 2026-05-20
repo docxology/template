@@ -66,12 +66,71 @@ def test_run_prose_pipeline_strict_mode(tmp_path: Path):
 
 
 def test_y_figures_skips_without_input(tmp_path: Path):
-    """y_generate_prose_figures.py exits 2 when manuscript_report.json missing."""
-    # Skip-path is hard to test for the bundled project since output may exist;
-    # this is mostly for defensive validation that the exit code is 2 in that path.
-    if not (PROJECT_ROOT / "output" / "manuscript_report.json").exists():
-        result = subprocess.run(
-            [sys.executable, str(PROJECT_ROOT / "scripts" / "y_generate_prose_figures.py")],
-            cwd=REPO_ROOT, capture_output=True, text=True,
-        )
-        assert result.returncode == 2
+    """y_generate_prose_figures.py exits 2 when manuscript_report.json missing.
+
+    Uses --project-root to point at the isolated tmp tree so the test never
+    depends on (or pollutes) the bundled project's output/ directory.
+    """
+    iso = tmp_path / "iso"
+    iso.mkdir()
+    # No manuscript_report.json in iso/output/ — the script should exit 2.
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(PROJECT_ROOT / "scripts" / "y_generate_prose_figures.py"),
+            "--project-root", str(iso),
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 2
+
+
+def test_z_generate_manuscript_variables(tmp_path: Path):
+    """z_generate_manuscript_variables.py runs end-to-end on an isolated manuscript tree.
+
+    Mirrors test_run_prose_pipeline_offline but exercises the final-stage
+    z_ script: takes a real manuscript_report.json produced by Phase 1,
+    derives substitution variables, and writes both
+    output/data/manuscript_variables.json and output/manuscript/*.md
+    (token-substituted).
+    """
+    iso = _setup_isolated(tmp_path)
+    # Phase 1 — produce manuscript_report.json so the z_ script has its input.
+    p1 = subprocess.run(
+        [
+            sys.executable,
+            str(PROJECT_ROOT / "scripts" / "run_prose_pipeline.py"),
+            "--config", str(iso / "manuscript" / "config.yaml"),
+            "--project-root", str(iso),
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert p1.returncode == 0, p1.stderr
+    assert (iso / "output" / "manuscript_report.json").exists()
+
+    # Phase 2.z — variable hydration.
+    p2 = subprocess.run(
+        [
+            sys.executable,
+            str(PROJECT_ROOT / "scripts" / "z_generate_manuscript_variables.py"),
+            "--project-root", str(iso),
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert p2.returncode == 0, p2.stderr
+    variables_path = iso / "output" / "data" / "manuscript_variables.json"
+    assert variables_path.exists()
+    payload = json.loads(variables_path.read_text(encoding="utf-8"))
+    # The bundled manuscript always produces a non-empty word count.
+    assert payload["total_words"] > 0
+    # Token-substituted manuscript tree must exist; no literal {{TOKEN}} left.
+    substituted_dir = iso / "output" / "manuscript"
+    assert substituted_dir.is_dir()
+    for md in substituted_dir.glob("*.md"):
+        assert "{{" not in md.read_text(encoding="utf-8"), f"unresolved tokens in {md}"

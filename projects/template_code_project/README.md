@@ -23,7 +23,7 @@ alone is not proof — confirm tests collected > 0 and coverage ≥ 90%:
 ```bash
 uv run pytest projects/template_code_project/tests/ \
   --cov=projects/template_code_project/src --cov-fail-under=90
-# exemplar baseline: 117 passed, ~99% coverage
+# live baseline: docs/_generated/canonical_facts.md
 ```
 
 **Combined-PDF rendering & Mermaid.** This project's convention is
@@ -42,6 +42,21 @@ Full end-to-end: `uv run python scripts/execute_pipeline.py --project template_c
 ## Dependencies
 
 Run `uv sync` at the **repository root**; that environment is what CI and `./run.sh` use. [`pyproject.toml`](pyproject.toml) in this directory configures pytest/coverage for `projects/template_code_project/tests/` and records the same scientific stack for isolated runs. Root [`pyproject.toml`](../../pyproject.toml) has `[tool.uv.workspace]` with `members = []`, so this folder is not installed as a separate workspace package.
+
+## Why this template — the transferable pattern
+
+The genuinely transferable lesson is not gradient descent. It is
+**reproducibility-by-construction**: every numeric in the manuscript prose
+is a `{{TOKEN}}` registered in one Python function
+(`src/manuscript_variables.py::generate_variables`) and cross-checked by
+one test (`tests/test_manuscript_variables.py::test_all_manuscript_tokens_are_generated`),
+which fails CI on any token used in prose that the generator does not emit.
+The deliverable PDF is therefore *proof* that the repo's invariants held
+during build: configuration drift, deleted result, or out-of-sync narrative
+cannot reach a green PDF without the gate flipping red first. A forker who
+internalizes "every prose number is a token, every token is a single Python
+function, every drift is a CI failure" gets that discipline for free —
+regardless of whether their domain is optimization.
 
 ## Key Features
 
@@ -115,7 +130,7 @@ graph TD
 
 ✅ **Fully compliant** with template development standards:
 
-- **Testing**: `src/` coverage is gated at 90%; live counts are tracked in [`../../docs/_generated/canonical_facts.md`](../../docs/_generated/canonical_facts.md)
+- **Testing**: `src/` coverage is gated at 90%; live test count + achieved coverage tracked in [`../../docs/_generated/canonical_facts.md`](../../docs/_generated/canonical_facts.md)
 - **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
 - **Code Quality**: Ruff format/check (CI parity), descriptive naming, proper imports

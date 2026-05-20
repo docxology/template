@@ -95,6 +95,12 @@ Current markers (defined in
 - [ ] Added a citation → ensure the key exists in `references.bib`.
 - [ ] Tightened thresholds → re-run the pipeline; widen any band that
   fails legitimately.
+- [ ] **Deleted or renamed a section → re-run
+  `scripts/z_generate_manuscript_variables.py` so the
+  `{{LONGEST_SECTION_WORDS}}` / `{{SHORTEST_SECTION_WORDS}}` /
+  `{{FILES_ANALYSED}}` / `{{TOTAL_WORDS}}` tokens reflect the new section
+  set. Skipping this step leaves stale numbers in the rendered PDF and
+  the regression test silently passes if `manuscript/` is empty.**
 
 ## See also
 

@@ -176,8 +176,16 @@ def test_all_manuscript_tokens_are_generated():
 
     project_root = Path(__file__).resolve().parent.parent
     manuscript_dir = project_root / "manuscript"
-    if not manuscript_dir.is_dir():
-        pytest.skip("manuscript/ directory not found; skipping cross-reference check")
+    # Hard-fail if manuscript/ has been removed: silently skipping the
+    # cross-reference test lets a forker delete every section without any
+    # regression signal. The whole point of this test is to gate
+    # manuscript/code drift; an empty manuscript is the maximally-drifted
+    # state, not an exemption.
+    assert manuscript_dir.is_dir(), (
+        f"manuscript/ directory not found at {manuscript_dir}. "
+        "This test guards {{TOKEN}}/compute_variables() drift; restore the "
+        "directory or remove this regression test intentionally."
+    )
 
     unresolved: dict[str, list[str]] = {}
     for md_file in sorted(manuscript_dir.glob("*.md")):

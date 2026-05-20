@@ -163,11 +163,11 @@ Every knob lives in `projects/template_prose_project/manuscript/config.yaml`:
 | `prose.target_grade_level_min` / `_max` | FKGL band for `grade_level_in_band` check | `_check_grade_level` in `src/pipeline.py` |
 | `prose.long_sentence_threshold` | Word count above which sentences are flagged | `infrastructure.prose.analyze_quality` (via `analyze_manuscript`) |
 | `prose.citation_density_min_per_1000` | Floor for `citation_density_above_floor` check | `_check_citation_density` in `src/pipeline.py` |
-| `prose.require_h1_per_section` | Toggle `every_file_has_h1` check | `_check_headings` in `src/pipeline.py` |
-| `prose.forbid_skipped_levels` | Toggle `no_skipped_heading_levels` check | `_check_headings` in `src/pipeline.py` |
+| `prose.require_h1_per_section` | Toggle `every_file_has_h1` check | `_check_h1_per_file` in `src/pipeline.py` |
+| `prose.forbid_skipped_levels` | Toggle `no_skipped_heading_levels` check | `_check_no_skipped_levels` in `src/pipeline.py` |
 | `bibliography.references_path` | Path to BibTeX file | `parse_bibfile` in `src/pipeline.py` |
-| `bibliography.fail_on_missing` | Fail if a `[@key]` is not in the bib | `_check_bibliography_consistency` |
-| `bibliography.fail_on_unused` | Fail if a bib entry is never cited | `_check_bibliography_consistency` |
+| `bibliography.fail_on_missing` | Fail if a `[@key]` is not in the bib | `_check_bibliography` in `src/pipeline.py` |
+| `bibliography.fail_on_unused` | Fail if a bib entry is never cited | `_check_bibliography` in `src/pipeline.py` |
 
 ## Troubleshooting
 

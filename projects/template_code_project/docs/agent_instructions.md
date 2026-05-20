@@ -23,9 +23,9 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 ---
 
-## Rule 2: Coverage Gate — 117 Tests, ≥90% on `src/`
+## Rule 2: Coverage Gate — ≥90% on `src/`
 
-The current test suite has **117 collected tests** across `test_optimizer.py`, `test_invariants.py`, `test_invariants_and_dashboard.py`, and `test_manuscript_variables.py`, and achieves approximately **99.5% line/branch coverage** on `projects/template_code_project/src/`. Both the project `pyproject.toml` and the root pipeline gate coverage at 90%.
+The test suite covers `test_optimizer.py`, `test_invariants.py`, `test_invariants_and_dashboard.py`, and `test_manuscript_variables.py`. Both the project `pyproject.toml` and the root pipeline gate coverage at **90%**. Live test count + current coverage percentage live in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md) — do not hardcode either number in prose, because both drift faster than the docs touching them.
 
 Before modifying `src/optimizer.py`, count the existing tests for the function you are changing. After modifying, run:
 
@@ -37,7 +37,7 @@ uv run pytest projects/template_code_project/tests/ \
     -v
 ```
 
-The current ~99.5% means there is a ~9.5% buffer before the gate is hit. Do not consume the buffer unnecessarily. Do not delete tests to make a coverage number work — fix the gap.
+If coverage drops, do not delete tests to make the number work — fix the gap.
 
 ---
 
@@ -144,9 +144,17 @@ uv run pytest projects/template_code_project/tests/ \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/template_code_project/tests/ || echo "Clean — no mocks found"
 
-# 3. src/ has no infrastructure imports
-grep -r "from infrastructure\|import infrastructure" \
-    projects/template_code_project/src/ || echo "Clean — src/ is infrastructure-free"
+# 3. The mathematical primitives (optimizer.py, invariants.py) have no infrastructure imports.
+#    These two files MUST remain infrastructure-free so they are copy-pasteable into any
+#    Python environment without the pipeline installed. Other `src/` modules (`analysis.py`,
+#    `dashboard.py`, `manuscript_variables.py`) are orchestration layers and may import
+#    `infrastructure.*` behind try/except fallbacks; that is intentional and documented in
+#    `src/AGENTS.md` and `architecture.md`.
+grep -nE "^(from|import) infrastructure" \
+    projects/template_code_project/src/optimizer.py \
+    projects/template_code_project/src/invariants.py \
+    && echo "VIOLATION — math primitive imports infrastructure" \
+    || echo "Clean — math primitives are infrastructure-free"
 ```
 
 All three must produce zero violations (or the "Clean" message for checks 2 and 3).

@@ -95,13 +95,14 @@ before compilation.
 
 ## `uv` command not found
 
-**Fix.** Install `uv`:
+**Fix.** Install `uv` via the canonical installer (the repo invariant — see root `CLAUDE.md` — is `uv`-only; never bootstrap `uv` through `pip`):
 
 ```bash
 # macOS / Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
-# or
-pip install uv
+
+# Homebrew (macOS)
+brew install uv
 ```
 
 Make sure `~/.local/bin` (or the install location) is on your `PATH`.

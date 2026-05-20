@@ -31,16 +31,16 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 ---
 
-## Rule 2: Coverage Gate — 66 Tests, 100% on `src/`
+## Rule 2: Coverage Gate — ≥90% on `src/`
 
-The current test suite collects **66 tests** across `tests/test_config.py`,
-`tests/test_figures.py`, `tests/test_manuscript_variables.py`,
-`tests/test_pipeline.py`, `tests/test_pipeline_integration.py`,
-`tests/test_report.py`, and `tests/test_scripts.py`. It achieves **100% line
-and branch coverage** on `projects/template_prose_project/src/` (362
-statements, 70 branches, zero misses). The gate is 90%
-(`fail_under = 90` enforced by the root pipeline; the project's own
-`pyproject.toml` configures a 70% floor for ad-hoc runs).
+The test suite covers `tests/test_config.py`, `tests/test_figures.py`,
+`tests/test_manuscript_variables.py`, `tests/test_pipeline.py`,
+`tests/test_pipeline_integration.py`, `tests/test_report.py`, and
+`tests/test_scripts.py`. Live test count + achieved coverage are tracked in
+[`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md) —
+do not hardcode either number in prose. The gate is **90%**
+(`fail_under = 90` in the project's own `pyproject.toml` and at the root
+pipeline; both gate the same number).
 
 Before modifying any file in `src/`, count the existing tests for the function
 you are changing. After modifying, run:
@@ -66,10 +66,10 @@ sub-module level inside `src/`:
 
 | File | May call infrastructure operations | Notes |
 |---|---|---|
-| `src/pipeline.py` | **Yes** — the single point of contact | Calls `analyze_manuscript`, `write_report`, `parse_bibfile` |
-| `src/figures.py` | No — type-only import of `ManuscriptReport` | Pure matplotlib + stdlib |
-| `src/report.py` | No — type-only import of `ManuscriptReport`; uses pure helper `render_outline` | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
-| `src/manuscript_variables.py` | No imports from infrastructure | Reads JSON written by `pipeline.py` |
+| `src/pipeline.py` | **Yes** — the primary infra-operations entry point | Calls `analyze_manuscript`, `write_report`, `parse_bibfile` |
+| `src/figures.py` | **Yes** — `infrastructure.prose.ManuscriptReport` (top-level) and a deep load helper that reconstructs `FileReport`/`ProseMetrics`/`StructureReport`/etc. from JSON for the figure renderers (`load_manuscript_report`, ~lines 139-198) | Must not re-implement analysis — load + plot only |
+| `src/report.py` | **Yes** — `infrastructure.prose.{ManuscriptReport, render_outline}` (type + pure helper) | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
+| `src/manuscript_variables.py` | **Yes** — calls `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` inside `write_resolved_manuscript_tree` and the `{{TOKEN}}` substitution path | Reads JSON written by `pipeline.py`; rendering helpers are pure delegations to infrastructure |
 | `src/config.py` | No | Pure YAML loading + dataclasses |
 | `scripts/*.py` | No analysis logic — only CLI shim | `run_prose_pipeline.py` is a wrapper around `src.pipeline.run_prose_pipeline` |
 
@@ -106,10 +106,11 @@ The bibliography is automatically validated.
 
 **GOOD** (concrete):
 ```markdown
-`_check_bibliography_consistency` in `src/pipeline.py` cross-references the
+`_check_bibliography` in `src/pipeline.py` cross-references the
 `[@key]` citations extracted by `infrastructure.prose` against the
 `BibDatabase` returned by `infrastructure.reference.citation.parse_bibfile`,
-emitting a `CheckResult` whose `details.missing` lists unmatched keys.
+emitting a `CheckResult` with `name="bibliography_consistency"` whose
+`details.missing` lists unmatched keys.
 ```
 
 ---
