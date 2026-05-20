@@ -33,7 +33,7 @@ flowchart LR
     CHECKS --> JSON[manuscript_report.json<br/>checks.json]
     CHECKS --> RPT[src/report.py<br/>review_report.md]
     PROSE --> FIG[src/figures.py<br/>word counts · readability ·<br/>citation density PNGs]
-    JSON --> MV[src/manuscript_variables.py<br/>{{TOKEN}} substitution]
+    JSON --> MV[src/manuscript_variables.py<br/>variable token substitution]
     MV --> SUB[output/manuscript/*.md<br/>tokens resolved]
 
     classDef io fill:#0f766e,stroke:#0f172a,color:#fff

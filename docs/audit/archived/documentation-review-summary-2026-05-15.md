@@ -1,6 +1,6 @@
 # Documentation Review Summary
 
-**Quick Reference**: See [Full Report](documentation-review-report.md) for detailed findings.
+**Quick Reference**: See [Full Report](documentation-review-report-2026-05-04.md) for detailed findings.
 
 ## Review Results
 
@@ -16,7 +16,7 @@
 - **144 files** with broken references
 - Many are false positives (placeholders, examples)
 - Real issues: anchor links, archived project refs
-- References must distinguish the tracked root [`.cursorrules`](../../.cursorrules) file from **`docs/rules/`** (standards corpus); there is no documented `.cursorrules/` subdirectory contract.
+- References must distinguish the tracked root [`.cursorrules`](../../../.cursorrules) file from **`docs/rules/`** (standards corpus); there is no documented `.cursorrules/` subdirectory contract.
 
 ### ✅ Technical Accuracy: PASS
 
@@ -44,8 +44,8 @@
 
 ## Detailed Reports
 
-- **[Full Review Report](documentation-review-report.md)** - Complete findings and recommendations
-- **[Filepath Issues](filepath-audit-report.md)** - Detailed filepath validation (existing report)
+- **[Full Review Report](documentation-review-report-2026-05-04.md)** - Complete findings and recommendations
+- **[Filepath Issues](filepath-audit-report-2026-05-16.md)** - Detailed filepath validation (existing report)
 
 ## Next Steps
 

@@ -157,4 +157,4 @@ this live backlog.)
 - [`CHANGELOG.md`](CHANGELOG.md) — historical release notes
 - [`docs/development/roadmap.md`](docs/development/roadmap.md) — longer-term direction
 - [`.github/AGENTS.md`](.github/AGENTS.md) — CI gates and quality thresholds
-- [`docs/audit/triple-check-report.md`](docs/audit/triple-check-report.md) — most recent integrity audit
+- [`docs/audit/archived/triple-check-report-2026-04-27.md`](docs/audit/archived/triple-check-report-2026-04-27.md) — 2026-04-27 integrity audit (archived; live linter at `scripts/lint_docs.py`)

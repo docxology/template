@@ -8,8 +8,8 @@
 
 | Your work shape | Fork this exemplar | Detailed walkthrough |
 |---|---|---|
-| Numerical / algorithmic research with figures, dashboards, manuscript | [`projects/template_code_project/`](../../projects/template_code_project/) — has its own gradient-descent algorithm in `src/optimizer.py`, six figure generators in `src/figures.py`, ~117 tests at ~99.5% coverage | [`forking_guide.md`](../../projects/template_code_project/docs/forking_guide.md) |
-| Editorial / prose review pipeline — readability, structure, BibTeX validation | [`projects/template_prose_project/`](../../projects/template_prose_project/) — no algorithm of its own; `src/pipeline.py` delegates to `infrastructure/prose/` + `infrastructure/reference/citation/`; ~76 tests at 100% coverage | [`forking_guide.md`](../../projects/template_prose_project/docs/forking_guide.md) |
+| Numerical / algorithmic research with figures, dashboards, manuscript | [`projects/template_code_project/`](../../projects/template_code_project/) — has its own gradient-descent algorithm in `src/optimizer.py`, six figure generators in `src/figures.py`; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`forking_guide.md`](../../projects/template_code_project/docs/forking_guide.md) |
+| Editorial / prose review pipeline — readability, structure, BibTeX validation | [`projects/template_prose_project/`](../../projects/template_prose_project/) — no algorithm of its own; `src/pipeline.py` delegates to `infrastructure/prose/` + `infrastructure/reference/citation/`; live test count + coverage in [`canonical_facts.md`](../_generated/canonical_facts.md) | [`forking_guide.md`](../../projects/template_prose_project/docs/forking_guide.md) |
 
 Both walkthroughs follow the same shape: 4-line copy-paste TL;DR (`cp -r`
 + `sed` rename + `uv run pytest`), an explicit statement of the

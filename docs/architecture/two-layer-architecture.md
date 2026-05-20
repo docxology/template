@@ -118,7 +118,7 @@ flowchart LR
     SC --> OA[optimization_analysis.py<br/>main analysis pipeline · thin wrapper around src/analysis.py]
     SC --> BD[build_dashboard.py<br/>numerical-invariants HTML dashboard]
     SC --> GD[generate_api_docs.py<br/>API documentation generator]
-    SC --> ZG[z_generate_manuscript_variables.py<br/>{{TOKEN}} substitution · runs LAST]
+    SC --> ZG[z_generate_manuscript_variables.py<br/>variable token substitution · runs LAST]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff

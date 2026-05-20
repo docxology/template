@@ -8,7 +8,7 @@
 
 > **Status (2026-05-04):** All findings in this report have been
 > remediated. Verification was re-run on 2026-05-04: every broken-link
-> fix listed in [`triple-check-report.md`](triple-check-report.md) is
+> fix listed in [`triple-check-report-2026-04-27.md`](triple-check-report-2026-04-27.md) is
 > still in place, the glossary Build-Pipeline entry now lists the correct
 > 8/10-stage executor sequence, and `quick-start-cheatsheet.md` uses
 > filesystem-path coverage args plus a real exemplar import. The body of
@@ -28,8 +28,8 @@ A systematic review of all 165 Markdown files (42,134 lines) across the `docs/` 
 - **Overall health:** Strong structure, comprehensive coverage, consistent terminology — mostly accurate and up-to-date.
 
 All items above were remediated; see
-[`triple-check-report.md`](triple-check-report.md) for the fix log and
-[`documentation-review-summary.md`](documentation-review-summary.md) for
+[`triple-check-report-2026-04-27.md`](triple-check-report-2026-04-27.md) for the fix log and
+[`documentation-review-summary-2026-05-15.md`](documentation-review-summary-2026-05-15.md) for
 the action-item summary.
 
 ---

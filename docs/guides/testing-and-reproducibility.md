@@ -189,7 +189,7 @@ uv run pytest projects/template_code_project/tests/test_optimization.py --cov=pr
 
 Expected: Coverage requirements met (90% project, 60% infra)
 
-### Ensuring 100% Coverage
+### Closing coverage gaps (toward the 90% gate)
 
 **Check for missing lines**:
 

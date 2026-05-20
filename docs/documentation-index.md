@@ -216,9 +216,10 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - CI/CD integration
 - **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - Dependency management
 - **[plans/README.md](plans/README.md)** - Strategic plans and architecture decisions
-- **Filepath audit** — `scripts/audit_filepaths.py`: `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md` ([script entrypoint](../scripts/audit_filepaths.py)); overview [audit/README.md](audit/README.md)
-- **[audit/literature-modules-audit.md](audit/literature-modules-audit.md)** - Literature module audit
-- **[audit/triple-check-report.md](audit/triple-check-report.md)** - Triple check audit report
+- **Live doc linter** — `scripts/lint_docs.py`: `uv run python scripts/lint_docs.py` ([script entrypoint](../scripts/lint_docs.py)) — repo-wide mermaid block validation + cross-link integrity + sibling-doc consistency; replaces the older point-in-time `audit_filepaths.py` snapshots
+- **Template drift checker** — `scripts/check_template_drift.py`: `uv run python scripts/check_template_drift.py` ([script entrypoint](../scripts/check_template_drift.py)) — 9 detectors against both exemplars + `repo_docs_hardcoded_count` detector against `docs/`
+- **Audit hub** — [audit/README.md](audit/README.md) (historical snapshots under [audit/archived/](audit/archived/) with `-YYYY-MM-DD.md` suffixes; use the live linters above as the canonical reference)
+- **[guides/fork-an-exemplar.md](guides/fork-an-exemplar.md)** - Top-level entry: pick the right exemplar and start a 5-minute fork
 
 ### Configuration & Performance (`operational/config/`)
 

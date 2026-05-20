@@ -634,8 +634,8 @@ Documentation review reports and filepath audits.
 
 | File | Purpose |
 | --- | --- |
-| [documentation-review-report.md](../docs/audit/documentation-review-report.md) | Comprehensive documentation audit results |
-| [filepath-audit-report.md](../docs/audit/filepath-audit-report.md) | File path accuracy and broken link report |
+| [Live doc linter](../scripts/lint_docs.py) | `uv run python scripts/lint_docs.py` — mermaid + cross-link + consistency (replaces stale audit snapshots) |
+| [audit/archived/](../docs/audit/archived/) | Historical audit snapshots with `-YYYY-MM-DD.md` suffix (point-in-time, not current state) |
 
 ### 🚀 Top-Level Docs
 

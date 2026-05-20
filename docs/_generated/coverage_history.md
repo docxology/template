@@ -3,6 +3,15 @@
 This file is **generated** by
 `scripts/generate_coverage_history.py`. Do not edit by hand.
 
+> **Status:** awaiting CI artifact population. `generate_coverage_history.py`
+> needs either `--from-dir <dir>` (a directory of historical coverage.xml
+> files) or `--from-gh --days N` (with `gh` authenticated to the
+> `docxology/template` repo to pull artifacts from the workflow runs).
+> Neither input is configured locally; the table below is therefore
+> empty by design until CI begins archiving coverage artifacts in a
+> readable shape. For current live coverage per exemplar, use
+> [`canonical_facts.md`](canonical_facts.md) instead.
+
 Last verified: 2026-05-05
 Rolling window: 30 day(s) — 2026-04-06 → 2026-05-05
 Suites observed: (none)

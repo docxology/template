@@ -38,7 +38,7 @@ Operational smoke checks for the local PAI install live outside this template's 
 
 The active local PAI also has a controlled Docxology public-context intake at `~/.claude/PAI/TOOLS/DocxologyIntake.ts`. It refreshes canonical public data from `danielarifriedman.com`, writes snapshots under `~/.claude/PAI/MEMORY/REFERENCE/DOCXOLOGY/`, and promotes only curated notes into `MEMORY/KNOWLEDGE/`.
 
-See [`audit/pai-v5-upgrade-audit.md`](audit/pai-v5-upgrade-audit.md) for the 2026-05-15 preflight, installer, migration, and verification notes. No template Python API changed as part of the PAI upgrade.
+See [`audit/archived/pai-v5-upgrade-audit-2026-05-15.md`](audit/archived/pai-v5-upgrade-audit-2026-05-15.md) for the 2026-05-15 preflight, installer, migration, and verification notes (archived 2026-05 as a point-in-time snapshot). No template Python API changed as part of the PAI upgrade.
 
 ## Weekly Pulse Runbook
 

@@ -1,43 +1,48 @@
 # audit/ - Audit Reports
 
-Directory for storing automated audit reports and validation results.
+Directory for audit reports and validation snapshots.
 
-## Purpose
+## Status
 
-This directory contains generated audit reports from repository-wide validation and quality checks. These reports help identify documentation issues, broken links, and quality problems across the codebase.
+The historical audit reports that previously lived here have been moved
+to [`archived/`](archived/) — each report is a point-in-time snapshot
+whose file paths and line numbers refer to the tree as it was at
+generation, and several pairs of reports disagreed by ~100+ broken-link
+issues (artifact of being written months apart). Keeping them in the
+top-level audit directory implied they were all current; archiving with
+the report date suffixed makes the chronology explicit.
 
-Reports here are **historical snapshots**: file paths and line numbers refer to the tree at generation time. For the current set of active `projects/` workspaces, use [_generated/active_projects.md](../_generated/active_projects.md) instead of inferring layout from audit tables.
+**For current drift status, use the live linters, not the snapshots:**
 
-## Contents
+| Linter | Command | Surface |
+|---|---|---|
+| Repo-wide doc linter | `uv run python scripts/lint_docs.py` | mermaid block parsing, cross-link integrity, sibling-doc consistency, AGENTS.md/README.md pair presence (179 mermaid blocks + every markdown link checked) |
+| Template drift checker | `uv run python scripts/check_template_drift.py` | 9 detectors on both exemplars: function-name drift, test-class drift, `__all__` doc drift, coverage-floor drift, dead links, oversize `src/*.py`, blanket `except`, mocks in tests, canonical-file presence |
+| Filepath audit (on-demand snapshot) | `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report-$(date +%Y-%m-%d).md` | one-off broken-reference scan; archive the result rather than keep in top-level |
 
-| File | Purpose | Audience |
-|------|---------|----------|
-| [`filepath-audit-report.md`](filepath-audit-report.md) | Filepath and reference audit report (regenerate with `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md`) | Developers |
-| [`documentation-review-report.md`](documentation-review-report.md) | Documentation completeness review report | All users |
-| [`documentation-review-summary.md`](documentation-review-summary.md) | Documentation review executive summary | All users |
-| [`triple-check-report.md`](triple-check-report.md) | 15-pass deep review and fix log (2026-04-27, re-verified 2026-05-04) | Developers |
-| [`literature-modules-audit.md`](literature-modules-audit.md) | Acceptance-criteria audit for `infrastructure/search/` and `infrastructure/reference/` (2026-05-01) | Developers |
-| [`pai-v5-upgrade-audit.md`](pai-v5-upgrade-audit.md) | PAI v5.0.0 upgrade audit and template-repo alignment (2026-05-15) | Developers |
+## Archived snapshots
 
-## Usage
+See [`archived/`](archived/) — each filename ends in `-YYYY-MM-DD.md`
+naming the generation date. Reports archived during the May 2026
+hardening pass:
 
-Regenerate the filepath audit:
+- `triple-check-report-2026-04-27.md` (15-pass deep review)
+- `documentation-review-report-2026-05-04.md`
+- `documentation-review-summary-2026-05-15.md`
+- `filepath-audit-report-2026-05-16.md`
+- `literature-modules-audit-2026-05-01.md` (`infrastructure/search/` + `infrastructure/reference/`)
+- `pai-v5-upgrade-audit-2026-05-15.md` (PAI v5.0.0 upgrade alignment)
+- `act_inf_metaanalysis_v2_comprehensive_review-2026-04-26.md` (project-specific review previously misfiled in `docs/plans/`)
 
-```bash
-uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report.md
-```
-
-## Report Structure
-
-Audit reports typically include:
-
-- Executive summary with issue counts
-- Link validation issues (broken references, missing files)
-- Quality issues (documentation gaps, formatting problems)
-- Recommendations for fixes
+When generating a new snapshot, suffix the filename with the generation
+date and archive it directly — don't park it at the top level where it
+would imply currency.
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - audit documentation
-- [`../operational/troubleshooting/`](../operational/troubleshooting/) - Troubleshooting guide
-- [`../reference/faq.md`](../reference/faq.md) - Common questions
+- [`archived/`](archived/) — historical snapshots
+- [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md) — live counts + coverage (canonical source of truth)
+- [`../_generated/active_projects.md`](../_generated/active_projects.md) — current `projects/` roster
+- [`../guides/fork-an-exemplar.md`](../guides/fork-an-exemplar.md) — fork-readiness entry
+- [`../../scripts/lint_docs.py`](../../scripts/lint_docs.py) — the live linter; replaces stale audit reports
+- [`../../scripts/check_template_drift.py`](../../scripts/check_template_drift.py) — exemplar drift checker

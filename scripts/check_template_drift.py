@@ -404,6 +404,51 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
             )
 
 
+def check_repo_docs_hardcoded_counts(report: Report) -> None:
+    """Catch hardcoded test counts / coverage percentages in repo-level `docs/`.
+
+    Catches the round-4 finding class: `docs/operational/build/build-system.md`
+    hardcoded "1796 infrastructure tests, 320 project tests" verbatim, and
+    six docs hardcoded "83.33%" / "100% coverage" — both classes drift the
+    moment the live numbers change. The rule is: counts and percentages
+    live in `docs/_generated/canonical_facts.md` and other docs link there.
+
+    Skipped: `_generated/*` (the canonical source of truth itself),
+    `audit/archived/*` (intentional point-in-time snapshots), fenced
+    code blocks (illustrative literal output is fine).
+    """
+    docs_dir = REPO_ROOT / "docs"
+    if not docs_dir.is_dir():
+        return
+    # Patterns we care about — broad enough to catch real drift, narrow
+    # enough not to flag every "1234" in unrelated prose.
+    test_count_pat = re.compile(r"\b(\d{3,5})\s+(?:infrastructure|project|infra)\s+tests?\b", re.IGNORECASE)
+    coverage_pat = re.compile(r"\b(\d{1,3}(?:\.\d+)?)\s*%\s*coverage\b", re.IGNORECASE)
+    skip_dirs = {"_generated", "archived"}
+    for md in docs_dir.rglob("*.md"):
+        if any(part in skip_dirs for part in md.parts):
+            continue
+        text = _strip_code_fences(_read(md))
+        for m in test_count_pat.finditer(text):
+            report.add(
+                "WARNING",
+                "repo",
+                "repo_docs_hardcoded_test_count",
+                f"{_rel(md)}: hardcoded '{m.group(0)}' near offset {m.start()} — link to docs/_generated/canonical_facts.md instead",
+            )
+        for m in coverage_pat.finditer(text):
+            # Exempt the 90% / 60% gate floors (those ARE policy, not live numbers).
+            value = float(m.group(1))
+            if value in {60.0, 90.0}:
+                continue
+            report.add(
+                "WARNING",
+                "repo",
+                "repo_docs_hardcoded_coverage_pct",
+                f"{_rel(md)}: hardcoded '{m.group(0)}' near offset {m.start()} — link to docs/_generated/canonical_facts.md instead",
+            )
+
+
 def check_project(project: str, report: Report) -> None:
     project_root = REPO_ROOT / "projects" / project
     if not project_root.is_dir():
@@ -470,6 +515,9 @@ def main(argv: list[str] | None = None) -> int:
     projects = list(PROJECT_NAMES) if args.project == "all" else [args.project]
     for project in projects:
         check_project(project, report)
+    # Repo-level checks run once regardless of --project (they scan docs/).
+    if args.project in ("all",) + PROJECT_NAMES:
+        check_repo_docs_hardcoded_counts(report)
     if args.format == "github":
         _print_github(report)
     else:

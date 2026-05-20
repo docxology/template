@@ -166,12 +166,12 @@ The documentation is:
 
 ## See Also
 
-- [`../../TO-DO.md`](../../TO-DO.md) — active backlog (M7 covers periodic
-  freshness sweeps of audit reports)
-- [`documentation-review-report.md`](documentation-review-report.md) — the
-  source review whose findings this report tracks
-- [`documentation-review-summary.md`](documentation-review-summary.md) —
-  one-page summary of remediation status
+- [`../../../TO-DO.md`](../../../TO-DO.md) — active backlog (audit-freshness
+  sweeps tracked there)
+- [`documentation-review-report-2026-05-04.md`](documentation-review-report-2026-05-04.md)
+  — the source review whose findings this report tracks (archived alongside this one)
+- [`documentation-review-summary-2026-05-15.md`](documentation-review-summary-2026-05-15.md)
+  — one-page summary of remediation status (archived alongside this one)
 
 ---
 
