@@ -141,33 +141,19 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 → **Details**: [projects/template_code_project/AGENTS.md](../projects/template_code_project/AGENTS.md) · [projects/template_code_project/README.md](../projects/template_code_project/README.md)
 
-<!-- The three sections below catalogue rotating projects that may not currently be checked out under projects/; per-line noqa comments suppress the docs-lint ghost-project warning. Authoritative current roster: docs/_generated/active_projects.md. -->
+### Rotating projects
 
-### `template` — Meta-Documentation Project (rotating)
-
-> **`projects/template/`** is a self-referential manuscript that programmatically documents this very repository. <!-- noqa: docs-lint -->
-
-| Feature | Implementation |
-| --- | --- |
-| Repository introspection | `src/template/introspection.py` — discovers modules, projects, stages |
-| Metrics injection | `src/template/metrics.py` + `inject_metrics.py` — `${var}` substitution |
-| 65 tests, 94.4% coverage | `tests/` — Zero-Mock, real filesystem |
-| 4 architecture figures | `scripts/generate_architecture_viz.py` — generated from live data |
-| 21-chapter manuscript | ~13,500 words covering Two-Layer Architecture, pipeline, provenance |
-
-→ **Details**: [projects/template/AGENTS.md](../projects/template/AGENTS.md) · [projects/template/README.md](../projects/template/README.md) <!-- noqa: docs-lint -->
-
-### `cognitive_case_diagrams` — Cognitive Case Diagrams (rotating)
-
-> **`projects/cognitive_case_diagrams/`** is an active manuscript project (categorial grammar, case diagrams, and related chapters). <!-- noqa: docs-lint -->
-
-→ **Details**: [projects/cognitive_case_diagrams/AGENTS.md](../projects/cognitive_case_diagrams/AGENTS.md) · [projects/cognitive_case_diagrams/README.md](../projects/cognitive_case_diagrams/README.md) <!-- noqa: docs-lint -->
-
-### `fep_lean` — FEP / Lean catalogue (rotating)
-
-> **`projects/fep_lean/`** — Free Energy Principle / Active Inference topics with Lean 4 sketches, Hermes (OpenRouter), and math-inc Open Gauss (`gauss`) when workflows are enabled. <!-- noqa: docs-lint -->
-
-→ **Details**: [projects/fep_lean/AGENTS.md](../projects/fep_lean/AGENTS.md) · [projects/fep_lean/README.md](../projects/fep_lean/README.md) <!-- noqa: docs-lint -->
+Beyond the two permanent exemplars, other projects rotate between
+`projects_in_progress/`, `projects/`, and `projects_archive/` as work
+progresses (meta-documentation, domain catalogues, Lean-toolchain projects,
+case studies). Their paths are deliberately **not** hard-coded here — per the
+repo-wide rule also stated in the root [`README.md`](../README.md) and
+[`AGENTS.md`](AGENTS.md), the single authoritative roster is
+[`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)
+(regenerated from `discover_projects()`), with measured facts in
+[`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md).
+This keeps the docs-lint "zero ghost references" gate green without per-line
+`noqa` suppressions.
 
 ### Archived exemplars
 
@@ -405,7 +391,7 @@ Full specification: [docs/security/steganography.md](../docs/security/steganogra
 | **Zero-Mock policy** | No `MagicMock`, `mocker.patch`, or `unittest.mock` anywhere |
 | **Real operations** | Tests use real filesystem, subprocess, and HTTP calls |
 | **Infrastructure coverage** | ≥ 60% (currently achieving 83%+) |
-| **Project coverage** | ≥ 90% (`template_code_project` achieves 100% · `template` achieves 94.4%) |
+| **Project coverage** | ≥ 90% (canonical exemplars `template_code_project` / `template_prose_project` exceed it; confirm live figures in [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md)) |
 | **Optional service skipping** | `@pytest.mark.requires_ollama` for graceful degradation |
 
 ```bash
@@ -476,7 +462,7 @@ graph TD
     class Operate operate
 ```
 
-The `docs/` directory spans many files across **13 subdirectories** — see [**docs/documentation-index.md**](../docs/documentation-index.md) for the live inventory. Every subdirectory has its own `README.md` and `AGENTS.md`. Start at [**docs/README.md**](../docs/README.md).
+The `docs/` directory spans many files across multiple subdirectories — see [**docs/documentation-index.md**](../docs/documentation-index.md) for the authoritative live inventory (counts drift; do not hard-code a subdir or file total here). Every subdirectory has its own `README.md` and `AGENTS.md`. Start at [**docs/README.md**](../docs/README.md).
 
 ### 📂 Core (`docs/core/`)
 
@@ -599,17 +585,24 @@ Contributing, testing internals, roadmap.
 
 Reusable AI agent prompt templates for common tasks.
 
+Authoritative index (purposes, categories, navigation map): [`docs/prompts/README.md`](../docs/prompts/README.md). The full current set:
+
 | File | Purpose |
 | --- | --- |
-| [infrastructure_module.md](../docs/prompts/infrastructure_module.md) | Creating a new infrastructure subpackage |
-| [feature_addition.md](../docs/prompts/feature_addition.md) | Adding a feature to an existing module |
-| [test_creation.md](../docs/prompts/test_creation.md) | Writing Zero-Mock tests |
-| [manuscript_creation.md](../docs/prompts/manuscript_creation.md) | Authoring a new manuscript chapter |
-| [refactoring.md](../docs/prompts/refactoring.md) | Safe refactoring with test preservation |
-| [validation_quality.md](../docs/prompts/validation_quality.md) | Adding validation and quality gates |
-| [documentation_creation.md](../docs/prompts/documentation_creation.md) | Writing AGENTS.md / README.md |
-| [code_development.md](../docs/prompts/code_development.md) | General code development patterns |
-| [comprehensive_assessment.md](../docs/prompts/comprehensive_assessment.md) | Full pipeline + codebase audit |
+| [code_development.md](../docs/prompts/code_development.md) | New modules, algorithms, or utilities |
+| [comprehensive_assessment.md](../docs/prompts/comprehensive_assessment.md) | Wide audit: tests, docs, manuscript, pipeline |
+| [documentation_creation.md](../docs/prompts/documentation_creation.md) | AGENTS.md / README.md for a directory |
+| [feature_addition.md](../docs/prompts/feature_addition.md) | End-to-end feature work across layers |
+| [infrastructure_module.md](../docs/prompts/infrastructure_module.md) | New or extended `infrastructure/*` packages |
+| [literature_synthesis.md](../docs/prompts/literature_synthesis.md) | LLM blocks for per-paper and corpus synthesis |
+| [manuscript_claim_verification.md](../docs/prompts/manuscript_claim_verification.md) | Triple-check every manuscript claim; improve text; keep AGENTS/README complete; stay renderable |
+| [manuscript_creation.md](../docs/prompts/manuscript_creation.md) | New manuscript + project layout from a research brief |
+| [manuscript_cross_references.md](../docs/prompts/manuscript_cross_references.md) | Registry/token manuscripts (`labels.yaml`, `[[FIG:]]`, …) and cross-ref audits |
+| [pipeline_debugging.md](../docs/prompts/pipeline_debugging.md) | Systematic DAG-stage triage when a pipeline run fails or stalls |
+| [refactoring.md](../docs/prompts/refactoring.md) | Clean-break refactors with migration |
+| [reproducibility_audit.md](../docs/prompts/reproducibility_audit.md) | Determinism + regenerate-from-clean + double-run diff |
+| [test_creation.md](../docs/prompts/test_creation.md) | Tests under the no-mocks policy |
+| [validation_quality.md](../docs/prompts/validation_quality.md) | Validation CLI, gates, manuscript/output checks |
 
 ### 📖 Reference (`docs/reference/`)
 

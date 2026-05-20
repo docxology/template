@@ -46,81 +46,30 @@ run when this file was last edited.
 
 ## 🟢 Minor (1–2 hours each)
 
-* **DOC-MERMAID-1 — Pre-existing Mermaid diagrams.**
-
-  **Problem:** 26 `%% noqa: docs-lint — pre-existing diagram…` comments
-  suppress mermaid validation on blocks that fail the repo parser/renderer.
-
-  **Inventory (18 files, one PR-sized pass per file or small cluster):**
-
-  | Area | Files |
-  | --- | --- |
-  | Root / system | [`AGENTS.md`](AGENTS.md) (2), [`infrastructure/AGENTS.md`](infrastructure/AGENTS.md), [`infrastructure/README.md`](infrastructure/README.md) |
-  | Docs hub | [`docs/PAI.md`](docs/PAI.md), [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md), [`docs/core/workflow.md`](docs/core/workflow.md), [`docs/core/literature-data-flow.md`](docs/core/literature-data-flow.md), [`docs/usage/examples.md`](docs/usage/examples.md), [`docs/architecture/decision-tree.md`](docs/architecture/decision-tree.md), [`docs/architecture/two-layer-architecture.md`](docs/architecture/two-layer-architecture.md) (4), [`docs/reference/copypasta-diagrams.md`](docs/reference/copypasta-diagrams.md) (2) |
-  | GitHub docs | [`projects_archive/template_search_project/AGENTS.md`](projects_archive/template_search_project/AGENTS.md), [`.github/README.md`](.github/README.md) |
-  | Infrastructure READMEs | [`infrastructure/documentation/README.md`](infrastructure/documentation/README.md), [`infrastructure/project/README.md`](infrastructure/project/README.md), [`infrastructure/rendering/README.md`](infrastructure/rendering/README.md) (3), [`infrastructure/scientific/README.md`](infrastructure/scientific/README.md), [`infrastructure/validation/README.md`](infrastructure/validation/README.md) (3) |
-
-  **In scope:** Fix or replace diagrams so each block parses cleanly; delete
-  the corresponding `%% noqa` line. Prefer valid Mermaid; use ASCII or static
-  lists only when the graph is not expressible without lint hacks.
-
-  **Out of scope:** Rewriting prose unrelated to the diagram; changing
-  [`docs/development/roadmap.md`](docs/development/roadmap.md) MED4 wording
-  (that label is the **shipped docs-lint CI job**, not this backlog — see
-  [`CHANGELOG.md`](CHANGELOG.md)).
-
-  **Acceptance:** `rg '%% noqa: docs-lint' --glob '*.md'` returns no matches;
-  then `uv run python scripts/lint_docs.py` passes (all three checks).
-
-  **Incremental check:** After each diagram fix, the two commands above should
-  still pass (no new `noqa` lines).
-
 * **GH-HYGIENE-1 — GitHub supply-chain & process hardening.**
 
-  **Problem:** workflow/process gaps surfaced by the `.github` audit.
+  **Problem:** workflow/process gaps surfaced by the `.github` audit. Subs
+  `c` (`.github/CODEOWNERS`) and `d` (`SECURITY.md` / `CITATION.cff` /
+  `CONTRIBUTING.md`) shipped and were cleared from this backlog (see
+  [`CHANGELOG.md`](CHANGELOG.md)). Three independent subs remain, ~½–2 h each;
+  each row carries its own smallest next step and a verifiable acceptance.
 
-  **In scope (each is independent, ~½–2 h):**
+  | Sub | Item | Why it matters | Smallest next step | Acceptance (observable / one command) |
+  | --- | --- | --- | --- | --- |
+  | a | SHA-pin every `uses:` action in `ci.yml`/`release.yml`/`stale.yml` to a full 40-char commit SHA + trailing `# vX.Y.Z`; let Dependabot bump the pin | Mutable tags are force-pushable — supply-chain compromise vector | enumerate unpinned refs, replace each tag with its commit SHA | `rg -n 'uses: .+@(v[0-9]\|main\|master)$' .github/workflows` returns **no matches** |
+  | b | Add an `actionlint` CI job (`needs: []`, `permissions: { contents: read }`) | Would have caught the `hashFiles()`-in-job-`if:` parse outage; prevents regression | add a job running SHA-pinned `rhysd/actionlint` | `actionlint` job exists in `ci.yml` and is green on a PR |
+  | e | Dependabot auto-merge workflow gated on green required checks | Safe minor/patch action bumps need zero manual toil | add `.github/workflows/dependabot-automerge.yml` using `gh pr merge --auto`, guarded by `github.actor == 'dependabot[bot]'` | a Dependabot minor/patch PR auto-merges once required checks pass |
 
-  | Sub | Item | Why |
-  | --- | --- | --- |
-  | a | SHA-pin every `uses:` action in `ci.yml`/`release.yml`/`stale.yml` (full 40-char SHA + `# vX.Y.Z`), let Dependabot bump | Mutable tags are force-pushable (supply-chain) |
-  | b | Add an `actionlint` CI job (`needs: []`, `contents: read`) | Would have caught the `hashFiles()`-in-job-`if:` outage; prevents regression |
-  | c | ~~Add `.github/CODEOWNERS`~~ **DONE** — `@docxology` default + path owners | Activates the documented review routing |
-  | d | ~~Add `SECURITY.md` + `CITATION.cff` + `CONTRIBUTING.md`~~ **DONE** — `.github/SECURITY.md`, root `CITATION.cff` (single citation source, DOI `10.5281/zenodo.19139090`), root `CONTRIBUTING.md` pointer | GitHub Security/Cite/Contributing tabs now populated |
-  | e | Dependabot auto-merge workflow gated on green required checks | The 3 open safe action bumps need no manual toil |
-  | f | Harden `release.yml` tag-name injection (pass `${{ steps.tag.outputs.name }}` via `env:`, not direct `run:` interpolation) | Textbook script-injection class |
-  | g | Fix dead coverage-history step (`performance` job `gh run download` lacks `actions: read` → silent `|| true` no-op) | Either grant the permission or delete the dead step |
-
-  **Acceptance:** per sub-item — `actionlint` clean incl. SHA-pin check (a/b);
-  files exist and GitHub tabs populate (c/d); Dependabot PR auto-merges on
-  green (e); `release.yml` uses `env:` not direct interpolation (f);
-  coverage-history artefact is non-empty or the step is removed (g).
-
-* **DOCS-CONFIDENTIALITY-1 — DONE (this cycle).** The confidentiality
-  invariant (public repo; only `template_code_project` +
-  `template_prose_project` tracked; enforced by
-  `scripts/check_tracked_projects.py` in pre-push + CI `lint`) is now stated
-  in `CLAUDE.md`, root `AGENTS.md`, `README.md`, `.github/README.md`,
-  `.github/AGENTS.md`; the false "`template_search_project` is a restorable
-  tracked exemplar" framing was corrected to "local-only, never committed".
-
-_Shipped note — m2 (Steganography deterministic mode):_
-`infrastructure.steganography.config.resolve_build_timestamp`,
-`STEGANOGRAPHY_DETERMINISTIC=1` (or `secure_run.sh --deterministic`),
-`tests/infra_tests/steganography/test_deterministic_mode.py`.
+  **Out of scope:** rewriting unrelated workflow logic; renaming required-check
+  contexts (branch-protection contract — see
+  [`.github/AGENTS.md`](.github/AGENTS.md)).
 
 ---
 
 ## 🟡 Medium (½ – 2 days each)
 
-_None active — MED1 (multi-project parallel execution) shipped via
-`infrastructure/core/pipeline/multi_project_parallel.py` and the
-`--parallel` / `--max-workers=N` CLI flags on `execute_multi_project.py`.
-MED3 (coverage trend dashboard) shipped via
-`infrastructure/reporting/coverage_history.py` +
-`scripts/generate_coverage_history.py` (offline `--from-dir` and online
-`--from-gh` modes), with an informational `coverage-history` artefact
-uploaded by the `performance` job in `.github/workflows/ci.yml`._
+_None active._ (Prior MED items shipped and were cleared to
+[`CHANGELOG.md`](CHANGELOG.md); this section tracks only open medium work.)
 
 ---
 
@@ -143,6 +92,14 @@ files remains **unsupported**.
 
 **Per-ID closure notes**
 
+- **GH-HYGIENE-1f:** `release.yml` passes event/tag expression values through
+  step `env:` variables before shell use; `actionlint` is clean and direct tag
+  interpolation inside `run:` blocks is gone.
+
+- **GH-HYGIENE-1g:** the `performance` job now grants `actions: read`, so
+  `scripts/generate_coverage_history.py --from-gh` can download workflow
+  artifacts with the built-in `GITHUB_TOKEN` instead of silently no-oping.
+
 - **ARCH-CONFTEST-1 (doc track):** [`tests/AGENTS.md`](tests/AGENTS.md) states
   the per-project pytest rule, names the `tests.conftest` collision, and
   documents one sanctioned way to share fixtures without a second pytest
@@ -159,12 +116,11 @@ files remains **unsupported**.
 
 ## ⚠️ Known divergences from `CHANGELOG.md`
 
-_Previously_: older CHANGELOG rows claimed gates not yet wired; those items were closed in the v0.7.0 / v0.7.1 cycle. If you find a **new** drift between `CHANGELOG.md`, `TO-DO.md`, and `.github/workflows/ci.yml`, log it here and fix forward rather than rewriting shipped changelog entries.
-
-| Past CHANGELOG claim | Closed by | Acceptance verified |
-| --- | --- | --- |
-| `pip-audit` blocking + ignore file | v0.7.2 | `.github/workflows/ci.yml` security job parses `.github/pip-audit-ignore.txt`; no `continue-on-error` on pip-audit |
-| `pip>=26.1.1` override | v0.7.2 | `[tool.uv] override-dependencies` in root **`pyproject.toml`** |
+_None open._ If you find a **new** drift between `CHANGELOG.md`, `TO-DO.md`,
+and `.github/workflows/ci.yml`, log it here and fix forward rather than
+rewriting shipped changelog entries. (The prior v0.7.x divergences were closed
+and verified; their detail now lives in [`CHANGELOG.md`](CHANGELOG.md), not in
+this live backlog.)
 
 
 ---
@@ -172,9 +128,10 @@ _Previously_: older CHANGELOG rows claimed gates not yet wired; those items were
 ## Conventions
 
 - Every release row in `CHANGELOG.md` corresponds to a `vX.Y.Z` git tag.
-- **Backlog IDs** (`DOC-MERMAID-1`, `ARCH-CONFTEST-1`, …) are stable; use
+- **Backlog IDs** (`GH-HYGIENE-1`, `ARCH-CONFTEST-1`, …) are stable; use
   them in commit messages or doc comments when touching related work so grep
-  stays useful.
+  stays useful. A cleared item's ID is retired with it (its history moves to
+  `CHANGELOG.md`); never silently reuse a retired ID for new work.
 - Every TO-DO item has explicit acceptance criteria and a verifiable
   command in the **Acceptance** line (tracked-table items use **Per-ID closure
   notes** below the table).

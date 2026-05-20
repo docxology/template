@@ -71,9 +71,13 @@ def _make_minimal_project(tmp_path: Path, *, with_results: bool = True) -> Path:
                 fieldnames=["step_size", "solution", "objective_value", "iterations", "converged"],
             )
             writer.writeheader()
-            writer.writerow({"step_size": "0.1", "solution": "2.0", "objective_value": "-4.0", "iterations": "50", "converged": "True"})
-            writer.writerow({"step_size": "0.5", "solution": "2.0", "objective_value": "-4.0", "iterations": "10", "converged": "True"})
-            writer.writerow({"step_size": "1.0", "solution": "2.0", "objective_value": "-4.0", "iterations": "1", "converged": "True"})
+            writer.writerows(
+                [
+                    _result_row("0.1", iterations="50"),
+                    _result_row("0.5", iterations="10"),
+                    _result_row("1.0", iterations="1"),
+                ]
+            )
 
         (reports_dir / "stability_analysis.json").write_text(
             json.dumps({"stability_score": 0.95, "function_name": "quadratic_function"}),
@@ -87,17 +91,26 @@ def _make_minimal_project(tmp_path: Path, *, with_results: bool = True) -> Path:
     return tmp_path
 
 
+def _result_row(step_size: str, *, iterations: str, converged: str = "True") -> dict[str, str]:
+    return {
+        "step_size": step_size,
+        "solution": "2.0",
+        "objective_value": "-4.0",
+        "iterations": iterations,
+        "converged": converged,
+    }
+
+
 # ---------------------------------------------------------------------------
 # generate_variables — structure and key coverage
 # ---------------------------------------------------------------------------
+
 
 def test_all_keys_present_with_results(tmp_path):
     root = _make_minimal_project(tmp_path)
     variables = generate_variables(root)
     assert isinstance(variables, dict)
-    assert all(isinstance(k, str) and k == k.upper() for k in variables), (
-        "All keys must be UPPERCASE_SNAKE"
-    )
+    assert all(isinstance(k, str) and k == k.upper() for k in variables), "All keys must be UPPERCASE_SNAKE"
 
 
 def test_all_keys_present_without_results(tmp_path):
@@ -108,9 +121,7 @@ def test_all_keys_present_without_results(tmp_path):
     keys_with = set(generate_variables(root_with))
     keys_without = set(generate_variables(root_without))
 
-    assert keys_with == keys_without, (
-        f"Missing keys in fallback run: {sorted(keys_with - keys_without)}"
-    )
+    assert keys_with == keys_without, f"Missing keys in fallback run: {sorted(keys_with - keys_without)}"
 
 
 def test_config_derived_values(tmp_path):
@@ -174,6 +185,7 @@ def test_provenance_keys_populated(tmp_path):
 # save_variables
 # ---------------------------------------------------------------------------
 
+
 def test_save_variables_round_trip(tmp_path):
     root = _make_minimal_project(tmp_path)
     variables = generate_variables(root)
@@ -198,6 +210,7 @@ def test_save_variables_creates_parent_dir(tmp_path):
 # produced by generate_variables()
 # ---------------------------------------------------------------------------
 
+
 def _make_project_with_rows(tmp_path: Path, rows: list[dict]) -> Path:
     """Build a minimal project with custom optimization CSV rows."""
     root = _make_minimal_project(tmp_path, with_results=False)
@@ -216,15 +229,14 @@ def _make_project_with_rows(tmp_path: Path, rows: list[dict]) -> Path:
     (reports_dir / "stability_analysis.json").write_text(
         '{"stability_score": 0.8, "function_name": "f"}', encoding="utf-8"
     )
-    (reports_dir / "performance_benchmark.json").write_text(
-        '{"execution_time": 0.0001}', encoding="utf-8"
-    )
+    (reports_dir / "performance_benchmark.json").write_text('{"execution_time": 0.0001}', encoding="utf-8")
     return root
 
 
 # ---------------------------------------------------------------------------
 # _format_sci — pure-function branch coverage
 # ---------------------------------------------------------------------------
+
 
 def test_format_sci_zero():
     assert _format_sci(0.0) == "0"
@@ -251,6 +263,7 @@ def test_format_sci_non_unit_coeff():
 # _step_agency_label — all four return branches
 # ---------------------------------------------------------------------------
 
+
 def test_step_agency_label_conservative():
     assert _step_agency_label(0.1) == "conservative"
     assert _step_agency_label(0.0) == "conservative"
@@ -276,6 +289,7 @@ def test_step_agency_label_divergent():
 # generate_variables — missing-config fallback (covers lines 45-46, 72)
 # ---------------------------------------------------------------------------
 
+
 def test_generate_variables_no_config(tmp_path):
     """generate_variables must return all keys even with no manuscript/config.yaml."""
     root_with = _make_minimal_project(tmp_path / "with_config")
@@ -285,9 +299,7 @@ def test_generate_variables_no_config(tmp_path):
     empty_root.mkdir()
     keys_without = set(generate_variables(empty_root))
 
-    assert keys_with == keys_without, (
-        f"Missing keys without config: {sorted(keys_with - keys_without)}"
-    )
+    assert keys_with == keys_without, f"Missing keys without config: {sorted(keys_with - keys_without)}"
     v = generate_variables(empty_root)
     assert v["CONFIG_HASH"] == "N/A"
 
@@ -296,10 +308,17 @@ def test_generate_variables_no_config(tmp_path):
 # generate_variables — partial convergence (RESULT_ALL_CONVERGED == "No")
 # ---------------------------------------------------------------------------
 
+
 def test_result_not_all_converged(tmp_path):
     rows = [
         {"step_size": "0.5", "solution": "2.0", "objective_value": "-4.0", "iterations": "10", "converged": "True"},
-        {"step_size": "2.5", "solution": "50.0", "objective_value": "100.0", "iterations": "1000", "converged": "False"},
+        {
+            "step_size": "2.5",
+            "solution": "50.0",
+            "objective_value": "100.0",
+            "iterations": "1000",
+            "converged": "False",
+        },
     ]
     root = _make_project_with_rows(tmp_path, rows)
     v = generate_variables(root)
@@ -313,6 +332,7 @@ def test_result_not_all_converged(tmp_path):
 # ---------------------------------------------------------------------------
 # generate_variables — rho ≥ 1 convergence factor (line 252)
 # ---------------------------------------------------------------------------
+
 
 def test_convergence_factor_rho_ge_1(tmp_path):
     """Step size α = 2.0 → ρ = |1 − 2| = 1 ≥ 1 → 'divergent' bullet."""
@@ -352,9 +372,6 @@ def test_all_manuscript_tokens_are_generated(tmp_path):
             if token not in produced:
                 unresolved.setdefault(token, []).append(md_file.name)
 
-    assert not unresolved, (
-        "Manuscript tokens not produced by generate_variables():\n"
-        + "\n".join(
-            f"  {{{{{{t}}}}}}: {files}" for t, files in sorted(unresolved.items())
-        )
+    assert not unresolved, "Manuscript tokens not produced by generate_variables():\n" + "\n".join(
+        f"  {{{{{{t}}}}}}: {files}" for t, files in sorted(unresolved.items())
     )

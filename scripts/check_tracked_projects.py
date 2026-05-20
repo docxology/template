@@ -14,9 +14,9 @@ Plus the repo-level documentation that lives directly in ``projects/``
 potential confidential-data leak (typically an accidental ``git add -f``)
 and MUST block the push/CI until untracked with ``git rm -r --cached``.
 
-This is defense-in-depth behind ``.gitignore`` (``projects/*`` ignored, only
-the two templates negated): the ignore rule is bypassable with ``-f``; this
-guard is not.
+This is defense-in-depth behind ``.gitignore`` (``projects/*`` ignored, with
+repo-level Markdown docs and the two template directories negated): ignore
+rules are bypassable with ``-f``; this guard is not.
 """
 
 from __future__ import annotations

@@ -6,12 +6,12 @@ The names below are the single source of truth from `infrastructure.project.disc
 
 Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides—link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/) unless a doc explicitly compares layouts.
 
-Generated at (UTC): `2026-05-16T16:36:54+00:00`
+Generated at (UTC): `2026-05-19T04:29:20+00:00`
 
 Current entries:
 
-- `BeeStack`
 - `actinf_policy_entanglement_lean`
+- `biology_textbook`
 - `cogant`
 - `crescent_city`
 - `deep_temporal_affect`

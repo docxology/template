@@ -616,6 +616,7 @@ jobs:
     timeout-minutes: 5
     needs: [test-infra, test-project]
     permissions:
+      actions: read
       contents: read
     steps:
       - uses: actions/checkout@v4

@@ -41,3 +41,26 @@ def test_current_repo_has_no_tracked_generated_artifacts() -> None:
     )
 
     assert proc.returncode == 0, proc.stdout + proc.stderr
+
+
+def test_projects_docs_are_trackable_while_rotating_projects_remain_ignored() -> None:
+    """Gitignore keeps repo-level projects docs visible without exposing project trees."""
+    repo_root = _repo_root()
+
+    docs_proc = subprocess.run(
+        ["git", "ls-files", "-ci", "--exclude-standard", "projects/*.md"],
+        cwd=repo_root,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    private_proc = subprocess.run(
+        ["git", "check-ignore", "-q", "--no-index", "projects/confidential_project/src/private.py"],
+        cwd=repo_root,
+        check=False,
+        timeout=30,
+    )
+
+    assert docs_proc.stdout == ""
+    assert private_proc.returncode == 0

@@ -304,6 +304,70 @@ class TestGenerateTitlePageBody:
         result = generate_title_page_body(tmp_path)
         assert "\\maketitle" in result
 
+    def test_book_publishing_page_supports_quote_and_acknowledgement_blocks(self, tmp_path):
+        """Book configs may add page-two quote and acknowledgement boxes."""
+        (tmp_path / "config.yaml").write_text(
+            yaml.dump(
+                {
+                    "book": {
+                        "title": "Book Title",
+                        "subtitle": "Book Subtitle",
+                        "author": "Author Name",
+                        "license": "CC BY 4.0",
+                    },
+                    "front_matter": {
+                        "page_two_quote": {
+                            "text": "A quoted line with 100% evidence.",
+                            "attribution": "Source Name",
+                        },
+                        "page_two_acknowledgements": {
+                            "title": "Thanks",
+                            "text": "A compact acknowledgement with one paragraph.",
+                        },
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        result = generate_title_page_body(tmp_path)
+
+        assert "Publishing Information" in result
+        assert r"\fcolorbox{red!55!black}{red!3}" in result
+        assert r"A quoted line with 100\% evidence." in result
+        assert "Source Name" in result
+        assert r"\fcolorbox{black!35}{black!2}" in result
+        assert "Thanks" in result
+        assert "A compact acknowledgement with one paragraph." in result
+        assert "\\end{minipage}%\n}\n\\par\n\\vspace{1.0em}" in result
+
+    def test_book_publishing_page_includes_repository_url_and_doi(self, tmp_path):
+        """Book publishing page emits DOI and optional repository_url from config."""
+        (tmp_path / "config.yaml").write_text(
+            yaml.dump(
+                {
+                    "book": {
+                        "title": "Book Title",
+                        "subtitle": "Book Subtitle",
+                        "author": "Author Name",
+                        "license": "CC BY 4.0",
+                    },
+                    "publication": {
+                        "doi": "10.5281/zenodo.20286478",
+                        "repository_url": "https://github.com/docxology/biology_textbook",
+                        "repository_label": "Source repository",
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        result = generate_title_page_body(tmp_path)
+
+        assert "Publishing Information" in result
+        assert r"\href{https://doi.org/10.5281/zenodo.20286478}" in result
+        assert r"\href{https://github.com/docxology/biology_textbook}" in result
+        assert "Source repository" in result
+        assert "via the source repository linked above." in result
+
     def test_returns_string(self, tmp_path):
         """Always returns a string."""
         result = generate_title_page_body(tmp_path)

@@ -42,11 +42,10 @@ def _resolve_manuscript_dir(project_root: Path) -> Path:
     Prefers the injected output/manuscript/ directory when it exists and
     contains markdown files; falls back to the source manuscript/ directory.
 
-    When the injected dir is selected, this function also mirrors the
+    When the injected dir is selected, this function also refreshes the
     rendering-critical auxiliary files (``config.yaml`` and ``*.bib``) from
-    the source ``manuscript/`` directory if they are missing. Without
-    ``config.yaml``, title-page and TOC injection silently no-ops because
-    :func:`generate_title_page_preamble` cannot locate paper metadata.
+    the source ``manuscript/`` directory. Without a fresh ``config.yaml``,
+    title-page and TOC injection can render from stale metadata.
     """
     import shutil as _shutil
 
@@ -56,14 +55,13 @@ def _resolve_manuscript_dir(project_root: Path) -> Path:
         if source_dir.is_dir():
             cfg_src = source_dir / "config.yaml"
             cfg_dst = injected_dir / "config.yaml"
-            if cfg_src.is_file() and not cfg_dst.exists():
+            if cfg_src.is_file():
                 _shutil.copy2(cfg_src, cfg_dst)
-                logger.info(f"Mirrored config.yaml into injected manuscript: {cfg_dst}")
+                logger.info(f"Refreshed config.yaml in injected manuscript: {cfg_dst}")
             for bib in sorted(source_dir.glob("*.bib")):
                 bib_dst = injected_dir / bib.name
-                if not bib_dst.exists():
-                    _shutil.copy2(bib, bib_dst)
-                    logger.info(f"Mirrored {bib.name} into injected manuscript: {bib_dst}")
+                _shutil.copy2(bib, bib_dst)
+                logger.info(f"Refreshed {bib.name} in injected manuscript: {bib_dst}")
         logger.info(f"Rendering from injected manuscript directory: {injected_dir}")
         return injected_dir
     return source_dir

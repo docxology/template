@@ -55,6 +55,25 @@ def test_resolve_manuscript_dir_uses_injected_when_present(tmp_path: Path) -> No
     assert result == injected
 
 
+def test_resolve_manuscript_dir_refreshes_injected_auxiliary_files(tmp_path: Path) -> None:
+    """Refreshes source config and bibliography when using injected markdown."""
+    source = tmp_path / "manuscript"
+    injected = tmp_path / "output" / "manuscript"
+    source.mkdir()
+    injected.mkdir(parents=True)
+    (injected / "01_intro.md").write_text("# Intro")
+    (source / "config.yaml").write_text("book:\n  title: Fresh\n", encoding="utf-8")
+    (injected / "config.yaml").write_text("book:\n  title: Stale\n", encoding="utf-8")
+    (source / "references.bib").write_text("@book{fresh,title={Fresh}}\n", encoding="utf-8")
+    (injected / "references.bib").write_text("@book{stale,title={Stale}}\n", encoding="utf-8")
+
+    result = _resolve_manuscript_dir(tmp_path)
+
+    assert result == injected
+    assert "Fresh" in (injected / "config.yaml").read_text(encoding="utf-8")
+    assert "fresh" in (injected / "references.bib").read_text(encoding="utf-8")
+
+
 def test_resolve_manuscript_dir_falls_back_to_source(tmp_path: Path) -> None:
     """Falls back to manuscript/ when injected dir is absent."""
     result = _resolve_manuscript_dir(tmp_path)

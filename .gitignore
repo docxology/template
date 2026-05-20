@@ -108,12 +108,14 @@ invalid/
 # keep it tracked whenever it is restored under projects/.
 projects/*
 # CONFIDENTIALITY INVARIANT: this is a PUBLIC repo into which confidential
-# projects are routinely rotated under projects/. ONLY these two canonical
-# template exemplars may ever be tracked/pushed. Do NOT add a negation for
-# any other project (incl. template_search_project) — if a non-confidential
-# extra exemplar must be published, track it deliberately with `git add -f`
-# and review the diff. The check-tracked-projects guard (pre-push + CI)
-# fails the build if anything else under projects/ is staged/tracked.
+# projects are routinely rotated under projects/. Repo-level Markdown files in
+# projects/ are navigation docs; only the two canonical template exemplar
+# directories may ever be tracked/pushed. Do NOT add a negation for any other
+# project directory (incl. template_search_project) — if a non-confidential
+# extra exemplar must be published, track it deliberately with `git add -f` and
+# review the diff. The check-tracked-projects guard (pre-push + CI) fails the
+# build if anything else under projects/ is staged/tracked.
+!projects/*.md
 !projects/template_code_project/
 !projects/template_code_project/**
 !projects/template_prose_project/
