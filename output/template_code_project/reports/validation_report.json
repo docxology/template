@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-22T08:01:38.346315",
+  "timestamp": "2026-05-22T10:40:58.196634",
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
@@ -21,7 +21,7 @@
         "directory_structure": {
           "project_combined_pdf": {
             "exists": true,
-            "size_mb": 1.65,
+            "size_mb": 1.66,
             "readable": true
           },
           "pdf": {
@@ -156,7 +156,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 6.451272964477539,
+      "total_size_mb": 6.45888614654541,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -166,11 +166,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.886204719543457
+      "size_mb": 1.8889808654785156
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.520167350769043
+      "size_mb": 1.5221805572509766
     },
     "data": {
       "files": 4,
