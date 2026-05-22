@@ -3,29 +3,29 @@
     {
       "contract_match": true,
       "path": "output/reports/evidence_registry.json",
-      "sha256": "4b199c832ab129de4bfe6a7bd709fbdea411e3ea1a751c69196811aa48ab1e97",
+      "sha256": "d6681b46efeef4fd303606b365934ee3763ed9943e14ea82f04e9fa3971739e1",
       "size_bytes": 8732474,
       "stage_name": "Output Validation",
       "stage_num": 6,
-      "timestamp": "2026-05-22T13:18:43+00:00"
+      "timestamp": "2026-05-22T15:01:38+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/validation_report.json",
-      "sha256": "a031f878fd2428fbf81d359963a409739d83dfdd742ef2cbc1f6c1a5ca063222",
-      "size_bytes": 4521,
+      "sha256": "3590e98aac4c59d726330526a4e49d6cadcfa653eede3a93ca7cc572340ac453",
+      "size_bytes": 4519,
       "stage_name": "Output Validation",
       "stage_num": 6,
-      "timestamp": "2026-05-22T13:18:43+00:00"
+      "timestamp": "2026-05-22T15:01:38+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/validation_report.md",
-      "sha256": "199d0c2bce3af5024f3c286133a22bb1cfbbba4ea3ce69913c2e573f22f8b166",
+      "sha256": "363b6bedd46a02381a9ac1d510387d68a98f02396690fb309c297c439d2273df",
       "size_bytes": 298,
       "stage_name": "Output Validation",
       "stage_num": 6,
-      "timestamp": "2026-05-22T13:18:43+00:00"
+      "timestamp": "2026-05-22T15:01:38+00:00"
     }
   ],
   "issues": []

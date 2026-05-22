@@ -23,6 +23,8 @@ _STALE_AUX_EXTENSIONS = (
     ".vrb",
 )
 
+_SIGPIPE_RETURNCODES = {-13, 141}
+
 
 def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
     """Remove stale LaTeX sidecar files before a fresh compile."""
@@ -31,6 +33,23 @@ def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
         if stale_file.exists():
             stale_file.unlink()
             logger.debug(f"Removed stale LaTeX sidecar: {stale_file.name}")
+
+
+def _is_recoverable_compile_failure(
+    result: subprocess.CompletedProcess[str],
+    pdf_exists: bool,
+    pdf_valid: bool,
+) -> bool:
+    """Return whether a failed pass is worth retrying immediately.
+
+    XeLaTeX/xdvipdfmx can occasionally leave a truncated PDF on the first pass
+    for large image-heavy Beamer decks, then produce a valid file on rerun once
+    aux/navigation files settle. Only recover when there is evidence of that
+    transient state; genuine syntax failures still surface normally.
+    """
+    if pdf_exists and not pdf_valid:
+        return True
+    return result.returncode in _SIGPIPE_RETURNCODES
 
 
 def compile_latex(
@@ -99,6 +118,31 @@ def compile_latex(
             pdf_valid = validate_pdf_structure(pdf_file_temp) if pdf_exists else False
 
             if result.returncode != 0 or not pdf_exists or not pdf_valid:
+                if _is_recoverable_compile_failure(result, pdf_exists, pdf_valid):
+                    logger.warning(
+                        "LaTeX pass %d produced an invalid/truncated PDF; retrying once before failing",
+                        i + 1,
+                    )
+                    if pdf_exists and not pdf_valid:
+                        pdf_file_temp.unlink(missing_ok=True)
+
+                    recovery_result = subprocess.run(
+                        cmd,
+                        capture_output=True,
+                        text=True,
+                        timeout=timeout,
+                        cwd=tex_path.parent,
+                    )
+                    log_content = log_file.read_text(encoding="utf-8", errors="replace") if log_file.exists() else ""
+                    pdf_exists = pdf_file_temp.exists()
+                    pdf_valid = validate_pdf_structure(pdf_file_temp) if pdf_exists else False
+
+                    if recovery_result.returncode == 0 and pdf_exists and pdf_valid:
+                        logger.info("LaTeX compilation recovered after retry")
+                        continue
+
+                    result = recovery_result
+
                 if not log_content:
                     log_content = "No log file"
 

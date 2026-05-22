@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-22T06:19:24.310623",
+  "timestamp": "2026-05-22T08:02:18.349740",
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
@@ -166,7 +166,7 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 0.3317832946777344
+      "size_mb": 0.33178234100341797
     },
     "figures": {
       "files": 3,
