@@ -33,6 +33,14 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 
 A system for research and development projects. This template provides a test-driven structure with automated PDF generation, professional documentation, and validated build pipelines.
 
+## 🧭 Positioning (honest framing)
+
+> This is primarily **Daniel Ari Friedman's research operating system**, made public and MIT-licensed so other researchers can fork it if helpful. It is not a one-size-fits-all template — it is opinionated, Python+pytest+LaTeX-flavored, and tuned to the kind of work Daniel does (Active Inference, computational biology, cognitive security). Honest framing ages better than wishful adoption metrics.
+>
+> If your workflow looks similar (TDD-on-research-code, Markdown→PDF, multi-project monorepo, optional local-LLM draft assistance, deterministic + watermarked outputs, Zenodo DOI publishing), the template will probably save you time. If it doesn't look similar, a lighter alternative (Quarto, MyST, Cookiecutter-data-science) may serve you better. See [`MAINTAINERS.md`](MAINTAINERS.md) for ownership and [`STATUS.md`](STATUS.md) for per-subsystem freshness so you can judge what's actively maintained vs dormant.
+>
+> Long-horizon viability guides — toolchain migration, regression testing, archival redundancy, local CI, and the design for a future executable-bundle stage — live in [`docs/maintenance/`](docs/maintenance/).
+
 ## 🎯 What This Template Provides
 
 This is a **GitHub Template Repository** that gives you:
@@ -103,12 +111,20 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 | Exemplar | Shape | Tests | Coverage |
 |---|---|---|---|
-| [`projects/template_code_project/`](projects/template_code_project/) | Code-centric (optimization + dashboard) | 117 | ~99.5% |
-| [`projects/template_prose_project/`](projects/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | 67 | 100.00% |
+| [`projects/template_code_project/`](projects/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
+| [`projects/template_prose_project/`](projects/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) after substantive changes.*
 
 Both permanent exemplars share the same directory layout, the same 12-file `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`), and the same verification checklist. New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) for the full comparison.
+
+Both exemplars also ship project-local composability overlays:
+`domain_profile.yaml` declares review gates, source policy, artifact
+expectations, and benchmark rubric preferences; `experiment_plan.yaml`
+declares design-validation conditions, primary metric direction, expected
+figures/tables, baselines, and ablations. These files are declarative inputs
+for validation and benchmark tooling; they do not generate experiments or run
+autonomous agents.
 
 > **🔒 Confidentiality.** This is a **public** template repo. Only the two
 > canonical exemplars above are git-tracked/pushed — `.gitignore` ignores
@@ -120,6 +136,20 @@ Both permanent exemplars share the same directory layout, the same 12-file `docs
 > blocks any accidental commit in the pre-push hook and CI. Copy
 > `template_search_project` under `projects/` locally to exercise literature
 > discovery, then never commit it.
+
+**Private active projects.** In Daniel's working checkout, confidential projects
+live outside this public repo at `/Users/4d/Documents/GitHub/projects/` with the
+lifecycle folders `active/`, `passive/`, and `archive/`. `run.sh` and
+`python -m infrastructure.orchestration` auto-sync `active/*` into
+`template/projects/*` as symlinks before listing, selecting, running, or
+rendering projects, so linked projects behave like native `projects/` entries.
+Inspect without changing the tree:
+`uv run python -m infrastructure.orchestration link-projects --dry-run`.
+Override the sibling path with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
+`.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
+The symlinked project keeps working outputs at `projects/<name>/output/` (the
+private target), while final deliverables still copy to `output/<name>/` in this
+template checkout.
 
 Other entries in `projects/` rotate between `projects_in_progress/`,
 `projects/`, and `projects_archive/` as work progresses (Lean toolchain
@@ -207,7 +237,7 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
   numbered orchestrators under `scripts/` include `00_*.py` through `07_*.py` (setup → copy, LLM, executive report — see [`scripts/AGENTS.md`](scripts/AGENTS.md)).
 - **Orchestration:** the pipeline runs Setup → Tests → Analysis → Render →
   Validate → Copy, with optional LLM Review and LLM Translations stages.
-- **Core systems:** 16 `infrastructure/` Python subpackages (Layer 1) plus
+- **Core systems:** 17 `infrastructure/` Python subpackages (Layer 1) plus
   per-project `projects/{name}/src/` algorithms (Layer 2); see
   [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) for
   the live module list.
@@ -320,9 +350,13 @@ the numbering system and slug rules are authoritative in
 ## 📊 Testing
 
 TDD with strict coverage gates: **infrastructure ≥ 60 %**, **projects ≥ 90 %**.
-No mocks — tests use real data, real files, `pytest-httpserver` for HTTP. Run
-all tests with `uv run python scripts/01_run_tests.py --project <name>`. Per-suite
-commands and coverage report flags are documented in
+No mocks — tests use real data, real files, `pytest-httpserver` for HTTP. The
+project pipeline runs a focused `pipeline-smoke` infrastructure contract plus
+the selected project's full coverage suite, so ordinary renders do not rerun
+the entire repository test matrix. Run the full infrastructure gate explicitly
+with `uv run python scripts/01_run_tests.py --infra-only --infra-scope full`;
+run a project suite with `uv run python scripts/01_run_tests.py --project-only
+--project <name>`. Per-suite commands and coverage report flags are documented in
 [`tests/AGENTS.md`](tests/AGENTS.md) and
 [`docs/development/testing/testing-guide.md`](docs/development/testing/testing-guide.md);
 live coverage / test counts live in
@@ -348,7 +382,7 @@ Two entry points — `./run.sh` (interactive or `--pipeline`) and
 | ----- | ------ | ---- | ------------ |
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose` | `core`, `tests` | configurable tolerance |
+| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
 | **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
 | **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
 | **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
@@ -356,6 +390,8 @@ Two entry points — `./run.sh` (interactive or `--pipeline`) and
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 Full per-stage flowchart, failure/skip transitions, and the script-to-stage

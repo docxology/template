@@ -49,9 +49,7 @@ class TestPipelineStageResult:
 
     def test_success_result(self):
         """Test successful stage result."""
-        result = PipelineStageResult(
-            stage_num=1, stage_name="Test Stage", success=True, duration=5.2
-        )
+        result = PipelineStageResult(stage_num=1, stage_name="Test Stage", success=True, duration=5.2)
 
         assert result.stage_num == 1
         assert result.stage_name == "Test Stage"
@@ -149,9 +147,7 @@ sys.exit(0)
 
         # Ensure checkpoints are written under the temp repo, not the real repository root.
         checkpoint_dir = repo_root / "projects" / project_name / "output" / ".checkpoints"
-        executor.checkpoint_manager = CheckpointManager(
-            checkpoint_dir=checkpoint_dir, project_name=project_name
-        )
+        executor.checkpoint_manager = CheckpointManager(checkpoint_dir=checkpoint_dir, project_name=project_name)
 
         return executor
 
@@ -302,6 +298,10 @@ sys.exit(1)
         assert "04_validate_output.py" in invoked_scripts
         assert "06_llm_review.py" in invoked_scripts
         assert "05_copy_outputs.py" in invoked_scripts
+        infra_invocations = [i for i in invocations if i["script"] == "01_run_tests.py" and "--infra-only" in i["args"]]
+        assert infra_invocations
+        assert "--infra-scope" in infra_invocations[0]["args"]
+        assert "pipeline-smoke" in infra_invocations[0]["args"]
 
     def test_execute_core_pipeline_success(self, tmp_path: Path):
         """Test successful core pipeline execution."""
@@ -337,19 +337,13 @@ sys.exit(1)
     def test_skip_infra_execution(self, tmp_path: Path):
         """Test that infrastructure tests are skipped when configured."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
-        executor = self._make_executor(
-            repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=False
-        )
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=False)
 
         results = executor.execute_core_pipeline()
         assert all(r.success for r in results)
 
         invocations = self._read_invocations(repo_root)
-        infra_calls = [
-            i
-            for i in invocations
-            if i["script"] == "01_run_tests.py" and "--infra-only" in i["args"]
-        ]
+        infra_calls = [i for i in invocations if i["script"] == "01_run_tests.py" and "--infra-only" in i["args"]]
         assert infra_calls == []
 
     def test_skip_llm_execution(self, tmp_path: Path):
@@ -374,9 +368,7 @@ sys.exit(1)
     def test_resume_pipeline_missing_checkpoint_runs_fresh(self, tmp_path: Path):
         """If no valid checkpoint exists, resume falls back to a fresh run."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
-        executor = self._make_executor(
-            repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=True
-        )
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=True)
 
         results = executor._resume_pipeline()
         assert len(results) > 0
@@ -416,9 +408,7 @@ sys.exit(0)
         (scripts_dir / "04_validate_output.py").write_text(success_script, encoding="utf-8")
         (scripts_dir / "05_copy_outputs.py").write_text(success_script, encoding="utf-8")
 
-        executor = self._make_executor(
-            repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=False
-        )
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=False)
 
         results = executor.execute_core_pipeline()
 
@@ -443,14 +433,18 @@ sys.exit(0)
         skip_script = "import sys; sys.exit(2)\n"  # simulates Ollama unavailable
         success_script = "import sys; sys.exit(0)\n"
 
-        for name in ["00_setup_environment.py", "01_run_tests.py", "02_run_analysis.py",
-                     "03_render_pdf.py", "04_validate_output.py", "05_copy_outputs.py"]:
+        for name in [
+            "00_setup_environment.py",
+            "01_run_tests.py",
+            "02_run_analysis.py",
+            "03_render_pdf.py",
+            "04_validate_output.py",
+            "05_copy_outputs.py",
+        ]:
             (scripts_dir / name).write_text(success_script, encoding="utf-8")
         (scripts_dir / "06_llm_review.py").write_text(skip_script, encoding="utf-8")
 
-        executor = self._make_executor(
-            repo_root, "test", clean=False, skip_infra=True, skip_llm=False, resume=False
-        )
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=False, resume=False)
         results = executor.execute_full_pipeline()
 
         # All stages should succeed: LLM stage exit-2 is treated as graceful skip
@@ -461,17 +455,13 @@ sys.exit(0)
         from infrastructure.core.runtime.checkpoint import StageResult
 
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
-        executor = self._make_executor(
-            repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=True
-        )
+        executor = self._make_executor(repo_root, "test", clean=False, skip_infra=True, skip_llm=True, resume=True)
 
         # Pre-populate checkpoint as if the first stage already completed
         executor.checkpoint_manager.save_checkpoint(
             pipeline_start_time=0.0,
             last_stage_completed=1,
-            stage_results=[
-                StageResult(name="Environment Setup", exit_code=0, duration=0.1, completed=True)
-            ],
+            stage_results=[StageResult(name="Environment Setup", exit_code=0, duration=0.1, completed=True)],
             total_stages=executor.config.total_stages,
         )
 

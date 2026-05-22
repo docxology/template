@@ -85,6 +85,20 @@ Thumbs.db
 !infrastructure/validation/output/
 !infrastructure/validation/output/**
 **/projects/*/output/
+# EXCEPTION: the two canonical exemplars' TOP-LEVEL rendered output is tracked
+# as living render-proof (a deliberate, scoped reversal of the "never commit
+# output" rule above — mirrors the projects/ confidentiality pattern). The
+# scripts/check_tracked_generated_artifacts.py guard grants the same two paths a
+# matching exemption. Everything else under output/ — including every
+# confidential/active project's output (e.g. output/<active-project>/) — stays
+# ignored and is NEVER negated here. Leading `/` anchors this to top-level
+# output/ only, so nested projects/*/output stays ignored.
+!/output/
+/output/*
+!/output/template_code_project/
+!/output/template_code_project/**
+!/output/template_prose_project/
+!/output/template_prose_project/**
 **/.benchmarks/
 **/.pytest_cache/
 **/.venv/

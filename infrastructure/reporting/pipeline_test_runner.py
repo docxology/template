@@ -14,11 +14,12 @@ import subprocess
 import time
 import tomllib
 from pathlib import Path
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 import tempfile
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep
+from infrastructure.core.logging.constants import BANNER_WIDTH, TABLE_WIDTH
 from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.reporting.coverage_reporter import (
@@ -31,10 +32,26 @@ from infrastructure.reporting.coverage_reporter import (
 from infrastructure.core.logging.helpers import format_duration as _format_duration
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.runtime.environment import get_python_command, resolve_test_python
+from infrastructure.project.discovery import resolve_project_root
 from infrastructure.reporting.coverage_parser import check_cov_datafile_support
 from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite
 
 logger = get_logger(__name__)
+
+InfrastructureTestScope = Literal["full", "pipeline-smoke"]
+
+INFRASTRUCTURE_TEST_SCOPES: tuple[InfrastructureTestScope, ...] = ("full", "pipeline-smoke")
+
+PIPELINE_SMOKE_INFRA_TEST_PATHS = (
+    Path("tests/infra_tests/git_hook_smoke"),
+    Path("tests/infra_tests/core/test_pipeline.py"),
+    Path("tests/infra_tests/core/test_pipeline_types.py"),
+    Path("tests/infra_tests/core/test_pipeline_control_extensions.py"),
+    Path("tests/infra_tests/project/test_domain_profile.py"),
+    Path("tests/infra_tests/validation/test_evidence_registry.py"),
+    Path("tests/infra_tests/bench/test_template_benchmark_harness.py"),
+    Path("tests/infra_tests/test_documentation_index_invariants.py"),
+)
 
 
 def _project_declared_coverage_floor(project_root: Path) -> int | None:
@@ -90,7 +107,42 @@ _DISCOVERY_PATTERNS = [
 ]
 
 
-def _log_discovered_tests(cmd: list[str], repo_root: Path, env: dict, label: str) -> None:
+def _resolve_infrastructure_test_paths(repo_root: Path, scope: InfrastructureTestScope) -> list[str]:
+    """Return pytest paths for an infrastructure test scope."""
+    if scope == "full":
+        return [
+            str(repo_root / "tests" / "infra_tests"),
+            str(repo_root / "tests" / "integration"),
+            "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
+        ]
+    if scope == "pipeline-smoke":
+        return [str(repo_root / relative_path) for relative_path in PIPELINE_SMOKE_INFRA_TEST_PATHS]
+    raise ValueError(f"Unknown infrastructure test scope: {scope}")
+
+
+def _parse_test_discovery_timeout(scope: InfrastructureTestScope) -> float:
+    """Resolve the collection timeout for pytest discovery logging."""
+    raw_timeout = os.environ.get("TEST_DISCOVERY_TIMEOUT_SEC")
+    if raw_timeout:
+        try:
+            timeout = float(raw_timeout)
+        except ValueError:
+            logger.warning("Ignoring invalid TEST_DISCOVERY_TIMEOUT_SEC=%r", raw_timeout)
+        else:
+            if timeout > 0:
+                return timeout
+            logger.warning("Ignoring non-positive TEST_DISCOVERY_TIMEOUT_SEC=%r", raw_timeout)
+    return 120.0 if scope == "full" else 30.0
+
+
+def _log_discovered_tests(
+    cmd: list[str],
+    repo_root: Path,
+    env: dict,
+    label: str,
+    *,
+    timeout_seconds: float = 30.0,
+) -> None:
     """Run pytest --collect-only and log the discovered test count."""
     discovery_cmd = cmd.copy()
     discovery_cmd.append("--collect-only")
@@ -102,7 +154,7 @@ def _log_discovered_tests(cmd: list[str], repo_root: Path, env: dict, label: str
             env=env,
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=timeout_seconds,
         )
         combined = result.stdout + "\n" + result.stderr
         test_count = None
@@ -131,32 +183,42 @@ def run_infrastructure_tests(
     include_ollama_tests: bool = False,
     include_bench: bool = False,
     strict: bool = True,
+    scope: InfrastructureTestScope = "full",
 ) -> tuple[int, TestSuiteResults]:
     """Execute infrastructure test suite with coverage."""
+    if scope not in INFRASTRUCTURE_TEST_SCOPES:
+        raise ValueError(f"Unknown infrastructure test scope: {scope}")
     start_time = time.time()
-    project_root = repo_root / "projects" / project_name
+    project_root = resolve_project_root(repo_root, project_name)
 
     clean_coverage_files(repo_root)
 
     testing_config = get_testing_config(repo_root)
-    infra_threshold = testing_config.infra_coverage_threshold
+    full_scope = scope == "full"
+    infra_threshold = testing_config.infra_coverage_threshold if full_scope else 0
 
-    log_substep(f"Running infrastructure tests ({infra_threshold}% coverage threshold)...", logger)
+    if full_scope:
+        log_substep(f"Running infrastructure tests ({infra_threshold}% coverage threshold)...", logger)
+    else:
+        log_substep("Running pipeline-smoke infrastructure tests (no coverage gate)...", logger)
     if not include_ollama_tests:
         log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)", logger)
-    logger.info(f"Test path: {repo_root / 'tests' / 'infra_tests'}")
-    logger.info("Coverage target: infrastructure (60% minimum)")
+    logger.info("Infrastructure test scope: %s", scope)
+    logger.info("Test path(s): %s", ", ".join(_resolve_infrastructure_test_paths(repo_root, scope)))
+    if full_scope:
+        logger.info("Coverage target: infrastructure (%s%% minimum)", infra_threshold)
+    else:
+        logger.info("Coverage target: N/A for pipeline-smoke scope")
 
     cmd = resolve_test_python(repo_root / ".venv")
 
     cmd += [
         "-m",
         "pytest",
-        str(repo_root / "tests" / "infra_tests"),
-        str(repo_root / "tests" / "integration"),
-        "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
-        "--cov=infrastructure",
     ]
+    cmd.extend(_resolve_infrastructure_test_paths(repo_root, scope))
+    if full_scope:
+        cmd.append("--cov=infrastructure")
     infra_marker = build_pytest_marker_expression(
         skip_requires_ollama=not include_ollama_tests,
         skip_slow=not include_slow,
@@ -168,20 +230,27 @@ def run_infrastructure_tests(
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     cov_datafile_supported = check_cov_datafile_support()
-    if cov_datafile_supported:
-        cmd.append("--cov-datafile=.coverage.infra")
-    else:
-        env["COVERAGE_FILE"] = ".coverage.infra"
+    coverage_json_paths: list[Path] = []
+    if full_scope:
+        if cov_datafile_supported:
+            cmd.append("--cov-datafile=.coverage.infra")
+        else:
+            env["COVERAGE_FILE"] = ".coverage.infra"
 
-    cmd.extend(
-        [
-            "--cov-report=term-missing",
-            "--cov-report=html",
-            "--cov-report=json:coverage_infra.json",
-            f"--cov-fail-under={infra_threshold}",
-            "--tb=short",
+        coverage_json_paths = [
+            repo_root / "coverage_infra.json",
+            repo_root / "coverage.json",
+            repo_root / "htmlcov" / "coverage.json",
         ]
-    )
+        cmd.extend(
+            [
+                "--cov-report=term-missing",
+                "--cov-report=html",
+                "--cov-report=json:coverage_infra.json",
+                f"--cov-fail-under={infra_threshold}",
+            ]
+        )
+    cmd.append("--tb=short")
     if quiet:
         cmd.extend(["-q"])
 
@@ -193,7 +262,13 @@ def run_infrastructure_tests(
     if shutil.which("uv"):
         env["PATH"] = f"{os.path.dirname(shutil.which('uv'))}:{env.get('PATH', '')}"
 
-    _log_discovered_tests(cmd, repo_root, env, "infrastructure")
+    _log_discovered_tests(
+        cmd,
+        repo_root,
+        env,
+        f"infrastructure ({scope})",
+        timeout_seconds=_parse_test_discovery_timeout(scope),
+    )
 
     try:
         config = TestSuiteConfig(
@@ -201,16 +276,13 @@ def run_infrastructure_tests(
             cmd=cmd,
             env=env,
             repo_root=repo_root,
-            coverage_json_paths=[
-                repo_root / "coverage_infra.json",
-                repo_root / "coverage.json",
-                repo_root / "htmlcov" / "coverage.json",
-            ],
+            coverage_json_paths=coverage_json_paths,
             coverage_threshold=infra_threshold,
             max_failures_env_var="MAX_INFRA_TEST_FAILURES",
             max_failures_config_key="max_infra_test_failures",
             quiet=quiet,
-            spinner_label="Running infrastructure tests",
+            spinner_label=f"Running infrastructure tests ({scope})",
+            streaming_subprocess=True,
         )
         exit_code, test_results = run_test_suite(config)
         if strict and test_results.get("failed", 0) > 0:
@@ -236,7 +308,7 @@ def run_project_tests(
 ) -> tuple[int, TestSuiteResults]:
     """Execute project test suite with coverage."""
     start_time = time.time()
-    project_root = repo_root / "projects" / project_name
+    project_root = resolve_project_root(repo_root, project_name)
 
     clean_coverage_files(repo_root)
 
@@ -246,7 +318,7 @@ def run_project_tests(
 
     log_substep(f"Running project tests for '{project_name}' ({project_threshold}% coverage threshold)...", logger)
     logger.info(f"Test path: {project_root / 'tests'}")
-    logger.info(f"Coverage target: projects/{project_name}/src ({project_threshold}% minimum)")
+    logger.info(f"Coverage target: {project_root / 'src'} ({project_threshold}% minimum)")
 
     cmd = resolve_test_python(project_root / ".venv")
     # A per-project ``.venv`` can have a valid interpreter symlink yet lack
@@ -280,8 +352,8 @@ def run_project_tests(
     cmd += [
         "-m",
         "pytest",
-        f"projects/{project_name}/tests",
-        f"--cov=projects/{project_name}/src",
+        str(project_root / "tests"),
+        f"--cov={project_root / 'src'}",
         # No per-project --cov-config: the project pyproject's
         # source=["src"]/omit=["src/analysis.py"] are project-relative and do
         # NOT resolve when pytest runs from repo-root, which silently mis-scoped
@@ -353,6 +425,7 @@ def run_project_tests(
             max_failures_config_key="max_project_test_failures",
             quiet=quiet,
             spinner_label=f"Running project tests for '{project_name}'",
+            streaming_subprocess=True,
         )
         exit_code, test_results = run_test_suite(config)
         if strict and test_results.get("failed", 0) > 0:
@@ -507,7 +580,7 @@ def report_results(
         _report_suite_failure("Project", project_results, project_name)
 
     logger.info("")
-    logger.info("=" * 64)
+    logger.info("=" * BANNER_WIDTH)
 
     infra_passed = infra_results.get("passed", 0)
     infra_total = infra_results.get("total", 0)
@@ -537,7 +610,7 @@ def report_results(
         logger.info(
             f"Project:       ✓ PASSED ({project_passed}/{project_total} tests, {project_coverage:.1f}% coverage)"
         )
-        logger.info("-" * 64)
+        logger.info("-" * TABLE_WIDTH)
         logger.info(f"Total:         ✓ PASSED ({total_passed}/{total_tests} tests)")
         if infra_was_run:
             logger.info(f"Coverage:      Infrastructure: {infra_coverage:.1f}% | Project: {project_coverage:.1f}%")
@@ -550,7 +623,7 @@ def report_results(
         if total_duration > 0:
             logger.info(f"Duration:      {_format_duration(total_duration)}")
 
-        logger.info("=" * 64)
+        logger.info("=" * BANNER_WIDTH)
         log_success("All tests passed - ready for analysis", logger)
     else:
         if infra_exit == 0:
@@ -562,7 +635,7 @@ def report_results(
             logger.info(f"Infrastructure: ✗ FAILED ({infra_failed} test(s) failed)")
 
         logger.info(f"Project:       ✗ FAILED ({project_results.get('failed', 0)} test(s) failed)")
-        logger.info("-" * 64)
+        logger.info("-" * TABLE_WIDTH)
         logger.info("Total:         ✗ FAILED (project tests failed)")
         logger.error("Project tests failed - pipeline cannot continue until tests pass")
         logger.info("Fix the failing tests shown above and re-run the pipeline")
@@ -578,6 +651,7 @@ def execute_test_pipeline(
     include_slow: bool,
     include_ollama_tests: bool,
     strict: bool,
+    infra_scope: InfrastructureTestScope = "full",
 ) -> int:
     """Run full test orchestration.
 
@@ -598,6 +672,7 @@ def execute_test_pipeline(
             include_slow,
             include_ollama_tests,
             strict=strict,
+            scope=infra_scope,
         )
 
     if run_project:
@@ -614,7 +689,7 @@ def execute_test_pipeline(
 
     if run_project:
         report = generate_test_report(infra_results, project_results, repo_root, include_coverage_details=True)
-        output_dir = repo_root / "projects" / project_name / "output" / "reports"
+        output_dir = resolve_project_root(repo_root, project_name) / "output" / "reports"
         save_test_report_to_files(report, output_dir)
         report_results(infra_exit, project_exit, infra_results, project_results, report, project_name)
     elif run_infra:

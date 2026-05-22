@@ -1,0 +1,176 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/checks.json",
+      "sha256": "e7cb5141e8784e6a693fef868c16d5294a6146a8a8e285dd68fadb7a5833833f",
+      "size_bytes": 1041,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/data/manuscript_variables.json",
+      "sha256": "fcc4e7454421a212a8c4ed1cc79478533057d0d6ca4f995165a4f49468df0c6a",
+      "size_bytes": 357,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/citation_density.png",
+      "sha256": "c48d7ba4d738a05aafb4997c99dfec14bf975bbceecddedb22455857f6ccd205",
+      "size_bytes": 100306,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/readability_metrics.png",
+      "sha256": "2dde562cbec731e2af747711d5999583c8447c2f5e3444186f3a4d39e40a8f93",
+      "size_bytes": 144489,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/section_word_counts.png",
+      "sha256": "116f86bd733677c4c2ea989672d4f3392bf091383bcd57bdee55d589a2a47d42",
+      "size_bytes": 101369,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "060f7c3a4c5516182dc17e43227c3af1e7b31b47a5b0143396615c00564a5968",
+      "size_bytes": 2393,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "bb28f76428c86a8b04256ec1a7704458fb993ea292c7775ddbf77c4ea1696e80",
+      "size_bytes": 2548,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "34d5f534cb3dd3981be0a3df2476ddb9c5b614e9ca7b0f375dc42386ce8ca55a",
+      "size_bytes": 4372,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "5070ee7f11b90d139f305b8d9992b7bc7f07b8fbe250ee3490cc54ab2d85ad76",
+      "size_bytes": 2427,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/04_conclusion.md",
+      "sha256": "e872a1c5f593b7d1ec080b24ce5cd012463ae82112d910558c4214f692c3dd79",
+      "size_bytes": 2366,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/05_pipeline_internals.md",
+      "sha256": "a8ec6387c97aa03c1b0d92d4f50b9073a5b6cb0184d741585a289d5f444695f3",
+      "size_bytes": 2725,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/06_reproducibility.md",
+      "sha256": "d4556cdad3473ca55e3690f02a2829b41996abadf8cf5e431eaeb19725aa4d5d",
+      "size_bytes": 2374,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "d58607556acc1a61281aa5f8f6e636a8efda4f176f31de56b0fea783adb57f43",
+      "size_bytes": 891,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/config.yaml",
+      "sha256": "ad698c84c3ff5653c6c02daa4432c28a1158b256ba64d54218a36cc78c38204f",
+      "size_bytes": 3949,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/preamble.md",
+      "sha256": "21b3edeede6fb23e32815558eaf27f9bca690cdbdafe958012591e6a6c62cddd",
+      "size_bytes": 1674,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript/references.bib",
+      "sha256": "b8a8f331dd83f0ea71e03833462310339c9a9eb7775ca8ebcf25e573520c4ebe",
+      "size_bytes": 1809,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/manuscript_report.json",
+      "sha256": "b1b953676acc99136b99a92b9dadbdf1e87937d21967bf70f713cbd5d8da9e2f",
+      "size_bytes": 28900,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/review_report.md",
+      "sha256": "3910d2830e529449fbc2ddb7e145a764378c4c2e4656372c69d4cdb6d6d3dcbf",
+      "size_bytes": 2594,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/run_summary.json",
+      "sha256": "05d64b417c78d95f667ec3e7e77ce2536efc408102494879625bcdb4df6b18bb",
+      "size_bytes": 1295,
+      "stage_name": "Project Analysis",
+      "stage_num": 4,
+      "timestamp": "2026-05-22T00:49:20+00:00"
+    }
+  ],
+  "issues": []
+}

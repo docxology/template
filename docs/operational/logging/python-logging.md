@@ -138,11 +138,30 @@ logger.info("This goes to console AND file")
 
 Default format:
 
+There are now **two** default formats — one for the terminal (compact,
+prefix-less, optionally emoji-tagged) and one for the log file (full
+`[ts] [LEVEL] message`). The console handler uses `ConsoleFormatter`; the
+file handler uses the legacy `TemplateFormatter`. See
+[`output-design.md`](output-design.md) for the full visual contract.
+
+**Terminal default (clean):**
+
 ```
-ℹ️ [2025-11-21 12:00:00] [INFO] Processing started
-⚠️ [2025-11-21 12:00:05] [WARN] File not found
-❌ [2025-11-21 12:00:10] [ERROR] Processing failed
+Processing started
+⚠️  File not found
+❌  Processing failed
 ```
+
+**File-handler format (pipeline.log — always prefixed):**
+
+```
+[2025-11-21 12:00:00] [INFO] Processing started
+[2025-11-21 12:00:05] [WARNING] File not found
+[2025-11-21 12:00:10] [ERROR] Processing failed
+```
+
+Set `LOG_TERMINAL_VERBOSE=1` to restore the prefixed format on the terminal
+(matches file output).
 
 **Disable Emojis:**
 

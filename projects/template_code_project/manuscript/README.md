@@ -8,7 +8,7 @@ It demonstrates the complete research pipeline from algorithm implementation thr
 
 This project is explicitly designed to showcase the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer**: The code delegates all tracking, performance benchmarking, stability validation, and PDF rendering to the 16-module infrastructure cluster (located at the repository root).
+1. **`infrastructure/` Layer**: The code delegates all tracking, performance benchmarking, stability validation, and PDF rendering to the 17-package infrastructure cluster (located at the repository root).
 2. **`tests/` Integrity**: A zero-mock suite (`projects/template_code_project/tests/`, **117** collected tests) with **≥90%** coverage on `projects/template_code_project/src/` (typically ~99% line/branch with the current tests).
 3. **`docs/` Orchestration**: Adherence to the Rigorous Agentic Scientific Protocol (RASP) ensuring total documentation-to-code parity (`projects/template_code_project/docs/`).
 
@@ -38,7 +38,7 @@ graph TD
     end
 
     subgraph "Template Ecosystem"
-        Tests["tests/ (117 tests, ~99% src)"]:::docs
+        Tests["tests/ (see canonical facts)"]:::docs
         Config["config.yaml & preamble.md"]:::docs
         
         subgraph "`infrastructure/`"

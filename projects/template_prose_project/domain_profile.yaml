@@ -1,0 +1,48 @@
+domain: prose_research
+display_name: Prose Research Exemplar
+required_packages:
+  - textstat
+  - matplotlib
+  - pytest
+preferred_outputs:
+  - pdf
+  - html
+  - docx
+validation_gates:
+  - source_quality
+  - citation_integrity
+  - prose_quality
+  - render_validation
+  - publication_readiness
+figure_types:
+  - section_word_counts
+  - readability_metrics
+  - citation_density
+citation_policy: official_or_scholarly
+source_policy: "Prefer manuscript-local bibliography entries and project-generated prose metrics; unsupported claims remain advisory until grounded."
+review_gates:
+  - source_quality
+  - citation_integrity
+  - publication_readiness
+artifact_expectations:
+  - output/data/manuscript_variables.json
+  - output/checks.json
+  - output/figures/readability_metrics.png
+  - output/reports/validation_report.json
+  - output/pdf/template_prose_project_combined.pdf
+benchmark_rubric:
+  name: prose-research-readiness
+  dimensions:
+    - name: output_validity
+      weight: 1.0
+    - name: source_quality
+      weight: 1.0
+    - name: evidence_grounding
+      weight: 2.0
+    - name: cross_reference_integrity
+      weight: 1.0
+    - name: render_success
+      weight: 1.0
+    - name: publication_readiness
+      weight: 1.0
+llm_prompt_guidance: "Use citation keys, prose metrics, and generated reports as constraints; keep editorial guidance separate from measured claims."

@@ -57,6 +57,7 @@ flowchart TB
     P --> M[/manuscript/]
     P --> OUT[/output<br/>Working outputs · regenerated · gitignored/]
     P --> PY[pyproject.toml<br/>Pytest/coverage config · project metadata]
+    P --> DP[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 
     SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>STYLE.md · AGENTS.md · README.md]
     SC --> SC_F[optimization_analysis.py · build_dashboard.py ·<br/>generate_api_docs.py · z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
@@ -69,7 +70,7 @@ flowchart TB
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
     class P d
     class SRC,SC,T,DOCS,M,OUT pkg
-    class SRC_F,SC_F,T_F,DOCS_F,M_F,PY f
+    class SRC_F,SC_F,T_F,DOCS_F,M_F,PY,DP f
 ```
 
 ## Installation/Setup
@@ -126,7 +127,14 @@ benchmark_path = run_performance_benchmarking()
 
 ## Configuration
 
-The project uses the template's configuration system via `pyproject.toml` and environment variables.
+The project uses the template's configuration system via `pyproject.toml`,
+manuscript `config.yaml`, and environment variables. Advisory agentic-research
+controls are declarative: `domain_profile.yaml` declares review gates, source
+policy, artifact expectations, and benchmark rubric preferences;
+`experiment_plan.yaml` declares the gradient-descent conditions, primary metric,
+expected figures/tables, baseline, and ablation; `data/claim_ledger.yaml`
+registers sourced numeric claims for evidence-registry validation. These
+overlays are validation inputs only; they do not execute autonomous agents.
 
 ## Protocol for AI Agents
 

@@ -32,7 +32,7 @@ stages:
     tags: [core]
   - name: Infrastructure Tests
     script: 01_run_tests.py
-    args: [--infra-only, --verbose]
+    args: [--infra-only, --verbose, --infra-scope, pipeline-smoke]
     depends_on: [Environment Setup]
     tags: [core, tests]
   - name: Project Tests

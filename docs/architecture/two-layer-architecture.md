@@ -44,7 +44,7 @@ flowchart TB
     INFRA --> DOC[/documentation<br/>figure · image · markdown integration · glossary/]
     INFRA --> PUB[/publishing<br/>academic publishing tools/]
     INFRA --> LLM[/llm<br/>LLM integration · literature workflows/]
-    INFRA --> REND[/rendering<br/>multi-format · PDF · slides · HTML/]
+    INFRA --> REND[/rendering<br/>multi-format · PDF · HTML · slides · DOCX · EPUB/]
     INFRA --> SCI[/scientific<br/>scientific dev tools/]
     INFRA --> SEARCH[/search<br/>multi-source literature search/]
     INFRA --> REF[/reference<br/>BibTeX I/O/]
@@ -262,7 +262,7 @@ from projects.name.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure<br/>Layer 1 · 16 importable packages/]
+    INFRA[/infrastructure<br/>Layer 1 · 17 importable packages/]
     INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
     INFRA --> CORE[/core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
     INFRA --> DOC[/documentation<br/>figure manager · glossary gen/]
@@ -272,7 +272,7 @@ flowchart TB
     INFRA --> PROJ[/project<br/>multi-project discovery/]
     INFRA --> PROSE[/prose<br/>markdown analysis/]
     INFRA --> PUB[/publishing<br/>Zenodo · arXiv · GitHub/]
-    INFRA --> REND[/rendering<br/>PDF · HTML · slides/]
+    INFRA --> REND[/rendering<br/>PDF · HTML · slides · DOCX · EPUB/]
     INFRA --> REP[/reporting<br/>pipeline · executive reports/]
     INFRA --> SCI[/scientific<br/>numerical stability · benchmarking/]
     INFRA --> SK[/skills<br/>SKILL.md discovery/]

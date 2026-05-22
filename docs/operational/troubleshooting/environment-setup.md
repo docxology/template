@@ -140,6 +140,12 @@ uv run python scripts/02_run_analysis.py
 | `MPLBACKEND` | (system) | Matplotlib backend |
 | `MPLCONFIGDIR` | `~/.matplotlib` | Matplotlib config directory |
 | `LOG_LEVEL` | `1` | Logging verbosity (0=DEBUG, 1=INFO) |
+| `LOG_TERMINAL_VERBOSE` | (unset) | Restore the verbose `[ts] [LEVEL]` prefix on console (matches file format) |
+| `ENABLE_PDF` | `1` | Per-format render toggle — combined PDF |
+| `ENABLE_HTML` | `1` | Per-format render toggle — combined HTML |
+| `ENABLE_SLIDES` | `1` | Per-format render toggle — per-section Beamer PDFs |
+| `ENABLE_DOCX` | `0` | Opt-in render toggle — combined Word document |
+| `ENABLE_EPUB` | `0` | Opt-in render toggle — combined EPUB bundle |
 | `AUTHOR_NAME` | `"Project Author"` | Primary author name |
 | `AUTHOR_ORCID` | `"0000-0000-0000-0000"` | Author ORCID |
 | `PROJECT_TITLE` | `"Project Title"` | Project title |

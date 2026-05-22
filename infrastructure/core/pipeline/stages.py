@@ -47,7 +47,15 @@ class PipelineStageMixin(ABC):
 
     def run_infrastructure_tests(self) -> bool:
         """Public API used by multi-project orchestrator."""
-        return self._run_script("01_run_tests.py", "--infra-only", "--verbose", "--project", self.config.project_name)
+        return self._run_script(
+            "01_run_tests.py",
+            "--infra-only",
+            "--verbose",
+            "--infra-scope",
+            "pipeline-smoke",
+            "--project",
+            self.config.project_name,
+        )
 
     def run_project_tests(self) -> bool:
         """Run project test suite."""

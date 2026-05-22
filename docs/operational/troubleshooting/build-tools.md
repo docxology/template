@@ -205,9 +205,9 @@ Normal - pypdf gracefully handles malformed PDF objects.
 
 ```bash
 # Check labels exist
-grep -r "\\label{" projects/<name>/manuscript/
+grep -r '\label{' projects/<name>/manuscript/
 
-grep -r "\\ref{" projects/<name>/manuscript/
+grep -r '\ref{' projects/<name>/manuscript/
 ```
 
 **Solutions:**

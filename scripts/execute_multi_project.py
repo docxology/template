@@ -206,6 +206,26 @@ def execute_multi_project(
         except Exception as e:
             logger.warning(f"Failed to generate multi-project summary: {e}")
 
+        # Persist the canonical text summary to docs/_generated/ for regression
+        # detection across runs. Wrapped: docs-write failure must never break
+        # the pipeline exit code.
+        try:
+            from infrastructure.core.pipeline.multi_project import (
+                format_multi_project_detailed_report,
+                write_last_run_summary,
+            )
+
+            summary_lines = format_multi_project_detailed_report(
+                result=result,
+                ordered_projects=projects,
+                repo_root=repo_root,
+            )
+            artifact = write_last_run_summary(summary_lines, repo_root)
+            if artifact is not None:
+                logger.info(f"  • LAST-RUN: {artifact}")
+        except Exception as e:
+            logger.warning(f"Failed to write last-run-summary.md: {e}")
+
         if result.successful_projects == len(projects):
             log_success("🎉 All projects completed successfully!", logger)
             return 0

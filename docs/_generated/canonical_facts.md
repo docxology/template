@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-15 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `pytest tests/infra_tests/project/test_discovery.py -q` (**58** passed), `pytest projects/*/tests/ --collect-only` per exemplar below, `find infrastructure -name '*.py' -type f | wc -l` (**345** `.py` files, re-measured 2026-05-15 — point-in-time; this count drifts as the tree changes, always re-derive with the command rather than trusting the literal). Counts below for `fep_lean` are historical from archived/restored trees (see commands).
+**Generated from live repo state on 2026-05-22 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `pytest tests/infra_tests/project/test_discovery.py tests/infra_tests/test_docs_discovery_consistency.py -q` (**60** passed), `pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/test_pipeline_control_extensions.py -q` (**56** passed), `pytest projects/*/tests/ --collect-only` per exemplar below, `find infrastructure -name '*.py' -type f | wc -l` (**365** `.py` files, point-in-time; this count drifts as the tree changes, always re-derive with the command rather than trusting the literal). Counts below for `fep_lean` are historical from archived/restored trees (see commands).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -12,6 +12,8 @@ This file aggregates verifiable facts from discovery scripts, CI configuration, 
 - `template_prose_project`
 
 Optional add-on: `projects_archive/template_search_project` can be restored under `projects/` for literature-search workflows.
+
+Private active projects live outside this public repo at `/Users/4d/Documents/GitHub/projects/active/` by default and are symlinked into `template/projects/` by `run.sh`/`infrastructure.orchestration` before discovery. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
 **Active projects this checkout** (`projects/`, from `discover_projects()`; rotates — authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
@@ -42,8 +44,9 @@ Default exemplar for paths: `projects/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current importable Python subpackages under `infrastructure/` (16):
+Current importable Python subpackages under `infrastructure/` (17):
 
+- benchmark
 - core
 - doctor
 - documentation
@@ -74,7 +77,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **345** on 2026-05-15 — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **365** on 2026-05-22 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -84,7 +87,19 @@ See `infrastructure/AGENTS.md` for module-specific function signatures and entry
 uv run pytest tests/infra_tests/project/test_discovery.py -q
 ```
 
-Result: 58 passed in ~0.44s (real data, no mocks).
+Current discovery/docs command:
+
+```bash
+uv run pytest tests/infra_tests/project/test_discovery.py tests/infra_tests/test_docs_discovery_consistency.py -q
+```
+
+Result: 60 passed in ~0.63s (real data, no mocks). Link-sync and pipeline-control command:
+
+```bash
+uv run pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/test_pipeline_control_extensions.py -q
+```
+
+Result: 56 passed in ~0.76s (real symlinks and file-backed HITL state, no mocks).
 
 **Exemplar `pytest --collect-only` totals** (2026-05-19):
 
@@ -177,7 +192,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```mermaid
 flowchart TD
-    Root[Root] --> Infra[infrastructure/ <br/>16 importable packages]
+    Root[Root] --> Infra[infrastructure/ <br/>17 importable packages]
     Root --> Projects[projects/ <br/>see active_projects.md]
     Root --> Tests[tests/infra_tests/]
     Infra --> Core[core/ <br/>pipeline, logging, files, config]

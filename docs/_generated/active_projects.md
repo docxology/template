@@ -6,7 +6,7 @@ The names below are the single source of truth from `infrastructure.project.disc
 
 Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides—link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/) unless a doc explicitly compares layouts.
 
-Generated at (UTC): `2026-05-20T04:10:23+00:00`
+Generated at (UTC): `2026-05-22T00:16:18+00:00`
 
 Current entries:
 

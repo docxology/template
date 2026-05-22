@@ -113,6 +113,23 @@ Every knob lives in `manuscript/config.yaml`:
 | `bibliography` | `fail_on_missing` | `true` | Fail if a cited `[@key]` is not in the bib. |
 | `bibliography` | `fail_on_unused` | `false` | Fail if a bib entry is never cited. |
 
+## Agentic research overlays
+
+This exemplar includes two declarative overlays for advisory research controls:
+
+- [`domain_profile.yaml`](domain_profile.yaml) declares the prose-research
+  domain, review gates, citation/source policy, artifact expectations, and
+  benchmark rubric weights.
+- [`experiment_plan.yaml`](experiment_plan.yaml) declares the prose-validation
+  conditions, primary metric direction, expected figures and tables, baseline,
+  and strict-bibliography ablation.
+- [`data/claim_ledger.yaml`](data/claim_ledger.yaml) registers sourced numeric
+  claims that are intentionally tied to prose-review code, manuscript examples,
+  or generated reports.
+
+These files are validation and benchmark inputs only. They do not generate
+experiments, mutate prompts, or run autonomous review agents.
+
 ## Architecture
 
 * `src/config.py` — typed YAML loader.

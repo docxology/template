@@ -24,7 +24,8 @@ This is a research project template with a test-driven development workflow, aut
 | Secure workflow via main shell (`secure` subcommand) | `./run.sh --secure-run` |
 | Full pipeline | `./run.sh --pipeline` |
 | Core pipeline (no LLM) | `uv run python scripts/execute_pipeline.py --project {name} --core-only` |
-| All tests | `uv run python scripts/01_run_tests.py --project {name}` |
+| Project pipeline tests | `uv run python scripts/01_run_tests.py --project {name}` |
+| Full infrastructure gate | `uv run python scripts/01_run_tests.py --infra-only --infra-scope full` |
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
 | Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`; add `--group monitoring` to mirror CI extras) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
@@ -33,6 +34,11 @@ This is a research project template with a test-driven development workflow, aut
 | Bandit (CI / security job) | `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` (exclusions in `bandit.yaml` → `exclude_dirs`) |
 | Pre-commit (lint stage) | `pre-commit run --all-files` |
 | Pre-push hooks | `pre-commit run --hook-stage pre-push --all-files` |
+| Local CI reproduction (act + fallback) | `./scripts/ci_local.sh` (added 2026-05-20; see [`docs/maintenance/ci-local.md`](docs/maintenance/ci-local.md)) |
+| Executable bundle (opt-in Stage 10) | `uv run python scripts/08_executable_bundle.py --project {name}` |
+| Archive publication dry-run (opt-in Stage 11) | `uv run python scripts/09_archive_publication.py --project {name}` |
+| Archive publication real deposit | `uv run python scripts/09_archive_publication.py --project {name} --providers zenodo software_heritage ipfs_pinata --commit` (requires credentials — see [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md)) |
+| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 
 ### CI mirror (GitHub Actions)
 
@@ -157,12 +163,21 @@ never be committed.** This is enforced, not conventional:
 cannot slip past it). `template_search_project` rests in
 [`projects_archive/template_search_project/`](projects_archive/template_search_project/);
 copy it under `projects/` **locally** to exercise the literature-search
-workflow, then never commit it. Other rotating projects move between
+workflow, then never commit it.
+
+Private active work lives outside this public repo at
+`/Users/4d/Documents/GitHub/projects/{active,passive,archive}`. `run.sh` and
+`python -m infrastructure.orchestration` auto-sync `active/*` into
+`template/projects/*` as symlinks before discovery, menu rendering, and
+pipeline execution. Inspect with
+`uv run python -m infrastructure.orchestration link-projects --dry-run`;
+override the root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
+`.private_projects_root`; disable one command with `TEMPLATE_SKIP_LINK_SYNC=1`.
+Other rotating projects move between the private lifecycle repo,
 `projects_in_progress/`, `projects/`, and `projects_archive/` as work
 progresses; never hard-code their paths in long-lived docs — consult
 `_generated/active_projects.md` instead.
-**In-progress projects:** `aii-org` and others in [`projects_in_progress/`](projects_in_progress/) (not discovered until moved under `projects/`)
-**Archived projects:** Located in `projects_archive/` (not executed by pipeline)
+**Backburner & archived projects:** live in the private `docxology/projects` repo under `passive/` and `archive/` — promote one to `active/` to render it (see [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md)). The local `projects_in_progress/` / `projects_archive/` staging tiers remain supported by discovery but are unused in this checkout.
 
 ## Architecture
 
@@ -231,15 +246,15 @@ avg = calculate_average(data)  # Use tested method
 
 ### Active vs Archived Projects
 
-- **`projects/`** - Active projects (discovered and executed by infrastructure)
-- **`projects_in_progress/`** - In-progress projects (scaffolding, not executed)
-- **`projects_archive/`** - Archived projects (preserved but not executed)
+- **`projects/`** — the two public exemplars, plus `active/` projects from the private repo symlinked in (discovered + rendered).
+- **Private `docxology/projects` repo** — the primary home for real projects: `active/` (rendered every run), `passive/` (backburner), `archive/` (retired). See [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
+- **`projects_in_progress/` / `projects_archive/`** — legacy local staging tiers; still supported by discovery but unused in this checkout (superseded by the private repo's `passive/` / `archive/`).
 
 **Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (do not hard-code names in docs).
-**Current in-progress projects:** See [`projects_in_progress/`](projects_in_progress/) (e.g. `cogant`, `cognitive_case_diagrams`, `template`)
+**Backburner / archived projects:** in the private repo's `passive/` and `archive/`.
 
-To archive: `mv projects/{name}/ projects_archive/{name}/`
-To reactivate: `mv projects_archive/{name}/ projects/{name}/`
+To make a private project render: move it into the private repo's `active/`, then `./run.sh` (auto-syncs the symlink).
+To retire one: move it into the private repo's `archive/`.
 
 ### Standard Project Layout
 
@@ -291,7 +306,7 @@ flowchart TB
 
 0. **Clean Output Directories** - Remove previous outputs for a fresh run
 1. **Environment Setup** - Validate dependencies, discover projects
-2. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
+2. **Infrastructure Tests** - Run the focused `pipeline-smoke` infrastructure contract by default; use `--infra-scope full` for the coverage-bearing repo gate
 3. **Project Tests** - Project test suite (90% coverage minimum)
 4. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
 5. **Render PDF** - Convert markdown to professional PDFs

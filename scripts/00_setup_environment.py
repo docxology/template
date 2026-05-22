@@ -163,10 +163,19 @@ def main() -> int:
 
     def check_project_discovery() -> bool:
         """Discover and validate available projects."""
-        from infrastructure.project.discovery import discover_projects
+        from infrastructure.project.discovery import discover_projects, resolve_project_root
+        from infrastructure.project.validation import validate_project_structure
 
         logger.info("Discovering available projects...")
         try:
+            target_root = resolve_project_root(repo_root, args.project)
+            target_valid, target_message = validate_project_structure(target_root)
+            if target_valid:
+                logger.info("Target project resolved: %s", target_root)
+            else:
+                logger.error("Target project is not runnable at %s: %s", target_root, target_message)
+                return False
+
             projects = discover_projects(repo_root)
 
             if not projects:
@@ -204,9 +213,10 @@ def main() -> int:
         See ``infrastructure/project/setup_hook.py`` for the manifest schema.
         Backward-compatible: returns ``True`` when no hook exists.
         """
+        from infrastructure.project.discovery import resolve_project_root
         from infrastructure.project.setup_hook import run_project_setup_hook
 
-        project_dir = repo_root / "projects" / args.project
+        project_dir = resolve_project_root(repo_root, args.project)
         if not project_dir.is_dir():
             return True
         return run_project_setup_hook(project_dir)

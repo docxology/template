@@ -38,13 +38,14 @@ Two projects under `projects/` are **permanent canonical exemplars** — `templa
 
 | Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
 |---|---|---|---|---|---|---|
-| [`template_code_project/`](template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | 117 | ~99.5% |
-| [`template_prose_project/`](template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | 67 | 100.00% |
-| [`../projects_archive/template_search_project/`](../projects_archive/template_search_project/) **(local-only — NOT git-tracked)** | Optional search-centric add-on (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | 267 | ~99.5% |
+| [`template_code_project/`](template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | see canonical facts | see canonical facts |
+| [`template_prose_project/`](template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
+| [`../projects_archive/template_search_project/`](../projects_archive/template_search_project/) **(local-only — NOT git-tracked)** | Optional search-centric add-on (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | see project docs when restored | see project docs when restored |
 
 The two permanent exemplars, and the optional search add-on when restored, share the **same** structural conventions:
 
 - `src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`, `output/`, `pyproject.toml`, root `README.md` + `AGENTS.md`.
+- `domain_profile.yaml` + `experiment_plan.yaml` overlays for advisory review gates, artifact expectations, benchmark rubrics, declared conditions, primary metrics, baselines, and ablations.
 - The same 12-file `docs/` hub: `AGENTS.md`, `README.md`, `agent_instructions.md`, `architecture.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `style_guide.md`, `syntax_guide.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`.
 - Per-directory `AGENTS.md` + `README.md` (and, for `tests/`, a `PATTERNS.md`).
 - Manuscript files `00_abstract.md` … `99_references.md` plus `config.yaml`, `preamble.md`, `references.bib`, `SYNTAX.md`, and a manuscript-level `AGENTS.md`/`README.md`.
@@ -69,6 +70,13 @@ Active projects in the `projects/` directory are:
 - **Validated** by `04_validate_output.py`
 - **Copied** to `output/{name}/` by `05_copy_outputs.py`
 
+Private active projects normally live in
+`/Users/4d/Documents/GitHub/projects/active/` and are symlinked into this
+directory by `run.sh`/`infrastructure.orchestration` before discovery. Preview
+with `uv run python -m infrastructure.orchestration link-projects --dry-run`;
+override the private root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
+`.private_projects_root`; disable one auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
+
 #### ❌ **Archived Projects (`projects_archive/`)**
 
 Archived projects in the `projects_archive/` directory are:
@@ -81,13 +89,13 @@ Archived projects in the `projects_archive/` directory are:
 ```mermaid
 graph TD
     subgraph Active["Active Projects (projects/)"]
-        P1[template_code_project<br/>Code exemplar · 117 tests · ~99.5% cov]
-        P2[template_prose_project<br/>Prose exemplar · 67 tests · 100% cov]
+        P1[template_code_project<br/>Code exemplar · see canonical facts]
+        P2[template_prose_project<br/>Prose exemplar · see canonical facts]
         Pn[other rotating workspaces<br/>see docs/_generated/active_projects.md]
     end
 
     subgraph InProgress["In-Progress Projects (projects_in_progress/)"]
-        IP["biology_textbook · cogant · corym ·<br/>template · trsc<br/>(rotates)"]
+        IP["rotating WIP projects<br/>see live checkout"]
     end
 
     subgraph Archive["Archived Projects (projects_archive/)"]

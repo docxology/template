@@ -43,6 +43,23 @@ Full end-to-end: `uv run python scripts/execute_pipeline.py --project template_c
 
 Run `uv sync` at the **repository root**; that environment is what CI and `./run.sh` use. [`pyproject.toml`](pyproject.toml) in this directory configures pytest/coverage for `projects/template_code_project/tests/` and records the same scientific stack for isolated runs. Root [`pyproject.toml`](../../pyproject.toml) has `[tool.uv.workspace]` with `members = []`, so this folder is not installed as a separate workspace package.
 
+## Agentic research overlays
+
+This exemplar includes two declarative overlays for advisory research controls:
+
+- [`domain_profile.yaml`](domain_profile.yaml) declares the code-research domain,
+  expected outputs, review gates, source policy, artifact expectations, and
+  benchmark rubric weights.
+- [`experiment_plan.yaml`](experiment_plan.yaml) declares the deterministic
+  gradient-descent conditions, primary metric direction, expected figures and
+  tables, baseline, and ablation condition.
+- [`data/claim_ledger.yaml`](data/claim_ledger.yaml) registers manuscript
+  numeric claims that are intentionally sourced from project code, captions, or
+  generated artifacts rather than `{{TOKEN}}` variables.
+
+These files are validation and benchmark inputs only. They do not fork project
+trees, mutate prompts, or run autonomous experiment agents.
+
 ## Why this template — the transferable pattern
 
 The genuinely transferable lesson is not gradient descent. It is

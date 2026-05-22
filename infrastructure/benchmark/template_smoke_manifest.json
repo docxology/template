@@ -1,0 +1,38 @@
+{
+  "name": "template-smoke",
+  "projects": [
+    "template_code_project",
+    "template_prose_project"
+  ],
+  "required_outputs": [
+    "output/pdf",
+    "output/reports/validation_report.json"
+  ],
+  "checks": [
+    "output_validity",
+    "evidence_grounding",
+    "reproducibility_bundle",
+    "artifact_manifest"
+  ],
+  "rubric": {
+    "name": "template-publication-readiness",
+    "dimensions": [
+      {
+        "name": "output_validity",
+        "weight": 1.0
+      },
+      {
+        "name": "evidence_grounding",
+        "weight": 2.0
+      },
+      {
+        "name": "reproducibility_bundle",
+        "weight": 1.0
+      },
+      {
+        "name": "artifact_manifest",
+        "weight": 1.0
+      }
+    ]
+  }
+}

@@ -327,6 +327,6 @@ Having issues? Here's where to look:
 
 **Ready to start?** Choose your skill level above and dive in!
 
-**Verify locally**: run `uv run python scripts/01_run_tests.py --project <name>` and `./run.sh --pipeline` (or `--core-only`) on your machine for timing and coverage numbers.
+**Verify locally**: run `uv run python scripts/01_run_tests.py --project <name>` for the pipeline test contract, `uv run python scripts/01_run_tests.py --infra-only --infra-scope full` for the full infrastructure gate, and `./run.sh --pipeline` (or `--core-only`) for end-to-end timing.
 
 **Need help?** Start with **[Getting Started Guide](../guides/getting-started.md)** or check the **[FAQ](../reference/faq.md)**

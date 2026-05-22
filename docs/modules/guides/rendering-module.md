@@ -12,9 +12,67 @@
 - **PDF Rendering**: Professional LaTeX-based PDFs
 - **Presentation Slides**: Beamer (PDF) and reveal.js (HTML) slides
 - **Web Output**: Interactive HTML with MathJax
+- **DOCX Output**: Microsoft Word document via pandoc (opt-in)
+- **EPUB Output**: e-reader bundle via pandoc (opt-in)
 - **Scientific Posters**: Large-format poster generation
-- **Format-Agnostic**: Single source, multiple outputs
+- **Format-Agnostic**: Single source, multiple outputs — per-format on/off toggle via [`render.formats`](../../usage/output-formats.md)
 - **Quality Validation**: Automated output checking
+
+## DOCX & EPUB Rendering
+
+Both formats are emitted by thin pandoc-backed renderer modules; the
+pandoc engine that already drives HTML and combined-PDF preprocessing.
+
+| File | Public API |
+| --- | --- |
+| `infrastructure/rendering/docx_renderer.py` | `render_docx(combined_md, output_path, *, bibliography=None, reference_doc=None, pandoc_path="pandoc", extra_args=None) -> DocxRenderResult` |
+| `infrastructure/rendering/epub_renderer.py` | `render_epub(combined_md, output_path, *, bibliography=None, cover_image=None, pandoc_path="pandoc", extra_args=None) -> EpubRenderResult` |
+
+Both functions return a frozen dataclass (`DocxRenderResult` /
+`EpubRenderResult`) carrying `output_path`, `size_bytes`, and
+`duration_seconds`. Errors raise `infrastructure.core.exceptions.RenderingError`
+on non-zero pandoc exit; `FileNotFoundError` when the combined-markdown
+input is absent.
+
+DOCX/EPUB are **opt-in** by default. Enable in the project's
+`manuscript/config.yaml`:
+
+```yaml
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: true
+    epub: false
+```
+
+Both renderers reuse the preprocessed `_combined_manuscript.md` produced
+by the PDF stage. If PDF rendering is disabled, DOCX and EPUB cascade-skip
+with a `[skip] DOCX rendering: no combined markdown found` log line.
+
+See also: [`../../usage/output-formats.md`](../../usage/output-formats.md),
+[`../../architecture/adrs/003-multi-format-rendering-and-toggles.md`](../../architecture/adrs/003-multi-format-rendering-and-toggles.md).
+
+## Configuration
+
+`RenderingConfig` (`infrastructure/rendering/config.py`) exposes five
+on/off booleans plus output-path overrides:
+
+| Field | Default | Effect |
+| --- | --- | --- |
+| `enable_pdf` | `True` | gate combined-PDF stage |
+| `enable_html` | `True` | gate combined-HTML stage |
+| `enable_slides` | `True` | gate per-section Beamer stage |
+| `enable_docx` | `False` | gate combined-DOCX stage |
+| `enable_epub` | `False` | gate combined-EPUB stage |
+| `docx_dir` | `output/docx` | output directory for DOCX |
+| `epub_dir` | `output/epub` | output directory for EPUB |
+
+Factory: `RenderingConfig.from_project_config(yaml_mapping, *, env=None)`
+reads the `render.formats` block from a parsed `manuscript/config.yaml`
+mapping; env vars (`ENABLE_PDF`, `ENABLE_HTML`, `ENABLE_SLIDES`,
+`ENABLE_DOCX`, `ENABLE_EPUB`) override yaml.
 
 ---
 

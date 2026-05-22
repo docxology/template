@@ -281,12 +281,13 @@ class SlidesRenderer:
         ``preamble.md``; consumers should treat it as a build artefact.
 
         The header also defines ``\\providecommand`` fallbacks for natbib
-        commands (``\\citep``, ``\\citet``, ``\\citealp``) so that
-        manuscripts whose ``[@key]`` tokens were resolved to natbib calls
-        for the combined PDF still typeset cleanly in slides (which load
-        Beamer's default citation engine, not natbib). The fallback
-        renders a citation as ``[key]`` — readable, distinct, and
-        survives without an undefined-control-sequence error.
+        commands (``\\citep``, ``\\citet``, ``\\citealp``) and manuscript
+        cross-reference commands (``\\cref``, ``\\Cref``) so that
+        manuscript prose already normalized for the combined PDF still
+        typesets cleanly in slides. The fallback renders citations as
+        ``[key]`` and unresolved cross-references as detokenized label
+        strings — readable, distinct, and safe from undefined-control-
+        sequence and raw-underscore errors.
 
         Returns the header path when a snippet was produced, or ``None``
         when neither a math snippet nor a citation fallback is needed.
@@ -320,16 +321,19 @@ class SlidesRenderer:
             "\\setlength{\\tabcolsep}{2pt}\n"
             "\\AtBeginEnvironment{longtable}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n"
             "\\AtBeginEnvironment{tabular}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n\n"
-            "% Natbib fallbacks — slides don't load natbib, but combined-PDF\n"
-            "% renderer emits \\citep / \\citet for clickable citations. The\n"
-            "% fallback renders a citation as a bracketed key list so slides\n"
-            "% don't fail on undefined control sequence. \\providecommand is\n"
-            "% a no-op if natbib is loaded later.\n"
+            "% Natbib and cross-reference fallbacks — slides don't load natbib\n"
+            "% or cleveref, but combined-PDF manuscript prose may emit these\n"
+            "% commands. The fallback renders citations as a bracketed key list\n"
+            "% and cross-references as detokenized labels so slides don't fail on\n"
+            "% undefined control sequences or raw underscores. \\providecommand is\n"
+            "% a no-op if packages load later.\n"
             "\\providecommand{\\citep}[1]{[#1]}\n"
             "\\providecommand{\\citet}[1]{#1}\n"
             "\\providecommand{\\citealp}[1]{#1}\n"
             "\\providecommand{\\citeauthor}[1]{#1}\n"
             "\\providecommand{\\citeyear}[1]{#1}\n"
+            "\\providecommand{\\cref}[1]{\\texttt{\\detokenize{#1}}}\n"
+            "\\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
         )
 
         if not snippet_parts:

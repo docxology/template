@@ -23,6 +23,12 @@ def test_generated_artifact_path_matcher() -> None:
     assert not is_generated_artifact_path("projects/template_code_project/src/optimizer.py")
     assert not is_generated_artifact_path("docs/_generated/canonical_facts.md")
 
+    # Scoped exception: the two exemplars' TOP-LEVEL output is tracked render-proof.
+    assert not is_generated_artifact_path("output/template_code_project/pdf/template_code_project_combined.pdf")
+    assert not is_generated_artifact_path("output/template_prose_project/figures/wordcount.png")
+    # But a confidential/active project's top-level output stays guarded.
+    assert is_generated_artifact_path("output/actinf_policy_entanglement_lean/pdf/x.pdf")
+
 
 def test_current_repo_has_no_tracked_generated_artifacts() -> None:
     """Repository index must stay free of regeneratable output artifacts."""

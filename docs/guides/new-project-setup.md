@@ -168,7 +168,19 @@ testing:
   max_test_failures: 0
   max_infra_test_failures: 3
   max_project_test_failures: 0
+
+# Per-format render toggles. PDF/HTML/Slides default on; DOCX/EPUB default
+# off. See docs/usage/output-formats.md for the full reference.
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false   # set true to emit a Microsoft Word document
+    epub: false   # set true to emit an EPUB e-reader bundle
 ```
+
+> Both template exemplars (`template_code_project`, `template_prose_project`) ship with this block populated. New projects should mirror the structure; omitting the block falls back to defaults (PDF/HTML/Slides on, DOCX/EPUB off).
 
 ---
 

@@ -40,6 +40,7 @@ from infrastructure.orchestration.secure_run import (
     run_secure_pipeline,
 )
 from infrastructure.project.discovery import discover_projects
+from infrastructure.project.linking import SKIP_ENV_VAR, sync_active_links
 
 
 def _default_repo_root() -> Path:
@@ -177,6 +178,14 @@ def build_parser() -> argparse.ArgumentParser:
     # 'list-projects' subcommand
     sub.add_parser("list-projects", help="List discovered projects, one per line.")
 
+    # 'link-projects' subcommand — explicit sync of private active/ projects.
+    link = sub.add_parser(
+        "link-projects",
+        help="Symlink the private repo's active/ projects into projects/.",
+    )
+    link.add_argument("--dry-run", action="store_true", help="Report without changing anything.")
+    link.add_argument("--no-prune", action="store_true", help="Keep stale managed links.")
+
     return parser
 
 
@@ -185,6 +194,45 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _resolve_repo_root(ns: argparse.Namespace) -> Path:
     return Path(ns.repo_root) if ns.repo_root else _default_repo_root()
+
+
+def _maybe_sync_links(repo_root: Path) -> None:
+    """Best-effort: symlink the private repo's active/ projects into projects/.
+
+    Runs on every CLI invocation so ``run.sh`` renders active projects as native.
+    Deliberately non-fatal: a missing/unreadable private repo must never break the
+    pipeline, so failures print a visible warning (not silently swallowed) and the
+    CLI continues. Disable with ``$TEMPLATE_SKIP_LINK_SYNC`` or when no private root
+    is present (the call is then a pure no-op).
+    """
+    if os.environ.get(SKIP_ENV_VAR):
+        return
+    try:
+        result = sync_active_links(repo_root)
+    except (OSError, RuntimeError) as exc:  # fs hiccup / symlink loop — surface, don't crash CLI
+        print(f"[link-sync] warning: {exc}", file=sys.stderr)
+        return
+    if result.changed:
+        print(f"[link-sync] {result.summary()}", file=sys.stderr)
+
+
+def _cmd_link_projects(ns: argparse.Namespace) -> int:
+    repo_root = _resolve_repo_root(ns)
+    result = sync_active_links(
+        repo_root,
+        prune=not ns.no_prune,
+        dry_run=ns.dry_run,
+    )
+    print(result.summary())
+    for name in result.created:
+        print(f"  + {name}")
+    for name in result.updated:
+        print(f"  ~ {name}")
+    for name in result.removed:
+        print(f"  - {name}")
+    for name in result.skipped:
+        print(f"  . {name}")
+    return 0
 
 
 def _default_project_name(names: list[str]) -> str:
@@ -427,6 +475,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     ns = parser.parse_args(argv)
 
+    # Auto-sync the private repo's active/ projects into projects/ so every
+    # invocation (menu, pipeline, list, …) sees them as native projects. The
+    # explicit `link-projects` command does its own sync, so skip it here.
+    if ns.command != "link-projects":
+        _maybe_sync_links(_resolve_repo_root(ns))
+
     if ns.command is None:
         # No subcommand → interactive menu (parity with bare ./run.sh)
         return _interactive(_resolve_repo_root(ns))
@@ -437,6 +491,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "secure": _cmd_secure,
         "menu": _cmd_menu,
         "list-projects": _cmd_list_projects,
+        "link-projects": _cmd_link_projects,
     }
     return dispatch[ns.command](ns)
 

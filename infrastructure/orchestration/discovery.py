@@ -10,11 +10,11 @@ additions used by the interactive menu and CLI:
   former ``p`` menu option. Pure function for testability: takes an input
   callable and an output callable so tests can drive it without stdin.
 
-The 3 always-present canonical projects are
-``projects/template_code_project``, ``projects/template_prose_project``, and
-    other active projects listed in ``docs/_generated/active_projects.md``
-hard-coded; they come from
-:func:`infrastructure.project.discovery.discover_projects` at runtime.
+The two always-present canonical projects are ``template_code_project`` and
+``template_prose_project``. Any other active project name comes from
+:func:`infrastructure.project.discovery.discover_projects` at runtime, including
+symlinked private projects when link-sync has run. The generated docs record the
+current roster; this module does not hard-code it.
 """
 
 from collections.abc import Callable, Sequence

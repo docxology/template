@@ -133,8 +133,12 @@ class PipelineResumeMixin(ABC):
         for stage_spec in remaining:
             executed_stage_num += 1
             result = self._run_stage_and_checkpoint(executed_stage_num, stage_spec, resumed_results, pipeline_start)
-            if not result.success:
+            if not result.success or result.hitl_pause:
                 break
+
+        lesson_writer = getattr(self, "_write_run_lessons_report", None)
+        if callable(lesson_writer):
+            lesson_writer(resumed_results)
 
         return resumed_results
 

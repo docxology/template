@@ -1,0 +1,25 @@
+conditions:
+  - name: bundled_manuscript
+    role: reference
+    description: "The checked-in prose manuscript and bibliography before stricter gate settings."
+  - name: configured_prose_pipeline
+    role: proposed
+    description: "The default prose validation pipeline with readability, citation, and outline checks."
+  - name: strict_bibliography
+    role: variant
+    description: "A stricter bibliography condition that treats unused or missing entries as blocking defects."
+metrics:
+  primary:
+    name: readability_grade
+    direction: minimize
+protocol: "Run the prose validation pipeline against the bundled manuscript with the same section set, bibliography file, and configured thresholds for every condition."
+expected_figures:
+  - fig:readability_metrics
+  - fig:citation_density
+  - fig:section_word_counts
+expected_tables:
+  - tbl:prose_checks
+baselines:
+  - bundled_manuscript
+ablations:
+  - strict_bibliography

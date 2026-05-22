@@ -37,7 +37,7 @@ Stage numbers below are script-prefix keys (0 = `00_setup_environment.py`). The 
 
 ## Project Layout
 
-- `infrastructure/` — Reusable generic tooling (16 packages)
+- `infrastructure/` — Reusable generic tooling (17 packages)
 - `projects/{name}/` — Self-contained research project
   - `src/` — Domain algorithms
   - `tests/` — Test suite

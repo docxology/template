@@ -80,6 +80,13 @@ def _verify_latex_warning_policy(project_root: Path, manuscript_dir: Path) -> bo
 def generate_rendering_summary(project_name: str = "project") -> dict[str, Any]:
     """Generate comprehensive summary of rendering results.
 
+    STABILITY: this is the canonical per-project rendering reporting surface.
+    Tests may assert on substring presence (e.g. ``"RENDERING RESULTS SUMMARY"``,
+    ``"Combined Manuscript PDF"``, ``"Web Outputs"``, ``"Presentation Slides"``).
+    New sections may be appended; existing section headers MUST NOT change.
+
+    See docs/operational/logging/output-design.md for the schema.
+
     Returns:
         Dictionary with rendering statistics and file information
     """
@@ -145,7 +152,15 @@ def generate_rendering_summary(project_name: str = "project") -> dict[str, Any]:
 
 
 def log_rendering_summary(summary: dict[str, Any]) -> None:
-    """Log comprehensive rendering summary with formatted output."""
+    """Log comprehensive rendering summary with formatted output.
+
+    STABILITY: this is the canonical per-project rendering reporting surface.
+    Tests may assert on substring presence (e.g. ``"RENDERING RESULTS SUMMARY"``,
+    ``"Combined Manuscript PDF"``, ``"Web Outputs"``, ``"Presentation Slides"``).
+    New sections may be appended; existing section headers MUST NOT change.
+
+    See docs/operational/logging/output-design.md for the schema.
+    """
     logger.info("\n" + "=" * 60)
     logger.info("RENDERING RESULTS SUMMARY")
     logger.info("=" * 60)

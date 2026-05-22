@@ -64,12 +64,12 @@ When re-enabling DA assistant capabilities, apply the staged rollout documented 
 
 ## Architecture
 
-**Counting note:** the tree below lists **16** Python packages under `infrastructure/` (core, doctor, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). The `config/`, `docker/`, and `logrotate.d/` directories ship configuration/docs rather than `__init__.py`, so they are not Python packages. For live counts, use [`docs/_generated/canonical_facts.md`](_generated/canonical_facts.md). See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
+**Counting note:** the tree below lists **17** Python packages under `infrastructure/` (benchmark, core, doctor, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). The `config/`, `docker/`, and `logrotate.d/` directories ship configuration/docs rather than `__init__.py`, so they are not Python packages. For live counts, use [`docs/_generated/canonical_facts.md`](_generated/canonical_facts.md). See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
 
 ```mermaid
 flowchart TB
     ROOT[/template/]
-    ROOT --> INFRA[/infrastructure<br/>Layer 1 · 16 Python packages/]
+    ROOT --> INFRA[/infrastructure<br/>Layer 1 · 17 Python packages/]
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
     ROOT --> SCR[/scripts<br/>Entry-point orchestrators · thin wrappers/]
     ROOT --> PROJ[/projects<br/>Active research projects · Layer 2/]
@@ -79,7 +79,7 @@ flowchart TB
     ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
     ROOT --> DOCKER[infrastructure/docker<br/>Dockerfile · docker-compose.yml]
 
-    INFRA --> INFRA_PKGS[core · doctor · documentation · llm · orchestration ·<br/>project · prose · publishing · reference · rendering ·<br/>reporting · scientific · search · skills · steganography · validation]
+    INFRA --> INFRA_PKGS[benchmark · core · doctor · documentation · llm ·<br/>orchestration · project · prose · publishing · reference ·<br/>rendering · reporting · scientific · search · skills ·<br/>steganography · validation]
 
     SCR --> SCR_FILES[bash_utils.sh ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 
@@ -149,9 +149,12 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 | `MPLBACKEND` | `Agg` | Headless matplotlib (required on servers) |
 | `UV_FROZEN` | `true` | Reproducible locked dependency installs |
 | `LOG_LEVEL` | `1` | 0=DEBUG 1=INFO 2=WARN 3=ERROR |
+| `LOG_TERMINAL_VERBOSE` | unset | Set to restore the verbose `[ts] [LEVEL]` prefix on terminal output (file always has it). See [operational/logging/output-design.md](operational/logging/output-design.md). |
 | `PIPELINE_MODE` | `0` | Set to `1` by `run.sh` for non-interactive flags |
 | `OLLAMA_HOST` | `http://localhost:11434` | LLM server URL |
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars per LLM prompt |
+| `ENABLE_PDF` / `ENABLE_HTML` / `ENABLE_SLIDES` | `1` | Per-format render toggles. Set `0` to skip. See [usage/output-formats.md](usage/output-formats.md). |
+| `ENABLE_DOCX` / `ENABLE_EPUB` | `0` | Opt-in per-format toggles for Word / EPUB output. |
 
 ---
 

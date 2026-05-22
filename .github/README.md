@@ -111,7 +111,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
-| `infrastructure/` | Permanent | **16** top-level Python packages under `infrastructure/` (plus config/documentation-only directories); documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
+| `infrastructure/` | Permanent | **17** top-level Python packages under `infrastructure/` (plus config/documentation-only directories); documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
@@ -197,7 +197,7 @@ graph TB
     end
 
     subgraph Core["🧠 Core Systems (DAG Engine)"]
-        INFRASTRUCTURE[Infrastructure Modules<br/>16 Python packages<br/>Validation, rendering, LLM]
+        INFRASTRUCTURE[Infrastructure Modules<br/>17 Python packages<br/>Validation, rendering, LLM]
         BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
         CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
     end
@@ -271,7 +271,7 @@ flowchart TD
     subgraph Processing["⚙️ 10-Stage DAG Pipeline"]
         STAGE0["Stage 0 — Clean<br/>(built-in / executor)"]
         STAGE1["Stage 1 — Setup<br/>00_setup_environment.py"]
-        STAGE2["Stage 2 — Infra tests<br/>01_run_tests.py --infra-only"]
+        STAGE2["Stage 2 — Infra smoke<br/>01_run_tests.py --infra-scope pipeline-smoke"]
         STAGE3["Stage 3 — Project tests<br/>01_run_tests.py --project-only"]
         STAGE4["Stage 4 — Analysis<br/>02_run_analysis.py"]
         STAGE5["Stage 5 — Render PDF<br/>03_render_pdf.py"]
@@ -326,7 +326,7 @@ Stage indices **0–9** are pipeline positions; they **do not** match `scripts/N
 | ----- | ------ | ---- | ------------ |
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose` | `core`, `tests` | configurable tolerance |
+| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
 | **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
 | **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
 | **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
@@ -334,6 +334,8 @@ Stage indices **0–9** are pipeline positions; they **do not** match `scripts/N
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 Full stage details: [docs/core/workflow.md](../docs/core/workflow.md) · [docs/core/how-to-use.md](../docs/core/how-to-use.md).

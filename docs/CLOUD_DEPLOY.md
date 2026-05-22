@@ -181,6 +181,21 @@ export MPLBACKEND=Agg          # non-interactive matplotlib backend (critical on
 export UV_FROZEN=true          # use locked dependencies only (reproducible builds)
 export LOG_LEVEL=1             # 0=debug, 1=info, 2=warning (default)
 export PIPELINE_MODE=1         # enables auto uv install + sync (set by run.sh automatically)
+
+# Logging — cloud / non-TTY environments
+# LOG_TERMINAL_VERBOSE=1 restores the verbose [ts] [LEVEL] prefix on stdout for
+# log-shipping containers that grep on the same shape as pipeline.log.
+# Default (unset) is the prefix-less console format described in
+# docs/operational/logging/output-design.md.
+
+# Render formats — opt in / out per format. Yaml config (manuscript/config.yaml
+# under `render.formats:`) takes precedence over env; env overrides defaults.
+# DOCX and EPUB require pandoc (already installed for HTML/PDF).
+export ENABLE_PDF=1            # default 1 — combined PDF
+export ENABLE_HTML=1           # default 1 — combined + per-section HTML
+export ENABLE_SLIDES=1         # default 1 — per-section Beamer PDFs
+export ENABLE_DOCX=0           # default 0 — opt-in combined Word document
+export ENABLE_EPUB=0           # default 0 — opt-in combined EPUB bundle
 ```
 
 Add to `.env` or export in your CI environment. The `Dockerfile` already sets `MPLBACKEND=Agg` and

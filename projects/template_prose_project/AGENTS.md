@@ -20,6 +20,7 @@ flowchart TB
     P --> DOCS[/docs/]
     P --> OUT[/output<br/>regeneratable/]
     P --> META[pyproject.toml · README.md ·<br/>AGENTS.md · .gitignore]
+    P --> OVERLAY[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 
     SRC --> SRC_F[config.py · pipeline.py · figures.py ·<br/>manuscript_variables.py · report.py]
     SC --> SC_F[run_prose_pipeline.py ·<br/>y_generate_prose_figures.py ·<br/>z_generate_manuscript_variables.py]
@@ -30,7 +31,7 @@ flowchart TB
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
     class P d
     class SRC,T,SC,M,DOCS,OUT pkg
-    class SRC_F,SC_F,M_F,META f
+    class SRC_F,SC_F,M_F,META,OVERLAY f
 ```
 
 ## Key contracts
@@ -49,6 +50,14 @@ flowchart TB
   the JSON report; no project-specific knowledge embedded.
 * `src/report.py::write_review_report` — single function that takes a
   `ManuscriptReport` + `CheckResult`s and writes markdown.
+* `domain_profile.yaml` and `experiment_plan.yaml` — declarative advisory
+  overlays for review gates, source policy, artifact expectations, benchmark
+  rubric weights, validation conditions, primary metric, baseline, and ablation.
+* `data/claim_ledger.yaml` — file-backed registry of numeric claims that are
+  intentionally sourced from project code, manuscript examples, or generated
+  reports rather than manuscript variables.
+
+These files are validation inputs only and do not run autonomous review agents.
 
 ## Run modes
 

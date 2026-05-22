@@ -3,6 +3,11 @@
 ## Purpose
 
 The `tests/infra_tests/` directory validates the reusable infrastructure modules in `infrastructure/`.
+The full suite is the coverage-bearing repository gate. Project pipelines run
+the narrower `pipeline-smoke` subset to validate DAG execution, advisory
+controls, evidence/profile/benchmark extension points, documentation
+invariants, and tracked-artifact guards without rerunning every infrastructure
+module test on each project render.
 
 ## Standards
 

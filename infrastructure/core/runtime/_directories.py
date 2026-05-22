@@ -7,16 +7,31 @@ the source code directory structure.
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.project.discovery import resolve_project_root
 
 logger = get_logger(__name__)
 
 
-def _project_output_dirs(project_name: str) -> list[str]:
+def _project_output_dirs(repo_root: Path | str, project_name: str | None = None) -> list[str]:
     """Return the canonical list of output directories for a project.
 
     Used by both setup_directories and validate_directory_structure to
-    ensure the two functions always reference the same layout.
+    ensure the two functions always reference the same layout. The one-argument
+    form (``_project_output_dirs("myproj")``) is retained for older tests and
+    callers; it resolves paths relative to the current directory.
     """
+    if project_name is None:
+        project_name = str(repo_root)
+        repo_root = Path(".")
+    else:
+        repo_root = Path(repo_root)
+
+    project_root = resolve_project_root(repo_root, project_name)
+    try:
+        project_rel = project_root.relative_to(repo_root)
+    except ValueError:
+        project_rel = Path("projects") / project_name
+
     return [
         f"output/{project_name}",
         f"output/{project_name}/figures",
@@ -29,17 +44,17 @@ def _project_output_dirs(project_name: str) -> list[str]:
         f"output/{project_name}/slides",
         f"output/{project_name}/web",
         f"output/{project_name}/llm",
-        f"projects/{project_name}/output",
-        f"projects/{project_name}/output/figures",
-        f"projects/{project_name}/output/data",
-        f"projects/{project_name}/output/pdf",
-        f"projects/{project_name}/output/tex",
-        f"projects/{project_name}/output/logs",
-        f"projects/{project_name}/output/reports",
-        f"projects/{project_name}/output/simulations",
-        f"projects/{project_name}/output/slides",
-        f"projects/{project_name}/output/web",
-        f"projects/{project_name}/output/llm",
+        f"{project_rel}/output",
+        f"{project_rel}/output/figures",
+        f"{project_rel}/output/data",
+        f"{project_rel}/output/pdf",
+        f"{project_rel}/output/tex",
+        f"{project_rel}/output/logs",
+        f"{project_rel}/output/reports",
+        f"{project_rel}/output/simulations",
+        f"{project_rel}/output/slides",
+        f"{project_rel}/output/web",
+        f"{project_rel}/output/llm",
     ]
 
 
@@ -56,7 +71,7 @@ def setup_directories(repo_root: Path, project_name: str = "project", directorie
         True if all directories created successfully, False otherwise
     """
     if directories is None:
-        directories = _project_output_dirs(project_name)
+        directories = _project_output_dirs(repo_root, project_name)
 
     try:
         for directory in directories:
@@ -85,18 +100,20 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
         True if required directories exist, False otherwise
     """
     # Core components (required for template operation)
+    project_root = resolve_project_root(repo_root, project_name)
+    project_rel = project_root.relative_to(repo_root) if project_root.is_absolute() else project_root
     required_dirs = [
-        "infrastructure",  # Generic tools (build_verifier, figure_manager, etc.)
-        f"projects/{project_name}",  # Project directory
-        f"projects/{project_name}/src",  # Source code
-        f"projects/{project_name}/tests",  # Tests
+        Path("infrastructure"),  # Generic tools (build_verifier, figure_manager, etc.)
+        project_rel,  # Project directory
+        project_rel / "src",  # Source code
+        project_rel / "tests",  # Tests
     ]
 
     optional_dirs = [
-        "scripts",  # Optional: orchestration scripts
-        "tests",  # Optional: infrastructure tests
-        f"projects/{project_name}/scripts",  # Optional: project scripts
-        f"projects/{project_name}/manuscript",  # Optional: manuscript
+        Path("scripts"),  # Optional: orchestration scripts
+        Path("tests"),  # Optional: infrastructure tests
+        project_rel / "scripts",  # Optional: project scripts
+        project_rel / "manuscript",  # Optional: manuscript
     ]
 
     all_present = True
@@ -123,7 +140,7 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
 
 def validate_directory_structure(repo_root: Path, project_name: str = "project") -> list[str]:
     """Return list of missing output directories for project (empty = all present)."""
-    required_dirs = _project_output_dirs(project_name)
+    required_dirs = _project_output_dirs(repo_root, project_name)
 
     missing = []
     for dir_path in required_dirs:

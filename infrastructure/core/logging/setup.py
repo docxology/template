@@ -12,7 +12,7 @@ import os
 import sys
 from pathlib import Path
 
-from infrastructure.core.logging.formatters import JSONFormatter, TemplateFormatter
+from infrastructure.core.logging.formatters import ConsoleFormatter, JSONFormatter
 from infrastructure.core.logging.constants import get_structured_logging_enabled
 
 
@@ -56,7 +56,7 @@ def setup_logger(name: str, level: int | None = None, log_file: Path | str | Non
     if get_structured_logging_enabled():
         console_handler.setFormatter(JSONFormatter())
     else:
-        console_handler.setFormatter(TemplateFormatter())
+        console_handler.setFormatter(ConsoleFormatter())
     logger.addHandler(console_handler)
 
     if log_file:

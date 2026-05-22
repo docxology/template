@@ -9,6 +9,7 @@ import os
 import select
 import subprocess
 import sys
+from contextlib import nullcontext
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -164,6 +165,11 @@ class TestSuiteConfig:
     max_failures_config_key: str
     quiet: bool = True
     spinner_label: str = ""
+    streaming_subprocess: bool = False
+    """If True, the wrapped operation streams its stdout to the same TTY (e.g.,
+    pytest -v). In that case skip the spinner — its \r animation interleaves
+    with the streamed lines and produces visible garble. Default False preserves
+    spinner behavior for non-streaming operations (Ollama model load, etc.)."""
 
     def __post_init__(self) -> None:
         if not self.spinner_label:
@@ -195,7 +201,10 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
 
     while retry_count <= max_retries:
         try:
-            with log_with_spinner(config.spinner_label, logger):
+            spinner_ctx = (
+                nullcontext() if config.streaming_subprocess else log_with_spinner(config.spinner_label, logger)
+            )
+            with spinner_ctx:
                 exit_code, stdout_text, stderr_text = run_pytest_stream(
                     config.cmd, config.repo_root, config.env, config.quiet
                 )

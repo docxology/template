@@ -1375,6 +1375,26 @@ discover_manuscript_files(manuscript_dir: Path) -> list[Path]
 
 Discover manuscript files with proper ordering and filtering.
 
+### `DocxRenderResult`
+
+*class — defined in `infrastructure.rendering.docx_renderer`*
+
+```python
+class DocxRenderResult
+```
+
+Outcome of a DOCX render.
+
+### `EpubRenderResult`
+
+*class — defined in `infrastructure.rendering.epub_renderer`*
+
+```python
+class EpubRenderResult
+```
+
+Outcome of an EPUB render.
+
 ### `EXCLUDED_DOC_FILENAMES`
 
 *constant — defined in `infrastructure.rendering.manuscript_injection`*
@@ -1382,6 +1402,26 @@ Discover manuscript files with proper ordering and filtering.
 ```python
 EXCLUDED_DOC_FILENAMES: frozenset[str] = frozenset({'AGENTS.md', 'README.md', 'SYNTAX.md'})
 ```
+
+### `render_docx`
+
+*function — defined in `infrastructure.rendering.docx_renderer`*
+
+```python
+render_docx(combined_md: Path, output_path: Path, *, bibliography: Path | None=None, reference_doc: Path | None=None, pandoc_path: str='pandoc', extra_args: list[str] | None=None) -> DocxRenderResult
+```
+
+Render *combined_md* to a DOCX at *output_path*.
+
+### `render_epub`
+
+*function — defined in `infrastructure.rendering.epub_renderer`*
+
+```python
+render_epub(combined_md: Path, output_path: Path, *, bibliography: Path | None=None, cover_image: Path | None=None, pandoc_path: str='pandoc', extra_args: list[str] | None=None) -> EpubRenderResult
+```
+
+Render *combined_md* to an EPUB at *output_path*.
 
 ### `RenderingConfig`
 

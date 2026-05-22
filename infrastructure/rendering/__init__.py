@@ -5,10 +5,14 @@ This module provides tools for generating research outputs:
 - Slides (Beamer/Reveal.js)
 - Web (HTML5)
 - Posters
+- DOCX (Microsoft Word, via pandoc)
+- EPUB (e-reader, via pandoc)
 """
 
 from .config import RenderingConfig
 from .core import RenderManager
+from .docx_renderer import DocxRenderResult, render_docx
+from .epub_renderer import EpubRenderResult, render_epub
 from .manuscript_discovery import (
     discover_manuscript_files,
     verify_figures_exist,
@@ -21,10 +25,14 @@ from .manuscript_injection import (
 
 
 __all__ = [
+    "DocxRenderResult",
+    "EpubRenderResult",
     "EXCLUDED_DOC_FILENAMES",
     "RenderManager",
     "RenderingConfig",
     "discover_manuscript_files",
+    "render_docx",
+    "render_epub",
     "substitute_manuscript_text",
     "verify_figures_exist",
     "write_resolved_manuscript_tree",

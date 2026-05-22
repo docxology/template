@@ -1,0 +1,32 @@
+{
+  "entries": [
+    {
+      "contract_match": true,
+      "path": "output/reports/evidence_registry.json",
+      "sha256": "c4923aefb4409228bbaa498da69a7110a7b90ddc71024653c6ff2e5947614feb",
+      "size_bytes": 69475,
+      "stage_name": "Output Validation",
+      "stage_num": 6,
+      "timestamp": "2026-05-22T00:50:25+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.json",
+      "sha256": "7fb6351dd0ebac09628de7cc05bb0c3a51e04bb7c90d8a94ceadad9a84dff422",
+      "size_bytes": 4525,
+      "stage_name": "Output Validation",
+      "stage_num": 6,
+      "timestamp": "2026-05-22T00:50:25+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/validation_report.md",
+      "sha256": "7ed70ea82d1ce744402b16671841c819327ffc45b6047afd115b47b8a3cc5d0a",
+      "size_bytes": 298,
+      "stage_name": "Output Validation",
+      "stage_num": 6,
+      "timestamp": "2026-05-22T00:50:25+00:00"
+    }
+  ],
+  "issues": []
+}

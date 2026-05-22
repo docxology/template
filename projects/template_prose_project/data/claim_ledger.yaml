@@ -1,0 +1,22 @@
+claims:
+  - claim_id: figure-export-dpi
+    kind: number
+    value: 300
+    source: projects/template_prose_project/src/figures.py export settings
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/figures/
+  - claim_id: comparison-sibling-word-count
+    kind: number
+    value: 200
+    source: projects/template_prose_project/manuscript/01_introduction.md editorial-drift example
+    source_tier: manuscript_claim
+    freshness: active
+    artifact_path: manuscript/01_introduction.md
+  - claim_id: citation-density-denominator
+    kind: number
+    value: 1000
+    source: projects/template_prose_project/src/pipeline.py citation density metric
+    source_tier: project_source
+    freshness: active
+    artifact_path: output/data/manuscript_report.json

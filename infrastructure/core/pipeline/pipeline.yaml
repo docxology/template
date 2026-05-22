@@ -16,6 +16,10 @@
 #                  (rendered into generated stage tables; not interpreted by
 #                  the executor). Examples: "hard fail", "soft fail",
 #                  "warning + report", "skipped if Ollama absent".
+#   contract     — declarative stage contract: inputs, outputs, done criteria,
+#                  failure code, retry count, optional HITL gate, rollback target
+#   hooks        — optional explicit argv hooks: pre_stage, post_stage, on_fail,
+#                  on_pause; default timeout is 30s and CI execution is opt-in
 
 stages:
 
@@ -23,19 +27,40 @@ stages:
     method: _run_clean_outputs
     tags: [core, clean]
     failure_mode: soft fail
+    contract:
+      input_artifacts: ["projects/{project}/output/"]
+      output_artifacts: ["projects/{project}/output/"]
+      definition_of_done: "Previous generated outputs are removed or the clean step is skipped."
+      failure_code: "CLEAN_OUTPUT_FAILED"
+      retry_policy: 0
+      rollback_to: "start"
 
   - name: Environment Setup
     script: 00_setup_environment.py
     depends_on: [Clean Output Directories]
     tags: [core]
     failure_mode: hard fail
+    contract:
+      input_artifacts: ["pyproject.toml", "projects/{project}/"]
+      output_artifacts: ["projects/{project}/output/logs/"]
+      definition_of_done: "Interpreter, project directories, and required runtime paths are ready."
+      failure_code: "ENVIRONMENT_SETUP_FAILED"
+      retry_policy: 1
+      rollback_to: "Clean Output Directories"
 
   - name: Infrastructure Tests
     script: 01_run_tests.py
-    args: [--infra-only, --verbose]
+    args: [--infra-only, --verbose, --infra-scope, pipeline-smoke]
     depends_on: [Environment Setup]
     tags: [core, tests]
     failure_mode: configurable tolerance
+    contract:
+      input_artifacts: ["infrastructure/", "tests/infra_tests/"]
+      output_artifacts: ["projects/{project}/output/reports/"]
+      definition_of_done: "Focused pipeline-smoke infrastructure tests pass or report configured tolerance; full repo coverage remains an explicit verification command."
+      failure_code: "INFRASTRUCTURE_TESTS_FAILED"
+      retry_policy: 0
+      rollback_to: "Environment Setup"
 
   - name: Project Tests
     script: 01_run_tests.py
@@ -43,24 +68,56 @@ stages:
     depends_on: [Environment Setup]
     tags: [core, tests]
     failure_mode: configurable tolerance
+    contract:
+      input_artifacts: ["projects/{project}/src/", "projects/{project}/tests/"]
+      output_artifacts: ["projects/{project}/output/reports/"]
+      definition_of_done: "Project tests pass against real project behavior."
+      failure_code: "PROJECT_TESTS_FAILED"
+      retry_policy: 0
+      gate: "experiment_method_design"
+      rollback_to: "Environment Setup"
 
   - name: Project Analysis
     script: 02_run_analysis.py
     depends_on: [Project Tests]
     tags: [core]
     failure_mode: hard fail
+    contract:
+      input_artifacts: ["projects/{project}/src/", "projects/{project}/scripts/"]
+      output_artifacts: ["projects/{project}/output/"]
+      definition_of_done: "Project analysis scripts produce declared data and figure artifacts."
+      failure_code: "PROJECT_ANALYSIS_FAILED"
+      retry_policy: 0
+      gate: "experiment_method_design"
+      rollback_to: "Project Tests"
 
   - name: PDF Rendering
     script: 03_render_pdf.py
     depends_on: [Project Analysis]
     tags: [core]
     failure_mode: hard fail
+    contract:
+      input_artifacts: ["projects/{project}/manuscript/", "projects/{project}/output/data/"]
+      output_artifacts: ["projects/{project}/output/"]
+      definition_of_done: "Manuscript renders to a structurally valid PDF artifact."
+      failure_code: "PDF_RENDERING_FAILED"
+      retry_policy: 0
+      gate: "render_validation"
+      rollback_to: "Project Analysis"
 
   - name: Output Validation
     script: 04_validate_output.py
     depends_on: [PDF Rendering]
     tags: [core]
     failure_mode: warning + report
+    contract:
+      input_artifacts: ["projects/{project}/output/", "projects/{project}/manuscript/"]
+      output_artifacts: ["projects/{project}/output/reports/"]
+      definition_of_done: "Output, figure, markdown, and evidence checks produce a validation report."
+      failure_code: "OUTPUT_VALIDATION_FAILED"
+      retry_policy: 0
+      gate: "literature_source_quality"
+      rollback_to: "PDF Rendering"
 
   - name: LLM Scientific Review
     script: 06_llm_review.py
@@ -69,6 +126,13 @@ stages:
     depends_on: [Output Validation]
     tags: [llm]
     failure_mode: skipped if Ollama absent
+    contract:
+      input_artifacts: ["projects/{project}/manuscript/", "projects/{project}/output/pdf/"]
+      output_artifacts: ["projects/{project}/output/reports/"]
+      definition_of_done: "Optional scientific review is written or gracefully skipped when unavailable."
+      failure_code: "LLM_REVIEW_FAILED"
+      retry_policy: 0
+      rollback_to: "Output Validation"
 
   - name: LLM Translations
     script: 06_llm_review.py
@@ -77,12 +141,72 @@ stages:
     depends_on: [Output Validation]
     tags: [llm]
     failure_mode: skipped if Ollama absent
+    contract:
+      input_artifacts: ["projects/{project}/manuscript/"]
+      output_artifacts: ["projects/{project}/output/translations/"]
+      definition_of_done: "Optional translations are written or gracefully skipped when unavailable."
+      failure_code: "LLM_TRANSLATION_FAILED"
+      retry_policy: 0
+      rollback_to: "Output Validation"
 
   - name: Copy Outputs
     script: 05_copy_outputs.py
     depends_on: [Output Validation]
     tags: [core]
     failure_mode: soft fail
+    contract:
+      input_artifacts: ["projects/{project}/output/"]
+      output_artifacts: ["projects/{project}/output/reports/", "output/{project}/"]
+      definition_of_done: "Final deliverables are copied into the canonical top-level output tree."
+      failure_code: "COPY_OUTPUTS_FAILED"
+      retry_policy: 0
+      gate: "publication_readiness"
+      rollback_to: "Output Validation"
+
+  # ── Opt-in long-horizon stage definitions ─────────────────────────────
+  # These stages are declared here so contracts stay versioned with the DAG,
+  # but PipelineExecutor filters tags `bundle` and `archival` out of default
+  # runs. See docs/maintenance/stage-10-executable-bundle.md and
+  # docs/maintenance/archival-targets.md for rationale.
+  #
+  # Invoke directly when needed:
+  #   uv run python scripts/08_executable_bundle.py --project <name>
+  #   uv run python scripts/09_archive_publication.py --project <name>
+
+  - name: Executable Bundle
+    script: 08_executable_bundle.py
+    allow_skip: true
+    depends_on: [PDF Rendering]
+    tags: [bundle]
+    failure_mode: soft fail
+    contract:
+      input_artifacts: ["projects/{project}/", "projects/{project}/output/"]
+      output_artifacts: ["projects/{project}/output/bundles/"]
+      definition_of_done: "Executable reproducibility bundle is written or reports why it was skipped."
+      failure_code: "EXECUTABLE_BUNDLE_FAILED"
+      retry_policy: 0
+      rollback_to: "PDF Rendering"
+
+  - name: Archival Publication
+    script: 09_archive_publication.py
+    allow_skip: true
+    depends_on: [Executable Bundle]
+    tags: [archival]
+    failure_mode: soft fail
+    contract:
+      input_artifacts: ["projects/{project}/output/", "output/{project}/"]
+      output_artifacts: ["projects/{project}/output/archive/"]
+      definition_of_done: "Archival publication manifest is generated or reports why it was skipped."
+      failure_code: "ARCHIVAL_PUBLICATION_FAILED"
+      retry_policy: 0
+      gate: "publication_readiness"
+      rollback_to: "Executable Bundle"
+
+control:
+  hitl_mode: full-auto
+  smart_pause_action: report
+  custom_gate_stages: []
+  stage_policies: {}
 
 # ── Telemetry Configuration ──────────────────────────────────────────
 # Unified pipeline telemetry: resource tracking + diagnostic aggregation.
@@ -97,4 +221,3 @@ telemetry:
   slow_stage_multiplier: 2.0
   high_memory_mb: 1024
   high_cpu_percent: 90.0
-

@@ -1,0 +1,30 @@
+\frametitle{Determinism guarantees}
+\protect\phantomsection\label{determinism-guarantees}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Stage
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Deterministic?
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Mechanism
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Prose analysis & yes & pure functions over text \\
+Bibliography parse & yes & byte-stable round-trip in
+\breaktt{infrastructure.reference.citation} \\
+Check evaluation & yes & pure comparisons \\
+Markdown report assembly & yes & sorted file list, fixed output
+template \\
+Figure generation & yes (within Matplotlib version) & fixed palette, no
+random subsampling \\
+Manuscript variables & yes & derived from the deterministic JSON
+report \\
+\bottomrule\noalign{}
+\end{longtable}
+}

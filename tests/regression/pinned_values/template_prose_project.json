@@ -1,0 +1,9 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "project_name": "template_prose_project",
+    "scaffolded_on": "2026-05-20",
+    "scaffolded_by": "Daniel Ari Friedman",
+    "note": "Scaffold only — no real pinned values yet. See docs/maintenance/regression-testing.md to populate."
+  }
+}

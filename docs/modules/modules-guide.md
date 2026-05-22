@@ -4,7 +4,7 @@ Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
-**Counting:** **18** overview rows below cover the **16** importable Python packages under `infrastructure/` (see [canonical_facts.md](../_generated/canonical_facts.md)) plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). `infrastructure/config/`, `infrastructure/docker/`, and `infrastructure/logrotate.d/` have no `__init__.py`.
+**Counting:** **19** overview rows below cover the **17** importable Python packages under `infrastructure/` (see [canonical_facts.md](../_generated/canonical_facts.md)) plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). `infrastructure/config/`, `infrastructure/docker/`, and `infrastructure/logrotate.d/` have no `__init__.py`.
 
 ---
 
@@ -18,7 +18,7 @@ Reference for Layer-1 infrastructure modules.
 | **Publishing** | Academic workflows | DOI validation, citation generation | [Details](guides/publishing-module.md) |
 | **Scientific** | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |
 | **LLM** | Local LLM & literature | Ollama integration, templates, literature search | [Details](guides/llm-module.md) |
-| **Rendering** | Multi-format output | PDF, slides, web, poster | [Details](guides/rendering-module.md) |
+| **Rendering** | Multi-format output | PDF, HTML, slides, poster, DOCX, EPUB (opt-in) | [Details](guides/rendering-module.md) |
 | **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
 | **Search** | Literature backends | Discovery, caches, full-text helpers | [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) |
 | **Reference** | Bibliographic utilities | BibTeX models, parser/writer | [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md) |

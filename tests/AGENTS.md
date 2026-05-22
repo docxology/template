@@ -22,6 +22,7 @@ The `tests/` directory contains repository-wide tests for infrastructure, integr
 
 - Infrastructure code is held to the repository coverage floor in `tests/infra_tests/`.
 - Integration tests should confirm the pipeline and shell entry points remain wired correctly.
+- The project pipeline uses a curated `pipeline-smoke` infrastructure subset for speed; the full infrastructure coverage gate remains explicit (`scripts/01_run_tests.py --infra-only --infra-scope full`).
 
 ## Documentation Expectations
 

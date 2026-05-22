@@ -9,6 +9,7 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 | [coverage_history.md](coverage_history.md) | **Generated** — `uv run python scripts/generate_coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
 | [canonical_facts.md](canonical_facts.md) | **Generated** — live test runs, discovery, and CI configuration (refresh with `generate_active_projects_doc.py` + measured pytest; see file footer) |
 | [skills_index.md](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
+| [last-run-summary.md](last-run-summary.md) | **Generated** — auto-written by `infrastructure.core.pipeline.multi_project` on every `./run.sh --pipeline` invocation (best-effort). Schema: [`../operational/logging/output-design.md`](../operational/logging/output-design.md) |
 | `README.md`, `AGENTS.md` | **Maintainer** — policy and conventions for linking to generated content |
 
 ## Policy

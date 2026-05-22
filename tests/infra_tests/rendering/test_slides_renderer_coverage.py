@@ -443,6 +443,8 @@ class TestSlidesMathHeaderInjection:
         content = header.read_text(encoding="utf-8")
         assert "\\providecommand{\\citep}" in content
         assert "\\providecommand{\\citet}" in content
+        assert "\\providecommand{\\cref}" in content
+        assert "\\providecommand{\\Cref}" in content
         # No math snippet expected (no preamble).
         assert "unicode-math" not in content
 

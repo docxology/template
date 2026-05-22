@@ -12,10 +12,18 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.pipeline.artifacts import aggregate_artifact_manifests, validate_artifact_manifest
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
+from infrastructure.project.domain_profile import load_domain_profile
+from infrastructure.project.experiment_plan import load_experiment_plan, validate_experiment_plan
 from infrastructure.validation.content.figure_validator import validate_figure_registry
+from infrastructure.validation.evidence_registry import (
+    build_project_evidence_registry,
+    validate_text_against_registry,
+    write_evidence_registry_report,
+)
 from infrastructure.validation.output.validator import collect_detailed_validation_results
 from infrastructure.project.discovery import resolve_project_root
 
@@ -188,6 +196,65 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict[str,
     return structure_valid, detailed_validation
 
 
+def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
+    """Validate manuscript evidence tokens against project artifact provenance."""
+    log_substep("Validating evidence registry...", logger)
+
+    if not manuscript_dir.exists():
+        logger.warning(f"Manuscript directory not found at expected location: {manuscript_dir}")
+        return True, []
+
+    markdown_files = sorted(path for path in manuscript_dir.rglob("*.md") if path.is_file())
+    if not markdown_files:
+        logger.warning("No manuscript markdown files found for evidence registry validation")
+        return True, []
+
+    registry = build_project_evidence_registry(project_root)
+    write_evidence_registry_report(project_root / "output", registry)
+    error_issues: list[str] = []
+    warning_issues: list[str] = []
+    for path in markdown_files:
+        text = path.read_text(encoding="utf-8")
+        strict_file = any(token in path.name.lower() for token in ("claim", "ledger", "results", "table", "caption"))
+        report = validate_text_against_registry(text, registry, strict=strict_file)
+        for issue in report.errors:
+            error_issues.append(f"{path.name}: unsupported {issue.kind} {issue.value}")
+        for issue in report.warnings:
+            warning_issues.append(f"{path.name}: unsupported {issue.kind} {issue.value}")
+
+    issues = [*error_issues, *warning_issues]
+
+    if issues:
+        for issue in issues:
+            logger.warning(issue)
+        return not error_issues, issues
+
+    log_success("Evidence registry validation passed", logger)
+    return True, []
+
+
+def validate_project_design(project_root: Path) -> tuple[bool, list[str]]:
+    """Validate advisory domain profile and experiment plan overlays."""
+    log_substep("Validating project design overlays...", logger)
+    issues: list[str] = []
+    try:
+        load_domain_profile(project_root)
+    except ValueError as exc:
+        issues.append(str(exc))
+    try:
+        plan = load_experiment_plan(project_root)
+        result = validate_experiment_plan(plan)
+        issues.extend(result.issues)
+    except ValueError as exc:
+        issues.append(str(exc))
+    if issues:
+        for issue in issues:
+            logger.warning(issue)
+        return False, issues
+    log_success("Project design overlays passed", logger)
+    return True, []
+
+
 def generate_validation_report(
     check_results: list[tuple[str, bool]],
     figure_issues: list[str],
@@ -241,6 +308,33 @@ def generate_validation_report(
                         "issue": "Missing output directories",
                         "action": "Ensure all analysis scripts completed successfully",
                         "file": _project_relative_path(project_name, "output"),
+                    }
+                )
+            elif check_name == "Evidence registry":
+                recommendations.append(
+                    {
+                        "priority": "medium",
+                        "issue": "Evidence registry reported unsupported manuscript facts",
+                        "action": "Register generated facts or replace unsupported hard-coded claims",
+                        "file": _project_relative_path(project_name, "output/reports/evidence_registry.json"),
+                    }
+                )
+            elif check_name == "Artifact manifest":
+                recommendations.append(
+                    {
+                        "priority": "medium",
+                        "issue": "Artifact manifest reported drift or missing declared outputs",
+                        "action": "Regenerate declared outputs or update the stage contract",
+                        "file": _project_relative_path(project_name, "output/reports/artifact_manifest.json"),
+                    }
+                )
+            elif check_name == "Project design overlays":
+                recommendations.append(
+                    {
+                        "priority": "low",
+                        "issue": "Domain profile or experiment plan validation failed",
+                        "action": "Fix domain_profile.yaml or experiment_plan.yaml schema and design declarations",
+                        "file": _project_relative_path(project_name),
                     }
                 )
 
@@ -320,10 +414,11 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
         logger.error(f"Error during output structure validation: {e}", exc_info=True)
         results.append(("Output structure", False))
 
+    project_root = _project_root(project_name)
+    manuscript_dir = project_root / "manuscript"
+
     try:
-        project_root = _project_root(project_name)
         registry_path = project_root / "output" / "figures" / "figure_registry.json"
-        manuscript_dir = project_root / "manuscript"
         fig_result, figure_issues = validate_figure_registry(registry_path, manuscript_dir)
         results.append(("Figure registry", fig_result))
     except Exception as e:
@@ -331,8 +426,38 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
         results.append(("Figure registry", False))
         figure_issues = []
 
+    try:
+        evidence_result, evidence_issues = validate_evidence_registry(project_root, manuscript_dir)
+        results.append(("Evidence registry", evidence_result))
+        if evidence_issues:
+            output_statistics = {"evidence_issues": evidence_issues}
+        else:
+            output_statistics = {}
+    except Exception as e:
+        logger.error(f"Error during evidence registry validation: {e}", exc_info=True)
+        results.append(("Evidence registry", False))
+        output_statistics = {}
+
     output_dir = project_root / "output"
-    output_statistics = {}
+
+    try:
+        design_result, design_issues = validate_project_design(project_root)
+        results.append(("Project design overlays", design_result))
+        if design_issues:
+            output_statistics["design_validation_issues"] = design_issues
+    except Exception as e:
+        logger.error(f"Error during project design validation: {e}", exc_info=True)
+        results.append(("Project design overlays", False))
+
+    try:
+        artifact_manifest = aggregate_artifact_manifests(output_dir)
+        artifact_report = validate_artifact_manifest(artifact_manifest, project_dir=project_root)
+        results.append(("Artifact manifest", artifact_report.valid))
+        if artifact_report.issues:
+            output_statistics["artifact_manifest_issues"] = list(artifact_report.issues)
+    except Exception as e:
+        logger.error(f"Error during artifact manifest validation: {e}", exc_info=True)
+        results.append(("Artifact manifest", False))
 
     if detailed_validation:
         output_statistics["detailed_validation"] = detailed_validation

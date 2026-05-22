@@ -25,10 +25,10 @@ Each ADR follows this structure:
 | [000](000-two-layer-architecture.md) | Two-Layer Architecture | Accepted |
 | [001](001-thin-orchestrator-pattern.md) | Thin Orchestrator Pattern | Accepted |
 | [002](002-declarative-dag-pipeline.md) | Declarative DAG Pipeline | Accepted |
-| [003] — | *Withdrawn; covered by ADR 002* | — |
+| [003](003-multi-format-rendering-and-toggles.md) | Multi-Format Rendering and Per-Format Toggles | Accepted |
 | [004](004-zero-mock-testing-policy.md) | Zero-Mock Testing Policy | Accepted |
 
-> **Note:** ADR 003 was withdrawn — its scope (declarative pipeline definition) was absorbed into ADR 002.
+> **Note:** ADR 003 was previously withdrawn (its original scope was absorbed into ADR 002); the slot is now reused for the 2026-05-20 multi-format rendering decision.
 
 ## Reading Order
 

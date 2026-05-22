@@ -17,18 +17,28 @@ Both are **standalone** projects with the same directory layout (`src/`, `tests/
 
 | Exemplar | Purpose | Algorithm? | Mutates `references.bib`? | Embeds figures? | Tests | Coverage |
 |---|---|---|---|---|---|---|
-| [`template_code_project`](template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | 117 | ~99.5% |
-| [`template_prose_project`](template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | 67 | 100.00% |
+| [`template_code_project`](template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
+| [`template_prose_project`](template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
 
-The two permanent exemplars cover the computational and prose-review paths. Use the archived search exemplar when the project needs literature discovery, auto-populated BibTeX, or optional LLM synthesis. **Important:** run each project's `tests/` in **its own** `pytest` invocation — pointing pytest at `projects/*/tests/` simultaneously triggers `ImportPathMismatchError` because every project ships a `tests/conftest.py`.
+The measured test and coverage totals drift as the exemplars evolve; confirm
+current numbers in
+[`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md).
+The two permanent exemplars cover the computational and prose-review paths. Use
+the archived search exemplar when the project needs literature discovery,
+auto-populated BibTeX, or optional LLM synthesis. **Important:** run each
+project's `tests/` in **its own** `pytest` invocation — pointing pytest at
+`projects/*/tests/` simultaneously triggers `ImportPathMismatchError` because
+every project ships a `tests/conftest.py`.
 
-Additional siblings under `projects/` today (e.g. other research workspaces) are real projects for this checkout, not permanent fixtures.
+Additional siblings under `projects/` today are real projects for this
+checkout, not permanent fixtures. They are usually symlinks from the sibling
+private lifecycle repo at `/Users/4d/Documents/GitHub/projects/active/`; inspect
+planned syncs with
+`uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
 ### In-progress projects (under `projects_in_progress/`)
 
-These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready (see [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for live discovery):
-
-- **biology_textbook**, **cogant**, **corym**, **template**, **trsc**, **what_is_cogsec** — current in-progress workspaces in this checkout (subject to rotation)
+These are actively being developed under [`projects_in_progress/`](../projects_in_progress/) but are not yet pipeline-ready. The roster is deliberately not copied here; use `ls projects_in_progress/` for the current checkout and [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) for projects actually discovered by `./run.sh`.
 
 **Note:** Use `projects/template_code_project/` for concrete paths, commands, and layout examples unless a document explicitly compares project shapes. Promote projects from `projects_in_progress/` or `projects_archive/` to `projects/` when they are ready for pipeline execution.
 
@@ -105,15 +115,24 @@ mv projects_archive/myproject projects/myproject
 # Project will be automatically discovered on next run.sh execution
 ```
 
+For confidential work, prefer the sibling private lifecycle repo:
+`/Users/4d/Documents/GitHub/projects/active/` is linked into this directory,
+while `passive/` and `archive/` remain unlinked. Move private work between those
+folders instead of committing it here.
+
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
-| `template_code_project/`    | Code-centric exemplar (optimization + dashboard) | 117 | ~99.5%   |
-| `template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | 67 | 100.00% |
+| `template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
+| `template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
 
 The two permanent exemplars share the same `docs/` hub structure (12 files: `AGENTS.md`, `README.md`, `agent_instructions.md`, `architecture.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `style_guide.md`, `syntax_guide.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`) and the same per-directory `AGENTS.md` + `README.md` convention.
 
-**In-progress projects** live in `projects_in_progress/` (e.g. `biology_textbook`, `cogant`, `corym`).
-**Archived projects** live in `projects_archive/` (e.g. `traditional_newspaper`, `area_handbook`, `density_bioscales`, `medical_ai`, `cognitive_integrity`, `special_number_proximity`).
+**Private active projects** live in `/Users/4d/Documents/GitHub/projects/active/`
+and are linked into this directory automatically by `run.sh`/orchestration.
+Set `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root` to use another
+private repo; set `TEMPLATE_SKIP_LINK_SYNC=1` to skip one auto-sync.
+**In-progress projects** live in `projects_in_progress/`.
+**Archived projects** live in `projects_archive/`.
 
 ```mermaid
 graph TD
@@ -849,8 +868,8 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 
 ### 🎯 **Permanent Exemplars**
 
-- **template_code_project**: Optimization research exemplar (~99.5% coverage, 117 tests)
-- **template_prose_project**: Prose-review exemplar (100% coverage, 67 tests)
+- **template_code_project**: Optimization research exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
+- **template_prose_project**: Prose-review exemplar (measured tests/coverage in `docs/_generated/canonical_facts.md`)
 
 Additional rotating projects are discovered from `docs/_generated/active_projects.md`.
 

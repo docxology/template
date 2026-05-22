@@ -1,1 +1,219 @@
-['project.dependencies]`, then:\n\n```bash\nuv sync\n```\n\nSee `docs/README.md` "Critical Rule: Root Venv Must Include All Project Dependencies', '.', '--', 'Error: `ImportError: matplotlib` or plotting failures\n\n**Cause:** `matplotlib` not in core deps (only in optional group).\n\n**Fix:** Move `matplotlib` to `[project.dependencies]` in root `pyproject.toml` and run `uv sync`.\n\n---\n\n### Error: Network timeouts during literature/LLM calls\n\n**Cause:** External API rate limits or connectivity.\n\n**Fix:** Ensure idempotency (output files exist → skip network). For testing, set environment variables to use mock services or raise errors early. See `infrastructure/llm/` for backoff configuration.\n\n---\n\n## 🔵 Stage 03 — PDF Rendering Failures\n\n### Error: `LaTeX Error: File `...\'.sty\' not found`\n\n**Cause:** Missing LaTeX package.\n\n**Fix:** Install missing package via tlmgr (TeX Live) or system package manager. Common packages: `texlive-latex-extra`, `texlive-fonts-recommended`, `texlive-fonts-extra`. See `CLOUD_DEPLOY.md` for full list.\n\n---\n\n### Error: `! Undefined control sequence.` or `! LaTeX Error: Environment ... unknown.`\n\n**Cause:** Custom LaTeX macros not defined or missing `usepackage`.\n\n**Fix:** Check manuscript preamble (`manuscript/preamble.md`) includes required packages. Ensure all custom commands are defined before use.\n\n---\n\n### Error: Pandoc conversion error: `Could not determine writer for format`\n\n```\n[ERROR] Could not determine writer for format \'latex\'\n```\n\n**Cause:** Pandoc TeX template missing or Pandoc too old.\n\n**Fix:** Upgrade Pandoc (≥2.14). Install `texlive-xetex` for LaTeX template support. Verify `pandoc --version`.\n\n---\n\n### Error: `! PDF inclusion error: file \'...\' not found.` (missing figures)\n\n**Cause:** Figure files not generated or wrong relative path.\n\n**Fix:** Ensure Stage 02 generated figures into `output/figures/`. Check manuscript includes correct path: `includegraphics{../output/figures/my_figure.png}`. Re-run analysis stage.\n\n---\n\n## 🟣 Stage 04 — Validation Failures\n\n### Error: Cross-reference undefined: `\ref{sec:...}` or `eqref{...}`\n\n**Cause:** Label not defined or typo in label name.\n\n**Fix:** Verify each `label{sec:...}` exists in manuscript. Check that label IDs match exactly (case-sensitive). Run `uv run python -m infrastructure.validation.cli markdown projects/<name>/manuscript/` to detect missing labels early.\n\n---\n\n### Error: `BibTeX` undefined references or missing entries\n\n**Cause:** Citation key not present in `references.bib`.\n\n**Fix:** Add missing entry to `manuscript/references.bib`. Ensure `cite{key}` matches `@...{key}`. Run `bibtex` manually or `03_render_pdf.py` to update.\n\n---\n\n### Error: PDF page count mismatch\n\n**Cause:** Expected total pages differ from generated count (often due to dynamic content changes).\n\n**Fix:** This is usually fine if content changed; update expected count in `config.yaml` if needed. For reproducibility, ensure deterministic RNG seeds.\n\n---\n\n### Error: Markdown validation fails: "front-matter YAML block required"\n\n**Cause:** Missing or malformed YAML front-matter in a manuscript section.\n\n**Fix:** Each `*.md` file in manuscript should start with YAML front-matter:\n\n```yaml\n---\ntitle: "Section Title', '--', "Or at minimum include a heading `# Section Title`.\n\n---\n\n## 🟤 Stage 05 — Copy Failures\n\n### Error: Permission denied when copying to `output/`\n\n**Cause:** `output/` directory owned by another user or read-only.\n\n**Fix:** Fix ownership/permissions:\n\n```bash\nsudo chown -R $(whoami) output/\nchmod -R u+rwX output/\n```\n\n---\n\n### Error: Disk space full\n\n**Cause:** Storage exhausted during figure generation or PDF compilation.\n\n**Fix:** Free up disk space. Clean previous `output/` if needed: `rm -rf output/`. Pipeline clean stage (Stage 0) removes working outputs but not final `output/` — delete old manually if necessary.\n\n---\n\n## ✳️ LLM Stages (06/07) — Optional Failures\n\n### Error: `HermesExplain: OpenRouter API rate limit exceeded`\n\n**Cause:** Too many LLM requests or insufficient credits.\n\n**Fix:** Add backoff in `infrastructure/llm/core/config.py` or wait for rate limit reset. Set `OLLAMA_*` environment variables to use local model instead. Set `HERMES_ENABLED=false` to skip LLM stages. See `infrastructure/llm/` configuration docs.\n\n---\n\n### Error: `LLM review failed: empty response`\n\n**Cause:** LLM returned no content or malformed output.\n\n**Fix:** Check LLM service health (local Ollama or OpenRouter). Validate `hermes_review_prompt.md` template. Increase `max_tokens` in config. Enable retries (`LLM_MAX_RETRIES` environment variable).\n\n---\n\n## 🛠️ General Debugging\n\n### Enable Verbose Logging\n\n```bash\n# Set environment variable\nexport LOG_LEVEL=0  # DEBUG level (most verbose)\n# or via systemd / export in shell profile\n\n# Run pipeline with full logging\n./run.sh --pipeline 2>&1 | tee pipeline.log\n```\n\n---\n\n### Check Stage Logs\n\nEach project writes `projects/<name>/output/logs/pipeline.log`. Inspect after failure:\n\n```bash\nless projects/template_code_project/output/logs/pipeline.log\n```\n\nSearch for `ERROR` or `Exception`.\n\n---\n\n### Re-run Single Stage\n\n```bash\nuv run python scripts/03_render_pdf.py --project template_code_project --verbose\n```\n\nUse `--stage` filter in `execute_pipeline.py` if needed.\n\n---\n\n### Validate Environment\n\n```bash\n# Check all required tools\nuv --version\npandoc --version\nxelatex --version\n\n# Check Python deps\nuv pip list | grep -E 'pandoc|latex|matplotlib'\n```\n\n---\n\n### Clean Build\n\n```bash\n# Remove all outputs except final deliverable\nrm -rf projects/template_code_project/output/\nuv run python scripts/00_setup_environment.py --project template_code_project\n```\n\nThen re-run pipeline.\n\n---\n\n### Checkpoint/Resume\n\nIf pipeline fails at a certain stage, fix the issue and resume from that stage:\n\n```bash\nuv run python scripts/execute_pipeline.py --project template_code_project --resume\n```\n\nCheckpoint file: `projects/<name>/output/checkpoint.json`.\n\n---\n\n## 📊 Performance Bottlenecks\n\n### Slow Stage Detection\n\nTelemetry automatically warns if stage duration exceeds `slow_stage_multiplier` × historical median. Check `telemetry.json` for `performance_warnings`.\n\n**Fix:** Profile the slow stage (see `docs/operational/performance/benchmarking-guide.md`).\n\n---\n\n### Memory Growth\n\nMonitor via telemetry `peak_memory_mb`. If memory increases with data size, consider streaming or chunked processing.\n\n---\n\n## 🧪 CI/CD Failures\n\n### Mock Detection Fails\n\n`scripts/verify_no_mocks.py` flags usage of `unittest.mock`.\n\n**Fix:** Replace mocks with real data or fixtures. See `development/testing/testing-with-credentials.md` for patterns.\n\n---\n\n### Coverage Gates Fail in CI\n\nInfrastructure must maintain 60%, projects 90%.\n\n**Fix:** Improve test coverage for changed files. Do not skip coverage gates.\n\n---\n\n## 🧩 Compatibility Issues\n\n### Python Version Mismatch\n\nTemplate requires Python 3.10+. Check:\n\n```bash\npython3 --version\nuv python list\n```\n\nAdjust uv Python version in `pyproject.toml` if needed.\n\n---\n\n### Platform-Specific Paths\n\nAvoid hard-coded `/home/user` or `C:\\`. Use `Path` objects and `os.path` utilities.\n\n---\n\n### Dependency Conflicts\n\nIf `uv sync` fails with conflict, update lockfile:\n\n```bash\nuv lock --refresh\n```\n\nOr adjust version constraints in `pyproject.toml`.\n\n---\n\n## 🆘 Still Stuck?\n\n1. Search existing issues in repository\n2. Consult **module-specific** `AGENTS.md` files (e.g., `infrastructure/validation/AGENTS.md`)\n3. Review **project-specific** `docs/` (e.g., `projects/template_code_project/docs/troubleshooting.md`)\n4. Create new issue with full error log and reproducibility steps\n\n---\n\n*This guide is maintained in `docs/operational/troubleshooting/common-errors.md`. Update when new patterns emerge.*"]
+# Common Errors
+
+> Catalog of frequent failure modes by pipeline stage, with actionable
+> remediation. Linked from
+> [`README.md`](README.md) and from `build-tools.md`.
+>
+> _Companion to [`recovery-procedures.md`](recovery-procedures.md) (broader
+> rollback procedures) and [`test-failures.md`](test-failures.md)
+> (test-suite-specific failures)._
+
+## Quick triage
+
+1. Read the pipeline log: `tail -200 projects/<name>/output/logs/pipeline.log`
+2. Identify the failing stage from the `Stage N failed` line.
+3. Locate the matching section below by stage number.
+
+---
+
+## Stage 0 — Clean output directories
+
+**Symptom:** `Permission denied` removing files in `output/`.
+
+```text
+PermissionError: [Errno 13] Permission denied: 'output/<project>/.../foo.pdf'
+```
+
+**Causes & fix**
+
+- A file is held open in another process (Preview, browser, editor). Close it,
+  then re-run.
+- The file was created by `root` (e.g., from a Docker run on Linux). `sudo
+  chown -R "$USER:" output/` then re-run.
+
+---
+
+## Stage 1 — Environment Setup
+
+**Symptom:** `uv: command not found` or `uv sync` fails.
+
+**Fix:** Install `uv` per the official guide at <https://docs.astral.sh/uv/>.
+Two common paths: `pip install uv`, or follow the published shell installer
+on the uv docs page. Then run `uv sync` from the repo root.
+
+**Symptom:** `pandoc: command not found` when rendering HTML / DOCX / EPUB.
+
+**Fix:** `brew install pandoc` (macOS) or
+`apt-get install pandoc` (Debian). DOCX and EPUB require pandoc >= 2.10.
+
+**Symptom:** `xelatex: command not found` when building combined PDF.
+
+**Fix:** Install BasicTeX / TeX Live; then `sudo tlmgr install multirow
+cleveref doi newunicodechar`.
+
+---
+
+## Stage 2 — Project tests
+
+See [`test-failures.md`](test-failures.md) for the full catalog. Most-common
+modes:
+
+- **Coverage gate failed** — bump the missing branches; coverage tables live
+  in `output/<project>/htmlcov/index.html`.
+- **`ImportPathMismatchError: ('tests.conftest', ...)`** — the
+  `ARCH-CONFTEST-1` collision documented in
+  [`../../../TO-DO.md`](../../../TO-DO.md). Run one pytest subprocess per
+  project; never collect across projects in one process.
+
+---
+
+## Stage 3 — Project Analysis
+
+**Symptom:** Analysis script exits 0 but produces no figure files.
+
+**Check:**
+
+```bash
+find projects/<name>/output/figures -type f -newer pyproject.toml
+```
+
+If empty, the script is silently failing. Re-run with `LOG_LEVEL=0` to surface
+debug output, and confirm the script `print(str(output_path))`-s its outputs
+to stdout for the manifest.
+
+**Symptom:** Script timeout (`Per-script timeout: 7200s`).
+
+**Fix:** Either reduce the work, increase `ANALYSIS_SCRIPT_TIMEOUT_SEC` env
+var, or split the script into stages.
+
+---
+
+## Stage 4 — Multi-format rendering
+
+> The "PDF Rendering" stage actually emits PDF + HTML + Slides + optional
+> DOCX/EPUB. See [`../logging/output-design.md`](../logging/output-design.md)
+> for the visual contract.
+
+**Symptom:** `[skip] PDF rendering disabled in config (render.formats.pdf=false)`.
+
+This is the **expected** log line when a format is gated off. Confirm intent
+by checking `projects/<name>/manuscript/config.yaml` `render.formats` block.
+
+**Symptom:** `[skip] DOCX rendering: no combined markdown found`.
+
+The DOCX/EPUB renderers reuse the preprocessed `_combined_manuscript.md`
+produced by the PDF stage. If PDF rendering is disabled, DOCX/EPUB
+cascade-skip. To produce DOCX/EPUB without PDF, set
+`render.formats.pdf: true` even if you don't need the PDF artifact.
+
+**Symptom:** `pandoc DOCX render failed (exit 1)`.
+
+```text
+pandoc DOCX render failed (exit 1): ...could not parse reference doc...
+```
+
+**Causes & fix**
+
+- The `--reference-doc=` path is wrong. Confirm with
+  `ls -la <reference_doc_path>`.
+- Pandoc < 2.10. Upgrade.
+
+**Symptom:** `LaTeX compilation completed in 2.56s` but the PDF is 0 bytes or
+absent.
+
+Tail the per-section `output/<project>/slides/<section>_slides.log` or
+`output/<project>/pdf/_xelatex_stdout.log` for the actual TeX error. Often a
+missing package — install with `tlmgr install <package>`.
+
+**Symptom:** `Spinner garble — ⠋ Running project tests... mid-line with PASSED`.
+
+Fixed in this repo by `TestSuiteConfig.streaming_subprocess: bool = True` at
+pytest call sites. If you wrote a new test-runner wrapper, set
+`streaming_subprocess=True` to suppress the spinner — see
+[`test-failures.md`](test-failures.md).
+
+---
+
+## Stage 5 — Output Validation
+
+**Symptom:** `MARKDOWN.LINK_BAD_TEXT` (non-informative link text).
+
+**Fix:** Replace bare-code link text like `infrastructure/prose/` with
+descriptive prose explaining where the link goes.
+
+**Symptom:** Validation reports "no figures found".
+
+**Check:** Confirm the analysis stage ran AND that
+`infrastructure/rendering/manuscript_discovery.py::verify_figures_exist`
+finds them under `projects/<name>/output/figures/`.
+
+---
+
+## Stage 6 — Copy Outputs
+
+**Symptom:** `Could not copy output/.../pdf/foo.pdf to output/<project>/pdf/`.
+
+**Cause:** the source PDF wasn't produced (Stage 4 partially failed). Re-run
+Stage 4 with `LOG_LEVEL=0` to find the underlying renderer error.
+
+---
+
+## LLM stages (optional — only when `--no-llm` is not passed)
+
+**Symptom:** `Failed to connect to Ollama at http://localhost:11434`.
+
+**Fix:** `ollama serve` (in another shell), then `ollama pull gemma3:4b`. The
+LLM stages are gated; if you don't want them, run with `--core-only` or
+`--no-llm`.
+
+**Symptom:** LLM review times out.
+
+**Fix:** Bump `LLM_TIMEOUT_SEC` env (default 600). Slow CPUs may need 1200+.
+
+---
+
+## CI / GitHub Actions failures
+
+**Symptom:** PR check `lint` fails on `scripts/check_tracked_projects.py`.
+
+You added a non-template project under `projects/` and tried to push.
+Per the [private-projects-repo contract](../../maintenance/private-projects-repo.md),
+only the two canonical exemplars (`template_code_project`,
+`template_prose_project`) are git-tracked. Move other projects out of
+`projects/` and re-push.
+
+**Symptom:** Coverage job `pytest --cov=infrastructure --cov-fail-under=60`
+fails.
+
+A new untested module dropped coverage below 60. Either add tests or move
+the new code under an explicit `# pragma: no cover` if it's intentionally
+diagnostic-only.
+
+---
+
+## General debugging tactics
+
+- Always run with `LOG_LEVEL=0` (DEBUG) to surface the underlying tool
+  invocation. Default is `LOG_LEVEL=1` (INFO).
+- `LOG_TERMINAL_VERBOSE=1` to restore the verbose `[ts] [LEVEL] msg` prefix
+  on the terminal (the file always has it).
+- `docs/_generated/last-run-summary.md` shows the most recent end-of-run
+  multi-project summary. Diff against a known-good prior run to spot
+  regressions.
+- `docs/operational/logging/output-design.md` is the visual-contract
+  reference for what each stage should look like.
+
+---
+
+## Still stuck?
+
+1. File an issue with the failing stage label, the project name, the
+   relevant `pipeline.log` excerpt, and the exact command line.
+2. Or, run `uv run python -m infrastructure.doctor` for a guided diagnosis.
+
+## See also
+
+- [`recovery-procedures.md`](recovery-procedures.md) — broader rollback procedures
+- [`test-failures.md`](test-failures.md) — pytest-specific failures
+- [`build-tools.md`](build-tools.md) — tool-chain (xelatex, pandoc, mermaid) issues
+- [`../logging/output-design.md`](../logging/output-design.md) — visual contract for pipeline output

@@ -11,14 +11,21 @@
 ## Quick Start
 
 ```bash
-# Run all tests with coverage (quiet mode by default, skips slow tests)
-uv run python scripts/01_run_tests.py
+# Run the selected project pipeline test contract:
+# focused infrastructure smoke + project coverage suite
+uv run python scripts/01_run_tests.py --project template_code_project
 
 # Run tests with verbose output (shows all test names)
-uv run python scripts/01_run_tests.py --verbose
+uv run python scripts/01_run_tests.py --project template_code_project --verbose
 
-# Run including slow tests (LLM integration tests)
-uv run python scripts/01_run_tests.py --include-slow
+# Run the full coverage-bearing infrastructure gate
+uv run python scripts/01_run_tests.py --infra-only --infra-scope full
+
+# Run only the focused infrastructure smoke contract used by project pipelines
+uv run python scripts/01_run_tests.py --infra-only --infra-scope pipeline-smoke
+
+# Run including slow tests
+uv run python scripts/01_run_tests.py --include-slow --project template_code_project
 
 # Run specific test suite
 uv run pytest tests/infra_tests/ -v
@@ -29,6 +36,12 @@ uv run pytest tests/ --cov=src --cov-report=html
 # Run only slow tests (requires Ollama for LLM tests)
 uv run pytest -m slow
 ```
+
+`pipeline-smoke` is intentionally small but real: it exercises the declarative
+DAG, advisory HITL controls, evidence registry, domain profiles, benchmark
+harness, documentation invariant, and tracked-artifact guard. It is the right
+default inside `./run.sh --pipeline` because project pipelines already run the
+selected project's full coverage suite and then render/validate real outputs.
 
 ## Slow Test Handling
 
@@ -198,7 +211,6 @@ open htmlcov/index.html
 
 - [Logging Guide](../../operational/logging/)
 - [Error Handling Guide](../../operational/error-handling-guide.md)
-
 
 
 

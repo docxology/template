@@ -25,6 +25,15 @@ from infrastructure.core.errors import (
 )
 from infrastructure.core.pipeline.resume import PipelineResumeMixin
 from infrastructure.core.pipeline.stages import PipelineStageMixin
+from infrastructure.core.pipeline.control import load_pipeline_control_config, merge_control_configs
+from infrastructure.core.pipeline.hitl import HitlController
+from infrastructure.core.pipeline.hooks import (
+    HookEvent,
+    StageHookContext,
+    any_hook_failed,
+    run_stage_hooks,
+    summarize_hook_failures,
+)
 from infrastructure.core.pipeline.types import (
     PipelineConfig,
     PipelineStageResult,
@@ -57,6 +66,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             config: Pipeline configuration
         """
         self.config = config
+        self.control_config = self._resolve_control_config()
         self.checkpoint_manager = CheckpointManager(project_name=config.project_name, repo_root=config.repo_root)
 
         # Log file: projects/{project_name}/output/logs/pipeline.log
@@ -92,6 +102,25 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         project_yaml = self.config.project_dir / "pipeline.yaml"
         default_yaml = self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
         return project_yaml if project_yaml.exists() else default_yaml
+
+    def _default_pipeline_yaml(self) -> Path:
+        return self.config.repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+
+    def _project_pipeline_yaml(self) -> Path:
+        return self.config.project_dir / "pipeline.yaml"
+
+    def _resolve_control_config(self):
+        """Resolve advisory control config from YAML plus explicit config."""
+        default_yaml = self._default_pipeline_yaml()
+        project_yaml = self._project_pipeline_yaml()
+        loaded = load_pipeline_control_config(
+            default_yaml if default_yaml.exists() else None,
+            project_yaml=project_yaml if project_yaml.exists() else None,
+            cli_hitl_mode=self.config.hitl_mode,
+        )
+        if self.config.control != type(self.config.control)():
+            loaded = merge_control_configs(loaded, self.config.control)
+        return loaded
 
     def _init_telemetry(self) -> None:
         """Initialize the telemetry collector from pipeline YAML config."""
@@ -141,8 +170,10 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if yaml_path is not None:
             dag = PipelineDAG.from_yaml(yaml_path)
 
-            # Apply flag-based filtering via tags
-            exclude_tags: set[str] = set()
+            # Apply flag-based filtering via tags. Long-horizon stages are
+            # declared in pipeline.yaml for documentation and direct script
+            # invocation, but are not part of the default executor path.
+            exclude_tags: set[str] = {"bundle", "archival"}
             if not include_llm or self.config.skip_llm:
                 exclude_tags.add("llm")
             if skip_clean:
@@ -207,11 +238,19 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         pipeline_start: float,
     ) -> PipelineStageResult:
         """Execute a stage, append to results, and checkpoint on success."""
-        result = self._execute_stage(stage_num, stage_spec.name, stage_spec.func, pipeline_start)
+        result = self._execute_stage(
+            stage_num,
+            stage_spec.name,
+            stage_spec.func,
+            pipeline_start,
+            stage_spec=stage_spec,
+        )
         results.append(result)
         if not result.success:
             logger.error(PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name))
-        else:
+        elif result.stage_completed:
+            self._write_artifact_manifest(stage_num, stage_spec)
+            self._write_snapshot(stage_num, stage_spec)
             self._save_checkpoint(pipeline_start, stage_num, results)
         return result
 
@@ -222,14 +261,68 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         for stage_num, stage_spec in enumerate(stages, 1):
             result = self._run_stage_and_checkpoint(stage_num, stage_spec, results, pipeline_start)
-            if not result.success:
+            if not result.success or result.hitl_pause:
                 break
 
         if self._telemetry is not None:
             total_duration = time.time() - pipeline_start
             self._telemetry.finalize(total_duration=total_duration)
 
+        self._write_pause_recommendations_report()
+        self._write_run_lessons_report(results)
         return results
+
+    def _write_pause_recommendations_report(self) -> None:
+        """Persist advisory SmartPause recommendations."""
+        try:
+            from infrastructure.core.pipeline.smart_pause import (
+                compute_pause_recommendations,
+                write_pause_recommendations,
+            )
+
+            output_dir = self.config.project_dir / "output"
+            write_pause_recommendations(output_dir, compute_pause_recommendations(output_dir))
+        except OSError as exc:
+            logger.warning(f"Failed to write pause recommendations: {exc}")
+
+    def _write_run_lessons_report(self, results: list[PipelineStageResult]) -> None:
+        """Persist explicit run lessons when possible."""
+        try:
+            from infrastructure.reporting.run_lessons import collect_run_lessons, write_run_lessons
+
+            output_dir = self.config.project_dir / "output"
+            lessons = collect_run_lessons(results, project_output_dir=output_dir)
+            write_run_lessons(output_dir, lessons)
+        except OSError as exc:
+            logger.warning(f"Failed to write run lessons report: {exc}")
+
+    def _write_artifact_manifest(self, stage_num: int, stage_spec: StageSpec) -> None:
+        """Persist stage and aggregate artifact manifests."""
+        try:
+            from infrastructure.core.pipeline.artifacts import (
+                aggregate_artifact_manifests,
+                write_stage_artifact_manifest,
+            )
+
+            write_stage_artifact_manifest(
+                repo_root=self.config.repo_root,
+                project_dir=self.config.project_dir,
+                stage_num=stage_num,
+                stage_name=stage_spec.name,
+                contract=stage_spec.contract,
+            )
+            aggregate_artifact_manifests(self.config.project_dir / "output")
+        except OSError as exc:
+            logger.warning(f"Failed to write artifact manifest: {exc}")
+
+    def _write_snapshot(self, stage_num: int, stage_spec: StageSpec) -> None:
+        """Persist a stage output snapshot."""
+        try:
+            from infrastructure.core.pipeline.snapshot import create_snapshot
+
+            create_snapshot(self.config.project_dir / "output", stage_num=stage_num, stage_name=stage_spec.name)
+        except OSError as exc:
+            logger.warning(f"Failed to write pipeline snapshot: {exc}")
 
     def _execute_stage(
         self,
@@ -237,6 +330,8 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         stage_name: str,
         stage_func: Callable[[], bool],
         pipeline_start: float | None = None,
+        *,
+        stage_spec: StageSpec | None = None,
     ) -> PipelineStageResult:
         """Execute single pipeline stage with timing and error handling.
 
@@ -260,13 +355,176 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         if self._telemetry is not None:
             self._telemetry.start_stage(stage_name, stage_num)
 
+        effective_stage_spec = stage_spec or StageSpec(stage_name, stage_func)
+        stage_contract = effective_stage_spec.contract
+        stage_hooks = effective_stage_spec.hooks
+        run_dir = self.config.project_dir / "output"
+        run_dir.mkdir(parents=True, exist_ok=True)
+        hitl_controller = HitlController(
+            project_output_dir=run_dir,
+            control=self.control_config,
+        )
+
+        if hitl_controller.should_pause_before(stage_num, effective_stage_spec):
+            reason = hitl_controller.pause_reason(
+                stage_num=stage_num,
+                stage_spec=effective_stage_spec,
+                default="checkpoint",
+            )
+            hitl_controller.pause(
+                stage_num=stage_num,
+                stage_name=stage_name,
+                reason=reason,
+                context_summary=stage_contract.definition_of_done,
+                stage_spec=effective_stage_spec,
+            )
+            duration = time.time() - start_time
+            if self._telemetry is not None:
+                self._telemetry.end_stage(stage_name, stage_num, success=True)
+            return PipelineStageResult(
+                stage_num=stage_num,
+                stage_name=stage_name,
+                success=True,
+                duration=duration,
+                hitl_pause=True,
+                stage_completed=False,
+                lessons=(f"HITL pause before stage: {reason}",),
+            )
+
+        pre_context = StageHookContext(
+            project_name=self.config.project_name,
+            stage_name=stage_name,
+            stage_num=stage_num,
+            run_dir=run_dir,
+            status="running",
+        )
+        pre_hook_results = run_stage_hooks(stage_hooks, HookEvent.PRE_STAGE, pre_context)
+        if any_hook_failed(pre_hook_results):
+            duration = time.time() - start_time
+            error_message = summarize_hook_failures(pre_hook_results)
+            if self._telemetry is not None:
+                self._telemetry.end_stage(
+                    stage_name, stage_num, success=False, exit_code=1, error_message=error_message
+                )
+            return PipelineStageResult(
+                stage_num=stage_num,
+                stage_name=stage_name,
+                success=False,
+                duration=duration,
+                exit_code=1,
+                error_message=error_message,
+            )
+
         try:
-            success = stage_func()
+            success = False
+            attempts = max(1, stage_contract.retry_policy + 1)
+            for attempt in range(1, attempts + 1):
+                try:
+                    success = stage_func()
+                except Exception:
+                    if attempt < attempts:
+                        logger.warning(
+                            f"Stage {stage_num} raised an exception; retrying ({attempt}/{stage_contract.retry_policy})"
+                        )
+                        continue
+                    raise
+                if success:
+                    break
+                if attempt < attempts:
+                    logger.warning(
+                        f"Stage {stage_num} returned failure; retrying ({attempt}/{stage_contract.retry_policy})"
+                    )
 
             duration = time.time() - start_time
 
             if success:
                 logger.info(f"✓ Stage {stage_num} completed successfully ({duration:.1f}s)")
+                post_context = StageHookContext(
+                    project_name=self.config.project_name,
+                    stage_name=stage_name,
+                    stage_num=stage_num,
+                    run_dir=run_dir,
+                    status="success",
+                )
+                post_hook_results = run_stage_hooks(stage_hooks, HookEvent.POST_STAGE, post_context)
+                if any_hook_failed(post_hook_results):
+                    error_message = summarize_hook_failures(post_hook_results)
+                    if self._telemetry is not None:
+                        self._telemetry.end_stage(
+                            stage_name,
+                            stage_num,
+                            success=False,
+                            exit_code=1,
+                            error_message=error_message,
+                        )
+                    return PipelineStageResult(
+                        stage_num=stage_num,
+                        stage_name=stage_name,
+                        success=False,
+                        duration=duration,
+                        exit_code=1,
+                        error_message=error_message,
+                    )
+
+                hitl_pause = False
+                lessons: tuple[str, ...] = ()
+                if stage_spec is not None and hitl_controller.should_pause_after(stage_num, stage_spec):
+                    reason = hitl_controller.pause_reason(
+                        stage_num=stage_num,
+                        stage_spec=stage_spec,
+                        default="checkpoint",
+                    )
+                    hitl_controller.pause(
+                        stage_num=stage_num,
+                        stage_name=stage_name,
+                        reason=reason,
+                        context_summary=stage_contract.definition_of_done,
+                        stage_spec=stage_spec,
+                    )
+                    pause_context = StageHookContext(
+                        project_name=self.config.project_name,
+                        stage_name=stage_name,
+                        stage_num=stage_num,
+                        run_dir=run_dir,
+                        status="paused",
+                    )
+                    pause_hook_results = run_stage_hooks(stage_hooks, HookEvent.ON_PAUSE, pause_context)
+                    if any_hook_failed(pause_hook_results):
+                        error_message = summarize_hook_failures(pause_hook_results)
+                        if self._telemetry is not None:
+                            self._telemetry.end_stage(
+                                stage_name,
+                                stage_num,
+                                success=False,
+                                exit_code=1,
+                                error_message=error_message,
+                            )
+                        return PipelineStageResult(
+                            stage_num=stage_num,
+                            stage_name=stage_name,
+                            success=False,
+                            duration=duration,
+                            exit_code=1,
+                            error_message=error_message,
+                        )
+                    hitl_pause = True
+                    lessons = (f"HITL pause requested: {reason}",)
+                elif stage_spec is not None and self.control_config.smart_pause_action == "pause":
+                    from infrastructure.core.pipeline.smart_pause import compute_pause_recommendations
+
+                    recommendations = compute_pause_recommendations(run_dir)
+                    if recommendations:
+                        reason = "smart_pause"
+                        hitl_controller.pause(
+                            stage_num=stage_num,
+                            stage_name=stage_name,
+                            reason=reason,
+                            context_summary=recommendations[0].evidence[0] if recommendations[0].evidence else "",
+                            stage_spec=stage_spec,
+                        )
+                        hitl_pause = True
+                        lessons = (f"SmartPause requested: {recommendations[0].reason_codes[0]}",)
+
                 if self._telemetry is not None:
                     self._telemetry.end_stage(stage_name, stage_num, success=True)
                 return PipelineStageResult(
@@ -274,30 +532,62 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
                     stage_name=stage_name,
                     success=True,
                     duration=duration,
+                    hitl_pause=hitl_pause,
+                    lessons=lessons,
                 )
             else:
                 logger.error(STAGE_FAILED.format(stage_num=stage_num))
+                fail_context = StageHookContext(
+                    project_name=self.config.project_name,
+                    stage_name=stage_name,
+                    stage_num=stage_num,
+                    run_dir=run_dir,
+                    status="failed",
+                    error_message="stage returned false",
+                )
+                fail_hook_results = run_stage_hooks(stage_hooks, HookEvent.ON_FAIL, fail_context)
+                error_message = summarize_hook_failures(fail_hook_results)
                 if self._telemetry is not None:
-                    self._telemetry.end_stage(stage_name, stage_num, success=False, exit_code=1)
+                    self._telemetry.end_stage(
+                        stage_name,
+                        stage_num,
+                        success=False,
+                        exit_code=1,
+                        error_message=error_message,
+                    )
                 return PipelineStageResult(
                     stage_num=stage_num,
                     stage_name=stage_name,
                     success=False,
                     duration=duration,
                     exit_code=1,
+                    error_message=error_message,
                 )
 
         except Exception as e:  # noqa: BLE001 — intentional: stage executor isolates all failures into PipelineStageResult
             duration = time.time() - start_time
             logger.error(STAGE_EXCEPTION.format(stage_num=stage_num, error=e))
+            fail_context = StageHookContext(
+                project_name=self.config.project_name,
+                stage_name=stage_name,
+                stage_num=stage_num,
+                run_dir=run_dir,
+                status="failed",
+                error_message=str(e),
+            )
+            fail_hook_results = run_stage_hooks(stage_hooks, HookEvent.ON_FAIL, fail_context)
+            hook_error = summarize_hook_failures(fail_hook_results)
+            error_message = "; ".join(part for part in (str(e), hook_error) if part)
             if self._telemetry is not None:
-                self._telemetry.end_stage(stage_name, stage_num, success=False, exit_code=1, error_message=str(e))
+                self._telemetry.end_stage(
+                    stage_name, stage_num, success=False, exit_code=1, error_message=error_message
+                )
             return PipelineStageResult(
                 stage_num=stage_num,
                 stage_name=stage_name,
                 success=False,
                 duration=duration,
                 exit_code=1,
-                error_message=str(e),
+                error_message=error_message,
                 exception_type=type(e).__name__,
             )

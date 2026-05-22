@@ -71,7 +71,7 @@ by `scripts/generate_stage_table_doc.py`):
 | ----- | ------ | ---- | ------------ |
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose` | `core`, `tests` | configurable tolerance |
+| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
 | **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
 | **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
 | **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
@@ -79,6 +79,8 @@ by `scripts/generate_stage_table_doc.py`):
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 `execute_pipeline.py` supports single-stage execution with stage keys such as `setup`, `tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, and `executive_report`.

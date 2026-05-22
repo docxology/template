@@ -11,6 +11,7 @@
 | 🐍 **Python** | [python-logging.md](python-logging.md) | Python logging system |
 | 🐚 **Bash** | [bash-logging.md](bash-logging.md) | Shell script logging |
 | 📋 **Patterns** | [logging-patterns.md](logging-patterns.md) | Best practices, progress tracking |
+| 📐 **Output design** | [output-design.md](output-design.md) | Visual contract — terminal vs file, summary schema, verbosity dial |
 
 ---
 
@@ -97,6 +98,9 @@ log_error "Error occurred"
 | `LOG_LEVEL` | 0,1,2,3 | 1 | 0=DEBUG, 1=INFO, 2=WARNING, 3=ERROR |
 | `NO_EMOJI` | true/false | false | Disable emoji in output |
 | `STRUCTURED_LOGGING` | true/false | false | Enable JSON structured logging |
+| `LOG_TERMINAL_VERBOSE` | true/false | false | Restore full `[ts] [LEVEL] name:` prefix on console (matches file format) — see [output-design.md](output-design.md) |
+
+> Console handler is **prefix-less by default**; the file handler in `pipeline.log` always uses the full `[ts] [LEVEL] message` format. Set `LOG_TERMINAL_VERBOSE=1` to make the terminal match the file.
 
 ### Setting Log Levels
 

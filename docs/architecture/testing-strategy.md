@@ -52,8 +52,8 @@ uv run pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
 ## Full Test Suite
 
 ```bash
-# All tests with coverage (70% is the global fallback; per-suite gates are 60% infra / 90% project)
-uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=70
+# All tests with coverage (75% is the combined-union gate; per-suite gates are 60% infra / 90% project)
+uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=75
 
 # Generate HTML coverage report
 uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html

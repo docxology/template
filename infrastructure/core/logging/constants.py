@@ -23,6 +23,12 @@ EMOJIS = {
 }
 
 
+BANNER_WIDTH = 60  # top-level banner separators (== bar)
+STAGE_WIDTH = 46  # per-stage section header (━ bar)
+SUBSECTION_WIDTH = 50  # in-stage subsection (== bar)
+TABLE_WIDTH = 80  # data-table containers (- bar)
+
+
 def get_emoji_enabled() -> bool:
     """Return True if emoji output is enabled (NO_EMOJI unset and stdout is a TTY).
 
@@ -39,3 +45,11 @@ def get_structured_logging_enabled() -> bool:
     Not cached: os.getenv() can be legitimately patched between tests.
     """
     return os.getenv("STRUCTURED_LOGGING", "false").lower() == "true"
+
+
+def get_terminal_verbose_enabled() -> bool:
+    """Return True if LOG_TERMINAL_VERBOSE=1 — restore full timestamp/[INFO] prefix on console.
+
+    Not cached: env legitimately patched between tests.
+    """
+    return os.getenv("LOG_TERMINAL_VERBOSE", "").lower() in ("1", "true", "yes")

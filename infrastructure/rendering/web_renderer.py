@@ -51,6 +51,8 @@ class WebRenderer:
 
         try:
             subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
+            if output_file.exists():
+                self._normalize_figure_paths_in_file(output_file)
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -183,6 +185,7 @@ class WebRenderer:
         # Embed CSS styling in the generated HTML
         if output_file.exists():
             self._embed_css(output_file)
+            self._normalize_figure_paths_in_file(output_file)
             logger.info(f"✓ Embedded CSS styling in {output_file.name}")
 
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
@@ -328,7 +331,31 @@ class WebRenderer:
             latex = cls._REF_RE.sub(lambda m: _visible_ref(m.group(1)), latex)
             return _clean_latex_text(latex)
 
-        return cls._RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content)
+        return cls._normalize_figure_paths(cls._RAW_LATEX_INLINE_RE.sub(_replace_raw_span, content))
+
+    @staticmethod
+    def _normalize_figure_paths(content: str) -> str:
+        """Rewrite manuscript figure paths for files emitted under ``output/web``."""
+        return (
+            content.replace("../../output/figures/", "../figures/")
+            .replace("../output/figures/", "../figures/")
+            .replace("output/figures/", "../figures/")
+        )
+
+    @classmethod
+    def _normalize_figure_paths_in_file(cls, html_file: Path) -> None:
+        """Normalize figure paths in an emitted HTML file in place."""
+        html_content = html_file.read_text(encoding="utf-8")
+        normalized = cls._normalize_figure_paths(html_content)
+        if normalized == html_content:
+            return
+        _tmp = html_file.with_suffix(html_file.suffix + ".tmp")
+        try:
+            _tmp.write_text(normalized, encoding="utf-8")
+            _tmp.replace(html_file)
+        except OSError:
+            _tmp.unlink(missing_ok=True)
+            raise
 
     def _embed_css(self, html_file: Path) -> None:
         """Embed CSS styling directly into HTML file.

@@ -27,7 +27,7 @@ flowchart TB
 
     BUILD --> BUILD_F[README · build-system ·<br/>dependency-management · ci-cd-integration ·<br/>build-performance · build-history]
     CFG --> CFG_F[README · configuration ·<br/>checkpoint-resume · performance-optimization]
-    LOG --> LOG_F[README · python-logging ·<br/>bash-logging · logging-patterns]
+    LOG --> LOG_F[README · python-logging ·<br/>bash-logging · logging-patterns ·<br/>output-design]
     PERF --> PERF_F[README · benchmarking-guide]
     TS --> TS_F[README · common-errors · build-tools ·<br/>test-failures · environment-setup ·<br/>recovery-procedures · llm-review · llm-diagnostics]
 

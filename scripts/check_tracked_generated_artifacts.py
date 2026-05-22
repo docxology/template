@@ -29,10 +29,22 @@ GENERATED_ARTIFACT_PATTERNS: tuple[str, ...] = (
     "projects/*/*/output/*",
 )
 
+# EXCEPTION: the two canonical exemplars' TOP-LEVEL rendered output is
+# deliberately tracked as living render-proof (see the matching .gitignore
+# negation). These prefixes are exempt from the disposable-artifact guard; every
+# other output path — including confidential/active projects' output — stays
+# guarded. Mirrors the projects/ confidentiality pattern: only these two.
+ALLOWED_TRACKED_OUTPUT_PREFIXES: tuple[str, ...] = (
+    "output/template_code_project/",
+    "output/template_prose_project/",
+)
+
 
 def is_generated_artifact_path(path: str) -> bool:
     """Return True when *path* is a disposable artifact that should be untracked."""
     normalized = path.replace("\\", "/")
+    if any(normalized.startswith(prefix) for prefix in ALLOWED_TRACKED_OUTPUT_PREFIXES):
+        return False
     return any(fnmatch.fnmatch(normalized, pattern) for pattern in GENERATED_ARTIFACT_PATTERNS)
 
 

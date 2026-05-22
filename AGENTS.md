@@ -59,7 +59,7 @@ This document provides documentation for the Research Project Template system, e
 - Content-validation diagnostics carry stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`, e.g. `MARKDOWN.PANDOC_BARE_PIPE`, `BIBTEX.UNDEFINED_KEY`); every new `DiagnosticEvent` emission must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters on `diagnostics.json`.
 - `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .` runs `prevalidate_source_markdown` without a full render (fast pre-flight before `scripts/03_render_pdf.py`). Mermaid in Markdown (`lint_docs` / `mmdc`): unquoted `//` starts a line comment; stadium nodes `[/label/]` must close with `/]`; prefer quoted labels and `<br/>` over `\\n` in labels.
 - Slides keep Beamer Unicode/math parity with combined PDFs via `extract_math_font_preamble` in `infrastructure/rendering/_pdf_latex_helpers.py`, wired through Pandoc `-H header.tex` from `SlidesRenderer.render`; prose Unicode glyphs in body LaTeX are remapped by `infrastructure/rendering/_pdf_unicode_remap.py` inside `_pdf_combined_renderer.postprocess_latex`.
-- **CONFIDENTIALITY INVARIANT (this is a PUBLIC repo).** `.gitignore` ignores `projects/*` and negates **only** `projects/template_code_project/` and `projects/template_prose_project/` (plus the repo-level `projects/*.md` docs). Those two canonical exemplars are the **only** project trees ever git-tracked/pushed. Every other project under `projects/` — rotating research, client/confidential work, and the optional `template_search_project` literature-search exemplar — is **local-only and must never be committed**. This is enforced, not just conventional: `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). `template_search_project` rests in [`projects_archive/template_search_project/`](projects_archive/template_search_project/); copy it under `projects/` **locally** to exercise the literature-search workflow, but never commit it. Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any other project paths in docs (every non-template path may rotate between `projects/`, `projects_in_progress/`, `projects_archive/`). Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
+- **CONFIDENTIALITY INVARIANT (this is a PUBLIC repo).** `.gitignore` ignores `projects/*` and negates **only** `projects/template_code_project/` and `projects/template_prose_project/` (plus the repo-level `projects/*.md` docs). Those two canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in the sibling private repo `/Users/4d/Documents/GitHub/projects/` with `active/`, `passive/`, and `archive/`; `run.sh`/`infrastructure.orchestration` sync `active/*` into `template/projects/*` as symlinks before discovery. Every non-template project visible under `projects/` — rotating research, client/confidential work, symlinked active work, and the optional `template_search_project` literature-search exemplar — is **local-only and must never be committed**. This is enforced, not just conventional: `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). `template_search_project` rests in [`projects_archive/template_search_project/`](projects_archive/template_search_project/); copy it under `projects/` **locally** to exercise the literature-search workflow, but never commit it. Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any other project paths in docs (every non-template path may rotate between `projects/`, `projects_in_progress/`, `projects_archive/`, or the sibling private repo). Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
 - WIP resolution: `infrastructure.project.discovery.resolve_project_root` lets `uv run python scripts/03_render_pdf.py --project biology_textbook` from the repo root whether the tree is under `projects/` or `projects_in_progress/` (nested WIP: pass e.g. `cognitive_integrity/cogsec_multiagent_1_theory`; bare `cogsec_multiagent_*` resolves only under `projects/`). For `biology_textbook`, `manuscript/config.yaml` is the master TOC (38 chapters, 38 labs, 38 question banks; paths enforced by `test_toc_consistency.py`); `layout.*` / `typography.*` in config are authoring documentation only—not wired into LaTeX by infrastructure. PDF margins and line spacing come from `manuscript/preamble.md` (authoritative; currently 2 mm geometry and `\setstretch{1.28}`). README/AGENTS “print density” (4 mm) and config `layout` (3 mm, `line_height: 1.05`) often drift—sync config, preamble, and manuscript docs when changing layout. Keep `docs/api_reference.md` in sync with `src/biology` public APIs and `docs/accessibility.md` advisory vs enforced keys.
 - `bandit.yaml` lists `exclude_dirs` (`projects_archive`, `projects_in_progress`, `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/` — same rotating-project exemption as coverage/mypy) so Bandit stays strict on `infrastructure/`, `scripts/`, and the two canonical exemplars while non-authored / rotating trees are skipped; CI and hooks rely on that config instead of repeating long `--exclude` lists on the command line.
 - When copied **locally** under `projects/` for a sweep, the literature-search exemplar's `manuscript/config.yaml` ships `search.max_results: 10` and `deep_search.max_results_per_keyword: 10` for faster default pipeline smoke; raise those caps when you need full sweeps. It is local-only (not git-tracked); it rests in [`projects_archive/template_search_project/`](projects_archive/template_search_project/) and must never be committed (the `check_tracked_projects.py` guard blocks it).
@@ -168,6 +168,15 @@ The template now supports **multiple independent projects** within a single repo
 
 **Active projects** (under `projects/`): the set **rotates** as workspaces are promoted, archived, or moved. Authoritative names **at any moment** are only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (regenerate after layout changes). The **only** path **guaranteed** to remain the **control-positive** exemplar for docs and commands is `projects/template_code_project/` (optimization research exemplar).
 
+Private active projects normally live in the sibling repo
+`/Users/4d/Documents/GitHub/projects/active/` and are symlinked into
+`template/projects/` by `run.sh`/`infrastructure.orchestration` before
+discovery. Use
+`uv run python -m infrastructure.orchestration link-projects --dry-run` to
+inspect the planned links, `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
+`.private_projects_root` to override the sibling repo, and
+`TEMPLATE_SKIP_LINK_SYNC=1` to disable auto-sync for a command.
+
 **Note:** Exemplars such as `blake_bimetalism`, `traditional_newspaper`, `area_handbook`, `density_bioscales` may live under [`projects_archive/`](projects_archive/). In-progress trees live under [`projects_in_progress/`](projects_in_progress/) until promoted (roster varies by checkout). Active names are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 ## 📂 Project Organization: Active vs Archived
@@ -229,7 +238,7 @@ flowchart TB
     INFRA --> I_DOCS[AGENTS.md · README.md · SKILL.md]
     INFRA --> I_CONFIG[/config<br/>Repo-wide configuration/]
     INFRA --> I_DOCKER[/docker<br/>Container specs/]
-    INFRA --> I_SUB[Layer 1 packages listed in<br/>`infrastructure/AGENTS.md` —<br/>16 Python packages + config dirs ·<br/>.py count: see canonical_facts.md]
+    INFRA --> I_SUB[Layer 1 packages listed in<br/>`infrastructure/AGENTS.md` —<br/>17 Python packages + config dirs ·<br/>.py count: see canonical_facts.md]
 
     PROJECTS --> P_README[README.md · multi-project guide]
     PROJECTS --> P_STUB[/_test_project<br/>Stub · output/ only · not discovered/]
@@ -600,7 +609,7 @@ steganography:
 
 - **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
 1. **Environment Setup** - Verify system requirements and dependencies
-2. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
+2. **Infrastructure Tests** - Run the focused `pipeline-smoke` infrastructure contract (may be skipped; full coverage gate is explicit)
 3. **Project Tests** - Run project test suite (90% coverage minimum)
 4. **Project Analysis** - Execute `projects/{name}/scripts/` analysis workflows
 5. **PDF Rendering** - Generate manuscript PDFs and figures
@@ -609,9 +618,15 @@ steganography:
 8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
 9. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
+**Opt-in long-horizon stages** (added 2026-05-20; NOT in default core or `--core-only` runs — enable via `--tags bundle` or `--tags archival`):
+
+10. **Executable Bundle** (`scripts/08_executable_bundle.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project, parallel to PDF as the durable artifact. Design: [`docs/maintenance/stage-10-executable-bundle.md`](docs/maintenance/stage-10-executable-bundle.md).
+11. **Archival Publication** (`scripts/09_archive_publication.py`, tag `archival`) — Mirror the executable bundle to multiple independent archival targets (Zenodo, Software Heritage, IPFS via Pinata/Web3.Storage). Defaults to dry-run; pass `--commit` to actually deposit. Design: [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md).
+
 **Infrastructure Tests Behavior:**
 
-- **Single project mode**: Infrastructure tests run as stage 2 (may be skipped with `--skip-infra`)
+- **Single project pipeline mode**: Stage 2 runs `scripts/01_run_tests.py --infra-only --infra-scope pipeline-smoke`, a focused real suite for DAG execution, advisory controls, evidence/profile/benchmark extension points, doc invariants, and tracked-artifact guards. This keeps project rebuilds fast without hiding the full repo gate.
+- **Full infrastructure gate**: Run `uv run python scripts/01_run_tests.py --infra-only --infra-scope full` (or the direct pytest command in the verification guide) for the coverage-bearing repository suite.
 - **Multi-project mode** (`--all-projects`): Infrastructure tests run **once** for all projects at the start, then are **skipped** for individual project executions to avoid redundant testing. This is shown in logs as "Running infrastructure tests once for all projects..." followed by "Skipping stage: Infrastructure Tests" for each project.
 
 **Multi-Project Executive Reporting** (`--all-projects` mode only):
@@ -1170,15 +1185,14 @@ wall time; a project can fail there yet pass when re-run on its own. Triage:
   `total_failed: 0`) and render artifacts (`output/pdf/*_combined.pdf` present, no `^! `
   lines in `output/pdf/*.log` or `output/slides/*.log`). If clean, re-run that single project.
 
-#### `validate_docs_and_figures.py` exit 1 at Project Analysis (deep_temporal_affect)
+#### `validate_docs_and_figures.py` exit 1 at Project Analysis (rotating project)
 
-This is the project's read-only self-validator. Its run-report / session checks and links
-into `output/` assert a **completed canonical run** (`run_all.py` / later pipeline stages).
-Run as a plain analysis script it correctly treats not-yet-generated artifacts as
-non-blocking warnings; pass `--strict` to require the full canonical run (hard findings).
-So `python scripts/validate_docs_and_figures.py` → 0 mid-pipeline, `--strict` → 1 until the
-canonical run has produced `output/reports/{summary,validation_report}.md` and
-`output/data/trajectories/session_info.json`.
+Some rotating/private projects ship a read-only self-validator. Its run-report,
+session, and output-link checks often assert a **completed canonical run**
+(`run_all.py` / later pipeline stages). Run as a plain analysis script it should
+treat not-yet-generated artifacts as non-blocking warnings; pass `--strict` to
+require the full canonical run as a hard gate. Keep project-specific artifact
+paths in the project docs, not in this root manual.
 
 #### Scripts Failing
 

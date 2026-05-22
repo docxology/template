@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_methodology</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:methodology">Methodology</h1>
+<p>The pipeline runs in five stages, each a pure function in the
+project’s <code>src/</code> modules; the orchestrator script in
+<code>scripts/</code> does only argument parsing and filesystem I/O.</p>
+<h2 id="read">Read</h2>
+<p><code>infrastructure.prose.read_manuscript_dir</code> walks the
+configured manuscript directory and returns a sorted
+<code>{filename: text}</code> mapping. Scaffolding files
+(<code>preamble.md</code>, <code>config.yaml.example</code>,
+<code>AGENTS.md</code>, <code>README.md</code>, <code>SYNTAX.md</code>)
+are excluded by default — they hold infrastructure documentation rather
+than manuscript prose.</p>
+<h2 id="analyse">Analyse</h2>
+<p>For each file, three analysers run in parallel:</p>
+<ul>
+<li><p><strong>Metrics</strong>
+(<code>infrastructure.prose.analysis.metrics</code>) — word, sentence,
+paragraph, syllable counts; average words per sentence; average
+syllables per word; complex-word fraction; Flesch Reading Ease <span
+class="citation" data-cites="flesch1948new">[@flesch1948new]</span>;
+Flesch-Kincaid Grade Level <span class="citation"
+data-cites="kincaid1975derivation">[@kincaid1975derivation]</span>;
+Gunning Fog Index <span class="citation"
+data-cites="gunning1952technique">[@gunning1952technique]</span>. The
+implementations are textbook formulae over a vowel-group syllable
+heuristic; they’re good enough for a writer-facing signal, not for
+linguistic research.</p></li>
+<li><p><strong>Structure</strong>
+(<code>infrastructure.prose.analysis.structure</code>) — heading
+outline, per-section word counts, max heading depth, presence of an H1,
+detection of skipped heading levels (e.g. an H1 followed directly by an
+H3).</p></li>
+<li><p><strong>Quality</strong>
+(<code>infrastructure.prose.analysis.quality</code>) — passive-voice
+candidates (heuristic: “be” form + past participle), hedge-word density,
+citation density (Pandoc-style <code>[@key]</code> extraction),
+long-sentence flagging.</p></li>
+</ul>
+<p>The results are aggregated into a <code>ManuscriptReport</code> whose
+JSON form is small, greppable, and diff-friendly.</p>
+<h2 id="cross-check">Cross-check</h2>
+<p>Every cited key is matched against the BibTeX file at
+<code>bibliography.references_path</code>. The check has four tunable
+behaviours via <code>config.yaml</code>:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fail_on_missing: true</code></td>
+<td>Any cited <code>[@key]</code> that does not exist in the bib fails
+the check.</td>
+</tr>
+<tr>
+<td><code>fail_on_missing: false</code></td>
+<td>Missing citations are warned but do not fail the run.</td>
+</tr>
+<tr>
+<td><code>fail_on_unused: true</code></td>
+<td>Bib entries that are never cited fail the check.</td>
+</tr>
+<tr>
+<td><code>fail_on_unused: false</code></td>
+<td>Unused entries are warned but do not fail.</td>
+</tr>
+</tbody>
+</table>
+<p>The check uses <a
+href="../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
+so it sees exactly the same view of the bibliography that the rendering
+pipeline uses.</p>
+<h2 id="evaluate">Evaluate</h2>
+<p>The report runs through a set of pure check functions:</p>
+<ul>
+<li><code>_check_grade_level</code> — the manuscript-wide weighted
+average FKGL falls within
+<code>[target_grade_level_min, target_grade_level_max]</code>.</li>
+<li><code>_check_citation_density</code> — citations per 1000 words ≥
+<code>citation_density_min_per_1000</code>.</li>
+<li><code>_check_no_skipped_levels</code> — no file uses a skipped
+heading level (when
+<code>prose.forbid_skipped_levels: true</code>).</li>
+<li><code>_check_h1_per_file</code> — every file has an H1 (when
+<code>prose.require_h1_per_section: true</code>).</li>
+<li><code>_check_bibliography</code> — citation/bib consistency per the
+<code>bibliography:</code> policy block.</li>
+</ul>
+<p>Each check produces a
+<code>CheckResult(passed, message, details)</code>; the run’s
+<code>all_passed</code> flag is the conjunction.</p>
+<h2 id="render">Render</h2>
+<p><code>src/report.py::write_review_report</code> writes a markdown
+file with:</p>
+<ul>
+<li>Top-line counts (files, words, sentences, paragraphs,
+averages).</li>
+<li>A pass/fail table for every check.</li>
+<li>Per-file metrics table (word count, sentence count, FRE, FKGL, Fog,
+citations, hedges, passives).</li>
+<li>Heading outline per file.</li>
+<li>Quality-flag callouts (long sentences, passive candidates, hedges)
+per file.</li>
+</ul>
+<p>Three orchestrators run in lexicographic order (so the figure and
+variable stages always see a fresh review):</p>
+<ul>
+<li><code>scripts/run_prose_pipeline.py</code> writes
+<code>output/manuscript_report.json</code> (the raw
+<code>ManuscriptReport</code>), <code>output/checks.json</code> (the
+list of check results), <code>output/review_report.md</code> (the
+human-readable review report), and <code>output/run_summary.json</code>
+(one-line metadata).</li>
+<li><code>scripts/y_generate_prose_figures.py</code> reads
+<code>manuscript_report.json</code> and writes
+<code>../figures/{section_word_counts,readability_metrics,citation_density}.png</code>.</li>
+<li><code>scripts/z_generate_manuscript_variables.py</code> reads
+<code>manuscript_report.json</code>
+<ul>
+<li><code>config.yaml</code> and writes
+<code>output/data/manuscript_variables.json</code> along with a resolved
+manuscript tree under <code>output/manuscript/</code>.</li>
+</ul></li>
+<li><code>manuscript/references.bib</code> is <strong>not</strong>
+modified by this pipeline — the prose project does not generate
+citations, only validates them.</li>
+</ul>
+</body>
+</html>

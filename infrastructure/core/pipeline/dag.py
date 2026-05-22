@@ -18,8 +18,31 @@ from typing import Any, Callable
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.types import StageContract, StageHooks
 
 logger = get_logger(__name__)
+
+_CONTRACT_KEYS = frozenset(
+    {
+        "input_artifacts",
+        "output_artifacts",
+        "definition_of_done",
+        "failure_code",
+        "retry_policy",
+        "gate",
+        "rollback_to",
+    }
+)
+_HOOK_KEYS = frozenset(
+    {
+        "pre_stage",
+        "post_stage",
+        "on_fail",
+        "on_pause",
+        "timeout_seconds",
+        "run_in_ci",
+    }
+)
 
 
 @dataclass
@@ -39,6 +62,8 @@ class StageDefinition:
     depends_on: list[str] = field(default_factory=list)
     tags: list[str] = field(default_factory=list)
     failure_mode: str | None = None
+    contract: StageContract = field(default_factory=StageContract)
+    hooks: StageHooks = field(default_factory=StageHooks)
 
 
 class PipelineDAG:
@@ -67,6 +92,8 @@ class PipelineDAG:
 
         definitions: list[StageDefinition] = []
         for entry in raw["stages"]:
+            if not isinstance(entry, dict):
+                raise ValueError("Each pipeline stage entry must be a mapping")
             definitions.append(
                 StageDefinition(
                     name=entry["name"],
@@ -77,6 +104,8 @@ class PipelineDAG:
                     depends_on=entry.get("depends_on", []),
                     tags=entry.get("tags", []),
                     failure_mode=entry.get("failure_mode"),
+                    contract=_parse_contract(entry.get("contract"), entry["name"]),
+                    hooks=_parse_hooks(entry.get("hooks"), entry["name"]),
                 )
             )
         logger.debug(f"Parsed {len(definitions)} stage definition(s) from {yaml_path.name}")
@@ -97,6 +126,8 @@ class PipelineDAG:
                     depends_on=entry.get("depends_on", []),
                     tags=entry.get("tags", []),
                     failure_mode=entry.get("failure_mode"),
+                    contract=_parse_contract(entry.get("contract"), entry["name"]),
+                    hooks=_parse_hooks(entry.get("hooks"), entry["name"]),
                 )
             )
         return cls(definitions)
@@ -190,7 +221,14 @@ class PipelineDAG:
 
         for stage in sorted_stages:
             func = self._resolve_stage_func(stage, executor)
-            specs.append(StageSpec(name=stage.name, func=func))
+            specs.append(
+                StageSpec(
+                    name=stage.name,
+                    func=func,
+                    contract=stage.contract,
+                    hooks=stage.hooks,
+                )
+            )
 
         return specs
 
@@ -259,3 +297,90 @@ def load_telemetry_config(yaml_path: Path) -> Any:
         logger.debug(f"Failed to load telemetry config from {yaml_path}: {e}")
 
     return None
+
+
+def _as_str_tuple(value: Any, *, key: str, stage_name: str) -> tuple[str, ...]:
+    """Normalize a YAML scalar/list value to a tuple of strings."""
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        return (value,)
+    if isinstance(value, list):
+        if not all(isinstance(item, str) for item in value):
+            raise ValueError(f"Stage '{stage_name}' contract key '{key}' must contain strings")
+        return tuple(value)
+    raise ValueError(f"Stage '{stage_name}' contract key '{key}' must be string or list")
+
+
+def _parse_contract(raw: Any, stage_name: str) -> StageContract:
+    """Parse and validate the optional ``contract:`` block for a stage."""
+    if raw is None:
+        return StageContract()
+    if not isinstance(raw, dict):
+        raise ValueError(f"Stage '{stage_name}' contract must be a mapping")
+
+    unknown = set(raw) - _CONTRACT_KEYS
+    if unknown:
+        names = ", ".join(sorted(unknown))
+        raise ValueError(f"Stage '{stage_name}' has unsupported contract key(s): {names}")
+
+    return StageContract(
+        input_artifacts=_as_str_tuple(raw.get("input_artifacts"), key="input_artifacts", stage_name=stage_name),
+        output_artifacts=_as_str_tuple(raw.get("output_artifacts"), key="output_artifacts", stage_name=stage_name),
+        definition_of_done=str(raw.get("definition_of_done", "") or ""),
+        failure_code=str(raw.get("failure_code", "") or ""),
+        retry_policy=int(raw.get("retry_policy", 0) or 0),
+        gate=str(raw["gate"]) if raw.get("gate") is not None else None,
+        rollback_to=str(raw["rollback_to"]) if raw.get("rollback_to") is not None else None,
+    )
+
+
+def _normalize_hook_commands(value: Any, *, key: str, stage_name: str) -> tuple[tuple[str, ...], ...]:
+    """Normalize hook command YAML to immutable argv tuples.
+
+    Accepted forms:
+    - ``["python", "script.py"]`` for one command
+    - ``[["python", "a.py"], ["python", "b.py"]]`` for many commands
+    - ``"python script.py"`` for a command that will be shell-split later
+    """
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        return ((value,),)
+    if not isinstance(value, list):
+        raise ValueError(f"Stage '{stage_name}' hook key '{key}' must be string or list")
+    if not value:
+        return ()
+    if all(isinstance(item, str) for item in value):
+        return (tuple(value),)
+    commands: list[tuple[str, ...]] = []
+    for item in value:
+        if isinstance(item, str):
+            commands.append((item,))
+            continue
+        if not isinstance(item, list) or not all(isinstance(part, str) for part in item):
+            raise ValueError(f"Stage '{stage_name}' hook key '{key}' command entries must be strings or string lists")
+        commands.append(tuple(item))
+    return tuple(commands)
+
+
+def _parse_hooks(raw: Any, stage_name: str) -> StageHooks:
+    """Parse and validate the optional ``hooks:`` block for a stage."""
+    if raw is None:
+        return StageHooks()
+    if not isinstance(raw, dict):
+        raise ValueError(f"Stage '{stage_name}' hooks must be a mapping")
+
+    unknown = set(raw) - _HOOK_KEYS
+    if unknown:
+        names = ", ".join(sorted(unknown))
+        raise ValueError(f"Stage '{stage_name}' has unsupported hook key(s): {names}")
+
+    return StageHooks(
+        pre_stage=_normalize_hook_commands(raw.get("pre_stage"), key="pre_stage", stage_name=stage_name),
+        post_stage=_normalize_hook_commands(raw.get("post_stage"), key="post_stage", stage_name=stage_name),
+        on_fail=_normalize_hook_commands(raw.get("on_fail"), key="on_fail", stage_name=stage_name),
+        on_pause=_normalize_hook_commands(raw.get("on_pause"), key="on_pause", stage_name=stage_name),
+        timeout_seconds=int(raw.get("timeout_seconds", 30) or 30),
+        run_in_ci=bool(raw.get("run_in_ci", False)),
+    )

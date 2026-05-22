@@ -32,7 +32,7 @@ ensure_repo_root_on_path()
 from infrastructure.core.logging.utils import get_logger, log_header, log_live_resource_usage, log_substep
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.test_runner import run_per_project_pytest
-from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
+from infrastructure.reporting.pipeline_test_runner import INFRASTRUCTURE_TEST_SCOPES, execute_test_pipeline
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -83,6 +83,16 @@ def main() -> int:
         help="Run only infrastructure tests (skip project tests)",
     )
     parser.add_argument(
+        "--infra-scope",
+        choices=INFRASTRUCTURE_TEST_SCOPES,
+        default="full",
+        help=(
+            "Infrastructure test scope. 'full' runs the coverage-bearing repo "
+            "suite; 'pipeline-smoke' runs the focused real contract used by "
+            "project pipelines."
+        ),
+    )
+    parser.add_argument(
         "--project-only",
         action="store_true",
         help="Run only project tests (skip infrastructure tests)",
@@ -124,7 +134,9 @@ def main() -> int:
 
     # If the default placeholder project is selected but isn't a runnable project,
     # pick the first discovered runnable project (has src/ and tests/).
-    project_root = repo_root / "projects" / args.project
+    from infrastructure.project.discovery import resolve_project_root
+
+    project_root = resolve_project_root(repo_root, args.project)
     if args.project == "project" and (not (project_root / "src").exists() or not (project_root / "tests").exists()):
         try:
             from infrastructure.project.discovery import discover_projects
@@ -162,6 +174,7 @@ def main() -> int:
         include_slow=args.include_slow,
         include_ollama_tests=args.include_ollama_tests,
         strict=strict,
+        infra_scope=args.infra_scope,
     )
 
     # Log resource usage at end

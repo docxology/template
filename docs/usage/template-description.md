@@ -24,7 +24,7 @@ This template provides a **foundation** for research projects with:
 
 ### 📚 **Documentation & Publishing**
 
-- **Markdown to PDF pipeline** with professional formatting
+- **Markdown-to-multiformat pipeline**: PDF + HTML + Slides ship by default; DOCX and EPUB are opt-in via [`render.formats`](output-formats.md) in `manuscript/config.yaml`. Pandoc + xelatex drive the pipeline; see [output-formats.md](output-formats.md) for the full matrix.
 - **Cross-referencing system** for complex documents
 - **Automated figure generation** from Python scripts
 - **Glossary generation** from source code

@@ -295,6 +295,39 @@ else
 fi
 ```
 
+## Pipeline Summary Format
+
+The end-of-run terminal summary block is rendered by **`format_multi_project_detailed_report`**
+in [`infrastructure/core/pipeline/multi_project.py`](../../infrastructure/core/pipeline/multi_project.py).
+This is the **canonical pipeline-completion reporting surface** — every full-run option
+(interactive menu, `./run.sh --pipeline`, and direct `infrastructure.orchestration` invocations)
+prints this block via the orchestrator in
+[`infrastructure/orchestration/pipeline_runner.py`](../../infrastructure/orchestration/pipeline_runner.py).
+
+The per-project rendering summary printed during Stage 5 is rendered by
+**`log_rendering_summary`** (paired with `generate_rendering_summary`) in
+[`infrastructure/rendering/_pipeline_summary.py`](../../infrastructure/rendering/_pipeline_summary.py).
+This is the **canonical per-project rendering reporting surface** — wrapped in
+`RENDERING RESULTS SUMMARY` separator bars, it lists the combined PDF, individual
+section PDFs, web outputs, slides, and total output size.
+
+For the full visual contract — the canonical clean-run block, the failure-mode shape,
+the schema of every section, and the verbosity dial that controls terminal-vs-file
+output — see [logging/output-design.md](logging/output-design.md).
+
+**Stability contract.** Both functions ship with explicit `STABILITY:` docstrings.
+Section headers (`MULTI-PROJECT EXECUTION SUMMARY`, `PROJECT STATUS`,
+`STAGE TIMING BREAKDOWN`, `PERFORMANCE HIGHLIGHTS`, `RENDERING RESULTS SUMMARY`,
+`Combined Manuscript PDF`, `Web Outputs`, `Presentation Slides`) are part of the
+public contract: tests assert on their substring presence, downstream tooling
+greps for them, and they must not change without coordinated updates. New
+sections may be appended.
+
+After each multi-project run, the rendered block is also persisted verbatim to
+[`docs/_generated/last-run-summary.md`](../_generated/) so it can be diffed
+across runs for regression detection. The write is best-effort — a docs-write
+failure cannot crash the pipeline.
+
 ## Troubleshooting
 
 ### Reports Not Generated

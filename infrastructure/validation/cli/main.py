@@ -4,15 +4,21 @@ Thin orchestrator wrapping infrastructure.validation module functionality.
 """
 
 import argparse
+import json
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 
+from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.validation.integrity.checks import verify_output_integrity
 from infrastructure.validation.integrity.link_validator import LinkValidator
 from infrastructure.validation.content.markdown_validator import validate_markdown
 from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
+from infrastructure.validation.evidence_registry import (
+    build_project_evidence_registry,
+    validate_text_against_registry,
+)
 
 logger = get_logger(__name__)
 
@@ -181,6 +187,41 @@ def validate_links_command(args: argparse.Namespace) -> None:
         raise SystemExit(0)
 
 
+def validate_evidence_command(args: argparse.Namespace) -> None:
+    """Validate manuscript numbers and citations against the verified registry."""
+    project_root = Path(args.project_root)
+    manuscript_dir = Path(args.manuscript_dir) if args.manuscript_dir else project_root / "manuscript"
+    if not project_root.exists():
+        logger.error(f"Project root not found: {project_root}")
+        raise SystemExit(1)
+    if not manuscript_dir.exists():
+        logger.error(f"Manuscript directory not found: {manuscript_dir}")
+        raise SystemExit(1)
+
+    registry = build_project_evidence_registry(project_root)
+    text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in discover_manuscript_files(manuscript_dir)
+        if path.is_file() and path.suffix.lower() == ".md"
+    )
+    report = validate_text_against_registry(text, registry)
+    payload = {
+        "unsupported_numbers": report.unsupported_numbers,
+        "unsupported_citations": report.unsupported_citations,
+        "has_issues": report.has_issues,
+    }
+
+    if args.output_json:
+        output_path = Path(args.output_json)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+        logger.info(f"Evidence report saved to: {output_path}")
+    else:
+        logger.info(json.dumps(payload, indent=2, sort_keys=True))
+
+    raise SystemExit(1 if report.has_issues and args.fail_on_issues else 0)
+
+
 def main() -> None:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(description="Validate research output (PDFs, Markdown, integrity).")
@@ -225,6 +266,21 @@ def main() -> None:
     link_parser.add_argument("--repo-root", help="Repository root directory (default: current directory)")
     link_parser.add_argument("--output", help="Output file for validation report")
     link_parser.set_defaults(func=validate_links_command)
+
+    # Evidence registry validation
+    evidence_parser = subparsers.add_parser(
+        "evidence",
+        help="Validate manuscript claims against registered project evidence",
+    )
+    evidence_parser.add_argument("project_root", help="Path to project root")
+    evidence_parser.add_argument("--manuscript-dir", help="Path to manuscript markdown directory")
+    evidence_parser.add_argument("--output-json", help="Write JSON evidence report")
+    evidence_parser.add_argument(
+        "--fail-on-issues",
+        action="store_true",
+        help="Exit non-zero when unsupported facts are found",
+    )
+    evidence_parser.set_defaults(func=validate_evidence_command)
 
     args = parser.parse_args()
 

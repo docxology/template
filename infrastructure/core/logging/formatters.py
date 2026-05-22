@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 from typing import ClassVar
 
-from infrastructure.core.logging.constants import EMOJIS, get_emoji_enabled
+from infrastructure.core.logging.constants import EMOJIS, get_emoji_enabled, get_terminal_verbose_enabled
 
 
 class JSONFormatter(logging.Formatter):
@@ -63,3 +63,34 @@ class TemplateFormatter(logging.Formatter):
         message = record.getMessage()
 
         return f"{emoji_str}[{timestamp}] [{level_name}] {message}"
+
+
+class ConsoleFormatter(logging.Formatter):
+    """Terminal-oriented formatter: clean messages, no timestamp/level chrome.
+
+    Returns just the message for INFO/DEBUG and an emoji-prefixed message for
+    warnings/errors. Reverts to the verbose TemplateFormatter format when the
+    env var LOG_TERMINAL_VERBOSE=1.
+
+    The verbose path is the existing TemplateFormatter behavior, preserved for
+    operators who depend on per-line timestamps in the terminal.
+    """
+
+    _LEVEL_EMOJI_KEYS: ClassVar[dict[int, str]] = {
+        logging.DEBUG: "",
+        logging.INFO: "",  # no emoji on info — keep terminal calm
+        logging.WARNING: "warning",
+        logging.ERROR: "error",
+        logging.CRITICAL: "error",
+    }
+
+    def format(self, record: logging.LogRecord) -> str:
+        # Honour LOG_TERMINAL_VERBOSE=1 → full prefix (rollback path)
+        if get_terminal_verbose_enabled():
+            return TemplateFormatter().format(record)
+
+        message = record.getMessage()
+        emoji_key = self._LEVEL_EMOJI_KEYS.get(record.levelno, "")
+        if emoji_key and get_emoji_enabled():
+            return f"{EMOJIS[emoji_key]} {message}"
+        return message

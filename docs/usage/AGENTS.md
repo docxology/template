@@ -12,6 +12,7 @@ Technical guide for `docs/usage/` — content authoring, formatting, visualizati
 | `examples-showcase.md` | Real-world usage showcase |
 | `template-description.md` | Template feature overview |
 | `markdown-template-guide.md` | Markdown authoring and cross-referencing |
+| `output-formats.md` | Five-format output reference: PDF/HTML/Slides/DOCX/EPUB + `render.formats` config |
 | `manuscript-numbering-system.md` | Section numbering conventions |
 | `style-guide.md` | Equations, figures, captions, and tables |
 | `image-management.md` | Image insertion, captioning, and cross-referencing |

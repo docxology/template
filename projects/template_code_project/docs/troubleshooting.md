@@ -197,7 +197,8 @@ fresh clone does not. See
 
 **Symptom:** `scripts/01_run_tests.py --project template_code_project` prints
 `Project: ✓ PASSED (0/0 tests, 0.0% coverage)` and exits 0, while the
-documented direct command runs all 117 tests at ~99% coverage.
+documented direct command runs the current project suite with the measured
+coverage shown in the repo canonical facts.
 
 **Cause:** the aggregate runner resolves the interpreter from
 `projects/template_code_project/.venv`. A `.venv` made by `uv venv` without

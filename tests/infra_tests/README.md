@@ -5,11 +5,15 @@ Infrastructure tests cover the reusable modules under `infrastructure/`. They us
 ## Coverage
 
 ```bash
+uv run python scripts/01_run_tests.py --infra-only --infra-scope pipeline-smoke
+uv run python scripts/01_run_tests.py --infra-only --infra-scope full
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html --cov-fail-under=60
 uv run pytest tests/infra_tests/ -m "not requires_ollama"
 ```
 
-Floor: **60%** (currently ~83%). Coverage is measured over `infrastructure/` only.
+Floor: **60%** for the full scope. `pipeline-smoke` is intentionally coverage-free
+and is used inside project pipelines as a fast real contract check. Coverage is
+measured over `infrastructure/` only.
 
 ## Directory -> Module Mapping
 

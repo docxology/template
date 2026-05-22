@@ -16,6 +16,7 @@ The `usage/` directory contains practical examples, usage patterns, and guides f
 | [`examples-showcase.md`](examples-showcase.md) | Real-world usage examples | Advanced users |
 | [`template-description.md`](template-description.md) | Template overview and features | New users |
 | [`markdown-template-guide.md`](markdown-template-guide.md) | Markdown authoring guide | Content creators |
+| [`output-formats.md`](output-formats.md) | Five-format output matrix (PDF/HTML/Slides/DOCX/EPUB) + `render.formats` config reference | All users |
 | [`manuscript-numbering-system.md`](manuscript-numbering-system.md) | Manuscript section numbering | Content creators |
 | [`style-guide.md`](style-guide.md) | Manuscript style guide (equations, figures, captions, tables) | Content creators |
 | [`image-management.md`](image-management.md) | Image insertion and cross-referencing | Content creators |

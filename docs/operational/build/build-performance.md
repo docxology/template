@@ -14,7 +14,8 @@ This document provides detailed performance analysis extracted from the build sy
 
 **Indicative breakdown** (numbers drift with every commit; verify live counts in [`../../_generated/canonical_facts.md`](../../_generated/canonical_facts.md)):
 
-- Infrastructure Tests: ~25 seconds, runs against the entire `infrastructure/` package
+- Pipeline infrastructure smoke: ~20 seconds, focused on DAG/control/evidence/profile/benchmark/doc guardrails
+- Full infrastructure gate: explicit coverage-bearing repo suite; runtime varies with the full `tests/infra_tests/` + integration matrix
 - Project Tests: ~5 seconds, matrix of all active exemplars (see `active_projects.md`)
 
 **Result:** ✅ **ALL TESTS PASSING**

@@ -97,6 +97,21 @@ class TestCombineMarkdownFiles:
         assert "label{thm:demo}" not in result
         assert "**Theorem.**" in result
 
+    def test_html_safe_markdown_normalizes_project_figure_paths(self, tmp_path):
+        renderer = _make_renderer(tmp_path)
+        source = (
+            "![A](../output/figures/a.png)\n"
+            "![B](output/figures/b.png)\n"
+            "![C](../../output/figures/c.png)\n"
+        )
+
+        result = renderer._html_safe_markdown(source)
+
+        assert "../output/figures/" not in result
+        assert "../../output/figures/" not in result
+        assert "output/figures/" not in result
+        assert result.count("../figures/") == 3
+
 
 class TestEmbedCss:
     def test_embed_in_head(self, tmp_path):

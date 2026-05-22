@@ -23,8 +23,8 @@ from infrastructure.core._optional_deps import psutil
 T = TypeVar("T")
 P = ParamSpec("P")
 
-_HEADER_SEPARATOR_WIDTH = 50
-_STAGE_SEPARATOR_WIDTH = 46
+from infrastructure.core.logging.constants import SUBSECTION_WIDTH as _HEADER_SEPARATOR_WIDTH
+from infrastructure.core.logging.constants import STAGE_WIDTH as _STAGE_SEPARATOR_WIDTH
 
 
 @contextmanager

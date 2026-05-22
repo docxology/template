@@ -25,6 +25,7 @@ from tests.helpers.log_parser import (
 ROOT = Path(__file__).parent.parent.parent.resolve()
 
 
+@pytest.mark.timeout(180)
 class TestFullPipelineStructuredLogs:
     """Test full pipeline execution with structured log assertions."""
 
@@ -45,9 +46,7 @@ class TestFullPipelineStructuredLogs:
         # Manuscript
         manuscript = project / "manuscript"
         manuscript.mkdir()
-        (manuscript / "01_abstract.md").write_text(
-            "# Abstract\n\nMinimal test abstract for pipeline validation.\n"
-        )
+        (manuscript / "01_abstract.md").write_text("# Abstract\n\nMinimal test abstract for pipeline validation.\n")
         (manuscript / "config.yaml").write_text(
             "paper:\n  title: Pipeline Integration Test\n"
             "authors:\n  - name: Test Author\n"
@@ -58,9 +57,7 @@ class TestFullPipelineStructuredLogs:
         src = project / "src"
         src.mkdir()
         (src / "__init__.py").write_text("")
-        (src / "core.py").write_text(
-            'def compute(x: int) -> int:\n    """Compute double of x."""\n    return x * 2\n'
-        )
+        (src / "core.py").write_text('def compute(x: int) -> int:\n    """Compute double of x."""\n    return x * 2\n')
 
         # Tests
         tests = project / "tests"
@@ -106,8 +103,7 @@ class TestFullPipelineStructuredLogs:
 
         # Should have at least some log entries
         assert len(logs) > 0, (
-            f"No structured log entries found. stdout={result.stdout[:500]}, "
-            f"stderr={result.stderr[:500]}"
+            f"No structured log entries found. stdout={result.stdout[:500]}, stderr={result.stderr[:500]}"
         )
 
         # All entries should have valid structure

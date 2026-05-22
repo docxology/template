@@ -26,7 +26,7 @@ uv run python scripts/07_generate_executive_report.py
 | Stage | Script | Responsibility |
 | --- | --- | --- |
 | 00 | `00_setup_environment.py` | Validate Python, dependencies, build tools, and directories |
-| 01 | `01_run_tests.py` | Run infrastructure and project tests with coverage gates. With `--project-only --all-projects`, delegates to `infrastructure.core.test_runner.run_per_project_pytest` (one pytest process per project, `--cov-append`, combined coverage gate — used by CI). |
+| 01 | `01_run_tests.py` | Run infrastructure and project tests. Project pipelines use `--infra-scope pipeline-smoke` for a focused real infrastructure contract; explicit repo verification uses `--infra-scope full` for the coverage-bearing infrastructure suite. With `--project-only --all-projects`, delegates to `infrastructure.core.test_runner.run_per_project_pytest` (one pytest process per project, `--cov-append`, combined coverage gate — used by CI). |
 | 02 | `02_run_analysis.py` | Discover and run `projects/{name}/scripts/` |
 | 03 | `03_render_pdf.py` | Render manuscripts to PDF |
 | 04 | `04_validate_output.py` | Validate PDFs, markdown, and integrity reports |

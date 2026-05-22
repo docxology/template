@@ -18,7 +18,7 @@ Technical guide for `docs/architecture/adrs/` — lightweight, numbered decision
 - ADRs are numbered sequentially (`NNN-short-title.md`).
 - Each ADR follows the standard structure: Context, Decision, Consequences (positive/negative), Alternatives Considered.
 - ADRs are immutable once accepted — superseded decisions get a new ADR that references the old one.
-- Gaps in numbering (e.g., no `003-*`) indicate withdrawn or merged drafts.
+- Gaps in numbering *may* indicate withdrawn drafts; check the index. (A withdrawn slot may also be reused for a new decision — e.g., ADR 003 was reused on 2026-05-20 for multi-format rendering.)
 
 ## See Also
 

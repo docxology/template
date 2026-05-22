@@ -128,7 +128,7 @@ flowchart TD
 | Stage | Time | Percentage | Description |
 | ------- | ------ | ------------ | ------------- |
 | **Setup Environment** | 1s | 1% | Dependency validation |
-| **Run Tests** | 26s | 31% | Combined infra + project tests |
+| **Run Tests** | ~35s | 36% | Pipeline-smoke infrastructure contract + selected project tests |
 | **Run Analysis** | 6s | 7% | Execute project scripts |
 | **Render PDF** | 50s | 60% | Generate manuscript PDFs |
 | **Validate Output** | 1s | 1% | Quality checks |
@@ -141,7 +141,7 @@ flowchart TD
 | ------- | ------ | ------------ | ------------- |
 | **Clean Output Directories** | <1s | <1% | Fresh build state |
 | **Setup Environment** | 1s | <1% | Dependency validation |
-| **Infrastructure Tests** | ~25s | 2% | full suite with coverage; live count → `canonical_facts.md` |
+| **Infrastructure Tests** | ~20s | 2% | pipeline-smoke contract; full coverage gate is explicit |
 | **Project Tests** | ~5s | <1% | matrix of all active projects with coverage; live counts per exemplar in `canonical_facts.md` |
 | **Project Analysis** | 6s | <1% | Execute project scripts |
 | **PDF Rendering** | 50s | 4% | Generate manuscript PDFs |

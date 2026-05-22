@@ -23,6 +23,8 @@ The template supports three configuration methods (in priority order):
 | `LOG_LEVEL` | `1` | Logging verbosity: `0`=DEBUG, `1`=INFO, `2`=WARN, `3`=ERROR |
 | `NO_EMOJI` | (unset) | Disable emoji in log output |
 | `NO_COLOR` | (unset) | Disable colorized output |
+| `LOG_TERMINAL_VERBOSE` | (unset) | Restore the verbose `[ts] [LEVEL] msg` prefix on terminal output (the log file always has it). See [`../logging/output-design.md`](../logging/output-design.md). |
+| `STRUCTURED_LOGGING` | (unset) | Set to `true` to emit JSON log lines |
 
 **Example:**
 ```bash
@@ -204,8 +206,33 @@ See [LLM Configuration](../../../infrastructure/llm/AGENTS.md) for options.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `RENDERING_FORMAT` | `pdf` | Output format: `pdf`, `html`, `slides` |
 | `RENDERING_ENGINE` | `xelatex` | LaTeX engine: `xelatex`, `pdflatex`, `lualatex` |
+| `ENABLE_PDF` | `1` | Per-format toggle — combined PDF + per-section LaTeX/PDF. Values: `0/1`, `true/false`, `yes/no` (case-insensitive). |
+| `ENABLE_HTML` | `1` | Per-format toggle — combined HTML index + per-section HTML. |
+| `ENABLE_SLIDES` | `1` | Per-format toggle — per-section Beamer PDFs. |
+| `ENABLE_DOCX` | `0` | Opt-in — combined Word document at `output/<project>/docx/`. |
+| `ENABLE_EPUB` | `0` | Opt-in — combined EPUB at `output/<project>/epub/`. |
+
+> **Precedence** (highest first): `ENABLE_<FORMAT>` env var → `render.formats.<format>` in `manuscript/config.yaml` → dataclass default. See [`../../usage/output-formats.md`](../../usage/output-formats.md) for the full reference.
+
+#### Render-format YAML block
+
+Per-project format defaults live in `projects/<name>/manuscript/config.yaml`
+under a new `render.formats` block:
+
+```yaml
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: true     # opt-in — requires pandoc
+    epub: false    # opt-in — requires pandoc
+```
+
+The block is validated by `infrastructure/core/config/schema.py` (strict
+`additionalProperties: false` on the inner mapping). When a format is
+disabled the pipeline logs `[skip] <format> rendering disabled in config`.
 
 ## Configuration Examples
 

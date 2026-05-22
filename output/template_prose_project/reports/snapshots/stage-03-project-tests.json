@@ -1,0 +1,16 @@
+{
+  "artifact_manifest_hash": "75f7eebd22f0c5689f489c63f328eb481b531f39757709119d5ea9c1647dc4d9",
+  "artifacts": {
+    "output/reports/test_results.json": "ef719cee9154166da23e54cf776dfc1db0498cbd50980398df3807c96e1ff8e8",
+    "output/reports/test_results.md": "65e1b322df923462779c2bd7684fe616c371aef9f0df8632167b1f128019d20f"
+  },
+  "evidence_fact_count": 0,
+  "path": "/Users/4d/Documents/GitHub/template/projects/template_prose_project/output/reports/snapshots/stage-03-project-tests.json",
+  "stage_name": "Project Tests",
+  "stage_num": 3,
+  "timestamp": "2026-05-22T00:49:17+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

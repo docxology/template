@@ -161,6 +161,23 @@ def generate_manuscript_config_schema(
         "llm": {"type": "object", "additionalProperties": True},
         "testing": {"type": "object", "additionalProperties": True},
         "steganography": {"type": "object", "additionalProperties": True},
+        "render": {
+            "type": "object",
+            "properties": {
+                "formats": {
+                    "type": "object",
+                    "properties": {
+                        "pdf": {"type": "boolean"},
+                        "html": {"type": "boolean"},
+                        "slides": {"type": "boolean"},
+                        "docx": {"type": "boolean"},
+                        "epub": {"type": "boolean"},
+                    },
+                    "additionalProperties": False,
+                },
+            },
+            "additionalProperties": True,
+        },
         "keywords": {"type": "array", "items": {"type": "string"}},
         "metadata": {"type": "object", "additionalProperties": {"type": "string"}},
         "project_config": {"type": "object", "additionalProperties": True},

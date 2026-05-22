@@ -121,7 +121,19 @@ The template now supports **multiple research projects** in a single repository.
 
 Projects are discovered dynamically from `projects/` (see `infrastructure.project.discovery.discover_projects()`). **Authoritative names:** [_generated/active_projects.md](_generated/active_projects.md) (see [_generated/README.md](_generated/README.md) for policy and regeneration). **Examples in this guide** use **`template_code_project`** as the stable control-positive layout under `projects/`.
 
-Archived and in-progress work lives under `projects_archive/` and `projects_in_progress/` and is not executed by `./run.sh` until moved into `projects/`.
+Archived and in-progress work lives under `projects_archive/` and
+`projects_in_progress/` and is not executed by `./run.sh` until moved into
+`projects/`.
+
+Private active work normally lives in the sibling repo
+`/Users/4d/Documents/GitHub/projects/active/`. `run.sh` auto-syncs those
+directories into `template/projects/` as symlinks before discovery, so they
+appear in the menu and run/render like native projects without being tracked by
+this public repository. Use
+`uv run python -m infrastructure.orchestration link-projects --dry-run` to
+preview link changes, `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
+`.private_projects_root` to override the sibling repo, and
+`TEMPLATE_SKIP_LINK_SYNC=1` to skip auto-sync for a command.
 
 ### Multi-Project Commands
 
@@ -346,7 +358,7 @@ The canonical pipeline-stage table (rendered from `pipeline.yaml`):
 | ----- | ------ | ---- | ------------ |
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `00_setup_environment.py` | `core` | hard fail |
-| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose` | `core`, `tests` | configurable tolerance |
+| **2** Infrastructure Tests | `01_run_tests.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
 | **3** Project Tests | `01_run_tests.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
 | **4** Project Analysis | `02_run_analysis.py` | `core` | hard fail |
 | **5** PDF Rendering | `03_render_pdf.py` | `core` | hard fail |
@@ -354,6 +366,8 @@ The canonical pipeline-stage table (rendered from `pipeline.yaml`):
 | **7** LLM Scientific Review | `06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **8** LLM Translations | `06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **9** Copy Outputs | `05_copy_outputs.py` | `core` | soft fail |
+| **10** Executable Bundle | `08_executable_bundle.py` | `bundle` | soft fail |
+| **11** Archival Publication | `09_archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 The table above lists pipeline-position indices (0-based, as the executor sees them); the table below maps script *filename* prefixes to their high-level purpose:
@@ -437,6 +451,32 @@ You can override by setting before running:
 export LOG_LEVEL=0  # Enable debug logging
 ./run.sh --pipeline
 ```
+
+### Logging variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LOG_LEVEL` | `1` | `0`=DEBUG `1`=INFO `2`=WARN `3`=ERROR |
+| `NO_EMOJI` | unset | Set to disable emoji in output |
+| `STRUCTURED_LOGGING` | unset | Set to emit JSON log lines |
+| `LOG_TERMINAL_VERBOSE` | unset | Restore the verbose `[ts] [LEVEL] msg` prefix on the terminal (the file always has it) — see [operational/logging/output-design.md](operational/logging/output-design.md) |
+
+### Render-format variables
+
+Format toggles default to PDF/HTML/Slides **on**, DOCX/EPUB **off**. Set
+in `projects/{name}/manuscript/config.yaml` under `render.formats`, or
+override per-run via env (env precedence beats yaml):
+
+| Variable | Type | Default | Effect |
+|----------|------|---------|--------|
+| `ENABLE_PDF` | `0/1`,`true/false`,`yes/no` | `1` | Combined PDF + per-section LaTeX/PDF |
+| `ENABLE_HTML` | same | `1` | Combined HTML index + per-section HTML |
+| `ENABLE_SLIDES` | same | `1` | Per-section Beamer PDFs |
+| `ENABLE_DOCX` | same | `0` | Combined Word document (`output/<project>/docx/`) |
+| `ENABLE_EPUB` | same | `0` | Combined EPUB (`output/<project>/epub/`) |
+
+See [`usage/output-formats.md`](usage/output-formats.md) for the full
+configuration matrix.
 
 ### LLM Review Variables
 

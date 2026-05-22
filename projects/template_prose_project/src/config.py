@@ -34,6 +34,7 @@ _KNOWN_TOP_LEVEL_KEYS: frozenset[str] = frozenset(
         "prose",
         "bibliography",
         "report",
+        "render",  # accepted-but-ignored (parsed by infrastructure.rendering.config)
     }
 )
 _KNOWN_PROSE_KEYS: frozenset[str] = frozenset(

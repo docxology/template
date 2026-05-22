@@ -22,7 +22,13 @@ from infrastructure.core.pipeline.stage_monitor import (
     get_system_resources,
 )
 from infrastructure.core.pipeline.summary import generate_pipeline_summary
-from infrastructure.core.pipeline.types import StageSpec
+from infrastructure.core.pipeline.types import (
+    PipelineControlConfig,
+    StageContract,
+    StageHooks,
+    StagePolicy,
+    StageSpec,
+)
 from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
 
 __all__ = [
@@ -36,7 +42,11 @@ __all__ = [
     "PipelineConfig",
     "PipelineExecutor",
     "PipelineStageResult",
+    "PipelineControlConfig",
     "StagePerformanceTracker",
+    "StageContract",
+    "StageHooks",
+    "StagePolicy",
     "StageSpec",
     "TelemetryCollector",
     "TelemetryConfig",

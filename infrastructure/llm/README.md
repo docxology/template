@@ -1,6 +1,8 @@
 # LLM Infrastructure
 
-Local Large Language Model (LLM) integration for research workflows, providing manuscript review, summarization, and analysis capabilities using Ollama.
+Local Large Language Model (LLM) integration for research workflows, providing **manuscript draft assistance**, summarization, and analysis capabilities using Ollama.
+
+> **Important (2026-05-20 relabeling).** What this module does is **draft assistance** — structural lint, style suggestions, translation of technical abstracts. **It is not "scientific review."** A small local model (`gemma3:4b` by default) is not capable of substantive peer review of technical research; treating its output as such would be misleading to readers and reviewers. The pipeline stages historically called "LLM Scientific Review" should be read as "LLM Structural Lint (Draft Assistance)" — this rename is reflected in [`docs/maintenance/toolchain-migration.md`](../../docs/maintenance/toolchain-migration.md). The `pipeline.yaml` stage name is preserved for backwards compatibility with existing project configs; the disclaimer here is the authoritative interpretation. To upgrade output quality, swap the model in your project config (the Ollama abstraction is model-agnostic — see "Migration path" in the toolchain guide).
 
 ## Quick Start
 

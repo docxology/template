@@ -13,28 +13,28 @@ def _repo_root() -> Path:
 
 
 def test_active_projects_doc_matches_discovery() -> None:
-    """docs/_generated/active_projects.md lists every discover_projects name."""
+    """docs/_generated/active_projects.md exactly matches discovery."""
     root = _repo_root()
     doc_path = root / "docs" / "_generated" / "active_projects.md"
     assert doc_path.is_file(), f"Missing {doc_path}; run scripts/generate_active_projects_doc.py"
 
     text = doc_path.read_text(encoding="utf-8")
     discovered = {p.qualified_name for p in discover_projects(root)}
-    for name in discovered:
-        assert f"`{name}`" in text, f"active_projects.md missing project {name!r}"
+    current_match = re.search(r"Current entries:\n\n(?P<entries>(?:- `[^`]+`\n)+)", text)
+    assert current_match, "active_projects.md must contain a generated Current entries block"
+    documented = set(re.findall(r"- `([^`]+)`", current_match.group("entries")))
 
-    # No stale traditional_newspaper under active generated list
-    assert "`traditional_newspaper`" not in text
+    assert documented == discovered, (
+        "active_projects.md drifted from discover_projects(); "
+        "run uv run python scripts/generate_active_projects_doc.py\n"
+        f"missing={sorted(discovered - documented)} extra={sorted(documented - discovered)}"
+    )
 
 
 def test_docs_markdown_no_broken_projects_paths() -> None:
     """Links under docs/ must not point at projects/NAME/ unless NAME exists."""
     root = _repo_root()
-    valid = {
-        p.name
-        for p in (root / "projects").iterdir()
-        if p.is_dir() and not p.name.startswith(".")
-    }
+    valid = {p.name for p in (root / "projects").iterdir() if p.is_dir() and not p.name.startswith(".")}
     link_target = re.compile(r"\]\(([^)]+)\)")
     projects_segment = re.compile(r"projects/([a-z0-9_]+)/")
     failures: list[str] = []

@@ -12,11 +12,15 @@ import re
 
 
 from infrastructure.reporting.pipeline_test_runner import (
+    INFRASTRUCTURE_TEST_SCOPES,
+    PIPELINE_SMOKE_INFRA_TEST_PATHS,
     TestSuiteResults,
     _DISCOVERY_PATTERNS,
     _log_discovered_tests,
+    _parse_test_discovery_timeout,
     _report_suite_failure,
     _report_suite_success,
+    _resolve_infrastructure_test_paths,
     report_results,
 )
 
@@ -121,12 +125,57 @@ class TestDiscoveryPatterns:
         assert found is None
 
 
+class TestInfrastructureTestScopes:
+    """Test infrastructure suite scope selection."""
+
+    def test_scopes_are_public_choices(self):
+        """CLI choices expose full and pipeline-smoke scopes."""
+        assert INFRASTRUCTURE_TEST_SCOPES == ("full", "pipeline-smoke")
+
+    def test_full_scope_uses_repo_suite_and_integration(self, tmp_path):
+        """Full scope covers the complete infrastructure and integration tree."""
+        paths = _resolve_infrastructure_test_paths(tmp_path, "full")
+
+        assert str(tmp_path / "tests" / "infra_tests") in paths
+        assert str(tmp_path / "tests" / "integration") in paths
+        assert any("test_module_interoperability.py" in path for path in paths)
+
+    def test_pipeline_smoke_scope_uses_curated_real_contract(self, tmp_path):
+        """Pipeline smoke stays focused on core contracts instead of the whole repo suite."""
+        paths = _resolve_infrastructure_test_paths(tmp_path, "pipeline-smoke")
+
+        assert paths == [str(tmp_path / relative_path) for relative_path in PIPELINE_SMOKE_INFRA_TEST_PATHS]
+        assert all("tests/infra_tests" in path for path in paths)
+        assert not any("tests/integration" in path for path in paths)
+
+    def test_unknown_scope_fails_fast(self, tmp_path):
+        """Unknown scopes are rejected instead of silently falling back."""
+        import pytest
+
+        with pytest.raises(ValueError, match="Unknown infrastructure test scope"):
+            _resolve_infrastructure_test_paths(tmp_path, "everything")  # type: ignore[arg-type]
+
+    def test_discovery_timeout_defaults_by_scope(self, monkeypatch):
+        """Full discovery gets a longer timeout than pipeline smoke."""
+        monkeypatch.delenv("TEST_DISCOVERY_TIMEOUT_SEC", raising=False)
+
+        assert _parse_test_discovery_timeout("full") == 120.0
+        assert _parse_test_discovery_timeout("pipeline-smoke") == 30.0
+
+    def test_discovery_timeout_env_override(self, monkeypatch):
+        """Discovery timeout can be raised locally for large checkouts."""
+        monkeypatch.setenv("TEST_DISCOVERY_TIMEOUT_SEC", "45")
+
+        assert _parse_test_discovery_timeout("full") == 45.0
+
+
 class TestLogDiscoveredTests:
     """Test the _log_discovered_tests function."""
 
     def test_log_discovered_tests_with_echo(self, tmp_path):
         """Test discovery with a simple command that outputs test count text."""
         import os
+
         cmd = ["echo", "collected 10 items"]
         env = os.environ.copy()
         # Should not raise - it just logs
@@ -135,6 +184,7 @@ class TestLogDiscoveredTests:
     def test_log_discovered_tests_with_invalid_command(self, tmp_path):
         """Test discovery with a command that fails (shouldn't raise)."""
         import os
+
         cmd = ["false"]  # returns exit code 1
         env = os.environ.copy()
         # Should not raise even when command fails
@@ -143,6 +193,7 @@ class TestLogDiscoveredTests:
     def test_log_discovered_tests_unparseable_output(self, tmp_path):
         """Test discovery when output contains no parseable count."""
         import os
+
         cmd = ["echo", "no count here"]
         env = os.environ.copy()
         _log_discovered_tests(cmd, tmp_path, env, "integration")
@@ -169,8 +220,7 @@ class TestReportSuiteFailure:
     def test_report_with_many_failures(self):
         """Test failure report truncates at 5."""
         failed_tests = [
-            {"test": f"test_{i}", "error_type": "AssertionError", "error_message": f"msg {i}"}
-            for i in range(10)
+            {"test": f"test_{i}", "error_type": "AssertionError", "error_message": f"msg {i}"} for i in range(10)
         ]
         results = {"failed": 10, "skipped": 0, "warnings": 0, "failed_tests": failed_tests}
         _report_suite_failure("Project", results, "myproject")

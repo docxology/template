@@ -10,6 +10,7 @@ This module coordinates the PDF rendering stage by:
 
 import subprocess
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.exceptions import RenderingError, ValidationError
 from infrastructure.core.logging.utils import get_logger, log_success, log_live_resource_usage
@@ -36,6 +37,13 @@ from infrastructure.rendering._pipeline_summary import (  # noqa: F401
 logger = get_logger(__name__)
 
 
+def _has_generated_manuscript_ordering(config_path: Path) -> bool:
+    """Return True when an injected config owns generated manuscript ordering."""
+    if not config_path.is_file():
+        return False
+    return "# Generated manuscript ordering" in config_path.read_text(encoding="utf-8")
+
+
 def _resolve_manuscript_dir(project_root: Path) -> Path:
     """Return the manuscript directory to render from.
 
@@ -56,8 +64,14 @@ def _resolve_manuscript_dir(project_root: Path) -> Path:
             cfg_src = source_dir / "config.yaml"
             cfg_dst = injected_dir / "config.yaml"
             if cfg_src.is_file():
-                _shutil.copy2(cfg_src, cfg_dst)
-                logger.info(f"Refreshed config.yaml in injected manuscript: {cfg_dst}")
+                if _has_generated_manuscript_ordering(cfg_dst):
+                    logger.info(
+                        "Preserved generated config.yaml ordering in injected manuscript: %s",
+                        cfg_dst,
+                    )
+                else:
+                    _shutil.copy2(cfg_src, cfg_dst)
+                    logger.info(f"Refreshed config.yaml in injected manuscript: {cfg_dst}")
             for bib in sorted(source_dir.glob("*.bib")):
                 bib_dst = injected_dir / bib.name
                 _shutil.copy2(bib, bib_dst)
@@ -175,12 +189,39 @@ def _log_manuscript_composition(source_files: list[Path]) -> None:
     logger.info("=" * 60 + "\n")
 
 
+def _load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
+    """Load the manuscript ``config.yaml`` as a plain dict for render-format toggles.
+
+    Returns None when the file is missing, unparseable, or PyYAML is unavailable —
+    callers must fall back to defaults in that case. Best-effort by design.
+    """
+    cfg = manuscript_dir / "config.yaml"
+    if not cfg.is_file():
+        return None
+    try:
+        import yaml
+    except ImportError:
+        logger.debug("PyYAML not available; cannot read render.formats from config.yaml")
+        return None
+    try:
+        with cfg.open("r", encoding="utf-8") as fh:
+            data = yaml.safe_load(fh)
+        return data if isinstance(data, dict) else None
+    except (OSError, yaml.YAMLError) as exc:
+        logger.debug(f"Could not parse {cfg.name} for render formats: {exc}")
+        return None
+
+
 def _render_individual_files(
     manager: "RenderManager",
     source_files: list[Path],
     reporter: "DiagnosticReporter",
 ) -> tuple[int, list[str]]:
-    """Render each source file; return (rendered_count, failed_file_names)."""
+    """Render each source file; return (rendered_count, failed_file_names).
+
+    Per-file chatter (each output path) is emitted at DEBUG; the stage-level
+    progress bar carries the user-facing signal at INFO.
+    """
     rendered_count = 0
     failed_files: list[str] = []
     progress = SubStageProgress(total=len(source_files), stage_name="Rendering Files")
@@ -190,7 +231,7 @@ def _render_individual_files(
             outputs = manager.render_all(source_file)
             if outputs:
                 for output_path in outputs:
-                    log_success(f"Generated: {output_path.name}", logger)
+                    logger.debug(f"  Generated: {output_path.name}")
                 rendered_count += 1
             else:
                 logger.warning(f"  No output generated for {source_file.name}")
@@ -218,44 +259,179 @@ def _render_combined_outputs(
     reporter: "DiagnosticReporter",
     rendered_count: int,
 ) -> None:
-    """Generate the combined PDF and HTML manuscripts from all markdown files."""
+    """Generate the combined PDF / HTML / DOCX / EPUB manuscripts.
+
+    Each format is gated on the corresponding ``manager.config.enable_<fmt>``
+    boolean. Defaults preserve current behavior (PDF + HTML on; DOCX + EPUB
+    off — opt in via ``render.formats.{docx,epub}: true`` in
+    ``manuscript/config.yaml``).
+    """
     import traceback
 
-    logger.info("\n" + "=" * 60)
-    logger.info("Generating combined PDF manuscript...")
-    try:
-        combined_pdf = manager.render_combined_pdf(md_files, manuscript_dir, project_name)
-        logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
-    except RenderingError as re:
-        logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
-        reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
-        if rendered_count > 0:
-            logger.info(f"ℹ️  Note: {rendered_count} individual PDF(s) were generated despite combined PDF failure.")
-    except (OSError, subprocess.SubprocessError, ValueError, TypeError) as e:
-        logger.error(f"❌ Unexpected error generating combined PDF: {e}")
-        logger.error(f"  Error type: {type(e).__name__}")
-        logger.error(f"  Full traceback:\n{traceback.format_exc()}")
-        if hasattr(e, "stderr") and e.stderr:
-            logger.error(f"  Full stderr:\n{e.stderr}")
-        if hasattr(e, "stdout") and e.stdout:
-            logger.error(f"  Full stdout:\n{e.stdout}")
-        try:
-            combined_md_path = manuscript_dir.parent / "output" / "tex" / "_combined_manuscript.md"
-            if combined_md_path.exists():
-                logger.error(f"  Combined markdown: {combined_md_path} ({combined_md_path.stat().st_size} bytes)")
-        except OSError as stat_err:
-            logger.debug(f"  Could not stat combined markdown file: {stat_err}")
-        logger.warning("  This is an unexpected error - please report this issue")
+    config = manager.config
 
-    logger.info("\n" + "=" * 60)
-    logger.info("Generating combined HTML manuscript...")
+    # ── Combined PDF ───────────────────────────────────────────────
+    if config.enable_pdf:
+        logger.debug("\n" + "=" * 60)
+        logger.info("Generating combined PDF manuscript...")
+        try:
+            combined_pdf = manager.render_combined_pdf(md_files, manuscript_dir, project_name)
+            logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
+        except RenderingError as re:
+            logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
+            reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
+            if rendered_count > 0:
+                logger.info(f"ℹ️  Note: {rendered_count} individual PDF(s) were generated despite combined PDF failure.")
+        except (OSError, subprocess.SubprocessError, ValueError, TypeError) as e:
+            logger.error(f"❌ Unexpected error generating combined PDF: {e}")
+            logger.error(f"  Error type: {type(e).__name__}")
+            logger.error(f"  Full traceback:\n{traceback.format_exc()}")
+            if hasattr(e, "stderr") and e.stderr:
+                logger.error(f"  Full stderr:\n{e.stderr}")
+            if hasattr(e, "stdout") and e.stdout:
+                logger.error(f"  Full stdout:\n{e.stdout}")
+            try:
+                combined_md_path = manuscript_dir.parent / "output" / "tex" / "_combined_manuscript.md"
+                if combined_md_path.exists():
+                    logger.error(f"  Combined markdown: {combined_md_path} ({combined_md_path.stat().st_size} bytes)")
+            except OSError as stat_err:
+                logger.debug(f"  Could not stat combined markdown file: {stat_err}")
+            logger.warning("  This is an unexpected error - please report this issue")
+    else:
+        logger.info("[skip] PDF rendering disabled in config (render.formats.pdf=false)")
+
+    # ── Combined HTML ──────────────────────────────────────────────
+    if config.enable_html:
+        logger.debug("\n" + "=" * 60)
+        logger.info("Generating combined HTML manuscript...")
+        try:
+            manager.render_combined_web(md_files, manuscript_dir, project_name)
+        except RenderingError as re:
+            logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
+            reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
+        except (OSError, subprocess.SubprocessError, ValueError) as e:
+            logger.warning(f"⚠️  Unexpected error generating combined HTML: {e}")
+    else:
+        logger.info("[skip] HTML rendering disabled in config (render.formats.html=false)")
+
+    # ── Combined DOCX (opt-in) ─────────────────────────────────────
+    if config.enable_docx:
+        _render_combined_docx(manager, manuscript_dir, project_name, reporter)
+    else:
+        logger.debug("[skip] DOCX rendering disabled in config (default; render.formats.docx=true to enable)")
+
+    # ── Combined EPUB (opt-in) ─────────────────────────────────────
+    if config.enable_epub:
+        _render_combined_epub(manager, manuscript_dir, project_name, reporter)
+    else:
+        logger.debug("[skip] EPUB rendering disabled in config (default; render.formats.epub=true to enable)")
+
+
+def _resolve_combined_markdown(manuscript_dir: Path) -> Path | None:
+    """Find the combined-manuscript markdown produced by the combined-PDF pipeline.
+
+    The combined renderer writes to ``<project>/output/pdf/_combined_manuscript.md``
+    or ``<project>/output/tex/_combined_manuscript.md`` depending on layout.
+    DOCX + EPUB rendering reuses this preprocessed source.
+
+    ``manuscript_dir`` may be either the source ``<project>/manuscript/`` or the
+    injected ``<project>/output/manuscript/``. We canonicalise to ``<project>/``
+    and then probe ``output/{pdf,tex}/_combined_manuscript.md``.
+    """
+    if manuscript_dir.name == "manuscript" and manuscript_dir.parent.name == "output":
+        project_root = manuscript_dir.parent.parent
+    else:
+        project_root = manuscript_dir.parent
+    candidates = [
+        project_root / "output" / "pdf" / "_combined_manuscript.md",
+        project_root / "output" / "tex" / "_combined_manuscript.md",
+    ]
+    for candidate in candidates:
+        if candidate.exists() and candidate.stat().st_size > 0:
+            return candidate
+    return None
+
+
+def _resolve_bibliography(manuscript_dir: Path) -> Path | None:
+    """Return the first .bib in the manuscript dir, or None if not found."""
+    bibs = sorted(manuscript_dir.glob("*.bib"))
+    return bibs[0] if bibs else None
+
+
+def _render_combined_docx(
+    manager: "RenderManager",
+    manuscript_dir: Path,
+    project_name: str,
+    reporter: "DiagnosticReporter",
+) -> None:
+    """Render the combined DOCX from the preprocessed combined markdown."""
+    from infrastructure.rendering.docx_renderer import render_docx
+
+    combined_md = _resolve_combined_markdown(manuscript_dir)
+    if combined_md is None:
+        logger.warning(
+            "[skip] DOCX rendering: no combined markdown found (combined-PDF stage may have been skipped or failed)"
+        )
+        return
+
+    docx_dir = Path(manager.config.docx_dir)
+    docx_dir.mkdir(parents=True, exist_ok=True)
+    out_path = docx_dir / f"{project_name}_combined.docx"
+    bibliography = _resolve_bibliography(manuscript_dir)
+
+    logger.debug("\n" + "=" * 60)
+    logger.info("Generating combined DOCX manuscript...")
     try:
-        manager.render_combined_web(md_files, manuscript_dir, project_name)
+        result = render_docx(
+            combined_md,
+            out_path,
+            bibliography=bibliography,
+            pandoc_path=manager.config.pandoc_path,
+        )
+        logger.info(f"✅ Generated combined DOCX: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
     except RenderingError as re:
-        logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
+        logger.warning(f"⚠️  Rendering error generating combined DOCX: {re.message}")
         reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
-    except (OSError, subprocess.SubprocessError, ValueError) as e:
-        logger.warning(f"⚠️  Unexpected error generating combined HTML: {e}")
+    except (OSError, subprocess.SubprocessError, ValueError, FileNotFoundError) as e:
+        logger.warning(f"⚠️  Unexpected error generating combined DOCX: {e}")
+
+
+def _render_combined_epub(
+    manager: "RenderManager",
+    manuscript_dir: Path,
+    project_name: str,
+    reporter: "DiagnosticReporter",
+) -> None:
+    """Render the combined EPUB from the preprocessed combined markdown."""
+    from infrastructure.rendering.epub_renderer import render_epub
+
+    combined_md = _resolve_combined_markdown(manuscript_dir)
+    if combined_md is None:
+        logger.warning(
+            "[skip] EPUB rendering: no combined markdown found (combined-PDF stage may have been skipped or failed)"
+        )
+        return
+
+    epub_dir = Path(manager.config.epub_dir)
+    epub_dir.mkdir(parents=True, exist_ok=True)
+    out_path = epub_dir / f"{project_name}_combined.epub"
+    bibliography = _resolve_bibliography(manuscript_dir)
+
+    logger.debug("\n" + "=" * 60)
+    logger.info("Generating combined EPUB manuscript...")
+    try:
+        result = render_epub(
+            combined_md,
+            out_path,
+            bibliography=bibliography,
+            pandoc_path=manager.config.pandoc_path,
+        )
+        logger.info(f"✅ Generated combined EPUB: {result.output_path.name} ({result.size_bytes / 1024:.1f} KB)")
+    except RenderingError as re:
+        logger.warning(f"⚠️  Rendering error generating combined EPUB: {re.message}")
+        reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.WARNING))
+    except (OSError, subprocess.SubprocessError, ValueError, FileNotFoundError) as e:
+        logger.warning(f"⚠️  Unexpected error generating combined EPUB: {e}")
 
 
 def _render_pipeline_impl(project_name: str = "project") -> int:
@@ -313,6 +489,8 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
     _log_manuscript_composition(source_files)
 
     try:
+        project_yaml = _load_project_config_yaml(manuscript_dir)
+        env_config = RenderingConfig.from_project_config(project_yaml)
         config = RenderingConfig(
             manuscript_dir=str(manuscript_dir),
             figures_dir=str(project_root / "output" / "figures"),
@@ -321,9 +499,20 @@ def _render_pipeline_impl(project_name: str = "project") -> int:
             web_dir=str(project_root / "output" / "web"),
             slides_dir=str(project_root / "output" / "slides"),
             poster_dir=str(project_root / "output" / "posters"),
+            docx_dir=str(project_root / "output" / "docx"),
+            epub_dir=str(project_root / "output" / "epub"),
+            enable_pdf=env_config.enable_pdf,
+            enable_html=env_config.enable_html,
+            enable_slides=env_config.enable_slides,
+            enable_docx=env_config.enable_docx,
+            enable_epub=env_config.enable_epub,
         )
         manager = RenderManager(config, manuscript_dir=manuscript_dir, figures_dir=project_root / "output" / "figures")
         log_success("Initialized RenderManager from infrastructure.rendering", logger)
+        logger.info(
+            f"Render formats: pdf={config.enable_pdf} html={config.enable_html} "
+            f"slides={config.enable_slides} docx={config.enable_docx} epub={config.enable_epub}"
+        )
     except (OSError, ValueError, TypeError) as e:
         logger.error(f"Failed to initialize RenderManager: {e}")
         return 1
