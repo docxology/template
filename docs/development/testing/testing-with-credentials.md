@@ -4,7 +4,7 @@ This guide explains how to configure and run tests that require external service
 
 ## Overview
 
-The test suite includes tests that make real API calls to external services. These tests are marked with special pytest markers and will automatically skip if credentials are not available.
+The default suite keeps credential-free coverage hermetic with local HTTP servers where possible. Tests that truly make real API calls to external services are marked with special pytest markers and should be selected only in environments where those credentials are configured.
 
 ## Quick Start
 
@@ -141,25 +141,27 @@ Ollama tests require a running Ollama server with at least one model installed:
    export OLLAMA_HOST=http://localhost:11434
    ```
 
-**Note:** Ollama tests will automatically skip if the server is not running or no models are available. No credentials are required - tests use the local Ollama installation.
+**Note:** Ollama tests use the local Ollama installation and do not require external credentials. Tests marked `requires_ollama` trigger the session harness in `tests/conftest.py`; the harness starts Ollama when possible, pulls `smollm2` by default when no small/fast model is present, and fails with setup guidance if it cannot provide a runnable daemon/model.
 
 ## Test Markers
 
 Tests are marked with the following markers:
 
-| Marker | Description | Skip Condition |
+| Marker | Description | Default handling |
 |--------|-------------|----------------|
-| `requires_ollama` | Needs Ollama server running | Ollama not running or no models |
-| `requires_zenodo` | Needs Zenodo API access | No `ZENODO_SANDBOX_TOKEN` |
-| `requires_github` | Needs GitHub API access | No `GITHUB_TOKEN` or `GITHUB_REPO` |
-| `requires_arxiv` | Needs arXiv API access | No `ARXIV_USERNAME` |
-| `requires_latex` | Needs LaTeX installed | No `pdflatex` or `xelatex` |
-| `requires_network` | Needs internet access | Offline environment |
-| `requires_credentials` | Needs any external credentials | General credential marker |
+| `requires_ollama` | Needs local Ollama | Harness starts/pulls or fails with setup guidance |
+| `requires_zenodo` | Needs Zenodo API access | Opt-in when real Zenodo credentials are configured |
+| `requires_github` | Needs GitHub API access | Opt-in when `GITHUB_TOKEN` / `GITHUB_REPO` are configured |
+| `requires_arxiv` | Needs arXiv API access | Opt-in when arXiv credentials are configured |
+| `requires_latex` | Needs LaTeX installed | Runs only on LaTeX-capable jobs |
+| `requires_network` | Needs internet access | Runs only in network-enabled environments |
+| `requires_credentials` | Needs any external credentials | Opt-in credentialed integration marker |
+| `private_project` | Needs a private sidecar project checkout | Deselected by default; opt in when that project is present |
+| `external_fixture` | Needs downloaded external fixture trees | Deselected by default; opt in after fixture setup |
 
 ## Running Tests Selectively
 
-### Run all tests (skipping those without credentials)
+### Run the default test selection
 
 ```bash
 uv run pytest tests/

@@ -107,8 +107,8 @@ class TestStreamingIntegration:
             full_response = "".join(chunks)
             assert isinstance(full_response, str)
             assert len(full_response) > 0
-        except LLMConnectionError:
-            pytest.skip("Ollama server not available")
+        except LLMConnectionError as exc:
+            pytest.fail(f"Ollama streaming test server unavailable: {exc}")
 
     def test_stream_long_real_ollama(self, ollama_test_server):
         """Test stream_long with real Ollama server simulation."""
@@ -124,8 +124,8 @@ class TestStreamingIntegration:
             full_response = "".join(chunks)
             assert isinstance(full_response, str)
             assert len(full_response) > 0
-        except LLMConnectionError:
-            pytest.skip("Ollama server not available")
+        except LLMConnectionError as exc:
+            pytest.fail(f"Ollama streaming test server unavailable: {exc}")
 
 
 class TestStreamingContextManagement:

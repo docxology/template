@@ -83,6 +83,7 @@ dotenv = [
 ]
 # Optional barcode generation for steganography module (gracefully absent)
 steganography = [
+  "cryptography>=48.0.0",
   "qrcode[pil]>=8.2",
   "python-barcode>=0.15",
 ]
@@ -120,7 +121,7 @@ dev = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
-default-groups = ["dev", "rendering", "discopy"]
+default-groups = ["dev", "rendering", "discopy", "steganography"]
 # pip-api (via pip-audit) pins an older pip; bump so pip-audit passes CVE gates (CVE-2026-3219).
 override-dependencies = [
     "pip>=26.1.1",
@@ -145,7 +146,7 @@ testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10 -m 'not slow and not bench'"
+addopts = "-v --tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10 -m 'not slow and not bench and not private_project and not external_fixture'"
 timeout = 10  # Timeout individual tests after 10 seconds to prevent hanging
 timeout_method = "thread"  # Use thread-based timeout (safer for network operations)
 markers = [
@@ -154,6 +155,8 @@ markers = [
     "integration: mark test as integration test",
     "no_patch_llm_client: marks tests that need real default LLMClient behavior (opts out of autouse fixture)",
     "bench: performance benchmark tests (skip by default; opt-in with -m bench)",
+    "private_project: tests for private sidecar project tooling (deselect by default; opt-in only when that project is checked out)",
+    "external_fixture: tests requiring downloaded external fixture trees (deselect by default; opt-in after fixture setup)",
 ]
 # pytest-asyncio configuration
 asyncio_mode = "strict"

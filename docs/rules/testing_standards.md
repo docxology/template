@@ -99,7 +99,7 @@ For modules requiring external services (LLM, Publishing APIs):
 
 1. **Pure Logic Tests**: Test configuration, validation, data handling without network
 2. **Integration Tests**: Mark with `@pytest.mark.requires_ollama` (or similar marker)
-3. **Skip Gracefully**: Tests auto-skip when service unavailable
+3. **Fail with setup guidance**: Default-selected tests should not silently skip unavailable services
 
 ```python
 # ✅ GOOD: Pure logic test (no network needed)
@@ -112,10 +112,8 @@ def test_config_from_env(clean_llm_env):
 @pytest.mark.requires_ollama
 class TestLLMIntegration:
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        client = LLMClient()
-        if not client.check_connection():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        assert ensure_ollama_for_tests
 
     def test_query(self):
         client = LLMClient()
@@ -123,7 +121,7 @@ class TestLLMIntegration:
         assert response is not None
 
 # Run commands:
-# pytest -m "not requires_ollama"  # Skip network tests
+# pytest -m "not requires_ollama"  # Deselect local Ollama tests
 # pytest -m requires_ollama        # Only network tests
 ```
 

@@ -301,7 +301,7 @@ class TestLLMClientQueryIntegration:
     """Integration tests requiring running Ollama server.
 
     Run with: pytest -m requires_ollama
-    Skip with: pytest -m "not requires_ollama"
+    Deselect with: pytest -m "not requires_ollama"
     """
 
     @pytest.fixture(autouse=True)

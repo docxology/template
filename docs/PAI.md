@@ -5,7 +5,7 @@
 - **System**: Research Project Template
 - **Role**: Standardized Research Execution Environment
 - **Type**: Core Infrastructure / Skill
-- **Version**: Default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) defines a **10-stage** DAG (including LLM stages); `--core-only` runs **8** stages (LLM-tagged stages excluded). `run.sh` progress lines use `[0/9]` for clean plus `[1/9]`–`[9/9]` for nine tracked steps — see [`RUN_GUIDE.md`](RUN_GUIDE.md).
+- **Version**: Default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) declares **12** stages: 8 core stages, 2 optional LLM stages, and 2 opt-in bundle/archival stages. Default full runs execute the 10 core+LLM stages; `--core-only` executes the 8 core stages — see [`RUN_GUIDE.md`](RUN_GUIDE.md).
 - **Signposting**: This repository is a PAI “template” node; it is intended to be self-describing via `AGENTS.md` and `docs/`.
 
 ---

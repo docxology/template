@@ -106,6 +106,14 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "requires_credentials: tests requiring external service credentials"
     )
+    config.addinivalue_line(
+        "markers",
+        "private_project: tests for private sidecar project tooling; opt in only when present",
+    )
+    config.addinivalue_line(
+        "markers",
+        "external_fixture: tests requiring downloaded external fixture trees; opt in after setup",
+    )
 
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
@@ -262,7 +270,7 @@ def ensure_ollama_for_tests():
                 "  3. Verify installation: ollama --version\n"
                 "  4. Check if port 11434 is available: lsof -i :11434\n"
                 "  5. Pull a small test model: ollama pull smollm2\n\n"
-                "To skip Ollama tests: pytest -m 'not requires_ollama'\n"
+                "To deselect Ollama tests: pytest -m 'not requires_ollama'\n"
                 "=" * 80
             )
 
@@ -287,7 +295,8 @@ def ensure_ollama_for_tests():
         if skip_pull:
             logger.warning(
                 "Ollama has no small/fast test model (%s); OLLAMA_SKIP_TEST_MODEL_PULL is set — "
-                "some tests may skip. Install e.g. smollm2 manually.",
+                "tests may use slower fallback models or fail if no model can be loaded. "
+                "Install e.g. smollm2 manually.",
                 reason,
             )
             return

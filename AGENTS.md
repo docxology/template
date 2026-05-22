@@ -9,7 +9,7 @@ This document provides documentation for the Research Project Template system, e
 **Title**: *A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*
 **DOI**: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090) · **Record**: [zenodo.org/records/19139090](https://zenodo.org/records/19139090)
 
-`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, and provenance, built through a ten-stage DAG. **Layer 1** (`infrastructure/`, ~**345** Python files under `infrastructure/` per `find infrastructure -name '*.py' -type f | wc -l` — a point-in-time count that drifts as the tree changes; re-derive rather than trust the literal) is separated from **Layer 2** (self-contained projects under `projects/`). Each directory carries `README.md` + `AGENTS.md`; infrastructure packages usually add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
+`template/` applies Infrastructure as Code to the research lifecycle: version-controlled manuscripts, tests, provenance, and a declared pipeline DAG. **Layer 1** (`infrastructure/`) is separated from **Layer 2** (self-contained projects under `projects/`). Current measured counts and stage facts live in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md); re-derive them instead of copying literals into prose. Each directory carries `README.md` + `AGENTS.md`; infrastructure packages usually add `SKILL.md` for agent routing. Full paper, metrics, and claims: Zenodo record above and root [`README.md`](README.md).
 
 ### Documentation map
 
@@ -513,7 +513,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: full pipeline — 10 named stages in pipeline.yaml; run.sh displays [0/9] clean + [1/9]–[9/9]; --core-only would drop the two LLM stages and leave 8.
+# Non-interactive: default full pipeline — 10 core+LLM stages; pipeline.yaml declares two additional opt-in bundle/archival stages. --core-only drops the two LLM stages and leaves 8.
 ./run.sh --pipeline
 ```
 
@@ -605,7 +605,7 @@ steganography:
 
 ### Pipeline Stages
 
-**Full Pipeline Stages** — the default `pipeline.yaml` declares **10 named stages** (`Clean Output Directories` is stage 0; nine numbered stages follow). `run.sh` displays them as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding the two LLM-tagged stages.
+**Full Pipeline Stages** — the default `pipeline.yaml` declares **12 named stages**: 8 core stages, 2 optional LLM stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `run.sh` displays that default path as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding the two LLM-tagged stages.
 
 - **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
 1. **Environment Setup** - Verify system requirements and dependencies
@@ -635,7 +635,7 @@ steganography:
 
 **Stage numbering (canonical phrasing — keep in sync with CLAUDE.md and README.md):**
 
-> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **10 named stages** (`Clean Output Directories` is stage 0; nine numbered stages follow). `run.sh` displays them as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding the two LLM-tagged stages.
+> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **12 named stages**: 8 core stages, 2 optional LLM stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding the two LLM-tagged stages. Bundle and archival stages are declared for contracts but invoked separately when needed.
 
 ### Manual Execution Options
 
@@ -817,21 +817,23 @@ def test_file_operation(tmp_path):
     assert result == "content"
 ```
 
-**External Tool Testing**: Use `@pytest.mark.skipif` for optional dependencies
+**External Tool Testing**: Keep default tests deterministic; mark opt-in tool/credential tests or fail with setup guidance
 
 ```python
 # BEFORE (mocked subprocess)
 with patch('subprocess.run') as mock_run:
     mock_run.return_value = MagicMock(returncode=0)
 
-# AFTER (tool execution)
-@pytest.mark.skipif(not shutil.which('pandoc'), reason="pandoc not installed")
+# AFTER (tool execution in an opt-in marker group)
+@pytest.mark.requires_latex
 def test_pandoc_conversion(tmp_path):
+    pandoc = shutil.which('pandoc')
+    assert pandoc, "Install pandoc before running requires_latex tests"
     md_file = tmp_path / "test.md"
     md_file.write_text("# Test")
     pdf_file = tmp_path / "test.pdf"
 
-    result = subprocess.run(['pandoc', str(md_file), '-o', str(pdf_file)])
+    result = subprocess.run([pandoc, str(md_file), '-o', str(pdf_file)])
     assert result.returncode == 0
     assert pdf_file.exists()
 ```

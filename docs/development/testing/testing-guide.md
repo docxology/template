@@ -51,15 +51,15 @@ Tests are categorized by execution speed:
 - **Fast tests**: Unit tests, configuration tests, validation tests (< 1 second)
 - **Slow tests**: Integration tests using `ollama_test_server` (network calls, LLM queries)
 
-### Automatic Slow Test Skipping
+### Default Test Selection
 
-By default, slow tests are **automatically skipped** to ensure fast test runs:
+By default, pytest deselects slow, benchmark, private-project, and external-fixture tests to keep the maintained public gate deterministic:
 
 ```bash
-# Normal test run (skips slow tests)
+# Normal test run
 uv run python scripts/01_run_tests.py
 
-# pytest directly (also skips slow tests due to addopts)
+# pytest directly uses the same marker selection from pyproject.toml
 uv run pytest tests/
 ```
 
@@ -211,8 +211,6 @@ open htmlcov/index.html
 
 - [Logging Guide](../../operational/logging/)
 - [Error Handling Guide](../../operational/error-handling-guide.md)
-
-
 
 
 

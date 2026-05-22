@@ -6,7 +6,7 @@
 
 ```bash
 # Run analysis pipeline
-python3 scripts/optimization_analysis.py
+uv run python scripts/optimization_analysis.py
 
 # View generated outputs
 ls -la ../output/
@@ -24,7 +24,7 @@ ls -la ../output/
 ### Run Analysis
 
 ```bash
-python3 optimization_analysis.py
+uv run python optimization_analysis.py
 ```
 
 Executes optimization experiments and generates all outputs.

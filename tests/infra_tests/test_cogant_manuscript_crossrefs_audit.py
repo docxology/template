@@ -11,6 +11,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.private_project
+
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 _SCRIPT = _REPO_ROOT / "projects_in_progress/cogant/tools/audit_manuscript_crossrefs.py"
 _MANUSCRIPT_DIR = _REPO_ROOT / "projects_in_progress/cogant/manuscript"

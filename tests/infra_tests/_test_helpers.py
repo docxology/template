@@ -276,12 +276,12 @@ def cleanup_test_directory(test_dir: Path) -> None:
 def safe_network_test(service_name: str = "External service"):
     """Context manager to safely run network-dependent tests.
 
-    Catches common connection errors and skips the test instead of failing.
-    Desgined for integration tests that depend on local services (Ollama, etc.)
-    that might not always be running.
+    Catches common connection errors and fails with setup guidance instead of
+    producing a skip. Designed for integration tests whose marker fixtures
+    should already have made the local service (Ollama, etc.) available.
 
     Args:
-        service_name: Name of the service for the skip message
+        service_name: Name of the service for the failure message
 
     Usage:
         with safe_network_test("Ollama"):
@@ -290,4 +290,4 @@ def safe_network_test(service_name: str = "External service"):
     try:
         yield
     except (LLMConnectionError, requests.exceptions.RequestException, ConnectionError) as e:
-        pytest.skip(f"{service_name} connection issue: {e}")
+        pytest.fail(f"{service_name} connection issue after test setup: {e}")

@@ -159,13 +159,13 @@ The optimization algorithms support configuration through function parameters:
 
 ```bash
 # Run all tests for this module
-pytest ../tests/ -v
+uv run pytest ../tests/ -v
 
 # Run specific test classes
-pytest ../tests/ -k "TestQuadraticFunction"
+uv run pytest ../tests/ -k "TestQuadraticFunction"
 
 # Run with coverage
-pytest ../tests/ --cov=. --cov-report=html
+uv run pytest ../tests/ --cov=. --cov-report=html
 ```
 
 ## API Reference

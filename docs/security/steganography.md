@@ -1,6 +1,6 @@
 # PDF Steganography
 
-The template utilizes a multi-layer steganographic approach to assert provenance.
+The template provides an opt-in, multi-layer PDF provenance pass for secure-run workflows.
 
 ## Core Features
 
@@ -8,7 +8,7 @@ The template utilizes a multi-layer steganographic approach to assert provenance
 
 Configurable text strings (such as "CONFIDENTIAL", "DRAFT", or the Author Name) can be diagonally overlaid across every page of the manuscript.
 
-By default, the `overlay_opacity` is set to `0.08` (8% visibility). At this setting, the text is minimally intrusive to human readers but profoundly disrupts naive OCR scanners and automated data-scraping neural networks unless they deploy advanced de-noising algorithms.
+By default, the `overlay_opacity` is set to `0.08` (8% visibility). At this setting, the text is minimally intrusive to human readers and may disrupt naive OCR or scraping pipelines, but it is not a robust anti-extraction control.
 
 ### 2. Dynamic `mailto:` Author QR Codes
 
@@ -18,12 +18,17 @@ If it finds `email` keys for the authors, the processor dynamically generates an
 
 ### 3. Invisible Metadata Injection
 
-The processor bypasses the visual later completely to rewrite the PDF metadata dictionaries (XMP and standard PDF info keys), unconditionally branding the `Author`, `Subject`, and specific identifiers (like a `Doc-ID` tracking UUID) into the file internals.
+The processor can rewrite the PDF metadata dictionaries (XMP and standard PDF info keys) to record `Author`, `Subject`, hashes, document ID, timestamp, and optional Git commit provenance inside the file internals. This happens only when steganography and metadata injection are enabled.
 
 ## Configuration
 
-Steganography is controlled by `infrastructure/config/secure_config.yaml`.
-If you delete this file, the pipeline will fallback to conservative hard-coded defaults (Text overlay: CONFIDENTIAL, Opacity: 8%, Hash and Metadata enabled, QR barcodes enabled).
+Steganography configuration is resolved in three layers:
+
+1. Dataclass defaults in `infrastructure.steganography.config.SteganographyConfig` (`enabled: false`).
+2. Repository secure-run defaults in `infrastructure/config/secure_config.yaml`.
+3. Per-project overrides in `projects/<name>/manuscript/config.yaml` under `steganography:`.
+
+Normal public exemplar renders do not apply watermarking or encryption. Running `./secure_run.sh` is the explicit opt-in path for applying the repository secure defaults to a project.
 
 ```yaml
 steganography:
@@ -44,6 +49,10 @@ steganography:
 
   # Inject cryptographic SHA manifests
   hashing_enabled: true
+
+  # Optional PDF password protection. AES-256 is used unless deliberately overridden.
+  encryption_enabled: false
+  pdf_encryption_algorithm: "AES-256"
 ```
 
 ## Deterministic mode

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Research Project Template pipelines natively integrate optional cryptographic hashing and PDF steganography capabilities. This module documentation explains how the pipeline signs and secures academic outputs against scraping, tampering, or misattribution.
+The Research Project Template pipelines integrate optional cryptographic hashing, PDF steganography, and AES-256 PDF password protection capabilities. This module documentation explains how the secure-run path records provenance and creates protected companion PDFs. It does not implement a public-key signature scheme or reader tracking.
 
 ## Directory Structure
 
@@ -17,7 +17,7 @@ The Research Project Template pipelines natively integrate optional cryptographi
 Instead of using the default `./run.sh` pipeline menu, launch the pipeline using the secure orchestrator:
 
 ```bash
-./secure_run.sh
+./secure_run.sh --project template_code_project
 ```
 
-complements your specified scientific orchestrations inside an augmented pipeline. After the PDF rendering phase completes, it automatically reads your `infrastructure/config/secure_config.yaml` and executes the steganographer across all your finalized manuscripts, dropping secured copies into `<project>/output/pdf/` labeled `_steganography.pdf` along with cryptographic manifests (`.hashes.json`).
+After the PDF rendering phase completes, secure-run reads `infrastructure/config/secure_config.yaml`, overlays any project `manuscript/config.yaml` `steganography:` settings, and executes the steganography pass on the selected project's finalized PDFs. Secured copies land in `<project>/output/pdf/` with the `_steganography.pdf` suffix along with cryptographic hash manifests (`.hashes.json`).

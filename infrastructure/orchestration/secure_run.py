@@ -55,17 +55,43 @@ def _load_steganography():  # pragma: no cover - import indirection
 
 def _load_project_config(project_path: Path) -> dict[str, Any]:
     """Load ``manuscript/config.yaml`` for the project, if present."""
-    cfg = project_path / "manuscript" / "config.yaml"
-    if not cfg.exists():
+    return _load_yaml_mapping(project_path / "manuscript" / "config.yaml")
+
+
+def _load_yaml_mapping(path: Path) -> dict[str, Any]:
+    """Load a YAML mapping from *path*, returning ``{}`` when absent/invalid."""
+    if not path.exists():
         return {}
     try:
         import yaml  # local import — yaml is already a project dep
 
-        with cfg.open("r", encoding="utf-8") as fh:
-            return yaml.safe_load(fh) or {}
+        with path.open("r", encoding="utf-8") as fh:
+            data = yaml.safe_load(fh) or {}
     except Exception as exc:  # noqa: BLE001
-        logger.warning("Failed to read %s: %s", cfg, exc)
+        logger.warning("Failed to read %s: %s", path, exc)
         return {}
+    if not isinstance(data, dict):
+        logger.warning("Ignoring non-mapping YAML config: %s", path)
+        return {}
+    return data
+
+
+def _load_repo_secure_config(repo_root: Path) -> dict[str, Any]:
+    """Load repository-wide secure defaults from ``infrastructure/config``."""
+    config = _load_yaml_mapping(repo_root / "infrastructure" / "config" / "secure_config.yaml")
+    steg = config.get("steganography", {})
+    return dict(steg) if isinstance(steg, dict) else {}
+
+
+def _effective_steganography_config(repo_root: Path, project_config: dict[str, Any]) -> dict[str, Any]:
+    """Merge steganography config with precedence: dataclass < repo < project."""
+    merged = _load_repo_secure_config(repo_root)
+    project_steg = project_config.get("steganography", {})
+    if isinstance(project_steg, dict):
+        merged.update(project_steg)
+    elif project_steg:
+        logger.warning("Ignoring non-mapping steganography config: %r", project_steg)
+    return merged
 
 
 def apply_steganography_to_project(
@@ -110,17 +136,16 @@ def apply_steganography_to_project(
     config_yaml = _load_project_config(project.path)
     title = config_yaml.get("paper", {}).get("title", project_qualified_name)
     authors = [a.get("name", "") for a in config_yaml.get("authors", [])]
+    author_emails = [a.get("email") for a in config_yaml.get("authors", []) if a.get("email")]
     keywords = config_yaml.get("keywords", [])
+    steg_mapping = _effective_steganography_config(repo_root, config_yaml)
 
     if processor_factory is None:  # pragma: no cover - heavy reportlab path
         SteganographyConfig, SteganographyProcessor = _load_steganography()
-        steg_config = SteganographyConfig.all_enabled()
-        if "steganography" in config_yaml:
-            steg_config = SteganographyConfig.from_dict(config_yaml["steganography"])
-            steg_config.enabled = True
+        steg_config = SteganographyConfig.from_dict(steg_mapping)
         processor = SteganographyProcessor(steg_config)
     else:
-        processor = processor_factory(config_yaml.get("steganography", {}))
+        processor = processor_factory(steg_mapping)
 
     success_count = 0
     for pdf_path in pdfs:
@@ -130,6 +155,7 @@ def apply_steganography_to_project(
                 title=title,
                 authors=authors,
                 keywords=keywords,
+                author_emails=author_emails,
             )
             logger.info("Processed %s -> %s", pdf_path.name, getattr(result, "name", result))
             success_count += 1

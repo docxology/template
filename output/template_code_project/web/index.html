@@ -652,12 +652,12 @@ class="header-section-number">2</span> Introduction</h1>
 exemplar for the <a
 href="https://github.com/docxology/template">Research Project
 Template</a> ecosystem, demonstrating a fully-tested numerical
-optimization implementation securely bracketed by rigorous
-infrastructure, hermetic testing, and extensive documentation
-architectures. The prose, the labelled figures, and the labelled
-equations have all been programmably generated through an unbreakable
-custody chain starting from algorithm implementation through strict
-CI/CD validation to multi-format <code>.pdf</code> compilation.</p>
+optimization implementation bracketed by rigorous infrastructure,
+hermetic testing, and extensive documentation architectures. The prose,
+the labelled figures, and the labelled equations have all been generated
+through an auditable custody chain starting from algorithm
+implementation through strict CI/CD validation to multi-format
+<code>.pdf</code> compilation.</p>
 <h2 data-number="2.1" id="template-architecture-context"><span
 class="header-section-number">2.1</span> Template Architecture
 Context</h2>
@@ -666,16 +666,11 @@ software reliability. This project unifies theoretical optimization with
 the repository’s three foundational pillars:</p>
 <ol type="1">
 <li><strong><code>infrastructure/</code> Layer (Root
-Directory)</strong>: A modular stack of fifteen Python subpackages
-(<code>core</code>, <code>documentation</code>, <code>llm</code>,
-<code>orchestration</code>, <code>project</code>, <code>prose</code>,
-<code>publishing</code>, <code>reference</code>, <code>rendering</code>,
-<code>reporting</code>, <code>scientific</code>, <code>search</code>,
-<code>skills</code>, <code>steganography</code>,
-<code>validation</code>) providing the computational scaffolding (the
-sibling <code>config/</code> and <code>docker/</code> directories under
-<code>infrastructure/</code> are configuration/data, not Python
-packages).</li>
+Directory)</strong>: A modular stack of importable Python packages
+providing the computational scaffolding. The current package count is
+measured in the template repository’s generated canonical facts rather
+than repeated here because it changes as infrastructure modules are
+added or retired.</li>
 <li><strong><code>tests/</code> Framework
 (<code>projects/template_code_project/tests/</code>)</strong>: An
 uncompromising validation layer maintaining a zero-mock testing policy.
@@ -714,7 +709,7 @@ numerical boundaries and performance scaling.</li>
 <li><strong>Hermetic Validation</strong>: Deploying
 <code>infrastructure.validation</code> components
 (<code>markdown_validator</code>, <code>output_validator</code>) to
-ensure all generated artifacts are cryptographically sound.</li>
+ensure generated artifacts are structurally valid and traceable.</li>
 <li><strong>Reporting &amp; Rendering</strong>: Employing
 <code>infrastructure.rendering.pdf_renderer</code> and
 <code>infrastructure.reporting.executive_reporter</code> to
@@ -1507,9 +1502,9 @@ Template methodology, the project successfully deployed the three
 foundational pillars:</p>
 <ol type="1">
 <li><strong><code>infrastructure</code> Ecosystem</strong>: Fully
-leveraged the 15-package infrastructure cluster to handle scientific
-benchmarking, rendering, prose review, literature search, BibTeX
-validation, and reporting.</li>
+leveraged the measured infrastructure package cluster to handle
+scientific benchmarking, rendering, prose review, literature search,
+BibTeX validation, and reporting.</li>
 <li><strong><code>tests</code> Integrity</strong>: Established absolute
 logical hermeticity through a comprehensive integration and
 infrastructure validation suite operating continuously.</li>
@@ -1668,7 +1663,7 @@ scalar case (<span class="math inline">\(d = 1\)</span>) to moderate
 dimensionality (<span class="math inline">\(d = 50\)</span>), using
 identity-Hessian quadratics to isolate algorithmic scaling from problem
 conditioning effects. Representative single-call execution time from the
-last benchmark run: <strong>3.1 μs</strong> (recorded in
+last benchmark run: <strong>1.9 μs</strong> (recorded in
 <code>output/reports/performance_benchmark.json</code>).</p>
 <h2 data-number="6.5" id="computational-environment"><span
 class="header-section-number">6.5</span> Computational Environment</h2>
@@ -1676,7 +1671,7 @@ class="header-section-number">6.5</span> Computational Environment</h2>
 <li><strong>Python</strong>: 3.12.13</li>
 <li><strong>NumPy</strong>: 2.4.1</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-05-22T00:46:04Z</li>
+<li><strong>Generated</strong>: 2026-05-22T03:55:49Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>

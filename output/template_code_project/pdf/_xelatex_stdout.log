@@ -123,12 +123,12 @@ ictionary-english.trsl)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/local/texlive/2026/texmf-dist/tex/latex/microtype/mt-msb.cfg)
 (./_combined_manuscript.toc [1] [2]) [3] [4] [5] [6] [7] [8] [9]
-Overfull \hbox (821.17511pt too wide) in paragraph at lines 798--799
+Overfull \hbox (821.17511pt too wide) in paragraph at lines 793--794
 \TU/lmr/m/n/10 1233840596906177455240913358131801868905057899753059079921866755
 5409910008960556039568852130152776011678834551589497989620754880563800936176875
 2272295676536457470613583575384064.0000|  
  [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22]
-Underfull \hbox (badness 1264) in paragraph at lines 1402--1407
+Underfull \hbox (badness 1264) in paragraph at lines 1397--1402
 []\TU/JuliaMono-Regular(0)/m/n/10 o p t i m i z a t i o n _ a n a l y s i s . p
  y \TU/lmr/m/n/10 — writes \TU/JuliaMono-Regular(0)/m/n/10 o u t p u t / d a t 
 a / o p t i m i z a t i o n _ r e s u l t s . c s v\TU/lmr/m/n/10 , \TU/JuliaMo

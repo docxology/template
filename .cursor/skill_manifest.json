@@ -129,7 +129,7 @@
     },
     {
       "name": "infrastructure-steganography",
-      "description": "Skill for the steganography infrastructure module providing QR code generation with dynamic mailto links, invisible hashing payloads, and document-wide overlay processing. Use this module to insert secure cryptographic and steganographic data onto PDFs.",
+      "description": "Skill for the steganography infrastructure module providing QR code generation with dynamic mailto links, hash manifests, metadata payloads, and document-wide overlay processing. Use this module to insert opt-in cryptographic and steganographic provenance data onto PDFs.",
       "path": "infrastructure/steganography/SKILL.md",
       "cursor_at": "infrastructure/steganography/SKILL.md"
     },

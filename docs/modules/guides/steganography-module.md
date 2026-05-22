@@ -13,8 +13,8 @@
 - **QR Code and Barcode Strips**: Error-correction Q-level QR codes and Code128 barcodes encoding document metadata, author mailto links, and hash digests
 - **SHA-256/SHA-512 Hashing**: Cryptographic hash computation with JSON manifest sidecar output
 - **PDF Metadata Injection**: XMP packets and PDF Info dictionary injection with embedded manifest attachments
-- **AES-256 Encryption**: Optional PDF password protection via encrypted payloads
-- **Fully Optional**: All dependencies are lazily imported; the module does nothing unless explicitly enabled in `config.yaml`
+- **AES-256 PDF Encryption**: Optional PDF password protection when `pdf_password` is configured
+- **Fully Optional**: The module does nothing unless explicitly enabled through secure-run defaults, project config, or API configuration
 
 ---
 
@@ -130,17 +130,19 @@ steganography:
 | `barcodes_enabled` | `bool` | `True` | QR / Code128 barcode strips |
 | `metadata_enabled` | `bool` | `True` | XMP and PDF Info injection |
 | `hashing_enabled` | `bool` | `True` | SHA-256/SHA-512 hash computation |
-| `encryption_enabled` | `bool` | `False` | AES-256 payload encryption |
+| `encryption_enabled` | `bool` | `False` | Enable PDF password protection when `pdf_password` is set |
 | `overlay_mode` | `str` | `"text"` | Overlay content: `text`, `qr`, or `none` |
 | `overlay_opacity` | `float` | `0.08` | Alpha channel (0.0 invisible to 1.0 solid) |
 | `pdf_password` | `str \| None` | `None` | Password for PDF-level encryption |
+| `pdf_encryption_algorithm` | `str` | `"AES-256"` | PDF encryption algorithm passed to `pypdf` |
 | `output_suffix` | `str` | `"_steganography"` | Suffix appended to output filename |
 | `manifest_enabled` | `bool` | `True` | Write JSON hash manifest sidecar |
 
 ### Factory Methods
 
 ```python
-# All techniques enabled (used by embed_steganography default)
+# All techniques enabled (used by embed_steganography default; PDF password
+# encryption still requires pdf_password)
 config = SteganographyConfig.all_enabled()
 
 # From a parsed YAML dictionary (unknown keys silently ignored)

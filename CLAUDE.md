@@ -27,7 +27,7 @@ This is a research project template with a test-driven development workflow, aut
 | Project pipeline tests | `uv run python scripts/01_run_tests.py --project {name}` |
 | Full infrastructure gate | `uv run python scripts/01_run_tests.py --infra-only --infra-scope full` |
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
-| Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`; add `--group monitoring` to mirror CI extras) |
+| Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`, `steganography`; add `--group monitoring` to mirror CI extras) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
 | Ruff (CI scope) | `uvx ruff check infrastructure/ projects/*/src/ --fix && uvx ruff format infrastructure/ projects/*/src/` |
 | Mypy (CI scope) | `uv run mypy infrastructure/ projects/*/src/` |
@@ -62,7 +62,7 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 ./secure_run.sh --steganography-only --project {project_name}
 ./secure_run.sh --steganography-only
 
-# Full pipeline (10 named stages: clean=stage 0, then nine numbered stages — setup, infra tests, project tests, analysis, render, validate, LLM review, LLM translations, copy)
+# Full pipeline default path (10 core+LLM stages; pipeline.yaml declares two additional opt-in bundle/archival stages)
 ./run.sh --pipeline
 
 # Core pipeline only (8 stages — LLM review and LLM translations excluded)
@@ -302,7 +302,7 @@ flowchart TB
 
 ## Pipeline Stages
 
-### Full Pipeline (10-stage DAG)
+### Full Pipeline (default 10-stage path; 12 declared stages)
 
 0. **Clean Output Directories** - Remove previous outputs for a fresh run
 1. **Environment Setup** - Validate dependencies, discover projects
@@ -317,7 +317,7 @@ flowchart TB
 
 **Stage numbering (canonical phrasing — keep in sync with AGENTS.md and README.md):**
 
-> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **10 named stages** (`Clean Output Directories` is stage 0; nine numbered stages follow). `run.sh` displays them as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding the two LLM-tagged stages.
+> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **12 named stages**: 8 core stages, 2 optional LLM stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding the two LLM-tagged stages. Bundle and archival stages are declared for contracts but invoked separately when needed.
 
 **Note:** Executive Report (cross-project metrics and dashboards) runs automatically in multi-project mode when 2+ projects are executed (not counted as a numbered stage).
 

@@ -20,7 +20,7 @@ The generic project template implements a **unified test-driven development para
 - **Source code** implements mathematical functionality
 - **Tests** validate all functionality with coverage (60% infra, 90% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `projects/{name}/src/` methods
-- **`scripts/execute_pipeline.py`** orchestrates the declarative 10-stage DAG pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the declarative DAG pipeline
 
 ## Workflow Diagram
 

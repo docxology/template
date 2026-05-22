@@ -15,7 +15,7 @@ from pathlib import Path
 from dataclasses import dataclass, field
 
 from infrastructure.core.logging.utils import get_logger, log_operation
-from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig
+from infrastructure.steganography.config import DocumentMetadata, SteganographyConfig, resolve_git_commit
 
 logger = get_logger(__name__)
 
@@ -50,7 +50,7 @@ class SteganographyProcessor:
         self.config = config or SteganographyConfig()
         self._document_id: str = ""
         self._hashes: dict[str, str] = {}
-        self._metadata_extra: dict[str, str] = {}
+        self._git_commit: str | None = None
 
     # ── Public API ───────────────────────────────────────────────────
 
@@ -104,7 +104,12 @@ class SteganographyProcessor:
             from infrastructure.steganography.encryption import generate_document_id
 
             self._document_id = generate_document_id()
+            self._git_commit = resolve_git_commit()
             logger.info(f"║  Doc-ID: {self._document_id}")
+            if self._git_commit:
+                logger.info("║  Git:    %s", self._git_commit[:12])
+            else:
+                logger.info("║  Git:    unavailable")
 
             # 3. Apply overlays and barcodes (merged onto each page)
             if self.config.overlays_enabled or self.config.barcodes_enabled:
@@ -325,6 +330,10 @@ class SteganographyProcessor:
             hashes=self._hashes,
             document_id=self._document_id,
             keywords=keywords,
+            extra={
+                "GitCommit": self._git_commit or "unavailable",
+                "GitCommitAvailable": str(bool(self._git_commit)).lower(),
+            },
         )
         meta = build_document_metadata(doc)
         xmp = build_xmp_packet(doc)
@@ -333,6 +342,8 @@ class SteganographyProcessor:
             "document_id": self._document_id,
             "hashes": self._hashes,
             "title": title,
+            "git_commit": self._git_commit,
+            "git_commit_available": bool(self._git_commit),
             "steganography_applied": True,
         }
         attachments = {"stego_manifest.json": json.dumps(manifest_dict, indent=2).encode("utf-8")}
@@ -350,6 +361,7 @@ class SteganographyProcessor:
             working_pdf,
             enc_path,
             user_password=self.config.pdf_password or "",
+            algorithm=self.config.pdf_encryption_algorithm,
         )
         working_pdf.unlink()
         enc_path.rename(working_pdf)
@@ -365,6 +377,9 @@ class SteganographyProcessor:
             self._hashes,
             extra={
                 "document_id": self._document_id,
+                "source_size_bytes": original_pdf.stat().st_size,
+                "git_commit": self._git_commit,
+                "git_commit_available": bool(self._git_commit),
                 "steganography_applied": "true",
             },
         )

@@ -45,9 +45,18 @@ class TestEncryption:
 
     @pytest.mark.skipif(not has_pypdf(), reason="pypdf not installed")
     def test_apply_pdf_password(self, tmp_pdf: Path, tmp_path: Path):
+        from pypdf import PdfReader
+
         from infrastructure.steganography.encryption import apply_pdf_password
 
         output = tmp_path / "encrypted.pdf"
         result = apply_pdf_password(tmp_pdf, output, user_password="test123")
         assert result.exists()
         assert result.stat().st_size > 0
+
+        reader = PdfReader(str(result))
+        assert reader.is_encrypted is True
+        assert reader.decrypt("test123") > 0
+        encrypt_dict = reader.trailer["/Encrypt"]
+        assert encrypt_dict["/Length"] == 256
+        assert encrypt_dict["/CF"]["/StdCF"]["/CFM"] == "/AESV3"

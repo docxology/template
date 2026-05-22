@@ -71,7 +71,12 @@ class TestSteganographyProcessor:
         SteganographyProcessor(config).process(tmp_pdf, output_pdf=output, title="Manifest Test")
         manifest = tmp_pdf.with_suffix(".hashes.json")
         assert manifest.exists()
-        assert "sha256" in json.loads(manifest.read_text())["hashes"]
+        data = json.loads(manifest.read_text())
+        assert "sha256" in data["hashes"]
+        assert data["document_id"]
+        assert data["source_size_bytes"] == tmp_pdf.stat().st_size
+        assert "git_commit" in data
+        assert isinstance(data["git_commit_available"], bool)
 
 
 class TestProcessPdfConvenience:

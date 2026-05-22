@@ -46,16 +46,16 @@ Tests require the same dependencies as the main code:
 
 ```bash
 # From tests directory
-pytest .
+uv run pytest .
 
 # From project root
-pytest tests/
+uv run pytest tests/
 
 # With verbose output
-pytest tests/ -v
+uv run pytest tests/ -v
 
 # With coverage (local HTML exploration)
-pytest tests/ --cov=../src --cov-report=html
+uv run pytest tests/ --cov=../src --cov-report=html
 
 # Canonical enforced gate (from repo root — the real per-project gate, CI parity).
 # A green exit with 0 collected tests is NOT a pass: confirm collected > 0 AND coverage >= 90%.
@@ -67,20 +67,20 @@ uv run pytest projects/template_code_project/tests/ \
 
 ```bash
 # Test quadratic function evaluation
-pytest tests/ -k "TestQuadraticFunction"
+uv run pytest tests/ -k "TestQuadraticFunction"
 
 # Test gradient computation
-pytest tests/ -k "TestComputeGradient"
+uv run pytest tests/ -k "TestComputeGradient"
 
 # Test optimization algorithm
-pytest tests/ -k "TestGradientDescent"
+uv run pytest tests/ -k "TestGradientDescent"
 ```
 
 ### Debug Individual Tests
 
 ```bash
 # Run single test with debug output
-pytest tests/test_optimizer.py::TestGradientDescent::test_convergence_to_optimum -v -s
+uv run pytest tests/test_optimizer.py::TestGradientDescent::test_convergence_to_optimum -v -s
 ```
 
 ## Configuration
@@ -212,13 +212,13 @@ class TestOptimizationResult:
 Enable detailed test output:
 
 ```bash
-pytest tests/ -v -s --tb=long
+uv run pytest tests/ -v -s --tb=long
 ```
 
 Check test coverage:
 
 ```bash
-pytest tests/ --cov=../src --cov-report=term-missing
+uv run pytest tests/ --cov=../src --cov-report=term-missing
 ```
 
 ## Best Practices

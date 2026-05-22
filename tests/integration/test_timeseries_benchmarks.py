@@ -4,7 +4,7 @@ Loads M4 monthly and/or synthetic timeseries fixtures and evaluates
 ARIMA, ETS, Theta, and LightGBM forecasts. Computes SMAPE on holdout
 and asserts overall error < 0.5 (50%).
 
-Marked as integration; excluded from fast tests.
+Marked as integration and benchmark; deselected from the default public gate.
 """
 
 from __future__ import annotations
@@ -194,14 +194,15 @@ def backtest_series(series: List[float]) -> dict[str, float]:
 
 
 @pytest.mark.integration
+@pytest.mark.bench
 class TestTimeseriesBenchmarks:
     """Backtest forecasting models on real/synthetic benchmarks."""
 
     @pytest.fixture(autouse=True)
     def require_libs(self):
-        """Skip all tests in this class if required libraries are missing."""
+        """Fail fast if optional forecasting libraries are missing in an opt-in run."""
         if not _has_required_libs():
-            pytest.skip("Requires statsmodels and lightgbm for forecasting models")
+            pytest.fail("Requires statsmodels and lightgbm for forecasting benchmark models")
 
     def test_m4_monthly_available(self):
         """Check M4 monthly data is present or synthetic fallback."""

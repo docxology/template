@@ -6,13 +6,13 @@ An uncompromising validation layer for the mathematical algorithms. Enforces a s
 
 ```bash
 # Run all tests
-pytest .
+uv run pytest .
 
 # Run with coverage
-pytest . --cov=../src --cov-report=term
+uv run pytest . --cov=../src --cov-report=term
 
 # Run specific tests
-pytest -k "TestGradientDescent" -v
+uv run pytest -k "TestGradientDescent" -v
 ```
 
 ## Key Features
@@ -27,9 +27,9 @@ pytest -k "TestGradientDescent" -v
 ### Run Tests
 
 ```bash
-pytest . -v              # Verbose output
-pytest . -k "gradient"   # Filter by name
-pytest . --tb=short      # Shorter tracebacks
+uv run pytest . -v              # Verbose output
+uv run pytest . -k "gradient"   # Filter by name
+uv run pytest . --tb=short      # Shorter tracebacks
 ```
 
 ### Coverage
@@ -37,7 +37,7 @@ pytest . --tb=short      # Shorter tracebacks
 Local exploration (HTML report):
 
 ```bash
-pytest . --cov=../src --cov-report=html
+uv run pytest . --cov=../src --cov-report=html
 open htmlcov/index.html
 ```
 

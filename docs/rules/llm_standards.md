@@ -426,9 +426,8 @@ def test_config_from_env(clean_llm_env):
 @pytest.mark.requires_ollama
 class TestLLMIntegration:
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        if not is_ollama_running():
-            pytest.skip("Ollama not running")
+    def check_ollama(self, ensure_ollama_for_tests):
+        assert ensure_ollama_for_tests
 
     def test_query(self):
         client = LLMClient()
@@ -788,4 +787,3 @@ config = OllamaClientConfig(default_model="some-model")  # Use env vars or from_
 **Last Updated**: 2026-04-08
 **Status**: (includes translation feature; testing guidance aligned with pytest_httpserver suite)
 **Maintainer**: Template Team
-

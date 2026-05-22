@@ -2478,6 +2478,7 @@ scientific = [
     { name = "wordcloud" },
 ]
 steganography = [
+    { name = "cryptography" },
     { name = "python-barcode" },
     { name = "qrcode", extra = ["pil"] },
 ]
@@ -2529,6 +2530,7 @@ scientific = [
     { name = "wordcloud", specifier = ">=1.9.0" },
 ]
 steganography = [
+    { name = "cryptography", specifier = ">=48.0.0" },
     { name = "python-barcode", specifier = ">=0.15" },
     { name = "qrcode", extras = ["pil"], specifier = ">=8.2" },
 ]

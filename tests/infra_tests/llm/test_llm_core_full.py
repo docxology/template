@@ -312,7 +312,7 @@ class TestLLMQueryModesIntegration:
     """Integration tests for query modes requiring Ollama.
 
     Run with: pytest -m requires_ollama
-    Skip with: pytest -m "not requires_ollama"
+    Deselect with: pytest -m "not requires_ollama"
     """
 
     @pytest.fixture(autouse=True)
@@ -328,8 +328,7 @@ class TestLLMQueryModesIntegration:
         result = client.query_short("What is 2+2? Answer briefly.")
 
         assert result is not None
-        if len(result) == 0:
-            pytest.skip("Model returned empty response (transient issue)")
+        assert result, "Model returned an empty response"
 
     @pytest.mark.timeout(180)  # Extended timeout for network-dependent test
     def test_query_long(self):
@@ -345,13 +344,12 @@ class TestLLMQueryModesIntegration:
             requests.exceptions.Timeout,
             requests.exceptions.ConnectionError,
         ) as e:
-            # Skip on any network/timeout errors - these are external service issues
             error_str = str(e).lower()
             if any(
                 keyword in error_str
                 for keyword in ["timed out", "timeout", "connection", "refused"]
             ):
-                pytest.skip(f"Ollama connection/timeout issue (external service): {e}")
+                pytest.fail(f"Ollama connection/timeout issue after setup: {e}")
             raise
 
     def test_query_raw(self):

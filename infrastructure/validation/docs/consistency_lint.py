@@ -29,13 +29,23 @@ from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS
 logger = get_logger(__name__)
 
 
-_DEFAULT_LONG_LIVED_DOC_ROOTS: tuple[str, ...] = ("docs", "infrastructure", ".github", "tests")
+_DEFAULT_LONG_LIVED_DOC_ROOTS: tuple[str, ...] = (
+    "docs",
+    "infrastructure",
+    ".github",
+    "tests",
+    "projects/template_code_project",
+    "projects/template_prose_project",
+)
 """Top-level dirs that contain long-lived docs subject to the consistency checks.
 
 ``tests`` was added 2026-05-15 after a repo-wide triple-check found real import
 and command-convention rot in ``tests/**/AGENTS.md`` that this gate had never
-covered (it was a structural scope blind spot). ``docs/_generated/``,
-``docs/audit/``, and ``docs/streams/`` remain excluded by
+covered (it was a structural scope blind spot). The two tracked exemplar
+projects are included because their manuscripts/docs are public template
+contracts; private symlinked projects, archives, WIP trees, and ``output/`` stay
+outside this source-doc sweep. ``docs/_generated/``, ``docs/audit/``, and
+``docs/streams/`` remain excluded by
 :data:`_DEFAULT_GHOST_EXCLUDE_PARTS` by deliberate policy — they are
 historical/audit/generated records, not authoritative current docs.
 """

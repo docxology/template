@@ -44,7 +44,7 @@ logger = get_logger(__name__)
 
 
 def _stage_label(stage_name: str, project_name: str = "project") -> str:
-    """Build a stage label like ``"Stage 8/10: LLM Scientific Review (English)"``.
+    """Build a truthful stage label like ``"Stage N/M: LLM Scientific Review"``.
 
     Reads ``infrastructure/core/pipeline/pipeline.yaml`` (or the project-specific
     override at ``projects/{name}/pipeline.yaml``) and looks up the 1-based

@@ -248,13 +248,7 @@ def _real_codebase_fixtures_ready() -> bool:
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(
-    not _real_codebase_fixtures_ready(),
-    reason=(
-        "Real codebase fixtures missing or empty; run "
-        "uv run python scripts/fixtures/download_real_codebases.py"
-    ),
-)
+@pytest.mark.external_fixture
 class TestRealCodebases:
     """Test suite for real-world codebase architecture analysis."""
 

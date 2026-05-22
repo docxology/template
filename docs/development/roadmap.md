@@ -22,7 +22,7 @@ infrastructure. Architecture details:
 
 | Release | Theme |
 | ------- | ----- |
-| `v2.0.0` | Two-layer architecture, thin orchestrator pattern, 10-stage DAG, multi-project support |
+| `v2.0.0` | Two-layer architecture, thin orchestrator pattern, declared DAG pipeline, multi-project support |
 | `v2.1.0` | Unified intelligent logging — `ProjectLogger`, structured format, `log_operation()`, `format_duration()` |
 | `v2.1.1` | CI Zero-Mock gate (`verify_no_mocks.py`); mock/fake patterns eliminated from suite |
 | `v2.2.0` | Orchestration hermeticity — script discovery, `get_subprocess_env()`, hermetic subprocess env |

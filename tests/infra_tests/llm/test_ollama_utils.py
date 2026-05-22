@@ -286,13 +286,10 @@ class TestCheckModelLoaded:
     @pytest.mark.requires_ollama
     def test_check_model_loaded_with_server(self):
         """Test check_model_loaded with running Ollama server."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+        assert is_ollama_running(), "requires_ollama fixture should ensure Ollama is running"
 
-        # Get first available model
         models = get_model_names()
-        if not models:
-            pytest.skip("No models available")
+        assert models, "requires_ollama fixture should ensure at least one model is installed"
 
         model_name = models[0]
         is_loaded, loaded_name = check_model_loaded(model_name)
@@ -305,12 +302,10 @@ class TestCheckModelLoaded:
     @pytest.mark.requires_ollama
     def test_check_model_loaded_partial_match(self):
         """Test check_model_loaded with partial model name match."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+        assert is_ollama_running(), "requires_ollama fixture should ensure Ollama is running"
 
         models = get_model_names()
-        if not models:
-            pytest.skip("No models available")
+        assert models, "requires_ollama fixture should ensure at least one model is installed"
 
         # Get base name without tag
         first_model = models[0]
@@ -355,16 +350,15 @@ class TestPreloadModel:
     @pytest.mark.requires_ollama
     def test_preload_model_with_server(self):
         """Test preload_model with running Ollama server."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+        assert is_ollama_running(), "requires_ollama fixture should ensure Ollama is running"
 
-        # Get first available model
-        models = get_model_names()
-        if not models:
-            pytest.skip("No models available")
+        model_name = select_small_fast_model()
+        if model_name is None:
+            models = get_model_names()
+            assert models, "requires_ollama fixture should ensure at least one model is installed"
+            model_name = models[0]
 
-        model_name = models[0]
-        success, error = preload_model(model_name, timeout=5.0, retries=0)
+        success, error = preload_model(model_name, timeout=30.0, retries=1)
 
         # Should either succeed or fail gracefully
         assert isinstance(success, bool)
@@ -373,22 +367,25 @@ class TestPreloadModel:
     @pytest.mark.requires_ollama
     def test_preload_model_already_loaded(self):
         """Test preload_model when model is already loaded."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+        assert is_ollama_running(), "requires_ollama fixture should ensure Ollama is running"
 
-        models = get_model_names()
-        if not models:
-            pytest.skip("No models available")
-
-        model_name = models[0]
+        model_name = select_small_fast_model()
+        if model_name is None:
+            models = get_model_names()
+            assert models, "requires_ollama fixture should ensure at least one model is installed"
+            model_name = models[0]
 
         # Preload once
-        success1, error1 = preload_model(model_name, timeout=5.0, retries=0)
-        if not success1:
-            pytest.skip(f"Could not preload model {model_name}: {error1}")
+        success1, error1 = preload_model(model_name, timeout=30.0, retries=1)
+        assert success1, f"Could not preload model {model_name}: {error1}"
 
         # Preload again - should detect it's already loaded
-        success2, error2 = preload_model(model_name, check_loaded_first=True, timeout=5.0, retries=0)
+        success2, error2 = preload_model(
+            model_name,
+            check_loaded_first=True,
+            timeout=30.0,
+            retries=1,
+        )
         assert success2 is True
         assert error2 is None
 

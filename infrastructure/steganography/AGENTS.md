@@ -49,18 +49,19 @@ Chains: hashing → overlays → barcodes → metadata → encryption → manife
 | `barcode_payload.py` | Barcode payload encoding and structure |
 | `metadata.py` | PDF Info + XMP injection (pypdf) |
 | `hashing.py` | SHA-256/512, manifest JSON |
-| `encryption.py` | AES-256-GCM, HMAC, PDF password |
+| `encryption.py` | AES-GCM payload helpers, HMAC, AES-256 PDF password protection |
 
 ## Integration Points
 
 - **`infrastructure/__init__.py`** — lazy import under try/except
 - **`infrastructure/core/config_loader.py`** — `SteganographyConfigYAML` TypedDict in `ManuscriptConfig`
 - **`secure_run.sh`** — shell entry; `uv sync --group steganography`, then `python -m infrastructure.orchestration secure` ([`run_secure_pipeline`](../orchestration/secure_run.py)); pipeline DAG matches `./run.sh` via Python, not a `./run.sh` subprocess
-- **`config.yaml`** — `steganography:` section with per-technique booleans
+- **`infrastructure/config/secure_config.yaml`** — repository secure-run defaults
+- **`config.yaml`** — project `manuscript/config.yaml` `steganography:` section with per-technique booleans and overrides
 
 ## Dependencies
 
-All lazily imported: `pypdf`, `reportlab`, `qrcode[pil]`, `python-barcode`, `cryptography` (optional).
+All lazily imported: `pypdf`, `reportlab`, `qrcode[pil]`, `python-barcode`, `cryptography`.
 
 ## Testing
 

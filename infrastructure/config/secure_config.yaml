@@ -2,10 +2,10 @@
 # Secure Configuration — Steganographic PDF Post-Processing Settings
 #
 # This file controls security features applied by secure_run.sh.
-# All settings here override defaults in infrastructure/steganography/config.py.
+# Precedence: dataclass defaults < this file < per-project manuscript/config.yaml.
 #
-# Location: <repo-root>/secure_config.yaml
-# Loaded by: secure_run.sh (Step 2: Steganographic Post-Processing)
+# Location: <repo-root>/infrastructure/config/secure_config.yaml
+# Loaded by: infrastructure.orchestration.secure_run
 ################################################################################
 
 steganography:
@@ -60,8 +60,9 @@ steganography:
   # Optional AES-256 PDF password protection.
   # Set encryption_enabled: true and provide a password.
 
-  # pdf_password: ""     # Uncomment and set to enable password protection
-  # hmac_secret: ""      # Optional HMAC key for fingerprint verification
+  pdf_encryption_algorithm: "AES-256"
+  # pdf_password: ""  # Uncomment and set with encryption_enabled: true
+  # hmac_secret: ""   # Optional HMAC key for fingerprint verification
 
   # ── Output ───────────────────────────────────────────────────────────
   #

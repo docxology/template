@@ -60,6 +60,7 @@ class TestSteganographyConfig:
         config = SteganographyConfig()
         assert "sha256" in config.hash_algorithms
         assert "sha512" in config.hash_algorithms
+        assert config.pdf_encryption_algorithm == "AES-256"
 
     def test_overlay_defaults(self):
         from infrastructure.steganography.config import SteganographyConfig
@@ -68,3 +69,17 @@ class TestSteganographyConfig:
         assert config.overlay_text == "CONFIDENTIAL"
         assert 0.0 < config.overlay_opacity < 1.0
         assert config.output_suffix == "_steganography"
+
+    def test_from_dict_pdf_encryption_algorithm(self):
+        from infrastructure.steganography.config import SteganographyConfig
+
+        config = SteganographyConfig.from_dict(
+            {
+                "enabled": True,
+                "encryption_enabled": True,
+                "pdf_encryption_algorithm": "AES-256",
+            }
+        )
+
+        assert config.encryption_enabled is True
+        assert config.pdf_encryption_algorithm == "AES-256"

@@ -90,10 +90,10 @@ Scripts are tested through the project test suite:
 
 ```bash
 # Run all project tests (includes script integration tests)
-pytest ../tests/ -v
+uv run pytest ../tests/ -v
 
 # Run specific analysis tests
-pytest ../tests/test_optimizer.py -k "TestStabilityAnalysis or TestPerformanceBenchmarking or TestAnalysisDashboard" -v
+uv run pytest ../tests/test_optimizer.py -k "TestStabilityAnalysis or TestPerformanceBenchmarking or TestAnalysisDashboard" -v
 ```
 
 ## API Reference

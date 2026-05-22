@@ -97,15 +97,15 @@ The pipeline discovers workspaces under `projects/` that have `src/` and `tests/
 uv sync
 ```
 
-### Optional dependency groups
+### Dependency groups
 
 | Group | Purpose | Command |
 |-------|---------|---------|
-| `rendering` | PDF quality tools (reportlab, pypdf) | `uv sync --group rendering` |
+| `rendering` | PDF quality tools (reportlab, pypdf) | Included in default `uv sync`; explicit: `uv sync --group rendering` |
 | `monitoring` | Resource monitoring (psutil) | `uv sync --group monitoring` |
 | `dotenv` | Load `.env` files | `uv sync --group dotenv` |
 | `llm` | Ollama Python client (needs Ollama server) | `uv sync --group llm` |
-| `steganography` | QR/barcode generation | `uv sync --group steganography` |
+| `steganography` | QR/barcode generation and cryptography helpers | Included in default `uv sync`; explicit: `uv sync --group steganography` |
 
 Install multiple groups at once:
 
@@ -133,7 +133,7 @@ falling back to the root `.venv`, then to system `python3`.
 
 ## 6. Running the Pipeline (Non-Interactive)
 
-### Full pipeline (default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **10** DAG stages; LLM stages may skip with exit code 2 if Ollama is unavailable)
+### Full pipeline (default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **10** core+LLM stages; LLM stages may skip with exit code 2 if Ollama is unavailable; two bundle/archival stages are declared but opt-in)
 
 ```bash
 ./run.sh --pipeline
@@ -346,7 +346,7 @@ uv run scripts/00_setup_environment.py
 ## See Also
 
 - [`RUN_GUIDE.md`](RUN_GUIDE.md) — Pipeline stages and entry points
-- [`../infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) — Default DAG (10 stages; `--core-only` excludes LLM-tagged stages → 8)
+- [`../infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) — Default DAG (12 declared stages; default run executes 10 core+LLM stages; `--core-only` excludes LLM-tagged stages → 8)
 - [`../infrastructure/docker/Dockerfile`](../infrastructure/docker/Dockerfile) — Container specification
 - [`../infrastructure/docker/docker-compose.yml`](../infrastructure/docker/docker-compose.yml) — Multi-service orchestration
 - [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — CI reference

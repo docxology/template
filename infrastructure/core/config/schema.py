@@ -84,13 +84,19 @@ class SteganographyConfigYAML(TypedDict, total=False):
 
     enabled: bool
     overlays: bool
+    overlays_enabled: bool
     barcodes: bool
+    barcodes_enabled: bool
     metadata: bool
+    metadata_enabled: bool
     hashing: bool
+    hashing_enabled: bool
     encryption: bool
+    encryption_enabled: bool
     overlay_text: str
     overlay_opacity: float
     pdf_password: str
+    pdf_encryption_algorithm: str
 
 
 @dataclass(frozen=True)

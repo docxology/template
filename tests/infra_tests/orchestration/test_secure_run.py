@@ -24,7 +24,7 @@ class _NoopProcessor:
     def __init__(self, _config):
         self.calls: list[Path] = []
 
-    def process(self, pdf_path: Path, *, title: str = "", authors=None, keywords=None):
+    def process(self, pdf_path: Path, *, title: str = "", authors=None, keywords=None, author_emails=None):
         self.calls.append(pdf_path)
         # Return an object with a `.name` to match the production interface.
         out = pdf_path.with_name(pdf_path.stem + "_steganography.pdf")
@@ -99,15 +99,28 @@ def test_apply_steganography_unknown_project_returns_1(fake_repo: Path) -> None:
     assert rc == 1
 
 
-def test_apply_steganography_loads_config_yaml(fake_repo: Path) -> None:
-    """The processor receives a steganography subsection from config.yaml when present."""
+def test_apply_steganography_merges_repo_defaults_then_project_config(fake_repo: Path) -> None:
+    """Repo secure defaults are overlaid by the project's steganography section."""
+    repo_cfg = fake_repo / "infrastructure" / "config"
+    repo_cfg.mkdir(parents=True)
+    (repo_cfg / "secure_config.yaml").write_text(
+        "steganography:\n"
+        "  enabled: true\n"
+        "  overlay_text: REPO\n"
+        "  hashing_enabled: true\n"
+        "  pdf_encryption_algorithm: AES-256\n",
+        encoding="utf-8",
+    )
     proj = fake_repo / "projects" / "template_code_project"
     (proj / "manuscript").mkdir(parents=True, exist_ok=True)
     (proj / "manuscript" / "config.yaml").write_text(
         "paper:\n  title: Test Title\n"
         "authors:\n  - name: Alice\n"
+        "    email: alice@example.test\n"
         "keywords: [k1, k2]\n"
-        "steganography:\n  enabled: true\n",
+        "steganography:\n"
+        "  overlay_text: PROJECT\n"
+        "  barcodes_enabled: false\n",
         encoding="utf-8",
     )
     _make_pdf(proj / "output" / "pdf" / "paper.pdf")
@@ -119,10 +132,11 @@ def test_apply_steganography_loads_config_yaml(fake_repo: Path) -> None:
             received["config"] = cfg
             self.calls = []
 
-        def process(self, p, *, title="", authors=None, keywords=None):
+        def process(self, p, *, title="", authors=None, keywords=None, author_emails=None):
             received["title"] = title
             received["authors"] = list(authors or [])
             received["keywords"] = list(keywords or [])
+            received["author_emails"] = list(author_emails or [])
             self.calls.append(p)
             return p
 
@@ -135,7 +149,14 @@ def test_apply_steganography_loads_config_yaml(fake_repo: Path) -> None:
     assert received["title"] == "Test Title"
     assert received["authors"] == ["Alice"]
     assert received["keywords"] == ["k1", "k2"]
-    assert received["config"] == {"enabled": True}
+    assert received["author_emails"] == ["alice@example.test"]
+    assert received["config"] == {
+        "enabled": True,
+        "overlay_text": "PROJECT",
+        "hashing_enabled": True,
+        "pdf_encryption_algorithm": "AES-256",
+        "barcodes_enabled": False,
+    }
 
 
 # --- run_secure_pipeline -----------------------------------------------------

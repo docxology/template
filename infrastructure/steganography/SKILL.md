@@ -1,26 +1,25 @@
 ---
 name: infrastructure-steganography
-description: Skill for the steganography infrastructure module providing QR code generation with dynamic mailto links, invisible hashing payloads, and document-wide overlay processing. Use this module to insert secure cryptographic and steganographic data onto PDFs.
+description: Skill for the steganography infrastructure module providing QR code generation with dynamic mailto links, hash manifests, metadata payloads, and document-wide overlay processing. Use this module to insert opt-in cryptographic and steganographic provenance data onto PDFs.
 ---
 
 # Steganography Infrastructure Module
 
-The `steganography` module applies cryptographically-secure hashing manifests, text overlaps, and interactive metadata objects (like 'mailto' QR barcodes) directly to PDF post-rendering.
+The `steganography` module applies cryptographic hash manifests, text overlays, and interactive metadata objects (like `mailto` QR barcodes) directly to PDF post-rendering.
 
 ## Core Processor (`core.py`)
 
 The primary orchestrator of steganography operations. It handles config extraction, hashing, alpha-text watermarking, and barcodes.
 
 ```python
-from infrastructure.steganography import SteganographyProcessor
+from infrastructure.steganography import SteganographyConfig, SteganographyProcessor
 from pathlib import Path
 
-processor = SteganographyProcessor(
-    pdf_path=Path("output.pdf"),
-    project_config={"steganography": {"overlay_mode": "text"}},
-    author_emails=["test@example.com"]
+processor = SteganographyProcessor(SteganographyConfig(enabled=True, overlay_mode="text"))
+final_pdf = processor.process(
+    Path("output.pdf"),
+    author_emails=["test@example.com"],
 )
-final_pdf = processor.process()
 ```
 
 ## Barcodes (`barcodes.py`)

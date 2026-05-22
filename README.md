@@ -282,7 +282,8 @@ narrative + benefits:
 - **Markdown-to-PDF pipeline** with cross-referenced manuscripts and figure
   integration ([`docs/usage/markdown-template-guide.md`](docs/usage/markdown-template-guide.md),
   [`docs/modules/pdf-validation.md`](docs/modules/pdf-validation.md)).
-- **Validated build system** with 10-stage DAG, 8-stage core path, and CI gates
+- **Validated build system** with 12 declared stages, a default 10-stage
+  core+LLM path, an 8-stage `--core-only` path, and CI gates
   ([`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md)).
 - **Generic + reusable** — drop the same `infrastructure/` into any project that
   follows the layout ([`docs/usage/template-description.md`](docs/usage/template-description.md)).
@@ -373,7 +374,7 @@ Working outputs: `projects/{name}/output/` (disposable). Final deliverables:
 Two entry points — `./run.sh` (interactive or `--pipeline`) and
 `uv run python scripts/execute_pipeline.py --project <name> [--core-only]`.
 
-> **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **10 named stages** (`Clean Output Directories` is stage 0; nine numbered stages follow). `run.sh` displays them as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding the two LLM-tagged stages.
+> **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **12 named stages**: 8 core stages, 2 optional LLM stages, and 2 opt-in bundle/archival stages. Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding the two LLM-tagged stages. Bundle and archival stages are declared for contracts but invoked separately when needed.
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/generate_stage_table_doc.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/NN_*.py` numeric prefixes (for example, stage 9 runs `05_copy_outputs.py`). -->

@@ -1,8 +1,9 @@
 """Integration tests demonstrating module interoperability.
 
-This suite tests how the new infrastructure modules work together to support
-a complete research workflow. Following the "no mocks" policy, all tests use
-real implementations or skip when services are unavailable.
+This suite tests how the infrastructure modules work together to support a
+complete research workflow. Following the no-mocks policy, tests use real
+implementations and fail with setup guidance when required local services are
+not available.
 """
 
 import pytest
@@ -32,7 +33,7 @@ class TestResearchWorkflow:
         if not ok:
             pytest.fail(f"Ollama model {model_name!r} failed to preload: {err}")
 
-        # ensure_ollama_for_tests already validated the daemon; skip only on transient transport/runtime issues
+        # ensure_ollama_for_tests already validated the daemon; fail on transient transport/runtime issues.
         try:
             # Get system health status
             checker = SystemHealthChecker()
@@ -66,7 +67,7 @@ class TestResearchWorkflow:
             RuntimeError,
             requests.exceptions.RequestException,
         ) as e:
-            pytest.skip(f"Transient error after healthy Ollama ensure: {e}")
+            pytest.fail(f"Transient error after healthy Ollama ensure: {e}")
 
     def test_rendering_metadata_workflow(self, tmp_path):
         """Test rendering metadata -> publishing metadata workflow.
@@ -92,16 +93,16 @@ class TestResearchWorkflow:
         assert "test" in metadata.keywords
         assert metadata.abstract == "This is a test abstract."
 
-    @pytest.mark.skip(reason="infrastructure.literature module not implemented yet")
     def test_full_research_pipeline_metadata(self, tmp_path):
         """Test complete pipeline metadata handling without network calls.
 
         Tests that modules can work together for metadata creation and validation.
         """
         # 1. Create sample paper metadata (without network search)
-        from infrastructure.literature.sources import SearchResult
+        from infrastructure.search import Paper
 
-        paper = SearchResult(
+        paper = Paper(
+            id="local:novel-algorithm",
             title="Novel Algorithm",
             authors=["Researcher"],
             year=2024,
@@ -163,37 +164,35 @@ class TestModuleInteroperability:
         assert llm_logger.name == "infrastructure.llm"
         assert render_logger.name == "infrastructure.rendering"
 
-    @pytest.mark.skip(reason="infrastructure.literature module not implemented yet")
     def test_configuration_independence(self):
         """Test that module configurations are independent."""
-        from infrastructure.literature.core import LiteratureConfig
         from infrastructure.llm.core.config import OllamaClientConfig
         from infrastructure.rendering.config import RenderingConfig
+        from infrastructure.search import SearchQuery
 
-        lit_config = LiteratureConfig()
+        search_query = SearchQuery(text="optimization", max_results=10)
         llm_config = OllamaClientConfig()
         render_config = RenderingConfig()
 
         # Each has distinct configuration
-        assert hasattr(lit_config, "default_limit")
+        assert hasattr(search_query, "max_results")
         assert hasattr(llm_config, "default_model")
         assert hasattr(render_config, "latex_compiler")
 
         # Configurations are independent
-        lit_config.default_limit = 999
+        search_query.max_results = 999
         assert llm_config.default_model != 999
 
 
 class TestWrapperScripts:
     """Test wrapper scripts in infrastructure CLIs."""
 
-    @pytest.mark.skip(reason="infrastructure.literature module not implemented yet")
     def test_literature_cli_exists(self):
-        """Test that literature CLI exists."""
-        from infrastructure.literature.core import cli
+        """Test that literature search CLI exists."""
+        from infrastructure.search.literature import cli
 
         assert hasattr(cli, "main")
-        assert hasattr(cli, "search_command")
+        assert hasattr(cli, "build_parser")
 
     def test_rendering_cli_exists(self):
         """Test that rendering CLI exists."""

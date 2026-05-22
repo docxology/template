@@ -1,12 +1,12 @@
 # Introduction {#sec:introduction}
 
-This `template_code_project` serves as the foundational exemplar for the [Research Project Template](https://github.com/docxology/template) ecosystem, demonstrating a fully-tested numerical optimization implementation securely bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures. The prose, the labelled figures, and the labelled equations have all been programmably generated through an unbreakable custody chain starting from algorithm implementation through strict CI/CD validation to multi-format `.pdf` compilation.
+This `template_code_project` serves as the foundational exemplar for the [Research Project Template](https://github.com/docxology/template) ecosystem, demonstrating a fully-tested numerical optimization implementation bracketed by rigorous infrastructure, hermetic testing, and extensive documentation architectures. The prose, the labelled figures, and the labelled equations have all been generated through an auditable custody chain starting from algorithm implementation through strict CI/CD validation to multi-format `.pdf` compilation.
 
 ## Template Architecture Context
 
 Scientific engineering requires mathematical accuracy combined with software reliability. This project unifies theoretical optimization with the repository's three foundational pillars:
 
-1. **`infrastructure/` Layer (Root Directory)**: A modular stack of fifteen Python subpackages (`core`, `documentation`, `llm`, `orchestration`, `project`, `prose`, `publishing`, `reference`, `rendering`, `reporting`, `scientific`, `search`, `skills`, `steganography`, `validation`) providing the computational scaffolding (the sibling `config/` and `docker/` directories under `infrastructure/` are configuration/data, not Python packages).
+1. **`infrastructure/` Layer (Root Directory)**: A modular stack of importable Python packages providing the computational scaffolding. The current package count is measured in the template repository's generated canonical facts rather than repeated here because it changes as infrastructure modules are added or retired.
 2. **`tests/` Framework (`projects/template_code_project/tests/`)**: An uncompromising validation layer maintaining a zero-mock testing policy. This is enforced automatically via the [CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) mapping to `pyproject.toml` directives.
 3. **`docs/` Knowledge Base (`projects/template_code_project/docs/`)**: A structured repository of architectural guidelines, operational patterns, and the Rigorous Agentic Scientific Protocol (RASP) that governs the AI-assisted agents writing these very texts.
 
@@ -24,7 +24,7 @@ where $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is a continuously differentiable 
 Rather than existing as isolated scripts, this project extensively leverages the `infrastructure` layer:
 
 - **Scientific Utilities**: Utilizing `infrastructure.scientific.stability` and `infrastructure.scientific.benchmarking` to guarantee numerical boundaries and performance scaling.
-- **Hermetic Validation**: Deploying `infrastructure.validation` components (`markdown_validator`, `output_validator`) to ensure all generated artifacts are cryptographically sound.
+- **Hermetic Validation**: Deploying `infrastructure.validation` components (`markdown_validator`, `output_validator`) to ensure generated artifacts are structurally valid and traceable.
 - **Reporting & Rendering**: Employing `infrastructure.rendering.pdf_renderer` and `infrastructure.reporting.executive_reporter` to automatically transform code outputs into this finalized manuscript.
 
 ## Algorithm Overview

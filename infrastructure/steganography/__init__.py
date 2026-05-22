@@ -8,11 +8,12 @@ Techniques include:
 - QR code and Code128 barcode strips
 - PDF metadata and XMP injection
 - Cryptographic hash embedding
-- AES-256 encrypted payloads
+- AES-GCM encrypted payload helpers
 - Optional PDF password protection
 
 The module is fully optional — all dependencies are lazily imported and
-the module does nothing unless explicitly enabled in ``config.yaml``.
+the module does nothing unless explicitly enabled through secure-run
+defaults, project config, or API configuration.
 
 Usage::
 

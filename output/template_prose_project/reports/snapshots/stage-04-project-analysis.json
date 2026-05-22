@@ -1,5 +1,5 @@
 {
-  "artifact_manifest_hash": "5187aa1a27ffa8d03894f4cb02a91bfaef7e5ac71e9ddd1f2b0e4a81b8ba0616",
+  "artifact_manifest_hash": "93454114b0673dbe75527443881bcebf5324bce5570db0c82207bfb5573fec2c",
   "artifacts": {
     "output/checks.json": "e7cb5141e8784e6a693fef868c16d5294a6146a8a8e285dd68fadb7a5833833f",
     "output/data/manuscript_variables.json": "fcc4e7454421a212a8c4ed1cc79478533057d0d6ca4f995165a4f49468df0c6a",
@@ -18,8 +18,8 @@
     "output/manuscript/preamble.md": "21b3edeede6fb23e32815558eaf27f9bca690cdbdafe958012591e6a6c62cddd",
     "output/manuscript/references.bib": "b8a8f331dd83f0ea71e03833462310339c9a9eb7775ca8ebcf25e573520c4ebe",
     "output/manuscript_report.json": "b1b953676acc99136b99a92b9dadbdf1e87937d21967bf70f713cbd5d8da9e2f",
-    "output/reports/test_results.json": "ef719cee9154166da23e54cf776dfc1db0498cbd50980398df3807c96e1ff8e8",
-    "output/reports/test_results.md": "65e1b322df923462779c2bd7684fe616c371aef9f0df8632167b1f128019d20f",
+    "output/reports/test_results.json": "6d900fc9a4edf9d8f404b2848604378bd2cd917da26838b21d3534c80933b911",
+    "output/reports/test_results.md": "f74e9893f0cfdf493b668af220bd3c1c8839c3605e906b019c46df6df333dac2",
     "output/review_report.md": "3910d2830e529449fbc2ddb7e145a764378c4c2e4656372c69d4cdb6d6d3dcbf",
     "output/run_summary.json": "05d64b417c78d95f667ec3e7e77ce2536efc408102494879625bcdb4df6b18bb"
   },
@@ -27,7 +27,7 @@
   "path": "/Users/4d/Documents/GitHub/template/projects/template_prose_project/output/reports/snapshots/stage-04-project-analysis.json",
   "stage_name": "Project Analysis",
   "stage_num": 4,
-  "timestamp": "2026-05-22T00:49:20+00:00",
+  "timestamp": "2026-05-22T03:56:50+00:00",
   "validation_summary": {
     "checks": {},
     "summary": {}

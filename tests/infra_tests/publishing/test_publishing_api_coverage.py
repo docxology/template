@@ -1,9 +1,7 @@
-"""Comprehensive tests for infrastructure/publishing/api.py.
+"""Comprehensive tests for publishing API and public package exports.
 
 Tests publishing API functionality using pytest-httpserver (no mocks).
 """
-
-import pytest
 
 
 class TestPublishingApiCore:
@@ -64,27 +62,47 @@ class TestZenodoApi:
 
 
 class TestArxivApi:
-    """Test arXiv submission helpers (skipped when not present)."""
+    """Test arXiv submission helpers exposed by the publishing package."""
 
     def test_prepare_arxiv_submission(self, tmp_path):
-        """prepare_arxiv_submission is skipped if not exported."""
+        """prepare_arxiv_submission creates an archive from real local files."""
+        import tarfile
+
+        import infrastructure.publishing as publishing
+
+        output_dir = tmp_path / "output"
+        pdf_dir = output_dir / "pdf"
+        manuscript_dir = tmp_path / "manuscript"
+        pdf_dir.mkdir(parents=True)
+        manuscript_dir.mkdir()
+        (manuscript_dir / "main.tex").write_text("\\documentclass{article}", encoding="utf-8")
+        (manuscript_dir / "references.bib").write_text("@misc{x, title={X}}", encoding="utf-8")
+
+        metadata = publishing.PublicationMetadata(
+            title="Test Paper",
+            authors=["Author"],
+            abstract="Abstract",
+            keywords=["test"],
+        )
+        (pdf_dir / "Test_Paper.bbl").write_text("\\begin{thebibliography}{1}", encoding="utf-8")
+
+        result = publishing.prepare_arxiv_submission(output_dir, metadata)
+        assert result.exists()
+        assert result.suffixes[-2:] == [".tar", ".gz"]
+        with tarfile.open(result, "r:gz") as archive:
+            names = archive.getnames()
+        assert "main.tex" in names
+        assert "references.bib" in names
+        assert "Test_Paper.bbl" in names
+
+    def test_api_module_keeps_zenodo_client_boundary(self):
+        """api.py remains the Zenodo client module; platform helpers live in package exports."""
+        import infrastructure.publishing as publishing
         from infrastructure.publishing import api
 
-        if not hasattr(api, "prepare_arxiv_submission"):
-            pytest.skip("prepare_arxiv_submission not available in this build")
-        tex = tmp_path / "main.tex"
-        tex.write_text("\\documentclass{article}")
-        result = api.prepare_arxiv_submission(str(tmp_path))
-        assert result is not None
-
-    def test_create_arxiv_package(self, tmp_path):
-        """create_arxiv_package is skipped if not exported."""
-        from infrastructure.publishing import api
-
-        if not hasattr(api, "create_arxiv_package"):
-            pytest.skip("create_arxiv_package not available in this build")
-        result = api.create_arxiv_package(str(tmp_path))
-        assert result is not None
+        assert hasattr(publishing, "prepare_arxiv_submission")
+        assert hasattr(publishing, "publish_to_zenodo")
+        assert not hasattr(api, "prepare_arxiv_submission")
 
 
 class TestGitHubApi:
@@ -103,28 +121,37 @@ class TestGitHubApi:
 
 
 class TestMetadataExtraction:
-    """Test metadata extraction helpers (skipped when not present)."""
+    """Test metadata extraction and citation helpers exposed by the package."""
 
     def test_extract_metadata(self, tmp_path):
-        """extract_metadata is skipped if not exported."""
-        from infrastructure.publishing import api
+        """extract_publication_metadata reads real markdown content."""
+        import infrastructure.publishing as publishing
 
-        if not hasattr(api, "extract_metadata"):
-            pytest.skip("extract_metadata not available in this build")
         md = tmp_path / "paper.md"
-        md.write_text("# Title\nAuthors: Test")
-        result = api.extract_metadata(str(md))
-        assert result is not None
+        md.write_text(
+            "# Paper Title\n\nAuthors: Dr. Test Author\n\n## Abstract\nExample abstract.",
+            encoding="utf-8",
+        )
+        result = publishing.extract_publication_metadata([md])
+        assert result.title == "Paper Title"
+        assert result.authors == ["Dr. Test Author"]
+        assert result.abstract == "Example abstract."
 
     def test_generate_bibtex(self):
-        """generate_bibtex is skipped if not exported."""
-        from infrastructure.publishing import api
+        """generate_citation_bibtex returns a BibTeX entry."""
+        import infrastructure.publishing as publishing
 
-        if not hasattr(api, "generate_bibtex"):
-            pytest.skip("generate_bibtex not available in this build")
-        metadata = {"title": "Test Paper", "authors": ["Author One"], "year": 2024}
-        result = api.generate_bibtex(metadata)
+        metadata = publishing.PublicationMetadata(
+            title="Test Paper",
+            authors=["Author One"],
+            abstract="Abstract",
+            keywords=["test"],
+            publication_date="2024-01-01",
+        )
+        result = publishing.generate_citation_bibtex(metadata)
         assert isinstance(result, str)
+        assert "@software{authorone2024" in result
+        assert "title = {Test Paper}" in result
 
 
 class TestPublishingApiIntegration:

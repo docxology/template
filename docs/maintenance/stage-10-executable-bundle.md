@@ -1,8 +1,8 @@
-# Stage 10 — Executable Bundle (design document)
+# Stage 10 — Executable Bundle (opt-in stage)
 
 > Created 2026-05-20. Design document for an opt-in long-horizon artifact path. The stage contract is declared in `pipeline.yaml` for traceability, but `PipelineExecutor` filters `bundle` / `archival` tags out of default runs; invoke `scripts/08_executable_bundle.py` directly when intentionally producing this artifact. Addresses World-Threat-Model findings at the 5-15-year horizon where PDF-as-primary-deliverable becomes legacy and executable-artifact-as-primary becomes the norm.
 
-## Why this stage is being designed
+## Why this stage exists
 
 The World Threat Model run identified that:
 
@@ -93,9 +93,10 @@ The manifest is **the contract** between this template and any future agentic ve
 | Stage 7: LLM draft assistance | LLM-aided review | existing (relabeled 2026-05-20) |
 | Stage 8: LLM translations | zh/hi/ru abstracts | existing |
 | Stage 9: Copy outputs | final deliverables to output/ | existing |
-| **Stage 10: Executable bundle** | **container + lockfile + manifest** | **NEW (designed, not yet implemented)** |
+| **Stage 10: Executable bundle** | **container + lockfile + manifest** | **implemented as an opt-in stage** |
+| **Stage 11: Archival publication** | **dry-run or committed archival manifest/deposits** | **implemented as an opt-in stage** |
 
-Stage 10 runs **in parallel** with Stage 5 (both depend on Stage 4 Analysis), not after. Stage 9 (Copy Outputs) gets a new dependency on Stage 10 to bundle the executable artifact into the final delivery directory.
+The declared Stage 10 currently depends on PDF rendering and is filtered out of default runs by its `bundle` tag. Stage 11 depends on Stage 10 and is filtered out by its `archival` tag. The default full run still ends with Copy Outputs; invoke these long-horizon stages directly when intentionally producing bundles or archival records.
 
 ## Why "parallel to Stage 5" not "replacing Stage 5"
 
@@ -105,15 +106,22 @@ Stage 10 runs **in parallel** with Stage 5 (both depend on Stage 4 Analysis), no
 - The executable bundle is the *working* artifact; the PDF is the *citing* artifact
 - A template trying to be useful at both 2-year and 20-year horizons needs both
 
-## Implementation order (when user authorizes)
+## Implementation status
 
-1. **Phase 1** — Build the manifest schema + a generator (`infrastructure/rendering/manifest.py`) that reads `pinned_values/<project>.json` (from `tests/regression/`) and produces a `manifest.json`.
-2. **Phase 2** — Build the Dockerfile generator (one Dockerfile per project, parameterized by Python version + LaTeX packages from `pipeline.yaml`).
-3. **Phase 3** — Wire Stage 10 into `pipeline.yaml` with `depends_on: [Project Analysis]` and `tags: [core]`.
-4. **Phase 4** — Add a `--bundle-only` flag to `run.sh` for testing.
-5. **Phase 5** — Cross-test against both canonical exemplars; ensure `docker compose run reproduce` reproduces the same PDF byte-for-byte (modulo timestamps) on a fresh machine.
-6. **Phase 6** — Add CI job `executable-bundle` to verify the bundle builds on every commit.
-7. **Phase 7** — Update `CLAUDE.md` quick-reference + `AGENTS.md` system manual + `docs/RUN_GUIDE.md` to document Stage 10.
+Implemented pieces:
+
+1. `scripts/08_executable_bundle.py` builds `output/<project>/executable_bundle/`.
+2. `infrastructure/rendering/manifest.py` reads `tests/regression/pinned_values/<project>.json` when present and writes `manifest.json`.
+3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml`.
+4. `pipeline.yaml` declares the `Executable Bundle` stage with tag `bundle`; default runs filter it out.
+5. `scripts/09_archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path.
+
+Remaining hardening:
+
+1. Add a dedicated `--bundle-only` `run.sh` convenience flag if direct script invocation proves awkward.
+2. Cross-test both canonical exemplars in CI with the generated container.
+3. Decide whether reproducibility should be byte-identical or content-equivalent when timestamps are present.
+4. Add a dedicated CI job once container runtime availability is stable.
 
 ## Out of scope for v1
 
@@ -129,15 +137,15 @@ Stage 10 runs **in parallel** with Stage 5 (both depend on Stage 4 Analysis), no
 3. **External-data policy.** Datasets that can't be redistributed (license restrictions) — how does the manifest reference them while remaining reproducible?
 4. **Backward compatibility with existing publications.** Do we retroactively generate bundles for already-published manuscripts via the Zenodo DOI 10.5281/zenodo.19139090?
 
-These need decisions before implementation. Defer until user reviews this design.
+These need decisions before treating the bundle as a release gate.
 
 ## Status
 
-**Design only.** Not implemented. Not in `pipeline.yaml`. Requires user authorization before wiring into the running pipeline.
+**Opt-in implementation.** The stage contract is declared in `pipeline.yaml`, and the direct script writes a bundle. It is not part of default, `--core-only`, or LLM-inclusive full runs.
 
 ## Related
 
 - [`README.md`](README.md) — guide hub
 - [`regression-testing.md`](regression-testing.md) — the `pinned_values/` source for the manifest's claims section
 - [`archival-targets.md`](archival-targets.md) — the archival receipts captured in the manifest
-- [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) — where Stage 10 would be added
+- [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) — declared Stage 10 and Stage 11 contracts

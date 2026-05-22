@@ -42,10 +42,11 @@ Testing metric ensuring all conditional branches (if/else, switch cases) are exe
 
 ### Build Pipeline
 
-Automated sequence of operations orchestrated by `scripts/execute_pipeline.py` using a 10-stage DAG defined in `infrastructure/core/pipeline/pipeline.yaml`.
+Automated sequence of operations orchestrated by `scripts/execute_pipeline.py` using the declared DAG in `infrastructure/core/pipeline/pipeline.yaml`.
 
 **Core pipeline** (`--core-only`): Clean Output Directories → Environment Setup → Infrastructure Tests → Project Tests → Project Analysis → PDF Rendering → Output Validation → Copy Outputs (8 stages).
 **Full pipeline** (default): adds LLM Scientific Review and LLM Translations stages (10 total).
+**Opt-in stages**: Executable Bundle and Archival Publication are declared in the DAG for contracts and direct invocation, so `pipeline.yaml` contains 12 stages total.
 
 See [RUN_GUIDE.md](../RUN_GUIDE.md) for the complete stage reference.
 

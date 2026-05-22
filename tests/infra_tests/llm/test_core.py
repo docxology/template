@@ -217,7 +217,7 @@ class TestLLMClientWithOllama:
     """Integration tests requiring running Ollama server.
 
     Run with: pytest -m requires_ollama
-    Skip with: pytest -m "not requires_ollama"
+    Deselect with: pytest -m "not requires_ollama"
 
     Uses ollama_utils for dynamic model selection based on available models.
     """
@@ -250,9 +250,7 @@ class TestLLMClientWithOllama:
         with safe_network_test("Ollama"):
             response = client.query("Say 'test' and nothing else.", options=opts)
             assert response is not None
-            # Skip if model returns empty (transient model quality issue)
-            if len(response) == 0:
-                pytest.skip("Model returned empty response (transient quality issue)")
+            assert response, "Model returned an empty response"
 
     def test_query_short(self, client):
         """Test short response mode."""
@@ -266,7 +264,8 @@ class TestLLMClientWithOllama:
         """Test long response mode.
 
         Uses extended timeout for long-form generation which may take longer.
-        Skips gracefully on timeout - integration tests depend on external service.
+        Fails with setup guidance on timeout; the requires_ollama fixture should
+        have made the local service available before this test runs.
         """
         # Create client with extended timeout for long responses
         extended_config = default_config.with_overrides(timeout=120.0)
@@ -284,21 +283,20 @@ class TestLLMClientWithOllama:
             requests.exceptions.Timeout,
             requests.exceptions.ConnectionError,
         ) as e:
-            # Skip on any network/timeout errors - these are external service issues
             error_str = str(e).lower()
             if any(
                 keyword in error_str
                 for keyword in ["timed out", "timeout", "connection", "refused"]
             ):
-                pytest.skip(f"Ollama connection/timeout issue (external service): {e}")
+                pytest.fail(f"Ollama connection/timeout issue after setup: {e}")
             raise
 
     def test_query_structured(self, client, default_config):
         """Test structured JSON response.
 
         Uses extended timeout and handles empty responses gracefully.
-        Skips on LLM errors or empty responses - integration tests depend on
-        external service quality and model capability.
+        Fails on LLM errors or empty responses so default-selected tests do not
+        hide model/setup regressions as skips.
         """
         # Create client with extended timeout for structured response
         extended_config = default_config.with_overrides(timeout=90.0)
@@ -317,18 +315,15 @@ class TestLLMClientWithOllama:
                 )
 
                 assert isinstance(result, dict)
-                # Empty dict {} is valid JSON - skip if model doesn't follow schema
-                if len(result) == 0:
-                    pytest.skip("Model returned empty JSON object (model quality issue)")
+                assert result, "Model returned an empty JSON object"
                 print(f"Structured result: {result}")
         except LLMConnectionError as e:
             if "timed out" in str(e).lower() or "timeout" in str(e).lower():
-                pytest.skip(f"Ollama timed out (external service issue): {e}")
+                pytest.fail(f"Ollama timed out after setup: {e}")
             raise
         except LLMError as e:
-            # Empty or invalid JSON responses indicate model quality issues, not code bugs
             if "valid JSON" in str(e) or "response=" in str(e):
-                pytest.skip(f"Model returned invalid JSON (model quality issue): {e}")
+                pytest.fail(f"Model returned invalid JSON: {e}")
             raise
 
     def test_query_raw(self, default_config):

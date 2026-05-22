@@ -184,19 +184,17 @@ class TestValidatePreamblePackages:
             # If exception raised, some packages missing - that's valid
             pass
 
-    @pytest.mark.skipif(
-        shutil.which("kpsewhich") is not None,
-        reason="Without kpsewhich only; when present, non-strict preamble is covered elsewhere",
-    )
-    def test_validate_preamble_no_kpsewhich(self):
+    def test_validate_preamble_no_kpsewhich(self, monkeypatch):
         """Test preamble validation when kpsewhich not available."""
-        # Should handle gracefully when kpsewhich not found
-        try:
-            result = validate_preamble_packages(strict=False)
-            assert isinstance(result, ValidationReport)
-        except ValidationError:
-            # May raise if strict and packages missing
-            pass
+        from infrastructure.rendering import latex_validation
+
+        monkeypatch.setattr(latex_validation, "find_kpsewhich", lambda: None)
+
+        result = latex_validation.validate_preamble_packages(strict=False)
+
+        assert isinstance(result, ValidationReport)
+        assert result.all_required_available is False
+        assert result.missing_required
 
 
 class TestGetMissingPackagesCommand:

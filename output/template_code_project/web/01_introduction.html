@@ -179,12 +179,12 @@
 exemplar for the <a
 href="https://github.com/docxology/template">Research Project
 Template</a> ecosystem, demonstrating a fully-tested numerical
-optimization implementation securely bracketed by rigorous
-infrastructure, hermetic testing, and extensive documentation
-architectures. The prose, the labelled figures, and the labelled
-equations have all been programmably generated through an unbreakable
-custody chain starting from algorithm implementation through strict
-CI/CD validation to multi-format <code>.pdf</code> compilation.</p>
+optimization implementation bracketed by rigorous infrastructure,
+hermetic testing, and extensive documentation architectures. The prose,
+the labelled figures, and the labelled equations have all been generated
+through an auditable custody chain starting from algorithm
+implementation through strict CI/CD validation to multi-format
+<code>.pdf</code> compilation.</p>
 <h2 id="template-architecture-context">Template Architecture
 Context</h2>
 <p>Scientific engineering requires mathematical accuracy combined with
@@ -192,16 +192,11 @@ software reliability. This project unifies theoretical optimization with
 the repository’s three foundational pillars:</p>
 <ol type="1">
 <li><strong><code>infrastructure/</code> Layer (Root
-Directory)</strong>: A modular stack of fifteen Python subpackages
-(<code>core</code>, <code>documentation</code>, <code>llm</code>,
-<code>orchestration</code>, <code>project</code>, <code>prose</code>,
-<code>publishing</code>, <code>reference</code>, <code>rendering</code>,
-<code>reporting</code>, <code>scientific</code>, <code>search</code>,
-<code>skills</code>, <code>steganography</code>,
-<code>validation</code>) providing the computational scaffolding (the
-sibling <code>config/</code> and <code>docker/</code> directories under
-<code>infrastructure/</code> are configuration/data, not Python
-packages).</li>
+Directory)</strong>: A modular stack of importable Python packages
+providing the computational scaffolding. The current package count is
+measured in the template repository’s generated canonical facts rather
+than repeated here because it changes as infrastructure modules are
+added or retired.</li>
 <li><strong><code>tests/</code> Framework
 (<code>projects/template_code_project/tests/</code>)</strong>: An
 uncompromising validation layer maintaining a zero-mock testing policy.
@@ -239,7 +234,7 @@ numerical boundaries and performance scaling.</li>
 <li><strong>Hermetic Validation</strong>: Deploying
 <code>infrastructure.validation</code> components
 (<code>markdown_validator</code>, <code>output_validator</code>) to
-ensure all generated artifacts are cryptographically sound.</li>
+ensure generated artifacts are structurally valid and traceable.</li>
 <li><strong>Reporting &amp; Rendering</strong>: Employing
 <code>infrastructure.rendering.pdf_renderer</code> and
 <code>infrastructure.reporting.executive_reporter</code> to

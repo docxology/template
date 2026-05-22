@@ -76,11 +76,8 @@ package = false
         assert (tmp_path / ".venv").exists(), "Virtual environment not created"
         assert (tmp_path / "uv.lock").exists(), "Lock file not generated"
 
-    def test_complete_setup_without_uv(self, tmp_path):
-        """Test complete setup fallback without uv."""
-        # Ensure uv is not available for this test
-        if shutil.which("uv"):
-            pytest.skip("uv is available - cannot test fallback path")
+    def test_complete_setup_without_uv(self):
+        """Test dependency checks used by the no-uv fallback path."""
 
         # Test fallback dependency checking
         all_present, missing = check_dependencies(["sys", "os"])
@@ -261,21 +258,19 @@ package = false
                 elif var in os.environ:
                     del os.environ[var]
 
-    def test_install_missing_packages_fallback(self, tmp_path):
+    def test_install_missing_packages_fallback(self, monkeypatch, tmp_path):
         """Test install_missing_packages fallback behavior."""
-        # Test with uv unavailable
-        if shutil.which("uv"):
-            pytest.skip("uv is available - cannot test fallback")
+        from infrastructure.core.runtime import _packages
+
+        monkeypatch.setattr(_packages, "check_uv_available", lambda: False)
 
         # Should return False when uv is not available
-        result = install_missing_packages(["test_package"])
+        result = install_missing_packages(["test_package"], cwd=tmp_path)
 
         assert result is False
 
     def test_install_missing_packages_with_uv(self, tmp_path):
-        """Test install_missing_packages with uv available."""
-        if not shutil.which("uv"):
-            pytest.skip("uv not available - skipping integration test")
+        """Test install_missing_packages no-op behavior without mutating the environment."""
 
         # Create a minimal pyproject.toml
         pyproject = tmp_path / "pyproject.toml"
@@ -287,10 +282,9 @@ dependencies = []
 """
         )
 
-        # Test installation of a simple package
-        # Note: This would actually install the package, so we skip for safety
-        # In a real scenario, you'd test with a test-specific package
-        pytest.skip("Package installation test skipped for safety - would modify environment")
+        result = install_missing_packages([], cwd=tmp_path)
+
+        assert result is True
 
     def test_validate_directory_structure(self, tmp_path):
         """Test directory structure validation."""

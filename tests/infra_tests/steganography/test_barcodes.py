@@ -2,13 +2,8 @@
 
 from __future__ import annotations
 
-import pytest
-
-from tests.infra_tests.steganography.conftest import has_qrcode, has_reportlab
-
 
 class TestBarcodes:
-    @pytest.mark.skipif(not has_qrcode(), reason="qrcode not installed")
     def test_generate_qr_code(self):
         from infrastructure.steganography.barcodes import generate_qr_code
 
@@ -31,7 +26,6 @@ class TestBarcodes:
         assert "T:" in payload
         assert "TS:" in payload
 
-    @pytest.mark.skipif(not (has_reportlab() and has_qrcode()), reason="reportlab and/or qrcode not installed")
     def test_create_barcode_strip_overlay(self):
         from infrastructure.steganography.barcodes import create_barcode_strip_overlay
 

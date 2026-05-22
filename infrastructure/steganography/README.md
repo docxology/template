@@ -26,9 +26,9 @@ when they are absent:
 - `reportlab` — overlay canvas generation
 - `qrcode[pil]` — QR code generation
 - `python-barcode` — Code128 barcode generation
-- `cryptography` — AES-256 encryption (optional, only for encryption feature)
+- `cryptography` — AES-GCM payload helpers and encrypted metadata payloads
 
-Install all with: `pip install pypdf reportlab qrcode[pil] python-barcode`
+The root `uv sync` includes the `steganography` group by default for the maintained test gate. Minimal environments can still install it explicitly with `uv sync --group steganography`.
 
 ## Configuration
 
@@ -41,7 +41,8 @@ steganography:
   barcodes: true
   metadata: true
   hashing: true
-  encryption: false        # Requires 'cryptography' package
+  encryption: false
+  pdf_encryption_algorithm: "AES-256"
   overlay_text: "CONFIDENTIAL"
   overlay_opacity: 0.08
 ```
@@ -110,15 +111,15 @@ process_pdf(Path("paper.pdf"), config=config, title="My Paper")
 
 ### Hashing
 
-- SHA-256 and SHA-512 of the original PDF content
+- SHA-256 and SHA-512 of the rendered source PDF content
 - Hash values embedded in barcodes, metadata, and footer overlays
 - JSON sidecar manifest (`*.hashes.json`) for external verification
 
 ### Encryption (optional)
 
-- AES-256-GCM encrypted metadata payloads
+- AES-GCM encrypted metadata payloads
 - HMAC-SHA256 digital fingerprinting
-- PDF-level password protection via pypdf
+- PDF-level AES-256 password protection via pypdf
 
 ## Deterministic mode
 
@@ -142,7 +143,7 @@ flowchart LR
     META --> ENC[Encryption · optional]
     ENC --> OUT[Output PDF]
     H -.SHA-256/SHA-512 manifest.-> MAN[.hashes.json]
-    META -.signed payload.-> MAN
+    META -.provenance payload.-> MAN
 
     classDef io fill:#0f766e,stroke:#0f172a,color:#fff
     classDef proc fill:#1e3a8a,stroke:#0f172a,color:#fff

@@ -12,11 +12,11 @@
 
 ## What this watermarking IS
 
-Cryptographic provenance metadata embedded in a PDF such that, given the rendered PDF and the originating repo + commit, an authorized party can:
+Cryptographic provenance metadata embedded in a PDF such that, given the processed PDF and the originating repository state, an authorized party can:
 
-1. **Verify** that the PDF was rendered from a specific commit hash in this repo
+1. **Compare** the PDF against the rendered source-PDF hashes recorded in the sidecar manifest
 2. **Detect** unauthorized re-distribution of a pre-publication / draft / client deliverable that was distributed via a specific channel (per-recipient watermark variant — opt-in only)
-3. **Attribute** a leaked draft back to the deterministic build that produced it
+3. **Attribute** a leaked draft back to the deterministic build metadata that produced it when project/operator workflow keeps those manifests
 
 The feature operates on the assumption that:
 
@@ -36,7 +36,7 @@ The feature operates on the assumption that:
 
 1. **Pre-publication draft sent to N collaborators**, one of whom leaks it to a competing group. Per-recipient watermarking lets the operator identify the leak source after the fact. Useful primarily as a deterrent, not a forensic certainty.
 2. **Confidential client deliverable distributed for review.** Same shape as 1 — leak attribution via deterministic per-distribution watermark.
-3. **Reproducibility provenance** — the watermark embeds the commit hash and deterministic build metadata, so a downstream reader (or future archivist) can verify a specific PDF was rendered from a specific commit at a specific timestamp. This is the most defensible use case and is **independent of any per-recipient identifier**.
+3. **Reproducibility provenance** — the watermark embeds deterministic build metadata and the Git commit when available, so a downstream reader (or future archivist) can identify the repository state recorded during post-processing. This is the most defensible use case and is **independent of any per-recipient identifier**.
 
 ## Threat scenarios explicitly out of scope
 
@@ -65,20 +65,23 @@ If you need robustness against the second list, you have a different problem and
 
 See [`encryption.py`](encryption.py) and [`hashing.py`](hashing.py). The embedding uses standard primitives (no novel cryptography). Notes:
 
-- Hash function: SHA-256 (post-quantum migration: when a NIST-finalized PQC suite is mainstream, this should be upgraded; tracked in `STATUS.md`)
+- Hash functions: SHA-256 and SHA-512 by default for source-PDF integrity manifests
+- PDF password protection: AES-256 via `pypdf` when `encryption_enabled` and `pdf_password` are configured
+- Payload encryption helpers: AES-GCM from `cryptography` for encrypted metadata payloads
+- Optional fingerprinting: HMAC-SHA256 when an operator supplies a per-project secret
 - The "secret" component (used for per-recipient watermarking) is a per-project key configured outside the repo — **do not commit recipient keys**
 
 ## Default configuration
 
-The default per-project `pyproject.toml` does **not** enable watermarking:
+Normal project rendering does **not** enable watermarking. The explicit secure-run path merges dataclass defaults, repository defaults from `infrastructure/config/secure_config.yaml`, and per-project overrides from `projects/<name>/manuscript/config.yaml` under `steganography:`.
 
-```toml
-[tool.template.steganography]
-enabled = false  # set to true only for confidential / pre-publication projects
-disclose_to_recipients = true  # required when enabled = true
+```yaml
+steganography:
+  enabled: false  # set true only for confidential / pre-publication projects or secure-run defaults
+  disclosure_required: true  # required when per-recipient watermarking is used
 ```
 
-The two canonical public exemplars (`template_code_project`, `template_prose_project`) explicitly have `enabled = false`. Forks intending to use watermarking must opt in deliberately and must include the disclosure boilerplate.
+The two canonical public exemplars (`template_code_project`, `template_prose_project`) do not apply steganography during normal `./run.sh` renders. Forks intending to use watermarking must opt in deliberately and must include the disclosure boilerplate.
 
 ## Why this file exists
 

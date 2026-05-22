@@ -352,6 +352,21 @@ def test_tests_dir_is_in_scope_blind_spot_closed(tmp_path: Path) -> None:
     ), "tests/ docs must be in consistency-lint scope"
 
 
+def test_canonical_exemplar_markdown_is_in_scope(tmp_path: Path) -> None:
+    """Regression guard: stale package-count claims in exemplar manuscripts are source docs."""
+    repo = _scaffold_repo(tmp_path, n_packages=17)
+    _write(
+        repo / "projects" / "template_code_project" / "manuscript" / "01_intro.md",
+        "The infrastructure layer has 15 Python subpackages.\n",
+    )
+    issues = check_module_count_claims(repo)
+    assert any(
+        "projects/template_code_project/manuscript/01_intro.md" in str(i.file)
+        and i.category == "module-count"
+        for i in issues
+    ), "tracked exemplar manuscript markdown must be in consistency-lint scope"
+
+
 def test_inconsistency_format_contains_file_and_line(tmp_path: Path) -> None:
     inc = Inconsistency(file=Path("/a/b.md"), line=7, category="module-count", detail="x")
     s = inc.format()

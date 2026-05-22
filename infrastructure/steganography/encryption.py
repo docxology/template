@@ -139,11 +139,13 @@ def apply_pdf_password(
     output_pdf: Path,
     user_password: str,
     owner_password: str | None = None,
+    algorithm: str = "AES-256",
 ) -> Path:
     """Apply password-based encryption to a PDF file.
 
-    Uses ``pypdf`` for PDF manipulation.  Applies 128-bit RC4 encryption
-    (broad reader compatibility).
+    Uses ``pypdf`` for PDF manipulation.  Applies AES-256 by default; pass a
+    different ``algorithm`` only when you deliberately need broader legacy
+    reader compatibility.
 
     Args:
         input_pdf: Source PDF.
@@ -151,6 +153,8 @@ def apply_pdf_password(
         user_password: Password required to open the document.
         owner_password: Owner password for full permissions (defaults to
                         *user_password*).
+        algorithm: PDF encryption algorithm accepted by
+                   :meth:`pypdf.PdfWriter.encrypt`.
 
     Returns:
         Path to the encrypted PDF.
@@ -178,12 +182,13 @@ def apply_pdf_password(
     writer.encrypt(
         user_password=user_password,
         owner_password=owner_password,
+        algorithm=algorithm,
     )
 
     with open(output_pdf, "wb") as fh:
         writer.write(fh)
 
-    logger.info(f"PDF password protection applied → {output_pdf.name}")
+    logger.info("PDF password protection applied (%s) → %s", algorithm, output_pdf.name)
     return output_pdf
 
 

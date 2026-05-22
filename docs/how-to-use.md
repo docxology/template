@@ -22,7 +22,7 @@ uv run python scripts/03_render_pdf.py --project template_code_project
 
 ## Pipeline Overview
 
-Stage numbers below are script-prefix keys (0 = `00_setup_environment.py`). The canonical DAG has 10 named stages — Clean (stage 0) plus nine numbered stages — see [`docs/RUN_GUIDE.md`](RUN_GUIDE.md) for the authoritative table.
+Stage numbers below are script-prefix keys (0 = `00_setup_environment.py`). The canonical DAG is declared in `pipeline.yaml` with 12 stages total; default full runs execute the 10 core+LLM stages, and `--core-only` executes 8. See [`docs/RUN_GUIDE.md`](RUN_GUIDE.md) for the authoritative table.
 
 | Key | Script | Purpose |
 |-----|--------|---------|

@@ -9,13 +9,14 @@
 
 ## What This Does
 
-The steganography module adds invisible provenance layers to your PDFs:
+The steganography module can add visible and invisible provenance layers to PDFs during explicit secure-run workflows:
 
-- **Watermark overlay**: Semi-transparent text with build timestamp and commit hash
-- **QR code**: Links to the repository, embedded in the PDF
-- **SHA-256 hash**: Cryptographic fingerprint for tamper detection
+- **Watermark overlay**: Semi-transparent text plus footer metadata
+- **QR and barcode strip**: Document metadata, author contact links, and integrity payloads
+- **SHA-256/SHA-512 hashes**: Cryptographic hashes of the rendered source PDF
 - **PDF metadata**: XMP metadata injection (author, title, DOI)
 - **Hash manifest**: `.hashes.json` file for independent verification
+- **PDF encryption**: Optional AES-256 password protection when configured
 
 The original PDF is preserved; a second `*_steganography.pdf` is created alongside it.
 
@@ -60,19 +61,18 @@ from pathlib import Path
 # Custom configuration
 config = SteganographyConfig(
     enabled=True,
-    watermark_text="DRAFT - {timestamp}",
-    qr_enabled=True,
-    encryption_enabled=False,  # Skip AES encryption
+    overlay_text="DRAFT",
+    barcodes_enabled=True,
+    encryption_enabled=False,
 )
 
 processor = SteganographyProcessor(config)
-result = processor.process(
-    pdf_path=Path("output/template_code_project/pdf/template_code_project_combined.pdf"),
+output = processor.process(
+    Path("output/template_code_project/pdf/template_code_project_combined.pdf"),
     title="My Research Paper",
-    author="Daniel Ari Friedman",
+    authors=["Daniel Ari Friedman"],
 )
-print(f"Output: {result.output_path}")
-print(f"SHA-256: {result.sha256}")
+print(f"Output: {output}")
 ```
 
 ### Hash Verification
@@ -86,10 +86,12 @@ result = process_pdf(Path("paper.pdf"))
 
 # The .hashes.json manifest contains:
 # {
-#   "sha256": "abc123...",
-#   "sha512": "def456...",
+#   "source_file": "paper.pdf",
 #   "timestamp": "2026-01-15T10:30:00Z",
-#   "commit": "a1b2c3d"
+#   "hashes": {"sha256": "abc123...", "sha512": "def456..."},
+#   "document_id": "...",
+#   "git_commit": "a1b2c3d..." or null,
+#   "git_commit_available": true
 # }
 ```
 
@@ -101,10 +103,12 @@ result = process_pdf(Path("paper.pdf"))
 # In projects/{name}/manuscript/config.yaml
 steganography:
   enabled: true
-  watermark: true
-  qr_code: true
-  encryption: false
-  hash_algorithm: "sha256"
+  overlays_enabled: true
+  barcodes_enabled: true
+  metadata_enabled: true
+  hashing_enabled: true
+  encryption_enabled: false
+  pdf_encryption_algorithm: "AES-256"
 ```
 
 ---
@@ -113,12 +117,12 @@ steganography:
 
 When steganography runs, it applies techniques in this order:
 
-1. **Metadata injection** — XMP and PDF Info dictionary
-2. **SHA-256 hashing** — Compute fingerprint of original PDF
-3. **Watermark overlay** — Alpha-channel text on each page
-4. **QR code injection** — Repository link encoded as QR
-5. **Hash manifest** — Write `.hashes.json` alongside output
-6. **Encryption** (optional) — AES-256 encrypted payload
+1. **Hashing** — compute configured hashes of the rendered source PDF
+2. **Document ID** — generate a build identifier
+3. **Overlays and barcodes** — alpha-channel text, footer, QR, and Code128 overlays
+4. **Metadata** — XMP and PDF Info dictionary injection
+5. **Encryption** — optional AES-256 PDF password protection
+6. **Hash manifest** — write `.hashes.json` alongside the source PDF
 
 ---
 
@@ -132,11 +136,11 @@ uv run python -c "
 import hashlib, json
 from pathlib import Path
 
-pdf = Path('output/template_code_project/pdf/code_project_combined_steganography.pdf')
+pdf = Path('output/template_code_project/pdf/code_project_combined.pdf')
 manifest = Path('output/template_code_project/pdf/code_project_combined.hashes.json')
 
 computed = hashlib.sha256(pdf.read_bytes()).hexdigest()
-expected = json.loads(manifest.read_text())['sha256']
+expected = json.loads(manifest.read_text())['hashes']['sha256']
 
 print(f'Computed: {computed}')
 print(f'Expected: {expected}')
@@ -150,15 +154,15 @@ print(f'Match: {computed == expected}')
 
 **Missing reportlab:**
 ```bash
-uv sync --group rendering  # Install optional PDF dependencies
+uv sync --group rendering --group steganography
 ```
 
 **QR code not appearing:**
-- Ensure `qr_enabled: true` in config
-- Check that `qrcode` package is installed: `uv pip install qrcode`
+- Ensure `barcodes_enabled: true` in config
+- Check that the steganography dependency group is installed: `uv sync --group steganography`
 
 **Steganography skipped silently:**
-- Check that `steganography.enabled: true` in config.yaml
+- Check that secure-run is being used, or that `steganography.enabled: true` is present in config
 - Verify PDF exists at expected path before steganography runs
 
 ---

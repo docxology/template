@@ -693,58 +693,35 @@ class TestEdgeCases:
 class TestDissemination:
     """Test dissemination capabilities."""
 
-    @pytest.mark.requires_zenodo
-    @pytest.mark.requires_network
-    @pytest.mark.requires_credentials
-    def test_publish_to_zenodo(self, tmp_path, zenodo_credentials):
-        """Test Zenodo publication workflow with real API calls.
-
-        This test creates a real deposition on Zenodo sandbox, uploads a file,
-        and then deletes the deposition for cleanup.
-        """
+    def test_publish_to_zenodo(self, tmp_path, zenodo_test_server):
+        """Test the Zenodo client workflow against a real local HTTP server."""
         from infrastructure.publishing.api import ZenodoClient
+        from infrastructure.publishing.api import ZenodoConfig
 
         # Create test PDF file
-        file_path = tmp_path / "test_paper.pdf"
+        file_path = tmp_path / "paper.pdf"
         file_path.write_text("%PDF-1.4\nTest PDF content for Zenodo upload test")
 
-        # Initialize Zenodo client with real credentials
         client = ZenodoClient(
-            access_token=zenodo_credentials["token"],
-            use_sandbox=zenodo_credentials["use_sandbox"],
+            ZenodoConfig(access_token="test-token", base_url=zenodo_test_server.url_for(""))
         )
 
         # Test metadata
-        metadata = publishing.PublicationMetadata(
-            title="Test Publication for Automated Testing",
-            authors=["Test Author"],
-            abstract="This is a test publication created by automated tests. It will be deleted automatically.",
-            keywords=["test", "automated"],
-        )
+        metadata = {
+            "title": "Test Publication for Automated Testing",
+            "upload_type": "publication",
+            "publication_type": "article",
+            "description": "Hermetic Zenodo client workflow test.",
+            "creators": [{"name": "Test Author"}],
+        }
 
-        deposition_id = None
-        try:
-            # 1. Create deposition
-            deposition_id = client.create_deposition(metadata)
-            assert deposition_id is not None
-            assert isinstance(deposition_id, str)
+        deposition_id = client.create_deposition(metadata)
+        assert deposition_id == "12345"
 
-            # 2. Upload file
-            client.upload_file(deposition_id, str(file_path))
+        client.upload_file("bucket123", str(file_path))
 
-            # 3. Publish (on sandbox, this is safe)
-            doi = client.publish(deposition_id)
-            assert doi is not None
-            assert doi.startswith("10.5281/zenodo.")
-
-        finally:
-            # Cleanup: Delete the test deposition
-            if deposition_id:
-                try:
-                    client.delete_deposition(deposition_id)
-                except Exception as e:
-                    # Log but don't fail test if cleanup fails
-                    print(f"Warning: Failed to delete test deposition {deposition_id}: {e}")
+        doi = client.publish(deposition_id)
+        assert doi == "10.5281/zenodo.12345"
 
     def test_prepare_arxiv_submission(self, tmp_path):
         """Test arXiv submission preparation."""

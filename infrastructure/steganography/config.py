@@ -26,6 +26,7 @@ logger = get_logger(__name__)
 __all__ = [
     "DocumentMetadata",
     "SteganographyConfig",
+    "resolve_git_commit",
     "resolve_build_timestamp",
 ]
 
@@ -123,6 +124,47 @@ def resolve_build_timestamp(
     return ts
 
 
+def resolve_git_commit(*, repo_root: Path | None = None) -> str | None:
+    """Return the current Git commit hash, or ``None`` when unavailable.
+
+    The steganography layer records provenance only when it can verify it from
+    Git. Missing Git metadata is a valid state for copied PDFs, exported
+    bundles, and synthetic tests, so callers should record the unavailable
+    state rather than inventing a commit.
+    """
+    cwd = Path(repo_root) if repo_root is not None else Path.cwd()
+
+    try:
+        result = subprocess.run(  # noqa: S603 — fixed argv, no shell
+            ["git", "rev-parse", "HEAD"],
+            cwd=str(cwd),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except FileNotFoundError:
+        logger.warning("Git commit provenance unavailable: 'git' is not on PATH.")
+        return None
+    except (OSError, subprocess.SubprocessError) as exc:
+        logger.warning("Git commit provenance unavailable: git invocation failed (%s).", exc)
+        return None
+
+    if result.returncode != 0:
+        logger.warning(
+            "Git commit provenance unavailable: 'git rev-parse HEAD' returned exit %d in %s.",
+            result.returncode,
+            cwd,
+        )
+        return None
+
+    commit = result.stdout.strip()
+    if not commit:
+        logger.warning("Git commit provenance unavailable: git returned an empty commit in %s.", cwd)
+        return None
+    return commit
+
+
 @dataclass
 class DocumentMetadata:
     """Document identity fields passed to metadata injection functions.
@@ -149,7 +191,7 @@ class SteganographyConfig:
         barcodes_enabled: QR / Code128 / DataMatrix barcode strips.
         metadata_enabled: XMP and PDF Info dictionary injection.
         hashing_enabled: Hash computation and embedding.
-        encryption_enabled: AES-256 payload encryption and PDF password.
+        encryption_enabled: Optional PDF password protection when a password is configured.
 
         overlay_mode: Overlay content mode:
             'text'  — repeating diagonal text (default)
@@ -193,6 +235,7 @@ class SteganographyConfig:
 
     # ── Encryption ────────────────────────────────────────────────────
     pdf_password: str | None = None
+    pdf_encryption_algorithm: str = "AES-256"
 
     # ── Output ────────────────────────────────────────────────────────
     output_suffix: str = "_steganography"

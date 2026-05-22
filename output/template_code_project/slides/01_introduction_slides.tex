@@ -128,12 +128,12 @@
 This \breaktt{template\_code\_project} serves as the foundational
 exemplar for the \href{https://github.com/docxology/template}{Research
 Project Template} ecosystem, demonstrating a fully-tested numerical
-optimization implementation securely bracketed by rigorous
-infrastructure, hermetic testing, and extensive documentation
-architectures. The prose, the labelled figures, and the labelled
-equations have all been programmably generated through an unbreakable
-custody chain starting from algorithm implementation through strict
-CI/CD validation to multi-format \texttt{.pdf} compilation.
+optimization implementation bracketed by rigorous infrastructure,
+hermetic testing, and extensive documentation architectures. The prose,
+the labelled figures, and the labelled equations have all been generated
+through an auditable custody chain starting from algorithm
+implementation through strict CI/CD validation to multi-format
+\texttt{.pdf} compilation.
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Template Architecture Context}
@@ -146,15 +146,10 @@ the repository's three foundational pillars:
 \tightlist
 \item
   \textbf{\texttt{infrastructure/} Layer (Root Directory)}: A modular
-  stack of fifteen Python subpackages (\texttt{core},
-  \texttt{documentation}, \texttt{llm}, \texttt{orchestration},
-  \texttt{project}, \texttt{prose}, \texttt{publishing},
-  \texttt{reference}, \texttt{rendering}, \texttt{reporting},
-  \texttt{scientific}, \texttt{search}, \texttt{skills},
-  \texttt{steganography}, \texttt{validation}) providing the
-  computational scaffolding (the sibling \texttt{config/} and
-  \texttt{docker/} directories under \texttt{infrastructure/} are
-  configuration/data, not Python packages).
+  stack of importable Python packages providing the computational
+  scaffolding. The current package count is measured in the template
+  repository's generated canonical facts rather than repeated here
+  because it changes as infrastructure modules are added or retired.
 \item
   \textbf{\texttt{tests/} Framework
   (\breaktt{projects/template\_code\_project/tests/})}: An uncompromising
@@ -202,7 +197,7 @@ leverages the \texttt{infrastructure} layer:
   \textbf{Hermetic Validation}: Deploying
   \breaktt{infrastructure.validation} components
   (\breaktt{markdown\_validator}, \texttt{output\_validator}) to ensure
-  all generated artifacts are cryptographically sound.
+  generated artifacts are structurally valid and traceable.
 \item
   \textbf{Reporting \& Rendering}: Employing
   \breaktt{infrastructure.rendering.pdf\_renderer} and

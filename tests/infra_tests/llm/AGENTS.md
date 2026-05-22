@@ -178,7 +178,7 @@ def test_query_long(self, client, default_config):
         response = client.query_long("...")
     except LLMConnectionError as e:
         if "timed out" in str(e).lower():
-            pytest.skip(f"Ollama timed out: {e}")
+            pytest.fail(f"Ollama timed out after setup: {e}")
 ```
 
 ### Empty Response Handling
@@ -188,8 +188,7 @@ Structured queries handle model quality issues:
 ```python
 def test_query_structured(self, ...):
     result = client.query_structured(...)
-    if len(result) == 0:
-        pytest.skip("Model returned empty JSON (model quality issue)")
+    assert result, "Model returned empty JSON"
 ```
 
 ## Coverage Summary
@@ -219,9 +218,8 @@ class TestNewFeature:
 @pytest.mark.requires_ollama
 class TestNewIntegration:
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        if not is_ollama_running():
-            pytest.skip("Ollama not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        assert ensure_ollama_for_tests
     
     def test_with_ollama(self, client):
         """Test with real Ollama server."""
@@ -229,7 +227,7 @@ class TestNewIntegration:
             response = client.query("Test")
             assert response is not None
         except LLMConnectionError as e:
-            pytest.skip(f"Ollama issue: {e}")
+            pytest.fail(f"Ollama issue after setup: {e}")
 ```
 
 ## Pipeline Integration
@@ -280,5 +278,4 @@ This is a model quality issue, not a code bug:
 - [`../../../infrastructure/llm/AGENTS.md`](../../../infrastructure/llm/AGENTS.md) - Module documentation
 - [`../../../infrastructure/llm/README.md`](../../../infrastructure/llm/README.md) - Quick reference
 - [`conftest.py`](conftest.py) - Fixture definitions
-
 

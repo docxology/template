@@ -2,7 +2,7 @@
 
 The Secure Execution entry point ([`secure_run.sh`](../../secure_run.sh)) runs the **same pipeline DAG** as `./run.sh` via Python [`PipelineRunner`](../../infrastructure/orchestration/pipeline_runner.py) / [`PipelineExecutor`](../../infrastructure/core/pipeline/executor.py), then applies steganographic post-processing. It does **not** shell out to `./run.sh`.
 
-Before invoking Python, `secure_run.sh` runs `uv sync --group steganography` so ReportLab / QR dependencies are present.
+The root `uv sync` installs the steganography dependency group by default, and `secure_run.sh` also runs `uv sync --group steganography` before invoking Python so minimal environments get ReportLab / QR / cryptography dependencies before hardening PDFs.
 
 ## Multi-project behaviour
 

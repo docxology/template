@@ -63,8 +63,8 @@ break BibTeX rendering, and a prompt revision cannot regress search.
 
 * `search/` needs `pytest-httpserver` for HTTP backends.
 * `reference/` needs zero network — pure data-in / data-out.
-* `llm/` needs an Ollama instance for some tests (gracefully skipped in
-  CI when absent).
+* `llm/` needs an Ollama instance for tests marked `requires_ollama`; the
+  harness starts/pulls a small local model or fails with setup guidance.
 
 Putting them together would force every test to bring up an HTTP server.
 
