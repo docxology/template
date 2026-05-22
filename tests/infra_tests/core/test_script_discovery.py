@@ -3,6 +3,8 @@
 Comprehensive tests for script discovery and output verification utilities.
 """
 
+import os
+
 import pytest
 
 from infrastructure.core.exceptions import PipelineError
@@ -47,6 +49,19 @@ class TestDiscoverAnalysisScripts:
 
         assert len(scripts) == 1
         assert scripts[0].name == "public.py"
+
+    def test_discover_analysis_scripts_ignores_setup_hook(self, tmp_path):
+        """Setup hooks run in Stage 00, not as Stage 02 analysis scripts."""
+        repo_root = tmp_path / "repo"
+        scripts_dir = repo_root / "projects" / "project" / "scripts"
+        scripts_dir.mkdir(parents=True)
+
+        (scripts_dir / "analysis.py").write_text("# analysis")
+        (scripts_dir / "setup_hook.py").write_text("# setup")
+
+        scripts = discover_analysis_scripts(repo_root, project_name="project")
+
+        assert [script.name for script in scripts] == ["analysis.py"]
 
     def test_discover_analysis_scripts_sorted(self, tmp_path):
         """Test that scripts are returned in sorted order."""
@@ -97,6 +112,24 @@ class TestDiscoverAnalysisScripts:
         (scripts_dir / "analysis.py").write_text("# analysis")
 
         scripts = discover_analysis_scripts(repo_root, project_name="draft_project")
+
+        assert [script.name for script in scripts] == ["analysis.py"]
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_discover_analysis_scripts_handles_external_project_symlink(self, tmp_path):
+        """Stage 02 discovery works when projects/<name> points outside the repo."""
+        repo_root = tmp_path / "repo"
+        projects_dir = repo_root / "projects"
+        projects_dir.mkdir(parents=True)
+
+        external = tmp_path / "private" / "active" / "linked_project"
+        scripts_dir = external / "scripts"
+        scripts_dir.mkdir(parents=True)
+        (scripts_dir / "analysis.py").write_text("# analysis")
+
+        (projects_dir / "linked_project").symlink_to(external, target_is_directory=True)
+
+        scripts = discover_analysis_scripts(repo_root, project_name="linked_project")
 
         assert [script.name for script in scripts] == ["analysis.py"]
 
@@ -279,6 +312,23 @@ class TestVerifyAnalysisOutputs:
 
         assert result is True
 
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_verify_analysis_outputs_handles_external_project_symlink(self, tmp_path):
+        """Stage 02 output checks work when projects/<name> points outside the repo."""
+        repo_root = tmp_path / "repo"
+        projects_dir = repo_root / "projects"
+        projects_dir.mkdir(parents=True)
+
+        external = tmp_path / "private" / "active" / "linked_project"
+        (external / "scripts").mkdir(parents=True)
+        (external / "scripts" / "analysis.py").write_text("# analysis")
+        (external / "output" / "data").mkdir(parents=True)
+        (external / "output" / "data" / "result.json").write_text("{}")
+
+        (projects_dir / "linked_project").symlink_to(external, target_is_directory=True)
+
+        assert verify_analysis_outputs(repo_root, "linked_project") is True
+
     def test_verify_analysis_outputs_nested_files(self, tmp_path):
         """Test verifying with nested file structure."""
         repo_root = tmp_path / "repo"
@@ -356,3 +406,12 @@ class TestVerifyAnalysisOutputs:
         assert info_not_yet, (
             "Expected the absent-output INFO line when nothing was generated."
         )
+
+    def test_verify_analysis_outputs_ignores_setup_hook_only_project(self, tmp_path):
+        """A project with only setup_hook.py does not require analysis outputs."""
+        repo_root = tmp_path / "repo"
+        scripts_dir = repo_root / "projects" / "setup_only" / "scripts"
+        scripts_dir.mkdir(parents=True)
+        (scripts_dir / "setup_hook.py").write_text("# setup")
+
+        assert verify_analysis_outputs(repo_root, "setup_only") is True

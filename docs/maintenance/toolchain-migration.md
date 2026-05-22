@@ -40,7 +40,7 @@ A maintainer in 2030 should be able to read this guide and know: "ruff is the im
 
 | | |
 | --- | --- |
-| **Contract** | Static type checking of `infrastructure/` and `projects/*/src/`. Strict mode where feasible. Catches type errors before runtime. |
+| **Contract** | Static type checking of the public CI source paths from `infrastructure.project.public_scope`. Strict mode where feasible. Catches type errors before runtime without traversing local-only private symlinks. |
 | **Current implementation** | `mypy --strict` (community). Has 211-source-file pass per memory log (2026-05-20). |
 | **Configuration location** | `pyproject.toml` under `[tool.mypy]` |
 | **Possible successors** | `pyright`/`pylance` (Microsoft, faster but different inference rules), `ty` (Astral, ~2026, faster), `pyrefly` (Meta). |

@@ -3,6 +3,9 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.core import RenderManager
+
 
 @pytest.mark.requires_latex
 def test_render_all_tex(render_manager, tmp_path, skip_if_no_latex):
@@ -85,3 +88,41 @@ Large generated appendix content.
     assert len(results) == 1
     assert results[0].suffix == ".html"
     assert not stale_slide.exists()
+
+
+def test_render_all_md_honors_disabled_slides(monkeypatch, tmp_path):
+    """Disabled slides should not invoke the Beamer renderer."""
+    md_file = tmp_path / "section.md"
+    md_file.write_text("# Section\n\nBody.\n", encoding="utf-8")
+    html_file = tmp_path / "section.html"
+    cfg = RenderingConfig(enable_slides=False, web_dir=str(tmp_path), slides_dir=str(tmp_path / "slides"))
+    manager = RenderManager(cfg)
+
+    def fail_slides(*_args, **_kwargs):
+        raise AssertionError("slides renderer should not be called")
+
+    monkeypatch.setattr(manager, "render_slides", fail_slides)
+    monkeypatch.setattr(manager.web_renderer, "render", lambda _source: html_file)
+
+    results = manager.render_all(md_file)
+
+    assert results == [html_file]
+
+
+def test_render_all_md_honors_disabled_html(monkeypatch, tmp_path):
+    """Disabled HTML should not invoke the web renderer."""
+    md_file = tmp_path / "section.md"
+    md_file.write_text("# Section\n\nBody.\n", encoding="utf-8")
+    slides_file = tmp_path / "section_slides.pdf"
+    cfg = RenderingConfig(enable_html=False, web_dir=str(tmp_path), slides_dir=str(tmp_path / "slides"))
+    manager = RenderManager(cfg)
+
+    def fail_web(*_args, **_kwargs):
+        raise AssertionError("web renderer should not be called")
+
+    monkeypatch.setattr(manager, "render_slides", lambda *_args, **_kwargs: slides_file)
+    monkeypatch.setattr(manager.web_renderer, "render", fail_web)
+
+    results = manager.render_all(md_file)
+
+    assert results == [slides_file]

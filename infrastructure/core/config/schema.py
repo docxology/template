@@ -99,6 +99,22 @@ class SteganographyConfigYAML(TypedDict, total=False):
     pdf_encryption_algorithm: str
 
 
+class RenderFormatsConfig(TypedDict, total=False):
+    """YAML schema for enabled manuscript render formats."""
+
+    pdf: bool
+    html: bool
+    slides: bool
+    docx: bool
+    epub: bool
+
+
+class RenderConfig(TypedDict, total=False):
+    """YAML schema for the ``render:`` section of config.yaml."""
+
+    formats: RenderFormatsConfig
+
+
 @dataclass(frozen=True)
 class ResolvedTestingConfig:
     """Immutable, fully-resolved testing configuration with defaults applied."""
@@ -119,6 +135,7 @@ class ManuscriptConfig(TypedDict, total=False):
     llm: LLMYAMLConfig
     testing: TestingConfig
     steganography: SteganographyConfigYAML
+    render: RenderConfig
     keywords: list[str]
     metadata: dict[str, str]
     project_config: dict[str, Any]  # passthrough for project-specific config sections
@@ -273,6 +290,8 @@ __all__ = [
     "ManuscriptConfig",
     "PaperConfig",
     "PublicationConfig",
+    "RenderConfig",
+    "RenderFormatsConfig",
     "ResolvedTestingConfig",
     "ReviewsConfig",
     "SteganographyConfigYAML",

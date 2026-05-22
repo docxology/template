@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write docs/_generated/active_projects.md from discover_projects().
+"""Write docs/_generated/active_projects.md for the public template scope.
 
 Run from repository root:
 
@@ -17,7 +17,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
-from infrastructure.project.discovery import discover_projects
+from infrastructure.project.public_scope import public_project_names
 
 logger = get_logger(__name__)
 
@@ -28,16 +28,19 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "active_projects.md"
 
-    projects = discover_projects(REPO_ROOT)
-    names = [p.qualified_name for p in projects]
+    names = public_project_names(REPO_ROOT)
     lines = [
-        "# Active projects (`discover_projects`)",
+        "# Public active projects",
         "",
         "This file is **generated**. Do not edit by hand.",
         "",
-        "The names below are the single source of truth from "
-        "`infrastructure.project.discovery.discover_projects()` for directories "
-        "under `projects/` that have both `src/` and `tests/`.",
+        "The names below are the public CI/documentation scope: tracked template "
+        "projects under `projects/` that have both `src/` and `tests/`.",
+        "",
+        "Runtime discovery still uses "
+        "`infrastructure.project.discovery.discover_projects()` and may include "
+        "local-only private symlinked projects. Do not copy that local roster "
+        "into public docs.",
         "",
         "Human-written documentation should **not** copy this list into RUN_GUIDE, "
         "PAI, or other guides—link here instead. For concrete paths, commands, and "

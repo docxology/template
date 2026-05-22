@@ -21,7 +21,7 @@ accepted.
 | 4 | **Testability / Tested** | Coverage gates met (infra **60%**, project **90%**). No mocks. Deterministic seeds. tmp_path for I/O. `pytest-httpserver` for HTTP. | `uv run pytest --cov-fail-under=...` + [Zero-mock ADR](../architecture/adrs/004-zero-mock-testing-policy.md). |
 | 5 | **Validation** | Inputs validated at the system boundary (CLI, public function). No hard-coded host paths. Narrow `except` (not bare `except Exception`). | `bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` + reviewer. |
 | 6 | **Documentation** | Module has a guide in `docs/modules/guides/<module>-module.md`. Public functions have docstrings. Changes to architecture have an ADR. | `infrastructure/validation/docs/` linters + reviewer. |
-| 7 | **Conventions** | Type hints on public APIs. Consistent error/logging via `infrastructure.core.logging.utils.get_logger`. PEP 8 + project style. | `uvx ruff check` + `uv run mypy infrastructure/ projects/*/src/`. |
+| 7 | **Conventions** | Type hints on public APIs. Consistent error/logging via `infrastructure.core.logging.utils.get_logger`. PEP 8 + project style. | `uvx ruff check` + `uv run mypy` on public CI source paths. |
 | 8 | **Reproducibility** | Deterministic outputs given the same inputs. Fixed RNG seeds. No reliance on wall-clock except through injectable helpers. `MPLBACKEND=Agg` for headless plotting. | Pipeline re-run yields byte-identical artefacts (steganographic checks excepted). |
 
 If a change cannot meet a criterion, raise an ADR explaining the deviation — do
@@ -46,9 +46,10 @@ not silently merge.
 Run these locally; they mirror CI exactly:
 
 ```bash
-uvx ruff check infrastructure/ projects/*/src/ tests/ scripts/ --fix
-uvx ruff format infrastructure/ projects/*/src/ tests/ scripts/
-uv run mypy infrastructure/ projects/*/src/
+SRC=$(uv run python -m infrastructure.project.public_scope source-paths)
+uvx ruff check --fix $SRC tests/ scripts/
+uvx ruff format $SRC tests/ scripts/
+uv run mypy $SRC
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 uv run python scripts/verify_no_mocks.py
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60

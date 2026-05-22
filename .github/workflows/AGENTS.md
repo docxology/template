@@ -71,7 +71,7 @@ flowchart TB
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Tools:** `uvx ruff check`, `uvx ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
-- **Scope:** `infrastructure/` and `projects/*/src/`
+- **Scope:** public CI source paths from `uv run python -m infrastructure.project.public_scope source-paths`
 
 #### 2. Unified Health Report (`health`)
 
@@ -126,7 +126,7 @@ flowchart TB
 - **Steps:**
   1. `infrastructure.validation.cli markdown projects/*/manuscript/` — validates all active project manuscripts
   2. `scripts/generate_api_reference_doc.py --check` — API reference drift gate
-  3. Dynamic project import check — discovers and imports every `projects/*/src` to catch broken imports
+  3. Dynamic project import check — imports the public project source paths from `infrastructure.project.public_scope`
 
 #### 8. Security Scan (`security`)
 
@@ -136,7 +136,7 @@ flowchart TB
 
 #### 9. Documentation Lint (`docs-lint`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12 / Node 20
+- **Runner:** `ubuntu-latest` / Python 3.12 / Node 24-compatible actions
 - **Depends on:** `lint`
 - **Timeout:** 15 minutes
 - **External tools (real, not mocked):**
@@ -155,7 +155,7 @@ flowchart TB
 
 - **Runner:** `ubuntu-latest` / Python 3.12
 - **Depends on:** `test-infra` + `test-project`
-- **Threshold:** Total import time for `infrastructure.core` + all active project `src` modules ≤ 5 seconds
+- **Threshold:** Total import time for `infrastructure.core` + public project `src` modules from `infrastructure.project.public_scope` ≤ 5 seconds
 - **Per-module timing** reported to stdout for trend analysis
 
 ### Quality Gates
@@ -177,7 +177,7 @@ flowchart TB
 
 ## Stale Workflow (`stale.yml`)
 
-Runs daily at 01:00 UTC using `actions/stale@v9`.
+Runs daily at 01:00 UTC using `actions/stale@v10.3.0`.
 
 | Item | Stale after | Closed after |
 |---|---|---|
@@ -192,9 +192,12 @@ Runs daily at 01:00 UTC using `actions/stale@v9`.
 
 Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input).
 
-1. Generates a commit-based changelog excerpt since the previous tag
-2. Creates a GitHub Release using `softprops/action-gh-release@v2` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
-3. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
+1. Verifies the requested tag exists in the checkout
+2. Generates a commit-based changelog excerpt since the previous tag
+3. Creates a GitHub Release using `softprops/action-gh-release@v3.0.0` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
+4. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
+
+Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 
 ---
 
@@ -203,9 +206,9 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input).
 ```bash
 # Reproduce lint locally
 uv sync
-uvx ruff check infrastructure/ projects/*/src/
-uvx ruff format --check infrastructure/ projects/*/src/
-uv run mypy infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Reproduce infrastructure tests locally
 COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
@@ -247,8 +250,8 @@ uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 
 ### Linting failures
 ```bash
-uvx ruff check infrastructure/ projects/*/src/ --fix
-uvx ruff format infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
 ```
 
 ### Test failures

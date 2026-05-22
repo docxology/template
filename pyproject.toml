@@ -334,11 +334,10 @@ module = "projects.what_is_cogsec.*"
 ignore_errors = true
 
 # Rotating research projects (animation/visualization/numpy-heavy surface
-# intentionally NOT driven to the exemplar type-strictness floor — the same
-# documented rotating-project exception that applies to coverage). Keeps the
-# CI-scope `mypy infrastructure/ projects/*/src/` gate enforcing the standard
-# on infrastructure + the canonical exemplars (which are clean) without a
-# rotating research WIP blocking every contributor's commit and CI.
+# intentionally NOT driven to the exemplar type-strictness floor). Public CI
+# resolves its mypy paths through infrastructure.project.public_scope, keeping
+# the gate on infrastructure + the canonical exemplars without a local private
+# or rotating research WIP blocking every contributor's commit and CI.
 [[tool.mypy.overrides]]
 module = "projects.BeeStack.*"
 ignore_errors = true

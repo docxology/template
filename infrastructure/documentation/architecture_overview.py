@@ -28,7 +28,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.project.discovery import discover_projects
+from infrastructure.project.public_scope import public_project_names
 
 logger = get_logger(__name__)
 
@@ -83,17 +83,17 @@ def _discover_infrastructure_config_dirs(repo_root: Path) -> list[str]:
 
 
 def _project_qualified_names(repo_root: Path) -> list[str]:
-    """Return alphabetically-sorted ``ProjectInfo.qualified_name`` strings.
+    """Return alphabetically-sorted public project names.
 
-    Falls back to the empty list if discovery raises (e.g. ``projects/`` missing
-    in a stripped-down test fixture).
+    Runtime discovery may include local-only symlinked private projects. This
+    generated diagram is committed to the public repository, so it uses the
+    narrower public template scope.
     """
     try:
-        projects = discover_projects(repo_root)
+        return public_project_names(repo_root)
     except Exception as exc:  # pragma: no cover - defensive
-        logger.warning("discover_projects() failed: %s", exc)
+        logger.warning("public project scope discovery failed: %s", exc)
         return []
-    return sorted(p.qualified_name for p in projects)
 
 
 def _safe_node_id(prefix: str, name: str) -> str:
@@ -116,8 +116,9 @@ def build_architecture_mermaid(repo_root: Path) -> str:
        ``infrastructure/`` containing an ``__init__.py``.
     2. **Infrastructure (Config)** — sibling directories without ``__init__.py``
        (``config/``, ``docker/``, ``logrotate.d/`` at the time of writing).
-    3. **Projects** — every project returned by
-       :func:`infrastructure.project.discovery.discover_projects`.
+    3. **Projects** — tracked public exemplar projects. Runtime discovery may
+       include additional local-only symlinked projects; those are not rendered
+       into committed public docs.
 
     All three clusters connect to a central ``Pipeline`` node so the diagram
     reads as a single page.
@@ -166,7 +167,7 @@ def build_architecture_mermaid(repo_root: Path) -> str:
     lines.append("    end")
     lines.append("")
 
-    lines.append('    subgraph Projects["Projects (discover_projects)"]')
+    lines.append('    subgraph Projects["Projects (public CI scope)"]')
     lines.append("        direction TB")
     if projects:
         for qname in projects:

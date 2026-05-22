@@ -16,6 +16,15 @@ logger = get_logger(__name__)
 _MIN_VALID_PDF_MB = 0.001
 
 
+def _remove_stale_slide_artifacts(slides_dir: Path, source_stem: str) -> None:
+    """Remove slide artifacts for a source file when slides are intentionally skipped."""
+    for stale in slides_dir.glob(f"{source_stem}_slides.*"):
+        try:
+            stale.unlink()
+        except OSError as cleanup_error:
+            logger.debug(f"Could not remove stale slide artefact {stale}: {cleanup_error}")
+
+
 class RenderManager:
     """Orchestrates rendering of all output formats."""
 
@@ -69,7 +78,10 @@ class RenderManager:
             if source_file.suffix == ".tex":
                 # LaTeX usually means PDF or Poster
                 logger.info(f"Rendering LaTeX file: {source_file.name}")
-                rendered_paths.append(self.pdf_renderer.render(source_file))
+                if self.config.enable_pdf:
+                    rendered_paths.append(self.pdf_renderer.render(source_file))
+                else:
+                    logger.info(f"Skipping PDF for {source_file.name} (render.formats.pdf=false)")
 
             elif source_file.suffix == ".md":
                 # Markdown supports slides and web formats
@@ -78,14 +90,12 @@ class RenderManager:
                 skip_beamer = "<!-- render:skip-beamer -->" in source_text
 
                 # 1. Beamer slides for presentation
-                if skip_beamer:
+                if not self.config.enable_slides:
+                    logger.info(f"Skipping Beamer slides for {source_file.name} (render.formats.slides=false)")
+                    _remove_stale_slide_artifacts(Path(self.config.slides_dir), source_file.stem)
+                elif skip_beamer:
                     logger.info(f"Skipping Beamer slides for {source_file.name} (render:skip-beamer)")
-                    slides_dir = Path(self.config.slides_dir)
-                    for stale in slides_dir.glob(f"{source_file.stem}_slides.*"):
-                        try:
-                            stale.unlink()
-                        except OSError as cleanup_error:
-                            logger.debug(f"Could not remove stale slide artefact {stale}: {cleanup_error}")
+                    _remove_stale_slide_artifacts(Path(self.config.slides_dir), source_file.stem)
                 else:
                     try:
                         logger.debug("Rendering Beamer slides...")
@@ -124,14 +134,17 @@ class RenderManager:
                         # Continue with other formats
 
                 # 2. HTML web version
-                try:
-                    logger.debug("Rendering HTML web version...")
-                    rendered_paths.append(self.web_renderer.render(source_file))
-                    logger.debug("HTML web version rendered successfully")
-                except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
-                    format_errors.append(("html", e))
-                    logger.warning(f"Failed to render HTML: {e}")
-                    # Continue - some formats may still succeed
+                if self.config.enable_html:
+                    try:
+                        logger.debug("Rendering HTML web version...")
+                        rendered_paths.append(self.web_renderer.render(source_file))
+                        logger.debug("HTML web version rendered successfully")
+                    except (OSError, subprocess.SubprocessError, ValueError) as e:  # noqa: BLE001 — tracked in format_errors; raises if all formats fail
+                        format_errors.append(("html", e))
+                        logger.warning(f"Failed to render HTML: {e}")
+                        # Continue - some formats may still succeed
+                else:
+                    logger.info(f"Skipping HTML for {source_file.name} (render.formats.html=false)")
 
             if not rendered_paths:
                 failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)

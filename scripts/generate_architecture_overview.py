@@ -11,7 +11,10 @@ Run from repository root::
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.documentation.architecture_overview import render_architecture_svg

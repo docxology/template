@@ -252,11 +252,17 @@ def test_redirected_streams_restores_original_fds(tmp_path: Path) -> None:
     log_b = tmp_path / "b.log"
 
     with _redirect_worker_streams(log_a):
+        print("python-a")
         os.write(1, b"hello-a\n")
     with _redirect_worker_streams(log_b):
+        print("python-b")
         os.write(1, b"hello-b\n")
 
     assert "hello-a" in log_a.read_text()
+    assert "python-a" in log_a.read_text()
     assert "hello-b" in log_b.read_text()
+    assert "python-b" in log_b.read_text()
     assert "hello-b" not in log_a.read_text()
+    assert "python-b" not in log_a.read_text()
     assert "hello-a" not in log_b.read_text()
+    assert "python-a" not in log_b.read_text()

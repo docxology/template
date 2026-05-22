@@ -82,7 +82,7 @@ Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale 
 
 ### Release Workflow (`workflows/release.yml`)
 
-Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Writes a short git-log excerpt to the release body (`body_path`); **`generate_release_notes`** is off so the body is not duplicated by GitHub auto-notes.
+Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the requested tag exists, writes a short git-log excerpt to the release body (`body_path`), and keeps **`generate_release_notes`** off so the body is not duplicated by GitHub auto-notes.
 
 ## Dependabot (`dependabot.yml`)
 
@@ -174,8 +174,8 @@ See [`ISSUE_TEMPLATE/AGENTS.md`](ISSUE_TEMPLATE/AGENTS.md) for local editing rul
 
 ```bash
 # Fix linting locally
-uvx ruff check infrastructure/ projects/*/src/ --fix
-uvx ruff format infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
 
 # Run tests locally (mirror CI)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"

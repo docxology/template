@@ -4,7 +4,7 @@
 
 Consistent code formatting ensures readability, maintainability, and reduces merge conflicts. All Python code must follow these standards.
 
-**Automation**: CI and local hooks enforce **Ruff** (lint, format, import sorting) and **mypy** on `infrastructure/` and `projects/*/src/`. Mirror commands live in root [`CLAUDE.md`](../../CLAUDE.md); hook IDs are declared in [`/.pre-commit-config.yaml`](../../.pre-commit-config.yaml).
+**Automation**: CI and local hooks enforce **Ruff** (lint, format, import sorting) and **mypy** on the public CI source paths reported by `uv run python -m infrastructure.project.public_scope source-paths`. Mirror commands live in root [`CLAUDE.md`](../../CLAUDE.md); hook IDs are declared in [`/.pre-commit-config.yaml`](../../.pre-commit-config.yaml).
 
 ## Python Code Style (PEP 8)
 
@@ -121,9 +121,9 @@ Ruff subsumes the roles historically filled by separate formatters (Black), impo
 ### Commands (CI parity)
 
 ```bash
-uvx ruff check infrastructure/ projects/*/src/ --fix
-uvx ruff format infrastructure/ projects/*/src/
-uv run mypy infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 ```
 
 ### Line length
@@ -311,7 +311,7 @@ def test_error_conditions():
 ### Do's ✅
 
 - ✅ **Use Ruff** (`uvx ruff check`, `uvx ruff format`) for lint/format/import sorting — CI parity
-- ✅ **Use mypy** (`uv run mypy`) on `infrastructure/` and `projects/*/src/`
+- ✅ **Use mypy** (`uv run mypy`) on the public CI source paths
 - ✅ **Use pre-commit hooks** (`ruff-ci`, `mypy-ci`) to automate checks
 - ✅ **Follow PEP 8** guidelines
 - ✅ **Use descriptive names** for variables and functions
@@ -368,9 +368,9 @@ Use **`uv run mypy`** from the terminal for CI-parity typing; enable **mypy** or
 Mirror **[`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)** `lint` job locally:
 
 ```bash
-uvx ruff check infrastructure/ projects/*/src/
-uvx ruff format --check infrastructure/ projects/*/src/
-uv run mypy infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 ```
 
 ### Development Workflow

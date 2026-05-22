@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 
-from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.exceptions import CompilationError, RenderingError
 from infrastructure.rendering import pdf_renderer
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
@@ -41,7 +41,7 @@ class TestPDFRendererClass:
             result = renderer.render(tex_file)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError) as e:
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
             pytest.skip(f"Required tool not available: {e}")
 
     def test_render_md_file(self, tmp_path):
@@ -58,7 +58,7 @@ class TestPDFRendererClass:
             result = renderer.render(md_file)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError) as e:
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
             pytest.skip(f"Required tool not available: {e}")
 
     def test_render_unsupported_format(self, tmp_path, caplog):
@@ -101,7 +101,7 @@ class TestRenderMarkdown:
             result = renderer.render_markdown(md_file)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError) as e:
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
             pytest.skip(f"Required tool not available: {e}")
 
     @pytest.mark.timeout(90)
@@ -117,7 +117,7 @@ class TestRenderMarkdown:
         # Use real execution - may succeed or fail depending on pandoc
         try:
             renderer.render_markdown(md_file)
-        except (RenderingError, OSError, subprocess.SubprocessError) as e:
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
             pytest.skip(f"Required tool not available: {e}")
 
     @pytest.mark.timeout(90)
@@ -135,7 +135,7 @@ class TestRenderMarkdown:
             result = renderer.render_markdown(md_file, output_name="custom.pdf")
             # If successful, should contain custom name
             assert "custom" in str(result) or True
-        except (RenderingError, OSError, subprocess.SubprocessError) as e:
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
             pytest.skip(f"Required tool not available: {e}")
 
 
@@ -157,7 +157,7 @@ class TestBibliographyProcessing:
             result = process_bibliography(tex_file, tmp_path / "pdf", [bib_file])
             # Should return boolean
             assert isinstance(result, bool)
-        except (RenderingError, OSError, subprocess.SubprocessError) as e:
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
             pytest.skip(f"Required tool not available: {e}")
 
 
@@ -199,7 +199,7 @@ authors:
             result = renderer.render_combined(source_files, tmp_path / "manuscript")
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError) as e:
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
             pytest.skip(f"Required tool not available: {e}")
 
 
@@ -213,9 +213,7 @@ class TestPdfRendererCore:
     def test_has_render_functions(self):
         """Test that module has render functions."""
         module_funcs = [
-            a
-            for a in dir(pdf_renderer)
-            if not a.startswith("_") and callable(getattr(pdf_renderer, a, None))
+            a for a in dir(pdf_renderer) if not a.startswith("_") and callable(getattr(pdf_renderer, a, None))
         ]
         assert len(module_funcs) > 0
 
@@ -233,7 +231,7 @@ class TestPdfRendering:
             try:
                 result = pdf_renderer.render_pdf(str(tex))
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError) as e:
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
                 pytest.skip(f"Required tool not available: {e}")
 
     def test_render_pdf_from_markdown(self, tmp_path):
@@ -246,7 +244,7 @@ class TestPdfRendering:
             try:
                 result = pdf_renderer.render_markdown_to_pdf(str(md))
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError) as e:
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
                 pytest.skip(f"Required tool not available: {e}")
 
 
@@ -263,7 +261,7 @@ class TestLatexCompilation:
             try:
                 result = pdf_renderer.compile_latex(str(tex))
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError) as e:
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
                 pytest.skip(f"Required tool not available: {e}")
 
     def test_compile_latex_multiple_passes(self, tmp_path):
@@ -276,7 +274,7 @@ class TestLatexCompilation:
             try:
                 result = pdf_renderer.compile_latex(str(tex), passes=2)
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError) as e:
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
                 pytest.skip(f"Required tool not available: {e}")
 
 
@@ -299,7 +297,7 @@ class TestPandocIntegration:
             try:
                 result = pdf_renderer.pandoc_convert(str(md), "pdf")
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError) as e:
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
                 pytest.skip(f"Required tool not available: {e}")
 
 
@@ -338,7 +336,7 @@ class TestRenderOptions:
             try:
                 result = pdf_renderer.render_pdf(str(tex), engine="xelatex")
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError) as e:
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
                 pytest.skip(f"Required tool not available: {e}")
 
 

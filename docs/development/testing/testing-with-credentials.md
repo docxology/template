@@ -391,7 +391,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6.0.2
 
       - name: Setup credentials
         run: |

@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD013 MD033 MD041 MD051 MD060 -->
 <div align="center">
 
-# 🔬 Docxology Template
+# 🔬 Research Project Template
 
 **Production-grade scaffold for reproducible computational research**
 Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
@@ -39,7 +39,7 @@ This folder is the **GitHub integration surface**: Actions workflows, Dependabot
 
 ## What Is This?
 
-The **Docxology Template** solves the structural root of research irreproducibility: fragmentation between code, tests, manuscripts, and provenance. Instead of patching tools together, it enforces integrity at the architectural level.
+The **Research Project Template** addresses the structural root of research irreproducibility: fragmentation between code, tests, manuscripts, and provenance. Instead of patching tools together, it enforces integrity at the architectural level.
 
 | You get | How |
 | --- | --- |
@@ -735,9 +735,9 @@ See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-aud
 
 ```bash
 # Lint + format check (mirror CI)
-uvx ruff check infrastructure/ projects/*/src/
-uvx ruff format --check infrastructure/ projects/*/src/
-uv run mypy infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Tests (skip Ollama-requiring tests)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
@@ -766,7 +766,6 @@ Required status checks:
   Project Tests (ubuntu-latest, Python 3.10/3.11/3.12)
   Validate Manuscripts · Security Scan · Documentation Lint · Performance Check
   # Optional informational artefact: Unified Health Report (informational)
-  # Optional: fep_lean (gauss + lake) — only when that job runs (skipped if fep_lean not in projects/)
 
 Require PR review before merging: 1 approver
 ```
@@ -808,6 +807,8 @@ Require PR review before merging: 1 approver
 | Python (uv) | `dev-tools` (pytest, mypy, ruff…) | 5 |
 | Python (uv) | `scientific-core` (numpy, scipy…) | 5 |
 
+Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+
 ---
 
 ## 🔍 Troubleshooting
@@ -819,8 +820,8 @@ gh run view <run-id> --log-failed
 gh run rerun <run-id> --failed
 
 # Fix lint locally
-uvx ruff check infrastructure/ projects/*/src/ --fix
-uvx ruff format infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
 ```
 
 Common issues: [docs/operational/troubleshooting/](../docs/operational/troubleshooting/) · [docs/reference/faq.md](../docs/reference/faq.md).

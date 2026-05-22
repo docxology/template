@@ -1,5 +1,9 @@
 """Tests for infrastructure.core.runtime._directories."""
 
+import os
+
+import pytest
+
 
 from infrastructure.core.runtime._directories import (
     _project_output_dirs,
@@ -79,6 +83,23 @@ class TestVerifySourceStructure:
 
         result = verify_source_structure(tmp_path, "myproj")
         assert result is True
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_symlinked_external_project(self, tmp_path):
+        repo_root = tmp_path / "repo"
+        (repo_root / "infrastructure").mkdir(parents=True)
+        projects_dir = repo_root / "projects"
+        projects_dir.mkdir()
+
+        external = tmp_path / "private" / "active" / "linkedproj"
+        (external / "src").mkdir(parents=True)
+        (external / "tests").mkdir()
+
+        link = projects_dir / "linkedproj"
+        link.symlink_to(external, target_is_directory=True)
+
+        assert link.is_symlink()
+        assert verify_source_structure(repo_root, "linkedproj") is True
 
 
 class TestValidateDirectoryStructure:

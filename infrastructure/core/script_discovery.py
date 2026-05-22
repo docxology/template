@@ -18,6 +18,28 @@ from infrastructure.project.discovery import resolve_project_root
 
 logger = get_logger(__name__)
 
+_NON_ANALYSIS_SCRIPT_NAMES = frozenset({"__init__.py", "setup_hook.py"})
+
+
+def _display_project_path(resolved_dir: Path, repo_root: Path, project_name: str) -> Path:
+    """Return a repo-relative path for logs without assuming symlink targets are in-repo."""
+    if not resolved_dir.is_absolute():
+        return resolved_dir
+    try:
+        return resolved_dir.relative_to(repo_root.resolve())
+    except ValueError:
+        return Path("projects") / project_name
+
+
+def _is_analysis_script(path: Path) -> bool:
+    """Return whether *path* should run in Stage 02 analysis discovery."""
+    return (
+        path.is_file()
+        and path.suffix == ".py"
+        and not path.name.startswith("_")
+        and path.name not in _NON_ANALYSIS_SCRIPT_NAMES
+    )
+
 
 def _configured_analysis_scripts(project_dir: Path, project_scripts_dir: Path) -> list[Path] | None:
     """Return config-declared analysis scripts, or ``None`` when no allowlist exists."""
@@ -50,7 +72,7 @@ def _configured_analysis_scripts(project_dir: Path, project_scripts_dir: Path) -
             logger.warning("Ignoring non-string analysis script entry in %s: %r", config_path, item)
             continue
         script = project_scripts_dir / item
-        if script.is_file() and script.suffix == ".py" and not script.name.startswith("_"):
+        if _is_analysis_script(script):
             scripts.append(script)
         else:
             logger.warning("Configured analysis script not found or not runnable: %s", script)
@@ -86,7 +108,8 @@ def discover_analysis_scripts(
         >>> # Discovers scripts in projects/myresearch/scripts/
     """
     resolved_dir = project_dir if project_dir is not None else resolve_project_root(repo_root, project_name)
-    logger.info(f"[STAGE-02] Discovering analysis scripts in {resolved_dir.relative_to(repo_root)}/...")
+    display_dir = _display_project_path(resolved_dir, repo_root, project_name)
+    logger.info(f"[STAGE-02] Discovering analysis scripts in {display_dir}/...")
 
     project_scripts_dir = resolved_dir / "scripts"
 
@@ -105,12 +128,8 @@ def discover_analysis_scripts(
         )
     else:
         # Find all Python scripts in the scripts/ directory except private modules and
-        # package markers (__init__.py) so ``scripts/`` may be a proper package.
-        scripts = sorted(
-            f
-            for f in project_scripts_dir.glob("*.py")
-            if f.is_file() and not f.name.startswith("_") and f.name != "__init__.py"
-        )
+        # non-analysis hooks so ``scripts/`` may contain setup helpers.
+        scripts = sorted(f for f in project_scripts_dir.glob("*.py") if _is_analysis_script(f))
 
     for script in scripts:
         log_success(f"Found: {script.name} (project: {project_name})", logger)
@@ -176,7 +195,8 @@ def verify_analysis_outputs(
         False if scripts exist but no output was generated.
     """
     resolved_dir = project_dir if project_dir is not None else resolve_project_root(repo_root, project_name)
-    logger.info(f"[STAGE-02] Verifying analysis outputs for {resolved_dir.relative_to(repo_root)}/...")
+    display_dir = _display_project_path(resolved_dir, repo_root, project_name)
+    logger.info(f"[STAGE-02] Verifying analysis outputs for {display_dir}/...")
 
     # Determine whether analysis scripts exist (so we know whether output is expected)
     scripts_dir = resolved_dir / "scripts"
@@ -184,7 +204,7 @@ def verify_analysis_outputs(
     if configured_scripts is not None:
         scripts_exist = bool(configured_scripts)
     else:
-        scripts_exist = scripts_dir.exists() and any(f for f in scripts_dir.glob("*.py") if not f.name.startswith("_"))
+        scripts_exist = scripts_dir.exists() and any(_is_analysis_script(f) for f in scripts_dir.glob("*.py"))
 
     output_dirs = [
         resolved_dir / "output" / "figures",

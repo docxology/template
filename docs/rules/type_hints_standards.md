@@ -395,14 +395,14 @@ class Node:
 ### mypy Static Type Checking
 
 ```bash
-# Check types in project
-mypy infrastructure/
+# Check types in public CI source paths
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Strict mode (recommended)
-mypy --strict infrastructure/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy --strict
 
 # Check specific file
-mypy infrastructure/core.py
+uv run mypy infrastructure/core.py
 ```
 
 ### Configuration (mypy.ini)

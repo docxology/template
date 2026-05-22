@@ -167,10 +167,10 @@ jobs:
         python-version: ['3.10', '3.11', '3.12']
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6.0.2
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -183,7 +183,7 @@ jobs:
         uv run pytest projects/template_code_project/tests/ --cov=projects/template_code_project/src --cov-report=xml --cov-fail-under=90
 
     - name: Upload coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v6.0.1
       with:
         file: ./coverage.xml
         fail_ci_if_error: true
@@ -193,7 +193,7 @@ jobs:
     needs: test
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6.0.2
 
     - name: Install system dependencies
       run: |
@@ -201,7 +201,7 @@ jobs:
         sudo apt-get install -y pandoc texlive-xetex
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: '3.10'
 
@@ -214,7 +214,7 @@ jobs:
         uv run python scripts/execute_pipeline.py --project {name} --core-only
 
     - name: Upload PDFs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v7.0.1
       with:
         name: pdfs
         path: output/*/pdf/*.pdf
@@ -511,5 +511,4 @@ After completing this guide, you should be able to:
 **Need help?** Check the **[FAQ](../reference/faq.md)** or **[Documentation Index](../documentation-index.md)**
 
 **Quick Reference**: [Cheatsheet](../reference/quick-start-cheatsheet.md) | [Glossary](../reference/glossary.md)
-
 

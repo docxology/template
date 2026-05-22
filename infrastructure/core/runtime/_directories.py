@@ -12,6 +12,25 @@ from infrastructure.project.discovery import resolve_project_root
 logger = get_logger(__name__)
 
 
+def _repo_visible_project_path(repo_root: Path | str, project_name: str) -> Path:
+    """Return the project path to check/create from inside ``repo_root``.
+
+    ``resolve_project_root`` follows symlinks so callers can operate on the real
+    project source tree. Directory setup and source-structure checks, however,
+    must address the repo-visible symlink path when the target lives outside
+    this repository.
+    """
+    repo_root = Path(repo_root)
+    project_root = resolve_project_root(repo_root, project_name)
+    if not project_root.is_absolute():
+        return project_root
+
+    try:
+        return project_root.relative_to(repo_root.resolve())
+    except ValueError:
+        return Path("projects") / project_name
+
+
 def _project_output_dirs(repo_root: Path | str, project_name: str | None = None) -> list[str]:
     """Return the canonical list of output directories for a project.
 
@@ -26,11 +45,7 @@ def _project_output_dirs(repo_root: Path | str, project_name: str | None = None)
     else:
         repo_root = Path(repo_root)
 
-    project_root = resolve_project_root(repo_root, project_name)
-    try:
-        project_rel = project_root.relative_to(repo_root)
-    except ValueError:
-        project_rel = Path("projects") / project_name
+    project_rel = _repo_visible_project_path(repo_root, project_name)
 
     return [
         f"output/{project_name}",
@@ -100,8 +115,7 @@ def verify_source_structure(repo_root: Path, project_name: str = "project") -> b
         True if required directories exist, False otherwise
     """
     # Core components (required for template operation)
-    project_root = resolve_project_root(repo_root, project_name)
-    project_rel = project_root.relative_to(repo_root) if project_root.is_absolute() else project_root
+    project_rel = _repo_visible_project_path(repo_root, project_name)
     required_dirs = [
         Path("infrastructure"),  # Generic tools (build_verifier, figure_manager, etc.)
         project_rel,  # Project directory

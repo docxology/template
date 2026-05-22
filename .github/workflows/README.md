@@ -62,9 +62,9 @@ flowchart TB
 
 ```bash
 # Lint
-uvx ruff check infrastructure/ projects/*/src/
-uvx ruff format --check infrastructure/ projects/*/src/
-uv run mypy infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Infrastructure tests
 uv run pytest tests/infra_tests/ \
@@ -97,14 +97,16 @@ Exempt labels: `pinned` · `security` · `in-progress` · `blocked` · `do-not-c
 
 ## Release Workflow (`release.yml`)
 
-Triggered on `v*.*.*` tag push or `workflow_dispatch`. Writes a git-log excerpt to the release body (`generate_release_notes: false`). Uses `softprops/action-gh-release@v2`. Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
+Triggered on `v*.*.*` tag push or `workflow_dispatch`. Verifies the requested tag exists, writes a git-log excerpt to the release body (`generate_release_notes: false`), and uses `softprops/action-gh-release@v3.0.0`. Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
+
+Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 
 ## Troubleshooting
 
 ```bash
 # Fix linting
-uvx ruff check infrastructure/ projects/*/src/ --fix
-uvx ruff format infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
 
 # View CI run logs
 gh run list --workflow=CI --limit=5
@@ -131,12 +133,12 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v6.0.2
+      - uses: astral-sh/setup-uv@v8.1.0
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6.2.0
         with:
           python-version: "3.12"
       - name: Sync dependencies

@@ -15,22 +15,14 @@ Optional add-on: `projects_archive/template_search_project` can be restored unde
 
 Private active projects live outside this public repo at `/Users/4d/Documents/GitHub/projects/active/` by default and are symlinked into `template/projects/` by `run.sh`/`infrastructure.orchestration` before discovery. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
-**Active projects this checkout** (`projects/`, from `discover_projects()`; rotates — authoritative snapshot → [`active_projects.md`](active_projects.md)):
+**Public CI/documentation project scope** (`projects/`, filtered through `infrastructure.project.public_scope`; authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
-- `actinf_policy_entanglement_lean`
 - `template_code_project`
 - `template_prose_project`
 
 `projects/_test_project/` is a stub layout used by validation tests only — omitted from `discover_projects()` (path may be absent in sparse checkouts; not a tracked exemplar tree).
 
-**In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`):
-
-- biology_textbook
-- cogant
-- corym
-- template
-- trsc
-- what_is_cogsec
+**In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`): local-only roster omitted from public docs; inspect the directory in a local checkout when needed.
 
 **Archived projects** (`projects_archive/`, preserved but not executed): includes `fep_lean`, `act_inf_metaanalysis`, `cognitive_integrity`, and others — list with `ls projects_archive/`.
 
@@ -115,7 +107,7 @@ Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_templa
 Coverage gates (enforced in CI):
 
 - infrastructure/ : >= 60%
-- projects/*/src/ : >= 90% (matrix project tests; excludes `projects/fep_lean/tests/` — see below)
+- public template project `src/` trees : >= 90% (matrix project tests; public lint/type paths come from `uv run python -m infrastructure.project.public_scope source-paths`)
 - `projects/fep_lean/src/` : >= 89% (dedicated CI job `fep_lean (gauss + lake)` when `projects/fep_lean/lean/lean-toolchain` exists)
 
 Run full suite with:

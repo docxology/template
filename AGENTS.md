@@ -20,7 +20,7 @@ This document provides documentation for the Research Project Template system, e
 | [`CLAUDE.md`](CLAUDE.md) | Command cheat sheet, patterns; keep in sync with this file for pipeline wording |
 | **This file (`AGENTS.md`)** | Full reference: stages, validation, modules, troubleshooting |
 | [`docs/documentation-index.md`](docs/documentation-index.md) | Flat index of long-lived docs |
-| [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) | Authoritative `projects/` names — never hard-code rotating paths in docs |
+| [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) | Authoritative public CI/documentation project names — never hard-code rotating private paths in docs |
 | [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) | Measured coverage and counts; refresh after changing gates or discovery |
 | [`.github/README.md`](.github/README.md) | GitHub: CI overview, templates, Dependabot |
 | [`.github/AGENTS.md`](.github/AGENTS.md) | Actions job names, coverage gates, local reproduction commands |
@@ -29,9 +29,9 @@ This document provides documentation for the Research Project Template system, e
 
 **Read order:** [`README.md`](README.md) → [`CLAUDE.md`](CLAUDE.md) → this file for anything not covered there.
 
-**Ground truth:** Active project names come from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`). Measured numbers for documentation claims belong in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md); avoid inventing statistics.
+**Ground truth:** Public CI/documentation project names come from [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`infrastructure.project.public_scope`). Runtime `discover_projects()` remains broader for local private symlinked workspaces. Measured numbers for documentation claims belong in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md); avoid inventing statistics.
 
-**Definition of done (code):** Ruff + mypy clean on `infrastructure/` and `projects/*/src/`; tests exercise real behaviour (no mocks); coverage still meets 60% (infra) / 90% (project `src/`) unless CI documents a rotating-project exception ([`.github/AGENTS.md`](.github/AGENTS.md)).
+**Definition of done (code):** Ruff + mypy clean on the public CI source paths from `uv run python -m infrastructure.project.public_scope source-paths`; tests exercise real behaviour (no mocks); coverage still meets 60% (infra) / 90% (project `src/`) unless CI documents a rotating-project exception ([`.github/AGENTS.md`](.github/AGENTS.md)).
 
 **Hooks:** [`.pre-commit-config.yaml`](.pre-commit-config.yaml) — commit stage runs Ruff and mypy; pre-push adds no-mocks verification, a short pytest smoke module, Bandit (`-c bandit.yaml`, exclusions in YAML), and `infrastructure.skills check` + `check-all-exports`. Install: `pre-commit install` and `pre-commit install --hook-type pre-push` after `uv sync`.
 

@@ -210,7 +210,7 @@ Path(os.environ["HOOK_LOG"]).write_text(json.dumps(payload, sort_keys=True), enc
         encoding="utf-8",
     )
 
-    hooks = StageHooks(pre_stage=((sys.executable, str(hook_script)),), timeout_seconds=5)
+    hooks = StageHooks(pre_stage=((sys.executable, str(hook_script)),), timeout_seconds=5, run_in_ci=True)
     context = StageHookContext(
         project_name="template_code_project",
         stage_name="Source Audit",

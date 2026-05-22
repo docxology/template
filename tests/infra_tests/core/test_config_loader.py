@@ -739,6 +739,7 @@ class TestConfigKeyValidation:
             "metadata": {"license": "MIT"},
             "llm": {"reviews": {"enabled": True}},
             "testing": {"max_test_failures": 0},
+            "render": {"formats": {"pdf": True, "html": True, "slides": False}},
         }
         config_file = tmp_path / "valid_config.yaml"
         with open(config_file, "w") as f:

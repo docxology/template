@@ -7,7 +7,7 @@
       "size_bytes": 83,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -16,7 +16,7 @@
       "size_bytes": 412,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -25,7 +25,7 @@
       "size_bytes": 84,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -34,7 +34,7 @@
       "size_bytes": 597,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -43,7 +43,7 @@
       "size_bytes": 960,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -52,25 +52,25 @@
       "size_bytes": 7451,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/dashboard_payload.json",
-      "sha256": "8833dff11f98ab61ce69e63d3d7f298b2112fc74b1bb54cce3e18baf0209eea6",
+      "sha256": "63243ccc297e78f250e99621b85bf0b62bcf5346b6bdf1cf0de989bee35d59f2",
       "size_bytes": 109977,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "daa3992d56a63ba9d22de0606ed1a9b3e5e3009cfd0e50fab294c20e74f46c86",
+      "sha256": "305ce3037392eeddb734f21907a6bec46c1bc82930be51d12bc34707930e8dd1",
       "size_bytes": 3290,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -79,7 +79,7 @@
       "size_bytes": 483,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -88,7 +88,7 @@
       "size_bytes": 2779,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -97,7 +97,7 @@
       "size_bytes": 398220,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -106,7 +106,7 @@
       "size_bytes": 241115,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -115,7 +115,7 @@
       "size_bytes": 309163,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -124,16 +124,16 @@
       "size_bytes": 2145,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/performance_benchmark.png",
-      "sha256": "35528ac417f4a7cdba87a04ea4976fd841941c9400cb7501d57ebfe6b75ab1e1",
-      "size_bytes": 195548,
+      "sha256": "3c6b56f45ae21a73b51bf77eb4f809c95227dcd3712b1b16fb1dfb9f31d9c70a",
+      "size_bytes": 194033,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -142,7 +142,7 @@
       "size_bytes": 194019,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -151,7 +151,7 @@
       "size_bytes": 256368,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -160,7 +160,7 @@
       "size_bytes": 2229,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -169,7 +169,7 @@
       "size_bytes": 5436,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -178,7 +178,7 @@
       "size_bytes": 6959,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -187,7 +187,7 @@
       "size_bytes": 16148,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -196,16 +196,16 @@
       "size_bytes": 4511,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
       "path": "output/manuscript/05_experimental_setup.md",
-      "sha256": "22322e17eb320d8458b6527d07ff2fa35f75692f0762e122e9143fd3327c930e",
+      "sha256": "074dbe8c498d6e79e3371e9ee584ad09758c0cdff4f5e53050f7085f1ab64c1a",
       "size_bytes": 3529,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -214,7 +214,7 @@
       "size_bytes": 3039,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -223,7 +223,7 @@
       "size_bytes": 2869,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -232,7 +232,7 @@
       "size_bytes": 606,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -241,7 +241,7 @@
       "size_bytes": 3846,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -250,7 +250,7 @@
       "size_bytes": 2632,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -259,7 +259,7 @@
       "size_bytes": 2799,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -268,25 +268,25 @@
       "size_bytes": 1559,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/dashboard_invariants.txt",
-      "sha256": "47b2eb484088e43ec8642c549017167d12265ceeb116b90fccaa75f49a839f0e",
+      "sha256": "9a73c2a78ada3aeada492f0c983b4cb49008c2ba32b9f9193fb1344c507471ef",
       "size_bytes": 4748,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/dashboard_summary.txt",
-      "sha256": "f630ee28846d9a7cbef59189ea3c46f5f8e54a08dc4cc38b2b81e81224e43cf6",
+      "sha256": "073d1ad2ff81213634e3e621c1c283e2fec139d0f855d6b85a76172c829c1e4d",
       "size_bytes": 957,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
@@ -295,25 +295,25 @@
       "size_bytes": 148,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/performance_benchmark.json",
-      "sha256": "f53be6ab7fdbfd4abd04de0e6d61f8c00941cd9865938667ae67a7750ea4f933",
+      "sha256": "cdd0d9b26ca241eca6c932abee1aa6cbf2468fc8dc4a07d85a488409888f6ead",
       "size_bytes": 212,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/dashboard.html",
-      "sha256": "7eaf0ee9d5ce081580c983a3d3a2237438c2183e13287602ff55e566baf3a139",
+      "sha256": "e6c9c615cd9b01f4b0a2d02847ee79d78fe14fc8bc762cabfccc041166e1542a",
       "size_bytes": 120661,
       "stage_name": "Project Analysis",
       "stage_num": 4,
-      "timestamp": "2026-05-22T03:55:49+00:00"
+      "timestamp": "2026-05-22T13:17:57+00:00"
     }
   ],
   "issues": []

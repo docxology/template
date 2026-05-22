@@ -40,8 +40,8 @@ def _make_fake_repo(root: Path) -> None:
     config_dir.mkdir(parents=True)
     (config_dir / "settings.yaml").write_text("k: v\n", encoding="utf-8")
 
-    # Minimal valid project under projects/
-    proj = root / "projects" / "demo_project"
+    # Minimal valid public project under projects/
+    proj = root / "projects" / "template_code_project"
     (proj / "src").mkdir(parents=True)
     (proj / "src" / "__init__.py").write_text("", encoding="utf-8")
     (proj / "src" / "demo.py").write_text("def hello() -> str:\n    return 'hi'\n", encoding="utf-8")
@@ -66,8 +66,8 @@ def test_build_architecture_mermaid_includes_foo_package(tmp_path: Path) -> None
     # Non-Python config dir lands in the config cluster
     assert "infrastructure/config_only/" in src
 
-    # Active project is rendered
-    assert "projects/demo_project/" in src
+    # Public project is rendered
+    assert "projects/template_code_project/" in src
 
     # Cluster anchors and pipeline node are wired up
     assert 'Pipeline["Pipeline orchestrator' in src

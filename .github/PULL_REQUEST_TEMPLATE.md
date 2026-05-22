@@ -14,9 +14,9 @@ Link to any relevant issues using 'Closes #123' syntax.
 
 ```bash
 uv sync --group rendering --group monitoring --group discopy
-uvx ruff check infrastructure/ projects/*/src/
-uvx ruff format --check infrastructure/ projects/*/src/
-uv run mypy infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format --check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
 # Docs / API surface (when touching docs or infrastructure package exports):

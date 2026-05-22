@@ -208,11 +208,12 @@ def _iter_cache_chrome_candidates(cache_root: Path) -> list[tuple[tuple[int, tup
 
 
 def _resolve_chrome_executable() -> Path | None:
-    env_path = os.environ.get("PUPPETEER_EXECUTABLE_PATH")
-    if env_path:
-        candidate = Path(env_path)
-        if _is_executable_file(candidate):
-            return candidate
+    for env_var in ("PUPPETEER_EXECUTABLE_PATH", "CHROME_EXECUTABLE_PATH"):
+        env_path = os.environ.get(env_var)
+        if env_path:
+            candidate = Path(env_path)
+            if _is_executable_file(candidate):
+                return candidate
 
     cache_dir = Path(os.environ.get("PUPPETEER_CACHE_DIR", Path.home() / ".cache" / "puppeteer"))
     cache_candidates = _iter_cache_chrome_candidates(cache_dir)
@@ -229,11 +230,6 @@ def _resolve_chrome_executable() -> Path | None:
 
     for executable_name in _SYSTEM_CHROME_NAMES:
         candidate = Path.home() / executable_name
-        if _is_executable_file(candidate):
-            return candidate
-
-    for executable_name in _SYSTEM_CHROME_NAMES:
-        candidate = Path("/usr/bin") / executable_name
         if _is_executable_file(candidate):
             return candidate
 

@@ -29,9 +29,7 @@
   },
   "active_projects": [
     "template_code_project",
-    "corym",
-    "template_search_project",
-    "what_is_cogsec"
+    "template_prose_project"
   ],
   "memory_augmented": true,
   "all_systems_optimal": true

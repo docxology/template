@@ -1,16 +1,17 @@
-# Active projects (`discover_projects`)
+# Public active projects
 
 This file is **generated**. Do not edit by hand.
 
-The names below are the single source of truth from `infrastructure.project.discovery.discover_projects()` for directories under `projects/` that have both `src/` and `tests/`.
+The names below are the public CI/documentation scope: tracked template projects under `projects/` that have both `src/` and `tests/`.
+
+Runtime discovery still uses `infrastructure.project.discovery.discover_projects()` and may include local-only private symlinked projects. Do not copy that local roster into public docs.
 
 Human-written documentation should **not** copy this list into RUN_GUIDE, PAI, or other guides—link here instead. For concrete paths, commands, and layout examples, default to the stable exemplar [`projects/template_code_project/`](../../projects/template_code_project/) unless a doc explicitly compares layouts.
 
-Generated at (UTC): `2026-05-22T00:16:18+00:00`
+Generated at (UTC): `2026-05-22T11:50:09+00:00`
 
 Current entries:
 
-- `actinf_policy_entanglement_lean`
 - `template_code_project`
 - `template_prose_project`
 

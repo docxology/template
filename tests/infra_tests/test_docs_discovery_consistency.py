@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from infrastructure.project.discovery import discover_projects
+from infrastructure.project.public_scope import public_project_names
 
 
 def _repo_root() -> Path:
@@ -13,19 +13,19 @@ def _repo_root() -> Path:
 
 
 def test_active_projects_doc_matches_discovery() -> None:
-    """docs/_generated/active_projects.md exactly matches discovery."""
+    """docs/_generated/active_projects.md exactly matches public project scope."""
     root = _repo_root()
     doc_path = root / "docs" / "_generated" / "active_projects.md"
     assert doc_path.is_file(), f"Missing {doc_path}; run scripts/generate_active_projects_doc.py"
 
     text = doc_path.read_text(encoding="utf-8")
-    discovered = {p.qualified_name for p in discover_projects(root)}
+    discovered = set(public_project_names(root))
     current_match = re.search(r"Current entries:\n\n(?P<entries>(?:- `[^`]+`\n)+)", text)
     assert current_match, "active_projects.md must contain a generated Current entries block"
     documented = set(re.findall(r"- `([^`]+)`", current_match.group("entries")))
 
     assert documented == discovered, (
-        "active_projects.md drifted from discover_projects(); "
+        "active_projects.md drifted from public project scope; "
         "run uv run python scripts/generate_active_projects_doc.py\n"
         f"missing={sorted(discovered - documented)} extra={sorted(documented - discovered)}"
     )

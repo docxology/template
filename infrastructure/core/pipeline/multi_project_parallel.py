@@ -40,7 +40,7 @@ import traceback
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Sequence
+from typing import TYPE_CHECKING, Callable, Sequence, TextIO
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -109,9 +109,14 @@ class _RedirectedStreams:
         self._log_file = log_file
         self._saved_stdout: int | None = None
         self._saved_stderr: int | None = None
+        self._original_stdout: TextIO | None = None
+        self._original_stderr: TextIO | None = None
+        self._log_stream: TextIO | None = None
 
     def __enter__(self) -> "_RedirectedStreams":
         self._log_file.parent.mkdir(parents=True, exist_ok=True)
+        self._original_stdout = sys.stdout
+        self._original_stderr = sys.stderr
         # Flush any pending Python-level buffered output before swapping FDs.
         try:
             sys.stdout.flush()
@@ -121,21 +126,45 @@ class _RedirectedStreams:
 
         self._saved_stdout = os.dup(1)
         self._saved_stderr = os.dup(2)
-
-        fd = os.open(str(self._log_file), os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
         try:
-            os.dup2(fd, 1)
-            os.dup2(fd, 2)
-        finally:
-            os.close(fd)
+            self._log_stream = self._log_file.open("a", encoding="utf-8", buffering=1)
+            os.dup2(self._log_stream.fileno(), 1)
+            os.dup2(self._log_stream.fileno(), 2)
+            sys.stdout = self._log_stream
+            sys.stderr = self._log_stream
+        except Exception:
+            if self._original_stdout is not None:
+                sys.stdout = self._original_stdout
+            if self._original_stderr is not None:
+                sys.stderr = self._original_stderr
+            if self._saved_stdout is not None:
+                os.dup2(self._saved_stdout, 1)
+                os.close(self._saved_stdout)
+                self._saved_stdout = None
+            if self._saved_stderr is not None:
+                os.dup2(self._saved_stderr, 2)
+                os.close(self._saved_stderr)
+                self._saved_stderr = None
+            if self._log_stream is not None:
+                self._log_stream.close()
+                self._log_stream = None
+            raise
         return self
 
     def __exit__(self, exc_type: object, exc_val: object, exc_tb: object) -> None:
         try:
+            if self._log_stream is not None:
+                self._log_stream.flush()
             sys.stdout.flush()
             sys.stderr.flush()
         except (OSError, ValueError):
             pass
+        if self._original_stdout is not None:
+            sys.stdout = self._original_stdout
+            self._original_stdout = None
+        if self._original_stderr is not None:
+            sys.stderr = self._original_stderr
+            self._original_stderr = None
         if self._saved_stdout is not None:
             os.dup2(self._saved_stdout, 1)
             os.close(self._saved_stdout)
@@ -144,6 +173,9 @@ class _RedirectedStreams:
             os.dup2(self._saved_stderr, 2)
             os.close(self._saved_stderr)
             self._saved_stderr = None
+        if self._log_stream is not None:
+            self._log_stream.close()
+            self._log_stream = None
 
 
 def _redirect_worker_streams(log_file: Path) -> _RedirectedStreams:

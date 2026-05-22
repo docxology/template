@@ -104,8 +104,7 @@ Repo-wide documentation audit driven by the `scripts/lint_docs.py` harness (merm
 - Vanished-file references fixed (`pipeline_reporter.py` → `pipeline_report_model.py`; `docs/link_validator.py` → `integrity/link_validator.py`).
 - Corrupt `infrastructure/DEVELOPER_GUIDE.md` (single-line JSON blob) recovered to an accurate stub; duplicated 628-line second document trimmed from `tests/AGENTS.md`.
 - ~190+ command lines converted from bare `pytest`/`python3` to `uv run …` per the canonical command convention (incl. 15 residual command-line `pytest` invocations across 7 files caught in the verification pass).
-- Stale coverage snapshots (83.33%/100%) replaced with links to `coverage-gaps.md`/`canonical_facts.md`; CI lint/mypy scope corrected to `infrastructure/ projects/*/src/`.
+- Stale coverage snapshots (83.33%/100%) replaced with links to `coverage-gaps.md`/`canonical_facts.md`; CI lint/mypy scope now resolves through `infrastructure.project.public_scope`.
 - Index/navigation gaps closed in `docs/audit/`, `docs/streams/`, `infrastructure/README.md` (missing rows added).
 
 **Verification:** `uv run python scripts/lint_docs.py` → broken_links 0 · consistency 0 · doc_pairs 0 · mermaid 0. Advisor invariant battery + same-vendor fallback spot-checks clean; true cross-vendor (Cato/codex) audit deferred — backend infrastructure unavailable this run.
-

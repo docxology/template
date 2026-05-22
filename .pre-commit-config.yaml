@@ -1,5 +1,6 @@
 # Pre-commit hooks — aligned with `.github/workflows/ci.yml` lint job:
-#   ruff check + ruff format on `infrastructure/` and `projects/*/src/`
+#   ruff check + ruff format on the public CI source scope from
+#   `infrastructure.project.public_scope`
 #   mypy on the same paths (see `[tool.mypy]` in pyproject.toml)
 #
 # Pre-push (fast): no-mocks script + pytest on `tests/infra_tests/git_hook_smoke/`,
@@ -32,8 +33,9 @@ repos:
           - -c
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
-            uvx ruff check infrastructure/ projects/*/src/ --fix &&
-            uvx ruff format infrastructure/ projects/*/src/
+            CI_SOURCE_PATHS="$(uv run python -m infrastructure.project.public_scope source-paths)" &&
+            uvx ruff check $CI_SOURCE_PATHS --fix &&
+            uvx ruff format $CI_SOURCE_PATHS
         language: system
         pass_filenames: false
         stages: [pre-commit, manual]
@@ -49,7 +51,8 @@ repos:
           - -c
           - >-
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
-            uv run mypy infrastructure/ projects/*/src/
+            CI_SOURCE_PATHS="$(uv run python -m infrastructure.project.public_scope source-paths)" &&
+            uv run mypy $CI_SOURCE_PATHS
         language: system
         pass_filenames: false
         stages: [pre-commit, manual]

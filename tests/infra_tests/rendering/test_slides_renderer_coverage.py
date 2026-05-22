@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 
-from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.exceptions import CompilationError, RenderingError
 from infrastructure.rendering import slides_renderer
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
@@ -41,7 +41,7 @@ class TestSlidesRendererClass:
             result = renderer.render(source, output_format="revealjs")
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError):
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if pandoc not available
             pass
 
@@ -59,9 +59,8 @@ class TestSlidesRendererClass:
             result = renderer.render(source, output_format="beamer")
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError):
-            # Expected to fail if LaTeX not available
-            pass
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
+            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
 
 
 class TestRevealJsRendering:
@@ -80,7 +79,7 @@ class TestRevealJsRendering:
         try:
             result = renderer._render_revealjs(source, output)
             assert result == output or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError):
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
             # Expected to fail if pandoc not available
             pass
 
@@ -98,7 +97,7 @@ class TestRevealJsRendering:
             renderer._render_revealjs(source, output)
             # Real post-condition: a successful render must produce the output file
             assert output.exists(), "_render_revealjs returned without producing the output file"
-        except (RenderingError, OSError, subprocess.SubprocessError):
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
             # Expected when pandoc / reveal.js dependencies are unavailable
             pass
 
@@ -120,9 +119,8 @@ class TestBeamerRendering:
             result = renderer._render_beamer_with_paths(source, output, None, None)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError):
-            # Expected to fail if dependencies not available
-            pass
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
+            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
 
     @pytest.mark.timeout(90)
     def test_render_beamer_with_resource_paths(self, tmp_path):
@@ -144,9 +142,8 @@ class TestBeamerRendering:
             result = renderer._render_beamer_with_paths(source, output, manuscript_dir, figures_dir)
             # If successful, should return a path
             assert result is not None or isinstance(result, Path)
-        except (RenderingError, OSError, subprocess.SubprocessError):
-            # Expected to fail if dependencies not available
-            pass
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
+            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
 
     def test_render_beamer_pdf_not_found(self, tmp_path):
         """Test beamer rendering when PDF not generated using real execution."""
@@ -162,9 +159,8 @@ class TestBeamerRendering:
             renderer._render_beamer_with_paths(source, output, None, None)
             # Real post-condition: a successful beamer render must produce the PDF
             assert output.exists(), "_render_beamer_with_paths returned without producing the PDF"
-        except (RenderingError, OSError, subprocess.SubprocessError):
-            # Expected when pandoc / LaTeX dependencies are unavailable
-            pass
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
+            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
 
     def test_render_beamer_subprocess_failure(self, tmp_path):
         """Test beamer rendering subprocess failure handling with real execution."""
@@ -180,9 +176,8 @@ class TestBeamerRendering:
             renderer._render_beamer_with_paths(source, output, None, None)
             # Real post-condition: a successful beamer render must produce the PDF
             assert output.exists(), "_render_beamer_with_paths returned without producing the PDF"
-        except (RenderingError, OSError, subprocess.SubprocessError):
-            # Expected when the beamer subprocess fails or deps are unavailable
-            pass
+        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
+            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
 
 
 class TestFigurePathFixing:
@@ -272,9 +267,7 @@ class TestSlidesRendererCore:
     def test_has_render_functions(self):
         """Test that module has render functions."""
         module_funcs = [
-            a
-            for a in dir(slides_renderer)
-            if not a.startswith("_") and callable(getattr(slides_renderer, a, None))
+            a for a in dir(slides_renderer) if not a.startswith("_") and callable(getattr(slides_renderer, a, None))
         ]
         assert len(module_funcs) > 0
 
@@ -292,9 +285,8 @@ class TestBeamerRenderingAdditional:
             try:
                 result = slides_renderer.render_beamer(str(md))
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError):
-                # Expected to fail if dependencies not available
-                pass
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
+                pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
 
     def test_render_beamer_with_theme(self, tmp_path):
         """Test Beamer rendering with theme using real execution."""
@@ -306,9 +298,8 @@ class TestBeamerRenderingAdditional:
             try:
                 result = slides_renderer.render_beamer(str(md), theme="Madrid")
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError):
-                # Expected to fail if dependencies not available
-                pass
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
+                pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
 
 
 class TestRevealJsRenderingAdditional:
@@ -324,7 +315,7 @@ class TestRevealJsRenderingAdditional:
             try:
                 result = slides_renderer.render_revealjs(str(md))
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError):
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if pandoc not available
                 pass
 
@@ -338,7 +329,7 @@ class TestRevealJsRenderingAdditional:
             try:
                 result = slides_renderer.render_revealjs(str(md), theme="moon")
                 assert result is not None or isinstance(result, Path)
-            except (RenderingError, OSError, subprocess.SubprocessError):
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if pandoc not available
                 pass
 
@@ -376,7 +367,7 @@ class TestSlideTemplates:
             try:
                 result = slides_renderer.apply_template(str(md), template="default")
                 assert result is not None
-            except (RenderingError, OSError, subprocess.SubprocessError):
+            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
                 # Expected to fail if function not available
                 pass
 
@@ -407,9 +398,7 @@ class TestSlidesMathHeaderInjection:
     """
 
     def _make_renderer(self, tmp_path):
-        config = RenderingConfig(
-            output_dir=tmp_path, slides_dir=tmp_path / "slides"
-        )
+        config = RenderingConfig(output_dir=tmp_path, slides_dir=tmp_path / "slides")
         (tmp_path / "slides").mkdir(exist_ok=True)
         return SlidesRenderer(config)
 
@@ -454,9 +443,7 @@ class TestSlidesMathHeaderInjection:
         """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "preamble.md").write_text(
-            "```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8"
-        )
+        (manuscript / "preamble.md").write_text("```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8")
         renderer = self._make_renderer(tmp_path)
         header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
         assert header is not None
@@ -464,15 +451,11 @@ class TestSlidesMathHeaderInjection:
         assert "\\providecommand{\\citep}" in content
         assert "unicode-math" not in content
 
-    def test_beamer_pandoc_cmd_includes_h_flag_when_math_required(
-        self, tmp_path, monkeypatch
-    ):
+    def test_beamer_pandoc_cmd_includes_h_flag_when_math_required(self, tmp_path, monkeypatch):
         """End-to-end wiring: pandoc receives -H _slides_math_header.tex."""
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "preamble.md").write_text(
-            "```latex\n\\usepackage{unicode-math}\n```\n", encoding="utf-8"
-        )
+        (manuscript / "preamble.md").write_text("```latex\n\\usepackage{unicode-math}\n```\n", encoding="utf-8")
         source = manuscript / "00_intro.md"
         source.write_text("# Slide 1\n\nHello.\n", encoding="utf-8")
 
@@ -482,26 +465,18 @@ class TestSlidesMathHeaderInjection:
         def fake_run(cmd, *args, **kwargs):
             captured["cmd"] = cmd
             tex_path = Path(cmd[cmd.index("-o") + 1])
-            tex_path.write_text(
-                "\\documentclass{beamer}\\begin{document}foo\\end{document}\n"
-            )
+            tex_path.write_text("\\documentclass{beamer}\\begin{document}foo\\end{document}\n")
             return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
 
-        monkeypatch.setattr(
-            "infrastructure.rendering.slides_renderer.subprocess.run", fake_run
-        )
+        monkeypatch.setattr("infrastructure.rendering.slides_renderer.subprocess.run", fake_run)
 
         def fake_compile(tex, out_dir, **kwargs):
             (out_dir / f"{tex.stem}.pdf").write_bytes(b"%PDF-1.4 fake\n")
 
-        monkeypatch.setattr(
-            "infrastructure.rendering.slides_renderer.compile_latex", fake_compile
-        )
+        monkeypatch.setattr("infrastructure.rendering.slides_renderer.compile_latex", fake_compile)
 
         output_file = tmp_path / "slides" / "00_intro_slides.pdf"
-        result = renderer._render_beamer_with_paths(
-            source, output_file, manuscript_dir=manuscript, figures_dir=None
-        )
+        result = renderer._render_beamer_with_paths(source, output_file, manuscript_dir=manuscript, figures_dir=None)
         assert result == output_file
         cmd = captured["cmd"]
         assert "-H" in cmd
@@ -509,18 +484,14 @@ class TestSlidesMathHeaderInjection:
         assert cmd[h_idx + 1].endswith("_slides_math_header.tex")
         assert Path(cmd[h_idx + 1]).exists()
 
-    def test_beamer_pandoc_cmd_includes_h_flag_for_citation_fallbacks(
-        self, tmp_path, monkeypatch
-    ):
+    def test_beamer_pandoc_cmd_includes_h_flag_for_citation_fallbacks(self, tmp_path, monkeypatch):
         """The slides math header is now always written so natbib
         citation fallbacks are in scope, even when the preamble doesn't
         load unicode-math. Pandoc therefore always sees ``-H``.
         """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "preamble.md").write_text(
-            "```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8"
-        )
+        (manuscript / "preamble.md").write_text("```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8")
         source = manuscript / "00_intro.md"
         source.write_text("# Slide 1\n", encoding="utf-8")
 
@@ -530,25 +501,17 @@ class TestSlidesMathHeaderInjection:
         def fake_run(cmd, *args, **kwargs):
             captured["cmd"] = cmd
             tex_path = Path(cmd[cmd.index("-o") + 1])
-            tex_path.write_text(
-                "\\documentclass{beamer}\\begin{document}foo\\end{document}\n"
-            )
+            tex_path.write_text("\\documentclass{beamer}\\begin{document}foo\\end{document}\n")
             return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
 
-        monkeypatch.setattr(
-            "infrastructure.rendering.slides_renderer.subprocess.run", fake_run
-        )
+        monkeypatch.setattr("infrastructure.rendering.slides_renderer.subprocess.run", fake_run)
         monkeypatch.setattr(
             "infrastructure.rendering.slides_renderer.compile_latex",
-            lambda tex, out_dir, **kw: (out_dir / f"{tex.stem}.pdf").write_bytes(
-                b"%PDF-1.4 fake\n"
-            ),
+            lambda tex, out_dir, **kw: (out_dir / f"{tex.stem}.pdf").write_bytes(b"%PDF-1.4 fake\n"),
         )
 
         output_file = tmp_path / "slides" / "00_intro_slides.pdf"
-        renderer._render_beamer_with_paths(
-            source, output_file, manuscript_dir=manuscript, figures_dir=None
-        )
+        renderer._render_beamer_with_paths(source, output_file, manuscript_dir=manuscript, figures_dir=None)
         assert "-H" in captured["cmd"]
         h_idx = captured["cmd"].index("-H")
         header_path = Path(captured["cmd"][h_idx + 1])

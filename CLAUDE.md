@@ -29,8 +29,9 @@ This is a research project template with a test-driven development workflow, aut
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
 | Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`, `steganography`; add `--group monitoring` to mirror CI extras) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
-| Ruff (CI scope) | `uvx ruff check infrastructure/ projects/*/src/ --fix && uvx ruff format infrastructure/ projects/*/src/` |
-| Mypy (CI scope) | `uv run mypy infrastructure/ projects/*/src/` |
+| Public CI source paths | `uv run python -m infrastructure.project.public_scope source-paths` |
+| Ruff (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uvx ruff check --fix && uv run python -m infrastructure.project.public_scope source-paths \| xargs uvx ruff format` |
+| Mypy (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run mypy` |
 | Bandit (CI / security job) | `uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` (exclusions in `bandit.yaml` → `exclude_dirs`) |
 | Pre-commit (lint stage) | `pre-commit run --all-files` |
 | Pre-push hooks | `pre-commit run --hook-stage pre-push --all-files` |
@@ -107,9 +108,9 @@ uv run python scripts/manage_workspace.py status
 uv run python scripts/manage_workspace.py add <package> --project <name>
 
 # Linting and type checking (mirror CI `lint` job)
-uvx ruff check infrastructure/ projects/*/src/ --fix
-uvx ruff format infrastructure/ projects/*/src/
-uv run mypy infrastructure/ projects/*/src/
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check --fix
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff format
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 
 # Security scan (mirror CI `security` job Bandit step)
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/

@@ -39,6 +39,7 @@ def test_resolve_chrome_prefers_env_path_over_cache_and_system(tmp_path: Path, m
     system_chrome = _write_shell_executable(tmp_path / "bin" / "google-chrome", "exit 0\n")
 
     monkeypatch.setenv("PUPPETEER_EXECUTABLE_PATH", str(env_chrome))
+    monkeypatch.setenv("CHROME_EXECUTABLE_PATH", str(tmp_path / "env" / "chrome-secondary"))
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(cache_chrome.parents[3]))
     monkeypatch.setenv("PATH", str(system_chrome.parent))
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
@@ -48,13 +49,24 @@ def test_resolve_chrome_prefers_env_path_over_cache_and_system(tmp_path: Path, m
 
 def test_resolve_chrome_uses_newest_cache_executable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     cache_dir = tmp_path / ".cache" / "puppeteer"
-    older = _write_shell_executable(cache_dir / "chrome" / "mac_arm-148.0.7778.97" / "chrome-mac-arm64" / "Google Chrome for Testing.app" / "Contents" / "MacOS" / "Google Chrome for Testing", "exit 0\n")
+    older = _write_shell_executable(
+        cache_dir
+        / "chrome"
+        / "mac_arm-148.0.7778.97"
+        / "chrome-mac-arm64"
+        / "Google Chrome for Testing.app"
+        / "Contents"
+        / "MacOS"
+        / "Google Chrome for Testing",
+        "exit 0\n",
+    )
     newest = _write_shell_executable(
         cache_dir / "chrome-headless-shell" / "linux-149.1.2.3" / "chrome-headless-shell",
         "exit 0\n",
     )
 
     monkeypatch.delenv("PUPPETEER_EXECUTABLE_PATH", raising=False)
+    monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(cache_dir))
     monkeypatch.setenv("PATH", "")
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
@@ -69,6 +81,7 @@ def test_resolve_chrome_uses_system_candidates_then_none(tmp_path: Path, monkeyp
     system_chrome = _write_shell_executable(tmp_path / "bin" / "chromium-browser", "exit 0\n")
 
     monkeypatch.delenv("PUPPETEER_EXECUTABLE_PATH", raising=False)
+    monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.delenv("PUPPETEER_CACHE_DIR", raising=False)
     monkeypatch.setenv("PATH", str(system_chrome.parent))
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path / "missing-home"))
@@ -127,6 +140,7 @@ def test_replace_inline_mermaid_falls_back_when_no_chrome_resolves(
 
     monkeypatch.setenv("PATH", str(mmdc.parent))
     monkeypatch.setenv("PUPPETEER_EXECUTABLE_PATH", str(tmp_path / "missing" / "chrome"))
+    monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(tmp_path / "missing-cache"))
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path / "missing-home"))
     caplog.set_level("WARNING")
@@ -151,6 +165,7 @@ def test_replace_inline_mermaid_falls_back_on_empty_source(
 
     monkeypatch.setenv("PATH", os.pathsep.join((str(mmdc.parent), str(chrome.parent))))
     monkeypatch.delenv("PUPPETEER_EXECUTABLE_PATH", raising=False)
+    monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(tmp_path / "missing-cache"))
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path / "missing-home"))
     caplog.set_level("WARNING")
@@ -190,6 +205,7 @@ exit 9
     )
 
     monkeypatch.delenv("PUPPETEER_EXECUTABLE_PATH", raising=False)
+    monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(tmp_path / "missing-cache"))
     monkeypatch.setenv("PATH", str(mmdc.parent))
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))

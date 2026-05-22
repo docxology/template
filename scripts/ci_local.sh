@@ -33,7 +33,7 @@ Examples:
 
 Pure-Python fallback (when act unavailable) runs:
   - ruff check + format
-  - mypy (strict on infrastructure/ + projects/*/src/)
+  - mypy (strict on public CI source scope)
   - bandit security scan
   - infra + project pytest with coverage gates
   - pre-commit hooks (all stages, including pre-push)
@@ -137,15 +137,19 @@ fi
 echo "[ci_local] act unavailable — running pure-Python fallback"
 echo
 
+if [[ -z "$JOB" || "$JOB" == "lint" || "$JOB" == "typecheck" ]]; then
+  read -r -a PUBLIC_CI_SOURCE_PATHS <<<"$(uv run python -m infrastructure.project.public_scope source-paths)"
+fi
+
 if [[ -z "$JOB" || "$JOB" == "lint" ]]; then
   echo "[ci_local] === Lint (ruff check + format) ==="
-  uvx ruff check infrastructure/ projects/*/src/ --fix
-  uvx ruff format infrastructure/ projects/*/src/
+  uvx ruff check --fix "${PUBLIC_CI_SOURCE_PATHS[@]}"
+  uvx ruff format "${PUBLIC_CI_SOURCE_PATHS[@]}"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "typecheck" ]]; then
   echo "[ci_local] === Type check (mypy) ==="
-  uv run mypy infrastructure/ projects/*/src/
+  uv run mypy "${PUBLIC_CI_SOURCE_PATHS[@]}"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "security" ]]; then
