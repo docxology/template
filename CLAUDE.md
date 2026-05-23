@@ -337,8 +337,8 @@ flowchart TB
 
 ### Coverage Requirements
 
-- **Infrastructure**: 60% minimum (currently 83.33%)
-- **Projects (per-project standalone)**: 90% minimum (currently varies by project; canonical exemplars meet it — `template_code_project` ~100%, `template_prose_project` ~94%). This is the real per-project quality gate: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90`.
+- **Infrastructure**: 60% minimum (measured baseline → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
+- **Projects (per-project standalone)**: 90% minimum. Exemplar measured coverage → [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md). Per-project gate: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90`.
   - **Rotating-project exceptions**: a CI matrix job may pin a lower floor for a checked-out rotating project (e.g. an 89% gate for a Lean-toolchain project) when its Lean build + live external CLI + Ollama-gated paths carry CI-only surface below the 90% floor. The exception applies only while that project is checked out under `projects/`; raise back to 90% once that surface is covered.
 - **Combined-union all-projects gate**: 75% (`scripts/01_run_tests.py --project-only --all-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans every active project's source (including research projects with animation/visualization/Lean-adjacent code intentionally not driven to 90%). 75 reflects the true sustained combined level — a reconciled, enforced gate replacing a previously unenforced aspirational 90. Per-project floors are unchanged and remain authoritative.
 - **No mocks**: All tests use real numerical examples
@@ -579,10 +579,6 @@ uv run python scripts/03_render_pdf.py --project {name}
 - **AGENTS.md** - System reference (configuration, modules, troubleshooting details)
 - **.github/README.md** / **.github/AGENTS.md** - CI workflows, Dependabot, PR templates; local parity via **`.pre-commit-config.yaml`**
 - **[docs/RUN_GUIDE.md](docs/RUN_GUIDE.md)** - Pipeline execution documentation
-- **docs/core/architecture.md** - Detailed architecture guide
-- **docs/core/workflow.md** - Development workflow details
-- **docs/core/how-to-use.md** - Usage guide (12 skill levels)
-- **docs/documentation-index.md** - Documentation inventory (authoritative file list)
 - **docs/core/architecture.md** - Detailed architecture guide
 - **docs/core/workflow.md** - Development workflow details
 - **docs/core/how-to-use.md** - Usage guide (12 skill levels)

@@ -57,7 +57,7 @@ Labels follow the same agency taxonomy used for plot colours (`_agency_category`
 
 The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/template_code_project/tests/` during the infrastructure build phase.
 
-1. **Project tests**: `projects/template_code_project/tests/test_optimizer.py` holds **52** collected tests that exercise `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks.
+1. **Project tests**: [`projects/template_code_project/tests/test_optimizer.py`](../tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
 2. **Infrastructure validation**: The repository-level `tests/infra_tests/` suite validates shared template modules (e.g. pipeline and discovery helpers) independently of this project’s manuscript.
 3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/template_code_project/src/` prior to treating the project as build-green.
 
@@ -67,7 +67,7 @@ The most critical aspect of the project's methodology is its validation framewor
 
 ### Figure generation contract
 
-Each figure in `03_results.md` maps to a single generator in `optimization_analysis.py` (`generate_convergence_plot`, `generate_step_size_sensitivity_plot`, `generate_convergence_rate_plot`, `generate_complexity_visualization`, `generate_stability_visualization`, `generate_benchmark_visualization`). Captions in the markdown intentionally name the function and the key parameters (tolerance lines, grids, dimensions) so reviewers can navigate from PDF to code without inferring hidden defaults.
+Each figure in `03_results.md` maps to a generator in `src/figures.py` (`generate_convergence_plot`, `generate_step_size_sensitivity_plot`, `generate_convergence_rate_plot`, `generate_complexity_visualization`, `generate_stability_visualization`, `generate_benchmark_visualization`), orchestrated by `src/analysis.py` / `scripts/optimization_analysis.py`. Captions in the markdown intentionally name the function and the key parameters (tolerance lines, grids, dimensions) so reviewers can navigate from PDF to code without inferring hidden defaults.
 
 ## Analysis Pipeline & LaTeX Integration
 

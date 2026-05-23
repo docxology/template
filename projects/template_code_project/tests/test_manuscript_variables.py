@@ -124,6 +124,20 @@ def test_all_keys_present_without_results(tmp_path):
     assert keys_with == keys_without, f"Missing keys in fallback run: {sorted(keys_with - keys_without)}"
 
 
+def test_load_config_missing_file(tmp_path):
+    root = tmp_path / "empty"
+    root.mkdir()
+    from src.manuscript_variables import _load_config
+
+    assert _load_config(root) == {}
+
+
+def test_load_optimization_results_missing_csv(tmp_path):
+    from src.manuscript_variables import _load_optimization_results
+
+    assert _load_optimization_results(tmp_path) == []
+
+
 def test_config_derived_values(tmp_path):
     root = _make_minimal_project(tmp_path)
     v = generate_variables(root)
@@ -137,6 +151,13 @@ def test_config_derived_values(tmp_path):
     assert v["CONFIG_FIRST_AUTHOR"] == "Alice"
     assert "optimization" in v["CONFIG_KEYWORDS"]
     assert v["CONFIG_VERSION"] == "1.0"
+
+
+def test_config_step_sizes_match_project_yaml():
+    """Real config.yaml defines six step sizes for the exemplar pipeline."""
+    project_root = Path(__file__).resolve().parent.parent
+    v = generate_variables(project_root)
+    assert v["CONFIG_NUM_STEP_SIZES"] == "6"
 
 
 def test_result_derived_values(tmp_path):
@@ -304,6 +325,18 @@ def test_generate_variables_no_config(tmp_path):
     assert v["CONFIG_HASH"] == "N/A"
 
 
+def test_generate_variables_require_analysis_outputs_raises(tmp_path):
+    root = _make_minimal_project(tmp_path / "draft", with_results=False)
+    with pytest.raises(FileNotFoundError, match="optimization_results"):
+        generate_variables(root, require_analysis_outputs=True)
+
+
+def test_generate_variables_require_analysis_outputs_passes_with_csv(tmp_path):
+    root = _make_minimal_project(tmp_path / "ready", with_results=True)
+    variables = generate_variables(root, require_analysis_outputs=True)
+    assert variables["RESULT_OPTIMUM_X"] != "N/A"
+
+
 # ---------------------------------------------------------------------------
 # generate_variables — partial convergence (RESULT_ALL_CONVERGED == "No")
 # ---------------------------------------------------------------------------
@@ -375,3 +408,46 @@ def test_all_manuscript_tokens_are_generated(tmp_path):
     assert not unresolved, "Manuscript tokens not produced by generate_variables():\n" + "\n".join(
         f"  {{{{{{t}}}}}}: {files}" for t, files in sorted(unresolved.items())
     )
+
+
+class TestImportFallback:
+    def test_logger_fallback_without_infrastructure(self) -> None:
+        """Import path when infrastructure logging is unavailable."""
+        import subprocess
+        import sys
+
+        project_root = Path(__file__).resolve().parent.parent
+        code = """
+import builtins
+import importlib.util
+import sys
+from pathlib import Path
+
+project_root = Path(sys.argv[1])
+real_import = builtins.__import__
+
+def _block_infra(name, globals=None, locals=None, fromlist=(), level=0):
+    if name == "infrastructure" or name.startswith("infrastructure."):
+        raise ImportError("infrastructure unavailable")
+    return real_import(name, globals, locals, fromlist, level)
+
+builtins.__import__ = _block_infra
+sys.path.insert(0, str(project_root / "src"))
+
+spec = importlib.util.spec_from_file_location(
+    "manuscript_variables_isolated",
+    project_root / "src" / "manuscript_variables.py",
+)
+mod = importlib.util.module_from_spec(spec)
+assert spec.loader is not None
+spec.loader.exec_module(mod)
+assert mod.logger.name == "manuscript_variables_isolated"
+"""
+        result = subprocess.run(
+            [sys.executable, "-c", code, str(project_root)],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr or result.stdout

@@ -168,6 +168,33 @@ class TestBuildDashboardCLI:
         # Plotly CDN embedded
         assert "cdn.plot.ly" in html.read_text()
 
+    def test_payload_step_sizes_match_config_yaml(self, tmp_path):
+        from src.experiment_config import load_experiment_config
+
+        cfg = load_experiment_config(PROJECT_ROOT)
+        js = tmp_path / "d.json"
+        html = tmp_path / "d.html"
+        inv = tmp_path / "inv.txt"
+        sm = tmp_path / "sum.txt"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(PROJECT_ROOT / "scripts" / "build_dashboard.py"),
+                "--alpha-sweep-num", "10",
+                "--html-out", str(html),
+                "--json-out", str(js),
+                "--invariants-out", str(inv),
+                "--summary-out", str(sm),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=180,
+        )
+        assert result.returncode == 0, f"stderr:\n{result.stderr}"
+        payload = json.loads(js.read_text())["payload"]
+        assert payload["step_sizes"] == [float(s) for s in cfg.step_sizes]
+        assert len(payload["step_sizes"]) == 6
+
     def test_custom_step_sizes(self, tmp_path):
         html = tmp_path / "d.html"
         js = tmp_path / "d.json"
@@ -238,6 +265,61 @@ class TestBuildDashboardCLI:
             timeout=30,
         )
         assert result.returncode != 0
+
+    def test_rejects_non_positive_step_size(self, tmp_path):
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(PROJECT_ROOT / "scripts" / "build_dashboard.py"),
+                "--step-sizes", "0.0",
+                "--html-out", str(tmp_path / "x.html"),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode != 0
+
+    def test_dashboard_main_writes_outputs(self, tmp_path):
+        html = tmp_path / "dash.html"
+        js = tmp_path / "dash.json"
+        inv = tmp_path / "inv.txt"
+        sm = tmp_path / "sum.txt"
+        from src.dashboard import main as dashboard_main
+
+        dashboard_main(
+            [
+                "--alpha-sweep-num", "8",
+                "--html-out", str(html),
+                "--json-out", str(js),
+                "--invariants-out", str(inv),
+                "--summary-out", str(sm),
+            ]
+        )
+        assert html.exists()
+        assert js.exists()
+
+    def test_alpha_sweep_handles_divergent_regime(self, tmp_path):
+        html = tmp_path / "dash.html"
+        js = tmp_path / "dash.json"
+        inv = tmp_path / "inv.txt"
+        sm = tmp_path / "sum.txt"
+        from src.dashboard import main as dashboard_main
+
+        dashboard_main(
+            [
+                "--step-sizes", "0.1",
+                "--alpha-sweep-min", "0.01",
+                "--alpha-sweep-max", "3.0",
+                "--alpha-sweep-num", "6",
+                "--html-out", str(html),
+                "--json-out", str(js),
+                "--invariants-out", str(inv),
+                "--summary-out", str(sm),
+            ]
+        )
+        payload = json.loads(js.read_text())["payload"]
+        assert any(payload["alpha_sweep"]["diverged"])
 
 
 # ---------------------------------------------------------------------------

@@ -15,7 +15,7 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `operational/` | Runbooks, maintenance, configuration, Docker, logging, troubleshooting |
 | `plans/` | Strategic plans and architecture decision records |
 | `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
-| `modules/` | Infrastructure module guides (18 overview rows; see [modules/modules-guide.md](modules/modules-guide.md)) |
+| `modules/` | Infrastructure module guides (see [modules/modules-guide.md](modules/modules-guide.md); package count drifts — re-derive from `infrastructure/` discovery) |
 | `development/` | Contributing, testing, security, roadmap |
 | `best-practices/` | Best practices, version control, migration |
 | `prompts/` | AI prompt templates (see [prompts/AGENTS.md](prompts/AGENTS.md)) |

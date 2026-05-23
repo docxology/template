@@ -57,7 +57,6 @@ for _p in (SRC_DIR, REPO_ROOT):
 
 
 import numpy as np  # noqa: E402
-import yaml  # noqa: E402
 
 from infrastructure.reporting.interactive_dashboard import (  # noqa: E402
     InteractiveDashboard,
@@ -66,12 +65,14 @@ from infrastructure.reporting.interactive_dashboard import (  # noqa: E402
 )
 
 try:
+    from .experiment_config import ExperimentConfig, load_experiment_config
     from .invariants import OptimizerSweepConfig, all_invariants  # noqa: E402
     from .optimizer import (  # noqa: E402
         quadratic_function,
         simulate_trajectory,
     )
 except ImportError:  # pragma: no cover - supports direct module execution
+    from experiment_config import ExperimentConfig, load_experiment_config  # type: ignore[no-redef]
     from invariants import OptimizerSweepConfig, all_invariants  # type: ignore[no-redef]  # noqa: E402
     from optimizer import (  # type: ignore[no-redef]  # noqa: E402
         quadratic_function,
@@ -91,26 +92,14 @@ CFG_DEFAULT = PROJECT_ROOT / "manuscript" / "config.yaml"
 # ---------------------------------------------------------------------------
 
 
-def _load_yaml_defaults(path: Path) -> dict:
-    if not path.exists():
-        return {}
-    try:
-        data = yaml.safe_load(path.read_text())
-    except (yaml.YAMLError, OSError):
-        return {}
-    if not isinstance(data, dict):
-        return {}
-    exp = data.get("optimization_experiment", {}) or {}
-    return exp if isinstance(exp, dict) else {}
-
-
-# ---------------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------------
+def _load_yaml_defaults(_path: Path) -> ExperimentConfig:
+    """Load experiment defaults from ``manuscript/config.yaml``."""
+    return load_experiment_config(PROJECT_ROOT)
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     cfg = _load_yaml_defaults(CFG_DEFAULT)
+    a_diag = np.diag(cfg.A_array()).tolist()
     p = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -119,34 +108,32 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--step-sizes",
         type=float,
         nargs="+",
-        default=cfg.get("step_sizes", [0.01, 0.1, 0.5, 1.0, 1.5, 2.5]),
+        default=list(cfg.step_sizes),
         help="step sizes α to evaluate",
     )
     p.add_argument(
         "--A",
         type=float,
         nargs="+",
-        default=[float(v[0]) if isinstance(v, (list, tuple)) else float(v) for v in cfg.get("quadratic_A", [[1.0]])],
+        default=[float(v) for v in a_diag],
         help="diagonal entries of A (quadratic Hessian); order = dim",
     )
     p.add_argument(
         "--b",
         type=float,
         nargs="+",
-        default=cfg.get("quadratic_b", [1.0]),
+        default=list(cfg.quadratic_b),
         help="linear-term vector b",
     )
     p.add_argument(
         "--x0",
         type=float,
         nargs="+",
-        default=[float(cfg.get("initial_point", 0.0))]
-        if not isinstance(cfg.get("initial_point", 0.0), (list, tuple))
-        else list(cfg.get("initial_point", [0.0])),
+        default=[cfg.initial_point],
         help="initial point",
     )
-    p.add_argument("--tol", type=float, default=float(cfg.get("tolerance", 1e-8)))
-    p.add_argument("--max-iter", type=int, default=int(cfg.get("max_iterations", 1000)))
+    p.add_argument("--tol", type=float, default=float(cfg.tolerance))
+    p.add_argument("--max-iter", type=int, default=int(cfg.max_iterations))
     p.add_argument(
         "--alpha-sweep-min",
         type=float,
@@ -213,7 +200,13 @@ def _compute_payload(args: argparse.Namespace) -> dict:
     # Per-α full convergence trajectories (1-D landscape ≈ x history projected)
     trajectories: dict[str, dict] = {}
     for alpha in args.step_sizes:
-        traj = simulate_trajectory(float(alpha), max_iter=min(args.max_iter, 200))
+        traj = simulate_trajectory(
+            float(alpha),
+            max_iter=min(args.max_iter, 200),
+            A=A,
+            b=b,
+            initial_point=np.array(args.x0, dtype=np.float64),
+        )
         trajectories[f"{float(alpha):.4f}"] = {
             "iterations": list(traj["iterations"]),
             "objectives": list(traj["objectives"]),

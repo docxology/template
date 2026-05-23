@@ -168,7 +168,7 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 - Test execution: ~30 seconds aggregate (infra + per-exemplar); current counts → `canonical_facts.md`
 - Script execution: 6 seconds (5/5 successful)
 - PDF rendering: 50 seconds (13 modules + combined document)
-- Coverage: 83.33% infrastructure, 100% project
+- Coverage: infrastructure ≥60% ([`docs/development/coverage-gaps.md`](../../development/coverage-gaps.md)); project exemplars → [`docs/_generated/canonical_facts.md`](../../_generated/canonical_facts.md)
 
 ## 🚨 Troubleshooting
 

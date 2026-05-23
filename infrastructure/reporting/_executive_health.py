@@ -4,6 +4,7 @@ Provides project health score calculation and actionable recommendation
 generation based on comprehensive project metrics analysis.
 """
 
+from pathlib import Path
 from typing import Any
 
 from ._executive_models import ProjectMetrics
@@ -277,3 +278,23 @@ def generate_recommendations(projects: list[ProjectMetrics]) -> list[str]:
             )
 
     return recommendations
+
+
+def verify_project_completion(repo_root: Path, project_name: str) -> bool:
+    """Return True when a project has root output/ and combined PDF."""
+    output_dir = repo_root / "output" / project_name
+    if not output_dir.exists():
+        logger.warning("Project '%s' missing output directory", project_name)
+        return False
+
+    project_basename = Path(project_name).name
+    manuscript_pdf = output_dir / "pdf" / f"{project_basename}_combined.pdf"
+    if not manuscript_pdf.exists():
+        logger.warning(
+            "Project '%s' missing combined PDF — may indicate incomplete pipeline",
+            project_name,
+        )
+        return False
+
+    logger.debug("Project '%s' verification passed", project_name)
+    return True

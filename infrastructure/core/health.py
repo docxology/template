@@ -208,6 +208,15 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
             ],
         ),
         ("architecture-overview", arch_overview_argv),
+        (
+            "module-line-count",
+            [
+                "uv",
+                "run",
+                "python",
+                "scripts/gates/module_line_count_check.py",
+            ],
+        ),
     ]
 
 

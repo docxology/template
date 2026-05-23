@@ -107,6 +107,7 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the req
 | `N Python (sub)packages` claims match reality | zero stale counts |
 | Rotating projects in long-lived docs are conditional | zero ghost references |
 | Import time | ≤ 5 s |
+| Module line count (`scripts/gates/module_line_count_check.py`) | warn ≥ 800 lines; fail ≥ 950 (`infrastructure/`, `scripts/` only) |
 
 ## Local Pre-Push Parity (`.pre-commit-config.yaml`)
 
@@ -188,6 +189,8 @@ IGNORE_ARGS=()
 while IFS= read -r raw; do [[ "$raw" =~ ^[[:space:]]*# ]] && continue; line="${raw%%#*}"; line="$(echo "$line" | xargs)"; [ -z "$line" ] || IGNORE_ARGS+=(--ignore-vuln "$line"); done < .github/pip-audit-ignore.txt
 uv run pip-audit "${IGNORE_ARGS[@]}"
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
+# Module line count (also in `uv run python -m infrastructure.core.health --gates=module-line-count`):
+uv run python scripts/gates/module_line_count_check.py
 # Strict LOW+MEDIUM+HIGH sweep against the documented allow-list:
 uv run bandit -c bandit.yaml -r --severity-level low infrastructure/ scripts/
 

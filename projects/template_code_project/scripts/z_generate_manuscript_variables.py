@@ -17,6 +17,7 @@ Exit codes:
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -26,10 +27,21 @@ sys.path.insert(0, str(_PROJECT_ROOT.parent.parent))
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Generate manuscript variables for template_code_project")
+    parser.add_argument(
+        "--allow-draft",
+        action="store_true",
+        help="Allow N/A fallbacks when analysis outputs are missing (non-pipeline draft mode)",
+    )
+    args = parser.parse_args()
+
     from infrastructure.rendering.manuscript_injection import write_resolved_manuscript_tree
     from src.manuscript_variables import generate_variables, save_variables
 
-    variables = generate_variables(_PROJECT_ROOT)
+    variables = generate_variables(
+        _PROJECT_ROOT,
+        require_analysis_outputs=not args.allow_draft,
+    )
     out_path = _PROJECT_ROOT / "output" / "data" / "manuscript_variables.json"
     save_variables(variables, out_path)
     write_resolved_manuscript_tree(_PROJECT_ROOT, variables)

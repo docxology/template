@@ -174,12 +174,63 @@ class DocumentationScanner:
         """Phase 6: Verification and Validation."""
         logger.info("Phase 6: Verification and Validation...")
 
+        from infrastructure.validation.content.markdown_validator import validate_markdown
+        from infrastructure.validation.docs.accuracy import verify_commands
+        from infrastructure.validation.docs.cross_link_lint import detect_markdown_link_cycles
+        from infrastructure.validation.docs.lint_runner import doc_roots, run_docs_lint
+
+        md_files = discover_markdown_files(self.repo_root)
+        roots = doc_roots(self.repo_root)
+
+        lint_report = run_docs_lint(self.repo_root, quiet=True)
+        if lint_report.runtime_error:
+            docs_lint = {
+                "status": "skipped",
+                "reason": lint_report.runtime_error,
+            }
+        elif lint_report.failed:
+            docs_lint = {
+                "status": "failed",
+                "issue_counts": {
+                    "mermaid": len(lint_report.mermaid or []),
+                    "broken_links": len(lint_report.broken_links or []),
+                    "consistency": len(lint_report.consistency or []),
+                    "doc_pairs": len(lint_report.doc_pairs or []),
+                },
+            }
+        else:
+            docs_lint = {"status": "passed", "issue_counts": {}}
+
+        docs_dir = self.repo_root / "docs"
+        if docs_dir.is_dir():
+            problems, exit_code = validate_markdown(docs_dir, self.repo_root, strict=False)
+            md_validation = {
+                "status": "failed" if exit_code != 0 else "passed",
+                "issue_count": len(problems),
+            }
+        else:
+            md_validation = {"status": "skipped", "reason": "docs/ directory absent"}
+
+        command_issues = verify_commands(md_files, self.repo_root)
+        commands_tested = {
+            "status": "failed" if command_issues else "passed",
+            "issue_count": len(command_issues),
+        }
+
+        cycles = detect_markdown_link_cycles(roots)
+        circular_references = {
+            "status": "failed" if cycles else "passed",
+            "cycle_count": len(cycles),
+            "cycles": [list(cycle.files) for cycle in cycles[:10]],
+        }
+
         verification_results = {
             "link_checker": self._run_link_checker(),
-            "markdown_syntax": {"status": "basic_validation_passed"},
-            "commands_tested": {"status": "manual_testing_required", "commands_found": 0},
+            "docs_lint": docs_lint,
+            "markdown_validation": md_validation,
+            "commands_tested": commands_tested,
             "cross_references": self._verify_cross_references(),
-            "circular_references": {"status": "no_circular_references_detected"},
+            "circular_references": circular_references,
         }
 
         self.results.statistics["phase6"] = verification_results
@@ -239,18 +290,6 @@ class DocumentationScanner:
         except Exception as e:  # noqa: BLE001
             logger.warning(f"Link checker failed: {e}")
             return {"success": False, "error": str(e)}
-
-    def _validate_markdown_syntax(self) -> dict[str, Any]:
-        """Basic markdown validation hook for the verification phase."""
-        return {"status": "basic_validation_passed"}
-
-    def _test_documented_commands(self) -> dict[str, Any]:
-        """Documented commands are listed for manual follow-up, not executed here."""
-        return {"status": "manual_testing_required", "commands_found": 0}
-
-    def _check_circular_references(self) -> dict[str, Any]:
-        """Placeholder circular-reference sweep (full graph analysis is optional)."""
-        return {"status": "no_circular_references_detected"}
 
     def _verify_cross_references(self) -> dict[str, Any]:
         """Verify cross-references."""

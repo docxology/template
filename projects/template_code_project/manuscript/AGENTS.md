@@ -34,9 +34,10 @@ Numeric values that come from analysis outputs **must** use `{{VARIABLE_NAME}}` 
 
 **The token pipeline**:
 1. `scripts/z_generate_manuscript_variables.py` calls `src/manuscript_variables.py::generate_variables()` to compute all token values
-2. The script writes the full `{TOKEN: value}` mapping to `output/data/manuscript_variables.json`
-3. It calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` which copies each `manuscript/*.md` template to `output/manuscript/*.md`, substituting every `{{TOKEN}}` with its resolved value
-4. `scripts/03_render_pdf.py` renders the **substituted** copies (from `output/manuscript/`), not the originals
+2. `generate_variables()` reads experiment parameters via `src/experiment_config.py::load_experiment_config()` (same loader as analysis, figures, and dashboard)
+3. The script writes the full `{TOKEN: value}` mapping to `output/data/manuscript_variables.json`
+4. It calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` which copies each `manuscript/*.md` template to `output/manuscript/*.md`, substituting every `{{TOKEN}}` with its resolved value
+5. `scripts/03_render_pdf.py` renders the **substituted** copies (from `output/manuscript/`), not the originals
 
 **Adding a new token**:
 1. Add a key/value pair to the `variables` dict in `src/manuscript_variables.py::generate_variables()`
@@ -57,7 +58,7 @@ See [`../docs/syntax_guide.md`](../docs/syntax_guide.md) for the complete token 
 
 All six figures must be referenced via Pandoc-crossref `[@fig:label]`, never with hardcoded numbers or raw `\ref{}`:
 
-| Label | PNG Filename | Generator Function in `scripts/optimization_analysis.py` |
+| Label | PNG Filename | Generator in `src/figures.py` (orchestrated via `src/analysis.py` / `scripts/optimization_analysis.py`) |
 |---|---|---|
 | `{#fig:convergence}` | `output/figures/convergence_plot.png` | `generate_convergence_plot()` |
 | `{#fig:step_sensitivity}` | `output/figures/step_size_sensitivity.png` | `generate_step_size_sensitivity_plot()` |
@@ -67,7 +68,7 @@ All six figures must be referenced via Pandoc-crossref `[@fig:label]`, never wit
 | `{#fig:stability}` | `output/figures/stability_analysis.png` | `generate_stability_visualization()` |
 
 **To add a new figure**:
-1. Add a generator function to `scripts/optimization_analysis.py` that writes a new PNG under `projects/template_code_project/output/figures/`.
+1. Add a generator function to `src/figures.py` and wire it through `src/analysis.py` (script entry: `scripts/optimization_analysis.py`).
 2. In the appropriate manuscript section, add a Pandoc image line (alt, relative path under `../output/figures/`, and `{#fig:…}`) by copying the structure of any figure in `03_results.md` and updating the path to match the file your generator writes.
 3. Reference in prose: `[@fig:new_label]` (parenthetical) or `@fig:new_label` (narrative)
 4. Document in [`../docs/output_inventory.md`](../docs/output_inventory.md) regeneration table
@@ -81,7 +82,7 @@ Orchestrators under `projects/template_code_project/scripts/` should use `infras
 Follow these steps in order whenever you change behavior and need to update the manuscript:
 
 1. **Update mathematical or experimental description** in `02_methodology.md` / `05_experimental_setup.md` as needed.
-2. **Add or extend tests** in `projects/template_code_project/tests/test_optimizer.py` (there is no separate `tests/integration/` tree in this project).
+2. **Add or extend tests** — pure math in `tests/test_optimizer.py`; orchestration and error paths in `tests/test_analysis_integration.py` and `tests/test_analysis_coverage.py`.
 3. **Regenerate analysis outputs**:
    ```bash
    uv run python projects/template_code_project/scripts/optimization_analysis.py

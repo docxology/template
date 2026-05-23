@@ -11,7 +11,9 @@ The most critical style rule is the absolute prohibition of mocking. The followi
 - `import unittest.mock`
 - `from unittest.mock import MagicMock, patch, create_autospec, Mock, AsyncMock`
 - `@patch(...)` decorators
-- `monkeypatch.setattr(...)` when used to substitute a real function with a fake callable
+- `monkeypatch.setattr(...)` when used to substitute a real function with a fake callable (or fake return values)
+
+**Allowed for orchestration modules only:** `pytest.MonkeyPatch` on module attributes (`project_root`, `INFRASTRUCTURE_AVAILABLE`, I/O boundaries) and subprocess import isolation — real code paths run; see [`../tests/PATTERNS.md`](../tests/PATTERNS.md).
 
 **Why**: `src/optimizer.py` contains pure functions. You can always test them with real numpy arrays and real mathematical results. A test that requires a mock is a test for the wrong thing — it tests that one function calls another (call-count assertion), not that the algorithm is correct.
 

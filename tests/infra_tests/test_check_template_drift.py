@@ -18,9 +18,8 @@ All inputs are real files written to `tmp_path` — no mocks.
 
 from __future__ import annotations
 
-import importlib.util
-import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -29,17 +28,25 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 @pytest.fixture(scope="module")
 def drift_module():
-    """Load `scripts/check_template_drift.py` as a module so we can call
-    individual detector functions against synthetic project trees.
-    """
-    spec = importlib.util.spec_from_file_location(
-        "check_template_drift", REPO_ROOT / "scripts" / "check_template_drift.py"
+    """Import drift detectors from infrastructure.project.drift."""
+    import infrastructure.project.drift.checks as checks
+    from infrastructure.project.drift import DEFAULT_PROJECT_NAMES
+    from infrastructure.project.drift.models import Report as DriftReport
+
+    return SimpleNamespace(
+        Report=DriftReport,
+        PROJECT_NAMES=DEFAULT_PROJECT_NAMES,
+        check_function_name_drift=checks.check_function_name_drift,
+        check_test_class_drift=checks.check_test_class_drift,
+        check_coverage_floor_consistency=checks.check_coverage_floor_consistency,
+        check_all_export_drift=checks.check_all_export_drift,
+        check_referenced_files_exist=checks.check_referenced_files_exist,
+        check_no_oversize_src_files=checks.check_no_oversize_src_files,
+        check_no_blanket_except_in_src=checks.check_no_blanket_except_in_src,
+        check_mocks_absent_from_tests=checks.check_mocks_absent_from_tests,
+        check_required_files_exist=checks.check_required_files_exist,
+        check_project=lambda project, report: checks.check_project(REPO_ROOT, project, report),
     )
-    assert spec is not None and spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules["check_template_drift"] = mod
-    spec.loader.exec_module(mod)
-    return mod
 
 
 def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Path:

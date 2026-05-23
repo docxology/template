@@ -187,11 +187,15 @@ __all__ = [
 ]
 ```
 
-`src/analysis.py`, `src/dashboard.py`, and `src/manuscript_variables.py`
+`src/analysis.py`, `src/dashboard.py`, `src/figures.py`,
+`src/experiment_config.py`, and `src/manuscript_variables.py`
 expose their public callables directly via deep imports
-(`from src.analysis import generate_convergence_plot`); they are part of
+(`from src.analysis import generate_convergence_plot`,
+`from src.experiment_config import load_experiment_config`, etc.); they are part of
 the orchestration layer, not the pure-math API, so they are
-intentionally NOT in `__init__.py.__all__`.
+intentionally NOT in `__init__.py.__all__`. `experiment_config.py` is the
+config single source of truth shared by analysis, figures, dashboard, and
+manuscript_variables.
 
 ## See Also
 

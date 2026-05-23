@@ -44,6 +44,7 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
         "description": "",
         "version": "0.1.0",
         "authors": [],
+        "template_flags": {},
     }
 
     # Try pyproject.toml first
@@ -64,6 +65,9 @@ def get_project_metadata(project_dir: Path) -> dict[str, Any]:
                     metadata["authors"] = [
                         author.get("name", author.get("email", "Unknown")) for author in project_config["authors"]
                     ]
+            template_tool = pyproject_data.get("tool", {}).get("template", {})
+            if isinstance(template_tool, dict):
+                metadata["template_flags"] = template_tool
         except (OSError, ValueError, KeyError) as e:
             logger.warning(f"Failed to parse {pyproject_path}: {e}")
 

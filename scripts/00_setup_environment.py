@@ -16,8 +16,6 @@ Exit codes:
 
 from __future__ import annotations
 
-import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -30,14 +28,15 @@ ensure_repo_root_on_path()
 from infrastructure.core.logging.utils import get_logger, log_success, log_header
 from infrastructure.core.runtime.environment import (
     check_python_version,
-    check_dependencies,
+    set_environment_variables,
     setup_directories,
     verify_source_structure,
-    set_environment_variables,
 )
-from infrastructure.core.runtime.env_deps import (
-    install_missing_packages,
-    check_build_tools,
+from infrastructure.core.runtime.env_deps import check_build_tools
+from infrastructure.core.runtime.setup_checks import (
+    run_optional_setup_hook,
+    sync_workspace_dependencies,
+    validate_project_discovery,
 )
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 
@@ -64,173 +63,15 @@ def main() -> int:
     # Clean coverage files to ensure clean state for subsequent test runs
     clean_coverage_files(repo_root)
 
-    def check_and_install_dependencies() -> bool:
-        """Check dependencies and install missing ones using workspace sync."""
-        logger.info("Checking for uv package manager...")
-
-        try:
-            result = subprocess.run(
-                ["uv", "sync"],
-                cwd=str(repo_root),
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=30,
-            )
-            if result.returncode == 0:
-                log_success("Workspace dependencies synced successfully with uv", logger)
-                logger.debug(f"uv output: {result.stdout}")
-                return True
-            else:
-                logger.warning(f"uv sync failed (exit code {result.returncode}): {result.stderr}")
-                logger.info("Falling back to individual dependency checking...")
-                # Fall back to checking individual dependencies
-                all_present, missing = check_dependencies()
-                if not all_present and missing:
-                    return install_missing_packages(missing)
-                return all_present
-        except FileNotFoundError:
-            logger.info("uv not found in PATH, using fallback dependency checking")
-            logger.info(
-                "Install uv with: pip install uv (recommended for faster dependency management)"
-            )
-            # Fall back to checking individual dependencies
-            all_present, missing = check_dependencies()
-            if not all_present and missing:
-                return install_missing_packages(missing)
-            return all_present
-        except subprocess.TimeoutExpired:
-            logger.warning(
-                "uv sync timed out after 30s - dependencies likely already available in venv"
-            )
-            log_success("Workspace dependencies synced successfully with uv", logger)
-            return True
-        except subprocess.SubprocessError as e:
-            logger.error(f"Subprocess error during uv sync: {e}", exc_info=True)
-            logger.info("Falling back to individual dependency checking...")
-            # Fall back to checking individual dependencies
-            all_present, missing = check_dependencies()
-            if not all_present and missing:
-                return install_missing_packages(missing)
-            return all_present
-
-    def maybe_bootstrap_fep_lean_mathlib() -> bool:
-        """If targeting fep_lean and Mathlib .olean cache is incomplete, run bootstrap script."""
-        if args.project != "fep_lean":
-            return True
-        proj = repo_root / "projects" / "fep_lean"
-        lean_dir = proj / "lean"
-        if not lean_dir.is_dir():
-            return True
-        sys.path.insert(0, str(proj / "src"))
-        try:
-            from verification.lean_verifier import LeanVerifier
-        except ImportError:
-            logger.warning("fep_lean: skip Lean bootstrap (verification import failed)")
-            return True
-        ver = LeanVerifier(lean_dir, proj)
-        if not ver.check_lake_available():
-            logger.info("fep_lean: lake/elan not available; skipping Mathlib bootstrap")
-            return True
-        ok, msg = ver.check_mathlib_built()
-        if ok:
-            logger.info("fep_lean Mathlib: %s", msg)
-            return True
-        logger.warning("fep_lean Mathlib not ready: %s", msg)
-        logger.info(
-            "Running one-time Lean/Mathlib bootstrap (~10–15 min). "
-            "To run manually: bash projects/fep_lean/scripts/_maint_bootstrap_lean_toolchain.sh"
-        )
-        script = proj / "scripts" / "_maint_bootstrap_lean_toolchain.sh"
-        if not script.is_file():
-            logger.error("Bootstrap script missing: %s", script)
-            return False
-        result = subprocess.run(
-            ["bash", str(script)],
-            cwd=str(repo_root),
-            check=False,
-            timeout=int(os.environ.get("FEP_LEAN_BOOTSTRAP_TIMEOUT_SEC", "3600")),
-        )
-        if result.returncode != 0:
-            logger.error("Lean bootstrap exited with code %s", result.returncode)
-            return False
-        ok2, msg2 = ver.check_mathlib_built()
-        if not ok2:
-            logger.error("Mathlib still incomplete after bootstrap: %s", msg2)
-            return False
-        logger.info("fep_lean Mathlib after bootstrap: %s", msg2)
-        return True
-
-    def check_project_discovery() -> bool:
-        """Discover and validate available projects."""
-        from infrastructure.project.discovery import discover_projects, resolve_project_root
-        from infrastructure.project.validation import validate_project_structure
-
-        logger.info("Discovering available projects...")
-        try:
-            target_root = resolve_project_root(repo_root, args.project)
-            target_valid, target_message = validate_project_structure(target_root)
-            if target_valid:
-                logger.info("Target project resolved: %s", target_root)
-            else:
-                logger.error("Target project is not runnable at %s: %s", target_root, target_message)
-                return False
-
-            projects = discover_projects(repo_root)
-
-            if not projects:
-                logger.warning("No valid projects found in projects/ directory")
-                return False
-
-            logger.info(f"Discovered {len(projects)} valid project(s):")
-            for project in projects:
-                marker = "→" if project.name == args.project else " "
-                structure = []
-                if project.has_src:
-                    structure.append("src")
-                if project.has_tests:
-                    structure.append("tests")
-                if project.has_scripts:
-                    structure.append("scripts")
-                if project.has_manuscript:
-                    structure.append("manuscript")
-
-                structure_str = ", ".join(structure) if structure else "minimal"
-                logger.info(f"  {marker} {project.name}: {structure_str}")
-
-                if project.name == args.project:
-                    logger.info(f"    Setting up: {project.name}")
-
-            return True
-        except Exception as e:
-            logger.error(f"Project discovery failed: {e}")
-            return False
-
-    def run_setup_hook() -> bool:
-        """Invoke the optional ``projects/<name>/scripts/setup_hook.{py,sh}``.
-
-        Generic per-project bootstrap (e.g. fetch model weights, prime caches).
-        See ``infrastructure/project/setup_hook.py`` for the manifest schema.
-        Backward-compatible: returns ``True`` when no hook exists.
-        """
-        from infrastructure.project.discovery import resolve_project_root
-        from infrastructure.project.setup_hook import run_project_setup_hook
-
-        project_dir = resolve_project_root(repo_root, args.project)
-        if not project_dir.is_dir():
-            return True
-        return run_project_setup_hook(project_dir)
-
     checks = [
         ("Python version", lambda: check_python_version()),
-        ("Dependencies", check_and_install_dependencies),
+        ("Dependencies", lambda: sync_workspace_dependencies(repo_root)),
         ("Build tools", lambda: check_build_tools()),
         ("Directory structure", lambda: setup_directories(repo_root, args.project)),
         ("Source structure", lambda: verify_source_structure(repo_root, args.project)),
-        ("Project discovery", check_project_discovery),
+        ("Project discovery", lambda: validate_project_discovery(repo_root, args.project)),
         ("Environment variables", lambda: set_environment_variables(repo_root)),
-        ("fep_lean Lean/Mathlib (optional)", maybe_bootstrap_fep_lean_mathlib),
-        ("Project setup_hook (optional)", run_setup_hook),
+        ("Project setup_hook (optional)", lambda: run_optional_setup_hook(repo_root, args.project)),
     ]
 
     results = []

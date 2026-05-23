@@ -13,8 +13,29 @@ from infrastructure.validation.docs.scan_scope import (
     iter_markdown_files,
     should_exclude_path,
 )
+from infrastructure.validation.paths import resolve_markdown_target
 
 logger = get_logger(__name__)
+
+_INDEX_FILES = ("AGENTS.md", "README.md", "index.md")
+
+
+def _directory_index_relative(dir_path: Path, repo_root: Path) -> Path | None:
+    """Return repo-relative path to an index file in *dir_path*, or the directory itself."""
+    repo_root_abs = repo_root.resolve()
+    for name in _INDEX_FILES:
+        index_path = dir_path / name
+        if index_path.is_file():
+            try:
+                return index_path.resolve().relative_to(repo_root_abs)
+            except ValueError:
+                return None
+    if dir_path.is_dir():
+        try:
+            return dir_path.resolve().relative_to(repo_root_abs)
+        except ValueError:
+            return None
+    return None
 
 
 class LinkValidator:
@@ -88,7 +109,7 @@ class LinkValidator:
         return links
 
     def resolve_link_target(self, link_target: str, source_file: Path) -> tuple[Path | None, bool]:
-        """Resolve a link target to an absolute path.
+        """Resolve a link target to a repo-relative path.
 
         Args:
             link_target: The link target (relative or absolute path, may contain #anchor)
@@ -97,94 +118,40 @@ class LinkValidator:
         Returns:
             Tuple of (resolved_path, is_external)
         """
-        # Check if it's an external URL
         if link_target.startswith(("http://", "https://", "mailto:", "ftp://")):
             return None, True
 
-        # Split off anchor if present
-        if "#" in link_target:
-            file_part, anchor_part = link_target.split("#", 1)
-            link_target = file_part  # Resolve just the file part
+        file_part = link_target.split("#", 1)[0] if "#" in link_target else link_target
 
-        # Handle anchor-only links (references within same file)
-        if not link_target or link_target.startswith("#"):
+        if not file_part or file_part.startswith("#"):
             return source_file, False
 
-        # Get absolute repo root
+        source_abs = source_file if source_file.is_absolute() else (self.repo_root / source_file)
         repo_root_abs = self.repo_root.resolve()
 
-        # Resolve relative paths
-        if link_target.startswith("./") or link_target.startswith("../"):
-            # Relative to the directory containing the source file
-            source_dir = source_file.parent
-            try:
-                # Build the full path and resolve it step by step
-                full_path = source_dir / link_target
+        resolved = resolve_markdown_target(link_target, source_abs, self.repo_root)
 
-                # Convert to parts and manually resolve .. components
-                parts = list(full_path.parts)
-                resolved_parts: list[str] = []
+        if resolved.exists and resolved.resolved is None:
+            return None, True
 
-                for part in parts:
-                    if part == "..":
-                        # Go up one directory if possible
-                        if resolved_parts:
-                            resolved_parts.pop()
-                    elif part != ".":
-                        resolved_parts.append(part)
+        if file_part.endswith("/"):
+            if resolved.exists and resolved.path_type == "directory" and resolved.resolved is not None:
+                index_rel = _directory_index_relative(resolved.resolved, self.repo_root)
+                return index_rel, False
 
-                # Reconstruct the path
-                resolved_path = Path(*resolved_parts)
-
-                # Check if it exists and make relative to repo root
-                resolved_abs = resolved_path.resolve()
-                if resolved_abs.is_relative_to(repo_root_abs):
-                    return resolved_abs.relative_to(repo_root_abs), False
-                else:
-                    return None, False
-            except (ValueError, RuntimeError):
-                return None, False
-        elif link_target.endswith("/"):
-            # Directory reference - check for common index files (AGENTS.md, README.md, index.md)
-            index_files = ["AGENTS.md", "README.md", "index.md"]
-
-            # Try relative to repo root first
-            candidate_dir = (repo_root_abs / link_target).resolve()
-            if candidate_dir.exists() and candidate_dir.is_relative_to(repo_root_abs):
-                # Check for index files in this directory
-                for index_file in index_files:
-                    index_path = candidate_dir / index_file
-                    if index_path.exists() and index_path.is_relative_to(repo_root_abs):
-                        return index_path.relative_to(repo_root_abs), False
-                # Directory exists but no index file found - return directory itself
-                return candidate_dir.relative_to(repo_root_abs), False
-
-            # Fallback: relative to source file directory
-            source_dir = source_file.parent
-            candidate_dir = (source_dir / link_target).resolve()
-            if candidate_dir.exists() and candidate_dir.is_relative_to(repo_root_abs):
-                # Check for index files in this directory
-                for index_file in index_files:
-                    index_path = candidate_dir / index_file
-                    if index_path.exists() and index_path.is_relative_to(repo_root_abs):
-                        return index_path.relative_to(repo_root_abs), False
-                # Directory exists but no index file found - return directory itself
-                return candidate_dir.relative_to(repo_root_abs), False
-
+            for candidate_base in (repo_root_abs, source_abs.parent):
+                candidate_dir = (candidate_base / file_part).resolve()
+                if candidate_dir.exists() and candidate_dir.is_dir() and candidate_dir.is_relative_to(repo_root_abs):
+                    index_rel = _directory_index_relative(candidate_dir, self.repo_root)
+                    return index_rel, False
             return None, False
-        else:
-            # Assume relative to repo root or relative to source file
-            # First try relative to source file directory
-            source_dir = source_file.parent
-            candidate1 = (source_dir / link_target).resolve()
-            if candidate1.exists() and candidate1.is_relative_to(repo_root_abs):
-                return candidate1.relative_to(repo_root_abs), False
 
-            # Then try relative to repo root
-            candidate2 = (repo_root_abs / link_target).resolve()
-            if candidate2.exists() and candidate2.is_relative_to(repo_root_abs):
-                return candidate2.relative_to(repo_root_abs), False
+        if not resolved.exists or resolved.resolved is None:
+            return None, False
 
+        try:
+            return resolved.resolved.relative_to(repo_root_abs), False
+        except ValueError:
             return None, False
 
     def validate_file_links(self, file_path: Path) -> dict[str, list[dict[str, str]]]:

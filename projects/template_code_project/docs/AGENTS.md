@@ -17,6 +17,8 @@ Technical guide for `projects/template_code_project/docs/` — the operational r
 | `troubleshooting.md` | Symptom-driven recipes for common failures | ~170 | Comprehensive |
 | `quickstart.md` | 5-minute first-run walkthrough | ~90 | Comprehensive |
 | `output_conventions.md` | `output/` directory layout and regeneration | ~120 | Comprehensive |
+| `output_inventory.md` | Producer/consumer graph for pipeline artifacts | ~80 | Comprehensive |
+| `forking_guide.md` | Fork workflow, drift checker, friction-point table | ~130 | Comprehensive |
 | `rendering_pipeline.md` | 4-phase manuscript→PDF flow; config.yaml controls; troubleshooting | ~80 | Comprehensive |
 | `style_guide.md` | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | ~120 | Comprehensive |
 | `syntax_guide.md` | Markdown links, LaTeX refs, all 28 `{{VARIABLE}}` tokens, figure label registry, adding variables/figures | ~130 | Comprehensive |
@@ -77,17 +79,19 @@ viable project.
 |------|--------|---------------------------------|
 | `src/optimizer.py` | REQUIRED | Coverage gate; `tests/test_optimizer.py` |
 | `src/invariants.py` | REQUIRED | `tests/test_invariants.py` + dashboard invariants check |
-| `src/analysis.py` | REQUIRED (orchestration) | Exercised by `scripts/optimization_analysis.py` and `tests/test_invariants_and_dashboard.py`; re-exports `src/figures.py` for back-compat |
-| `src/figures.py` | REQUIRED (orchestration) | The six `generate_*` plot/visualization functions + `apply_visualization_style` + `VIZ_CONFIG`; exercised via `scripts/optimization_analysis.py` end-to-end run and `tests/test_optimizer.py::TestStabilityAnalysis` / `TestPerformanceBenchmarking` |
-| `src/dashboard.py` | REQUIRED (orchestration) | Exercised by `scripts/build_dashboard.py` and `tests/test_invariants_and_dashboard.py` |
-| `src/manuscript_variables.py` | REQUIRED | `tests/test_manuscript_variables.py` + the live `{{TOKEN}}` cross-reference test |
+| `src/experiment_config.py` | REQUIRED | `load_experiment_config()`; shared by analysis, figures, dashboard, manuscript_variables; `tests/test_experiment_config.py` |
+| `src/analysis.py` | REQUIRED (orchestration) | Exercised by `scripts/optimization_analysis.py`; `tests/test_analysis_integration.py`, `tests/test_analysis_coverage.py` |
+| `src/figures.py` | REQUIRED (orchestration) | Six `generate_*` plot functions; `tests/test_figures_orchestration.py` + stability/benchmark viz in `tests/test_analysis_integration.py` |
+| `src/dashboard.py` | REQUIRED (orchestration) | Exercised by `scripts/build_dashboard.py`; `tests/test_invariants_and_dashboard.py`, `tests/test_dashboard_config.py` |
+| `src/manuscript_variables.py` | REQUIRED | `tests/test_manuscript_variables.py` + live `{{TOKEN}}` cross-reference; reads config via `load_experiment_config()` |
 | `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |
 | `tests/conftest.py` | REQUIRED | Pins `MPLBACKEND=Agg` + `src/` `sys.path`; without it pytest cannot collect |
 | `scripts/optimization_analysis.py` | REQUIRED | Pipeline stage 4 entry point; PDF stage depends on its outputs |
 | `scripts/z_generate_manuscript_variables.py` | REQUIRED | Hydrates `{{TOKEN}}`s; PDF stage reads `output/manuscript/*.md` it writes |
-| `scripts/build_dashboard.py` | REQUIRED | Pipeline reads `output/reports/analysis_dashboard.html` |
-| `scripts/generate_api_docs.py` | AESTHETIC | Auxiliary docs generator; pipeline does not consume its output |
-| `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; pipeline still runs without it |
+| `scripts/build_dashboard.py` | REQUIRED | Pipeline reads `output/web/dashboard.html` |
+| `scripts/generate_api_docs.py` | AESTHETIC | Auxiliary docs generator; smoke-tested by `tests/test_scripts_smoke.py`; pipeline does not consume its output |
+| `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; smoke-tested by `tests/test_scripts_smoke.py`; pipeline still runs without it |
+| `tests/test_scripts_smoke.py` | AESTHETIC | Subprocess smoke for auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
 | `manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering.pdf_renderer`; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Pandoc reads token-substituted copies during PDF stage |
 | `manuscript/references.bib` | REQUIRED | Pandoc citeproc reads it during PDF stage |
@@ -115,4 +119,4 @@ AESTHETIC list as the audit surface that lives outside automated CI.
 - [`../pyproject.toml`](../pyproject.toml) — Coverage gate settings (`fail_under = 90`, `branch = true`)
 - [`../tests/conftest.py`](../tests/conftest.py) — `sys.path` setup and `MPLBACKEND=Agg`
 - [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) — Manuscript directory: `{{VARIABLE}}` protocol, figure list, workflow
-- [`../../AGENTS.md`](../../AGENTS.md) — Root template documentation (infrastructure module reference)
+- [`../../../AGENTS.md`](../../../AGENTS.md) — Root template documentation (infrastructure module reference)

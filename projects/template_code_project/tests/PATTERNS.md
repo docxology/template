@@ -6,11 +6,22 @@ Testing conventions and patterns for the `template_code_project` exemplar's zero
 
 The following are **strictly forbidden** anywhere in the `template_code_project` exemplar:
 
-- Any mocking framework usage (including built-in mocking libraries and third-party monkeypatch helpers)
-- Any test strategy that fakes objects/attributes to avoid executing real code paths
-- Any "synthetic result objects" created solely to satisfy a type shape without executing the algorithm
+- `unittest.mock`, `MagicMock`, `create_autospec`, `@patch`, or other mock factories
+- Synthetic result objects created solely to satisfy a type shape without executing the algorithm
+- Replacing algorithm bodies with stubs so tests never run real math
 
 Every test must exercise real algorithms with real data.
+
+### Orchestration boundary testing (allowed)
+
+For **`src/analysis.py`**, **`src/dashboard.py`**, **`src/figures.py`**, and **`src/manuscript_variables.py`** only:
+
+- **`pytest.MonkeyPatch`** on module attributes (`project_root`, `verify_output_integrity`, `_get_logger`, etc.) — real functions run; I/O boundaries are redirected, not faked
+- **Subprocess import isolation** — block `infrastructure.*` at import time to exercise fallback paths (see `TestImportFallback` in `test_analysis_coverage.py` and `test_manuscript_variables.py`)
+
+Canonical orchestration-branch examples: [`test_analysis_coverage.py`](test_analysis_coverage.py), [`test_dashboard_config.py`](test_dashboard_config.py).
+
+Pure-math modules (`optimizer.py`, `invariants.py`, `experiment_config.py`) should not need monkeypatch.
 
 ## Fixture Patterns
 
@@ -135,7 +146,7 @@ uv run pytest projects/template_code_project/tests/ \
     --cov-report=html
 ```
 
-The `pyproject.toml` enforces `fail_under = 90` as the CI gate. The current suite typically achieves ~96%, providing a comfortable buffer. Do not delete tests to make a coverage number work — fix the gap.
+The `pyproject.toml` enforces `fail_under = 90` as the CI gate. Live achieved coverage is tracked in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md). Do not delete tests to make a coverage number work — fix the gap.
 
 ## Determinism
 
@@ -149,4 +160,6 @@ The `pyproject.toml` enforces `fail_under = 90` as the CI gate. The current suit
 - [../src/STYLE.md](../src/STYLE.md) — How source code should be structured
 - [../src/invariants.py](../src/invariants.py) — Numerical invariant builders covered by `test_invariants.py`
 - [../scripts/build_dashboard.py](../scripts/build_dashboard.py) — Dashboard CLI covered by `test_invariants_and_dashboard.py`
+- [../scripts/generate_api_docs.py](../scripts/generate_api_docs.py) — Auxiliary smoke in `test_scripts_smoke.py`
+- [../scripts/00_preflight.py](../scripts/00_preflight.py) — Auxiliary smoke in `test_scripts_smoke.py` (exit 0 or 1)
 - [../docs/testing_philosophy.md](../docs/testing_philosophy.md) — Zero-mock rationale

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `src/` directory contains the importable project logic for the research project. The mathematical layer (`optimizer.py`, `invariants.py`) remains pure and deterministic; generated-output workflows (`analysis.py`, `dashboard.py`, `manuscript_variables.py`) are also kept here so scripts can stay thin CLI wrappers.
+The `src/` directory contains the importable project logic for the research project. The mathematical layer (`optimizer.py`, `invariants.py`) remains pure and deterministic; generated-output workflows (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`, `documentation.py`) live here so scripts stay thin CLI wrappers. Experiment parameters are loaded once from `manuscript/config.yaml` → `experiment:` via `experiment_config.py` and shared by analysis, figures, dashboard, and manuscript variable generation.
 
 ## Key Concepts
 
@@ -18,20 +18,30 @@ The `src/` directory contains the importable project logic for the research proj
 
 ```mermaid
 flowchart LR
+    CFG[experiment_config.py<br/>load_experiment_config · ExperimentConfig]
     SRC[/src//]
     SRC --> INIT[__init__.py<br/>Module exports]
-    SRC --> OPT[optimizer.py<br/>Core optimization algorithms]
-    SRC --> INV[invariants.py<br/>Numerical invariant builders<br/>consumed by scripts/build_dashboard.py]
-    SRC --> ANA[analysis.py<br/>Experiment + figure generation]
-    SRC --> DASH[dashboard.py<br/>Dashboard payload + HTML builder]
-    SRC --> VARS[manuscript_variables.py<br/>Generated manuscript variables]
-    SRC --> AG[AGENTS.md · README.md · STYLE.md<br/>documentation]
+    SRC --> OPT[optimizer.py<br/>Core optimization · quadratic_optimum]
+    SRC --> INV[invariants.py<br/>Numerical invariant builders]
+    SRC --> ANA[analysis.py<br/>Experiment orchestration]
+    SRC --> FIG[figures.py<br/>Matplotlib visualizations]
+    SRC --> DASH[dashboard.py<br/>Plotly dashboard payload + HTML]
+    SRC --> VARS[manuscript_variables.py<br/>{{TOKEN}} substitution map]
+    SRC --> DOC[documentation.py<br/>API reference builder]
+    SRC --> AG[AGENTS.md · README.md · STYLE.md]
+
+    CFG --> ANA
+    CFG --> FIG
+    CFG --> DASH
+    CFG --> VARS
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef cfg fill:#7c2d12,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class SRC d
-    class INIT,OPT,INV,ANA,DASH,VARS code
+    class INIT,OPT,INV,ANA,FIG,DASH,VARS code
+    class CFG cfg
     class AG doc
 ```
 
@@ -170,7 +180,32 @@ uv run pytest ../tests/ --cov=. --cov-report=html
 
 ## API Reference
 
+### experiment_config.py
+
+#### ExperimentConfig (frozen dataclass)
+
+Loaded from `manuscript/config.yaml` → `experiment:` by `load_experiment_config(project_root)`.
+Shared by `analysis.py`, `figures.py`, `dashboard.py`, and `manuscript_variables.py`.
+
+Key fields: `step_sizes`, `quadratic_A`, `quadratic_b`, `initial_point`, `max_iterations`,
+`tolerance`, `convergence_tolerance`, `stability_starting_points`, `stability_step_sizes`,
+`benchmark_dimensions`. Helpers: `A_array()`, `b_array()`, `to_optimizer_sweep_config()`.
+
+#### load_experiment_config (function)
+
+```python
+def load_experiment_config(project_root: Path | None = None) -> ExperimentConfig:
+    """Parse ``experiment:`` from ``manuscript/config.yaml`` with typed defaults."""
+```
+
 ### optimizer.py
+
+#### quadratic_optimum (function)
+
+```python
+def quadratic_optimum(A: np.ndarray, b: np.ndarray) -> tuple[np.ndarray, float]:
+    """Analytical minimizer for f(x) = (1/2) x^T A x - b^T x. Returns (x*, f*)."""
+```
 
 #### OptimizationResult (dataclass)
 
@@ -275,6 +310,10 @@ Enable verbose output to monitor optimization progress:
 ```python
 result = gradient_descent(..., verbose=True)
 ```
+
+### documentation.py
+
+Markdown API reference builder for public `src/` symbols. Invoked by `scripts/generate_api_docs.py` (AESTHETIC); smoke-tested in `tests/test_scripts_smoke.py`.
 
 ## Best Practices
 

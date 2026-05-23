@@ -11,7 +11,6 @@ flowchart LR
     T[/tests/infra_tests/scientific//]
     T --> META[AGENTS.md · __init__.py]
     T --> BEN[test_benchmarking.py<br/>Performance benchmarking]
-    T --> COG[test_cogsec_improver.py<br/>Cognitive security improver]
     T --> DOC[test_documentation.py<br/>API documentation]
     T --> DEV[test_scientific_dev.py<br/>Scientific development]
     T --> DEVE[test_scientific_dev_edge_cases.py<br/>Edge cases]
@@ -23,7 +22,7 @@ flowchart LR
     classDef test fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class BEN,COG,DOC,DEV,DEVE,STAB,TPL,VAL test
+    class BEN,DOC,DEV,DEVE,STAB,TPL,VAL test
     class META doc
 ```
 

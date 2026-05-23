@@ -60,7 +60,7 @@ Final PDF: `projects/template_code_project/output/pdf/template_code_project_comb
 ## View Results
 
 - **PDF manuscript**: open `projects/template_code_project/output/pdf/template_code_project_combined.pdf`
-- **HTML dashboard**: open `projects/template_code_project/output/reports/analysis_dashboard.html`
+- **HTML dashboard**: open `projects/template_code_project/output/web/dashboard.html` (via `scripts/build_dashboard.py`)
 - **Figures**: browse `projects/template_code_project/output/figures/`
 - **Data**: `cat projects/template_code_project/output/data/optimization_results.csv`
 

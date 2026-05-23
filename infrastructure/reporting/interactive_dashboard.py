@@ -15,9 +15,8 @@ Plotly is loaded from a CDN; **no new Python dependencies** are introduced.
 This module is project-agnostic: every project that ships configurable
 simulations can reuse it by building a list of ``Panel`` objects, a list of
 ``Control`` objects, and a list of ``Invariant`` checks. See
-``projects/actinf_policy_entanglement_lean/scripts/build_dashboard.py``
-|``projects/actinf_policy_entanglement_lean/scripts/build_dashboard.py``
-for end-to-end examples. |
+``projects/template_code_project/scripts/build_dashboard.py``
+for end-to-end examples.
 """
 
 import html as _html

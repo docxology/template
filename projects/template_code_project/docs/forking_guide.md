@@ -88,8 +88,9 @@ function** that produces every numeric token referenced in
 ### 3. Update the test suite
 `tests/` enforces the [Zero-Mock Policy](testing_philosophy.md). Every
 test exercises real algorithms with real data — no `unittest.mock`,
-`MagicMock`, `@patch`, or `monkeypatch` as a mock factory. If you find
-yourself wanting to mock something inside `src/`, that means the code
+`MagicMock`, or `@patch`. Orchestration tests may use `pytest.MonkeyPatch`
+on module attributes or subprocess import isolation (see [`../tests/PATTERNS.md`](../tests/PATTERNS.md)) — not mock factories that fake algorithm output. If you find
+yourself wanting to mock something inside pure-math `src/`, that means the code
 belongs in `scripts/` instead.
 
 ### 4. Run the drift checker before pushing

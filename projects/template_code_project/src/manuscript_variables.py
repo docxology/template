@@ -28,6 +28,13 @@ import numpy as np
 import yaml
 
 try:
+    from .experiment_config import load_experiment_config
+    from .optimizer import quadratic_optimum
+except ImportError:  # pragma: no cover
+    from experiment_config import load_experiment_config  # type: ignore[no-redef]
+    from optimizer import quadratic_optimum  # type: ignore[no-redef]
+
+try:
     from infrastructure.core.logging.utils import get_logger
 
     logger = get_logger(__name__)
@@ -126,18 +133,22 @@ def _step_agency_label(alpha: float) -> str:
 # ---------------------------------------------------------------------------
 
 
-def generate_variables(project_root: Path) -> dict[str, str]:
+def generate_variables(project_root: Path, *, require_analysis_outputs: bool = False) -> dict[str, str]:
     """Generate all manuscript variables from config and analysis outputs.
 
     Reads ``manuscript/config.yaml`` and analysis outputs from ``output/``.
     Returns a flat mapping of UPPERCASE_KEY → string value for ``{{TOKEN}}``
-    substitution.  When data files are absent (e.g., analysis has not run
-    yet), fallback sentinel values (``"N/A"``) are used so the manuscript
-    renders without crashing.
+    substitution.  When data files are absent and *require_analysis_outputs*
+    is False (draft mode), fallback sentinel values (``"N/A"``) are used so the
+    manuscript renders without crashing.  Pipeline callers should pass
+    ``require_analysis_outputs=True`` so missing analysis outputs fail before
+    render.
 
     Args:
         project_root: Root directory of the code project (the directory
             containing ``manuscript/`` and ``output/``).
+        require_analysis_outputs: When True, raise if
+            ``output/data/optimization_results.csv`` is missing or empty.
 
     Returns:
         ``dict[str, str]`` with plain UPPERCASE_KEY keys (no surrounding
@@ -145,7 +156,14 @@ def generate_variables(project_root: Path) -> dict[str, str]:
         :func:`infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree`.
     """
     config = _load_config(project_root)
+    exp_cfg = load_experiment_config(project_root)
     results = _load_optimization_results(project_root)
+    if require_analysis_outputs and not results:
+        csv_path = project_root / "output" / "data" / "optimization_results.csv"
+        raise FileNotFoundError(
+            f"Analysis outputs required but missing or empty: {csv_path}. "
+            "Run projects/template_code_project/scripts/optimization_analysis.py first."
+        )
     stability = _load_json_report(project_root, "stability_analysis.json")
     benchmark = _load_json_report(project_root, "performance_benchmark.json")
     artifact_counts = _count_output_artifacts(project_root)
@@ -157,8 +175,7 @@ def generate_variables(project_root: Path) -> dict[str, str]:
     variables["CONFIG_TITLE"] = paper.get("title", "Untitled")
     variables["CONFIG_VERSION"] = paper.get("version", "1.0")
 
-    experiment = config.get("experiment", {})
-    step_sizes = experiment.get("step_sizes", [0.01, 0.1, 0.5, 1.0, 1.5, 2.5])
+    step_sizes = list(exp_cfg.step_sizes)
     variables["CONFIG_NUM_STEP_SIZES"] = str(len(step_sizes))
     variables["CONFIG_STEP_SIZES_CSV"] = ", ".join(str(s) for s in step_sizes)
     variables["CONFIG_MIN_STEP_SIZE"] = str(min(step_sizes))
@@ -167,35 +184,30 @@ def generate_variables(project_root: Path) -> dict[str, str]:
     bullets = [f"- $\\alpha = {float(s)}$ ({_step_agency_label(float(s))})" for s in step_sizes]
     variables["CONFIG_STEP_SIZES_BULLETS"] = "\n".join(bullets)
 
-    variables["CONFIG_INITIAL_POINT"] = str(experiment.get("initial_point", 0.0))
-    variables["CONFIG_MAX_ITERATIONS"] = str(experiment.get("max_iterations", 100))
-    variables["CONFIG_TOLERANCE"] = _format_sci(float(experiment.get("tolerance", 1e-6)))
-    variables["CONFIG_CONVERGENCE_TOL"] = _format_sci(float(experiment.get("convergence_tolerance", 1e-8)))
+    variables["CONFIG_INITIAL_POINT"] = str(exp_cfg.initial_point)
+    variables["CONFIG_MAX_ITERATIONS"] = str(exp_cfg.max_iterations)
+    variables["CONFIG_TOLERANCE"] = _format_sci(float(exp_cfg.tolerance))
+    variables["CONFIG_CONVERGENCE_TOL"] = _format_sci(float(exp_cfg.convergence_tolerance))
 
-    A = experiment.get("quadratic_A", [[1.0]])
-    b_vec = experiment.get("quadratic_b", [1.0])
-    variables["CONFIG_QUADRATIC_A"] = str(A)
-    variables["CONFIG_QUADRATIC_B"] = str(b_vec)
+    variables["CONFIG_QUADRATIC_A"] = str(list(exp_cfg.quadratic_A))
+    variables["CONFIG_QUADRATIC_B"] = str(list(exp_cfg.quadratic_b))
 
-    stability_starts = experiment.get("stability_starting_points", [-50, -10, -5, 0, 0.1, 5, 10, 50])
-    stability_steps = experiment.get("stability_step_sizes", [0.01, 0.05, 0.1, 0.2, 0.5, 0.9])
+    stability_starts = list(exp_cfg.stability_starting_points)
+    stability_steps = list(exp_cfg.stability_step_sizes)
     variables["CONFIG_NUM_STABILITY_STARTS"] = str(len(stability_starts))
     variables["CONFIG_NUM_STABILITY_STEPS"] = str(len(stability_steps))
     variables["CONFIG_STABILITY_CELLS"] = str(len(stability_starts) * len(stability_steps))
     variables["CONFIG_STABILITY_MIN_STEP"] = str(min(stability_steps))
     variables["CONFIG_STABILITY_MAX_STEP"] = str(max(stability_steps))
 
-    dims = experiment.get("benchmark_dimensions", [1, 2, 5, 10, 20, 50])
+    dims = list(exp_cfg.benchmark_dimensions)
     variables["CONFIG_BENCHMARK_DIMS"] = ", ".join(str(d) for d in dims)
     variables["CONFIG_BENCHMARK_MIN_DIM"] = str(min(dims)) if dims else "1"
     variables["CONFIG_BENCHMARK_MAX_DIM"] = str(max(dims)) if dims else "50"
 
     # ---- Results-derived ----
     if results:
-        A_np = np.array(A, dtype=float)
-        b_np = np.array(b_vec, dtype=float)
-        x_star = np.linalg.solve(A_np, b_np)
-        f_star = float(0.5 * x_star.T @ A_np @ x_star - b_np.T @ x_star)
+        x_star, f_star = quadratic_optimum(exp_cfg.A_array(), exp_cfg.b_array())
         variables["RESULT_OPTIMUM_X"] = f"{x_star[0]:.1f}"
         variables["RESULT_OPTIMUM_F"] = f"{f_star:.1f}"
 

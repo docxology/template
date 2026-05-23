@@ -202,4 +202,89 @@ def find_broken_links(
     return broken
 
 
-__all__ = ["BrokenLink", "find_broken_links"]
+@dataclass(frozen=True)
+class LinkCycle:
+    """A cycle in the relative Markdown file-link graph."""
+
+    files: tuple[str, ...]
+
+
+def _file_link_target(md_file: Path, target: str) -> str | None:
+    """Return repo-relative path for an internal file link, or None if not a file edge."""
+    if _is_external(target):
+        return None
+    base = unquote(target.split("#", 1)[0].split("?", 1)[0])
+    if not base:
+        return None
+    resolved, _ = _resolve_target(md_file, target)
+    if resolved is None:
+        return None
+    return str(resolved)
+
+
+def _collect_file_edges(roots: Iterable[Path], exclude_globs: Iterable[str]) -> dict[str, set[str]]:
+    """Build adjacency list of repo-relative markdown paths."""
+    graph: dict[str, set[str]] = {}
+    for md in _iter_markdown_files(roots, exclude_globs):
+        try:
+            raw = md.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as e:
+            logger.debug("skipping %s: %s", md, e)
+            continue
+        source = str(md.resolve())
+        graph.setdefault(source, set())
+        scrubbed = _strip_code(raw)
+        for match in _LINK_RE.finditer(scrubbed):
+            target_path = _file_link_target(md, match.group("url"))
+            if target_path is None:
+                continue
+            graph.setdefault(source, set()).add(target_path)
+            graph.setdefault(target_path, set())
+    return graph
+
+
+def detect_markdown_link_cycles(
+    roots: Iterable[Path],
+    exclude_globs: Iterable[str] = _DEFAULT_EXCLUDE_GLOBS,
+) -> list[LinkCycle]:
+    """Detect directed cycles in relative Markdown file-to-file links under *roots*."""
+    graph = _collect_file_edges(roots, exclude_globs)
+    visited: set[str] = set()
+    stack: set[str] = set()
+    cycles: list[LinkCycle] = []
+
+    def dfs(node: str, path: list[str]) -> None:
+        if node in stack:
+            start = path.index(node)
+            cycle = tuple(path[start:] + [node])
+            cycles.append(LinkCycle(files=cycle))
+            return
+        if node in visited:
+            return
+        visited.add(node)
+        stack.add(node)
+        path.append(node)
+        for neighbor in graph.get(node, ()):
+            dfs(neighbor, path)
+        path.pop()
+        stack.remove(node)
+
+    for node in graph:
+        dfs(node, [])
+
+    # Deduplicate cycles that are rotations of the same loop.
+    unique: list[LinkCycle] = []
+    seen: set[tuple[str, ...]] = set()
+    for cycle in cycles:
+        body = cycle.files[:-1]
+        if not body:
+            continue
+        rotations = tuple(tuple(body[i:] + body[:i]) for i in range(len(body)))
+        key = min(rotations)
+        if key not in seen:
+            seen.add(key)
+            unique.append(LinkCycle(files=cycle.files))
+    return unique
+
+
+__all__ = ["BrokenLink", "LinkCycle", "detect_markdown_link_cycles", "find_broken_links"]

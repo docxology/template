@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tests/` directory contains tests for the optimization algorithms in `src/`. These tests validate correctness, numerical accuracy, and edge case handling without using mocks - all tests use computations.
+The `tests/` directory contains tests for the optimization algorithms in `src/`. These tests validate correctness, numerical accuracy, and edge case handling without using mocks - all tests use computations. Orchestration modules may use `pytest.MonkeyPatch` on module attributes per [`PATTERNS.md`](PATTERNS.md).
 
 ## Key Concepts
 
@@ -18,19 +18,27 @@ flowchart LR
     T[/tests//]
     T --> INIT[__init__.py]
     T --> CFG[conftest.py<br/>PYTHONPATH · MPLBACKEND]
-    T --> TEST[test_optimizer.py<br/>Optimizer correctness · 52 tests]
-    T --> TINV[test_invariants.py<br/>Numerical invariant builders · 27 tests]
-    T --> TIDA[test_invariants_and_dashboard.py<br/>build_dashboard CLI smoke · 17 tests]
-    T --> TMV[test_manuscript_variables.py<br/>Manuscript variable injection · 21 tests]
+    T --> TEST[test_optimizer.py]
+    T --> TAI[test_analysis_integration.py]
+    T --> TAC[test_analysis_coverage.py]
+    T --> TEC[test_experiment_config.py]
+    T --> TFO[test_figures_orchestration.py]
+    T --> TDC[test_dashboard_config.py]
+    T --> TINV[test_invariants.py]
+    T --> TIDA[test_invariants_and_dashboard.py]
+    T --> TMV[test_manuscript_variables.py]
+    T --> TSS[test_scripts_smoke.py]
     T --> DOCS[PATTERNS.md · AGENTS.md · README.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class INIT,CFG,TEST,TINV,TIDA,TMV code
+    class INIT,CFG,TEST,TAI,TAC,TEC,TFO,TDC,TINV,TIDA,TMV,TSS code
     class DOCS doc
 ```
+
+Live test count: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
 
 ## Installation/Setup
 
@@ -57,8 +65,11 @@ uv run pytest tests/ -v
 # With coverage (local HTML exploration)
 uv run pytest tests/ --cov=../src --cov-report=html
 
-# Canonical enforced gate (from repo root — the real per-project gate, CI parity).
-# A green exit with 0 collected tests is NOT a pass: confirm collected > 0 AND coverage >= 90%.
+# Canonical enforced gate (from project directory — authoritative for full src/ coverage):
+cd projects/template_code_project
+uv run pytest tests/ --cov=src --cov-fail-under=90
+
+# From repo root (CI parity; same modules, project-relative coverage config):
 uv run pytest projects/template_code_project/tests/ \
   --cov=projects/template_code_project/src --cov-fail-under=90
 ```
@@ -107,6 +118,9 @@ As a core tenet of the Generalized Research Template, all tests in this exemplar
 
 #### Unit Tests (`test_optimizer.py`)
 
+Core mathematical primitives only — no infrastructure-dependent integration tests
+(stability/benchmark live in `test_analysis_integration.py`).
+
 1. **TestQuadraticFunction**
    - Basic function evaluation
    - Multi-dimensional cases
@@ -127,6 +141,23 @@ As a core tenet of the Generalized Research Template, all tests in this exemplar
 4. **TestOptimizationResult**
    - Data structure validation
    - Attribute correctness
+
+#### Integration Tests (`test_analysis_integration.py`)
+
+- Convergence experiment over configured step sizes
+- Stability analysis and performance benchmarking (with figure smoke tests)
+- Publishing helpers, validation, and `main()` pipeline smoke
+
+#### Config and orchestration tests
+
+- `test_analysis_coverage.py` — analysis orchestration branches (validation, main, publishing)
+- `test_experiment_config.py` — `load_experiment_config()` parsing and defaults
+- `test_figures_orchestration.py` — matplotlib figure generators
+- `test_dashboard_config.py` — dashboard payload reads shared config
+- `test_invariants.py` — numerical invariant builders
+- `test_invariants_and_dashboard.py` — `build_dashboard.py` CLI
+- `test_manuscript_variables.py` — `{{TOKEN}}` map + live manuscript cross-reference
+- `test_scripts_smoke.py` — auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`)
 
 ## API Reference
 

@@ -36,7 +36,7 @@ The overall system design that enforces separation of concerns between business 
 
 ### Branch Coverage
 
-Testing metric ensuring all conditional branches (if/else, switch cases) are executed during tests. Required to be 100% for all `src/` code.
+Testing metric ensuring all conditional branches (if/else, switch cases) are executed during tests. Project `src/` gates require **≥90%** line coverage (see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)).
 
 **See**: [Test Coverage](#test-coverage)
 
@@ -301,7 +301,7 @@ Configuration information (author, title, DOI, etc.) applied to generated docume
 - `PROJECT_TITLE`
 - `DOI`
 
-**See**: [Configuration System](../AGENTS.md#directory-structure)
+**See**: [Configuration System](../../AGENTS.md#configuration-system)
 
 ## R
 
@@ -372,7 +372,7 @@ Core business logic residing in `src/` directory. Must have test coverage.
 
 ### Statement Coverage
 
-Testing metric ensuring every line of code is executed during tests. Required to be 100% for all `src/` code.
+Testing metric ensuring every line of code is executed during tests. Project `src/` gates require **≥90%** (see [`docs/_generated/canonical_facts.md`](../_generated/canonical_facts.md)).
 
 **Check**: Look for lines marked `>>>>>` in coverage report
 

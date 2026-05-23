@@ -1,9 +1,0 @@
-{
-  "integrity_check": {
-    "total_files": 15,
-    "integrity_passed": 15,
-    "issues_found": 0,
-    "warnings": 1,
-    "recommendations": 1
-  }
-}

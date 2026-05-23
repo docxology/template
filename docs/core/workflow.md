@@ -34,7 +34,7 @@ graph TB
     end
 
     subgraph VALGEN["Validation and generation"]
-        VALIDATION["Test Validation<br/>100% coverage target"]
+        VALIDATION["Test Validation<br/>≥90% src/ coverage gate"]
         FIGURES["Figure Generation<br/>Using project src/ methods"]
         DATA["Data Generation<br/>Using project src/ methods"]
         MARKDOWN_VAL["Markdown Validation<br/>Images and references"]
@@ -119,9 +119,9 @@ flowchart TD
     START([Start Development]) --> TESTS[Write Tests First]
     TESTS --> IMPLEMENT[Implement Functionality]
     IMPLEMENT --> VALIDATE[Run Tests & Check Coverage]
-    VALIDATE -->|Coverage < 100%| ADD_TESTS[Add Missing Tests]
+    VALIDATE -->|Coverage below gate| ADD_TESTS[Add Missing Tests]
     ADD_TESTS --> VALIDATE
-    VALIDATE -->|Coverage = 100%| INTEGRATION[Test Script Integration]
+    VALIDATE -->|Coverage ≥90%| INTEGRATION[Test Script Integration]
     INTEGRATION --> DOCS[Update Documentation]
     DOCS --> PIPELINE[Run Pipeline]
     PIPELINE --> SUCCESS[Development]

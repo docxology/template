@@ -32,9 +32,9 @@ flowchart TB
 
     FIG --> FIG_F[convergence_plot · step_size_sensitivity ·<br/>convergence_rate_comparison · algorithm_complexity ·<br/>performance_benchmark · stability_analysis]
     DATA --> DATA_F[optimization_results.csv ·<br/>manuscript_variables.json ·<br/>stability_analysis.json · performance_benchmark.json · ...]
-    REP --> REP_F[analysis_dashboard.html · output_statistics.json ·<br/>validation_report.json · telemetry.json]
+    REP --> REP_F[output_statistics.json · validation_report.json · telemetry.json]
     PDF --> PDF_F[template_code_project_combined.pdf]
-    WEB --> WEB_F[index.html · section pages...]
+    WEB --> WEB_F[dashboard.html · index.html · section pages...]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
@@ -118,5 +118,5 @@ To add a new figure or data product:
 ## See Also
 
 - [`manuscript/AGENTS.md`](../manuscript/AGENTS.md) — Manuscript modification protocol and token system
-- [`../docs/rendering_pipeline.md`](../docs/rendering_pipeline.md) — Full 4-phase pipeline description
-- [`../docs/syntax_guide.md`](../docs/syntax_guide.md) — Figure references and `{{VARIABLE}}` syntax
+- [`rendering_pipeline.md`](rendering_pipeline.md) — Full 4-phase pipeline description
+- [`syntax_guide.md`](syntax_guide.md) — Figure references and `{{VARIABLE}}` syntax

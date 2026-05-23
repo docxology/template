@@ -5,7 +5,11 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.lint_runner import doc_roots
+from infrastructure.validation.docs.cross_link_lint import find_broken_links
 from infrastructure.validation.docs.models import CompletenessGap, DocumentationFile
 
 logger = get_logger(__name__)
@@ -71,13 +75,66 @@ def check_script_documentation(repo_root: Path) -> list[CompletenessGap]:
     return gaps
 
 
-def check_config_documentation(config_files: dict[str, Path]) -> list[CompletenessGap]:
-    """Check if configuration options are documented."""
+def _collect_doc_text(repo_root: Path) -> str:
+    parts: list[str] = []
+    for candidate in (repo_root / "docs", repo_root / "AGENTS.md", repo_root / "README.md"):
+        if candidate.is_file():
+            parts.append(candidate.read_text(encoding="utf-8").lower())
+        elif candidate.is_dir():
+            for md in candidate.rglob("*.md"):
+                try:
+                    parts.append(md.read_text(encoding="utf-8").lower())
+                except OSError as exc:
+                    logger.debug("Skipping unreadable doc %s: %s", md, exc)
+    return "\n".join(parts)
+
+
+def check_config_documentation(
+    config_files: dict[str, Path],
+    repo_root: Path,
+) -> list[CompletenessGap]:
+    """Check if top-level configuration keys from config.yaml.example appear in docs."""
     gaps: list[CompletenessGap] = []
-    # Check if config.yaml.example is comprehensive
-    if "config.yaml.example" in config_files:
-        # This could be enhanced to check all options are documented
-        pass
+    example_path = config_files.get("config.yaml.example")
+    if example_path is None or not example_path.exists():
+        return gaps
+
+    try:
+        data = yaml.safe_load(example_path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError, ValueError) as exc:
+        logger.debug("Failed to load config.yaml.example: %s", exc)
+        return gaps
+
+    if not isinstance(data, dict):
+        return gaps
+
+    doc_text = _collect_doc_text(repo_root)
+    for key in data:
+        if key.lower() not in doc_text:
+            gaps.append(
+                CompletenessGap(
+                    category="config",
+                    item=key,
+                    description=f"Top-level config key '{key}' not mentioned in repo docs",
+                    severity="info",
+                )
+            )
+    return gaps
+
+
+def check_cross_reference_completeness(repo_root: Path) -> list[CompletenessGap]:
+    """Report unresolved internal links as completeness gaps."""
+    gaps: list[CompletenessGap] = []
+    for broken in find_broken_links(doc_roots(repo_root)):
+        rel = str(broken.file.relative_to(repo_root)) if broken.file.is_relative_to(repo_root) else str(broken.file)
+        gaps.append(
+            CompletenessGap(
+                category="cross_reference",
+                item=broken.target,
+                description=f"Broken link in {rel}:{broken.line} — {broken.reason}",
+                severity="warning",
+            )
+        )
     return gaps
 
 
@@ -137,13 +194,6 @@ def check_onboarding(
     return gaps
 
 
-def check_cross_reference_completeness() -> list[CompletenessGap]:
-    """Check cross-reference completeness."""
-    gaps: list[CompletenessGap] = []
-    # This could check if related topics are linked
-    return gaps
-
-
 def group_gaps_by_category(gaps: list[CompletenessGap]) -> dict[str, int]:
     """Group completeness gaps by category."""
     categories: dict[str, int] = defaultdict(int)
@@ -188,7 +238,7 @@ def run_completeness_phase(
     gaps.extend(script_gaps)
 
     # Check configuration documentation
-    config_gaps = check_config_documentation(config_files)
+    config_gaps = check_config_documentation(config_files, repo_root)
     gaps.extend(config_gaps)
 
     # Check troubleshooting guides
@@ -204,7 +254,7 @@ def run_completeness_phase(
     gaps.extend(onboarding_gaps)
 
     # Check cross-references
-    crossref_gaps = check_cross_reference_completeness()
+    crossref_gaps = check_cross_reference_completeness(repo_root)
     gaps.extend(crossref_gaps)
 
     completeness_report = {

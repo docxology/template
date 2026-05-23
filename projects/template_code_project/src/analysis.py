@@ -11,26 +11,32 @@ import functools
 import json
 import logging
 import sys
+import time as _time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import numpy as np
 
 try:
+    from .experiment_config import ExperimentConfig, load_experiment_config
     from .optimizer import (
         OptimizationResult,
         compute_gradient,
         gradient_descent,
         make_quadratic_problem,
         quadratic_function,
+        quadratic_optimum,
     )
 except ImportError:  # pragma: no cover - supports direct module execution
+    from experiment_config import ExperimentConfig, load_experiment_config  # type: ignore[no-redef]
     from optimizer import (  # type: ignore[no-redef]
         OptimizationResult,
         compute_gradient,
         gradient_descent,
         make_quadratic_problem,
         quadratic_function,
+        quadratic_optimum,
     )
 
 
@@ -53,11 +59,10 @@ def _setup_fallback_logging() -> logging.Logger:
 
 # Infrastructure imports (optional — PYTHONPATH must include repo root)
 try:
-    from infrastructure.core import CheckpointManager, ProgressBar, SystemHealthChecker, get_logger, log_success
+    from infrastructure.core import ProgressBar, SystemHealthChecker, get_logger, log_success
     from infrastructure.core.exceptions import ScriptExecutionError, TemplateError, ValidationError
     from infrastructure.publishing import generate_citation_apa, generate_citation_bibtex, generate_citation_mla
     from infrastructure.publishing.models import PublicationMetadata
-    from infrastructure.reporting import collect_output_statistics
     from infrastructure.scientific import benchmark_function, check_numerical_stability
     from infrastructure.validation import verify_output_integrity
 
@@ -79,119 +84,46 @@ def _get_logger() -> logging.Logger:
 project_root = Path(__file__).resolve().parent.parent
 
 
-# ---------------------------------------------------------------------------
-# Backwards-compatibility: figure generators and their helpers now live in
-# src/figures.py (split out for readability; see commit history). Re-export
-# here so existing call sites — including
-# scripts/optimization_analysis.py and tests/test_optimizer.py's
-# infrastructure-dependent test classes — keep working unchanged.
-# ---------------------------------------------------------------------------
-try:
-    from .figures import (  # noqa: E402,F401
-        VIZ_CONFIG,
-        _agency_category,
-        _load_experiment_config,
-        _save_figure_data,
-        apply_visualization_style,
-        generate_benchmark_visualization,
-        generate_complexity_visualization,
-        generate_convergence_plot,
-        generate_convergence_rate_plot,
-        generate_stability_visualization,
-        generate_step_size_sensitivity_plot,
-    )
-except ImportError:  # pragma: no cover - supports direct module execution
-    from figures import (  # type: ignore[no-redef]  # noqa: E402,F401
-        VIZ_CONFIG,
-        _agency_category,
-        _load_experiment_config,
-        _save_figure_data,
-        apply_visualization_style,
-        generate_benchmark_visualization,
-        generate_complexity_visualization,
-        generate_convergence_plot,
-        generate_convergence_rate_plot,
-        generate_stability_visualization,
-        generate_step_size_sensitivity_plot,
-    )
-
-
-def run_convergence_experiment() -> Any:
+def run_convergence_experiment(
+    *,
+    on_step: Callable[[float, OptimizationResult], None] | None = None,
+    config: ExperimentConfig | None = None,
+) -> dict[float, OptimizationResult]:
     """Run gradient descent with different step sizes and track convergence."""
     logger = _get_logger()
     logger.info("Running convergence experiments...")
 
-    exp_config = _load_experiment_config()
-    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
-    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
+    cfg = config or load_experiment_config(project_root)
+    A = cfg.A_array()
+    b = cfg.b_array()
     obj_func, grad_func = make_quadratic_problem(A, b)
+    initial_point = cfg.x0()
 
-    step_sizes = exp_config.get("step_sizes", [0.01, 0.1, 0.5, 1.0, 1.5, 2.5])
-    initial_point = np.array([exp_config.get("initial_point", 0.0)])
-    max_iter = exp_config.get("max_iterations", 1000)
-    tol = exp_config.get("tolerance", 1e-8)
+    results: dict[float, OptimizationResult] = {}
 
-    results = {}
-
-    for step_size in step_sizes:
+    for step_size in cfg.step_sizes:
         logger.info(f"Testing step size: {step_size}")
 
         result = gradient_descent(
             initial_point=initial_point,
             objective_func=obj_func,
             gradient_func=grad_func,
-            step_size=step_size,
-            max_iterations=max_iter,
-            tolerance=tol,
+            step_size=float(step_size),
+            max_iterations=cfg.max_iterations,
+            tolerance=cfg.tolerance,
             verbose=False,
         )
 
-        results[step_size] = result
-        logger.info(f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}")
-    return results
-
-
-def run_convergence_experiment_with_progress(progress_bar: Any) -> Any:
-    """Run gradient descent with different step sizes and track convergence with progress bar."""
-    logger = _get_logger()
-    logger.info("Running convergence experiments...")
-
-    exp_config = _load_experiment_config()
-    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
-    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
-    obj_func, grad_func = make_quadratic_problem(A, b)
-
-    step_sizes = exp_config.get("step_sizes", [0.01, 0.1, 0.5, 1.0, 1.5, 2.5])
-    initial_point = np.array([exp_config.get("initial_point", 0.0)])
-    max_iter = exp_config.get("max_iterations", 1000)
-    tol = exp_config.get("tolerance", 1e-8)
-
-    results = {}
-
-    for step_size in step_sizes:
-        logger.info(f"Testing step size: {step_size}")
-
-        result = gradient_descent(
-            initial_point=initial_point,
-            objective_func=obj_func,
-            gradient_func=grad_func,
-            step_size=step_size,
-            max_iterations=max_iter,
-            tolerance=tol,
-            verbose=False,
-        )
-
-        results[step_size] = result
+        results[float(step_size)] = result
         logger.info(f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}")
 
-        # Update progress bar
-        if progress_bar:
-            progress_bar.update(1)
+        if on_step is not None:
+            on_step(float(step_size), result)
 
     return results
 
 
-def save_optimization_results(results: Any) -> Any:
+def save_optimization_results(results: dict[float, OptimizationResult]) -> Path:
     """Save optimization results to CSV file."""
     logger = _get_logger()
     logger.info("Saving optimization results...")
@@ -205,8 +137,9 @@ def save_optimization_results(results: Any) -> Any:
         f.write("step_size,solution,objective_value,iterations,converged,gradient_norm\n")
 
         for step_size, result in results.items():
+            solution_str = ";".join(f"{v:.6f}" for v in result.solution)
             f.write(
-                f"{step_size},{result.solution[0]:.6f},{result.objective_value:.6f},"
+                f"{step_size},{solution_str},{result.objective_value:.6f},"
                 f"{result.iterations},{result.converged},{result.gradient_norm:.2e}\n"
             )
 
@@ -214,24 +147,72 @@ def save_optimization_results(results: Any) -> Any:
     return data_path
 
 
-def run_stability_analysis() -> Any:
+def _stability_score_from_runs(
+    test_inputs: list[np.ndarray],
+    A: np.ndarray,
+    b: np.ndarray,
+    step_size: float = 0.1,
+) -> tuple[float, float, list[str]]:
+    """Compute stability score from gradient-descent runs at known optimum."""
+    _, optimal_value = quadratic_optimum(A, b)
+    errors = []
+    for x0 in test_inputs:
+        result = gradient_descent(
+            initial_point=x0,
+            objective_func=lambda x: quadratic_function(x, A, b),
+            gradient_func=lambda x: compute_gradient(x, A, b),
+            step_size=step_size,
+            max_iterations=500,
+            tolerance=1e-12,
+        )
+        errors.append(abs(result.objective_value - optimal_value))
+    max_error = max(errors)
+    score = 1.0 if max_error < 1e-6 else max(0.0, 1.0 - np.log10(max_error + 1e-16) / 16)
+    recommendations = [] if max_error < 1e-6 else ["Consider adaptive step size"]
+    return float(score), max_error, recommendations
+
+
+def _benchmark_timings(
+    test_inputs: list[np.ndarray],
+    A: np.ndarray,
+    b: np.ndarray,
+    iterations: int = 50,
+) -> float:
+    """Time gradient_descent calls across inputs; return mean seconds."""
+    timings = []
+    for x0 in test_inputs:
+        elapsed = []
+        for _ in range(iterations):
+            t0 = _time.perf_counter()
+            gradient_descent(
+                initial_point=x0,
+                objective_func=lambda x: quadratic_function(x, A, b),
+                gradient_func=lambda x: compute_gradient(x, A, b),
+                step_size=0.1,
+                max_iterations=500,
+                tolerance=1e-12,
+            )
+            elapsed.append(_time.perf_counter() - t0)
+        timings.append(np.mean(elapsed))
+    return float(np.mean(timings))
+
+
+def run_stability_analysis(config: ExperimentConfig | None = None) -> Path:
     """Assess numerical stability of optimization algorithms."""
     logger = _get_logger()
     log = logger.info
     log("Running numerical stability analysis...")
 
-    # Test different input ranges for stability
-    test_inputs = [
-        np.array([0.0]),  # Standard start point
-        np.array([10.0]),  # Far from optimum
-        np.array([-5.0]),  # Negative values
-        np.array([0.1]),  # Close to optimum
-    ]
+    cfg = config or load_experiment_config(project_root)
+    A = cfg.A_array()
+    b = cfg.b_array()
+    _, optimal_value = quadratic_optimum(A, b)
+
+    test_inputs = [np.array([float(x)]) for x in cfg.stability_starting_points[:4]]
 
     if INFRASTRUCTURE_AVAILABLE:
-        # Use infrastructure scientific module
         stability_report = check_numerical_stability(
-            func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
+            func=functools.partial(quadratic_function, A=A, b=b),
             test_inputs=test_inputs,
             tolerance=1e-10,
         )
@@ -243,28 +224,13 @@ def run_stability_analysis() -> Any:
             "recommendations": stability_report.recommendations,
         }
     else:
-        # Standalone stability analysis: run gradient descent for each test input
-        # and compute stability score based on convergence to known optimum
-        optimal_value = -0.5
-        errors = []
-        for x0 in test_inputs:
-            result = gradient_descent(
-                initial_point=x0,
-                objective_func=lambda x: quadratic_function(x, np.array([[1.0]]), np.array([1.0])),
-                gradient_func=lambda x: compute_gradient(x, np.array([[1.0]]), np.array([1.0])),
-                step_size=0.1,
-                max_iterations=500,
-                tolerance=1e-12,
-            )
-            errors.append(abs(result.objective_value - optimal_value))
-        max_error = max(errors)
-        score = 1.0 if max_error < 1e-6 else max(0.0, 1.0 - np.log10(max_error + 1e-16) / 16)
+        score, max_error, recommendations = _stability_score_from_runs(test_inputs, A, b)
         stability_data = {
             "function_name": "quadratic_function",
-            "stability_score": float(score),
-            "expected_behavior": "Converge to f(x*)=-0.5 for all starting points",
+            "stability_score": score,
+            "expected_behavior": f"Converge to f(x*)={optimal_value:.4g} for all starting points",
             "actual_behavior": f"Max error: {max_error:.2e} across {len(test_inputs)} inputs",
-            "recommendations": [] if max_error < 1e-6 else ["Consider adaptive step size"],
+            "recommendations": recommendations,
         }
 
     # Save stability report
@@ -281,25 +247,25 @@ def run_stability_analysis() -> Any:
     return stability_path
 
 
-def run_performance_benchmarking() -> Any:
+def run_performance_benchmarking(config: ExperimentConfig | None = None) -> Path:
     """Benchmark gradient descent performance."""
     logger = _get_logger()
     log = logger.info
     log("Running performance benchmarking...")
 
-    import time as _time
+    cfg = config or load_experiment_config(project_root)
+    A = cfg.A_array()
+    b = cfg.b_array()
 
-    # Different problem scales
     test_inputs = [
-        np.array([0.0]),  # Standard case
-        np.array([5.0]),  # Moderate distance
-        np.array([20.0]),  # Large distance
+        np.array([0.0]),
+        np.array([5.0]),
+        np.array([20.0]),
     ]
 
     if INFRASTRUCTURE_AVAILABLE:
-        # Use infrastructure scientific module
         benchmark_report = benchmark_function(
-            func=functools.partial(quadratic_function, A=np.array([[1.0]]), b=np.array([1.0])),
+            func=functools.partial(quadratic_function, A=A, b=b),
             test_inputs=test_inputs,
             iterations=50,
         )
@@ -313,23 +279,7 @@ def run_performance_benchmarking() -> Any:
         }
         avg_time = benchmark_report.execution_time
     else:
-        # Standalone benchmark: time gradient_descent calls across inputs
-        timings = []
-        for x0 in test_inputs:
-            elapsed = []
-            for _ in range(50):
-                t0 = _time.perf_counter()
-                gradient_descent(
-                    initial_point=x0,
-                    objective_func=lambda x: quadratic_function(x, np.array([[1.0]]), np.array([1.0])),
-                    gradient_func=lambda x: compute_gradient(x, np.array([[1.0]]), np.array([1.0])),
-                    step_size=0.1,
-                    max_iterations=500,
-                    tolerance=1e-12,
-                )
-                elapsed.append(_time.perf_counter() - t0)
-            timings.append(np.mean(elapsed))
-        avg_time = float(np.mean(timings))
+        avg_time = _benchmark_timings(test_inputs, A, b)
         benchmark_data = {
             "function_name": "quadratic_function",
             "execution_time": avg_time,
@@ -353,134 +303,13 @@ def run_performance_benchmarking() -> Any:
     return benchmark_path
 
 
-def generate_analysis_dashboard(results: Any, stability_path: Any = None, benchmark_path: Any = None) -> Any:
-    """Generate comprehensive analysis dashboard."""
-    logger = _get_logger()
-    logger.info("Generating analysis dashboard...")
-
-    try:
-        # Ensure output directory structure exists
-        output_dir = project_root / "output" / "reports"
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        # Collect output summary (may fail if output dirs are empty/missing
-        # or if infrastructure is not available and collect_output_statistics is undefined)
-        try:
-            # project_root already points to projects/template_code_project/, so pass it
-            # as project_dir to avoid double-construction with project_name.
-            output_statistics = collect_output_statistics(
-                project_root.parent.parent,
-                project_name="template_code_project",
-                project_dir=project_root,
-            )
-        except (OSError, ValueError, TypeError, KeyError, NameError) as stats_err:
-            logger.debug(f"Output statistics collection failed (non-fatal): {stats_err}")
-            output_statistics = {}
-
-        # Create dashboard HTML
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Optimization Analysis Dashboard</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; margin: 20px; }}
-                .metric {{ background: #f0f0f0; padding: 10px; margin: 10px; border-radius: 5px; }}
-                .metric h3 {{ margin-top: 0; }}
-                .status-good {{ color: green; }}
-                .status-warning {{ color: orange; }}
-                .status-error {{ color: red; }}
-            </style>
-        </head>
-        <body>
-            <h1>Optimization Analysis Dashboard</h1>
-
-            <div class="metric">
-                <h3>Optimization Results</h3>
-                <p>Step sizes tested: {len(results)}</p>
-                <p>Convergence achieved: {sum(1 for r in results.values() if r.converged)}/{len(results)}</p>
-            </div>
-        """
-
-        if stability_path:
-            html_content += """
-            <div class="metric">
-                <h3>Numerical Stability</h3>
-                <p>Stability analysis completed</p>
-                <p>Report: <a href="reports/stability_analysis.json">stability_analysis.json</a></p>
-            </div>
-            """
-
-        if benchmark_path:
-            html_content += """
-            <div class="metric">
-                <h3>Performance Benchmark</h3>
-                <p>Benchmarking completed</p>
-                <p>Report: <a href="reports/performance_benchmark.json">performance_benchmark.json</a></p>
-            </div>
-            """
-
-        # Use output_statistics for dashboard content with proper key checking
-        figures_count = (
-            output_statistics.get("figures", {}).get("file_count", 0)
-            if isinstance(output_statistics.get("figures"), dict)
-            else 0
-        )
-        data_count = (
-            output_statistics.get("data", {}).get("file_count", 0)
-            if isinstance(output_statistics.get("data"), dict)
-            else 0
-        )
-        reports_count = (
-            output_statistics.get("reports", {}).get("file_count", 0)
-            if isinstance(output_statistics.get("reports"), dict)
-            else 0
-        )
-
-        html_content += f"""
-        <div class="metric">
-            <h3>Output Summary</h3>
-            <p>Figures generated: {figures_count}</p>
-            <p>Data files: {data_count}</p>
-            <p>Reports: {reports_count}</p>
-        </div>
-        """
-
-        html_content += """
-        </body>
-        </html>
-        """
-
-        # Save dashboard
-        output_dir = project_root / "output" / "reports"
-        dashboard_path = output_dir / "analysis_dashboard.html"
-        with open(dashboard_path, "w") as f:
-            f.write(html_content)
-
-        logger.info(f"Saved analysis dashboard to: {dashboard_path}")
-        return dashboard_path
-
-    except (
-        OSError,
-        ValueError,
-        TypeError,
-        NameError,
-        AttributeError,
-        KeyError,
-        RuntimeError,
-        ImportError,
-    ) as e:
-        # Narrow but inclusive: covers I/O failures, lazy-import failures, and
-        # missing-attribute errors raised by infrastructure.reporting when
-        # `collect_output_statistics` returns an incomplete payload. Anything
-        # else genuinely unexpected should propagate so we see it loudly.
-        logger.warning(f"Failed to generate dashboard: {e}")
-        return None
-
-
 def validate_generated_outputs() -> Any:
     """Validate integrity of generated analysis outputs."""
     logger = _get_logger()
+    if not INFRASTRUCTURE_AVAILABLE:
+        logger.info("Skipping output validation (infrastructure not available)")
+        return None
+
     logger.info("Validating generated outputs...")
 
     try:
@@ -531,7 +360,6 @@ def save_validation_report(validation_report: Any) -> Any:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         report_path = output_dir / "output_validation.json"
-        import json
 
         with open(report_path, "w") as f:
             json.dump(validation_report, f, indent=2, default=str)
@@ -617,8 +445,30 @@ def register_figure() -> None:
 
 def main() -> None:
     """Main analysis function."""
+    try:
+        from .figures import (
+            apply_visualization_style,
+            generate_benchmark_visualization,
+            generate_complexity_visualization,
+            generate_convergence_plot,
+            generate_convergence_rate_plot,
+            generate_stability_visualization,
+            generate_step_size_sensitivity_plot,
+        )
+    except ImportError:  # pragma: no cover
+        from figures import (  # type: ignore[no-redef]
+            apply_visualization_style,
+            generate_benchmark_visualization,
+            generate_complexity_visualization,
+            generate_convergence_plot,
+            generate_convergence_rate_plot,
+            generate_stability_visualization,
+            generate_step_size_sensitivity_plot,
+        )
+
     apply_visualization_style()
     logger = _get_logger()
+    exp_config = load_experiment_config(project_root)
 
     def log_info(msg: str) -> None:
         logger.info(msg)
@@ -631,7 +481,6 @@ def main() -> None:
     log_info(f"Project root: {project_root}")
 
     try:
-        # System health check
         if INFRASTRUCTURE_AVAILABLE:
             health_checker = SystemHealthChecker()
             log_info("Running system health check...")
@@ -644,103 +493,72 @@ def main() -> None:
             else:
                 log_info("System health check passed")
 
-        # Initialize checkpoint manager
         if INFRASTRUCTURE_AVAILABLE:
-            checkpoint_dir = project_root / "output" / "checkpoints"
-            CheckpointManager(checkpoint_dir)  # Initialize checkpoint manager
-            log_info("Checkpoint manager initialized")
+            log_info("Performance monitoring available")
+        else:
+            log_info("Running without performance monitoring")
 
-        # Performance monitoring (decorator-based; not used as context manager)
-        from contextlib import nullcontext
-
-        with nullcontext():
-            log_info(
-                "Performance monitoring available"
-                if INFRASTRUCTURE_AVAILABLE
-                else "Running without performance monitoring"
+        log_info("Running convergence experiments...")
+        if INFRASTRUCTURE_AVAILABLE:
+            progress = ProgressBar(total=len(exp_config.step_sizes), task="Step sizes")
+            results = run_convergence_experiment(
+                on_step=lambda _alpha, _result: progress.update(1),
+                config=exp_config,
             )
+            progress.finish()
+        else:
+            results = run_convergence_experiment(config=exp_config)
 
-            # Run experiments with progress tracking
-            log_info("Running convergence experiments...")
-            if INFRASTRUCTURE_AVAILABLE:
-                progress = ProgressBar(total=4, task="Step sizes")
-                results = run_convergence_experiment_with_progress(progress)
-                progress.finish()
-            else:
-                results = run_convergence_experiment()
+        log_info("Generating traditional analysis outputs...")
+        convergence_plot = generate_convergence_plot(results, config=exp_config)
+        sensitivity_plot = generate_step_size_sensitivity_plot(results, config=exp_config)
+        rate_plot = generate_convergence_rate_plot(results, config=exp_config)
+        complexity_plot = generate_complexity_visualization(results, config=exp_config)
+        data_path = save_optimization_results(results)
 
-            # Generate traditional outputs
-            log_info("Generating traditional analysis outputs...")
-            convergence_plot = generate_convergence_plot(results)
-            sensitivity_plot = generate_step_size_sensitivity_plot(results)
-            rate_plot = generate_convergence_rate_plot(results)
-            complexity_plot = generate_complexity_visualization(results)
-            data_path = save_optimization_results(results)
+        stability_plot = None
+        benchmark_plot = None
 
-            # Run scientific analysis (if infrastructure available)
-            stability_plot = None
-            benchmark_plot = None
-            dashboard_path = None
+        log_info("Running scientific analysis...")
+        log_info("Numerical stability analysis...")
+        stability_path = run_stability_analysis(config=exp_config)
 
-            # Scientific analysis (works with or without infrastructure)
-            log_info("Running scientific analysis...")
-            log_info("Numerical stability analysis...")
-            stability_path = run_stability_analysis()
+        log_info("Performance benchmarking...")
+        benchmark_path = run_performance_benchmarking(config=exp_config)
 
-            log_info("Performance benchmarking...")
-            benchmark_path = run_performance_benchmarking()
+        log_info("Generating scientific visualizations...")
+        stability_plot = generate_stability_visualization(stability_path)
+        benchmark_plot = generate_benchmark_visualization(benchmark_path)
 
-            # Generate scientific visualizations
-            log_info("Generating scientific visualizations...")
-            stability_plot = generate_stability_visualization(stability_path)
-            benchmark_plot = generate_benchmark_visualization(benchmark_path)
+        register_figure()
 
-            # Generate comprehensive dashboard (requires infrastructure)
-            if INFRASTRUCTURE_AVAILABLE:
-                log_info("Generating analysis dashboard...")
-                dashboard_path = generate_analysis_dashboard(results, stability_path, benchmark_path)
-            else:
-                log_warning("Infrastructure not available - skipping dashboard generation")
+        validation_report_path = None
+        log_info("Validating generated outputs...")
+        if INFRASTRUCTURE_AVAILABLE:
+            validation_report = validate_generated_outputs()
+            if validation_report:
+                validation_report_path = save_validation_report(validation_report)
 
-            # Register figures if possible
-            register_figure()
+        log_info("Generating publishing materials...")
+        publishing_metadata = extract_optimization_metadata(results)
+        if publishing_metadata and INFRASTRUCTURE_AVAILABLE:
+            citations = generate_citations_from_metadata(publishing_metadata)
+            save_publishing_materials(publishing_metadata, citations)
+        elif publishing_metadata:
+            log_info("Skipping citation generation (infrastructure not available)")
 
-            # Validate generated outputs
-            validation_report_path = None
-            log_info("Validating generated outputs...")
-            if INFRASTRUCTURE_AVAILABLE:
-                validation_report = validate_generated_outputs()
-                if validation_report:
-                    validation_report_path = save_validation_report(validation_report)
+        if INFRASTRUCTURE_AVAILABLE:
+            log_info("Publishing integration demonstration...")
+            try:
+                if publishing_metadata:
+                    log_info("Publishing interfaces available: Zenodo, arXiv, GitHub releases")
+                    log_info("Publication metadata extracted and formatted")
+            except (OSError, ImportError, ValueError) as e:
+                log_warning(f"Publishing demonstration failed: {e}")
 
-            # Generate publishing materials (requires infrastructure for citations)
-            log_info("Generating publishing materials...")
-            publishing_metadata = extract_optimization_metadata(results)
-            if publishing_metadata and INFRASTRUCTURE_AVAILABLE:
-                citations = generate_citations_from_metadata(publishing_metadata)
-                save_publishing_materials(publishing_metadata, citations)
-            elif publishing_metadata:
-                log_info("Skipping citation generation (infrastructure not available)")
-
-            # HTML dashboard is already created and saved above
-
-            # Publishing integration (demonstrate capabilities)
-            if INFRASTRUCTURE_AVAILABLE:
-                log_info("Publishing integration demonstration...")
-                try:
-                    # Demonstrate Zenodo publishing preparation
-                    if publishing_metadata:
-                        # This would normally require API tokens, but we demonstrate the interface
-                        log_info("Publishing interfaces available: Zenodo, arXiv, GitHub releases")
-                        log_info("Publication metadata extracted and formatted")
-                except (OSError, ImportError, ValueError) as e:
-                    log_warning(f"Publishing demonstration failed: {e}")
-
-        # Performance metrics not available (monitor_performance is a decorator)
         if INFRASTRUCTURE_AVAILABLE:
             log_info("Pipeline completed with infrastructure support")
 
-        # Log final results
         log_info(f"Generated convergence plot: {convergence_plot}")
         log_info(f"Generated sensitivity plot: {sensitivity_plot}")
         log_info(f"Generated rate comparison plot: {rate_plot}")
@@ -752,7 +570,6 @@ def main() -> None:
             log_info(f"Generated benchmark report: {benchmark_path}")
             log_info(f"Generated stability visualization: {stability_plot}")
             log_info(f"Generated benchmark visualization: {benchmark_plot}")
-            log_info(f"Generated analysis dashboard: {dashboard_path}")
             log_info(f"Generated validation report: {validation_report_path}")
             log_info("Generated publishing materials and citations")
 
@@ -817,8 +634,8 @@ def main() -> None:
 
 
 def extract_optimization_metadata(
-    results: Dict[float, OptimizationResult],
-) -> Optional[Dict[str, Any]]:
+    results: dict[float, OptimizationResult],
+) -> dict[str, Any] | None:
     """Extract publication metadata from optimization results.
 
     Args:
@@ -867,8 +684,8 @@ def extract_optimization_metadata(
 
 
 def generate_citations_from_metadata(
-    metadata: Dict[str, Any],
-) -> Optional[Dict[str, str]]:
+    metadata: dict[str, Any],
+) -> dict[str, str] | None:
     """Generate citations from optimization metadata.
 
     Args:
@@ -904,7 +721,7 @@ def generate_citations_from_metadata(
         return None
 
 
-def save_publishing_materials(metadata: Dict[str, Any], citations: Optional[Dict[str, str]] = None) -> None:
+def save_publishing_materials(metadata: dict[str, Any], citations: dict[str, str] | None = None) -> None:
     """Save publishing materials to output directory.
 
     Args:
@@ -917,7 +734,6 @@ def save_publishing_materials(metadata: Dict[str, Any], citations: Optional[Dict
 
         # Save metadata
         metadata_path = output_dir / "optimization_metadata.json"
-        import json
 
         with open(metadata_path, "w") as f:
             json.dump(metadata, f, indent=2, default=str)

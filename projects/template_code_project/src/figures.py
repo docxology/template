@@ -1,17 +1,8 @@
 """Figure generators for the template_code_project exemplar.
 
-Extracted from ``src/analysis.py`` to keep both files under the
-template-drift size threshold (1500 lines). This module owns the
-publication-quality figure generation: the matplotlib style, the
-colorblind-safe palette (Wong/IBM palette), the agency-category
-classification for step sizes, the small ``_save_figure_data`` helper
-that pairs each PNG with a sidecar JSON, and the six ``generate_*``
-functions that produce the figures referenced by ``manuscript/03_results.md``.
-
-``analysis.py`` re-exports every public name from this module so existing
-callers (``scripts/optimization_analysis.py``,
-``tests/test_optimizer.py``'s infrastructure-dependent classes) keep
-working without changes.
+Publication-quality figure generation: matplotlib style, colorblind-safe
+palette, agency-category classification, and six ``generate_*`` functions
+referenced by ``manuscript/03_results.md``.
 """
 # ruff: noqa: E402
 
@@ -24,15 +15,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 try:
+    from .experiment_config import ExperimentConfig, load_experiment_config
     from .optimizer import (
         gradient_descent,
         make_quadratic_problem,
+        quadratic_optimum,
         simulate_trajectory,
     )
 except ImportError:  # pragma: no cover - supports direct module execution
+    from experiment_config import ExperimentConfig, load_experiment_config  # type: ignore[no-redef]
     from optimizer import (  # type: ignore[no-redef]
         gradient_descent,
         make_quadratic_problem,
+        quadratic_optimum,
         simulate_trajectory,
     )
 
@@ -55,27 +50,12 @@ except ImportError:  # pragma: no cover
         return logger
 
 
-import yaml
-
 # Project root: projects/template_code_project/
 project_root = Path(__file__).resolve().parent.parent
 
 
-def _load_experiment_config() -> Dict[str, Any]:
-    """Load experiment parameters from manuscript/config.yaml.
-
-    Defined here (rather than re-imported from analysis.py) so figures.py
-    has no compile-time dependency on the orchestration module. analysis.py
-    imports this back through the figures re-export shim so the function
-    remains accessible under both module paths.
-    """
-    config_path = project_root / "manuscript" / "config.yaml"
-    if config_path.exists():
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f) or {}
-        experiment: Dict[str, Any] = config.get("experiment", {}) or {}
-        return experiment
-    return {}
+def _experiment_config() -> ExperimentConfig:
+    return load_experiment_config(project_root)
 
 
 # =============================================================================
@@ -199,7 +179,7 @@ def _save_figure_data(data, name, output_dir):
     return data_path
 
 
-def generate_convergence_plot(results: Any) -> Any:
+def generate_convergence_plot(results: Any, config: ExperimentConfig | None = None) -> Any:
     """Generate convergence plot showing objective value vs iteration.
 
     Uses agency-category colors and handles divergent trajectories.
@@ -207,7 +187,11 @@ def generate_convergence_plot(results: Any) -> Any:
     logger = _get_logger()
     logger.info("Generating convergence plot...")
 
-    # Create figure with enhanced styling
+    cfg = config or _experiment_config()
+    A = cfg.A_array()
+    b = cfg.b_array()
+    _, f_star = quadratic_optimum(A, b)
+
     fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
     step_sizes = list(results.keys())
@@ -217,16 +201,13 @@ def generate_convergence_plot(results: Any) -> Any:
         result = results[step_size]
         category, color = _agency_category(step_size)
 
-        # Limit trajectory length for readability
-        max_plot_iters = min(result.iterations + 5, 50)
-        trajectory = simulate_trajectory(step_size, max_iter=max_plot_iters)
-
-        # Clip extreme values for divergent cases
-        objectives = np.array(trajectory["objectives"], dtype=float)
+        history = result.objective_history or []
+        iterations = list(range(len(history)))
+        objectives = np.array(history, dtype=float)
         objectives = np.clip(objectives, -10, 100)
 
         ax.plot(
-            trajectory["iterations"],
+            iterations,
             objectives,
             color=color,
             linewidth=VIZ_CONFIG["lines"]["linewidth"],
@@ -235,28 +216,27 @@ def generate_convergence_plot(results: Any) -> Any:
             markersize=VIZ_CONFIG["lines"]["markersize"],
             markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
             markerfacecolor="white",
-            markevery=max(1, len(trajectory["iterations"]) // 8),
+            markevery=max(1, len(iterations) // 8) if iterations else 1,
         )
         plot_data[str(step_size)] = {
             "category": category,
-            "iterations": trajectory["iterations"],
+            "iterations": iterations,
             "objectives": [float(o) for o in objectives],
         }
 
-    # Add optimal value reference line
     ax.axhline(
-        y=-0.5,
+        y=f_star,
         color=VIZ_CONFIG["colors"]["neutral"],
         linestyle="--",
         linewidth=2,
         alpha=0.8,
-        label="Optimal: f(x*) = −0.5",
+        label=f"Optimal: f(x*) = {f_star:.4g}",
     )
 
     ax.set_xlabel("Iteration")
     ax.set_ylabel("Objective Value f(x)")
     ax.set_title(
-        "Gradient Descent Convergence Analysis\nQuadratic Minimization: f(x) = ½x² − x",
+        "Gradient Descent Convergence Analysis\nQuadratic Minimization",
         pad=15,
     )
     ax.legend(
@@ -288,25 +268,29 @@ def generate_convergence_plot(results: Any) -> Any:
 # It delegates to gradient_descent() and returns {"iterations": [...], "objectives": [...]}.
 
 
-def generate_step_size_sensitivity_plot(results: Any) -> Any:
-    """Generate step size sensitivity analysis with expanded range.
-
-    Left: iterations to convergence vs step size (log-x), sweeping α from
-    0.005 to 0.4 in 10 steps to reveal the full curve shape.
-    Right: final objective value vs step size with y-axis showing the full
-    descent from f(x₀)=0 to f(x*)=−0.5, making the solution quality
-    genuinely visible rather than zoomed into a trivial band.
-    """
+def generate_step_size_sensitivity_plot(results: Any, config: ExperimentConfig | None = None) -> Any:
+    """Generate step size sensitivity analysis with expanded range."""
     logger = _get_logger()
     logger.info("Generating step size sensitivity plot...")
 
-    # Sweep a wider range of step sizes for a more informative curve
+    cfg = config or _experiment_config()
+    A = cfg.A_array()
+    b = cfg.b_array()
+    x0 = cfg.x0()
+    _, f_star = quadratic_optimum(A, b)
+
     sweep_alphas = [0.005, 0.01, 0.02, 0.05, 0.08, 0.1, 0.15, 0.2, 0.3, 0.4]
     sweep_iters = []
     sweep_obj_vals = []
 
     for alpha in sweep_alphas:
-        traj = simulate_trajectory(alpha, max_iter=500)
+        traj = simulate_trajectory(
+            alpha,
+            max_iter=500,
+            A=A,
+            b=b,
+            initial_point=x0,
+        )
         sweep_iters.append(len(traj["iterations"]))
         sweep_obj_vals.append(traj["objectives"][-1])
 
@@ -366,12 +350,12 @@ def generate_step_size_sensitivity_plot(results: Any) -> Any:
         label="Achieved f(x)",
     )
     ax2.axhline(
-        y=-0.5,
+        y=f_star,
         color=color_success,
         linestyle="--",
         linewidth=2.5,
         alpha=0.9,
-        label="Optimal f(x*) = −0.5",
+        label=f"Optimal f(x*) = {f_star:.4g}",
     )
     ax2.axhline(
         y=0.0,
@@ -384,7 +368,7 @@ def generate_step_size_sensitivity_plot(results: Any) -> Any:
     ax2.set_xlabel("Step Size (α)")
     ax2.set_ylabel("Final Objective Value")
     ax2.set_title(
-        "Solution Quality vs Step Size\nAll step sizes reach the optimum f(x*)=−0.5",
+        f"Solution Quality vs Step Size\nAll stable step sizes reach f(x*)={f_star:.4g}",
         pad=12,
     )
     ax2.legend(
@@ -392,7 +376,7 @@ def generate_step_size_sensitivity_plot(results: Any) -> Any:
         fontsize=VIZ_CONFIG["fonts"]["legend"],
     )
     ax2.set_xscale("log")
-    ax2.set_ylim(-0.6, 0.1)  # Full range from initial to below optimum
+    ax2.set_ylim(f_star - 0.1, 0.1)
 
     plt.tight_layout()
 
@@ -406,16 +390,16 @@ def generate_step_size_sensitivity_plot(results: Any) -> Any:
     return plot_path
 
 
-def generate_convergence_rate_plot(results: Any) -> Any:
-    """Generate convergence rate comparison plot.
-
-    Uses colorblind-safe palette and accessibility-optimized settings.
-    """
+def generate_convergence_rate_plot(results: Any, config: ExperimentConfig | None = None) -> Any:
+    """Generate convergence rate comparison plot."""
     logger = _get_logger()
     logger.info("Generating convergence rate comparison plot...")
 
-    exp_config = _load_experiment_config()
-    conv_tol = float(exp_config.get("convergence_tolerance", exp_config.get("tolerance", 1e-8)))
+    cfg = config or _experiment_config()
+    A = cfg.A_array()
+    b = cfg.b_array()
+    _, f_star = quadratic_optimum(A, b)
+    conv_tol = float(cfg.convergence_tolerance)
 
     fig, ax = plt.subplots(figsize=VIZ_CONFIG["figure"]["figsize_single"])
 
@@ -423,16 +407,13 @@ def generate_convergence_rate_plot(results: Any) -> Any:
 
     for step_size in step_sizes:
         category, color = _agency_category(step_size)
-        # Limit trajectory to avoid overflow for divergent step sizes
-        trajectory = simulate_trajectory(step_size, max_iter=30)
+        result = results[step_size]
+        history = result.objective_history or []
+        iterations = list(range(len(history)))
+        objectives = history
 
-        iterations = trajectory["iterations"]
-        objectives = trajectory["objectives"]
+        errors = [abs(obj - f_star) for obj in objectives]
 
-        # Calculate error relative to optimal value (-0.5)
-        errors = [abs(obj + 0.5) for obj in objectives]  # Absolute error
-
-        # Only plot until convergence or reasonable iterations
         max_plot_iter = min(50, len(iterations))
         ax.plot(
             iterations[:max_plot_iter],
@@ -444,7 +425,7 @@ def generate_convergence_rate_plot(results: Any) -> Any:
             markersize=VIZ_CONFIG["lines"]["markersize"],
             markerfacecolor="white",
             markeredgewidth=VIZ_CONFIG["lines"]["markeredgewidth"],
-            markevery=max(1, max_plot_iter // 8),
+            markevery=max(1, max_plot_iter // 8) if max_plot_iter else 1,
         )
 
     ax.set_xlabel("Iteration")
@@ -493,31 +474,24 @@ def generate_convergence_rate_plot(results: Any) -> Any:
     return plot_path
 
 
-def generate_complexity_visualization(results: Any) -> Any:
-    """Generate algorithm performance analysis with 4 informative panels.
-
-    (TL) Empirical iterations bar chart.
-    (TR) Solution quality: log₁₀ absolute error from optimum per step size.
-    (BL) Empirical iterations vs step size compared to 1/(2α(1−α)) proxy curve.
-    (BR) Per-step error contraction ρ = |1 − α| for the unit Hessian quadratic.
-    """
+def generate_complexity_visualization(results: Any, config: ExperimentConfig | None = None) -> Any:
+    """Generate algorithm performance analysis with 4 informative panels."""
     logger = _get_logger()
     logger.info("Generating algorithm complexity visualization...")
 
-    exp_config = _load_experiment_config()
-    conv_tol = float(exp_config.get("convergence_tolerance", exp_config.get("tolerance", 1e-8)))
+    cfg = config or _experiment_config()
+    conv_tol = float(cfg.convergence_tolerance)
     log_tol = float(np.log10(conv_tol))
+    _, f_star = quadratic_optimum(cfg.A_array(), cfg.b_array())
 
     step_sizes = list(results.keys())
     iterations = [results[step_size].iterations for step_size in step_sizes]
 
-    # Compute solution quality: log₁₀ of absolute error from optimum
-    optimal_value = -0.5
     log_errors = []
     for step_size in step_sizes:
         obj_val = results[step_size].objective_value
-        err = abs(obj_val - optimal_value)
-        log_errors.append(np.log10(max(err, 1e-16)))  # floor at 1e-16
+        err = abs(obj_val - f_star)
+        log_errors.append(np.log10(max(err, 1e-16)))
 
     # Compute theoretical complexity and contraction factor: ρ = |1 - α|
     theoretical_complexity = []
@@ -687,22 +661,15 @@ def generate_stability_visualization(stability_path: Any) -> Any:
 
     logger.info("Generating stability visualization...")
 
-    exp_config = _load_experiment_config()
-    A = np.array(exp_config.get("quadratic_A", [[1.0]]), dtype=float)
-    b = np.array(exp_config.get("quadratic_b", [1.0]), dtype=float)
-    x_star = np.linalg.solve(A, b)
-    optimal_value = float(0.5 * x_star.T @ A @ x_star - b.T @ x_star)
+    exp_config = _experiment_config()
+    A = exp_config.A_array()
+    b = exp_config.b_array()
+    _, optimal_value = quadratic_optimum(A, b)
 
-    starting_points = exp_config.get(
-        "stability_starting_points",
-        [-50.0, -10.0, -5.0, 0.0, 0.1, 5.0, 10.0, 50.0],
-    )
-    step_sizes = exp_config.get(
-        "stability_step_sizes",
-        [0.01, 0.05, 0.1, 0.2, 0.5, 0.9],
-    )
-    max_iter = int(exp_config.get("max_iterations", 500))
-    tol = float(exp_config.get("tolerance", 1e-8))
+    starting_points = list(exp_config.stability_starting_points)
+    step_sizes = list(exp_config.stability_step_sizes)
+    max_iter = int(exp_config.max_iterations)
+    tol = float(exp_config.tolerance)
 
     obj_func, grad_func = make_quadratic_problem(A, b)
 
@@ -800,8 +767,8 @@ def generate_benchmark_visualization(benchmark_path: Any) -> Any:
 
     import time
 
-    exp_config = _load_experiment_config()
-    dimensions = exp_config.get("benchmark_dimensions", [1, 2, 5, 10, 20, 50])
+    exp_config = _experiment_config()
+    dimensions = list(exp_config.benchmark_dimensions)
     times_us: list[float] = []
     iter_counts: list[int] = []
 

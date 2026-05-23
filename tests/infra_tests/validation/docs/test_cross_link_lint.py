@@ -9,6 +9,7 @@ from pathlib import Path
 
 from infrastructure.validation.docs.cross_link_lint import (
     BrokenLink,
+    detect_markdown_link_cycles,
     find_broken_links,
 )
 
@@ -159,3 +160,14 @@ def test_find_broken_links_format_returns_string() -> None:
     assert "/x/y.md:42" in s
     assert "[hi](nope.md)" in s
     assert "target does not exist" in s
+
+
+def test_detect_markdown_link_cycles_finds_two_node_cycle(tmp_path: Path) -> None:
+    a = tmp_path / "a.md"
+    b = tmp_path / "b.md"
+    _write(a, "[to b](b.md)\n")
+    _write(b, "[to a](a.md)\n")
+    cycles = detect_markdown_link_cycles([tmp_path])
+    assert len(cycles) >= 1
+    cycle_nodes = {Path(node).name for node in cycles[0].files}
+    assert {"a.md", "b.md"}.issubset(cycle_nodes)

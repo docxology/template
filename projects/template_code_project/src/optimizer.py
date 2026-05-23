@@ -169,6 +169,19 @@ def gradient_descent(
     )
 
 
+def quadratic_optimum(
+    A: np.ndarray | None = None,
+    b: np.ndarray | None = None,
+) -> tuple[np.ndarray, float]:
+    """Return (x*, f*) for f(x) = ½ xᵀ A x − bᵀ x."""
+    n = 1 if A is None else np.asarray(A, dtype=float).shape[0]
+    x_ref = np.zeros(n, dtype=float)
+    _, A_arr, b_arr = _validate_quadratic_inputs(x_ref, A, b)
+    x_star = np.linalg.solve(A_arr, b_arr)
+    f_star = quadratic_function(x_star, A_arr, b_arr)
+    return x_star, float(f_star)
+
+
 def make_quadratic_problem(
     A: np.ndarray | None = None,
     b: np.ndarray | None = None,

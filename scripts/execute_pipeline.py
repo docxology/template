@@ -23,7 +23,6 @@ if str(repo_root) not in sys.path:
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
 from infrastructure.core.pipeline.hitl import HitlController
-from infrastructure.core.pipeline.summary import generate_pipeline_summary
 from infrastructure.core.runtime.environment import get_python_command, validate_interpreter
 
 logger = get_logger(__name__)
@@ -119,92 +118,14 @@ def execute_pipeline(
             results = executor.execute_full_pipeline()
 
         # Generate comprehensive pipeline report
-        output_dir = repo_root / "projects" / project_name / "output"
-        reports_dir = output_dir / "reports"
-        reports_dir.mkdir(parents=True, exist_ok=True)
+        from infrastructure.core.pipeline.post_run_reporting import write_pipeline_post_run_reports
 
-        total_duration = sum(r.duration for r in results)
-
-        # Generate text summary for display
-        text_summary = generate_pipeline_summary(
-            stage_results=results,
-            total_duration=total_duration,
-            output_dir=output_dir,
+        write_pipeline_post_run_reports(
+            results=results,
+            repo_root=repo_root,
+            project_name=project_name,
             skip_infra=skip_infra,
-            output_format="text",
         )
-        logger.info(text_summary)
-
-        # Generate JSON and HTML reports for programmatic access
-        try:
-            from infrastructure.reporting import (
-                generate_pipeline_report,
-                save_pipeline_report,
-                collect_output_statistics,
-            )
-            from infrastructure.reporting.log_analysis import generate_log_summary
-
-            # Collect output statistics
-            output_stats = collect_output_statistics(repo_root, project_name)
-
-            # Generate log summary if log file exists
-            log_summary = None
-            log_file = output_dir / "logs" / "pipeline.log"
-            if log_file.exists():
-                try:
-                    log_summary_file = reports_dir / "log_summary.txt"
-                    log_summary_text = generate_log_summary(log_file, log_summary_file)
-                    log_summary_preview = log_summary_text[:500] if log_summary_text else ""
-                    logger.info("Log summary generated")
-                    log_summary = {
-                        "summary_file": str(log_summary_file),
-                        "preview": log_summary_preview,
-                    }
-                except Exception as e:
-                    logger.warning(f"Failed to generate log summary: {e}")
-
-            # Generate comprehensive pipeline report
-            pipeline_report = generate_pipeline_report(
-                stage_results=[
-                    {
-                        "name": r.stage_name,
-                        "exit_code": r.exit_code,
-                        "duration": r.duration,
-                        "error_message": r.error_message,
-                    }
-                    for r in results
-                ],
-                total_duration=total_duration,
-                repo_root=repo_root,
-                output_statistics=output_stats,
-                project_name=project_name,
-            )
-
-            # Save report in multiple formats
-            saved_files = save_pipeline_report(pipeline_report, reports_dir, formats=["json", "html", "markdown"])
-            logger.info(f"Pipeline reports saved to {reports_dir}")
-            for fmt, path in saved_files.items():
-                logger.info(f"  • {fmt.upper()}: {path.name}")
-
-            if log_summary:
-                logger.info("  • LOG SUMMARY: log_summary.txt")
-
-        except (ImportError, OSError, KeyError, AttributeError) as e:
-            logger.warning(f"Failed to generate comprehensive pipeline report: {e}", exc_info=True)
-
-        # Verify log file after pipeline execution
-        log_file = output_dir / "logs" / "pipeline.log"
-        if log_file.exists():
-            try:
-                size = log_file.stat().st_size
-                if size > 0:
-                    logger.info(f"Pipeline log file verified: {log_file} ({size:,} bytes)")
-                else:
-                    logger.warning(f"Pipeline log file is empty: {log_file}")
-            except OSError as e:
-                logger.warning(f"Failed to verify pipeline log file: {e}")
-        else:
-            logger.warning(f"Pipeline log file not found: {log_file}")
 
         # Return appropriate exit code
         success = all(r.success for r in results)

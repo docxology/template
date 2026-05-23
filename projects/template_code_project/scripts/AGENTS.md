@@ -19,6 +19,7 @@ flowchart LR
     SC[/scripts//]
     SC --> OA[optimization_analysis.py<br/>Main analysis pipeline]
     SC --> BD[build_dashboard.py<br/>Interactive HTML dashboard +<br/>numerical-invariants report]
+    SC --> PF[00_preflight.py<br/>Manuscript preflight · AESTHETIC]
     SC --> GD[generate_api_docs.py<br/>API documentation generator]
     SC --> ZGEN[z_generate_manuscript_variables.py<br/>Manuscript variable hydration · z_ prefix = runs LAST]
     SC --> DOCS[AGENTS.md · README.md · CONVENTIONS.md]
@@ -26,8 +27,10 @@ flowchart LR
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
+    classDef aux fill:#7c2d12,stroke:#0f172a,color:#fff
     class SC d
-    class OA,BD,GD,ZGEN code
+    class OA,BD,ZGEN code
+    class PF,GD aux
     class DOCS doc
 ```
 
@@ -93,8 +96,13 @@ Scripts are tested through the project test suite:
 uv run pytest ../tests/ -v
 
 # Run specific analysis tests
-uv run pytest ../tests/test_optimizer.py -k "TestStabilityAnalysis or TestPerformanceBenchmarking or TestAnalysisDashboard" -v
+uv run pytest ../tests/test_analysis_integration.py -k "TestStabilityAnalysis or TestPerformanceBenchmarking" -v
+
+# Auxiliary script smoke (non-gated AESTHETIC scripts)
+uv run pytest ../tests/test_scripts_smoke.py -v
 ```
+
+**Auxiliary smoke coverage:** [`tests/test_scripts_smoke.py`](../tests/test_scripts_smoke.py) subprocess-invokes `generate_api_docs.py` (expects exit 0 and `output/docs/api_reference.md`) and `00_preflight.py` (accepts exit 0 or 1 when the local Puppeteer cache is absent; asserts actionable preflight diagnostics). Neither script is pipeline-required.
 
 ## API Reference
 
@@ -103,12 +111,12 @@ uv run pytest ../tests/test_optimizer.py -k "TestStabilityAnalysis or TestPerfor
 #### run_convergence_experiment (function)
 
 ```python
-def run_convergence_experiment() -> Dict[float, OptimizationResult]:
-    """Run gradient descent with different step sizes and track convergence.
-
-    Returns:
-        Dictionary mapping step sizes to optimization results
-    """
+def run_convergence_experiment(
+    *,
+    on_step: Callable[[float, OptimizationResult], None] | None = None,
+    config: ExperimentConfig | None = None,
+) -> dict[float, OptimizationResult]:
+    """Run gradient descent with different step sizes and track convergence."""
 ```
 
 #### generate_convergence_plot (function)
@@ -217,25 +225,10 @@ def generate_benchmark_visualization(benchmark_path: Optional[str]) -> Optional[
     """
 ```
 
-##### generate_analysis_dashboard (function)
+##### build_dashboard (script)
 
-```python
-def generate_analysis_dashboard(
-    results: Dict[str, Any],
-    stability_path: Optional[str] = None,
-    benchmark_path: Optional[str] = None
-) -> Optional[str]:
-    """Generate analysis dashboard.
-
-    Args:
-        results: Optimization results dictionary
-        stability_path: Path to stability analysis report
-        benchmark_path: Path to performance benchmark report
-
-    Returns:
-        Path to generated HTML dashboard, or None if generation fails
-    """
-```
+Interactive Plotly dashboard: `scripts/build_dashboard.py` → `output/web/dashboard.html`.
+Implementation: `src/dashboard.py`.
 
 #### main (function)
 

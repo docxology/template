@@ -23,6 +23,22 @@ The Validation module provides quality assurance and validation tools for resear
 - Link and URL integrity checking
 - Section anchor validation
 
+**integrity/check_links.py**
+- Documentation link verification CLI (thin wrapper around `link_audit_core`)
+- Follow-up: extract link parsing helpers into `link_extract.py` and shrink this module to a thin CLI (~80 lines)
+
+**integrity/link_validator.py**
+- `LinkValidator.resolve_link_target()` delegates path resolution to `paths.resolve_markdown_target()` with directory index-file fallback
+
+**integrity/link_audit_core.py**
+- `run_link_audit(repo_root)` - comprehensive markdown link audit loop
+
+**integrity/link_policies.py**
+- Skip policies for manuscript cross-refs and generated output paths
+
+**paths.py**
+- `resolve_markdown_target(target, source_file, repo_root)` - canonical path resolver shared by link and accuracy validators
+
 **integrity/checks.py**
 - File integrity verification (SHA-256 hashing)
 - Cross-reference validation across documents
@@ -1316,6 +1332,7 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[ScanAccuracy
 def validate_config_options(
     md_files: List[Path],
     config_files: Dict[str, Path],
+    repo_root: Path,
 ) -> List[ScanAccuracyIssue]:
     """Validate configuration options in documentation.
 
@@ -1330,7 +1347,7 @@ def validate_config_options(
 
 #### check_terminology (function)
 ```python
-def check_terminology(md_files: List[Path]) -> List[ScanAccuracyIssue]:
+def check_terminology(md_files: List[Path], repo_root: Path) -> List[ScanAccuracyIssue]:
     """Check terminology consistency.
 
     Args:

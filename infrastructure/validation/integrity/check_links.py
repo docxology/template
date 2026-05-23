@@ -21,10 +21,9 @@ import ast
 import re
 import sys
 from pathlib import Path
-from typing import Any, Set, TypedDict, Union, cast
+from typing import Any, TypedDict, Union
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.validation.docs.accuracy import extract_headings
 
 logger = get_logger(__name__)
 
@@ -685,168 +684,24 @@ def _get_actual_project_names(repo_root: Path) -> list[str]:
 
 def check_file_reference(target: str, source_file: Path, repo_root: Path) -> tuple[bool, str]:
     """Check if a file reference resolves correctly."""
-    # Handle relative paths
-    if target.startswith("../"):
-        # Count how many levels up
-        levels_up = target.count("../")
-        target_path = source_file.parent
-        for _ in range(levels_up):
-            target_path = target_path.parent
-        target_path = target_path / target.replace("../", "").replace("./", "")
-    elif target.startswith("./"):
-        target_path = source_file.parent / target[2:]
-    else:
-        # Relative to source file directory
-        target_path = source_file.parent / target
+    from infrastructure.validation.paths import resolve_markdown_target
 
-    # Normalize path
-    try:
-        target_path = target_path.resolve()
-        repo_root_resolved = repo_root.resolve()
-
-        # Check if it's within repo first
-        try:
-            target_path.relative_to(repo_root_resolved)
-        except ValueError:
-            return False, f"Path outside repository: {target_path}"
-
-        # Check if file or directory exists
-        if target_path.exists():
-            if target_path.is_file():
-                return True, str(target_path.relative_to(repo_root_resolved))
-            elif target_path.is_dir():
-                # Directory references are valid (e.g., [src/](src/))
-                return True, str(target_path.relative_to(repo_root_resolved))
-            else:
-                return (
-                    False,
-                    f"Path exists but is not a file or directory: {target_path}",
-                )
-        else:
-            # Check if it's a markdown file without extension
-            md_path = target_path.with_suffix(".md")
-            if md_path.exists() and md_path.is_file():
-                return True, str(md_path.relative_to(repo_root_resolved))
-            return False, f"File or directory does not exist: {target_path}"
-    except (OSError, ValueError) as e:
-        return False, f"Error resolving path: {e}"
+    resolved = resolve_markdown_target(target, source_file, repo_root)
+    if resolved.exists:
+        if resolved.resolved is not None:
+            try:
+                return True, str(resolved.resolved.relative_to(repo_root.resolve()))
+            except ValueError:
+                pass
+        return True, resolved.message
+    return False, resolved.message
 
 
 def run_link_audit(repo_root: Path) -> int:
     """Run the comprehensive link and reference audit for ``repo_root``."""
-    md_files = find_all_markdown_files(str(repo_root))
+    from infrastructure.validation.integrity.link_audit_core import run_link_audit as _run_link_audit
 
-    logger.info(f"Found {len(md_files)} markdown files")
-    logger.info("Running comprehensive filepath and reference audit")
-
-    all_headings: dict[str, Set[str]] = {}
-    # Accumulator uses list[Any] because the validate_* helpers return list[dict[str,Any]];
-    # generate_comprehensive_report receives a cast to the narrower LinkCheckResult type.
-    issues: dict[str, list[Any]] = {
-        "broken_anchor_links": [],
-        "broken_file_refs": [],
-        "code_block_paths": [],
-        "directory_structures": [],
-        "python_imports": [],
-        "placeholder_consistency": [],
-    }
-
-    # First pass: collect all headings
-    for md_file in md_files:
-        try:
-            content = md_file.read_text(encoding="utf-8")
-            all_headings[str(md_file.relative_to(repo_root))] = extract_headings(content)
-        except (OSError, UnicodeDecodeError) as e:
-            logger.error(f"Error reading {md_file}: {e}")
-
-    # Second pass: comprehensive validation
-    for md_file in md_files:
-        try:
-            content = md_file.read_text(encoding="utf-8")
-            internal_links, external_links, file_refs = extract_links(content, md_file)
-
-            # Check internal links (anchors)
-            file_key = str(md_file.relative_to(repo_root))
-            for link in internal_links:
-                target = link["target"].lstrip("#")
-
-                # Skip anchor link validation for manuscript files as they use cross-references
-                # that are resolved during rendering, not same-file headings
-                if "manuscript" in file_key:
-                    continue
-
-                # Skip cross-references that are meant to be resolved by the rendering pipeline
-                # These include: fig:, sec:, eq:, table: prefixes, or standard section references
-                cross_ref_prefixes = ["fig:", "sec:", "eq:", "table:", "tab:"]
-                if any(target.startswith(prefix) for prefix in cross_ref_prefixes):
-                    continue
-
-                # Skip common manuscript section references
-                common_sections = [
-                    "methodology",
-                    "experimental_results",
-                    "discussion",
-                    "conclusion",
-                    "results",
-                ]
-                if target in common_sections or any(sec in target.lower() for sec in common_sections):
-                    continue
-
-                # Only check for actual heading anchors within the same file
-                if file_key in all_headings and target not in all_headings[file_key]:
-                    issues["broken_anchor_links"].append(
-                        {
-                            "file": file_key,
-                            "line": link["line"],
-                            "target": link["target"],
-                            "text": link["text"],
-                            "issue": "Anchor not found",
-                            "type": "broken_anchor",
-                        }
-                    )
-
-            # Check file references
-            for ref in file_refs:
-                target = ref["target"]
-                if "#" in target:
-                    target = target.split("#")[0]
-
-                # Skip references to generated files in output directories
-                if "output/" in target or "/output/" in target:
-                    continue
-
-                if target:
-                    exists, msg = check_file_reference(target, md_file, repo_root)
-                    if not exists:
-                        issues["broken_file_refs"].append(
-                            {
-                                "file": str(md_file.relative_to(repo_root)),
-                                "line": ref["line"],
-                                "target": ref["target"],
-                                "text": ref["text"],
-                                "issue": msg,
-                                "type": "broken_file_ref",
-                            }
-                        )
-
-            # Additional validations
-            code_block_issues = validate_file_paths_in_code(content, md_file, repo_root)
-            issues["code_block_paths"].extend(code_block_issues)
-
-            dir_structure_issues = validate_directory_structures(content, md_file, repo_root)
-            issues["directory_structures"].extend(dir_structure_issues)
-
-            import_issues = validate_python_imports(content, md_file, repo_root)
-            issues["python_imports"].extend(import_issues)
-
-            placeholder_issues = validate_placeholder_consistency(content, md_file, repo_root)
-            issues["placeholder_consistency"].extend(placeholder_issues)
-
-        except (OSError, UnicodeDecodeError) as e:
-            logger.error(f"Error processing {md_file}: {e}")
-
-    # Generate comprehensive report
-    return generate_comprehensive_report(cast(dict[str, list[LinkCheckResult]], issues), len(md_files))
+    return _run_link_audit(repo_root)
 
 
 def main() -> int:

@@ -53,10 +53,11 @@ from infrastructure.core.logging.utils import (
 from infrastructure.core.runtime._python_env import get_python_command
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.project.discovery import discover_projects
+from infrastructure.project.metadata import get_project_metadata
 
 logger = get_logger(__name__)
 
-DEFAULT_SKIP_PROJECTS: tuple[str, ...] = ("fep_lean",)
+DEFAULT_SKIP_PROJECTS: tuple[str, ...] = ()
 DEFAULT_COVERAGE_FILE: str = ".coverage.project"
 # Combined-union floor for the multi-project run (`--project-only
 # --all-projects`). This is deliberately distinct from — and lower than —
@@ -80,6 +81,16 @@ if _DEFAULT_MARKER is None:  # pragma: no cover - defensive
     raise RuntimeError("default pytest marker expression must not be empty")
 DEFAULT_MARKER_EXPR: str = _DEFAULT_MARKER
 DEFAULT_TIMEOUT: int = 120
+
+
+def discover_skip_combined_pytest_projects(repo_root: Path) -> tuple[str, ...]:
+    """Return project names that opt out of combined multi-project pytest."""
+    skipped: list[str] = []
+    for info in discover_projects(repo_root):
+        flags = get_project_metadata(info.path).get("template_flags", {})
+        if flags.get("skip_combined_pytest"):
+            skipped.append(info.name)
+    return tuple(sorted(skipped))
 
 
 def _discover_project_test_dirs(
@@ -229,7 +240,7 @@ def run_per_project_pytest(
     repo_root: Path,
     *,
     projects: Sequence[str] | None = None,
-    skip_projects: Sequence[str] = DEFAULT_SKIP_PROJECTS,
+    skip_projects: Sequence[str] | None = None,
     coverage_file: str = DEFAULT_COVERAGE_FILE,
     fail_under: int = DEFAULT_FAIL_UNDER,
     marker_expr: str | None = None,
@@ -242,9 +253,9 @@ def run_per_project_pytest(
         projects: Optional explicit project names to run. When ``None`` the
             project list is derived from
             :func:`infrastructure.project.discovery.discover_projects`.
-        skip_projects: Project names to skip even if discovered. Defaults
-            to ``("fep_lean",)`` because that project has its own
-            dedicated CI job (lake build + Open Gauss).
+        skip_projects: Project names to skip even if discovered. When ``None``,
+            projects with ``[tool.template] skip_combined_pytest = true`` in
+            ``pyproject.toml`` are skipped automatically.
         coverage_file: Path to the combined coverage data file. Used only
             when the ``COVERAGE_FILE`` environment variable is unset.
             Default: ``".coverage.project"``.
@@ -261,7 +272,11 @@ def run_per_project_pytest(
     """
     log_header("Per-project pytest runner", logger)
 
-    pairs = _discover_project_test_dirs(repo_root, projects, skip_projects)
+    effective_skip = (
+        tuple(skip_projects) if skip_projects is not None else discover_skip_combined_pytest_projects(repo_root)
+    )
+
+    pairs = _discover_project_test_dirs(repo_root, projects, effective_skip)
     if not pairs:
         logger.warning("No runnable projects with a tests/ directory were found.")
         return 0
@@ -319,5 +334,6 @@ __all__ = [
     "DEFAULT_MARKER_EXPR",
     "DEFAULT_SKIP_PROJECTS",
     "DEFAULT_TIMEOUT",
+    "discover_skip_combined_pytest_projects",
     "run_per_project_pytest",
 ]

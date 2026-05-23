@@ -99,6 +99,13 @@ class TestScannerPhases:
         scanner = DocumentationScanner(repo)
         result = scanner.phase6_verification()
         assert "link_checker" in result
+        assert "docs_lint" in result
+        assert result["docs_lint"]["status"] in {"passed", "failed", "skipped"}
+        assert "markdown_validation" in result
+        assert "commands_tested" in result
+        assert result["commands_tested"]["status"] in {"passed", "failed"}
+        assert "circular_references" in result
+        assert result["circular_references"]["status"] in {"passed", "failed"}
         assert "cross_references" in result
 
     def test_phase7_reporting(self, tmp_path):
@@ -153,21 +160,6 @@ class TestScannerPhases:
         improvements = scanner._identify_other_improvements()
         assert len(improvements) == 1
         assert improvements[0]["type"] == "structural"
-
-    def test_validate_markdown_syntax(self, tmp_path):
-        scanner = DocumentationScanner(tmp_path)
-        result = scanner._validate_markdown_syntax()
-        assert result["status"] == "basic_validation_passed"
-
-    def test_test_documented_commands(self, tmp_path):
-        scanner = DocumentationScanner(tmp_path)
-        result = scanner._test_documented_commands()
-        assert result["status"] == "manual_testing_required"
-
-    def test_check_circular_references(self, tmp_path):
-        scanner = DocumentationScanner(tmp_path)
-        result = scanner._check_circular_references()
-        assert result["status"] == "no_circular_references_detected"
 
     def test_verify_cross_references(self, tmp_path):
         (tmp_path / "test.md").write_text("[link](other.md)")

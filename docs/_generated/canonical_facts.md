@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-22 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `pytest tests/infra_tests/project/test_discovery.py tests/infra_tests/test_docs_discovery_consistency.py -q` (**60** passed), `pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/test_pipeline_control_extensions.py -q` (**56** passed), `pytest projects/*/tests/ --collect-only` per exemplar below, `find infrastructure -name '*.py' -type f | wc -l` (**365** `.py` files, point-in-time; this count drifts as the tree changes, always re-derive with the command rather than trusting the literal). Counts below for `fep_lean` are historical from archived/restored trees (see commands).
+**Generated from live repo state on 2026-05-23 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `pytest tests/infra_tests/project/test_discovery.py tests/infra_tests/test_docs_discovery_consistency.py -q` (**60** passed), `pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/test_pipeline_control_extensions.py -q` (**56** passed), `pytest projects/*/tests/ --collect-only` per exemplar below, `find infrastructure -name '*.py' -type f | wc -l` (**365** `.py` files, point-in-time; this count drifts as the tree changes, always re-derive with the command rather than trusting the literal). Counts below for `fep_lean` are historical from archived/restored trees (see commands).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -93,20 +93,20 @@ uv run pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/t
 
 Result: 56 passed in ~0.76s (real symlinks and file-backed HITL state, no mocks).
 
-**Exemplar `pytest --collect-only` totals** (2026-05-19):
+**Exemplar `pytest --collect-only` totals** (2026-05-23):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_code_project` | 117 | 99.52 % |
+| `template_code_project` | 204 | 98.44 % |
 | `template_prose_project` | 76 | 100.00 % |
 
-The prose count grew from 67 → 76 during the May 2026 hardening pass: eight new `tests/test_config.py` cases that exercise the strict-key validator + `__post_init__` invariants in `src/config.py`, plus one new `tests/test_scripts.py::test_z_generate_manuscript_variables` subprocess test.
+Measured from `projects/template_code_project/` with `uv run pytest tests/ --cov=src --cov-fail-under=90 -q`. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
 Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_template_drift.py`): **20 passed**, gating the nine detectors that run against both exemplars (function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead link, oversize `src/*.py`, blanket `except Exception`, mocks in tests, canonical-file presence).
 
 Coverage gates (enforced in CI):
 
-- infrastructure/ : >= 60%
+- infrastructure/ : >= 60% (measured baseline → [`docs/development/coverage-gaps.md`](../development/coverage-gaps.md))
 - public template project `src/` trees : >= 90% (matrix project tests; public lint/type paths come from `uv run python -m infrastructure.project.public_scope source-paths`)
 - `projects/fep_lean/src/` : >= 89% (dedicated CI job `fep_lean (gauss + lake)` when `projects/fep_lean/lean/lean-toolchain` exists)
 
@@ -153,12 +153,13 @@ Avoid raw `python3` or `pytest` in documentation.
 
 Scripts in `scripts/` and `projects/{name}/scripts/` import computation from `infrastructure.*` or `projects.{name}.src.*`. They handle only I/O, orchestration, and reporting.
 
-**`template_code_project/src/` layout (post-May-2026 split):**
+**`template_code_project/src/` layout:**
 - `optimizer.py`, `invariants.py` — math primitives, infrastructure-free
-- `analysis.py` — orchestration (experiments + dashboard + validation + publishing + `main()`); re-exports figure generators from `figures.py` for back-compat
-- `figures.py` — the six `generate_*` plot/visualization functions + `apply_visualization_style` + `VIZ_CONFIG` + `_agency_category` + `_save_figure_data` + `_load_experiment_config`
-- `dashboard.py` — `scripts/build_dashboard.py` orchestration
-- `manuscript_variables.py` — `{{TOKEN}}` substitution generator
+- `experiment_config.py` — `load_experiment_config()`; single parser for `manuscript/config.yaml` → `experiment:`
+- `analysis.py` — experiment orchestration, stability/benchmark, validation, publishing, `main()`
+- `figures.py` — matplotlib figure generators (uses `load_experiment_config`)
+- `dashboard.py` — Plotly dashboard payload + HTML (`load_experiment_config`)
+- `manuscript_variables.py` — `{{TOKEN}}` substitution (`load_experiment_config`, `quadratic_optimum`)
 
 **No-mocks policy**: Tests use real computation, temp files (`tmp_path`), `pytest-httpserver` for HTTP, and `reportlab` for PDF tests.
 

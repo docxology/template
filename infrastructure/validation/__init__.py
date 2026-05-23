@@ -1,41 +1,9 @@
-"""Validation module - Quality & validation tools.
+"""Validation package — document, link, integrity, and output quality tools.
 
-This module contains utilities for validating documents, PDFs, markdown files,
-and ensuring data integrity across the research project.
-
-## Module groups (22 files — logical namespaces within the flat package)
-
-**Content validators** (validate specific file types):
-    pdf_validator: PDF rendering validation
-    markdown_validator: Markdown file validation
-    figure_validator: Figure registry validation
-
-**Integrity & links**:
-    integrity: File integrity and cross-reference validation
-    link_validator: Markdown link resolution and checking
-    check_links: Documentation link verification CLI
-
-**Documentation scanning**:
-    doc_scanner: Comprehensive documentation scanning
-    doc_discovery: Documentation file discovery utilities
-    doc_models: Data models for documentation scanning
-
-**Repository-wide scanning**:
-    repo_scanner: Repository accuracy and completeness scanning
-    audit_orchestrator: Comprehensive multi-module audit coordination
-    issue_categorizer: Issue categorization and filtering
-
-**CLI entry points**:
-    cli: Unified validation CLI interface
-    validate_markdown_cli: Standalone markdown validation script
-    validate_pdf_cli: Standalone PDF validation script
-
-**Output validation**:
-    output_validator: Pipeline output validation
-    (output statistics live in infrastructure/reporting/output_reporter.py)
+Import from submodules for new code; this module re-exports the stable
+pipeline-facing surface documented in ``infrastructure/validation/AGENTS.md``.
 """
 
-# Content validators
 from .content import (
     extract_text_from_pdf,
     find_markdown_files,
@@ -49,8 +17,6 @@ from .content import (
     validate_pdf_rendering,
     validate_refs,
 )
-
-# Integrity & links
 from .integrity import (
     LinkValidator,
     generate_integrity_report,
@@ -60,8 +26,10 @@ from .integrity import (
     verify_file_integrity,
     verify_output_integrity,
 )
-
-# Repository-wide scanning
+from .output import (
+    validate_copied_outputs,
+    validate_output_structure,
+)
 from .repo import (
     assign_severity,
     categorize_by_type,
@@ -74,18 +42,7 @@ from .repo import (
     run_comprehensive_audit,
 )
 
-# Output validation
-from .output import (
-    validate_copied_outputs,
-    validate_output_structure,
-)
-
-# The validation package intentionally exports a broad surface because pipeline scripts
-# import a variety of validators from a single entry point rather than from individual
-# submodules. Sibling packages (rendering, documentation) have narrower entry points
-# because their callers use more targeted imports.
 __all__ = [
-    # Content validators
     "validate_pdf_rendering",
     "extract_text_from_pdf",
     "scan_for_issues",
@@ -97,7 +54,6 @@ __all__ = [
     "validate_citations",
     "validate_pandoc_pitfalls",
     "validate_figure_registry",
-    # Integrity & links
     "verify_file_integrity",
     "verify_cross_references",
     "verify_data_consistency",
@@ -105,7 +61,6 @@ __all__ = [
     "verify_output_integrity",
     "generate_integrity_report",
     "LinkValidator",
-    # Repository-wide scanning
     "run_comprehensive_audit",
     "generate_audit_report",
     "categorize_by_type",
@@ -115,7 +70,6 @@ __all__ = [
     "group_related_issues",
     "prioritize_issues",
     "generate_issue_summary",
-    # Output validation
     "validate_copied_outputs",
     "validate_output_structure",
 ]

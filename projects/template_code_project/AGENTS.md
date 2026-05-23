@@ -59,9 +59,9 @@ flowchart TB
     P --> PY[pyproject.toml<br/>Pytest/coverage config · project metadata]
     P --> DP[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 
-    SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>STYLE.md · AGENTS.md · README.md]
-    SC --> SC_F[optimization_analysis.py · build_dashboard.py ·<br/>generate_api_docs.py · z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
-    T --> T_F[__init__.py · conftest.py · test_optimizer.py ·<br/>test_invariants.py · test_invariants_and_dashboard.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
+    SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>experiment_config.py · analysis.py · figures.py ·<br/>dashboard.py · manuscript_variables.py ·<br/>STYLE.md · AGENTS.md · README.md]
+    SC --> SC_F[optimization_analysis.py · build_dashboard.py ·<br/>00_preflight.py · generate_api_docs.py ·<br/>z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
+    T --> T_F[conftest.py · test_optimizer.py · test_analysis_integration.py ·<br/>test_analysis_coverage.py · test_experiment_config.py ·<br/>test_figures_orchestration.py · test_dashboard_config.py ·<br/>test_invariants.py · test_invariants_and_dashboard.py ·<br/>test_manuscript_variables.py · test_scripts_smoke.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
     DOCS --> DOCS_F[AGENTS.md · README.md · agent_instructions.md ·<br/>architecture.md · testing_philosophy.md ·<br/>rendering_pipeline.md · style_guide.md · syntax_guide.md]
     M --> M_F[00_abstract → 07_scope_and_related_work.md ·<br/>SYNTAX.md · config.yaml · config.yaml.example ·<br/>preamble.md · references.bib · AGENTS.md · README.md]
 
@@ -121,8 +121,8 @@ stability_path = run_stability_analysis()
 benchmark_path = run_performance_benchmarking()
 # Generates performance metrics and comparison plots
 
-# Access dashboard
-# Automatically generated at output/reports/analysis_dashboard.html
+# Access dashboard (Plotly)
+# Generated at output/web/dashboard.html via scripts/build_dashboard.py
 ```
 
 ## Configuration
@@ -319,25 +319,10 @@ def generate_benchmark_visualization(benchmark_path: Optional[str]) -> Optional[
     """
 ```
 
-##### generate_analysis_dashboard (function)
+##### build_dashboard (script)
 
-```python
-def generate_analysis_dashboard(
-    results: Dict[str, Any],
-    stability_path: Optional[str] = None,
-    benchmark_path: Optional[str] = None
-) -> Optional[str]:
-    """Generate analysis dashboard.
-
-    Args:
-        results: Optimization results dictionary
-        stability_path: Path to stability analysis report
-        benchmark_path: Path to performance benchmark report
-
-    Returns:
-        Path to generated HTML dashboard, or None if failed
-    """
-```
+Interactive Plotly dashboard: `scripts/build_dashboard.py` → `output/web/dashboard.html`.
+Implementation: `src/dashboard.py`.
 
 ## Troubleshooting
 

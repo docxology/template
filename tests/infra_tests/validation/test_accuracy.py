@@ -222,20 +222,35 @@ class TestCheckFilePaths:
 
 
 class TestValidateConfigOptions:
-    def test_no_config(self):
-        issues = validate_config_options([], {})
+    def test_no_config(self, tmp_path):
+        issues = validate_config_options([], {}, tmp_path)
         assert issues == []
 
     def test_with_config_yaml(self, tmp_path):
         cfg = tmp_path / "config.yaml"
-        cfg.write_text("key: value\n")
-        issues = validate_config_options([], {"config.yaml": cfg})
+        cfg.write_text("paper:\n  title: Example\n")
+        md = tmp_path / "doc.md"
+        md.write_text("Set `paper.title` in config.\n")
+        issues = validate_config_options([md], {"config.yaml": cfg}, tmp_path)
         assert issues == []
+
+    def test_unknown_config_reference(self, tmp_path):
+        cfg = tmp_path / "config.yaml"
+        cfg.write_text("paper:\n  title: Example\n")
+        md = tmp_path / "doc.md"
+        md.write_text("Toggle `paper.nonexistent_key` here.\n")
+        issues = validate_config_options([md], {"config.yaml": cfg}, tmp_path)
+        assert len(issues) == 1
+        assert issues[0].category == "config"
 
 
 class TestCheckTerminology:
-    def test_returns_empty(self):
-        assert check_terminology([]) == []
+    def test_flags_zero_mock_wording(self, tmp_path):
+        md = tmp_path / "doc.md"
+        md.write_text("We use zero mocks in tests.\n")
+        issues = check_terminology([md], tmp_path)
+        assert len(issues) == 1
+        assert issues[0].category == "terminology"
 
 
 # ---------------------------------------------------------------------------

@@ -4,7 +4,7 @@ This document tracks infrastructure test coverage gaps. Numbers are
 re-baselined from the live `pytest --cov` run; see "How this file is
 generated" below.
 
-**Last verified:** 2026-05-04 (re-baselined against live `pytest --cov`)
+**Last verified:** 2026-05-23 (baseline retained; re-run command below when collection errors are resolved)
 
 ## Current Coverage Status
 

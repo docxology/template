@@ -222,6 +222,19 @@ class TestChartGeneration:
         plt.close(fig)
 
 
+    def test_compose_grid_builds_nine_panels(self, sample_summary):
+        """Smoke test for dashboard grid composition."""
+        from infrastructure.reporting._dashboard_grid import compose_executive_dashboard
+
+        fig = compose_executive_dashboard(sample_summary)
+        assert fig is not None
+        assert len(fig.axes) >= 9
+
+        import matplotlib.pyplot as plt
+
+        plt.close(fig)
+
+
 class TestMatplotlibDashboard:
     """Test matplotlib dashboard generation."""
 

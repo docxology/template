@@ -89,7 +89,7 @@ alone is not proof; confirm tests collected > 0 and coverage ≥ 90%:
 ```bash
 uv run pytest projects/template_prose_project/tests/ \
   --cov=projects/template_prose_project/src --cov-fail-under=90
-# exemplar baseline: 67 passed, 100% coverage
+# exemplar baseline → docs/_generated/canonical_facts.md
 ```
 
 Full end-to-end (tests → analysis → render → validate → copy):

@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from scripts.check_tracked_generated_artifacts import is_generated_artifact_path
+from infrastructure.project.git_guards import is_generated_artifact_path
 
 
 def _repo_root() -> Path:

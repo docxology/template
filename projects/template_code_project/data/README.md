@@ -1,10 +1,13 @@
 # template_code_project/data
 
-Project-maintained data inputs for the code exemplar.
+Project-maintained **inputs** for the code exemplar (not pipeline outputs).
 
-## Contents
+## Quick reference
 
-- `claim_ledger.yaml` - Source-backed numeric and artifact claims consumed by evidence validation.
+| File | Role |
+| --- | --- |
+| `claim_ledger.yaml` | Source-backed numeric and artifact claims for evidence validation |
 
-Generated analysis outputs do not belong here; they are written under `output/`
-during pipeline runs.
+Generated analysis outputs belong under `output/` during pipeline runs, not here.
+
+Schema and edit protocol: [`AGENTS.md`](AGENTS.md).

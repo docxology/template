@@ -1,11 +1,13 @@
 # src/ - Project Logic
 
-Core optimization algorithms, analysis builders, dashboard payloads, and manuscript-variable extraction for the code exemplar. Mathematical primitives stay pure; generated-output workflows live in importable modules so scripts can remain thin wrappers.
+Core optimization algorithms, shared experiment configuration, analysis builders, figure generators, dashboard payloads, and manuscript-variable extraction for the code exemplar. Mathematical primitives stay pure; generated-output workflows live in importable modules so scripts remain thin wrappers.
 
 ## Quick Start
 
 ```python
 import logging
+
+import numpy as np
 from optimizer import gradient_descent, quadratic_function
 
 logger = logging.getLogger(__name__)
@@ -24,9 +26,13 @@ logger.info(f"Optimal solution: {result.solution}")
 ## Key Features
 
 - **Gradient descent** optimization algorithm
-- **Quadratic function** evaluation and gradients
+- **Quadratic function** evaluation, gradients, and analytical optimum (`quadratic_optimum`)
+- **Shared experiment config** in `experiment_config.py` (single loader for `manuscript/config.yaml`)
 - **Importable analysis pipeline** in `analysis.py`
-- **Importable dashboard builder** in `dashboard.py`
+- **Matplotlib figures** in `figures.py`
+- **Plotly dashboard builder** in `dashboard.py`
+- **Manuscript `{{TOKEN}}` map** in `manuscript_variables.py`
+- **API reference builder** in `documentation.py` (invoked by `scripts/generate_api_docs.py`)
 - **Reproducible results** with deterministic behavior
 - **Type-safe** with type hints
 
@@ -35,33 +41,40 @@ logger.info(f"Optimal solution: {result.solution}")
 ### Import and Use
 
 ```python
+from experiment_config import load_experiment_config
 from optimizer import (
     gradient_descent,
     quadratic_function,
     compute_gradient,
-    OptimizationResult
+    quadratic_optimum,
+    OptimizationResult,
 )
+
+cfg = load_experiment_config()
+x_star, f_star = quadratic_optimum(cfg.A_array(), cfg.b_array())
 ```
 
 ### Run Tests
 
-```python
-pytest ../tests/ -v
+```bash
+cd projects/template_code_project
+uv run pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[gradient_descent] --> B[Optimization Loop]
-    B --> C[objective_func]
-    B --> D[gradient_func]
-    B --> E[Convergence Check]
+    YAML[manuscript/config.yaml] --> CFG[experiment_config.py]
+    CFG --> ANA[analysis.py]
+    CFG --> FIG[figures.py]
+    CFG --> DASH[dashboard.py]
+    CFG --> VARS[manuscript_variables.py]
 
-    F[quadratic_function] --> G[Matrix Operations]
-    H[compute_gradient] --> I[Matrix Operations]
-
-    J[OptimizationResult] --> K[Solution Data]
+    ANA --> OPT[optimizer.py]
+    FIG --> OPT
+    DASH --> OPT
+    VARS --> OPT
 ```
 
 ## More Information

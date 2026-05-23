@@ -13,7 +13,19 @@ The `infrastructure/project/` module provides project discovery, validation, and
 - `discover_projects(repo_root, projects_dir="projects")` - Find all valid projects in the active projects directory
 - `resolve_project_root(repo_root, project_name)` - Resolve `projects/<name>` if present, else `projects_in_progress/<name>` (used by PDF rendering for WIP trees)
 - `validate_project_structure(project_dir)` - Validate required directories exist
-- `get_project_metadata(project_dir)` - Extract configuration from pyproject.toml and config.yaml
+- `get_project_metadata(project_dir)` - Extract configuration from pyproject.toml and config.yaml (includes `[tool.template]` flags such as `skip_combined_pytest`)
+
+### Template Drift (`drift/`)
+
+- `run_drift_checks(repo_root, projects)` - exemplar doc/code drift battery (used by `scripts/check_template_drift.py`)
+- `Finding`, `Report` - structured drift findings
+
+**Project pyproject.toml flags (`[tool.template]`):**
+
+```toml
+[tool.template]
+skip_combined_pytest = true  # omit from combined multi-project pytest union
+```
 
 **Internal helpers (not exported from `infrastructure.project`)**:
 

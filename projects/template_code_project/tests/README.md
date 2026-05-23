@@ -1,81 +1,55 @@
 # tests/ - Zero-Mock Test Suite
 
-An uncompromising validation layer for the mathematical algorithms. Enforces a strict Zero-Mock policy.
+An uncompromising validation layer for the mathematical algorithms and orchestration paths. Enforces a strict Zero-Mock policy.
 
 ## Quick Start
 
 ```bash
-# Run all tests
-uv run pytest .
-
-# Run with coverage
-uv run pytest . --cov=../src --cov-report=term
-
-# Run specific tests
-uv run pytest -k "TestGradientDescent" -v
+cd projects/template_code_project
+uv run pytest tests/ -v
+uv run pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 ## Key Features
 
 - **Real data testing** (no mocks)
 - **Numerical accuracy validation**
-- **Edge case coverage**
+- **Integration tests** for analysis, figures, dashboard, and manuscript variables
 - **Deterministic results**
 
-## Common Commands
+## Test Files
 
-### Run Tests
+| File | Focus |
+| --- | --- |
+| `test_optimizer.py` | Pure math (`optimizer.py`) |
+| `test_analysis_integration.py` | Analysis orchestration, stability/benchmark |
+| `test_analysis_coverage.py` | Analysis branch and error-path coverage |
+| `test_experiment_config.py` | Shared config loader |
+| `test_figures_orchestration.py` | Matplotlib generators |
+| `test_dashboard_config.py` | Dashboard config + argparse validation |
+| `test_invariants.py` | Invariant builders |
+| `test_invariants_and_dashboard.py` | Dashboard CLI |
+| `test_manuscript_variables.py` | `{{TOKEN}}` map + live cross-reference |
+| `test_scripts_smoke.py` | Auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
 
-```bash
-uv run pytest . -v              # Verbose output
-uv run pytest . -k "gradient"   # Filter by name
-uv run pytest . --tb=short      # Shorter tracebacks
-```
-
-### Coverage
-
-Local exploration (HTML report):
-
-```bash
-uv run pytest . --cov=../src --cov-report=html
-open htmlcov/index.html
-```
-
-**Canonical enforced gate** (run from the repo root — this is the real
-per-project quality gate and what CI enforces project-by-project):
-
-```bash
-uv run pytest projects/template_code_project/tests/ \
-  --cov=projects/template_code_project/src --cov-fail-under=90
-# exemplar baseline: 117 passed, ~99% coverage
-```
-
-A green exit code alone is **not** proof — confirm tests **collected > 0**
-and **coverage ≥ 90%**. See
-[`../docs/testing_philosophy.md`](../docs/testing_philosophy.md#running-the-gate-collection-and-threshold-not-just-exit-code).
+Live test count and coverage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[test_optimizer.py — 52 tests] --> B[TestQuadraticFunction]
-    A --> C[TestComputeGradient]
-    A --> D[TestGradientDescent]
-    A --> E[TestOptimizationResult]
-    A --> F[TestPerformanceBenchmarks]
-    A --> G[TestStabilityAnalysis]
-    A --> H[TestPerformanceBenchmarking]
-    A --> I[TestAnalysisDashboard]
-    A --> J[TestMakeQuadraticProblem]
-    A --> K[TestSimulateTrajectory]
-
-    B --> L[Function Evaluation]
-    C --> M[Gradient Computation]
-    D --> N[Optimization Algorithm]
-    E --> O[Data Structures]
+    OPT[test_optimizer.py] --> MATH[src/optimizer.py]
+    CFG[test_experiment_config.py] --> EC[src/experiment_config.py]
+    INT[test_analysis_integration.py] --> ANA[src/analysis.py]
+    FIG[test_figures_orchestration.py] --> FIGS[src/figures.py]
+    COV[test_analysis_coverage.py] --> ANA
+    TINV[test_invariants.py] --> INVM[src/invariants.py]
+    DASH[test_invariants_and_dashboard.py] --> DB[src/dashboard.py]
+    SMK[test_scripts_smoke.py] --> SCRIPTS[scripts/ auxiliary]
+    MV[test_manuscript_variables.py] --> VARS[src/manuscript_variables.py]
 ```
 
-> **Zero-Mock Policy**: Tests use real `OptimizationResult` instances and real computations. No `unittest.mock`, `MagicMock`, `@patch`, or synthetic `type()` objects.
+> **Zero-Mock Policy**: Tests use real numpy arrays, temp files, and generated artifacts. No `unittest.mock`, `MagicMock`, or `@patch`. Orchestration modules may use `pytest.MonkeyPatch` on module attributes and subprocess import isolation — see [`PATTERNS.md`](PATTERNS.md).
 
 ## More Information
 

@@ -99,8 +99,7 @@ output/template_code_project/template_code_project_combined.pdf
 
 ### I imported `infrastructure` in `src/` and tests broke
 
-Remove the import. `src/` must be infrastructure-free. Move the
-infrastructure-using code to `scripts/`.
+Pure-math modules (`src/optimizer.py`, `src/invariants.py`) must stay infrastructure-free. Orchestration modules (`src/analysis.py`, `src/figures.py`, `src/dashboard.py`, `src/manuscript_variables.py`) may import `infrastructure.*` behind try/except fallbacks. If you added infrastructure to a math primitive, move that code to an orchestration module or `scripts/`.
 
 ### My test uses `unittest.mock` and coverage dropped
 

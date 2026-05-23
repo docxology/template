@@ -33,6 +33,8 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `verify_no_mocks.py` - mock-usage checker
 - `audit_filepaths.py` - repository filepath audit
 - `check_tracked_generated_artifacts.py` - git-index hygiene guard for generated outputs (untracked helper; exercised by `tests/infra_tests/git_hook_smoke/`)
+- `check_template_drift.py` - thin CLI over `infrastructure.project.drift` for exemplar doc/code drift
+- `gates/module_line_count_check.py` - advisory line-count gate (warn 800, fail 950) for `infrastructure/` and `scripts/`
 
 **Setup / workspace / helpers:**
 

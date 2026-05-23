@@ -123,7 +123,7 @@ uv run pytest projects/template_code_project/tests/ --cov=projects/template_code
 
 # 2. Find missing lines (marked with ">>>>>")
 # 3. Add tests for uncovered code
-# 4. Re-run until 100%
+# 4. Re-run until ≥90% (project src/ gate)
 ```
 
 ## 📝 Quick Syntax Reference
@@ -166,7 +166,7 @@ Reference it: \ref{fig:my_figure}
 | Problem | Quick Fix |
 |---------|-----------|
 | **Tests fail** | `uv run pytest projects/template_code_project/tests/ -v` to see details |
-| **Coverage < 100%** | `uv run pytest --cov=projects/template_code_project/src --cov-report=term-missing` |
+| **Coverage below gate** | `uv run pytest --cov=projects/template_code_project/src --cov-report=term-missing --cov-fail-under=90` |
 | **Import errors** | Check `PYTHONPATH` or use `uv run` |
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
 | **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project template_code_project` first |

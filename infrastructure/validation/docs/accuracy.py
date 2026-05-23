@@ -7,9 +7,28 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.docs.consistency_lint import _is_placeholder_name
 from infrastructure.validation.docs.models import LinkIssue, ScanAccuracyIssue
 
 logger = get_logger(__name__)
+
+_CONFIG_REF_RE = re.compile(
+    r"`([a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+)`",
+    re.IGNORECASE,
+)
+
+_TERMINOLOGY_RULES: tuple[tuple[re.Pattern[str], str, str], ...] = (
+    (
+        re.compile(r"\bzero\s+mock(?:s|ed|ing)?\b", re.IGNORECASE),
+        "no mocks",
+        "Repository policy uses 'no mocks' (see tests/AGENTS.md).",
+    ),
+    (
+        re.compile(r"\b8\s+stage(?:s)?\b(?![^\n]{0,40}(?:core-only|excluding|exclude))", re.IGNORECASE),
+        "stage-count phrasing",
+        "Default full pipeline is 10 core+LLM stages; 8 applies only with --core-only.",
+    ),
+)
 
 
 def extract_headings(content: str) -> set[str]:
@@ -42,61 +61,13 @@ def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> tuple[
         Tuple of (exists: bool, message: str, path_type: str)
         path_type is 'file', 'directory', or 'unknown'
     """
-    # Check if target is a directory reference (ends with /)
-    is_directory_ref = target.endswith("/")
+    from infrastructure.validation.paths import resolve_markdown_target
 
-    if target.startswith("../"):
-        levels_up = target.count("../")
-        target_path = source_file.parent
-        for _ in range(levels_up):
-            target_path = target_path.parent
-        target_path = target_path / target.replace("../", "").replace("./", "")
-    elif target.startswith("./"):
-        target_path = source_file.parent / target[2:]
-    else:
-        target_path = source_file.parent / target
-
-    try:
-        target_path = target_path.resolve()
-        repo_root_resolved = repo_root.resolve()
-
-        # Check if path is within repository
-        try:
-            target_path.relative_to(repo_root_resolved)
-        except ValueError:
-            return False, f"Path outside repository: {target_path}", "unknown"
-
-        # Check if it exists
-        if target_path.exists():
-            if target_path.is_file():
-                return True, "", "file"
-            elif target_path.is_dir():
-                # If it's a directory and target ends with /, it's valid
-                if is_directory_ref:
-                    return True, "", "directory"
-                # If it's a directory but target doesn't end with /, might be intentional
-                # Check if there's a file with same name (without extension)
-                return True, "", "directory"
-            else:
-                return (
-                    False,
-                    f"Path exists but is not a file or directory: {target_path}",
-                    "unknown",
-                )
-        else:
-            # Path doesn't exist
-            if is_directory_ref:
-                return False, f"Directory does not exist: {target_path}", "directory"
-            else:
-                # Check if it might be a file
-                # Remove file extension and check if directory exists
-                if target_path.suffix:
-                    dir_path = target_path.parent
-                    if dir_path.exists() and dir_path.is_dir():
-                        return False, f"File does not exist: {target_path}", "file"
-                return False, f"File does not exist: {target_path}", "file"
-    except OSError as e:
-        return False, f"Error resolving path: {e}", "unknown"
+    resolved = resolve_markdown_target(target, source_file, repo_root)
+    path_type = (
+        resolved.path_type if resolved.path_type != "unknown" else ("directory" if target.endswith("/") else "file")
+    )
+    return resolved.exists, resolved.message, path_type
 
 
 def check_links(md_files: list[Path], repo_root: Path, all_headings: dict[str, set[str]]) -> list[LinkIssue]:
@@ -271,30 +242,101 @@ def check_file_paths(md_files: list[Path], repo_root: Path) -> list[ScanAccuracy
     return issues
 
 
-def validate_config_options(md_files: list[Path], config_files: dict[str, Path]) -> list[ScanAccuracyIssue]:
-    """Validate configuration options mentioned in docs."""
-    issues: list[ScanAccuracyIssue] = []
+def _flatten_yaml_keys(data: Any, prefix: str = "") -> set[str]:
+    """Return dotted paths for keys in a nested YAML mapping."""
+    keys: set[str] = set()
+    if isinstance(data, dict):
+        for key, value in data.items():
+            path = f"{prefix}.{key}" if prefix else str(key)
+            keys.add(path)
+            keys.update(_flatten_yaml_keys(value, path))
+    return keys
 
-    # Load actual config files
-    config_data = {}
-    if "config.yaml" in config_files:
+
+def _load_known_config_keys(config_files: dict[str, Path]) -> set[str]:
+    known: set[str] = set()
+    for name, path in config_files.items():
+        if not name.endswith((".yaml", ".yml")) or not path.exists():
+            continue
         try:
-            with open(config_files["config.yaml"], "r") as f:
-                config_data["yaml"] = yaml.safe_load(f) or {}
-        except (OSError, yaml.YAMLError, ValueError) as e:
-            logger.debug(f"Failed to load config.yaml for validation: {e}")
+            data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        except (OSError, yaml.YAMLError, ValueError) as exc:
+            logger.debug("Failed to load %s for config validation: %s", name, exc)
+            continue
+        known.update(_flatten_yaml_keys(data))
+    return known
 
-    # Check documentation for config references
-    # This is a simplified check - could be enhanced to actually validate against config schema
 
+def _config_ref_known(ref: str, known_keys: set[str]) -> bool:
+    if ref in known_keys:
+        return True
+    return any(key.startswith(f"{ref}.") for key in known_keys)
+
+
+def validate_config_options(
+    md_files: list[Path],
+    config_files: dict[str, Path],
+    repo_root: Path,
+) -> list[ScanAccuracyIssue]:
+    """Validate configuration options mentioned in docs against loaded config files."""
+    issues: list[ScanAccuracyIssue] = []
+    known_keys = _load_known_config_keys(config_files)
+    if not known_keys:
+        return issues
+
+    for md_file in md_files:
+        try:
+            content = md_file.read_text(encoding="utf-8")
+            file_key = str(md_file.relative_to(repo_root))
+        except (OSError, UnicodeDecodeError, ValueError) as exc:
+            logger.warning("Failed to read %s for config validation: %s", md_file, exc)
+            continue
+
+        for match in _CONFIG_REF_RE.finditer(content):
+            ref = match.group(1)
+            if "/" in ref or ref.endswith((".md", ".py", ".yaml", ".yml", ".toml", ".sh")):
+                continue
+            if _is_placeholder_name(ref.split(".")[0]):
+                continue
+            if _config_ref_known(ref, known_keys):
+                continue
+            line_num = content[: match.start()].count("\n") + 1
+            issues.append(
+                ScanAccuracyIssue(
+                    category="config",
+                    severity="warning",
+                    file=file_key,
+                    line=line_num,
+                    message=f"Config reference `{ref}` not found in loaded config files",
+                )
+            )
     return issues
 
 
-def check_terminology(md_files: list[Path]) -> list[ScanAccuracyIssue]:
-    """Check terminology consistency across documentation."""
+def check_terminology(md_files: list[Path], repo_root: Path) -> list[ScanAccuracyIssue]:
+    """Check terminology consistency against curated repository conventions."""
     issues: list[ScanAccuracyIssue] = []
-    # This would check for inconsistent terminology
-    # For now, return empty - could be enhanced with a terminology dictionary
+    for md_file in md_files:
+        try:
+            content = md_file.read_text(encoding="utf-8")
+            file_key = str(md_file.relative_to(repo_root))
+        except (OSError, UnicodeDecodeError, ValueError) as exc:
+            logger.warning("Failed to read %s for terminology check: %s", md_file, exc)
+            continue
+
+        for pattern, preferred, detail in _TERMINOLOGY_RULES:
+            for match in pattern.finditer(content):
+                line_num = content[: match.start()].count("\n") + 1
+                issues.append(
+                    ScanAccuracyIssue(
+                        category="terminology",
+                        severity="info",
+                        file=file_key,
+                        line=line_num,
+                        message=f"Prefer '{preferred}': {detail}",
+                        details=match.group(0),
+                    )
+                )
     return issues
 
 
@@ -335,11 +377,11 @@ def run_accuracy_phase(
     logger.info(f"Found {len(path_issues)} file path issues")
 
     # Validate configuration options
-    config_issues = validate_config_options(md_files, config_files)
+    config_issues = validate_config_options(md_files, config_files, repo_root)
     logger.info(f"Found {len(config_issues)} configuration issues")
 
     # Check terminology consistency
-    terminology_issues = check_terminology(md_files)
+    terminology_issues = check_terminology(md_files, repo_root)
     logger.info(f"Found {len(terminology_issues)} terminology issues")
 
     # Combine all accuracy issues

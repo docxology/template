@@ -14,11 +14,13 @@ The `docs/` directory contains the behavioral and architectural rules that gover
 |---|---|---|
 | [`agent_instructions.md`](agent_instructions.md) | 7 hard rules for AI agents; verification checklist | AI agents, all developers |
 | [`architecture.md`](architecture.md) | Layer table, dependency direction, forbidden patterns, how-to-add-algorithm | Developers |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, 117-test inventory, coverage mechanics, the gate-vs-exit-code rule | Developers, testers |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock policy, test-file inventory, coverage mechanics, the gate-vs-exit-code rule (live counts → [`canonical_facts.md`](../../../docs/_generated/canonical_facts.md)) | Developers, testers |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Mermaid/chrome prerequisite; 4-phase manuscript→PDF pipeline; config.yaml controls | Content authors, developers |
 | [`style_guide.md`](style_guide.md) | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | Developers |
 | [`syntax_guide.md`](syntax_guide.md) | Markdown links, LaTeX refs, all `{{VARIABLE}}` tokens, figure label registry | Content authors |
 | [`output_conventions.md`](output_conventions.md) | Output directory layout, what's disposable, regeneration rules | Developers |
+| [`output_inventory.md`](output_inventory.md) | Full pipeline artifact inventory (generator + stage) | Developers |
+| [`forking_guide.md`](forking_guide.md) | Fork workflow and drift-check guidance | Developers, agents |
 | [`troubleshooting.md`](troubleshooting.md) | Diagnosed failures incl. `mmdc`/Chrome and "PASSED but 0 tests", with fix commands | Developers |
 | [`quickstart.md`](quickstart.md) | Minimal run commands to first deliverable | New users |
 | [`faq.md`](faq.md) | Recurring questions: architecture, testing, manuscript | All |

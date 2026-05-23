@@ -289,7 +289,7 @@ flowchart TB
 
 - **Layer 1 (infrastructure/)**: Generic, reusable tools for any project
 - All code is domain-independent
-- 60%+ test coverage required (currently 83.33%)
+- 60%+ test coverage required (measured baseline → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md))
 - Can be copied to other projects
 
 ### 2. Thin Orchestrator Pattern
@@ -628,7 +628,7 @@ uv run python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GIT
 
 ### 5. Testing
 
-- 83.33% test coverage overall (60% minimum required)
+- Measured infrastructure coverage (≥60% gate) → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md)
 - Real data analysis, no mocks
 - Integration tests for module interoperability
 - CI/CD compatible
@@ -765,7 +765,7 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 
 ### Coverage Status
 
-Infrastructure test coverage: **83.33%** overall (exceeds 60% minimum).
+Infrastructure test coverage: see [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md) (≥60% minimum enforced in CI).
 
 Run coverage report:
 
@@ -806,7 +806,7 @@ If configuration isn't loading:
 3. **Reusability** - Modules can be used independently
 4. **Scalability** - Easy to add modules without cluttering core
 5. **Documentation** - Each module documented
-6. **Testing** - Real data testing with 83.33% coverage
+6. **Testing** - Real data testing; measured coverage → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md)
 7. **Flexibility** - Use individual modules or pipeline
 
 ## Future Enhancements

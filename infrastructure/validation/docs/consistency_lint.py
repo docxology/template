@@ -265,7 +265,7 @@ def _line_has_noqa(line: str) -> bool:
 # These are NOT real project names so they should never trigger ghost-project warnings.
 _STATIC_PLACEHOLDER_NAMES: frozenset[str] = frozenset(
     {
-        "biology_textbook",  # legacy migration-guide example
+        "biology_textbook",  # archived / migration-guide example (also under projects_archive/)
         "template",  # in-progress scaffold dir; not a real project
         "code_project",  # generic scaffolding example
         "prose_project",
@@ -329,7 +329,9 @@ def check_no_ghost_projects(
     active_names = {p.name for p in discover_projects(repo_root)}
     if extra_active:
         active_names.update(extra_active)
-    allow = active_names | set(canonical)
+    archive_root = repo_root / "projects_archive"
+    archived_names = {p.name for p in archive_root.iterdir() if p.is_dir()} if archive_root.is_dir() else set()
+    allow = active_names | set(canonical) | archived_names
 
     # Match `projects/<name>/` only when `projects` starts a path-like token (i.e.
     # is not preceded by an identifier char or `/`). This rules out
@@ -347,6 +349,8 @@ def check_no_ghost_projects(
         text = _blank_fences(raw)
         for line_no, raw_line in enumerate(text.splitlines(), start=1):
             if _line_is_conditional(raw_line) or _line_has_noqa(raw_line):
+                continue
+            if "projects_archive/" in raw_line:
                 continue
             for match in pattern.finditer(raw_line):
                 name = match.group("name")

@@ -4,41 +4,54 @@ The Generalized Research Template strictly forbids mocking in scientific/mathema
 
 ## Why Zero Mocks?
 
-The core insight is architectural: if a function requires a mock to be tested, it is doing I/O, calling external systems, or producing side-effects — which means it belongs in `scripts/` (as a thin orchestrator), not in `src/` (as pure logic). The purity of `src/optimizer.py` is what makes zero-mock testing achievable. Every function in `src/` is deterministic and side-effect-free, so tests simply call functions with real numpy arrays and verify real mathematical outputs.
+The core insight is architectural: if a function requires a mock to be tested, it is doing I/O, calling external systems, or producing side-effects — which means it belongs in `scripts/` (as a thin orchestrator), not in `src/` (as pure logic). The purity of `src/optimizer.py` is what makes zero-mock testing achievable. Every function in `src/optimizer.py` is deterministic and side-effect-free, so tests simply call functions with real numpy arrays and verify real mathematical outputs.
 
 If you ever feel the urge to mock something in a test for `src/`, treat it as a signal: move that code to `scripts/` and test the `src/` boundary directly.
 
 ## The Validation Suite
 
-Files:
-- `projects/template_code_project/tests/test_optimizer.py` — covers `src/optimizer.py` (pure math)
-- `projects/template_code_project/tests/test_invariants.py` — covers `src/invariants.py` (dashboard invariants)
-- `projects/template_code_project/tests/test_invariants_and_dashboard.py` — covers `scripts/build_dashboard.py` orchestration
+| File | Role |
+| --- | --- |
+| `test_optimizer.py` | Pure math: `quadratic_function`, `gradient_descent`, `make_quadratic_problem`, `simulate_trajectory` |
+| `test_experiment_config.py` | `load_experiment_config()` and `ExperimentConfig` defaults |
+| `test_analysis_integration.py` | Convergence runs, stability/benchmark reports, publishing, validation, `main()` smoke |
+| `test_analysis_coverage.py` | Analysis orchestration branches: validation errors/issues, `main()` paths, citations, publishing, register_figure |
+| `test_figures_orchestration.py` | Matplotlib figure generators |
+| `test_scripts_smoke.py` | Auxiliary script smoke (`generate_api_docs.py`, `00_preflight.py`) |
+| `test_dashboard_config.py` | Dashboard `_parse_args` validation, payload divergent α-sweep, config parity with YAML |
+| `test_invariants.py` | `src/invariants.py` builders and schema |
+| `test_invariants_and_dashboard.py` | `scripts/build_dashboard.py` end-to-end |
+| `test_manuscript_variables.py` | `{{TOKEN}}` map + live manuscript cross-reference |
 
 Configuration: `projects/template_code_project/pyproject.toml` (`fail_under = 90`, matching the root pipeline gate)
+
 Conftest: `projects/template_code_project/tests/conftest.py` (sets `MPLBACKEND=Agg`, adds `src/` to `sys.path`)
 
-The suite covers `src/optimizer.py`, `src/invariants.py`, `src/manuscript_variables.py`, and the thin orchestration in `scripts/build_dashboard.py` plus `scripts/optimization_analysis.py` (via conditional imports). Live test count and coverage percentage are tracked in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md); both run well above the 90% gate.
+Live test count and coverage percentage: [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md) (or `uv run pytest tests/ --collect-only -q` from the project directory).
 
-## Test Class Inventory
+## Test Class Inventory (core math — `test_optimizer.py`)
 
-| Class | Tests | Covers |
-|---|---|---|
-| `TestQuadraticFunction` | 7 | `quadratic_function()` evaluation, dimension mismatch errors, zero/large/negative inputs |
-| `TestComputeGradient` | 3 | `compute_gradient()` accuracy at 1D and nD, default parameter handling |
-| `TestGradientDescent` | 10 | Convergence to optimum, iteration cap, already-at-optimum, multidimensional, parameter validation, divergent step size (α > 2), verbose path |
-| `TestOptimizationResult` | 2 | Dataclass construction; `objective_history` population and length invariant |
-| `TestPerformanceBenchmarks` | 2 | Execution time across dimensions, function evaluation speed (real timing) |
-| `TestMakeQuadraticProblem` | 6 | Factory returns callables, objective matches `quadratic_function`, gradient matches `compute_gradient`, factory usable with `gradient_descent` |
-| `TestSimulateTrajectory` | 5 | Return structure, objectives decrease toward optimum, parallel list lengths, sequential iterations, default params |
-| `TestStabilityAnalysis` | 2 | Infrastructure-dependent; skipped if `infrastructure.scientific` unavailable |
-| `TestPerformanceBenchmarking` | 2 | Infrastructure-dependent; skipped if `infrastructure.scientific` unavailable |
-| `TestAnalysisDashboard` | 2 | Infrastructure-dependent; skipped if `infrastructure.reporting` unavailable |
+| Class | Covers |
+| --- | --- |
+| `TestQuadraticFunction` | `quadratic_function()` evaluation, dimension mismatch errors |
+| `TestComputeGradient` | `compute_gradient()` accuracy at 1D and nD |
+| `TestGradientDescent` | Convergence, iteration cap, multidimensional cases, divergent step size |
+| `TestOptimizationResult` | Dataclass construction; `objective_history` |
+| `TestPerformanceBenchmarks` | Real timing across dimensions |
+| `TestMakeQuadraticProblem` | Factory callables usable with `gradient_descent` |
+| `TestSimulateTrajectory` | Trajectory structure and monotonic improvement |
 
-| `TestConvergenceInvariants`, `TestGradientConsistencyInvariants`, `TestTrajectoryInvariants`, `TestAllInvariants`, `TestInvariantResult`, `TestOptimizerSweepConfig` (test_invariants.py) | — | `src/invariants.py` invariant builders, `InvariantResult` / `Panel` schema, dashboard payload primitives |
-| `TestBuildDashboardCLI`, `TestGradientConsistency` (test_invariants_and_dashboard.py) | — | `scripts/build_dashboard.py` end-to-end: payload JSON, HTML emission, invariants.txt, summary.txt |
+## Integration inventory (`test_analysis_integration.py`)
 
-**Live test count:** see [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md) (or run `uv run pytest projects/template_code_project/tests/ --collect-only -q | tail -1`).
+| Class / area | Covers |
+| --- | --- |
+| `TestRunConvergenceExperiment` | All configured step sizes; `on_step` callback |
+| `TestScientificAnalysis` | Stability and benchmark report writers (tmp project root) |
+| `TestStabilityAnalysis` | Full stability run + visualization PNG (skipped if figures unavailable) |
+| `TestPerformanceBenchmarking` | Full benchmark run + visualization PNG |
+| `TestPublishingHelpers` | Citation metadata and save paths |
+| `TestValidationAndRegistration` | Output validation and figure registry |
+| `TestMainPipelineSmoke` | `analysis.main()` writes core artifacts |
 
 ## Coverage Mechanics
 
@@ -47,26 +60,18 @@ The suite covers `src/optimizer.py`, `src/invariants.py`, `src/manuscript_variab
 ```toml
 [tool.coverage.run]
 source = ["src"]
-branch = true          # Branch coverage, not just line coverage
+branch = true
 omit = ["tests/*", "*/__init__.py", "*/test_*.py"]
 
 [tool.coverage.report]
-fail_under = 90        # CI fails if src/ drops below 90%
-precision = 2
-exclude_lines = [
-    "pragma: no cover",
-    "if __name__ == .__main__.:",
-    "raise NotImplementedError",
-]
+fail_under = 90
 ```
 
-Run with full coverage report:
+Authoritative gate (measures all of `src/`, including orchestration modules):
 
 ```bash
-uv run pytest projects/template_code_project/tests/ \
-    --cov=projects/template_code_project/src \
-    --cov-report=term-missing \
-    --cov-fail-under=90
+cd projects/template_code_project
+uv run pytest tests/ --cov=src --cov-report=term-missing --cov-fail-under=90
 ```
 
 ## Zero-Mock Checklist
@@ -74,72 +79,37 @@ uv run pytest projects/template_code_project/tests/ \
 Before submitting any test, verify all boxes are checked:
 
 - [ ] Test uses real `numpy` arrays as inputs
-- [ ] Test calls `src/optimizer.py` functions directly with real data
+- [ ] Test calls `src/` functions directly with real data
 - [ ] Test asserts mathematical properties (convergence, gradient accuracy, dimension shapes), not call counts
-- [ ] No `unittest.mock`, `MagicMock`, `create_autospec`, `@patch`, or `monkeypatch` used as a mock factory
-- [ ] Infrastructure-dependent tests use `@pytest.mark.skipif(not INFRASTRUCTURE_AVAILABLE, ...)` — real infrastructure or graceful skip, never a fake
-- [ ] Any timing assertion uses bounds (`< 5.0`) not exact values, and the test docstring explains why timing is the right property to check
+- [ ] No `unittest.mock`, `MagicMock`, `create_autospec`, `@patch`, or mock factories
+- [ ] Infrastructure-dependent tests use `@pytest.mark.skipif` — real infrastructure or graceful skip, never a fake
+- [ ] Timing assertions use bounds (`< 5.0`) not exact values
 
 ## Infrastructure-Dependent Test Pattern
 
-Three test classes (`TestStabilityAnalysis`, `TestPerformanceBenchmarking`, `TestAnalysisDashboard`) call functions from `scripts/optimization_analysis.py` that in turn call `infrastructure.scientific` and `infrastructure.reporting`. These tests use the following pattern:
+`TestStabilityAnalysis` and `TestPerformanceBenchmarking` in `test_analysis_integration.py` call `src/analysis.py` and `src/figures.py` directly. When figure modules import cleanly, tests run real stability/benchmark paths and validate PNG output. When imports fail, tests skip cleanly — this is not a mock.
 
-```python
-try:
-    from projects.template_code_project.scripts.optimization_analysis import run_stability_analysis
-    INFRASTRUCTURE_AVAILABLE = True
-except ImportError:
-    INFRASTRUCTURE_AVAILABLE = False
+## Coverage inventory (`test_analysis_coverage.py`)
 
-@pytest.mark.skipif(not INFRASTRUCTURE_AVAILABLE, reason="infrastructure not available")
-def test_stability_analysis_execution(tmp_path):
-    result = run_stability_analysis()
-    assert result is not None
-```
+Branch and error-path tests for `src/analysis.py`: `TestFallbackLogging`, `TestValidateOutputs`, `TestSaveValidationReport`, `TestStabilityScoreBranches`, `TestScientificInfraPaths`, `TestExtractMetadataExtended`, `TestCitationsExtended`, `TestPublishingExtended`, `TestMainBranches`, `TestMainErrors`, `TestRegisterFigure`, `TestImportFallback`.
 
-This is **not a mock**. When `infrastructure` is importable (CI, local with `uv sync`), the test runs the real code end-to-end and validates real output. When infrastructure is absent, it skips cleanly. The distinction matters: a mock would substitute a fake for infrastructure; a skip simply does not run the test in that environment.
+## Orchestration Branch Testing
 
-## Performance and Bounds Validation
-
-The testing philosophy extends beyond correct return values. Using `infrastructure.scientific`, tests automatically map out the algorithm's performance across dimensions (e.g., $d=1$ to $d=50$) and condition variations. If algorithmic behavior violates the theoretical bounds ($O(n)$ time/space, stable convergence factors), the continuous integration pipeline marks the build as failed.
+Orchestration modules (`analysis.py`, `dashboard.py`, `figures.py`, `manuscript_variables.py`) may use **`pytest.MonkeyPatch`** on module attributes and **subprocess import isolation** to hit error paths and infrastructure fallbacks. That is not the same as mocking algorithm output: real code runs with redirected boundaries. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md) and [`test_analysis_coverage.py`](../tests/test_analysis_coverage.py).
 
 ## Structural Rule: If You Need a Mock, Move the Code
 
-The zero-mock constraint is self-enforcing when the architecture is correct. The rule is simple:
+- **`src/optimizer.py`, `src/invariants.py`, `src/experiment_config.py`** — Pure or config-only; no infrastructure imports
+- **`src/analysis.py`, `src/figures.py`, `src/dashboard.py`, `src/manuscript_variables.py`** — Orchestration; may import `infrastructure.*` behind try/except
+- **`scripts/*.py`** — CLI wrappers only
 
-- **`src/optimizer.py`** — Pure functions, no I/O, no infrastructure imports → testable with real data
-- **`scripts/*.py`** — Orchestrators that do I/O → test via integration, skip when infrastructure unavailable
+## Running the Gate
 
-If you find yourself wanting to mock `open()`, a logger, or an infrastructure module inside a test for `src/`, stop. That call does not belong in `src/`. Move it to `scripts/` and test the mathematical output from `src/` directly.
+A green exit code is **not** proof the suite ran. Confirm **N collected > 0 AND coverage ≥ 90%**.
 
-## Running the Gate: Collection and Threshold, Not Just Exit Code
-
-A green exit code is **not** proof the suite ran. Two failure modes have
-bitten this stack; both are now guarded, but the rule stands:
-
-1. **Zero collected = not a pass.** `scripts/01_run_tests.py --project
-   template_code_project` resolves the interpreter from a per-project
-   `.venv`. A `.venv` created by `uv venv` without `uv sync` lacks
-   `pytest`, so pytest collects nothing and a naive scorer reports
-   `✓ PASSED (0/0 tests, 0.0% coverage)` with exit 0. Always confirm
-   **N collected > 0 AND coverage ≥ 90%**, never exit code alone.
-
-2. **The canonical gate is the direct command** (authoritative; what CI
-   enforces project-by-project):
-
-   ```bash
-   uv run pytest projects/template_code_project/tests/ \
-     --cov=projects/template_code_project/src --cov-fail-under=90
-   # exemplar baseline: 117 passed, ~99% coverage
-   ```
-
-3. **Coverage resolves against the repo-root config.** The project's own
-   `pyproject.toml` `[tool.coverage]` `source`/`omit` are *project-relative*
-   and do not resolve when pytest runs from the repo root. The canonical
-   command and the aggregate runner both measure against the **repo-root**
-   `pyproject.toml` coverage config — that is the gated number
-   (`src/analysis.py`, `src/dashboard.py` are intentionally omitted there).
-   The runner now hard-fails a 0-collected or below-threshold run rather
-   than scoring it green.
+```bash
+cd projects/template_code_project
+uv run pytest tests/ --cov=src --cov-fail-under=90 -q
+```
 
 See [`troubleshooting.md`](troubleshooting.md#tests-report-passed-but-ran-0-tests--00-coverage).

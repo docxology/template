@@ -19,12 +19,11 @@ flowchart TB
     SCI --> DOC[documentation.py<br/>Scientific documentation generation]
     SCI --> VAL[validation.py<br/>Implementation validation]
     SCI --> TPL[templates.py<br/>Module &amp; workflow templates]
-    SCI --> COG[cogsec_improver.py<br/>AST-based source improvement for cogsec modules]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#1e3a8a,stroke:#0f172a,color:#fff
     class SCI d
-    class INIT,STAB,BEN,DOC,VAL,TPL,COG f
+    class INIT,STAB,BEN,DOC,VAL,TPL f
 ```
 
 **stability.py** (~100 lines)
@@ -242,4 +241,5 @@ Scientific module is used by:
 
 - [README.md](README.md) - Quick reference guide
 - [`core/`](../core/) - Foundation utilities
+- [`core/source_improve.py`](../core/source_improve.py) - AST-based source improvement (orchestrated by [`scripts/batch_cogsec_improve.py`](../../scripts/batch_cogsec_improve.py))
 

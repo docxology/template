@@ -449,17 +449,17 @@ uv run python -m infrastructure.validation.cli markdown projects/template_code_p
    - Lines marked with `>>>>>` are not covered
    - Add tests to cover all branches
 
-6. **Repeat until 100%**
+6. **Repeat until ≥90%** (project `src/` gate; see [`canonical_facts.md`](../_generated/canonical_facts.md))
 
 **Expected Result**: All critical code paths tested, coverage requirements met
 
 **Requirements**:
 
-- Statement coverage: 100%
-- Branch coverage: 100%
+- Statement coverage: **≥90%** on project `src/` (60% infrastructure)
+- Branch coverage: tracked when `--cov-branch` enabled
 - No mocks: Use data
 
-**See Also**: [Testing Guide](../../tests/AGENTS.md) | [Workflow](../core/workflow.md)
+**See Also**: [Configuration](../../AGENTS.md#configuration-system) | [Testing Guide](../../tests/AGENTS.md) | [Workflow](../core/workflow.md)
 
 ---
 
@@ -679,7 +679,7 @@ def test_process_negative():
 - Generated file headers
 - Cross-reference systems
 
-**See Also**: [AGENTS.md Configuration](../AGENTS.md#directory-structure)
+**See Also**: [AGENTS.md Configuration](../../AGENTS.md#configuration-system)
 
 ---
 

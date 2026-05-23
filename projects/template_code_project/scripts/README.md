@@ -36,19 +36,29 @@ ls -la ../output/figures/
 ls -la ../output/data/
 ```
 
+## Scripts
+
+| Script | Role | Pipeline |
+| --- | --- | --- |
+| `optimization_analysis.py` | Main analysis pipeline (experiments, figures, reports) | Required |
+| `build_dashboard.py` | Interactive HTML dashboard + invariants report | Required |
+| `z_generate_manuscript_variables.py` | Manuscript `{{TOKEN}}` hydration (runs last; `z_` prefix) | Required |
+| `generate_api_docs.py` | Writes `output/docs/api_reference.md` | AESTHETIC (smoke-tested) |
+| `00_preflight.py` | Puppeteer/mmdc pre-render warning | AESTHETIC (smoke-tested; exit 0 or 1) |
+
+Full API and smoke-test notes: [`AGENTS.md`](AGENTS.md).
+
 ## Architecture
 
 ```mermaid
 graph TD
-    A[optimization_analysis.py] --> B[Run Experiments]
-    A --> C[Generate Plot]
-    A --> D[Save Data]
-    A --> E[Register Figure]
-
-    B --> F[src/optimizer.py]
-    C --> G[matplotlib]
-    D --> H[CSV export]
-    E --> I[infrastructure.figure_manager]
+    OA[optimization_analysis.py] --> SA[src/analysis.py]
+    BD[build_dashboard.py] --> SD[src/dashboard.py]
+    ZGEN[z_generate_manuscript_variables.py] --> MV[src/manuscript_variables.py]
+    SA --> OPT[src/optimizer.py]
+    SA --> FIG[src/figures.py]
+    GD[generate_api_docs.py] --> DOC[src/documentation.py]
+    PF[00_preflight.py] --> INFRA[infrastructure.rendering.preflight]
 ```
 
 ## More Information

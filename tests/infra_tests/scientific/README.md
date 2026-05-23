@@ -21,7 +21,6 @@ uv run pytest tests/infra_tests/scientific/test_scientific_dev.py -v
 | File | Purpose |
 | --- | --- |
 | `test_benchmarking.py` | Performance benchmarking |
-| `test_cogsec_improver.py` | Cognitive security improver |
 | `test_documentation.py` | API documentation generation |
 | `test_scientific_dev.py` | Scientific development utilities |
 | `test_scientific_dev_edge_cases.py` | Edge cases for scientific dev utilities |

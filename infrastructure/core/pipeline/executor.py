@@ -14,7 +14,6 @@ from typing import Callable
 from infrastructure.core.runtime.checkpoint import CheckpointManager
 from infrastructure.core.logging.utils import (
     get_logger,
-    log_pipeline_stage_with_eta,
     setup_logger,
     setup_root_log_file_handler,
 )
@@ -39,6 +38,7 @@ from infrastructure.core.pipeline.types import (
     PipelineStageResult,
     StageSpec,
 )
+from infrastructure.core.pipeline._stage_execution import invoke_stage_function, log_stage_start
 from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
 
 logger = get_logger(__name__)
@@ -346,11 +346,12 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         """
         start_time = time.time()
 
-        # Use enhanced stage logging with ETA if pipeline start time available
-        if pipeline_start is not None:
-            log_pipeline_stage_with_eta(stage_num, self.config.total_stages, stage_name, pipeline_start, logger)
-        else:
-            logger.info(f"Stage {stage_num}: {stage_name}")
+        log_stage_start(
+            self,
+            stage_num=stage_num,
+            stage_name=stage_name,
+            pipeline_start=pipeline_start,
+        )
 
         if self._telemetry is not None:
             self._telemetry.start_stage(stage_name, stage_num)
@@ -416,24 +417,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             )
 
         try:
-            success = False
-            attempts = max(1, stage_contract.retry_policy + 1)
-            for attempt in range(1, attempts + 1):
-                try:
-                    success = stage_func()
-                except Exception:
-                    if attempt < attempts:
-                        logger.warning(
-                            f"Stage {stage_num} raised an exception; retrying ({attempt}/{stage_contract.retry_policy})"
-                        )
-                        continue
-                    raise
-                if success:
-                    break
-                if attempt < attempts:
-                    logger.warning(
-                        f"Stage {stage_num} returned failure; retrying ({attempt}/{stage_contract.retry_policy})"
-                    )
+            success = invoke_stage_function(stage_func, retry_policy=stage_contract.retry_policy)
 
             duration = time.time() - start_time
 

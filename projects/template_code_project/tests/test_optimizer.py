@@ -3,37 +3,19 @@
 Comprehensive tests covering functionality, edge cases, and numerical accuracy.
 
 > **Template Exemplar Note**: This module enforces the Zero-Mock policy and targets
-> high coverage on `src/` (≥90% gate in `pyproject.toml`; typically ~96% with the
-> current suite).
+> high coverage on `src/` (≥90% gate in `pyproject.toml`; live percentage in
+> `docs/_generated/canonical_facts.md`).
 """
 
 import functools
-import json
 import time
-from pathlib import Path
 
 import numpy as np
 import pytest
 from src.optimizer import (OptimizationResult, compute_gradient,
                            gradient_descent, make_quadratic_problem,
-                           quadratic_function, simulate_trajectory)
-
-# Try to import scientific analysis functions (graceful fallback)
-try:
-    import sys
-
-    project_root = Path(__file__).parent.parent
-    sys.path.insert(0, str(project_root / "scripts"))
-
-    from optimization_analysis import (generate_analysis_dashboard,
-                                       generate_benchmark_visualization,
-                                       generate_stability_visualization,
-                                       run_performance_benchmarking,
-                                       run_stability_analysis)
-
-    INFRASTRUCTURE_AVAILABLE = True
-except ImportError:
-    INFRASTRUCTURE_AVAILABLE = False
+                           quadratic_function, quadratic_optimum,
+                           simulate_trajectory)
 
 
 class TestQuadraticFunction:
@@ -106,6 +88,24 @@ class TestQuadraticFunction:
         # f(-2) = (1/2)(4) - 1*(-2) = 2 + 2 = 4
         expected = 4.0
         assert np.isclose(result, expected)
+
+
+class TestQuadraticOptimum:
+    """Tests for closed-form quadratic optimum."""
+
+    def test_default_1d_optimum(self):
+        A = np.array([[1.0]])
+        b = np.array([1.0])
+        x_star, f_star = quadratic_optimum(A, b)
+        np.testing.assert_allclose(x_star, [1.0])
+        assert np.isclose(f_star, -0.5)
+
+    def test_non_default_optimum(self):
+        A = np.array([[2.0]])
+        b = np.array([4.0])
+        x_star, f_star = quadratic_optimum(A, b)
+        np.testing.assert_allclose(x_star, [2.0])
+        assert f_star < 0
 
 
 class TestComputeGradient:
@@ -633,202 +633,6 @@ class TestPerformanceBenchmarks:
             assert func_time < 0.2
             # Gradient evaluation should also be fast
             assert grad_time < 0.2
-
-
-@pytest.mark.skipif(
-    not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available"
-)
-class TestStabilityAnalysis:
-    """Test numerical stability analysis functions."""
-
-    def test_stability_analysis_execution(self, tmp_path):
-        """Test that stability analysis runs without errors."""
-        # Run stability analysis
-        result_path = run_stability_analysis()
-
-        if result_path:
-            # Check that report file was created
-            assert result_path.exists()
-            assert result_path.is_file()
-
-            # Check JSON content
-            with open(result_path, "r") as f:
-                data = json.load(f)
-
-            assert "stability_score" in data
-            assert "function_name" in data
-            assert "recommendations" in data
-            assert isinstance(data["stability_score"], (int, float))
-            assert 0.0 <= data["stability_score"] <= 1.0
-        else:
-            # Should not fail, but might return None if infrastructure issues
-            pytest.fail("Stability analysis returned None")
-
-    def test_stability_visualization(self, tmp_path):
-        """Test stability visualization generation."""
-        # First run analysis to get data
-        report_path = run_stability_analysis()
-
-        if report_path:
-            # Generate visualization
-            viz_path = generate_stability_visualization(report_path)
-
-            if viz_path:
-                # Check that visualization file was created
-                assert viz_path.exists()
-                assert viz_path.is_file()
-                assert viz_path.suffix == ".png"
-            else:
-                pytest.fail("Stability visualization returned None")
-        else:
-            pytest.fail("Stability analysis returned None")
-
-
-@pytest.mark.skipif(
-    not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available"
-)
-class TestPerformanceBenchmarking:
-    """Test performance benchmarking functions."""
-
-    def test_performance_benchmarking_execution(self, tmp_path):
-        """Test that performance benchmarking runs without errors."""
-        # Run performance benchmarking
-        result_path = run_performance_benchmarking()
-
-        if result_path:
-            # Check that report file was created
-            assert result_path.exists()
-            assert result_path.is_file()
-
-            # Check JSON content
-            with open(result_path, "r") as f:
-                data = json.load(f)
-
-            assert "execution_time" in data
-            assert "function_name" in data
-            assert "result_summary" in data
-            assert "iterations" in data
-            assert isinstance(data["execution_time"], (int, float))
-            assert data["execution_time"] > 0
-        else:
-            pytest.fail("Performance benchmarking returned None")
-
-    def test_performance_visualization(self, tmp_path):
-        """Test performance visualization generation."""
-        # First run benchmarking to get data
-        report_path = run_performance_benchmarking()
-
-        if report_path:
-            # Generate visualization
-            viz_path = generate_benchmark_visualization(report_path)
-
-            if viz_path:
-                # Check that visualization file was created
-                assert viz_path.exists()
-                assert viz_path.is_file()
-                assert viz_path.suffix == ".png"
-            else:
-                pytest.fail("Performance visualization returned None")
-        else:
-            pytest.fail("Performance benchmarking returned None")
-
-
-@pytest.mark.skipif(
-    not INFRASTRUCTURE_AVAILABLE, reason="Infrastructure modules not available"
-)
-class TestAnalysisDashboard:
-    """Test analysis dashboard generation."""
-
-    def test_dashboard_generation(self, tmp_path):
-        """Test that analysis dashboard is generated."""
-        # Real OptimizationResult instances (zero-mock policy)
-        test_results = {
-            0.01: OptimizationResult(
-                solution=np.array([0.2]), objective_value=-0.4,
-                iterations=100, converged=False, gradient_norm=1e-3,
-            ),
-            0.05: OptimizationResult(
-                solution=np.array([0.8]), objective_value=-0.45,
-                iterations=50, converged=False, gradient_norm=5e-4,
-            ),
-            0.1: OptimizationResult(
-                solution=np.array([1.0]), objective_value=-0.5,
-                iterations=20, converged=True, gradient_norm=1e-8,
-            ),
-            0.2: OptimizationResult(
-                solution=np.array([1.0]), objective_value=-0.5,
-                iterations=10, converged=True, gradient_norm=1e-9,
-            ),
-        }
-
-        # Generate dashboard
-        dashboard_path = generate_analysis_dashboard(test_results)
-
-        if dashboard_path:
-            # Check that dashboard file was created
-            assert dashboard_path.exists()
-            assert dashboard_path.is_file()
-            assert dashboard_path.suffix == ".html"
-
-            # Check HTML content
-            with open(dashboard_path, "r", encoding="utf-8") as f:
-                content = f.read()
-
-            assert "<!DOCTYPE html>" in content
-            assert "Optimization Analysis Dashboard" in content
-            assert "step sizes tested" in content.lower()
-        else:
-            pytest.fail("Dashboard generation returned None")
-
-    def test_dashboard_with_analysis_data(self, tmp_path):
-        """Test dashboard generation with stability and benchmark data."""
-        # Real OptimizationResult instances (zero-mock policy)
-        test_results = {
-            0.01: OptimizationResult(
-                solution=np.array([0.2]), objective_value=-0.4,
-                iterations=100, converged=False, gradient_norm=1e-3,
-            ),
-            0.05: OptimizationResult(
-                solution=np.array([0.8]), objective_value=-0.45,
-                iterations=50, converged=False, gradient_norm=5e-4,
-            ),
-            0.1: OptimizationResult(
-                solution=np.array([1.0]), objective_value=-0.5,
-                iterations=20, converged=True, gradient_norm=1e-8,
-            ),
-            0.2: OptimizationResult(
-                solution=np.array([1.0]), objective_value=-0.5,
-                iterations=10, converged=True, gradient_norm=1e-9,
-            ),
-        }
-
-        # Try to get real analysis data
-        stability_path = run_stability_analysis()
-        benchmark_path = run_performance_benchmarking()
-
-        # Generate dashboard with available data
-        dashboard_path = generate_analysis_dashboard(
-            test_results, stability_path, benchmark_path
-        )
-
-        if dashboard_path:
-            # Check that dashboard file was created
-            assert dashboard_path.exists()
-            assert dashboard_path.is_file()
-
-            # Check content includes expected sections
-            with open(dashboard_path, "r", encoding="utf-8") as f:
-                content = f.read()
-
-            assert "Optimization Results" in content
-
-            if stability_path:
-                assert "Numerical Stability" in content
-
-            if benchmark_path:
-                assert "Performance Benchmark" in content
-        else:
-            pytest.fail("Dashboard generation with analysis data returned None")
 
 
 class TestMakeQuadraticProblem:

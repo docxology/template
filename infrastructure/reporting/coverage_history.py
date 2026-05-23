@@ -55,8 +55,8 @@ class CoveragePoint:
 
     Attributes:
         date: Timestamp of the underlying CI run (UTC, tz-aware).
-        suite: Logical suite name — ``"infra"``, ``"project"``, or
-            ``"fep_lean"``. Anything else passes through verbatim.
+        suite: Logical suite name — ``"infra"``, ``"project"``, or any
+            additional suite discovered from ``coverage-*.xml`` filenames.
         percentage: Coverage in ``[0.0, 100.0]`` (Cobertura ``line-rate`` × 100).
         lines_covered: Total covered lines reported by Cobertura.
         lines_total: Total considered lines reported by Cobertura.
@@ -222,9 +222,8 @@ def build_history_markdown(
     by_day = _bucket_by_day(in_window)
 
     # Discover which suites appear, then stabilise their order:
-    # canonical suites first (infra → project → fep_lean), then any extras
-    # alphabetically. Keeps the table column order deterministic across runs.
-    canonical_order = ["infra", "project", "fep_lean"]
+    # canonical suites first (infra → project), then any extras alphabetically.
+    canonical_order = ["infra", "project"]
     seen = {p.suite for p in in_window}
     suites: list[str] = [s for s in canonical_order if s in seen]
     suites.extend(sorted(s for s in seen if s not in canonical_order))

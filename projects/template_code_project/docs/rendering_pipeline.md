@@ -56,7 +56,7 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 | `optimization_results.csv` | `output/data/` | Per-step-size convergence results table |
 | `stability_analysis.json` | `output/reports/` | Aggregate stability score and per-cell results |
 | `performance_benchmark.json` | `output/reports/` | Timing results per dimension |
-| `analysis_dashboard.html` | `output/reports/` | HTML dashboard with all metrics |
+| `dashboard.html` | `output/web/` | Plotly interactive dashboard (`build_dashboard.py`) |
 | `optimization_metadata.json` | `output/citations/` | DOI, author, keyword metadata for citation tools |
 
 ### Phase 2 — Generate Manuscript Variables
@@ -124,12 +124,7 @@ uv run python scripts/05_copy_outputs.py --project template_code_project
 | `authors[*]` | Author list on title page | `pdf_renderer.py` + `{{CONFIG_FIRST_AUTHOR}}` |
 | `publication.doi` | DOI on title page and citations | `pdf_renderer.py` |
 | `keywords` | `{{CONFIG_KEYWORDS}}` count | `src/manuscript_variables.py` |
-| `experiment.step_sizes` | Drives ALL convergence experiments | `optimization_analysis.py` |
-| `experiment.max_iterations` | `{{CONFIG_MAX_ITERATIONS}}` | `src/manuscript_variables.py` |
-| `experiment.tolerance` | `{{CONFIG_TOLERANCE}}` | `src/manuscript_variables.py` |
-| `experiment.stability_starting_points` | Stability grid rows | `optimization_analysis.py` |
-| `experiment.stability_step_sizes` | Stability grid columns | `optimization_analysis.py` |
-| `experiment.benchmark_dimensions` | Performance benchmark dimensions | `optimization_analysis.py` |
+| `experiment.*` | Step sizes, tolerances, A/b, stability/benchmark grids | `src/experiment_config.py::load_experiment_config()` → `analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py` |
 | `llm.translations.enabled` | Whether to run LLM translation step | `execute_pipeline.py` |
 
 ## Troubleshooting
