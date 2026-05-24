@@ -5,6 +5,13 @@ import json
 import pytest
 
 from infrastructure.core.exceptions import LLMTemplateError
+from infrastructure.llm.prompts._fragment_builders import (
+    build_content_requirements,
+    build_format_requirements,
+    build_section_structure,
+    build_token_budget_awareness,
+    build_validation_hints,
+)
 from infrastructure.llm.prompts.composer import PromptComposer
 from infrastructure.llm.prompts.loader import PromptFragmentLoader
 
@@ -183,7 +190,7 @@ class TestPromptComposer:
         loader = PromptFragmentLoader(base_path=setup_prompts)
         composer = PromptComposer(loader=loader)
 
-        result = composer._build_format_requirements(["## Header1", "## Header2"])
+        result = build_format_requirements(loader, ["## Header1", "## Header2"])
 
         assert "FORMAT REQUIREMENTS" in result
         assert "## Header1" in result
@@ -194,7 +201,7 @@ class TestPromptComposer:
         loader = PromptFragmentLoader(base_path=setup_prompts)
         composer = PromptComposer(loader=loader)
 
-        result = composer._build_content_requirements()
+        result = build_content_requirements(loader)
 
         assert "CONTENT REQUIREMENTS" in result
         assert "NO HALLUCINATION" in result
@@ -205,7 +212,7 @@ class TestPromptComposer:
         loader = PromptFragmentLoader(base_path=setup_prompts)
         composer = PromptComposer(loader=loader)
 
-        result = composer._build_section_structure("test_template")
+        result = build_section_structure(loader, "test_template")
 
         assert "SECTION STRUCTURE" in result
         assert "## Section1" in result
@@ -218,7 +225,7 @@ class TestPromptComposer:
         composer = PromptComposer(loader=loader)
 
         with pytest.raises(LLMTemplateError) as exc_info:
-            composer._build_section_structure("nonexistent")
+            build_section_structure(loader, "nonexistent")
 
         assert "not found" in str(exc_info.value).lower()
 
@@ -227,8 +234,10 @@ class TestPromptComposer:
         loader = PromptFragmentLoader(base_path=setup_prompts)
         composer = PromptComposer(loader=loader)
 
-        result = composer._build_token_budget_awareness(
-            total_tokens=1000, section_budgets={"Section1": 500, "Section2": 500}
+        result = build_token_budget_awareness(
+            loader,
+            total_tokens=1000,
+            section_budgets={"Section1": 500, "Section2": 500},
         )
 
         assert "TOKEN BUDGET" in result
@@ -240,8 +249,10 @@ class TestPromptComposer:
         loader = PromptFragmentLoader(base_path=setup_prompts)
         composer = PromptComposer(loader=loader)
 
-        result = composer._build_validation_hints(
-            word_count_range=(100, 200), required_elements=["Element1", "Element2"]
+        result = build_validation_hints(
+            loader,
+            word_count_range=(100, 200),
+            required_elements=["Element1", "Element2"],
         )
 
         assert "VALIDATION" in result

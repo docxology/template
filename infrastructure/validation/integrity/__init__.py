@@ -1,11 +1,11 @@
 """Integrity validation subpackage."""
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.integrity.check_links import (
     LinkCheckResult,
     check_file_reference,
     extract_code_blocks,
     extract_links,
-    find_all_markdown_files,
     generate_comprehensive_report,
     validate_directory_structures,
     validate_file_paths_in_code,
@@ -45,7 +45,7 @@ __all__ = [
     "create_integrity_manifest",
     "extract_code_blocks",
     "extract_links",
-    "find_all_markdown_files",
+    "discover_markdown_files",
     "generate_comprehensive_report",
     "generate_integrity_report",
     "load_integrity_manifest",

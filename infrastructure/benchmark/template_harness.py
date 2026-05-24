@@ -12,6 +12,8 @@ from infrastructure.benchmark.rubrics import RubricSet
 from infrastructure.project.domain_profile import load_domain_profile
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
+    unsupported_citation_tokens,
+    unsupported_number_tokens,
     validate_text_against_registry,
 )
 
@@ -242,10 +244,12 @@ def _check_evidence_grounding(project_root: Path) -> list[str]:
         return ["no manuscript markdown found for evidence grounding"]
     report = validate_text_against_registry(text, registry)
     issues: list[str] = []
-    if report.unsupported_numbers:
-        issues.append(f"unsupported numbers: {', '.join(report.unsupported_numbers)}")
-    if report.unsupported_citations:
-        issues.append(f"unsupported citations: {', '.join(report.unsupported_citations)}")
+    numbers = unsupported_number_tokens(report)
+    citations = unsupported_citation_tokens(report)
+    if numbers:
+        issues.append(f"unsupported numbers: {', '.join(numbers)}")
+    if citations:
+        issues.append(f"unsupported citations: {', '.join(citations)}")
     return issues
 
 

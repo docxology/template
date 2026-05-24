@@ -21,46 +21,16 @@
 
 set -euo pipefail
 
-# Bypass macOS sandbox restrictions on ~/.matplotlib and ~/.cache/uv.
-export MPLCONFIGDIR="${TMPDIR:-/tmp}/matplotlib_cache"
-mkdir -p "$MPLCONFIGDIR"
-export UV_CACHE_DIR="${TMPDIR:-/tmp}/uv_cache"
-mkdir -p "$UV_CACHE_DIR"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/shell_bootstrap.sh
+source "$SCRIPT_DIR/scripts/shell_bootstrap.sh"
+
+setup_orchestration_sandbox_env
+cd "$SCRIPT_DIR"
 
 # Lean session workflows: parity with run.sh. Default on; honor an existing
 # value if the caller already set one. `--no-lean-workflows` below overrides.
 export FEP_LEAN_GAUSS_WORKFLOWS="${FEP_LEAN_GAUSS_WORKFLOWS:-1}"
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
-
-print_uv_install_instructions() {
-    cat >&2 <<'EOF'
-ERROR: uv is required to run secure_run.sh.
-
-Install uv (one of):
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  brew install uv
-  pip install uv
-EOF
-}
-
-ensure_uv() {
-    if command -v uv >/dev/null 2>&1 && uv --version >/dev/null 2>&1; then
-        return 0
-    fi
-    if command -v curl >/dev/null 2>&1; then
-        curl -LsSf https://astral.sh/uv/install.sh | sh || return 1
-    elif command -v wget >/dev/null 2>&1; then
-        wget -qO- https://astral.sh/uv/install.sh | sh || return 1
-    else
-        print_uv_install_instructions
-        return 1
-    fi
-    [[ -f "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env"
-    export PATH="$HOME/.local/bin:$PATH"
-    command -v uv >/dev/null 2>&1
-}
 
 # Fast path: forward --help directly so users discover flags without paying
 # for `uv sync --group steganography`.
@@ -68,7 +38,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
     if ensure_uv; then
         exec uv run python -m infrastructure.orchestration secure --help
     fi
-    print_uv_install_instructions
+    print_uv_install_instructions "secure_run.sh"
     exit 1
 fi
 
@@ -102,7 +72,7 @@ for arg in "$@"; do
 done
 
 if ! ensure_uv; then
-    print_uv_install_instructions
+    print_uv_install_instructions "secure_run.sh"
     exit 1
 fi
 

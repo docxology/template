@@ -17,6 +17,8 @@ from infrastructure.validation.content.markdown_validator import validate_markdo
 from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
+    unsupported_citation_tokens,
+    unsupported_number_tokens,
     validate_text_against_registry,
 )
 
@@ -206,8 +208,8 @@ def validate_evidence_command(args: argparse.Namespace) -> None:
     )
     report = validate_text_against_registry(text, registry)
     payload = {
-        "unsupported_numbers": report.unsupported_numbers,
-        "unsupported_citations": report.unsupported_citations,
+        "unsupported_numbers": unsupported_number_tokens(report),
+        "unsupported_citations": unsupported_citation_tokens(report),
         "has_issues": report.has_issues,
     }
 

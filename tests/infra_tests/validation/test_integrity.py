@@ -334,7 +334,7 @@ class TestOutputCompleteness:
             "06_conclusion.pdf",
             "07_references.pdf",
             "10_symbols_glossary.pdf",
-            "project_combined.pdf",
+            "template_code_project_combined.pdf",
         ]:
             (tmp_path / "pdf" / pdf).write_text("PDF")
 

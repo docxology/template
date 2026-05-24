@@ -1,14 +1,13 @@
 """Tests for infrastructure.validation.docs.discovery — pure function coverage."""
 
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.discovery import (
     _get_project_category,
     analyze_documentation_file,
     catalog_agents_readme,
     create_hierarchy,
-    discover_markdown_files,
     find_config_files,
-    find_markdown_files,
     find_script_files,
     identify_cross_references,
 )
@@ -20,39 +19,39 @@ class TestDiscoverMarkdownFiles:
         (tmp_path / "doc.md").write_text("# Doc")
         (tmp_path / "sub").mkdir()
         (tmp_path / "sub" / "nested.md").write_text("# Nested")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 2
 
     def test_excludes_output_dir(self, tmp_path):
         (tmp_path / "output").mkdir()
         (tmp_path / "output" / "skip.md").write_text("# Skip")
         (tmp_path / "keep.md").write_text("# Keep")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 1
         assert result[0].name == "keep.md"
 
     def test_excludes_venv(self, tmp_path):
         (tmp_path / ".venv").mkdir()
         (tmp_path / ".venv" / "skip.md").write_text("# Skip")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 0
 
     def test_excludes_pycache(self, tmp_path):
         (tmp_path / "__pycache__").mkdir()
         (tmp_path / "__pycache__" / "skip.md").write_text("# Skip")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 0
 
     def test_empty_dir(self, tmp_path):
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert result == []
 
 
 class TestFindMarkdownFiles:
     def test_is_alias(self, tmp_path):
         (tmp_path / "doc.md").write_text("# Doc")
-        result_a = discover_markdown_files(tmp_path)
-        result_b = find_markdown_files(tmp_path)
+        result_a = discover_markdown_files(tmp_path, scope="repo")
+        result_b = discover_markdown_files(tmp_path, scope="repo")
         assert result_a == result_b
 
 

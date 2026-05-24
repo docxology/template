@@ -12,7 +12,7 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS
+from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, SKILL_EVAL_DIR_NAME
 
 PERMANENT_TEMPLATE_ROOTS: tuple[str, ...] = (
     ".github",
@@ -27,6 +27,7 @@ PERMANENT_TEMPLATE_ROOTS: tuple[str, ...] = (
 DOC_PAIR_EXCLUDE_PARTS: frozenset[str] = frozenset(
     {
         *DEFAULT_EXCLUDE_PARTS,
+        SKILL_EVAL_DIR_NAME,
         ".benchmarks",
         ".cache",
         ".cursor",

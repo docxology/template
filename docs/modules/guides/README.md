@@ -20,8 +20,14 @@
 | **Skills** | [skills-module.md](skills-module.md) | SKILL.md discovery, manifest generation |
 | **Steganography** | [steganography-module.md](steganography-module.md) | Watermarking, provenance |
 | **Validation** | [validation-module.md](validation-module.md) | PDF/Markdown validation, auditing |
+| **Doctor** | [doctor-module.md](doctor-module.md) | Repository health diagnostics |
+| **Orchestration** | [orchestration-module.md](orchestration-module.md) | `python -m infrastructure.orchestration` CLI |
+| **Prose** | [prose-module.md](prose-module.md) | Readability metrics, editorial heuristics |
+| **Search** | [search-module.md](search-module.md) | Literature discovery and indexing |
+| **Reference** | [reference-module.md](reference-module.md) | BibTeX / citation toolkit |
 
 ## See Also
 
 - [Modules Guide](../modules-guide.md) - Overview and integration patterns
+- [Literature Search](../literature-search-and-references.md) - Cross-module literature workflow
 - [API Reference](../../reference/api-reference.md) - Full API documentation

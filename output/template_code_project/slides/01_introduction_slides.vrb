@@ -1,0 +1,26 @@
+\frametitle{Reader's guide to the manuscript}
+\protect\phantomsection\label{readers-guide-to-the-manuscript}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\breakseq{[@sec:methodology]}} ties pseudocode to
+  \breaktt{gradient\_descent()} and explains how stability checks and
+  benchmarks call into \breaktt{infrastructure.scientific}.
+\item
+  \textbf{\breakseq{[@sec:results]}} is figure-centric: every panel references
+  a generator in \texttt{src/figures.py} (orchestrated via
+  \breaktt{scripts/optimization\_analysis.py}) and uses
+  \texttt{\{\{CONFIG\_*\}\}} / \texttt{\{\{RESULT\_*\}\}} placeholders
+  for numeric values.
+\item
+  \textbf{\breakseq{[@sec:experimental\_setup]}} lists the exact YAML fields
+  (\texttt{experiment:} block) that controlled the run whose artifacts
+  you are viewing.
+\item
+  \textbf{\breakseq{[@sec:reproducibility]}} records the configuration hash and
+  artifact inventory produced alongside the PDF.
+\item
+  \textbf{\breakseq{[@sec:scope]}} states scope and related literature so the
+  exemplar is not mistaken for a general-purpose optimizer benchmark
+  suite.
+\end{itemize}

@@ -80,6 +80,9 @@ The Core module provides fundamental foundation utilities used across the entire
 **pytest_marker_exprs.py**
 - ``build_pytest_marker_expression(...)`` returns one ``pytest -m`` string for subprocess runners (`pipeline_test_runner`, ``run_per_project_pytest``) so benchmarks and slow/Ollama-gated tests stay opt-in outside defaults.
 
+**pytest_orchestration.py**
+- Canonical Stage-01 / union-gate pytest subprocess policy: discovery logging, coverage datafile pinning, declared project ``fail_under``, and project-suite guards. Consumed by ``infrastructure.reporting.pipeline_test_runner`` and ``infrastructure.core.test_runner``.
+
 **cli.py**
 - Command-line interface utilities
 - CLI argument parsing and validation
@@ -157,6 +160,10 @@ The Core module provides fundamental foundation utilities used across the entire
 - Tag-based filtering for `--core-only` vs full pipeline
 - Stage metadata: name, script, description, dependencies, tags
 - Optional `telemetry:` configuration block
+
+**pipeline/stage_vocabulary.py**
+- Canonical stage names and aliases loaded from `pipeline.yaml`
+- Shared by menu progress banners (`orchestration/menu.py`) and eval grader stage heuristics
 
 **telemetry/collector.py**
 - `TelemetryCollector` — unified stage-level metrics + diagnostic aggregation

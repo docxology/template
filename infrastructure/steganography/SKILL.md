@@ -30,7 +30,7 @@ Responsible for generating dense Error-Correction Q-Level QR codes and Code128 b
 from infrastructure.steganography.barcodes import create_barcode_strip_overlay
 overlay_pdf_bytes = create_barcode_strip_overlay(
     page_width=612, page_height=792,
-    qr_data="https://doi.org/...", code128_data="paper-id-001",
+    code128_data="paper-id-001",
 )
 ```
 

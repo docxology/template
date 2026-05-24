@@ -41,14 +41,18 @@ This index lists documentation files in the Research Project Template by categor
 ---
 
 > [!IMPORTANT]
-> **Critical Rules for Multi-Project Pipelines**
->
-> 1. **Root Venv Dependency Coverage** — If `projects/<name>/.venv` does NOT exist, every package in that project's `pyproject.toml` must also be in the root `pyproject.toml`. Violation: Stage 4 fails silently in < 1s. Fix: `uv sync` after adding to root deps.
-> 2. **`matplotlib` in Core Deps** — Must be in `[project.dependencies]`, not `[project.optional-dependencies]`. `uv sync` without flags skips optional groups.
-> 3. **`project_config:` Namespace** — Project-specific `config.yaml` keys that aren't in the `ManuscriptConfig` schema cause WARNING spam. Nest them under `project_config:` to suppress warnings.
-> 4. **Idempotency** — Analysis scripts must skip network calls when output data files already exist.
->
-> Details: [docs/AGENTS.md](AGENTS.md) | [guides/new-project-setup.md](guides/new-project-setup.md#pitfall-6-root-venv)
+> **Multi-project pipeline pitfalls** (root venv deps, `matplotlib` in core deps, `project_config:` namespace, idempotency) — authoritative copy in [docs/AGENTS.md](AGENTS.md#learnings--known-issues) and [guides/new-project-setup.md](guides/new-project-setup.md#pitfall-6-root-venv).
+
+## Topic routing (canonical → deep dives)
+
+| Topic | Start here | Deep dives |
+|-------|------------|------------|
+| Pipeline ops | [RUN_GUIDE.md](RUN_GUIDE.md) | [operational/pipeline-control.md](operational/pipeline-control.md), [operational/runbook.md](operational/runbook.md) |
+| Logging | [operational/logging/output-design.md](operational/logging/output-design.md) | [operational/logging/python-logging.md](operational/logging/python-logging.md), [operational/logging/bash-logging.md](operational/logging/bash-logging.md) |
+| Secure / steganography | [guides/secure-research-guide.md](guides/secure-research-guide.md) | [security/README.md](security/README.md), [security/secure_execution.md](security/secure_execution.md) |
+| Literature search | [guides/literature-workflow-guide.md](guides/literature-workflow-guide.md) | [core/literature-data-flow.md](core/literature-data-flow.md), [modules/literature-search-and-references.md](modules/literature-search-and-references.md) |
+
+**Module package counts:** link [modules/modules-guide.md](modules/modules-guide.md) or regenerate from `infrastructure/` discovery — do not hand-edit competing literals across hub pages.
 
 ---
 
@@ -115,6 +119,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[architecture/adrs/000-two-layer-architecture.md](architecture/adrs/000-two-layer-architecture.md)** - ADR-000: Two-layer architecture
 - **[architecture/adrs/001-thin-orchestrator-pattern.md](architecture/adrs/001-thin-orchestrator-pattern.md)** - ADR-001: Thin orchestrator pattern
 - **[architecture/adrs/002-declarative-dag-pipeline.md](architecture/adrs/002-declarative-dag-pipeline.md)** - ADR-002: Declarative DAG pipeline
+- **[architecture/adrs/003-multi-format-rendering-and-toggles.md](architecture/adrs/003-multi-format-rendering-and-toggles.md)** - ADR-003: Multi-format rendering and toggles
 - **[architecture/adrs/004-zero-mock-testing-policy.md](architecture/adrs/004-zero-mock-testing-policy.md)** - ADR-004: Zero-mock testing policy
 - **[core/workflow.md](core/workflow.md)** - Development workflow
 - **[architecture/testing-strategy.md](architecture/testing-strategy.md)** - Testing strategy overview
@@ -149,6 +154,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[usage/style-guide.md](usage/style-guide.md)** - Equations, figures, tables
 - **[usage/image-management.md](usage/image-management.md)** - Image handling
 - **[usage/visualization-guide.md](usage/visualization-guide.md)** - Publication-quality figures
+- **[usage/output-formats.md](usage/output-formats.md)** - Per-format render toggles (PDF, HTML, slides, DOCX, EPUB)
 
 ### Scientific Computing
 
@@ -170,7 +176,13 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[development/no-mocks-http-testing.md](development/no-mocks-http-testing.md)** - HTTP testing without mocks
 - **[development/validation_gates.md](development/validation_gates.md)** - Validation gates
 - **[development/code-review-checklist.md](development/code-review-checklist.md)** - Eight-criterion review checklist (clarity, composability, functionality/SSOT, testability, validation, documentation, conventions, reproducibility)
+- **[maintenance/README.md](maintenance/README.md)** - Maintenance hub index
 - **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (`active/`, `passive/`, `archive/`) and symlink sync into `projects/`
+- **[maintenance/toolchain-migration.md](maintenance/toolchain-migration.md)** - Toolchain migration notes
+- **[maintenance/regression-testing.md](maintenance/regression-testing.md)** - Regression testing workflow
+- **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Stage 11 archival providers
+- **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/ci_local.sh`)
+- **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Stage 10 executable bundle design
 
 ---
 
@@ -197,6 +209,11 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[modules/guides/skills-module.md](modules/guides/skills-module.md)**
 - **[modules/guides/steganography-module.md](modules/guides/steganography-module.md)**
 - **[modules/guides/validation-module.md](modules/guides/validation-module.md)**
+- **[modules/guides/doctor-module.md](modules/guides/doctor-module.md)**
+- **[modules/guides/orchestration-module.md](modules/guides/orchestration-module.md)**
+- **[modules/guides/prose-module.md](modules/guides/prose-module.md)**
+- **[modules/guides/search-module.md](modules/guides/search-module.md)**
+- **[modules/guides/reference-module.md](modules/guides/reference-module.md)**
 
 ---
 
@@ -256,6 +273,11 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[operational/runbook.md](operational/runbook.md)** - Runbook for operational procedures
 - **[operational/error-handling-guide.md](operational/error-handling-guide.md)** - Error handling patterns
 - **[operational/docker.md](operational/docker.md)** - Docker containerization
+- **[operational/config-wizard.md](operational/config-wizard.md)** - Environment setup wizard
+- **[operational/template-usage.md](operational/template-usage.md)** - Template usage patterns
+- **[operational/diagrams.md](operational/diagrams.md)** - Operational diagrams
+- **[operational/maintenance.md](operational/maintenance.md)** - Log rotation, backups, dependency updates
+- **[operational/performance/benchmarking-guide.md](operational/performance/benchmarking-guide.md)** - Benchmarking guide
 
 ---
 
@@ -282,20 +304,21 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 ## AI prompt templates
 
 - **[prompts/README.md](prompts/README.md)** - Navigation guide
-- **[prompts/manuscript_creation.md](prompts/manuscript_creation.md)** - Manuscript creation
-- **[prompts/manuscript_cross_references.md](prompts/manuscript_cross_references.md)** - Registry/token manuscript cross-references
-- **[prompts/manuscript_claim_verification.md](prompts/manuscript_claim_verification.md)** - Triple-check manuscript claims (max effort/tools)
-- **[prompts/literature_synthesis.md](prompts/literature_synthesis.md)** - Literature synthesis LLM blocks
-- **[prompts/code_development.md](prompts/code_development.md)** - Code development
-- **[prompts/test_creation.md](prompts/test_creation.md)** - Test creation
-- **[prompts/feature_addition.md](prompts/feature_addition.md)** - Feature addition
-- **[prompts/refactoring.md](prompts/refactoring.md)** - Refactoring
-- **[prompts/documentation_creation.md](prompts/documentation_creation.md)** - Documentation creation
-- **[prompts/infrastructure_module.md](prompts/infrastructure_module.md)** - Infrastructure modules
-- **[prompts/validation_quality.md](prompts/validation_quality.md)** - Validation and QA
-- **[prompts/comprehensive_assessment.md](prompts/comprehensive_assessment.md)** - Assessment and review
-- **[prompts/reproducibility_audit.md](prompts/reproducibility_audit.md)** - Determinism and regenerate-from-clean audit
-- **[prompts/pipeline_debugging.md](prompts/pipeline_debugging.md)** - Pipeline DAG-stage failure triage
+- **[prompts/SKILL.md](prompts/SKILL.md)** - Hub router (`template-workflows`)
+- **[prompts/manuscript-creation/SKILL.md](prompts/manuscript-creation/SKILL.md)** - Manuscript creation
+- **[prompts/manuscript-cross-references/SKILL.md](prompts/manuscript-cross-references/SKILL.md)** - Registry/token manuscript cross-references
+- **[prompts/manuscript-claim-verification/SKILL.md](prompts/manuscript-claim-verification/SKILL.md)** - Triple-check manuscript claims (max effort/tools)
+- **[prompts/literature-synthesis/SKILL.md](prompts/literature-synthesis/SKILL.md)** - Literature synthesis LLM blocks
+- **[prompts/code-development/SKILL.md](prompts/code-development/SKILL.md)** - Code development
+- **[prompts/test-creation/SKILL.md](prompts/test-creation/SKILL.md)** - Test creation
+- **[prompts/feature-addition/SKILL.md](prompts/feature-addition/SKILL.md)** - Feature addition
+- **[prompts/refactoring/SKILL.md](prompts/refactoring/SKILL.md)** - Refactoring
+- **[prompts/documentation-creation/SKILL.md](prompts/documentation-creation/SKILL.md)** - Documentation creation
+- **[prompts/infrastructure-module/SKILL.md](prompts/infrastructure-module/SKILL.md)** - Infrastructure modules
+- **[prompts/validation-quality/SKILL.md](prompts/validation-quality/SKILL.md)** - Validation and QA
+- **[prompts/comprehensive-assessment/SKILL.md](prompts/comprehensive-assessment/SKILL.md)** - Assessment and review
+- **[prompts/reproducibility-audit/SKILL.md](prompts/reproducibility-audit/SKILL.md)** - Determinism and regenerate-from-clean audit
+- **[prompts/pipeline-debugging/SKILL.md](prompts/pipeline-debugging/SKILL.md)** - Pipeline DAG-stage failure triage
 
 ---
 
@@ -313,14 +336,15 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 flowchart TB
     DOCS[/docs//]
     DOCS --> ENTRY[Entry points<br/>README.md · AGENTS.md ·<br/>documentation-index.md ·<br/>CLOUD_DEPLOY.md · PAI.md · RUN_GUIDE.md]
-    DOCS --> CORE[/core<br/>how-to-use · architecture · workflow/]
-    DOCS --> GUIDES[/guides<br/>9 skill-level guides<br/>levels 1-12 · LLM · publishing · security/]
-    DOCS --> ARCH[/architecture<br/>two-layer · thin-orchestrator ·<br/>decision-tree · migration · testing-strategy/]
-    DOCS --> USAGE[/usage<br/>examples · markdown-template-guide ·<br/>numbering · image-management · visualization/]
+    DOCS --> CORE[/core<br/>how-to-use · architecture · workflow ·<br/>literature-data-flow/]
+    DOCS --> GUIDES[/guides<br/>skill-level + specialized guides<br/>levels 1-12 · LLM · publishing · security · literature/]
+    DOCS --> ARCH[/architecture<br/>two-layer · thin-orchestrator ·<br/>decision-tree · adrs · discovery-export · migration · testing-strategy/]
+    DOCS --> USAGE[/usage<br/>examples · markdown-template-guide ·<br/>numbering · output-formats · image-management · visualization/]
     DOCS --> OP[/operational/]
     DOCS --> REF[/reference<br/>api-reference · glossary · faq ·<br/>cheatsheets · common-workflows · copypasta/]
-    DOCS --> MOD[/modules<br/>modules-guide · scientific-simulation ·<br/>pdf-validation · per-module guides/]
+    DOCS --> MOD[/modules<br/>modules-guide · literature-search ·<br/>pdf-validation · per-module guides/]
     DOCS --> DEV[/development<br/>contributing · code-of-conduct ·<br/>security · roadmap · coverage-gaps · testing//]
+    DOCS --> MAINT[/maintenance<br/>private-projects · ci-local ·<br/>regression · archival · bundle/]
     DOCS --> BP[/best-practices<br/>best-practices · version-control ·<br/>multi-project · migration · backup-recovery/]
     DOCS --> PROMPTS[/prompts<br/>AI prompt templates · manuscript ·<br/>registry cross-refs · literature synthesis ·<br/>code · test · feature · refactor · doc ·<br/>infra · validation · assessment/]
     DOCS --> SEC[/security<br/>steganography · hashing &amp; manifests ·<br/>secure_execution/]
@@ -339,7 +363,7 @@ flowchart TB
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef sub fill:#0f766e,stroke:#0f172a,color:#fff
     class DOCS root
-    class CORE,GUIDES,ARCH,USAGE,OP,REF,MOD,DEV,BP,PROMPTS,SEC,STREAMS,AUDIT,RULES,GEN pkg
+    class CORE,GUIDES,ARCH,USAGE,OP,REF,MOD,DEV,MAINT,BP,PROMPTS,SEC,STREAMS,AUDIT,RULES,GEN pkg
     class ENTRY,OP_CFG,OP_LOG,OP_TS,OP_BUILD,OP_F sub
 ```
 

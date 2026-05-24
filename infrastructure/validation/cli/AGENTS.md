@@ -9,8 +9,8 @@ module: `python -m infrastructure.validation.cli <subcommand> ...`.
 ## Files
 
 - `main.py` — CLI dispatcher (argparse subparsers + handlers)
-- `markdown.py` — markdown validation CLI (legacy thin wrapper)
-- `pdf.py` — PDF validation CLI (legacy thin wrapper)
+- `markdown.py` — markdown validation CLI (`python -m infrastructure.validation.cli markdown …`)
+- `pdf.py` — PDF validation CLI (`python -m infrastructure.validation.cli pdf …`)
 - `__main__.py` — module entry point (delegates to `main.main()`)
 - `__init__.py` — package marker
 

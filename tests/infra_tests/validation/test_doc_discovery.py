@@ -1,6 +1,6 @@
 """Tests for infrastructure/validation/doc_discovery.py.
 
-Covers find_markdown_files, identify_cross_references, catalog_agents_readme,
+Covers discover_markdown_files, identify_cross_references, catalog_agents_readme,
 find_config_files, create_hierarchy, and discover_documentation using real temp directories.
 """
 
@@ -10,11 +10,11 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.discovery import (
     catalog_agents_readme,
     create_hierarchy,
     find_config_files,
-    find_markdown_files,
     identify_cross_references,
     discover_documentation,
 )
@@ -41,7 +41,7 @@ def doc_root(tmp_path: Path) -> Path:
 
 class TestFindMarkdownFiles:
     def test_finds_all_md_files(self, doc_root: Path) -> None:
-        files = find_markdown_files(doc_root)
+        files = discover_markdown_files(doc_root, scope="repo")
         names = [f.name for f in files]
         assert "README.md" in names
         assert "AGENTS.md" in names
@@ -54,35 +54,35 @@ class TestFindMarkdownFiles:
         output.mkdir()
         (output / "generated.md").write_text("# Generated")
 
-        files = find_markdown_files(tmp_path)
+        files = discover_markdown_files(tmp_path, scope="repo")
         names = [f.name for f in files]
         assert "README.md" in names
         assert "generated.md" not in names
 
     def test_returns_sorted_list(self, doc_root: Path) -> None:
-        files = find_markdown_files(doc_root)
+        files = discover_markdown_files(doc_root, scope="repo")
         assert files == sorted(files)
 
     def test_empty_directory_returns_empty(self, tmp_path: Path) -> None:
-        files = find_markdown_files(tmp_path)
+        files = discover_markdown_files(tmp_path, scope="repo")
         assert files == []
 
 
 class TestCatalogAgentsReadme:
     def test_finds_agents_and_readme(self, doc_root: Path) -> None:
-        md_files = find_markdown_files(doc_root)
+        md_files = discover_markdown_files(doc_root, scope="repo")
         result = catalog_agents_readme(md_files, doc_root)
         assert any("AGENTS.md" in r for r in result)
         assert any("README.md" in r for r in result)
 
     def test_excludes_other_docs(self, doc_root: Path) -> None:
-        md_files = find_markdown_files(doc_root)
+        md_files = discover_markdown_files(doc_root, scope="repo")
         result = catalog_agents_readme(md_files, doc_root)
         assert not any("guide.md" in r for r in result)
         assert not any("api.md" in r for r in result)
 
     def test_returns_relative_paths(self, doc_root: Path) -> None:
-        md_files = find_markdown_files(doc_root)
+        md_files = discover_markdown_files(doc_root, scope="repo")
         result = catalog_agents_readme(md_files, doc_root)
         for r in result:
             assert not Path(r).is_absolute()
@@ -111,20 +111,20 @@ class TestFindConfigFiles:
 
 class TestCreateHierarchy:
     def test_returns_dict_keyed_by_directory(self, doc_root: Path) -> None:
-        md_files = find_markdown_files(doc_root)
+        md_files = discover_markdown_files(doc_root, scope="repo")
         hierarchy = create_hierarchy(md_files, doc_root)
         assert isinstance(hierarchy, dict)
         assert "root" in hierarchy or "docs" in hierarchy
 
     def test_root_files_keyed_as_root(self, doc_root: Path) -> None:
-        md_files = find_markdown_files(doc_root)
+        md_files = discover_markdown_files(doc_root, scope="repo")
         hierarchy = create_hierarchy(md_files, doc_root)
         assert "root" in hierarchy
         root_files = hierarchy["root"]
         assert any("README.md" in f for f in root_files)
 
     def test_subdirectory_files_keyed_correctly(self, doc_root: Path) -> None:
-        md_files = find_markdown_files(doc_root)
+        md_files = discover_markdown_files(doc_root, scope="repo")
         hierarchy = create_hierarchy(md_files, doc_root)
         assert "docs" in hierarchy
         docs_files = hierarchy["docs"]
@@ -133,20 +133,20 @@ class TestCreateHierarchy:
 
 class TestIdentifyCrossReferences:
     def test_finds_relative_links(self, doc_root: Path) -> None:
-        md_files = find_markdown_files(doc_root)
+        md_files = discover_markdown_files(doc_root, scope="repo")
         refs = identify_cross_references(md_files)
         assert isinstance(refs, set)
         assert len(refs) > 0
 
     def test_excludes_http_links(self, tmp_path: Path) -> None:
         (tmp_path / "doc.md").write_text("[external](https://example.com)\n")
-        md_files = find_markdown_files(tmp_path)
+        md_files = discover_markdown_files(tmp_path, scope="repo")
         refs = identify_cross_references(md_files)
         assert not any("http" in r for r in refs)
 
     def test_excludes_anchor_links(self, tmp_path: Path) -> None:
         (tmp_path / "doc.md").write_text("[section](#heading)\n")
-        md_files = find_markdown_files(tmp_path)
+        md_files = discover_markdown_files(tmp_path, scope="repo")
         refs = identify_cross_references(md_files)
         assert not any(r.startswith("#") for r in refs)
 
@@ -174,7 +174,7 @@ class TestRunDiscoveryPhase:
 
     def test_markdown_count_matches_files(self, doc_root: Path) -> None:
         result = discover_documentation(doc_root)
-        actual_files = find_markdown_files(doc_root)
+        actual_files = discover_markdown_files(doc_root, scope="repo")
         assert result["markdown_files"] == len(actual_files)
 
     def test_config_files_count_positive(self, doc_root: Path) -> None:

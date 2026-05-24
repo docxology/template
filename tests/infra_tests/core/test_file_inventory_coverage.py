@@ -71,7 +71,7 @@ class TestFileInventoryManager:
         assert all(e.category == "pdf" for e in entries)
 
     def test_collect_combined_pdfs_at_root(self, tmp_path):
-        (tmp_path / "project_combined.pdf").write_bytes(b"Combined PDF")
+        (tmp_path / "template_code_project_combined.pdf").write_bytes(b"Combined PDF")
         manager = FileInventoryManager()
         entries = manager.collect_output_files(tmp_path)
         assert any("combined" in e.path.name for e in entries)

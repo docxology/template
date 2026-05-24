@@ -9,6 +9,10 @@ from pytest_httpserver import HTTPServer
 
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import OllamaClientConfig
+from infrastructure.llm.review.generation import (
+    _build_off_topic_retry_prompt,
+    _deduplicate_response,
+)
 from infrastructure.llm.review.generator import (
     extract_manuscript_text,
     generate_improvement_suggestions,
@@ -59,6 +63,91 @@ class TestExtractManuscriptText:
             assert "Second line of text" in text
         except ValueError as e:
             assert "No PDF parsing library available" in str(e)
+
+    @pytest.mark.parametrize("path_arg", ["path_obj", "str"])
+    def test_file_not_found_returns_none(self, tmp_path, path_arg):
+        missing = tmp_path / "nonexistent.pdf"
+        arg = str(missing) if path_arg == "str" else missing
+        text, metrics = extract_manuscript_text(arg)
+        assert text is None
+        assert metrics.total_chars == 0
+
+    def test_valid_pdf_populates_metrics(self, tmp_path):
+        pytest.importorskip("reportlab")
+        from reportlab.pdfgen import canvas
+
+        pdf_path = tmp_path / "paper.pdf"
+        c = canvas.Canvas(str(pdf_path))
+        c.setFont("Helvetica", 12)
+        c.drawString(100, 700, "This is a test manuscript about quantum computing")
+        c.save()
+
+        text, metrics = extract_manuscript_text(pdf_path)
+        assert text is not None
+        assert metrics.total_chars > 0
+        assert metrics.total_words > 0
+        assert metrics.total_tokens_est > 0
+        assert metrics.truncated is False
+
+    @pytest.mark.parametrize(
+        ("max_input_length", "expect_truncated"),
+        [(100, True), (0, False)],
+    )
+    def test_truncation_behavior(self, tmp_path, max_input_length, expect_truncated):
+        pytest.importorskip("reportlab")
+        from reportlab.pdfgen import canvas
+
+        pdf_path = tmp_path / "long.pdf"
+        c = canvas.Canvas(str(pdf_path))
+        if expect_truncated:
+            c.setFont("Helvetica", 8)
+            for i in range(100):
+                y = 750 - (i * 7)
+                if y < 50:
+                    c.showPage()
+                    y = 750
+                c.drawString(50, y, f"Line {i}: " + "word " * 20)
+        else:
+            c.drawString(100, 700, "Short content")
+        c.save()
+
+        text, metrics = extract_manuscript_text(pdf_path, max_input_length=max_input_length)
+        assert text is not None
+        assert metrics.truncated is expect_truncated
+        if expect_truncated:
+            assert metrics.truncated_chars == max_input_length
+            assert "truncated" in text.lower()
+
+
+class TestGenerationHelpers:
+    @pytest.mark.parametrize("had_off_topic", [False, True])
+    def test_build_off_topic_retry_prompt(self, had_off_topic):
+        result = _build_off_topic_retry_prompt("Original prompt", had_off_topic=had_off_topic)
+        if had_off_topic:
+            assert "IMPORTANT" in result or "Original prompt" in result
+        else:
+            assert result == "Original prompt"
+        assert "Original prompt" in result
+
+    @pytest.mark.parametrize(
+        ("response", "fallback", "expect_same"),
+        [
+            ("This is a unique response with different content in each part.", "fallback", True),
+            ("", "fallback", True),
+            ("Short text", "fallback", True),
+        ],
+    )
+    def test_deduplicate_response_non_repetitive(self, response, fallback, expect_same):
+        result = _deduplicate_response(response, fallback)
+        if expect_same:
+            assert result == response
+        else:
+            assert len(result) > 0
+
+    def test_deduplicate_response_highly_repetitive(self):
+        repeated = "The same sentence repeated. " * 50
+        result = _deduplicate_response(repeated, "best fallback response")
+        assert len(result) > 0
 
 
 class TestGenerateReviewWithMetrics:

@@ -18,6 +18,7 @@ from infrastructure.rendering._pdf_latex_helpers import (
     generate_title_page_preamble,
 )
 from infrastructure.rendering._pdf_figure_paths import fix_figure_paths
+from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.pdf_renderer import PDFRenderer
 
@@ -285,7 +286,7 @@ class TestCombinedPDFRendering:
 
         # Create combined markdown
         combined_md = manuscript_dir.parent / "_combined_manuscript.md"
-        combined_content = renderer._combine_markdown_files(source_files)
+        combined_content = combine_manuscript_markdown_sections(source_files)
         combined_md.write_text(combined_content)
 
         # Test that combined content includes source files

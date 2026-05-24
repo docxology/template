@@ -10,11 +10,12 @@ The `infrastructure/validation/docs/` package contains repository documentation 
 - `scanner.py` - documentation scanner (`DocumentationScanner.run_verification_checks()`)
 - `discovery.py` - documentation discovery helpers
 - `verification.py` - verification checks (lint, markdown, commands, link cycles)
-- `scan_scope.py` - shared exclusions for local/generated trees
+- `scan_scope.py` - shared exclusions for local/generated trees (`output/`, `_generated/`, `_skill-eval/`, …)
 - `mermaid_lint.py` - fenced Mermaid validation through `mmdc`
 - `cross_link_lint.py` - relative Markdown link validation and link-cycle detection
 - `lint_runner.py` - CI docs lint orchestration (used by verification checks and `scripts/lint_docs.py`)
-- `consistency_lint.py` - stale count and ghost-project checks
+- `consistency_lint.py` - facade re-exporting consistency checks (module counts, ghost projects, command conventions, doc imports, stale shell-bootstrap contracts)
+- `consistency/` - implementation package for consistency linters
 - `doc_pair_lint.py` - permanent-template `AGENTS.md` / `README.md` coverage
 - `accuracy.py` - accuracy checks
 - `completeness.py` - completeness checks
@@ -48,6 +49,26 @@ Stub statuses such as `basic_validation_passed` and `manual_testing_required` ar
 | `build_scan_report()` | `build_documentation_scan_report()` |
 
 Statistics keys: `discovery`, `accuracy`, `completeness`, `quality`, `improvements`, `verification`.
+
+## Lint scope exclusions
+
+Shared via [`scan_scope.py`](scan_scope.py) (`DEFAULT_EXCLUDE_PARTS`, `SKILL_EVAL_DIR_NAME`):
+
+| Path component | Rationale |
+| --- | --- |
+| `output/`, `projects_archive/`, `projects_in_progress/` | Regenerated or non-executed trees |
+| `_generated/` | Machine-generated snippets |
+| `_skill-eval/` | Regenerated skill-eval harness fixtures under `docs/prompts/_skill-eval/` |
+
+Cross-link lint also skips `**/_skill-eval/**` via `_DEFAULT_EXCLUDE_GLOBS`.
+
+## Consistency checks
+
+`check_stale_shell_contracts()` (via `consistency_lint.py`) flags post-refactor doc drift:
+
+- PIPELINE_MODE export claims tied to `run.sh` (bash-local only, not exported)
+- claims that `secure_run.sh` owns `--deterministic` parsing (Python `secure` subcommand owns the flag)
+- unconditional `projects/template_search_project/` without `projects_archive/` or local-only copy context
 
 ## See Also
 

@@ -11,17 +11,21 @@ from __future__ import annotations
 import re
 
 
-from infrastructure.reporting.pipeline_test_runner import (
-    INFRASTRUCTURE_TEST_SCOPES,
+from infrastructure.core.pytest_orchestration import (
+    DISCOVERY_PATTERNS,
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
-    TestSuiteResults,
-    _DISCOVERY_PATTERNS,
-    _log_discovered_tests,
-    _parse_test_discovery_timeout,
+    log_discovered_tests,
+    parse_test_discovery_timeout,
+    resolve_infrastructure_test_paths,
+)
+from infrastructure.reporting.pipeline_test_reporting import (
     _report_suite_failure,
     _report_suite_success,
-    _resolve_infrastructure_test_paths,
     report_results,
+)
+from infrastructure.reporting.pipeline_test_runner import (
+    INFRASTRUCTURE_TEST_SCOPES,
+    TestSuiteResults,
 )
 
 
@@ -61,11 +65,11 @@ class TestTestSuiteResults:
 
 
 class TestDiscoveryPatterns:
-    """Test the _DISCOVERY_PATTERNS regex list."""
+    """Test the DISCOVERY_PATTERNS regex list."""
 
     def test_patterns_are_valid_regex(self):
         """All discovery patterns should be valid regex."""
-        for pattern in _DISCOVERY_PATTERNS:
+        for pattern in DISCOVERY_PATTERNS:
             compiled = re.compile(pattern, re.IGNORECASE)
             assert compiled is not None
 
@@ -73,7 +77,7 @@ class TestDiscoveryPatterns:
         """Pattern should match '42 tests collected'."""
         text = "============== 42 tests collected =============="
         found = None
-        for pattern in _DISCOVERY_PATTERNS:
+        for pattern in DISCOVERY_PATTERNS:
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
                 found = int(match.group(1))
@@ -84,7 +88,7 @@ class TestDiscoveryPatterns:
         """Pattern should match 'collected 100 items'."""
         text = "collected 100 items"
         found = None
-        for pattern in _DISCOVERY_PATTERNS:
+        for pattern in DISCOVERY_PATTERNS:
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
                 found = int(match.group(1))
@@ -95,7 +99,7 @@ class TestDiscoveryPatterns:
         """Pattern should match 'found 5 tests'."""
         text = "found 5 tests"
         found = None
-        for pattern in _DISCOVERY_PATTERNS:
+        for pattern in DISCOVERY_PATTERNS:
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
                 found = int(match.group(1))
@@ -106,7 +110,7 @@ class TestDiscoveryPatterns:
         """Pattern should match '200 tests found'."""
         text = "200 tests found"
         found = None
-        for pattern in _DISCOVERY_PATTERNS:
+        for pattern in DISCOVERY_PATTERNS:
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
                 found = int(match.group(1))
@@ -117,7 +121,7 @@ class TestDiscoveryPatterns:
         """No pattern should match random text."""
         text = "Hello world, nothing to see here"
         found = None
-        for pattern in _DISCOVERY_PATTERNS:
+        for pattern in DISCOVERY_PATTERNS:
             match = re.search(pattern, text, re.IGNORECASE)
             if match:
                 found = int(match.group(1))
@@ -134,7 +138,7 @@ class TestInfrastructureTestScopes:
 
     def test_full_scope_uses_repo_suite_and_integration(self, tmp_path):
         """Full scope covers the complete infrastructure and integration tree."""
-        paths = _resolve_infrastructure_test_paths(tmp_path, "full")
+        paths = resolve_infrastructure_test_paths(tmp_path, "full")
 
         assert str(tmp_path / "tests" / "infra_tests") in paths
         assert str(tmp_path / "tests" / "integration") in paths
@@ -142,7 +146,7 @@ class TestInfrastructureTestScopes:
 
     def test_pipeline_smoke_scope_uses_curated_real_contract(self, tmp_path):
         """Pipeline smoke stays focused on core contracts instead of the whole repo suite."""
-        paths = _resolve_infrastructure_test_paths(tmp_path, "pipeline-smoke")
+        paths = resolve_infrastructure_test_paths(tmp_path, "pipeline-smoke")
 
         assert paths == [str(tmp_path / relative_path) for relative_path in PIPELINE_SMOKE_INFRA_TEST_PATHS]
         assert all("tests/infra_tests" in path for path in paths)
@@ -153,50 +157,50 @@ class TestInfrastructureTestScopes:
         import pytest
 
         with pytest.raises(ValueError, match="Unknown infrastructure test scope"):
-            _resolve_infrastructure_test_paths(tmp_path, "everything")  # type: ignore[arg-type]
+            resolve_infrastructure_test_paths(tmp_path, "everything")  # type: ignore[arg-type]
 
     def test_discovery_timeout_defaults_by_scope(self, monkeypatch):
         """Full discovery gets a longer timeout than pipeline smoke."""
         monkeypatch.delenv("TEST_DISCOVERY_TIMEOUT_SEC", raising=False)
 
-        assert _parse_test_discovery_timeout("full") == 120.0
-        assert _parse_test_discovery_timeout("pipeline-smoke") == 30.0
+        assert parse_test_discovery_timeout("full") == 120.0
+        assert parse_test_discovery_timeout("pipeline-smoke") == 30.0
 
     def test_discovery_timeout_env_override(self, monkeypatch):
         """Discovery timeout can be raised locally for large checkouts."""
         monkeypatch.setenv("TEST_DISCOVERY_TIMEOUT_SEC", "45")
 
-        assert _parse_test_discovery_timeout("full") == 45.0
+        assert parse_test_discovery_timeout("full") == 45.0
 
 
 class TestLogDiscoveredTests:
-    """Test the _log_discovered_tests function."""
+    """Test the log_discovered_tests function."""
 
-    def test_log_discovered_tests_with_echo(self, tmp_path):
+    def testlog_discovered_tests_with_echo(self, tmp_path):
         """Test discovery with a simple command that outputs test count text."""
         import os
 
         cmd = ["echo", "collected 10 items"]
         env = os.environ.copy()
         # Should not raise - it just logs
-        _log_discovered_tests(cmd, tmp_path, env, "unit")
+        log_discovered_tests(cmd, tmp_path, env, "unit")
 
-    def test_log_discovered_tests_with_invalid_command(self, tmp_path):
+    def testlog_discovered_tests_with_invalid_command(self, tmp_path):
         """Test discovery with a command that fails (shouldn't raise)."""
         import os
 
         cmd = ["false"]  # returns exit code 1
         env = os.environ.copy()
         # Should not raise even when command fails
-        _log_discovered_tests(cmd, tmp_path, env, "unit")
+        log_discovered_tests(cmd, tmp_path, env, "unit")
 
-    def test_log_discovered_tests_unparseable_output(self, tmp_path):
+    def testlog_discovered_tests_unparseable_output(self, tmp_path):
         """Test discovery when output contains no parseable count."""
         import os
 
         cmd = ["echo", "no count here"]
         env = os.environ.copy()
-        _log_discovered_tests(cmd, tmp_path, env, "integration")
+        log_discovered_tests(cmd, tmp_path, env, "integration")
 
 
 class TestReportSuiteFailure:
@@ -418,3 +422,23 @@ class TestReportResults:
         }
         report = {}
         report_results(0, 0, infra_results, project_results, report, "myproject")
+
+
+class TestReportInfraOnlyResults:
+    def test_success_path(self):
+        from infrastructure.reporting.pipeline_test_reporting import report_infra_only_results
+
+        report_infra_only_results(0, {"passed": 3, "total": 3, "failed": 0, "failed_tests": []})
+
+    def test_failure_lists_failed_tests(self):
+        from infrastructure.reporting.pipeline_test_reporting import report_infra_only_results
+
+        report_infra_only_results(
+            1,
+            {
+                "passed": 1,
+                "total": 2,
+                "failed": 1,
+                "failed_tests": [{"test": "t::x", "error_type": "Assert", "error_message": "boom"}],
+            },
+        )

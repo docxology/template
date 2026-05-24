@@ -25,6 +25,7 @@ DEFAULT_EXCLUDE_PARTS: frozenset[str] = frozenset(
         ".tox",
         ".venv",
         "__pycache__",
+        "_skill-eval",
         "build",
         "dist",
         "htmlcov",
@@ -36,6 +37,11 @@ DEFAULT_EXCLUDE_PARTS: frozenset[str] = frozenset(
         "venv",
     }
 )
+
+# Regenerated skill-eval harness output under docs/prompts/_skill-eval/ (fixture
+# response.md files with intentionally wrong relative links). Excluded from
+# cross-link and doc-pair lint like output/ and _generated/.
+SKILL_EVAL_DIR_NAME: str = "_skill-eval"
 
 
 def should_exclude_path(path: Path, exclude_parts: Iterable[str] = DEFAULT_EXCLUDE_PARTS) -> bool:
@@ -73,4 +79,4 @@ def iter_markdown_files(
     return sorted(out)
 
 
-__all__ = ["DEFAULT_EXCLUDE_PARTS", "iter_markdown_files", "should_exclude_path"]
+__all__ = ["DEFAULT_EXCLUDE_PARTS", "SKILL_EVAL_DIR_NAME", "iter_markdown_files", "should_exclude_path"]

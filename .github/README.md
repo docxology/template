@@ -16,24 +16,128 @@ Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
 
-[**⚡ Quick Start**](#quick-start) · [**📐 Architecture**](#architecture) · [**🔄 Pipeline**](#pipeline) · [**🤖 AI Collaboration**](#ai-collaboration) · [**🔒 Provenance**](#security-provenance) · [**📚 Docs**](#documentation-hub)
+[**🧭 Choose path**](#choose-your-path) · [**🤖 Agents**](#agent--automation-entry-point) · [**⚡ Quick Start**](#quick-start) · [**📐 Architecture**](#architecture) · [**🔄 Pipeline**](#pipeline) · [**🔒 Provenance**](#security--provenance) · [**📚 Docs**](#documentation-hub) · [**🔧 CI/CD**](#cicd)
 
 </div>
 
 ---
 
-## About `.github/`
+## Table of contents
 
-This folder is the **GitHub integration surface**: Actions workflows, Dependabot, and issue/PR templates. It is not importable application code.
+| Section | Audience |
+| --- | --- |
+| [About this document](#about-this-document) | Everyone — scope of this README vs root [`README.md`](../README.md) |
+| [Choose your path](#choose-your-path) | Humans — goal-based deep links |
+| [Agent & automation entry point](#agent--automation-entry-point) | Cursor, Claude Code, Codex, CI bots — read order, skills, commands |
+| [Quick Start](#quick-start) | First clone → first pipeline run |
+| [Architecture](#architecture) | Two-layer layout, directories, lifecycle |
+| [Active projects](#active-projects) | Exemplars and rotating roster |
+| [Pipeline](#pipeline) | Stage DAG, scripts, flags |
+| [AI collaboration](#ai-collaboration) | `AGENTS.md` / `SKILL.md` conventions |
+| [Security & provenance](#security--provenance) | Steganography, hashing, `secure_run.sh` |
+| [Testing standards](#testing-standards) | No-mocks policy, coverage floors |
+| [Documentation hub](#documentation-hub) | Full `docs/` map with deep links |
+| [CI/CD](#cicd) | Workflows, jobs, local parity, branch protection |
+| [Issue & PR templates](#issue--pr-templates) | Contributing on GitHub |
+| [Troubleshooting](#troubleshooting) | `gh` CLI, common fixes |
+
+---
+
+## About this document
+
+This file lives under [`.github/`](.) but serves as the **primary GitHub-rendered entry point** for the repository: badges, architecture diagrams, pipeline reference, documentation map, and CI inventory — optimized for browsing on github.com and for agents that land here first.
 
 | Document | Use |
 | --- | --- |
-| **This file** | Human overview while browsing the repo on GitHub |
-| [`AGENTS.md`](AGENTS.md) | Technical index: job names, triggers, coverage thresholds |
-| [`workflows/README.md`](workflows/README.md) | CI job graph and commands to mirror CI locally |
-| [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | Issue template inventory and editing notes |
+| **This file** | Human + agent overview on GitHub (you are here) |
+| [`AGENTS.md`](AGENTS.md) | CI job ids, display names, thresholds, local parity commands |
+| [`workflows/README.md`](workflows/README.md) · [`workflows/AGENTS.md`](workflows/AGENTS.md) | Step-level CI detail |
+| [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | Issue template inventory |
+| [`../README.md`](../README.md) | Clone-first quickstart and honest positioning |
+| [`../AGENTS.md`](../AGENTS.md) | Full system manual (pipeline semantics, modules, troubleshooting index) |
+| [`../CLAUDE.md`](../CLAUDE.md) | Copy-paste command cheat sheet |
+| [`.cursorrules`](../.cursorrules) | Cursor agent constraints (architecture, CI scope) |
 
-**Related (repo root):** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) lists agent `SKILL.md` descriptors. After adding or editing `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit the updated manifest (see [`infrastructure/skills/`](../infrastructure/skills/)). Per-subsystem verification dates: [`STATUS.md`](../STATUS.md).
+**Ground truth (do not hard-code rotating names or counts):** [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) · [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) · [`STATUS.md`](../STATUS.md) · [`docs/documentation-index.md`](../docs/documentation-index.md)
+
+**Skills manifest:** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — regenerate after editing any `**/SKILL.md` with `uv run python -m infrastructure.skills write` (human index: [`docs/_generated/skills_index.md`](../docs/_generated/skills_index.md)).
+
+---
+
+## Choose your path
+
+Pick the entry that matches your goal — each link is stable for deep navigation from issues, PRs, and agent transcripts.
+
+| Goal | Start here | Then |
+| --- | --- | --- |
+| **Clone and run** | [Quick Start](#quick-start) | [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) · [`docs/guides/getting-started.md`](../docs/guides/getting-started.md) |
+| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | [`projects/template_code_project/`](../projects/template_code_project/) or [`template_prose_project/`](../projects/template_prose_project/) |
+| **Debug a failed pipeline stage** | [`docs/prompts/pipeline-debugging/SKILL.md`](../docs/prompts/pipeline-debugging/SKILL.md) | [`docs/operational/troubleshooting/`](../docs/operational/troubleshooting/) |
+| **Write or fix tests** | [`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md) | [`docs/prompts/test-creation/SKILL.md`](../docs/prompts/test-creation/SKILL.md) |
+| **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
+| **Contribute / open a PR** | [CI/CD](#cicd) · [Issue & PR templates](#issue--pr-templates) | [`docs/development/contributing.md`](../docs/development/contributing.md) |
+| **Mirror CI locally** | [Simulate CI locally](#simulate-ci-locally) | [`docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md) · [`scripts/ci_local.sh`](../scripts/ci_local.sh) |
+| **Cloud / headless deploy** | [`docs/CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) | [`infrastructure/docker/`](../infrastructure/docker/) |
+| **Full system reference** | [`../AGENTS.md`](../AGENTS.md) | [`docs/documentation-index.md`](../docs/documentation-index.md) |
+
+---
+
+## Agent & automation entry point
+
+Structured routing for coding agents, review bots, and CI automation. **Read in this order** unless the user task is narrowly scoped.
+
+### 1 — Read order
+
+| Priority | File | When |
+| ---: | --- | --- |
+| 1 | [`.cursorrules`](../.cursorrules) | Cursor — architecture, thin orchestrator, no-mocks, CI scope |
+| 2 | [`CLAUDE.md`](../CLAUDE.md) | Exact shell commands, CI mirror, common patterns |
+| 3 | [`AGENTS.md`](../AGENTS.md) | Pipeline stages, validation, configuration, troubleshooting index |
+| 4 | **Directory `AGENTS.md`** | API surfaces for the tree you are editing (`infrastructure/`, `projects/<name>/`, `docs/`, …) |
+| 5 | [`.github/AGENTS.md`](AGENTS.md) | GitHub Actions job names, branch protection, local CI parity |
+
+### 2 — Workflow skill router
+
+Natural-language tasks map to one child skill under [`docs/prompts/`](../docs/prompts/). Hub: [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md).
+
+| Symptom or goal | Skill |
+| --- | --- |
+| Pipeline stage failed / stuck | [`pipeline-debugging`](../docs/prompts/pipeline-debugging/SKILL.md) |
+| Regenerate-from-clean / determinism | [`reproducibility-audit`](../docs/prompts/reproducibility-audit/SKILL.md) |
+| Triple-check manuscript claims | [`manuscript-claim-verification`](../docs/prompts/manuscript-claim-verification/SKILL.md) |
+| `[[FIG:]]` / registry / cross-refs | [`manuscript-cross-references`](../docs/prompts/manuscript-cross-references/SKILL.md) |
+| New manuscript + project from brief | [`manuscript-creation`](../docs/prompts/manuscript-creation/SKILL.md) |
+| Full repo health audit | [`comprehensive-assessment`](../docs/prompts/comprehensive-assessment/SKILL.md) |
+| Validation CLI / markdown / PDF gates | [`validation-quality`](../docs/prompts/validation-quality/SKILL.md) |
+| New module or algorithm | [`code-development`](../docs/prompts/code-development/SKILL.md) |
+| Tests (no mocks) | [`test-creation`](../docs/prompts/test-creation/SKILL.md) |
+| End-to-end feature | [`feature-addition`](../docs/prompts/feature-addition/SKILL.md) |
+| New `infrastructure/*` package | [`infrastructure-module`](../docs/prompts/infrastructure-module/SKILL.md) |
+| Directory docs (`AGENTS.md` / `README.md`) | [`documentation-creation`](../docs/prompts/documentation-creation/SKILL.md) |
+
+**Ambiguous intent:** load the hub [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md) and pick **one** child — do not improvise without it.
+
+### 3 — Non-negotiable invariants
+
+- **Thin orchestrator:** business logic only in `infrastructure/` or `projects/{name}/src/` — never in `scripts/`.
+- **No mocks:** no `unittest.mock`, `MagicMock`, or `mocker.patch` — use real data, temp files, `pytest-httpserver`, subprocess.
+- **Coverage:** infrastructure ≥ 60%, project `src/` ≥ 90% per project ([`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md)).
+- **Public repo confidentiality:** only `template_code_project` and `template_prose_project` may be git-tracked under `projects/` — [`scripts/check_tracked_projects.py`](../scripts/check_tracked_projects.py) enforces in CI and pre-push.
+- **Rotating paths:** never hard-code private or rotating project names — link [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md).
+
+### 4 — Command cheat sheet (agents)
+
+```bash
+uv sync                                                          # install deps
+./run.sh --pipeline --project template_code_project --core-only  # 8-stage core DAG
+uv run python scripts/01_run_tests.py --project template_code_project
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
+uv run python -m infrastructure.skills check                     # manifest freshness
+pre-commit run --hook-stage pre-push --all-files                 # local CI subset
+```
+
+Full command matrix: [`CLAUDE.md`](../CLAUDE.md) · [`docs/reference/quick-start-cheatsheet.md`](../docs/reference/quick-start-cheatsheet.md)
 
 ---
 
@@ -89,7 +193,7 @@ graph TD
     Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 16 Python packages under infrastructure/ (+ config/logrotate templates) · documented areas in docs/modules/"
+    subgraph "Layer 1 · 17 importable Python packages under infrastructure/ (+ config/docker templates) · docs/modules/"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -342,32 +446,37 @@ Full stage details: [docs/core/workflow.md](../docs/core/workflow.md) · [docs/c
 
 ---
 
-## 🤖 AI Collaboration
+## AI collaboration
 
-Every directory at every level contains **two documentation files**:
-
-- **`README.md`** — Human-readable overview and quick-start
-- **`AGENTS.md`** — Machine-readable spec for AI coding assistants: API tables, dependency graphs, architectural constraints, naming conventions
-
-Under `infrastructure/`, each subpackage also has **`SKILL.md`** (YAML frontmatter). The aggregated list for editors is [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) (regenerate with `uv run python -m infrastructure.skills write`). Cursor project skills live under [`.cursor/skills/`](../.cursor/skills/).
+Every permanent directory carries **`README.md`** (human navigation) and **`AGENTS.md`** (machine-readable API tables, constraints, file inventories). `infrastructure/` subpackages add **`SKILL.md`** for agent routing.
 
 ```mermaid
 flowchart TB
-    CL[CLAUDE.md · root<br/>Global constraints: Zero-Mock ·<br/>Thin Orchestrator · naming]
-    AG[AGENTS.md · per directory<br/>Local API surfaces · file inventories ·<br/>integration patterns]
-    RD[README.md<br/>Human navigation · quick-start]
+    GH[".github/README.md<br/>GitHub entry · CI · doc map"]
+    CL["CLAUDE.md<br/>Commands · CI mirror"]
+    AG["AGENTS.md · per directory<br/>Local APIs · integration"]
+    SK["SKILL.md · infrastructure + docs/prompts<br/>Workflow routing"]
+    RD["README.md<br/>Quick-start"]
 
-    CL --> AG --> RD
+    GH --> CL --> AG
+    AG --> SK --> RD
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef tech fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef hum fill:#0f766e,stroke:#0f172a,color:#fff
-    class CL root
-    class AG tech
+    class GH,CL root
+    class AG,SK tech
     class RD hum
 ```
 
-See [docs/rules/](../docs/rules/) for standards and [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) for the infrastructure skill hub.
+| Layer | Entry |
+| --- | --- |
+| Workflow skills (14 tasks) | [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md) · [Agent router](#agent--automation-entry-point) |
+| Infrastructure skills | [`infrastructure/SKILL.md`](../infrastructure/SKILL.md) · [`docs/_generated/skills_index.md`](../docs/_generated/skills_index.md) |
+| Editor manifest | [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) — `uv run python -m infrastructure.skills write` |
+| Contributor norms | [`docs/rules/`](../docs/rules/) · [`.cursorrules`](../.cursorrules) |
+| PAI integration | [`docs/PAI.md`](../docs/PAI.md) |
+| Skill eval harness (synthetic) | [`docs/prompts/_skill-eval/AGENTS.md`](../docs/prompts/_skill-eval/AGENTS.md) |
 
 ---
 
@@ -583,28 +692,30 @@ Contributing, testing internals, roadmap.
 | [security.md](../docs/development/security.md) | Security disclosure policy |
 | [code-of-conduct.md](../docs/development/code-of-conduct.md) | Community standards |
 
-### 🤖 Prompts (`docs/prompts/`)
+### Prompts / workflow skills (`docs/prompts/`)
 
-Reusable AI agent prompt templates for common tasks.
+Discoverable agent skills — **hub + 14 workflow directories** — for template-compliant tasks. Invoke in natural language; indexed in [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json). **Agent router:** [Agent & automation entry point](#agent--automation-entry-point).
 
-Authoritative index (purposes, categories, navigation map): [`docs/prompts/README.md`](../docs/prompts/README.md). The full current set:
+Hub and index: [`docs/prompts/SKILL.md`](../docs/prompts/SKILL.md), [`docs/prompts/README.md`](../docs/prompts/README.md), [`docs/prompts/AGENTS.md`](../docs/prompts/AGENTS.md).
 
-| File | Purpose |
+| Skill directory | Purpose |
 | --- | --- |
-| [code_development.md](../docs/prompts/code_development.md) | New modules, algorithms, or utilities |
-| [comprehensive_assessment.md](../docs/prompts/comprehensive_assessment.md) | Wide audit: tests, docs, manuscript, pipeline |
-| [documentation_creation.md](../docs/prompts/documentation_creation.md) | AGENTS.md / README.md for a directory |
-| [feature_addition.md](../docs/prompts/feature_addition.md) | End-to-end feature work across layers |
-| [infrastructure_module.md](../docs/prompts/infrastructure_module.md) | New or extended `infrastructure/*` packages |
-| [literature_synthesis.md](../docs/prompts/literature_synthesis.md) | LLM blocks for per-paper and corpus synthesis |
-| [manuscript_claim_verification.md](../docs/prompts/manuscript_claim_verification.md) | Triple-check every manuscript claim; improve text; keep AGENTS/README complete; stay renderable |
-| [manuscript_creation.md](../docs/prompts/manuscript_creation.md) | New manuscript + project layout from a research brief |
-| [manuscript_cross_references.md](../docs/prompts/manuscript_cross_references.md) | Registry/token manuscripts (`labels.yaml`, `[[FIG:]]`, …) and cross-ref audits |
-| [pipeline_debugging.md](../docs/prompts/pipeline_debugging.md) | Systematic DAG-stage triage when a pipeline run fails or stalls |
-| [refactoring.md](../docs/prompts/refactoring.md) | Clean-break refactors with migration |
-| [reproducibility_audit.md](../docs/prompts/reproducibility_audit.md) | Determinism + regenerate-from-clean + double-run diff |
-| [test_creation.md](../docs/prompts/test_creation.md) | Tests under the no-mocks policy |
-| [validation_quality.md](../docs/prompts/validation_quality.md) | Validation CLI, gates, manuscript/output checks |
+| [code-development/](../docs/prompts/code-development/SKILL.md) | New modules, algorithms, or utilities |
+| [comprehensive-assessment/](../docs/prompts/comprehensive-assessment/SKILL.md) | Wide audit: tests, docs, manuscript, pipeline |
+| [documentation-creation/](../docs/prompts/documentation-creation/SKILL.md) | AGENTS.md / README.md for a directory |
+| [feature-addition/](../docs/prompts/feature-addition/SKILL.md) | End-to-end feature work across layers |
+| [infrastructure-module/](../docs/prompts/infrastructure-module/SKILL.md) | New or extended `infrastructure/*` packages |
+| [literature-synthesis/](../docs/prompts/literature-synthesis/SKILL.md) | LLM blocks for per-paper and corpus synthesis |
+| [manuscript-claim-verification/](../docs/prompts/manuscript-claim-verification/SKILL.md) | Triple-check every manuscript claim |
+| [manuscript-creation/](../docs/prompts/manuscript-creation/SKILL.md) | New manuscript + project from a research brief |
+| [manuscript-cross-references/](../docs/prompts/manuscript-cross-references/SKILL.md) | Registry/token cross-ref audits |
+| [pipeline-debugging/](../docs/prompts/pipeline-debugging/SKILL.md) | DAG-stage triage when pipeline fails |
+| [refactoring/](../docs/prompts/refactoring/SKILL.md) | Clean-break refactors with migration |
+| [reproducibility-audit/](../docs/prompts/reproducibility-audit/SKILL.md) | Determinism + regenerate-from-clean |
+| [test-creation/](../docs/prompts/test-creation/SKILL.md) | Tests under the no-mocks policy |
+| [validation-quality/](../docs/prompts/validation-quality/SKILL.md) | Validation CLI, gates, output checks |
+
+Regenerate manifest after skill edits: `uv run python -m infrastructure.skills write`.
 
 ### 📖 Reference (`docs/reference/`)
 
@@ -644,10 +755,33 @@ Documentation review reports and filepath audits.
 | File | Purpose |
 | --- | --- |
 | [docs/README.md](../docs/README.md) | Documentation hub index and navigation |
+| [docs/AGENTS.md](../docs/AGENTS.md) | Technical guide for the `docs/` tree |
 | [docs/documentation-index.md](../docs/documentation-index.md) | Full inventory of documentation files (authoritative count) |
 | [docs/RUN_GUIDE.md](../docs/RUN_GUIDE.md) | Complete run guide: modes, flags, troubleshooting |
 | [docs/CLOUD_DEPLOY.md](../docs/CLOUD_DEPLOY.md) | Cloud deployment guide (AWS, GCP, Azure, Docker) |
 | [docs/PAI.md](../docs/PAI.md) | Personal AI Infrastructure integration guide |
+
+### 🔧 Maintenance (`docs/maintenance/`)
+
+Long-horizon viability — toolchain migration, local CI, archival targets, regression testing.
+
+| File | Purpose |
+| --- | --- |
+| [docs/maintenance/README.md](../docs/maintenance/README.md) | Maintenance hub index |
+| [docs/maintenance/ci-local.md](../docs/maintenance/ci-local.md) | Reproduce GitHub Actions with `act` / [`scripts/ci_local.sh`](../scripts/ci_local.sh) |
+| [docs/maintenance/regression-testing.md](../docs/maintenance/regression-testing.md) | Pinned numerical outputs for claim binding |
+| [docs/maintenance/archival-targets.md](../docs/maintenance/archival-targets.md) | Stage 11 Zenodo / Software Heritage / IPFS |
+| [docs/maintenance/private-projects-repo.md](../docs/maintenance/private-projects-repo.md) | Private `active/` / `passive/` / `archive/` lifecycle |
+| [docs/maintenance/stage-10-executable-bundle.md](../docs/maintenance/stage-10-executable-bundle.md) | Opt-in executable bundle stage |
+
+### 📋 Repo meta (root)
+
+| File | Purpose |
+| --- | --- |
+| [STATUS.md](../STATUS.md) | Per-subsystem manual E2E verification ledger |
+| [MAINTAINERS.md](../MAINTAINERS.md) | Ownership and contact |
+| [CHANGELOG.md](../CHANGELOG.md) | Template repository (Layer 1) release history |
+| [.pre-commit-config.yaml](../.pre-commit-config.yaml) | Local Ruff, mypy, Bandit, pre-push gates |
 
 ---
 
@@ -733,6 +867,8 @@ See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-aud
 
 ### Simulate CI Locally
 
+**One command (act + fallback):** [`scripts/ci_local.sh`](../scripts/ci_local.sh) — see [`docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md).
+
 ```bash
 # Lint + format check (mirror CI)
 uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
@@ -753,6 +889,9 @@ while IFS= read -r raw || [ -n "$raw" ]; do
 done < .github/pip-audit-ignore.txt
 uv run pip-audit "${IGNORE_ARGS[@]}"
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
+
+# Pre-push hook bundle (fast local gate)
+pre-commit run --hook-stage pre-push --all-files
 ```
 
 ### Branch Protection
@@ -830,7 +969,7 @@ Common issues: [docs/operational/troubleshooting/](../docs/operational/troublesh
 
 <div align="center">
 
-**[📖 AGENTS.md](../AGENTS.md)** · **[🚀 Run Guide](../docs/RUN_GUIDE.md)** · **[📐 Architecture](../docs/architecture/two-layer-architecture.md)** · **[📋 Rules](../docs/rules/)** · **[🐛 Issues](https://github.com/docxology/template/issues)** · **[💬 Discussions](https://github.com/docxology/template/discussions)**
+**[🤖 Agent entry](#agent--automation-entry-point)** · **[📖 AGENTS.md](../AGENTS.md)** · **[⌨️ CLAUDE.md](../CLAUDE.md)** · **[🚀 Run Guide](../docs/RUN_GUIDE.md)** · **[📐 Architecture](../docs/architecture/two-layer-architecture.md)** · **[📋 Rules](../docs/rules/)** · **[🔧 CI AGENTS.md](AGENTS.md)** · **[📊 STATUS](../STATUS.md)** · **[🐛 Issues](https://github.com/docxology/template/issues)** · **[💬 Discussions](https://github.com/docxology/template/discussions)**
 
 *Reproducibility as architecture, not afterthought.*
 

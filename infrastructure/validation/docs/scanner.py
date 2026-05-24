@@ -18,12 +18,10 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.accuracy import verify_documentation_accuracy
 from infrastructure.validation.docs.completeness import analyze_documentation_completeness
-from infrastructure.validation.docs.discovery import (
-    discover_documentation,
-    discover_markdown_files,
-)
+from infrastructure.validation.docs.discovery import discover_documentation
 from infrastructure.validation.docs.models import (
     CompletenessGap,
     DocumentationFile,
@@ -37,41 +35,8 @@ from infrastructure.validation.docs._docs_scan_report import build_documentation
 from infrastructure.validation.docs.verification import run_verification_checks
 
 
-class AccuracyIssue(ScanAccuracyIssue):
-    """Backward-compatible wrapper around :class:`ScanAccuracyIssue`."""
-
-    def __init__(
-        self,
-        file: str,
-        line: int,
-        issue_type: str,
-        issue_message: str,
-        severity: str = "warning",
-        details: str = "",
-    ) -> None:
-        super().__init__(
-            category=issue_type,
-            severity=severity,
-            file=file,
-            line=line,
-            message=issue_message,
-            details=details,
-        )
-
-    @property
-    def issue_type(self) -> str:
-        """Compatibility alias for the legacy field name."""
-        return self.category
-
-    @property
-    def issue_message(self) -> str:
-        """Compatibility alias for the legacy field name."""
-        return self.message
-
-
 __all__ = [
     "DocumentationScanner",
-    "AccuracyIssue",
     "ScanAccuracyIssue",
     "CompletenessGap",
     "DocumentationFile",
@@ -111,7 +76,7 @@ class DocumentationScanner:
 
     def verify_accuracy(self) -> dict[str, Any]:
         """Accuracy verification."""
-        md_files = discover_markdown_files(self.repo_root)
+        md_files = discover_markdown_files(self.repo_root, scope="repo")
 
         accuracy_report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy(
             md_files, self.repo_root, self.config_files
@@ -136,7 +101,7 @@ class DocumentationScanner:
 
     def assess_quality(self) -> dict[str, Any]:
         """Quality assessment."""
-        md_files = discover_markdown_files(self.repo_root)
+        md_files = discover_markdown_files(self.repo_root, scope="repo")
         quality_report, quality_issues = assess_documentation_quality(md_files, self.repo_root)
 
         self.results.quality_issues.extend(quality_issues)

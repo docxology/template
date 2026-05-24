@@ -63,6 +63,19 @@ class TestDiscoverAnalysisScripts:
 
         assert [script.name for script in scripts] == ["analysis.py"]
 
+    def test_discover_analysis_scripts_ignores_preflight(self, tmp_path):
+        """Preflight scripts are aesthetic/manual; they must not gate Stage 02."""
+        repo_root = tmp_path / "repo"
+        scripts_dir = repo_root / "projects" / "project" / "scripts"
+        scripts_dir.mkdir(parents=True)
+
+        (scripts_dir / "analysis.py").write_text("# analysis")
+        (scripts_dir / "00_preflight.py").write_text("# preflight")
+
+        scripts = discover_analysis_scripts(repo_root, project_name="project")
+
+        assert [script.name for script in scripts] == ["analysis.py"]
+
     def test_discover_analysis_scripts_sorted(self, tmp_path):
         """Test that scripts are returned in sorted order."""
         repo_root = tmp_path / "repo"

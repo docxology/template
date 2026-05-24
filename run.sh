@@ -23,57 +23,15 @@ set -euo pipefail
 # Argv shaping array — declared before any sourced env hooks so `set -u` stays safe.
 declare -a TRANSLATED
 
-# Bypass macOS sandbox restrictions on ~/.matplotlib and ~/.cache/uv.
-export MPLCONFIGDIR="${TMPDIR:-/tmp}/matplotlib_cache"
-mkdir -p "$MPLCONFIGDIR"
-export UV_CACHE_DIR="${TMPDIR:-/tmp}/uv_cache"
-mkdir -p "$UV_CACHE_DIR"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/shell_bootstrap.sh
+source "$SCRIPT_DIR/scripts/shell_bootstrap.sh"
+
+setup_orchestration_sandbox_env
+cd "$SCRIPT_DIR"
 
 # OpenGauss (math-inc) Lean session workflows: default on; `--no-lean-workflows` or env overrides.
 export FEP_LEAN_GAUSS_WORKFLOWS="${FEP_LEAN_GAUSS_WORKFLOWS:-1}"
-
-# Resolve repo root from this script's location and cd in.
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
-
-# ──────────────────────────────────────────────────────────────────────────
-# uv detection / bootstrap
-# ──────────────────────────────────────────────────────────────────────────
-
-print_uv_install_instructions() {
-    cat >&2 <<'EOF'
-ERROR: uv is required to run this pipeline.
-
-Install uv (one of):
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  brew install uv
-  pip install uv
-
-Then re-run: ./run.sh
-EOF
-}
-
-ensure_uv() {
-    if command -v uv >/dev/null 2>&1 && uv --version >/dev/null 2>&1; then
-        return 0
-    fi
-
-    # Auto-install uv via Astral's official installer when absent.
-    if command -v curl >/dev/null 2>&1; then
-        curl -LsSf https://astral.sh/uv/install.sh | sh || return 1
-    elif command -v wget >/dev/null 2>&1; then
-        wget -qO- https://astral.sh/uv/install.sh | sh || return 1
-    else
-        print_uv_install_instructions
-        return 1
-    fi
-
-    # Source the installer's PATH additions.
-    [[ -f "$HOME/.local/bin/env" ]] && source "$HOME/.local/bin/env"
-    export PATH="$HOME/.local/bin:$PATH"
-
-    command -v uv >/dev/null 2>&1
-}
 
 # Detect non-interactive / pipeline invocation early to drive `uv sync`.
 PIPELINE_MODE=0
@@ -87,7 +45,7 @@ for arg in "$@"; do
 done
 
 if ! ensure_uv; then
-    print_uv_install_instructions
+    print_uv_install_instructions "run.sh"
     exit 1
 fi
 

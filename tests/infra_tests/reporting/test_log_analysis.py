@@ -6,17 +6,17 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.reporting.log_analysis import _collect_log_statistics, generate_log_summary
+from infrastructure.reporting.log_analysis import _tally_log_level_counts, generate_log_summary
 
 
 class TestCollectLogStatistics:
-    """Tests for _collect_log_statistics."""
+    """Tests for _tally_log_level_counts."""
 
     def test_counts_debug_lines(self, tmp_path: Path) -> None:
         """Lines containing 'debug' increment the debug counter."""
         log = tmp_path / "pipeline.log"
         log.write_text("DEBUG: starting stage\nINFO: stage done\n")
-        stats = _collect_log_statistics(log)
+        stats = _tally_log_level_counts(log)
         assert stats["counts"]["debug"] == 1
         assert stats["counts"]["info"] == 1
 
@@ -24,7 +24,7 @@ class TestCollectLogStatistics:
         """Lines containing 'warning' or 'warn' increment the warning counter."""
         log = tmp_path / "pipeline.log"
         log.write_text("WARNING: low disk\nwarn: retrying\n")
-        stats = _collect_log_statistics(log)
+        stats = _tally_log_level_counts(log)
         assert stats["counts"]["warning"] == 2
         assert len(stats["warnings"]) == 2
 
@@ -32,7 +32,7 @@ class TestCollectLogStatistics:
         """Lines containing 'error' increment the error counter and populate errors list."""
         log = tmp_path / "pipeline.log"
         log.write_text("ERROR: file not found\nERROR: timeout\n")
-        stats = _collect_log_statistics(log)
+        stats = _tally_log_level_counts(log)
         assert stats["counts"]["error"] == 2
         assert len(stats["errors"]) == 2
 
@@ -40,34 +40,34 @@ class TestCollectLogStatistics:
         """Lines containing 'critical' increment the critical counter."""
         log = tmp_path / "pipeline.log"
         log.write_text("CRITICAL: disk full\n")
-        stats = _collect_log_statistics(log)
+        stats = _tally_log_level_counts(log)
         assert stats["counts"]["critical"] == 1
 
     def test_total_lines(self, tmp_path: Path) -> None:
         """total_lines equals the number of lines in the file."""
         log = tmp_path / "pipeline.log"
         log.write_text("line1\nline2\nline3\n")
-        stats = _collect_log_statistics(log)
+        stats = _tally_log_level_counts(log)
         assert stats["total_lines"] == 3
 
     def test_warnings_capped_at_10(self, tmp_path: Path) -> None:
         """warnings list is capped at 10 entries."""
         log = tmp_path / "pipeline.log"
         log.write_text("\n".join(f"WARNING: msg{i}" for i in range(15)) + "\n")
-        stats = _collect_log_statistics(log)
+        stats = _tally_log_level_counts(log)
         assert stats["counts"]["warning"] == 15
         assert len(stats["warnings"]) == 10
 
     def test_raises_for_missing_file(self, tmp_path: Path) -> None:
         """FileNotFoundError raised when the file does not exist."""
         with pytest.raises(FileNotFoundError):
-            _collect_log_statistics(tmp_path / "nonexistent.log")
+            _tally_log_level_counts(tmp_path / "nonexistent.log")
 
     def test_empty_file(self, tmp_path: Path) -> None:
         """Empty log file produces zero counts."""
         log = tmp_path / "empty.log"
         log.write_text("")
-        stats = _collect_log_statistics(log)
+        stats = _tally_log_level_counts(log)
         assert stats["total_lines"] == 0
         assert all(v == 0 for v in stats["counts"].values())
 

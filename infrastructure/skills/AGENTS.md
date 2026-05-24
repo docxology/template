@@ -26,7 +26,7 @@ flowchart TB
 
 ## Public API (`discovery.py`)
 
-- `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "projects/template_code_project/src", ".cursor/skills")` relative to repo root
+- `DEFAULT_SKILL_SEARCH_ROOTS` — `("infrastructure", "projects", "docs/prompts", ".cursor/skills")` relative to repo root
 - `SkillDescriptor` — `absolute_path`, `relative_path`, `name`, `description`, `frontmatter`; properties `path_posix`, `cursor_at`
 - `split_yaml_frontmatter(source: str) -> tuple[dict | None, str]`
 - `load_skill_descriptor(skill_path: Path, repo_root: Path) -> SkillDescriptor`

@@ -3,17 +3,17 @@
 Tests link checking functionality comprehensively.
 """
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.accuracy import extract_headings
 from infrastructure.validation.integrity import check_links
 from infrastructure.validation.integrity.check_links import (
     check_file_reference,
     extract_links,
-    find_all_markdown_files,
 )
 
 
 class TestFindAllMarkdownFiles:
-    """Test find_all_markdown_files function."""
+    """Test discover_markdown_files function."""
 
     def test_find_markdown_files(self, tmp_path):
         """Test finding markdown files."""
@@ -21,7 +21,7 @@ class TestFindAllMarkdownFiles:
         (tmp_path / "docs").mkdir()
         (tmp_path / "docs" / "guide.md").write_text("# Guide")
 
-        files = find_all_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="link_audit")
 
         assert len(files) >= 2
         assert any("README.md" in str(f) for f in files)
@@ -32,7 +32,7 @@ class TestFindAllMarkdownFiles:
         (tmp_path / "output").mkdir()
         (tmp_path / "output" / "skip.md").write_text("# Skip")
 
-        files = find_all_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="link_audit")
 
         # Check that skip.md in output is not included
         file_names = [f.name for f in files]
@@ -46,7 +46,7 @@ class TestFindAllMarkdownFiles:
         (tmp_path / "htmlcov").mkdir()
         (tmp_path / "htmlcov" / "skip.md").write_text("# Skip")
 
-        files = find_all_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="link_audit")
 
         # Check that skip.md in htmlcov is not included
         file_names = [f.name for f in files]
@@ -56,7 +56,7 @@ class TestFindAllMarkdownFiles:
 
     def test_empty_directory(self, tmp_path):
         """Test empty directory."""
-        files = find_all_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 0
 
 
@@ -334,7 +334,7 @@ This links to [nonexistent section](#does-not-exist).
         md_file = tmp_path / "doc.md"
         md_file.write_text(md_content)
 
-        files = find_all_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 1
 
         content = md_file.read_text()
@@ -474,7 +474,7 @@ See [README](../README.md) for overview.
 """
         )
 
-        files = find_all_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 2
 
         # Validate all links
@@ -522,7 +522,7 @@ class TestCheckLinksIntegration:
         (tmp_path / "docs").mkdir()
         (tmp_path / "docs" / "guide.md").write_text("[Back](../README.md)")
 
-        files = find_all_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 2
 
         for f in files:

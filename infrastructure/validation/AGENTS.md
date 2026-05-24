@@ -538,130 +538,18 @@ def main():
     """Main CLI entry point for validation tools."""
 ```
 
-### validate_pdf_cli.py
+### cli/pdf.py
 
-#### print_validation_report (function)
-```python
-def print_validation_report(report: dict, verbose: bool = False) -> None:
-    """Print PDF validation report to console.
+PDF validation CLI invoked as `python -m infrastructure.validation.cli pdf …`.
+Entry points: `main()`, `print_validation_report()`, and helpers for default
+`output/{project}/pdf/{project}_combined.pdf` discovery (requires `--project` when
+not passing an explicit path).
 
-    Args:
-        report: Validation report dictionary
-        verbose: Enable verbose output
-    """
-```
+### cli/markdown.py
 
-#### main (function)
-```python
-def main(pdf_path: Optional[Path] = None, n_words: int = 200, verbose: bool = False) -> int:
-    """Main function for PDF validation CLI.
-
-    Args:
-        pdf_path: Path to PDF file to validate
-        n_words: Number of words to extract for preview
-        verbose: Enable verbose output
-
-    Returns:
-        Exit code (0 for success, non-zero for errors)
-    """
-```
-
-### validate_markdown_cli.py
-
-#### _repo_root (function)
-```python
-def _repo_root() -> str:
-    """Get repository root directory.
-
-    Returns:
-        Repository root path as string
-    """
-```
-
-#### find_markdown_files (function)
-```python
-def find_markdown_files(directory: str) -> list[str]:
-    """Find all markdown files in directory.
-
-    Args:
-        directory: Directory to search
-
-    Returns:
-        List of markdown file paths
-    """
-```
-
-#### collect_symbols (function)
-```python
-def collect_symbols(md_files: list[str]) -> tuple[set[str], set[str]]:
-    """Collect symbols from markdown files.
-
-    Args:
-        md_files: List of markdown file paths
-
-    Returns:
-        Tuple of (labels, anchors) sets
-    """
-```
-
-#### validate_images (function)
-```python
-def validate_images(md_files: list[str], repo_root_str: str) -> list[str]:
-    """Validate image references in markdown files.
-
-    Args:
-        md_files: List of markdown file paths
-        repo_root_str: Repository root directory
-
-    Returns:
-        List of validation error messages
-    """
-```
-
-#### validate_refs (function)
-```python
-def validate_refs(
-    md_files: list[str],
-    repo_root_str: str,
-    labels: set[str],
-    anchors: set[str],
-) -> list[str]:
-    """Validate cross-references in markdown files.
-
-    Args:
-        md_files: List of markdown file paths
-        repo_root_str: Repository root directory
-        labels: Set of available labels
-        anchors: Set of available anchors
-
-    Returns:
-        List of validation error messages
-    """
-```
-
-#### validate_math (function)
-```python
-def validate_math(md_files: list[str], repo_root_str: str) -> list[str]:
-    """Validate mathematical equations in markdown files.
-
-    Args:
-        md_files: List of markdown file paths
-        repo_root_str: Repository root directory
-
-    Returns:
-        List of validation error messages
-    """
-```
-
-#### main (function)
-```python
-def main() -> int:
-    """Main function for markdown validation CLI.
-
-    Returns:
-        Exit code (0 for success, non-zero for errors)
-    """
-```
+Markdown validation CLI invoked as `python -m infrastructure.validation.cli markdown …`.
+Wraps manuscript/content validators (`find_markdown_files`, `collect_symbols`,
+`validate_images`, `validate_refs`, `validate_math`) and exits non-zero on issues.
 
 ### output_validator.py
 

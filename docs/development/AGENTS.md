@@ -16,6 +16,7 @@ Technical guide for `docs/development/` — contribution guidelines, testing, se
 | `testing/testing-guide.md` | Testing framework and patterns |
 | `testing/testing-with-credentials.md` | External service credential testing |
 | `no-mocks-http-testing.md` | No-mocks HTTP testing with `pytest-httpserver` |
+| `code-review-checklist.md` | Eight-criterion review checklist |
 | `validation_gates.md` | Validation gate stages and enforcement |
 
 ## Key Conventions

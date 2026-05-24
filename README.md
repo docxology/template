@@ -27,7 +27,7 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 
 **Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration).
 
-**Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) (overview) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
+**Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) ([agent entry point](.github/README.md#agent--automation-entry-point), doc map, CI inventory) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
 
 <a id="migration-from-quadmath"></a>
 

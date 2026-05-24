@@ -16,6 +16,7 @@ from infrastructure.validation.docs.scan_scope import (
 DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
     "infrastructure",
     "projects",  # Covers all projects (only permanent exemplars have src/ dirs)
+    "docs/prompts",
     ".cursor/skills",
 )
 

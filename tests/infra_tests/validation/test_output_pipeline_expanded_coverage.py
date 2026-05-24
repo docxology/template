@@ -1,4 +1,4 @@
-"""Tests for infrastructure.validation.output.pipeline — validate_pdfs and validate_markdown."""
+"""Tests for infrastructure.validation.output.pipeline — validate_pdfs and validate_manuscript_output_markdown."""
 
 
 import infrastructure.validation.output.pipeline as mod
@@ -66,7 +66,7 @@ class TestValidateMarkdown:
     def test_no_manuscript_dir(self, tmp_path, monkeypatch):
         monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
         # No manuscript directory - should return True (graceful)
-        result = mod.validate_markdown("test")
+        result = mod.validate_manuscript_output_markdown("test")
         assert result is True
 
     def test_empty_manuscript_dir(self, tmp_path, monkeypatch):
@@ -74,7 +74,7 @@ class TestValidateMarkdown:
         ms_dir = tmp_path / "projects" / "test" / "manuscript"
         ms_dir.mkdir(parents=True)
         # No markdown files
-        result = mod.validate_markdown("test")
+        result = mod.validate_manuscript_output_markdown("test")
         assert result is True
 
     def test_with_markdown_files(self, tmp_path, monkeypatch):
@@ -86,7 +86,7 @@ class TestValidateMarkdown:
         # Also create the output dir for DiagnosticReporter
         (tmp_path / "projects" / "test" / "output").mkdir(parents=True)
 
-        result = mod.validate_markdown("test")
+        result = mod.validate_manuscript_output_markdown("test")
         assert result is True
 
     def test_markdown_resolves_wip_project(self, tmp_path, monkeypatch):
@@ -97,7 +97,7 @@ class TestValidateMarkdown:
         (project / "output").mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("# Introduction\n\nHello world.")
 
-        result = mod.validate_markdown("draft")
+        result = mod.validate_manuscript_output_markdown("draft")
         assert result is True
 
     def test_clean_markdown_clears_stale_diagnostics(self, tmp_path, monkeypatch):
@@ -114,7 +114,7 @@ class TestValidateMarkdown:
             encoding="utf-8",
         )
 
-        result = mod.validate_markdown("test")
+        result = mod.validate_manuscript_output_markdown("test")
 
         assert result is True
         assert not stale.exists()

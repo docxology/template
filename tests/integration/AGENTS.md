@@ -26,12 +26,14 @@ The `tests/integration/` directory contains repository-level integration tests t
 - `test_module_interoperability.py`
 - `test_output_copying.py`
 - `test_run_sh.py`
+- `test_secure_run_sh.py`
 - `test_timeseries_benchmarks.py`
 
 ## Notes
 
 - `test_execute_pipeline_cli.py` covers the Python pipeline entry point.
-- `test_run_sh.py` covers the shell wrapper.
+- `test_run_sh.py` covers the `run.sh` shell wrapper.
+- `test_secure_run_sh.py` covers `secure_run.sh` and `run.sh --secure-run` argv shaping.
 - `test_full_pipeline.py` covers the end-to-end pipeline path.
 
 ## See Also

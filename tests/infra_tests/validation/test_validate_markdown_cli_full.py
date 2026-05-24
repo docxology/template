@@ -20,31 +20,30 @@ class TestValidateMarkdownCliFunctions:
         assert isinstance(result, str)
         assert len(result) > 0
 
-    def test_find_markdown_files(self, tmp_path):
-        """Test find_markdown_files function."""
-        from infrastructure.validation.cli.markdown import find_markdown_files
+    def test_discover_markdown_files(self, tmp_path):
+        """Test discover_markdown_files function."""
+        from infrastructure.validation.cli.markdown import discover_markdown_files
 
         (tmp_path / "01_intro.md").write_text("# Intro")
         (tmp_path / "02_body.md").write_text("# Body")
         (tmp_path / "03_conclusion.md").write_text("# Conclusion")
 
-        files = find_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="tree")
 
         assert len(files) == 3
-        # Files should be sorted numerically
-        assert any("01_intro.md" in f for f in files)
+        assert any(f.name == "01_intro.md" for f in files)
 
-    def test_find_markdown_files_no_extension(self, tmp_path):
-        """Test find_markdown_files with non-markdown files."""
-        from infrastructure.validation.cli.markdown import find_markdown_files
+    def test_discover_markdown_files_no_extension(self, tmp_path):
+        """Test discover_markdown_files with non-markdown files."""
+        from infrastructure.validation.cli.markdown import discover_markdown_files
 
         (tmp_path / "test.txt").write_text("Not markdown")
         (tmp_path / "doc.md").write_text("# Doc")
 
-        files = find_markdown_files(str(tmp_path))
+        files = discover_markdown_files(tmp_path, scope="tree")
 
         assert len(files) == 1
-        assert "doc.md" in files[0]
+        assert files[0].name == "doc.md"
 
     def test_collect_symbols(self, tmp_path):
         """Test collect_symbols function (canonical: labels=LaTeX \\label{}, anchors={#...})."""
@@ -239,7 +238,7 @@ class TestValidateMarkdownIntegration:
         from infrastructure.validation.cli import markdown as validate_markdown_cli
 
         assert hasattr(validate_markdown_cli, "main")
-        assert hasattr(validate_markdown_cli, "find_markdown_files")
+        assert hasattr(validate_markdown_cli, "discover_markdown_files")
         assert hasattr(validate_markdown_cli, "collect_symbols")
         assert hasattr(validate_markdown_cli, "validate_images")
         assert hasattr(validate_markdown_cli, "validate_refs")

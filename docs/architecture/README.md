@@ -13,6 +13,8 @@ The `architecture/` directory contains detailed documentation about the system a
 | File | Purpose | Audience |
 |------|---------|----------|
 | [`AGENTS.md`](AGENTS.md) | Technical guide for this directory | Maintainers, agents |
+| [`discovery-export-synthesis.md`](discovery-export-synthesis.md) | Discovery → Export → Synthesis three-module architecture | Developers, architects |
+| [`adrs/`](adrs/) | Architecture decision records (ADR-001–004) | Maintainers |
 | [`two-layer-architecture.md`](two-layer-architecture.md) | two-layer architecture guide | Developers, architects |
 | [`thin-orchestrator-summary.md`](thin-orchestrator-summary.md) | Thin orchestrator pattern implementation | Developers |
 | [`decision-tree.md`](decision-tree.md) | Decision tree for code placement | Developers |

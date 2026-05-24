@@ -266,22 +266,13 @@ class SteganographyProcessor:
 
             # ── Barcode strip ────────────────────────────────────
             if self.config.barcodes_enabled:
-                from infrastructure.steganography.barcodes import (
-                    build_barcode_payload,
-                    create_barcode_strip_overlay,
-                )
+                from infrastructure.steganography.barcodes import create_barcode_strip_overlay
 
-                qr_payload = build_barcode_payload(
-                    title=ctx.title,
-                    hashes=ctx.hashes,
-                    document_id=ctx.document_id,
-                )
                 c128_payload = f"ID:{ctx.document_id[:16]}|P:{page_idx + 1}"
 
                 bc_bytes = create_barcode_strip_overlay(
                     page_width,
                     page_height,
-                    qr_data=self.config.barcode_content or qr_payload,
                     code128_data=c128_payload,
                     title=ctx.title,
                     authors=ctx.authors,

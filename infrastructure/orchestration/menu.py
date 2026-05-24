@@ -13,20 +13,10 @@ Interactive prompts and the menu redraw loop live in
 
 from collections.abc import Iterable
 
-# Stage labels — kept in sync with the names in
-# ``infrastructure/core/pipeline/pipeline.yaml``. Used for human-facing
-# banners; the executor's authoritative stage list comes from the YAML.
-STAGE_NAMES: tuple[str, ...] = (
-    "Environment Setup",
-    "Infrastructure Tests",
-    "Project Tests",
-    "Project Analysis",
-    "PDF Rendering",
-    "Output Validation",
-    "LLM Scientific Review",
-    "LLM Translations",
-    "Copy Outputs",
-)
+from infrastructure.core.pipeline.stage_vocabulary import menu_stage_names
+
+# Stage labels from ``infrastructure/core/pipeline/pipeline.yaml`` via stage_vocabulary.
+STAGE_NAMES: tuple[str, ...] = menu_stage_names()
 
 # Column width for the middle label field (monospace alignment).
 _MENU_LABEL_WIDTH = 30

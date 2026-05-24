@@ -1,6 +1,7 @@
 """Tests for check_links validate_python_imports and validate_file_paths_in_code — coverage."""
 
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.integrity.check_links import (
     validate_python_imports,
     validate_file_paths_in_code,

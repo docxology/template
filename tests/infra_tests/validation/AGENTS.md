@@ -535,7 +535,7 @@ def validate_academic_standards(document, standards):
 - Directory completeness assessment
 
 **PDF Location Requirements:**
-- PDFs must be located in `output_dir/pdf/project_combined.pdf` (or `{project_name}_combined.pdf`)
+- PDFs must be located in `output_dir/pdf/{project_name}_combined.pdf`
 - Tests create realistic output directory structures
 - Validation functions expect PDFs in `pdf/` subdirectory, not root level
 
@@ -548,7 +548,7 @@ def test_validate_complete_structure(output_directory_structure):
     # Create PDF in pdf/ directory (where it's actually expected)
     pdf_dir = output_dir / "pdf"
     pdf_dir.mkdir(exist_ok=True)  # Already exists from fixture
-    (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 1000)
+    (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 1000)
 
     # Create subdirectories with files (skip pdf/ since already handled)
     for subdir in ["web", "slides", "figures", "data", "reports", "simulations"]:
@@ -566,7 +566,7 @@ def test_validate_small_pdf(tmp_path):
     pdf_dir.mkdir()
 
     # Create very small PDF (< 100KB) in pdf/ directory
-    (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 100)
+    (pdf_dir / "test_project_combined.pdf").write_bytes(b"PDF" * 100)
 
     result = validate_output_structure(output_dir)
     # Small PDF is still valid but flagged as suspicious
@@ -595,7 +595,7 @@ def output_with_pdf(output_directory_structure, pdf_file_fixture):
     output_dir = output_directory_structure
 
     # Copy PDF to correct location
-    pdf_dest = output_dir / "pdf" / "project_combined.pdf"
+    pdf_dest = output_dir / "pdf" / "test_project_combined.pdf"
     pdf_dest.write_bytes(pdf_file_fixture.read_bytes())
 
     return output_dir

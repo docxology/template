@@ -20,10 +20,10 @@ repo_root = Path(__file__).parent.parent
 logger = get_logger(__name__)
 
 try:
+    from infrastructure.validation.content.discovery import discover_markdown_files
     from infrastructure.validation.content.markdown_validator import (
         collect_symbols,  # noqa: F401 — re-exported for tests
         find_manuscript_directory,
-        find_markdown_files,  # noqa: F401 — re-exported for tests
         validate_images as _validate_images,
         validate_markdown as _validate_markdown,
         validate_math as _validate_math,
@@ -111,10 +111,9 @@ def main(manuscript_path: Path | None = None, strict: bool = False) -> int:
 
 
 __all__ = [
-    # Re-exports from infrastructure.validation.content.markdown_validator
-    # (re-exported for tests; the public surface preserved here for callers)
+    # Re-exports from infrastructure.validation.content
     "collect_symbols",
-    "find_markdown_files",
+    "discover_markdown_files",
     # Local helpers / CLI surface
     "main",
     "validate_images",

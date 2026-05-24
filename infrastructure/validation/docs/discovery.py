@@ -8,26 +8,13 @@ from typing import Any, Set
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.discovery import discover_projects
-from infrastructure.validation.docs.scan_scope import (
-    DEFAULT_EXCLUDE_PARTS,
-    iter_markdown_files,
-    should_exclude_path,
-)
+from infrastructure.validation.content.discovery import discover_markdown_files
+from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, should_exclude_path
 from infrastructure.validation.docs.models import DocumentationFile
 
 logger = get_logger(__name__)
 
 _DEFAULT_EXCLUDE_DIRS = DEFAULT_EXCLUDE_PARTS
-
-
-def discover_markdown_files(repo_root: Path) -> list[Path]:
-    """Find all markdown files excluding output/htmlcov and virtual environments."""
-    return iter_markdown_files([repo_root], exclude_parts=_DEFAULT_EXCLUDE_DIRS)
-
-
-def find_markdown_files(repo_root: Path) -> list[Path]:
-    """Backward-compatible alias for :func:`discover_markdown_files`."""
-    return discover_markdown_files(repo_root)
 
 
 def catalog_agents_readme(md_files: list[Path], repo_root: Path) -> list[str]:
@@ -219,7 +206,7 @@ def discover_documentation(repo_root: Path) -> dict[str, Any]:
     logger.info("Discovery and inventory...")
 
     # Find all markdown files
-    md_files = discover_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root, scope="repo")
     logger.info(f"Found {len(md_files)} markdown files")
 
     # Catalog AGENTS.md and README.md files
@@ -277,7 +264,7 @@ def discover_project_documentation(repo_root: Path) -> dict[str, dict[str, Any]]
         Dictionary mapping project names to their documentation metadata
     """
     projects = discover_projects(repo_root)
-    md_files = discover_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root, scope="repo")
 
     project_docs = {}
 
@@ -396,7 +383,7 @@ def get_audit_context(repo_root: Path) -> dict[str, Any]:
         Dictionary with audit context including projects, configs, and hierarchy
     """
     projects = discover_projects(repo_root)
-    md_files = discover_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root, scope="repo")
     config_files = find_config_files(repo_root)
     hierarchy = create_hierarchy(md_files, repo_root)
     categories = categorize_documentation(md_files, repo_root)

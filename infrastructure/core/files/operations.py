@@ -103,29 +103,26 @@ def _copy_combined_pdf(
     combined_pdf_dst = output_dir / f"{project_basename}_combined.pdf"
 
     if not combined_pdf_src.exists():
-        combined_pdf_src = output_dir / "pdf" / "project_combined.pdf"
-        combined_pdf_dst = output_dir / "project_combined.pdf"
-
-    if combined_pdf_src.exists():
-        try:
-            shutil.copy2(combined_pdf_src, combined_pdf_dst)
-            file_size = combined_pdf_src.stat().st_size
-            log_success(f"Copied combined PDF to root ({file_size / (1024 * 1024):.2f} MB)", logger)
-            stats["combined_pdf"] = 1
-            files_list.append(
-                {
-                    "path": str(combined_pdf_dst.resolve()),
-                    "size": file_size,
-                    "category": "pdf",
-                }
-            )
-            logger.info(f"  Root PDF: {combined_pdf_dst} ({file_size:,} bytes)")
-        except (OSError, shutil.Error) as e:
-            msg = f"Failed to copy combined PDF to root: {e}"
-            logger.warning(msg)
-            stats["errors"].append(msg)
-    else:
         logger.debug(f"Combined PDF not found at: {combined_pdf_src}")
+        return
+
+    try:
+        shutil.copy2(combined_pdf_src, combined_pdf_dst)
+        file_size = combined_pdf_src.stat().st_size
+        log_success(f"Copied combined PDF to root ({file_size / (1024 * 1024):.2f} MB)", logger)
+        stats["combined_pdf"] = 1
+        files_list.append(
+            {
+                "path": str(combined_pdf_dst.resolve()),
+                "size": file_size,
+                "category": "pdf",
+            }
+        )
+        logger.info(f"  Root PDF: {combined_pdf_dst} ({file_size:,} bytes)")
+    except (OSError, shutil.Error) as e:
+        msg = f"Failed to copy combined PDF to root: {e}"
+        logger.warning(msg)
+        stats["errors"].append(msg)
 
 
 def copy_final_deliverables(

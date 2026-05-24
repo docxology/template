@@ -673,8 +673,8 @@ class TestValidateOutputStructure:
         result = validate_output_structure(project_output_dir)
 
         # Check PDF metadata
-        assert result["directory_structure"]["project_combined_pdf"]["exists"] is True
-        assert result["directory_structure"]["project_combined_pdf"]["size_mb"] > 0
+        assert result["directory_structure"]["combined_pdf"]["exists"] is True
+        assert result["directory_structure"]["combined_pdf"]["size_mb"] > 0
 
         # Check figures directory metadata
         assert result["directory_structure"]["figures"]["exists"] is True
@@ -741,7 +741,7 @@ class TestValidateOutputStructure:
 
         result = validate_output_structure(project_output_dir)
 
-        assert result["directory_structure"]["project_combined_pdf"]["exists"] is True
+        assert result["directory_structure"]["combined_pdf"]["exists"] is True
 
     def test_validate_nested_copied_output_structure(self, tmp_path):
         """Copied nested output validation uses the qualified output path."""
@@ -758,7 +758,7 @@ class TestValidateOutputStructure:
         result = validate_output_structure(project_output_dir)
 
         assert result["valid"] is True
-        assert result["directory_structure"]["project_combined_pdf"]["exists"] is True
+        assert result["directory_structure"]["combined_pdf"]["exists"] is True
 
     def test_validate_multiple_issues(self, tmp_path):
         """Test validation with multiple issues."""
@@ -789,4 +789,4 @@ class TestValidateOutputStructure:
 
         result = validate_output_structure(project_output_dir)
 
-        assert result["directory_structure"]["project_combined_pdf"]["readable"] is True
+        assert result["directory_structure"]["combined_pdf"]["readable"] is True

@@ -22,6 +22,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`publishing-guide.md`](publishing-guide.md) | Publishing workflow (DOI, Zenodo, arXiv, citations) | Expert |
 | [`secure-research-guide.md`](secure-research-guide.md) | PDF watermarking, provenance, and integrity | Expert |
 | [`manuscript-semantics.md`](manuscript-semantics.md) | **Canonical** manuscript syntax & semantics — Pandoc citations `[@key]`, cross-refs `[@eq:/@fig:/@sec:]`, `{{TOKEN}}` substitution, preamble. Read before authoring any manuscript. | All levels |
+| [`fork-an-exemplar.md`](fork-an-exemplar.md) | Fork-readiness walkthrough for canonical exemplars | All levels |
 | [`literature-workflow-guide.md`](literature-workflow-guide.md) | Literature discovery → export → synthesis (Ollama-assisted) | Expert |
 
 ## Learning Path

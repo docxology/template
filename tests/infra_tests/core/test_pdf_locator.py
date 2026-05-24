@@ -205,11 +205,8 @@ class TestFindCombinedPdfFallbackWhenNoOutputSegment:
         assert found_path == source_pdf
 
 
-class TestFindCombinedPdfMatchesLegacyName:
-    """The helper must preserve the ``_find_combined_pdf`` legacy import name via
-    re-export in the validator module, so downstream code that reached in via
-    ``from infrastructure.validation.output.validator import _find_combined_pdf``
-    continues to work."""
+class TestFindCombinedPdfReexports:
+    """Validator and package re-exports must remain aligned with the canonical helper."""
 
     def test_validator_reexport_still_importable(self) -> None:
         from infrastructure.validation.output.validator import (

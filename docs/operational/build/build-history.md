@@ -41,40 +41,37 @@ build_combined() {
 
 ## Pipeline Architecture Evolution
 
-The build pipeline evolved from a 6-stage core pipeline, to an 8-stage core pipeline, to the current 10-stage DAG system:
+The build pipeline evolved from a 6-stage core path, to an 8-stage `--core-only` path, to the current declarative DAG in [`pipeline.yaml`](../../../infrastructure/core/pipeline/pipeline.yaml):
 
-**Current stages (00-07):**
+- **12 declared stages** in YAML: 8 core, 2 LLM-tagged, 2 opt-in bundle/archival
+- **Default full run:** Clean Output Directories + 9 numbered stages (10 core+LLM path)
+- **`--core-only`:** 8 stages (LLM-tagged stages excluded)
 
-- **Stage 00**: Environment setup & validation (`scripts/00_setup_environment.py`)
-- **Stage 01**: Run tests with coverage (`scripts/01_run_tests.py`)
-- **Stage 02**: Execute analysis scripts (`scripts/02_run_analysis.py`)
-- **Stage 03**: Render PDFs from markdown (`scripts/03_render_pdf.py`)
-- **Stage 04**: Validate outputs (`scripts/04_validate_output.py`)
-- **Stage 05**: Copy final deliverables (`scripts/05_copy_outputs.py`)
-- **Stage 06**: LLM scientific review (`scripts/06_llm_review.py`)
-- **Stage 07**: Generate executive report (`scripts/07_generate_executive_report.py`)
+**Script mapping** (YAML stage index ≠ `scripts/NN_*.py` prefix — see [`scripts/AGENTS.md`](../../../scripts/AGENTS.md) stage table):
+
+| Stage | Script | Notes |
+| ----- | ------ | ----- |
+| 0 | built-in clean | pre-step |
+| 1 | `00_setup_environment.py` | Environment setup |
+| 2 | `01_run_tests.py` | Infrastructure + project tests |
+| 3 | `02_run_analysis.py` | Project analysis |
+| 4 | `03_render_pdf.py` | PDF rendering |
+| 5 | `04_validate_output.py` | Output validation |
+| 6–7 | `06_llm_review.py` | LLM review / translations (optional) |
+| 9 | `05_copy_outputs.py` | Copy deliverables |
+| — | `07_generate_executive_report.py` | Multi-project only (not a numbered DAG stage) |
 
 **Usage:**
 
 ```bash
-# Run pipeline (all 8 stages)
+# Core pipeline (8 stages — no LLM)
 uv run python scripts/execute_pipeline.py --project {name} --core-only
 
-# Or use unified interactive menu
-./run.sh
-
-# Run individual stages
-uv run python scripts/00_setup_environment.py  # Stage 00
-uv run python scripts/01_run_tests.py          # Stage 01
-uv run python scripts/02_run_analysis.py       # Stage 02
-uv run python scripts/03_render_pdf.py         # Stage 03
-uv run python scripts/04_validate_output.py    # Stage 04
-uv run python scripts/05_copy_outputs.py       # Stage 05
-uv run python scripts/06_llm_review.py         # Stage 06
-uv run python scripts/07_generate_executive_report.py  # Stage 07
+# Full pipeline (default 10-stage core+LLM path)
+./run.sh --pipeline --project {name}
 ```
 
 ---
 
-**Build Version:** v2.0 (10-stage DAG pipeline)
+**Build Version:** v2.0 (declarative DAG in `pipeline.yaml`; 10-stage default core+LLM path)
 **Status:** ✅ Documented for reference

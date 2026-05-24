@@ -1,9 +1,8 @@
 """Tests for infrastructure.llm.core._stream_helpers — comprehensive coverage."""
 
 from infrastructure.llm.core._stream_helpers import (
-    save_partial_if_needed,
-    try_save_partial,
     TIMEOUT_WARNING_FRACTION,
+    save_partial_if_needed,
 )
 
 
@@ -77,69 +76,6 @@ class TestSavePartialIfNeeded:
             save_fn=lambda *a, **kw: False,
             chunk_count=1,
             context="test",
-        )
-        assert result is False
-
-
-class TestTrySavePartial:
-    def test_basic_save(self):
-        calls = []
-
-        def mock_save_fn(full_response, save_path, model, prompt, chunks, start, *, is_error=False):
-            calls.append({
-                "response": full_response,
-                "path": save_path,
-                "model": model,
-                "chunks": chunks,
-                "is_error": is_error,
-            })
-            return True
-
-        result = try_save_partial(
-            full_response=["chunk1"],
-            save_response=True,
-            partial_saved=False,
-            save_streaming_state_fn=mock_save_fn,
-            save_path="/tmp/test.json",
-            model_name="llama3",
-            prompt="test prompt",
-            chunk_count=1,
-            start_time=0.0,
-            context="backward compat test",
-        )
-        assert result is True
-        assert len(calls) == 1
-        assert calls[0]["path"] == "/tmp/test.json"
-        assert calls[0]["model"] == "llama3"
-        assert calls[0]["is_error"] is True
-
-    def test_no_save_when_empty(self):
-        result = try_save_partial(
-            full_response=[],
-            save_response=True,
-            partial_saved=False,
-            save_streaming_state_fn=lambda *a, **kw: True,
-            save_path=None,
-            model_name="m",
-            prompt="p",
-            chunk_count=0,
-            start_time=0.0,
-            context="test",
-        )
-        assert result is False
-
-    def test_no_save_when_save_response_disabled(self):
-        result = try_save_partial(
-            full_response=["data"],
-            save_response=False,
-            partial_saved=False,
-            save_streaming_state_fn=lambda *a, **kw: True,
-            save_path=None,
-            model_name="m",
-            prompt="p",
-            chunk_count=1,
-            start_time=0.0,
-            context="c",
         )
         assert result is False
 

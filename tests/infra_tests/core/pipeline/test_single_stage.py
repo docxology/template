@@ -16,7 +16,7 @@ def test_unknown_stage_exits_with_message() -> None:
 
 
 def test_known_stage_key_is_mapped() -> None:
-    from infrastructure.core.pipeline import single_stage
+    from infrastructure.core.pipeline.stage_registry import STAGE_DISPATCH
 
-    assert "render_pdf" in single_stage._STAGE_TO_SCRIPT
-    assert single_stage._STAGE_TO_SCRIPT["render_pdf"][0].endswith("03_render_pdf.py")
+    assert "render_pdf" in STAGE_DISPATCH
+    assert STAGE_DISPATCH["render_pdf"].script.endswith("03_render_pdf.py")

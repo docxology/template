@@ -18,6 +18,7 @@ try:
 except ImportError:
     MATPLOTLIB_AVAILABLE = False
     Axes = Any  # type: ignore[misc, assignment]
+    Figure = Any  # type: ignore[misc, assignment]
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting._dashboard_constants import COLORS

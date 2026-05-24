@@ -26,15 +26,13 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `guides/skills-module.md` | SKILL.md discovery / manifest |
 | `guides/steganography-module.md` | Steganography / provenance module |
 | `guides/validation-module.md` | Validation / QA module (PDF, markdown, CLI) |
+| `guides/doctor-module.md` | Repository health diagnostics module |
+| `guides/orchestration-module.md` | Pipeline CLI and menu delegation |
+| `guides/prose-module.md` | Prose-manuscript analysis module |
+| `guides/search-module.md` | Literature discovery module |
+| `guides/reference-module.md` | Citation and reference management module |
 
-**Layer-1 hubs without a dedicated `guides/*.md` file** are documented in-tree:
-
-| Location | Topic |
-|---|---|
-| [`infrastructure/prose/AGENTS.md`](../../infrastructure/prose/AGENTS.md) | Readability metrics, outline, editorial heuristics, CLI |
-| [`infrastructure/orchestration/AGENTS.md`](../../infrastructure/orchestration/AGENTS.md) | `python -m infrastructure.orchestration` CLI and menu delegation |
-| [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) | Literature discovery, indexing, orchestrated retrieval |
-| [`infrastructure/reference/AGENTS.md`](../../infrastructure/reference/AGENTS.md) | BibTeX / citations toolkit shared across prose and search |
+Package-level `infrastructure/*/AGENTS.md` files remain the in-tree API reference when a guide defers to hub docs.
 
 ## Key Conventions
 

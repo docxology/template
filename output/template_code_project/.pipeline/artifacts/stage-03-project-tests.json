@@ -1,0 +1,77 @@
+{
+  "entries": [
+    {
+      "contract_match": false,
+      "path": "output/docs/api_glossary.md",
+      "sha256": "fd8de1b3561500156bb770746dffe4eeb299648931618dfcfbfd86bed687a381",
+      "size_bytes": 4513,
+      "stage_name": "Project Tests",
+      "stage_num": 3,
+      "timestamp": "2026-05-24T17:55:25+00:00"
+    },
+    {
+      "contract_match": false,
+      "path": "output/docs/api_reference.md",
+      "sha256": "0803e31fd3165119ec2b83f7c49544389793bd1bdd7de586930a6f6af3376d2e",
+      "size_bytes": 936,
+      "stage_name": "Project Tests",
+      "stage_num": 3,
+      "timestamp": "2026-05-24T17:55:25+00:00"
+    },
+    {
+      "contract_match": false,
+      "path": "output/figures/performance_benchmark.png",
+      "sha256": "4c6e55dc0d724f1b7f88897ea207cac49b9e9e963311b087b6c862ed4fae292b",
+      "size_bytes": 191364,
+      "stage_name": "Project Tests",
+      "stage_num": 3,
+      "timestamp": "2026-05-24T17:55:25+00:00"
+    },
+    {
+      "contract_match": false,
+      "path": "output/figures/stability_analysis.png",
+      "sha256": "1e42d3b3df747d6f2da12e3cad891e8b5fe7d70bcdb8e224997e9b22cae0d31e",
+      "size_bytes": 194019,
+      "stage_name": "Project Tests",
+      "stage_num": 3,
+      "timestamp": "2026-05-24T17:55:25+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/performance_benchmark.json",
+      "sha256": "50543ae5511a7335efebc4cf73413df5d7829c881ac4357f4464882ea4250ef8",
+      "size_bytes": 211,
+      "stage_name": "Project Tests",
+      "stage_num": 3,
+      "timestamp": "2026-05-24T17:55:25+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/stability_analysis.json",
+      "sha256": "965a796f593504fc06d931a5314e00275c427466982ade2f4f57b2710ab3e9da",
+      "size_bytes": 211,
+      "stage_name": "Project Tests",
+      "stage_num": 3,
+      "timestamp": "2026-05-24T17:55:25+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.json",
+      "sha256": "3b5b20eebf068a9451574746744371650e9184318056d9819e5d006671ff9816",
+      "size_bytes": 2312,
+      "stage_name": "Project Tests",
+      "stage_num": 3,
+      "timestamp": "2026-05-24T17:55:25+00:00"
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.md",
+      "sha256": "c95b0fb4c574dbaf3b9b0d78de3fe229d6e8b497c618d67f9afcb3287153e5cb",
+      "size_bytes": 293,
+      "stage_name": "Project Tests",
+      "stage_num": 3,
+      "timestamp": "2026-05-24T17:55:25+00:00"
+    }
+  ],
+  "issues": []
+}

@@ -18,7 +18,7 @@ from infrastructure.project.discovery import resolve_project_root
 
 logger = get_logger(__name__)
 
-_NON_ANALYSIS_SCRIPT_NAMES = frozenset({"__init__.py", "setup_hook.py"})
+_NON_ANALYSIS_SCRIPT_NAMES = frozenset({"__init__.py", "setup_hook.py", "00_preflight.py"})
 
 
 def _display_project_path(resolved_dir: Path, repo_root: Path, project_name: str) -> Path:

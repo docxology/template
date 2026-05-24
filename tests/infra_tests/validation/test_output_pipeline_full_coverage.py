@@ -129,7 +129,7 @@ class TestVerifyOutputsExist:
         structure_valid, details = mod.verify_outputs_exist("draft")
 
         assert isinstance(structure_valid, bool)
-        assert details["structure"]["directory_structure"]["project_combined_pdf"]["exists"] is True
+        assert details["structure"]["directory_structure"]["combined_pdf"]["exists"] is True
 
 
 class TestExecuteValidationPipeline:

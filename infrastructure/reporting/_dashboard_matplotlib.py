@@ -5,7 +5,7 @@ Chart generators, specialized visualizations, and CSV exports are delegated
 to extracted submodules:
 
   - ``_dashboard_charts``       — base chart functions + multi-panel dashboard
-  - ``_dashboard_specialized``  — health radar, pipeline efficiency, codebase complexity, etc.
+  - ``_dashboard_health`` / ``_dashboard_pipeline`` / ``_dashboard_outputs`` / ``_dashboard_codebase`` — specialized charts
   - ``_dashboard_csv``          — CSV export: project breakdowns, comparative analysis, recommendations
 
 The Plotly interactive dashboard generator lives in this module because it
@@ -33,16 +33,22 @@ from infrastructure.reporting._dashboard_charts import (  # noqa: F401
     create_test_count_chart,
     generate_matplotlib_dashboard,
 )
-from infrastructure.reporting._dashboard_specialized import (  # noqa: F401
+from infrastructure.reporting._dashboard_codebase import (  # noqa: F401
     generate_codebase_comparison_chart,
     generate_codebase_complexity_chart,
+)
+from infrastructure.reporting._dashboard_health import (  # noqa: F401
     generate_health_comparison_chart,
     generate_health_radar_chart,
+    generate_project_breakdowns,
+)
+from infrastructure.reporting._dashboard_outputs import (  # noqa: F401
     generate_output_comparison_chart,
     generate_output_distribution_charts,
+)
+from infrastructure.reporting._dashboard_pipeline import (  # noqa: F401
     generate_pipeline_bottlenecks_chart,
     generate_pipeline_efficiency_chart,
-    generate_project_breakdowns,
 )
 from infrastructure.reporting._dashboard_csv import (  # noqa: F401
     generate_comparative_analysis_csv,

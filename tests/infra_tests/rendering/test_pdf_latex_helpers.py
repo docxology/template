@@ -6,6 +6,7 @@ Tests using real temp files (No Mocks Policy).
 from __future__ import annotations
 
 import yaml
+import pytest
 
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
@@ -14,6 +15,7 @@ from infrastructure.rendering._pdf_latex_helpers import (
     extract_preamble,
     generate_title_page_body,
     generate_title_page_preamble,
+    parse_missing_latex_package_from_log,
 )
 
 
@@ -372,3 +374,62 @@ class TestGenerateTitlePageBody:
         """Always returns a string."""
         result = generate_title_page_body(tmp_path)
         assert isinstance(result, str)
+
+
+class TestParseMissingLatexPackage:
+    """Tests for parse_missing_latex_package_from_log."""
+
+    @pytest.mark.parametrize(
+        ("log_content", "expected"),
+        [
+            ("File `multirow.sty' not found\n", "multirow"),
+            ("! LaTeX Error: File `cleveref.sty' not found\n", "cleveref"),
+            ("All good, no errors.\n", None),
+        ],
+    )
+    def test_parse_missing_package_from_log(
+        self, tmp_path, log_content: str, expected: str | None
+    ) -> None:
+        log = tmp_path / "test.log"
+        log.write_text(log_content, encoding="utf-8")
+        assert parse_missing_latex_package_from_log(log) == expected
+
+    def test_nonexistent_log(self, tmp_path):
+        assert parse_missing_latex_package_from_log(tmp_path / "missing.log") is None
+
+
+class TestErrorPaths:
+    """Error-handler paths for latex helper IO and YAML parsing."""
+
+    def test_check_latex_log_unreadable(self, tmp_path):
+        import stat
+
+        log = tmp_path / "test.log"
+        log.write_text("File `figure.png` not found\n", encoding="utf-8")
+        log.chmod(0o000)
+        try:
+            result = check_latex_log_for_graphics_errors(log)
+            assert isinstance(result, dict)
+        finally:
+            log.chmod(stat.S_IRWXU)
+
+    def test_generate_title_page_preamble_invalid_yaml(self, tmp_path):
+        config = tmp_path / "config.yaml"
+        config.write_text("paper:\n  title: [\n  invalid yaml\n", encoding="utf-8")
+        assert generate_title_page_preamble(tmp_path) == ""
+
+    def test_generate_title_page_body_invalid_yaml(self, tmp_path):
+        config = tmp_path / "config.yaml"
+        config.write_text("paper:\n  title: [\n  broken\n", encoding="utf-8")
+        assert generate_title_page_body(tmp_path) == ""
+
+    def test_parse_missing_latex_package_unreadable(self, tmp_path):
+        import stat
+
+        log = tmp_path / "test.log"
+        log.write_text("File `multirow.sty' not found\n", encoding="utf-8")
+        log.chmod(0o000)
+        try:
+            assert parse_missing_latex_package_from_log(log) is None
+        finally:
+            log.chmod(stat.S_IRWXU)

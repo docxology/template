@@ -304,11 +304,21 @@ def setup_project_logging(name: str, level: Optional[int] = None,
 
 ## Pipeline Logging
 
-**Location:** `projects/{project_name}/output/logs/pipeline.log`
+**During execution:** `projects/{project_name}/output/logs/pipeline.log`
+
+**After copy stage (stage 9):** the same file is also under `output/{project_name}/logs/pipeline.log`
+via [`copy_final_deliverables`](../../../infrastructure/core/files/operations.py).
+
+Canonical format and verbosity dial: [output-design.md](output-design.md).
 
 **View logs:**
 
 ```bash
+# During or after a run (working tree)
+cat projects/{project_name}/output/logs/pipeline.log
+grep -i error projects/{project_name}/output/logs/pipeline.log
+
+# After copy stage (final deliverables tree)
 cat output/{project_name}/logs/pipeline.log
 grep -i error output/{project_name}/logs/pipeline.log
 ```

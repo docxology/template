@@ -1,6 +1,7 @@
 """Tests for infrastructure.validation.integrity.check_links — expanded coverage."""
 
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.integrity.check_links import (
     extract_links,
     extract_code_blocks,
@@ -8,7 +9,7 @@ from infrastructure.validation.integrity.check_links import (
     _is_real_path_item,
     _resolve_template_path,
     check_file_reference,
-    find_all_markdown_files,
+    discover_markdown_files,
     validate_directory_structures,
     validate_placeholder_consistency,
     generate_comprehensive_report,
@@ -237,20 +238,20 @@ class TestFindAllMarkdownFiles:
         (tmp_path / "README.md").write_text("# Readme")
         (tmp_path / "docs").mkdir()
         (tmp_path / "docs" / "guide.md").write_text("# Guide")
-        files = find_all_markdown_files(tmp_path)
+        files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 2
 
     def test_excludes_output(self, tmp_path):
         (tmp_path / "output").mkdir()
         (tmp_path / "output" / "report.md").write_text("# Report")
         (tmp_path / "README.md").write_text("# Readme")
-        files = find_all_markdown_files(tmp_path)
+        files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 1
 
     def test_excludes_venv(self, tmp_path):
         (tmp_path / ".venv").mkdir()
         (tmp_path / ".venv" / "readme.md").write_text("venv")
-        files = find_all_markdown_files(tmp_path)
+        files = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 0
 
 

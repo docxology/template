@@ -20,6 +20,7 @@ measured over `infrastructure/` only.
 | Directory | Focus |
 |-----------|-------|
 | `bench/` | Opt-in `pytest-benchmark` suites, skipped by default |
+| `config/` | `infrastructure/config/` — secure_config schema expectations |
 | `core/` | `infrastructure/core/` — logging, files, runtime, pipeline, telemetry, security |
 | `core/config/` | Config schema extensions, strict loading, JSON schema |
 | `core/pipeline/` | Lower-level pipeline helpers such as multi-project parallelism |
@@ -46,23 +47,18 @@ Top-level files outside subfolders include `test_docs_discovery_consistency.py`,
 
 ## File Naming Convention
 
-Several directories contain files with `_coverage`, `_full`, `_expanded_coverage`, or `_additional` suffixes. These are **complementary test suites** that fill coverage gaps in the base file — they are not duplicates. All are collected and run by pytest.
+Prefer **one behavioral test module per production module**. Use
+``@pytest.mark.parametrize`` for branch/error paths instead of spawning
+``*_expanded_coverage*`` or ``*_full_coverage*`` companion files.
 
-| Suffix pattern | Meaning |
-|----------------|---------|
-| `test_foo.py` | Core behavior tests |
-| `test_foo_coverage.py` | Additional test cases that push coverage higher |
-| `test_foo_full.py` | Comprehensive end-to-end scenarios |
-| `test_foo_expanded_coverage.py` | Edge-case and branch coverage additions |
+Legacy ``*_coverage*`` suffix files still exist in some packages; when
+touching a module, merge supplements into the canonical file and delete
+the redundant tier. Do not add a third coverage tier for new work.
 
-Duplicate class names across these files are intentional — pytest collects each class independently. Do not merge them without verifying coverage does not drop.
-
-## Practices
-
-- Keep tests behavior-focused.
-- Use `pytest.mark.requires_*` for optional external services (Ollama, LaTeX, etc.).
-- Prefer explicit file and subprocess setup over mocks.
-- Add `_coverage` variants when adding branch coverage for existing modules rather than expanding the base test file beyond ~400 lines.
+| Pattern | Preferred use |
+| ------- | ------------- |
+| `test_foo.py` | Canonical behavior + parametrized branches |
+| `test_foo_coverage.py` | Legacy only — merge into `test_foo.py` when editing |
 
 ## See Also
 

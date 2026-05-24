@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.core.exceptions import TemplateError
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.core import RenderManager
 
@@ -126,3 +127,18 @@ def test_render_all_md_honors_disabled_html(monkeypatch, tmp_path):
     results = manager.render_all(md_file)
 
     assert results == [slides_file]
+
+
+def test_render_all_missing_source_raises_template_error(tmp_path: Path) -> None:
+    manager = RenderManager(RenderingConfig(web_dir=str(tmp_path), slides_dir=str(tmp_path / "slides")))
+    missing = tmp_path / "missing.md"
+    with pytest.raises(TemplateError, match="does not exist"):
+        manager.render_all(missing)
+
+
+def test_render_all_unsupported_suffix_raises_template_error(tmp_path: Path) -> None:
+    manager = RenderManager(RenderingConfig(web_dir=str(tmp_path), slides_dir=str(tmp_path / "slides")))
+    bad = tmp_path / "notes.txt"
+    bad.write_text("plain text", encoding="utf-8")
+    with pytest.raises(TemplateError, match="Unsupported file format"):
+        manager.render_all(bad)

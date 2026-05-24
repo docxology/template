@@ -81,7 +81,7 @@ flowchart TB
 
     INFRA --> INFRA_PKGS[benchmark · core · doctor · documentation · llm ·<br/>orchestration · project · prose · publishing · reference ·<br/>rendering · reporting · scientific · search · skills ·<br/>steganography · validation]
 
-    SCR --> SCR_FILES[bash_utils.sh ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
+    SCR --> SCR_FILES[shell_bootstrap.sh · bash_utils.sh ops only ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 
     PROJ --> PROJ_F["template_code_project · template_prose_project · template_search_project<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
 
@@ -150,7 +150,7 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 | `UV_FROZEN` | `true` | Reproducible locked dependency installs |
 | `LOG_LEVEL` | `1` | 0=DEBUG 1=INFO 2=WARN 3=ERROR |
 | `LOG_TERMINAL_VERBOSE` | unset | Set to restore the verbose `[ts] [LEVEL]` prefix on terminal output (file always has it). See [operational/logging/output-design.md](operational/logging/output-design.md). |
-| `PIPELINE_MODE` | `0` | Set to `1` by `run.sh` for non-interactive flags |
+| `FEP_LEAN_GAUSS_WORKFLOWS` | `1` | OpenGauss Lean session workflows; `--no-lean-workflows` or `0` disables |
 | `OLLAMA_HOST` | `http://localhost:11434` | LLM server URL |
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars per LLM prompt |
 | `ENABLE_PDF` / `ENABLE_HTML` / `ENABLE_SLIDES` | `1` | Per-format render toggles. Set `0` to skip. See [usage/output-formats.md](usage/output-formats.md). |
@@ -175,8 +175,8 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 - **Real Tests** — No mocks allowed. Verified by `scripts/verify_no_mocks.py`.
 - **Thin Orchestrators** — Scripts must not contain business logic.
 - **Coverage** — Infrastructure ≥ 60%, Projects ≥ 90%.
-- **PIPELINE_MODE** — Set automatically by `run.sh` for all non-interactive flags;
-  triggers `ensure_uv()` + `uv sync` bootstrap on first run.
+- **Shell bootstrap** — `run.sh` / `secure_run.sh` source `scripts/shell_bootstrap.sh`
+  (`ensure_uv`, sandbox env vars); conditional `uv sync` is internal to `run.sh`, not an exported env var.
 
 ---
 

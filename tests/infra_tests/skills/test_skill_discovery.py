@@ -11,12 +11,17 @@ import pytest
 from infrastructure.skills.cli import main as skills_cli_main
 from infrastructure.skills.discovery import (
     DEFAULT_SKILL_SEARCH_ROOTS,
+    SkillDescriptor,
+    _ensure_unique_names,
     build_skill_index_markdown,
     build_manifest_payload,
     discover_skills,
     iter_skill_paths,
+    load_manifest,
     load_skill_descriptor,
     manifest_matches_discovery,
+    manifest_skill_dicts_for_prompt,
+    skill_descriptors_as_json_serializable,
     split_yaml_frontmatter,
     write_skill_manifest,
 )
@@ -125,8 +130,27 @@ class TestTemplateRepository:
         assert DEFAULT_SKILL_SEARCH_ROOTS == (
             "infrastructure",
             "projects",
+            "docs/prompts",
             ".cursor/skills",
         )
+
+    def test_template_workflow_skills_present(self) -> None:
+        root = _template_repo_root()
+        skills = discover_skills(root)
+        names = {s.name for s in skills}
+        assert "template-workflows" in names
+        assert "template-pipeline-debugging" in names
+        assert "template-comprehensive-assessment" in names
+        template_names = [n for n in names if n and n.startswith("template-")]
+        assert len(template_names) >= 14
+        assert len(template_names) == len(set(template_names))
+
+    def test_prompts_hub_skill_path(self) -> None:
+        root = _template_repo_root()
+        skills = discover_skills(root)
+        paths = {s.path_posix for s in skills}
+        assert "docs/prompts/SKILL.md" in paths
+        assert "docs/prompts/pipeline-debugging/SKILL.md" in paths
 
     def test_all_infrastructure_skills_parse(self) -> None:
         root = _template_repo_root()
@@ -245,6 +269,9 @@ class TestCliModule:
             json.dumps({"version": 1, "skills": []}),
             encoding="utf-8",
         )
+        ok, msg = manifest_matches_discovery(tmp_path, manifest)
+        assert ok is False
+        assert "out of date" in msg.lower()
         code = skills_cli_main(
             ["check", "--repo-root", str(tmp_path), "--manifest", str(manifest)]
         )
@@ -302,3 +329,54 @@ class TestBuildManifestPayload:
         for row in payload["skills"]:
             assert set(row.keys()) == {"name", "description", "path", "cursor_at"}
             assert row["path"] == row["cursor_at"]
+
+    def test_basic_payload_from_fixture(self, tmp_path: Path) -> None:
+        (tmp_path / "infrastructure").mkdir()
+        (tmp_path / "infrastructure" / "SKILL.md").write_text(
+            "---\nname: MySkill\ndescription: A skill\n---\nbody",
+            encoding="utf-8",
+        )
+        skills = discover_skills(tmp_path)
+        payload = build_manifest_payload(skills)
+        assert payload["skills"][0]["name"] == "MySkill"
+
+
+class TestEnsureUniqueNames:
+    def test_duplicate_raises(self) -> None:
+        skills = [
+            SkillDescriptor(Path("/a"), Path("a/SKILL.md"), "same", "desc"),
+            SkillDescriptor(Path("/b"), Path("b/SKILL.md"), "same", "desc"),
+        ]
+        with pytest.raises(ValueError, match="Duplicate"):
+            _ensure_unique_names(skills)
+
+
+class TestLoadManifest:
+    def test_not_dict_raises(self, tmp_path: Path) -> None:
+        manifest = tmp_path / "manifest.json"
+        manifest.write_text(json.dumps([1, 2, 3]), encoding="utf-8")
+        with pytest.raises(ValueError, match="object"):
+            load_manifest(manifest)
+
+
+class TestManifestSkillDictsForPrompt:
+    def test_none_name_becomes_empty_string(self) -> None:
+        skills = [SkillDescriptor(Path("/a"), Path("a/SKILL.md"), None, None)]
+        result = manifest_skill_dicts_for_prompt(skills)
+        assert result[0]["name"] == ""
+        assert result[0]["description"] == ""
+
+
+class TestSkillDescriptorsAsJsonSerializable:
+    def test_includes_frontmatter(self) -> None:
+        skills = [
+            SkillDescriptor(
+                Path("/a"),
+                Path("infrastructure/SKILL.md"),
+                "S1",
+                "D1",
+                frontmatter={"name": "S1"},
+            ),
+        ]
+        result = skill_descriptors_as_json_serializable(skills)
+        assert result[0]["frontmatter"] == {"name": "S1"}

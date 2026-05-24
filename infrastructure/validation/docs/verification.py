@@ -9,7 +9,8 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.content.markdown_validator import validate_markdown
 from infrastructure.validation.docs.accuracy import verify_commands
 from infrastructure.validation.docs.cross_link_lint import detect_markdown_link_cycles
-from infrastructure.validation.docs.discovery import discover_markdown_files, identify_cross_references
+from infrastructure.validation.content.discovery import discover_markdown_files
+from infrastructure.validation.docs.discovery import identify_cross_references
 from infrastructure.validation.docs.lint_runner import doc_roots, run_docs_lint
 
 logger = get_logger(__name__)
@@ -32,7 +33,7 @@ def run_link_audit(repo_root: Path) -> dict[str, Any]:
 
 def verify_cross_references(repo_root: Path) -> dict[str, Any]:
     """Count cross-references across discovered markdown files."""
-    md_files = discover_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root, scope="repo")
     return {
         "status": "verified",
         "total_references": len(identify_cross_references(md_files)),
@@ -43,7 +44,7 @@ def run_verification_checks(repo_root: Path) -> dict[str, Any]:
     """Run documentation verification checks against the repository."""
     logger.info("Documentation verification checks...")
 
-    md_files = discover_markdown_files(repo_root)
+    md_files = discover_markdown_files(repo_root, scope="repo")
     roots = doc_roots(repo_root)
 
     lint_report = run_docs_lint(repo_root, quiet=True)

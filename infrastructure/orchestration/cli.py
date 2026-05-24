@@ -39,6 +39,8 @@ from infrastructure.orchestration.secure_run import (
     SecureRunOptions,
     run_secure_pipeline,
 )
+from infrastructure.core.pipeline.single_stage import execute_single_stage
+from infrastructure.core.pipeline.stage_registry import MENU_KEY_TO_STAGE
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.linking import SKIP_ENV_VAR, sync_active_links
 
@@ -407,18 +409,6 @@ def _interactive(
                 break
 
 
-_STAGE_KEY_MAP: dict[str, str] = {
-    "0": "setup",
-    "1": "tests",
-    "2": "analysis",
-    "3": "render_pdf",
-    "4": "validate",
-    "5": "copy",
-    "6": "llm_reviews",
-    "7": "llm_translations",
-}
-
-
 def _dispatch_menu_key(
     key: str,
     project: str,
@@ -444,30 +434,12 @@ def _dispatch_menu_key(
         skip_infra = key in {"b", "d"}
         skip_llm = key in {"c", "d"}
         return runner.run_multi(MultiProjectInvocation(skip_infra=skip_infra, skip_llm=skip_llm))
-    if key in _STAGE_KEY_MAP:
+    if key in MENU_KEY_TO_STAGE:
+        stage = MENU_KEY_TO_STAGE[key]
         if stage_runner is not None:
-            return stage_runner(_STAGE_KEY_MAP[key], project, repo_root)
-        return _subprocess_stage(_STAGE_KEY_MAP[key], project, repo_root)
+            return stage_runner(stage, project, repo_root)
+        return execute_single_stage(stage, project, repo_root)
     return 1
-
-
-def _subprocess_stage(stage: str, project: str, repo_root: Path) -> int:  # pragma: no cover
-    """Default stage dispatcher — invokes scripts/execute_pipeline.py.
-
-    Excluded from coverage because subprocess invocation requires the full
-    pipeline executor to be runnable; it is exercised by smoke tests.
-    """
-    import subprocess
-
-    cmd = [
-        sys.executable,
-        str(repo_root / "scripts" / "execute_pipeline.py"),
-        "--project",
-        project,
-        "--stage",
-        stage,
-    ]
-    return subprocess.run(cmd, cwd=str(repo_root), check=False).returncode
 
 
 def main(argv: Sequence[str] | None = None) -> int:

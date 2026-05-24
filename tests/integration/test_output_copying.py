@@ -364,8 +364,8 @@ class TestValidateOutputStructure:
         assert result["valid"] is True
         assert len(result["issues"]) == 0
         assert len(result["missing_files"]) == 0
-        assert "project_combined_pdf" in result["directory_structure"]
-        assert result["directory_structure"]["project_combined_pdf"]["exists"] is True
+        assert "combined_pdf" in result["directory_structure"]
+        assert result["directory_structure"]["combined_pdf"]["exists"] is True
 
     def test_structure_missing_output_dir(self, tmp_path):
         """Test structure validation with missing output directory."""

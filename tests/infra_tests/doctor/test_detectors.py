@@ -90,6 +90,18 @@ def test_stale_coverage_files(tmp_path: Path):
     )
 
 
+def test_doctor_state_not_writable_reports_warn(tmp_path: Path) -> None:
+    doctor_dir = tmp_path / ".doctor"
+    doctor_dir.mkdir()
+    doctor_dir.chmod(0o444)
+    try:
+        findings = detect_doctor_state_writable(tmp_path)
+        assert findings[0].healthy is False
+        assert findings[0].severity == Severity.CRITICAL
+    finally:
+        doctor_dir.chmod(0o755)
+
+
 def test_doctor_state_writable_creates_directory(tmp_path: Path):
     findings = detect_doctor_state_writable(tmp_path)
     assert findings[0].healthy is True
@@ -126,3 +138,26 @@ def test_run_detectors_idempotent(tmp_path: Path):
     second = run_detectors(tmp_path)
     assert [f.code for f in first] == [f.code for f in second]
     assert [f.healthy for f in first] == [f.healthy for f in second]
+
+
+def test_run_detectors_selected_subset(tmp_path: Path):
+    """``selected=`` runs only the requested detectors."""
+    _make_min_repo(tmp_path)
+    (tmp_path / ".coverage").write_text("data")
+    findings = run_detectors(tmp_path, selected=(detect_stale_coverage_files,))
+    assert len(findings) == 1
+    assert findings[0].code == "DOC302"
+
+
+def test_orphan_output_dirs_surfaces_fix_id(tmp_path: Path):
+    from infrastructure.doctor.detectors import detect_orphan_output_dirs
+
+    _make_min_repo(tmp_path)
+    orphan = tmp_path / "output" / "ghost_project"
+    orphan.mkdir(parents=True)
+    (orphan / "pdf").mkdir()
+    findings = detect_orphan_output_dirs(tmp_path)
+    assert findings
+    assert findings[0].healthy is False
+    fix_ids = {rl.fix_id for rl in findings[0].repair_levels}
+    assert "fix_remove_orphan_output_dirs" in fix_ids

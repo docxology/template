@@ -1,0 +1,83 @@
+{
+  "timestamp": "2026-05-24T10:55:25.929478",
+  "infrastructure": {},
+  "project": {
+    "passed": 209,
+    "failed": 0,
+    "skipped": 0,
+    "total": 209,
+    "warnings": 0,
+    "exit_code": 0,
+    "discovery_count": 209,
+    "collection_errors": 0,
+    "execution_phases": {
+      "setup": 23.3,
+      "collection": 23.3,
+      "execution": 23.3
+    },
+    "test_categories": {},
+    "coverage_percent": 99.43074003795067,
+    "failed_tests": []
+  },
+  "summary": {
+    "total_passed": 209,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 209,
+    "all_passed": true,
+    "project_coverage": 99.43074003795067
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 97.74774774774775,
+      "total_executed": 434,
+      "total_missing": 3,
+      "total_excluded": 7,
+      "total_lines": 444,
+      "file_coverage": {
+        "projects/template_code_project/src/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 3,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 3
+        },
+        "projects/template_code_project/src/documentation.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 22,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 22
+        },
+        "projects/template_code_project/src/experiment_config.py": {
+          "coverage_percent": 96.92307692307692,
+          "executed_lines": 63,
+          "missing_lines": 0,
+          "excluded_lines": 2,
+          "total_lines": 65
+        },
+        "projects/template_code_project/src/invariants.py": {
+          "coverage_percent": 97.6470588235294,
+          "executed_lines": 83,
+          "missing_lines": 0,
+          "excluded_lines": 2,
+          "total_lines": 85
+        },
+        "projects/template_code_project/src/manuscript_variables.py": {
+          "coverage_percent": 96.64804469273743,
+          "executed_lines": 173,
+          "missing_lines": 3,
+          "excluded_lines": 3,
+          "total_lines": 179
+        },
+        "projects/template_code_project/src/optimizer.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 90,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 90
+        }
+      }
+    }
+  }
+}

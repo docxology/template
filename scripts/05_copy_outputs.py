@@ -11,7 +11,7 @@ Stage 05 of the pipeline orchestration - copies all project outputs to
 the top-level output/ directory for easy access.
 
 Complete project outputs copied:
-- PDF manuscript (pdf/ directory + root copy of project_combined.pdf)
+- PDF manuscript (pdf/ directory + root copy of `{project}_combined.pdf`)
 - Presentation slides (slides/ directory - all formats and metadata)
 - Web outputs (web/ directory - all HTML files)
 - Generated figures (figures/ directory - all images and PDFs)
@@ -132,7 +132,7 @@ def main() -> int:
             json.dump(output_stats, f, indent=2)
         logger.info(f"Output statistics JSON saved to: {json_file}")
 
-        # Step 5: Generate original summary (for backward compatibility)
+        # Step 5: Log copy summary for the pipeline console
         log_output_summary(output_dir, dict(stats), structure_validation)
 
         # Determine success/failure

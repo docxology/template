@@ -17,6 +17,7 @@ from infrastructure.validation.docs.consistency_lint import (
     check_module_count_claims,
     check_no_ghost_projects,
     check_readme_files_list,
+    check_stale_shell_contracts,
 )
 from infrastructure.validation.docs.cross_link_lint import BrokenLink, find_broken_links
 from infrastructure.validation.docs.doc_pair_lint import DocPairIssue, find_doc_pair_issues
@@ -107,6 +108,7 @@ def run_consistency_lint(repo_root: Path, *, quiet: bool) -> list[Inconsistency]
     issues.extend(check_doc_imports_resolve(repo_root))
     issues.extend(check_readme_files_list(repo_root))
     issues.extend(check_canonical_count_singularity(repo_root))
+    issues.extend(check_stale_shell_contracts(repo_root))
     if not quiet:
         logger.info("consistency: %d issues", len(issues))
     return issues

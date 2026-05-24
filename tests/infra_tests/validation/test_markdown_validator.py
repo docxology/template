@@ -10,10 +10,10 @@ import pytest
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.insert(0, ROOT)
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.content.markdown_validator import (
     collect_symbols,
     find_manuscript_directory,
-    find_markdown_files,
     validate_citations,
     validate_images,
     validate_markdown,
@@ -25,14 +25,15 @@ from infrastructure.validation.content.diagnostic_codes import (
     BibtexCode,
     MarkdownCode,
 )
+from infrastructure.core.exceptions import NotADirectoryError
 from infrastructure.core.logging import DiagnosticSeverity
 
 
 class TestFindMarkdownFiles:
-    """Test find_markdown_files function."""
+    """Test discover_markdown_files (tree scope)."""
 
     def test_finds_and_sorts_markdown_files(self, tmp_path):
-        """Test find_markdown_files finds and sorts markdown files."""
+        """Test discover_markdown_files finds and sorts markdown files."""
         # Create test markdown files
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
@@ -40,30 +41,30 @@ class TestFindMarkdownFiles:
         (manuscript / "01_first.md").write_text("content")
         (manuscript / "not_md.txt").write_text("content")
 
-        files = find_markdown_files(manuscript)
+        files = discover_markdown_files(manuscript, scope="tree")
 
         assert len(files) == 2
-        assert "01_first.md" in files[0]
-        assert "02_second.md" in files[1]
+        assert files[0].name == "01_first.md"
+        assert files[1].name == "02_second.md"
 
     def test_nonexistent_directory_raises(self, tmp_path):
         """Test find_markdown_files raises on nonexistent directory."""
         with pytest.raises(FileNotFoundError):
-            find_markdown_files(tmp_path / "nonexistent")
+            discover_markdown_files(tmp_path / "nonexistent", scope="tree")
 
     def test_file_instead_of_directory_raises(self, tmp_path):
         """Test find_markdown_files raises when given a file."""
         test_file = tmp_path / "test.txt"
         test_file.write_text("content")
         with pytest.raises(NotADirectoryError):
-            find_markdown_files(test_file)
+            discover_markdown_files(test_file, scope="tree")
 
     def test_empty_directory(self, tmp_path):
         """Test find_markdown_files with empty directory."""
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
 
-        files = find_markdown_files(manuscript)
+        files = discover_markdown_files(manuscript, scope="tree")
 
         assert files == []
 

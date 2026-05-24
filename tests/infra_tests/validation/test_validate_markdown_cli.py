@@ -91,22 +91,21 @@ class TestValidateMarkdownCliHelpers:
         assert isinstance(root, str)
         assert len(root) > 0
 
-    def test_find_markdown_files(self, tmp_path):
-        """Test find_markdown_files function."""
-        # Create test files
+    def test_discover_markdown_files(self, tmp_path):
+        """Test discover_markdown_files function."""
         (tmp_path / "01_intro.md").write_text("# Intro")
         (tmp_path / "02_methods.md").write_text("# Methods")
         (tmp_path / "readme.txt").write_text("Not markdown")
 
-        files = validate_markdown_cli.find_markdown_files(str(tmp_path))
+        files = validate_markdown_cli.discover_markdown_files(tmp_path, scope="tree")
 
         assert len(files) == 2
-        assert any("01_intro.md" in f for f in files)
-        assert any("02_methods.md" in f for f in files)
+        assert any(f.name == "01_intro.md" for f in files)
+        assert any(f.name == "02_methods.md" for f in files)
 
-    def test_find_markdown_files_empty_dir(self, tmp_path):
+    def test_discover_markdown_files_empty_dir(self, tmp_path):
         """Test with empty directory."""
-        files = validate_markdown_cli.find_markdown_files(str(tmp_path))
+        files = validate_markdown_cli.discover_markdown_files(tmp_path, scope="tree")
         assert len(files) == 0
 
     def test_collect_symbols_with_labels(self, tmp_path):
@@ -160,7 +159,7 @@ class TestValidateMarkdownCliExports:
     def test_module_has_expected_functions(self):
         """Test module exports expected functions."""
         assert hasattr(validate_markdown_cli, "_repo_root")
-        assert hasattr(validate_markdown_cli, "find_markdown_files")
+        assert hasattr(validate_markdown_cli, "discover_markdown_files")
         assert hasattr(validate_markdown_cli, "collect_symbols")
         assert hasattr(validate_markdown_cli, "validate_images")
 
@@ -190,7 +189,7 @@ See Section [](#abstract) for details.
         )
 
         # Find files
-        files = validate_markdown_cli.find_markdown_files(str(manuscript_dir))
+        files = [str(path) for path in validate_markdown_cli.discover_markdown_files(manuscript_dir, scope="tree")]
         assert len(files) == 2
 
         # Collect symbols

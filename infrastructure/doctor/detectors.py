@@ -14,7 +14,6 @@ fixer in :mod:`.fixers` if there is a safe automatic remediation).
 
 import os
 import shutil
-import subprocess  # noqa: S404 — only invoked with hardcoded argv probes
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -737,23 +736,3 @@ def run_detectors(
             )
     out.sort(key=lambda f: f.code)
     return out
-
-
-def _probe_tool(*argv: str) -> tuple[bool, str]:
-    """Probe a CLI tool by running ``argv`` with a short timeout.
-
-    Returns ``(ok, stdout-tail)``. Kept around for future detectors
-    that want to extract a version string; currently unused, retained
-    intentionally for the next iteration.
-    """
-    try:
-        result = subprocess.run(  # noqa: S603 — argv list, no shell
-            list(argv),
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
-        )
-        return result.returncode == 0, (result.stdout or "")[-200:]
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        return False, ""

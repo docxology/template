@@ -52,16 +52,6 @@ class EvidenceValidationReport:
     warnings: list[EvidenceIssue] = field(default_factory=list)
 
     @property
-    def unsupported_numbers(self) -> list[str]:
-        """Backward-compatible list of unsupported numeric tokens."""
-        return [issue.value for issue in [*self.errors, *self.warnings] if issue.kind == "number"]
-
-    @property
-    def unsupported_citations(self) -> list[str]:
-        """Backward-compatible list of unsupported citation tokens."""
-        return [issue.value for issue in [*self.errors, *self.warnings] if issue.kind == "citation"]
-
-    @property
     def has_issues(self) -> bool:
         """Return true when validation found unsupported evidence tokens."""
         return bool(self.errors or self.warnings)
@@ -541,6 +531,16 @@ def _zone_for_heading(line: str) -> str:
     if any(name in heading for name in _LENIENT_HEADINGS):
         return "lenient"
     return "lenient"
+
+
+def unsupported_number_tokens(report: EvidenceValidationReport) -> list[str]:
+    """Return numeric tokens flagged as unsupported in *report*."""
+    return [issue.value for issue in (*report.errors, *report.warnings) if issue.kind == "number"]
+
+
+def unsupported_citation_tokens(report: EvidenceValidationReport) -> list[str]:
+    """Return citation tokens flagged as unsupported in *report*."""
+    return [issue.value for issue in (*report.errors, *report.warnings) if issue.kind == "citation"]
 
 
 def _looks_strict_line(line: str) -> bool:

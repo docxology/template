@@ -2,6 +2,8 @@
 
 import json
 
+import pytest
+
 from infrastructure.reporting.pipeline_io import (
     _atomic_write_json,
     _atomic_write_text,
@@ -9,9 +11,15 @@ from infrastructure.reporting.pipeline_io import (
     generate_validation_markdown,
     save_error_summary,
     save_performance_report,
+    save_pipeline_report,
     save_test_results,
     save_validation_report,
 )
+from infrastructure.reporting.pipeline_report_model import (
+    PipelineReport,
+    generate_pipeline_report,
+)
+from infrastructure.core.runtime.checkpoint import StageResult
 
 
 class TestAtomicWriteJson:
@@ -208,3 +216,143 @@ class TestGenerateErrorMarkdown:
         md = generate_error_markdown(summary)
         assert "Error Summary" in md
         assert "0" in md
+
+
+def _make_pipeline_report(**overrides):
+    defaults = {
+        "timestamp": "2026-04-01T12:00:00",
+        "total_duration": 30.0,
+        "stages": [
+            StageResult(name="setup", exit_code=0, duration=2.0, status="passed"),
+            StageResult(name="build", exit_code=0, duration=10.0, status="passed"),
+            StageResult(name="test", exit_code=1, duration=18.0, status="failed"),
+        ],
+        "test_results": {"total": 100, "passed": 95, "failed": 5},
+        "validation_results": {"checks": {"pdf": True}},
+        "performance_metrics": {"cpu_time": 25.0},
+        "error_summary": {"total_errors": 1},
+        "output_statistics": {"files": 3},
+    }
+    defaults.update(overrides)
+    return PipelineReport(**defaults)
+
+
+class TestSavePipelineReport:
+    @pytest.mark.parametrize(
+        "formats,expected_keys,missing_keys",
+        [
+            (["json", "html", "markdown"], {"json", "html", "markdown"}, set()),
+            (["json"], {"json"}, {"html", "markdown"}),
+            (["html"], {"html"}, {"json", "markdown"}),
+            (["markdown"], {"markdown"}, {"json", "html"}),
+        ],
+    )
+    def test_format_selection(self, tmp_path, formats, expected_keys, missing_keys):
+        report = _make_pipeline_report()
+        result = save_pipeline_report(report, tmp_path, formats=formats)
+        for key in expected_keys:
+            assert key in result
+            assert result[key].exists()
+        for key in missing_keys:
+            assert key not in result
+
+    def test_json_content_valid(self, tmp_path):
+        report = _make_pipeline_report()
+        result = save_pipeline_report(report, tmp_path, formats=["json"])
+        data = json.loads(result["json"].read_text())
+        assert data["total_duration"] == 30.0
+        assert len(data["stages"]) == 3
+        assert data["test_results"]["total"] == 100
+
+    def test_creates_output_directory(self, tmp_path):
+        report = _make_pipeline_report()
+        out_dir = tmp_path / "nested" / "reports"
+        result = save_pipeline_report(report, out_dir, formats=["json"])
+        assert result["json"].exists()
+
+    def test_minimal_report(self, tmp_path):
+        report = PipelineReport(
+            timestamp="2026-01-01T00:00:00",
+            total_duration=0.0,
+            stages=[],
+        )
+        result = save_pipeline_report(report, tmp_path, formats=["json"])
+        data = json.loads(result["json"].read_text())
+        assert data["stages"] == []
+        assert data["test_results"] is None
+
+    @pytest.mark.parametrize(
+        "format_key,content_check",
+        [
+            ("html", lambda content: "<html" in content or "<div" in content or "Pipeline" in content),
+            ("markdown", lambda content: "Pipeline" in content or "#" in content),
+        ],
+    )
+    def test_rendered_output_structure(self, tmp_path, format_key, content_check):
+        report = _make_pipeline_report()
+        result = save_pipeline_report(report, tmp_path, formats=[format_key])
+        assert content_check(result[format_key].read_text())
+
+
+class TestGeneratePipelineReport:
+    def test_basic(self, tmp_path):
+        stage_results = [
+            {"name": "setup", "exit_code": 0, "duration": 1.0},
+            {"name": "build", "exit_code": 1, "duration": 5.0},
+        ]
+        report = generate_pipeline_report(stage_results, 6.0, tmp_path)
+        assert report.total_duration == 6.0
+        assert len(report.stages) == 2
+        assert report.stages[0].status == "passed"
+        assert report.stages[1].status == "failed"
+
+    def test_with_project_name_and_log(self, tmp_path):
+        log_dir = tmp_path / "projects" / "myproj" / "output" / "logs"
+        log_dir.mkdir(parents=True)
+        (log_dir / "pipeline.log").write_text("log content")
+        report = generate_pipeline_report(
+            [{"name": "s1", "exit_code": 0, "duration": 1.0}],
+            1.0,
+            tmp_path,
+            project_name="myproj",
+            output_statistics={"files": 1},
+        )
+        assert report.output_statistics is not None
+        assert report.output_statistics["log_file"]["exists"] is True
+        assert report.output_statistics["log_file"]["size"] > 0
+
+    def test_with_project_dir_override(self, tmp_path):
+        custom_dir = tmp_path / "custom_loc" / "myproj"
+        log_dir = custom_dir / "output" / "logs"
+        log_dir.mkdir(parents=True)
+        (log_dir / "pipeline.log").write_text("log")
+        report = generate_pipeline_report(
+            [{"name": "s1", "exit_code": 0, "duration": 1.0}],
+            1.0,
+            tmp_path,
+            project_name="myproj",
+            project_dir=custom_dir,
+            output_statistics={"files": 1},
+        )
+        assert report.output_statistics["log_file"]["exists"] is True
+
+    @pytest.mark.parametrize(
+        "stage_input,expected_name",
+        [
+            ({"exit_code": 0, "duration": 1.0}, "unknown"),
+            ({"name": "s1", "exit_code": 0, "duration": 1.0}, "s1"),
+        ],
+    )
+    def test_stage_name_defaults(self, tmp_path, stage_input, expected_name):
+        report = generate_pipeline_report([stage_input], 1.0, tmp_path)
+        assert report.stages[0].name == expected_name
+
+    def test_no_output_statistics(self, tmp_path):
+        report = generate_pipeline_report(
+            [{"name": "s1", "exit_code": 0, "duration": 1.0}],
+            1.0,
+            tmp_path,
+            project_name="proj",
+            output_statistics=None,
+        )
+        assert report.output_statistics is None

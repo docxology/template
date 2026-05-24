@@ -2,8 +2,9 @@
 
 from pathlib import Path
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.integrity.check_links import (
-    find_all_markdown_files,
+    discover_markdown_files,
     extract_links,
     extract_code_blocks,
     _should_validate_path,
@@ -25,7 +26,7 @@ class TestFindAllMarkdownFiles:
         sub = tmp_path / "docs"
         sub.mkdir()
         (sub / "guide.md").write_text("# Guide")
-        result = find_all_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="link_audit")
         names = [f.name for f in result]
         assert "README.md" in names
         assert "guide.md" in names
@@ -34,20 +35,20 @@ class TestFindAllMarkdownFiles:
         out = tmp_path / "output"
         out.mkdir()
         (out / "report.md").write_text("# Report")
-        result = find_all_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(result) == 0
 
     def test_excludes_git(self, tmp_path):
         git = tmp_path / ".git"
         git.mkdir()
         (git / "notes.md").write_text("# Notes")
-        result = find_all_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="link_audit")
         assert len(result) == 0
 
     def test_sorted(self, tmp_path):
         (tmp_path / "z.md").write_text("# Z")
         (tmp_path / "a.md").write_text("# A")
-        result = find_all_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="link_audit")
         assert result[0].name == "a.md"
 
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 
 import pytest
@@ -21,7 +22,7 @@ class _FakeProject:
 
 
 def _make_stage(
-    name: str, success: bool = True, duration: float = 1.0
+    name: str, success: bool = True, duration: float = 1.0, error: str = ""
 ) -> PipelineStageResult:
     return PipelineStageResult(
         stage_num=1,
@@ -29,11 +30,65 @@ def _make_stage(
         success=success,
         exit_code=0 if success else 1,
         duration=duration,
-        error_message="" if success else f"{name} failed",
+        error_message="" if success else error or f"{name} failed",
     )
 
 
 class TestBuildSummaryDict:
+    def test_basic_summary(self):
+        projects = [_FakeProject("proj_a")]
+        result = MultiProjectResult(
+            project_results={"proj_a": [_make_stage("test", True, 5.0)]},
+            successful_projects=1,
+            failed_projects=0,
+            total_duration=5.0,
+            infra_test_duration=1.0,
+        )
+        summary = _build_summary_dict(result, projects)
+        assert summary["total_projects"] == 1
+        assert summary["successful_projects"] == 1
+        assert summary["projects"]["proj_a"]["success"] is True
+        assert summary["projects"]["proj_a"]["duration"] == 5.0
+
+    def test_failed_project(self):
+        projects = [_FakeProject("proj_a")]
+        result = MultiProjectResult(
+            project_results={
+                "proj_a": [
+                    _make_stage("test", True, 2.0),
+                    _make_stage("render", False, 1.0, error="Build failed"),
+                ]
+            },
+            successful_projects=0,
+            failed_projects=1,
+            total_duration=3.0,
+            infra_test_duration=0.0,
+        )
+        summary = _build_summary_dict(result, projects)
+        assert summary["failed_projects"] == 1
+        assert summary["projects"]["proj_a"]["success"] is False
+        assert "Build failed" in summary["projects"]["proj_a"]["errors"]
+        assert len(summary["recommendations"]) > 0
+
+    def test_multiple_projects(self):
+        projects = [_FakeProject("proj_a"), _FakeProject("proj_b")]
+        result = MultiProjectResult(
+            project_results={
+                "proj_a": [_make_stage("test", True, 4.0)],
+                "proj_b": [_make_stage("test", False, 6.0, error="Timeout")],
+            },
+            successful_projects=1,
+            failed_projects=1,
+            total_duration=10.0,
+            infra_test_duration=2.0,
+        )
+        summary = _build_summary_dict(result, projects)
+        assert summary["total_projects"] == 2
+        assert summary["projects"]["proj_a"]["success"] is True
+        assert summary["projects"]["proj_b"]["success"] is False
+        assert summary["performance_analysis"]["slowest_project"] == "proj_b"
+        assert summary["performance_analysis"]["fastest_project"] == "proj_a"
+
     def test_performance_analysis(self):
         projects = [_FakeProject("fast"), _FakeProject("slow")]
         result = MultiProjectResult(
@@ -225,6 +280,40 @@ class TestFormatMarkdown:
         error_lines = [l for l in lines if l.startswith("- alpha:")]
         assert len(error_lines) == 0
 
+    def test_format_with_errors(self):
+        summary = {
+            "timestamp": "2026-01-01T00:00:00",
+            "total_projects": 1,
+            "successful_projects": 0,
+            "failed_projects": 1,
+            "total_duration": 3.0,
+            "infra_test_duration": 0.0,
+            "projects": {
+                "proj_a": {
+                    "success": False,
+                    "duration": 3.0,
+                    "stages_completed": 2,
+                    "errors": ["Build failed", "Test failed", "Deploy failed", "Extra error"],
+                },
+            },
+            "performance_analysis": {},
+            "error_aggregation": {
+                "total_errors": 4,
+                "errors_by_project": {"proj_a": 4},
+            },
+            "recommendations": [
+                {
+                    "priority": "high",
+                    "action": "Fix builds",
+                    "details": "Multiple failures detected",
+                },
+            ],
+        }
+        md = _format_multi_project_summary_markdown(summary)
+        assert "Build failed" in md
+        assert "Recommendations" in md
+        assert "HIGH" in md
+
 
 class TestGenerateReport:
     def test_creates_output_dir(self, tmp_path):
@@ -241,3 +330,31 @@ class TestGenerateReport:
         assert out.exists()
         assert files["json"].exists()
         assert files["markdown"].exists()
+
+    def test_generates_json_and_markdown(self, tmp_path):
+        projects = [_FakeProject("proj_a")]
+        result = MultiProjectResult(
+            project_results={"proj_a": [_make_stage("test", True, 5.0)]},
+            successful_projects=1,
+            failed_projects=0,
+            total_duration=5.0,
+            infra_test_duration=1.0,
+        )
+        files = generate_multi_project_summary_report(result, projects, tmp_path / "reports")
+        data = json.loads(files["json"].read_text())
+        assert data["total_projects"] == 1
+        assert files["markdown"].read_text().startswith("# Multi-Project Execution Summary")
+
+    def test_creates_nested_output_dir(self, tmp_path):
+        projects = [_FakeProject("proj_a")]
+        result = MultiProjectResult(
+            project_results={"proj_a": [_make_stage("test", True, 1.0)]},
+            successful_projects=1,
+            failed_projects=0,
+            total_duration=1.0,
+            infra_test_duration=0.0,
+        )
+        output_dir = tmp_path / "nested" / "deep" / "reports"
+        files = generate_multi_project_summary_report(result, projects, output_dir)
+        assert output_dir.exists()
+        assert files["json"].exists()

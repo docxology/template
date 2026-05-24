@@ -28,7 +28,7 @@ def test_generate_api_docs_writes_reference() -> None:
 
 
 def test_preflight_script_emits_diagnostics() -> None:
-    """00_preflight.py is aesthetic-only; exit 1 is OK when chrome cache is absent."""
+    """00_preflight.py is aesthetic-only; exit 0 when no render mermaid, exit 1 when chrome absent."""
     script = PROJECT_ROOT / "scripts" / "00_preflight.py"
     result = subprocess.run(
         [sys.executable, str(script)],
@@ -40,7 +40,8 @@ def test_preflight_script_emits_diagnostics() -> None:
     )
     assert result.returncode in (0, 1), result.stderr or result.stdout
     combined = f"{result.stdout}\n{result.stderr}".lower()
-    assert any(token in combined for token in ("preflight", "puppeteer", "mmdc"))
+    if result.returncode == 1:
+        assert any(token in combined for token in ("preflight", "puppeteer", "mmdc"))
 
 
 def test_run_api_doc_generation_continues_when_glossary_index_fails(

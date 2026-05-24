@@ -108,25 +108,62 @@ class TestGenerateMarkdownReport:
         md = generate_markdown_report(data)
         assert "below" in md
 
-    def test_report_with_project(self):
-        projects = {
-            "template_code_project": {
-                "exit_code": 0,
-                "passed": 50,
-                "failed": 0,
-                "skipped": 2,
-                "warnings": 0,
-                "coverage_percent": 95.0,
-                "meets_threshold": True,
-                "covered_lines": 1000,
-                "total_lines": 1053,
-                "duration_seconds": 30.0,
-            }
-        }
+    @pytest.mark.parametrize(
+        "projects,expected_fragments",
+        [
+            (
+                {
+                    "template_code_project": {
+                        "exit_code": 0,
+                        "passed": 50,
+                        "failed": 0,
+                        "skipped": 2,
+                        "warnings": 0,
+                        "coverage_percent": 95.0,
+                        "meets_threshold": True,
+                        "covered_lines": 1000,
+                        "total_lines": 1053,
+                        "duration_seconds": 30.0,
+                    }
+                },
+                ["Code Project Tests", "95.0%"],
+            ),
+            (
+                {
+                    "template_code_project": {
+                        "exit_code": 0,
+                        "passed": 400,
+                        "failed": 0,
+                        "skipped": 2,
+                        "warnings": 0,
+                        "coverage_percent": 95.0,
+                        "meets_threshold": True,
+                        "covered_lines": 950,
+                        "total_lines": 1000,
+                        "duration_seconds": 15.0,
+                    },
+                    "template": {
+                        "exit_code": 1,
+                        "passed": 80,
+                        "failed": 3,
+                        "skipped": 1,
+                        "warnings": 1,
+                        "coverage_percent": 88.0,
+                        "meets_threshold": False,
+                        "covered_lines": 440,
+                        "total_lines": 500,
+                        "duration_seconds": 8.0,
+                    },
+                },
+                ["Code Project", "Template", "95.0%"],
+            ),
+        ],
+    )
+    def test_report_with_projects(self, projects, expected_fragments):
         data = _make_report_data(projects=projects)
         md = generate_markdown_report(data)
-        assert "Code Project Tests" in md
-        assert "95.0%" in md
+        for fragment in expected_fragments:
+            assert fragment in md
 
     def test_report_metadata_flags(self):
         data = _make_report_data()

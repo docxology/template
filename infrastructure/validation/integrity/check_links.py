@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.accuracy import extract_headings
 from infrastructure.validation.integrity.link_extract import (
     LinkCheckResult,
@@ -22,7 +23,6 @@ from infrastructure.validation.integrity.link_extract import (
     check_file_reference,
     extract_code_blocks,
     extract_links,
-    find_all_markdown_files,
     validate_directory_structures,
     validate_file_paths_in_code,
     validate_placeholder_consistency,
@@ -42,7 +42,7 @@ __all__ = [
     "extract_code_blocks",
     "extract_headings",
     "extract_links",
-    "find_all_markdown_files",
+    "discover_markdown_files",
     "generate_comprehensive_report",
     "main",
     "run_link_audit",

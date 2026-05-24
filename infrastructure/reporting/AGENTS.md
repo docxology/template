@@ -562,6 +562,12 @@ saved_files = save_executive_summary(summary, Path("output/executive_summary"))
 
 ### Dashboard System (`_dashboard_matplotlib.py` + extracted modules)
 
+**Decomposition note (`_dashboard_charts.py`, ~734 lines):** do not refactor wholesale
+on unrelated passes. On the next dashboard touch, split chart builders into
+focused modules — manuscript metrics, test/coverage charts, pipeline health,
+and cross-project aggregates — and keep `generate_all_dashboards()` as the
+single orchestrator entry point.
+
 Creates visual dashboards and charts for executive reporting.
 
 #### Key Functions
@@ -875,7 +881,7 @@ from infrastructure.reporting.manuscript_overview import generate_manuscript_ove
 from pathlib import Path
 
 # Generate overview for single project
-pdf_path = Path("output/project/pdf/project_combined.pdf")
+pdf_path = Path("output/template_code_project/pdf/template_code_project_combined.pdf")
 output_dir = Path("output/executive_summary")
 result = generate_manuscript_overview(pdf_path, output_dir, "my_project")
 

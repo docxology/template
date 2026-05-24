@@ -1,0 +1,20 @@
+\frametitle{Discussion}
+\protect\phantomsection\label{discussion}
+The experimental results validate the gradient descent implementation
+and confirm the theoretical convergence predictions from
+\breakseq{[@sec:methodology]}. The monotonic relationship between step size and
+iteration count (\breakseq{[@tbl:opt\_results]}) aligns with the convergence
+factor analysis in \breakseq{[@eq:convergence\_factor]}, while the uniform
+solution accuracy across all step sizes demonstrates the robustness of
+the convergence criterion \(\|\nabla f(x)\| < \epsilon\). The automated
+analysis pipeline successfully generated six publication-quality
+visualizations and structured numerical outputs, validating the
+template's end-to-end research workflow from algorithmic implementation
+through automated infrastructure-driven reporting and manuscript
+integration.
+
+\emph{As a meta-architectural note: the perfect embedding of these
+outputs into this document, including all dynamic references (e.g.,
+\breakseq{[@fig:stability]}), confirms the absolute reliability of the
+\breaktt{infrastructure/rendering/pdf\_renderer.py} module handling the
+Pandoc conversion.}

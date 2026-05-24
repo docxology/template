@@ -8,8 +8,12 @@
 
 ## Quick Start
 
+`run.sh` and `secure_run.sh` do **not** source this file — they bootstrap
+`uv` and delegate to `python -m infrastructure.orchestration`. Use the
+patterns below in backup, health-check, and other operational shell scripts.
+
 ```bash
-# Source the logging utilities
+# Source the logging utilities (operational scripts only)
 source scripts/bash_utils.sh
 
 # Basic logging functions
@@ -121,6 +125,12 @@ log_resource_usage "PDF Rendering" "$duration"
 ---
 
 ## Log File Format
+
+**Operational scripts** that source `bash_utils.sh` may write transcripts like the sample below.
+The **pipeline** log contract (stage banners, `[0/9]`–`[9/9]`, Python orchestration output) lives in
+[output-design.md](output-design.md) — not in bash entry points.
+
+Example operational-script transcript:
 
 ```
 ===========================================================

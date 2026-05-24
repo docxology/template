@@ -14,7 +14,7 @@ Logging standards and operational patterns across bash + Python:
 | --- | --- |
 | `README.md` | Primary entry point for logging guidance |
 | `python-logging.md` | Python logging patterns and APIs |
-| `bash-logging.md` | Bash logging patterns used by `run.sh` |
+| `bash-logging.md` | Bash logging patterns for operational scripts (`bash_utils.sh`; not used by `run.sh`) |
 | `logging-patterns.md` | Cross-language conventions and examples |
 | `output-design.md` | Visual contract — terminal vs file, summary schema, verbosity dial |
 

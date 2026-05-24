@@ -148,6 +148,15 @@ def test_find_broken_links_excludes_default_dirs(tmp_path: Path) -> None:
     assert find_broken_links([tmp_path]) == []
 
 
+def test_find_broken_links_excludes_skill_eval_workspace(tmp_path: Path) -> None:
+    """Regenerated eval fixtures under _skill-eval/ are outside link-lint scope."""
+    fixture = tmp_path / "docs" / "prompts" / "_skill-eval" / "latest" / "with_skill" / "outputs" / "response.md"
+    _write(fixture, "[bad relative link](../../_generated/active_projects.md)\n")
+    good = tmp_path / "docs" / "prompts" / "README.md"
+    _write(good, "# prompts hub")
+    assert find_broken_links([tmp_path]) == []
+
+
 def test_find_broken_links_format_returns_string() -> None:
     bl = BrokenLink(
         file=Path("/x/y.md"),

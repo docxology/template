@@ -2,13 +2,13 @@
 ################################################################################
 # Shared Bash Utilities
 #
-# Common utilities for run.sh:
-# - Color codes and formatting
-# - Logging functions
-# - Utility functions (duration formatting, choice parsing, etc.)
-# - Environment setup
+# Common utilities for operational shell scripts (backup tiers, health-check,
+# integration tests). Root pipeline entry points (`run.sh`, `secure_run.sh`)
+# delegate to `python -m infrastructure.orchestration` and source
+# `shell_bootstrap.sh` instead — they do not source this file.
 #
-# This file is sourced by run.sh
+# Contents: color codes, logging helpers, duration formatting, get_python_cmd,
+# ensure_secure_run_environment, and related helpers.
 ################################################################################
 
 # Color codes for output
@@ -569,7 +569,7 @@ ensure_secure_run_environment() {
 }
 
 # ============================================================================
-# Project Discovery (shared by run.sh / secure_run.sh)
+# Project Discovery (operational scripts / integration tests — not run.sh)
 # ============================================================================
 
 # discover_active_projects [--qualified]

@@ -8,8 +8,10 @@ from infrastructure.validation.evidence_registry import (
     EvidenceFact,
     VerifiedEvidenceRegistry,
     build_project_evidence_registry,
-    write_evidence_registry_report,
+    unsupported_citation_tokens,
+    unsupported_number_tokens,
     validate_text_against_registry,
+    write_evidence_registry_report,
 )
 
 
@@ -23,8 +25,8 @@ def test_registry_validates_supported_numbers_and_citations() -> None:
         registry,
     )
 
-    assert report.unsupported_numbers == []
-    assert report.unsupported_citations == []
+    assert unsupported_number_tokens(report) == []
+    assert unsupported_citation_tokens(report) == []
 
 
 def test_registry_flags_unsupported_numbers_and_citations() -> None:
@@ -37,8 +39,8 @@ def test_registry_flags_unsupported_numbers_and_citations() -> None:
         registry,
     )
 
-    assert report.unsupported_numbers == ["43"]
-    assert report.unsupported_citations == ["doe2026"]
+    assert unsupported_number_tokens(report) == ["43"]
+    assert unsupported_citation_tokens(report) == ["doe2026"]
 
 
 def test_build_project_registry_collects_variables_bibtex_figures_and_data(tmp_path: Path) -> None:
@@ -82,7 +84,7 @@ def test_build_project_registry_collects_variables_bibtex_figures_and_data(tmp_p
     assert registry.has("artifact", "output/figures/plot.png")
 
     report = validate_text_against_registry("The generated table reports 2,000 iterations.", registry)
-    assert report.unsupported_numbers == []
+    assert unsupported_number_tokens(report) == []
 
 
 def test_registry_validates_internal_section_and_equation_references(tmp_path: Path) -> None:
@@ -104,7 +106,7 @@ def test_registry_validates_internal_section_and_equation_references(tmp_path: P
 
     assert registry.has("section", "sec:methods")
     assert registry.has("equation", "eq:update")
-    assert report.unsupported_citations == []
+    assert unsupported_citation_tokens(report) == []
 
 
 def test_registry_accepts_numeric_variants_and_preserves_provenance() -> None:
@@ -123,7 +125,7 @@ def test_registry_accepts_numeric_variants_and_preserves_provenance() -> None:
 
     report = validate_text_against_registry("The Results show 12.5% error.", registry)
 
-    assert report.unsupported_numbers == []
+    assert unsupported_number_tokens(report) == []
     fact = registry.lookup("number", "12.5")[0]
     assert fact.source_path == "output/data/manuscript_variables.json"
     assert fact.source_field == "$.ERROR_RATE"
@@ -160,8 +162,8 @@ The result is 888 and cites [@missing].
 
     report = validate_text_against_registry(text, registry)
 
-    assert report.unsupported_numbers == []
-    assert report.unsupported_citations == []
+    assert unsupported_number_tokens(report) == []
+    assert unsupported_citation_tokens(report) == []
 
 
 def test_write_evidence_registry_report(tmp_path: Path) -> None:

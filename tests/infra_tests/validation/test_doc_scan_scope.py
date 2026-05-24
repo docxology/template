@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from infrastructure.validation.docs.discovery import discover_markdown_files
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.scan_scope import iter_markdown_files, should_exclude_path
 from infrastructure.validation.integrity.link_validator import LinkValidator
 
@@ -49,7 +49,7 @@ def test_discovery_and_link_validator_share_scope(tmp_path: Path) -> None:
     results = validator.validate_all_markdown_files()
 
     assert sorted(results) == ["README.md", "docs/guide.md"]
-    assert [path.relative_to(tmp_path) for path in discover_markdown_files(tmp_path)] == [
+    assert [path.relative_to(tmp_path) for path in discover_markdown_files(tmp_path, scope="repo")] == [
         Path("README.md"),
         Path("docs/guide.md"),
     ]

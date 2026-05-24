@@ -5,8 +5,8 @@ pipeline-facing surface documented in ``infrastructure/validation/AGENTS.md``.
 """
 
 from .content import (
+    discover_markdown_files,
     extract_text_from_pdf,
-    find_markdown_files,
     scan_for_issues,
     validate_citations,
     validate_figure_registry,
@@ -47,7 +47,7 @@ __all__ = [
     "extract_text_from_pdf",
     "scan_for_issues",
     "validate_markdown",
-    "find_markdown_files",
+    "discover_markdown_files",
     "validate_images",
     "validate_refs",
     "validate_math",

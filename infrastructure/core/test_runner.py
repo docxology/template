@@ -38,7 +38,6 @@ skip list, marker expression) is configurable, and all subprocess work
 happens via real ``subprocess.run`` calls — no mocking.
 """
 
-import os
 import shutil
 import subprocess  # nosec B404
 from pathlib import Path
@@ -49,6 +48,10 @@ from infrastructure.core.logging.utils import (
     log_header,
     log_substep,
     log_success,
+)
+from infrastructure.core.pytest_orchestration import (
+    make_coverage_subprocess_env,
+    resolve_coverage_file,
 )
 from infrastructure.core.runtime._python_env import get_python_command
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
@@ -169,26 +172,6 @@ def _build_pytest_cmd(
     return cmd
 
 
-def _resolve_coverage_file(coverage_file: str) -> str:
-    """Return the COVERAGE_FILE value, honouring the env var when set."""
-    env_value = os.environ.get("COVERAGE_FILE")
-    if env_value:
-        return env_value
-    return coverage_file
-
-
-def _make_subprocess_env(coverage_file_value: str, repo_root: Path) -> dict[str, str]:
-    """Build a subprocess env with COVERAGE_FILE pinned and PYTHONPATH set."""
-    env = os.environ.copy()
-    env["COVERAGE_FILE"] = coverage_file_value
-    existing_pp = env.get("PYTHONPATH", "")
-    pp_parts = [str(repo_root)]
-    if existing_pp:
-        pp_parts.append(existing_pp)
-    env["PYTHONPATH"] = os.pathsep.join(pp_parts)
-    return env
-
-
 def _run_pytest_for_project(
     cmd: list[str],
     repo_root: Path,
@@ -283,7 +266,7 @@ def run_per_project_pytest(
 
     resolved_markers = DEFAULT_MARKER_EXPR if marker_expr is None else marker_expr or None
 
-    coverage_file_value = _resolve_coverage_file(coverage_file)
+    coverage_file_value = resolve_coverage_file(coverage_file)
     # Reset combined coverage data file before the first project runs.
     cf_path = Path(coverage_file_value)
     if not cf_path.is_absolute():
@@ -295,7 +278,7 @@ def run_per_project_pytest(
         except OSError as exc:  # pragma: no cover - filesystem oddity
             logger.warning("Could not remove stale coverage file %s: %s", cf_path, exc)
 
-    env = _make_subprocess_env(str(cf_path), repo_root)
+    env = make_coverage_subprocess_env(str(cf_path), repo_root)
 
     logger.info("Will run %d project(s):", len(pairs))
     for name, tests_dir in pairs:

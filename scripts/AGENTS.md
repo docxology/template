@@ -51,7 +51,8 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 - `backup-daily.sh`, `backup-weekly.sh`, `backup-full.sh` - rsync backup tiers
 - `restore-test.sh` - non-destructive backup-restore verification
 - `health-check.sh` - pre-flight system health check (Python, uv, disk, Docker, repo)
-- `bash_utils.sh` - shared shell helpers sourced by `run.sh` / `secure_run.sh`
+- `shell_bootstrap.sh` - shared `uv` bootstrap and sandbox env vars sourced by `run.sh` / `secure_run.sh`
+- `bash_utils.sh` - shared shell helpers for backup/health scripts and integration tests (not sourced by root entry points)
 
 > **Unified health command** — every quality gate listed below (mypy,
 > ruff, ruff-format, bandit, `verify_no_mocks.py`,

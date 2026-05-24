@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from infrastructure.validation.output.pipeline import (
     generate_validation_report,
-    validate_markdown,
+    validate_manuscript_output_markdown,
     validate_pdfs,
     verify_outputs_exist,
 )
@@ -29,16 +29,16 @@ class TestValidatePdfs:
 
 
 class TestValidateMarkdown:
-    """Test validate_markdown() with real directory structures."""
+    """Test validate_manuscript_output_markdown() with real directory structures."""
 
     def test_returns_true_for_missing_manuscript_dir(self) -> None:
         """Missing manuscript dir returns True (not an error, just nothing to validate)."""
-        result = validate_markdown("_nonexistent_project_xyz_abc")
+        result = validate_manuscript_output_markdown("_nonexistent_project_xyz_abc")
         assert result is True
 
     def test_returns_true_for_empty_manuscript_dir(self) -> None:
         """Empty manuscript dir (no .md files) returns True."""
-        result = validate_markdown("_nonexistent_project_xyz_abc")
+        result = validate_manuscript_output_markdown("_nonexistent_project_xyz_abc")
         assert result is True
 
 

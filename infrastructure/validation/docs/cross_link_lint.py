@@ -50,6 +50,7 @@ _DEFAULT_EXCLUDE_PARTS = DEFAULT_EXCLUDE_PARTS
 _DEFAULT_EXCLUDE_GLOBS: tuple[str, ...] = (
     "**/CHANGELOG*.md",
     "**/_generated/**",
+    "**/_skill-eval/**",
 )
 
 # Match a fenced code block (``` or ~~~), capturing the entire block (incl fences).

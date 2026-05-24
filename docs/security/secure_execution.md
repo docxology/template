@@ -27,7 +27,7 @@ To reach the **`secure` subcommand** from the main thin shell, use **`./run.sh -
 
 ## Non-interactive CLI (`secure` subcommand)
 
-Forwarded by `./secure_run.sh` after optional `--deterministic` stripping:
+Forwarded by `./secure_run.sh` to the Python `secure` subcommand (including `--deterministic`):
 
 ```bash
 # Pipeline + steganography for one project
@@ -60,7 +60,7 @@ There is **no** `--pipeline` flag on the `secure` subcommand — omitting `--ste
 | `--skip-infra` | Skip infrastructure tests stage during pipeline phase. |
 | `--core-only` | Omit LLM-tagged stages during pipeline phase. |
 | `--resume` | Resume pipeline from checkpoint (pipeline phase only). |
-| `--deterministic` | Parsed only by `secure_run.sh`: sets `STEGANOGRAPHY_DETERMINISTIC=1` so timestamps align with `git log -1 --format=%cI` (byte-identical `*_steganography.pdf` across runs at same `HEAD`). |
+| `--deterministic` | Parsed by the Python `secure` subcommand ([`infrastructure/orchestration/cli.py`](../../infrastructure/orchestration/cli.py)): sets `STEGANOGRAPHY_DETERMINISTIC=1` so timestamps align with `git log -1 --format=%cI` (byte-identical `*_steganography.pdf` across runs at same `HEAD`). |
 
 ### Deterministic / reproducible mode
 

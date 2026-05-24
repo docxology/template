@@ -1,0 +1,22 @@
+[
+  {"query": "my pipeline failed at pdf render for template_code_project what stage broke", "should_trigger": true},
+  {"query": "full repo audit tests docs manuscript for all active projects", "should_trigger": true},
+  {"query": "triple check every claim in manuscript before arxiv submission", "should_trigger": true},
+  {"query": "prove reproducible double run from clean before zenodo", "should_trigger": true},
+  {"query": "audit [[FIG:]] labels.yaml orphan keys in lean manuscript", "should_trigger": true},
+  {"query": "scaffold new projects/ tree from research brief like template_code_project", "should_trigger": true},
+  {"query": "add pytest no mocks for infrastructure module", "should_trigger": true},
+  {"query": "new infrastructure package with SKILL.md and infra_tests", "should_trigger": true},
+  {"query": "validate combined pdf unresolved refs template_prose_project", "should_trigger": true},
+  {"query": "write fibonacci homework function python", "should_trigger": false},
+  {"query": "summarize random pdf bullet points only", "should_trigger": false},
+  {"query": "bandit scan my node chat app in home directory", "should_trigger": false},
+  {"query": "something wrong with manuscript refs not sure pipeline or prose", "should_trigger": true},
+  {"query": "project analysis 0.8s no figures missing dependency", "should_trigger": true},
+  {"query": "core only pipeline validate fails need resume", "should_trigger": true},
+  {"query": "refactor move logic from scripts to src without behavior change", "should_trigger": true},
+  {"query": "write AGENTS.md README for scripts folder with real commands", "should_trigger": true},
+  {"query": "synthesize 15 arxiv papers thematic clusters citekey only", "should_trigger": true},
+  {"query": "implement adam optimizer in project src typed tests", "should_trigger": true},
+  {"query": "docker compose postgres tuning for production", "should_trigger": false}
+]

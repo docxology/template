@@ -7,16 +7,15 @@ import pytest
 from infrastructure.validation.docs import scanner as doc_scanner
 from infrastructure.validation.docs._docs_scan_report import build_documentation_scan_report
 from infrastructure.validation.docs.accuracy import extract_headings
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.discovery import (
     analyze_documentation_file,
     catalog_agents_readme,
     find_config_files,
-    find_markdown_files,
     find_script_files,
 )
-from infrastructure.validation.docs.models import ScanAccuracyIssue as AccuracyIssueModel
+from infrastructure.validation.docs.models import ScanAccuracyIssue
 from infrastructure.validation.docs.scanner import (
-    AccuracyIssue,
     CompletenessGap,
     DocumentationFile,
     DocumentationScanner,
@@ -95,14 +94,14 @@ class TestDataClasses:
         assert issue.severity == "error"
 
     def test_accuracy_issue_creation(self):
-        issue = AccuracyIssue(
+        issue = ScanAccuracyIssue(
+            category="command",
             file="readme.md",
             line=5,
-            issue_type="command",
-            issue_message="Command not found",
+            message="Command not found",
             severity="warning",
         )
-        assert issue.issue_type == "command"
+        assert issue.category == "command"
 
     def test_completeness_gap_creation(self):
         gap = CompletenessGap(
@@ -130,26 +129,24 @@ class TestDataClasses:
         assert results.link_issues == []
 
 
-class TestAccuracyIssueCompat:
+class TestScanAccuracyIssue:
     def test_basic_creation(self):
-        issue = AccuracyIssue(
+        issue = ScanAccuracyIssue(
+            category="broken_ref",
             file="test.md",
             line=10,
-            issue_type="broken_ref",
-            issue_message="Reference not found",
+            message="Reference not found",
             severity="warning",
             details="extra detail",
         )
-        assert issue.issue_type == "broken_ref"
-        assert issue.issue_message == "Reference not found"
         assert issue.category == "broken_ref"
         assert issue.message == "Reference not found"
 
     def test_default_severity(self):
-        issue = AccuracyIssue(
-            file="t.md", line=1, issue_type="test", issue_message="msg",
+        issue = ScanAccuracyIssue(
+            category="test", file="t.md", line=1, message="msg",
         )
-        assert issue.severity == "warning"
+        assert issue.severity == "error"
 
 
 class TestDocumentationScannerDiscovery:
@@ -167,20 +164,20 @@ class TestDocumentationScannerDiscovery:
         assert scanner.script_files == []
         assert scanner.config_files == {}
 
-    def test_find_markdown_files(self, tmp_path):
+    def test_discover_markdown_files(self, tmp_path):
         (tmp_path / "doc1.md").write_text("# Doc 1")
         (tmp_path / "doc2.md").write_text("# Doc 2")
         (tmp_path / "subdir").mkdir()
         (tmp_path / "subdir" / "doc3.md").write_text("# Doc 3")
-        assert len(find_markdown_files(tmp_path)) == 3
+        assert len(discover_markdown_files(tmp_path, scope="repo")) == 3
 
-    def test_find_markdown_files_skips_output(self, tmp_path):
+    def test_discover_markdown_files_skips_output(self, tmp_path):
         (tmp_path / "README.md").write_text("# README")
         (tmp_path / "docs").mkdir()
         (tmp_path / "docs" / "guide.md").write_text("# Guide")
         (tmp_path / "output").mkdir()
         (tmp_path / "output" / "skip.md").write_text("# Skip")
-        files = find_markdown_files(tmp_path)
+        files = discover_markdown_files(tmp_path, scope="repo")
         assert len(files) >= 2
         assert not any("output" in str(f) for f in files)
 
@@ -188,7 +185,7 @@ class TestDocumentationScannerDiscovery:
         (tmp_path / "README.md").write_text("# Readme")
         (tmp_path / "AGENTS.md").write_text("# Agents")
         (tmp_path / "other.md").write_text("# Other")
-        md_files = find_markdown_files(tmp_path)
+        md_files = discover_markdown_files(tmp_path, scope="repo")
         assert len(catalog_agents_readme(md_files, tmp_path)) == 2
 
     def test_find_config_files(self, tmp_path):
@@ -407,7 +404,12 @@ class TestDocumentationScannerReport:
             LinkIssue("test.md", 1, "bad link", "missing.md", "broken", "Not found")
         )
         scanner.results.accuracy_issues.append(
-            AccuracyIssue("readme.md", 5, "command", "Invalid command")
+            ScanAccuracyIssue(
+                category="command",
+                file="readme.md",
+                line=5,
+                message="Invalid command",
+            )
         )
         scanner.results.completeness_gaps.append(
             CompletenessGap("API", "missing_docs", "Function not documented")
@@ -474,13 +476,13 @@ class TestDiscoveryModuleFunctions:
         assert len(headings) >= 3
 
     def test_accuracy_issue_model(self):
-        issue = AccuracyIssueModel(
+        issue = ScanAccuracyIssue(
+            category="command",
             file="doc.md",
             line=5,
-            issue_type="command",
-            issue_message="Command not found",
+            message="Command not found",
         )
-        assert issue.issue_type == "command"
+        assert issue.category == "command"
 
 
 class TestDocScannerModule:

@@ -7,7 +7,7 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.validation.docs.consistency_lint import _is_placeholder_name
+from infrastructure.validation.docs.consistency_lint import is_placeholder_name
 from infrastructure.validation.docs.models import LinkIssue, ScanAccuracyIssue
 
 logger = get_logger(__name__)
@@ -296,7 +296,7 @@ def validate_config_options(
             ref = match.group(1)
             if "/" in ref or ref.endswith((".md", ".py", ".yaml", ".yml", ".toml", ".sh")):
                 continue
-            if _is_placeholder_name(ref.split(".")[0]):
+            if is_placeholder_name(ref.split(".")[0]):
                 continue
             if _config_ref_known(ref, known_keys):
                 continue

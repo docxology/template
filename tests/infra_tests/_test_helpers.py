@@ -189,7 +189,7 @@ startxref
         pdf_path.write_text(pdf_content)
 
 
-def create_output_with_pdf(output_dir: Path, pdf_name: str = "project_combined.pdf") -> Path:
+def create_output_with_pdf(output_dir: Path, pdf_name: str = "template_code_project_combined.pdf") -> Path:
     """Create output directory with a PDF file in the pdf/ subdirectory.
 
     Args:

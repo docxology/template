@@ -97,7 +97,7 @@ def validate_pdfs(project_name: str = "project") -> bool:
     return valid_count == len(pdf_files)
 
 
-def validate_markdown(project_name: str = "project") -> bool:
+def validate_manuscript_output_markdown(project_name: str = "project") -> bool:
     """Validate markdown files in manuscript using infrastructure validation module.
 
     Args:
@@ -389,7 +389,7 @@ def execute_validation_pipeline(project_name: str = "project") -> int:
 
     checks = [
         ("PDF validation", lambda: validate_pdfs(project_name)),
-        ("Markdown validation", lambda: validate_markdown(project_name)),
+        ("Markdown validation", lambda: validate_manuscript_output_markdown(project_name)),
     ]
 
     results = []

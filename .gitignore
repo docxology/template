@@ -160,3 +160,8 @@ projects_in_progress/
 scripts/.scope
 tests/.scope
 .cursor/hooks/state/continual-learning.json
+
+# Skill-eval harness regenerated outputs
+docs/prompts/_skill-eval/latest/
+docs/prompts/_skill-eval/baseline/
+docs/prompts/_skill-eval/iteration-*/

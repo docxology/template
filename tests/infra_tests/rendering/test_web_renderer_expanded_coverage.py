@@ -18,6 +18,15 @@ def _make_renderer(tmp_path):
     return WebRenderer(config)
 
 
+def test_individual_render_output_names_include_parent_context(tmp_path: Path) -> None:
+    renderer = _make_renderer(tmp_path)
+    source_a = tmp_path / "manuscript" / "parts" / "alpha" / "00-overview.md"
+    source_b = tmp_path / "manuscript" / "parts" / "beta" / "00-overview.md"
+
+    assert renderer._output_file_for_source(source_a).name == "alpha__00-overview.html"
+    assert renderer._output_file_for_source(source_b).name == "beta__00-overview.html"
+
+
 class TestCombineMarkdownFiles:
     def test_single_file(self, tmp_path):
         renderer = _make_renderer(tmp_path)

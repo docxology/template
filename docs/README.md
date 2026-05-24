@@ -83,6 +83,7 @@ graph TD
 | [`architecture/`](architecture/) | System design | two-layer-architecture.md, thin-orchestrator, decision-tree |
 | [`usage/`](usage/) | Content authoring & patterns | examples, markdown guide, style guide, visualization |
 | [`operational/`](operational/) | Operational workflows | `build/`, `config/`, `logging/`, `troubleshooting/` |
+| [`maintenance/`](maintenance/) | Long-horizon ops | private-projects-repo, ci-local, regression, archival, bundle |
 | [`reference/`](reference/) | Reference materials | api-reference, faq, glossary, cheatsheet, workflows |
 | [`modules/`](modules/) | Infrastructure modules | modules-guide, scientific simulation, pdf-validation, `guides/` |
 | [`development/`](development/) | Development & contribution | contributing, security, roadmap, `testing/` sub-folder |
@@ -135,6 +136,15 @@ graph TD
 | Best practices | [`best-practices/best-practices.md`](best-practices/best-practices.md) |
 | Security policies | [`security/README.md`](security/README.md) |
 | Audit reports | [`audit/README.md`](audit/README.md) |
+
+## Topic routing (canonical → deep dives)
+
+| Topic | Start here | Deep dives |
+|-------|------------|------------|
+| Pipeline ops | [`RUN_GUIDE.md`](RUN_GUIDE.md) | [`operational/pipeline-control.md`](operational/pipeline-control.md), [`operational/runbook.md`](operational/runbook.md) |
+| Logging | [`operational/logging/output-design.md`](operational/logging/output-design.md) | [`operational/logging/python-logging.md`](operational/logging/python-logging.md), [`operational/logging/bash-logging.md`](operational/logging/bash-logging.md) (operational scripts only) |
+| Secure / steganography | [`guides/secure-research-guide.md`](guides/secure-research-guide.md) → [`security/README.md`](security/README.md) | [`security/secure_execution.md`](security/secure_execution.md), [`modules/guides/steganography-module.md`](modules/guides/steganography-module.md) |
+| Literature search | [`guides/literature-workflow-guide.md`](guides/literature-workflow-guide.md) | [`core/literature-data-flow.md`](core/literature-data-flow.md), [`modules/literature-search-and-references.md`](modules/literature-search-and-references.md), [`streams/inferant-stream-019-literature-search.md`](streams/inferant-stream-019-literature-search.md) (historical) |
 | Development rules | [`rules/README.md`](rules/README.md) |
 | Session notes (streams) | [`streams/README.md`](streams/README.md) |
 

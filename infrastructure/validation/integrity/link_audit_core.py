@@ -8,12 +8,12 @@ from typing import Any, Set, cast
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.docs.accuracy import extract_headings
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.integrity.check_links import generate_comprehensive_report
 from infrastructure.validation.integrity.link_extract import (
     LinkCheckResult,
     check_file_reference,
     extract_links,
-    find_all_markdown_files,
     validate_directory_structures,
     validate_file_paths_in_code,
     validate_placeholder_consistency,
@@ -52,7 +52,7 @@ class LinkIssue:
 
 def run_link_audit(repo_root: Path) -> int:
     """Run the comprehensive link and reference audit for ``repo_root``."""
-    md_files = find_all_markdown_files(str(repo_root))
+    md_files = discover_markdown_files(repo_root, scope="link_audit")
 
     logger.info(f"Found {len(md_files)} markdown files")
     logger.info("Running comprehensive filepath and reference audit")

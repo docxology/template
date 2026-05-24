@@ -698,51 +698,29 @@ def test_api_composition():
 
 ## API Evolution Guidelines
 
-### Backward Compatibility
+### API evolution (clean break)
+
+This repository follows the clean-break doctrine in [`docs/rules/refactoring.md`](refactoring.md):
+rename or reshape APIs in one atomic pass and update every caller. Do **not** add
+backward-compatible wrapper functions, dual constructors, or deprecated aliases.
+
+When an external API must change:
+
+1. Update implementation and all in-repo callers/tests together.
+2. Document the new entry point in the module `AGENTS.md` / `README.md`.
+3. Record the change in `CHANGELOG.md` when it affects published CLI or library contracts.
+
+Optional-version parameters (`enhanced: bool = False`) that extend behavior without
+a second function name are fine; parallel `old_name` → `new_name` shims are not.
 
 ```python
-# ✅ GOOD: Maintain backward compatibility
-def process_data_v2(data: list[dict], *, enhanced: bool = False) -> dict:
-    """Process data with features (v2).
+# ✅ GOOD: single canonical API with an opt-in flag
+def process_data(data: list[dict], *, enhanced: bool = False) -> dict:
+    ...
 
-    Args:
-        data: Data to process (same as v1)
-        enhanced: Enable processing features
-
-    Returns:
-        Same structure as v1, with additional fields when enhanced=True
-    """
-    # Implementation that maintains v1 behavior by default
-    pass
-
-# Provide backward-compatible wrapper
-def process_data(data: list[dict]) -> dict:
-    """Process data (maintains v1 API)."""
-    return process_data_v2(data, enhanced=False)
-```
-
-### Deprecation Notices
-
-```python
-# ✅ GOOD: Deprecate gracefully
-import warnings
-
-def old_function_name(param: str) -> str:
-    """Old function name (deprecated).
-
-    .. deprecated:: 2.0.0
-        Use :func:`new_function_name` instead.
-    """
-    warnings.warn(
-        "old_function_name is deprecated, use new_function_name instead",
-        DeprecationWarning,
-        stacklevel=2
-    )
-    return new_function_name(param)
-
-def new_function_name(parameter: str) -> str:
-    """New function with improved API."""
-    return parameter.upper()
+# ❌ BAD: wrapper preserving a removed name (forbidden here)
+def process_data_v1(data: list[dict]) -> dict:
+    return process_data(data, enhanced=False)
 ```
 
 ## Best Practices Summary
@@ -753,7 +731,6 @@ def new_function_name(parameter: str) -> str:
 - ✅ **Provide type hints** for all parameters and returns
 - ✅ **Use keyword-only parameters** for optional/advanced settings
 - ✅ **Document exceptions** in docstrings with context
-- ✅ **Maintain backward compatibility** when possible
 - ✅ **Use consistent patterns** across similar APIs
 - ✅ **Provide examples** in docstrings for complex APIs
 - ✅ **Use builder/factory patterns** for complex object creation

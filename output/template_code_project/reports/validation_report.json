@@ -1,0 +1,200 @@
+{
+  "timestamp": "2026-05-24T10:56:11.096907",
+  "checks": {
+    "PDF validation": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true,
+    "Evidence registry": true,
+    "Project design overlays": true,
+    "Artifact manifest": false
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "artifact_manifest_issues": [
+      "undeclared artifact: output/docs/api_glossary.md",
+      "undeclared artifact: output/docs/api_reference.md",
+      "undeclared artifact: output/figures/stability_analysis.png"
+    ],
+    "detailed_validation": {
+      "structure": {
+        "valid": true,
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [],
+        "warnings": [],
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "size_mb": 1.62,
+            "readable": true
+          },
+          "pdf": {
+            "exists": true,
+            "files": 10,
+            "size_mb": 1.85,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 12,
+            "size_mb": 0.35,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 73,
+            "size_mb": 2.5,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 7,
+            "size_mb": 1.48,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 4,
+            "size_mb": 0.18,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 13,
+            "size_mb": 0.05,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "llm": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "logs": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 10,
+          "size_mb": "1.85",
+          "largest_file": "template_code_project_combined.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 12,
+          "size_mb": "0.35",
+          "largest_file": "dashboard.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 73,
+          "size_mb": "2.50",
+          "largest_file": "03_results_slides.pdf"
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 7,
+          "size_mb": "1.48",
+          "largest_file": "algorithm_complexity.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 4,
+          "size_mb": "0.18",
+          "largest_file": "dashboard_payload.json"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 13,
+          "size_mb": "0.05",
+          "largest_file": "artifact_manifest.json"
+        },
+        "simulations": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "llm": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "logs": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "pipeline.log"
+        }
+      },
+      "file_counts": {
+        "pdf": 10,
+        "web": 12,
+        "slides": 73,
+        "figures": 7,
+        "data": 4,
+        "reports": 13,
+        "simulations": 0,
+        "llm": 0,
+        "logs": 1
+      },
+      "total_size_mb": 6.4050188064575195,
+      "issues_by_severity": {
+        "critical": [],
+        "warning": [],
+        "info": []
+      },
+      "recommendations": []
+    },
+    "pdf": {
+      "files": 10,
+      "size_mb": 1.8542566299438477
+    },
+    "figures": {
+      "files": 7,
+      "size_mb": 1.4803657531738281
+    },
+    "data": {
+      "files": 4,
+      "size_mb": 0.17653560638427734
+    }
+  },
+  "summary": {
+    "total_checks": 7,
+    "passed": 6,
+    "failed": 1,
+    "figure_issues_count": 0,
+    "all_passed": false
+  },
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "Artifact manifest reported drift or missing declared outputs",
+      "action": "Regenerate declared outputs or update the stage contract",
+      "file": "projects/template_code_project/output/reports/artifact_manifest.json"
+    }
+  ]
+}

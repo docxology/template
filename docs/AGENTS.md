@@ -16,9 +16,10 @@ Technical guide for the `docs/` directory — the central documentation hub for 
 | `plans/` | Strategic plans and architecture decision records |
 | `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
 | `modules/` | Infrastructure module guides (see [modules/modules-guide.md](modules/modules-guide.md); package count drifts — re-derive from `infrastructure/` discovery) |
+| `maintenance/` | Long-horizon maintenance: private-projects, ci-local, regression, archival, bundle |
 | `development/` | Contributing, testing, security, roadmap |
 | `best-practices/` | Best practices, version control, migration |
-| `prompts/` | AI prompt templates (see [prompts/AGENTS.md](prompts/AGENTS.md)) |
+| `prompts/` | Agent workflow skills — hub [`prompts/SKILL.md`](prompts/SKILL.md); see [prompts/AGENTS.md](prompts/AGENTS.md) |
 | `audit/` | Audit reports and findings |
 | `security/` | Security documentation and policies |
 | `rules/` | Contributor norms — expanded standards; repo-root [`.cursorrules`](../.cursorrules) is the Cursor-facing summary |

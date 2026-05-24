@@ -8,6 +8,96 @@
       "cursor_at": ".cursor/skills/gauss/SKILL.md"
     },
     {
+      "name": "template-workflows",
+      "description": "Router and workflow hub for the Research Project Template — code, tests, manuscripts,\npipeline, validation, docs, and reproducibility. USE WHEN the user wants to audit the\nrepo, debug ./run.sh or execute_pipeline.py, add a feature, write tests, scaffold a\nmanuscript, verify claims, fix cross-references, run validation gates, refactor, or\nprepare a Zenodo release — even if they never say \"prompt\", \"skill\", or docs/prompts.\nAlso USE WHEN intent is ambiguous (\"something wrong with my manuscript\", \"full health\ncheck\", \"fix the pipeline\") — pick ONE child skill from the routing table and follow it.\nDo NOT use for generic homework, unrelated app security scans, or casual PDF summarization.",
+      "path": "docs/prompts/SKILL.md",
+      "cursor_at": "docs/prompts/SKILL.md"
+    },
+    {
+      "name": "template-code-development",
+      "description": "Standards-compliant code for the Research Project Template — infrastructure or project\nsrc/, thin orchestrators, type hints, no mocks. USE WHEN implementing an algorithm, utility,\nanalysis method, optimizer, new module in projects/*/src or infrastructure/, or user says\nadd code following template architecture — even without docs/prompts. Not for end-to-end\nfeature spanning manuscript + pipeline (use template-feature-addition).",
+      "path": "docs/prompts/code-development/SKILL.md",
+      "cursor_at": "docs/prompts/code-development/SKILL.md"
+    },
+    {
+      "name": "template-comprehensive-assessment",
+      "description": "Full checkout audit for the Research Project Template — tests, architecture, docs,\nmanuscript, pipeline. USE WHEN user asks for comprehensive assessment, full repo review,\nhealth check across projects, audit everything, or pre-merge sanity sweep for template\nexemplars — even without naming docs/prompts or a skill. Not for single failing stage only.",
+      "path": "docs/prompts/comprehensive-assessment/SKILL.md",
+      "cursor_at": "docs/prompts/comprehensive-assessment/SKILL.md"
+    },
+    {
+      "name": "template-documentation-creation",
+      "description": "Author or refresh AGENTS.md and README.md for template directories — accurate commands,\nMermaid where helpful, link _generated/active_projects.md. USE WHEN folder needs AGENTS,\nREADME audit, doc contract fix, or signposting after code change — even without\ndocumentation_creation prompt.",
+      "path": "docs/prompts/documentation-creation/SKILL.md",
+      "cursor_at": "docs/prompts/documentation-creation/SKILL.md"
+    },
+    {
+      "name": "template-feature-addition",
+      "description": "End-to-end feature work across src/, scripts/, tests/, manuscript, and docs for the\nResearch Project Template. USE WHEN adding a pipeline-visible feature, new analysis stage,\nmanuscript-facing output, or cross-layer integration — even without feature_addition prompt.",
+      "path": "docs/prompts/feature-addition/SKILL.md",
+      "cursor_at": "docs/prompts/feature-addition/SKILL.md"
+    },
+    {
+      "name": "template-infrastructure-module",
+      "description": "Add or extend generic infrastructure/ packages — Layer 1 modules with SKILL.md, AGENTS.md,\ntests in tests/infra_tests/, 60% coverage. USE WHEN new reusable package under\ninfrastructure/, extending validation/rendering/llm, or skill manifest entry — even without\ninfrastructure_module prompt.",
+      "path": "docs/prompts/infrastructure-module/SKILL.md",
+      "cursor_at": "docs/prompts/infrastructure-module/SKILL.md"
+    },
+    {
+      "name": "template-literature-synthesis",
+      "description": "LLM prompt blocks for per-paper and corpus literature synthesis after a search pipeline.\nUSE WHEN synthesizing arXiv/Crossref results, writing per-paper notes, thematic clusters,\ngap analysis from a literature corpus, or wiring template_search_project synthesis — even\nwithout naming infrastructure.llm templates.",
+      "path": "docs/prompts/literature-synthesis/SKILL.md",
+      "cursor_at": "docs/prompts/literature-synthesis/SKILL.md"
+    },
+    {
+      "name": "template-manuscript-claim-verification",
+      "description": "Triple-pass verification of every manuscript claim against code, data, refs, and renderer;\nrepair prose while staying renderable. USE WHEN pre-submission, pre-Zenodo, pre-arXiv,\nabstract numbers disagree with CSV, citations do not support sentences, or user asks to\ntriple-check / verify every claim — even without docs/prompts. Not for casual PDF summary.",
+      "path": "docs/prompts/manuscript-claim-verification/SKILL.md",
+      "cursor_at": "docs/prompts/manuscript-claim-verification/SKILL.md"
+    },
+    {
+      "name": "template-manuscript-creation",
+      "description": "Scaffold a research manuscript and project layout from a research brief — sections,\nconfig.yaml, src/, scripts/, tests. USE WHEN starting a new paper, new projects/ tree,\nmanuscript from topic description, or aligning with template_code_project exemplar — even\nwithout copy-paste prompts.",
+      "path": "docs/prompts/manuscript-creation/SKILL.md",
+      "cursor_at": "docs/prompts/manuscript-creation/SKILL.md"
+    },
+    {
+      "name": "template-manuscript-cross-references",
+      "description": "Audit or author registry-driven manuscript cross-refs — labels.yaml, [[FIG:]], [[THMREF:]],\n[[VAR:]] tokens. USE WHEN fixing figure/equation/theorem numbering, orphan registry keys,\nhard-coded \"Theorem 7.3\" in prose, or [[MISSING:]] injection failures — even for Pandoc\nprojects that also use a YAML registry.",
+      "path": "docs/prompts/manuscript-cross-references/SKILL.md",
+      "cursor_at": "docs/prompts/manuscript-cross-references/SKILL.md"
+    },
+    {
+      "name": "template-pipeline-debugging",
+      "description": "Systematic pipeline DAG failure triage for the Research Project Template. USE WHEN\n./run.sh or execute_pipeline.py fails, a stage stalls (setup, tests, analysis, render,\nvalidate, LLM, copy), pytest/coverage gate fails mid-pipeline, PDF render or validate\nbreaks, Project Analysis finishes too fast with no figures, or user says pipeline debug,\nstage failed, resume checkpoint, core-only triage — even without naming this skill or docs/prompts.",
+      "path": "docs/prompts/pipeline-debugging/SKILL.md",
+      "cursor_at": "docs/prompts/pipeline-debugging/SKILL.md"
+    },
+    {
+      "name": "template-refactoring",
+      "description": "Clean-break refactors with migration for the Research Project Template — move logic to src/,\nsplit modules, rename APIs with test updates. USE WHEN restructuring code, extracting\nmodules, removing duplication, or migration without behavior change.",
+      "path": "docs/prompts/refactoring/SKILL.md",
+      "cursor_at": "docs/prompts/refactoring/SKILL.md"
+    },
+    {
+      "name": "template-reproducibility-audit",
+      "description": "Deterministic reproducibility audit — fixed seeds, regenerate-from-clean, double-run\ndiff before Zenodo/arXiv/release. USE WHEN outputs drift between runs, \"worked on my\nmachine\", need regenerate-from-clean proof, or pre-release reproducibility check — even\nwithout naming docs/prompts.",
+      "path": "docs/prompts/reproducibility-audit/SKILL.md",
+      "cursor_at": "docs/prompts/reproducibility-audit/SKILL.md"
+    },
+    {
+      "name": "template-test-creation",
+      "description": "Create pytest suites under the no-mocks policy — real data, temp files, subprocess,\npytest-httpserver. USE WHEN adding tests, raising coverage, testing new src/ module,\nor user forbids mocks.",
+      "path": "docs/prompts/test-creation/SKILL.md",
+      "cursor_at": "docs/prompts/test-creation/SKILL.md"
+    },
+    {
+      "name": "template-validation-quality",
+      "description": "Run validation CLI, prerender, markdown/PDF/integrity gates, and QA workflows for the\nResearch Project Template. USE WHEN validate manuscript, check PDF for ?? refs, prerender\ngate, link checker, output integrity, or pre-commit validation — even without\nvalidation_quality prompt.",
+      "path": "docs/prompts/validation-quality/SKILL.md",
+      "cursor_at": "docs/prompts/validation-quality/SKILL.md"
+    },
+    {
       "name": "infrastructure-overview",
       "description": "Top-level skill for the research template infrastructure layer. Use in Cursor, Claude Code, or similar agents when editing or importing anything under infrastructure/, understanding the two-layer architecture, or wiring build/validation/rendering/publishing. Covers module discovery, import patterns, thin orchestrators, per-subpackage SKILL.md paths, and .cursor/skill_manifest.json (see infrastructure.skills).",
       "path": "infrastructure/SKILL.md",

@@ -1,8 +1,8 @@
 """Content validation subpackage."""
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from infrastructure.validation.content.markdown_validator import (
-    find_markdown_files,
     validate_citations,
     validate_images,
     validate_markdown,
@@ -17,8 +17,8 @@ from infrastructure.validation.content.pdf_validator import (
 )
 
 __all__ = [
+    "discover_markdown_files",
     "extract_text_from_pdf",
-    "find_markdown_files",
     "scan_for_issues",
     "validate_citations",
     "validate_figure_registry",

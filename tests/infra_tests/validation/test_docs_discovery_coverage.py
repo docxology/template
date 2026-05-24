@@ -1,9 +1,8 @@
 """Tests for infrastructure.validation.docs.discovery — comprehensive coverage."""
 
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.discovery import (
-    discover_markdown_files,
-    find_markdown_files,
     catalog_agents_readme,
     find_config_files,
     find_script_files,
@@ -22,7 +21,7 @@ class TestDiscoverMarkdownFiles:
         (tmp_path / "README.md").write_text("# Hello")
         (tmp_path / "docs").mkdir()
         (tmp_path / "docs" / "guide.md").write_text("# Guide")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         names = [f.name for f in result]
         assert "README.md" in names
         assert "guide.md" in names
@@ -30,29 +29,29 @@ class TestDiscoverMarkdownFiles:
     def test_excludes_output_dir(self, tmp_path):
         (tmp_path / "output").mkdir()
         (tmp_path / "output" / "report.md").write_text("# Report")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 0
 
     def test_excludes_venv(self, tmp_path):
         (tmp_path / ".venv").mkdir()
         (tmp_path / ".venv" / "readme.md").write_text("# Venv")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 0
 
     def test_excludes_projects_archive(self, tmp_path):
         (tmp_path / "projects_archive").mkdir()
         (tmp_path / "projects_archive" / "old.md").write_text("# Old")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 0
 
     def test_empty_dir(self, tmp_path):
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert result == []
 
     def test_sorted_output(self, tmp_path):
         (tmp_path / "z.md").write_text("# Z")
         (tmp_path / "a.md").write_text("# A")
-        result = discover_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert result[0].name == "a.md"
         assert result[1].name == "z.md"
 
@@ -60,7 +59,7 @@ class TestDiscoverMarkdownFiles:
 class TestFindMarkdownFiles:
     def test_alias_works(self, tmp_path):
         (tmp_path / "test.md").write_text("# Test")
-        result = find_markdown_files(tmp_path)
+        result = discover_markdown_files(tmp_path, scope="repo")
         assert len(result) == 1
 
 

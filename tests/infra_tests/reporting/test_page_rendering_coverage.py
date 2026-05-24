@@ -2,15 +2,15 @@
 
 import pytest
 
+from infrastructure.core.exceptions import FileNotFoundError as InfraFileNotFoundError
 
 
 class TestExtractPdfPagesAsImages:
     def test_file_not_found(self, tmp_path):
         from infrastructure.reporting.page_rendering import extract_pdf_pages_as_images
 
-        with pytest.raises(Exception) as exc_info:
+        with pytest.raises(InfraFileNotFoundError):
             extract_pdf_pages_as_images(tmp_path / "nonexistent.pdf")
-        assert "not found" in str(exc_info.value).lower()
 
     def test_valid_pdf_with_text(self, tmp_path):
         """Create a real PDF with reportlab and extract pages."""
@@ -46,6 +46,21 @@ class TestExtractPdfPagesAsImages:
 
         images = extract_pdf_pages_as_images(pdf_path)
         assert len(images) == 1
+
+    def test_custom_dpi(self, tmp_path):
+        from reportlab.pdfgen import canvas
+
+        pdf_path = tmp_path / "dpi_test.pdf"
+        c = canvas.Canvas(str(pdf_path))
+        c.drawString(100, 700, "DPI test content")
+        c.save()
+
+        from infrastructure.reporting.page_rendering import extract_pdf_pages_as_images
+
+        images = extract_pdf_pages_as_images(pdf_path, dpi=150)
+        assert len(images) >= 1
+        assert images[0].width > 0
+        assert images[0].height > 0
 
 
 class TestRenderPagesSimple:

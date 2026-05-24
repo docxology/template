@@ -289,12 +289,10 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
             validation_results["issues_by_severity"]["critical"].append(issue)
 
     for missing_file in validation_results["structure"].get("missing_files", []):
-        if missing_file == "project_combined.pdf":
-            validation_results["issues_by_severity"]["critical"].append(f"Missing expected file: {missing_file}")
-        elif "_combined.pdf" in missing_file:
+        if "_combined.pdf" in missing_file:
             project_name = missing_file.replace("_combined.pdf", "")
             validation_results["issues_by_severity"]["critical"].append(
-                f"Missing expected file: {missing_file} (project-specific combined PDF for {project_name})"  # noqa: E501
+                f"Missing expected file: {missing_file} (project-specific combined PDF for {project_name})"
             )
         else:
             validation_results["issues_by_severity"]["critical"].append(f"Missing expected file: {missing_file}")
@@ -409,7 +407,7 @@ def validate_output_structure(output_dir: Path) -> dict[str, Any]:
         logger.debug("No project name detected in directory structure, skipping specific PDF validation")
 
     # Populate directory structure metadata
-    pdf_key = "project_combined_pdf"  # Default key for backward compatibility
+    pdf_key = "combined_pdf"
     if combined_pdf_found and pdf_file:
         result["directory_structure"][pdf_key] = {
             "exists": True,

@@ -228,7 +228,7 @@ class TestFindAllMarkdownFiles:
         output.mkdir()
         (output / "generated.md").write_text("# Generated")
 
-        files = check_links.find_all_markdown_files(str(tmp_path))
+        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
 
         # Should find docs/doc.md but not output/generated.md
         file_names = [f.name for f in files]
@@ -245,7 +245,7 @@ class TestFindAllMarkdownFiles:
         htmlcov.mkdir()
         (htmlcov / "coverage.md").write_text("# Coverage")
 
-        files = check_links.find_all_markdown_files(str(tmp_path))
+        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
 
         file_names = [f.name for f in files]
         assert "readme.md" in file_names
@@ -271,7 +271,7 @@ class TestMainFunctionReporting:
         def patched_main():
             """Patched main to use tmp_path as repo root."""
             repo_root = tmp_path
-            md_files = check_links.find_all_markdown_files(str(repo_root))
+            md_files = check_links.discover_markdown_files(repo_root, scope="link_audit")
 
             print(f"Found {len(md_files)} markdown files")
 

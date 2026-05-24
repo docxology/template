@@ -31,14 +31,14 @@ flowchart TB
     INFRA --> ORCH[/orchestration<br/>run.sh-equivalent CLI · menu · PipelineRunner<br/>stage logs · secure_run wrapper/]
     INFRA --> PRS[/prose<br/>Readability metrics · outline · editorial flags · CLI/]
 
-    CORE --> CORE_F[exceptions · logging · config/loader ·<br/>pipeline · post_run_reporting · hitl_cli · single_stage ·<br/>runtime/checkpoint · setup_checks · source_improve · cache_gate ·<br/>runtime/retry · runtime/function_profiler · security ·<br/>runtime/environment · files/operations · telemetry/]
-    VAL --> VAL_F[content/pdf_validator · content/markdown_validator ·<br/>line_count · security_gate · plugin_export · docs/lint_runner ·<br/>integrity/checks · repo/audit_orchestrator · repo/scanner · cli/main]
+    CORE --> CORE_F[exceptions · logging · config/loader ·<br/>pipeline · stage_registry · post_run_reporting · hitl_cli · single_stage ·<br/>runtime/checkpoint · setup_checks · source_improve · cache_gate ·<br/>runtime/retry · runtime/function_profiler · security ·<br/>runtime/environment · files/operations · telemetry/]
+    VAL --> VAL_F[content/pdf_validator · content/markdown_validator · content/discovery ·<br/>line_count · security_gate · plugin_export · docs/lint_runner ·<br/>integrity/checks · repo/audit_orchestrator · repo/scanner · cli/main]
     DOC --> DOC_F[figure_manager · image_manager ·<br/>markdown_integration · glossary_gen]
     SCI --> SCI_F[benchmarking · stability · validation · templates]
     LLM --> LLM_F[core · templates · validation · review · prompts]
     REND --> REND_F[core · pdf_renderer · slides_renderer ·<br/>web_renderer · preflight · latex_utils · cli]
     PUB --> PUB_F[api · citations · metadata · executable_bundle ·<br/>package · platforms · cli · publish_cli]
-    REP --> REP_F[report_generator · error_aggregator · executive_reporter ·<br/>_dashboard_matplotlib · _dashboard_charts ·<br/>_dashboard_specialized · _dashboard_csv]
+    REP --> REP_F[report_generator · error_aggregator · executive_reporter ·<br/>_dashboard_matplotlib · _dashboard_charts ·<br/>_dashboard_health · _dashboard_pipeline ·<br/>_dashboard_outputs · _dashboard_codebase · _dashboard_csv]
     STEG --> STEG_F[core · config · overlays · barcodes ·<br/>metadata · hashing · encryption]
     SEARCH --> SEARCH_F[literature/ · models · backends ·<br/>client · cache · fulltext · cli]
     REF --> REF_F[citation/ · models · escape ·<br/>bibtex_writer · bibtex_parser · converter · cli]
@@ -63,7 +63,8 @@ Measured coverage and gate thresholds → [`docs/_generated/canonical_facts.md`]
 | --- | --- |
 | `core/pipeline/post_run_reporting.py` | Post-run summary + JSON report after pipeline stages |
 | `core/pipeline/hitl_cli.py` | Human-in-the-loop CLI for `execute_pipeline.py` |
-| `core/pipeline/single_stage.py` | Single-stage execution map for `execute_pipeline.py` |
+| `core/pipeline/stage_registry.py` | Canonical stage-key → script map (`STAGE_DISPATCH`, `MENU_KEY_TO_STAGE`) |
+| `core/pipeline/single_stage.py` | Subprocess single-stage runner for `execute_pipeline.py --stage` and menu keys |
 | `core/pipeline/multi_project_cli.py` | Multi-project serial/parallel CLI (`scripts/execute_multi_project.py`) |
 | `core/runtime/setup_checks.py` | Stage 0: `sync_workspace_dependencies`, `validate_project_discovery`, `run_optional_setup_hook` |
 | `core/source_improve.py` | Mechanical Python hygiene (`scripts/batch_cogsec_improve.py`) |
@@ -77,6 +78,22 @@ Measured coverage and gate thresholds → [`docs/_generated/canonical_facts.md`]
 | `project/git_guards.py` | Tracked-project and generated-artifact guards |
 | `publishing/executable_bundle.py` | Stage 10 bundle (`scripts/08_executable_bundle.py`) |
 | `rendering/preflight.py` | Manuscript preflight (exemplar `00_preflight.py` scripts) |
+
+## P1 quality backlog (deferred splits)
+
+Tracked after the P0 composability pass (stage registry, unified markdown discovery, output-pipeline rename). CI line-count gate: warn ≥800 / fail ≥950 for `infrastructure/` + `scripts/`.
+
+| Module | Lines (approx.) | Planned split / move |
+| --- | ---: | --- |
+| `search/literature/backends.py` | 748 | One module per backend (`arxiv_backend.py`, `crossref_backend.py`, …) |
+| `doctor/detectors.py` | 739 | Package `doctor/detectors/` with one file per detector + registry |
+| `reporting/_dashboard_charts.py` | 735 | Split by chart family (health / pipeline / outputs) |
+| `rendering/_pdf_latex_helpers.py` | 729 | Split preamble vs bibliography vs log parsing |
+| `validation/content/markdown_validator.py` | 713 | Extract image/ref/math validators (discovery already in `content/discovery.py`) |
+| `core/pipeline/multi_project.py` | — | Move `format_multi_project_detailed_report()` to `reporting/` |
+| `validation` ↔ `rendering` | — | Shared pre-render leaf (`validation/content/prerender.py`) so rendering does not import the full markdown validator |
+| `rendering/render_all_cli.py` | — | Remove `sys.path.insert`; use `--project` / discovery like other CLIs |
+| Package barrels | — | Lazy `__getattr__` on wide `__init__.py` hubs (`validation`, `reporting`, `publishing`, `doctor`) |
 
 ## Function Signatures
 
@@ -169,11 +186,14 @@ Measured coverage and gate thresholds → [`docs/_generated/canonical_facts.md`]
 - `def extract_text_from_pdf(pdf_path: Path) -> str:`
 - `def scan_for_issues(text: str) -> dict[str, int]:`
 
+#### content/discovery.py
+
+- `def discover_markdown_files(root: Path, *, scope: Literal["tree", "repo", "link_audit"] = "tree", repo_root: Path | None = None) -> list[Path]:`
+
 #### content/markdown_validator.py
 
 - `def validate_markdown(markdown_dir: str | Path, repo_root: str | Path, strict: bool = False) -> tuple[list[DiagnosticEvent], int]:`
-- `def find_manuscript_directory(repo_root: str | Path) -> Path:`
-- `def find_markdown_files(markdown_dir: str | Path) -> list[str]:`
+- `def find_manuscript_directory(repo_root: str | Path, project_name: str = "project") -> Path:`
 - `def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:`
 - `def validate_images(md_paths: list[str], repo_root: str | Path) -> list[DiagnosticEvent]:`
 - `def validate_refs(md_paths: list[str], repo_root: str | Path, labels: set[str], anchors: set[str]) -> list[DiagnosticEvent]:`

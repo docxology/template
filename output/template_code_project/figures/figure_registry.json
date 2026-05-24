@@ -1,0 +1,68 @@
+{
+  "fig:convergence": {
+    "figure_id": "figure_000",
+    "filename": "convergence_plot.png",
+    "caption": "Gradient descent convergence for different step sizes",
+    "label": "fig:convergence",
+    "section": "Results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "optimization_analysis.py",
+    "metadata": {}
+  },
+  "fig:step_sensitivity": {
+    "figure_id": "figure_001",
+    "filename": "step_size_sensitivity.png",
+    "caption": "Step size sensitivity analysis showing iterations and solution quality",
+    "label": "fig:step_sensitivity",
+    "section": "Results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "optimization_analysis.py",
+    "metadata": {}
+  },
+  "fig:convergence_rate": {
+    "figure_id": "figure_002",
+    "filename": "convergence_rate_comparison.png",
+    "caption": "Convergence rate comparison on logarithmic scale",
+    "label": "fig:convergence_rate",
+    "section": "Results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "optimization_analysis.py",
+    "metadata": {}
+  },
+  "fig:complexity": {
+    "figure_id": "figure_003",
+    "filename": "algorithm_complexity.png",
+    "caption": "Algorithm complexity visualization with performance metrics",
+    "label": "fig:complexity",
+    "section": "Results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "optimization_analysis.py",
+    "metadata": {}
+  },
+  "fig:stability": {
+    "figure_id": "figure_004",
+    "filename": "stability_analysis.png",
+    "caption": "Numerical stability analysis results and recommendations",
+    "label": "fig:stability",
+    "section": "Results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "optimization_analysis.py",
+    "metadata": {}
+  },
+  "fig:benchmark": {
+    "figure_id": "figure_005",
+    "filename": "performance_benchmark.png",
+    "caption": "Performance benchmarking results and metrics",
+    "label": "fig:benchmark",
+    "section": "Results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "optimization_analysis.py",
+    "metadata": {}
+  }
+}

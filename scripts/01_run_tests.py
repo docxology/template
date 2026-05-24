@@ -60,7 +60,7 @@ def main() -> int:
         "--verbose",
         "-v",
         action="store_true",
-        help="Show individual test names (deprecated/default)",
+        help="Show individual test names (default; use --quiet to suppress)",
     )
     parser.add_argument(
         "--project",

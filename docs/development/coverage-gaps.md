@@ -4,13 +4,13 @@ This document tracks infrastructure test coverage gaps. Numbers are
 re-baselined from the live `pytest --cov` run; see "How this file is
 generated" below.
 
-**Last verified:** 2026-05-24 (repo-wide docs pass)
+**Last verified:** 2026-05-24 (infrastructure thermo-nuclear quality review)
 
 ## Current Coverage Status
 
-**Overall infrastructure coverage: 76.26 %** (gate: ≥ 60 %)
-**Tests:** 5817 passing, 4 skipped (LLM tests excluded via `--ignore=tests/infra_tests/llm`)
-**Total statements measured:** 31 211
+**Overall infrastructure coverage: 78.39 %** (gate: ≥ 60 %)
+**Tests:** 5706+ passing (non-LLM suite; LLM suite exercised separately)
+**Total statements measured:** 34 534
 
 The numbers below come from:
 
@@ -36,17 +36,18 @@ priority list below.
 | ------ | -------- | ---------- | ----- |
 | `steganography/barcodes.py` | 11.39 % | 73 | Optional barcode rendering; gated on `pyzbar`/`pillow` |
 | `steganography/barcode_generators.py` | 20.00 % | 45 | Optional, same dependency gate |
-| `rendering/pipeline.py` | 34.83 % | 207 | High-value target — orchestrates PDF stages |
+| `rendering/pipeline.py` | 32.40 % → improved | 331 | Orchestration spine — `_render_individual_files` error path in `test_pipeline.py`; full render LaTeX-gated |
 | `core/cli_handlers.py` | 38.07 % | 128 | Top-level CLI dispatch; subprocess-tested |
 | `core/install_commands.py` | 40.54 % | 23 | Optional-dep install hints; tiny module |
 | `publishing/publish_cli.py` | 41.18 % | 17 | CLI entry; subprocess-tested |
 | `core/runtime/env_deps.py` | 46.22 % | 89 | Environment-dep checks; mostly platform branches |
-| `reporting/pipeline_test_runner.py` | 50.00 % | 310 | High-value target — pytest orchestration logic |
+| `reporting/pipeline_test_runner.py` | ~60 % | 137 | Stage-01 runner facade; reporting in `pipeline_test_reporting.py` (~89 %) |
+| `core/pytest_orchestration.py` | ~80 % | 141 | Shared pytest subprocess policy |
 | `core/config/cli.py` | 53.12 % | 26 | CLI entry; subprocess-tested |
 | `validation/cli/main.py` | 58.83 % | 147 | CLI entry; partial subprocess coverage |
 | `rendering/_pdf_latex_pipeline.py` | 60.65 % | 109 | Real-LaTeX gated paths skip when xelatex absent |
 | `reporting/_dashboard_matplotlib.py` | 60.67 % | 81 | Optional matplotlib backend code |
-| `rendering/core.py` | 60.91 % | 90 | High-value target — render-tree builder |
+| `rendering/core.py` | 65.22 % | 108 | Render tree builder — format-disable branches covered in `test_core.py` |
 | `rendering/cli.py` | 61.73 % | 69 | CLI entry; subprocess-tested |
 
 ### Real Improvement Targets
@@ -54,22 +55,21 @@ priority list below.
 After excluding CLI subprocess shims and optional-dep gated modules, the
 genuine gaps are:
 
-1. **`infrastructure/rendering/pipeline.py` (34.83 %, 207 stmts)** — the
-   PDF orchestration entry point. Most missed lines are error-handling
-   branches around `RenderingError` / `ValidationError`. Adding integration
-   tests with a synthetic project gated on ``xelatex`` detection so renders
-   stay real-data paths without mocks.
+1. **`infrastructure/rendering/pipeline.py` (32.40 %, 331 stmts)** — the PDF
+   orchestration entry point. Pure-logic helpers and the missing-project fast
+   path are covered in `tests/infra_tests/rendering/test_pipeline.py`; full
+   render paths remain LaTeX-gated.
 
-2. **`infrastructure/reporting/pipeline_test_runner.py` (50.00 %, 310 stmts)**
-   — pytest subprocess orchestration (marker expressions, discovery logging).
-   Per-suite coverage merge logic remains the largest uncovered cluster.
-   Per-project CI-style runs are centralized in
-   `infrastructure.core.test_runner.run_per_project_pytest` (see **MED3**
-   shipped in **CHANGELOG** / [`TO-DO.md`](../../TO-DO.md)).
+2. **`infrastructure/reporting/pipeline_test_runner.py` + `pipeline_test_reporting.py`
+   + `infrastructure/core/pytest_orchestration.py`** — Stage-01 orchestration
+   split across three modules; subprocess integration tests in
+   `test_pipeline_test_runner_integration.py`; reporting helpers in
+   `test_pipeline_test_runner_coverage.py`.
 
-3. **`infrastructure/rendering/core.py` (60.91 %, 90 stmts)** — the render
-   tree builder. Missing lines are mostly the multi-format branching
-   (HTML/slides/poster).
+3. **`infrastructure/rendering/core.py` (65.22 %, 108 stmts)** — the render
+   tree builder. Format-disable and missing-source branches are covered in
+   `tests/infra_tests/rendering/test_core.py`; Beamer/HTML success paths remain
+   pandoc/LaTeX gated.
 
 ## Modules Previously Listed (Now Resolved)
 
@@ -84,7 +84,7 @@ three are now well above the gate. Listed for historical context:
 
 ## Coverage Gates
 
-- **Infrastructure**: ≥ 60 % (current 76.26 %)
+- **Infrastructure**: ≥ 60 % (current **78.39 %**)
 - **Projects**: ≥ 90 % per project (rotating-project exception possible per
   the `.github/workflows/ci.yml` matrix; see CLAUDE.md)
 - **Per-project gates** are enforced separately in CI; they do not aggregate
@@ -105,6 +105,16 @@ uv run pytest tests/infra_tests/ \
 Then sort the per-module rows by coverage percentage and update the
 "Lowest-Coverage Modules" table above. Do not copy historical numbers
 forward — re-measure each time.
+
+## Recently added module tests (2026-05-24)
+
+| Module | Test file |
+| --- | --- |
+| `reporting/pipeline_test_reporting.py` | `tests/infra_tests/reporting/test_pipeline_test_runner_coverage.py` |
+| `reporting/pipeline_test_runner.py` (subprocess) | `tests/infra_tests/reporting/test_pipeline_test_runner_integration.py` |
+| `validation/docs/consistency/*` | `tests/infra_tests/validation/docs/consistency/test_*.py` |
+| `rendering/pipeline.py` (error paths) | `tests/infra_tests/rendering/test_pipeline.py` |
+| `rendering/pdf_renderer.py` | `tests/infra_tests/rendering/test_pdf_renderer.py` |
 
 ## Recently added module tests (2026-05-23)
 

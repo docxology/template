@@ -3,7 +3,7 @@
 import ast
 import re
 from pathlib import Path
-from typing import Any, TypedDict, Union
+from typing import Any, TypedDict
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -19,30 +19,6 @@ class LinkCheckResult(TypedDict):
     text: str
     issue: str
     type: str
-
-
-def find_all_markdown_files(repo_root: Union[str, Path]) -> list[Path]:
-    """Find all markdown files in the repository."""
-    repo_path = Path(repo_root)
-    md_files = []
-    exclude_dirs = {
-        "output",
-        "htmlcov",
-        "projects_archive",
-        ".venv",
-        "venv",
-        "site-packages",
-        "__pycache__",
-        ".pytest_cache",
-        ".git",
-        "node_modules",
-    }
-    for md_file in repo_path.rglob("*.md"):
-        # Skip output, htmlcov, archived projects, virtual environments, and build artifacts
-        if any(excluded in md_file.parts for excluded in exclude_dirs):
-            continue
-        md_files.append(md_file)
-    return sorted(md_files)
 
 
 def extract_links(

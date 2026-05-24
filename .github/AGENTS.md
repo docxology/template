@@ -4,7 +4,7 @@
 
 The `.github/` directory contains GitHub-specific configuration and automation for the Research Project Template. This includes continuous integration workflows, issue templates, PR templates, and other GitHub integrations that ensure code quality and collaborative development.
 
-**Human entry point:** [README.md](README.md) (browsing on GitHub). **This file (`AGENTS.md`):** job names, paths, and thresholds for automation and agents.
+**Human entry point:** [README.md](README.md) — GitHub overview, doc map, and [Agent & automation entry point](README.md#agent--automation-entry-point). **This file (`AGENTS.md`):** job names, paths, and thresholds for automation and agents.
 
 ## Publication
 

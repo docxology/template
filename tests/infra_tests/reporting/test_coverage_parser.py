@@ -11,7 +11,16 @@ from pathlib import Path
 import pytest
 
 from infrastructure.reporting.coverage_parser import (
+    MIN_VALID_COVERAGE_FILE_BYTES,
+    _parse_coverage_json,
+    _parse_failures_fallback,
+    _parse_failures_section,
+    _parse_failures_short,
+    _parse_failures_timeout,
+    _parse_failures_verbose,
+    _wait_for_coverage_file,
     check_cov_datafile_support,
+    check_test_failures,
     extract_coverage_percentage,
     extract_failed_tests,
     extract_timeout_errors,
@@ -39,6 +48,77 @@ TIMEOUT_OUTPUT = """\
 tests/test_slow.py::test_long FAILED
 E   Timeout: test timed out after 10 seconds
 """
+
+
+class TestParseFailuresSection:
+    def test_basic_failure(self):
+        output = (
+            "=== FAILURES ===\n"
+            "__ test_foo __\n"
+            "/path/to/test.py:10: AssertionError: expected True\n"
+            "=== short test durations ===\n"
+        )
+        result = _parse_failures_section(output)
+        assert len(result) == 1
+        assert result[0]["test"] in ("test_foo", "test.py")
+        assert "AssertionError" in result[0]["error_type"]
+
+    def test_no_failures_section(self):
+        assert _parse_failures_section("=== 10 passed ===") == []
+
+
+class TestParseFailuresVerbose:
+    def test_verbose_failed(self):
+        output = "tests/test_foo.py::test_bar FAILED\ntests/test_baz.py::test_ok PASSED"
+        result = _parse_failures_verbose(output)
+        assert len(result) == 1
+        assert "test_bar" in result[0]["test"]
+
+    def test_no_failures(self):
+        assert _parse_failures_verbose("tests/test_foo.py::test_bar PASSED") == []
+
+
+class TestParseFailuresShort:
+    @pytest.mark.parametrize(
+        "output,expected_type,message_fragment",
+        [
+            ("FAILED tests/test_foo.py::test_bar - AssertionError: expected 1", "AssertionError", "expected 1"),
+            ("FAILED tests/test_foo.py::test_bar", "Unknown", None),
+        ],
+    )
+    def test_short_failed(self, output, expected_type, message_fragment):
+        result = _parse_failures_short(output)
+        assert len(result) == 1
+        assert result[0]["error_type"] == expected_type
+        if message_fragment:
+            assert message_fragment in result[0]["error_message"]
+
+    def test_no_failures(self):
+        assert _parse_failures_short("all good") == []
+
+
+class TestParseFailuresTimeout:
+    def test_timeout_found(self):
+        output = (
+            "tests/test_slow.py::test_slow_op FAILED\n"
+            "more context\n"
+            "more context\n"
+            "pytest_timeout: Timeout >10s\n"
+        )
+        assert len(_parse_failures_timeout(output)) >= 1
+
+    def test_no_timeout(self):
+        assert _parse_failures_timeout("tests passed fine") == []
+
+
+class TestParseFailuresFallback:
+    def test_fallback_failed(self):
+        result = _parse_failures_fallback("FAILED tests/test_x.py::test_y")
+        assert len(result) == 1
+        assert "test_y" in result[0]["test"]
+
+    def test_no_failures(self):
+        assert _parse_failures_fallback("all passed") == []
 
 
 class TestExtractFailedTests:
@@ -86,6 +166,12 @@ class TestExtractTimeoutErrors:
         assert len(errors) >= 1
         assert errors[0]["timeout_duration"] == "10s"
 
+    def test_timeout_with_duration(self):
+        stdout = "tests/test_foo.py::test_bar FAILED\ntimeout exceeded 5.0 seconds\n"
+        result = extract_timeout_errors(stdout, "")
+        assert len(result) >= 1
+        assert "5.0s" in result[0]["timeout_duration"]
+
     def test_empty_on_no_timeout(self):
         assert extract_timeout_errors("all passed", "") == []
 
@@ -123,6 +209,18 @@ class TestExtractCoveragePercentage:
         found, _pct = extract_coverage_percentage("", [tiny])
         assert found is False
 
+    @pytest.mark.parametrize(
+        "stdout,expected_pct",
+        [
+            ("TOTAL    5000    1000    80.00%", 80.0),
+            ("coverage: 65.50%", 65.5),
+        ],
+    )
+    def test_from_stdout_patterns(self, stdout, expected_pct):
+        found, pct = extract_coverage_percentage(stdout, [])
+        assert found is True
+        assert pct == pytest.approx(expected_pct)
+
 
 class TestCheckCovDatafileSupport:
     def test_returns_bool(self):
@@ -138,3 +236,62 @@ class TestCheckCovDatafileSupport:
         )
         expected = "--cov-datafile" in result.stdout
         assert check_cov_datafile_support() == expected
+
+
+class TestCheckTestFailures:
+    def test_no_failures(self, tmp_path: Path) -> None:
+        should_halt, msg = check_test_failures(0, "infra", tmp_path)
+        assert should_halt is False
+        assert "All tests passed" in msg
+
+    def test_within_tolerance(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("MAX_TEST_FAILURES", "5")
+        should_halt, msg = check_test_failures(3, "infra", tmp_path, env_var="MAX_TEST_FAILURES")
+        assert should_halt is False
+        assert "within tolerance" in msg
+
+    def test_exceeds_tolerance(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("MAX_TEST_FAILURES", "2")
+        should_halt, msg = check_test_failures(5, "infra", tmp_path, env_var="MAX_TEST_FAILURES")
+        assert should_halt is True
+        assert "exceeds tolerance" in msg
+
+    def test_invalid_env_value(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("MAX_TEST_FAILURES", "not_a_number")
+        should_halt, _msg = check_test_failures(1, "infra", tmp_path, env_var="MAX_TEST_FAILURES")
+        assert should_halt is True
+
+
+class TestParseCoverageJson:
+    def test_valid_json(self, tmp_path: Path) -> None:
+        cov = tmp_path / "coverage.json"
+        cov.write_text(json.dumps({"totals": {"percent_covered": 85.5}}), encoding="utf-8")
+        assert _parse_coverage_json(cov) == pytest.approx(85.5)
+
+    def test_zero_coverage(self, tmp_path: Path) -> None:
+        cov = tmp_path / "coverage.json"
+        cov.write_text(json.dumps({"totals": {"percent_covered": 0}}), encoding="utf-8")
+        assert _parse_coverage_json(cov) is None
+
+    def test_corrupt_json_returns_none(self, tmp_path: Path) -> None:
+        cov = tmp_path / "coverage.json"
+        cov.write_text("{invalid", encoding="utf-8")
+        assert _parse_coverage_json(cov) is None
+
+    def test_missing_file(self, tmp_path: Path) -> None:
+        assert _parse_coverage_json(tmp_path / "nonexistent.json") is None
+
+
+class TestWaitForCoverageFile:
+    def test_valid_file(self, tmp_path: Path) -> None:
+        cov = tmp_path / "coverage.json"
+        cov.write_text("x" * (MIN_VALID_COVERAGE_FILE_BYTES + 10), encoding="utf-8")
+        assert _wait_for_coverage_file([cov], max_retries=1, delay=0.01) == cov
+
+    def test_file_too_small(self, tmp_path: Path) -> None:
+        cov = tmp_path / "coverage.json"
+        cov.write_text("{}", encoding="utf-8")
+        assert _wait_for_coverage_file([cov], max_retries=1, delay=0.01) is None
+
+    def test_no_files(self, tmp_path: Path) -> None:
+        assert _wait_for_coverage_file([tmp_path / "nonexistent.json"], max_retries=1, delay=0.01) is None

@@ -1,0 +1,271 @@
+{
+  "skill_name": "template-workflows",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "pipeline-render-failure",
+      "prompt": "ok so ./run.sh --pipeline died on template_code_project during PDF render — last line just says exit 1. can you figure out which stage actually broke and what to run next?",
+      "expected_output": "Reproduce, isolate render stage, cite execute_pipeline/resume commands",
+      "files": [],
+      "expectations": [
+        "Mentions reproduce or re-run the failing invocation",
+        "Names a pipeline stage (render, validate, analysis, or tests)",
+        "References execute_pipeline.py or run.sh",
+        "Mentions --resume or isolating a single stage",
+        "Does not invent coverage percentages"
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "hub-full-audit",
+      "prompt": "I need a full health pass on this checkout — tests, docs links, manuscript refs, pipeline wiring — for template_code_project and template_prose_project. what's the plan?",
+      "expected_output": "Comprehensive assessment workflow across five areas",
+      "files": [],
+      "expectations": [
+        "Covers tests and coverage gates",
+        "Mentions thin orchestrator or src vs scripts",
+        "Links or references active_projects.md instead of hard-coding roster",
+        "Includes manuscript validation approach",
+        "Mentions pipeline or RUN_GUIDE semantics"
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "claim-verification-pre-arxiv",
+      "prompt": "before i submit to arxiv i want every number and citation in actinf_policy_entanglement_lean manuscript triple-checked against the code and regenerated outputs — fix prose if wrong but keep it renderable",
+      "expected_output": "Three-pass claim verification with inventory and reconciliation",
+      "files": [],
+      "expectations": [
+        "Mentions claim inventory or numbered claims",
+        "Describes multiple distinct verification passes",
+        "Mentions regenerate or recompute not trust prose",
+        "References validation CLI or prerender/markdown/pdf",
+        "Says not to hand-edit output/ directory"
+      ]
+    },
+    {
+      "id": 4,
+      "eval_name": "reproducibility-zenodo",
+      "prompt": "getting ready for zenodo — need to prove template_code_project rebuilds identically from clean twice. what do i run?",
+      "expected_output": "Determinism audit with double-run and diff",
+      "files": [],
+      "expectations": [
+        "Mentions regenerate from clean or core-only pipeline",
+        "Mentions double-run or two identical runs",
+        "Mentions seeds or determinism",
+        "References execute_pipeline.py --core-only",
+        "Mentions git status or diff for output drift"
+      ]
+    },
+    {
+      "id": 5,
+      "eval_name": "registry-cross-refs",
+      "prompt": "my lean project uses [[FIG:]] tokens and labels.yaml — i think theorem numbers in prose are stale. audit cross-refs?",
+      "expected_output": "Registry token cross-reference audit",
+      "files": [],
+      "expectations": [
+        "Mentions labels.yaml or registry",
+        "Mentions [[FIG:]] or token style cross-refs",
+        "Warns against hard-coded theorem/section numbers in prose",
+        "Mentions markdown validation CLI",
+        "Does not prescribe raw LaTeX \\ref in new prose"
+      ]
+    },
+    {
+      "id": 6,
+      "eval_name": "new-manuscript-brief",
+      "prompt": "i have a research brief on sparse optimization for imaging — scaffold a new projects/ tree + manuscript like template_code_project with tests and thin scripts",
+      "expected_output": "Manuscript creation scaffold workflow",
+      "files": [],
+      "expectations": [
+        "References template_code_project as exemplar",
+        "Mentions src/ and scripts/ separation",
+        "Mentions 90% coverage or no mocks",
+        "Mentions config.yaml or manuscript structure",
+        "Mentions active_projects.md for naming discipline"
+      ]
+    },
+    {
+      "id": 7,
+      "eval_name": "no-mocks-tests",
+      "prompt": "add pytest coverage for infrastructure/validation/new_gate.py — repo forbids mocks, use real files",
+      "expected_output": "Test creation under no-mocks policy",
+      "files": [],
+      "expectations": [
+        "Explicitly rejects mocks or unittest.mock",
+        "Mentions tmp_path or real data patterns",
+        "Mentions 60% infrastructure coverage or pytest --cov",
+        "Mentions subprocess or pytest-httpserver as valid patterns"
+      ]
+    },
+    {
+      "id": 8,
+      "eval_name": "infra-package",
+      "prompt": "need a new reusable infrastructure/foo/ package with CLI, tests in infra_tests, and SKILL.md for agents",
+      "expected_output": "Infrastructure module workflow",
+      "files": [],
+      "expectations": [
+        "Places code under infrastructure/",
+        "Mentions tests/infra_tests/",
+        "Mentions 60% coverage floor",
+        "Mentions SKILL.md or skills write manifest",
+        "Mentions __all__ or public API exports"
+      ]
+    },
+    {
+      "id": 9,
+      "eval_name": "validate-pdf-unresolved",
+      "prompt": "template_prose_project combined pdf shows ?? refs — run the right validation gates and tell me what failed",
+      "expected_output": "Validation quality CLI workflow",
+      "files": [],
+      "expectations": [
+        "Uses infrastructure.validation.cli pdf or markdown",
+        "Mentions prerender or markdown strict mode",
+        "Structured issue reporting with paths",
+        "Does not suggest hand-editing output/pdf as fix"
+      ]
+    },
+    {
+      "id": 10,
+      "eval_name": "feature-end-to-end",
+      "prompt": "add a new analysis figure + manuscript section to template_code_project end-to-end — code in src, script orchestrates, tests, docs updated",
+      "expected_output": "Feature addition cross-layer workflow",
+      "files": [],
+      "expectations": [
+        "Logic in src not scripts",
+        "Mentions tests and pipeline or 01_run_tests",
+        "Mentions manuscript or figure output paths",
+        "Mentions AGENTS.md or README updates"
+      ]
+    },
+    {
+      "id": 11,
+      "eval_name": "literature-synthesis-corpus",
+      "prompt": "after arxiv search i have 15 papers — write per-paper notes and a thematic synthesis with [citekey] citations only",
+      "expected_output": "Literature synthesis prompt blocks",
+      "files": [],
+      "expectations": [
+        "Per-paper structured fields (contribution/method/evidence)",
+        "Thematic clusters or cross-paper synthesis",
+        "Square-bracket citation keys not bare titles",
+        "Mentions temperature 0 or seed for replay optional"
+      ]
+    },
+    {
+      "id": 12,
+      "eval_name": "docs-agents-readme",
+      "prompt": "scripts/ under template_code_project grew — write accurate AGENTS.md and README with real commands from the repo",
+      "expected_output": "Documentation creation for a directory",
+      "files": [],
+      "expectations": [
+        "Distinguishes AGENTS.md technical vs README quick nav",
+        "Says read live code not invent APIs",
+        "Mentions lint_docs or link active_projects",
+        "Includes verification commands"
+      ]
+    },
+    {
+      "id": 13,
+      "eval_name": "refactor-scripts-to-src",
+      "prompt": "there's business logic in projects/foo/scripts/analyze.py that should live in src/ — refactor without changing behavior",
+      "expected_output": "Refactoring workflow preserving behavior",
+      "files": [],
+      "expectations": [
+        "Move logic to src/",
+        "Keep scripts as thin orchestrators",
+        "Run pytest baseline verification",
+        "No new feature scope creep"
+      ]
+    },
+    {
+      "id": 14,
+      "eval_name": "code-dev-algorithm",
+      "prompt": "implement adam optimizer in template_code_project src with typed API, logging, and tests — follow template architecture",
+      "expected_output": "Code development in project layer",
+      "files": [],
+      "expectations": [
+        "Places code in projects/*/src/",
+        "Type hints and get_logger",
+        "90% coverage or project test command",
+        "Thin orchestrator preserved"
+      ]
+    },
+    {
+      "id": 15,
+      "eval_name": "near-miss-fibonacci",
+      "prompt": "write a fibonacci function in python for my homework",
+      "expected_output": "Should NOT use template workflow skills",
+      "files": [],
+      "expectations": [
+        "Does not mention execute_pipeline.py",
+        "Does not mention active_projects.md roster",
+        "Does not require 90% template coverage gates"
+      ],
+      "negative": true
+    },
+    {
+      "id": 16,
+      "eval_name": "near-miss-summarize-pdf",
+      "prompt": "summarize this random PDF i downloaded — just give me bullet points",
+      "expected_output": "Should NOT use manuscript claim verification",
+      "files": [],
+      "expectations": [
+        "Does not mention triple-check claim inventory",
+        "Does not mention prerender validation CLI",
+        "Does not mention projects/manuscript paths"
+      ],
+      "negative": true
+    },
+    {
+      "id": 17,
+      "eval_name": "near-miss-generic-security",
+      "prompt": "run bandit and npm audit on my node app in ~/apps/chat",
+      "expected_output": "Should NOT use template validation-quality skill",
+      "files": [],
+      "expectations": [
+        "Does not mention infrastructure.validation.cli markdown",
+        "Does not mention template_code_project manuscript",
+        "Does not mention pipeline DAG stages"
+      ],
+      "negative": true
+    },
+    {
+      "id": 18,
+      "eval_name": "hub-ambiguous-fix-manuscript",
+      "prompt": "something's wrong with my manuscript — refs broken i think? not sure if pipeline or prose issue",
+      "expected_output": "Hub routes to cross-refs or validation or claim verification",
+      "files": [],
+      "expectations": [
+        "Asks clarifying question OR picks manuscript-focused workflow",
+        "Mentions validation or cross-reference or claim check",
+        "Does not jump straight to unrelated code development"
+      ]
+    },
+    {
+      "id": 19,
+      "eval_name": "analysis-fast-fail",
+      "prompt": "multi-project run showed template_code_project Project Analysis finished in 0.8s with no figures — smells like import/missing dep. debug?",
+      "expected_output": "Pipeline debugging classifies dependency/import",
+      "files": [],
+      "expectations": [
+        "Identifies Project Analysis stage or analysis script entrypoint",
+        "Mentions isolate script or run analysis directly",
+        "Mentions uv sync or root venv dependency gap",
+        "References reproduce first error"
+      ]
+    },
+    {
+      "id": 20,
+      "eval_name": "core-only-triage",
+      "prompt": "skip llm stages — core pipeline only for template_prose_project but validate stage fails. resume?",
+      "expected_output": "Pipeline debug with core-only and resume",
+      "files": [],
+      "expectations": [
+        "Mentions --core-only",
+        "Mentions --resume",
+        "Names validate stage or validation CLI",
+        "Quotes need for first real error not last line"
+      ]
+    }
+  ]
+}

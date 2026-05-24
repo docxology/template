@@ -126,8 +126,12 @@ uv venv
 uv pip install -r requirements.txt   # if present
 ```
 
-The `get_python_cmd()` function in `scripts/bash_utils.sh` checks for project-local `.venv` first,
-falling back to the root `.venv`, then to system `python3`.
+Stage scripts resolve the test/analysis interpreter via
+`infrastructure.core.runtime._python_env.resolve_test_python()` (project `.venv`
+when present and valid, otherwise the workspace interpreter). Root entry points
+(`run.sh`, `secure_run.sh`) use `uv run python -m infrastructure.orchestration`.
+The `get_python_cmd()` helper in `scripts/bash_utils.sh` is the supported path
+for operational shell scripts that source that file directly (backup/health tooling).
 
 ---
 
@@ -180,7 +184,7 @@ Set these before running to ensure correct headless behaviour:
 export MPLBACKEND=Agg          # non-interactive matplotlib backend (critical on servers)
 export UV_FROZEN=true          # use locked dependencies only (reproducible builds)
 export LOG_LEVEL=1             # 0=debug, 1=info, 2=warning (default)
-export PIPELINE_MODE=1         # enables auto uv install + sync (set by run.sh automatically)
+# run.sh / secure_run.sh call ensure_uv() and run uv sync when needed — no exported PIPELINE_MODE
 
 # Logging — cloud / non-TTY environments
 # LOG_TERMINAL_VERBOSE=1 restores the verbose [ts] [LEVEL] prefix on stdout for

@@ -26,7 +26,7 @@ class TestCollectOutputStatistics:
         stats = collect_output_statistics(tmp_path, "test")
         assert stats["total_files"] == 0
         assert stats["total_size_mb"] == 0.0
-        assert stats["pdf_files"] == 0
+        assert stats["directories"]["pdf"]["file_count"] == 0
         assert len(stats["missing_expected_files"]) > 0  # No subdirs exist
 
     def test_with_pdf_files(self, tmp_path: Path):
@@ -38,7 +38,7 @@ class TestCollectOutputStatistics:
         (pdf_dir / "other.pdf").write_bytes(b"%PDF-1.4" + b"x" * 2000)
 
         stats = collect_output_statistics(tmp_path, "test")
-        assert stats["pdf_files"] == 2
+        assert stats["directories"]["pdf"]["file_count"] == 2
         assert stats["total_files"] >= 2
 
     def test_with_multiple_directories(self, tmp_path: Path):
@@ -51,9 +51,9 @@ class TestCollectOutputStatistics:
 
         stats = collect_output_statistics(tmp_path, "test")
         assert stats["total_files"] == 4
-        assert stats["pdf_files"] == 1
-        assert stats["figures"] == 1
-        assert stats["data_files"] == 1
+        assert stats["directories"]["pdf"]["file_count"] == 1
+        assert stats["directories"]["figures"]["file_count"] == 1
+        assert stats["directories"]["data"]["file_count"] == 1
 
     def test_largest_files_tracking(self, tmp_path: Path):
         """Should track the largest files across directories."""
@@ -110,7 +110,7 @@ class TestCollectOutputStatistics:
         (pdf_dir / "paper.pdf").write_bytes(b"x" * 500)
 
         stats = collect_output_statistics(tmp_path, "ignored", project_dir=custom_dir)
-        assert stats["pdf_files"] == 1
+        assert stats["directories"]["pdf"]["file_count"] == 1
 
     def test_directory_info_structure(self, tmp_path: Path):
         """Each directory entry should have expected keys."""

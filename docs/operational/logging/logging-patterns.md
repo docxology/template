@@ -183,19 +183,22 @@ ls -la projects/{project_name}/output/logs/archive/
 - During execution: `projects/{project_name}/output/logs/pipeline.log`
 - After copy stage: `output/{project_name}/logs/pipeline.log`
 
-**Content:**
+**Content** (written by Python orchestration — see [output-design.md](output-design.md)):
 
-- All bash script output (colors stripped in file)
-- All Python script output
+- Stage script and orchestration output (colors stripped in file)
+- Python stage script output
 - Error messages and stack traces
 - Progress indicators and ETAs
 - Stage completion status
 
-**Viewing Logs:**
+**Viewing logs:**
 
 ```bash
+cat projects/{project_name}/output/logs/pipeline.log
+grep -i error projects/{project_name}/output/logs/pipeline.log
+
+# After copy stage
 cat output/{project_name}/logs/pipeline.log
-grep -i error output/{project_name}/logs/pipeline.log
 grep "Stage 5" output/{project_name}/logs/pipeline.log
 ```
 

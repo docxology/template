@@ -69,7 +69,7 @@ class FileInventoryManager:
                 entries.extend(self._collect_files_in_directory(category_dir, category))
 
         # Also check for root-level combined PDFs (project-specific naming like
-        # code_project_combined.pdf or the legacy project_combined.pdf)
+        # template_code_project_combined.pdf)
         for file_path in output_dir.glob("*combined*.pdf"):
             if file_path.is_file():
                 try:

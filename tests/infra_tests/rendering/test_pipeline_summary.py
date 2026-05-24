@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from infrastructure.rendering._pipeline_summary import (
     _check_citations_used,
     generate_rendering_summary,
@@ -57,6 +59,17 @@ class TestCheckCitationsUsed:
     def test_detects_citep_command(self, tmp_path: Path) -> None:
         (tmp_path / "section.md").write_text(r"As noted \citep{jones2019}")
         assert _check_citations_used(tmp_path) is True
+
+    @pytest.mark.parametrize(
+        ("content", "expected"),
+        [
+            (r"\citet{doe2022} showed that.", True),
+            ("According to @smith2020 the results.", True),
+        ],
+    )
+    def test_detects_additional_citation_forms(self, tmp_path: Path, content: str, expected: bool) -> None:
+        (tmp_path / "section.md").write_text(content, encoding="utf-8")
+        assert _check_citations_used(tmp_path) is expected
 
     def test_no_citations_in_plain_text(self, tmp_path: Path) -> None:
         (tmp_path / "section.md").write_text("This is a plain text file without citations.")

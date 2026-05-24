@@ -4,7 +4,6 @@ from infrastructure.validation.docs.accuracy import check_links, verify_commands
 from infrastructure.validation.docs.completeness import analyze_documentation_completeness
 from infrastructure.validation.docs.discovery import (
     discover_documentation,
-    discover_markdown_files,
     discover_project_documentation,
 )
 from infrastructure.validation.docs.models import DocumentationFile, ScanResults
@@ -20,7 +19,6 @@ __all__ = [
     "assess_documentation_quality",
     "check_links",
     "discover_documentation",
-    "discover_markdown_files",
     "discover_project_documentation",
     "run_verification_checks",
     "verify_commands",

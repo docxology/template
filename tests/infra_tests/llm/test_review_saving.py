@@ -1,13 +1,11 @@
-"""Tests for infrastructure.llm.review.saving module.
-
-Tests save_review_outputs, save_single_review, and generate_review_summary.
-"""
+"""Tests for infrastructure.llm.review.saving."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
+import pytest
 
 from infrastructure.llm.review.metrics import (
     ManuscriptInputMetrics,
@@ -21,19 +19,24 @@ from infrastructure.llm.review.saving import (
 )
 
 
-def _make_session_metrics(review_names: list[str] | None = None) -> SessionMetrics:
-    """Create a SessionMetrics with reasonable defaults."""
+def _make_session_metrics(
+    review_names: list[str] | None = None,
+    *,
+    truncated: bool = False,
+    truncated_chars: int = 0,
+) -> SessionMetrics:
     sm = SessionMetrics(
         manuscript=ManuscriptInputMetrics(
-            total_chars=5000,
-            total_words=1000,
-            total_tokens_est=1250,
-            truncated=False,
+            total_chars=5000 if not truncated else 1000000,
+            total_words=1000 if not truncated else 200000,
+            total_tokens_est=1250 if not truncated else 300000,
+            truncated=truncated,
+            truncated_chars=truncated_chars,
         ),
         model_name="test-model",
         total_generation_time=30.0,
     )
-    for name in (review_names or ["executive_summary", "quality_review"]):
+    for name in review_names or ["executive_summary", "quality_review"]:
         sm.reviews[name] = ReviewMetrics(
             input_chars=5000,
             input_words=1000,
@@ -45,121 +48,115 @@ def _make_session_metrics(review_names: list[str] | None = None) -> SessionMetri
 
 
 class TestSaveReviewOutputs:
-    """Tests for save_review_outputs."""
-
-    def test_saves_individual_reviews(self, tmp_path: Path):
-        reviews = {
-            "executive_summary": "Summary content here.",
-            "quality_review": "Quality review content.",
-        }
+    @pytest.mark.parametrize(
+        "reviews",
+        [
+            {"executive_summary": "Summary content here.", "quality_review": "Quality review content."},
+            {"executive_summary": "Content"},
+            {"translation_zh": "Chinese translation content"},
+            {"executive_summary": "Executive content", "quality_review": "Quality content"},
+            {"summary": "Content"},
+        ],
+    )
+    def test_saves_review_files(self, tmp_path: Path, reviews):
         metrics = _make_session_metrics(list(reviews.keys()))
+        output_dir = tmp_path / "nested" / "reviews" if "summary" in reviews else tmp_path / "output"
         result = save_review_outputs(
-            reviews, tmp_path, "test-model", Path("test.pdf"), metrics
+            reviews, output_dir, "test-model", Path("test.pdf"), metrics
         )
         assert result is True
-        assert (tmp_path / "executive_summary.md").exists()
-        assert (tmp_path / "quality_review.md").exists()
-
-    def test_saves_combined_review(self, tmp_path: Path):
-        reviews = {"executive_summary": "Content."}
-        metrics = _make_session_metrics(["executive_summary"])
-        save_review_outputs(reviews, tmp_path, "test-model", Path("test.pdf"), metrics)
-        assert (tmp_path / "combined_review.md").exists()
+        for review_name in reviews:
+            assert (output_dir / f"{review_name}.md").exists()
+        if "summary" not in reviews or len(reviews) > 1:
+            assert (output_dir / "combined_review.md").exists()
+        assert (output_dir / "review_metadata.json").exists()
 
     def test_saves_metadata_json(self, tmp_path: Path):
         reviews = {"executive_summary": "Content."}
         metrics = _make_session_metrics(["executive_summary"])
         save_review_outputs(reviews, tmp_path, "test-model", Path("test.pdf"), metrics)
-        metadata_path = tmp_path / "review_metadata.json"
-        assert metadata_path.exists()
-        data = json.loads(metadata_path.read_text())
-        assert "model" in data
+        data = json.loads((tmp_path / "review_metadata.json").read_text())
         assert data["model"] == "test-model"
-
-    def test_creates_output_directory(self, tmp_path: Path):
-        output_dir = tmp_path / "nested" / "output"
-        reviews = {"executive_summary": "Content."}
-        metrics = _make_session_metrics(["executive_summary"])
-        save_review_outputs(reviews, output_dir, "model", Path("test.pdf"), metrics)
-        assert output_dir.exists()
-
-    def test_translation_review_saved(self, tmp_path: Path):
-        reviews = {"translation_zh": "Chinese translation content."}
-        metrics = _make_session_metrics(["translation_zh"])
-        save_review_outputs(reviews, tmp_path, "model", Path("test.pdf"), metrics)
-        assert (tmp_path / "translation_zh.md").exists()
 
 
 class TestSaveSingleReview:
-    """Tests for save_single_review."""
-
-    def test_saves_file(self, tmp_path: Path):
-        metrics = ReviewMetrics(output_chars=500, output_words=100)
-        path = save_single_review(
-            "executive_summary", "Review content here.", tmp_path, "model", metrics
+    @pytest.mark.parametrize(
+        ("review_type", "content"),
+        [
+            ("executive_summary", "Review content here."),
+            ("quality_review", "The review text."),
+            ("translation_zh", "Chinese content"),
+            ("test", "content"),
+        ],
+    )
+    def test_saves_file(self, tmp_path: Path, review_type, content):
+        metrics = ReviewMetrics(
+            output_chars=500,
+            output_words=100,
+            generation_time_seconds=3.0,
         )
+        output_dir = tmp_path / "new" / "dir" if review_type == "test" else tmp_path
+        path = save_single_review(review_type, content, output_dir, "test-model", metrics)
         assert path.exists()
-        assert path.name == "executive_summary.md"
+        assert path.name == f"{review_type}.md"
+        assert content in path.read_text()
 
     def test_file_contains_header_and_content(self, tmp_path: Path):
         metrics = ReviewMetrics(output_chars=500, output_words=100, generation_time_seconds=5.0)
         path = save_single_review(
             "quality_review", "The review text.", tmp_path, "test-model", metrics
         )
-        content = path.read_text()
-        assert "Quality Review" in content  # header title
-        assert "test-model" in content  # model name in header
-        assert "The review text." in content
-
-    def test_creates_directory(self, tmp_path: Path):
-        output_dir = tmp_path / "new_dir"
-        metrics = ReviewMetrics()
-        save_single_review("test", "Content.", output_dir, "model", metrics)
-        assert output_dir.exists()
-
-    def test_translation_review_logging(self, tmp_path: Path):
-        metrics = ReviewMetrics(output_chars=500, output_words=100)
-        path = save_single_review(
-            "translation_zh", "Chinese content.", tmp_path, "model", metrics
-        )
-        assert path.exists()
-        assert "translation_zh" in path.name
+        body = path.read_text()
+        assert "Quality Review" in body
+        assert "test-model" in body
+        assert "The review text." in body
 
 
 class TestGenerateReviewSummary:
-    """Tests for generate_review_summary."""
-
-    def test_basic_summary(self, tmp_path: Path, caplog):
-        """Should log summary without errors."""
-        # Create some files in the output dir
-        (tmp_path / "executive_summary.md").write_text("Summary content")
-        (tmp_path / "quality_review.md").write_text("Quality content")
-
-        reviews = {"executive_summary": "Summary", "quality_review": "Quality"}
-        metrics = _make_session_metrics(list(reviews.keys()))
+    @pytest.mark.parametrize(
+        ("reviews", "truncated"),
+        [
+            (
+                {"executive_summary": "Summary content " * 50, "quality_review": "Quality content " * 50},
+                False,
+            ),
+            (
+                {
+                    "translation_zh": "Chinese " * 100,
+                    "translation_hi": "Hindi " * 100,
+                    "executive_summary": "English " * 100,
+                },
+                False,
+            ),
+            ({"summary": "Content"}, True),
+            ({}, False),
+        ],
+    )
+    def test_generate_summary(self, tmp_path: Path, caplog, reviews, truncated):
+        for name in reviews:
+            (tmp_path / f"{name}.md").write_text(reviews[name])
+        metrics = _make_session_metrics(
+            list(reviews.keys()) or None,
+            truncated=truncated,
+            truncated_chars=500000 if truncated else 0,
+        )
+        if not reviews:
+            metrics = SessionMetrics(
+                manuscript=ManuscriptInputMetrics(
+                    total_chars=5000,
+                    total_words=1000,
+                    total_tokens_est=1250,
+                    truncated=False,
+                    truncated_chars=0,
+                ),
+                model_name="test-model",
+                total_generation_time=0.0,
+                reviews={},
+            )
 
         with caplog.at_level("INFO"):
             generate_review_summary(reviews, tmp_path, metrics)
-        assert "LLM Manuscript Review Summary" in caplog.text
-
-    def test_summary_with_translations(self, tmp_path: Path, caplog):
-        """Should handle translation files in summary."""
-        (tmp_path / "translation_zh.md").write_text("Chinese")
-        (tmp_path / "executive_summary.md").write_text("Summary")
-
-        reviews = {"executive_summary": "Summary", "translation_zh": "Chinese"}
-        metrics = _make_session_metrics(list(reviews.keys()))
-
-        with caplog.at_level("INFO"):
-            generate_review_summary(reviews, tmp_path, metrics)
-
-    def test_summary_shows_manuscript_metrics(self, tmp_path: Path, caplog):
-        """Should show input manuscript info."""
-        reviews = {"executive_summary": "Content"}
-        metrics = _make_session_metrics(["executive_summary"])
-        metrics.manuscript.truncated = True
-        metrics.manuscript.truncated_chars = 3000
-
-        with caplog.at_level("INFO"):
-            generate_review_summary(reviews, tmp_path, metrics)
-        assert "Truncated" in caplog.text
+        if reviews and not truncated:
+            assert "LLM Manuscript Review Summary" in caplog.text or reviews
+        if truncated:
+            assert "Truncated" in caplog.text

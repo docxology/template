@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+"""Tests for infrastructure.core.pipeline.stage_registry."""
+
+from __future__ import annotations
+
+import pytest
+
+from infrastructure.core.pipeline.stage_registry import (
+    MENU_KEY_TO_STAGE,
+    STAGE_DISPATCH,
+    script_argv_for_stage,
+)
+
+
+def test_stage_dispatch_covers_menu_keys() -> None:
+    for stage in MENU_KEY_TO_STAGE.values():
+        assert stage in STAGE_DISPATCH
+
+
+def test_render_pdf_maps_to_expected_script() -> None:
+    script, *_args = script_argv_for_stage("render_pdf")
+    assert script.endswith("03_render_pdf.py")
+
+
+def test_tests_stage_includes_infra_smoke_scope() -> None:
+    script, *args = script_argv_for_stage("tests")
+    assert script.endswith("01_run_tests.py")
+    assert "--infra-scope" in args
+    assert "pipeline-smoke" in args
+
+
+def test_unknown_stage_exits() -> None:
+    with pytest.raises(SystemExit, match="Unknown stage"):
+        script_argv_for_stage("not_a_real_stage")

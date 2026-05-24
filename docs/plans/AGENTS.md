@@ -2,22 +2,24 @@
 
 ## Overview
 
-Technical guide for `docs/plans/` — project-level planning documents, correction plans, and phased work directives.
+Technical guide for `docs/plans/` — repo-wide planning documents and phased correction directives.
 
-## Files
+## Current status
 
-| File | Purpose |
-|------|---------|
-| `act_inf_metaanalysis_v2_comprehensive_review.md` | Comprehensive correction plan for act_inf_metaanalysis v2 manuscript |
+This directory is **intentionally empty**. Per-project plans live under `projects/{name}/docs/` (active) or `projects_archive/{name}/docs/` (historical). Repo-wide audit snapshots live under [`../audit/archived/`](../audit/archived/) with `-YYYY-MM-DD.md` suffixes.
+
+The previous tenant (`act_inf_metaanalysis_v2_comprehensive_review.md`) was moved to [`../audit/archived/act_inf_metaanalysis_v2_comprehensive_review-2026-04-26.md`](../audit/archived/act_inf_metaanalysis_v2_comprehensive_review-2026-04-26.md) in the May 2026 hardening pass.
 
 ## Key Conventions
 
-- Plans are per-project and reference the active project name; see [_generated/active_projects.md](../_generated/active_projects.md) for current roster.
-- Plans may include phased task lists with priority labels (CRITICAL, HIGH, NORMAL).
-- Once a plan is fully executed, move it to `projects/{name}/docs/` or archive it; this directory holds active/in-progress plans only.
+- Drop new repo-wide plans here as `<topic>.md` with a date header.
+- Project-specific plans belong under `projects/{name}/docs/`, not this directory.
+- Once executed, move plans to the project tree or archive; do not leave completed work here.
+- Active `projects/` names → [_generated/active_projects.md](../_generated/active_projects.md).
 
 ## See Also
 
 - [README.md](README.md) — Quick navigation
-- [../architecture/](../architecture/) — Architecture and design decisions
+- [../architecture/](../architecture/) — Architecture and ADRs
 - [../guides/new-project-setup.md](../guides/new-project-setup.md) — New project setup checklist
+- [../audit/archived/](../audit/archived/) — Dated audit and review snapshots

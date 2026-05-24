@@ -207,14 +207,13 @@ class TestMainFunction:
 class TestDefaultPdfPath:
     """Test default PDF path handling."""
 
-    def test_main_default_path(self, capsys):
-        """Test main uses default path when none specified."""
+    def test_main_default_path(self, tmp_path, monkeypatch, capsys):
+        """Test main returns 2 when no combined PDF is discoverable."""
         from infrastructure.validation.cli import pdf as validate_pdf_cli
 
-        # Without a real PDF, should return error
+        monkeypatch.chdir(tmp_path)
         exit_code = validate_pdf_cli.main()
 
-        # Should try default path and fail (file not found)
         assert exit_code == 2
 
 

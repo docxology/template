@@ -9,7 +9,7 @@ includes:
   - projects/template_code_project/output/figures/performance_benchmark.png
   - projects/template_code_project/output/logs/pipeline.log
   - projects/template_code_project/output/pdf/_combined_manuscript.log
-  - projects/template_code_project/output/pdf/code_project_combined.pdf
+  - projects/template_code_project/output/pdf/template_code_project_combined.pdf
   - projects/template_code_project/output/reports/output_statistics.json
   - projects/template_code_project/output/reports/output_statistics.txt
   - projects/template_code_project/output/reports/performance_benchmark.json

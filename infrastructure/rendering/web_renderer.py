@@ -34,7 +34,7 @@ class WebRenderer:
         output_dir = Path(self.config.web_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        output_file = output_dir / f"{source_file.stem}.html"
+        output_file = self._output_file_for_source(source_file)
 
         cmd = [
             self.config.pandoc_path,
@@ -60,6 +60,17 @@ class WebRenderer:
                 f"Failed to render HTML: {e.stderr}",
                 context={"source": str(source_file)},
             ) from e
+
+    def _output_file_for_source(self, source_file: Path) -> Path:
+        """Return a collision-resistant HTML path for an individual section."""
+        output_dir = Path(self.config.web_dir)
+        parent_name = source_file.parent.name
+        if parent_name and parent_name not in {".", ""}:
+            raw_stem = f"{parent_name}__{source_file.stem}"
+        else:
+            raw_stem = source_file.stem
+        safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "-", raw_stem).strip("-._") or source_file.stem
+        return output_dir / f"{safe_stem}.html"
 
     def render_combined(
         self,

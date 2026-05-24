@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from infrastructure.rendering.manuscript_injection import EXCLUDED_DOC_FILENAMES
+
 
 def puppeteer_cache_has_chrome() -> bool:
     """Return True iff chrome-headless-shell exists in the Puppeteer cache."""
@@ -24,6 +26,8 @@ def project_manuscript_has_mermaid(manuscript_dir: Path) -> bool:
     if not manuscript_dir.is_dir():
         return False
     for md in manuscript_dir.glob("*.md"):
+        if md.name in EXCLUDED_DOC_FILENAMES:
+            continue
         if "```mermaid" in md.read_text(encoding="utf-8"):
             return True
     return False

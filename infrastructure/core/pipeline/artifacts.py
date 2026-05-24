@@ -218,6 +218,11 @@ def _is_relative_to(path: Path, parent: Path) -> bool:
         path.relative_to(parent)
         return True
     except ValueError:
+        pass
+    try:
+        path.resolve().relative_to(parent.resolve())
+        return True
+    except (OSError, ValueError):
         return False
 
 

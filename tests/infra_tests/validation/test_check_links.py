@@ -8,13 +8,15 @@ from infrastructure.validation.integrity import link_extract
 
 
 def test_link_extract_module_import_smoke() -> None:
-    """Library surface lives in link_extract; check_links re-exports for CLI callers."""
+    """Library surface lives in link_extract; check_links re-exports discovery for CLI callers."""
     assert link_extract.extract_links is check_links.extract_links
-    assert link_extract.find_all_markdown_files is check_links.find_all_markdown_files
+    from infrastructure.validation.content.discovery import discover_markdown_files as canonical
+
+    assert check_links.discover_markdown_files is canonical
 
 
 class TestFindAllMarkdownFiles:
-    """Test suite for find_all_markdown_files function."""
+    """Test suite for discover_markdown_files function."""
 
     def test_find_markdown_files_basic(self, tmp_path):
         """Test finding markdown files in a directory."""
@@ -23,7 +25,7 @@ class TestFindAllMarkdownFiles:
         (tmp_path / "docs").mkdir()
         (tmp_path / "docs" / "guide.md").write_text("# Guide")
 
-        files = check_links.find_all_markdown_files(str(tmp_path))
+        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
 
         assert len(files) == 2
         assert any("readme.md" in str(f) for f in files)
@@ -35,7 +37,7 @@ class TestFindAllMarkdownFiles:
         (tmp_path / "output").mkdir()
         (tmp_path / "output" / "excluded.md").write_text("# Excluded")
 
-        files = check_links.find_all_markdown_files(str(tmp_path))
+        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
 
         assert len(files) == 1
         assert not any("output" in str(f) for f in files)
@@ -46,14 +48,14 @@ class TestFindAllMarkdownFiles:
         (tmp_path / "htmlcov").mkdir()
         (tmp_path / "htmlcov" / "coverage.md").write_text("# Coverage")
 
-        files = check_links.find_all_markdown_files(str(tmp_path))
+        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
 
         assert len(files) == 1
         assert not any("htmlcov" in str(f) for f in files)
 
     def test_find_markdown_files_empty_dir(self, tmp_path):
         """Test with empty directory."""
-        files = check_links.find_all_markdown_files(str(tmp_path))
+        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 0
 
     def test_find_markdown_files_nested(self, tmp_path):
@@ -61,7 +63,7 @@ class TestFindAllMarkdownFiles:
         (tmp_path / "a" / "b" / "c").mkdir(parents=True)
         (tmp_path / "a" / "b" / "c" / "deep.md").write_text("# Deep")
 
-        files = check_links.find_all_markdown_files(str(tmp_path))
+        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
 
         assert len(files) == 1
         assert "deep.md" in str(files[0])
@@ -258,7 +260,7 @@ class TestCheckLinksIntegration:
         )
 
         # Find all markdown files
-        files = check_links.find_all_markdown_files(str(tmp_path))
+        files = check_links.discover_markdown_files(tmp_path, scope="link_audit")
         assert len(files) == 2
 
         # Extract and check links
@@ -274,7 +276,7 @@ class TestCheckLinksIntegration:
     def test_module_has_main_function(self):
         """Test that module has main function if it's a script."""
         # The module may have a main function or be importable
-        assert hasattr(check_links, "find_all_markdown_files")
+        assert hasattr(check_links, "discover_markdown_files")
         assert hasattr(check_links, "extract_links")
         assert hasattr(check_links, "check_file_reference")
 

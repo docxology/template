@@ -53,7 +53,8 @@ uv run python scripts/07_generate_executive_report.py
 - `show_project_info.py` - project metadata helper (used by `run.sh` interactive menu)
 - `organize_executive_outputs.py` - reorganizes executive report outputs by file type
 - `batch_cogsec_improve.py` - thin orchestrator applying mechanical source improvements
-- `bash_utils.sh` - shared shell helpers used by `run.sh` and `secure_run.sh`
+- `bash_utils.sh` - shared shell helpers for backup/health scripts and integration tests (not sourced by `run.sh` / `secure_run.sh`)
+- `shell_bootstrap.sh` - shared `uv` bootstrap and sandbox env vars sourced by `run.sh` and `secure_run.sh`
 - `backup-daily.sh` / `backup-weekly.sh` / `backup-full.sh` - rsync backup tiers
 - `restore-test.sh` - non-destructive backup-restore verification
 - `health-check.sh` - pre-flight system health check (Python, uv, disk, Docker, repo)
@@ -85,7 +86,7 @@ See [`docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin
 - Project-specific analysis scripts belong in `projects/{name}/scripts/`.
 - The root scripts stay generic and work with any active project discovered from `projects/`.
 - Use `uv run` for direct Python entry points (`execute_pipeline.py`, `execute_multi_project.py`, `07_generate_executive_report.py`).
-- `run.sh` and `secure_run.sh` resolve Python through the `get_python_cmd` helper in `bash_utils.sh`, which prefers the uv-managed `.venv/bin/python` and falls back to `python3`. This is equivalent to `uv run python` for the commands these shells issue; no separate `uv run` wrapping is required inside `run.sh`.
+- `run.sh` and `secure_run.sh` are thin bootstrap shells: they source `shell_bootstrap.sh`, then `exec uv run python -m infrastructure.orchestration` (menu, pipeline, and secure subcommands live in Python). Bare `./run.sh` relies on `uv run` to sync the workspace; pipeline-flag invocations also run `uv sync` when `.venv` is missing.
 
 ## See Also
 

@@ -1,113 +1,77 @@
-# docs/prompts/ — AI prompt templates
+# docs/prompts/ — Agent workflow skills
 
-Prompt templates for work that must stay compliant, tested, and documented in this repository.
+Discoverable agent skills for template-compliant work. Each workflow lives in a subdirectory with `SKILL.md` (YAML frontmatter for auto-routing).
 
-**Index:** [AGENTS.md](AGENTS.md) (file table and conventions)
+**Hub:** [SKILL.md](SKILL.md) · **Technical index:** [AGENTS.md](AGENTS.md)
 
-## Purpose
+## How to invoke
 
-Copy-paste blocks that reference real standards and commands so assistants and humans produce aligned artifacts without re-deriving policy from memory.
+Say what you need in natural language — no slash commands or copy-paste blocks required. Examples:
+
+| Say something like… | Skill |
+| --- | --- |
+| "Pipeline failed at PDF render for template_code_project" | [pipeline-debugging/SKILL.md](pipeline-debugging/SKILL.md) |
+| "Full repo audit for active projects" | [comprehensive-assessment/SKILL.md](comprehensive-assessment/SKILL.md) |
+| "Triple-check every manuscript claim before arXiv" | [manuscript-claim-verification/SKILL.md](manuscript-claim-verification/SKILL.md) |
+| "Prove double-run reproducibility before Zenodo" | [reproducibility-audit/SKILL.md](reproducibility-audit/SKILL.md) |
+| "Audit [[FIG:]] and labels.yaml" | [manuscript-cross-references/SKILL.md](manuscript-cross-references/SKILL.md) |
+| "Scaffold new project + manuscript from brief" | [manuscript-creation/SKILL.md](manuscript-creation/SKILL.md) |
+| "Add tests, no mocks" | [test-creation/SKILL.md](test-creation/SKILL.md) |
+| "New infrastructure/ package" | [infrastructure-module/SKILL.md](infrastructure-module/SKILL.md) |
 
 ## Categories
 
 ### Research content
 
-| Prompt | Use when |
-|--------|----------|
-| [manuscript_creation.md](manuscript_creation.md) | New manuscript + project layout from a research brief |
-| [manuscript_cross_references.md](manuscript_cross_references.md) | Registry-driven manuscripts (`refs/labels.yaml`, `[[FIG:]]`, `[[THMREF:]]`, …) or auditing cross-refs |
-| [manuscript_claim_verification.md](manuscript_claim_verification.md) | Maximum-effort triple-check of every manuscript claim; improve text, keep AGENTS/README complete, stay renderable |
-| [literature_synthesis.md](literature_synthesis.md) | LLM blocks for per-paper and corpus synthesis after a search pipeline |
+| Skill directory | Use when |
+| --- | --- |
+| [manuscript-creation/](manuscript-creation/SKILL.md) | New manuscript + project from a research brief |
+| [manuscript-cross-references/](manuscript-cross-references/SKILL.md) | Registry/token manuscripts and cross-ref audits |
+| [manuscript-claim-verification/](manuscript-claim-verification/SKILL.md) | Triple-check every claim; stay renderable |
+| [literature-synthesis/](literature-synthesis/SKILL.md) | LLM blocks for search corpus synthesis |
 
 ### Code and tests
 
-| Prompt | Use when |
-|--------|----------|
-| [code_development.md](code_development.md) | New modules, algorithms, or utilities |
-| [test_creation.md](test_creation.md) | Adding tests under the no-mocks policy |
-| [feature_addition.md](feature_addition.md) | End-to-end feature work across layers |
-| [refactoring.md](refactoring.md) | Clean-break refactors with migration |
+| Skill directory | Use when |
+| --- | --- |
+| [code-development/](code-development/SKILL.md) | New modules, algorithms, utilities |
+| [test-creation/](test-creation/SKILL.md) | Tests under the no-mocks policy |
+| [feature-addition/](feature-addition/SKILL.md) | End-to-end feature work |
+| [refactoring/](refactoring/SKILL.md) | Clean-break refactors |
 
 ### Infrastructure and docs
 
-| Prompt | Use when |
-|--------|----------|
-| [infrastructure_module.md](infrastructure_module.md) | New or extended `infrastructure/*` packages |
-| [documentation_creation.md](documentation_creation.md) | AGENTS.md / README.md for a directory |
-| [validation_quality.md](validation_quality.md) | Validation CLI, gates, manuscript/output checks |
-| [comprehensive_assessment.md](comprehensive_assessment.md) | Wide audit: tests, docs, manuscript, pipeline |
-| [reproducibility_audit.md](reproducibility_audit.md) | Determinism + regenerate-from-clean + double-run diff before release/Zenodo |
-| [pipeline_debugging.md](pipeline_debugging.md) | Systematic DAG-stage triage when a pipeline run fails or stalls |
+| Skill directory | Use when |
+| --- | --- |
+| [infrastructure-module/](infrastructure-module/SKILL.md) | New `infrastructure/*` packages |
+| [documentation-creation/](documentation-creation/SKILL.md) | AGENTS.md / README.md for a directory |
+| [validation-quality/](validation-quality/SKILL.md) | Validation CLI and gates |
+| [comprehensive-assessment/](comprehensive-assessment/SKILL.md) | Wide audit |
+| [reproducibility-audit/](reproducibility-audit/SKILL.md) | Determinism before release |
+| [pipeline-debugging/](pipeline-debugging/SKILL.md) | DAG stage triage |
 
-## Navigation map
+## Discovery
 
-```mermaid
-graph TD
-    subgraph Research["Research content"]
-        MS[manuscript_creation.md]
-        MX[manuscript_cross_references.md]
-        MCV[manuscript_claim_verification.md]
-        LS[literature_synthesis.md]
-    end
-
-    subgraph Code["Code and tests"]
-        CD[code_development.md]
-        TC[test_creation.md]
-        FA[feature_addition.md]
-        RF[refactoring.md]
-    end
-
-    subgraph Ops["Infrastructure · docs · QA"]
-        IM[infrastructure_module.md]
-        DC[documentation_creation.md]
-        VQ[validation_quality.md]
-        CA[comprehensive_assessment.md]
-        RA[reproducibility_audit.md]
-        PD[pipeline_debugging.md]
-    end
-
-    MS --> MX
-    MX --> MCV
-    CD --> TC
-    FA --> RF
-    IM --> DC
-    CA --> VQ
-    MCV --> RA
-    RA --> PD
-
-    classDef r fill:#e3f2fd,stroke:#1565c0
-    classDef c fill:#fff3e0,stroke:#e65100
-    classDef o fill:#f3e5f5,stroke:#4a148c
-    class Research r
-    class Code c
-    class Ops o
-```
-
-## How to use
-
-1. Pick the row that matches the task; open the file and copy the **Prompt Template** / **Copy-paste prompt** block.
-2. Fill bracketed placeholders (`[project]`, `[feature]`, …). Use [`_generated/active_projects.md`](../_generated/active_projects.md) for real project names.
-3. Run the **Verification** / **Commands** section literally; do not substitute invented coverage numbers—use pytest output or [`_generated/canonical_facts.md`](../_generated/canonical_facts.md).
-
-## Standards leveraged
-
-| Resource | Role |
-|----------|------|
-| [`../rules/`](../rules/) | Normative coding, testing, docs, manuscripts |
-| [`../guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) | Pandoc cite + crossref syntax |
-| [`../core/architecture.md`](../core/architecture.md) | Two layers, thin orchestrator |
-| [`.github/AGENTS.md`](../../.github/AGENTS.md) | CI jobs and coverage floors |
-
-## Example commands
+Skills are indexed in `.cursor/skill_manifest.json`:
 
 ```bash
-ls docs/prompts/
-uv run pytest projects/template_code_project/tests/ \
-  --cov=projects/template_code_project/src --cov-fail-under=90 -q
+uv run python -m infrastructure.skills write
+uv run python -m infrastructure.skills write-index
 ```
+
+Human browse: [`docs/_generated/skills_index.md`](../_generated/skills_index.md).
+
+## Standards
+
+| Resource | Role |
+| --- | --- |
+| [`../rules/`](../rules/) | Normative coding, testing, docs |
+| [`../guides/manuscript-semantics.md`](../guides/manuscript-semantics.md) | Pandoc cite + crossref |
+| [`../core/architecture.md`](../core/architecture.md) | Two layers, thin orchestrator |
+| [`.github/AGENTS.md`](../../.github/AGENTS.md) | CI jobs and coverage floors |
 
 ## See also
 
 - [`../README.md`](../README.md) — documentation hub
-- [`../development/contributing.md`](../development/contributing.md)
 - [`../../CLAUDE.md`](../../CLAUDE.md) — command cheat sheet
+- [`../guides/new-project-one-shot-prompt.md`](../guides/new-project-one-shot-prompt.md) — one-shot LLM scaffold

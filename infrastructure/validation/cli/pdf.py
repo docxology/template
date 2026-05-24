@@ -22,7 +22,23 @@ from infrastructure.validation.content.pdf_validator import validate_pdf_renderi
 
 logger = get_logger(__name__)
 
-repo_root = Path(__file__).parent.parent
+
+def _repo_root_from_cwd() -> Path:
+    """Return repository root (directory containing pyproject.toml), else cwd."""
+    for candidate in (Path.cwd(), *Path.cwd().parents):
+        if (candidate / "pyproject.toml").is_file():
+            return candidate
+    return Path.cwd()
+
+
+def discover_combined_pdf(repo_root: Path, project_name: str | None = None) -> Path | None:
+    """Locate a combined manuscript PDF under ``output/{project}/pdf/``."""
+    if project_name:
+        candidate = repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf"
+        return candidate if candidate.exists() else None
+
+    candidates = sorted((repo_root / "output").glob("*/pdf/*_combined.pdf"))
+    return candidates[0] if candidates else None
 
 
 def print_validation_report(report: dict[str, Any], verbose: bool = False) -> None:
@@ -75,22 +91,38 @@ def print_validation_report(report: dict[str, Any], verbose: bool = False) -> No
     logger.info("")
 
 
-def main(pdf_path: Path | None = None, n_words: int = 200, verbose: bool = False) -> int:
+def main(
+    pdf_path: Path | None = None,
+    n_words: int = 200,
+    verbose: bool = False,
+    project_name: str | None = None,
+) -> int:
     """
     Main validation orchestration.
 
     Args:
-        pdf_path: Path to PDF file (defaults to first *combined*.pdf found in output/pdf/)
+        pdf_path: Path to PDF file (defaults to ``output/{project}/pdf/{project}_combined.pdf``)
         n_words: Number of words to extract for preview
         verbose: Enable verbose output
+        project_name: Project slug when resolving the default combined PDF path
 
     Returns:
         Exit code: 0 for success, 1 for issues found, 2 for errors
     """
-    # Default to first project combined PDF found (project-specific naming like code_project_combined.pdf)
     if pdf_path is None:
-        candidates = sorted((repo_root / "output" / "pdf").glob("*combined*.pdf"))
-        pdf_path = candidates[0] if candidates else repo_root / "output" / "pdf" / "project_combined.pdf"
+        repo_root = _repo_root_from_cwd()
+        pdf_path = discover_combined_pdf(repo_root, project_name=project_name)
+        if pdf_path is None:
+            hint = (
+                f"output/{project_name}/pdf/{project_name}_combined.pdf"
+                if project_name
+                else "output/{project}/pdf/{project}_combined.pdf"
+            )
+            logger.error(
+                "PDF file not found. Pass a path or use --project to resolve %s",
+                hint,
+            )
+            return 2
 
     # Validate PDF exists
     if not pdf_path.exists():
@@ -128,17 +160,18 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Validate default combined PDF
-  python validate_pdf_output.py
+  # Validate exemplar combined PDF
+  python -m infrastructure.validation.cli.pdf \\
+    output/template_code_project/pdf/template_code_project_combined.pdf
 
-  # Validate specific PDF
-  python validate_pdf_output.py output/pdf/01_abstract.pdf
+  # Discover combined PDF for one project
+  python -m infrastructure.validation.cli.pdf --project template_code_project
 
   # Show more words (default: 200)
-  python validate_pdf_output.py --words 500
+  python -m infrastructure.validation.cli.pdf --project template_code_project --words 500
 
   # Verbose output
-  python validate_pdf_output.py --verbose
+  python -m infrastructure.validation.cli.pdf --project template_code_project --verbose
         """,
     )
 
@@ -146,7 +179,12 @@ Examples:
         "pdf_path",
         nargs="?",
         type=Path,
-        help="Path to PDF file (default: output/pdf/project_combined.pdf)",
+        help="Path to PDF file (default: output/{project}/pdf/{project}_combined.pdf)",
+    )
+    parser.add_argument(
+        "--project",
+        dest="project_name",
+        help="Project name when resolving the default combined PDF path",
     )
     parser.add_argument(
         "-w",
@@ -159,6 +197,11 @@ Examples:
 
     args = parser.parse_args()
 
-    exit_code = main(pdf_path=args.pdf_path, n_words=args.words, verbose=args.verbose)
+    exit_code = main(
+        pdf_path=args.pdf_path,
+        n_words=args.words,
+        verbose=args.verbose,
+        project_name=args.project_name,
+    )
 
     sys.exit(exit_code)

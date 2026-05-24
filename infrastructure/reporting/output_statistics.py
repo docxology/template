@@ -192,11 +192,6 @@ def collect_output_statistics(
                 all_extensions[ext] = all_extensions.get(ext, 0) + count
     stats["file_counts_by_type"] = all_extensions
 
-    # Add simplified keys for backward compatibility with tests
-    stats["pdf_files"] = stats["directories"].get("pdf", {}).get("file_count", 0)
-    stats["figures"] = stats["directories"].get("figures", {}).get("file_count", 0)
-    stats["data_files"] = stats["directories"].get("data", {}).get("file_count", 0)
-
     return stats
 
 

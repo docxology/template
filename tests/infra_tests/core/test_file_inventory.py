@@ -138,13 +138,13 @@ class TestFileInventoryManager:
             assert figures_entries[0].path == figures_file
 
     def test_collect_output_files_root_level_files(self, tmp_path):
-        """Test collecting root-level files like project_combined.pdf."""
+        """Test collecting root-level files like template_code_project_combined.pdf."""
         # Create a temporary output directory
         output_dir = tmp_path / "output"
         output_dir.mkdir()
 
         # Create a root-level PDF file
-        pdf_file = output_dir / "project_combined.pdf"
+        pdf_file = output_dir / "template_code_project_combined.pdf"
         pdf_file.write_bytes(b"fake pdf content" * 100)  # ~1700 bytes
 
         manager = FileInventoryManager()

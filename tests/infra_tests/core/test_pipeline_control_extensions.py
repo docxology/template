@@ -632,6 +632,47 @@ def test_stage_artifact_manifest_records_hashes_and_contract_issues(tmp_path: Pa
     assert (project_dir / "output" / "reports" / "artifact_manifest.json").exists()
 
 
+def test_stage_artifact_manifest_accepts_symlinked_private_project_contracts(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    private_root = tmp_path / "private" / "active"
+    project_dir = private_root / "p"
+    linked_project = repo_root / "projects" / "p"
+    output_file = project_dir / "output" / "data" / "result.json"
+    output_file.parent.mkdir(parents=True)
+    linked_project.parent.mkdir(parents=True)
+    linked_project.symlink_to(project_dir, target_is_directory=True)
+    output_file.write_text('{"ok": true}\n', encoding="utf-8")
+
+    manifest = write_stage_artifact_manifest(
+        repo_root=repo_root,
+        project_dir=project_dir,
+        stage_num=4,
+        stage_name="Project Analysis",
+        contract=StageContract(output_artifacts=("projects/{project}/output/data/",)),
+    )
+    validation = validate_artifact_manifest(manifest, project_dir=project_dir)
+
+    assert [entry.contract_match for entry in manifest.entries] == [True]
+    assert validation.issues == ()
+
+
+def test_default_environment_setup_contract_allows_setup_hook_outputs() -> None:
+    pipeline_path = Path(__file__).resolve().parents[3] / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+    dag = PipelineDAG.from_yaml(pipeline_path)
+    setup = next(stage for stage in dag.stages if stage.name == "Environment Setup")
+
+    assert "projects/{project}/output/" in setup.contract.output_artifacts
+
+
+def test_default_test_stage_contracts_allow_generated_project_outputs() -> None:
+    pipeline_path = Path(__file__).resolve().parents[3] / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+    dag = PipelineDAG.from_yaml(pipeline_path)
+    test_stages = {stage.name: stage for stage in dag.stages if stage.name in {"Infrastructure Tests", "Project Tests"}}
+
+    assert test_stages["Infrastructure Tests"].contract.output_artifacts == ("projects/{project}/output/",)
+    assert test_stages["Project Tests"].contract.output_artifacts == ("projects/{project}/output/",)
+
+
 def test_stage_artifact_manifest_detects_changed_hash(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     project_dir = repo_root / "projects" / "p"

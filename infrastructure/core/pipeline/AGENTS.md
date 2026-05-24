@@ -28,6 +28,7 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 - `post_run_reporting.py` - post-run JSON/HTML/Markdown report generation
 - `hitl_cli.py` - non-interactive HITL CLI (`PipelineArgs`, `handle_hitl_command`)
 - `single_stage.py` - single-stage subprocess dispatch map
+- `stage_vocabulary.py` - canonical stage names/aliases from `pipeline.yaml` (shared with menu banners and eval grader)
 - `summary_formatters.py` - summary formatting
 - `summary_helpers.py` - summary helpers
 - `summary_models.py` - summary dataclasses

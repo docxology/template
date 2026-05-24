@@ -42,7 +42,7 @@ stages:
     failure_mode: hard fail
     contract:
       input_artifacts: ["pyproject.toml", "projects/{project}/"]
-      output_artifacts: ["projects/{project}/output/logs/"]
+      output_artifacts: ["projects/{project}/output/"]
       definition_of_done: "Interpreter, project directories, and required runtime paths are ready."
       failure_code: "ENVIRONMENT_SETUP_FAILED"
       retry_policy: 1
@@ -56,8 +56,8 @@ stages:
     failure_mode: configurable tolerance
     contract:
       input_artifacts: ["infrastructure/", "tests/infra_tests/"]
-      output_artifacts: ["projects/{project}/output/reports/"]
-      definition_of_done: "Focused pipeline-smoke infrastructure tests pass or report configured tolerance; full repo coverage remains an explicit verification command."
+      output_artifacts: ["projects/{project}/output/"]
+      definition_of_done: "Focused pipeline-smoke infrastructure tests pass or report configured tolerance; project fixtures may refresh generated output artifacts; full repo coverage remains an explicit verification command."
       failure_code: "INFRASTRUCTURE_TESTS_FAILED"
       retry_policy: 0
       rollback_to: "Environment Setup"
@@ -70,8 +70,8 @@ stages:
     failure_mode: configurable tolerance
     contract:
       input_artifacts: ["projects/{project}/src/", "projects/{project}/tests/"]
-      output_artifacts: ["projects/{project}/output/reports/"]
-      definition_of_done: "Project tests pass against real project behavior."
+      output_artifacts: ["projects/{project}/output/"]
+      definition_of_done: "Project tests pass against real project behavior and may refresh generated project artifacts exercised by the suite."
       failure_code: "PROJECT_TESTS_FAILED"
       retry_policy: 0
       gate: "experiment_method_design"

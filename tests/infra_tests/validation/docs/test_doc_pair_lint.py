@@ -51,7 +51,17 @@ def test_generated_and_local_paths_are_excluded() -> None:
     assert is_doc_pair_excluded_path(Path("projects/demo/src/demo.egg-info"))
     assert is_doc_pair_excluded_path(Path("projects/demo/output"))
     assert is_doc_pair_excluded_path(Path(".cursor/hooks/state"))
+    assert is_doc_pair_excluded_path(Path("docs/prompts/_skill-eval/latest/with_skill/outputs"))
     assert not is_doc_pair_excluded_path(Path(".github/ISSUE_TEMPLATE"))
+
+
+def test_find_doc_pair_issues_skips_skill_eval_workspace(tmp_path: Path) -> None:
+    """Nested _skill-eval harness dirs must not require README/AGENTS pairs."""
+    _write(tmp_path / "docs" / "README.md")
+    _write(tmp_path / "docs" / "AGENTS.md")
+    _write(tmp_path / "docs" / "prompts" / "_skill-eval" / "latest" / "with_skill" / "outputs" / "response.md")
+    issues = find_doc_pair_issues(tmp_path, roots=("docs",))
+    assert all("_skill-eval" not in str(issue.path) for issue in issues)
 
 
 def test_current_repo_has_complete_permanent_template_doc_pairs() -> None:

@@ -11,12 +11,14 @@ from __future__ import annotations
 import os
 
 
+from pathlib import Path
+
 from infrastructure.reporting.suite_runner import (
-    _is_internal_stack_line,
-    _passes_quiet_filter,
     _INTERNAL_STACK_PATTERNS,
     _SUMMARY_KEYWORDS,
     TestSuiteConfig,
+    _is_internal_stack_line,
+    _passes_quiet_filter,
     run_pytest_stream,
     run_test_suite,
 )
@@ -84,6 +86,10 @@ class TestPassesQuietFilter:
         """In quiet mode, dots are not passed through."""
         assert not _passes_quiet_filter(".", ".", quiet=True)
 
+    def test_quiet_coverage_line_passes(self):
+        """In quiet mode, coverage summary lines pass."""
+        assert _passes_quiet_filter("\n", "TOTAL coverage 80%\n", quiet=True)
+
 
 class TestInternalStackPatterns:
     """Verify the _INTERNAL_STACK_PATTERNS list and _SUMMARY_KEYWORDS."""
@@ -136,6 +142,50 @@ class TestRunPytestStream:
         )
         assert exit_code == 0
         assert "line1" in stdout
+
+
+class TestTestSuiteConfig:
+    """TestSuiteConfig defaults and overrides."""
+
+    def test_default_spinner_label(self):
+        config = TestSuiteConfig(
+            label="Infrastructure",
+            cmd=["pytest", "tests/"],
+            env={},
+            repo_root=Path("/tmp"),
+            coverage_json_paths=[],
+            coverage_threshold=60.0,
+            max_failures_env_var="MAX_INFRA_FAILURES",
+            max_failures_config_key="max_infra_failures",
+        )
+        assert config.spinner_label == "Running infrastructure tests"
+
+    def test_custom_spinner_label(self):
+        config = TestSuiteConfig(
+            label="Project",
+            cmd=["pytest"],
+            env={},
+            repo_root=Path("/tmp"),
+            coverage_json_paths=[],
+            coverage_threshold=90.0,
+            max_failures_env_var="MAX_PROJ_FAILURES",
+            max_failures_config_key="max_proj_failures",
+            spinner_label="Custom label",
+        )
+        assert config.spinner_label == "Custom label"
+
+    def test_quiet_default(self):
+        config = TestSuiteConfig(
+            label="Test",
+            cmd=[],
+            env={},
+            repo_root=Path("/tmp"),
+            coverage_json_paths=[],
+            coverage_threshold=0,
+            max_failures_env_var="",
+            max_failures_config_key="",
+        )
+        assert config.quiet is True
 
 
 class TestRunTestSuite:

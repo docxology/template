@@ -12,9 +12,10 @@ This is part of the infrastructure layer (generic, reusable validation).
 import re
 from pathlib import Path
 
-from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
+from infrastructure.core.exceptions import FileNotFoundError
 from infrastructure.core.logging import DiagnosticEvent, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.content.diagnostic_codes import (
     BibtexCode,
     MarkdownCode,
@@ -63,34 +64,6 @@ BIBTEX_KEY_PATTERN = re.compile(r"^@\w+\{\s*([^,\s}]+)\s*[,}]", re.MULTILINE)
 # final PDF (project documentation / preamble metadata). Skipped by the
 # render-time pitfall and citation checks to avoid false positives.
 NON_RENDERED_MANUSCRIPT_FILES: frozenset[str] = frozenset({"AGENTS.md", "README.md", "preamble.md"})
-
-
-def find_markdown_files(markdown_dir: str | Path) -> list[str]:
-    """Find all markdown files in the specified directory.
-
-    Args:
-        markdown_dir: Directory to search for markdown files
-
-    Returns:
-        List of full paths to markdown files, sorted by filename
-
-    Raises:
-        FileNotFoundError: If markdown_dir doesn't exist
-    """
-    markdown_dir = Path(markdown_dir)
-    if not markdown_dir.exists():
-        raise FileNotFoundError(
-            f"Markdown directory not found: {markdown_dir}",
-            context={"directory": str(markdown_dir)},
-        )
-
-    if not markdown_dir.is_dir():
-        raise NotADirectoryError(
-            f"Path is not a directory: {markdown_dir}",
-            context={"path": str(markdown_dir)},
-        )
-
-    return [str(p) for p in sorted(markdown_dir.glob("*.md"))]
 
 
 def collect_symbols(md_paths: list[str]) -> tuple[set[str], set[str]]:
@@ -667,7 +640,7 @@ def validate_markdown(
     if not markdown_dir.exists():
         raise FileNotFoundError(f"Markdown directory not found: {markdown_dir}")
 
-    md_paths = find_markdown_files(markdown_dir)
+    md_paths = [str(path) for path in discover_markdown_files(markdown_dir, scope="tree")]
     if not md_paths:
         return ([], 0)
 

@@ -2,6 +2,8 @@
 
 import json
 
+import pytest
+
 from infrastructure.reporting.report_builder import (
     _calculate_weighted_coverage,
     _aggregate_counts,
@@ -44,6 +46,36 @@ class TestCalculateWeightedCoverage:
 
 
 class TestAggregateCounts:
+    @pytest.mark.parametrize(
+        "results,expected",
+        [
+            (
+                [{"passed": 100, "failed": 5, "skipped": 3, "duration_seconds": 10.0}],
+                {"total_tests": 108, "total_passed": 100, "total_failed": 5, "total_skipped": 3},
+            ),
+            (
+                [
+                    {"passed": 50, "failed": 2, "skipped": 1, "duration_seconds": 5.0},
+                    {"passed": 30, "failed": 0, "skipped": 0, "duration_seconds": 3.0},
+                ],
+                {"total_passed": 80, "total_failed": 2, "total_duration_seconds": 8.0},
+            ),
+            (
+                [{"passed": 0, "failed": 0, "skipped": 0, "duration_seconds": 0.0}],
+                {"total_tests": 0, "pass_rate": 0},
+            ),
+        ],
+    )
+    def test_aggregate_counts_parametrized(self, results, expected):
+        agg = _aggregate_counts(results)
+        for key, value in expected.items():
+            if key == "pass_rate":
+                assert agg[key] == value
+            elif key == "total_duration_seconds":
+                assert agg[key] == value
+            else:
+                assert agg[key] == value
+
     def test_basic_aggregation(self):
         results = [
             {"passed": 10, "failed": 2, "skipped": 1, "duration_seconds": 5.0},

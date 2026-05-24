@@ -15,7 +15,7 @@ The Research Project Template follows a **thin orchestrator pattern** where all 
 
 ```mermaid
 flowchart TB
-    UI["User Interface<br/>run.sh → execute_pipeline.py → PipelineExecutor"]
+    UI["User Interface<br/>run.sh / secure_run.sh → infrastructure.orchestration"]
     ORCH["Orchestration Layer<br/>scripts/00_*.py … scripts/07_*.py → infrastructure<br/>projects/&lt;name&gt;/scripts/*.py → projects/&lt;name&gt;/src/"]
     LOGIC["Business Logic<br/>infrastructure/ (reusable) + projects/&lt;name&gt;/src/ (custom)"]
 
@@ -34,8 +34,9 @@ flowchart TB
 
 **Layer 1: Entry Points (Thin Orchestrators)**
 
-- **`run.sh`**: Bash menu system that delegates to Python orchestrators
-- **`execute_pipeline.py`**: Python pipeline coordinator using `PipelineExecutor`
+- **`run.sh` / `secure_run.sh`**: Bootstrap `uv`, then `exec uv run python -m infrastructure.orchestration` (interactive menu, pipeline, multi-project, and secure subcommands)
+- **`infrastructure.orchestration`**: `PipelineRunner` wrapping `PipelineExecutor`; menu rendering in `menu.py`
+- **`execute_pipeline.py`**: Alternate non-interactive pipeline entry using `PipelineExecutor` directly
 - **`execute_multi_project.py`**: Multi-project orchestration using `MultiProjectOrchestrator`
 - **Purpose**: User interface and high-level coordination only
 
@@ -55,21 +56,22 @@ flowchart TB
 
 ```mermaid
 graph TD
-    A[User] --> B[run.sh]
-    B --> C[execute_pipeline.py]
-    C --> D[PipelineExecutor]
-    D --> E[scripts/00_setup_environment.py]
-    D --> F[scripts/01_run_tests.py]
-    D --> G[scripts/02_run_analysis.py]
-    D --> H[scripts/03_render_pdf.py]
+    A[User] --> B[run.sh or secure_run.sh]
+    B --> C[infrastructure.orchestration]
+    C --> D[PipelineRunner]
+    D --> E[PipelineExecutor]
+    E --> F[scripts/00_setup_environment.py]
+    E --> G[scripts/01_run_tests.py]
+    E --> H[scripts/02_run_analysis.py]
+    E --> I[scripts/03_render_pdf.py]
 
-    E --> I[infrastructure.core.runtime.environment]
-    F --> J[infrastructure.reporting.pytest_output_parser]
-    G --> K[infrastructure.core.script_discovery]
-    H --> L[infrastructure.rendering.RenderManager]
+    F --> J[infrastructure.core.runtime.environment]
+    G --> K[infrastructure.reporting.pipeline_test_runner]
+    H --> L[infrastructure.core.script_discovery]
+    I --> M[infrastructure.rendering]
 
-    K --> M["projects/{name}/scripts/*.py"]
-    M --> N["projects/{name}/src/"]
+    L --> N["projects/{name}/scripts/*.py"]
+    N --> O["projects/{name}/src/"]
 ```
 
 ### Benefits
@@ -153,7 +155,38 @@ uv run scripts/execute_multi_project.py
 
 ## Entry Point 1: Manuscript Operations (`run.sh`)
 
-`run.sh` provides an interactive menu for all manuscript pipeline operations:
+`run.sh` is a thin bootstrap shell: it sources `scripts/shell_bootstrap.sh`,
+then `exec uv run python -m infrastructure.orchestration`. Bare `./run.sh`
+opens the interactive menu; `uv run` syncs the workspace on demand. Invocations
+with pipeline flags also run `uv sync` when `.venv` is missing.
+
+For pipeline + steganography, use `./secure_run.sh --project <name>` or
+`./run.sh --secure-run --project <name>` (see
+[`docs/security/secure_execution.md`](security/secure_execution.md)).
+
+### `shell_bootstrap.sh` (shared bootstrap)
+
+Both [`run.sh`](../run.sh) and [`secure_run.sh`](../secure_run.sh) source
+[`scripts/shell_bootstrap.sh`](../scripts/shell_bootstrap.sh) only — not
+[`scripts/bash_utils.sh`](../scripts/bash_utils.sh) (operational backup/health scripts).
+
+| Helper | Role |
+| --- | --- |
+| `setup_orchestration_sandbox_env` | Sets `MPLCONFIGDIR` and `UV_CACHE_DIR` under `$TMPDIR` for headless/cache-safe runs |
+| `ensure_uv` | Locates or installs `uv` (quiet; no colored logging) |
+| `print_uv_install_instructions` | Prints install guidance when `uv` is unavailable |
+
+**`run.sh`-specific behaviour:**
+
+- Internal `PIPELINE_MODE` (bash-local, **not exported**) triggers conditional `uv sync` when `.venv` is missing on pipeline-capable flags.
+- **Argv shaping:** `--pipeline` / `--all-projects` → prepend `pipeline` subcommand; `--secure-run` → prepend `secure`; other flags forward verbatim to `python -m infrastructure.orchestration`.
+- **`FEP_LEAN_GAUSS_WORKFLOWS`:** defaults to `1`; `--no-lean-workflows` sets it to `0`.
+
+**`secure_run.sh`-specific behaviour:**
+
+- Always runs `uv sync --group steganography` before exec (except `--help` fast path).
+- No args → exit **2** with quick-start stderr; `--help` skips stego sync.
+- Forwards all flags (including `--deterministic`) to the Python `secure` subcommand.
 
 ```bash
 ./run.sh
@@ -391,6 +424,8 @@ The table above lists pipeline-position indices (0-based, as the executor sees t
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
 | `./run.sh --pipeline` | Full DAG (**10** stages in default `pipeline.yaml`) | Optional | Manuscript pipeline with LLM stages present in the graph |
+| `./run.sh --secure-run` | Same as `./secure_run.sh` via argv shaping | Optional | Secure subcommand from the main thin shell |
+| `./secure_run.sh` | Full/core DAG + steganography | Optional | Dedicated secure entry; always `uv sync --group steganography` |
 | `uv run python scripts/execute_pipeline.py --project {name} --core-only` | Core DAG (**8** stages; LLM stages omitted) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
@@ -440,12 +475,12 @@ uv run scripts/06_llm_review.py --translations-only # Translations only
 
 ## Environment Variables
 
-The scripts automatically set:
+Root entry shells (`run.sh`, `secure_run.sh`) do **not** export `PROJECT_ROOT` or
+`PYTHONPATH`. Pipeline stages set runtime paths via
+[`set_environment_variables()`](../infrastructure/core/runtime/_packages.py)
+and the test runner adds project `src/` when needed.
 
-- `PROJECT_ROOT`: Repository root directory
-- `PYTHONPATH`: Includes root, infrastructure, and `projects/{name}/src`
-
-You can override by setting before running:
+You can override logging or render toggles before running:
 
 ```bash
 export LOG_LEVEL=0  # Enable debug logging

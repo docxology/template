@@ -181,7 +181,7 @@ def output_with_pdf(output_directory_structure, pdf_file_fixture):
     output_dir = output_directory_structure
 
     # Copy the PDF to the correct location
-    pdf_dest = output_dir / "pdf" / "project_combined.pdf"
+    pdf_dest = output_dir / "pdf" / "template_code_project_combined.pdf"
     pdf_dest.write_bytes(pdf_file_fixture.read_bytes())
 
     return output_dir

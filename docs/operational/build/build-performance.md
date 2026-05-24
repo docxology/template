@@ -127,7 +127,7 @@ Warning--I didn't find a database entry for "optimization2022"
 12. `99_references.pdf` ✅
 
 **Combined Documents:**
-13. `project_combined.pdf` ✅ **(Main output)**
+13. `{project}_combined.pdf` ✅ **(Main output — e.g. `template_code_project_combined.pdf`)**
 
 ### Other Formats
 

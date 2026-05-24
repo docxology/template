@@ -121,6 +121,51 @@ class TestInputSanitizer:
         with pytest.raises(SecurityError, match="Directory traversal detected"):
             sanitizer.validate_file_input(Path("../../../etc/passwd"))
 
+    def test_validate_file_input_missing_file(self):
+        sanitizer = InputSanitizer()
+        with pytest.raises(SecurityError, match="not found"):
+            sanitizer.validate_file_input(Path("nonexistent_file.txt"))
+
+    def test_validate_file_input_valid_relative_path(self, tmp_path):
+        import os
+
+        sanitizer = InputSanitizer()
+        test_file = tmp_path / "test.txt"
+        test_file.write_text("content")
+        old_cwd = os.getcwd()
+        try:
+            os.chdir(tmp_path)
+            sanitizer.validate_file_input(Path("test.txt"))
+        finally:
+            os.chdir(old_cwd)
+
+    def test_validate_file_input_wrong_extension(self, tmp_path):
+        import os
+
+        sanitizer = InputSanitizer()
+        test_file = tmp_path / "test.exe"
+        test_file.write_text("content")
+        old_cwd = os.getcwd()
+        try:
+            os.chdir(tmp_path)
+            with pytest.raises(SecurityError, match="extension"):
+                sanitizer.validate_file_input(Path("test.exe"), allowed_extensions=[".txt", ".md"])
+        finally:
+            os.chdir(old_cwd)
+
+    def test_validate_file_input_small_file_passes(self, tmp_path):
+        import os
+
+        sanitizer = InputSanitizer()
+        test_file = tmp_path / "big.txt"
+        test_file.write_text("small content")
+        old_cwd = os.getcwd()
+        try:
+            os.chdir(tmp_path)
+            sanitizer.validate_file_input(Path("big.txt"))
+        finally:
+            os.chdir(old_cwd)
+
     def test_validate_file_input_checks_extension(self, tmp_path):
         """Test that file extension checking works."""
         sanitizer = InputSanitizer()
@@ -158,6 +203,16 @@ class TestInputSanitizer:
         result = sanitizer.sanitize_filename("path/to/file.txt")
         assert "/" not in result
         assert result == "path_to_file.txt"
+
+    def test_sanitize_filename_backslash(self):
+        sanitizer = InputSanitizer()
+        result = sanitizer.sanitize_filename("path\\to\\file.txt")
+        assert "\\" not in result
+
+    def test_sanitize_filename_only_special_chars(self):
+        sanitizer = InputSanitizer()
+        result = sanitizer.sanitize_filename("\x00\x01\x02")
+        assert result == "unnamed_file" or len(result) > 0
 
     def test_sanitize_filename_removes_dangerous_characters(self):
         """Test that dangerous characters are removed."""
@@ -269,6 +324,10 @@ class TestGlobalFunctions:
         result = sanitize_llm_input("Hello, world!")
         assert "Hello" in result
         assert "world" in result
+
+    def test_sanitize_llm_input_strips_control_chars(self):
+        result = sanitize_llm_input("Hello\x00World")
+        assert "\x00" not in result
 
     def test_sanitize_llm_input_dangerous(self):
         """Test that dangerous input is rejected."""

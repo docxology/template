@@ -53,7 +53,6 @@ __all__ = [
 def create_barcode_strip_overlay(
     page_width: float,
     page_height: float,
-    qr_data: str,
     code128_data: str,
     strip_height: float = 68.0,
     title: str = "",
@@ -80,8 +79,6 @@ def create_barcode_strip_overlay(
     Args:
         page_width: Target page width in points.
         page_height: Target page height in points.
-        qr_data: Accepted for backward compatibility; not used in the current implementation.
-            Specific QR payloads are derived from title, authors, hashes, etc.
         code128_data: Data for Code128 barcode.
         strip_height: Height of the barcode strip area in points.
         title: Document title for QR content.

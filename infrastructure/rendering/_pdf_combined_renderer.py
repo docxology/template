@@ -35,8 +35,8 @@ from infrastructure.rendering.latex_texttt import (
     make_known_literals_breakable,
     make_long_texttt_breakable,
 )
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.content.markdown_validator import (
-    find_markdown_files,
     validate_citations,
     validate_pandoc_pitfalls,
 )
@@ -638,7 +638,7 @@ def prevalidate_source_markdown(
 
     Args:
         source: Either a manuscript directory (``Path``) — scanned with
-            :func:`find_markdown_files` — or an explicit iterable of
+            :func:`discover_markdown_files` (``scope='tree'``) — or an explicit iterable of
             markdown file paths.
         repo_root: Repository root for relative-path display in error
             messages. Defaults to a best-effort guess based on the first
@@ -653,7 +653,7 @@ def prevalidate_source_markdown(
     if isinstance(source, Path):
         if not source.exists():
             return
-        paths: list[str] = find_markdown_files(source)
+        paths: list[str] = [str(path) for path in discover_markdown_files(source, scope="tree")]
         anchor_dir = source
     else:
         paths = [str(p) for p in source]

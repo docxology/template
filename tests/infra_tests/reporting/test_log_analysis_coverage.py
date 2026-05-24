@@ -4,7 +4,6 @@ import pytest
 
 from infrastructure.reporting.log_analysis import (
     _tally_log_level_counts,
-    _collect_log_statistics,
     generate_log_summary,
 )
 
@@ -86,7 +85,7 @@ class TestCollectLogStatistics:
     def test_backward_compat(self, tmp_path):
         log = tmp_path / "test.log"
         log.write_text("INFO ready\n")
-        result = _collect_log_statistics(log)
+        result = _tally_log_level_counts(log)
         assert result["counts"]["info"] == 1
 
 
