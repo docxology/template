@@ -40,7 +40,7 @@ Project-specific scripts in `projects/{name}/scripts/` are thin orchestrators th
 - Orchestrate domain-specific workflows
 - Handle I/O and visualization
 
-**Example**: `projects/{name}/scripts/example_figure.py` imports `add_numbers()` from `projects/{name}/src/example.py` for computation.
+**Example**: `projects/{name}/scripts/optimization_analysis.py` imports from `projects/{name}/src/` for computation (code exemplar).
 
 ### 2. **Documentation**
 
@@ -100,7 +100,7 @@ save_test_report_to_files(report, output_dir)
 ### 2. **Project Script Import Pattern (projects/{name}/scripts/)**
 
 ```python
-# projects/{name}/scripts/example_figure.py - Project orchestrator
+# projects/{name}/scripts/optimization_analysis.py - Project orchestrator (code exemplar)
 from projects.template_code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
 from infrastructure.documentation.figure_manager import FigureManager  # From infrastructure/
 
@@ -171,7 +171,7 @@ test_results = parse_pytest_output(stdout, stderr, exit_code)
 ### ✅ **Correct: Project Script Using projects/{name}/src/**
 
 ```python
-# projects/{name}/scripts/example_figure.py - Project orchestrator
+# projects/{name}/scripts/optimization_analysis.py - Project orchestrator (code exemplar)
 from projects.template_code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
 
 # Use projects/{name}/src/ methods for computation
@@ -193,6 +193,24 @@ def parse_test_output(stdout, stderr, exit_code):
 from infrastructure.reporting.pytest_output_parser import parse_pytest_output
 ```
 
+## Enforcement (2026-05)
+
+Automated gates prevent regression into fat orchestrators:
+
+| Gate | Location | Scope | Thresholds |
+| --- | --- | --- | --- |
+| **Line count** | `infrastructure/validation/line_count.py` via `scripts/gates/module_line_count_check.py` | `infrastructure/`, `scripts/`, `projects/*/scripts/` | infra/scripts: warn 800 / fail 950; project scripts: warn 150 / fail 250 |
+| **Thin orchestrator drift** | `infrastructure/project/drift/orchestrator.py` via `scripts/check_template_drift.py` | `scripts/**/*.py`, exemplar `projects/*/scripts/` | ERROR when ≥200 lines + ≥3 non-trivial functions or embedded numpy/matplotlib/scipy blocks |
+| **Repo scanner advisory** | `infrastructure/validation/repo/scanner.py` | whole repo | warns when scripts lack `infrastructure/` or `src/` imports |
+
+Run locally:
+
+```bash
+uv run python scripts/gates/module_line_count_check.py
+uv run python scripts/check_template_drift.py --strict
+uv run python -m infrastructure.core.health
+```
+
 ## Current Status
 
 ### ✅ **Implemented**
@@ -205,6 +223,7 @@ from infrastructure.reporting.pytest_output_parser import parse_pytest_output
 - [x] Build system validation
 - [x] Figure generation with projects/{name}/src/ integration
 - [x] PDF generation with infrastructure rendering modules
+- [x] Line-count and drift checks wired into template drift + health gates
 
 ### 🔄 **Working Pipeline**
 

@@ -1,4 +1,4 @@
-"""Phase 3: Completeness Analysis for documentation scanning."""
+"""Completeness analysis for documentation scanning."""
 
 import re
 from collections import defaultdict
@@ -210,12 +210,12 @@ def group_gaps_by_severity(gaps: list[CompletenessGap]) -> dict[str, int]:
     return dict(severities)
 
 
-def run_completeness_phase(
+def analyze_documentation_completeness(
     repo_root: Path,
     documentation_files: list[DocumentationFile],
     config_files: dict[str, Path],
 ) -> tuple[dict[str, Any], list[CompletenessGap]]:
-    """Run Phase 3: Completeness Analysis.
+    """Analyze documentation completeness gaps.
 
     Args:
         repo_root: Root path of the repository
@@ -225,7 +225,7 @@ def run_completeness_phase(
     Returns:
         Dictionary with completeness report
     """
-    logger.info("Phase 3: Completeness Analysis...")
+    logger.info("Completeness analysis...")
 
     gaps = []
 

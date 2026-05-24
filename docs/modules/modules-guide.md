@@ -114,20 +114,20 @@ def comprehensive_validation(output_dir: Path, manuscript_files: list[Path]) -> 
 
 ## Module Dependencies
 
-| Module | Dependencies | Test Coverage |
-|--------|--------------|---------------|
-| Core | pathlib, logging | 83% |
-| Documentation | pathlib | 80% |
-| Validation | hashlib, pathlib | 81% |
-| Publishing | requests, bibtexparser | 86% |
-| Scientific | numpy, time, psutil | 88% |
-| LLM | requests, ollama | 91% |
-| Rendering | pandoc, xelatex | 91% |
-| Reporting | json, pathlib | 75% |
-| Project | pathlib | 85% |
-| Steganography | PIL/Pillow, qrcode, pypdf | 80% |
-| Skills | pathlib | 85% |
-| Telemetry | psutil, json, pathlib | 84% |
+| Module | Dependencies | Measured coverage |
+|--------|--------------|-------------------|
+| Core | pathlib, logging | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Documentation | pathlib | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Validation | hashlib, pathlib | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Publishing | requests, bibtexparser | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Scientific | numpy, time, psutil | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| LLM | requests, ollama | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Rendering | pandoc, xelatex | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Reporting | json, pathlib | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Project | pathlib | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Steganography | PIL/Pillow, qrcode, pypdf | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Skills | pathlib | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
+| Telemetry | psutil, json, pathlib | See [`coverage-gaps.md`](../development/coverage-gaps.md) |
 
 All modules work independently or together with minimal coupling.
 

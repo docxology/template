@@ -11,7 +11,7 @@ from infrastructure.validation.docs.completeness import (
     check_cross_reference_completeness,
     group_gaps_by_category,
     group_gaps_by_severity,
-    run_completeness_phase,
+    analyze_documentation_completeness,
 )
 from infrastructure.validation.docs.models import CompletenessGap, DocumentationFile
 
@@ -234,13 +234,13 @@ class TestGroupGaps:
 
 
 # ---------------------------------------------------------------------------
-# run_completeness_phase (orchestrator)
+# analyze_documentation_completeness (orchestrator)
 # ---------------------------------------------------------------------------
 
 
 class TestRunCompletenessPhase:
     def test_basic_run(self, tmp_path):
-        report, gaps = run_completeness_phase(tmp_path, [], {})
+        report, gaps = analyze_documentation_completeness(tmp_path, [], {})
         assert "total_gaps" in report
         assert "by_category" in report
         assert "severity_breakdown" in report
@@ -248,7 +248,7 @@ class TestRunCompletenessPhase:
 
     def test_finds_gaps(self, tmp_path):
         # No troubleshooting, no workflow, no onboarding
-        report, gaps = run_completeness_phase(tmp_path, [], {})
+        report, gaps = analyze_documentation_completeness(tmp_path, [], {})
         assert report["total_gaps"] >= 3  # troubleshooting + workflow + onboarding
 
     def test_documented_reduces_gaps(self, tmp_path):
@@ -257,7 +257,7 @@ class TestRunCompletenessPhase:
             _make_doc("docs/WORKFLOW.md"),
             _make_doc("docs/GETTING_STARTED.md"),
         ]
-        report, gaps = run_completeness_phase(tmp_path, docs, {})
+        report, gaps = analyze_documentation_completeness(tmp_path, docs, {})
         # No troubleshooting/workflow/onboarding gaps
         categories = {g.category for g in gaps}
         assert "troubleshooting" not in categories
@@ -268,7 +268,7 @@ class TestRunCompletenessPhase:
         src = tmp_path / "src"
         src.mkdir()
         (src / "secret.py").write_text("x = 1")
-        report, gaps = run_completeness_phase(tmp_path, [], {})
+        report, gaps = analyze_documentation_completeness(tmp_path, [], {})
         feature_gaps = [g for g in gaps if g.category == "features"]
         assert len(feature_gaps) == 1
         assert feature_gaps[0].item == "secret"

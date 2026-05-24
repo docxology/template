@@ -47,7 +47,7 @@ Optimal convergence occurs when $\alpha = \frac{2}{\lambda_{\min} + \lambda_{\ma
 
 ### Step Size Analysis
 
-Step sizes are not chosen ad hoc in the manuscript: they are read from `experiment.step_sizes` in `manuscript/config.yaml` and passed through `run_convergence_experiment()` in `optimization_analysis.py`. The active grid for this build is:
+Step sizes are not chosen ad hoc in the manuscript: they are read from `experiment.step_sizes` in `manuscript/config.yaml` and passed through `run_convergence_experiment()` in `src/analysis.py` (entry: `scripts/optimization_analysis.py`). The active grid for this build is:
 
 {{CONFIG_STEP_SIZES_BULLETS}}
 

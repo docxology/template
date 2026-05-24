@@ -27,7 +27,7 @@ flowchart TB
     LINT --> DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
     VNM --> TI[test-infra<br/>ubuntu+macos × py310–312<br/>≥ 60% coverage]
-    VNM --> TP[test-project<br/>01_run_tests.py all-projects<br/>≥ 90% coverage]
+    VNM --> TP[test-project<br/>01_run_tests.py all-projects<br/>≥ 75% union coverage]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
     TI --> PERF[performance<br/>import time ≤ 5 s]
     TP --> PERF
@@ -52,7 +52,8 @@ flowchart TB
 | `check-all-exports` | zero violations |
 | No-mocks policy | zero mock usage |
 | Infrastructure coverage | ≥ 60% |
-| Project coverage | ≥ 90% |
+| Per-project coverage (standalone) | ≥ 90% |
+| Combined-union all-projects coverage | ≥ 75% |
 | pip-audit | blocking (ignore IDs from `.github/pip-audit-ignore.txt`; retries in CI) |
 | Bandit MEDIUM+ (`bandit.yaml`) | zero findings |
 | Docs lint | mermaid + cross-links + consistency + doc-pair coverage clean |

@@ -83,7 +83,7 @@ Final PDF: `projects/template_code_project/output/pdf/template_code_project_comb
 |---|---|
 | Run tests | `uv run pytest projects/template_code_project/tests/ -v` |
 | Run analysis | `uv run python projects/template_code_project/scripts/optimization_analysis.py` |
-| Hydrate manuscript variables | `uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py` |
+| Hydrate manuscript variables | `uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py` (strict; requires analysis CSV; add `--allow-draft` for early drafts) |
 | Render PDF | `uv run python scripts/03_render_pdf.py --project template_code_project` |
 | Copy final deliverables | `uv run python scripts/05_copy_outputs.py --project template_code_project` |
 | Clean outputs | `rm -rf projects/template_code_project/output/` |

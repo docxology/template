@@ -1,4 +1,4 @@
-"""Phase 2: Accuracy Verification for documentation scanning."""
+"""Accuracy verification for documentation scanning."""
 
 import re
 from pathlib import Path
@@ -340,10 +340,10 @@ def check_terminology(md_files: list[Path], repo_root: Path) -> list[ScanAccurac
     return issues
 
 
-def run_accuracy_phase(
+def verify_documentation_accuracy(
     md_files: list[Path], repo_root: Path, config_files: dict[str, Path]
 ) -> tuple[dict[str, Any], list[LinkIssue], list[ScanAccuracyIssue], dict[str, set[str]]]:
-    """Run Phase 2: Accuracy Verification.
+    """Verify documentation accuracy (links, commands, paths, terminology).
 
     Args:
         md_files: List of markdown files to check
@@ -353,7 +353,7 @@ def run_accuracy_phase(
     Returns:
         Tuple of (accuracy_report, link_issues, accuracy_issues, all_headings)
     """
-    logger.info("Phase 2: Accuracy Verification...")
+    logger.info("Accuracy verification...")
 
     # Collect headings for anchor validation
     all_headings: dict[str, set[str]] = {}

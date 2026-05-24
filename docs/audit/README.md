@@ -17,7 +17,8 @@ the report date suffixed makes the chronology explicit.
 | Linter | Command | Surface |
 |---|---|---|
 | Repo-wide doc linter | `uv run python scripts/lint_docs.py` | mermaid block parsing, cross-link integrity, sibling-doc consistency, AGENTS.md/README.md pair presence (179 mermaid blocks + every markdown link checked) |
-| Template drift checker | `uv run python scripts/check_template_drift.py` | 9 detectors on both exemplars: function-name drift, test-class drift, `__all__` doc drift, coverage-floor drift, dead links, oversize `src/*.py`, blanket `except`, mocks in tests, canonical-file presence |
+| Template drift checker | `uv run python scripts/check_template_drift.py` | 9 per-exemplar detectors + 2 repo-level checks (`repo_docs_hardcoded_counts`, thin-orchestrator script AST/line-count on root `scripts/` and `projects/*/scripts/`) |
+| Documentation verification checks | `DocumentationScanner.run_verification_checks()` in `infrastructure/validation/docs/scanner.py` | Delegates to `run_verification_checks()` — `run_docs_lint`, `validate_markdown`, `verify_commands`, `detect_markdown_link_cycles()` — see [`infrastructure/validation/docs/AGENTS.md`](../../infrastructure/validation/docs/AGENTS.md) |
 | Filepath audit (on-demand snapshot) | `uv run python scripts/audit_filepaths.py --output docs/audit/filepath-audit-report-$(date +%Y-%m-%d).md` | one-off broken-reference scan; archive the result rather than keep in top-level |
 
 ## Archived snapshots

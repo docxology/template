@@ -87,11 +87,12 @@ viable project.
 | `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |
 | `tests/conftest.py` | REQUIRED | Pins `MPLBACKEND=Agg` + `src/` `sys.path`; without it pytest cannot collect |
 | `scripts/optimization_analysis.py` | REQUIRED | Pipeline stage 4 entry point; PDF stage depends on its outputs |
-| `scripts/z_generate_manuscript_variables.py` | REQUIRED | Hydrates `{{TOKEN}}`s; PDF stage reads `output/manuscript/*.md` it writes |
+| `scripts/z_generate_manuscript_variables.py` | REQUIRED | Hydrates `{{TOKEN}}`s; default strict mode requires `output/data/optimization_results.csv` (`--allow-draft` for early drafts); PDF stage reads `output/manuscript/*.md` it writes |
 | `scripts/build_dashboard.py` | REQUIRED | Pipeline reads `output/web/dashboard.html` |
 | `scripts/generate_api_docs.py` | AESTHETIC | Auxiliary docs generator; smoke-tested by `tests/test_scripts_smoke.py`; pipeline does not consume its output |
 | `scripts/00_preflight.py` | AESTHETIC | Emits a warning before PDF render; smoke-tested by `tests/test_scripts_smoke.py`; pipeline still runs without it |
 | `tests/test_scripts_smoke.py` | AESTHETIC | Subprocess smoke for auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
+| `tests/test_documentation.py` | AESTHETIC | Unit tests for `documentation.py` API reference helpers |
 | `manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering.pdf_renderer`; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Pandoc reads token-substituted copies during PDF stage |
 | `manuscript/references.bib` | REQUIRED | Pandoc citeproc reads it during PDF stage |

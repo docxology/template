@@ -30,9 +30,9 @@ combined PDF fails" is the signature of this missing dependency. See
 
 ## The Self-Referential Flow
 
-The pipeline has four phases. Each phase must complete before the next begins.
+The pipeline has four steps. Each step must complete before the next begins.
 
-### Phase 1 — Run Analysis
+### Analysis
 
 **Script**: `scripts/optimization_analysis.py` (from repository root)
 
@@ -59,7 +59,7 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 | `dashboard.html` | `output/web/` | Plotly interactive dashboard (`build_dashboard.py`) |
 | `optimization_metadata.json` | `output/citations/` | DOI, author, keyword metadata for citation tools |
 
-### Phase 2 — Generate Manuscript Variables
+### Manuscript variables
 
 **Script**: `scripts/z_generate_manuscript_variables.py` (thin orchestrator; logic lives in `src/manuscript_variables.py`)
 
@@ -70,15 +70,17 @@ uv run python projects/template_code_project/scripts/z_generate_manuscript_varia
 
 **Inputs**: `manuscript/config.yaml` + `output/data/optimization_results.csv` + `output/reports/*.json`
 
-**What it does**: Calls `src/manuscript_variables.py::generate_variables()` to compute all token values, then calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` to write substituted copies of `manuscript/*.md` to `output/manuscript/`. It also writes the full mapping to `output/data/manuscript_variables.json`.
+**What it does**: Calls `src/manuscript_variables.py::generate_variables(..., require_analysis_outputs=True)` (default) to compute all token values, then calls `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` to write substituted copies of `manuscript/*.md` to `output/manuscript/`. It also writes the full mapping to `output/data/manuscript_variables.json`.
 
-**Critical**: ALL `{{VARIABLE}}` tokens must resolve to non-empty strings before Phase 3. If any token is unresolved, the literal `{{TOKEN_NAME}}` string will appear in the rendered PDF.
+**Strict default**: Fails with `FileNotFoundError` when `output/data/optimization_results.csv` is missing. Use `--allow-draft` only for intentional early drafts that may emit `"N/A"` for result-derived tokens.
+
+**Critical**: ALL `{{VARIABLE}}` tokens must resolve to non-empty strings before PDF render. If any token is unresolved, the literal `{{TOKEN_NAME}}` string will appear in the rendered PDF.
 
 **Outputs**:
 - `output/manuscript/*.md` — substituted copies of all 8 manuscript sections
 - `output/data/manuscript_variables.json` — complete `{ "TOKEN": "value" }` mapping
 
-### Phase 3 — Render PDF
+### PDF render
 
 **Script**: `scripts/03_render_pdf.py` (at repository root, **not** inside `projects/`)
 
@@ -104,7 +106,7 @@ uv run python scripts/03_render_pdf.py --project template_code_project
 - `output/slides/` — Per-section Beamer slide PDFs (one per manuscript section)
 - `output/web/` — HTML versions of each section
 
-### Phase 4 — Copy Final Deliverables
+### Copy deliverables
 
 **Script**: `scripts/05_copy_outputs.py` (at repository root)
 
@@ -133,14 +135,14 @@ uv run python scripts/05_copy_outputs.py --project template_code_project
 
 **Symptom**: The rendered PDF contains literal `{{TOKEN_NAME}}` text.
 
-**Cause**: Phase 2 (`scripts/z_generate_manuscript_variables.py`) did not run, failed silently, or the token is not defined in `src/manuscript_variables.py::generate_variables()`.
+**Cause**: Manuscript variables (`scripts/z_generate_manuscript_variables.py`) did not run, failed silently, or the token is not defined in `src/manuscript_variables.py::generate_variables()`.
 
 **Fix**:
 ```bash
 # Check whether output/data/manuscript_variables.json exists
 ls projects/template_code_project/output/data/manuscript_variables.json
 
-# Re-run Phase 2
+# Re-run manuscript variables
 uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
 
 # Detect remaining unresolved tokens
@@ -151,7 +153,7 @@ grep -r "{{" projects/template_code_project/output/manuscript/ | grep -v ".json"
 
 **Symptom**: PDF has a broken image placeholder or missing figure reference.
 
-**Cause**: Phase 1 (`optimization_analysis.py`) failed to generate one or more figures.
+**Cause**: Analysis (`optimization_analysis.py`) failed to generate one or more figures.
 
 **Fix**:
 ```bash

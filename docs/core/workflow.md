@@ -163,7 +163,7 @@ coverage report
 uv run pytest
 
 # Generate figures and data
-uv run python projects/template_code_project/scripts/example_figure.py
+uv run python projects/template_code_project/scripts/optimization_analysis.py
 uv run python scripts/02_run_analysis.py --project template_code_project
 
 # Validate markdown integrity
@@ -284,7 +284,7 @@ uv sync
 uv run pytest projects/template_code_project/tests/ --cov=projects.template_code_project.src --cov-report=term-missing
 
 # Generate figures
-uv run python projects/template_code_project/scripts/example_figure.py
+uv run python projects/template_code_project/scripts/optimization_analysis.py
 uv run python scripts/02_run_analysis.py --project template_code_project
 
 # Validate markdown
@@ -384,7 +384,7 @@ uv run pytest --cov=src --cov-report=term-missing
 uv run python -m infrastructure.validation.cli markdown projects/template_code_project/manuscript/
 
 # Regenerate specific figures
-uv run python projects/template_code_project/scripts/example_figure.py
+uv run python projects/template_code_project/scripts/optimization_analysis.py
 
 # Check test coverage gaps
 coverage report -m

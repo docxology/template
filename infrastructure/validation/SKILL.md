@@ -147,15 +147,15 @@ Comprehensive scanning of documentation for accuracy, completeness, and quality:
 
 ```python
 from infrastructure.validation.docs.scanner import DocumentationScanner
-from infrastructure.validation.docs.accuracy import run_accuracy_phase
-from infrastructure.validation.docs.completeness import run_completeness_phase
+from infrastructure.validation.docs.accuracy import verify_documentation_accuracy
+from infrastructure.validation.docs.completeness import analyze_documentation_completeness
 
 scanner = DocumentationScanner(repo_root)
-inventory = scanner.phase1_discovery()
-accuracy_report, link_issues, accuracy_issues, headings = run_accuracy_phase(
+inventory = scanner.discover_inventory()
+accuracy_report, link_issues, accuracy_issues, headings = verify_documentation_accuracy(
     md_files, repo_root, config_files
 )
-completeness_report, gaps = run_completeness_phase(repo_root, documentation_files, config_files)
+completeness_report, gaps = analyze_documentation_completeness(repo_root, documentation_files, config_files)
 ```
 
 ## Repository Scanning (`repo/scanner.py`)

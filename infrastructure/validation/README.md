@@ -524,15 +524,16 @@ validation:
 
 ```bash
 # Run all validation tests
-uv run pytest tests/infra_tests/test_validation/ -v
+uv run pytest tests/infra_tests/validation/ -v
 
 # Test specific validator
-uv run pytest tests/infra_tests/test_validation/test_pdf_validator.py -v
-uv run pytest tests/infra_tests/test_validation/test_markdown_validator.py -v
-uv run pytest tests/infra_tests/test_validation/test_integrity.py -v
+uv run pytest tests/infra_tests/validation/test_pdf_validator.py -v
+uv run pytest tests/infra_tests/validation/test_markdown_validator.py -v
+uv run pytest tests/infra_tests/validation/test_integrity.py -v
+uv run pytest tests/infra_tests/validation/test_security_gate.py -v
 
 # Test with coverage
-uv run pytest tests/infra_tests/test_validation/ --cov=infrastructure.validation --cov-report=html
+uv run pytest tests/infra_tests/validation/ --cov=infrastructure.validation --cov-report=html
 
 # Integration tests
 uv run pytest tests/integration/test_validation_pipeline.py -v

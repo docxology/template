@@ -38,9 +38,10 @@ state these explicitly; cross-referenced here for the impatient:
 
 ## Verify your fork is honest — the drift checker
 
-The template ships a 9-detector drift checker at
-[`scripts/check_template_drift.py`](../../scripts/check_template_drift.py)
-with 20 unit tests at
+The template ships a drift checker at
+[`scripts/check_template_drift.py`](../../scripts/check_template_drift.py):
+**9 detectors per exemplar** plus **2 repo-level checks** (hard-coded doc
+counts and thin-orchestrator script enforcement). Unit tests at
 [`tests/infra_tests/test_check_template_drift.py`](../../tests/infra_tests/test_check_template_drift.py).
 While the checker today runs against the two canonical exemplars (not
 arbitrary forks), it is the right model for the kind of self-check your

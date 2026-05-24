@@ -3909,8 +3909,16 @@ Core module is imported by all other infrastructure modules for:
 - **Handle Corruption**: Gracefully handle corrupted checkpoints
 - **Clean Up**: Remove checkpoints after successful completion
 
+## Opt-in modules (not default pipeline)
+
+| Module | Entry | Notes |
+| --- | --- | --- |
+| [`cache_gate.py`](cache_gate.py) | `scripts/gates/gate_cache.py` | Hermes cache validation; requires `HERMES_HOME` |
+| [`source_improve.py`](source_improve.py) | `scripts/batch_cogsec_improve.py` | AST-based mechanical Python hygiene fixes |
+
 ## See Also
 
 - [README.md](README.md) - Quick reference guide
 - [`validation/`](../validation/) - Validation & quality assurance
+- [`../scripts/gates/AGENTS.md`](../../scripts/gates/AGENTS.md) - Opt-in gate scripts
 

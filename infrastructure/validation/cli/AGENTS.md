@@ -32,6 +32,7 @@ Useful as a fast pre-commit / interactive check that fires in milliseconds and
 fails the same way the renderer would, on the same source files.
 
 ```bash
+# When fep_lean is checked out locally under projects/:
 # Default discovery: union of manuscript/*.bib next to the markdown (omit --bib)
 uv run python -m infrastructure.validation.cli prerender projects/fep_lean/manuscript
 

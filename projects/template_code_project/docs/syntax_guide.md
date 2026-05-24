@@ -95,7 +95,7 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 
 **RESULT_* — Derived from `output/data/optimization_results.csv`**
 
-| Token | Description | Depends on Phase 1 |
+| Token | Description | Depends on analysis outputs |
 |---|---|---|
 | `{{RESULT_OPTIMUM_X}}` | Analytical optimum $x^* = A^{-1}b$ | No (computed from config) |
 | `{{RESULT_OPTIMUM_F}}` | Objective at optimum $f(x^*)$ | No (computed from config) |
@@ -185,7 +185,7 @@ To add a figure that appears in `03_results.md`:
 1. Add the generator function to `src/figures.py` and wire it through `src/analysis.py` (script entry: `scripts/optimization_analysis.py`).
 2. Add the Pandoc image reference in `03_results.md`:
    ```markdown
-   ![Caption text describing the figure.](../output/figures/new_figure.png){#fig:new_label}
+   ![Caption text describing the figure.](../output/figures/convergence_plot.png){#fig:new_label}
    ```
 3. Reference in text using Pandoc-crossref: `See [@fig:new_label].`
 4. Update `manuscript/AGENTS.md` to document the new figure label and generator.

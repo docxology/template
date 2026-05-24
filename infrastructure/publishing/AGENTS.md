@@ -46,6 +46,10 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 **readiness.py**
 - Publishing readiness checks
 
+**executable_bundle.py**
+- `bundle_project(project_name, repo_root, ...)` — container + lockfile + `manifest.json` for Stage 10
+- Wired from `scripts/08_executable_bundle.py` (opt-in pipeline stage, tag `bundle`)
+
 **cli.py** / **publish_cli.py**
 - CLI entry points for publishing workflows
 

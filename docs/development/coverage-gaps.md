@@ -4,20 +4,20 @@ This document tracks infrastructure test coverage gaps. Numbers are
 re-baselined from the live `pytest --cov` run; see "How this file is
 generated" below.
 
-**Last verified:** 2026-05-23 (baseline retained; re-run command below when collection errors are resolved)
+**Last verified:** 2026-05-24 (repo-wide docs pass)
 
 ## Current Coverage Status
 
-**Overall infrastructure coverage: 76.83 %** (gate: ≥ 60 %)
-**Tests:** 5246 passing, 8 skipped (LLM tests excluded via `--ignore=tests/infra_tests/llm`)
-**Total statements measured:** 22 400
+**Overall infrastructure coverage: 76.26 %** (gate: ≥ 60 %)
+**Tests:** 5817 passing, 4 skipped (LLM tests excluded via `--ignore=tests/infra_tests/llm`)
+**Total statements measured:** 31 211
 
 The numbers below come from:
 
 ```bash
-.venv/bin/python -m pytest tests/infra_tests/ \
+uv run pytest tests/infra_tests/ \
   --cov=infrastructure --cov-report=term --cov-fail-under=0 \
-  -q --ignore=tests/infra_tests/llm --timeout=60
+  -q --ignore=tests/infra_tests/llm --timeout=120
 ```
 
 The `--ignore=tests/infra_tests/llm` flag is what the local fast suite uses;
@@ -84,7 +84,7 @@ three are now well above the gate. Listed for historical context:
 
 ## Coverage Gates
 
-- **Infrastructure**: ≥ 60 % (current 76.83 %)
+- **Infrastructure**: ≥ 60 % (current 76.26 %)
 - **Projects**: ≥ 90 % per project (rotating-project exception possible per
   the `.github/workflows/ci.yml` matrix; see CLAUDE.md)
 - **Per-project gates** are enforced separately in CI; they do not aggregate
@@ -96,15 +96,29 @@ These numbers should be re-baselined whenever `infrastructure/` gains a new
 module or whenever a low-coverage module is closed out:
 
 ```bash
-.venv/bin/python -m pytest tests/infra_tests/ \
+uv run pytest tests/infra_tests/ \
   --cov=infrastructure --cov-report=term --cov-fail-under=0 \
-  -q --ignore=tests/infra_tests/llm --timeout=60 \
+  -q --ignore=tests/infra_tests/llm --timeout=120 \
   2>&1 | tail -80
 ```
 
 Then sort the per-module rows by coverage percentage and update the
 "Lowest-Coverage Modules" table above. Do not copy historical numbers
 forward — re-measure each time.
+
+## Recently added module tests (2026-05-23)
+
+| Module | Test file |
+| --- | --- |
+| `core/runtime/setup_checks.py` | `tests/infra_tests/core/runtime/test_setup_checks.py` |
+| `core/pipeline/single_stage.py` | `tests/infra_tests/core/pipeline/test_single_stage.py` |
+| `core/pipeline/multi_project_cli.py` | `tests/infra_tests/core/test_multi_project.py` (existing) |
+| `core/cache_gate.py` | `tests/infra_tests/core/test_cache_gate.py` |
+| `project/git_guards.py` | `tests/infra_tests/project/test_git_guards.py` |
+| `publishing/executable_bundle.py` | `tests/infra_tests/publishing/test_executable_bundle.py` |
+| `validation/plugin_export.py` | `tests/infra_tests/validation/test_plugin_export.py` |
+| `validation/security_gate.write_security_report` | `tests/infra_tests/validation/test_security_gate.py` |
+| `core/pipeline/post_run_reporting.py` | `tests/infra_tests/core/pipeline/test_post_run_reporting.py` |
 
 ## Testing Standards
 

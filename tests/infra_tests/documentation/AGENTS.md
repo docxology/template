@@ -249,11 +249,7 @@ uv run pytest tests/infra_tests/documentation/ --cov=infrastructure.documentatio
 
 ### Coverage Analysis
 
-**Coverage Requirements:**
-- Figure manager: 100% coverage
-- Glossary generation: 100% coverage
-- Image manager: 100% coverage
-- Markdown integration: 100% coverage
+**Coverage Requirements:** measured per module → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md)
 
 ## Test Maintenance
 
@@ -365,11 +361,7 @@ uv run pytest tests/infra_tests/documentation/ --durations=5
 
 ### Coverage Status
 
-**Current Coverage:**
-- Figure Manager: 100%
-- Glossary Generation: 100%
-- Image Manager: 100%
-- Markdown Integration: 100%
+**Current Coverage:** re-measure with `pytest tests/infra_tests/documentation/ --cov=infrastructure.documentation` → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md)
 
 ### Quality Metrics
 

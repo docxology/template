@@ -8,7 +8,7 @@ from infrastructure.validation.docs.quality import (
     check_formatting,
     group_quality_by_severity,
     group_quality_by_type,
-    run_quality_phase,
+    assess_documentation_quality,
 )
 from infrastructure.validation.docs.models import QualityIssue
 
@@ -240,13 +240,13 @@ class TestRunQualityPhase:
         long_line = "x" * 130
         md2.write_text(f"# Title\n### Skip\n{long_line}\n")
 
-        report, issues = run_quality_phase([md1, md2], tmp_path)
+        report, issues = assess_documentation_quality([md1, md2], tmp_path)
         assert report["total_issues"] >= 2  # at least heading skip + long line
         assert "by_type" in report
         assert "severity_breakdown" in report
         assert len(issues) >= 2
 
     def test_empty_file_list(self, tmp_path):
-        report, issues = run_quality_phase([], tmp_path)
+        report, issues = assess_documentation_quality([], tmp_path)
         assert report["total_issues"] == 0
         assert issues == []

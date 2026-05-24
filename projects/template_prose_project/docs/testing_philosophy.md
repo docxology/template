@@ -52,23 +52,9 @@ Configuration: `projects/template_prose_project/pyproject.toml`
 
 ## Coverage
 
-The test suite achieves **100% line and branch coverage** on
-`projects/template_prose_project/src/`:
-
-```
-Name                                                          Stmts   Miss Branch BrPart    Cover
------------------------------------------------------------------------------------------------------------
-projects/template_prose_project/src/__init__.py                   7      0      0      0  100.00%
-projects/template_prose_project/src/config.py                    46      0      2      0  100.00%
-projects/template_prose_project/src/figures.py                  102      0     14      0  100.00%
-projects/template_prose_project/src/manuscript_variables.py      59      0     12      0  100.00%
-projects/template_prose_project/src/pipeline.py                  81      0     14      0  100.00%
-projects/template_prose_project/src/report.py                    67      0     28      0  100.00%
------------------------------------------------------------------------------------------------------------
-TOTAL                                                           362      0     70      0  100.00%
-```
-
-Run with full coverage report:
+Measured line and branch coverage for `projects/template_prose_project/src/` lives in
+[`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md)
+(exemplar table). Re-measure locally:
 
 ```bash
 uv run pytest projects/template_prose_project/tests/ \

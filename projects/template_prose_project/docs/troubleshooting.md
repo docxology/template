@@ -180,7 +180,8 @@ collects nothing. A green exit with **zero collected tests is not a pass.**
 `[tool.coverage]` uses *project-relative* `source`/`omit` paths that do not
 resolve when pytest runs from the repo root. The canonical command and the
 runner both measure against the **repo-root** `pyproject.toml` coverage
-config — that is the number the 90% gate enforces (≈100% for this exemplar).
+config — that is the number the 90% gate enforces (live % →
+[`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md)).
 
 ## Where to look
 

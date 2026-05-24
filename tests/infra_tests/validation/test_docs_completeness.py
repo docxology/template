@@ -17,7 +17,7 @@ from infrastructure.validation.docs.completeness import (
     check_workflow_documentation,
     group_gaps_by_category,
     group_gaps_by_severity,
-    run_completeness_phase,
+    analyze_documentation_completeness,
 )
 from infrastructure.validation.docs.models import CompletenessGap, DocumentationFile
 
@@ -210,11 +210,11 @@ class TestGroupGaps:
 
 
 class TestRunCompletenessPhase:
-    """Tests for run_completeness_phase."""
+    """Tests for analyze_documentation_completeness."""
 
     def test_basic_run(self, tmp_path: Path):
         """Should return a report dict and list of gaps."""
-        report, gaps = run_completeness_phase(tmp_path, [], {})
+        report, gaps = analyze_documentation_completeness(tmp_path, [], {})
         assert "total_gaps" in report
         assert "by_category" in report
         assert "severity_breakdown" in report
@@ -223,5 +223,5 @@ class TestRunCompletenessPhase:
     def test_run_with_docs(self, tmp_path: Path):
         """With proper docs, some gaps should still be detected (onboarding, etc)."""
         docs = [_make_doc_file("docs/TROUBLESHOOTING.md")]
-        report, gaps = run_completeness_phase(tmp_path, docs, {})
+        report, gaps = analyze_documentation_completeness(tmp_path, docs, {})
         assert report["total_gaps"] >= 0

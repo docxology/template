@@ -12,7 +12,7 @@ from infrastructure.validation.docs.discovery import (
     categorize_documentation,
     _get_project_category,
     analyze_documentation_file,
-    run_discovery_phase,
+    discover_documentation,
     _calculate_project_stats,
 )
 
@@ -299,7 +299,7 @@ class TestRunDiscoveryPhase:
         (tmp_path / "docs").mkdir()
         (tmp_path / "docs" / "guide.md").write_text("# Guide")
         (tmp_path / "projects").mkdir()
-        result = run_discovery_phase(tmp_path)
+        result = discover_documentation(tmp_path)
         assert "markdown_files" in result
         assert result["markdown_files"] >= 2
         assert "hierarchy" in result

@@ -31,13 +31,13 @@ flowchart TB
     INFRA --> ORCH[/orchestration<br/>run.sh-equivalent CLI · menu · PipelineRunner<br/>stage logs · secure_run wrapper/]
     INFRA --> PRS[/prose<br/>Readability metrics · outline · editorial flags · CLI/]
 
-    CORE --> CORE_F[exceptions · logging · config/loader ·<br/>pipeline · runtime/checkpoint · runtime/retry ·<br/>runtime/function_profiler · security ·<br/>runtime/environment · files/operations ·<br/>telemetry/]
-    VAL --> VAL_F[content/pdf_validator · content/markdown_validator ·<br/>integrity/checks · repo/audit_orchestrator ·<br/>repo/scanner · cli/main]
+    CORE --> CORE_F[exceptions · logging · config/loader ·<br/>pipeline · post_run_reporting · hitl_cli · single_stage ·<br/>runtime/checkpoint · setup_checks · source_improve · cache_gate ·<br/>runtime/retry · runtime/function_profiler · security ·<br/>runtime/environment · files/operations · telemetry/]
+    VAL --> VAL_F[content/pdf_validator · content/markdown_validator ·<br/>line_count · security_gate · plugin_export · docs/lint_runner ·<br/>integrity/checks · repo/audit_orchestrator · repo/scanner · cli/main]
     DOC --> DOC_F[figure_manager · image_manager ·<br/>markdown_integration · glossary_gen]
     SCI --> SCI_F[benchmarking · stability · validation · templates]
     LLM --> LLM_F[core · templates · validation · review · prompts]
-    REND --> REND_F[core · pdf_renderer · slides_renderer ·<br/>web_renderer · latex_utils · cli]
-    PUB --> PUB_F[api · citations · metadata · package ·<br/>platforms · cli · publish_cli]
+    REND --> REND_F[core · pdf_renderer · slides_renderer ·<br/>web_renderer · preflight · latex_utils · cli]
+    PUB --> PUB_F[api · citations · metadata · executable_bundle ·<br/>package · platforms · cli · publish_cli]
     REP --> REP_F[report_generator · error_aggregator · executive_reporter ·<br/>_dashboard_matplotlib · _dashboard_charts ·<br/>_dashboard_specialized · _dashboard_csv]
     STEG --> STEG_F[core · config · overlays · barcodes ·<br/>metadata · hashing · encryption]
     SEARCH --> SEARCH_F[literature/ · models · backends ·<br/>client · cache · fulltext · cli]
@@ -54,6 +54,29 @@ flowchart TB
 ```
 
 > Each Layer-1 Python package ships `AGENTS.md` and `README.md`; most also ship `SKILL.md` (YAML frontmatter for editors). Exceptions are folders like `logrotate.d/` (config only — see [`logrotate.d/AGENTS.md`](logrotate.d/AGENTS.md)). The manifest aggregator lives in [`infrastructure/skills/`](skills/).
+
+## Thin-orchestrator modules (refactor inventory)
+
+Measured coverage and gate thresholds → [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) and [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md).
+
+| Module | Role |
+| --- | --- |
+| `core/pipeline/post_run_reporting.py` | Post-run summary + JSON report after pipeline stages |
+| `core/pipeline/hitl_cli.py` | Human-in-the-loop CLI for `execute_pipeline.py` |
+| `core/pipeline/single_stage.py` | Single-stage execution map for `execute_pipeline.py` |
+| `core/pipeline/multi_project_cli.py` | Multi-project serial/parallel CLI (`scripts/execute_multi_project.py`) |
+| `core/runtime/setup_checks.py` | Stage 0: `sync_workspace_dependencies`, `validate_project_discovery`, `run_optional_setup_hook` |
+| `core/source_improve.py` | Mechanical Python hygiene (`scripts/batch_cogsec_improve.py`) |
+| `core/cache_gate.py` | Hermes/cache opt-in gate (`scripts/gates/gate_cache.py`) |
+| `validation/line_count.py` | Module line-count scanner (Layer 1 + all `projects/*/scripts/`) |
+| `validation/security_gate.py` | Bandit-backed security report writer |
+| `validation/plugin_export.py` | Plugin export directory diff |
+| `validation/docs/lint_runner.py` | Markdown lint orchestration |
+| `project/workspace.py` | Workspace sync/status (`scripts/manage_workspace.py`) |
+| `project/info.py` | Project introspection (`scripts/show_project_info.py`) |
+| `project/git_guards.py` | Tracked-project and generated-artifact guards |
+| `publishing/executable_bundle.py` | Stage 10 bundle (`scripts/08_executable_bundle.py`) |
+| `rendering/preflight.py` | Manuscript preflight (exemplar `00_preflight.py` scripts) |
 
 ## Function Signatures
 
@@ -303,7 +326,7 @@ flowchart TB
 
 - Each module has:
   - `__init__.py` - Public API exports
-  - `core.py` - Core business logic (100% tested)
+  - `core.py` - Core business logic (coverage per module → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md))
   - `cli.py` - Command-line interface (optional)
   - `config.py` - Configuration management (optional)
   - `AGENTS.md` - Detailed documentation
@@ -757,7 +780,7 @@ uv run python3 -m infrastructure.publishing.cli create-release v1.0 output/{proj
 uv run pytest tests/infra_tests/ -v
 
 # Specific module
-uv run pytest tests/infra_tests/test_validation/ -v
+uv run pytest tests/infra_tests/validation/ -v
 
 # With coverage
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html

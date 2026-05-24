@@ -392,7 +392,7 @@ Full specification: [docs/security/steganography.md](../docs/security/steganogra
 | --- | --- |
 | **Zero-Mock policy** | No `MagicMock`, `mocker.patch`, or `unittest.mock` anywhere |
 | **Real operations** | Tests use real filesystem, subprocess, and HTTP calls |
-| **Infrastructure coverage** | ≥ 60% (currently achieving 83%+) |
+| **Infrastructure coverage** | ≥ 60% (live % → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md)) |
 | **Project coverage** | ≥ 90% (canonical exemplars `template_code_project` / `template_prose_project` exceed it; confirm live figures in [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md)) |
 | **Optional service skipping** | `@pytest.mark.requires_ollama` for graceful degradation |
 

@@ -57,7 +57,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
    ```
    **Outputs**: `figures/`, `data/`, `reports/`, `citations/`, `manuscript/`
 
-3. **Hydrate manuscript variables** — substitutes `{{VARIABLE}}` tokens in all manuscript templates.
+3. **Hydrate manuscript variables** — substitutes `{{VARIABLE}}` tokens in all manuscript templates (strict: requires analysis CSV unless `--allow-draft`).
    ```bash
    uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
    ```
@@ -90,7 +90,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 To add a new figure or data product:
 
-1. **Add the generator** in `scripts/optimization_analysis.py` — write to `output/figures/` or `output/data/` with a fixed, predictable filename.
+1. **Add the generator** in `src/figures.py` and wire it through `src/analysis.py` (script entry: `scripts/optimization_analysis.py`) — write to `output/figures/` or `output/data/` with a fixed, predictable filename.
 2. **Update `docs/output_inventory.md`** — add an entry to the file inventory table (see below).
 3. **Update manuscript references** — reference the new file via `\\ref{fig:label}` or data table as appropriate.
 4. **Re-run the pipeline** (steps 2–5 above).

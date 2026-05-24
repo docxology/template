@@ -137,8 +137,8 @@ Demonstrates various cross-reference patterns:
 
 The template includes two figure generation scripts that demonstrate the **thin orchestrator pattern**:
 
-1. **`example_figure.py`** - Basic example figure using `projects/{name}/src/` methods
-2. **`generate_research_figures.py`** - research figures using `projects/{name}/src/` methods
+1. **`projects/{name}/scripts/<analysis>.py`** - Thin orchestrator (code exemplar: `optimization_analysis.py`) using `projects/{name}/src/` methods
+2. **`projects/{name}/scripts/y_generate_*`** - Optional ordered figure/analysis scripts (prose exemplar pattern)
 
 ### Thin Orchestrator Pattern
 

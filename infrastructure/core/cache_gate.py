@@ -1,4 +1,8 @@
-"""Hermes plugin cache validation gate."""
+"""Hermes plugin cache validation gate (opt-in; not part of default template pipeline).
+
+Requires ``HERMES_HOME`` and a Hermes plugin tree. Invoked only via
+``scripts/gates/gate_cache.py`` — not wired into ``./run.sh`` or CI.
+"""
 
 from __future__ import annotations
 
@@ -14,32 +18,32 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 
-class _CounterStub:
+class _NoOpMetrics:
     def __init__(self, name: str, description: str = "") -> None:
         self._name = name
         self._description = description
 
-    def labels(self, **_kwargs: str) -> "_CounterStub":
+    def labels(self, **_kwargs: str) -> "_NoOpMetrics":
         return self
 
     def inc(self, amount: float = 1.0) -> None:
         logger.debug("%s.inc(%.1f)", self._name, amount)
 
 
-class _HistogramStub:
+class _NoOpHistogram:
     def __init__(self, name: str, description: str = "") -> None:
         self._name = name
         self._description = description
 
-    def labels(self, **_kwargs: str) -> "_HistogramStub":
+    def labels(self, **_kwargs: str) -> "_NoOpHistogram":
         return self
 
     def observe(self, value: float) -> None:
         logger.debug("%s.observe(%.4f)", self._name, value)
 
 
-gate_runs_total = _CounterStub("gate_runs_total", "Total gate runs by name and outcome")
-gate_duration_seconds = _HistogramStub("gate_duration_seconds", "Gate execution duration in seconds")
+gate_runs_total = _NoOpMetrics("gate_runs_total", "Total gate runs by name and outcome")
+gate_duration_seconds = _NoOpHistogram("gate_duration_seconds", "Gate execution duration in seconds")
 
 GATES = (
     {

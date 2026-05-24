@@ -318,30 +318,28 @@ integration.validate_manuscript()
 
 ## Example Scripts
 
-### Scientific Simulation (`scripts/scientific_simulation.py`)
+### Analysis pipeline (`projects/template_code_project/scripts/optimization_analysis.py`)
 
-Demonstrates simulation workflow:
-1. Set up parameters
-2. Run simulations
-3. Generate results and figures
-4. Create analysis reports
+Demonstrates the code-exemplar analysis workflow:
+1. Run convergence experiments via `src/analysis.py`
+2. Generate figures via `src/figures.py`
+3. Write CSV/JSON reports under `output/`
 
 **Run:**
 ```bash
-uv run python scripts/scientific_simulation.py
+uv run python projects/template_code_project/scripts/optimization_analysis.py
 ```
 
-### Analysis Pipeline (`scripts/analysis_pipeline.py`)
+### Generic project script (`projects/{name}/scripts/<analysis>.py`)
 
-Demonstrates statistical analysis workflow:
-1. Load simulation results
-2. Perform statistical analysis
-3. Generate comparison plots
-4. Create summary reports
+Demonstrates statistical or simulation workflows for other projects:
+1. Load or generate data via `src/`
+2. Perform analysis
+3. Write figures and reports under `output/`
 
 **Run:**
 ```bash
-uv run python scripts/analysis_pipeline.py
+uv run python projects/{name}/scripts/<your_analysis>.py
 ```
 
 ### Generate Scientific Figures (`scripts/generate_scientific_figures.py`)
