@@ -13,7 +13,6 @@ flowchart LR
     T --> BEN[test_benchmarking.py<br/>Performance benchmarking]
     T --> DOC[test_documentation.py<br/>API documentation]
     T --> DEV[test_scientific_dev.py<br/>Scientific development]
-    T --> DEVE[test_scientific_dev_edge_cases.py<br/>Edge cases]
     T --> STAB[test_stability.py<br/>Numerical stability]
     T --> TPL[test_templates.py<br/>Research templates]
     T --> VAL[test_validation.py<br/>Scientific validation]
@@ -22,7 +21,7 @@ flowchart LR
     classDef test fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class BEN,DOC,DEV,DEVE,STAB,TPL,VAL test
+    class BEN,DOC,DEV,STAB,TPL,VAL test
     class META doc
 ```
 

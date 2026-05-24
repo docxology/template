@@ -42,9 +42,9 @@ Groupings (non-exhaustive):
 
 | Area | Examples |
 |------|----------|
-| Client / connection / streaming | `test_core.py`, `test_llm_core_*.py`, `test_connection_mixin_coverage.py`, `test_streaming.py`, `test_stream_helpers_coverage.py`, `test_response_saving.py` |
-| Config / context | `test_config.py`, `test_config_expanded_coverage.py`, `test_context.py`, `test_context_*coverage*.py` |
-| Utils / server | `test_ollama_utils.py`, `test_server_coverage.py`, `test_heartbeat*.py` |
+| Client / connection / streaming | `test_core.py`, `test_connection_mixin.py`, `test_streaming.py`, `test_stream_helpers.py`, `test_response_saver.py` |
+| Config / context | `test_config.py`, `test_context.py` |
+| Utils / server | `test_ollama_utils.py`, `test_server.py`, `test_heartbeat*.py` |
 | Review / manuscript | `test_review_*.py`, `test_manuscript_*.py`, `test_llm_review.py` |
 | Validation / sanitization | `test_validation.py`, `test_validation_*coverage*.py`, `test_sanitization*.py` |
 | CLI / prompts / templates | `test_cli.py` (direct command functions); optional subprocess tests calling `python -m infrastructure.llm.cli` for `main()` exit codes |

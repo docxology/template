@@ -68,7 +68,7 @@ flowchart TB
 
 ### Integration Testing
 
-**Full Integration Tests (`test_publishing_api_full.py`, `test_publishing_cli_full.py`)**
+**Full Integration Tests (`test_api.py`, `test_publishing_cli.py`)**
 - End-to-end publishing workflows
 - Cross-component integration
 - Real API interactions through local test servers or explicitly marked live-service tests

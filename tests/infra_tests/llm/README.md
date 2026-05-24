@@ -32,7 +32,6 @@ uv run pytest tests/infra_tests/llm/ -v
 ### Integration Tests
 - `test_cli.py` - Command-line interface
 - `test_llm_core_additional.py` - Extended core functionality
-- `test_llm_core_coverage.py` - Coverage-focused tests
 
 ## Coverage
 

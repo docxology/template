@@ -51,14 +51,8 @@ Prefer **one behavioral test module per production module**. Use
 ``@pytest.mark.parametrize`` for branch/error paths instead of spawning
 ``*_expanded_coverage*`` or ``*_full_coverage*`` companion files.
 
-Legacy ``*_coverage*`` suffix files still exist in some packages; when
-touching a module, merge supplements into the canonical file and delete
-the redundant tier. Do not add a third coverage tier for new work.
-
-| Pattern | Preferred use |
-| ------- | ------------- |
-| `test_foo.py` | Canonical behavior + parametrized branches |
-| `test_foo_coverage.py` | Legacy only — merge into `test_foo.py` when editing |
+Legacy ``*_coverage*`` suffix files were removed in the 2026-05-24 wave-3
+consolidation. Do not add parallel supplement tiers for new work.
 
 ## See Also
 

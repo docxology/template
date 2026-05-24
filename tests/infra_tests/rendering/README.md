@@ -33,12 +33,12 @@ uv run pytest tests/infra_tests/rendering/test_pdf_renderer*.py -v
 - Bibliography processing
 - Figure integration
 
-### HTML / Web Renderer Tests (`test_web_renderer_coverage.py`)
+### HTML / Web Renderer Tests (`test_web_renderer.py`)
 
 HTML output generation:
 
 ```bash
-uv run pytest tests/infra_tests/rendering/test_web_renderer_coverage.py -v
+uv run pytest tests/infra_tests/rendering/test_web_renderer.py -v
 ```
 
 **Test Coverage:**
@@ -47,12 +47,12 @@ uv run pytest tests/infra_tests/rendering/test_web_renderer_coverage.py -v
 - Cross-reference handling
 - Style application
 
-### Slide Renderer Tests (`test_slides_renderer_core.py`, `test_slides_renderer_comprehensive.py`, `test_slides_renderer_coverage.py`)
+### Slide Renderer Tests (`test_slides_renderer_core.py`)
 
 Presentation slide generation:
 
 ```bash
-uv run pytest tests/infra_tests/rendering/test_slides_renderer_core.py tests/infra_tests/rendering/test_slides_renderer_comprehensive.py tests/infra_tests/rendering/test_slides_renderer_coverage.py -v
+uv run pytest tests/infra_tests/rendering/test_slides_renderer_core.py -v
 ```
 
 **Test Coverage:**

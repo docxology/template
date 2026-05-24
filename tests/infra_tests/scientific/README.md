@@ -23,7 +23,7 @@ uv run pytest tests/infra_tests/scientific/test_scientific_dev.py -v
 | `test_benchmarking.py` | Performance benchmarking |
 | `test_documentation.py` | API documentation generation |
 | `test_scientific_dev.py` | Scientific development utilities |
-| `test_scientific_dev_edge_cases.py` | Edge cases for scientific dev utilities |
+| `test_scientific_dev.py` | Scientific dev utilities (includes former edge-case paths) |
 | `test_stability.py` | Numerical stability checking |
 | `test_templates.py` | Research templates |
 | `test_validation.py` | Scientific validation rules |

@@ -4,13 +4,13 @@ This document tracks infrastructure test coverage gaps. Numbers are
 re-baselined from the live `pytest --cov` run; see "How this file is
 generated" below.
 
-**Last verified:** 2026-05-24 (infrastructure thermo-nuclear quality review)
+**Last verified:** 2026-05-24 (infra test consolidation wave 3)
 
 ## Current Coverage Status
 
-**Overall infrastructure coverage: 78.39 %** (gate: ≥ 60 %)
-**Tests:** 5706+ passing (non-LLM suite; LLM suite exercised separately)
-**Total statements measured:** 34 534
+**Overall infrastructure coverage: 76.61 %** (gate: ≥ 60 %)
+**Tests:** 5467 passing (non-LLM suite; LLM suite exercised separately)
+**Total statements measured:** 31 390
 
 The numbers below come from:
 
@@ -63,8 +63,8 @@ genuine gaps are:
 2. **`infrastructure/reporting/pipeline_test_runner.py` + `pipeline_test_reporting.py`
    + `infrastructure/core/pytest_orchestration.py`** — Stage-01 orchestration
    split across three modules; subprocess integration tests in
-   `test_pipeline_test_runner_integration.py`; reporting helpers in
-   `test_pipeline_test_runner_coverage.py`.
+   `test_pipeline_test_runner.py`; subprocess integration in
+   `test_pipeline_test_runner_integration.py`.
 
 3. **`infrastructure/rendering/core.py` (65.22 %, 108 stmts)** — the render
    tree builder. Format-disable and missing-source branches are covered in
@@ -84,7 +84,7 @@ three are now well above the gate. Listed for historical context:
 
 ## Coverage Gates
 
-- **Infrastructure**: ≥ 60 % (current **78.39 %**)
+- **Infrastructure**: ≥ 60 % (current **76.61 %**)
 - **Projects**: ≥ 90 % per project (rotating-project exception possible per
   the `.github/workflows/ci.yml` matrix; see CLAUDE.md)
 - **Per-project gates** are enforced separately in CI; they do not aggregate
@@ -110,25 +110,40 @@ forward — re-measure each time.
 
 | Module | Test file |
 | --- | --- |
-| `reporting/pipeline_test_reporting.py` | `tests/infra_tests/reporting/test_pipeline_test_runner_coverage.py` |
+| `reporting/pipeline_test_reporting.py` | `tests/infra_tests/reporting/test_pipeline_test_runner.py` |
 | `reporting/pipeline_test_runner.py` (subprocess) | `tests/infra_tests/reporting/test_pipeline_test_runner_integration.py` |
 | `validation/docs/consistency/*` | `tests/infra_tests/validation/docs/consistency/test_*.py` |
 | `rendering/pipeline.py` (error paths) | `tests/infra_tests/rendering/test_pipeline.py` |
 | `rendering/pdf_renderer.py` | `tests/infra_tests/rendering/test_pdf_renderer.py` |
 
+## Supplement consolidation (2026-05-24, wave 3)
+
+All legacy supplement tiers under `tests/infra_tests/` are removed:
+
+- `*_expanded_coverage*`, `*_full_coverage*`, `*_coverage.py` (except modules
+  whose subject is coverage reporting: `test_coverage_parser.py`,
+  `test_coverage_history.py`, `test_coverage_analysis.py`,
+  `test_coverage_json_parser.py`, `test_coverage_cleanup.py`,
+  `test_cogant_coverage_table_check.py`)
+- `*_full.py`, `*_comprehensive.py`, `*_edge_cases.py` companion files
+
+One canonical `test_<module>.py` per production module; use
+`scripts/merge_test_supplements.py` when consolidating future splits.
+
+| Area | Canonical test files (examples) |
+| --- | --- |
+| validation integrity | `test_check_links.py`, `test_repo_scanner.py`, `test_validate_*_cli.py` |
+| core progress / logging | `test_progress.py`, `test_logging_progress.py`, `test_pipeline_summary.py` |
+| reporting stage-01 | `test_pipeline_test_runner.py`, `test_pipeline_test_runner_integration.py` |
+| rendering | `test_web_renderer.py`, `test_pdf_combined_renderer.py`, `test_slides_renderer_core.py` |
+| llm | `test_core.py`, `test_models.py`, `test_review_*.py` (no `*_coverage` suffix) |
+| steganography | `test_encryption.py`, `test_metadata.py`, `test_overlays.py` |
+
 ## Supplement consolidation (2026-05-24, wave 2)
 
-All `*_expanded_coverage*` and `*_full_coverage*` tiers under `tests/infra_tests/` are
-removed. Merged into canonical modules:
-
-| Area | Canonical test file |
-| --- | --- |
-| `core/runtime/env_deps`, files, logging, perf monitor, config/cli handlers | `test_env_deps.py`, `test_file_operations.py`, `test_logging_progress.py`, `test_performance_monitor.py`, `test_config_cli_coverage.py`, `test_cli_handlers_coverage.py` |
-| `validation/output/pipeline`, `integrity/check_links` | `test_validation_output_pipeline.py`, `test_check_links.py` |
-| `rendering/web_renderer`, `publishing/readiness`, reporting suite runner, glossary CLI | `test_web_renderer_coverage.py`, `test_readiness.py`, `test_suite_runner.py`, `test_generate_glossary_cli.py` |
-
-Legacy `*_coverage.py` files remain in some packages; merge into the canonical
-`test_<module>.py` when touching that package next.
+Wave 2 removed `*_expanded_coverage*` / `*_full_coverage*` tiers (see git history
+at `f2471541`). Wave 3 completed the remaining `*_coverage.py` and `*_full.py`
+merges listed above.
 
 ## Recently added module tests (2026-05-23)
 

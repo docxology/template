@@ -13,7 +13,7 @@ flowchart TB
     T --> CORE[Core<br/>test_core · test_config · test_renderers]
     T --> PDF[PDF renderer<br/>test_pdf_renderer_additional / _combined ·<br/>_coverage / _fixes / _full]
     T --> SLIDES[Slides renderer<br/>test_slides_renderer_comprehensive ·<br/>_coverage]
-    T --> WEB[Web renderer<br/>test_web_renderer_coverage]
+    T --> WEB[Web renderer<br/>test_web_renderer]
     T --> POSTER[Poster<br/>test_poster_renderer]
     T --> LATEX[LaTeX<br/>test_latex_package_validator · test_latex_utils]
     T --> MAN[Manuscript<br/>test_manuscript_discovery]
@@ -311,7 +311,7 @@ def validate_pdf_structure(pdf_path: Path) -> bool:
 uv run pytest tests/infra_tests/rendering/
 
 # Run specific renderer tests
-uv run pytest tests/infra_tests/rendering/test_pdf_renderer_full.py
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer.py
 
 # Run CLI tests only
 uv run pytest tests/infra_tests/rendering/ -k "cli"
@@ -485,7 +485,7 @@ uv run pytest tests/infra_tests/rendering/ --cov=infrastructure.rendering --cov-
 **Verbose Test Output:**
 ```bash
 # Run with detailed output
-uv run pytest tests/infra_tests/rendering/test_pdf_renderer_full.py -v -s
+uv run pytest tests/infra_tests/rendering/test_pdf_renderer.py -v -s
 
 # Debug LaTeX compilation
 uv run pytest tests/infra_tests/rendering/ --pdb --tb=long

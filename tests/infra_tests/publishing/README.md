@@ -83,7 +83,7 @@ End-to-end workflows:
 
 ```bash
 # Full publishing workflow
-uv run pytest tests/infra_tests/publishing/test_publishing_api_full.py -v
+uv run pytest tests/infra_tests/publishing/test_api.py -v
 ```
 
 ### Edge Case Tests
