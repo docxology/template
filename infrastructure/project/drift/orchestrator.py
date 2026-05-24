@@ -22,6 +22,7 @@ _TRIVIAL_FUNC_NAMES = frozenset(
 _SUBPROCESS_SCHEDULER_NAMES = frozenset(
     {
         "run_all.py",
+        "regression_gate.py",
         "build_lean.py",
         "build_mathlib_proofs.py",
     }
@@ -104,7 +105,8 @@ def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None
         return None, None
 
     rel = _rel(path, repo_root)
-    is_project_script = "/projects/" in rel.replace("\\", "/") and "/scripts/" in rel.replace("\\", "/")
+    normalized = rel.replace("\\", "/")
+    is_project_script = normalized.startswith("projects/") and "/scripts/" in normalized
 
     if is_project_script and line_count >= _PROJECT_SCRIPT_WARN_LINES:
         non_trivial = _count_non_trivial_functions(source)

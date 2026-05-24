@@ -8,12 +8,12 @@ from typing import Any, Set, cast
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.docs.accuracy import extract_headings
-from infrastructure.validation.integrity.check_links import (
+from infrastructure.validation.integrity.check_links import generate_comprehensive_report
+from infrastructure.validation.integrity.link_extract import (
     LinkCheckResult,
     check_file_reference,
     extract_links,
     find_all_markdown_files,
-    generate_comprehensive_report,
     validate_directory_structures,
     validate_file_paths_in_code,
     validate_placeholder_consistency,

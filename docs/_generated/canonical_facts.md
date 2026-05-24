@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-23 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `generate_architecture_overview.py`, `pytest tests/infra_tests/project/test_discovery.py tests/infra_tests/test_docs_discovery_consistency.py -q` (**60** passed), `pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/test_pipeline_control_extensions.py -q` (**56** passed), `pytest projects/*/tests/ --collect-only` per exemplar below, `find infrastructure -name '*.py' -type f | wc -l` (**365** `.py` files, point-in-time; this count drifts as the tree changes, always re-derive with the command rather than trusting the literal). Counts below for `fep_lean` are historical from archived/restored trees (see commands).
+**Generated from live repo state on 2026-05-23 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**394**), `pytest tests/infra_tests/project/ --collect-only -q` (**149**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**6** passed), exemplar `pytest --collect-only` (209 + 76), drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -69,7 +69,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **365** on 2026-05-22 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **394** on 2026-05-23 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -97,12 +97,22 @@ Result: 56 passed in ~0.76s (real symlinks and file-backed HITL state, no mocks)
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_code_project` | 204 | 98.44 % |
+| `template_code_project` | 209 | 98.83 % |
 | `template_prose_project` | 76 | 100.00 % |
 
 Measured from `projects/template_code_project/` with `uv run pytest tests/ --cov=src --cov-fail-under=90 -q`. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
-Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_template_drift.py`): **20 passed**, gating the nine detectors that run against both exemplars (function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead link, oversize `src/*.py`, blanket `except Exception`, mocks in tests, canonical-file presence).
+Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_template_drift.py`): **20 passed**, gating **9 per-exemplar detectors** on both canonical projects plus **2 repo-level checks** (`check_repo_docs_hardcoded_counts`, `check_repo_thin_orchestrator_scripts` / `check_project_scripts` for `projects/*/scripts/`). Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** (`test_thin_orchestrator_drift.py`). Per-exemplar detectors: function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead link, oversize `src/*.py`, blanket `except Exception`, mocks in tests, canonical-file presence.
+
+**Thin-orchestrator gates** (measured 2026-05-23):
+
+| Gate | Command | Threshold |
+| --- | --- | --- |
+| Exemplar drift | `uv run python scripts/check_template_drift.py --strict` | 9+2 detectors |
+| Module line count | `uv run python scripts/gates/module_line_count_check.py` | warn ≥800 / fail ≥950 (`infrastructure/`, `scripts/`); warn ≥150 / fail ≥250 (`projects/{exemplar}/scripts/` via `PUBLIC_PROJECT_NAMES`) |
+| Unified health | `uv run python -m infrastructure.core.health` | optional `--gates=module-line-count` |
+| Tracked projects | `uv run python scripts/check_tracked_projects.py` | non-exemplar paths under `projects/` |
+| Generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` | disposable `output/` trees |
 
 Coverage gates (enforced in CI):
 
@@ -195,4 +205,4 @@ flowchart TD
 
 Link to this file from other documentation instead of repeating facts.
 
-**Regeneration note:** Refresh [`active_projects.md`](active_projects.md) with `scripts/generate_active_projects_doc.py`. Update this file after meaningful CI or test-scale changes (fep_lean counts, new gates), using measured `pytest` output rather than estimates.
+**Regeneration note:** Refresh [`active_projects.md`](active_projects.md) with `scripts/generate_active_projects_doc.py`. Update this file after meaningful CI or test-scale changes using measured `pytest`/`find` output. Re-run `uv run python scripts/check_template_drift.py --strict` and `uv run python scripts/gates/module_line_count_check.py` when drift or line-count gates change.

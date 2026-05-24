@@ -4,6 +4,13 @@ Tests link validation, file reference checking, and anchor validation.
 """
 
 from infrastructure.validation.integrity import check_links
+from infrastructure.validation.integrity import link_extract
+
+
+def test_link_extract_module_import_smoke() -> None:
+    """Library surface lives in link_extract; check_links re-exports for CLI callers."""
+    assert link_extract.extract_links is check_links.extract_links
+    assert link_extract.find_all_markdown_files is check_links.find_all_markdown_files
 
 
 class TestFindAllMarkdownFiles:

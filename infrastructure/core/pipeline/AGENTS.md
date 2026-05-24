@@ -6,10 +6,12 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 
 ## Files
 
-- `executor.py` - pipeline execution
+- `executor.py` - pipeline execution (thin `_execute_stage` delegates to `_stage_execution`)
+- `_stage_execution.py` - stage orchestration: HITL pauses, pre/post hooks, retries, telemetry (`execute_stage`, `handle_post_stage_success`, `handle_stage_failure`, `handle_stage_exception`)
 - `dag.py` - stage dependency graph helpers
 - `multi_project.py` - multi-project orchestration (serial)
 - `multi_project_parallel.py` - bounded-parallel multi-project orchestration
+- `multi_project_cli.py` - CLI for `scripts/execute_multi_project.py` (serial + `--parallel`)
   via `concurrent.futures.ProcessPoolExecutor`. Public entry point:
   `run_projects_in_parallel(...) -> ParallelRunResult`. Worker count defaults
   to `min(N_projects, os.cpu_count() or 1)` and is overridable by the
@@ -23,7 +25,9 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 - `_stage_tracker.py` - tracking internals
 - `_performance_monitor.py` - performance internals
 - `_monitor_types.py` - shared monitoring types
-- `summary.py` - pipeline summaries
+- `post_run_reporting.py` - post-run JSON/HTML/Markdown report generation
+- `hitl_cli.py` - non-interactive HITL CLI (`PipelineArgs`, `handle_hitl_command`)
+- `single_stage.py` - single-stage subprocess dispatch map
 - `summary_formatters.py` - summary formatting
 - `summary_helpers.py` - summary helpers
 - `summary_models.py` - summary dataclasses

@@ -23,9 +23,12 @@ The Validation module provides quality assurance and validation tools for resear
 - Link and URL integrity checking
 - Section anchor validation
 
+**integrity/link_extract.py**
+- Library surface for markdown link extraction and validation (no CLI)
+- `find_all_markdown_files`, `extract_links`, `extract_code_blocks`, path/import/placeholder validators, `check_file_reference`, `LinkCheckResult`
+
 **integrity/check_links.py**
-- Documentation link verification CLI (thin wrapper around `link_audit_core`)
-- Follow-up: extract link parsing helpers into `link_extract.py` and shrink this module to a thin CLI (~80 lines)
+- Documentation link verification CLI (~140 lines); re-exports `link_extract` helpers for backward compatibility
 
 **integrity/link_validator.py**
 - `LinkValidator.resolve_link_target()` delegates path resolution to `paths.resolve_markdown_target()` with directory index-file fallback
@@ -38,6 +41,17 @@ The Validation module provides quality assurance and validation tools for resear
 
 **paths.py**
 - `resolve_markdown_target(target, source_file, repo_root)` - canonical path resolver shared by link and accuracy validators
+
+**line_count.py**
+- `scan_infrastructure_and_scripts(repo_root)` — warn ≥800 / fail ≥950 for `infrastructure/` and `scripts/`
+- `scan_project_scripts(repo_root)` — warn ≥150 / fail ≥250 for every `projects/*/scripts/` tree
+- Used by `scripts/gates/module_line_count_check.py` and drift tooling
+
+**docs/lint_runner.py**
+- `run_docs_lint(...)` — orchestrates markdown consistency checks (used by `scripts/lint_docs.py`)
+
+**security_gate.py** / **plugin_export.py**
+- CI gate logic extracted from `scripts/gates/security_scan.py` and `plugin_export_check.py`
 
 **integrity/checks.py**
 - File integrity verification (SHA-256 hashing)
@@ -814,6 +828,14 @@ class DocumentationScanner:
         Args:
             repo_root: Repository root directory
         """
+
+    def phase6_verification(self) -> dict[str, Any]:
+        """Run Phase 6 verification checks.
+
+        Delegates to ``run_docs_lint``, ``validate_markdown``, ``verify_commands``,
+        and ``detect_markdown_link_cycles()``; see
+        ``infrastructure/validation/docs/AGENTS.md`` for status vocabulary.
+        """
 ```
 
 #### main (function)
@@ -1141,11 +1163,15 @@ def check_script_documentation(repo_root: Path) -> List[CompletenessGap]:
 
 #### check_config_documentation (function)
 ```python
-def check_config_documentation(config_files: Dict[str, Path]) -> List[CompletenessGap]:
+def check_config_documentation(
+    config_files: Dict[str, Path],
+    repo_root: Path,
+) -> List[CompletenessGap]:
     """Check configuration documentation completeness.
 
     Args:
         config_files: Dictionary of config files
+        repo_root: Repository root directory
 
     Returns:
         List of completeness gaps
@@ -1193,8 +1219,11 @@ def check_onboarding(documentation_files: List[DocumentationFile]) -> List[Compl
 
 #### check_cross_reference_completeness (function)
 ```python
-def check_cross_reference_completeness() -> List[CompletenessGap]:
+def check_cross_reference_completeness(repo_root: Path) -> List[CompletenessGap]:
     """Check cross-reference completeness.
+
+    Args:
+        repo_root: Repository root directory
 
     Returns:
         List of completeness gaps
@@ -1607,11 +1636,36 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
     """
 ```
 
+### security_gate.py
+
+Optional security scanner aggregation used by `scripts/gates/security_scan.py` (not the default `./run.sh` pipeline).
+
+#### aggregate_security_findings (function)
+
+```python
+def aggregate_security_findings(results: list[dict[str, Any]]) -> dict[str, Any]:
+    """Merge per-tool scan payloads into one report.
+
+    Entries with ``status: "skipped"`` are listed under ``skipped_tools`` and do
+    not contribute to ``total_findings`` or ``tools_run``. An empty dict from a
+    missing tool is **not** treated as a clean scan — callers must emit skipped
+    status explicitly.
+    """
+```
+
+#### run_security_scan (function)
+
+```python
+def run_security_scan(repo_root: Path) -> tuple[dict[str, Any], int]:
+    """Run bandit, safety, and pip-audit when installed; exit 1 on HIGH findings."""
+```
+
 ## Testing
 
 Run validation tests with:
 ```bash
-uv run pytest tests/infra_tests/test_validation/
+uv run pytest tests/infra_tests/validation/ -q
+uv run pytest tests/infra_tests/validation/test_security_gate.py -q
 ```
 
 ## Configuration

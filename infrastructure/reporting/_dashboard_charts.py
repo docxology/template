@@ -11,11 +11,13 @@ from typing import Any
 
 try:
     import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
     from matplotlib.figure import Figure
 
     MATPLOTLIB_AVAILABLE = True
 except ImportError:
     MATPLOTLIB_AVAILABLE = False
+    Axes = Any  # type: ignore[misc, assignment]
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.reporting._dashboard_constants import COLORS
@@ -29,22 +31,18 @@ from infrastructure.reporting.output_organizer import FileType, OutputOrganizer
 logger = get_logger(__name__)
 
 
-def create_test_count_chart(projects: list[ProjectMetrics]) -> Figure:
-    """Create bar chart showing test counts by project.
-
-    Args:
-        projects: List of ProjectMetrics
-
-    Returns:
-        Matplotlib Figure
-    """
-    fig, ax = plt.subplots(figsize=(10, 6))
-
+def draw_test_count_on_axes(
+    ax: Axes,
+    projects: list[ProjectMetrics],
+    *,
+    include_failed: bool = True,
+    title: str = "Test Counts by Project",
+) -> None:
+    """Plot test count bars on ``ax``."""
     project_names = [p.name for p in projects]
     total_tests = [p.tests.total_tests for p in projects]
     passed_tests = [p.tests.passed for p in projects]
     failed_tests = [p.tests.failed for p in projects]
-
     x = range(len(projects))
     width = 0.25
 
@@ -54,155 +52,125 @@ def create_test_count_chart(projects: list[ProjectMetrics]) -> Figure:
         width,
         label="Total",
         color=COLORS["primary"],
+        alpha=0.8,
     )
-    ax.bar(x, passed_tests, width, label="Passed", color=COLORS["success"])
-    ax.bar(
-        [i + width for i in x],
-        failed_tests,
-        width,
-        label="Failed",
-        color=COLORS["danger"],
-    )
+    ax.bar(x, passed_tests, width, label="Passed", color=COLORS["success"], alpha=0.8)
+    if include_failed:
+        ax.bar(
+            [i + width for i in x],
+            failed_tests,
+            width,
+            label="Failed",
+            color=COLORS["danger"],
+            alpha=0.8,
+        )
 
     ax.set_xlabel("Project", fontweight="bold")
     ax.set_ylabel("Test Count", fontweight="bold")
-    ax.set_title("Test Counts by Project", fontweight="bold", fontsize=14)
-    ax.set_xticks(x)
+    ax.set_title(title, fontweight="bold")
+    ax.set_xticks(list(x))
     ax.set_xticklabels(project_names, rotation=45, ha="right")
     ax.legend()
     ax.grid(axis="y", alpha=0.3)
 
-    plt.tight_layout()
-    return fig
 
-
-def create_coverage_chart(projects: list[ProjectMetrics]) -> Figure:
-    """Create bar chart showing coverage percentages by project.
-
-    Args:
-        projects: List of ProjectMetrics
-
-    Returns:
-        Matplotlib Figure
-    """
-    fig, ax = plt.subplots(figsize=(10, 6))
-
+def draw_coverage_on_axes(
+    ax: Axes,
+    projects: list[ProjectMetrics],
+    *,
+    title: str = "Test Coverage by Project",
+    compact: bool = False,
+) -> None:
+    """Plot coverage bars on ``ax``."""
     project_names = [p.name for p in projects]
     coverage = [p.tests.coverage_percent for p in projects]
-
-    # Color bars based on coverage thresholds
-    colors = []
-    for cov in coverage:
-        if cov >= 95:
-            colors.append(COLORS["success"])
-        elif cov >= 90:
-            colors.append(COLORS["warning"])
-        else:
-            colors.append(COLORS["danger"])
-
     x = range(len(projects))
-    ax.bar(x, coverage, color=colors)
 
-    # Add threshold line at 90%
-    ax.axhline(y=90, color=COLORS["danger"], linestyle="--", linewidth=2, label="90% Threshold")
+    if compact:
+        ax.bar(x, coverage, color=COLORS["primary"], alpha=0.8)
+        ax.axhline(y=90, color=COLORS["success"], linestyle="--", linewidth=2, label="Excellent (90%)")
+        ax.axhline(y=70, color=COLORS["warning"], linestyle="--", linewidth=2, label="Adequate (70%)")
+    else:
+        colors = []
+        for cov in coverage:
+            if cov >= 95:
+                colors.append(COLORS["success"])
+            elif cov >= 90:
+                colors.append(COLORS["warning"])
+            else:
+                colors.append(COLORS["danger"])
+        ax.bar(x, coverage, color=colors)
+        ax.axhline(y=90, color=COLORS["danger"], linestyle="--", linewidth=2, label="90% Threshold")
+        for i, cov in enumerate(coverage):
+            ax.text(i, cov + 1, f"{cov:.1f}%", ha="center", fontweight="bold")
 
     ax.set_xlabel("Project", fontweight="bold")
     ax.set_ylabel("Coverage (%)", fontweight="bold")
-    ax.set_title("Test Coverage by Project", fontweight="bold", fontsize=14)
-    ax.set_xticks(x)
+    ax.set_title(title, fontweight="bold")
+    ax.set_xticks(list(x))
     ax.set_xticklabels(project_names, rotation=45, ha="right")
     ax.set_ylim(0, 105)
     ax.legend()
     ax.grid(axis="y", alpha=0.3)
 
-    # Add percentage labels on bars
-    for i, cov in enumerate(coverage):
-        ax.text(i, cov + 1, f"{cov:.1f}%", ha="center", fontweight="bold")
 
-    plt.tight_layout()
-    return fig
-
-
-def create_pipeline_duration_chart(projects: list[ProjectMetrics]) -> Figure:
-    """Create stacked bar chart showing pipeline durations by project.
-
-    Args:
-        projects: List of ProjectMetrics
-
-    Returns:
-        Matplotlib Figure
-    """
-    fig, ax = plt.subplots(figsize=(10, 6))
-
+def draw_pipeline_duration_on_axes(
+    ax: Axes,
+    projects: list[ProjectMetrics],
+    *,
+    stacked: bool = True,
+    title: str = "Pipeline Duration by Project",
+) -> None:
+    """Plot pipeline duration on ``ax``."""
     project_names = [p.name for p in projects]
     durations = [p.pipeline.total_duration for p in projects]
-    bottleneck_durations = [p.pipeline.bottleneck_duration for p in projects]
-    other_durations = [d - b for d, b in zip(durations, bottleneck_durations)]
-
     x = range(len(projects))
 
-    ax.bar(x, other_durations, label="Other Stages", color=COLORS["secondary"])
-    ax.bar(
-        x,
-        bottleneck_durations,
-        bottom=other_durations,
-        label="Bottleneck Stage",
-        color=COLORS["danger"],
-    )
+    if stacked:
+        bottleneck_durations = [p.pipeline.bottleneck_duration for p in projects]
+        other_durations = [d - b for d, b in zip(durations, bottleneck_durations, strict=True)]
+        ax.bar(x, other_durations, label="Other Stages", color=COLORS["secondary"])
+        ax.bar(
+            x,
+            bottleneck_durations,
+            bottom=other_durations,
+            label="Bottleneck Stage",
+            color=COLORS["danger"],
+        )
+        ax.legend()
+    else:
+        ax.bar(x, durations, color=COLORS["warning"], alpha=0.8)
 
     ax.set_xlabel("Project", fontweight="bold")
     ax.set_ylabel("Duration (seconds)", fontweight="bold")
-    ax.set_title("Pipeline Duration by Project", fontweight="bold", fontsize=14)
-    ax.set_xticks(x)
+    ax.set_title(title, fontweight="bold")
+    ax.set_xticks(list(x))
     ax.set_xticklabels(project_names, rotation=45, ha="right")
-    ax.legend()
     ax.grid(axis="y", alpha=0.3)
-
-    # Add total duration labels
-    for i, duration in enumerate(durations):
-        ax.text(i, duration + 1, f"{duration:.0f}s", ha="center", fontweight="bold")
-
-    plt.tight_layout()
-    return fig
+    if durations:
+        max_d = max(durations)
+        for i, duration in enumerate(durations):
+            ax.text(i, duration + max_d * 0.02, f"{duration:.0f}s", ha="center", fontweight="bold")
 
 
-def create_output_distribution_chart(aggregate: dict[str, Any]) -> Figure:
-    """Create pie chart showing distribution of output types.
-
-    Args:
-        aggregate: Aggregate metrics dictionary
-
-    Returns:
-        Matplotlib Figure
-    """
-    fig, ax = plt.subplots(figsize=(8, 8))
-
-    outputs = aggregate.get("outputs", {})
-    labels = ["PDFs", "Figures", "Slides", "Web Pages"]
+def draw_output_distribution_on_axes(ax: Axes, outputs: dict[str, Any]) -> None:
+    """Plot output file distribution pie chart on ``ax``."""
+    labels = ["PDFs", "Figures", "Slides", "Web"]
     sizes = [
         outputs.get("total_pdfs", 0),
         outputs.get("total_figures", 0),
         outputs.get("total_slides", 0),
         outputs.get("total_web", 0),
     ]
-
-    colors = [
-        COLORS["primary"],
-        COLORS["success"],
-        COLORS["warning"],
-        COLORS["secondary"],
-    ]
-
-    # Only plot non-zero values
-    filtered_labels = []
-    filtered_sizes = []
-    filtered_colors = []
-    for label, size, color in zip(labels, sizes, colors):
+    colors = [COLORS["primary"], COLORS["success"], COLORS["warning"], COLORS["secondary"]]
+    filtered_labels: list[str] = []
+    filtered_sizes: list[int] = []
+    filtered_colors: list[str] = []
+    for label, size, color in zip(labels, sizes, colors, strict=True):
         if size > 0:
             filtered_labels.append(label)
             filtered_sizes.append(size)
             filtered_colors.append(color)
-
     if filtered_sizes:
         ax.pie(
             filtered_sizes,
@@ -212,21 +180,153 @@ def create_output_distribution_chart(aggregate: dict[str, Any]) -> Figure:
             startangle=90,
             textprops={"fontweight": "bold"},
         )
-        ax.set_title("Output File Distribution", fontweight="bold", fontsize=14)
+        ax.set_title("Output File Distribution", fontweight="bold")
     else:
         ax.text(
             0.5,
             0.5,
-            "No outputs generated",
+            "No outputs\ngenerated",
             ha="center",
             va="center",
             transform=ax.transAxes,
-            fontsize=14,
+            fontsize=12,
             fontweight="bold",
         )
 
-    plt.tight_layout()
-    return fig
+
+def draw_manuscript_complexity_scatter_on_axes(ax: Axes, projects: list[ProjectMetrics]) -> None:
+    """Plot equations vs word count scatter on ``ax``."""
+    project_names = [p.name for p in projects]
+    word_counts = [p.manuscript.total_words for p in projects]
+    equations = [p.manuscript.equations for p in projects]
+    ax.scatter(word_counts, equations, s=100, c=range(len(projects)), cmap="viridis", alpha=0.8)
+    for i, name in enumerate(project_names):
+        ax.annotate(
+            name,
+            (word_counts[i], equations[i]),
+            xytext=(5, 5),
+            textcoords="offset points",
+            fontsize=8,
+        )
+    ax.set_xlabel("Word Count", fontweight="bold")
+    ax.set_ylabel("Equations", fontweight="bold")
+    ax.set_title("Manuscript Complexity", fontweight="bold")
+    ax.grid(True, alpha=0.3)
+
+
+def draw_executive_summary_on_axes(ax: Axes, summary: ExecutiveSummary) -> None:
+    """Plot compact executive summary table on ``ax``."""
+    ax.axis("off")
+    headers = ["Project", "Health", "Words", "Tests", "Coverage"]
+    rows: list[list[str]] = []
+    for p in summary.project_metrics:
+        health = calculate_project_health_score(p)
+        rows.append(
+            [
+                p.name,
+                f"{health['percentage']:.0f}%",
+                f"{p.manuscript.total_words:,}",
+                str(p.tests.total_tests),
+                f"{p.tests.coverage_percent:.1f}%",
+            ]
+        )
+    agg = summary.aggregate_metrics
+    manuscript_agg = agg.get("manuscript", {})
+    tests_agg = agg.get("tests", {})
+    words_stats = manuscript_agg.get("words_stats", {})
+    coverage_stats = tests_agg.get("coverage_stats", {})
+    rows.append(
+        [
+            "**TOTAL**",
+            "**N/A**",
+            f"**{manuscript_agg.get('total_words', 0):,}**\n({words_stats.get('mean', 0):,.0f} avg)",
+            f"**{tests_agg.get('total_tests', 0)}**",
+            f"**{tests_agg.get('average_coverage', 0):.1f}%**\n({coverage_stats.get('mean', 0):.1f} avg)",
+        ]
+    )
+    table = ax.table(cellText=rows, colLabels=headers, loc="center", cellLoc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(8)
+    table.scale(1, 1.8)
+    for i in range(len(headers)):
+        cell = table[(0, i)]
+        cell.set_facecolor(COLORS["primary"])
+        cell.set_text_props(weight="bold", color="white")
+    for i in range(len(headers)):
+        cell = table[(len(rows), i)]
+        cell.set_facecolor(COLORS["light"])
+        cell.set_text_props(weight="bold")
+    ax.set_title("Executive Summary", fontweight="bold", fontsize=12, pad=20)
+
+
+def create_test_count_chart(
+    projects: list[ProjectMetrics],
+    *,
+    ax: Axes | None = None,
+) -> Figure | None:
+    """Create bar chart showing test counts by project."""
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        draw_test_count_on_axes(ax, projects)
+        ax.set_title("Test Counts by Project", fontweight="bold", fontsize=14)
+        plt.tight_layout()
+        return fig
+    draw_test_count_on_axes(ax, projects, include_failed=False, title="Test Results by Project")
+    return None
+
+
+def create_coverage_chart(
+    projects: list[ProjectMetrics],
+    *,
+    ax: Axes | None = None,
+) -> Figure | None:
+    """Create bar chart showing coverage percentages by project."""
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        draw_coverage_on_axes(ax, projects)
+        ax.set_title("Test Coverage by Project", fontweight="bold", fontsize=14)
+        plt.tight_layout()
+        return fig
+    draw_coverage_on_axes(ax, projects, compact=True)
+    return None
+
+
+def create_pipeline_duration_chart(
+    projects: list[ProjectMetrics],
+    *,
+    ax: Axes | None = None,
+) -> Figure | None:
+    """Create chart showing pipeline durations by project."""
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        draw_pipeline_duration_on_axes(ax, projects, stacked=True)
+        ax.set_title("Pipeline Duration by Project", fontweight="bold", fontsize=14)
+        plt.tight_layout()
+        return fig
+    draw_pipeline_duration_on_axes(
+        ax,
+        projects,
+        stacked=False,
+        title="Pipeline Execution Time",
+    )
+    return None
+
+
+def create_output_distribution_chart(
+    aggregate: dict[str, Any],
+    *,
+    ax: Axes | None = None,
+) -> Figure | None:
+    """Create pie chart showing distribution of output types."""
+    outputs = aggregate.get("outputs", {})
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(8, 8))
+        draw_output_distribution_on_axes(ax, outputs)
+        ax.set_title("Output File Distribution", fontweight="bold", fontsize=14)
+        plt.tight_layout()
+        return fig
+    draw_output_distribution_on_axes(ax, outputs)
+    return None
 
 
 def create_manuscript_size_chart(projects: list[ProjectMetrics]) -> Figure:
