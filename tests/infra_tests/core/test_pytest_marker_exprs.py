@@ -12,7 +12,10 @@ def test_default_triple_skip_matches_repo_gate() -> None:
             skip_slow=True,
             skip_bench=True,
         )
-        == "not requires_ollama and not slow and not bench"
+        == (
+            "not requires_ollama and not slow and not bench "
+            "and not private_project and not external_fixture"
+        )
     )
 
 
@@ -23,7 +26,7 @@ def test_include_slow_matches_ci_project_job_expression() -> None:
             skip_slow=False,
             skip_bench=True,
         )
-        == "not requires_ollama and not bench"
+        == "not requires_ollama and not bench and not private_project and not external_fixture"
     )
 
 
@@ -34,7 +37,7 @@ def test_include_ollama_include_slow_still_skips_bench() -> None:
             skip_slow=False,
             skip_bench=True,
         )
-        == "not bench"
+        == "not bench and not private_project and not external_fixture"
     )
 
 
@@ -44,6 +47,8 @@ def test_all_skips_disabled_returns_none() -> None:
             skip_requires_ollama=False,
             skip_slow=False,
             skip_bench=False,
+            skip_private_project=False,
+            skip_external_fixture=False,
         )
         is None
     )
@@ -56,5 +61,5 @@ def test_only_slow_skip() -> None:
             skip_slow=True,
             skip_bench=False,
         )
-        == "not slow"
+        == "not slow and not private_project and not external_fixture"
     )
