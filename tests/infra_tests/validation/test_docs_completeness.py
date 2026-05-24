@@ -159,20 +159,27 @@ class TestCheckOnboarding:
 class TestCheckConfigDocumentation:
     """Tests for check_config_documentation."""
 
-    def test_empty_config_files(self):
-        gaps = check_config_documentation({})
+    def test_empty_config_files(self, tmp_path: Path):
+        gaps = check_config_documentation({}, tmp_path)
         assert gaps == []
 
     def test_with_config_example(self, tmp_path: Path):
-        gaps = check_config_documentation({"config.yaml.example": tmp_path / "config.yaml.example"})
+        example = tmp_path / "config.yaml.example"
+        example.write_text("paper:\n  title: Example\n")
+        (tmp_path / "README.md").write_text("paper metadata\n")
+        gaps = check_config_documentation({"config.yaml.example": example}, tmp_path)
         assert gaps == []
 
 
 class TestCheckCrossReferenceCompleteness:
     """Tests for check_cross_reference_completeness."""
 
-    def test_returns_empty_list(self):
-        gaps = check_cross_reference_completeness()
+    def test_returns_empty_list(self, tmp_path: Path):
+        md = tmp_path / "index.md"
+        target = tmp_path / "other.md"
+        md.write_text("[ok](other.md)\n")
+        target.write_text("# other\n")
+        gaps = check_cross_reference_completeness(tmp_path)
         assert gaps == []
 
 

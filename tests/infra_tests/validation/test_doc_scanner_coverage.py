@@ -46,7 +46,8 @@ class TestDocScannerIntegration:
         result = scanner.phase6_verification()
 
         assert "link_checker" in result
-        assert "markdown_syntax" in result
+        assert "docs_lint" in result
+        assert "markdown_validation" in result
         assert "commands_tested" in result
         assert "cross_references" in result
         assert "circular_references" in result

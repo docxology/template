@@ -242,7 +242,10 @@ print("code block")
         verification = scanner.phase6_verification()
 
         assert "link_checker" in verification
-        assert "markdown_syntax" in verification
+        assert "docs_lint" in verification
+        assert "markdown_validation" in verification
+        assert "commands_tested" in verification
+        assert "circular_references" in verification
 
 
 class TestScannerVerificationMethods:
@@ -257,14 +260,14 @@ class TestScannerVerificationMethods:
         assert result["success"] is True
         assert result["exit_code"] == 0
 
-    def test_validate_markdown_syntax(self, tmp_path):
-        """Test that scanner has verification capabilities."""
+    def test_phase6_markdown_validation_key(self, tmp_path):
+        """Test that scanner phase6 includes markdown validation."""
         scanner = DocumentationScanner(tmp_path)
         (tmp_path / "test.md").write_text("# Test")
         scanner.phase1_discovery()
-        # Verify phase6 returns verification results
         result = scanner.phase6_verification()
-        assert "markdown_syntax" in result
+        assert "markdown_validation" in result
+        assert result["markdown_validation"]["status"] in {"passed", "failed", "skipped"}
 
     def test_test_documented_commands(self, tmp_path):
         """Test that scanner verification includes command testing."""
@@ -273,7 +276,7 @@ class TestScannerVerificationMethods:
         scanner.phase1_discovery()
         result = scanner.phase6_verification()
         assert "commands_tested" in result
-        assert result["commands_tested"]["status"] == "manual_testing_required"
+        assert result["commands_tested"]["status"] in {"passed", "failed"}
 
     def test_verify_cross_references(self, tmp_path):
         """Test _verify_cross_references (lines 971-973)."""
@@ -293,7 +296,7 @@ class TestScannerVerificationMethods:
         scanner.phase1_discovery()
         result = scanner.phase6_verification()
         assert "circular_references" in result
-        assert result["circular_references"]["status"] == "no_circular_references_detected"
+        assert result["circular_references"]["status"] in {"passed", "failed"}
 
 
 class TestReportGeneration:

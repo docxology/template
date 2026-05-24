@@ -128,13 +128,23 @@ class TestCheckScriptDocumentation:
 
 
 class TestCheckConfigDocumentation:
-    def test_empty_config(self):
-        gaps = check_config_documentation({})
+    def test_empty_config(self, tmp_path):
+        gaps = check_config_documentation({}, tmp_path)
         assert gaps == []
 
     def test_with_config_example(self, tmp_path):
-        gaps = check_config_documentation({"config.yaml.example": tmp_path / "config.yaml.example"})
+        example = tmp_path / "config.yaml.example"
+        example.write_text("paper:\n  title: Example\n")
+        (tmp_path / "README.md").write_text("Configure paper metadata in config.yaml.example\n")
+        gaps = check_config_documentation({"config.yaml.example": example}, tmp_path)
         assert gaps == []
+
+    def test_missing_key_in_docs(self, tmp_path):
+        example = tmp_path / "config.yaml.example"
+        example.write_text("paper:\n  title: Example\nllm:\n  enabled: true\n")
+        (tmp_path / "README.md").write_text("paper section only\n")
+        gaps = check_config_documentation({"config.yaml.example": example}, tmp_path)
+        assert any(g.item == "llm" for g in gaps)
 
 
 # ---------------------------------------------------------------------------
@@ -185,8 +195,12 @@ class TestCheckOnboarding:
 
 
 class TestCheckCrossReferenceCompleteness:
-    def test_returns_empty(self):
-        gaps = check_cross_reference_completeness()
+    def test_returns_empty_for_valid_links(self, tmp_path):
+        md = tmp_path / "index.md"
+        target = tmp_path / "other.md"
+        md.write_text("[ok](other.md)\n")
+        target.write_text("# other\n")
+        gaps = check_cross_reference_completeness(tmp_path)
         assert gaps == []
 
 
