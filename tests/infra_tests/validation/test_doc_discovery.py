@@ -1,7 +1,7 @@
 """Tests for infrastructure/validation/doc_discovery.py.
 
 Covers find_markdown_files, identify_cross_references, catalog_agents_readme,
-find_config_files, create_hierarchy, and run_discovery_phase using real temp directories.
+find_config_files, create_hierarchy, and discover_documentation using real temp directories.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from infrastructure.validation.docs.discovery import (
     find_config_files,
     find_markdown_files,
     identify_cross_references,
-    run_discovery_phase,
+    discover_documentation,
 )
 
 
@@ -157,7 +157,7 @@ class TestIdentifyCrossReferences:
 
 class TestRunDiscoveryPhase:
     def test_returns_dict_with_expected_keys(self, doc_root: Path) -> None:
-        result = run_discovery_phase(doc_root)
+        result = discover_documentation(doc_root)
         assert isinstance(result, dict)
         expected_keys = [
             "markdown_files",
@@ -173,14 +173,14 @@ class TestRunDiscoveryPhase:
             assert key in result, f"Missing key: {key}"
 
     def test_markdown_count_matches_files(self, doc_root: Path) -> None:
-        result = run_discovery_phase(doc_root)
+        result = discover_documentation(doc_root)
         actual_files = find_markdown_files(doc_root)
         assert result["markdown_files"] == len(actual_files)
 
     def test_config_files_count_positive(self, doc_root: Path) -> None:
-        result = run_discovery_phase(doc_root)
+        result = discover_documentation(doc_root)
         assert result["config_files"] >= 1
 
     def test_documentation_files_list_populated(self, doc_root: Path) -> None:
-        result = run_discovery_phase(doc_root)
+        result = discover_documentation(doc_root)
         assert len(result["documentation_files"]) > 0

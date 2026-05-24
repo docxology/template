@@ -337,7 +337,7 @@ def test_analysis_script_generates_output(tmp_path):
 
     # Run script
     result = subprocess.run(
-        ["python3", "scripts/example_figure.py", str(output_dir)],
+        ["python3", "projects/template_code_project/scripts/optimization_analysis.py"],
         capture_output=True,
         text=True
     )

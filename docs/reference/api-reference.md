@@ -1559,7 +1559,7 @@ Collect all metrics for a single project.
 
 ### `Control`
 
-*class — defined in `infrastructure.reporting.interactive_dashboard`*
+*class — defined in `infrastructure.reporting._interactive_models`*
 
 ```python
 class Control
@@ -1697,7 +1697,7 @@ Build a single self-contained interactive simulation dashboard.
 
 ### `Invariant`
 
-*class — defined in `infrastructure.reporting.interactive_dashboard`*
+*class — defined in `infrastructure.reporting._interactive_models`*
 
 ```python
 class Invariant
@@ -1747,7 +1747,7 @@ Centralized organizer for executive summary and multi-project outputs.
 
 ### `Panel`
 
-*class — defined in `infrastructure.reporting.interactive_dashboard`*
+*class — defined in `infrastructure.reporting._interactive_models`*
 
 ```python
 class Panel

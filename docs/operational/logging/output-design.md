@@ -23,7 +23,7 @@ handler" below.
 
 ## Reference: clean run
 
-Canonical clean-run summary — `template` repo, 2026-05-20, 4/4 projects:
+Canonical clean-run summary — template repo, illustrative multi-project run (project names rotate; counts are not authoritative):
 
 ```
 ================================================================================
@@ -34,7 +34,7 @@ Canonical clean-run summary — `template` repo, 2026-05-20, 4/4 projects:
 
 PROJECT STATUS
 --------------------------------------------------------------------------------
- ✅  actinf_policy_entanglement_lean  7/7 stages  20m 47s  out: 230.13 MB
+ ✅  <project_a>                      7/7 stages  20m 47s  out: 230.13 MB
  ✅  template_code_project            7/7 stages   1m 32s  out:   6.47 MB
  ✅  template_prose_project           7/7 stages   1m 01s  out:   1.77 MB
 

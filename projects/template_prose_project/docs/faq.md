@@ -56,12 +56,13 @@ zero-mock checklist.
 
 ## Testing and coverage
 
-### Why 90% coverage when the suite achieves 100%?
+### Why 90% coverage when the suite often exceeds it?
 
-The 90% gate is the floor enforced by the root pipeline; the project
-currently sits at 100% line and branch coverage on `src/`, leaving a 10%
-buffer. The buffer protects against incidental coverage drops during
-refactoring; do not consume it on purpose.
+The 90% gate is the floor enforced by the root pipeline. Live measured
+coverage for this exemplar is in
+[`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md).
+The buffer protects against incidental coverage drops during refactoring; do
+not consume it on purpose.
 
 If coverage drops, it signals a missing test — add the test, do not lower
 the gate.

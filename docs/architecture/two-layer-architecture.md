@@ -301,7 +301,7 @@ flowchart TB
     PROJ --> T[/tests<br/>Project tests/]
 
     SRC --> SRC_FILES[__init__.py · AGENTS.md · README.md ·<br/>example.py · ...]
-    SC --> SC_FILES[example_figure.py · generate_research_figures.py ·<br/>analysis_pipeline.py · scientific_simulation.py ·<br/>generate_scientific_figures.py]
+    SC --> SC_FILES[optimization_analysis.py · build_dashboard.py ·<br/>z_generate_manuscript_variables.py · run_prose_pipeline.py ·<br/>y_generate_prose_figures.py]
     T --> T_FILES[__init__.py · test_example.py ·<br/>test_simulation.py · test_statistics.py · ...]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

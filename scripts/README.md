@@ -58,9 +58,22 @@ uv run python scripts/07_generate_executive_report.py
 - `restore-test.sh` - non-destructive backup-restore verification
 - `health-check.sh` - pre-flight system health check (Python, uv, disk, Docker, repo)
 
+## Quality gates (thin orchestrator)
+
+| Gate | Command |
+| --- | --- |
+| Exemplar drift | `uv run python scripts/check_template_drift.py --strict` |
+| Module line count | `uv run python scripts/gates/module_line_count_check.py` |
+| Tracked projects guard | `uv run python scripts/check_tracked_projects.py` |
+| Tracked generated artifacts | `uv run python scripts/check_tracked_generated_artifacts.py` |
+| Unified health | `uv run python -m infrastructure.core.health` |
+| Opt-in Stage 10 bundle | `uv run python scripts/08_executable_bundle.py --project {name}` |
+| Opt-in Stage 11 archival | `uv run python scripts/09_archive_publication.py --project {name}` |
+
+See [`docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) and [`gates/AGENTS.md`](gates/AGENTS.md).
+
 ## Output Names
 
-- `projects/{name}/output/reports/pipeline_report.{json,html,md}`
 - `projects/{name}/output/reports/test_results.{json,md}`
 - `projects/{name}/output/reports/validation_report.{json,md}`
 - `projects/{name}/output/reports/log_summary.txt`

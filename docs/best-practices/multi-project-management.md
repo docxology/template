@@ -283,14 +283,11 @@ done
 **Usage:**
 
 ```bash
-# Run tests in all projects
-./run-all-projects.sh "uv run pytest tests/"
+# Run the multi-project test orchestrator (one pytest per project; 75% union gate)
+uv run python scripts/01_run_tests.py --project-only --all-projects
 
-# Build all projects
-./run-all-projects.sh "uv run python scripts/execute_multi_project.py"
-
-# Update dependencies
-./run-all-projects.sh "uv sync --upgrade"
+# Run the full multi-project pipeline
+./run.sh --all-projects --pipeline
 ```
 
 ### Status Monitoring

@@ -29,12 +29,14 @@ The `scripts/` directory contains thin, generic orchestrators for the build pipe
 
 **Quality gates / audits:**
 
-- `lint_docs.py` - documentation lint orchestrator (Mermaid, links, consistency, doc pairs)
+- `lint_docs.py` - thin CLI over `infrastructure.validation.docs.lint_runner.run_docs_lint`
 - `verify_no_mocks.py` - mock-usage checker
 - `audit_filepaths.py` - repository filepath audit
 - `check_tracked_generated_artifacts.py` - git-index hygiene guard for generated outputs (untracked helper; exercised by `tests/infra_tests/git_hook_smoke/`)
 - `check_template_drift.py` - thin CLI over `infrastructure.project.drift` for exemplar doc/code drift
-- `gates/module_line_count_check.py` - advisory line-count gate (warn 800, fail 950) for `infrastructure/` and `scripts/`
+- `gates/module_line_count_check.py` - line-count gate via `infrastructure.validation.line_count` (infra/scripts + `projects/*/scripts/`)
+- `check_tracked_projects.py` - confidentiality guard via `infrastructure.project.git_guards`
+- `08_executable_bundle.py` - bundle stage via `infrastructure.publishing.executable_bundle`
 
 **Setup / workspace / helpers:**
 
@@ -127,13 +129,31 @@ orchestrator:
 | Script invocation | Delegates to | Notes |
 | --- | --- | --- |
 | `01_run_tests.py` | `infrastructure.reporting.pipeline_test_runner.execute_test_pipeline` | Default path: infra-then-project for one selected project. |
-| `01_run_tests.py --project-only --all-projects` | `infrastructure.core.test_runner.run_per_project_pytest` | One pytest process per discovered project (avoids `tests/conftest.py` plugin-name collision), `--cov-append` accumulation, combined `coverage report --fail-under` gate. Mirrors the loop previously open-coded in `.github/workflows/ci.yml#test-project`. |
+| `01_run_tests.py --project-only --all-projects` | `infrastructure.core.test_runner.run_per_project_pytest` | One pytest process per discovered project (avoids `tests/conftest.py` plugin-name collision), `--cov-append` accumulation, combined union `coverage report --fail-under=75` (`DEFAULT_FAIL_UNDER`). Mirrors the loop previously open-coded in `.github/workflows/ci.yml#test-project`. **`./run.sh --all-projects --pipeline`** still runs the **per-project 90%** gate inside each project's own pytest invocation; the **75% union** gate applies only via this orchestrator path (CI `test-project` job). Symlinked WIP checkouts with large `src/` surfaces may report a lower union percentage (~80%) even when project-root pytest passes at 90% — treat the project directory as authoritative for that project's gate. |
 | `02_run_analysis.py` | `infrastructure.core.runtime._python_env.build_analysis_script_cmd_and_env` | |
 | `03_render_pdf.py` | `infrastructure.rendering.pipeline` | |
 | `04_validate_output.py` | `infrastructure.validation.cli` | |
 | `05_copy_outputs.py` | `infrastructure.reporting.output_organizer` | |
 | `06_llm_review.py` | `infrastructure.llm.review` | Skipped when Ollama is absent. |
 | `07_generate_executive_report.py` | `infrastructure.reporting.executive_reporter` | |
+| `lint_docs.py` | `infrastructure.validation.docs.lint_runner` | |
+| `execute_pipeline.py` (post-run) | `infrastructure.core.pipeline.post_run_reporting` | |
+| `00_setup_environment.py` | `infrastructure.core.runtime.environment`, `setup_checks`, `env_deps` | |
+| `show_project_info.py` | `infrastructure.project.info.collect_project_info` | |
+| `check_tracked_projects.py` | `infrastructure.project.git_guards.offending_tracked_projects` | |
+| `check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards.tracked_generated_artifacts` | |
+| `08_executable_bundle.py` | `infrastructure.publishing.executable_bundle.bundle_project` | |
+| `check_template_drift.py` | `infrastructure.project.drift` (+ thin-orchestrator script checks) | |
+| `manage_workspace.py` | `infrastructure.project.workspace` | |
+| `batch_cogsec_improve.py` | `infrastructure.core.source_improve` | |
+| `execute_pipeline.py` (HITL / single-stage) | `infrastructure.core.pipeline.hitl_cli`, `single_stage` | Post-run → `post_run_reporting` |
+| `execute_multi_project.py` | `infrastructure.core.pipeline.multi_project_cli` | Serial + `--parallel` paths |
+| `scripts/gates/module_line_count_check.py` | `infrastructure.validation.line_count` | |
+| `scripts/gates/security_scan.py` | `infrastructure.validation.security_gate` | Opt-in |
+| `scripts/gates/plugin_export_check.py` | `infrastructure.validation.plugin_export` | Opt-in |
+| `scripts/gates/gate_cache.py` | `infrastructure.core.cache_gate` | Opt-in |
+| `scripts/publish/*` | see [`publish/AGENTS.md`](publish/AGENTS.md) | |
+| `scripts/fixtures/*` | see [`fixtures/AGENTS.md`](fixtures/AGENTS.md) | |
 
 ## Testing Expectations
 

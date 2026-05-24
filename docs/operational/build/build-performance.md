@@ -20,33 +20,26 @@ This document provides detailed performance analysis extracted from the build sy
 
 **Result:** ✅ **ALL TESTS PASSING**
 
-**Coverage Breakdown:**
+**Coverage Breakdown:** *dated benchmark snapshot — live % → [`../../development/coverage-gaps.md`](../../development/coverage-gaps.md)*
 
-| Module | Statements | Missing | Coverage | Status |
-|--------|------------|---------|----------|--------|
-| `projects/{name}/src/example.py` | 21 | 0 | **100%** | ✅ |
-| `infrastructure/documentation/glossary_gen.py` | 56 | 0 | **100%** | ✅ |
-| `infrastructure/validation/content/pdf_validator.py` | 39 | 0 | **100%** | ✅ |
-| `infrastructure/scientific/` | 300 | 35 | **88%** | ✅ |
-| `infrastructure/publishing/` | 305 | 44 | **86%** | ✅ |
-| `infrastructure/validation/integrity/checks.py` | 354 | 67 | **81%** | ✅ Very Good |
-| **TOTAL** | **1989** | **360** | **81.90%** | ✅ **Excellent** |
+| Module | Notes |
+|--------|-------|
+| `projects/{name}/src/` | Per-exemplar gates → [`../../_generated/canonical_facts.md`](../../_generated/canonical_facts.md) |
+| `infrastructure/*` | Per-module % → [`../../development/coverage-gaps.md`](../../development/coverage-gaps.md) |
 
 ### Project Analysis — Script Execution (6 seconds)
 
 **Result:** ✅ **ALL SCRIPTS SUCCESSFUL**
 
-#### Script 1: `example_figure.py`
+#### Script 1: `projects/template_code_project/scripts/optimization_analysis.py`
 
 - ✅ Demonstrates thin orchestrator pattern
-- ✅ Imports from `projects/{name}/src/example.py`
-- ✅ Generates: `output/figures/example_figure.png`, `output/data/example_data.npz`, `output/data/example_data.csv`
+- ✅ Imports from `src/analysis.py`, `src/figures.py`, `src/optimizer.py`
+- ✅ Generates: `output/figures/convergence_plot.png`, `output/data/optimization_results.csv`, reports under `output/reports/`
 
-#### Script 2: `generate_research_figures.py`
+#### Script 2: `projects/{name}/scripts/<analysis>.py`
 
-- ✅ Generates 9 research figures
-- ✅ Generates 2 data files (CSV)
-- ✅ All scripts properly use `projects/{name}/src/` modules
+- ✅ Additional project scripts follow the same pattern (figures + data via `src/`)
 
 ### Repository Utilities (< 1 second)
 

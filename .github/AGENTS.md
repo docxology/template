@@ -107,7 +107,7 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the req
 | `N Python (sub)packages` claims match reality | zero stale counts |
 | Rotating projects in long-lived docs are conditional | zero ghost references |
 | Import time | ≤ 5 s |
-| Module line count (`scripts/gates/module_line_count_check.py`) | warn ≥ 800 lines; fail ≥ 950 (`infrastructure/`, `scripts/` only) |
+| Module line count (`scripts/gates/module_line_count_check.py`) | warn ≥ 800 / fail ≥ 950 for `infrastructure/` + `scripts/`; warn ≥ 150 / fail ≥ 250 for `projects/*/scripts/` |
 
 ## Local Pre-Push Parity (`.pre-commit-config.yaml`)
 

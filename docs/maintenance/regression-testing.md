@@ -9,7 +9,7 @@
 
 The template currently enforces a **coverage floor** (60% infra, 90% per-project, 75% combined union) as its quality signal. Coverage is hygiene, not correctness. A function can be 100% covered and still wrong.
 
-The operator's own memory ledger documents this failure mode across at least four projects (biology_textbook, actinf, dta, crescent_city). Shape tests, count tests, "the file exists" tests — all pass while the underlying scientific claim is broken.
+The operator's own memory ledger documents this failure mode across several private workspaces (for example a large symlinked textbook checkout under `projects/`). Shape tests, count tests, "the file exists" tests — all pass while the underlying scientific claim is broken.
 
 A reproducibility template that claims to make science *reproducible* needs to bind tests to **the actual quantitative claims in the manuscript**, not just to the existence and shape of the code.
 

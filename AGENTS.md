@@ -52,16 +52,16 @@ This document provides documentation for the Research Project Template system, e
 
 - PAI local alignment (2026-05-15): upstream target is `danielmiessler/Personal_AI_Infrastructure` `v5.0.0` (Life Operating System). The active `~/.claude` install was upgraded with the official installer and now carries `PAI_SYSTEM_PROMPT.md`, Algorithm `v6.3.0`, the ISA skill, and Pulse on port `31337`; `~/.claude/settings.json` now agrees with `PAI/ALGORITHM/LATEST` on Algorithm `6.3.0`. Timestamped backups at `/Users/4d/.claude.backup-20260512`, `/Users/4d/.claude.backup-20260515-105316`, and `/Users/4d/.claude.backup-2026-05-15T18-21-36-469Z` are retained for rollback. Treat PRD-era PAI loop wording as historical, and use ISA-first language in new PAI-facing docs.
 - PAI Docxology intake (2026-05-15): `~/.claude/PAI/TOOLS/DocxologyIntake.ts` is the controlled entrypoint for Daniel's public Docxology context. It fetches canonical structured files from `danielarifriedman.com`, writes snapshots under `~/.claude/PAI/MEMORY/REFERENCE/DOCXOLOGY/`, promotes curated knowledge notes, and keeps the boundary that public context is not private TELOS. The weekly Pulse job is `docxology-context-sync`.
-- Manuscript metrics, counts, and variables are auto-injected from per-project `output/data/manuscript_variables.json` at render time; never hand-author values that should be injected. PDF Publishing Information reads `publication.doi`, optional `publication.repository_url`, and `publication.repository_label` from `projects/{name}/manuscript/config.yaml` via `infrastructure/rendering/_pdf_latex_helpers.py` (`_latex_href_url()` preserves underscores in GitHub URLs).
+- Manuscript metrics, counts, and variables are auto-injected from per-project `output/data/manuscript_variables.json` at render time; never hand-author values that should be injected. For `template_code_project`, the default pipeline path calls `generate_variables(..., require_analysis_outputs=True)` via `scripts/z_generate_manuscript_variables.py` and fails when `output/data/optimization_results.csv` is absent; pass `--allow-draft` only for intentional early drafts that may use `"N/A"` fallbacks. PDF Publishing Information reads `publication.doi`, optional `publication.repository_url`, and `publication.repository_label` from `projects/{name}/manuscript/config.yaml` via `infrastructure/rendering/_pdf_latex_helpers.py` (`_latex_href_url()` preserves underscores in GitHub URLs).
 - **Rotating Lean-toolchain project (e.g. `fep_lean`, when checked out under `projects/`)**: real Lean 4 + Mathlib via `lake build`, OpenGauss `gauss` CLI, and the Hermes LLM pipeline (no mocks); validate end-to-end through `./run.sh`. Combined-PDF link colours come from `hyperref` / `\hypersetup` in the project's `manuscript/preamble.md` (red `fepred` for link, URL, and citation colours). Hermes and per-topic Gauss reports are built from the pipeline stage payload (`TopicRunResult.as_dict()`), not SQLite re-reads—that dict must include `tokens_used`, `explanation`, `refined_lean_sketch`, `hermes_model`, `cache_hit`, and `hermes_lean_compiles`. Topic sketches live in `scripts/catalogue_sketches.py` and `config/topics.yaml`; `lean/FepSketches/` holds `Basic.lean`, `fep_all.lean`, and ephemeral `_verify_*` files only. The manuscript emits unified `09z_unified_formalism_catalogue.md`; `scripts/theorem_latex_signatures.py` drives display-math aligned with Lean. The manuscript-variables injector reads only `run_*/verification_manifest.json` (not `verify_*/` standalone runs), so the abstract compile-rate reflects the Hermes-refined run.
 - Content-validation diagnostics carry stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`, e.g. `MARKDOWN.PANDOC_BARE_PIPE`, `BIBTEX.UNDEFINED_KEY`); every new `DiagnosticEvent` emission must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters on `diagnostics.json`.
-- `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .` runs `prevalidate_source_markdown` without a full render (fast pre-flight before `scripts/03_render_pdf.py`). Mermaid in Markdown (`lint_docs` / `mmdc`): unquoted `//` starts a line comment; stadium nodes `[/label/]` must close with `/]`; prefer quoted labels and `<br/>` over `\\n` in labels. Inline Mermaid in combined PDF preprocessing (`infrastructure/rendering/_pdf_mermaid.py`) renders via Chrome headless or `mmdc` when available; otherwise it falls back to a verbatim figure block instead of failing the render.
+- `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .` runs `prevalidate_source_markdown` without a full render (fast pre-flight before `scripts/03_render_pdf.py`). `DocumentationScanner.run_verification_checks()` in `infrastructure/validation/docs/scanner.py` delegates to `run_verification_checks()` (`run_docs_lint`, `validate_markdown`, `verify_commands`, `detect_markdown_link_cycles()`); legacy stub statuses such as `basic_validation_passed` and `manual_testing_required` are removed. Mermaid in Markdown (`lint_docs` / `mmdc`): unquoted `//` starts a line comment; stadium nodes `[/label/]` must close with `/]`; prefer quoted labels and `<br/>` over `\\n` in labels. Inline Mermaid in combined PDF preprocessing (`infrastructure/rendering/_pdf_mermaid.py`) renders via Chrome headless or `mmdc` when available; otherwise it falls back to a verbatim figure block instead of failing the render.
 - Slides keep Beamer Unicode/math parity with combined PDFs via `extract_math_font_preamble` in `infrastructure/rendering/_pdf_latex_helpers.py`, wired through Pandoc `-H header.tex` from `SlidesRenderer.render`; prose Unicode glyphs in body LaTeX are remapped by `infrastructure/rendering/_pdf_unicode_remap.py` inside `_pdf_combined_renderer.postprocess_latex`.
 - **CONFIDENTIALITY INVARIANT (this is a PUBLIC repo).** `.gitignore` ignores `projects/*` and negates **only** `projects/template_code_project/` and `projects/template_prose_project/` (plus the repo-level `projects/*.md` docs). Those two canonical exemplars are the **only** project trees ever git-tracked/pushed. Confidential/private work lives in the sibling private repo `/Users/4d/Documents/GitHub/projects/` with `active/`, `passive/`, and `archive/`; `run.sh`/`infrastructure.orchestration` sync `active/*` into `template/projects/*` as symlinks before discovery. Every non-template project visible under `projects/` — rotating research, client/confidential work, symlinked active work, and the optional `template_search_project` literature-search exemplar — is **local-only and must never be committed**. This is enforced, not just conventional: `scripts/check_tracked_projects.py` fails the CI `lint` job and the pre-push `pre-push-quick` hook if any non-template project path is tracked (a `git add -f` cannot slip past it). `template_search_project` rests in [`projects_archive/template_search_project/`](projects_archive/template_search_project/); copy it under `projects/` **locally** to exercise the literature-search workflow, but never commit it. Consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) before hard-coding any other project paths in docs (every non-template path may rotate between `projects/`, `projects_in_progress/`, `projects_archive/`, or the sibling private repo). Running **all** `projects/*/tests/` in **one** pytest process fails when two projects each ship `tests/conftest` under the `tests.conftest` package name; run **one project test directory per pytest invocation** (with `--cov-append` to merge coverage) or follow `.github/workflows/ci.yml` (e.g. `fep_lean` in its own job).
-- WIP resolution: `infrastructure.project.discovery.resolve_project_root` prefers `projects/<name>/` when that tree has `src/`, `tests/`, `scripts/`, and `manuscript/`; otherwise the same name under `projects_in_progress/` (nested WIP: pass e.g. `cognitive_integrity/cogsec_multiagent_1_theory`; bare `cogsec_multiagent_*` resolves only under `projects/`). For `biology_textbook`, `manuscript/config.yaml` is the master TOC (38 chapters, 38 labs, 38 question banks; paths enforced by `test_toc_consistency.py`); publication canon is `https://github.com/docxology/biology_textbook` and DOI `10.5281/zenodo.20286478` via `publication.repository_url` / `publication.doi`. `layout.*` / `typography.*` in config are authoring documentation only—not wired into LaTeX; PDF margins and line spacing come from `manuscript/preamble.md` (authoritative; currently 2 mm geometry and `\setstretch{1.28}`). Keep `docs/api_reference.md` in sync with `src/biology` public APIs and `docs/accessibility.md` advisory vs enforced keys.
+- WIP resolution: `infrastructure.project.discovery.resolve_project_root` prefers `projects/<name>/` when that tree has `src/`, `tests/`, `scripts/`, and `manuscript/`; otherwise the same name under `projects_in_progress/` (nested WIP: pass e.g. `cognitive_integrity/cogsec_multiagent_1_theory`; bare `cogsec_multiagent_*` resolves only under `projects/`). Symlinked private projects under `projects/` carry their own operational canon in that tree's `AGENTS.md`; consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) instead of hard-coding rotating paths in root docs.
 - `bandit.yaml` lists `exclude_dirs` (`projects_archive`, `projects_in_progress`, `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/` — same rotating-project exemption as coverage/mypy) so Bandit stays strict on `infrastructure/`, `scripts/`, and the two canonical exemplars while non-authored / rotating trees are skipped; CI and hooks rely on that config instead of repeating long `--exclude` lists on the command line.
 - When copied **locally** under `projects/` for a sweep, the literature-search exemplar's `manuscript/config.yaml` ships `search.max_results: 10` and `deep_search.max_results_per_keyword: 10` for faster default pipeline smoke; raise those caps when you need full sweeps. It is local-only (not git-tracked); it rests in [`projects_archive/template_search_project/`](projects_archive/template_search_project/) and must never be committed (the `check_tracked_projects.py` guard blocks it).
-- Exemplar doc/code drift is checked by `scripts/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` for `template_code_project` and `template_prose_project`; use `--project` and `--strict` for focused gates. Mechanical Python hygiene fixes live in `infrastructure/core/source_improve.py` (used by `scripts/batch_cogsec_improve.py`), not under `infrastructure/scientific/`. Layer 1 module size is gated by `scripts/gates/module_line_count_check.py` (warn ≥800, fail ≥950) and wired into `uv run python -m infrastructure.core.health` as `module-line-count`.
+- Exemplar doc/code drift is checked by `scripts/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` for `template_code_project` and `template_prose_project`; use `--project` and `--strict` for focused gates. The drift runner applies `check_project_scripts` / `check_repo_scripts` (AST + line-count) in `infrastructure.project.drift.orchestrator` to root `scripts/` and project `scripts/`. Mechanical Python hygiene fixes live in `infrastructure/core/source_improve.py` (used by `scripts/batch_cogsec_improve.py`), not under `infrastructure/scientific/`. Layer 1 module size is gated by `infrastructure/validation/line_count.py` via `scripts/gates/module_line_count_check.py` (warn ≥800, fail ≥950 for `infrastructure/` + `scripts/`; warn ≥150, fail ≥250 for `projects/*/scripts/`) and wired into `uv run python -m infrastructure.core.health` as `module-line-count`. Opt-in gates under `scripts/gates/` (`gate_cache`, `security_scan`, etc.) plus `infrastructure/core/cache_gate.py` (Hermes-only) and `infrastructure/validation/security_gate.py` are not in default `./run.sh` or CI; missing security tools report `status: "skipped"` under `skipped_tools`, not as clean scans.
 
 ### PAI Pulse Re-Enablement (Daemon Only)
 
@@ -527,16 +527,16 @@ uv run pytest tests/infra_tests/llm/ -m requires_ollama -v
 
 ### Secure Pipeline (`secure_run.sh`)
 
-**Two phases:** (1) run the **same DAG** as the normal pipeline through Python
+**Two steps:** (1) **Pipeline run** — the **same DAG** as the normal pipeline through Python
 [`PipelineRunner`](infrastructure/orchestration/pipeline_runner.py) /
-[`PipelineExecutor`](infrastructure/core/pipeline/executor.py) — **not** by shelling out to `./run.sh`; (2) run
+[`PipelineExecutor`](infrastructure/core/pipeline/executor.py) — **not** by shelling out to `./run.sh`; (2) **Steganography pass** — run
 [`SteganographyProcessor`](infrastructure/steganography/) on the resulting PDFs.
 
-**Phase 1** is skipped when `--steganography-only`. When the pipeline phase runs, **`--project <name>` is required** (single project per invocation). For steganography-only with no `--project`, PDFs for **all** discovered projects are processed.
+**Pipeline run** is skipped when `--steganography-only`. When the pipeline run executes, **`--project <name>` is required** (single project per invocation). For steganography-only with no `--project`, PDFs for **all** discovered projects are processed.
 
 For argv shaping into the `secure` subcommand from the same thin shell as `./run.sh`, use **`./run.sh --secure-run`** (see [`run.sh`](run.sh)). **`./secure_run.sh`** always execs `python -m infrastructure.orchestration secure` and does not replicate the full interactive main menu by itself.
 
-**Phase 2:** post-processes PDFs (companion `*_steganography.pdf`, `.hashes.json` manifest). Original PDFs stay untouched.
+**Steganography pass:** post-processes PDFs (companion `*_steganography.pdf`, `.hashes.json` manifest). Original PDFs stay untouched.
 
 ```bash
 # Interactive path that forwards to the secure subcommand (same orchestration CLI as ./run.sh)
@@ -1106,18 +1106,18 @@ All advanced modules follow the **thin orchestrator pattern**:
 - **Testing** ensuring reliability
 - **Documentation** for each module's functionality
 
-**Testing Coverage:**
+**Testing Coverage:** measured per module in [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md); suite locations under `tests/infra_tests/`.
 
-- ✅ **Security**: Tests (15+ tests)
-- ✅ **Health Check**: Tests (10+ tests)
-- ✅ **Input Sanitization**: Tests (8+ tests)
-- ✅ **Integrity**: Tests (16 tests)
-- ✅ **Publishing**: Tests (14 tests)
-- ✅ **Scientific Dev**: Tests (12 tests)
-- ✅ **Build Verifier**: Tests (10 tests)
-- ✅ **LLM Integration**: 91% coverage (11 tests)
-- ✅ **Rendering System**: 91% coverage (10 tests)
-- ✅ **Reporting**: 0% coverage (module, tests pending)
+- ✅ **Security** — `tests/infra_tests/core/`
+- ✅ **Health Check** — `tests/infra_tests/core/`
+- ✅ **Input Sanitization** — `tests/infra_tests/llm/`
+- ✅ **Integrity** — `tests/infra_tests/validation/`
+- ✅ **Publishing** — `tests/infra_tests/publishing/`
+- ✅ **Scientific Dev** — `tests/infra_tests/scientific/`
+- ✅ **Build Verifier** — `tests/infra_tests/validation/`
+- ✅ **LLM Integration** — `tests/infra_tests/llm/` (measured coverage → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
+- ✅ **Rendering System** — `tests/infra_tests/rendering/` (measured coverage → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
+- ✅ **Reporting** — `tests/infra_tests/reporting/` (measured coverage → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
 
 ### Accessing Outputs
 
@@ -1452,14 +1452,14 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 - ✅ Security System (tests) - Input sanitization and monitoring
 - ✅ Health Check System (tests) - System health monitoring
 - ✅ Input Sanitization (tests) - LLM prompt validation
-- ✅ LLM Integration (91% coverage, 11 tests) - Local Ollama support
-- ✅ Rendering System (91% coverage, 10 tests) - Multi-format output
+- ✅ LLM Integration — tests in `tests/infra_tests/llm/` (measured coverage → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
+- ✅ Rendering System — tests in `tests/infra_tests/rendering/` (measured coverage → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
 - ✅ Publishing API (integrated) - Zenodo, arXiv, GitHub automation
 - ✅ Multi-project architecture (projects/{name}/ structure)
 
 **Audit Status:**
 
-- ✅ **High code coverage** across all modules (90%+ target achieved for key modules)
+- ✅ **High code coverage** across infrastructure and project gates (live % → [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md), [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
 - ✅ Zero mock methods - all tests use data and HTTP calls
 - ✅ All .cursorrules standards implemented
 - ✅ compliance with thin orchestrator pattern

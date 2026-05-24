@@ -1,4 +1,4 @@
-"""Phase 4: Quality Assessment for documentation scanning."""
+"""Quality assessment for documentation scanning."""
 
 from collections import defaultdict
 from pathlib import Path
@@ -264,8 +264,8 @@ def group_quality_by_severity(issues: list[QualityIssue]) -> dict[str, int]:
     return dict(severities)
 
 
-def run_quality_phase(md_files: list[Path], repo_root: Path) -> tuple[dict[str, Any], list[QualityIssue]]:
-    """Run Phase 4: Quality Assessment.
+def assess_documentation_quality(md_files: list[Path], repo_root: Path) -> tuple[dict[str, Any], list[QualityIssue]]:
+    """Assess documentation quality (clarity, formatting, maintainability).
 
     Args:
         md_files: List of markdown files to assess
@@ -274,7 +274,7 @@ def run_quality_phase(md_files: list[Path], repo_root: Path) -> tuple[dict[str, 
     Returns:
         Tuple of (quality_report, quality_issues)
     """
-    logger.info("Phase 4: Quality Assessment...")
+    logger.info("Quality assessment...")
 
     quality_issues = []
 

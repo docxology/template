@@ -10,7 +10,7 @@ from infrastructure.validation.docs.accuracy import (
     check_file_paths,
     validate_config_options,
     check_terminology,
-    run_accuracy_phase,
+    verify_documentation_accuracy,
 )
 
 
@@ -254,7 +254,7 @@ class TestCheckTerminology:
 
 
 # ---------------------------------------------------------------------------
-# run_accuracy_phase
+# verify_documentation_accuracy
 # ---------------------------------------------------------------------------
 
 
@@ -262,7 +262,7 @@ class TestRunAccuracyPhase:
     def test_basic_run(self, tmp_path):
         md = tmp_path / "doc.md"
         md.write_text("# Hello\nSome text.")
-        report, link_issues, accuracy_issues, all_headings = run_accuracy_phase(
+        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy(
             [md], tmp_path, {}
         )
         assert "link_issues" in report
@@ -272,7 +272,7 @@ class TestRunAccuracyPhase:
         assert str(md.relative_to(tmp_path)) in all_headings
 
     def test_empty_file_list(self, tmp_path):
-        report, link_issues, accuracy_issues, all_headings = run_accuracy_phase(
+        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy(
             [], tmp_path, {}
         )
         assert report["total_issues"] == 0
@@ -281,7 +281,7 @@ class TestRunAccuracyPhase:
     def test_detects_broken_links(self, tmp_path):
         md = tmp_path / "doc.md"
         md.write_text("[broken](nonexistent.md)")
-        report, link_issues, accuracy_issues, all_headings = run_accuracy_phase(
+        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy(
             [md], tmp_path, {}
         )
         assert report["link_issues"] >= 1

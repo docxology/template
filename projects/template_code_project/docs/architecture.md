@@ -46,6 +46,7 @@ graph TD
     MAC[tests/test_analysis_coverage.py] -->|branch coverage| A2
     TSS[tests/test_scripts_smoke.py] -->|AESTHETIC CLI| PF[scripts/00_preflight.py]
     TSS --> GD[scripts/generate_api_docs.py]
+    TDOC[tests/test_documentation.py] -->|unit tests| DOC[src/documentation.py]
 
     B --> N((No imports from this repo))
 ```

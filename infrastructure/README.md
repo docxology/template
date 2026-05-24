@@ -89,7 +89,7 @@ Diagrams above are selective. These packages also exist under `infrastructure/` 
 flowchart TD
     subgraph "📋 Project Scripts"
         ANALYSIS[scripts/02_run_analysis.py<br/>Data processing & figures]
-        FIGURES[example_figure.py<br/>Visualization scripts]
+        FIGURES["projects/{name}/scripts/<analysis>.py<br/>Thin orchestrators"]
     end
 
     subgraph "🏗️ Infrastructure Layer"
@@ -330,7 +330,7 @@ flowchart TD
 
 ## Testing
 
-Infrastructure modules maintain **≥60% test coverage** (typically 80-84% overall):
+Infrastructure modules maintain **≥60% test coverage** (live overall % → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md)):
 
 ```bash
 # Test all infrastructure

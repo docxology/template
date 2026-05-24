@@ -61,7 +61,7 @@ flowchart TB
 
     SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>experiment_config.py · analysis.py · figures.py ·<br/>dashboard.py · manuscript_variables.py ·<br/>STYLE.md · AGENTS.md · README.md]
     SC --> SC_F[optimization_analysis.py · build_dashboard.py ·<br/>00_preflight.py · generate_api_docs.py ·<br/>z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
-    T --> T_F[conftest.py · test_optimizer.py · test_analysis_integration.py ·<br/>test_analysis_coverage.py · test_experiment_config.py ·<br/>test_figures_orchestration.py · test_dashboard_config.py ·<br/>test_invariants.py · test_invariants_and_dashboard.py ·<br/>test_manuscript_variables.py · test_scripts_smoke.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
+    T --> T_F[conftest.py · test_optimizer.py · test_analysis_integration.py ·<br/>test_analysis_coverage.py · test_experiment_config.py ·<br/>test_figures_orchestration.py · test_dashboard_config.py ·<br/>test_invariants.py · test_invariants_and_dashboard.py ·<br/>test_manuscript_variables.py · test_documentation.py ·<br/>test_scripts_smoke.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
     DOCS --> DOCS_F[AGENTS.md · README.md · agent_instructions.md ·<br/>architecture.md · testing_philosophy.md ·<br/>rendering_pipeline.md · style_guide.md · syntax_guide.md]
     M --> M_F[00_abstract → 07_scope_and_related_work.md ·<br/>SYNTAX.md · config.yaml · config.yaml.example ·<br/>preamble.md · references.bib · AGENTS.md · README.md]
 
@@ -106,6 +106,16 @@ logger.info("Iterations: %s, Final objective: %s", result.iterations, result.obj
 # From repository root — execute the full analysis pipeline
 uv run python projects/template_code_project/scripts/optimization_analysis.py
 # Writes figures, data, reports, and dashboard under projects/template_code_project/output/
+```
+
+### Manuscript variable hydration (strict default)
+
+`scripts/z_generate_manuscript_variables.py` calls `generate_variables(..., require_analysis_outputs=True)` by default and fails when `output/data/optimization_results.csv` is absent. Pass `--allow-draft` only for intentional early drafts that may use `"N/A"` fallbacks for result-derived tokens.
+
+```bash
+uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+# Draft-only (skip analysis CSV requirement):
+uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py --allow-draft
 ```
 
 ### Scientific Analysis Features
@@ -265,64 +275,15 @@ def simulate_trajectory(
 
 ### optimization_analysis.py
 
-The main analysis script (`scripts/optimization_analysis.py`) is a thin orchestrator that runs the full pipeline via its `main()` function. Key internal functions:
+Thin orchestrator (~65 lines) — runs the full pipeline via `main()`. **Function signatures:** [`src/AGENTS.md`](src/AGENTS.md) (`analysis.py`, `figures.py`, `optimizer.py`, `dashboard.py`). Do not duplicate API blocks here.
 
-#### Scientific Analysis Functions
+### build_dashboard.py
 
-##### run_stability_analysis (function)
+Thin wrapper → [`src/dashboard.py`](src/dashboard.py).
 
-```python
-def run_stability_analysis() -> Optional[str]:
-    """Assess numerical stability of optimization algorithms.
+### generate_api_docs.py
 
-    Returns:
-        Path to stability analysis JSON report, or None if failed
-    """
-```
-
-##### run_performance_benchmarking (function)
-
-```python
-def run_performance_benchmarking() -> Optional[str]:
-    """Benchmark gradient descent performance across different inputs.
-
-    Returns:
-        Path to performance benchmark JSON report, or None if failed
-    """
-```
-
-##### generate_stability_visualization (function)
-
-```python
-def generate_stability_visualization(stability_path: Optional[str]) -> Optional[str]:
-    """Generate visualization of stability analysis results.
-
-    Args:
-        stability_path: Path to stability analysis JSON report
-
-    Returns:
-        Path to generated stability visualization, or None if failed
-    """
-```
-
-##### generate_benchmark_visualization (function)
-
-```python
-def generate_benchmark_visualization(benchmark_path: Optional[str]) -> Optional[str]:
-    """Generate visualization of benchmark results.
-
-    Args:
-        benchmark_path: Path to performance benchmark JSON report
-
-    Returns:
-        Path to generated benchmark visualization, or None if failed
-    """
-```
-
-##### build_dashboard (script)
-
-Interactive Plotly dashboard: `scripts/build_dashboard.py` → `output/web/dashboard.html`.
-Implementation: `src/dashboard.py`.
+Thin wrapper → [`src/documentation.py`](src/documentation.py).
 
 ## Troubleshooting
 

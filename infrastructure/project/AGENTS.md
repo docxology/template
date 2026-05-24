@@ -19,6 +19,24 @@ The `infrastructure/project/` module provides project discovery, validation, and
 
 - `run_drift_checks(repo_root, projects)` - exemplar doc/code drift battery (used by `scripts/check_template_drift.py`)
 - `Finding`, `Report` - structured drift findings
+- `check_project_scripts` / `check_repo_scripts` (`orchestrator.py`) - AST thin-orchestrator enforcement
+- Line-count gate: `infrastructure.validation.line_count.scan_project_scripts` (via `scripts/gates/module_line_count_check.py`)
+
+### Project Introspection (`info.py`)
+
+- `collect_project_info(project_name, repo_root)` - manuscript/source/output/tests counts
+- `display_project_info(info, logger=...)` - formatted logging for `scripts/show_project_info.py`
+
+### Workspace Management (`workspace.py`)
+
+- `sync_workspace()`, `update_workspace()`, `add_dependency()`, `show_workspace_tree()`, `show_workspace_status()` — used by `scripts/manage_workspace.py`
+
+### Git Guards (`git_guards.py`)
+
+- `offending_tracked_projects(repo_root)` — non-exemplar paths tracked under `projects/`
+- `tracked_generated_artifacts(repo_root)` — committed files under disposable `output/` trees
+- `is_generated_artifact_path(path)` — path classifier for generated outputs
+- Used by `scripts/check_tracked_projects.py` and `scripts/check_tracked_generated_artifacts.py`
 
 **Project pyproject.toml flags (`[tool.template]`):**
 

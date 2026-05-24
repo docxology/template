@@ -28,6 +28,7 @@ flowchart LR
     T --> TIDA[test_invariants_and_dashboard.py]
     T --> TMV[test_manuscript_variables.py]
     T --> TSS[test_scripts_smoke.py]
+    T --> TDOC[test_documentation.py]
     T --> DOCS[PATTERNS.md · AGENTS.md · README.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff

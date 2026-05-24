@@ -104,7 +104,7 @@ flowchart TB
 
 - **Sync:** `uv sync --group rendering --group monitoring --group discopy` — same packages as a fresh local `uv sync` at the repo root for DisCoPy string-diagram tests: root **`default-groups`** are `dev`, `rendering`, and **`discopy`**, so `uv sync` already installs **DisCoPy**; this job adds **monitoring** (not in `default-groups`). **Hypothesis** comes from the **dev** group (parametric tests), not from `discopy` (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
 - **Matrix:** Same as `test-infra` (6 combinations)
-- **Coverage threshold:** 90% (`--cov-fail-under=90`) — enforced via combined `coverage report` after all projects
+- **Coverage threshold:** **75% combined union** (`DEFAULT_FAIL_UNDER` in [`infrastructure/core/test_runner.py`](../../infrastructure/core/test_runner.py)) — enforced via `coverage report` after all projects append into one trace. **Per-project standalone** runs still target **≥ 90%** on each project's own `src/`.
 - **Coverage file:** `.coverage.project` (isolated)
 - **Scope:** [`scripts/01_run_tests.py`](../../scripts/01_run_tests.py) `--project-only --all-projects --non-strict --include-slow`, which delegates to [`infrastructure.core.test_runner.run_per_project_pytest`](../../infrastructure/core/test_runner.py) (one pytest process per discovered project, `--cov-append`, then `coverage xml`). **The rotating Lean-toolchain project's tests are not run here** (separate `fep-lean` job in `ci.yml` with real `gauss` / `lake` / `lean`). <!-- noqa: docs-lint -->
 - **Codecov upload:** On Python 3.12 / ubuntu-latest only
@@ -167,7 +167,8 @@ flowchart TB
 | mypy type check | no errors | `lint` job |
 | No-mocks policy | zero mock usage | `verify-no-mocks` job |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
-| Project coverage | ≥ 90% | `test-project` job |
+| Per-project coverage (standalone) | ≥ 90% | each project's own pytest gate |
+| Combined-union all-projects coverage | ≥ 75% | `test-project` job (`DEFAULT_FAIL_UNDER`) |
 | fep_lean coverage | ≥ 89% | `fep-lean` job (skipped if `projects/fep_lean/lean/lean-toolchain` absent) |
 | pip-audit | no unignored vulnerabilities | `security` job |
 | Bandit MEDIUM+ (`bandit.yaml`) | zero findings | `security` job |

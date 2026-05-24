@@ -13,6 +13,7 @@ flowchart TB
     T --> CFG_DIR[/config<br/>schema extensions/]
     T --> PIPE_DIR[/pipeline<br/>parallel helpers/]
     T --> TEL_DIR[/telemetry<br/>retention/]
+    T --> RT_DIR[/runtime<br/>setup checks/]
 
     T --> CFG[Configuration / Environment<br/>test_config_cli_coverage · test_config_loader ·<br/>test_credentials · test_credentials_module ·<br/>test_environment]
     T --> EXC[Exceptions<br/>test_exceptions]
@@ -38,6 +39,7 @@ flowchart TB
 - [`config/`](config/) — config schema-extension registry, strict loading, and schema output.
 - [`pipeline/`](pipeline/) — multi-project parallel helper behavior and worker isolation.
 - [`telemetry/`](telemetry/) — telemetry retention and archive rotation.
+- [`runtime/`](runtime/) — project discovery validation and runtime setup helpers.
 
 ### Configuration and Environment
 
@@ -166,10 +168,7 @@ def test_translation_languages(tmp_path, sample_project_config):
 ### Coverage
 
 **Coverage Goals:**
-- 100% line coverage for core utilities
-- Branch coverage for conditional logic
-- Error path testing for robustness
-- Edge case validation
+- Measured coverage via `pytest --cov=infrastructure.core` → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md)
 
 ### Test Organization
 
@@ -412,10 +411,13 @@ uv run pytest tests/infra_tests/core/ --durations=10
 
 ### Coverage Targets
 
-**Current Status:**
-- Line Coverage: 100%
-- Branch Coverage: 95%+
-- Function Coverage: 100%
+Re-measure with:
+
+```bash
+uv run pytest tests/infra_tests/core/ --cov=infrastructure.core --cov-report=term-missing
+```
+
+Live aggregate → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md). Gate: **60%** minimum on `infrastructure/`.
 
 ### Performance Benchmarks
 

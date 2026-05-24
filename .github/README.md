@@ -33,7 +33,7 @@ This folder is the **GitHub integration surface**: Actions workflows, Dependabot
 | [`workflows/README.md`](workflows/README.md) | CI job graph and commands to mirror CI locally |
 | [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | Issue template inventory and editing notes |
 
-**Related (repo root):** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) lists agent `SKILL.md` descriptors. After adding or editing `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit the updated manifest (see [`infrastructure/skills/`](../infrastructure/skills/)).
+**Related (repo root):** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) lists agent `SKILL.md` descriptors. After adding or editing `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit the updated manifest (see [`infrastructure/skills/`](../infrastructure/skills/)). Per-subsystem verification dates: [`STATUS.md`](../STATUS.md).
 
 ---
 
@@ -392,7 +392,7 @@ Full specification: [docs/security/steganography.md](../docs/security/steganogra
 | --- | --- |
 | **Zero-Mock policy** | No `MagicMock`, `mocker.patch`, or `unittest.mock` anywhere |
 | **Real operations** | Tests use real filesystem, subprocess, and HTTP calls |
-| **Infrastructure coverage** | ≥ 60% (currently achieving 83%+) |
+| **Infrastructure coverage** | ≥ 60% (live % → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md)) |
 | **Project coverage** | ≥ 90% (canonical exemplars `template_code_project` / `template_prose_project` exceed it; confirm live figures in [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md)) |
 | **Optional service skipping** | `@pytest.mark.requires_ollama` for graceful degradation |
 

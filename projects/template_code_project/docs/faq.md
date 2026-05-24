@@ -55,12 +55,12 @@ not installed. See [`testing_philosophy.md`](testing_philosophy.md).
 
 ### How do I add a new figure?
 
-1. Add a generator function to `scripts/optimization_analysis.py` that
-   writes a PNG to `output/figures/` with a fixed filename
-   (e.g. `new_figure.png`).
+1. Add a generator function to `src/figures.py` and wire it through `src/analysis.py`
+   (script entry: `scripts/optimization_analysis.py`) that writes a PNG to
+   `output/figures/` with a fixed filename (e.g. `convergence_plot.png`).
 2. In `manuscript/03_results.md`, add a Pandoc image line:
    ```markdown
-   ![Caption text.](../output/figures/new_figure.png){#fig:new_label}
+   ![Caption text.](../output/figures/convergence_plot.png){#fig:new_label}
    ```
 3. Reference it in prose using Pandoc-crossref:
    `See [@fig:new_label] for the result.`

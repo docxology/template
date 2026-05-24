@@ -25,6 +25,25 @@ analysis stage, or the token is not defined in `src/manuscript_variables.py::gen
 4. If the token is still literal, add it to `generate_variables()` in
    `src/manuscript_variables.py`.
 
+## `FileNotFoundError`: missing `optimization_results.csv` during variable hydration
+
+**Cause.** `scripts/z_generate_manuscript_variables.py` runs in strict mode by default (`require_analysis_outputs=True`) and requires `output/data/optimization_results.csv` from the analysis stage.
+
+**Fix.**
+
+1. Run analysis first:
+   ```bash
+   uv run python projects/template_code_project/scripts/optimization_analysis.py
+   ```
+2. Re-run variable hydration:
+   ```bash
+   uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
+   ```
+3. For intentional early drafts only (tokens may fall back to `"N/A"`):
+   ```bash
+   uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py --allow-draft
+   ```
+
 ## Edited `manuscript/config.yaml` but the figures or PDF didn't change
 
 **Cause.** Stages 4-5 (analysis → render) were skipped or only the render

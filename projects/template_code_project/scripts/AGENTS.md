@@ -11,6 +11,7 @@ The `scripts/` directory contains **Thin Orchestrators**. In the context of the 
 - **Automated figure generation**: Scripts generate publication-ready figures via `infrastructure.rendering`.
 - **Data export**: Structured data output for deterministic tracking.
 - **Alphabetical ordering hints (`y_*`, `z_*`)**: scripts whose filenames start with a letter prefix run **after** any plainly-named script (alphabetical order). `z_generate_manuscript_variables.py` consumes outputs from `optimization_analysis.py` (figures, data, reports) and emits `{{TOKEN}}` substitutions — so it must run last. The alphabetical prefix is a human-readable hint for manual invocation; the canonical pipeline (`scripts/execute_pipeline.py`) enforces ordering via stage definitions, not filename. A forker introducing a script that should run between analysis and variable-hydration should name it `y_…` or rely on the pipeline stage list.
+- **`z_generate_manuscript_variables.py` strict mode**: default invocation calls `generate_variables(..., require_analysis_outputs=True)` and fails when `output/data/optimization_results.csv` is absent. Use `--allow-draft` for early manuscript drafts that intentionally use `"N/A"` fallbacks.
 
 ## Directory Structure
 
@@ -106,145 +107,39 @@ uv run pytest ../tests/test_scripts_smoke.py -v
 
 ## API Reference
 
+### generate_api_docs.py
+
+Thin wrapper (~35 lines) delegating to [`src/documentation.py`](../src/documentation.py):
+
+- `build_api_reference_markdown()` — static API reference template
+- `run_api_doc_generation(project_root)` — writes `output/docs/api_reference.md` and optional glossary index
+
+Unit tests: [`tests/test_documentation.py`](../tests/test_documentation.py). Subprocess smoke: [`tests/test_scripts_smoke.py`](../tests/test_scripts_smoke.py).
+
 ### optimization_analysis.py
 
-#### run_convergence_experiment (function)
+Thin wrapper (~65 lines) — re-exports and `main()` only. **All API signatures live in [`../src/AGENTS.md`](../src/AGENTS.md):**
 
-```python
-def run_convergence_experiment(
-    *,
-    on_step: Callable[[float, OptimizationResult], None] | None = None,
-    config: ExperimentConfig | None = None,
-) -> dict[float, OptimizationResult]:
-    """Run gradient descent with different step sizes and track convergence."""
-```
+| Concern | Module |
+| --- | --- |
+| Convergence experiments, stability, benchmarking | [`src/analysis.py`](../src/analysis.py) |
+| Matplotlib figures | [`src/figures.py`](../src/figures.py) |
+| Core optimizer | [`src/optimizer.py`](../src/optimizer.py) |
+| Dashboard HTML | [`src/dashboard.py`](../src/dashboard.py) via `build_dashboard.py` |
 
-#### generate_convergence_plot (function)
+Run: `uv run python scripts/optimization_analysis.py` from the project root.
 
-```python
-def generate_convergence_plot(results: Dict[float, OptimizationResult]) -> Path:
-    """Generate convergence plot showing objective value vs iteration.
+### build_dashboard.py
 
-    Args:
-        results: Dictionary of step size to optimization result
+Thin wrapper → [`src/dashboard.py`](../src/dashboard.py). See [`../src/AGENTS.md`](../src/AGENTS.md).
 
-    Returns:
-        Path to generated plot file
-    """
-```
+### 00_preflight.py
 
-#### simulate_trajectory (function)
+Thin wrapper → [`infrastructure.rendering.preflight`](../../../infrastructure/rendering/preflight.py).
 
-```python
-def simulate_trajectory(step_size: float, max_iter: int = 50) -> Dict[str, List]:
-    """Simulate gradient descent trajectory to collect intermediate values.
+### z_generate_manuscript_variables.py
 
-    Args:
-        step_size: Step size for gradient descent
-        max_iter: Maximum iterations to simulate
-
-    Returns:
-        Dictionary with 'iterations' and 'objectives' lists
-    """
-```
-
-#### save_optimization_results (function)
-
-```python
-def save_optimization_results(results: Dict[float, OptimizationResult]) -> Path:
-    """Save optimization results to CSV file.
-
-    Args:
-        results: Dictionary of step size to optimization result
-
-    Returns:
-        Path to saved CSV file
-    """
-```
-
-#### register_figure (function)
-
-```python
-def register_figure() -> None:
-    """Register the generated figure for manuscript reference.
-
-    Attempts to import infrastructure.figure_manager and register
-    the convergence plot. Gracefully handles missing infrastructure.
-    """
-```
-
-#### Scientific Analysis Functions
-
-##### run_stability_analysis (function)
-
-```python
-def run_stability_analysis() -> Optional[str]:
-    """Assess numerical stability of optimization algorithms.
-
-    Returns:
-        Path to stability analysis JSON report, or None if analysis fails
-    """
-```
-
-##### run_performance_benchmarking (function)
-
-```python
-def run_performance_benchmarking() -> Optional[str]:
-    """Benchmark gradient descent performance across different inputs.
-
-    Returns:
-        Path to performance benchmark JSON report, or None if benchmarking fails
-    """
-```
-
-##### generate_stability_visualization (function)
-
-```python
-def generate_stability_visualization(stability_path: Optional[str]) -> Optional[str]:
-    """Generate visualization of stability analysis results.
-
-    Args:
-        stability_path: Path to stability analysis JSON report
-
-    Returns:
-        Path to generated stability visualization PNG, or None if generation fails
-    """
-```
-
-##### generate_benchmark_visualization (function)
-
-```python
-def generate_benchmark_visualization(benchmark_path: Optional[str]) -> Optional[str]:
-    """Generate visualization of benchmark results.
-
-    Args:
-        benchmark_path: Path to performance benchmark JSON report
-
-    Returns:
-        Path to generated benchmark visualization PNG, or None if generation fails
-    """
-```
-
-##### build_dashboard (script)
-
-Interactive Plotly dashboard: `scripts/build_dashboard.py` → `output/web/dashboard.html`.
-Implementation: `src/dashboard.py`.
-
-#### main (function)
-
-```python
-def main() -> None:
-    """Main analysis function.
-
-    Executes analysis pipeline:
-    1. Run convergence experiments with progress tracking
-    2. Generate convergence and analysis plots
-    3. Save numerical results and analysis data
-    4. Run scientific stability and performance analysis
-    5. Generate dashboard
-    6. Register figures for manuscript reference
-    """
-```
+Thin wrapper → [`src/manuscript_variables.py`](../src/manuscript_variables.py).
 
 ## Infrastructure Integration
 

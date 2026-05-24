@@ -50,7 +50,7 @@ As the representative project for the repository, this implementation explicitly
 ## Reader's guide to the manuscript
 
 - **[@sec:methodology]** ties pseudocode to `gradient_descent()` and explains how stability checks and benchmarks call into `infrastructure.scientific`.
-- **[@sec:results]** is figure-centric: every panel references the generator function in `optimization_analysis.py` and uses `{{CONFIG_*}}` / `{{RESULT_*}}` placeholders for numeric values.
+- **[@sec:results]** is figure-centric: every panel references a generator in `src/figures.py` (orchestrated via `scripts/optimization_analysis.py`) and uses `{{CONFIG_*}}` / `{{RESULT_*}}` placeholders for numeric values.
 - **[@sec:experimental_setup]** lists the exact YAML fields (`experiment:` block) that controlled the run whose artifacts you are viewing.
 - **[@sec:reproducibility]** records the configuration hash and artifact inventory produced alongside the PDF.
 - **[@sec:scope]** states scope and related literature so the exemplar is not mistaken for a general-purpose optimizer benchmark suite.

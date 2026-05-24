@@ -25,9 +25,9 @@ class TestBuildDocumentationScanReport:
         assert "2026-04-01T12:00:00" in report
         assert "10 markdown files" in report
 
-    def test_with_phase1_stats(self):
+    def test_with_discovery_stats(self):
         results = _make_results()
-        results.statistics["phase1"] = {
+        results.statistics["discovery"] = {
             "markdown_files": 15,
             "agents_readme_files": 3,
             "config_files": 2,
@@ -38,9 +38,9 @@ class TestBuildDocumentationScanReport:
         assert "AGENTS.md/README.md" in report
         assert "Configuration Files" in report
 
-    def test_with_phase2_stats(self):
+    def test_with_accuracy_stats(self):
         results = _make_results()
-        results.statistics["phase2"] = {
+        results.statistics["accuracy"] = {
             "link_issues": 5,
             "command_issues": 1,
             "path_issues": 2,
@@ -49,7 +49,7 @@ class TestBuildDocumentationScanReport:
             "total_issues": 11,
         }
         report = build_documentation_scan_report(results)
-        assert "Phase 2: Accuracy Verification" in report
+        assert "## Accuracy" in report
         assert "Total Issues" in report
 
     def test_with_link_issues(self):

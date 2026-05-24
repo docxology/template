@@ -120,7 +120,7 @@ Create `scripts/` directory with thin orchestrators:
 
 ### Analysis Pipelines
 - `analysis_pipeline.py` - research workflow
-- `example_figure.py` - Figure generation examples
+- `projects/{name}/scripts/<analysis>.py` - Figure generation (code exemplar: `optimization_analysis.py`)
 - Additional scripts for specific analyses
 
 ### Script Requirements

@@ -29,7 +29,7 @@ Upstream CI is **`name: CI`** in [`.github/workflows/ci.yml`](../../../.github/w
 High-signal behavioral anchors:
 
 1. **`test-infra`** — `uv sync --group rendering --group monitoring`; Ubuntu + macOS × Python 3.10–3.12; **≥ 60 %** on `infrastructure/`. pytest uses **`continue-on-error: true` on macOS**; treat **Ubuntu matrix legs as the authoritative merge gate**.
-2. **`test-project`** — Adds `--group discopy`. Runs **one `pytest` invocation per `projects/*/tests/`** with **`--cov=projects/<name>/src`** and **`--cov-append`**, skipping `projects/fep_lean/tests/`, then **`coverage report --fail-under=90`** on the **combined** trace across measured project packages.
+2. **`test-project`** — Adds `--group discopy`. Runs **one `pytest` invocation per `projects/*/tests/`** with **`--cov=projects/<name>/src`** and **`--cov-append`**, skipping `projects/fep_lean/tests/`, then **`coverage report --fail-under=75`** on the **combined union** across measured project packages (`DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Each project still enforces **≥ 90%** on its own `src/` when pytest runs from that project directory.
 3. **`fep-lean`** — Runs **only when** [`hashFiles`](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun) guard finds `projects/fep_lean/lean/lean-toolchain` (`if:` in workflow). Otherwise skipped.
 4. **Manual CI runs** — `workflow_dispatch` on **CI has no workflow inputs**. (The **`release`** workflow differs: **`workflow_dispatch`** expects a **`tag`** input.)
 
@@ -112,7 +112,7 @@ For a single-package layout, **`pytest-cov`** can enforce gates directly:
     --cov-fail-under=90
 ```
 
-**This repo** aggregates multiple `projects/<name>/src` trees (`--cov-append` + `coverage report --fail-under=90`). See [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md).
+**This repo** aggregates multiple `projects/<name>/src` trees (`--cov-append` + combined union `coverage report --fail-under=75`). Per-project standalone gates remain **90%**. See [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md).
 
 ### Test Matrix
 

@@ -11,8 +11,8 @@ flowchart TB
     T[/tests/infra_tests/validation//]
     T --> META[AGENTS.md · __init__.py · conftest.py]
     T --> DOCS_DIR[/docs<br/>documentation linter tests/]
-    T --> CFG[Accuracy / Completeness<br/>test_accuracy · test_completeness · test_docs_completeness]
-    T --> DOC[Doc scanner / discovery<br/>test_doc_scanner · test_docs_scanner · test_doc_discovery]
+    T --> CFG[Accuracy / Completeness / Security<br/>test_accuracy · test_completeness · test_docs_completeness · test_security_gate]
+    T --> DOC[Doc scanner / discovery<br/>test_documentation_scanner · test_doc_discovery]
     T --> CONTENT[Content validators<br/>test_figure_validator · test_markdown_validator ·<br/>test_pdf_validator · test_output_validator]
     T --> INT[Integrity<br/>test_integrity · test_integrity_edge_cases]
     T --> CLI[CLI<br/>test_validation_cli · test_validate_markdown_cli ·<br/>test_validate_pdf_cli]
@@ -234,7 +234,7 @@ This is the appendix content.
 
 ### Document Scanning Tests
 
-**Document Scanner Tests (`test_doc_scanner.py`)**
+**Document Scanner Tests (`test_documentation_scanner.py`)**
 - Document structure analysis
 - Content completeness checking
 - Academic formatting validation
@@ -614,6 +614,9 @@ uv run pytest tests/infra_tests/validation/test_pdf_validator.py
 
 # Run link and cross-reference tests
 uv run pytest tests/infra_tests/validation/test_check_links.py tests/infra_tests/validation/test_cross_link_lint.py
+
+# Doc scanner verification + security gate
+uv run pytest tests/infra_tests/validation/test_documentation_scanner.py tests/infra_tests/validation/test_security_gate.py -v
 
 # Run with detailed output
 uv run pytest tests/infra_tests/validation/ -v

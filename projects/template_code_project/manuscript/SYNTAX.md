@@ -69,7 +69,7 @@ Reference equations with `[@eq:label]` (parenthetical) or `@eq:label` (narrative
 
 ### Figure label registry
 
-| Label | PNG filename | Generator function in `scripts/optimization_analysis.py` |
+| Label | PNG filename | Generator in `src/figures.py` (orchestrated via `src/analysis.py` / `scripts/optimization_analysis.py`) |
 |---|---|---|
 | `{#fig:convergence}` | `output/figures/convergence_plot.png` | `generate_convergence_plot()` |
 | `{#fig:step_sensitivity}` | `output/figures/step_size_sensitivity.png` | `generate_step_size_sensitivity_plot()` |

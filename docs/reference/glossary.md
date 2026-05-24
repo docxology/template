@@ -13,7 +13,7 @@
 - **Thin Orchestrator Pattern**: Core architectural principle (capitalized when referring to the pattern name, lowercase in prose)
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: v2.0 (current system version)
-- **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code
+- **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`canonical_facts.md`](../_generated/canonical_facts.md), [`coverage-gaps.md`](../development/coverage-gaps.md))
 - **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Stage scripts are `scripts/00_*.py`–`scripts/05_*.py` plus `06`/`07` for LLM and executive reporting where used.
 
 ---
@@ -404,7 +404,7 @@ GitHub repository type that can be used to create new repositories with same str
 
 ### Test Coverage
 
-Percentage of code executed during test runs. This template requires 90% minimum coverage for project code and 60% minimum for infrastructure.
+Percentage of code executed during test runs. This template requires 90% minimum coverage for project code and 60% minimum for infrastructure. Live measured percentages → [`../_generated/canonical_facts.md`](../_generated/canonical_facts.md) (exemplars) and [`../development/coverage-gaps.md`](../development/coverage-gaps.md) (infrastructure).
 
 **Types**:
 

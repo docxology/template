@@ -829,10 +829,11 @@ class DocumentationScanner:
             repo_root: Repository root directory
         """
 
-    def phase6_verification(self) -> dict[str, Any]:
-        """Run Phase 6 verification checks.
+    def run_verification_checks(self) -> dict[str, Any]:
+        """Run documentation verification checks.
 
-        Delegates to ``run_docs_lint``, ``validate_markdown``, ``verify_commands``,
+        Delegates to ``run_verification_checks()`` in ``verification.py`` —
+        ``run_docs_lint``, ``validate_markdown``, ``verify_commands``,
         and ``detect_markdown_link_cycles()``; see
         ``infrastructure/validation/docs/AGENTS.md`` for status vocabulary.
         """
@@ -936,10 +937,10 @@ def group_quality_by_severity(issues: List[QualityIssue]) -> Dict[str, int]:
     """
 ```
 
-#### run_quality_phase (function)
+#### assess_documentation_quality (function)
 ```python
-def run_quality_phase(md_files: List[Path], repo_root: Path) -> Tuple[Dict, List[QualityIssue]]:
-    """Run quality assessment phase.
+def assess_documentation_quality(md_files: List[Path], repo_root: Path) -> Tuple[Dict, List[QualityIssue]]:
+    """Assess documentation quality.
 
     Args:
         md_files: List of markdown files
@@ -1119,10 +1120,10 @@ def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationF
     """
 ```
 
-#### run_discovery_phase (function)
+#### discover_documentation (function)
 ```python
-def run_discovery_phase(repo_root: Path) -> Dict:
-    """Run documentation discovery phase.
+def discover_documentation(repo_root: Path) -> Dict:
+    """Discover and inventory documentation across the repository.
 
     Args:
         repo_root: Repository root directory
@@ -1256,10 +1257,10 @@ def group_gaps_by_severity(gaps: List[CompletenessGap]) -> Dict[str, int]:
     """
 ```
 
-#### run_completeness_phase (function)
+#### analyze_documentation_completeness (function)
 ```python
-def run_completeness_phase(repo_root: Path, documentation_files: List[DocumentationFile]) -> Tuple[Dict, List[CompletenessGap]]:
-    """Run completeness assessment phase.
+def analyze_documentation_completeness(repo_root: Path, documentation_files: List[DocumentationFile]) -> Tuple[Dict, List[CompletenessGap]]:
+    """Analyze documentation completeness gaps.
 
     Args:
         repo_root: Repository root directory
@@ -1387,14 +1388,14 @@ def check_terminology(md_files: List[Path], repo_root: Path) -> List[ScanAccurac
     """
 ```
 
-#### run_accuracy_phase (function)
+#### verify_documentation_accuracy (function)
 ```python
-def run_accuracy_phase(
+def verify_documentation_accuracy(
     md_files: List[Path],
     repo_root: Path,
     config_files: Dict[str, Path],
 ) -> Tuple[Dict, List[ScanAccuracyIssue]]:
-    """Run accuracy assessment phase.
+    """Verify documentation accuracy.
 
     Args:
         md_files: List of markdown files

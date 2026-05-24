@@ -166,7 +166,7 @@ def test_logger_creation():
 
 Core infrastructure tests maintain high coverage:
 
-- **Target**: 60% minimum (currently exceeds)
+- **Target**: 60% minimum (live % → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md))
 - **Focus**: Critical path coverage
 - **Quality**: data, no mocks
 

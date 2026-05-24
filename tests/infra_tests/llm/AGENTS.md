@@ -11,9 +11,7 @@ Tests for `infrastructure.llm` follow the **no mocks** rule: `MagicMock` /
 **Scale:** 66 `test_*.py` modules (hundreds of tests). Run subsets while
 developing; CI-quality gate is the full deterministic suite.
 
-**Coverage (informal):** with `-m "not requires_ollama"`, package
-`infrastructure.llm` is typically **~84%** line aggregate; many files hit 100%.
-Re-measure after substantive edits:
+**Coverage (informal):** re-measure after substantive edits (live aggregate → [`docs/development/coverage-gaps.md`](../../../docs/development/coverage-gaps.md)):
 
 ```bash
 uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" \

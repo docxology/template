@@ -23,6 +23,8 @@ Just cloned the repo? Do this:
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
+**Thin-orchestrator gates:** `uv run python scripts/check_template_drift.py --strict`, `uv run python scripts/gates/module_line_count_check.py`, `uv run python -m infrastructure.core.health` — details in [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md).
+
 **Assistants and editors:** [`.cursorrules`](.cursorrules) summarizes architecture and tooling for Cursor; [`CLAUDE.md`](CLAUDE.md) is the command cheat sheet; [`AGENTS.md`](AGENTS.md) is the full system manual (pipeline, validation, configuration).
 
 **Contributors and CI:** GitHub Actions, Dependabot, and PR/issue templates live under [`.github/README.md`](.github/README.md) (overview) and [`.github/AGENTS.md`](.github/AGENTS.md) (job names, thresholds, troubleshooting).
@@ -166,6 +168,7 @@ instead.
 ./run.sh                                     # Interactive project selection
 ./run.sh --project template_code_project --pipeline
 ./run.sh --all-projects --pipeline           # All discovered projects sequentially
+./secure_run.sh --steganography-only --project template_code_project  # Re-watermark PDFs
 mkdir -p projects/my_research/{src,tests,manuscript,scripts}  # Scaffold new project
 ```
 

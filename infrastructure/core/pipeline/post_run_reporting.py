@@ -5,15 +5,15 @@ from __future__ import annotations
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.pipeline.executor import StageResult
-from infrastructure.reporting.pipeline_summary import generate_pipeline_summary
+from infrastructure.core.pipeline.types import PipelineStageResult
+from infrastructure.core.pipeline.summary import generate_pipeline_summary
 
 logger = get_logger(__name__)
 
 
 def write_pipeline_post_run_reports(
     *,
-    results: list[StageResult],
+    results: list[PipelineStageResult],
     repo_root: Path,
     project_name: str,
     skip_infra: bool,

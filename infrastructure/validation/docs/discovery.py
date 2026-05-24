@@ -1,4 +1,4 @@
-"""Phase 1: Discovery and Inventory for documentation scanning."""
+"""Discovery and inventory for documentation scanning."""
 
 import re
 from collections import defaultdict
@@ -207,8 +207,8 @@ def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationF
         )
 
 
-def run_discovery_phase(repo_root: Path) -> dict[str, Any]:
-    """Run Phase 1: Discovery and Inventory.
+def discover_documentation(repo_root: Path) -> dict[str, Any]:
+    """Discover and inventory documentation across the repository.
 
     Args:
         repo_root: Root path of the repository
@@ -216,7 +216,7 @@ def run_discovery_phase(repo_root: Path) -> dict[str, Any]:
     Returns:
         Dictionary with discovery results
     """
-    logger.info("Phase 1: Discovery and Inventory...")
+    logger.info("Discovery and inventory...")
 
     # Find all markdown files
     md_files = discover_markdown_files(repo_root)

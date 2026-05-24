@@ -25,7 +25,7 @@ Reading order is mandatory, not advisory. Each document gates a category of acti
 
 ## Rule 2: Coverage Gate — ≥90% on `src/`
 
-The test suite spans `test_optimizer.py` (pure math), `test_analysis_integration.py` (orchestration), `test_analysis_coverage.py` (orchestration branches and error paths), `test_experiment_config.py`, `test_figures_orchestration.py`, `test_dashboard_config.py`, `test_invariants.py`, `test_invariants_and_dashboard.py`, `test_manuscript_variables.py`, and `test_scripts_smoke.py` (auxiliary script smoke). Both the project `pyproject.toml` and the root pipeline gate coverage at **90%**. Live test count + current coverage percentage live in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md) — do not hardcode either number in prose, because both drift faster than the docs touching them.
+The test suite spans `test_optimizer.py` (pure math), `test_analysis_integration.py` (orchestration), `test_analysis_coverage.py` (orchestration branches and error paths), `test_experiment_config.py`, `test_figures_orchestration.py`, `test_dashboard_config.py`, `test_invariants.py`, `test_invariants_and_dashboard.py`, `test_manuscript_variables.py`, `test_documentation.py` (API doc helpers), and `test_scripts_smoke.py` (auxiliary script smoke). Both the project `pyproject.toml` and the root pipeline gate coverage at **90%**. Live test count + current coverage percentage live in [`docs/_generated/canonical_facts.md`](../../../docs/_generated/canonical_facts.md) — do not hardcode either number in prose, because both drift faster than the docs touching them.
 
 Before modifying `src/optimizer.py`, count the existing tests for the function you are changing. After modifying, run:
 
@@ -122,7 +122,7 @@ Do not apply code-style rules to manuscript prose, and do not apply manuscript s
 The entire `projects/template_code_project/output/` tree is written by the pipeline and overwritten on every run. Editing a file in `output/` has zero lasting effect and will confuse future agents.
 
 If you need to change what a generated file contains, change the **generator**:
-- To change `output/data/optimization_results.csv` → modify `scripts/optimization_analysis.py`
+- To change `output/data/optimization_results.csv` → modify `src/analysis.py` (re-run via `scripts/optimization_analysis.py`)
 - To change `output/manuscript/03_results.md` → modify `manuscript/03_results.md` (the template) and/or `scripts/z_generate_manuscript_variables.py` (the variable definitions)
 - To change `output/pdf/template_code_project_combined.pdf` → modify the manuscript source files, then re-render
 

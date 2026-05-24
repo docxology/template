@@ -5,17 +5,25 @@ Thin orchestrators. **No business logic.** Each script imports from
 
 ## Files
 
+| Script | Delegates to | Notes |
+| --- | --- | --- |
+| `00_preflight.py` | `infrastructure.rendering.preflight` | Optional AESTHETIC; not pipeline-required |
+| `run_prose_pipeline.py` | `src/` prose pipeline | Produces `output/manuscript_report.json` |
+| `y_generate_prose_figures.py` | `src/` figure helpers | Consumes manuscript report JSON |
+| `z_generate_manuscript_variables.py` | `src/manuscript_variables.py` | Runs last (`z_` prefix) |
+
 ```mermaid
 flowchart LR
     SC[/template_prose_project/scripts//]
-    SC --> S1[run_prose_pipeline.py<br/>Main orchestrator: read → analyse →<br/>cross-check bib → write JSON + review.md]
-    SC --> S2[y_generate_prose_figures.py<br/>Read manuscript_report.json →<br/>render 3 PNG figures]
-    SC --> S3[z_generate_manuscript_variables.py<br/>Read manuscript_report.json →<br/>write substitution variables JSON]
+    SC --> S0[00_preflight.py<br/>Manuscript preflight · AESTHETIC]
+    SC --> S1[run_prose_pipeline.py<br/>Main orchestrator]
+    SC --> S2[y_generate_prose_figures.py<br/>PNG figures]
+    SC --> S3[z_generate_manuscript_variables.py<br/>Manuscript variables]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     class SC d
-    class S1,S2,S3 code
+    class S0,S1,S2,S3 code
 ```
 
 ## Naming convention

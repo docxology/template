@@ -18,6 +18,7 @@ If you ever feel the urge to mock something in a test for `src/`, treat it as a 
 | `test_analysis_coverage.py` | Analysis orchestration branches: validation errors/issues, `main()` paths, citations, publishing, register_figure |
 | `test_figures_orchestration.py` | Matplotlib figure generators |
 | `test_scripts_smoke.py` | Auxiliary script smoke (`generate_api_docs.py`, `00_preflight.py`) |
+| `test_documentation.py` | `documentation.py` API reference helpers |
 | `test_dashboard_config.py` | Dashboard `_parse_args` validation, payload divergent α-sweep, config parity with YAML |
 | `test_invariants.py` | `src/invariants.py` builders and schema |
 | `test_invariants_and_dashboard.py` | `scripts/build_dashboard.py` end-to-end |

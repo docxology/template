@@ -198,6 +198,33 @@ def load_experiment_config(project_root: Path | None = None) -> ExperimentConfig
     """Parse ``experiment:`` from ``manuscript/config.yaml`` with typed defaults."""
 ```
 
+### manuscript_variables.py
+
+#### generate_variables (function)
+
+```python
+def generate_variables(
+    project_root: Path,
+    *,
+    require_analysis_outputs: bool = False,
+) -> dict[str, str]:
+    """Build the flat ``UPPERCASE_KEY → value`` map for ``{{TOKEN}}`` injection.
+
+    When ``require_analysis_outputs`` is True (default pipeline path via
+    ``scripts/z_generate_manuscript_variables.py``), missing
+    ``output/data/optimization_results.csv`` raises ``FileNotFoundError`` instead
+    of emitting ``"N/A"`` for result-derived tokens. Pass ``--allow-draft`` to the
+    script for draft renders without analysis outputs.
+    """
+```
+
+#### save_variables (function)
+
+```python
+def save_variables(variables: dict[str, str], output_path: Path) -> Path:
+    """Write ``manuscript_variables.json`` for rendering and debugging."""
+```
+
 ### optimizer.py
 
 #### quadratic_optimum (function)
@@ -313,7 +340,7 @@ result = gradient_descent(..., verbose=True)
 
 ### documentation.py
 
-Markdown API reference builder for public `src/` symbols. Invoked by `scripts/generate_api_docs.py` (AESTHETIC); smoke-tested in `tests/test_scripts_smoke.py`.
+Markdown API reference builder for public `src/` symbols. Invoked by `scripts/generate_api_docs.py` (AESTHETIC); tested in `tests/test_documentation.py` and subprocess-smoke in `tests/test_scripts_smoke.py`.
 
 ## Best Practices
 

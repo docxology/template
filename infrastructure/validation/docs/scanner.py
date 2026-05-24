@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Comprehensive documentation scan and improvement analysis.
 
-This script performs a systematic 7-phase documentation scan:
+This script performs a systematic seven-step documentation scan:
 1. Discovery and inventory
 2. Accuracy verification
 3. Completeness analysis
@@ -18,12 +18,11 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
-from infrastructure.validation.docs.accuracy import run_accuracy_phase
-from infrastructure.validation.docs.completeness import run_completeness_phase
+from infrastructure.validation.docs.accuracy import verify_documentation_accuracy
+from infrastructure.validation.docs.completeness import analyze_documentation_completeness
 from infrastructure.validation.docs.discovery import (
+    discover_documentation,
     discover_markdown_files,
-    identify_cross_references,
-    run_discovery_phase,
 )
 from infrastructure.validation.docs.models import (
     CompletenessGap,
@@ -33,8 +32,9 @@ from infrastructure.validation.docs.models import (
     ScanAccuracyIssue,
     ScanResults,
 )
-from infrastructure.validation.docs.quality import run_quality_phase
+from infrastructure.validation.docs.quality import assess_documentation_quality
 from infrastructure.validation.docs._docs_scan_report import build_documentation_scan_report
+from infrastructure.validation.docs.verification import run_verification_checks
 
 
 class AccuracyIssue(ScanAccuracyIssue):
@@ -95,10 +95,10 @@ class DocumentationScanner:
         self.config_files: dict[str, Path] = {}
         self.documentation_structure: dict[str, list[str]] = defaultdict(list)
 
-    def phase1_discovery(self) -> dict[str, Any]:
-        """Phase 1: Discovery and Inventory."""
+    def discover_inventory(self) -> dict[str, Any]:
+        """Discovery and inventory."""
 
-        inventory = run_discovery_phase(self.repo_root)
+        inventory = discover_documentation(self.repo_root)
 
         # Update results
         self.results.documentation_files = inventory.get("documentation_files", [])
@@ -106,14 +106,14 @@ class DocumentationScanner:
         self.config_files = inventory["config_files_dict"]
         self.script_files = [self.repo_root / path for path in inventory["script_files_list"]]
 
-        self.results.statistics["phase1"] = inventory
+        self.results.statistics["discovery"] = inventory
         return inventory
 
-    def phase2_accuracy(self) -> dict[str, Any]:
-        """Phase 2: Accuracy Verification."""
+    def verify_accuracy(self) -> dict[str, Any]:
+        """Accuracy verification."""
         md_files = discover_markdown_files(self.repo_root)
 
-        accuracy_report, link_issues, accuracy_issues, all_headings = run_accuracy_phase(
+        accuracy_report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy(
             md_files, self.repo_root, self.config_files
         )
 
@@ -121,31 +121,31 @@ class DocumentationScanner:
         self.results.accuracy_issues.extend(accuracy_issues)
         self.all_headings = all_headings
 
-        self.results.statistics["phase2"] = accuracy_report
+        self.results.statistics["accuracy"] = accuracy_report
         return accuracy_report
 
-    def phase3_completeness(self) -> dict[str, Any]:
-        """Phase 3: Completeness Analysis."""
-        completeness_report, gaps = run_completeness_phase(
+    def analyze_completeness(self) -> dict[str, Any]:
+        """Completeness analysis."""
+        completeness_report, gaps = analyze_documentation_completeness(
             self.repo_root, self.results.documentation_files, self.config_files
         )
 
         self.results.completeness_gaps.extend(gaps)
-        self.results.statistics["phase3"] = completeness_report
+        self.results.statistics["completeness"] = completeness_report
         return dict(completeness_report)
 
-    def phase4_quality(self) -> dict[str, Any]:
-        """Phase 4: Quality Assessment."""
+    def assess_quality(self) -> dict[str, Any]:
+        """Quality assessment."""
         md_files = discover_markdown_files(self.repo_root)
-        quality_report, quality_issues = run_quality_phase(md_files, self.repo_root)
+        quality_report, quality_issues = assess_documentation_quality(md_files, self.repo_root)
 
         self.results.quality_issues.extend(quality_issues)
-        self.results.statistics["phase4"] = quality_report
+        self.results.statistics["quality"] = quality_report
         return quality_report
 
-    def phase5_improvements(self) -> dict[str, Any]:
-        """Phase 5: Intelligent Improvements."""
-        logger.info("Phase 5: Implementing Intelligent Improvements...")
+    def identify_improvements(self) -> dict[str, Any]:
+        """Identify intelligent improvements."""
+        logger.info("Identifying improvements...")
 
         improvements = []
 
@@ -166,82 +166,20 @@ class DocumentationScanner:
             "structural_changes": len([i for i in improvements if i.get("type") == "structural"]),
         }
 
-        self.results.statistics["phase5"] = improvement_report
-        logger.info(f"  Identified {len(improvements)} improvements")
+        self.results.statistics["improvements"] = improvement_report
+        logger.info("  Identified %s improvements", len(improvements))
         return improvement_report
 
-    def phase6_verification(self) -> dict[str, Any]:
-        """Phase 6: Verification and Validation."""
-        logger.info("Phase 6: Verification and Validation...")
-
-        from infrastructure.validation.content.markdown_validator import validate_markdown
-        from infrastructure.validation.docs.accuracy import verify_commands
-        from infrastructure.validation.docs.cross_link_lint import detect_markdown_link_cycles
-        from infrastructure.validation.docs.lint_runner import doc_roots, run_docs_lint
-
-        md_files = discover_markdown_files(self.repo_root)
-        roots = doc_roots(self.repo_root)
-
-        lint_report = run_docs_lint(self.repo_root, quiet=True)
-        if lint_report.runtime_error:
-            docs_lint = {
-                "status": "skipped",
-                "reason": lint_report.runtime_error,
-            }
-        elif lint_report.failed:
-            docs_lint = {
-                "status": "failed",
-                "issue_counts": {
-                    "mermaid": len(lint_report.mermaid or []),
-                    "broken_links": len(lint_report.broken_links or []),
-                    "consistency": len(lint_report.consistency or []),
-                    "doc_pairs": len(lint_report.doc_pairs or []),
-                },
-            }
-        else:
-            docs_lint = {"status": "passed", "issue_counts": {}}
-
-        docs_dir = self.repo_root / "docs"
-        if docs_dir.is_dir():
-            problems, exit_code = validate_markdown(docs_dir, self.repo_root, strict=False)
-            md_validation = {
-                "status": "failed" if exit_code != 0 else "passed",
-                "issue_count": len(problems),
-            }
-        else:
-            md_validation = {"status": "skipped", "reason": "docs/ directory absent"}
-
-        command_issues = verify_commands(md_files, self.repo_root)
-        commands_tested = {
-            "status": "failed" if command_issues else "passed",
-            "issue_count": len(command_issues),
-        }
-
-        cycles = detect_markdown_link_cycles(roots)
-        circular_references = {
-            "status": "failed" if cycles else "passed",
-            "cycle_count": len(cycles),
-            "cycles": [list(cycle.files) for cycle in cycles[:10]],
-        }
-
-        verification_results = {
-            "link_checker": self._run_link_checker(),
-            "docs_lint": docs_lint,
-            "markdown_validation": md_validation,
-            "commands_tested": commands_tested,
-            "cross_references": self._verify_cross_references(),
-            "circular_references": circular_references,
-        }
-
-        self.results.statistics["phase6"] = verification_results
+    def run_verification_checks(self) -> dict[str, Any]:
+        """Verification and validation."""
+        verification_results = run_verification_checks(self.repo_root)
+        self.results.statistics["verification"] = verification_results
         return verification_results
 
-    def phase7_reporting(self) -> str:
-        """Phase 7: Generate comprehensive report."""
-        logger.info("Phase 7: Generating Report...")
-
-        report = self._generate_report()
-        return report
+    def build_scan_report(self) -> str:
+        """Generate comprehensive report."""
+        logger.info("Generating scan report...")
+        return build_documentation_scan_report(self.results)
 
     def _identify_link_fixes(self) -> list[dict[str, Any]]:
         """Identify link fixes needed."""
@@ -277,53 +215,27 @@ class DocumentationScanner:
 
         return improvements
 
-    def _run_link_checker(self) -> dict[str, Any]:
-        """Run the repository link checker in-process."""
-        try:
-            from infrastructure.validation.integrity.check_links import run_link_audit
-
-            exit_code = run_link_audit(self.repo_root)
-            return {
-                "success": exit_code == 0,
-                "exit_code": exit_code,
-            }
-        except Exception as e:  # noqa: BLE001
-            logger.warning(f"Link checker failed: {e}")
-            return {"success": False, "error": str(e)}
-
-    def _verify_cross_references(self) -> dict[str, Any]:
-        """Verify cross-references."""
-        md_files = discover_markdown_files(self.repo_root)
-        return {
-            "status": "verified",
-            "total_references": len(identify_cross_references(md_files)),
-        }
-
-    def _generate_report(self) -> str:
-        """Generate comprehensive scan report."""
-        return build_documentation_scan_report(self.results)
-
     def run_full_scan(self) -> tuple[ScanResults, str]:
-        """Run all 7 phases of the documentation scan."""
-        logger.info("Starting Comprehensive Documentation Scan...")
+        """Run all steps of the documentation scan."""
+        logger.info("Starting comprehensive documentation scan...")
         logger.info("=" * 60)
 
-        self.phase1_discovery()
-        self.phase2_accuracy()
-        self.phase3_completeness()
-        self.phase4_quality()
-        self.phase5_improvements()
-        self.phase6_verification()
-        report = self.phase7_reporting()
+        self.discover_inventory()
+        self.verify_accuracy()
+        self.analyze_completeness()
+        self.assess_quality()
+        self.identify_improvements()
+        self.run_verification_checks()
+        report = self.build_scan_report()
 
         logger.info("=" * 60)
-        logger.info("Scan Complete!")
+        logger.info("Scan complete!")
 
         return self.results, report
 
 
 def main() -> int:
-    """Execute comprehensive 7-phase documentation scan and generate report.
+    """Execute comprehensive documentation scan and generate report.
 
     Discovers the repository root from the script location, runs a full
     documentation scan across all markdown files, and saves the report

@@ -3,10 +3,10 @@
 Tests link checking functionality comprehensively.
 """
 
+from infrastructure.validation.docs.accuracy import extract_headings
 from infrastructure.validation.integrity import check_links
 from infrastructure.validation.integrity.check_links import (
     check_file_reference,
-    extract_headings,
     extract_links,
     find_all_markdown_files,
 )

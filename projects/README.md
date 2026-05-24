@@ -44,16 +44,7 @@ These are actively being developed under [`projects_in_progress/`](../projects_i
 
 ### Archived exemplars (not in `projects/`)
 
-These are kept under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them:
-
-- **blake_bimetalism** — Blake / monetary history manuscript
-- **traditional_newspaper** — multi-folio tabloid layout (`geometry` / `multicol`, masthead figure)
-- **area_handbook** — corpus-driven handbook-style manuscript
-- **density_bioscales** — fluids and composite density scenarios
-- **special_number_proximity** — Diophantine proximity statistics
-- Plus: `act_inf_metaanalysis`, `active_inference`, `active_inference_meta_pragmatic`, `cognitive_case_diagrams`, `cognitive_integrity`, `ento_linguistics`, `fep_lean`, `game_design`, `medical_ai`, `pragmatism_blake`, `reliable_specification`, `wooden_planes`
-
-**Note:** Promote by moving a directory from `projects_archive/` or `projects_in_progress/` into `projects/`.
+Preserved under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them. See [`projects_archive/README.md`](../projects_archive/README.md) and [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) for the current roster — do not hard-code names here.
 
 ## Standalone Project Paradigm
 

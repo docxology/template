@@ -303,7 +303,7 @@ Even though you're not generating figures yet, you can reference existing ones:
 ```markdown
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{../output/figures/example_figure.png}
+\includegraphics[width=0.8\textwidth]{../output/figures/convergence_plot.png}
 \caption{Example visualization showing convergence behavior}
 \label{fig:example}
 \end{figure}

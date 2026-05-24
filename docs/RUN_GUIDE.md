@@ -517,7 +517,7 @@ chmod +x run.sh
 
 ### Tests fail with import errors
 
-Verify `conftest.py` is in the repository root and contains proper path setup.
+Verify each project has `projects/<name>/tests/conftest.py` with path bootstrap for that project's `src/` (and template root when needed). Do not rely on a repository-root `conftest.py` for project imports.
 
 ### Coverage threshold not met
 
