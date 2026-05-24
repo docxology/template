@@ -1,17 +1,21 @@
-"""Tests for infrastructure/core/env_deps.py.
+"""Tests for infrastructure/core/runtime/env_deps.py.
 
 Tests dependency and build tool checking utilities using real execution.
-Follows No Mocks Policy - all tests use real data and real execution.
+Follows No Mocks Policy — all tests use real package imports and shutil.which.
 """
 
-from infrastructure.core.runtime.env_deps import check_dependencies, check_build_tools
+from __future__ import annotations
+
+import pytest
+
+from infrastructure.core.runtime.env_deps import check_build_tools, check_dependencies
 
 
 class TestCheckDependencies:
-    """Test check_dependencies function."""
+    """Test check_dependencies with real package checks."""
 
     def test_returns_tuple(self):
-        """Test that check_dependencies returns a (bool, list) tuple."""
+        """check_dependencies returns a (bool, list) tuple."""
         result = check_dependencies()
         assert isinstance(result, tuple)
         assert len(result) == 2
@@ -19,48 +23,112 @@ class TestCheckDependencies:
         assert isinstance(all_present, bool)
         assert isinstance(missing, list)
 
+    def test_default_packages_check(self):
+        """Default package list returns a valid result (env-dependent)."""
+        all_present, missing = check_dependencies()
+        assert isinstance(all_present, bool)
+        assert isinstance(missing, list)
+
     def test_known_installed_package(self):
-        """Test that numpy is found (it's a declared dependency)."""
+        """numpy is a declared dependency and should import."""
         all_present, missing = check_dependencies(["numpy"])
         assert all_present is True
         assert missing == []
 
-    def test_nonexistent_package_flagged(self):
-        """Test that a nonexistent package is reported as missing."""
-        all_present, missing = check_dependencies(["__nonexistent_pkg_xyz__"])
+    @pytest.mark.parametrize(
+        "packages",
+        [
+            ["numpy"],
+            ["json", "os", "sys"],
+            ["os", "sys", "pathlib"],
+            ["json"],
+        ],
+    )
+    def test_present_packages(self, packages):
+        """Specified present packages return True with empty missing list."""
+        all_present, missing = check_dependencies(packages)
+        assert all_present is True
+        assert missing == []
+
+    @pytest.mark.parametrize(
+        "packages,missing_name",
+        [
+            (["__nonexistent_pkg_xyz__"], "__nonexistent_pkg_xyz__"),
+            (["nonexistent_package_xyz"], "nonexistent_package_xyz"),
+            (["nonexistent_package_xyz123"], "nonexistent_package_xyz123"),
+        ],
+    )
+    def test_single_missing_package(self, packages, missing_name):
+        """A single missing package is reported."""
+        all_present, missing = check_dependencies(packages)
         assert all_present is False
-        assert "__nonexistent_pkg_xyz__" in missing
+        assert missing_name in missing
+
+    def test_mixed_present_and_missing(self):
+        """Mix of present and missing packages returns False with only missing listed."""
+        all_present, missing = check_dependencies(["json", "nonexistent_abc"])
+        assert all_present is False
+        assert "nonexistent_abc" in missing
+        assert "json" not in missing
+
+    def test_custom_packages_all_missing(self):
+        """All specified missing packages are reported."""
+        all_present, missing = check_dependencies(["nonexistent_a", "nonexistent_b"])
+        assert all_present is False
+        assert len(missing) == 2
 
     def test_empty_list_returns_all_present(self):
-        """Test that empty required list returns True with no missing."""
+        """Empty required list returns True with no missing."""
         all_present, missing = check_dependencies([])
         assert all_present is True
         assert missing == []
 
-    def test_default_packages_present(self):
-        """Test that the default package list check passes in this environment."""
-        all_present, missing = check_dependencies()
-        # numpy, matplotlib, pytest should all be installed in test env
-        assert isinstance(all_present, bool)
-        assert isinstance(missing, list)
-
 
 class TestCheckBuildTools:
-    """Test check_build_tools function."""
+    """Test check_build_tools with real tool detection."""
 
     def test_returns_bool(self):
-        """Test that check_build_tools returns a boolean."""
+        """check_build_tools returns a boolean."""
         result = check_build_tools()
         assert isinstance(result, bool)
 
-    def test_custom_tool_dict(self):
-        """Test with custom tool dict including a known-available tool."""
-        # python is always available, so use that as a known tool
-        result = check_build_tools({"python3": "Python interpreter"})
-        # python3 may or may not be available (uv manages it), but result must be bool
+    def test_default_tools(self):
+        """Default checks (pandoc, xelatex) — result depends on system."""
+        result = check_build_tools()
         assert isinstance(result, bool)
 
-    def test_nonexistent_tool_returns_false(self):
-        """Test that a definitely nonexistent tool causes False return."""
-        result = check_build_tools({"__nonexistent_tool_xyz__": "Does not exist"})
+    @pytest.mark.parametrize(
+        "tools,expected",
+        [
+            ({"python3": "Python interpreter"}, True),
+            ({"echo": "Echo command", "cat": "Concatenate"}, True),
+        ],
+    )
+    def test_common_tools_present(self, tools, expected):
+        """Known-available tools should be found."""
+        assert check_build_tools(tools) is expected
+
+    @pytest.mark.parametrize(
+        "tools",
+        [
+            {"__nonexistent_tool_xyz__": "Does not exist"},
+            {"nonexistent_tool_xyz": "Fake tool"},
+        ],
+    )
+    def test_missing_tools(self, tools):
+        """Nonexistent tools cause False return."""
+        assert check_build_tools(tools) is False
+
+    def test_mixed_tools(self):
+        """Mix of present and missing tools returns False."""
+        result = check_build_tools(
+            {
+                "echo": "Echo command",
+                "nonexistent_tool_xyz": "Fake tool",
+            }
+        )
         assert result is False
+
+    def test_empty_tools_dict(self):
+        """Empty tools dict returns True."""
+        assert check_build_tools({}) is True

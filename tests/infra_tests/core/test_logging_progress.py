@@ -1,27 +1,34 @@
 """Tests for infrastructure.core.logging.progress module.
 
-Comprehensive tests for progress tracking functionality including
-ETA calculations, progress bars, and spinners.
+Comprehensive tests for progress tracking including ETA calculations,
+progress bars, spinners, streaming progress, and resource logging.
 
 Test Pattern:
-    All logging tests use `caplog` fixture (not `capsys`) because logs go through
-    Python's logging framework, not direct stdout/stderr writes. Use `caplog.at_level()`
-    to set the appropriate log level for the test.
+    Logging tests use `caplog` because logs go through Python's logging
+    framework. Use `caplog.at_level()` to set the appropriate log level.
 """
 
+from __future__ import annotations
+
+import io
+import logging
 from io import StringIO
 
 import pytest
 
+from infrastructure.core.logging.progress import (
+    Spinner,
+    StreamingProgress,
+    log_progress_bar,
+    log_progress_streaming,
+    log_resource_usage,
+    log_stage_with_eta,
+    log_with_spinner,
+)
 from infrastructure.core.runtime.eta import (
     calculate_eta,
     calculate_eta_ema,
     calculate_eta_with_confidence,
-)
-from infrastructure.core.logging.progress import (
-    Spinner,
-    log_progress_bar,
-    log_with_spinner,
 )
 
 
@@ -29,84 +36,66 @@ class TestCalculateEta:
     """Test calculate_eta function."""
 
     def test_calculate_eta_basic(self):
-        """Test basic ETA calculation."""
-        # 30 seconds for 3 items = 10s/item, 7 remaining = 70s
+        """30 seconds for 3 items = 10s/item, 7 remaining = 70s."""
         eta = calculate_eta(30.0, 3, 10)
         assert eta == pytest.approx(70.0, rel=0.01)
 
     def test_calculate_eta_zero_completed(self):
-        """Test ETA calculation with zero completed items."""
         eta = calculate_eta(30.0, 0, 10)
         assert eta is None
 
     def test_calculate_eta_zero_total(self):
-        """Test ETA calculation with zero total items."""
         eta = calculate_eta(30.0, 3, 0)
         assert eta is None
 
     def test_calculate_eta_completed_equals_total(self):
-        """Test ETA when all items are completed."""
         eta = calculate_eta(30.0, 10, 10)
         assert eta == 0.0
 
     def test_calculate_eta_completed_exceeds_total(self):
-        """Test ETA when completed exceeds total."""
         eta = calculate_eta(30.0, 15, 10)
         assert eta == 0.0
 
     def test_calculate_eta_fractional_values(self):
-        """Test ETA calculation with fractional values."""
         eta = calculate_eta(15.5, 2.5, 10)
-        # 15.5s for 2.5 items = 6.2s/item, 7.5 remaining = 46.5s
         assert eta == pytest.approx(46.5, rel=0.01)
 
     def test_calculate_eta_negative_values(self):
-        """Test ETA calculation with negative values."""
-        # Should handle gracefully
         eta = calculate_eta(-10.0, 3, 10)
-        assert eta is not None  # May return negative or None
+        assert eta is not None
 
 
 class TestCalculateEtaEma:
     """Test calculate_eta_ema function."""
 
     def test_calculate_eta_ema_basic(self):
-        """Test basic EMA ETA calculation."""
         eta = calculate_eta_ema(30.0, 3, 10)
         assert eta is not None
         assert eta > 0
 
     def test_calculate_eta_ema_with_previous(self):
-        """Test EMA ETA with previous estimate."""
         previous_eta = 80.0
         eta = calculate_eta_ema(30.0, 3, 10, previous_eta=previous_eta)
         assert eta is not None
-        # EMA should be between linear estimate and previous
         linear_eta = calculate_eta(30.0, 3, 10)
         assert min(linear_eta, previous_eta) <= eta <= max(linear_eta, previous_eta)
 
     def test_calculate_eta_ema_zero_completed(self):
-        """Test EMA ETA with zero completed items."""
         eta = calculate_eta_ema(30.0, 0, 10)
         assert eta is None
 
     def test_calculate_eta_ema_completed_equals_total(self):
-        """Test EMA ETA when all items are completed."""
         eta = calculate_eta_ema(30.0, 10, 10)
         assert eta == 0.0
 
     def test_calculate_eta_ema_alpha_parameter(self):
-        """Test EMA ETA with different alpha values."""
         previous_eta = 80.0
         eta_low_alpha = calculate_eta_ema(30.0, 3, 10, previous_eta=previous_eta, alpha=0.1)
         eta_high_alpha = calculate_eta_ema(30.0, 3, 10, previous_eta=previous_eta, alpha=0.9)
-
-        # Higher alpha should be closer to linear estimate
         linear_eta = calculate_eta(30.0, 3, 10)
         assert abs(eta_high_alpha - linear_eta) < abs(eta_low_alpha - linear_eta)
 
     def test_calculate_eta_ema_non_negative(self):
-        """Test that EMA ETA is always non-negative."""
         eta = calculate_eta_ema(30.0, 3, 10, previous_eta=-10.0)
         assert eta is not None
         assert eta >= 0.0
@@ -116,52 +105,37 @@ class TestCalculateEtaWithConfidence:
     """Test calculate_eta_with_confidence function."""
 
     def test_calculate_eta_with_confidence_basic(self):
-        """Test basic confidence interval calculation."""
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(30.0, 3, 10)
-
         assert optimistic is not None
         assert realistic is not None
         assert pessimistic is not None
         assert optimistic < realistic < pessimistic
 
     def test_calculate_eta_with_confidence_with_durations(self):
-        """Test confidence intervals with item durations."""
         item_durations = [8.0, 10.0, 12.0]
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(
             30.0, 3, 10, item_durations=item_durations
         )
-
-        # 7 remaining items
-        # Optimistic: 8.0 * 7 = 56.0
-        # Realistic: 10.0 * 7 = 70.0
-        # Pessimistic: 12.0 * 7 = 84.0
         assert optimistic == pytest.approx(56.0, rel=0.01)
         assert realistic == pytest.approx(70.0, rel=0.01)
         assert pessimistic == pytest.approx(84.0, rel=0.01)
 
     def test_calculate_eta_with_confidence_zero_completed(self):
-        """Test confidence intervals with zero completed items."""
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(30.0, 0, 10)
-
         assert optimistic is None
         assert realistic is None
         assert pessimistic is None
 
     def test_calculate_eta_with_confidence_completed_equals_total(self):
-        """Test confidence intervals when all items are completed."""
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(30.0, 10, 10)
-
         assert optimistic == 0.0
         assert realistic == 0.0
         assert pessimistic == 0.0
 
     def test_calculate_eta_with_confidence_empty_durations(self):
-        """Test confidence intervals with empty durations list."""
         optimistic, realistic, pessimistic = calculate_eta_with_confidence(
             30.0, 3, 10, item_durations=[]
         )
-
-        # Should fall back to linear calculation with adjustments
         assert optimistic is not None
         assert realistic is not None
         assert pessimistic is not None
@@ -172,123 +146,236 @@ class TestLogProgressBar:
     """Test log_progress_bar function."""
 
     def test_log_progress_bar_basic(self, caplog):
-        """Test basic progress bar logging."""
         with caplog.at_level("INFO"):
             log_progress_bar(3, 10, "Processing")
-
-        # Check that output was created
         assert "Processing" in caplog.text
         assert "%" in caplog.text or "3/10" in caplog.text
 
     def test_log_progress_bar_zero_total(self, caplog):
-        """Test progress bar with zero total."""
         with caplog.at_level("INFO"):
             log_progress_bar(0, 0, "Processing")
-
         assert "0/0" in caplog.text or "0%" in caplog.text
 
     def test_log_progress_bar_complete(self, caplog):
-        """Test progress bar at 100%."""
         with caplog.at_level("INFO"):
             log_progress_bar(10, 10, "Processing")
-
         assert "100%" in caplog.text or "10/10" in caplog.text
 
     def test_log_progress_bar_custom_message(self, caplog):
-        """Test progress bar with custom message."""
         with caplog.at_level("INFO"):
             log_progress_bar(5, 10, "Custom message")
-
         assert "Custom message" in caplog.text
 
     def test_log_progress_bar_custom_width(self, caplog):
-        """Test progress bar with custom width."""
         with caplog.at_level("INFO"):
             log_progress_bar(5, 10, "Processing", bar_width=20)
-
-        # Should still output successfully
         assert "Processing" in caplog.text
+
+    def test_log_progress_bar_default_logger(self, caplog):
+        with caplog.at_level(logging.INFO):
+            log_progress_bar(5, 10, "Test")
 
 
 class TestSpinner:
     """Test Spinner class."""
 
     def test_spinner_initialization(self):
-        """Test spinner initialization."""
         spinner = Spinner("Test message")
-
         assert spinner.message == "Test message"
         assert spinner.delay == 0.1
         assert spinner.thread is None
 
-    def test_spinner_start_non_tty(self, monkeypatch):
-        """Test spinner start on non-TTY stream."""
+    def test_spinner_start_non_tty(self):
         stream = StringIO()
         stream.isatty = lambda: False
-
         spinner = Spinner("Test message", stream=stream)
         spinner.start()
+        assert "Test message" in stream.getvalue()
 
-        # Should write message once for non-TTY
+    def test_spinner_non_tty_start_stop_with_final(self):
+        stream = io.StringIO()
+        spinner = Spinner("Working...", stream=stream)
+        spinner.start()
+        spinner.stop(final_message="Done!")
         output = stream.getvalue()
-        assert "Test message" in output
+        assert "Working..." in output
+        assert "Done!" in output
 
     def test_spinner_stop_without_start(self):
-        """Test stopping spinner that was never started."""
         spinner = Spinner("Test message")
-
-        # Should not raise error
         spinner.stop()
 
+    def test_spinner_stop_with_final_message_no_thread(self):
+        stream = io.StringIO()
+        spinner = Spinner("Idle", stream=stream)
+        spinner.stop(final_message="Finished")
+        assert "Finished" in stream.getvalue()
+
     def test_spinner_context_manager(self):
-        """Test spinner as context manager."""
         stream = StringIO()
         stream.isatty = lambda: False
-
         with Spinner("Test message", stream=stream) as spinner:
-            assert spinner is not None
-
-        # Should have written message
-        output = stream.getvalue()
-        assert "Test message" in output
+            assert isinstance(spinner, Spinner)
+        assert "Test message" in stream.getvalue()
 
     def test_spinner_stop_with_final_message(self):
-        """Test stopping spinner with final message."""
         stream = StringIO()
         stream.isatty = lambda: False
-
         spinner = Spinner("Test message", stream=stream)
         spinner.start()
         spinner.stop("Done!")
-
-        output = stream.getvalue()
-        assert "Done!" in output
+        assert "Done!" in stream.getvalue()
 
 
 class TestLogWithSpinner:
     """Test log_with_spinner context manager."""
 
     def test_log_with_spinner_basic(self):
-        """Test basic spinner context manager."""
-        # Use real spinner (will be disabled on non-TTY)
         with log_with_spinner("Loading..."):
             pass
-        # Test passes if no exceptions are raised
 
     def test_log_with_spinner_final_message(self):
-        """Test spinner with final message."""
-        # Use real spinner with final message
         with log_with_spinner("Loading...", final_message="Loaded!"):
             pass
-        # Test passes if no exceptions are raised
 
     def test_log_with_spinner_with_logger(self, caplog):
-        """Test spinner with logger for final message."""
-        import logging
-
         logger = logging.getLogger("test")
-
-        # Use real spinner with logger
         with log_with_spinner("Loading...", logger=logger):
             pass
-        # Test passes if no exceptions are raised
+
+    def test_log_with_spinner_without_logger_or_final(self):
+        with log_with_spinner("Working"):
+            pass
+
+    def test_log_with_spinner_exception_propagated(self, caplog):
+        logger = logging.getLogger("test_spinner")
+        with pytest.raises(ValueError, match="test error"):
+            with log_with_spinner("Test operation", logger=logger):
+                raise ValueError("test error")
+
+
+class TestStreamingProgress:
+    """Test StreamingProgress class."""
+
+    def test_construction(self):
+        stream = io.StringIO()
+        progress = StreamingProgress(total=100, message="Test", stream=stream)
+        assert progress.total == 100
+        assert progress.current == 0
+
+    def test_update_increments(self):
+        stream = io.StringIO()
+        progress = StreamingProgress(total=100, stream=stream, update_interval=0.0)
+        progress.update(10)
+        assert progress.current == 10
+        progress.update(5)
+        assert progress.current == 15
+
+    def test_update_capped_at_total(self):
+        stream = io.StringIO()
+        progress = StreamingProgress(total=10, stream=stream, update_interval=0.0)
+        progress.update(15)
+        assert progress.current == 10
+
+    def test_set_value(self):
+        stream = io.StringIO()
+        progress = StreamingProgress(total=50, stream=stream)
+        progress.set(25)
+        assert progress.current == 25
+
+    def test_set_capped_at_total(self):
+        stream = io.StringIO()
+        progress = StreamingProgress(total=50, stream=stream)
+        progress.set(100)
+        assert progress.current == 50
+
+    def test_non_tty_display_skipped(self):
+        stream = io.StringIO()
+        sp = StreamingProgress(100, "Test", stream=stream)
+        sp.update(10)
+        sp.set(50)
+        assert stream.getvalue() == ""
+
+    def test_finish_with_message(self):
+        stream = io.StringIO()
+        progress = StreamingProgress(total=10, stream=stream)
+        progress.finish(final_message="All done!")
+        assert "All done!" in stream.getvalue()
+
+    def test_finish_without_message(self):
+        stream = io.StringIO()
+        progress = StreamingProgress(total=10, stream=stream)
+        progress.finish()
+        assert stream.getvalue() == ""
+
+    def test_throttle(self):
+        stream = io.StringIO()
+        sp = StreamingProgress(100, "Test", stream=stream, update_interval=10.0)
+        sp.update(1)
+        sp.update(1)
+
+
+class TestLogProgressStreaming:
+    """Test log_progress_streaming function."""
+
+    def test_non_tty_fallback(self, caplog):
+        logger = logging.getLogger("test_streaming")
+        with caplog.at_level(logging.INFO, logger="test_streaming"):
+            log_progress_streaming(5, 10, "Step", logger=logger)
+
+    def test_zero_total(self, caplog):
+        logger = logging.getLogger("test_streaming_zero")
+        with caplog.at_level(logging.INFO, logger="test_streaming_zero"):
+            log_progress_streaming(0, 0, "Empty", logger=logger)
+
+
+class TestLogStageWithEta:
+    """Test log_stage_with_eta function."""
+
+    def test_with_eta(self, caplog):
+        logger = logging.getLogger("test_eta")
+        with caplog.at_level(logging.INFO, logger="test_eta"):
+            log_stage_with_eta("Rendering", 5, 10, 5.0, logger)
+        assert "Rendering" in caplog.text
+
+    def test_first_item_no_eta(self, caplog):
+        logger = logging.getLogger("test_eta")
+        with caplog.at_level(logging.INFO, logger="test_eta"):
+            log_stage_with_eta("Processing", 0, 10, 0.0, logger)
+        assert "Processing" in caplog.text
+
+    def test_default_logger(self, caplog):
+        with caplog.at_level(logging.INFO):
+            log_stage_with_eta("Test", 1, 5, 1.0)
+
+
+class TestLogResourceUsage:
+    """Test log_resource_usage function."""
+
+    def test_with_cpu_and_memory(self, caplog):
+        logger = logging.getLogger("test_resource")
+        with caplog.at_level(logging.DEBUG, logger="test_resource"):
+            log_resource_usage(cpu_percent=45.5, memory_mb=512.3, logger=logger)
+        assert "45.5%" in caplog.text
+        assert "512.3" in caplog.text
+
+    def test_cpu_only(self, caplog):
+        logger = logging.getLogger("test_resource")
+        with caplog.at_level(logging.DEBUG, logger="test_resource"):
+            log_resource_usage(cpu_percent=30.0, logger=logger)
+        assert "30.0%" in caplog.text
+
+    def test_memory_only(self, caplog):
+        logger = logging.getLogger("test_resource")
+        with caplog.at_level(logging.DEBUG, logger="test_resource"):
+            log_resource_usage(memory_mb=256.0, logger=logger)
+        assert "256.0" in caplog.text
+
+    def test_no_metrics(self, caplog):
+        logger = logging.getLogger("test_resource")
+        with caplog.at_level(logging.DEBUG, logger="test_resource"):
+            log_resource_usage(logger=logger)
+
+    def test_default_logger(self, caplog):
+        with caplog.at_level(logging.DEBUG):
+            log_resource_usage(cpu_percent=10.0)

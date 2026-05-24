@@ -20,7 +20,7 @@ LaTeX/pandoc warnings.
 
 | Function | Severity returned | Purpose |
 |---|---|---|
-| `find_markdown_files(dir)` | — | Sorted list of `*.md` under `dir`. |
+| `discover_markdown_files(root, scope=...)` | `tree` / `repo` / `link_audit` | Sorted markdown paths (canonical discovery API). |
 | `collect_symbols(paths)` | — | Set of `\label{}` and `{#anchor}` names. |
 | `validate_images(paths, root)` | ERROR | Referenced images resolve on disk. |
 | `validate_refs(paths, root, labels, anchors)` | ERROR / WARNING | `\eqref` and `(#anchor)` resolve; bare URLs / non-informative link text. |

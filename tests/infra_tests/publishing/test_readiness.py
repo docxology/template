@@ -95,3 +95,27 @@ class TestValidatePublicationReadiness:
         pdf.write_bytes(b"%PDF")
         result = validate_publication_readiness(md_files, [pdf])
         assert any("ready" in r.lower() for r in result["recommendations"])
+
+    def test_fully_ready_with_citations_and_figures(self, tmp_path):
+        content = (
+            "# Abstract\n\nThis paper...\n\n"
+            "# Introduction\n\nWe introduce...\n\n"
+            "# Methodology\n\nOur approach...\n\n"
+            "# Results\n\nWe found...\n\n"
+            "# Conclusion\n\nWe conclude...\n\n"
+            "See \\cite{ref2020} for details.\n"
+            "\\includegraphics{fig1.png}\n"
+        )
+        md_files = _write_manuscript(tmp_path, content)
+        pdf = tmp_path / "paper.pdf"
+        pdf.write_bytes(b"%PDF content")
+        result = validate_publication_readiness(md_files, [pdf])
+        assert result["completeness_score"] == 85
+        assert result["ready_for_publication"] is True
+        assert "ready for publication" in result["recommendations"][-1].lower()
+
+    def test_unreadable_file_skipped(self, tmp_path):
+        md = tmp_path / "bad.md"
+        md.write_bytes(b"\x80\x81\x82")
+        result = validate_publication_readiness([md], [])
+        assert str(md) in str(result["skipped_files"])

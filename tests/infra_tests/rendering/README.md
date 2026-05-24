@@ -33,12 +33,12 @@ uv run pytest tests/infra_tests/rendering/test_pdf_renderer*.py -v
 - Bibliography processing
 - Figure integration
 
-### HTML / Web Renderer Tests (`test_web_renderer_coverage.py`, `test_web_renderer_expanded_coverage.py`)
+### HTML / Web Renderer Tests (`test_web_renderer_coverage.py`)
 
 HTML output generation:
 
 ```bash
-uv run pytest tests/infra_tests/rendering/test_web_renderer_coverage.py tests/infra_tests/rendering/test_web_renderer_expanded_coverage.py -v
+uv run pytest tests/infra_tests/rendering/test_web_renderer_coverage.py -v
 ```
 
 **Test Coverage:**

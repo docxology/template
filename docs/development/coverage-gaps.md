@@ -116,6 +116,20 @@ forward — re-measure each time.
 | `rendering/pipeline.py` (error paths) | `tests/infra_tests/rendering/test_pipeline.py` |
 | `rendering/pdf_renderer.py` | `tests/infra_tests/rendering/test_pdf_renderer.py` |
 
+## Supplement consolidation (2026-05-24, wave 2)
+
+All `*_expanded_coverage*` and `*_full_coverage*` tiers under `tests/infra_tests/` are
+removed. Merged into canonical modules:
+
+| Area | Canonical test file |
+| --- | --- |
+| `core/runtime/env_deps`, files, logging, perf monitor, config/cli handlers | `test_env_deps.py`, `test_file_operations.py`, `test_logging_progress.py`, `test_performance_monitor.py`, `test_config_cli_coverage.py`, `test_cli_handlers_coverage.py` |
+| `validation/output/pipeline`, `integrity/check_links` | `test_validation_output_pipeline.py`, `test_check_links.py` |
+| `rendering/web_renderer`, `publishing/readiness`, reporting suite runner, glossary CLI | `test_web_renderer_coverage.py`, `test_readiness.py`, `test_suite_runner.py`, `test_generate_glossary_cli.py` |
+
+Legacy `*_coverage.py` files remain in some packages; merge into the canonical
+`test_<module>.py` when touching that package next.
+
 ## Recently added module tests (2026-05-23)
 
 | Module | Test file |

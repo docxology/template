@@ -34,9 +34,9 @@ uv run python3 -m infrastructure.validation.cli.pdf output/{project}/pdf/
 ```python
 from pathlib import Path
 
+from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.content.markdown_validator import (
     collect_symbols,
-    find_markdown_files,
     validate_images,
     validate_markdown,
     validate_math,
@@ -45,7 +45,7 @@ from infrastructure.validation.content.markdown_validator import (
 
 repo_root = Path(".")
 manuscript_dir = repo_root / "projects" / "project" / "manuscript"
-md_files = find_markdown_files(manuscript_dir)
+md_files = [str(path) for path in discover_markdown_files(manuscript_dir, scope="tree")]
 labels, anchors = collect_symbols(md_files)
 
 # Validate all markdown in a directory

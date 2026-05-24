@@ -8,7 +8,10 @@ from infrastructure.core.files.cleanup import (
     clean_output_directories,
     clean_output_directory,
 )
-from infrastructure.core.files.operations import copy_final_deliverables
+import pytest
+
+from infrastructure.core.exceptions import FileOperationError
+from infrastructure.core.files.operations import calculate_file_hash, copy_final_deliverables
 
 
 class TestCleanOutputDirectory:
@@ -455,6 +458,76 @@ class TestCopyFinalDeliverables:
         assert len(stats["errors"]) == 0 or all(
             "not found" not in err.lower() for err in stats["errors"]
         )
+
+    def test_with_logs_directory(self, tmp_path):
+        """Log files under logs/ are counted."""
+        project_root = tmp_path / "repo"
+        project_output = project_root / "projects" / "project" / "output"
+        (project_output / "logs").mkdir(parents=True)
+        (project_output / "logs" / "pipeline.log").write_text("Log line 1\nLog line 2")
+
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
+        assert stats["logs_files"] >= 1
+
+    def test_with_empty_log_file(self, tmp_path):
+        """Empty log files are still counted."""
+        project_root = tmp_path / "repo"
+        project_output = project_root / "projects" / "project" / "output"
+        (project_output / "logs").mkdir(parents=True)
+        (project_output / "logs" / "pipeline.log").write_text("")
+
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
+        assert stats["logs_files"] >= 1
+
+
+class TestCalculateFileHash:
+    """Test calculate_file_hash function."""
+
+    @pytest.mark.parametrize(
+        "algorithm,expected_len",
+        [
+            ("sha256", 64),
+            ("md5", 32),
+        ],
+    )
+    def test_known_algorithms(self, tmp_path, algorithm, expected_len):
+        """Supported hash algorithms return fixed-length hex digests."""
+        file_path = tmp_path / "test.txt"
+        file_path.write_text("hello world")
+        result = calculate_file_hash(file_path, algorithm)
+        assert result is not None
+        assert len(result) == expected_len
+
+    def test_file_not_found(self, tmp_path):
+        """Missing file returns None."""
+        assert calculate_file_hash(tmp_path / "nonexistent.txt") is None
+
+    def test_unsupported_algorithm(self, tmp_path):
+        """Unsupported algorithm raises FileOperationError."""
+        file_path = tmp_path / "test.txt"
+        file_path.write_text("data")
+        with pytest.raises(FileOperationError, match="Unsupported"):
+            calculate_file_hash(file_path, "fake_algo")
+
+    def test_empty_file(self, tmp_path):
+        """Empty file still produces a hash."""
+        file_path = tmp_path / "empty.txt"
+        file_path.write_text("")
+        result = calculate_file_hash(file_path, "sha256")
+        assert result is not None
+
+    def test_binary_file(self, tmp_path):
+        """Binary content is hashed correctly."""
+        file_path = tmp_path / "binary.bin"
+        file_path.write_bytes(bytes(range(256)))
+        result = calculate_file_hash(file_path, "sha256")
+        assert result is not None
 
 
 class TestCleanCoverageFiles:

@@ -77,6 +77,15 @@ class TestHandleDiscoverCommand:
         data = json.loads(capsys.readouterr().out)
         assert data == []
 
+    def test_discover_empty_repo(self, tmp_path, capsys):
+        """Repo with no projects/ directory should still succeed."""
+        args = argparse.Namespace(
+            repo_root=tmp_path,
+            format="text",
+        )
+        exit_code = handle_discover_command(args)
+        assert exit_code == 0
+
 
 class TestHandleInventoryCommand:
     def test_empty_output_dir(self, tmp_path, capsys):
