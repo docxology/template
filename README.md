@@ -168,6 +168,7 @@ instead.
 ./run.sh                                     # Interactive project selection
 ./run.sh --project template_code_project --pipeline
 ./run.sh --all-projects --pipeline           # All discovered projects sequentially
+./secure_run.sh --steganography-only --project template_code_project  # Re-watermark PDFs
 mkdir -p projects/my_research/{src,tests,manuscript,scripts}  # Scaffold new project
 ```
 

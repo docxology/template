@@ -33,7 +33,7 @@ This folder is the **GitHub integration surface**: Actions workflows, Dependabot
 | [`workflows/README.md`](workflows/README.md) | CI job graph and commands to mirror CI locally |
 | [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | Issue template inventory and editing notes |
 
-**Related (repo root):** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) lists agent `SKILL.md` descriptors. After adding or editing `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit the updated manifest (see [`infrastructure/skills/`](../infrastructure/skills/)).
+**Related (repo root):** [`.cursor/skill_manifest.json`](../.cursor/skill_manifest.json) lists agent `SKILL.md` descriptors. After adding or editing `infrastructure/**/SKILL.md`, run `uv run python -m infrastructure.skills write` and commit the updated manifest (see [`infrastructure/skills/`](../infrastructure/skills/)). Per-subsystem verification dates: [`STATUS.md`](../STATUS.md).
 
 ---
 
