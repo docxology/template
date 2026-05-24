@@ -1,0 +1,35 @@
+{
+  "artifact_manifest_hash": "6f230f4652d6baceff67009efe7ac6ef34bb542f77a7cfaf5c51c5f095d0c0c2",
+  "artifacts": {
+    "output/checks.json": "e7cb5141e8784e6a693fef868c16d5294a6146a8a8e285dd68fadb7a5833833f",
+    "output/data/manuscript_variables.json": "fcc4e7454421a212a8c4ed1cc79478533057d0d6ca4f995165a4f49468df0c6a",
+    "output/figures/citation_density.png": "c48d7ba4d738a05aafb4997c99dfec14bf975bbceecddedb22455857f6ccd205",
+    "output/figures/readability_metrics.png": "2dde562cbec731e2af747711d5999583c8447c2f5e3444186f3a4d39e40a8f93",
+    "output/figures/section_word_counts.png": "116f86bd733677c4c2ea989672d4f3392bf091383bcd57bdee55d589a2a47d42",
+    "output/manuscript/00_abstract.md": "060f7c3a4c5516182dc17e43227c3af1e7b31b47a5b0143396615c00564a5968",
+    "output/manuscript/01_introduction.md": "bb28f76428c86a8b04256ec1a7704458fb993ea292c7775ddbf77c4ea1696e80",
+    "output/manuscript/02_methodology.md": "34d5f534cb3dd3981be0a3df2476ddb9c5b614e9ca7b0f375dc42386ce8ca55a",
+    "output/manuscript/03_results.md": "5070ee7f11b90d139f305b8d9992b7bc7f07b8fbe250ee3490cc54ab2d85ad76",
+    "output/manuscript/04_conclusion.md": "e872a1c5f593b7d1ec080b24ce5cd012463ae82112d910558c4214f692c3dd79",
+    "output/manuscript/05_pipeline_internals.md": "a8ec6387c97aa03c1b0d92d4f50b9073a5b6cb0184d741585a289d5f444695f3",
+    "output/manuscript/06_reproducibility.md": "d4556cdad3473ca55e3690f02a2829b41996abadf8cf5e431eaeb19725aa4d5d",
+    "output/manuscript/99_references.md": "d58607556acc1a61281aa5f8f6e636a8efda4f176f31de56b0fea783adb57f43",
+    "output/manuscript/config.yaml": "ad698c84c3ff5653c6c02daa4432c28a1158b256ba64d54218a36cc78c38204f",
+    "output/manuscript/preamble.md": "21b3edeede6fb23e32815558eaf27f9bca690cdbdafe958012591e6a6c62cddd",
+    "output/manuscript/references.bib": "b8a8f331dd83f0ea71e03833462310339c9a9eb7775ca8ebcf25e573520c4ebe",
+    "output/manuscript_report.json": "b1b953676acc99136b99a92b9dadbdf1e87937d21967bf70f713cbd5d8da9e2f",
+    "output/reports/test_results.json": "bd8459d48f8b88b30d5793e00e97b174b74a135f733042b1e6f69d8bcde8414d",
+    "output/reports/test_results.md": "abbd6f88a5abfcda22da59b4cb1e3da996e0597c7d5575f38b0a8044cb7b8dd1",
+    "output/review_report.md": "3910d2830e529449fbc2ddb7e145a764378c4c2e4656372c69d4cdb6d6d3dcbf",
+    "output/run_summary.json": "05d64b417c78d95f667ec3e7e77ce2536efc408102494879625bcdb4df6b18bb"
+  },
+  "evidence_fact_count": 0,
+  "path": "/Users/4d/Documents/GitHub/template/projects/template_prose_project/output/reports/snapshots/stage-04-project-analysis.json",
+  "stage_name": "Project Analysis",
+  "stage_num": 4,
+  "timestamp": "2026-05-24T18:27:48+00:00",
+  "validation_summary": {
+    "checks": {},
+    "summary": {}
+  }
+}

@@ -78,6 +78,20 @@ def project_declared_coverage_floor(project_root: Path) -> int | None:
     return None
 
 
+def resolve_project_cov_config(project_root: Path) -> Path | None:
+    """Return project ``pyproject.toml`` when it declares ``[tool.coverage.run]``."""
+    pyproject = project_root / "pyproject.toml"
+    if not pyproject.is_file():
+        return None
+    try:
+        data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return None
+    if data.get("tool", {}).get("coverage", {}).get("run") is None:
+        return None
+    return pyproject
+
+
 def resolve_infrastructure_test_paths(repo_root: Path, scope: InfrastructureTestScope) -> list[str]:
     """Return pytest path arguments for an infrastructure test scope."""
     if scope == "full":
@@ -297,6 +311,7 @@ __all__ = [
     "project_declared_coverage_floor",
     "project_has_test_files",
     "resolve_coverage_file",
+    "resolve_project_cov_config",
     "resolve_infrastructure_test_paths",
     "resolve_project_test_python",
 ]

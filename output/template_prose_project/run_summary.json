@@ -1,0 +1,57 @@
+{
+  "title": "Editorial Quality at Scale: A Reproducible Prose-Review Pipeline",
+  "files": 8,
+  "total_words": 1802,
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "grade_level_in_band",
+      "passed": true,
+      "message": "avg FKGL = 16.58 (target 10.0–18.0)",
+      "details": {
+        "value": 16.58,
+        "min": 10.0,
+        "max": 18.0
+      }
+    },
+    {
+      "name": "citation_density_above_floor",
+      "passed": true,
+      "message": "density = 4.44/1000 words (min 0.0)",
+      "details": {
+        "density_per_1000": 4.44,
+        "min": 0.0,
+        "citation_count": 8,
+        "unique_keys": 6,
+        "word_count": 1802
+      }
+    },
+    {
+      "name": "no_skipped_heading_levels",
+      "passed": true,
+      "message": "0 file(s) with skipped levels",
+      "details": {
+        "offending_files": []
+      }
+    },
+    {
+      "name": "every_file_has_h1",
+      "passed": true,
+      "message": "0 file(s) missing H1",
+      "details": {
+        "offending_files": []
+      }
+    },
+    {
+      "name": "bibliography_consistency",
+      "passed": true,
+      "message": "6 cited / 6 in bib · 0 missing · 0 unused",
+      "details": {
+        "missing": [],
+        "unused": [],
+        "cited_count": 6,
+        "bib_count": 6
+      }
+    }
+  ]
+}

@@ -20,6 +20,7 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 ## Contracts
 
 - **No pipeline stage logic.** Stage scripts remain under [`scripts/`](../../scripts/).
+- **Interactive menu keys `0`–`7`** dispatch single stages via [`stage_registry.MENU_KEY_TO_STAGE`](../core/pipeline/stage_registry.py) → [`execute_single_stage()`](../core/pipeline/single_stage.py) (direct subprocess to `scripts/NN_*.py`); they do not shell out to `execute_pipeline.py --stage`.
 - **Slug validation** rejects traversal (`..`), NUL bytes, `-` prefixes, unknown project names from `discover_projects()`.
 - **Tests:** [`tests/infra_tests/orchestration/`](../../tests/infra_tests/orchestration/).
 

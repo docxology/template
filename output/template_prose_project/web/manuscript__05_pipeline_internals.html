@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05_pipeline_internals</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:pipeline_internals">Pipeline Internals</h1>
+<p>This section documents the artefacts produced by the prose-review
+run.</p>
+<pre class="mermaid"><code>flowchart TB
+    P[/projects/template_prose_project//]
+    P --&gt; M[/manuscript//]
+    P --&gt; OUT[/output/&lt;br/&gt;regenerable · gitignored/]
+
+    M --&gt; M_CFG[config.yaml&lt;br/&gt;single source of truth]
+    M --&gt; M_PRE[preamble.md&lt;br/&gt;LaTeX preamble]
+    M --&gt; M_SEC[00_abstract → 04_conclusion ·&lt;br/&gt;05_pipeline_internals · 06_reproducibility]
+    M --&gt; M_BIB[references.bib&lt;br/&gt;read-only · validated by pipeline]
+
+    OUT --&gt; O_REP[manuscript_report.json&lt;br/&gt;ManuscriptReport JSON]
+    OUT --&gt; O_CK[checks.json&lt;br/&gt;list of CheckResult]
+    OUT --&gt; O_RR[review_report.md&lt;br/&gt;final markdown report]
+    OUT --&gt; O_DATA[/data/manuscript_variables.json/]
+    OUT --&gt; O_FIG[/figures/&lt;br/&gt;section_word_counts.png ·&lt;br/&gt;readability_metrics.png ·&lt;br/&gt;citation_density.png/]
+    OUT --&gt; O_RS[run_summary.json]
+
+    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
+    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
+    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
+    class P,M,OUT d
+    class M_CFG,M_PRE,M_SEC,M_BIB src
+    class O_REP,O_CK,O_RR,O_DATA,O_FIG,O_RS gen</code></pre>
+<h2 id="data-structures">Data structures</h2>
+<pre class="mermaid"><code>classDiagram
+    class ManuscriptReport {
+        +list~FileReport~ files
+        +int total_words
+        +int total_sentences
+        +int total_paragraphs
+        +float avg_flesch_reading_ease
+        +float avg_flesch_kincaid_grade
+        +float avg_gunning_fog
+        +list~str~ citation_keys
+    }
+
+    class FileReport {
+        +str name
+        +ProseMetrics metrics
+        +StructureReport structure
+        +QualityReport quality
+    }
+
+    class ProseMetrics {
+        +int word_count
+        +int sentence_count
+        +int paragraph_count
+        +float flesch_reading_ease
+        +float flesch_kincaid_grade
+        +float gunning_fog
+    }
+
+    class StructureReport {
+        +list~Heading~ headings
+        +list~Section~ sections
+        +int max_depth
+        +bool has_h1
+        +bool has_skipped_level
+    }
+
+    class QualityReport {
+        +int passive_count
+        +int hedge_count
+        +int citation_count
+        +int long_sentence_count
+        +float citation_density_per_1000
+    }
+
+    class CheckResult {
+        +str name
+        +bool passed
+        +str message
+    }
+
+    class ProseRunArtifacts {
+        +ManuscriptReport manuscript_report
+        +list~CheckResult~ checks
+        +bool all_passed
+    }
+
+    ManuscriptReport --&gt; &quot;*&quot; FileReport
+    FileReport --&gt; ProseMetrics
+    FileReport --&gt; StructureReport
+    FileReport --&gt; QualityReport
+    ProseRunArtifacts --&gt; ManuscriptReport
+    ProseRunArtifacts --&gt; &quot;*&quot; CheckResult</code></pre>
+</body>
+</html>

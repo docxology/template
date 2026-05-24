@@ -44,9 +44,7 @@ issues = scan_for_issues(text)
 
 ```python
 from pathlib import Path
-from infrastructure.validation import (
-    find_markdown_files, validate_markdown, validate_images, validate_refs, validate_math,
-)
+from infrastructure.validation import discover_markdown_files, validate_markdown, validate_images, validate_refs, validate_math
 from infrastructure.validation.content.markdown_validator import collect_symbols
 
 repo_root = Path(".")
@@ -56,7 +54,7 @@ manuscript_dir = repo_root / "projects" / "template_code_project" / "manuscript"
 problems, exit_code = validate_markdown(manuscript_dir, repo_root)
 
 # Individual checks
-md_files = find_markdown_files(manuscript_dir)
+md_files = [str(p) for p in discover_markdown_files(manuscript_dir, scope="tree")]
 labels, anchors = collect_symbols(md_files)
 
 image_issues = validate_images(md_files, repo_root)

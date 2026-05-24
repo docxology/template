@@ -16,6 +16,7 @@ from infrastructure.core.pytest_orchestration import (
     project_declared_coverage_floor,
     project_has_test_files,
     resolve_coverage_file,
+    resolve_project_cov_config,
     resolve_infrastructure_test_paths,
 )
 
@@ -39,6 +40,37 @@ def test_project_declared_coverage_floor_missing_file_returns_none(tmp_path: Pat
     project = tmp_path / "projects" / "demo"
     project.mkdir(parents=True)
     assert project_declared_coverage_floor(project) is None
+
+
+def test_resolve_project_cov_config_reads_run_section(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "demo"
+    project.mkdir(parents=True)
+    pyproject = project / "pyproject.toml"
+    pyproject.write_text(
+        dedent(
+            """
+            [tool.coverage.run]
+            branch = true
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+    assert resolve_project_cov_config(project) == pyproject
+
+
+def test_resolve_project_cov_config_missing_run_section_returns_none(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "demo"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_text(
+        dedent(
+            """
+            [tool.coverage.report]
+            fail_under = 90
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+    assert resolve_project_cov_config(project) is None
 
 
 def test_resolve_coverage_file_honours_environment(monkeypatch: pytest.MonkeyPatch) -> None:

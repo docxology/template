@@ -14,21 +14,26 @@ The Validation module provides quality assurance and validation tools for resear
 - Document structure verification
 - First-N-words extraction for preview
 
+**content/discovery.py**
+- Canonical markdown enumeration: `discover_markdown_files(root, scope=...)`
+- Scopes: `tree` (non-recursive `*.md` in one directory), `repo` (shared doc-scan exclusions), `link_audit` (link-checker exclusions)
+
 **content/markdown_validator.py**
-- Markdown file discovery and collection
-- Manuscript directory discovery at `projects/{name}/manuscript/`
+- Manuscript directory discovery at `projects/{name}/manuscript/` (`find_manuscript_directory`)
 - Image reference validation
 - Cross-reference verification
 - Mathematical equation validation
 - Link and URL integrity checking
 - Section anchor validation
+- Does **not** own file discovery — use `content/discovery.py`
 
 **integrity/link_extract.py**
 - Library surface for markdown link extraction and validation (no CLI)
-- `find_all_markdown_files`, `extract_links`, `extract_code_blocks`, path/import/placeholder validators, `check_file_reference`, `LinkCheckResult`
+- `extract_links`, `extract_code_blocks`, path/import/placeholder validators, `check_file_reference`, `LinkCheckResult`
+- Link audits enumerate markdown via `discover_markdown_files(..., scope="link_audit")` from `content/discovery.py`
 
 **integrity/check_links.py**
-- Documentation link verification CLI (~140 lines); re-exports `link_extract` helpers for backward compatibility
+- Documentation link verification CLI (~140 lines); re-exports `discover_markdown_files` and `link_extract` helpers
 
 **integrity/link_validator.py**
 - `LinkValidator.resolve_link_target()` delegates path resolution to `paths.resolve_markdown_target()` with directory index-file fallback
@@ -155,20 +160,29 @@ def validate_pdf_rendering(
     """
 ```
 
-### content/markdown_validator.py
+### content/discovery.py
 
-#### find_markdown_files (function)
+#### discover_markdown_files (function)
 ```python
-def find_markdown_files(markdown_dir: str | Path) -> List[str]:
-    """Find all markdown files in a directory recursively.
+def discover_markdown_files(
+    root: Path,
+    *,
+    scope: Literal["tree", "repo", "link_audit"] = "tree",
+    repo_root: Path | None = None,
+) -> List[Path]:
+    """Discover markdown files under *root* according to *scope*.
 
-    Args:
-        markdown_dir: Directory to search for markdown files
+    Scopes:
+        tree — non-recursive ``*.md`` in one directory (manuscript dirs).
+        repo — recursive scan with ``DEFAULT_EXCLUDE_PARTS`` (doc scanner).
+        link_audit — recursive scan with link-checker exclusions.
 
     Returns:
-        List of markdown file paths as strings
+        Sorted list of markdown file paths
     """
 ```
+
+### content/markdown_validator.py
 
 #### collect_symbols (function)
 ```python
@@ -548,8 +562,27 @@ not passing an explicit path).
 ### cli/markdown.py
 
 Markdown validation CLI invoked as `python -m infrastructure.validation.cli markdown …`.
-Wraps manuscript/content validators (`find_markdown_files`, `collect_symbols`,
+Wraps manuscript/content validators (`discover_markdown_files`, `collect_symbols`,
 `validate_images`, `validate_refs`, `validate_math`) and exits non-zero on issues.
+
+### output/pipeline.py
+
+Pipeline-stage output validation orchestrator (`scripts/04_validate_output.py`).
+
+#### validate_manuscript_output_markdown (function)
+```python
+def validate_manuscript_output_markdown(project_name: str = "project") -> bool:
+    """Validate manuscript markdown for a project during the output pipeline.
+
+    Resolves ``projects/{project_name}/manuscript/``, then calls content
+    ``validate_markdown(manuscript_dir, repo_root)``. Returns True when the
+    manuscript dir is missing or validation passes.
+
+    Not the same as content ``validate_markdown(dir, repo_root)`` — use this
+    name only for the pipeline wrapper; use content ``validate_markdown`` for
+    direct directory validation.
+    """
+```
 
 ### output_validator.py
 
@@ -898,20 +931,11 @@ class QualityIssue:
     severity: str
 ```
 
-### doc_discovery.py
+### docs/discovery.py
 
-#### find_markdown_files (function)
-```python
-def find_markdown_files(repo_root: Path) -> List[Path]:
-    """Find all markdown files in repository.
-
-    Args:
-        repo_root: Repository root directory
-
-    Returns:
-        List of markdown file paths
-    """
-```
+Documentation inventory helpers (config/script discovery, hierarchy, categorization).
+Markdown enumeration uses `discover_markdown_files(repo_root, scope="repo")` from
+`content/discovery.py` — not defined in this module.
 
 #### catalog_agents_readme (function)
 ```python
@@ -1297,16 +1321,17 @@ def verify_documentation_accuracy(
 
 ### check_links.py
 
-#### find_all_markdown_files (function)
+#### discover_markdown_files (function)
 ```python
-def find_all_markdown_files(repo_root: str) -> List[Path]:
-    """Find all markdown files in repository.
+def discover_markdown_files(
+    root: Path,
+    *,
+    scope: Literal["tree", "repo", "link_audit"] = "tree",
+    repo_root: Path | None = None,
+) -> List[Path]:
+    """Re-export from ``content.discovery`` — use ``scope=\"link_audit\"`` for link audits.
 
-    Args:
-        repo_root: Repository root directory
-
-    Returns:
-        List of markdown file paths
+    Canonical implementation: ``infrastructure.validation.content.discovery``.
     """
 ```
 
@@ -1370,16 +1395,25 @@ report = validate_pdf_rendering(Path("output/{project_name}/pdf/{project_name}_c
 
 ### Markdown Validation
 ```python
-from infrastructure.validation import validate_markdown
-from infrastructure.validation.content.markdown_validator import find_manuscript_directory
+from pathlib import Path
+
+from infrastructure.validation import discover_markdown_files, validate_markdown
+from infrastructure.validation.content.markdown_validator import collect_symbols, find_manuscript_directory
 
 # Find manuscript directory at standard location
-manuscript_dir = find_manuscript_directory(Path("."))
+manuscript_dir = find_manuscript_directory(Path("."), project_name="template_code_project")
 # Returns projects/{name}/manuscript/ directory
 
-problems, exit_code = validate_markdown(str(manuscript_dir), ".")
+md_paths = [str(p) for p in discover_markdown_files(manuscript_dir, scope="tree")]
+labels, anchors = collect_symbols(md_paths)
+
+problems, exit_code = validate_markdown(manuscript_dir, Path("."))
 # Validates images, references, equations, links
 ```
+
+**Naming:** Content `validate_markdown(dir, repo_root)` validates a manuscript tree.
+Pipeline `validate_manuscript_output_markdown(project_name)` in `output/pipeline.py`
+is the Stage 4 wrapper — do not conflate the two.
 
 **Manuscript Directory Discovery**: The `find_manuscript_directory()` function locates the manuscript directory at `projects/{name}/manuscript/`.
 

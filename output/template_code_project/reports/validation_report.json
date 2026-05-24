@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-24T10:56:11.096907",
+  "timestamp": "2026-05-24T11:27:39.810969",
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
@@ -7,15 +7,10 @@
     "Figure registry": true,
     "Evidence registry": true,
     "Project design overlays": true,
-    "Artifact manifest": false
+    "Artifact manifest": true
   },
   "figure_issues": [],
   "output_statistics": {
-    "artifact_manifest_issues": [
-      "undeclared artifact: output/docs/api_glossary.md",
-      "undeclared artifact: output/docs/api_reference.md",
-      "undeclared artifact: output/figures/stability_analysis.png"
-    ],
     "detailed_validation": {
       "structure": {
         "valid": true,
@@ -32,7 +27,7 @@
           "pdf": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.85,
+            "size_mb": 1.86,
             "readable": true,
             "optional": false
           },
@@ -98,7 +93,7 @@
         "pdf": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.85",
+          "size_mb": "1.86",
           "largest_file": "template_code_project_combined.pdf"
         },
         "web": {
@@ -161,7 +156,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 6.4050188064575195,
+      "total_size_mb": 6.407022476196289,
       "issues_by_severity": {
         "critical": [],
         "warning": [],
@@ -171,11 +166,11 @@
     },
     "pdf": {
       "files": 10,
-      "size_mb": 1.8542566299438477
+      "size_mb": 1.8550910949707031
     },
     "figures": {
       "files": 7,
-      "size_mb": 1.4803657531738281
+      "size_mb": 1.4808626174926758
     },
     "data": {
       "files": 4,
@@ -184,17 +179,10 @@
   },
   "summary": {
     "total_checks": 7,
-    "passed": 6,
-    "failed": 1,
+    "passed": 7,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Artifact manifest reported drift or missing declared outputs",
-      "action": "Regenerate declared outputs or update the stage contract",
-      "file": "projects/template_code_project/output/reports/artifact_manifest.json"
-    }
-  ]
+  "recommendations": []
 }

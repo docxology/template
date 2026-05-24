@@ -26,6 +26,7 @@ from infrastructure.core.pytest_orchestration import (
     parse_test_discovery_timeout,
     prepend_uv_to_path,
     project_declared_coverage_floor,
+    resolve_project_cov_config,
     resolve_infrastructure_test_paths,
     resolve_project_test_python,
 )
@@ -179,6 +180,9 @@ def run_project_tests(
         str(project_root / "tests"),
         f"--cov={project_root / 'src'}",
     ]
+    project_cov_config = resolve_project_cov_config(project_root)
+    if project_cov_config is not None:
+        cmd.append(f"--cov-config={project_cov_config}")
 
     env = os.environ.copy()
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))

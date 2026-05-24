@@ -2186,7 +2186,7 @@ Build a human-readable Markdown index for discovered skills.
 *constant — defined in `infrastructure.skills.discovery`*
 
 ```python
-DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure', 'projects', '.cursor/skills')
+DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = ('infrastructure', 'projects', 'docs/prompts', '.cursor/skills')
 ```
 
 ### `discover_skills`
@@ -2361,6 +2361,16 @@ categorize_by_type(issues: list[ValidationIssue]) -> dict[str, list[ValidationIs
 
 Categorize issues by their type and severity.
 
+### `discover_markdown_files`
+
+*function — defined in `infrastructure.validation.content.discovery`*
+
+```python
+discover_markdown_files(root: Path, *, scope: MarkdownDiscoveryScope='tree', repo_root: Path | None=None) -> list[Path]
+```
+
+Discover markdown files under *root* according to *scope*.
+
 ### `extract_text_from_pdf`
 
 *function — defined in `infrastructure.validation.content.pdf_validator`*
@@ -2380,16 +2390,6 @@ filter_false_positives(issues: list[ValidationIssue]) -> list[ValidationIssue]
 ```
 
 Filter out false positive issues from the list.
-
-### `find_markdown_files`
-
-*function — defined in `infrastructure.validation.content.markdown_validator`*
-
-```python
-find_markdown_files(markdown_dir: str | Path) -> list[str]
-```
-
-Find all markdown files in the specified directory.
 
 ### `generate_audit_report`
 

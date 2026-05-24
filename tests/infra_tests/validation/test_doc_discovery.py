@@ -1,6 +1,6 @@
-"""Tests for infrastructure/validation/doc_discovery.py.
+"""Tests for infrastructure/validation/docs/discovery.py.
 
-Covers discover_markdown_files, identify_cross_references, catalog_agents_readme,
+Covers discover_markdown_files (repo scope), identify_cross_references, catalog_agents_readme,
 find_config_files, create_hierarchy, and discover_documentation using real temp directories.
 """
 

@@ -29,8 +29,8 @@ from infrastructure.core.exceptions import NotADirectoryError
 from infrastructure.core.logging import DiagnosticSeverity
 
 
-class TestFindMarkdownFiles:
-    """Test discover_markdown_files (tree scope)."""
+class TestDiscoverMarkdownFilesTree:
+    """Test discover_markdown_files with scope=\"tree\"."""
 
     def test_finds_and_sorts_markdown_files(self, tmp_path):
         """Test discover_markdown_files finds and sorts markdown files."""
@@ -48,19 +48,19 @@ class TestFindMarkdownFiles:
         assert files[1].name == "02_second.md"
 
     def test_nonexistent_directory_raises(self, tmp_path):
-        """Test find_markdown_files raises on nonexistent directory."""
+        """Test discover_markdown_files raises on nonexistent directory."""
         with pytest.raises(FileNotFoundError):
             discover_markdown_files(tmp_path / "nonexistent", scope="tree")
 
     def test_file_instead_of_directory_raises(self, tmp_path):
-        """Test find_markdown_files raises when given a file."""
+        """Test discover_markdown_files raises when given a file."""
         test_file = tmp_path / "test.txt"
         test_file.write_text("content")
         with pytest.raises(NotADirectoryError):
             discover_markdown_files(test_file, scope="tree")
 
     def test_empty_directory(self, tmp_path):
-        """Test find_markdown_files with empty directory."""
+        """Test discover_markdown_files with empty directory."""
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
 
