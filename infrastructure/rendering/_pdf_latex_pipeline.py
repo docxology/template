@@ -83,7 +83,7 @@ def _check_fatal_error(
     has_fatal_marker = any(marker in log_content for marker in fatal_markers)
     is_fatal_exit = result.returncode not in (0, SIGPIPE_EXIT)
 
-    if has_fatal_marker or is_fatal_exit:
+    if has_fatal_marker or (is_fatal_exit and "Output written on" not in log_content):
         if log_file.exists():
             missing_pkg = parse_missing_latex_package_from_log(log_file)
             if missing_pkg:
@@ -109,6 +109,12 @@ def _check_fatal_error(
         raise RenderingError(
             f"XeLaTeX compilation failed (pass {pass_num})",
             context={"source": str(combined_tex), "output": str(output_file)},
+        )
+    if is_fatal_exit:
+        logger.warning(
+            "  XeLaTeX pass %d exited with code %s but wrote output; continuing multi-pass compile",
+            pass_num,
+            result.returncode,
         )
     return False
 
