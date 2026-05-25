@@ -234,7 +234,7 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
 
 
 def validate_project_design(project_root: Path) -> tuple[bool, list[str]]:
-    """Validate advisory domain profile and experiment plan overlays."""
+    """Validate advisory domain profile, experiment plan, and opt-in readiness overlays."""
     log_substep("Validating project design overlays...", logger)
     issues: list[str] = []
     try:
@@ -247,12 +247,42 @@ def validate_project_design(project_root: Path) -> tuple[bool, list[str]]:
         issues.extend(result.issues)
     except ValueError as exc:
         issues.append(str(exc))
+    autoresearch_path = project_root / "autoresearch.yaml"
+    if autoresearch_path.exists():
+        try:
+            from infrastructure.autoresearch import (
+                build_autoresearch_plan,
+                validate_autoresearch_plan,
+                write_autoresearch_report,
+            )
+
+            project_name = _project_name_from_root(project_root)
+            plan = build_autoresearch_plan(_REPO_ROOT, project_name)
+            report = validate_autoresearch_plan(plan, project_root)
+            write_autoresearch_report(project_root, report)
+            issues.extend(f"{issue.code}: {issue.message}" for issue in report.issues if issue.severity == "error")
+            if plan.config.strict:
+                issues.extend(
+                    f"{issue.code}: {issue.message}" for issue in report.issues if issue.severity == "warning"
+                )
+        except (OSError, ValueError, RuntimeError, AttributeError) as exc:
+            issues.append(f"AutoResearch readiness validation failed: {exc}")
     if issues:
         for issue in issues:
             logger.warning(issue)
         return False, issues
     log_success("Project design overlays passed", logger)
     return True, []
+
+
+def _project_name_from_root(project_root: Path) -> str:
+    """Return a project discovery name for active or WIP project roots."""
+    for parent in (_REPO_ROOT / "projects", _REPO_ROOT / "projects_in_progress"):
+        try:
+            return str(project_root.resolve().relative_to(parent.resolve()))
+        except ValueError:
+            continue
+    return project_root.name
 
 
 def generate_validation_report(

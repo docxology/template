@@ -638,6 +638,7 @@ class TestModuleLevel:
             generate_title_page_preamble,
             generate_title_page_body,
         )
+        assert callable(combine_manuscript_markdown_sections)
         assert callable(process_bibliography)
         assert callable(extract_preamble)
         assert callable(fix_figure_paths)

@@ -441,6 +441,23 @@ def test_smart_pause_scores_validation_artifact_telemetry_and_rejections(tmp_pat
         '{"warnings": [{"warning_type": "slow_stage", "stage_name": "PDF Rendering", "message": "slow"}]}',
         encoding="utf-8",
     )
+    (reports / "autoresearch_readiness.json").write_text(
+        json.dumps(
+            {
+                "valid": False,
+                "issues": [
+                    {
+                        "severity": "error",
+                        "code": "AUTORESEARCH.ARTIFACT_MISSING",
+                        "message": "missing artifact",
+                        "source_path": "output/data/result.csv",
+                        "suggested_action": "regenerate",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
     (hitl / "decisions.jsonl").write_text(
         '{"action":"reject","stage_num":6,"stage_name":"Output Validation","message":"not grounded"}\n',
         encoding="utf-8",
@@ -450,9 +467,14 @@ def test_smart_pause_scores_validation_artifact_telemetry_and_rejections(tmp_pat
     output_path = write_pause_recommendations(tmp_path, recommendations)
 
     reason_codes = {reason for rec in recommendations for reason in rec.reason_codes}
-    assert {"validation_failed", "artifact_drift", "slow_telemetry", "human_rejection", "design_validation"}.issubset(
-        reason_codes
-    )
+    assert {
+        "validation_failed",
+        "artifact_drift",
+        "slow_telemetry",
+        "human_rejection",
+        "design_validation",
+        "autoresearch_readiness",
+    }.issubset(reason_codes)
     assert recommendations[0].score > 0
     assert output_path == tmp_path / "reports" / "pause_recommendations.json"
 
@@ -606,6 +628,7 @@ def test_stage_artifact_manifest_records_hashes_and_contract_issues(tmp_path: Pa
     (project_dir / "output" / "logs" / "pipeline.log").write_text("ignore me\n", encoding="utf-8")
     (project_dir / "output" / ".checkpoints" / "pipeline_checkpoint.json").write_text("{}", encoding="utf-8")
     (project_dir / "output" / "reports" / "artifact_manifest.json").write_text("{}", encoding="utf-8")
+    (project_dir / "output" / "reports" / "evidence_registry.json").write_text("{}", encoding="utf-8")
     (project_dir / "output" / "reports" / "snapshots" / "stage-01.json").write_text("{}", encoding="utf-8")
     (project_dir / "output" / "slides").mkdir()
     (project_dir / "output" / "slides" / "section_slides.aux").write_text("ignore me\n", encoding="utf-8")
@@ -626,6 +649,7 @@ def test_stage_artifact_manifest_records_hashes_and_contract_issues(tmp_path: Pa
     assert all("logs/" not in entry.path for entry in manifest.entries)
     assert all(".checkpoints/" not in entry.path for entry in manifest.entries)
     assert all("artifact_manifest.json" not in entry.path for entry in manifest.entries)
+    assert all("evidence_registry.json" not in entry.path for entry in manifest.entries)
     assert all("snapshots/" not in entry.path for entry in manifest.entries)
     assert all(not entry.path.endswith(".aux") for entry in manifest.entries)
     assert any("missing declared output" in issue for issue in validation.issues)

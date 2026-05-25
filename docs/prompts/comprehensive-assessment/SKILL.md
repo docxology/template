@@ -11,7 +11,7 @@ description: |
 
 ## Natural invoke
 
-- "Audit the whole repo for template_code_project and template_prose_project"
+- "Audit the whole repo for template_autoresearch_project, template_code_project, and template_prose_project"
 - "Full health check — tests, docs, manuscript, pipeline"
 - "What's broken across all active projects?"
 

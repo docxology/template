@@ -119,7 +119,7 @@ Implemented pieces:
 Remaining hardening:
 
 1. Add a dedicated `--bundle-only` `run.sh` convenience flag if direct script invocation proves awkward.
-2. Cross-test both canonical exemplars in CI with the generated container.
+2. Cross-test the public canonical exemplars in CI with the generated container.
 3. Decide whether reproducibility should be byte-identical or content-equivalent when timestamps are present.
 4. Add a dedicated CI job once container runtime availability is stable.
 

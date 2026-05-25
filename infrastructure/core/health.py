@@ -39,6 +39,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
 
+from infrastructure.project.public_scope import public_ci_source_paths
+
 __all__ = [
     "GateResult",
     "HealthReport",
@@ -95,17 +97,12 @@ class HealthReport:
 # for diagnostics. Sized to keep JSON reports compact while still being
 # useful for triage.
 _OUTPUT_TAIL_BYTES = 4000
+_GATE_TIMEOUT_SECONDS = 300.0
 
 
-def _discover_project_src_dirs(repo_root: Path) -> list[str]:
-    """Discover ``src/`` directories under ``projects/`` for linting."""
-    projects_dir = repo_root / "projects"
-    if not projects_dir.is_dir():
-        return []
-    return [
-        str(projects_dir / name / "src")
-        for name in sorted(d.name for d in projects_dir.iterdir() if d.is_dir() and (d / "src").is_dir())
-    ]
+def _public_source_targets(repo_root: Path) -> list[str]:
+    """Return public CI source paths for linting and type checks."""
+    return [path.as_posix() for path in public_ci_source_paths(repo_root)]
 
 
 def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
@@ -138,18 +135,17 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         ),
     ]
 
-    project_src_dirs = _discover_project_src_dirs(repo_root)
-    ruff_targets = ["infrastructure/"] + project_src_dirs
+    public_targets = _public_source_targets(repo_root)
 
     return [
-        ("mypy", ["uv", "run", "mypy", "--strict", "infrastructure/"]),
+        ("mypy", ["uv", "run", "mypy", *public_targets]),
         (
             "ruff",
-            ["uvx", "ruff", "check", *ruff_targets],
+            ["uvx", "ruff", "check", *public_targets],
         ),
         (
             "ruff-format",
-            ["uvx", "ruff", "format", "--check", *ruff_targets],
+            ["uvx", "ruff", "format", "--check", *public_targets],
         ),
         (
             "bandit",
@@ -265,7 +261,13 @@ _CUSTOM_PASS_PREDICATES = {
 # ---------------------------------------------------------------------------
 
 
-def _run_single_gate(name: str, argv: Sequence[str], repo_root: Path) -> GateResult:
+def _run_single_gate(
+    name: str,
+    argv: Sequence[str],
+    repo_root: Path,
+    *,
+    timeout_seconds: float = _GATE_TIMEOUT_SECONDS,
+) -> GateResult:
     """Execute one gate and capture its outcome."""
 
     start = time.perf_counter()
@@ -276,6 +278,7 @@ def _run_single_gate(name: str, argv: Sequence[str], repo_root: Path) -> GateRes
             capture_output=True,
             text=True,
             check=False,
+            timeout=timeout_seconds,
         )
         combined = (proc.stdout or "") + (proc.stderr or "")
         predicate = _CUSTOM_PASS_PREDICATES.get(name)
@@ -287,6 +290,19 @@ def _run_single_gate(name: str, argv: Sequence[str], repo_root: Path) -> GateRes
     except FileNotFoundError as exc:
         passed = False
         tail = f"executable not found: {exc}"
+    except subprocess.TimeoutExpired as exc:
+        passed = False
+        stdout = exc.stdout or ""
+        stderr = exc.stderr or ""
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode(errors="replace")
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode(errors="replace")
+        combined = str(stdout) + str(stderr)
+        output_tail = combined[-_OUTPUT_TAIL_BYTES:].rstrip()
+        tail = f"gate timed out after {timeout_seconds:g}s"
+        if output_tail:
+            tail = f"{tail}\n{output_tail}"
     elapsed_ms = (time.perf_counter() - start) * 1000.0
     return GateResult(name=name, passed=passed, elapsed_ms=elapsed_ms, output=tail)
 

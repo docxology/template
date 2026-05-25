@@ -48,11 +48,10 @@ def try_download_m4() -> bool:
 
     try:
         print("⬇ Loading M4 monthly dataset from Hugging Face...")
-        # nosec B615 — research fixture: streaming-mode load of the public
-        # M4 forecasting dataset for benchmark seed data only. No model
-        # weights or executable assets. The hub-side dataset has a stable
-        # schema; if `datasets` later supports content-addressed pinning by
-        # SHA we will adopt it here.
+        # Research fixture: streaming-mode load of the public M4 forecasting
+        # dataset for benchmark seed data only. No model weights or executable
+        # assets. If `datasets` later supports content-addressed pinning by SHA,
+        # adopt it here.
         dataset = load_dataset("m4", split="monthly", streaming=True)  # nosec B615
         # Streaming to avoid downloading full dataset (which is huge)
         print(f"✓ Dataset loaded (streaming). Sampling {NUM_SERIES} series...")
@@ -103,25 +102,29 @@ def generate_synthetic_timeseries() -> None:
         noise_scale = rng.uniform(0.5, 3.0)
 
         trend = trend_coef * t
-        seasonal = seasonal_amp * np.sin(2 * np.pi * t / seasonal_period + rng.uniform(0, 2*np.pi))
+        seasonal = seasonal_amp * np.sin(2 * np.pi * t / seasonal_period + rng.uniform(0, 2 * np.pi))
         noise = rng.normal(0, noise_scale, size=length)
 
         values = trend + seasonal + noise
         values = values.tolist()
 
-        outpath = SYNTHETIC_OUTPUT / f"synthetic_{i+1:03d}.json"
-        outpath.write_text(json.dumps({
-            "values": values,
-            "id": f"synthetic_{i+1:03d}",
-            "length": len(values),
-            "parameters": {
-                "trend_coef": float(trend_coef),
-                "seasonal_period": int(seasonal_period),
-                "seasonal_amp": float(seasonal_amp),
-                "noise_scale": float(noise_scale),
-            }
-        }))
-        print(f"  ✓ Generated synthetic series {i+1}/{NUM_SERIES}: {outpath.name} ({len(values)} points)")
+        outpath = SYNTHETIC_OUTPUT / f"synthetic_{i + 1:03d}.json"
+        outpath.write_text(
+            json.dumps(
+                {
+                    "values": values,
+                    "id": f"synthetic_{i + 1:03d}",
+                    "length": len(values),
+                    "parameters": {
+                        "trend_coef": float(trend_coef),
+                        "seasonal_period": int(seasonal_period),
+                        "seasonal_amp": float(seasonal_amp),
+                        "noise_scale": float(noise_scale),
+                    },
+                }
+            )
+        )
+        print(f"  ✓ Generated synthetic series {i + 1}/{NUM_SERIES}: {outpath.name} ({len(values)} points)")
 
     print(f"✓ Generated {NUM_SERIES} synthetic time series.")
 
@@ -152,7 +155,9 @@ def main() -> None:
     if SYNTHETIC_OUTPUT.exists():
         existing_synth = list(SYNTHETIC_OUTPUT.glob("*.json"))
         if len(existing_synth) >= NUM_SERIES:
-            print(f"⊘ Synthetic data already complete ({len(existing_synth)} series) at {SYNTHETIC_OUTPUT}, skipping generation.")
+            print(
+                f"⊘ Synthetic data already complete ({len(existing_synth)} series) at {SYNTHETIC_OUTPUT}, skipping generation."
+            )
             return
         else:
             print(f"⚠ Synthetic data incomplete ({len(existing_synth)} series). Regenerating...")

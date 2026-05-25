@@ -1,7 +1,5 @@
 """Tests for infrastructure.validation.docs.scanner and related modules."""
 
-from datetime import datetime
-
 import pytest
 
 from infrastructure.validation.docs import scanner as doc_scanner

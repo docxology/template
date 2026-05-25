@@ -184,7 +184,8 @@ def verify_data_consistency(data_files: list[Path]) -> dict[str, bool]:
             elif file_extension == ".pkl":
                 # Pickle validation
                 with open(data_file, "rb") as f:
-                    pickle.load(f)  # nosec B301 — validating project's own output files
+                    # Validate this project's own output files.
+                    pickle.load(f)  # nosec B301
 
         except (OSError, ValueError, pickle.UnpicklingError) as e:
             logger.warning(f"Data integrity check failed for {data_file}: {e}")

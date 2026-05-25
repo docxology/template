@@ -164,6 +164,36 @@ class TestVerifyOutputsExist:
         assert details["structure"]["directory_structure"]["combined_pdf"]["exists"] is True
 
 
+def test_validate_project_design_includes_autoresearch_when_configured(tmp_path, monkeypatch):
+    monkeypatch.setattr(mod, "_REPO_ROOT", tmp_path)
+    project = tmp_path / "projects" / "demo"
+    (project / "output" / "reports").mkdir(parents=True)
+    (project / "autoresearch.yaml").write_text(
+        "strict: true\nquality_checks: [unknown_check]\n",
+        encoding="utf-8",
+    )
+    pipeline_dir = tmp_path / "infrastructure" / "core" / "pipeline"
+    pipeline_dir.mkdir(parents=True)
+    (pipeline_dir / "pipeline.yaml").write_text(
+        """
+stages:
+  - name: Output Validation
+    script: 04_validate_output.py
+    contract:
+      output_artifacts: ["projects/{project}/output/reports/"]
+      definition_of_done: "Report written."
+      failure_code: "OUTPUT_VALIDATION_FAILED"
+""",
+        encoding="utf-8",
+    )
+
+    result, issues = mod.validate_project_design(project)
+
+    assert result is False
+    assert any("AUTORESEARCH.QUALITY_CHECK_UNKNOWN" in issue for issue in issues)
+    assert (project / "output" / "reports" / "autoresearch_readiness.json").exists()
+
+
 class TestGenerateValidationReport:
     """Test generate_validation_report()."""
 

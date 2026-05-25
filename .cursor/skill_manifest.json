@@ -104,6 +104,18 @@
       "cursor_at": "infrastructure/SKILL.md"
     },
     {
+      "name": "infrastructure-autoresearch",
+      "description": "Skill for deterministic AutoResearch readiness planning. Use when adding, validating, or documenting opt-in autoresearch.yaml controls, stage-gate readiness, evidence-grounded claims, artifact readiness reports, or AutoResearchClaw-inspired workflow checks in template projects.",
+      "path": "infrastructure/autoresearch/SKILL.md",
+      "cursor_at": "infrastructure/autoresearch/SKILL.md"
+    },
+    {
+      "name": "infrastructure-benchmark",
+      "description": "Deterministic benchmark harnesses for public template exemplars. Use when scoring generated project outputs against benchmark manifests, refreshing the default template smoke manifest, checking publication-readiness rubrics, or adding bounded no-network readiness checks for public template outputs.",
+      "path": "infrastructure/benchmark/SKILL.md",
+      "cursor_at": "infrastructure/benchmark/SKILL.md"
+    },
+    {
       "name": "infrastructure-config",
       "description": "Repository-scoped configuration for the template—environment variable templates and default secure/steganography YAML. Use when editing .env patterns, secure_config defaults, or cross-referencing project manuscript config overrides.",
       "path": "infrastructure/config/SKILL.md",
@@ -213,7 +225,7 @@
     },
     {
       "name": "infrastructure-skills",
-      "description": "Programmatic discovery of agent SKILL.md files under infrastructure/. Use when enumerating skills, validating .cursor/skill_manifest.json, or wiring editor automation. Exposes discover_skills, write_skill_manifest, and manifest_matches_discovery.",
+      "description": "Programmatic discovery of first-party agent SKILL.md files under configured public repo roots (infrastructure, projects, docs/prompts, and .cursor/skills). Use when enumerating skills, validating .cursor/skill_manifest.json, writing docs/_generated/skills_index.md, or wiring editor automation. Exposes discover_skills, write_skill_manifest, and manifest_matches_discovery.",
       "path": "infrastructure/skills/SKILL.md",
       "cursor_at": "infrastructure/skills/SKILL.md"
     },

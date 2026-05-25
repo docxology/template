@@ -68,7 +68,7 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 11 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
 | 12 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
 
-**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/check_tracked_generated_artifacts.py`, and **`scripts/check_tracked_projects.py`** — the **confidentiality guard** that fails CI if any project other than `template_code_project` / `template_prose_project` is git-tracked (this is a public repo; confidential/rotating projects are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (`projects_archive/`, `projects_in_progress/`, `.venv/`, `site-packages`, `.lake`, and the rotating research projects under `projects/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
+**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/check_tracked_generated_artifacts.py`, and **`scripts/check_tracked_projects.py`** — the **confidentiality guard** that fails CI if any project outside `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES` is git-tracked (this is a public repo; confidential/rotating projects are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/generate_api_reference_doc.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (`projects_archive/`, `projects_in_progress/`, `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects_in_progress/`, `detect` reports `false` and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
 
@@ -98,7 +98,7 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the req
 | No-mocks policy | zero mock usage |
 | Infrastructure coverage | ≥ 60% |
 | Project coverage (per-project standalone) | ≥ 90% |
-| Combined-union all-projects gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% (reconciled to measured reality; per-project floors authoritative) |
+| Combined-union public-project gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% (public exemplars; per-project floors authoritative) |
 | pip-audit | zero known vulns not listed in `.github/pip-audit-ignore.txt` |
 | Bandit MEDIUM+ (`-c bandit.yaml`) | zero findings |
 | Mermaid diagrams render under `mmdc` | zero failures |
@@ -181,7 +181,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ru
 # Run tests locally (mirror CI)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 -m "not requires_ollama"
 uv sync --group rendering --group monitoring --group discopy
-COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
+COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 
 # Security scan locally (mirror CI)

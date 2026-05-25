@@ -6,9 +6,14 @@ Discovers `SKILL.md` files, parses YAML frontmatter, and maintains `.cursor/skil
 
 ```bash
 uv run python -m infrastructure.skills write
+uv run python -m infrastructure.skills write-index
 uv run python -m infrastructure.skills check
 uv run python -m infrastructure.skills list-json
 ```
+
+Default discovery roots are `infrastructure/`, `projects/`, `docs/prompts/`,
+and `.cursor/skills/`. Override them with `--roots` after the subcommand when
+you need a focused manifest.
 
 ## Python API
 

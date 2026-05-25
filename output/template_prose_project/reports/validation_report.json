@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-24T11:28:15.706188",
+  "timestamp": "2026-05-24T17:58:40.023569",
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
@@ -156,7 +156,7 @@
         "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 1.7186317443847656,
+      "total_size_mb": 1.7184152603149414,
       "issues_by_severity": {
         "critical": [],
         "warning": [],

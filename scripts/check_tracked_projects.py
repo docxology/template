@@ -20,7 +20,7 @@ def main(argv: list[str] | None = None) -> int:
 
     offenders = offending_tracked_projects(args.repo_root.resolve())
     if not offenders:
-        print("Confidentiality guard: only the two canonical template projects are tracked.")
+        print("Confidentiality guard: only public canonical template projects are tracked.")
         return 0
 
     print(

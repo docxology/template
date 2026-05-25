@@ -2,7 +2,7 @@
   "facts": [
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_words",
       "source_field": "$.total_words",
@@ -14,7 +14,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_words (numeric variant)",
       "source_field": "$.total_words",
@@ -26,7 +26,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_sentences",
       "source_field": "$.total_sentences",
@@ -38,7 +38,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_sentences (numeric variant)",
       "source_field": "$.total_sentences",
@@ -50,7 +50,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_paragraphs",
       "source_field": "$.total_paragraphs",
@@ -62,7 +62,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.total_paragraphs (numeric variant)",
       "source_field": "$.total_paragraphs",
@@ -74,7 +74,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_grade_level",
       "source_field": "$.avg_grade_level",
@@ -86,19 +86,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
-      "kind": "number",
-      "source": "output/data/manuscript_variables.json:$.avg_grade_level (numeric variant)",
-      "source_field": "$.avg_grade_level",
-      "source_path": "output/data/manuscript_variables.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.1658"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_grade_level (numeric variant)",
       "source_field": "$.avg_grade_level",
@@ -110,7 +98,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
+      "kind": "number",
+      "source": "output/data/manuscript_variables.json:$.avg_grade_level (numeric variant)",
+      "source_field": "$.avg_grade_level",
+      "source_path": "output/data/manuscript_variables.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1658"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_reading_ease",
       "source_field": "$.avg_reading_ease",
@@ -122,7 +122,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_reading_ease (numeric variant)",
       "source_field": "$.avg_reading_ease",
@@ -134,7 +134,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_reading_ease (numeric variant)",
       "source_field": "$.avg_reading_ease",
@@ -146,7 +146,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_gunning_fog",
       "source_field": "$.avg_gunning_fog",
@@ -158,19 +158,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
-      "kind": "number",
-      "source": "output/data/manuscript_variables.json:$.avg_gunning_fog (numeric variant)",
-      "source_field": "$.avg_gunning_fog",
-      "source_path": "output/data/manuscript_variables.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "17.6"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.avg_gunning_fog (numeric variant)",
       "source_field": "$.avg_gunning_fog",
@@ -182,7 +170,19 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
+      "kind": "number",
+      "source": "output/data/manuscript_variables.json:$.avg_gunning_fog (numeric variant)",
+      "source_field": "$.avg_gunning_fog",
+      "source_path": "output/data/manuscript_variables.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "17.6"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.citation_count",
       "source_field": "$.citation_count",
@@ -194,7 +194,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.citation_count (numeric variant)",
       "source_field": "$.citation_count",
@@ -206,7 +206,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.files_analysed",
       "source_field": "$.files_analysed",
@@ -218,7 +218,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.files_analysed (numeric variant)",
       "source_field": "$.files_analysed",
@@ -230,7 +230,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.longest_section_words",
       "source_field": "$.longest_section_words",
@@ -242,7 +242,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.longest_section_words (numeric variant)",
       "source_field": "$.longest_section_words",
@@ -254,7 +254,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.shortest_section_words",
       "source_field": "$.shortest_section_words",
@@ -266,7 +266,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "output/data/manuscript_variables.json:$.shortest_section_words (numeric variant)",
       "source_field": "$.shortest_section_words",
@@ -278,7 +278,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "projects/template_prose_project/src/figures.py export settings",
       "source_field": "figure-export-dpi",
@@ -290,7 +290,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "projects/template_prose_project/src/figures.py export settings (numeric variant)",
       "source_field": "figure-export-dpi",
@@ -302,7 +302,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "projects/template_prose_project/manuscript/01_introduction.md editorial-drift example",
       "source_field": "comparison-sibling-word-count",
@@ -314,7 +314,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "projects/template_prose_project/manuscript/01_introduction.md editorial-drift example (numeric variant)",
       "source_field": "comparison-sibling-word-count",
@@ -326,7 +326,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "projects/template_prose_project/src/pipeline.py citation density metric",
       "source_field": "citation-density-denominator",
@@ -338,7 +338,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "number",
       "source": "projects/template_prose_project/src/pipeline.py citation density metric (numeric variant)",
       "source_field": "citation-density-denominator",
@@ -350,7 +350,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -362,7 +362,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -374,7 +374,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -386,7 +386,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -398,7 +398,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -410,7 +410,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -422,7 +422,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "citation",
       "source": "manuscript/references.bib",
       "source_field": "",
@@ -434,7 +434,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/03_results.md",
       "source_field": "",
@@ -446,7 +446,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -458,7 +458,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -470,7 +470,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/00_abstract.md",
       "source_field": "",
@@ -482,7 +482,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -494,7 +494,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/01_introduction.md",
       "source_field": "",
@@ -506,7 +506,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -518,7 +518,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/02_methodology.md",
       "source_field": "",
@@ -530,7 +530,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -542,7 +542,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/04_conclusion.md",
       "source_field": "",
@@ -554,7 +554,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -566,7 +566,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/05_pipeline_internals.md",
       "source_field": "",
@@ -578,7 +578,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -590,7 +590,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/06_reproducibility.md",
       "source_field": "",
@@ -602,7 +602,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -614,7 +614,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/99_references.md",
       "source_field": "",
@@ -626,7 +626,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "section",
       "source": "manuscript/SYNTAX.md",
       "source_field": "",
@@ -638,7 +638,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -650,7 +650,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -662,7 +662,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -674,7 +674,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -686,7 +686,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -698,7 +698,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -710,7 +710,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -722,7 +722,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -734,7 +734,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -746,7 +746,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -758,7 +758,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -770,7 +770,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -782,7 +782,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -794,7 +794,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -806,7 +806,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -818,7 +818,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -830,7 +830,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -842,7 +842,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -854,7 +854,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -866,7 +866,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -878,7 +878,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -890,7 +890,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -902,7 +902,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -914,7 +914,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -926,7 +926,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -938,7 +938,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -950,7 +950,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -962,7 +962,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -974,7 +974,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -986,7 +986,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -998,7 +998,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1010,7 +1010,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1022,7 +1022,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1034,7 +1034,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1046,7 +1046,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1058,7 +1058,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1070,7 +1070,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1082,7 +1082,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1094,7 +1094,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1106,7 +1106,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1118,7 +1118,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1130,7 +1130,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1142,7 +1142,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1154,7 +1154,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1166,7 +1166,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1178,7 +1178,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1190,7 +1190,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1202,7 +1202,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1214,7 +1214,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1226,7 +1226,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1238,7 +1238,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1250,7 +1250,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1262,7 +1262,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1274,7 +1274,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1286,7 +1286,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1298,7 +1298,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1310,7 +1310,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1322,7 +1322,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1334,7 +1334,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1346,7 +1346,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1358,7 +1358,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1370,7 +1370,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1382,7 +1382,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1394,7 +1394,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1406,7 +1406,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1418,7 +1418,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1430,7 +1430,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1442,7 +1442,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1454,7 +1454,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1466,7 +1466,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1478,7 +1478,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1490,7 +1490,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1502,7 +1502,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1514,7 +1514,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1526,7 +1526,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1538,7 +1538,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1550,7 +1550,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1562,7 +1562,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1574,7 +1574,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1586,7 +1586,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1598,7 +1598,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1610,7 +1610,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1622,7 +1622,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1634,7 +1634,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1646,7 +1646,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1658,7 +1658,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1670,7 +1670,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1682,7 +1682,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1694,7 +1694,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1706,7 +1706,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1718,7 +1718,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1730,7 +1730,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1742,7 +1742,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1754,7 +1754,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1766,7 +1766,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1778,7 +1778,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1790,7 +1790,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1802,7 +1802,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1814,7 +1814,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1826,7 +1826,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1838,7 +1838,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1850,7 +1850,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1862,7 +1862,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1874,7 +1874,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1886,7 +1886,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1898,7 +1898,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1910,7 +1910,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1922,7 +1922,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1934,7 +1934,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1946,7 +1946,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1958,7 +1958,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1970,7 +1970,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1982,7 +1982,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -1994,7 +1994,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2006,7 +2006,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2018,7 +2018,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2030,7 +2030,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2042,7 +2042,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2054,7 +2054,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2066,7 +2066,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2078,7 +2078,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2090,7 +2090,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2102,7 +2102,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2114,7 +2114,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2126,7 +2126,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "artifact",
       "source": "filesystem",
       "source_field": "",
@@ -2138,7 +2138,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "figure",
       "source": "output/figures/citation_density.png",
       "source_field": "",
@@ -2150,7 +2150,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "figure",
       "source": "output/figures/readability_metrics.png",
       "source_field": "",
@@ -2162,7 +2162,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "figure",
       "source": "output/figures/section_word_counts.png",
       "source_field": "",
@@ -2174,7 +2174,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "figure",
       "source": "output/figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png",
       "source_field": "",
@@ -2186,7 +2186,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "figure",
       "source": "output/figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.mmd",
       "source_field": "",
@@ -2198,7 +2198,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "figure",
       "source": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.mmd",
       "source_field": "",
@@ -2210,7 +2210,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "figure",
       "source": "output/figures/mermaid_inline/inline_mermaid_0001_12653844f6c5.png",
       "source_field": "",
@@ -2222,7 +2222,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-05-24T18:28:15+00:00",
+      "checked_at": "2026-05-25T00:58:40+00:00",
       "kind": "figure",
       "source": "output/figures/mermaid_inline/inline_mermaid.puppeteer.json",
       "source_field": "",

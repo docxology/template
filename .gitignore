@@ -85,14 +85,16 @@ Thumbs.db
 !infrastructure/validation/output/
 !infrastructure/validation/output/**
 **/projects/*/output/
-# EXCEPTION: the two canonical exemplars' TOP-LEVEL rendered output is tracked
+# EXCEPTION: the code/prose exemplars' TOP-LEVEL rendered output is tracked
 # as living render-proof (a deliberate, scoped reversal of the "never commit
 # output" rule above — mirrors the projects/ confidentiality pattern). The
-# scripts/check_tracked_generated_artifacts.py guard grants the same two paths a
-# matching exemption. Everything else under output/ — including every
-# confidential/active project's output (e.g. output/<active-project>/) — stays
-# ignored and is NEVER negated here. Leading `/` anchors this to top-level
-# output/ only, so nested projects/*/output stays ignored.
+# scripts/check_tracked_generated_artifacts.py guard grants the same paths a
+# matching exemption. The AutoResearch exemplar is public, but its top-level
+# output stays generated-only unless this allowlist and the guard are updated
+# together. Everything else under output/ — including every confidential/active
+# project's output (e.g. output/<active-project>/) — stays ignored and is NEVER
+# negated here. Leading `/` anchors this to top-level output/ only, so nested
+# projects/*/output stays ignored.
 !/output/
 /output/*
 !/output/template_code_project/
@@ -116,29 +118,39 @@ invalid/
 
 # projects/: ignore all workspaces except the canonical template exemplars
 # (Tracked copies of other projects remain in the index until `git rm -r --cached projects/<name>`.)
-# template_code_project and template_prose_project are the two permanent
-# always-present exemplars. template_search_project rotates between
-# projects/ (active) and projects_archive/; the negation patterns below
-# keep it tracked whenever it is restored under projects/.
+# template_code_project, template_prose_project, and
+# template_autoresearch_project are the permanent always-present exemplars.
+# template_search_project rotates between projects/ (active) and
+# projects_archive/.
 projects/*
 # CONFIDENTIALITY INVARIANT: this is a PUBLIC repo into which confidential
 # projects are routinely rotated under projects/. Repo-level Markdown files in
-# projects/ are navigation docs; only the two canonical template exemplar
+# projects/ are navigation docs; only the canonical template exemplar
 # directories may ever be tracked/pushed. Do NOT add a negation for any other
 # project directory (incl. template_search_project) — if a non-confidential
-# extra exemplar must be published, track it deliberately with `git add -f` and
-# review the diff. The check-tracked-projects guard (pre-push + CI) fails the
+# extra exemplar must be published, update this allowlist and the
+# check-tracked-projects guard together. The guard (pre-push + CI) fails the
 # build if anything else under projects/ is staged/tracked.
 !projects/*.md
 !projects/template_code_project/
 !projects/template_code_project/**
 !projects/template_prose_project/
 !projects/template_prose_project/**
+!projects/template_autoresearch_project/
+!projects/template_autoresearch_project/**
 projects/*/.DS_Store
 projects/*/output/
 projects/*/output/**
 projects/*/*.egg-info/
 projects/*/src/*.egg-info/
+
+# Download/generated fixture payloads. Keep the fixture docs and committed
+# private_project stubs visible, but never surface cloned repos or benchmark
+# data as accidental untracked source.
+tests/fixtures/real_codebases/*
+!tests/fixtures/real_codebases/README.md
+!tests/fixtures/real_codebases/AGENTS.md
+tests/fixtures/timeseries/
 
 # Archived and in-progress projects (not executed by pipeline)
 projects_archive/

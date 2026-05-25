@@ -1,10 +1,44 @@
 """Tests for latex_utils module."""
+
 import stat
 
 import pytest
 
 from infrastructure.core.exceptions import CompilationError
-from infrastructure.rendering.latex_utils import compile_latex
+from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
+
+
+def test_ensure_pdf_at_noop_when_paths_match(tmp_path):
+    """When compiled and target paths match, return target unchanged."""
+    pdf = tmp_path / "deck.pdf"
+    pdf.write_bytes(b"%PDF-1.4\n")
+    assert ensure_pdf_at(pdf, pdf) == pdf
+    assert pdf.exists()
+
+
+def test_ensure_pdf_at_renames_compiled_pdf(tmp_path):
+    """When LaTeX stem differs from requested output, move PDF to target."""
+    compiled = tmp_path / "slides_slides.pdf"
+    target = tmp_path / "slides.pdf"
+    compiled.write_bytes(b"%PDF-1.4 fake\n")
+
+    result = ensure_pdf_at(compiled, target)
+
+    assert result == target
+    assert target.exists()
+    assert not compiled.exists()
+
+
+def test_ensure_pdf_at_replaces_existing_target(tmp_path):
+    """An existing target file is replaced atomically via Path.replace."""
+    compiled = tmp_path / "a.pdf"
+    target = tmp_path / "b.pdf"
+    compiled.write_bytes(b"%PDF-1.4 new\n")
+    target.write_bytes(b"stale\n")
+
+    ensure_pdf_at(compiled, target)
+
+    assert target.read_bytes().startswith(b"%PDF-1.4")
 
 
 @pytest.mark.requires_latex
@@ -52,7 +86,7 @@ Recovered document.
 
     fake_compiler = tmp_path / "fake_xelatex.py"
     fake_compiler.write_text(
-        r'''#!/usr/bin/env python3
+        r"""#!/usr/bin/env python3
 import pathlib
 import sys
 
@@ -75,7 +109,7 @@ if attempt == 1:
 
 pdf.write_bytes(b"%PDF-1.4\nok\nstartxref\n1\n%%EOF\n")
 log.write_text("Output written on test.pdf\n", encoding="utf-8")
-''',
+""",
         encoding="utf-8",
     )
     fake_compiler.chmod(fake_compiler.stat().st_mode | stat.S_IXUSR)

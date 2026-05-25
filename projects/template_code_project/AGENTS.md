@@ -1,6 +1,6 @@
 # Code Project - Optimization Research Exemplar
 
-**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Permanent sibling exemplar: [`template_prose_project`](../template_prose_project) (prose-review pipeline). Optional **local-only** add-on exemplar: [`template_search_project`](../../projects_archive/template_search_project) (literature discovery + auto-populated BibTeX) — it rests in `projects_archive/`, is **not git-tracked** (public repo; only the two canonical exemplars are tracked), and is copied under `projects/` *locally only*, never committed. The exemplars share the canonical [`docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md).
+**This is an active project** in the `projects/` directory, discovered and executed by infrastructure discovery functions. Permanent sibling exemplars: [`template_prose_project`](../template_prose_project) (prose-review pipeline) and [`template_autoresearch_project`](../template_autoresearch_project) (deterministic readiness loop). Optional **local-only** add-on exemplar: [`template_search_project`](../../projects_archive/template_search_project) (literature discovery + auto-populated BibTeX) — it rests in `projects_archive/`, is **not git-tracked**, and is copied under `projects/` *locally only*, never committed. The exemplars share the canonical [`docs/guides/manuscript-semantics.md`](../../docs/guides/manuscript-semantics.md).
 
 ## Overview
 

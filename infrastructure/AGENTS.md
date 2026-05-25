@@ -13,6 +13,8 @@ Each subpackage has a `SKILL.md` file (YAML frontmatter) for agent skill discove
 flowchart TB
     INFRA[/infrastructure<br/>SKILL.md · top-level infrastructure skill/]
 
+    INFRA --> AUTO[/autoresearch<br/>Deterministic readiness plans<br/>stage gates · artifacts · evidence/]
+    INFRA --> BENCH[/benchmark<br/>Deterministic exemplar scoring/]
     INFRA --> CORE[/core<br/>Foundation utilities/]
     INFRA --> CFG[/config<br/>Repository configuration templates/]
     INFRA --> DOCK[/docker<br/>Containerization/]
@@ -31,6 +33,7 @@ flowchart TB
     INFRA --> ORCH[/orchestration<br/>run.sh-equivalent CLI · menu · PipelineRunner<br/>stage logs · secure_run wrapper/]
     INFRA --> PRS[/prose<br/>Readability metrics · outline · editorial flags · CLI/]
 
+    AUTO --> AUTO_F[config · models · planner · validation · reports · cli]
     CORE --> CORE_F[exceptions · logging · config/loader ·<br/>pipeline · stage_registry · post_run_reporting · hitl_cli · single_stage ·<br/>runtime/checkpoint · setup_checks · source_improve · cache_gate ·<br/>runtime/retry · runtime/function_profiler · security ·<br/>runtime/environment · files/operations · telemetry/]
     VAL --> VAL_F[content/pdf_validator · content/markdown_validator · content/discovery ·<br/>line_count · security_gate · plugin_export · docs/lint_runner ·<br/>integrity/checks · repo/audit_orchestrator · repo/scanner · cli/main]
     DOC --> DOC_F[figure_manager · image_manager ·<br/>markdown_integration · glossary_gen]
@@ -44,16 +47,17 @@ flowchart TB
     REF --> REF_F[citation/ · models · escape ·<br/>bibtex_writer · bibtex_parser · converter · cli]
     ORCH --> ORCH_F[cli · discovery · menu · pipeline_runner<br/>stage_logger · secure_run]
     PRS --> PRS_F[analysis/metrics · structure · quality<br/>markdown · report · cli]
+    BENCH --> BENCH_F[template_harness · rubrics · template_smoke_manifest.json]
 
     classDef hub fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef files fill:#0f766e,stroke:#0f172a,color:#fff
     class INFRA hub
-    class CORE,CFG,DOCK,SK,VAL,DOC,PROJ,SCI,LLM,REND,PUB,REP,STEG,SEARCH,REF,ORCH,PRS pkg
-    class CORE_F,VAL_F,DOC_F,SCI_F,LLM_F,REND_F,PUB_F,REP_F,STEG_F,SEARCH_F,REF_F,ORCH_F,PRS_F files
+    class AUTO,BENCH,CORE,CFG,DOCK,SK,VAL,DOC,PROJ,SCI,LLM,REND,PUB,REP,STEG,SEARCH,REF,ORCH,PRS pkg
+    class AUTO_F,BENCH_F,CORE_F,VAL_F,DOC_F,SCI_F,LLM_F,REND_F,PUB_F,REP_F,STEG_F,SEARCH_F,REF_F,ORCH_F,PRS_F files
 ```
 
-> Each Layer-1 Python package ships `AGENTS.md` and `README.md`; most also ship `SKILL.md` (YAML frontmatter for editors). Exceptions are folders like `logrotate.d/` (config only — see [`logrotate.d/AGENTS.md`](logrotate.d/AGENTS.md)). The manifest aggregator lives in [`infrastructure/skills/`](skills/).
+> Each Layer-1 Python package ships `AGENTS.md`, `README.md`, and `SKILL.md` (YAML frontmatter for editors). Non-package configuration folders such as `logrotate.d/` carry local docs but are not skill-discovered. The manifest aggregator lives in [`infrastructure/skills/`](skills/).
 
 ## Thin-orchestrator modules (refactor inventory)
 
@@ -61,6 +65,8 @@ Measured coverage and gate thresholds → [`docs/_generated/canonical_facts.md`]
 
 | Module | Role |
 | --- | --- |
+| `autoresearch/` | Opt-in deterministic readiness plans and reports over domain profiles, experiment plans, pipeline contracts, evidence, artifacts, and thin-orchestrator drift |
+| `benchmark/` | Deterministic benchmark manifests and scoring for public template exemplar outputs |
 | `core/pipeline/post_run_reporting.py` | Post-run summary + JSON report after pipeline stages |
 | `core/pipeline/hitl_cli.py` | Human-in-the-loop CLI for `execute_pipeline.py` |
 | `core/pipeline/stage_registry.py` | Canonical stage-key → script map (`STAGE_DISPATCH`, `MENU_KEY_TO_STAGE`) |

@@ -19,12 +19,17 @@ import json
 import os
 import re
 import shutil
-import subprocess  # nosec B404 — required for real mmdc invocation; no shell, fixed args
+import signal
+
+# Required for real mmdc invocation; calls use fixed argv and no shell.
+import subprocess  # nosec B404
 import tempfile
+import time
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+from infrastructure.core._optional_deps import psutil
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.validation.docs.scan_scope import iter_markdown_files
 
@@ -38,6 +43,7 @@ _MERMAID_FENCE = re.compile(
 
 # Heuristic: first non-empty, non-comment line tells us the diagram kind.
 _KIND_RE = re.compile(r"^\s*(?P<kind>[A-Za-z][A-Za-z0-9_-]*)")
+_MMDC_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TIMEOUT", "30"))
 
 
 @dataclass(frozen=True)
@@ -162,12 +168,82 @@ def _resolve_chrome(chrome_path: str | None) -> str | None:
     return None
 
 
-def _puppeteer_config(chrome_path: str | None) -> dict[str, object]:
+def _puppeteer_config(chrome_path: str | None, user_data_dir: Path) -> dict[str, object]:
     """Build a puppeteer-config.json payload for `mmdc`."""
-    cfg: dict[str, object] = {"args": ["--no-sandbox"]}
+    cfg: dict[str, object] = {
+        "args": ["--no-sandbox"],
+        "userDataDir": str(user_data_dir),
+    }
     if chrome_path:
         cfg["executablePath"] = chrome_path
     return cfg
+
+
+def _kill_process_group(pid: int) -> None:
+    """Kill the process group rooted at *pid* when the platform supports it."""
+    if os.name == "nt" or pid == os.getpgrp():
+        return
+    try:
+        os.killpg(pid, signal.SIGKILL)
+    except (OSError, ProcessLookupError, PermissionError):
+        return
+
+
+def _kill_processes_matching(tokens: Sequence[str], attempts: int = 3) -> None:
+    """Kill processes whose command line contains one of *tokens*."""
+    if psutil is None:
+        return
+    for _ in range(max(1, attempts)):
+        victims = []
+        for candidate in psutil.process_iter(["pid", "cmdline"]):
+            try:
+                if candidate.pid == os.getpid():
+                    continue
+                cmdline = " ".join(candidate.info.get("cmdline") or [])
+                if cmdline and any(token in cmdline for token in tokens):
+                    victims.append(candidate)
+            except (OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess):
+                continue
+        if not victims:
+            return
+        for victim in victims:
+            try:
+                victim.kill()
+            except (OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess):
+                continue
+        psutil.wait_procs(victims, timeout=5)
+        time.sleep(0.1)
+
+
+def _close_process_pipes(proc: subprocess.Popen[str]) -> None:
+    """Close captured pipes so orphaned descendants cannot block cleanup."""
+    for stream in (proc.stdout, proc.stderr):
+        if stream is not None:
+            stream.close()
+
+
+def _kill_process_tree(proc: subprocess.Popen[str], tokens: Sequence[str]) -> None:
+    """Terminate *proc*, its descendants, and matching detached browser helpers."""
+    _kill_process_group(proc.pid)
+    if psutil is None:
+        try:
+            proc.kill()
+        except ProcessLookupError:
+            pass
+        return
+    try:
+        parent = psutil.Process(proc.pid)
+        children = parent.children(recursive=True)
+        for child in children:
+            child.kill()
+        parent.kill()
+        psutil.wait_procs([parent, *children], timeout=5)
+    except (OSError, AttributeError, psutil.AccessDenied, psutil.NoSuchProcess):
+        try:
+            proc.kill()
+        except ProcessLookupError:
+            pass
+    _kill_processes_matching(tokens)
 
 
 def _run_mmdc(
@@ -176,6 +252,7 @@ def _run_mmdc(
     mmdc_bin: str,
     puppeteer_cfg_path: Path,
     workdir: Path,
+    timeout_seconds: float,
 ) -> tuple[int, str]:
     """Render a single block with `mmdc`. Return (returncode, stderr)."""
     src = workdir / f"block_{block.line}.mmd"
@@ -191,23 +268,32 @@ def _run_mmdc(
         str(puppeteer_cfg_path),
         "-q",  # quiet
     ]
+    proc = subprocess.Popen(  # nosec B603
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=(os.name != "nt"),
+    )
     try:
-        proc = subprocess.run(  # nosec B603 — fixed argv, no shell
-            cmd,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
+        stdout, stderr = proc.communicate(timeout=timeout_seconds)
     except subprocess.TimeoutExpired:
-        return 124, f"mmdc timed out for {block.file}:{block.line}"
-    return proc.returncode, proc.stderr or proc.stdout or ""
+        _kill_process_tree(proc, tokens=[str(workdir)])
+        try:
+            proc.communicate(timeout=1)
+        except subprocess.TimeoutExpired:
+            _close_process_pipes(proc)
+        return 124, f"mmdc timed out after {timeout_seconds:g}s for {block.file}:{block.line}"
+    _kill_process_group(proc.pid)
+    _kill_processes_matching([str(workdir)])
+    return int(proc.returncode), stderr or stdout or ""
 
 
 def validate_blocks(
     blocks: Sequence[MermaidBlock],
     mmdc_path: str | None = None,
     chrome_path: str | None = None,
+    timeout_seconds: float = _MMDC_TIMEOUT_SECONDS,
 ) -> list[ValidationFailure]:
     """Render each block with `mmdc` and return failures.
 
@@ -230,19 +316,24 @@ def validate_blocks(
     with tempfile.TemporaryDirectory(prefix="mermaid_lint_") as tmp:
         tmp_path = Path(tmp)
         cfg_path = tmp_path / "puppeteer-config.json"
+        chrome_profile = tmp_path / "chrome-profile"
         cfg_path.write_text(
-            json.dumps(_puppeteer_config(chrome_resolved)),
+            json.dumps(_puppeteer_config(chrome_resolved, chrome_profile)),
             encoding="utf-8",
         )
-        for block in blocks:
-            rc, stderr = _run_mmdc(
-                block,
-                mmdc_bin=mmdc_bin,
-                puppeteer_cfg_path=cfg_path,
-                workdir=tmp_path,
-            )
-            if rc != 0:
-                failures.append(ValidationFailure(block=block, stderr=stderr, returncode=rc))
+        try:
+            for block in blocks:
+                rc, stderr = _run_mmdc(
+                    block,
+                    mmdc_bin=mmdc_bin,
+                    puppeteer_cfg_path=cfg_path,
+                    workdir=tmp_path,
+                    timeout_seconds=timeout_seconds,
+                )
+                if rc != 0:
+                    failures.append(ValidationFailure(block=block, stderr=stderr, returncode=rc))
+        finally:
+            _kill_processes_matching([str(tmp_path)])
     return failures
 
 

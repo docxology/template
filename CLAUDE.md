@@ -154,12 +154,13 @@ uv run python -c "from infrastructure.project.discovery import discover_projects
 
 **Active projects:** Authoritative list → [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (`discover_projects()`).
 
-**🔒 CONFIDENTIALITY INVARIANT (public repo).** Only these two canonical
+**🔒 CONFIDENTIALITY INVARIANT (public repo).** Only these public canonical
 exemplars are ever git-tracked/pushed:
+- [`projects/template_autoresearch_project/`](projects/template_autoresearch_project/) — deterministic AutoResearch template
 - [`projects/template_code_project/`](projects/template_code_project/) — code-centric template
 - [`projects/template_prose_project/`](projects/template_prose_project/) — prose-centric template
 
-`.gitignore` ignores `projects/*` and negates **only** those two (plus the
+`.gitignore` ignores `projects/*` and negates **only** those public exemplars (plus the
 repo-level `projects/*.md` docs). **Every other project under `projects/` —
 rotating research, client/confidential work, and the optional
 `template_search_project` literature-search exemplar — is LOCAL-ONLY and must
@@ -171,11 +172,12 @@ cannot slip past it). `template_search_project` rests in
 copy it under `projects/` **locally** to exercise the literature-search
 workflow, then never commit it.
 
-Private active work lives outside this public repo at
+Private work lives outside this public repo at
 `/Users/4d/Documents/GitHub/projects/{active,passive,archive}`. `run.sh` and
-`python -m infrastructure.orchestration` auto-sync `active/*` into
-`template/projects/*` as symlinks before discovery, menu rendering, and
-pipeline execution. Inspect with
+`python -m infrastructure.orchestration` auto-sync private lifecycle folders as
+symlinks: `active/*` into `template/projects/*` for discovery/rendering,
+`passive/*` into `template/projects_in_progress/*`, and `archive/*` into
+`template/projects_archive/*` for local inspection. Inspect with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`;
 override the root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root`; disable one command with `TEMPLATE_SKIP_LINK_SYNC=1`.
@@ -183,7 +185,7 @@ Other rotating projects move between the private lifecycle repo,
 `projects_in_progress/`, `projects/`, and `projects_archive/` as work
 progresses; never hard-code their paths in long-lived docs — consult
 `_generated/active_projects.md` instead.
-**Backburner & archived projects:** live in the private `docxology/projects` repo under `passive/` and `archive/` — promote one to `active/` to render it (see [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md)). The local `projects_in_progress/` / `projects_archive/` staging tiers remain supported by discovery but are unused in this checkout.
+**Backburner & archived projects:** remain non-rendered unless promoted to `active/`; their local symlinks exist only for inspection or explicit targeted work (see [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md)).
 
 ## Architecture
 
@@ -252,9 +254,10 @@ avg = calculate_average(data)  # Use tested method
 
 ### Active vs Archived Projects
 
-- **`projects/`** — the two public exemplars, plus `active/` projects from the private repo symlinked in (discovered + rendered).
+- **`projects/`** — the public exemplars, plus `active/` projects from the private repo symlinked in (discovered + rendered).
+- **`projects_in_progress/`** — non-rendered symlinks to the private repo's `passive/` projects.
+- **`projects_archive/`** — non-rendered symlinks to the private repo's `archive/` projects.
 - **Private `docxology/projects` repo** — the primary home for real projects: `active/` (rendered every run), `passive/` (backburner), `archive/` (retired). See [`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
-- **`projects_in_progress/` / `projects_archive/`** — legacy local staging tiers; still supported by discovery but unused in this checkout (superseded by the private repo's `passive/` / `archive/`).
 
 **Current active projects:** See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) (do not hard-code names in docs).
 **Backburner / archived projects:** in the private repo's `passive/` and `archive/`.
@@ -345,7 +348,7 @@ flowchart TB
 - **Infrastructure**: 60% minimum (measured baseline → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
 - **Projects (per-project standalone)**: 90% minimum. Exemplar measured coverage → [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md). Per-project gate: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90`.
   - **Rotating-project exceptions**: a CI matrix job may pin a lower floor for a checked-out rotating project (e.g. an 89% gate for a Lean-toolchain project) when its Lean build + live external CLI + Ollama-gated paths carry CI-only surface below the 90% floor. The exception applies only while that project is checked out under `projects/`; raise back to 90% once that surface is covered.
-- **Combined-union all-projects gate**: 75% (`scripts/01_run_tests.py --project-only --all-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans every active project's source (including research projects with animation/visualization/Lean-adjacent code intentionally not driven to 90%). 75 reflects the true sustained combined level — a reconciled, enforced gate replacing a previously unenforced aspirational 90. Per-project floors are unchanged and remain authoritative.
+- **Combined-union public-project gate**: 75% (`scripts/01_run_tests.py --project-only --all-projects --public-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project in the checkout and may include rotating private symlinks. Per-project floors are unchanged and remain authoritative.
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducibility
 

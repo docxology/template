@@ -42,9 +42,9 @@ flowchart TB
 ## CLI (`cli.py`)
 
 - `main(argv=None) -> int`
-- Subcommands: `list-json`, `write` (`--output`), `check` (`--manifest`)
+- Subcommands: `list-json`, `write` (`--output`), `write-index` (`--output`), `check` (`--manifest`), `check-all-exports`
 - Shared flags on each subcommand (after the verb): `--repo-root`, `--roots DIR [DIR ...]`
-- Example: `uv run python -m infrastructure.skills write --roots infrastructure docs`
+- Example: `uv run python -m infrastructure.skills write --roots infrastructure docs/prompts .cursor/skills`
 
 ## Tests
 

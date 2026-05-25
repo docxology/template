@@ -1,0 +1,29 @@
+enabled: true
+strict: true
+topic: "Deterministic AutoResearch readiness in a reproducible template pipeline"
+quality_checks:
+  - domain_profile
+  - experiment_plan
+  - pipeline_contracts
+  - evidence_registry
+  - artifact_manifest
+  - thin_orchestrators
+stage_gates:
+  - Project Tests
+  - Project Analysis
+  - Output Validation
+  - Copy Outputs
+required_artifacts:
+  - output/data/autoresearch_plan.json
+  - output/data/autoresearch_loop.json
+  - output/data/autoresearch_claims.json
+  - output/data/autoresearch_stage_matrix.csv
+  - output/data/autoresearch_review_packet.json
+  - output/data/manuscript_variables.json
+  - output/figures/autoresearch_stage_matrix.png
+  - output/figures/figure_registry.json
+  - output/reports/autoresearch_loop.json
+  - output/reports/autoresearch_loop.md
+  - output/reports/autoresearch_review_packet.md
+  - output/reports/autoresearch_summary.md
+  - output/reports/artifact_manifest.json

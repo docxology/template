@@ -159,9 +159,9 @@ def _extract_pdf_text(pdf_bytes: bytes) -> str | None:
         reader = pypdf.PdfReader(BytesIO(pdf_bytes))
         chunks: list[str] = []
         for page in reader.pages:
-            try:  # nosec B112 reason: per-page best-effort extraction; outer except logs, partial pages are acceptable for fulltext indexing
+            try:
                 chunks.append(page.extract_text() or "")
-            except Exception:  # pragma: no cover - per-page failure  # nosec B112 reason: see try-line above
+            except Exception:  # pragma: no cover - per-page failure  # nosec B112
                 continue
         return re.sub(r"\n{3,}", "\n\n", "\n".join(chunks)).strip() or None
     except Exception as exc:  # pragma: no cover - defensive

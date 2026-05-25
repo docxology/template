@@ -10,6 +10,7 @@ from pathlib import Path
 ALLOWED_PROJECT_DIRS: tuple[str, ...] = (
     "projects/template_code_project/",
     "projects/template_prose_project/",
+    "projects/template_autoresearch_project/",
 )
 ALLOWED_PROJECTS_TOPLEVEL = re.compile(r"^projects/[^/]+\.md$")
 

@@ -9,11 +9,14 @@
 
 ## Key Features
 
-- **SKILL.md Discovery**: Scans infrastructure modules for `SKILL.md` files with YAML frontmatter
+- **SKILL.md Discovery**: Scans configured repository roots for `SKILL.md` files with YAML frontmatter
 - **Manifest Generation**: Writes the default manifest at repo-root `.cursor/skill_manifest.json` when you run `uv run python -m infrastructure.skills write` (the `.cursor/` directory is created if needed)
 - **Index Generation**: Writes [`docs/_generated/skills_index.md`](../../_generated/skills_index.md) with `uv run python -m infrastructure.skills write-index`
 - **Manifest Validation**: Checks if manifest matches current on-disk skills
-- **MCP Alignment**: Skill descriptors follow Model Context Protocol conventions
+- **MCP Alignment**: Skill descriptors use MCP-style metadata for agent routing; this module does not start an MCP server
+
+Default discovery roots are `infrastructure/`, `projects/`, `docs/prompts/`,
+and `.cursor/skills/`.
 
 ---
 
@@ -47,9 +50,12 @@ print(f"Manifest written to {path}")
 from pathlib import Path
 from infrastructure.skills import manifest_matches_discovery
 
-is_fresh = manifest_matches_discovery(Path("."))
+is_fresh, message = manifest_matches_discovery(
+    Path("."),
+    Path(".cursor/skill_manifest.json"),
+)
 if not is_fresh:
-    print("Manifest is stale — run `uv run python -m infrastructure.skills write`")
+    print(f"{message} — run `uv run python -m infrastructure.skills write`")
 ```
 
 **CLI Usage:**

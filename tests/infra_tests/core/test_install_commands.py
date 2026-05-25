@@ -7,6 +7,8 @@ from __future__ import annotations
 
 import platform
 
+import pytest
+
 from infrastructure.core.install_commands import build_install_commands
 
 

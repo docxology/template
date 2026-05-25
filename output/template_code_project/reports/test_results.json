@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-24T11:26:55.158740",
+  "timestamp": "2026-05-24T17:57:19.794204",
   "infrastructure": {},
   "project": {
     "passed": 209,
@@ -11,12 +11,12 @@
     "discovery_count": 209,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 22.51,
-      "collection": 22.51,
-      "execution": 22.51
+      "setup": 22.41,
+      "collection": 22.41,
+      "execution": 22.41
     },
     "test_categories": {},
-    "coverage_percent": 99.43074003795067,
+    "coverage_percent": 98.24561403508773,
     "failed_tests": []
   },
   "summary": {
@@ -25,22 +25,29 @@
     "total_skipped": 0,
     "total_tests": 209,
     "all_passed": true,
-    "project_coverage": 99.43074003795067
+    "project_coverage": 98.24561403508773
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 97.74774774774775,
-      "total_executed": 434,
-      "total_missing": 3,
-      "total_excluded": 7,
-      "total_lines": 444,
+      "overall_coverage": 96.93016116653875,
+      "total_executed": 1263,
+      "total_missing": 8,
+      "total_excluded": 32,
+      "total_lines": 1303,
       "file_coverage": {
-        "projects/template_code_project/src/__init__.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 3,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 3
+        "projects/template_code_project/src/analysis.py": {
+          "coverage_percent": 97.12041884816755,
+          "executed_lines": 371,
+          "missing_lines": 4,
+          "excluded_lines": 7,
+          "total_lines": 382
+        },
+        "projects/template_code_project/src/dashboard.py": {
+          "coverage_percent": 95.0,
+          "executed_lines": 133,
+          "missing_lines": 1,
+          "excluded_lines": 6,
+          "total_lines": 140
         },
         "projects/template_code_project/src/documentation.py": {
           "coverage_percent": 100.0,
@@ -55,6 +62,13 @@
           "missing_lines": 0,
           "excluded_lines": 2,
           "total_lines": 65
+        },
+        "projects/template_code_project/src/figures.py": {
+          "coverage_percent": 96.47058823529412,
+          "executed_lines": 328,
+          "missing_lines": 0,
+          "excluded_lines": 12,
+          "total_lines": 340
         },
         "projects/template_code_project/src/invariants.py": {
           "coverage_percent": 97.6470588235294,

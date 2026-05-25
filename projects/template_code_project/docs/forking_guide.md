@@ -33,7 +33,8 @@ uv run python projects/my_project/scripts/optimization_analysis.py
 ```
 
 **⚠️ Confidentiality invariant.** The repo `.gitignore` is configured so
-that **only** `template_code_project/` and `template_prose_project/`
+that **only** the public canonical exemplars listed in
+[`../../../docs/_generated/active_projects.md`](../../../docs/_generated/active_projects.md)
 under `projects/` are ever git-tracked. Your fork (`projects/my_project/`)
 is local-only and won't be pushed to the public repo even if you `git
 add -f` it — `scripts/check_tracked_projects.py` blocks the push in
@@ -97,7 +98,7 @@ belongs in `scripts/` instead.
 ```bash
 uv run python scripts/check_template_drift.py
 ```
-The checker runs 9 detectors against both canonical exemplars; while
+The checker runs 9 detectors against the public canonical exemplars; while
 forks are not yet covered, the gate will still flag any global drift
 your changes introduced into the shipped templates.
 

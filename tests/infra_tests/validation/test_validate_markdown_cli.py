@@ -40,7 +40,7 @@ class TestValidateMarkdownCliImportError:
         assert validate_markdown_cli.import_error is None
 
 
-class TestValidateMarkdownCliMain:
+class TestValidateMarkdownCliMainSubprocess:
     """Test main function execution paths."""
 
     def test_main_with_strict_flag(self, tmp_path):

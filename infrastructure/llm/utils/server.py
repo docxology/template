@@ -12,7 +12,9 @@ Note:
 """
 
 import shutil
-import subprocess  # nosec B404 — used only for fixed-list Popen (no shell=True)
+
+# Used only for fixed-list process calls.
+import subprocess  # nosec B404
 import time
 from collections.abc import Callable
 from subprocess import CompletedProcess
@@ -84,7 +86,7 @@ def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool
                 return False
 
             # Start server: list argv only, no shell interpolation.
-            process = subprocess.Popen(  # nosec B603 — fixed list argv, ollama_bin from shutil.which
+            process = subprocess.Popen(  # nosec B603
                 [ollama_bin, "serve"],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
@@ -152,7 +154,7 @@ def pull_ollama_model(
     logger.info("Running: %s", " ".join(argv))
 
     try:
-        result = run_fn(  # nosec B603 — fixed argv, ollama_bin from which_fn
+        result = run_fn(  # nosec B603
             argv,
             capture_output=True,
             text=True,

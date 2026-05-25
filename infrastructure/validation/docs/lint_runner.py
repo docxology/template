@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs.consistency_lint import (
     Inconsistency,
     check_canonical_count_singularity,
@@ -57,8 +58,9 @@ class DocsLintReport:
 
 
 def doc_roots(repo_root: Path) -> list[Path]:
+    """Return the public template documentation roots for repo-wide linting."""
     roots: list[Path] = []
-    for sub in ("docs", "infrastructure", ".github", "scripts"):
+    for sub in ("docs", "infrastructure", ".github", "scripts", "tests"):
         candidate = repo_root / sub
         if candidate.is_dir():
             roots.append(candidate)
@@ -66,8 +68,10 @@ def doc_roots(repo_root: Path) -> list[Path]:
         roots.append(md)
     projects = repo_root / "projects"
     if projects.is_dir():
-        for project_md in projects.glob("*/*.md"):
-            roots.append(project_md)
+        for project_name in PUBLIC_PROJECT_NAMES:
+            project = projects / project_name
+            if project.is_dir():
+                roots.append(project)
     return roots
 
 

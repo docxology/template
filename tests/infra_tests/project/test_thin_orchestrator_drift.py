@@ -73,6 +73,21 @@ def test_repo_script_fat_warns_not_errors(tmp_path: Path) -> None:
     assert any(f.rule == "thin_orchestrator" for f in report.warnings())
 
 
+def test_repo_script_with_many_helpers_warns_before_line_count_limit(tmp_path: Path) -> None:
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    body = "import json\n\n"
+    for i in range(4):
+        body += _fat_function(f"helper_{i}")
+    (scripts / "logic_orchestrator.py").write_text(body, encoding="utf-8")
+
+    report = Report()
+    check_repo_scripts(tmp_path, report)
+
+    assert not report.errors()
+    assert any("multiple reusable helpers" in f.message for f in report.warnings())
+
+
 def test_repo_vs_project_severity_policy(tmp_path: Path) -> None:
     """Repo scripts warn; project scripts error when fat."""
     project_root = _scaffold_project(tmp_path, "demo")

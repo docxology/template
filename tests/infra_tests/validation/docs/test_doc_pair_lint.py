@@ -7,7 +7,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs.doc_pair_lint import (
+    PERMANENT_TEMPLATE_ROOTS,
     find_doc_pair_issues,
     is_doc_pair_excluded_path,
 )
@@ -52,7 +54,39 @@ def test_generated_and_local_paths_are_excluded() -> None:
     assert is_doc_pair_excluded_path(Path("projects/demo/output"))
     assert is_doc_pair_excluded_path(Path(".cursor/hooks/state"))
     assert is_doc_pair_excluded_path(Path("docs/prompts/_skill-eval/latest/with_skill/outputs"))
+    assert not is_doc_pair_excluded_path(Path("tests/fixtures"))
+    assert not is_doc_pair_excluded_path(Path("tests/fixtures/real_codebases"))
+    assert is_doc_pair_excluded_path(Path("tests/fixtures/real_codebases/requests"))
+    assert not is_doc_pair_excluded_path(Path("tests/fixtures/private_project"))
+    assert not is_doc_pair_excluded_path(Path("tests/fixtures/private_project/cogant/tools"))
+    assert is_doc_pair_excluded_path(Path("tests/fixtures/timeseries/synthetic"))
     assert not is_doc_pair_excluded_path(Path(".github/ISSUE_TEMPLATE"))
+
+
+def test_fixture_private_project_remains_in_doc_pair_scope(tmp_path: Path) -> None:
+    """Committed private-project fixture folders still need local documentation."""
+    _write(tmp_path / "README.md")
+    _write(tmp_path / "AGENTS.md")
+    _write(tmp_path / "tests" / "README.md")
+    _write(tmp_path / "tests" / "AGENTS.md")
+    _write(tmp_path / "tests" / "fixtures" / "README.md")
+    _write(tmp_path / "tests" / "fixtures" / "AGENTS.md")
+    _write(tmp_path / "tests" / "fixtures" / "real_codebases" / "README.md")
+    _write(tmp_path / "tests" / "fixtures" / "real_codebases" / "AGENTS.md")
+    _write(tmp_path / "tests" / "fixtures" / "real_codebases" / "requests" / "src" / "requests" / "__init__.py")
+    _write(tmp_path / "tests" / "fixtures" / "timeseries" / "synthetic" / "series.json")
+    _write(tmp_path / "tests" / "fixtures" / "private_project" / "README.md")
+    _write(tmp_path / "tests" / "fixtures" / "private_project" / "AGENTS.md")
+    _write(tmp_path / "tests" / "fixtures" / "private_project" / "cogant" / "README.md")
+    _write(tmp_path / "tests" / "fixtures" / "private_project" / "cogant" / "tools" / "check.py")
+
+    issues = find_doc_pair_issues(tmp_path, roots=("tests",))
+    by_path = {issue.path: issue for issue in issues}
+
+    assert Path("tests/fixtures/real_codebases/requests") not in by_path
+    assert Path("tests/fixtures/timeseries") not in by_path
+    assert by_path[Path("tests/fixtures/private_project/cogant")].missing_agents is True
+    assert by_path[Path("tests/fixtures/private_project/cogant/tools")].missing_readme is True
 
 
 def test_find_doc_pair_issues_skips_skill_eval_workspace(tmp_path: Path) -> None:
@@ -68,6 +102,12 @@ def test_current_repo_has_complete_permanent_template_doc_pairs() -> None:
     """Regression guard for the permanent template documentation surface."""
     repo_root = Path(__file__).resolve().parents[4]
     assert find_doc_pair_issues(repo_root) == []
+
+
+def test_permanent_template_roots_follow_public_project_scope() -> None:
+    """Doc-pair lint tracks the same public project registry as CI/docs."""
+    expected = {f"projects/{name}" for name in PUBLIC_PROJECT_NAMES}
+    assert expected.issubset(set(PERMANENT_TEMPLATE_ROOTS))
 
 
 def test_lint_docs_doc_pairs_only_json() -> None:

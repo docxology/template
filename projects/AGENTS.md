@@ -34,15 +34,16 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 
 ## Permanent Canonical Exemplars and Optional Search Add-On
 
-Two projects under `projects/` are **permanent canonical exemplars** — `template_code_project` and `template_prose_project` are the **only** project trees git-tracked/pushed. **CONFIDENTIALITY INVARIANT (public repo):** `.gitignore` ignores `projects/*` and negates only those two; every other project (rotating research, client/confidential work, the search exemplar) is **local-only and must never be committed** — enforced by `scripts/check_tracked_projects.py` (pre-push `pre-push-quick` hook + CI `lint`), which a `git add -f` cannot bypass. Together the permanent exemplars cover the computational and prose-review paths. The `template_search_project` literature-search exemplar is local-only, rests under `projects_archive/template_search_project/`, and is copied under `projects/` *locally only* to run literature-search workflows (never committed):
+Three projects under `projects/` are **permanent canonical exemplars**: `template_code_project`, `template_prose_project`, and `template_autoresearch_project`. These are the public project trees allowed by `.gitignore`, `infrastructure.project.public_scope`, and `scripts/check_tracked_projects.py`. **CONFIDENTIALITY INVARIANT (public repo):** every other project under `projects/` (rotating research, client/confidential work, the search exemplar) is **local-only and must never be committed**. The guard runs in pre-push and CI, and a `git add -f` cannot bypass it. Together the permanent exemplars cover the computational, prose-review, and deterministic AutoResearch paths. The `template_search_project` literature-search exemplar is local-only, rests under `projects_archive/template_search_project/`, and is copied under `projects/` *locally only* to run literature-search workflows (never committed):
 
 | Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
 |---|---|---|---|---|---|---|
 | [`template_code_project/`](template_code_project/) | Code-centric (numerical experiment + analysis) | yes (`src/optimizer.py`, `src/invariants.py`) | curated read-only | 6 figures | see canonical facts | see canonical facts |
 | [`template_prose_project/`](template_prose_project/) | Prose-centric (editorial review) | no (orchestration over `infrastructure/prose`, `infrastructure/reference`) | curated read-only (validated, never written) | 0 (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
+| [`template_autoresearch_project/`](template_autoresearch_project/) | AutoResearch-centric (plan/evidence/claim/artifact/readiness loop) | yes (`src/loop.py`) | curated read-only (validated, never written) | 0 | see canonical facts | see canonical facts |
 | [`../projects_archive/template_search_project/`](../projects_archive/template_search_project/) **(local-only — NOT git-tracked)** | Optional search-centric add-on (literature discovery + LLM synthesis) | no (orchestration over `infrastructure/search`, `infrastructure/reference`, `infrastructure/llm`) | auto-populated `references.bib` + `references_deep.bib` | 3 figures | see project docs when restored | see project docs when restored |
 
-The two permanent exemplars, and the optional search add-on when restored, share the **same** structural conventions:
+The permanent exemplars, and the optional search add-on when restored, share the **same** structural conventions:
 
 - `src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`, `output/`, `pyproject.toml`, root `README.md` + `AGENTS.md`.
 - `domain_profile.yaml` + `experiment_plan.yaml` overlays for advisory review gates, artifact expectations, benchmark rubrics, declared conditions, primary metrics, baselines, and ablations.
@@ -70,10 +71,12 @@ Active projects in the `projects/` directory are:
 - **Validated** by `04_validate_output.py`
 - **Copied** to `output/{name}/` by `05_copy_outputs.py`
 
-Private active projects normally live in
-`/Users/4d/Documents/GitHub/projects/active/` and are symlinked into this
-directory by `run.sh`/`infrastructure.orchestration` before discovery. Preview
-with `uv run python -m infrastructure.orchestration link-projects --dry-run`;
+Private lifecycle projects normally live in
+`/Users/4d/Documents/GitHub/projects/`: `active/*` is symlinked into this
+directory before discovery/rendering, while `passive/*` and `archive/*` are
+symlinked into `../projects_in_progress/` and `../projects_archive/` for
+non-rendered inspection. Preview with
+`uv run python -m infrastructure.orchestration link-projects --dry-run`;
 override the private root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root`; disable one auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
 
@@ -90,7 +93,8 @@ Archived projects in the `projects_archive/` directory are:
 graph TD
     subgraph Active["Active Projects (projects/)"]
         P1[template_code_project<br/>Code exemplar · see canonical facts]
-        P2[template_prose_project<br/>Prose exemplar · see canonical facts]
+    P2[template_prose_project<br/>Prose exemplar · see canonical facts]
+    P3[template_autoresearch_project<br/>AutoResearch exemplar · see canonical facts]
         Pn[other rotating workspaces<br/>see docs/_generated/active_projects.md]
     end
 
@@ -110,6 +114,7 @@ graph TD
 
     P1 -->|Discovered| DISCOVER
     P2 -->|Discovered| DISCOVER
+    P3 -->|Discovered| DISCOVER
     Pn -->|Discovered| DISCOVER
     IP -.->|NOT Scanned| DISCOVER
     A -.->|NOT Scanned| DISCOVER

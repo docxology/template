@@ -17,6 +17,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, iter_markdown_files
 
 logger = get_logger(__name__)
@@ -27,7 +28,7 @@ logger = get_logger(__name__)
 # enforced by .gitignore + scripts/check_tracked_projects.py). Docs may
 # legitimately reference those as "optional / restore-when-needed", so a link
 # into one of those areas is "absent by design", NOT a broken link.
-_TRACKED_PROJECT_DIRS = frozenset({"template_code_project", "template_prose_project"})
+_TRACKED_PROJECT_DIRS = frozenset(PUBLIC_PROJECT_NAMES)
 
 
 def _is_intentionally_absent_project(md_file: Path, decoded: str) -> bool:

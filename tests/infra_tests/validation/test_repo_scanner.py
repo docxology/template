@@ -20,7 +20,7 @@ from infrastructure.validation.repo.scanner import (
 ScanResults = RepoScanResults
 
 
-class TestDataClasses:
+class TestDataClassesExtended:
     """Test data class instantiation."""
 
     def test_accuracy_issue_creation(self):
@@ -66,7 +66,7 @@ class TestDataClasses:
         assert "## Completeness Gaps" in text
 
 
-class TestRepositoryScanner:
+class TestRepositoryScannerExtended:
     """Test RepositoryScanner class."""
 
     def test_scanner_initialization(self, tmp_path):

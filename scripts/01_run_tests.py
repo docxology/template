@@ -112,11 +112,23 @@ def main() -> int:
             "This mirrors the open-coded loop in .github/workflows/ci.yml."
         ),
     )
+    parser.add_argument(
+        "--public-projects",
+        action="store_true",
+        help=(
+            "When combined with --project-only --all-projects, restrict the "
+            "per-project loop to infrastructure.project.public_scope. Use this "
+            "for public-repo release validation in checkouts that also symlink "
+            "private or rotating local projects."
+        ),
+    )
     args = parser.parse_args()
 
     # Validate mutually exclusive flags
     if args.infra_only and args.project_only:
         parser.error("--infra-only and --project-only cannot be used together")
+    if args.public_projects and not (args.project_only and args.all_projects):
+        parser.error("--public-projects requires --project-only --all-projects")
 
     quiet = args.quiet
 
@@ -158,8 +170,18 @@ def main() -> int:
             skip_slow=not args.include_slow,
             skip_bench=True,
         )
+        projects = None
+        if args.public_projects:
+            from infrastructure.project.public_scope import public_project_names
+
+            projects = public_project_names(repo_root)
+            log_substep(
+                "Restricting all-projects test run to public scope: " + ", ".join(projects),
+                logger,
+            )
         exit_code = run_per_project_pytest(
             repo_root,
+            projects=projects,
             marker_expr=marker_expr,
         )
         log_live_resource_usage("Test stage end", logger)

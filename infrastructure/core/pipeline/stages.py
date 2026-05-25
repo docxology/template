@@ -201,7 +201,7 @@ class PipelineStageMixin(ABC):
 
         try:
             # Stream subprocess output to console for long-running stages; still capture exit code.
-            result = subprocess.run(  # nosec B603 — cmd is [python, known_script_path, validated_args]
+            result = subprocess.run(  # nosec B603
                 cmd, cwd=self.config.repo_root, env=env, check=False, timeout=7200
             )
 

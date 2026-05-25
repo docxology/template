@@ -67,6 +67,18 @@ class TestPublicSurface:
             assert all(isinstance(arg, str) for arg in argv)
             assert len(argv) >= 1
 
+    def test_build_gate_specs_uses_public_project_scope(self, tmp_path: Path) -> None:
+        """Lint/type gates must not follow local rotating project symlinks."""
+        (tmp_path / "projects" / "template_code_project" / "src").mkdir(parents=True)
+        (tmp_path / "projects" / "private_research_project" / "src").mkdir(parents=True)
+
+        specs = dict(build_gate_specs(tmp_path))
+
+        for gate in ("mypy", "ruff", "ruff-format"):
+            argv = specs[gate]
+            assert "projects/template_code_project/src" in argv
+            assert "projects/private_research_project/src" not in argv
+
 
 class TestSyntheticGate:
     """A trivial echo gate must parse correctly into a ``GateResult``."""
@@ -101,6 +113,18 @@ class TestSyntheticGate:
         )
         assert result.passed is False
         assert "boom" in result.output
+
+    def test_synthetic_gate_timeout_fails_closed(self, tmp_path: Path) -> None:
+        from infrastructure.core.health import _run_single_gate  # noqa: PLC0415
+
+        result = _run_single_gate(
+            "synthetic-timeout",
+            [sys.executable, "-c", "import time; time.sleep(1)"],
+            tmp_path,
+            timeout_seconds=0.01,
+        )
+        assert result.passed is False
+        assert "timed out" in result.output
 
 
 class TestSubsetSelection:

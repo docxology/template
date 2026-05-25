@@ -36,7 +36,7 @@ from infrastructure.rendering._pdf_latex_helpers import (
     extract_preamble,
 )
 from infrastructure.rendering.config import RenderingConfig
-from infrastructure.rendering.latex_utils import compile_latex
+from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
 from infrastructure.rendering.latex_texttt import (
     constrain_includegraphics_textheight,
     make_known_literals_breakable,
@@ -212,18 +212,17 @@ class SlidesRenderer:
                 _tmp.unlink(missing_ok=True)
                 raise
 
-            # Compile LaTeX to PDF
-            compile_latex(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
+            # Compile LaTeX to PDF (written as {temp_tex.stem}.pdf, e.g. slides_slides.pdf)
+            compiled_pdf = compile_latex(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
+            ensure_pdf_at(compiled_pdf, output_file)
 
-            # Check if PDF was created
             if output_file.exists():
                 logger.info(f"Generated beamer slides: {output_file.name}")
                 return output_file
-            else:
-                raise RenderingError(
-                    f"LaTeX compilation succeeded but PDF not found: {output_file}",
-                    context={"source": str(source_file), "format": "beamer"},
-                )
+            raise RenderingError(
+                f"LaTeX compilation succeeded but PDF not found: {output_file}",
+                context={"source": str(source_file), "format": "beamer"},
+            )
 
         except subprocess.CalledProcessError as e:
             # Enhanced error reporting for LaTeX compilation failures

@@ -591,24 +591,36 @@ the renderer.
 
 ### latex_utils.py
 
+#### ensure_pdf_at (function)
+```python
+def ensure_pdf_at(compiled: Path, target: Path) -> Path:
+    """Move *compiled* to *target* when LaTeX wrote a different filename.
+
+    Returns:
+        *target* after any rename.
+    """
+```
+
 #### compile_latex (function)
 ```python
 def compile_latex(
-    tex_file: Path,
-    output_dir: Path,
+    tex_file: Path | str,
+    output_dir: Path | str | None = None,
     compiler: str = "xelatex",
-    max_passes: int = 4
-) -> Tuple[bool, Optional[Path]]:
+    timeout: int = 300,
+    passes: int = 2,
+) -> Path:
     """Compile LaTeX document with multiple passes.
 
     Args:
         tex_file: Path to LaTeX source file
         output_dir: Directory for output files
         compiler: LaTeX compiler to use
-        max_passes: Maximum number of compilation passes
+        timeout: Timeout in seconds per pass
+        passes: Number of compilation passes
 
     Returns:
-        Tuple of (success, pdf_path)
+        Path to generated PDF ({tex_stem}.pdf under output_dir)
     """
 ```
 

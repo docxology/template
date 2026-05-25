@@ -54,3 +54,45 @@ def test_docs_markdown_no_broken_projects_paths() -> None:
                 failures.append(f"{rel}: link target {target!r} references missing projects/{name}/")
 
     assert not failures, "Broken projects/ links in docs/:\n" + "\n".join(failures)
+
+
+def test_canonical_facts_infrastructure_python_count_matches_tree() -> None:
+    """The generated factsheet must not carry a stale infrastructure .py count."""
+    root = _repo_root()
+    doc_path = root / "docs" / "_generated" / "canonical_facts.md"
+    text = doc_path.read_text(encoding="utf-8")
+
+    count_match = re.search(r"Last refreshed count: \*\*(?P<count>\d+)\*\*", text)
+    assert count_match, "canonical_facts.md must include the refreshed infrastructure Python-file count"
+
+    documented = int(count_match.group("count"))
+    actual = sum(1 for path in (root / "infrastructure").rglob("*.py") if path.is_file())
+    assert documented == actual, (
+        "canonical_facts.md drifted from the live infrastructure Python-file count; "
+        f"documented={documented} actual={actual}"
+    )
+
+
+def test_pipeline_control_docs_describe_file_backed_hitl_boundary() -> None:
+    """Agent/HITL docs must not imply an autonomous approval service exists."""
+    root = _repo_root()
+    text = (root / "docs" / "operational" / "pipeline-control.md").read_text(encoding="utf-8")
+
+    for expected in (
+        "output/hitl/agent_context.json",
+        "output/hitl/agent_response.schema.json",
+        "There is no WebSocket server, MCP server, or autonomous approval loop.",
+    ):
+        assert expected in text
+
+
+def test_literature_search_docs_match_paperclip_mcp_contract() -> None:
+    """Paperclip docs must match the implemented MCP-style auth and endpoint."""
+    root = _repo_root()
+    text = (root / "docs" / "best-practices" / "literature-search-best-practices.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "`X-API-Key`" in text
+    assert "MCP-style JSON-RPC to `/mcp`" in text
+    assert "`Authorization: Bearer`" not in text

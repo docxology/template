@@ -67,13 +67,11 @@ DEFAULT_COVERAGE_FILE: str = ".coverage.project"
 # the per-project standalone floor (90%, which exemplar projects meet:
 # template_code_project ~100%, template_prose ~94%). The combined number is
 # structurally lower because per-project suites only cover their own
-# ``src/``; their union denominator spans every active project's source,
-# including research projects (animation/visualization/Lean-adjacent code)
-# whose surface is intentionally not driven to 90%. 75 reflects the true
-# sustained combined level of the active tree. Maintainer decision
-# (2026-05-15): reconcile the gate to measured reality rather than leave an
-# unenforced aspirational 90 that CI never actually held. Per-project floors
-# are unchanged and remain the real quality gate.
+# ``src/``; their union denominator spans every project included in the run.
+# CI uses the public project scope, while local runs may opt into every
+# discovered symlinked project. Maintainer decision (2026-05-15): keep the
+# union gate at the measured public-project level rather than confuse it with
+# per-project 90% floors, which remain the real quality gate.
 DEFAULT_FAIL_UNDER: int = 75
 _DEFAULT_MARKER = build_pytest_marker_expression(
     skip_requires_ollama=True,

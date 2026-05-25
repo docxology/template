@@ -324,7 +324,7 @@ jobs:
           set -euo pipefail
           rm -f .coverage.project coverage-project.xml
           uv run python scripts/01_run_tests.py \
-            --project-only --all-projects --non-strict --include-slow
+            --project-only --all-projects --public-projects --non-strict --include-slow
           uv run coverage xml -o coverage-project.xml
 
       - name: Upload project coverage to Codecov

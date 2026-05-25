@@ -2,7 +2,7 @@
 
 Runtime project discovery intentionally includes local symlinked workspaces so
 ``run.sh`` can operate on private active projects. Public CI and generated docs
-must stay narrower: only the two tracked exemplar projects are part of the
+must stay narrower: only the tracked exemplar projects are part of the
 public template repository.
 """
 
@@ -15,7 +15,11 @@ from typing import Sequence
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.project_info import ProjectInfo
 
-PUBLIC_PROJECT_NAMES: tuple[str, ...] = ("template_code_project", "template_prose_project")
+PUBLIC_PROJECT_NAMES: tuple[str, ...] = (
+    "template_autoresearch_project",
+    "template_code_project",
+    "template_prose_project",
+)
 
 
 def public_project_infos(repo_root: Path | str) -> list[ProjectInfo]:

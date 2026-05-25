@@ -10,6 +10,7 @@ from typing import Any
 
 from infrastructure.benchmark.rubrics import RubricSet
 from infrastructure.project.domain_profile import load_domain_profile
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
     unsupported_citation_tokens,
@@ -17,7 +18,7 @@ from infrastructure.validation.evidence_registry import (
     validate_text_against_registry,
 )
 
-_CANONICAL_PROJECTS = ("template_code_project", "template_prose_project")
+_CANONICAL_PROJECTS = PUBLIC_PROJECT_NAMES
 
 
 @dataclass(frozen=True)

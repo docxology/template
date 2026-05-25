@@ -106,7 +106,7 @@ flowchart TB
 - **Matrix:** Same as `test-infra` (6 combinations)
 - **Coverage threshold:** **75% combined union** (`DEFAULT_FAIL_UNDER` in [`infrastructure/core/test_runner.py`](../../infrastructure/core/test_runner.py)) — enforced via `coverage report` after all projects append into one trace. **Per-project standalone** runs still target **≥ 90%** on each project's own `src/`.
 - **Coverage file:** `.coverage.project` (isolated)
-- **Scope:** [`scripts/01_run_tests.py`](../../scripts/01_run_tests.py) `--project-only --all-projects --non-strict --include-slow`, which delegates to [`infrastructure.core.test_runner.run_per_project_pytest`](../../infrastructure/core/test_runner.py) (one pytest process per discovered project, `--cov-append`, then `coverage xml`). **The rotating Lean-toolchain project's tests are not run here** (separate `fep-lean` job in `ci.yml` with real `gauss` / `lake` / `lean`). <!-- noqa: docs-lint -->
+- **Scope:** [`scripts/01_run_tests.py`](../../scripts/01_run_tests.py) `--project-only --all-projects --public-projects --non-strict --include-slow`, which delegates to [`infrastructure.core.test_runner.run_per_project_pytest`](../../infrastructure/core/test_runner.py) (one pytest process per public project from `infrastructure.project.public_scope`, `--cov-append`, then `coverage xml`). Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains. <!-- noqa: docs-lint -->
 - **Codecov upload:** On Python 3.12 / ubuntu-latest only
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
@@ -168,7 +168,7 @@ flowchart TB
 | No-mocks policy | zero mock usage | `verify-no-mocks` job |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
 | Per-project coverage (standalone) | ≥ 90% | each project's own pytest gate |
-| Combined-union all-projects coverage | ≥ 75% | `test-project` job (`DEFAULT_FAIL_UNDER`) |
+| Combined-union public-project coverage | ≥ 75% | `test-project` job (`DEFAULT_FAIL_UNDER`) |
 | fep_lean coverage | ≥ 89% | `fep-lean` job (skipped if `projects/fep_lean/lean/lean-toolchain` absent) |
 | pip-audit | no unignored vulnerabilities | `security` job |
 | Bandit MEDIUM+ (`bandit.yaml`) | zero findings | `security` job |
@@ -222,7 +222,7 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
 #   uv sync --group monitoring
 # or full explicit parity: uv sync --group rendering --group monitoring --group discopy
 uv sync --group rendering --group monitoring --group discopy
-COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
+COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 
 # fep_lean only — requires gauss, lake, lean on PATH (see projects/fep_lean/tests/AGENTS.md when present)

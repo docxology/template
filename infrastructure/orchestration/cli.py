@@ -42,7 +42,7 @@ from infrastructure.orchestration.secure_run import (
 from infrastructure.core.pipeline.single_stage import execute_single_stage
 from infrastructure.core.pipeline.stage_registry import MENU_KEY_TO_STAGE
 from infrastructure.project.discovery import discover_projects
-from infrastructure.project.linking import SKIP_ENV_VAR, sync_active_links
+from infrastructure.project.linking import SKIP_ENV_VAR, sync_private_project_links
 
 
 def _default_repo_root() -> Path:
@@ -180,10 +180,10 @@ def build_parser() -> argparse.ArgumentParser:
     # 'list-projects' subcommand
     sub.add_parser("list-projects", help="List discovered projects, one per line.")
 
-    # 'link-projects' subcommand — explicit sync of private active/ projects.
+    # 'link-projects' subcommand — explicit sync of private lifecycle projects.
     link = sub.add_parser(
         "link-projects",
-        help="Symlink the private repo's active/ projects into projects/.",
+        help="Symlink private lifecycle projects into local mirrors.",
     )
     link.add_argument("--dry-run", action="store_true", help="Report without changing anything.")
     link.add_argument("--no-prune", action="store_true", help="Keep stale managed links.")
@@ -199,18 +199,19 @@ def _resolve_repo_root(ns: argparse.Namespace) -> Path:
 
 
 def _maybe_sync_links(repo_root: Path) -> None:
-    """Best-effort: symlink the private repo's active/ projects into projects/.
+    """Best-effort: sync private lifecycle project symlinks.
 
-    Runs on every CLI invocation so ``run.sh`` renders active projects as native.
-    Deliberately non-fatal: a missing/unreadable private repo must never break the
-    pipeline, so failures print a visible warning (not silently swallowed) and the
-    CLI continues. Disable with ``$TEMPLATE_SKIP_LINK_SYNC`` or when no private root
-    is present (the call is then a pure no-op).
+    Runs on every CLI invocation so ``run.sh`` renders active projects as native
+    and keeps passive/archive projects visible in non-rendered mirrors.
+    Deliberately non-fatal: a missing/unreadable private repo must never break
+    the pipeline, so failures print a visible warning (not silently swallowed)
+    and the CLI continues. Disable with ``$TEMPLATE_SKIP_LINK_SYNC`` or when no
+    private root is present (the call is then a pure no-op).
     """
     if os.environ.get(SKIP_ENV_VAR):
         return
     try:
-        result = sync_active_links(repo_root)
+        result = sync_private_project_links(repo_root)
     except (OSError, RuntimeError) as exc:  # fs hiccup / symlink loop — surface, don't crash CLI
         print(f"[link-sync] warning: {exc}", file=sys.stderr)
         return
@@ -220,7 +221,7 @@ def _maybe_sync_links(repo_root: Path) -> None:
 
 def _cmd_link_projects(ns: argparse.Namespace) -> int:
     repo_root = _resolve_repo_root(ns)
-    result = sync_active_links(
+    result = sync_private_project_links(
         repo_root,
         prune=not ns.no_prune,
         dry_run=ns.dry_run,
@@ -447,9 +448,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     ns = parser.parse_args(argv)
 
-    # Auto-sync the private repo's active/ projects into projects/ so every
-    # invocation (menu, pipeline, list, …) sees them as native projects. The
-    # explicit `link-projects` command does its own sync, so skip it here.
+    # Auto-sync the private repo's lifecycle projects into local symlink
+    # mirrors. The explicit `link-projects` command does its own sync, so skip
+    # it here.
     if ns.command != "link-projects":
         _maybe_sync_links(_resolve_repo_root(ns))
 

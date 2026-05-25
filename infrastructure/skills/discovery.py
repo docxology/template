@@ -174,14 +174,24 @@ def build_manifest_payload(skills: Sequence[SkillDescriptor]) -> dict[str, Any]:
     }
 
 
-def build_skill_index_markdown(skills: Sequence[SkillDescriptor]) -> str:
+def _format_search_roots_for_index(search_roots: Sequence[str]) -> str:
+    """Return a Markdown-friendly list of configured skill discovery roots."""
+    return ", ".join(f"`{root.rstrip('/')}/`" for root in search_roots)
+
+
+def build_skill_index_markdown(
+    skills: Sequence[SkillDescriptor],
+    *,
+    search_roots: Sequence[str] | None = None,
+) -> str:
     """Build a human-readable Markdown index for discovered skills."""
+    roots = tuple(search_roots) if search_roots is not None else DEFAULT_SKILL_SEARCH_ROOTS
     lines = [
         "# Skill Index",
         "",
         "Generated from live `SKILL.md` discovery.",
         "",
-        "Default discovery roots: `infrastructure/`, `projects/`, and `.cursor/skills/`.",
+        f"Default discovery roots: {_format_search_roots_for_index(roots)}.",
         "Project-level skills are opt-in: they are discovered only when a project "
         "ships a `SKILL.md` under those roots.",
         "",

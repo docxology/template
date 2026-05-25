@@ -7,6 +7,7 @@ so the gate fails loudly there if it is missing.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -120,6 +121,32 @@ def test_validate_blocks_flags_invalid_diagram(tmp_path: Path) -> None:
 
 def test_validate_blocks_empty_input_returns_empty_list() -> None:
     assert validate_blocks([]) == []
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX executable script semantics")
+def test_validate_blocks_timeout_kills_mmdc_process_tree(tmp_path: Path) -> None:
+    md = tmp_path / "p.md"
+    _write_md(md, "```mermaid\nflowchart TB\n  A-->B\n```\n")
+    slow_mmdc = tmp_path / "slow_mmdc"
+    slow_mmdc.write_text(
+        "#!/usr/bin/env python3\n"
+        "import subprocess\n"
+        "import sys\n"
+        "import time\n"
+        "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(5)'])\n"
+        "try:\n"
+        "    time.sleep(5)\n"
+        "finally:\n"
+        "    child.terminate()\n",
+        encoding="utf-8",
+    )
+    slow_mmdc.chmod(0o755)
+
+    failures = validate_blocks(find_mermaid_blocks([tmp_path]), mmdc_path=str(slow_mmdc), timeout_seconds=0.1)
+
+    assert len(failures) == 1
+    assert failures[0].returncode == 124
+    assert "timed out" in failures[0].stderr
 
 
 def test_mermaid_block_dataclass_is_frozen() -> None:

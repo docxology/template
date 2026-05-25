@@ -224,8 +224,57 @@ def write_evidence_registry_report(project_output_dir: Path, registry: VerifiedE
     report_dir = project_output_dir / "reports"
     report_dir.mkdir(parents=True, exist_ok=True)
     path = report_dir / "evidence_registry.json"
-    path.write_text(json.dumps(registry.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    payload = registry.to_dict()
+    _preserve_existing_checked_at(path, payload)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path
+
+
+def _preserve_existing_checked_at(path: Path, payload: dict[str, Any]) -> None:
+    existing = _existing_checked_at_by_fact(path)
+    if not existing:
+        return
+    facts = payload.get("facts", [])
+    if not isinstance(facts, list):
+        return
+    for row in facts:
+        if not isinstance(row, dict):
+            continue
+        checked_at = existing.get(_fact_identity(row))
+        if checked_at:
+            row["checked_at"] = checked_at
+
+
+def _existing_checked_at_by_fact(path: Path) -> dict[tuple[str, str, str, str, str], str]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(payload, dict):
+        return {}
+    facts = payload.get("facts", [])
+    if not isinstance(facts, list):
+        return {}
+    checked_at_by_fact: dict[tuple[str, str, str, str, str], str] = {}
+    for row in facts:
+        if not isinstance(row, dict):
+            continue
+        checked_at = row.get("checked_at")
+        if isinstance(checked_at, str) and checked_at:
+            checked_at_by_fact.setdefault(_fact_identity(row), checked_at)
+    return checked_at_by_fact
+
+
+def _fact_identity(row: dict[str, Any]) -> tuple[str, str, str, str, str]:
+    return (
+        str(row.get("kind", "")),
+        str(row.get("value", "")),
+        str(row.get("source", "")),
+        str(row.get("source_path", "")),
+        str(row.get("source_field", "")),
+    )
 
 
 _NUMBER_RE = re.compile(r"(?<![A-Za-z0-9_@.-])-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?%?(?![A-Za-z0-9_.-])")

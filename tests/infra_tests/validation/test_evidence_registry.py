@@ -177,6 +177,33 @@ def test_write_evidence_registry_report(tmp_path: Path) -> None:
     assert report_path == tmp_path / "reports" / "evidence_registry.json"
 
 
+def test_write_evidence_registry_report_preserves_stable_fact_timestamps(tmp_path: Path) -> None:
+    first = VerifiedEvidenceRegistry()
+    first.add(
+        EvidenceFact(
+            kind="citation",
+            value="smith2026",
+            source="manuscript/references.bib",
+            checked_at="2026-05-24T00:00:00+00:00",
+        )
+    )
+    report_path = write_evidence_registry_report(tmp_path, first)
+    first_payload = report_path.read_text(encoding="utf-8")
+
+    second = VerifiedEvidenceRegistry()
+    second.add(
+        EvidenceFact(
+            kind="citation",
+            value="smith2026",
+            source="manuscript/references.bib",
+            checked_at="2026-05-24T00:01:00+00:00",
+        )
+    )
+    write_evidence_registry_report(tmp_path, second)
+
+    assert report_path.read_text(encoding="utf-8") == first_payload
+
+
 def test_claim_ledger_ingestion_preserves_claim_metadata_and_freshness(tmp_path: Path) -> None:
     project = tmp_path / "project"
     (project / "data").mkdir(parents=True)

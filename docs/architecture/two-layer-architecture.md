@@ -262,7 +262,7 @@ from projects.name.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure<br/>Layer 1 · 17 importable packages/]
+    INFRA[/infrastructure<br/>Layer 1 · 18 importable packages/]
     INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
     INFRA --> CORE[/core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
     INFRA --> DOC[/documentation<br/>figure manager · glossary gen/]
@@ -552,7 +552,7 @@ uv run pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
 ### Full Test Suite
 
 ```bash
-# All tests with coverage (75% combined-union all-projects gate (DEFAULT_FAIL_UNDER); per-suite gates are 60% infra / 90% project)
+# All tests with coverage (75% combined-union public-project gate (DEFAULT_FAIL_UNDER); per-suite gates are 60% infra / 90% project)
 uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=75
 
 # Generate coverage report

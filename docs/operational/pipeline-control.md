@@ -8,7 +8,7 @@ into them.
 
 The control surface was informed by
 [aiming-lab/AutoResearchClaw](https://github.com/aiming-lab/AutoResearchClaw)
-at commit `bc9dd50`: stage contracts/gates, HITL checkpoints, SmartPause-style
+at commit `b5804c5fa0acecc01f56bdf52995e11bb74474cc`: stage contracts/gates, HITL checkpoints, SmartPause-style
 recommendation reports, SHA256 artifact manifests, evidence registries,
 run lessons, benchmarks, and domain profiles. This template adapts those ideas
 only as auditable, file-backed controls that a human or CI job can inspect.
@@ -18,6 +18,50 @@ simulated research results, automatic prompt or skill mutation, hidden
 self-approval loops, WebSocket/MCP approval servers, or automatic consumption of
 lessons as future instructions. Reports are written to disk; projects opt in to
 stronger behavior deliberately.
+
+## AutoResearch Readiness
+
+`infrastructure.autoresearch` adds an opt-in deterministic readiness layer over
+existing template modules. It builds an `AutoResearchPlan` from the project
+domain profile, experiment plan, pipeline DAG, declared stage gates, required
+artifacts, evidence registry, artifact manifest, and thin-orchestrator drift
+checks.
+
+Project-local configuration is optional:
+
+```yaml
+enabled: true
+strict: true
+topic: "Deterministic readiness"
+quality_checks:
+  - domain_profile
+  - experiment_plan
+  - pipeline_contracts
+  - evidence_registry
+  - artifact_manifest
+  - thin_orchestrators
+stage_gates:
+  - Project Analysis
+  - Output Validation
+required_artifacts:
+  - output/data/result.csv
+```
+
+`stage_gates` entries are exact `pipeline.yaml` stage names. Unknown stage
+names or unknown quality checks fail validation. Non-strict mode reports
+readiness gaps as warnings where possible; strict mode treats them as errors.
+
+Run readiness validation directly with:
+
+```bash
+uv run python -m infrastructure.autoresearch.cli validate --project template_code_project --fail-on-issues
+```
+
+Reports are written to
+`projects/{project}/output/reports/autoresearch_readiness.json` and
+`projects/{project}/output/reports/autoresearch_readiness.md`. The output
+validation stage includes AutoResearch readiness when `autoresearch.yaml`
+exists.
 
 ## Stage Contracts
 
@@ -115,7 +159,8 @@ There is no WebSocket server, MCP server, or autonomous approval loop.
 The executor writes advisory SmartPause recommendations to
 `output/reports/pause_recommendations.json`. Scores are based on failed
 validation checks, evidence issues, artifact drift, telemetry warnings,
-experiment-plan problems, and prior human rejections.
+experiment-plan problems, AutoResearch readiness failures, and prior human
+rejections.
 
 `control.smart_pause_action: report` is the default. Set it to `pause` only when
 a project intentionally wants a nonzero recommendation to create a HITL pause.
@@ -184,11 +229,13 @@ Missing profiles resolve to a built-in generic profile. Built-in fallback
 profiles also cover code research, prose research, and literature review.
 Unknown keys fail fast.
 
-The two tracked canonical exemplars ship explicit overlays:
+The public canonical exemplars ship explicit overlays:
 `projects/template_code_project/domain_profile.yaml`,
 `projects/template_code_project/experiment_plan.yaml`,
-`projects/template_prose_project/domain_profile.yaml`, and
-`projects/template_prose_project/experiment_plan.yaml`. Treat them as
+`projects/template_prose_project/domain_profile.yaml`,
+`projects/template_prose_project/experiment_plan.yaml`,
+`projects/template_autoresearch_project/domain_profile.yaml`, and
+`projects/template_autoresearch_project/experiment_plan.yaml`. Treat them as
 copy-and-edit starting points for new public projects.
 
 Projects may also add `experiment_plan.yaml` for design validation:
@@ -233,6 +280,7 @@ uv run python -m infrastructure.benchmark.template_harness --repo-root . --write
 
 It scores canonical exemplars only by default:
 
+- `template_autoresearch_project`
 - `template_code_project`
 - `template_prose_project`
 

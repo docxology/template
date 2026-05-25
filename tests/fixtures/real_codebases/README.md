@@ -17,6 +17,8 @@ python scripts/fixtures/download_real_codebases.py
 
 Uses `--depth=1` and git sparse-checkout to minimize download size. Idempotent — skips already-downloaded repos.
 
+Required before running integration tests marked `external_fixture` (see [`tests/integration/test_codebase_real.py`](../../integration/test_codebase_real.py)).
+
 ## See Also
 
 - [Download Script](../../../scripts/fixtures/download_real_codebases.py) — How fixtures are fetched

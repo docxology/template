@@ -71,7 +71,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | Goal | Start here | Then |
 | --- | --- | --- |
 | **Clone and run** | [Quick Start](#quick-start) | [`docs/RUN_GUIDE.md`](../docs/RUN_GUIDE.md) · [`docs/guides/getting-started.md`](../docs/guides/getting-started.md) |
-| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | [`projects/template_code_project/`](../projects/template_code_project/) or [`template_prose_project/`](../projects/template_prose_project/) |
+| **Add a research project** | [`docs/guides/new-project-setup.md`](../docs/guides/new-project-setup.md) | Start from the closest public exemplar: [`template_code_project`](../projects/template_code_project/), [`template_prose_project`](../projects/template_prose_project/), or [`template_autoresearch_project`](../projects/template_autoresearch_project/) |
 | **Debug a failed pipeline stage** | [`docs/prompts/pipeline-debugging/SKILL.md`](../docs/prompts/pipeline-debugging/SKILL.md) | [`docs/operational/troubleshooting/`](../docs/operational/troubleshooting/) |
 | **Write or fix tests** | [`docs/rules/testing_standards.md`](../docs/rules/testing_standards.md) | [`docs/prompts/test-creation/SKILL.md`](../docs/prompts/test-creation/SKILL.md) |
 | **Manuscript / PDF / citations** | [`docs/guides/manuscript-semantics.md`](../docs/guides/manuscript-semantics.md) | [`docs/prompts/manuscript-cross-references/SKILL.md`](../docs/prompts/manuscript-cross-references/SKILL.md) |
@@ -122,7 +122,7 @@ Natural-language tasks map to one child skill under [`docs/prompts/`](../docs/pr
 - **Thin orchestrator:** business logic only in `infrastructure/` or `projects/{name}/src/` — never in `scripts/`.
 - **No mocks:** no `unittest.mock`, `MagicMock`, or `mocker.patch` — use real data, temp files, `pytest-httpserver`, subprocess.
 - **Coverage:** infrastructure ≥ 60%, project `src/` ≥ 90% per project ([`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md)).
-- **Public repo confidentiality:** only `template_code_project` and `template_prose_project` may be git-tracked under `projects/` — [`scripts/check_tracked_projects.py`](../scripts/check_tracked_projects.py) enforces in CI and pre-push.
+- **Public repo confidentiality:** only the public exemplar set in [`infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`](../infrastructure/project/public_scope.py) may be git-tracked under `projects/` — [`scripts/check_tracked_projects.py`](../scripts/check_tracked_projects.py) enforces in CI and pre-push.
 - **Rotating paths:** never hard-code private or rotating project names — link [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md).
 
 ### 4 — Command cheat sheet (agents)
@@ -193,7 +193,7 @@ graph TD
     Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 17 importable Python packages under infrastructure/ (+ config/docker templates) · docs/modules/"
+    subgraph "Layer 1 · 18 importable Python packages under infrastructure/ (+ config/docker templates) · docs/modules/"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -203,19 +203,20 @@ graph TD
     end
 
     subgraph "Layer 2 · Active Project Workspaces"
+        Projects --> AP["template_autoresearch_project/ ← AutoResearch exemplar"]
         Projects --> CP["template_code_project/ ← Code exemplar"]
         Projects --> PP["template_prose_project/ ← Prose exemplar"]
         Projects --> Dots["Rotating projects ← Auto-discovered"]
     end
 ```
 
-Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Archived exemplars (for example `blake_bimetalism`) live under [`projects_archive/`](../projects_archive/).
+Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md). Archived or local-only exemplars live under [`projects_archive/`](../projects_archive/) when present.
 
 ### Directory Reference
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
-| `infrastructure/` | Permanent | **17** top-level Python packages under `infrastructure/` (plus config/documentation-only directories); documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
+| `infrastructure/` | Permanent | **18** top-level Python packages under `infrastructure/` (plus config/documentation-only directories); documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
@@ -247,7 +248,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ### Rotating projects
 
-Beyond the two permanent exemplars, other projects rotate between
+Beyond the permanent public exemplars, other projects rotate between
 `projects_in_progress/`, `projects/`, and `projects_archive/` as work
 progresses (meta-documentation, domain catalogues, Lean-toolchain projects,
 case studies). Their paths are deliberately **not** hard-coded here — per the
@@ -261,7 +262,7 @@ This keeps the docs-lint "zero ghost references" gate green without per-line
 
 ### Archived exemplars
 
-Retired or sample projects are kept under [`projects_archive/`](../projects_archive/) (not executed by `./run.sh` until moved back into `projects/`). Example: **blake_bimetalism** (digital humanities manuscript) — [projects_archive/blake_bimetalism/AGENTS.md](../projects_archive/blake_bimetalism/AGENTS.md).
+Retired or sample projects are kept under [`projects_archive/`](../projects_archive/) when present, but that roster is checkout-specific and not executed by `./run.sh` until moved back into `projects/`.
 
 ### Project Directory Layout
 
@@ -301,7 +302,7 @@ graph TB
     end
 
     subgraph Core["🧠 Core Systems (DAG Engine)"]
-        INFRASTRUCTURE[Infrastructure Modules<br/>17 Python packages<br/>Validation, rendering, LLM]
+        INFRASTRUCTURE[Infrastructure Modules<br/>18 Python packages<br/>Validation, rendering, LLM]
         BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
         CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
     end
@@ -502,7 +503,7 @@ Full specification: [docs/security/steganography.md](../docs/security/steganogra
 | **Zero-Mock policy** | No `MagicMock`, `mocker.patch`, or `unittest.mock` anywhere |
 | **Real operations** | Tests use real filesystem, subprocess, and HTTP calls |
 | **Infrastructure coverage** | ≥ 60% (live % → [`docs/development/coverage-gaps.md`](../docs/development/coverage-gaps.md)) |
-| **Project coverage** | ≥ 90% (canonical exemplars `template_code_project` / `template_prose_project` exceed it; confirm live figures in [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md)) |
+| **Project coverage** | ≥ 90% for public exemplar `src/` trees; confirm live figures in [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) |
 | **Optional service skipping** | `@pytest.mark.requires_ollama` for graceful degradation |
 
 ```bash
@@ -802,7 +803,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | # | Job (`id`) | `needs` | Runs when | Purpose |
 | - | --- | --- | --- | --- |
 | 1 | `detect` | — | always | Emits presence flags (`setup_hook`, `fep_lean`) for the optional jobs |
-| 2 | `lint` | — | always | `ruff check` + `ruff format` + `mypy` (CI scope) + `__all__` audit + tracked-generated-artifact guard + **confidentiality guard** (`check_tracked_projects.py` — only the two template projects may be tracked) |
+| 2 | `lint` | — | always | `ruff check` + `ruff format` + `mypy` (CI scope) + `__all__` audit + tracked-generated-artifact guard + **confidentiality guard** (`check_tracked_projects.py` — only public template projects may be tracked) |
 | 3 | `health` | `lint` | always | Unified health report (informational, non-blocking) |
 | 4 | `verify-no-mocks` | `lint` | always | Enforces the zero-mock policy (`scripts/verify_no_mocks.py`) |
 | 5 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
@@ -878,7 +879,7 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 # Tests (skip Ollama-requiring tests)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
 uv sync --group rendering --group monitoring --group discopy
-COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
+COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
 
 # Security (mirror CI)
 IGNORE_ARGS=()

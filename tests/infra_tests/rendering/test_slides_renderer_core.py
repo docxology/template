@@ -29,6 +29,18 @@ from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 
+def _require_beamer_toolchain() -> str:
+    """Return the available LaTeX compiler or skip when Beamer tools are absent."""
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    if shutil.which("xelatex"):
+        return "xelatex"
+    if shutil.which("pdflatex"):
+        return "pdflatex"
+    else:
+        pytest.skip("No LaTeX compiler available")
+
+
 @pytest.mark.requires_latex
 def test_long_section_renders_via_allowframebreaks(test_config, tmp_path):
     """A single long section must split across slides and produce a real PDF.
@@ -45,10 +57,7 @@ def test_long_section_renders_via_allowframebreaks(test_config, tmp_path):
     if test_config.latex_compiler is None:
         pytest.skip("No LaTeX compiler available")
 
-    paragraphs = [
-        f"Paragraph {i}: " + ("lorem ipsum dolor sit amet " * 12)
-        for i in range(1, 151)
-    ]
+    paragraphs = [f"Paragraph {i}: " + ("lorem ipsum dolor sit amet " * 12) for i in range(1, 151)]
     long_md = tmp_path / "long_section.md"
     long_md.write_text("# A Very Long Section\n\n" + "\n\n".join(paragraphs) + "\n")
 
@@ -58,8 +67,7 @@ def test_long_section_renders_via_allowframebreaks(test_config, tmp_path):
     assert result.exists(), f"Expected PDF at {result}"
     pdf_bytes = result.stat().st_size
     assert pdf_bytes > 5_000, (
-        f"Beamer PDF is {pdf_bytes} bytes — likely the 15-byte xelatex stub. "
-        f"Did the allowframebreaks Lua filter run?"
+        f"Beamer PDF is {pdf_bytes} bytes — likely the 15-byte xelatex stub. Did the allowframebreaks Lua filter run?"
     )
 
     log_path = result.with_suffix(".log")
@@ -68,9 +76,7 @@ def test_long_section_renders_via_allowframebreaks(test_config, tmp_path):
         assert "Error 256 (driver return code)" not in log_text, (
             "xelatex aborted with driver code 256 — overflowing frame not split."
         )
-        assert "(job aborted, no legal \\end found)" not in log_text, (
-            "xelatex aborted before reaching \\end{document}."
-        )
+        assert "(job aborted, no legal \\end found)" not in log_text, "xelatex aborted before reaching \\end{document}."
 
 
 class TestSlidesRendererClass:
@@ -164,25 +170,26 @@ class TestBeamerRendering:
 
     def test_render_beamer_with_paths_success(self, tmp_path):
         """Test successful beamer rendering using real execution."""
+        compiler = _require_beamer_toolchain()
         config = RenderingConfig(output_dir=tmp_path)
+        config.latex_compiler = compiler
         renderer = SlidesRenderer(config)
 
         source = tmp_path / "slides.md"
         source.write_text("# Test Slide")
         output = tmp_path / "slides.pdf"
 
-        # Use real execution - may fail if pandoc/LaTeX not available
-        try:
-            result = renderer._render_beamer_with_paths(source, output, None, None)
-            # If successful, should return a path
-            assert result is not None or isinstance(result, Path)
-        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
-            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
+        result = renderer._render_beamer_with_paths(source, output, None, None)
+        assert result == output
+        assert output.exists()
+        assert output.stat().st_size > 100
 
     @pytest.mark.timeout(90)
     def test_render_beamer_with_resource_paths(self, tmp_path):
         """Test beamer rendering with manuscript and figures directories using real execution."""
+        compiler = _require_beamer_toolchain()
         config = RenderingConfig(output_dir=tmp_path)
+        config.latex_compiler = compiler
         renderer = SlidesRenderer(config)
 
         source = tmp_path / "slides.md"
@@ -193,17 +200,12 @@ class TestBeamerRendering:
         manuscript_dir.mkdir()
         figures_dir.mkdir()
 
-        # Use real execution
-        try:
-            # XeLaTeX compilation can exceed the repo-default pytest timeout on some machines.
-            result = renderer._render_beamer_with_paths(source, output, manuscript_dir, figures_dir)
-            # If successful, should return a path
-            assert result is not None or isinstance(result, Path)
-        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
-            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
+        result = renderer._render_beamer_with_paths(source, output, manuscript_dir, figures_dir)
+        assert result == output
+        assert output.exists()
 
-    def test_render_beamer_pdf_not_found(self, tmp_path):
-        """Test beamer rendering when PDF not generated using real execution."""
+    def test_render_beamer_pandoc_subprocess_failure(self, tmp_path, monkeypatch):
+        """Pandoc failures surface as RenderingError with beamer context."""
         config = RenderingConfig(output_dir=tmp_path)
         renderer = SlidesRenderer(config)
 
@@ -211,30 +213,17 @@ class TestBeamerRendering:
         source.write_text("# Test Slide")
         output = tmp_path / "slides.pdf"
 
-        # Use real execution - may fail before PDF generation
-        try:
+        def fail_pandoc(*args, **kwargs):
+            raise subprocess.CalledProcessError(
+                returncode=1,
+                cmd=["pandoc"],
+                stderr="simulated pandoc failure",
+            )
+
+        monkeypatch.setattr("infrastructure.rendering.slides_renderer.subprocess.run", fail_pandoc)
+
+        with pytest.raises(RenderingError, match="Failed to render beamer slides"):
             renderer._render_beamer_with_paths(source, output, None, None)
-            # Real post-condition: a successful beamer render must produce the PDF
-            assert output.exists(), "_render_beamer_with_paths returned without producing the PDF"
-        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
-            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
-
-    def test_render_beamer_subprocess_failure(self, tmp_path):
-        """Test beamer rendering subprocess failure handling with real execution."""
-        config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
-
-        source = tmp_path / "slides.md"
-        source.write_text("# Test Slide")
-        output = tmp_path / "slides.pdf"
-
-        # Use real execution - may succeed or fail
-        try:
-            renderer._render_beamer_with_paths(source, output, None, None)
-            # Real post-condition: a successful beamer render must produce the PDF
-            assert output.exists(), "_render_beamer_with_paths returned without producing the PDF"
-        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
-            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
 
 
 class TestFigurePathFixing:
@@ -508,6 +497,33 @@ class TestSlidesMathHeaderInjection:
         assert "\\providecommand{\\citep}" in content
         assert "unicode-math" not in content
 
+    def test_beamer_renames_compiled_pdf_to_output_file(self, tmp_path, monkeypatch):
+        """When compile_latex writes {stem}_slides.pdf, normalize to output_file."""
+        source = tmp_path / "slides.md"
+        source.write_text("# Slide 1\n", encoding="utf-8")
+        output_file = tmp_path / "slides.pdf"
+
+        renderer = self._make_renderer(tmp_path)
+
+        def fake_run(cmd, *args, **kwargs):
+            tex_path = Path(cmd[cmd.index("-o") + 1])
+            tex_path.write_text("\\documentclass{beamer}\\begin{document}foo\\end{document}\n")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
+
+        monkeypatch.setattr("infrastructure.rendering.slides_renderer.subprocess.run", fake_run)
+
+        def fake_compile(tex, out_dir, **kwargs):
+            compiled = out_dir / f"{tex.stem}.pdf"
+            compiled.write_bytes(b"%PDF-1.4 fake\n")
+            return compiled
+
+        monkeypatch.setattr("infrastructure.rendering.slides_renderer.compile_latex", fake_compile)
+
+        result = renderer._render_beamer_with_paths(source, output_file, manuscript_dir=None, figures_dir=None)
+        assert result == output_file
+        assert output_file.exists()
+        assert not (tmp_path / "slides_slides.pdf").exists()
+
     def test_beamer_pandoc_cmd_includes_h_flag_when_math_required(self, tmp_path, monkeypatch):
         """End-to-end wiring: pandoc receives -H _slides_math_header.tex."""
         manuscript = tmp_path / "manuscript"
@@ -528,7 +544,9 @@ class TestSlidesMathHeaderInjection:
         monkeypatch.setattr("infrastructure.rendering.slides_renderer.subprocess.run", fake_run)
 
         def fake_compile(tex, out_dir, **kwargs):
-            (out_dir / f"{tex.stem}.pdf").write_bytes(b"%PDF-1.4 fake\n")
+            compiled = out_dir / f"{tex.stem}.pdf"
+            compiled.write_bytes(b"%PDF-1.4 fake\n")
+            return compiled
 
         monkeypatch.setattr("infrastructure.rendering.slides_renderer.compile_latex", fake_compile)
 
@@ -562,9 +580,15 @@ class TestSlidesMathHeaderInjection:
             return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
 
         monkeypatch.setattr("infrastructure.rendering.slides_renderer.subprocess.run", fake_run)
+
+        def fake_compile_return_path(tex, out_dir, **kw):
+            compiled = out_dir / f"{tex.stem}.pdf"
+            compiled.write_bytes(b"%PDF-1.4 fake\n")
+            return compiled
+
         monkeypatch.setattr(
             "infrastructure.rendering.slides_renderer.compile_latex",
-            lambda tex, out_dir, **kw: (out_dir / f"{tex.stem}.pdf").write_bytes(b"%PDF-1.4 fake\n"),
+            fake_compile_return_path,
         )
 
         output_file = tmp_path / "slides" / "00_intro_slides.pdf"

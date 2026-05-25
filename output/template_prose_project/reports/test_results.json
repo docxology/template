@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-24T11:27:47.017257",
+  "timestamp": "2026-05-24T17:58:11.282528",
   "infrastructure": {},
   "project": {
     "passed": 76,
@@ -11,9 +11,9 @@
     "discovery_count": 76,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 2.88,
-      "collection": 2.88,
-      "execution": 2.88
+      "setup": 2.89,
+      "collection": 2.89,
+      "execution": 2.89
     },
     "test_categories": {},
     "coverage_percent": 100.0,
@@ -30,18 +30,11 @@
   "coverage_details": {
     "project": {
       "overall_coverage": 100.0,
-      "total_executed": 369,
+      "total_executed": 362,
       "total_missing": 0,
       "total_excluded": 0,
-      "total_lines": 369,
+      "total_lines": 362,
       "file_coverage": {
-        "projects/template_prose_project/src/__init__.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 7,
-          "missing_lines": 0,
-          "excluded_lines": 0,
-          "total_lines": 7
-        },
         "projects/template_prose_project/src/config.py": {
           "coverage_percent": 100.0,
           "executed_lines": 65,

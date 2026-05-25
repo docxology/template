@@ -39,6 +39,7 @@ from .output_organizer import FileType, OutputOrganizer
 from .output_statistics import (
     collect_output_statistics,
     log_output_summary,
+    write_output_statistics_reports,
 )
 
 # Executive & multi-project reporters (cross-project summaries)
@@ -91,6 +92,7 @@ __all__ = [
     "reset_error_aggregator",
     "log_output_summary",
     "collect_output_statistics",
+    "write_output_statistics_reports",
     "generate_executive_summary",
     "save_executive_summary",
     "collect_project_metrics",

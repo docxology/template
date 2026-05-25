@@ -6,7 +6,7 @@
 
 ## TL;DR
 
-- **Off by default for the two canonical public exemplars.** No steganographic watermarking in `template_code_project` or `template_prose_project` unless explicitly enabled per-project.
+- **Off by default for the public canonical exemplars.** No steganographic watermarking in `template_autoresearch_project`, `template_code_project`, or `template_prose_project` unless explicitly enabled per-project.
 - **On by default only when an operator opts in** for a specific project (e.g., pre-publication leak attribution of a confidential client deliverable).
 - **The threat model below is the only thing this feature does.** Anything else (DRM, reader tracking, surveillance) is **explicitly out of scope** and not supported.
 
@@ -81,7 +81,7 @@ steganography:
   disclosure_required: true  # required when per-recipient watermarking is used
 ```
 
-The two canonical public exemplars (`template_code_project`, `template_prose_project`) do not apply steganography during normal `./run.sh` renders. Forks intending to use watermarking must opt in deliberately and must include the disclosure boilerplate.
+The public canonical exemplars do not apply steganography during normal `./run.sh` renders. Forks intending to use watermarking must opt in deliberately and must include the disclosure boilerplate.
 
 ## Why this file exists
 

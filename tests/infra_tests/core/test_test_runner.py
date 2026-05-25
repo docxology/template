@@ -9,6 +9,8 @@ combined coverage gate, ``--cov-append`` accumulation, and a single
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
 from textwrap import dedent
 
@@ -19,6 +21,8 @@ from infrastructure.core.test_runner import (
     DEFAULT_FAIL_UNDER,
     run_per_project_pytest,
 )
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 def _write_project(
@@ -229,15 +233,45 @@ def test_skip_projects_excludes_named_project(synthetic_repo: Path) -> None:
 
 
 def test_default_fail_under_constant_matches_repo_threshold() -> None:
-    """Combined-union all-projects gate, reconciled to measured reality.
+    """Combined-union project gate, reconciled to measured reality.
 
     Deliberately distinct from — and lower than — the per-project standalone
     90% floor (which exemplar projects meet). The combined number is
     structurally lower because per-project suites only cover their own
-    ``src/`` while the union denominator spans every active project. 75
-    reflects the true sustained combined level (actual ~80%); it replaces a
-    previously unenforced aspirational 90. Kept in lockstep with the
-    ``DEFAULT_FAIL_UNDER`` docstring/comment and the coverage docs in
-    CLAUDE.md / AGENTS.md / .github/AGENTS.md (maintainer decision 2026-05-15).
+    ``src/`` while the union denominator spans every project included in the
+    run. CI uses the public project scope; local runs may include rotating
+    symlinked projects. Kept in lockstep with the ``DEFAULT_FAIL_UNDER``
+    docstring/comment and the coverage docs in CLAUDE.md / AGENTS.md /
+    .github/AGENTS.md (maintainer decision 2026-05-15).
     """
     assert DEFAULT_FAIL_UNDER == 75
+
+
+def test_stage01_public_projects_flag_is_documented_in_help() -> None:
+    """The Stage 01 CLI exposes public-scope all-projects validation."""
+    proc = subprocess.run(  # noqa: S603
+        [sys.executable, "scripts/01_run_tests.py", "--help"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert proc.returncode == 0
+    assert "--public-projects" in proc.stdout
+
+
+def test_stage01_public_projects_requires_all_projects_mode() -> None:
+    """The public-scope flag is not silently ignored on the wrong command."""
+    proc = subprocess.run(  # noqa: S603
+        [sys.executable, "scripts/01_run_tests.py", "--public-projects"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert proc.returncode != 0
+    assert "--public-projects requires --project-only --all-projects" in proc.stderr

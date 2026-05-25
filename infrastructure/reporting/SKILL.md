@@ -98,10 +98,15 @@ save_test_report_to_files(results, output_path)
 ## Output Reporting (`output_statistics.py`)
 
 ```python
-from infrastructure.reporting import collect_output_statistics, log_output_summary
+from infrastructure.reporting import (
+    collect_output_statistics,
+    log_output_summary,
+    write_output_statistics_reports,
+)
 
 stats = collect_output_statistics(output_dir)
 log_output_summary(stats)
+write_output_statistics_reports(output_dir, stats)
 ```
 
 ## Multi-Project Reports

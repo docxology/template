@@ -280,6 +280,7 @@ class TestCombinedPDFRendering:
             pdf_dir=str(pdf_dir),
         )
         renderer = PDFRenderer(config)
+        assert renderer.config == config
 
         # Generate source files list
         source_files = sorted([f for f in manuscript_dir.glob("*.md") if f.name[0].isdigit()])

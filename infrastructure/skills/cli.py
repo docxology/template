@@ -50,7 +50,7 @@ def cmd_write_index(args: argparse.Namespace) -> int:
         out = (root / out).resolve()
     skills = discover_skills(root, search_roots=args.roots)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(build_skill_index_markdown(skills), encoding="utf-8")
+    out.write_text(build_skill_index_markdown(skills, search_roots=args.roots), encoding="utf-8")
     logger.info("Wrote skill index: %s", out)
     return 0
 

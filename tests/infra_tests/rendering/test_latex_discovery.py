@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from infrastructure.rendering.latex_discovery import (
     PackageStatus,
     check_latex_package,

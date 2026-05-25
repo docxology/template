@@ -1,6 +1,6 @@
 # Manuscript structure checklist
 
-Copy the closest exemplar under `projects/template_code_project/`, `projects/template_prose_project/`, or local `projects_archive/template_search_project/`.
+Copy the closest exemplar under `projects/template_autoresearch_project/`, `projects/template_code_project/`, `projects/template_prose_project/`, or local `projects_archive/template_search_project/`.
 
 ## Typical files
 

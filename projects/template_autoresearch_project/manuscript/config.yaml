@@ -1,0 +1,58 @@
+paper:
+  title: "Deterministic AutoResearch Readiness in a Reproducible Template Pipeline"
+  subtitle: "A public exemplar for plan, evidence, claim, artifact, and readiness controls"
+  version: "0.1"
+
+authors:
+  - name: "Research Template Author"
+    orcid: "0000-0000-0000-1234"
+    email: "author@research-template.org"
+    affiliation: "Research Template Institute"
+    corresponding: true
+
+publication:
+  doi: ""
+  year: "2026"
+
+keywords:
+  - "autoresearch"
+  - "reproducible research"
+  - "artifact readiness"
+  - "human review"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
+
+analysis:
+  scripts:
+    - run_autoresearch_loop.py
+    - z_generate_manuscript_variables.py
+
+autoresearch_project:
+  review_policy: "human_review_required"
+  loop_stages:
+    - plan
+    - gate
+    - evidence
+    - claims
+    - artifacts
+    - readiness
+  research_questions:
+    - id: rq1
+      question: "Can the template express a complete AutoResearch loop without autonomous execution?"
+      expected_evidence: "output/reports/autoresearch_loop.md"
+    - id: rq2
+      question: "Are manuscript claims grounded in generated project artifacts?"
+      expected_evidence: "output/reports/evidence_registry.json"
+    - id: rq3
+      question: "Can readiness checks be rerun from the standard validation stage?"
+      expected_evidence: "output/reports/autoresearch_readiness.json"

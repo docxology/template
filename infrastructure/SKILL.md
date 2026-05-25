@@ -11,7 +11,7 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 
 - **Hub:** This file lists every subpackage skill and a module map.
 - **Manifest:** `.cursor/skill_manifest.json` lists every skill (`name`, `description`, `path`); regenerate with `uv run python -m infrastructure.skills write`.
-- **Search:** `infrastructure/**/SKILL.md` (22 files: hub `infrastructure/SKILL.md` + 18 top-level subpackage skills + deeper nested skills `infrastructure/core/telemetry/SKILL.md`, `infrastructure/reference/citation/SKILL.md`, `infrastructure/search/literature/SKILL.md`).
+- **Search:** `infrastructure/**/SKILL.md` (24 files: hub `infrastructure/SKILL.md` + 20 top-level subpackage skills + deeper nested skills `infrastructure/core/telemetry/SKILL.md`, `infrastructure/reference/citation/SKILL.md`, `infrastructure/search/literature/SKILL.md`).
 - **In Cursor:** `@infrastructure/SKILL.md` or `@infrastructure/<module>/SKILL.md` to load context; pair with the matching `AGENTS.md` for API tables.
 - **Frontmatter:** Each `SKILL.md` has YAML `name` and `description` for routing (see also the table in `infrastructure/README.md`).
 
@@ -19,6 +19,8 @@ The `infrastructure/` package provides generic, reusable functionality for resea
 
 | Module | Purpose | Key Imports |
 |--------|---------|-------------|
+| `autoresearch/` | Deterministic research plans, stage-gate readiness, artifact/evidence reports | `build_autoresearch_plan`, `validate_autoresearch_plan` |
+| `benchmark/` | Deterministic benchmark manifests and public exemplar readiness scoring | `run_benchmark_manifest`, `score_project_against_manifest` |
 | `config/` | Repo defaults (`.env.template`, `secure_config.yaml`) | (YAML/dotenv; use `core.config_loader`) |
 | `core/` | Logging, config, exceptions, pipeline, progress, retry, security | `get_logger`, `load_config`, `PipelineExecutor` |
 | `docker/` | `Dockerfile`, `docker-compose.yml` for container runs | (CLI / `docs/CLOUD_DEPLOY.md`) |
@@ -91,15 +93,22 @@ uv run python3 -m infrastructure.validation.cli.main pdf output/template_code_pr
 Each subpackage has a `SKILL.md` (YAML frontmatter + body) for agent discovery—search the repo for `infrastructure/**/SKILL.md` or open paths below:
 
 - `infrastructure/config/SKILL.md` — Repo configuration templates and secure defaults
+- `infrastructure/autoresearch/SKILL.md` — Deterministic AutoResearch readiness planning
+- `infrastructure/benchmark/SKILL.md` — Deterministic public exemplar benchmark harnesses
 - `infrastructure/core/SKILL.md` — Foundation utilities
 - `infrastructure/docker/SKILL.md` — Container build and compose
+- `infrastructure/doctor/SKILL.md` — Repository diagnostics and audited repairs
 - `infrastructure/documentation/SKILL.md` — Figure and doc management
 - `infrastructure/llm/SKILL.md` — LLM integration
+- `infrastructure/orchestration/SKILL.md` — Pipeline CLI, menu, and runner orchestration
+- `infrastructure/prose/SKILL.md` — Manuscript prose quality analysis
 - `infrastructure/project/SKILL.md` — Project discovery and validation
 - `infrastructure/publishing/SKILL.md` — Academic publishing
+- `infrastructure/reference/SKILL.md` — Bibliographic reference workflows
 - `infrastructure/rendering/SKILL.md` — Output generation
 - `infrastructure/reporting/SKILL.md` — Pipeline reporting
 - `infrastructure/scientific/SKILL.md` — Scientific computing
+- `infrastructure/search/SKILL.md` — Literature discovery and search workflows
 - `infrastructure/skills/SKILL.md` — Programmatic skill discovery and manifest I/O
 - `infrastructure/steganography/SKILL.md` — Secure PDF post-processing
 - `infrastructure/core/telemetry/SKILL.md` — Unified pipeline telemetry (nested under `core/`)

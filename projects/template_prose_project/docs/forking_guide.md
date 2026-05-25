@@ -38,7 +38,8 @@ uv run python projects/my_review_project/scripts/run_prose_pipeline.py
 ```
 
 **⚠️ Confidentiality invariant.** The repo `.gitignore` is configured so
-that **only** `template_code_project/` and `template_prose_project/`
+that **only** the public canonical exemplars listed in
+[`../../../docs/_generated/active_projects.md`](../../../docs/_generated/active_projects.md)
 under `projects/` are ever git-tracked. Your fork (`projects/my_review_project/`)
 is local-only and won't be pushed to the public repo even if you `git
 add -f` it. Read [`../../../CLAUDE.md`](../../../CLAUDE.md)

@@ -48,7 +48,10 @@ from infrastructure.validation.output.validator import (
     validate_output_structure,
 )
 from infrastructure.reporting.output_statistics import (
+    collect_output_statistics,
+    generate_detailed_output_report,
     log_output_summary,
+    write_output_statistics_reports,
 )
 
 # Set up logger for this module
@@ -105,31 +108,14 @@ def main() -> int:
         structure_validation = validate_output_structure(output_dir)
 
         # Step 4: Collect comprehensive output statistics
-        from infrastructure.reporting.output_statistics import (
-            collect_output_statistics,
-            generate_detailed_output_report,
-        )
-
         output_stats = collect_output_statistics(repo_root, args.project, project_dir=project_root)
         detailed_report = generate_detailed_output_report(output_dir, output_stats)
 
         # Log detailed report
         logger.info(detailed_report)
 
-        # Save detailed report to file
-        reports_dir = project_root / "output" / "reports"
-        reports_dir.mkdir(parents=True, exist_ok=True)
-        report_file = reports_dir / "output_statistics.txt"
-        with open(report_file, "w") as f:
-            f.write(detailed_report)
+        report_file, json_file = write_output_statistics_reports(project_root / "output", output_stats)
         logger.info(f"Detailed output statistics saved to: {report_file}")
-
-        # Also save JSON version
-        import json
-
-        json_file = reports_dir / "output_statistics.json"
-        with open(json_file, "w") as f:
-            json.dump(output_stats, f, indent=2)
         logger.info(f"Output statistics JSON saved to: {json_file}")
 
         # Step 5: Log copy summary for the pipeline console

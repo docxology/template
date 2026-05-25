@@ -100,7 +100,8 @@ class PDFRenderer:
         logger.info(f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}")
 
         try:
-            subprocess.run(  # nosec B603 — cmd is a fixed list built from config paths + flags, no user input
+            # cmd is a fixed list built from config paths and flags.
+            subprocess.run(  # nosec B603
                 cmd,
                 check=True,
                 capture_output=True,

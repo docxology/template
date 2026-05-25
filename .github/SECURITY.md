@@ -19,8 +19,8 @@ suggested remediation. You can expect an acknowledgement within a few days.
 This is a **public research-project template**. The security-relevant
 surface is the **Layer-1 infrastructure** (`infrastructure/`), the
 orchestration **scripts** (`scripts/`), and the CI/CD configuration
-(`.github/workflows/`). Per-project trees under `projects/` other than the
-two canonical exemplars are **local-only and never published** (enforced by
+(`.github/workflows/`). Per-project trees under `projects/` outside the
+public canonical exemplars are **local-only and never published** (enforced by
 `scripts/check_tracked_projects.py`); do not report issues about
 non-published local project content here.
 

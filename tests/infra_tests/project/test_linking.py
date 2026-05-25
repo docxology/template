@@ -2,15 +2,17 @@
 """Tests for :mod:`infrastructure.project.linking` (no mocks — real symlinks).
 
 Every test uses ``tmp_path`` with real directories and real symlinks. The
-safety-critical guarantee under test is that pruning only ever removes symlinks
-the syncer itself manages (resolving into the private root) and never a real
-directory, an unmanaged symlink, or a protected exemplar.
+safety-critical guarantee under test is that pruning only ever removes lifecycle
+links the syncer itself manages and never a real directory, an unmanaged
+symlink, or a protected exemplar.
 """
 
 from __future__ import annotations
 
 import subprocess
 import sys
+import os
+from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
@@ -18,12 +20,15 @@ import pytest
 from infrastructure.project.discovery import discover_projects
 from infrastructure.project.linking import (
     ACTIVE_SUBDIR,
+    ARCHIVE_SUBDIR,
     CONFIG_FILENAME,
     ENV_VAR,
+    PASSIVE_SUBDIR,
     PROTECTED_NAMES,
     is_managed_symlink,
     private_projects_root,
     sync_active_links,
+    sync_private_project_links,
 )
 from infrastructure.project.validation import validate_project_structure
 
@@ -38,10 +43,10 @@ def _make_repo(tmp_path: Path) -> Path:
     return repo
 
 
-def _make_private(tmp_path: Path, *, active: list[str] = (), name: str = "projects") -> Path:
+def _make_private(tmp_path: Path, *, active: Sequence[str] = (), name: str = "projects") -> Path:
     """A private companion repo with active/passive/archive folders."""
     private = tmp_path / name
-    for sub in (ACTIVE_SUBDIR, "passive", "archive"):
+    for sub in (ACTIVE_SUBDIR, PASSIVE_SUBDIR, ARCHIVE_SUBDIR):
         (private / sub).mkdir(parents=True)
     for proj in active:
         _make_project(private / ACTIVE_SUBDIR / proj)
@@ -114,25 +119,41 @@ def test_env_root_accepts_active_only(tmp_path: Path, monkeypatch) -> None:
 def test_sync_creates_symlink(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
-    result = sync_active_links(repo, private)
+    result = sync_private_project_links(repo, private)
     link = repo / "projects" / "alpha"
     assert link.is_symlink()
-    assert result.created == ["alpha"]
+    assert result.created == ["projects/alpha"]
 
 
 def test_created_symlink_resolves_to_source(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     link = repo / "projects" / "alpha"
     assert link.resolve() == (private / ACTIVE_SUBDIR / "alpha").resolve()
+
+
+def test_active_lifecycle_entry_can_be_symlink_to_self_versioned_repo(tmp_path: Path) -> None:
+    """A private lifecycle entry may point at a sibling canonical git checkout."""
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, name="priv")
+    canonical = _make_project(tmp_path / "AGEINT")
+    (private / ACTIVE_SUBDIR / "AGEINT").symlink_to(canonical, target_is_directory=True)
+
+    result = sync_private_project_links(repo, private)
+    link = repo / "projects" / "AGEINT"
+
+    assert result.created == ["projects/AGEINT"]
+    assert link.is_symlink()
+    assert link.resolve() == canonical.resolve()
+    assert {p.name for p in discover_projects(repo)} == {"AGEINT"}
 
 
 def test_sync_is_idempotent(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha", "beta"], name="priv")
-    sync_active_links(repo, private)
-    second = sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
+    second = sync_private_project_links(repo, private)
     assert second.created == []
     assert second.updated == []
     assert second.removed == []
@@ -144,13 +165,14 @@ def test_sync_is_idempotent(tmp_path: Path) -> None:
 def test_prune_removes_stale_managed_link(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     # alpha leaves active/ (e.g. moved to passive/)
-    (private / ACTIVE_SUBDIR / "alpha").rename(private / "passive" / "alpha")
-    result = sync_active_links(repo, private)
-    assert result.removed == ["alpha"]
+    (private / ACTIVE_SUBDIR / "alpha").rename(private / PASSIVE_SUBDIR / "alpha")
+    result = sync_private_project_links(repo, private)
+    assert result.removed == ["projects/alpha"]
     assert not (repo / "projects" / "alpha").exists()
     assert not (repo / "projects" / "alpha").is_symlink()
+    assert (repo / "projects_in_progress" / "alpha").is_symlink()
 
 
 def test_prune_leaves_unmanaged_symlink(tmp_path: Path) -> None:
@@ -161,7 +183,7 @@ def test_prune_leaves_unmanaged_symlink(tmp_path: Path) -> None:
     outside.mkdir()
     foreign = repo / "projects" / "foreign"
     foreign.symlink_to(outside)
-    result = sync_active_links(repo, private)
+    result = sync_private_project_links(repo, private)
     assert "foreign" not in result.removed
     assert foreign.is_symlink()
 
@@ -172,7 +194,7 @@ def test_prune_never_touches_real_directory(tmp_path: Path) -> None:
     # A real directory under projects/ (e.g. an exemplar / native project).
     real = repo / "projects" / "native_proj"
     _make_project(real)
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     assert real.is_dir() and not real.is_symlink()
     assert (real / "src" / "calc.py").exists()
 
@@ -180,12 +202,13 @@ def test_prune_never_touches_real_directory(tmp_path: Path) -> None:
 def test_no_prune_keeps_stale_link(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
-    sync_active_links(repo, private)
-    (private / ACTIVE_SUBDIR / "alpha").rename(private / "archive" / "alpha")
-    result = sync_active_links(repo, private, prune=False)
+    sync_private_project_links(repo, private)
+    (private / ACTIVE_SUBDIR / "alpha").rename(private / ARCHIVE_SUBDIR / "alpha")
+    result = sync_private_project_links(repo, private, prune=False)
     assert result.removed == []
     # The now-broken symlink survives (prune disabled).
     assert (repo / "projects" / "alpha").is_symlink()
+    assert (repo / "projects_archive" / "alpha").is_symlink()
 
 
 def test_repoint_managed_stale_symlink(tmp_path: Path) -> None:
@@ -194,9 +217,49 @@ def test_repoint_managed_stale_symlink(tmp_path: Path) -> None:
     # A MANAGED link (points into active/) but at a stale/missing target.
     link = repo / "projects" / "alpha"
     link.symlink_to(private / ACTIVE_SUBDIR / "ghost")
-    result = sync_active_links(repo, private)
-    assert result.updated == ["alpha"]
+    result = sync_private_project_links(repo, private)
+    assert result.updated == ["projects/alpha"]
     assert link.resolve() == (private / ACTIVE_SUBDIR / "alpha").resolve()
+
+
+def test_source_symlink_uses_lifecycle_entry_and_prunes(tmp_path: Path) -> None:
+    """Self-versioned source repos still get lifecycle-managed links."""
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, name="priv")
+    external = tmp_path / "external_notes"
+    _make_project(external)
+    lifecycle_entry = private / PASSIVE_SUBDIR / "notes"
+    lifecycle_entry.symlink_to(external)
+
+    result = sync_private_project_links(repo, private)
+    link = repo / "projects_in_progress" / "notes"
+
+    assert result.created == ["projects_in_progress/notes"]
+    assert Path(os.readlink(link)) == lifecycle_entry
+    assert link.resolve() == external.resolve()
+
+    lifecycle_entry.unlink()
+    second = sync_private_project_links(repo, private)
+    assert second.removed == ["projects_in_progress/notes"]
+    assert not link.is_symlink()
+
+
+def test_old_direct_self_versioned_link_is_repointed_to_lifecycle_entry(tmp_path: Path) -> None:
+    """Links made by the old resolved-target behavior are normalized."""
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, name="priv")
+    external = tmp_path / "external_alpha"
+    _make_project(external)
+    lifecycle_entry = private / ACTIVE_SUBDIR / "alpha"
+    lifecycle_entry.symlink_to(external)
+    old_link = repo / "projects" / "alpha"
+    old_link.symlink_to(external)
+
+    result = sync_private_project_links(repo, private)
+
+    assert result.updated == ["projects/alpha"]
+    assert Path(os.readlink(old_link)) == lifecycle_entry
+    assert old_link.resolve() == external.resolve()
 
 
 def test_unmanaged_symlink_collision_not_clobbered(tmp_path: Path) -> None:
@@ -207,7 +270,7 @@ def test_unmanaged_symlink_collision_not_clobbered(tmp_path: Path) -> None:
     _make_project(external)
     link = repo / "projects" / "alpha"
     link.symlink_to(external)  # points OUTSIDE the private root
-    result = sync_active_links(repo, private)
+    result = sync_private_project_links(repo, private)
     assert any("alpha" in s and "unmanaged" in s for s in result.skipped)
     assert link.resolve() == external.resolve()  # left untouched
 
@@ -216,12 +279,13 @@ def test_link_into_passive_not_pruned(tmp_path: Path) -> None:
     """Forge finding #2: a user link into passive/ is unmanaged, never pruned."""
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
-    _make_project(private / "passive" / "notes")
+    _make_project(private / PASSIVE_SUBDIR / "notes")
     userlink = repo / "projects" / "notes"
-    userlink.symlink_to(private / "passive" / "notes")  # in private root, NOT active/
-    result = sync_active_links(repo, private)
+    userlink.symlink_to(private / PASSIVE_SUBDIR / "notes")  # wrong local mirror, unmanaged
+    result = sync_private_project_links(repo, private)
     assert "notes" not in result.removed
     assert userlink.is_symlink()
+    assert (repo / "projects_in_progress" / "notes").is_symlink()
 
 
 def test_broken_link_outside_active_not_pruned(tmp_path: Path) -> None:
@@ -231,7 +295,7 @@ def test_broken_link_outside_active_not_pruned(tmp_path: Path) -> None:
     gone = tmp_path / "gone_external"  # never existed under active/
     broken = repo / "projects" / "orphan"
     broken.symlink_to(gone)  # broken link pointing outside the private root
-    result = sync_active_links(repo, private)
+    result = sync_private_project_links(repo, private)
     assert "orphan" not in result.removed
     assert broken.is_symlink()  # left intact
 
@@ -245,9 +309,9 @@ def test_symlink_loop_does_not_crash(tmp_path: Path) -> None:
     loop_a.symlink_to(loop_b)
     loop_b.symlink_to(loop_a)
     # Must not raise RuntimeError("Symlink loop") — and still link alpha.
-    result = sync_active_links(repo, private)
-    assert "alpha" in result.created
-    assert "loop_a" not in result.removed and "loop_b" not in result.removed
+    result = sync_private_project_links(repo, private)
+    assert "projects/alpha" in result.created
+    assert "projects/loop_a" not in result.removed and "projects/loop_b" not in result.removed
 
 
 # --- sync_active_links: protections -----------------------------------------
@@ -259,7 +323,7 @@ def test_protected_exemplar_never_overwritten(tmp_path: Path) -> None:
     exemplar = next(iter(PROTECTED_NAMES))
     _make_project(repo / "projects" / exemplar)
     private = _make_private(tmp_path, active=[exemplar], name="priv")
-    result = sync_active_links(repo, private)
+    result = sync_private_project_links(repo, private)
     assert (repo / "projects" / exemplar).is_dir()
     assert not (repo / "projects" / exemplar).is_symlink()
     assert any(exemplar in s for s in result.skipped)
@@ -270,7 +334,7 @@ def test_real_path_collision_skipped(tmp_path: Path) -> None:
     private = _make_private(tmp_path, active=["alpha"], name="priv")
     # A real directory already occupies projects/alpha.
     _make_project(repo / "projects" / "alpha")
-    result = sync_active_links(repo, private)
+    result = sync_private_project_links(repo, private)
     assert (repo / "projects" / "alpha").is_dir()
     assert not (repo / "projects" / "alpha").is_symlink()
     assert any("alpha" in s and "real path" in s for s in result.skipped)
@@ -280,7 +344,7 @@ def test_md_file_in_active_not_linked(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
     (private / ACTIVE_SUBDIR / "README.md").write_text("doc\n", encoding="utf-8")
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     assert not (repo / "projects" / "README.md").exists()
 
 
@@ -288,7 +352,7 @@ def test_hidden_dir_in_active_skipped(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
     (private / ACTIVE_SUBDIR / ".hidden").mkdir()
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     assert not (repo / "projects" / ".hidden").exists()
 
 
@@ -298,7 +362,7 @@ def test_hidden_dir_in_active_skipped(tmp_path: Path) -> None:
 def test_noop_when_no_private_root(tmp_path: Path, monkeypatch) -> None:
     repo = _make_repo(tmp_path)
     monkeypatch.delenv(ENV_VAR, raising=False)
-    result = sync_active_links(repo)  # auto-resolve, nothing present
+    result = sync_private_project_links(repo)  # auto-resolve, nothing present
     assert result.private_root is None
     assert not result.changed
     assert list(repo.joinpath("projects").iterdir()) == []
@@ -307,8 +371,8 @@ def test_noop_when_no_private_root(tmp_path: Path, monkeypatch) -> None:
 def test_dry_run_makes_no_changes(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
-    result = sync_active_links(repo, private, dry_run=True)
-    assert result.created == ["alpha"]
+    result = sync_private_project_links(repo, private, dry_run=True)
+    assert result.created == ["projects/alpha"]
     assert not (repo / "projects" / "alpha").exists()  # nothing written
 
 
@@ -328,7 +392,7 @@ def test_link_projects_cli_dry_run_reports_without_linking(
     captured = capsys.readouterr()
 
     assert rc == 0
-    assert "+ alpha" in captured.out
+    assert "+ projects/alpha" in captured.out
     assert not (repo / "projects" / "alpha").exists()
 
 
@@ -338,7 +402,7 @@ def test_link_projects_cli_dry_run_reports_without_linking(
 def test_is_managed_symlink_true_for_in_private(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["alpha"], name="priv")
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     assert is_managed_symlink(repo / "projects" / "alpha", private.resolve())
 
 
@@ -356,7 +420,7 @@ def test_is_managed_symlink_false_for_real_dir(tmp_path: Path) -> None:
 def test_discovery_finds_linked_project(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["linked_proj"], name="priv")
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     names = {p.name for p in discover_projects(repo)}
     assert "linked_proj" in names
 
@@ -384,7 +448,7 @@ def test_orchestration_list_projects_auto_syncs_private_active(
 def test_validation_passes_for_symlinked_project(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["linked_proj"], name="priv")
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     ok, msg = validate_project_structure(repo / "projects" / "linked_proj")
     assert ok, msg
 
@@ -392,7 +456,7 @@ def test_validation_passes_for_symlinked_project(tmp_path: Path) -> None:
 def test_import_resolves_through_symlink(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path)
     private = _make_private(tmp_path, active=["linked_proj"], name="priv")
-    sync_active_links(repo, private)
+    sync_private_project_links(repo, private)
     # Prove `projects.linked_proj.src.calc` imports through the symlink, in a
     # clean subprocess so the test suite's sys.modules/sys.path stay pristine.
     proc = subprocess.run(
@@ -411,5 +475,42 @@ def test_import_resolves_through_symlink(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("name", sorted(PROTECTED_NAMES))
-def test_protected_names_are_the_two_exemplars(name: str) -> None:
-    assert name in {"template_code_project", "template_prose_project"}
+def test_protected_names_are_public_exemplars(name: str) -> None:
+    assert name in {"template_code_project", "template_prose_project", "template_autoresearch_project"}
+
+
+def test_legacy_sync_active_links_wrapper_syncs_all_lifecycles(tmp_path: Path) -> None:
+    """The old public function name remains lifecycle-aware for compatibility."""
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, active=["alpha"], name="priv")
+    _make_project(private / PASSIVE_SUBDIR / "notes")
+    _make_project(private / ARCHIVE_SUBDIR / "old")
+
+    result = sync_active_links(repo, private)
+
+    assert result.created == [
+        "projects/alpha",
+        "projects_in_progress/notes",
+        "projects_archive/old",
+    ]
+    assert (repo / "projects" / "alpha").is_symlink()
+    assert (repo / "projects_in_progress" / "notes").is_symlink()
+    assert (repo / "projects_archive" / "old").is_symlink()
+
+
+def test_passive_and_archive_links_are_not_default_discovered(tmp_path: Path) -> None:
+    """Passive/archive projects are visible locally but not rendered by default."""
+    repo = _make_repo(tmp_path)
+    private = _make_private(tmp_path, active=["linked_proj"], name="priv")
+    _make_project(private / PASSIVE_SUBDIR / "notes")
+    _make_project(private / ARCHIVE_SUBDIR / "old")
+
+    sync_private_project_links(repo, private)
+
+    assert (repo / "projects_in_progress" / "notes").resolve() == (
+        private / PASSIVE_SUBDIR / "notes"
+    ).resolve()
+    assert (repo / "projects_archive" / "old").resolve() == (
+        private / ARCHIVE_SUBDIR / "old"
+    ).resolve()
+    assert {p.name for p in discover_projects(repo)} == {"linked_proj"}

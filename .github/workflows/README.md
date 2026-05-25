@@ -27,7 +27,7 @@ flowchart TB
     LINT --> DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
     VNM --> TI[test-infra<br/>ubuntu+macos × py310–312<br/>≥ 60% coverage]
-    VNM --> TP[test-project<br/>01_run_tests.py all-projects<br/>≥ 75% union coverage]
+    VNM --> TP[test-project<br/>01_run_tests.py public projects<br/>≥ 75% union coverage]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
     TI --> PERF[performance<br/>import time ≤ 5 s]
     TP --> PERF
@@ -53,7 +53,7 @@ flowchart TB
 | No-mocks policy | zero mock usage |
 | Infrastructure coverage | ≥ 60% |
 | Per-project coverage (standalone) | ≥ 90% |
-| Combined-union all-projects coverage | ≥ 75% |
+| Combined-union public-project coverage | ≥ 75% |
 | pip-audit | blocking (ignore IDs from `.github/pip-audit-ignore.txt`; retries in CI) |
 | Bandit MEDIUM+ (`bandit.yaml`) | zero findings |
 | Docs lint | mermaid + cross-links + consistency + doc-pair coverage clean |
@@ -73,7 +73,7 @@ uv run pytest tests/infra_tests/ \
   -m "not requires_ollama"
 
 uv sync --group rendering --group monitoring --group discopy
-COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --non-strict --include-slow
+COVERAGE_FILE=.coverage.project uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 
 # Security (mirror CI — ignores file + bandit.yaml)

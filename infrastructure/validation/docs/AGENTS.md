@@ -16,7 +16,7 @@ The `infrastructure/validation/docs/` package contains repository documentation 
 - `lint_runner.py` - CI docs lint orchestration (used by verification checks and `scripts/lint_docs.py`)
 - `consistency_lint.py` - facade re-exporting consistency checks (module counts, ghost projects, command conventions, doc imports, stale shell-bootstrap contracts)
 - `consistency/` - implementation package for consistency linters
-- `doc_pair_lint.py` - permanent-template `AGENTS.md` / `README.md` coverage
+- `doc_pair_lint.py` - permanent-template `AGENTS.md` / `README.md` coverage (skips generated fixture payloads under `tests/fixtures/`)
 - `accuracy.py` - accuracy checks
 - `completeness.py` - completeness checks
 - `quality.py` - quality checks

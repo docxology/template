@@ -70,3 +70,39 @@ def test_projects_docs_are_trackable_while_rotating_projects_remain_ignored() ->
 
     assert docs_proc.stdout == ""
     assert private_proc.returncode == 0
+
+
+def test_generated_fixture_payloads_are_ignored_but_committed_fixture_docs_are_visible() -> None:
+    """Gitignore keeps downloaded fixture payloads out while leaving fixture docs/stubs trackable."""
+    repo_root = _repo_root()
+    generated_paths = [
+        "tests/fixtures/real_codebases/requests/src/requests/__init__.py",
+        "tests/fixtures/real_codebases/fastapi/fastapi/__init__.py",
+        "tests/fixtures/timeseries/synthetic/series.json",
+    ]
+    committed_paths = [
+        "tests/fixtures/real_codebases/README.md",
+        "tests/fixtures/real_codebases/AGENTS.md",
+        "tests/fixtures/private_project/cogant/tools/check_coverage_table.py",
+    ]
+
+    ignored_results = [
+        subprocess.run(
+            ["git", "check-ignore", "-q", "--no-index", path],
+            cwd=repo_root,
+            check=False,
+            timeout=30,
+        ).returncode
+        for path in generated_paths
+    ]
+    visible_proc = subprocess.run(
+        ["git", "check-ignore", "--no-index", *committed_paths],
+        cwd=repo_root,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert ignored_results == [0, 0, 0]
+    assert visible_proc.stdout == ""

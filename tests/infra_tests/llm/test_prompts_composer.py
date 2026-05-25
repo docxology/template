@@ -188,7 +188,6 @@ class TestPromptComposer:
     def test_build_format_requirements(self, setup_prompts):
         """Test building format requirements fragment."""
         loader = PromptFragmentLoader(base_path=setup_prompts)
-        composer = PromptComposer(loader=loader)
 
         result = build_format_requirements(loader, ["## Header1", "## Header2"])
 
@@ -199,7 +198,6 @@ class TestPromptComposer:
     def test_build_content_requirements(self, setup_prompts):
         """Test building content requirements fragment."""
         loader = PromptFragmentLoader(base_path=setup_prompts)
-        composer = PromptComposer(loader=loader)
 
         result = build_content_requirements(loader)
 
@@ -210,7 +208,6 @@ class TestPromptComposer:
     def test_build_section_structure(self, setup_prompts):
         """Test building section structure fragment."""
         loader = PromptFragmentLoader(base_path=setup_prompts)
-        composer = PromptComposer(loader=loader)
 
         result = build_section_structure(loader, "test_template")
 
@@ -222,7 +219,6 @@ class TestPromptComposer:
     def test_build_section_structure_not_found(self, setup_prompts):
         """Test building section structure with invalid key."""
         loader = PromptFragmentLoader(base_path=setup_prompts)
-        composer = PromptComposer(loader=loader)
 
         with pytest.raises(LLMTemplateError) as exc_info:
             build_section_structure(loader, "nonexistent")
@@ -232,7 +228,6 @@ class TestPromptComposer:
     def test_build_token_budget_awareness(self, setup_prompts):
         """Test building token budget awareness fragment."""
         loader = PromptFragmentLoader(base_path=setup_prompts)
-        composer = PromptComposer(loader=loader)
 
         result = build_token_budget_awareness(
             loader,
@@ -247,7 +242,6 @@ class TestPromptComposer:
     def test_build_validation_hints(self, setup_prompts):
         """Test building validation hints fragment."""
         loader = PromptFragmentLoader(base_path=setup_prompts)
-        composer = PromptComposer(loader=loader)
 
         result = build_validation_hints(
             loader,

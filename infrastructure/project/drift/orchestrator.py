@@ -33,6 +33,8 @@ _COMPUTE_IMPORTS = frozenset({"numpy", "np", "matplotlib", "matplotlib.pyplot", 
 _PROJECT_SCRIPT_WARN_LINES = 120
 _FAT_SCRIPT_FAIL_LINES = 200
 _FAT_MIN_FUNCTIONS = 3
+_ROOT_REUSABLE_HELPER_MIN_FUNCTIONS = 4
+_ROOT_REUSABLE_HELPER_MIN_LINES = 1
 
 
 def _rel(path: Path, repo_root: Path) -> str:
@@ -127,6 +129,14 @@ def _analyze_script(path: Path, repo_root: Path) -> tuple[str | None, str | None
             return (
                 "WARNING",
                 f"{rel}: {line_count} lines — consider moving helpers to infrastructure/",
+            )
+
+    if not is_project_script and line_count >= _ROOT_REUSABLE_HELPER_MIN_LINES:
+        non_trivial = _count_non_trivial_functions(source)
+        if non_trivial >= _ROOT_REUSABLE_HELPER_MIN_FUNCTIONS:
+            return (
+                "WARNING",
+                f"{rel}: multiple reusable helpers ({non_trivial}); move logic to infrastructure/",
             )
 
     if _uses_compute_imports(source) and is_project_script:

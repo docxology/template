@@ -1,25 +1,25 @@
-"""Tests for ``projects_in_progress/cogant/tools/check_coverage_table.py`` parse helpers.
+"""Tests for COGANT ``check_coverage_table.py`` parse helpers.
 
-Loads the script by path so the COGANT staging tree stays the single source of truth
-without packaging the tool as an importable package.
+Loads the script by path from staging when present, otherwise from the
+committed ``tests/fixtures/private_project/cogant`` fallback.
 """
 
 from __future__ import annotations
 
 import importlib.util
-from pathlib import Path
 
 import pytest
 
+from tests.infra_tests._cogant_paths import cogant_root
+
 pytestmark = pytest.mark.private_project
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-_SCRIPT = _REPO_ROOT / "projects_in_progress/cogant/tools/check_coverage_table.py"
+_SCRIPT = cogant_root() / "tools/check_coverage_table.py"
 
 
 def _load_check_coverage_module():
     if not _SCRIPT.is_file():
-        pytest.skip(f"COGANT staging script not present: {_SCRIPT}")
+        pytest.fail(f"COGANT check_coverage_table script not present: {_SCRIPT}")
     spec = importlib.util.spec_from_file_location("check_coverage_table", _SCRIPT)
     assert spec and spec.loader
     mod = importlib.util.module_from_spec(spec)

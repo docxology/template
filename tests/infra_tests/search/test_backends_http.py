@@ -281,6 +281,39 @@ def test_paperclip_sends_x_api_key_header(httpserver: HTTPServer):
     assert results[0].score == 0.91
 
 
+def test_paperclip_posts_mcp_tools_call_payload(httpserver: HTTPServer):
+    """Paperclip requests must use the repo-owned MCP-style JSON-RPC contract."""
+    expected_payload = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "paperclip",
+            "arguments": {
+                "command": "search 'active inference' -n 3 --since 2020",
+                "description": "search 'active inference' -n 3 --since 2020",
+                "skip_truncation": True,
+            },
+        },
+    }
+    httpserver.expect_request(
+        "/mcp",
+        method="POST",
+        headers={"X-API-Key": "test-key", "Content-Type": "application/json"},
+        json=expected_payload,
+    ).respond_with_json(PAPERCLIP_STRUCTURED_ENVELOPE)
+    backend = PaperclipBackend(
+        api_key="test-key",
+        http_client=UrllibHttpClient(),
+        base_url=httpserver.url_for("/mcp"),
+    )
+
+    results = backend.search(SearchQuery(text="active inference", max_results=3, year_min=2020))
+
+    assert len(results) == 1
+    assert results[0].source == "paperclip"
+
+
 def test_paperclip_parses_structured_papers(httpserver: HTTPServer):
     httpserver.expect_request("/papers", method="POST").respond_with_json(
         PAPERCLIP_STRUCTURED_ENVELOPE

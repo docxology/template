@@ -178,8 +178,9 @@ LLM stages are gated; if you don't want them, run with `--core-only` or
 
 You added a non-template project under `projects/` and tried to push.
 Per the [private-projects-repo contract](../../maintenance/private-projects-repo.md),
-only the two canonical exemplars (`template_code_project`,
-`template_prose_project`) are git-tracked. Move other projects out of
+only the public canonical exemplars listed in
+[`docs/_generated/active_projects.md`](../../_generated/active_projects.md)
+are git-tracked. Move other projects out of
 `projects/` and re-push.
 
 **Symptom:** Coverage job `pytest --cov=infrastructure --cov-fail-under=60`

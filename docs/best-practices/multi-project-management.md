@@ -283,7 +283,10 @@ done
 **Usage:**
 
 ```bash
-# Run the multi-project test orchestrator (one pytest per project; 75% union gate)
+# Run the public-project test orchestrator (one pytest per public exemplar; 75% union gate)
+uv run python scripts/01_run_tests.py --project-only --all-projects --public-projects
+
+# Include every locally discovered project, including private symlinked workspaces
 uv run python scripts/01_run_tests.py --project-only --all-projects
 
 # Run the full multi-project pipeline

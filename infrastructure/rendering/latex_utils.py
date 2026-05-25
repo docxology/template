@@ -52,6 +52,24 @@ def _is_recoverable_compile_failure(
     return result.returncode in _SIGPIPE_RETURNCODES
 
 
+def ensure_pdf_at(compiled: Path, target: Path) -> Path:
+    """Place a compiled PDF at *target* when LaTeX wrote a different filename.
+
+    Args:
+        compiled: Path returned by ``compile_latex`` (typically ``{tex_stem}.pdf``).
+        target: Caller-requested output path.
+
+    Returns:
+        *target* after any rename.
+    """
+    if compiled == target:
+        return target
+    if target.exists():
+        target.unlink()
+    compiled.replace(target)
+    return target
+
+
 def compile_latex(
     tex_file: Path | str,
     output_dir: Path | str | None = None,

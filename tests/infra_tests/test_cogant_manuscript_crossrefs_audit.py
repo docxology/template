@@ -1,7 +1,7 @@
-"""Tests for ``projects_in_progress/cogant/tools/audit_manuscript_crossrefs.py``.
+"""Tests for COGANT ``audit_manuscript_crossrefs.py``.
 
 Ensures pandoc-crossref-style ``@sec:`` / ``{#sec:`` identifiers stay internally
-consistent across COGANT staging manuscript fragments.
+consistent across COGANT manuscript fragments (staging or committed fixture).
 """
 
 from __future__ import annotations
@@ -11,16 +11,18 @@ from pathlib import Path
 
 import pytest
 
+from tests.infra_tests._cogant_paths import cogant_root
+
 pytestmark = pytest.mark.private_project
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-_SCRIPT = _REPO_ROOT / "projects_in_progress/cogant/tools/audit_manuscript_crossrefs.py"
-_MANUSCRIPT_DIR = _REPO_ROOT / "projects_in_progress/cogant/manuscript"
+_COGANT = cogant_root()
+_SCRIPT = _COGANT / "tools/audit_manuscript_crossrefs.py"
+_MANUSCRIPT_DIR = _COGANT / "manuscript"
 
 
 def _load_audit_module():
     if not _SCRIPT.is_file():
-        pytest.skip(f"COGANT staging script not present: {_SCRIPT}")
+        pytest.fail(f"COGANT audit script not present: {_SCRIPT}")
     spec = importlib.util.spec_from_file_location("audit_manuscript_crossrefs", _SCRIPT)
     assert spec and spec.loader
     mod = importlib.util.module_from_spec(spec)
@@ -32,7 +34,7 @@ def test_audit_manuscript_crossrefs_passes_on_staging_tree() -> None:
     """Staging manuscript must have no orphan @sec/@tbl refs or duplicate {#…} ids."""
     mod = _load_audit_module()
     if not _MANUSCRIPT_DIR.is_dir():
-        pytest.skip(f"COGANT manuscript dir not present: {_MANUSCRIPT_DIR}")
+        pytest.fail(f"COGANT manuscript dir not present: {_MANUSCRIPT_DIR}")
     assert mod.audit(_MANUSCRIPT_DIR) == 0
 
 

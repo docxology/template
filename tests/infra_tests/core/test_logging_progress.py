@@ -142,7 +142,7 @@ class TestCalculateEtaWithConfidence:
         assert optimistic < realistic < pessimistic
 
 
-class TestLogProgressBar:
+class TestLogProgressBarAdditional:
     """Test log_progress_bar function."""
 
     def test_log_progress_bar_basic(self, caplog):
@@ -176,7 +176,7 @@ class TestLogProgressBar:
             log_progress_bar(5, 10, "Test")
 
 
-class TestSpinner:
+class TestSpinnerAdditional:
     """Test Spinner class."""
 
     def test_spinner_initialization(self):
@@ -227,7 +227,7 @@ class TestSpinner:
         assert "Done!" in stream.getvalue()
 
 
-class TestLogWithSpinner:
+class TestLogWithSpinnerAdditional:
     """Test log_with_spinner context manager."""
 
     def test_log_with_spinner_basic(self):
@@ -254,7 +254,7 @@ class TestLogWithSpinner:
                 raise ValueError("test error")
 
 
-class TestStreamingProgress:
+class TestStreamingProgressAdditional:
     """Test StreamingProgress class."""
 
     def test_construction(self):
@@ -315,7 +315,7 @@ class TestStreamingProgress:
         sp.update(1)
 
 
-class TestLogProgressStreaming:
+class TestLogProgressStreamingAdditional:
     """Test log_progress_streaming function."""
 
     def test_non_tty_fallback(self, caplog):
@@ -329,7 +329,7 @@ class TestLogProgressStreaming:
             log_progress_streaming(0, 0, "Empty", logger=logger)
 
 
-class TestLogStageWithEta:
+class TestLogStageWithEtaAdditional:
     """Test log_stage_with_eta function."""
 
     def test_with_eta(self, caplog):
@@ -349,7 +349,7 @@ class TestLogStageWithEta:
             log_stage_with_eta("Test", 1, 5, 1.0)
 
 
-class TestLogResourceUsage:
+class TestLogResourceUsageAdditional:
     """Test log_resource_usage function."""
 
     def test_with_cpu_and_memory(self, caplog):

@@ -40,7 +40,9 @@ and real subprocesses.
 import os
 import platform
 import shutil
-import subprocess  # nosec B404 — required to invoke the project-supplied hook
+
+# Required to invoke the project-supplied setup hook.
+import subprocess  # nosec B404
 import sys
 from pathlib import Path
 from typing import Any
@@ -287,7 +289,8 @@ def run_project_setup_hook(project_dir: Path) -> bool:
 
     logger.info("Running setup_hook for %s: %s (timeout=%ds)", project_dir.name, hook, timeout)
     try:
-        result = subprocess.run(  # nosec B603 — argv is a fixed list, hook path is repo-local
+        # argv is fixed by this module; the hook path is validated as repo-local.
+        result = subprocess.run(  # nosec B603
             cmd,
             cwd=str(project_dir),
             check=False,

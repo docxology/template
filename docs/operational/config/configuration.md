@@ -174,7 +174,7 @@ def risky_operation():
 > **Note:** The `fep_lean` project is currently archived under `projects_archive/`. The following documentation describes its configuration when that project is checked out.
 
 
-When present under **`projects/fep_lean/`**, it is discovered like any other active project (see [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)). Orchestration lives in [`projects_archive/fep_lean/src/gauss/cli.py`](../../../projects_archive/fep_lean/src/gauss/cli.py) and related modules.
+When present under **`projects/fep_lean/`**, it is discovered like any other active project (see [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)). Project-specific Open Gauss orchestration lives in that local checkout under `src/gauss/` and related modules.
 
 | Variable | Default | Description |
 | -------- | ------- | ----------- |
@@ -375,7 +375,6 @@ The registry is process-local. Tests should call
 - [Troubleshooting Guide](../troubleshooting/) - Common issues and solutions
 - [Build System](../../RUN_GUIDE.md) - Build configuration
 - [Performance Optimization](performance-optimization.md) - Performance tuning
-
 
 
 

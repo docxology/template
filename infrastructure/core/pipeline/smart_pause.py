@@ -37,6 +37,7 @@ def compute_pause_recommendations(project_output_dir: Path) -> list[PauseRecomme
     """Compute advisory pause recommendations from current run reports."""
     reasons: dict[str, list[str]] = {}
     _collect_validation_reasons(project_output_dir / "reports" / "validation_report.json", reasons)
+    _collect_autoresearch_reasons(project_output_dir / "reports" / "autoresearch_readiness.json", reasons)
     _collect_artifact_reasons(project_output_dir / "reports" / "artifact_manifest.json", reasons)
     _collect_telemetry_reasons(project_output_dir / "reports" / "telemetry.json", reasons)
     _collect_rejection_reasons(project_output_dir / "hitl" / "decisions.jsonl", reasons)
@@ -98,6 +99,21 @@ def _collect_artifact_reasons(path: Path, reasons: dict[str, list[str]]) -> None
         return
     for issue in payload.get("issues", []):
         reasons.setdefault("Artifact manifest", []).append(f"artifact_drift: {issue}")
+
+
+def _collect_autoresearch_reasons(path: Path, reasons: dict[str, list[str]]) -> None:
+    payload = _read_json_object(path)
+    if not payload or payload.get("valid") is True:
+        return
+    issues = payload.get("issues", [])
+    if not isinstance(issues, list):
+        return
+    for row in issues:
+        if not isinstance(row, dict):
+            continue
+        code = str(row.get("code", "AUTORESEARCH.READINESS"))
+        message = str(row.get("message", "readiness issue"))
+        reasons.setdefault("AutoResearch readiness", []).append(f"autoresearch_readiness: {code}: {message}")
 
 
 def _collect_telemetry_reasons(path: Path, reasons: dict[str, list[str]]) -> None:

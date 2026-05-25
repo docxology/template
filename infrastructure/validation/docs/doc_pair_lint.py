@@ -12,6 +12,7 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, SKILL_EVAL_DIR_NAME
 
 PERMANENT_TEMPLATE_ROOTS: tuple[str, ...] = (
@@ -20,8 +21,7 @@ PERMANENT_TEMPLATE_ROOTS: tuple[str, ...] = (
     "infrastructure",
     "scripts",
     "tests",
-    "projects/template_code_project",
-    "projects/template_prose_project",
+    *(f"projects/{name}" for name in PUBLIC_PROJECT_NAMES),
 )
 
 DOC_PAIR_EXCLUDE_PARTS: frozenset[str] = frozenset(
@@ -37,6 +37,24 @@ DOC_PAIR_EXCLUDE_PARTS: frozenset[str] = frozenset(
 )
 
 DOC_FILENAMES = {"AGENTS.md", "README.md"}
+
+
+def _is_generated_tests_fixture_payload(path: Path) -> bool:
+    """Return True for downloaded/generated fixture payloads under ``tests/fixtures``."""
+    parts = path.parts
+    for index, part in enumerate(parts):
+        if part != "fixtures" or index == 0 or parts[index - 1] != "tests":
+            continue
+        rel_parts = parts[index + 1 :]
+        if not rel_parts:
+            return False
+        fixture_root = rel_parts[0]
+        if fixture_root == "timeseries":
+            return True
+        if fixture_root == "real_codebases":
+            return len(rel_parts) >= 2 and rel_parts[1] not in DOC_FILENAMES
+        return False
+    return False
 
 
 @dataclass(frozen=True)
@@ -64,6 +82,8 @@ def is_doc_pair_excluded_path(
 ) -> bool:
     """Return True when *path* is outside permanent-template doc-pair scope."""
     excluded = set(exclude_parts)
+    if _is_generated_tests_fixture_payload(path):
+        return True
     return any(part in excluded or part.endswith(".egg-info") for part in path.parts)
 
 

@@ -40,5 +40,5 @@ the decade-scale plan visible.
 
 - [`../../MAINTAINERS.md`](../../MAINTAINERS.md) — subsystem owners
 - [`../../STATUS.md`](../../STATUS.md) — per-subsystem heartbeat
-- [`private-projects-repo.md`](private-projects-repo.md) — implemented sibling private repo + active-link mechanism
+- [`private-projects-repo.md`](private-projects-repo.md) — implemented sibling private repo + lifecycle-link mechanism
 - [`../../AGENTS.md`](../../AGENTS.md) — full system manual

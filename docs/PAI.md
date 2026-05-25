@@ -64,12 +64,12 @@ When re-enabling DA assistant capabilities, apply the staged rollout documented 
 
 ## Architecture
 
-**Counting note:** the tree below lists **17** Python packages under `infrastructure/` (benchmark, core, doctor, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). The `config/`, `docker/`, and `logrotate.d/` directories ship configuration/docs rather than `__init__.py`, so they are not Python packages. For live counts, use [`docs/_generated/canonical_facts.md`](_generated/canonical_facts.md). See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
+**Counting note:** the tree below lists **18** Python packages under `infrastructure/` (autoresearch, benchmark, core, doctor, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation). The `config/`, `docker/`, and `logrotate.d/` directories ship configuration/docs rather than `__init__.py`, so they are not Python packages. For live counts, use [`docs/_generated/canonical_facts.md`](_generated/canonical_facts.md). See [docs/modules/modules-guide.md](modules/modules-guide.md) and [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module-specific entry points.
 
 ```mermaid
 flowchart TB
     ROOT[/template/]
-    ROOT --> INFRA[/infrastructure<br/>Layer 1 · 17 Python packages/]
+    ROOT --> INFRA[/infrastructure<br/>Layer 1 · 18 Python packages/]
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
     ROOT --> SCR[/scripts<br/>Entry-point orchestrators · thin wrappers/]
     ROOT --> PROJ[/projects<br/>Active research projects · Layer 2/]
@@ -83,7 +83,7 @@ flowchart TB
 
     SCR --> SCR_FILES[shell_bootstrap.sh · bash_utils.sh ops only ·<br/>00_setup_environment → 06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 
-    PROJ --> PROJ_F["template_code_project · template_prose_project · template_search_project<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
+    PROJ --> PROJ_F["template_autoresearch_project · template_code_project · template_prose_project<br/>local template_search_project add-on<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff

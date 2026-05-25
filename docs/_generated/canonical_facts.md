@@ -1,30 +1,32 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-23 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**394**), `pytest tests/infra_tests/project/ --collect-only -q` (**149**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**6** passed), exemplar `pytest --collect-only` (209 + 76), drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-05-25 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**417**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**162**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**6** passed), exemplar `pytest --collect-only` (209 + 76 + 14), drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
 ## Project Roster
 
-**Always-present canonical exemplars** (the only two guaranteed to live under `projects/`):
+**Always-present canonical exemplars** (the public exemplar projects guaranteed to live under `projects/`):
 
+- `template_autoresearch_project`
 - `template_code_project`
 - `template_prose_project`
 
 Optional add-on: `projects_archive/template_search_project` can be restored under `projects/` for literature-search workflows.
 
-Private active projects live outside this public repo at `/Users/4d/Documents/GitHub/projects/active/` by default and are symlinked into `template/projects/` by `run.sh`/`infrastructure.orchestration` before discovery. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
+Private lifecycle projects live outside this public repo at `/Users/4d/Documents/GitHub/projects/{active,passive,archive}/` by default. `run.sh`/`infrastructure.orchestration` symlinks `active/*` into `template/projects/*` before discovery/rendering, `passive/*` into `template/projects_in_progress/*`, and `archive/*` into `template/projects_archive/*` for non-rendered inspection. Override with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`; disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`; inspect with `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 
 **Public CI/documentation project scope** (`projects/`, filtered through `infrastructure.project.public_scope`; authoritative snapshot → [`active_projects.md`](active_projects.md)):
 
+- `template_autoresearch_project`
 - `template_code_project`
 - `template_prose_project`
 
 `projects/_test_project/` is a stub layout used by validation tests only — omitted from `discover_projects()` (path may be absent in sparse checkouts; not a tracked exemplar tree).
 
-**In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`): local-only roster omitted from public docs; inspect the directory in a local checkout when needed.
+**In-progress projects** (`projects_in_progress/`, not discovered until moved under `projects/`): local-only roster omitted from public docs; in Daniel's checkout this includes symlinks to private `passive/` projects.
 
-**Archived projects** (`projects_archive/`, preserved but not executed): includes `fep_lean`, `act_inf_metaanalysis`, `cognitive_integrity`, and others — list with `ls projects_archive/`.
+**Archived projects** (`projects_archive/`, preserved but not executed): in Daniel's checkout this includes symlinks to private `archive/` projects such as `fep_lean`, `act_inf_metaanalysis`, `cognitive_integrity`, and others — list with `ls projects_archive/`.
 
 Regenerate [`active_projects.md`](active_projects.md) with:
 
@@ -36,8 +38,9 @@ Default exemplar for paths: `projects/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current importable Python subpackages under `infrastructure/` (17):
+Current importable Python subpackages under `infrastructure/` (18):
 
+- autoresearch
 - benchmark
 - core
 - doctor
@@ -69,7 +72,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **394** on 2026-05-23 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **417** on 2026-05-25 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
@@ -91,20 +94,21 @@ Result: 60 passed in ~0.63s (real data, no mocks). Link-sync and pipeline-contro
 uv run pytest tests/infra_tests/project/test_linking.py tests/infra_tests/core/test_pipeline_control_extensions.py -q
 ```
 
-Result: 56 passed in ~0.76s (real symlinks and file-backed HITL state, no mocks).
+Result: 62 passed in ~0.46s (real symlinks and file-backed HITL state, no mocks).
 
-**Exemplar `pytest --collect-only` totals** (2026-05-23):
+**Exemplar `pytest --collect-only` totals** (2026-05-25):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
 | `template_code_project` | 209 | 98.83 % |
 | `template_prose_project` | 76 | 100.00 % |
+| `template_autoresearch_project` | 14 | 98.61 % |
 
 Measured from `projects/template_code_project/` with `uv run pytest tests/ --cov=src --cov-fail-under=90 -q`. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
-Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_template_drift.py`): **20 passed**, gating **9 per-exemplar detectors** on both canonical projects plus **2 repo-level checks** (`check_repo_docs_hardcoded_counts`, `check_repo_thin_orchestrator_scripts` / `check_project_scripts` for `projects/*/scripts/`). Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** (`test_thin_orchestrator_drift.py`). Per-exemplar detectors: function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead link, oversize `src/*.py`, blanket `except Exception`, mocks in tests, canonical-file presence.
+Drift-checker self-tests (separate suite at `tests/infra_tests/test_check_template_drift.py`): **20 passed**, gating **9 per-exemplar detectors** on public canonical exemplars plus **2 repo-level checks** (`check_repo_docs_hardcoded_counts`, `check_repo_thin_orchestrator_scripts` / `check_project_scripts` for `projects/*/scripts/`). Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** (`test_thin_orchestrator_drift.py`). Per-exemplar detectors: function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead link, oversize `src/*.py`, blanket `except Exception`, mocks in tests, canonical-file presence.
 
-**Thin-orchestrator gates** (measured 2026-05-23):
+**Thin-orchestrator gates** (measured 2026-05-25):
 
 | Gate | Command | Threshold |
 | --- | --- | --- |
@@ -195,7 +199,7 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```mermaid
 flowchart TD
-    Root[Root] --> Infra[infrastructure/ <br/>17 importable packages]
+    Root[Root] --> Infra[infrastructure/ <br/>18 importable packages]
     Root --> Projects[projects/ <br/>see active_projects.md]
     Root --> Tests[tests/infra_tests/]
     Infra --> Core[core/ <br/>pipeline, logging, files, config]

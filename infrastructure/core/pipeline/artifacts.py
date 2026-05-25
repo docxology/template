@@ -11,7 +11,14 @@ from pathlib import Path
 from infrastructure.core.pipeline.types import StageContract
 
 _IGNORED_OUTPUT_PARTS = frozenset({".checkpoints", ".pipeline", "logs", "hitl", "snapshots", "__pycache__"})
-_IGNORED_OUTPUT_FILENAMES = frozenset({"artifact_manifest.json", "snapshot_compare.json", "snapshot_compare.md"})
+_IGNORED_OUTPUT_FILENAMES = frozenset(
+    {
+        "artifact_manifest.json",
+        "evidence_registry.json",
+        "snapshot_compare.json",
+        "snapshot_compare.md",
+    }
+)
 _IGNORED_OUTPUT_SUFFIXES = frozenset({".aux", ".log", ".nav", ".snm", ".toc", ".vrb"})
 
 

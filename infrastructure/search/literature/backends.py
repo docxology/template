@@ -95,7 +95,8 @@ class UrllibHttpClient:
             url = f"{url}{sep}{qs}"
         req = urllib.request.Request(url, headers=dict(headers or {}))
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec - search API
+            # Literature search backend calls configured HTTP APIs.
+            with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310
                 charset = resp.headers.get_content_charset() or "utf-8"
                 body = resp.read().decode(charset, errors="replace")
                 return HttpResponse(status_code=resp.status, text=body, url=resp.geturl())
@@ -137,7 +138,8 @@ class UrllibHttpClient:
 
         req = urllib.request.Request(url, data=body, headers=hdrs, method="POST")
         try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec - search API
+            # Literature search backend calls configured HTTP APIs.
+            with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310
                 charset = resp.headers.get_content_charset() or "utf-8"
                 resp_body = resp.read().decode(charset, errors="replace")
                 return HttpResponse(status_code=resp.status, text=resp_body, url=resp.geturl())

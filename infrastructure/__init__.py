@@ -4,6 +4,8 @@ This package contains reusable infrastructure modules for building, validating, 
 managing research projects. Organized by functionality into submodules.
 
 Modules:
+    autoresearch: Deterministic research planning/readiness controls; see autoresearch/SKILL.md
+    benchmark: Deterministic public exemplar benchmark manifests and readiness scoring; see benchmark/SKILL.md
     config: Repository templates (.env.template, secure_config.yaml); see config/SKILL.md
     core: Foundation utilities (config, logging, exceptions, pipeline, telemetry, progress, checkpoint)
     docker: Dockerfile and docker-compose for container runs; see docker/SKILL.md

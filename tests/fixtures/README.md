@@ -8,7 +8,9 @@
 
 | Directory | Description |
 |-----------|-------------|
-| [`real_codebases/`](real_codebases/) | Shallow-cloned real GitHub repos (requests, fastapi) |
+| [`real_codebases/`](real_codebases/) | Shallow-cloned real GitHub repos (requests, fastapi) — required for `external_fixture` integration tests |
+| [`private_project/cogant/`](private_project/cogant/) | Committed COGANT tool + manuscript stubs for `private_project` infra tests (staging tree overrides when present) |
+| `timeseries/` | M4/synthetic series — created by `download_timeseries_benchmarks.py` (required for `bench` integration tests) |
 
 ## Setup
 
@@ -23,6 +25,12 @@ python scripts/fixtures/download_timeseries_benchmarks.py
 ```
 
 Both scripts are **idempotent** — safe to re-run.
+
+Timeseries benchmark tests also require optional Python deps:
+
+```bash
+uv sync --group timeseries-bench
+```
 
 ## See Also
 

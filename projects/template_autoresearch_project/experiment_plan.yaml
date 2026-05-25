@@ -1,0 +1,22 @@
+conditions:
+  - name: baseline_template_pipeline
+    role: reference
+    description: Existing deterministic template pipeline controls.
+  - name: autoresearch_readiness_loop
+    role: proposed
+    description: Explicit plan, evidence, claim, artifact, and readiness loop.
+  - name: strict_readiness_without_agent_execution
+    role: variant
+    description: Strict readiness validation with no autonomous execution.
+metrics:
+  primary:
+    name: readiness_pass
+    direction: maximize
+protocol: "Run the project through the standard template pipeline and require deterministic AutoResearch readiness reports to pass."
+expected_figures: []
+expected_tables:
+  - tbl:autoresearch-loop
+baselines:
+  - baseline_template_pipeline
+ablations:
+  - strict_readiness_without_agent_execution

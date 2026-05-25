@@ -1,0 +1,26 @@
+domain: autoresearch
+display_name: Deterministic AutoResearch Loop
+required_packages:
+  - pytest
+  - pyyaml
+preferred_outputs:
+  - pdf
+  - html
+  - reports
+validation_gates:
+  - experiment_method_design
+  - publication_readiness
+figure_types: []
+citation_policy: artifact_grounded
+review_gates:
+  - Project Tests
+  - Project Analysis
+  - Output Validation
+source_policy: local_artifacts_only
+artifact_expectations:
+  - output/data/autoresearch_plan.json
+  - output/data/autoresearch_loop.json
+  - output/data/autoresearch_claims.json
+  - output/data/manuscript_variables.json
+  - output/reports/autoresearch_loop.json
+  - output/reports/autoresearch_loop.md

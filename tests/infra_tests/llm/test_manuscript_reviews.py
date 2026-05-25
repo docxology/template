@@ -44,8 +44,6 @@ class TestManuscriptReviewTemplates:
             template.render()
 
     def test_render_none_text_raises(self, template_cls):
-        if template_cls is not ManuscriptExecutiveSummary:
-            pytest.skip("Quality review expanded suite did not cover None text")
         template = template_cls()
         with pytest.raises(LLMTemplateError):
             template.render(text=None)

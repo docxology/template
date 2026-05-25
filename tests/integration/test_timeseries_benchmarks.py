@@ -5,6 +5,7 @@ ARIMA, ETS, Theta, and LightGBM forecasts. Computes SMAPE on holdout
 and asserts overall error < 0.5 (50%).
 
 Marked as integration and benchmark; deselected from the default public gate.
+Requires optional deps: ``uv sync --group timeseries-bench``.
 """
 
 from __future__ import annotations
@@ -31,6 +32,7 @@ def _has_required_libs() -> bool:
     try:
         import statsmodels  # noqa: F401
         import lightgbm  # noqa: F401
+
         return True
     except ImportError:
         return False
@@ -71,9 +73,9 @@ def smape(actual: np.ndarray, forecast: np.ndarray) -> float:
     actual = np.asarray(actual)
     forecast = np.asarray(forecast)
     # Avoid division by zero
-    denom = (np.abs(actual) + np.abs(forecast))
+    denom = np.abs(actual) + np.abs(forecast)
     # If both are zero, smape is 0 for that point
-    with np.errstate(divide='ignore', invalid='ignore'):
+    with np.errstate(divide="ignore", invalid="ignore"):
         diff = 2 * np.abs(forecast - actual)
         ratios = diff / denom
         ratios[denom == 0] = 0.0
@@ -83,6 +85,7 @@ def smape(actual: np.ndarray, forecast: np.ndarray) -> float:
 def forecast_arima(train: np.ndarray, h: int) -> np.ndarray:
     """ARIMA(1,1,1) forecast."""
     from statsmodels.tsa.arima.model import ARIMA
+
     model = ARIMA(train, order=(1, 1, 1))
     fit = model.fit()
     pred = fit.forecast(steps=h)
@@ -91,7 +94,8 @@ def forecast_arima(train: np.ndarray, h: int) -> np.ndarray:
 
 def forecast_ets(train: np.ndarray, h: int) -> np.ndarray:
     """Exponential Smoothing (additive trend/seasonality)."""
-    from statsmodels.tsa.exponential_smoothing import ExponentialSmoothing
+    from statsmodels.tsa.holtwinters import ExponentialSmoothing
+
     m = 12  # monthly seasonality
     try:
         model = ExponentialSmoothing(
@@ -114,6 +118,7 @@ def forecast_ets(train: np.ndarray, h: int) -> np.ndarray:
 def forecast_theta(train: np.ndarray, h: int) -> np.ndarray:
     """Theta method forecast."""
     from statsmodels.tsa.forecasting.theta import ThetaModel
+
     model = ThetaModel(train, period=12, deseasonalize=True)
     fit = model.fit()
     pred = fit.forecast(steps=h)
@@ -134,7 +139,7 @@ def forecast_lightgbm(train: np.ndarray, h: int) -> np.ndarray:
     # Build X, y
     X, y = [], []
     for i in range(max_lag, n):
-        X.append(train[i - max_lag:i])
+        X.append(train[i - max_lag : i])
         y.append(train[i])
     X = np.array(X)
     y = np.array(y)

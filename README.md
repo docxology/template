@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs deps via uv)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/<project>/pdf/`. Logs in `output/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_code_project`, `template_prose_project`. The search exemplar is an optional add-on under `projects_archive/template_search_project/`.
+5. Run `./run.sh --help` for all flags. Always-present exemplars: `template_autoresearch_project`, `template_code_project`, `template_prose_project`. The search exemplar is an optional add-on under `projects_archive/template_search_project/`.
 
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
@@ -113,14 +113,15 @@ own `src/`, `tests/`, `manuscript/`, `scripts/`, and `output/` directory under
 
 | Exemplar | Shape | Tests | Coverage |
 |---|---|---|---|
+| [`projects/template_autoresearch_project/`](projects/template_autoresearch_project/) | AutoResearch-centric (deterministic plan/evidence/claim/artifact/readiness loop) | see canonical facts | see canonical facts |
 | [`projects/template_code_project/`](projects/template_code_project/) | Code-centric (optimization + dashboard) | see canonical facts | see canonical facts |
 | [`projects/template_prose_project/`](projects/template_prose_project/) | Prose-centric (editorial review + BibTeX validation) | see canonical facts | see canonical facts |
 
 *Test and coverage figures are representative; confirm against [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) after substantive changes.*
 
-Both permanent exemplars share the same directory layout, the same 12-file `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`), and the same verification checklist. New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) for the full comparison.
+The permanent exemplars share the same core layout and verification checklist. The code/prose exemplars also carry the 12-file project `docs/` hub (`agent_instructions.md`, `style_guide.md`, `syntax_guide.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`, `architecture.md`, `AGENTS.md`, `README.md`). New projects copy whichever exemplar is closest in shape and adjust from there. See [`projects/AGENTS.md`](projects/AGENTS.md#permanent-canonical-exemplars-and-optional-search-add-on) for the full comparison.
 
-Both exemplars also ship project-local composability overlays:
+The canonical exemplars also ship project-local composability overlays:
 `domain_profile.yaml` declares review gates, source policy, artifact
 expectations, and benchmark rubric preferences; `experiment_plan.yaml`
 declares design-validation conditions, primary metric direction, expected
@@ -128,9 +129,9 @@ figures/tables, baselines, and ablations. These files are declarative inputs
 for validation and benchmark tooling; they do not generate experiments or run
 autonomous agents.
 
-> **🔒 Confidentiality.** This is a **public** template repo. Only the two
+> **🔒 Confidentiality.** This is a **public** template repo. Only the
 > canonical exemplars above are git-tracked/pushed — `.gitignore` ignores
-> `projects/*` and negates only those two. Any project you add under
+> `projects/*` and negates only those public project directories. Any project you add under
 > `projects/` (research, client, confidential, or the optional local-only
 > `template_search_project` literature-search exemplar that rests in
 > [`projects_archive/`](projects_archive/template_search_project/)) stays
@@ -139,12 +140,14 @@ autonomous agents.
 > `template_search_project` under `projects/` locally to exercise literature
 > discovery, then never commit it.
 
-**Private active projects.** In Daniel's working checkout, confidential projects
-live outside this public repo at `/Users/4d/Documents/GitHub/projects/` with the
-lifecycle folders `active/`, `passive/`, and `archive/`. `run.sh` and
+**Private lifecycle projects.** In Daniel's working checkout, confidential
+projects live outside this public repo at `/Users/4d/Documents/GitHub/projects/`
+with the lifecycle folders `active/`, `passive/`, and `archive/`. `run.sh` and
 `python -m infrastructure.orchestration` auto-sync `active/*` into
-`template/projects/*` as symlinks before listing, selecting, running, or
-rendering projects, so linked projects behave like native `projects/` entries.
+`template/projects/*` for listing, selecting, running, and rendering; `passive/*`
+into `template/projects_in_progress/*`; and `archive/*` into
+`template/projects_archive/*`. Active links behave like native `projects/`
+entries; passive/archive links are visible but not default-rendered.
 Inspect without changing the tree:
 `uv run python -m infrastructure.orchestration link-projects --dry-run`.
 Override the sibling path with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or

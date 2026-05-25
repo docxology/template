@@ -4,7 +4,7 @@ Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
-**Counting:** **19** overview rows below cover the **17** importable Python packages under `infrastructure/` (see [canonical_facts.md](../_generated/canonical_facts.md)) plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). `infrastructure/config/`, `infrastructure/docker/`, and `infrastructure/logrotate.d/` have no `__init__.py`.
+**Counting:** **21** overview rows below cover the **18** importable Python packages under `infrastructure/` (see [canonical_facts.md](../_generated/canonical_facts.md)) plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). `infrastructure/config/`, `infrastructure/docker/`, and `infrastructure/logrotate.d/` have no `__init__.py`.
 
 ---
 
@@ -13,7 +13,10 @@ Reference for Layer-1 infrastructure modules.
 | Module | Purpose | Key Features | Guide |
 |--------|---------|--------------|-------|
 | **Core** | Shared utilities | Logging, config, exceptions | [Details](guides/core-module.md) |
+| **AutoResearch** | Deterministic research loops | Plan/evidence/readiness reports, stage contracts | [`infrastructure/autoresearch/AGENTS.md`](../../infrastructure/autoresearch/AGENTS.md) |
+| **Benchmark** | Benchmarking helpers | Timing, resource summaries, report payloads | [`infrastructure/benchmark/AGENTS.md`](../../infrastructure/benchmark/AGENTS.md) |
 | **Documentation** | Doc generation | Figure management, API glossary | [Details](guides/documentation-module.md) |
+| **Doctor** | Repository health diagnostics | Environment and repository checks | [Details](guides/doctor-module.md) |
 | **Validation** | Output verification | File integrity, cross-reference validation | [Details](guides/validation-module.md) |
 | **Publishing** | Academic workflows | DOI validation, citation generation | [Details](guides/publishing-module.md) |
 | **Scientific** | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |

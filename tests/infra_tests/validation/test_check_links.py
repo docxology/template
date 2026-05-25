@@ -31,7 +31,7 @@ def test_link_extract_module_import_smoke() -> None:
     assert check_links.discover_markdown_files is canonical_discover
 
 
-class TestDiscoverMarkdownFilesLinkAudit:
+class TestDiscoverMarkdownFilesLinkAuditExtended:
     def test_finds_md_files(self, tmp_path):
         (tmp_path / "README.md").write_text("# Hi")
         sub = tmp_path / "docs"
@@ -88,7 +88,7 @@ class TestDiscoverMarkdownFilesLinkAudit:
         assert discover_markdown_files(tmp_path, scope="link_audit") == []
 
 
-class TestExtractLinks:
+class TestExtractLinksExtended:
     def test_internal_anchor_links(self, tmp_path):
         f = tmp_path / "test.md"
         internal, external, file_refs = extract_links("[Section](#introduction)", f)
@@ -255,7 +255,7 @@ class TestGetActualProjectNames:
         assert _get_actual_project_names(tmp_path) == []
 
 
-class TestCheckFileReference:
+class TestCheckFileReferenceExtended:
     def test_existing_file(self, tmp_path):
         target = tmp_path / "guide.md"
         target.write_text("# Guide")
@@ -475,7 +475,7 @@ class TestBrokenAnchorLinks:
         assert "sub-section" in headings
 
 
-class TestCheckLinksIntegration:
+class TestCheckLinksIntegrationComprehensive:
     def test_full_link_checking_workflow(self, tmp_path):
         docs = tmp_path / "docs"
         docs.mkdir()
@@ -999,7 +999,7 @@ See [README](../README.md) for overview.
         assert len(file_refs) == 0
 
 
-class TestCheckLinksIntegration:
+class TestCheckLinksIntegrationRelativePaths:
     """Integration tests for check_links module."""
 
     def test_full_workflow(self, tmp_path):
@@ -1224,7 +1224,7 @@ class TestCheckLinksIntegration:
         assert check_links is not None
 
 
-class TestCheckFileReferenceEdgeCases:
+class TestCheckFileReferenceEdgeCasesAdditional:
     """Test edge cases in check_file_reference function."""
 
     def test_path_outside_repository(self, tmp_path):
@@ -1306,7 +1306,7 @@ class TestCheckFileReferenceEdgeCases:
         assert result is True or "does not exist" in msg.lower()
 
 
-class TestExtractHeadings:
+class TestExtractHeadingsAdditional:
     """Test heading extraction functionality."""
 
     def test_extract_headings_with_explicit_anchors(self):
@@ -1342,7 +1342,7 @@ class TestExtractHeadings:
         assert len(headings) > 0
 
 
-class TestMainFunction:
+class TestMainFunctionEdgeCases:
     """Test main function edge cases."""
 
     def test_main_with_broken_links(self, tmp_path):
@@ -1388,7 +1388,7 @@ class TestMainFunction:
         assert result is False
 
 
-class TestExtractLinks:
+class TestExtractLinksEdgeCases:
     """Test link extraction edge cases."""
 
     def test_extract_mailto_links(self, tmp_path):
@@ -1422,7 +1422,7 @@ class TestExtractLinks:
         assert external[0]["target"] == "http://example.com"
 
 
-class TestDiscoverMarkdownFilesLinkAudit:
+class TestDiscoverMarkdownFilesLinkAuditAdditional:
     """Test markdown file discovery."""
 
     def test_excludes_output_directory(self, tmp_path):
@@ -1616,7 +1616,7 @@ class TestMainFunctionReporting:
             assert exists is True
 
 
-class TestValidatePythonImports:
+class TestValidatePythonImportsAdditional:
     def test_no_python_blocks(self, tmp_path):
         content = "```bash\nls -la\n```"
         issues = validate_python_imports(content, tmp_path / "test.md", tmp_path)
@@ -1706,7 +1706,7 @@ class TestValidateFilePathsInCode:
         assert issues == []
 
 
-class TestGetActualProjectNames:
+class TestGetActualProjectNamesAdditional:
     def test_no_projects_dir(self, tmp_path):
         names = _get_actual_project_names(tmp_path)
         assert names == []

@@ -13,6 +13,8 @@ Each subpackage (and the package root) includes a **`SKILL.md`** with YAML front
 | Path | Frontmatter `name` |
 | ------ | ------------------- |
 | [SKILL.md](SKILL.md) | `infrastructure-overview` |
+| [autoresearch/SKILL.md](autoresearch/SKILL.md) | `infrastructure-autoresearch` |
+| [benchmark/SKILL.md](benchmark/SKILL.md) | `infrastructure-benchmark` |
 | [config/SKILL.md](config/SKILL.md) | `infrastructure-config` |
 | [core/SKILL.md](core/SKILL.md) | `infrastructure-core` |
 | [docker/SKILL.md](docker/SKILL.md) | `infrastructure-docker` |
@@ -58,6 +60,8 @@ graph TD
 
     subgraph "📊 Reporting & Quality"
         REPORTING[reporting<br/>Pipeline reporting<br/>Error aggregation]
+        AUTORESEARCH[autoresearch<br/>Deterministic readiness<br/>Plans, gates, artifacts]
+        BENCHMARK[benchmark<br/>Template readiness<br/>Manifest scoring]
     end
 
     PROJECT_SCRIPTS[Project Scripts<br/>project/scripts/]
@@ -68,6 +72,8 @@ graph TD
     INFRASTRUCTURE --> DOC
     INFRASTRUCTURE --> LLM
     INFRASTRUCTURE --> REPORTING
+    INFRASTRUCTURE --> AUTORESEARCH
+    INFRASTRUCTURE --> BENCHMARK
 
     DOC --> RENDER
     DOC --> VALIDATION
@@ -78,10 +84,11 @@ graph TD
     class CORE,EXCEPTIONS core
     class DOC,RENDER,VALIDATION doc
     class LLM,PUBLISHING,SCIENTIFIC integration
-    class REPORTING build
+    class REPORTING,AUTORESEARCH,BENCHMARK build
 ```
 
-Diagrams above are selective. These packages also exist under `infrastructure/` (or nested): **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor), **`core/telemetry/`** (`TelemetryCollector`, per-stage resource + diagnostic reports).
+Diagrams above are selective. These packages also exist under `infrastructure/` (or nested): **`benchmark/`** (deterministic exemplar readiness scoring), **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor), **`core/telemetry/`** (`TelemetryCollector`, per-stage resource + diagnostic reports).
+`autoresearch/` adds opt-in deterministic readiness planning over the existing pipeline, project, validation, and reporting modules.
 
 ## Infrastructure Dependencies
 

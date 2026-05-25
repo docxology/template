@@ -19,6 +19,7 @@ measured over `infrastructure/` only.
 
 | Directory | Focus |
 |-----------|-------|
+| `autoresearch/` | `infrastructure/autoresearch/` — deterministic readiness planning and reports |
 | `bench/` | Opt-in `pytest-benchmark` suites, skipped by default |
 | `config/` | `infrastructure/config/` — secure_config schema expectations |
 | `core/` | `infrastructure/core/` — logging, files, runtime, pipeline, telemetry, security |

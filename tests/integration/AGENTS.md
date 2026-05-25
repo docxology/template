@@ -35,6 +35,7 @@ The `tests/integration/` directory contains repository-level integration tests t
 - `test_run_sh.py` covers the `run.sh` shell wrapper.
 - `test_secure_run_sh.py` covers `secure_run.sh` and `run.sh --secure-run` argv shaping.
 - `test_full_pipeline.py` covers the end-to-end pipeline path.
+- `test_timeseries_benchmarks.py` requires `uv sync --group timeseries-bench` (statsmodels, lightgbm, scikit-learn) and fixtures from `scripts/fixtures/download_timeseries_benchmarks.py`.
 
 ## See Also
 

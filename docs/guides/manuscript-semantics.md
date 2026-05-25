@@ -1,6 +1,6 @@
 # Manuscript Semantics & Syntax (Canonical)
 
-This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The three template exemplars — `projects/template_code_project/`, `projects/template_prose_project/`, and `projects_archive/template_search_project/` — all conform to the conventions below. New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
+This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The public template exemplars — `projects/template_autoresearch_project/`, `projects/template_code_project/`, and `projects/template_prose_project/` — plus the local-only `projects_archive/template_search_project/` add-on conform to the conventions below. New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
 
 The PDF rendering pipeline uses **two cooperating tools**:
 

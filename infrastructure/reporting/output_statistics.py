@@ -4,6 +4,7 @@ This module provides functions for collecting comprehensive output file
 statistics and generating summary reports of output copying results.
 """
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -243,3 +244,15 @@ def generate_detailed_output_report(output_dir: Path, stats: dict[str, Any]) -> 
     lines.append("")
 
     return "\n".join(lines)
+
+
+def write_output_statistics_reports(project_output_dir: Path, stats: dict[str, Any]) -> tuple[Path, Path]:
+    """Write text and JSON output statistics reports under ``output/reports``."""
+    report = generate_detailed_output_report(project_output_dir, stats)
+    reports_dir = project_output_dir / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    text_path = reports_dir / "output_statistics.txt"
+    json_path = reports_dir / "output_statistics.json"
+    text_path.write_text(report, encoding="utf-8")
+    json_path.write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
+    return text_path, json_path

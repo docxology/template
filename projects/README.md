@@ -8,8 +8,9 @@ Directories under `projects/` **change over time** (promotion, archiving, or mov
 
 - [`template_code_project/`](template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
 - [`template_prose_project/`](template_prose_project/) — prose-centric exemplar (editorial review, BibTeX validation, readability metrics)
+- [`template_autoresearch_project/`](template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
 
-Both are **standalone** projects with the same directory layout (`src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`, `output/`), the same 12-file `docs/` hub (agent_instructions, architecture, testing_philosophy, rendering_pipeline, style_guide, syntax_guide, faq, quickstart, troubleshooting, output_conventions, plus `AGENTS.md` and `README.md`), and the same verification commands. The optional `template_search_project` literature-search exemplar is **local-only** — it lives at [`projects_archive/template_search_project/`](../projects_archive/template_search_project/) and is **not git-tracked**. This is a public repo: only the two canonical exemplars are tracked; copy `template_search_project` under `projects/` *locally* to exercise literature-search workflows, but never commit it (`scripts/check_tracked_projects.py` blocks any non-template project in pre-push + CI). Examples in this documentation default to `projects/template_code_project/` unless a doc explicitly compares projects.
+They are **standalone** projects with the same core layout (`src/`, `tests/`, `scripts/`, `manuscript/`, `output/`) and the same verification commands. The optional `template_search_project` literature-search exemplar is **local-only** — it lives at [`projects_archive/template_search_project/`](../projects_archive/template_search_project/) and is **not git-tracked**. This is a public repo: only the public canonical exemplars listed above are tracked; copy `template_search_project` under `projects/` *locally* to exercise literature-search workflows, but never commit it (`scripts/check_tracked_projects.py` blocks any non-template project in pre-push + CI). Examples in this documentation default to `projects/template_code_project/` unless a doc explicitly compares projects.
 
 **Current** names from `discover_projects()` are listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate after layout changes).
 
@@ -19,13 +20,15 @@ Both are **standalone** projects with the same directory layout (`src/`, `tests/
 |---|---|---|---|---|---|---|
 | [`template_code_project`](template_code_project/) | Numerical experiment + analysis dashboard | yes (`src/optimizer.py`, `src/invariants.py`) | no (curated) | yes (6 figures) | see canonical facts | see canonical facts |
 | [`template_prose_project`](template_prose_project/) | Editorial review (readability + structure + bibliography) | no | no (read-only validation) | no (3 diagnostic PNGs in review report) | see canonical facts | see canonical facts |
+| [`template_autoresearch_project`](template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
 
 The measured test and coverage totals drift as the exemplars evolve; confirm
 current numbers in
 [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md).
-The two permanent exemplars cover the computational and prose-review paths. Use
-the archived search exemplar when the project needs literature discovery,
-auto-populated BibTeX, or optional LLM synthesis. **Important:** run each
+The permanent exemplars cover the computational, prose-review, and deterministic
+AutoResearch paths. Use the archived search exemplar when the project needs
+literature discovery, auto-populated BibTeX, or optional LLM synthesis.
+**Important:** run each
 project's `tests/` in **its own** `pytest` invocation — pointing pytest at
 `projects/*/tests/` simultaneously triggers `ImportPathMismatchError` because
 every project ships a `tests/conftest.py`.
@@ -44,7 +47,7 @@ These are actively being developed under [`projects_in_progress/`](../projects_i
 
 ### Archived exemplars (not in `projects/`)
 
-Preserved under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them. See [`projects_archive/README.md`](../projects_archive/README.md) and [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) for the current roster — do not hard-code names here.
+Preserved under [`projects_archive/`](../projects_archive/) until moved back; the pipeline does not discover them. The archive roster is checkout-specific, especially when lifecycle symlinks are synced from the private sidecar repo. Use `ls projects_archive/` for local inspection and [`docs/_generated/canonical_facts.md`](../docs/_generated/canonical_facts.md) for the public policy — do not hard-code names here.
 
 ## Standalone Project Paradigm
 
@@ -108,22 +111,28 @@ mv projects_archive/myproject projects/myproject
 
 For confidential work, prefer the sibling private lifecycle repo:
 `/Users/4d/Documents/GitHub/projects/active/` is linked into this directory,
-while `passive/` and `archive/` remain unlinked. Move private work between those
-folders instead of committing it here.
+`passive/` is linked into `../projects_in_progress/`, and `archive/` is linked
+into `../projects_archive/`. Only this directory is discovered/rendered by
+default; the passive/archive mirrors are for inspection or explicit targeted
+work. Move private work between lifecycle folders instead of committing it here.
 
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
 | `template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
 | `template_prose_project/`   | Prose-centric exemplar (review + BibTeX validation) | see canonical facts | see canonical facts |
+| `template_autoresearch_project/` | AutoResearch exemplar (deterministic readiness loop) | see canonical facts | see canonical facts |
 
-The two permanent exemplars share the same `docs/` hub structure (12 files: `AGENTS.md`, `README.md`, `agent_instructions.md`, `architecture.md`, `testing_philosophy.md`, `rendering_pipeline.md`, `style_guide.md`, `syntax_guide.md`, `faq.md`, `quickstart.md`, `output_conventions.md`, `troubleshooting.md`) and the same per-directory `AGENTS.md` + `README.md` convention.
+The permanent exemplars share the same per-directory `AGENTS.md` + `README.md` convention and the same `src/`, `tests/`, `scripts/`, `manuscript/`, and `output/` boundaries.
 
-**Private active projects** live in `/Users/4d/Documents/GitHub/projects/active/`
-and are linked into this directory automatically by `run.sh`/orchestration.
+**Private lifecycle projects** live under `/Users/4d/Documents/GitHub/projects/`
+and are linked into the corresponding local lifecycle mirrors automatically by
+`run.sh`/orchestration.
 Set `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root` to use another
 private repo; set `TEMPLATE_SKIP_LINK_SYNC=1` to skip one auto-sync.
-**In-progress projects** live in `projects_in_progress/`.
-**Archived projects** live in `projects_archive/`.
+**In-progress projects** live in `projects_in_progress/` (including private
+`passive/` symlinks).
+**Archived projects** live in `projects_archive/` (including private `archive/`
+symlinks).
 
 ```mermaid
 graph TD

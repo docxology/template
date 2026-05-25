@@ -20,6 +20,7 @@ module test on each project render.
 
 ## Covered Areas
 
+- `autoresearch/`
 - `bench/`
 - `core/`
 - `doctor/`

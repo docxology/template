@@ -75,7 +75,7 @@ class TestValidatePdfFunction:
             assert result is not None or True
 
 
-class TestMainFunction:
+class TestMainFunctionWithRealPdf:
     """Test main function using real subprocess execution."""
 
     def test_main_with_file(self, tmp_path):
@@ -353,7 +353,7 @@ class TestDefaultPdfPath:
         assert exit_code == 2
 
 
-class TestValidatePdfCliIntegration:
+class TestValidatePdfCliIntegrationRealValidation:
     """Integration tests using real validation."""
 
     def test_full_validation_workflow(self, tmp_path):

@@ -10,8 +10,9 @@ from infrastructure.project.drift.checks import (
     check_repo_thin_orchestrator_scripts,
 )
 from infrastructure.project.drift.models import Report
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
-DEFAULT_PROJECT_NAMES: tuple[str, ...] = ("template_code_project", "template_prose_project")
+DEFAULT_PROJECT_NAMES: tuple[str, ...] = PUBLIC_PROJECT_NAMES
 
 
 def run_drift_checks(

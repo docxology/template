@@ -44,7 +44,7 @@ flowchart TB
 |---|---|---|
 | Crossref | `mailto=` | Accesses the higher-rate "polite pool"; **always set this** in production. |
 | arXiv | (none) | Soft cap ~1 query / 3 s. Cache aggressively. |
-| Paperclip | `Authorization: Bearer` | Paid; opt-in via `PAPERCLIP_API_KEY`. |
+| Paperclip | `X-API-Key` | Paid; opt-in via `PAPERCLIP_API_KEY`; the adapter posts MCP-style JSON-RPC to `/mcp`. |
 
 ```python
 CrossrefBackend(mailto=os.environ.get("CROSSREF_MAILTO", "ops@you.org"))

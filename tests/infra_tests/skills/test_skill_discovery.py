@@ -123,6 +123,8 @@ class TestManifestRoundTrip:
         assert "# Skill Index" in index
         assert "`m1`" in index
         assert "project ships a `SKILL.md`" in index
+        for root in DEFAULT_SKILL_SEARCH_ROOTS:
+            assert f"`{root}/`" in index
 
 
 class TestTemplateRepository:
@@ -161,6 +163,17 @@ class TestTemplateRepository:
             assert s.path_posix.endswith("SKILL.md")
             assert s.name is not None and s.name.strip()
             assert s.description is not None and s.description.strip()
+
+    def test_top_level_infrastructure_packages_have_skill_descriptors(self) -> None:
+        root = _template_repo_root()
+        missing = [
+            path.name
+            for path in sorted((root / "infrastructure").iterdir())
+            if path.is_dir()
+            and (path / "__init__.py").is_file()
+            and not (path / "SKILL.md").is_file()
+        ]
+        assert missing == []
 
     def test_manifest_matches_live_discovery(self) -> None:
         root = _template_repo_root()

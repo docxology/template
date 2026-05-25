@@ -7,6 +7,8 @@ import io
 import logging
 import time
 
+import pytest
+
 from infrastructure.core.logging.progress import (
     Spinner,
     StreamingProgress,
@@ -762,24 +764,19 @@ class TestLogWithSpinner:
     """Test log_with_spinner context manager — non-TTY paths."""
 
     def test_basic_usage(self):
-        from infrastructure.core.logging.progress import log_with_spinner
         logger = logging.getLogger("test_log_spinner")
         with log_with_spinner("Working...", logger=logger):
             pass
 
     def test_with_final_message(self):
-        from infrastructure.core.logging.progress import log_with_spinner
         with log_with_spinner("Working...", final_message="All done"):
             pass
 
     def test_no_logger_no_final(self):
-        from infrastructure.core.logging.progress import log_with_spinner
         with log_with_spinner("Working..."):
             pass
 
     def test_exception_propagates(self):
-        from infrastructure.core.logging.progress import log_with_spinner
-        import pytest
         logger = logging.getLogger("test_log_spinner")
         with pytest.raises(ValueError, match="test"):
             with log_with_spinner("Working...", logger=logger):
@@ -790,15 +787,12 @@ class TestLogProgressStreaming:
     """Test log_progress_streaming — non-TTY paths."""
 
     def test_non_tty_with_logger(self):
-        from infrastructure.core.logging.progress import log_progress_streaming
         logger = logging.getLogger("test_streaming")
         log_progress_streaming(5, 10, "Progress", logger)
 
     def test_non_tty_zero_total(self):
-        from infrastructure.core.logging.progress import log_progress_streaming
         logger = logging.getLogger("test_streaming")
         log_progress_streaming(0, 0, "Empty", logger)
 
     def test_non_tty_no_logger(self):
-        from infrastructure.core.logging.progress import log_progress_streaming
         log_progress_streaming(3, 10, "Test")

@@ -202,8 +202,8 @@ class RetryableOperation:
             raise exception
 
         delay = _compute_backoff_delay(self.attempt, self.initial_delay, self.exponential_base, self.max_delay)
-        # Add jitter to prevent thundering herd (matches retry_with_backoff behaviour)
-        delay += delay * 0.1 * random.random()  # nosec B311 — not for cryptographic use
+        # Add non-cryptographic jitter to prevent thundering herd.
+        delay += delay * 0.1 * random.random()  # nosec B311
 
         logger.warning(f"Attempt {self.attempt}/{self.max_attempts} failed: {exception}. Retrying in {delay:.1f}s...")
 

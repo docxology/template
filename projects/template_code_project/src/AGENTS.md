@@ -19,14 +19,14 @@ The `src/` directory contains the importable project logic for the research proj
 ```mermaid
 flowchart LR
     CFG[experiment_config.py<br/>load_experiment_config · ExperimentConfig]
-    SRC[/src//]
+    SRC["src/"]
     SRC --> INIT[__init__.py<br/>Module exports]
     SRC --> OPT[optimizer.py<br/>Core optimization · quadratic_optimum]
     SRC --> INV[invariants.py<br/>Numerical invariant builders]
     SRC --> ANA[analysis.py<br/>Experiment orchestration]
     SRC --> FIG[figures.py<br/>Matplotlib visualizations]
     SRC --> DASH[dashboard.py<br/>Plotly dashboard payload + HTML]
-    SRC --> VARS[manuscript_variables.py<br/>{{TOKEN}} substitution map]
+    SRC --> VARS["manuscript_variables.py<br/>template variable substitution map"]
     SRC --> DOC[documentation.py<br/>API reference builder]
     SRC --> AG[AGENTS.md · README.md · STYLE.md]
 

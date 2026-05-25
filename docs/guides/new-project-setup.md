@@ -180,7 +180,7 @@ render:
     epub: false   # set true to emit an EPUB e-reader bundle
 ```
 
-> Both template exemplars (`template_code_project`, `template_prose_project`) ship with this block populated. New projects should mirror the structure; omitting the block falls back to defaults (PDF/HTML/Slides on, DOCX/EPUB off).
+> Public template exemplars ship with this block populated. New projects should mirror the structure; omitting the block falls back to defaults (PDF/HTML/Slides on, DOCX/EPUB off).
 
 ---
 
