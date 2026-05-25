@@ -30,12 +30,17 @@ execution, or autonomous approval. It composes existing infrastructure modules:
 
 ## Loop flow
 
-1. `build_autoresearch_plan()` — canonical topic, artifacts, and quality checks
+1. `build_autoresearch_plan()` and `build_loop_config()` — canonical artifacts and manuscript settings
 2. `validate_autoresearch_plan(..., phase="intrinsic")` — domain, experiment, pipeline, scripts
-3. `write_core_loop_artifacts()` — plan, loop markdown, stage matrix CSV, figure
-4. `validate_autoresearch_plan(..., phase="extrinsic")` — evidence registry and artifact manifest
-5. `write_autoresearch_report()` — combined intrinsic + extrinsic readiness
-6. `finalize_loop_payloads()` — loop JSON, claims, review packet, summary, variables
+3. `write_core_loop_artifacts()` — plan JSON, loop markdown, stage matrix CSV, figure
+4. `write_evidence_registry_report()` — first registry snapshot from on-disk artifacts
+5. `build_claims()` + `finalize_loop_payloads()` — file-backed claims and loop JSON/review payloads
+6. `update_result_payloads()` — provisional refresh (`readiness_valid=False`)
+7. `write_artifact_manifest()` — first manifest pass
+8. `validate_autoresearch_plan(..., phase="extrinsic")` — evidence registry and artifact manifest
+9. `write_autoresearch_report()` — combined intrinsic + extrinsic readiness
+10. `update_result_payloads()` — final refresh with `readiness_valid` and output paths
+11. `write_evidence_registry_report()` + `write_artifact_manifest()` — final registry and manifest
 
 Loop stages use status `declared` (intent only — not pipeline execution proof).
 Claims are `supported` only when the configured evidence path exists on disk.

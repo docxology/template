@@ -24,6 +24,23 @@ generated-code execution, or autonomous approval loops are used.
 Loop stages are recorded as **declared** (configured intent). Claims are
 **supported** only when their evidence file exists locally.
 
+## Loop orchestration
+
+```mermaid
+flowchart TB
+  plan[build_autoresearch_plan] --> intrinsic[validate phase=intrinsic]
+  intrinsic --> core[write_core_loop_artifacts]
+  core --> registry1[write_evidence_registry_report]
+  registry1 --> claims[build_claims + finalize_loop_payloads]
+  claims --> update1[update_result_payloads provisional]
+  update1 --> manifest1[write_artifact_manifest]
+  manifest1 --> extrinsic[validate phase=extrinsic]
+  extrinsic --> readiness[write_autoresearch_report combined]
+  readiness --> update2[update_result_payloads final]
+  update2 --> registry2[write_evidence_registry_report refresh]
+  registry2 --> manifest2[write_artifact_manifest final]
+```
+
 Project-specific docs live in [`docs/`](docs/).
 
 ## Outputs

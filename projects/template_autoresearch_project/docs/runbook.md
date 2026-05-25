@@ -22,17 +22,21 @@ The command executes the standard project stages:
 
 ## Loop sequence (`src.loop.run_autoresearch_loop`)
 
-1. Compose plan via `build_autoresearch_plan()`.
-2. Merge manuscript settings via `build_loop_config()`.
-3. Run intrinsic readiness checks (domain profile, experiment plan, pipeline
+1. Compose plan via `build_autoresearch_plan()` and merge manuscript settings
+   via `build_loop_config()`.
+2. Run intrinsic readiness checks (domain profile, experiment plan, pipeline
    contracts, thin orchestrators).
-4. Write core artifacts once (plan JSON, loop markdown, stage matrix CSV,
-   figure).
-5. Run extrinsic readiness checks (evidence registry, artifact manifest,
+3. Write core artifacts (plan JSON, loop markdown, stage matrix CSV, figure).
+4. Write the first evidence registry snapshot from on-disk artifacts.
+5. Build file-backed claims and finalize loop JSON, review packet, summary, and
+   manuscript variables.
+6. Refresh loop payloads provisionally (`readiness_valid=False`) and write the
+   first artifact manifest.
+7. Run extrinsic readiness checks (evidence registry, artifact manifest,
    required artifacts on disk).
-6. Write combined readiness report and refresh the evidence registry snapshot.
-7. Build file-backed claims and finalize loop JSON, review packet, summary,
-   and manuscript variables.
+8. Write the combined intrinsic + extrinsic readiness report.
+9. Refresh loop payloads with final `readiness_valid` and output paths, then
+   rewrite the evidence registry and artifact manifest.
 
 Targeted checks:
 

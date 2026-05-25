@@ -10,7 +10,8 @@ configuration, loop, artifact, and script execution paths.
 - `test_config.py` — manuscript settings, plan merge, and `parse_string_sequence`
 - `test_loop.py` — file-backed loop orchestration, declared stage status, clean
   scaffold run against the real template repo root
-- `test_reports.py` — markdown/CSV renderers and writer helpers
+- `test_reports.py` — markdown/CSV renderers and basic writer helpers
+- `test_writers.py` — `write_loop_payloads()` core + finalize wrapper
 - `test_manuscript_variables.py` — manuscript token hydration from loop outputs
 - `test_models.py` — result dataclass serialization
 - `test_scripts.py` — thin script smoke tests
