@@ -667,6 +667,68 @@ validate_complete(content: str, mode: ResponseMode=ResponseMode.STANDARD, schema
 
 Validate LLM response content based on the response mode.
 
+## Package: `infrastructure.methods`
+
+### `build_methods_orchestration_plan`
+
+*function — defined in `infrastructure.methods.orchestration`*
+
+```python
+build_methods_orchestration_plan(repo_root: Path | str, project_name: str, *, projects_dir: str='projects') -> MethodsOrchestrationPlan
+```
+
+Build a deterministic methods orchestration plan for a project.
+
+### `MethodsIssue`
+
+*class — defined in `infrastructure.methods.models`*
+
+```python
+class MethodsIssue
+```
+
+One methods orchestration validation issue.
+
+### `MethodsOrchestrationPlan`
+
+*class — defined in `infrastructure.methods.models`*
+
+```python
+class MethodsOrchestrationPlan
+```
+
+Repository-derived methods orchestration plan for one project.
+
+### `MethodStage`
+
+*class — defined in `infrastructure.methods.models`*
+
+```python
+class MethodStage
+```
+
+One pipeline stage viewed as a methods/reproducibility contract.
+
+### `render_methods_orchestration_markdown`
+
+*function — defined in `infrastructure.methods.orchestration`*
+
+```python
+render_methods_orchestration_markdown(plan: MethodsOrchestrationPlan) -> str
+```
+
+Render a methods orchestration plan as Markdown.
+
+### `validate_methods_orchestration_plan`
+
+*function — defined in `infrastructure.methods.orchestration`*
+
+```python
+validate_methods_orchestration_plan(plan: MethodsOrchestrationPlan, *, repo_root: Path | str='.') -> tuple[MethodsIssue, ...]
+```
+
+Validate that the methods plan has the publication-critical surfaces.
+
 ## Package: `infrastructure.orchestration`
 
 ### `build_parser`
@@ -2277,6 +2339,16 @@ build_skill_index_markdown(skills: Sequence[SkillDescriptor], *, search_roots: S
 
 Build a human-readable Markdown index for discovered skills.
 
+### `check_skill_contracts`
+
+*function — defined in `infrastructure.skills.contracts`*
+
+```python
+check_skill_contracts(repo_root: Path | str) -> list[str]
+```
+
+Return all docs/prompts skill contract issues for a repository.
+
 ### `DEFAULT_SKILL_SEARCH_ROOTS`
 
 *constant — defined in `infrastructure.skills.discovery`*
@@ -2294,6 +2366,16 @@ discover_skills(repo_root: Path | str, *, search_roots: Sequence[str] | None=Non
 ```
 
 Discover all ``SKILL.md`` files under configured roots and parse frontmatter.
+
+### `iter_contract_skill_paths`
+
+*function — defined in `infrastructure.skills.contracts`*
+
+```python
+iter_contract_skill_paths(repo_root: Path | str) -> Iterable[Path]
+```
+
+Yield workflow skill files whose metadata contract is enforced.
 
 ### `iter_skill_paths`
 
@@ -2374,6 +2456,16 @@ split_yaml_frontmatter(source: str) -> tuple[dict[str, Any] | None, str]
 ```
 
 Split leading YAML frontmatter from markdown body.
+
+### `validate_skill_contract_file`
+
+*function — defined in `infrastructure.skills.contracts`*
+
+```python
+validate_skill_contract_file(skill_path: Path | str) -> list[str]
+```
+
+Return contract issues for one workflow ``SKILL.md`` file.
 
 ### `write_skill_manifest`
 

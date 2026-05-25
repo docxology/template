@@ -6,6 +6,18 @@ description: |
   validate, LLM, copy), pytest/coverage gate fails mid-pipeline, PDF render or validate
   breaks, Project Analysis finishes too fast with no figures, or user says pipeline debug,
   stage failed, resume checkpoint, core-only triage — even without naming this skill or docs/prompts.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - stage-triage
+    - resume
+  related_skills:
+    - template-validation-quality
+    - template-reproducibility-audit
 ---
 
 # Pipeline debugging

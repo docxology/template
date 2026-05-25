@@ -5,10 +5,26 @@ description: |
   pipeline, validation, docs, and reproducibility. USE WHEN the user wants to audit the
   repo, debug ./run.sh or execute_pipeline.py, add a feature, write tests, scaffold a
   manuscript, verify claims, fix cross-references, run validation gates, refactor, or
-  prepare a Zenodo release — even if they never say "prompt", "skill", or docs/prompts.
+  prepare a Zenodo release, research a topic, write/review/revise a paper, or run a
+  research-to-publication workflow — even if they never say "prompt", "skill", or docs/prompts.
   Also USE WHEN intent is ambiguous ("something wrong with my manuscript", "full health
   check", "fix the pipeline") — pick ONE child skill from the routing table and follow it.
   Do NOT use for generic homework, unrelated app security scans, or casual PDF summarization.
+metadata:
+  version: "1.1.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - router
+  related_skills:
+    - template-deep-research
+    - template-academic-paper
+    - template-academic-paper-reviewer
+    - template-academic-pipeline
+    - template-methods-orchestration
+    - template-comprehensive-assessment
 ---
 
 # Template workflow hub
@@ -26,6 +42,11 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 
 | Symptom or goal | Child skill |
 | --- | --- |
+| Research question, literature review, fact check, systematic review | [deep-research/SKILL.md](deep-research/SKILL.md) |
+| Draft, outline, revise, format, or disclose AI use in a manuscript | [academic-paper/SKILL.md](academic-paper/SKILL.md) |
+| Peer review, methodology review, re-review, or calibration | [academic-paper-reviewer/SKILL.md](academic-paper-reviewer/SKILL.md) |
+| Research → write → verify → review → revise → finalize | [academic-pipeline/SKILL.md](academic-pipeline/SKILL.md) |
+| Methods, methodology, stage contracts, artifact/evidence wiring | [methods-orchestration/SKILL.md](methods-orchestration/SKILL.md) |
 | Pipeline stage failed, stuck, or flaky | [pipeline-debugging/SKILL.md](pipeline-debugging/SKILL.md) |
 | Regenerate-from-clean / determinism / double-run diff | [reproducibility-audit/SKILL.md](reproducibility-audit/SKILL.md) |
 | Triple-check every manuscript claim; pre-submission | [manuscript-claim-verification/SKILL.md](manuscript-claim-verification/SKILL.md) |
@@ -53,3 +74,11 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 ## Discovery
 
 These skills are indexed in `.cursor/skill_manifest.json` (`uv run python -m infrastructure.skills write`). Human index: [README.md](README.md).
+
+## External design note
+
+This workflow set includes original, template-native adaptations of patterns observed in
+[Imbad0202/academic-research-skills](https://github.com/Imbad0202/academic-research-skills):
+mode registries, data-access labels, provenance checkpoints, and benchmark disclosure. ARS
+content is not vendored or copied because ARS is CC-BY-NC-4.0 while this repository is
+Apache-2.0.

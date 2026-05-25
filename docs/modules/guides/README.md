@@ -14,6 +14,7 @@
 | **Documentation** | [documentation-module.md](documentation-module.md) | Figure management, API glossary |
 | **Integrity** | [integrity-module.md](integrity-module.md) | File integrity, cross-reference validation |
 | **LLM** | [llm-module.md](llm-module.md) | Ollama integration, research templates |
+| **Methods** | [methods-module.md](methods-module.md) | Methods orchestration plans |
 | **Project** | [project-module.md](project-module.md) | Multi-project discovery, validation |
 | **Publishing** | [publishing-module.md](publishing-module.md) | DOI validation, citation generation |
 | **Rendering** | [rendering-module.md](rendering-module.md) | PDF, slides, web output |

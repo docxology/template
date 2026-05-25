@@ -5,6 +5,16 @@ description: |
   Mermaid where helpful, link _generated/active_projects.md. USE WHEN folder needs AGENTS,
   README audit, doc contract fix, or signposting after code change — even without
   documentation_creation prompt.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - author-docs
+  related_skills:
+    - template-comprehensive-assessment
 ---
 
 # Documentation creation

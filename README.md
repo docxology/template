@@ -52,6 +52,7 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Test-driven development** setup with coverage requirements
 - ✅ **Automated PDF generation** from markdown sources
 - ✅ **Thin orchestrator pattern** for maintainable code
+- ✅ **Methods orchestration** linking pipeline contracts, methods prose, artifacts, and evidence
 - ✅ **Ready-to-use utilities** for any research project
 - ✅ **Professional documentation** structure (full inventory: [`docs/documentation-index.md`](docs/documentation-index.md))
 - ✅ **Advanced quality analysis** and document metrics
@@ -72,6 +73,7 @@ Pick the entry point that matches your goal:
 - **Developers** (figures, data analysis, automation):
   [`docs/core/architecture.md`](docs/core/architecture.md),
   [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md),
+  [`docs/guides/methods-orchestration.md`](docs/guides/methods-orchestration.md),
   [`docs/core/workflow.md`](docs/core/workflow.md),
   [`docs/guides/figures-and-analysis.md`](docs/guides/figures-and-analysis.md).
 - **Contributors** (improve the template):

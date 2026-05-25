@@ -14,6 +14,7 @@ Modules:
     documentation: Documentation & figure management
     scientific: Scientific computing utilities
     llm: Local LLM integration for research assistance
+    methods: Methods orchestration plans over DAG, methods prose, artifacts, and evidence
     rendering: Multi-format output generation
     publishing: Academic publishing & dissemination
     reference: BibTeX I/O (read/write/convert) matching references.bib syntax; see reference/SKILL.md

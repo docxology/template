@@ -132,7 +132,7 @@
 
 ### **Q: What are the advanced modules?**
 
-**A:** The repo has **18** Python packages under `infrastructure/` (each has `__init__.py`): autoresearch, benchmark, core, doctor, documentation, llm, orchestration, project, prose, publishing, reference, rendering, reporting, scientific, search, skills, steganography, validation. See [canonical_facts.md](../_generated/canonical_facts.md) and [Modules Guide](../modules/modules-guide.md) for details.
+**A:** Importable infrastructure package names and measured counts are tracked in [canonical_facts.md](../_generated/canonical_facts.md). See the [Modules Guide](../modules/modules-guide.md) for the current package map and per-module guides.
 
 ### **Q: How do I use the advanced modules?**
 

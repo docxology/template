@@ -160,17 +160,21 @@ def discover_skills(
 
 def build_manifest_payload(skills: Sequence[SkillDescriptor]) -> dict[str, Any]:
     """Build the canonical JSON-serializable manifest structure."""
+    rows: list[dict[str, Any]] = []
+    for s in skills:
+        row: dict[str, Any] = {
+            "name": s.name,
+            "description": s.description,
+            "path": s.path_posix,
+            "cursor_at": s.cursor_at,
+        }
+        metadata = s.frontmatter.get("metadata")
+        if isinstance(metadata, dict):
+            row["metadata"] = metadata
+        rows.append(row)
     return {
         "version": _MANIFEST_VERSION,
-        "skills": [
-            {
-                "name": s.name,
-                "description": s.description,
-                "path": s.path_posix,
-                "cursor_at": s.cursor_at,
-            }
-            for s in skills
-        ],
+        "skills": rows,
     }
 
 

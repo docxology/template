@@ -193,7 +193,7 @@ graph TD
     Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 18 importable Python packages under infrastructure/ (+ config/docker templates) · docs/modules/"
+    subgraph "Layer 1 · 19 importable Python packages under infrastructure/ (+ config/docker templates) · docs/modules/"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -216,7 +216,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 | Path | Persistence | Purpose |
 | --- | :---: | --- |
-| `infrastructure/` | Permanent | **18** top-level Python packages under `infrastructure/` (plus config/documentation-only directories); documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md) — see also [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
+| `infrastructure/` | Permanent | Top-level Python packages under `infrastructure/` (plus config/documentation-only directories); live count in [docs/_generated/canonical_facts.md](../docs/_generated/canonical_facts.md), documented areas in [docs/modules/modules-guide.md](../docs/modules/modules-guide.md), and package details in [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects_in_progress/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects_archive/` | Permanent | Completed/retired work — preserved, not executed |
@@ -302,7 +302,7 @@ graph TB
     end
 
     subgraph Core["🧠 Core Systems (DAG Engine)"]
-        INFRASTRUCTURE[Infrastructure Modules<br/>18 Python packages<br/>Validation, rendering, LLM]
+        INFRASTRUCTURE[Infrastructure Modules<br/>19 Python packages<br/>Validation, rendering, LLM, methods]
         BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
         CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
     end

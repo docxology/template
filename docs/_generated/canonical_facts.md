@@ -1,6 +1,6 @@
 # Canonical Factsheet
 
-**Generated from live repo state on 2026-05-25 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**418**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**162**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**6** passed), exemplar `pytest --collect-only` (209 + 76 + 14), drift + line-count gates (see Thin-orchestrator gates below).
+**Generated from live repo state on 2026-05-25 (UTC).** Last measured runs: `generate_active_projects_doc.py`, `find infrastructure -name '*.py' -type f | wc -l` (**424**), `pytest tests/infra_tests/project/ --collect-only -q --no-cov` (**162**), `pytest tests/infra_tests/project/test_thin_orchestrator_drift.py -q` (**6** passed), exemplar `pytest --collect-only` (209 + 76 + 14), drift + line-count gates (see Thin-orchestrator gates below).
 
 This file aggregates verifiable facts from discovery scripts, CI configuration, and test execution. Human-written documentation should link here rather than duplicate lists or numbers.
 
@@ -38,7 +38,7 @@ Default exemplar for paths: `projects/template_code_project/`.
 
 ## Infrastructure Modules
 
-Current importable Python subpackages under `infrastructure/` (18):
+Current importable Python subpackages under `infrastructure/` (19):
 
 - autoresearch
 - benchmark
@@ -46,6 +46,7 @@ Current importable Python subpackages under `infrastructure/` (18):
 - doctor
 - documentation
 - llm
+- methods
 - orchestration
 - project
 - prose
@@ -72,7 +73,7 @@ Python modules on disk:
 find infrastructure -name '*.py' -type f | wc -l
 ```
 
-(Last refreshed count: **418** on 2026-05-25 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **424** on 2026-05-25 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 

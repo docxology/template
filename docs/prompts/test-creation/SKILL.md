@@ -4,6 +4,17 @@ description: |
   Create pytest suites under the no-mocks policy — real data, temp files, subprocess,
   pytest-httpserver. USE WHEN adding tests, raising coverage, testing new src/ module,
   or user forbids mocks.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - pytest
+    - coverage
+  related_skills:
+    - template-code-development
 ---
 
 # Test creation

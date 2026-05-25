@@ -32,10 +32,18 @@ EVAL_SKILL_MAP: dict[int, str] = {
     18: "docs/prompts/SKILL.md",
     19: "docs/prompts/pipeline-debugging/SKILL.md",
     20: "docs/prompts/pipeline-debugging/SKILL.md",
+    21: "docs/prompts/deep-research/SKILL.md",
+    22: "docs/prompts/academic-paper/SKILL.md",
+    23: "docs/prompts/academic-paper-reviewer/SKILL.md",
+    24: "docs/prompts/academic-pipeline/SKILL.md",
+    25: "docs/prompts/SKILL.md",
+    26: "docs/prompts/SKILL.md",
+    27: "docs/prompts/methods-orchestration/SKILL.md",
 }
 
 HUB_ROUTE_CHILD: dict[int, str] = {
     18: "docs/prompts/manuscript-cross-references/SKILL.md",
+    26: "docs/prompts/academic-pipeline/SKILL.md",
 }
 
 CAPTURE_HEADINGS = frozenset(

@@ -5,6 +5,18 @@ description: |
   manuscript, pipeline. USE WHEN user asks for comprehensive assessment, full repo review,
   health check across projects, audit everything, or pre-merge sanity sweep for template
   exemplars — even without naming docs/prompts or a skill. Not for single failing stage only.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - full-audit
+  related_skills:
+    - template-validation-quality
+    - template-reproducibility-audit
+    - template-manuscript-claim-verification
 ---
 
 # Comprehensive assessment

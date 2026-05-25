@@ -5,6 +5,18 @@ description: |
   repair prose while staying renderable. USE WHEN pre-submission, pre-Zenodo, pre-arXiv,
   abstract numbers disagree with CSV, citations do not support sentences, or user asks to
   triple-check / verify every claim — even without docs/prompts. Not for casual PDF summary.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: verified_only
+  task_type: open-ended
+  modes:
+    - claim-inventory
+    - pre-submission
+  related_skills:
+    - template-reproducibility-audit
+    - template-validation-quality
 ---
 
 # Manuscript claim verification

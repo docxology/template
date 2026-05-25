@@ -5,6 +5,18 @@ description: |
   config.yaml, src/, scripts/, tests. USE WHEN starting a new paper, new projects/ tree,
   manuscript from topic description, or aligning with template_code_project exemplar — even
   without copy-paste prompts.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: redacted
+  task_type: open-ended
+  modes:
+    - scaffold
+    - from-brief
+  related_skills:
+    - template-academic-paper
+    - template-manuscript-cross-references
 ---
 
 # Manuscript creation

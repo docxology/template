@@ -6,6 +6,17 @@ description: |
   analysis method, optimizer, new module in projects/*/src or infrastructure/, or user says
   add code following template architecture — even without docs/prompts. Not for end-to-end
   feature spanning manuscript + pipeline (use template-feature-addition).
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - implementation
+  related_skills:
+    - template-test-creation
+    - template-refactoring
 ---
 
 # Code development

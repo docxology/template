@@ -9,93 +9,446 @@
     },
     {
       "name": "template-workflows",
-      "description": "Router and workflow hub for the Research Project Template — code, tests, manuscripts,\npipeline, validation, docs, and reproducibility. USE WHEN the user wants to audit the\nrepo, debug ./run.sh or execute_pipeline.py, add a feature, write tests, scaffold a\nmanuscript, verify claims, fix cross-references, run validation gates, refactor, or\nprepare a Zenodo release — even if they never say \"prompt\", \"skill\", or docs/prompts.\nAlso USE WHEN intent is ambiguous (\"something wrong with my manuscript\", \"full health\ncheck\", \"fix the pipeline\") — pick ONE child skill from the routing table and follow it.\nDo NOT use for generic homework, unrelated app security scans, or casual PDF summarization.",
+      "description": "Router and workflow hub for the Research Project Template — code, tests, manuscripts,\npipeline, validation, docs, and reproducibility. USE WHEN the user wants to audit the\nrepo, debug ./run.sh or execute_pipeline.py, add a feature, write tests, scaffold a\nmanuscript, verify claims, fix cross-references, run validation gates, refactor, or\nprepare a Zenodo release, research a topic, write/review/revise a paper, or run a\nresearch-to-publication workflow — even if they never say \"prompt\", \"skill\", or docs/prompts.\nAlso USE WHEN intent is ambiguous (\"something wrong with my manuscript\", \"full health\ncheck\", \"fix the pipeline\") — pick ONE child skill from the routing table and follow it.\nDo NOT use for generic homework, unrelated app security scans, or casual PDF summarization.\n",
       "path": "docs/prompts/SKILL.md",
-      "cursor_at": "docs/prompts/SKILL.md"
+      "cursor_at": "docs/prompts/SKILL.md",
+      "metadata": {
+        "version": "1.1.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "router"
+        ],
+        "related_skills": [
+          "template-deep-research",
+          "template-academic-paper",
+          "template-academic-paper-reviewer",
+          "template-academic-pipeline",
+          "template-methods-orchestration",
+          "template-comprehensive-assessment"
+        ]
+      }
+    },
+    {
+      "name": "template-academic-paper-reviewer",
+      "description": "Read-only manuscript review, methodology review, re-review, and calibration workflow\nfor template projects. USE WHEN the user asks for peer review, referee-style critique,\nmethods/statistics review, or verification that revisions addressed prior comments.\n",
+      "path": "docs/prompts/academic-paper-reviewer/SKILL.md",
+      "cursor_at": "docs/prompts/academic-paper-reviewer/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "verified_only",
+        "task_type": "open-ended",
+        "modes": [
+          "full",
+          "quick",
+          "methodology-focus",
+          "re-review",
+          "calibration"
+        ],
+        "related_skills": [
+          "template-academic-paper",
+          "template-manuscript-claim-verification",
+          "template-validation-quality"
+        ]
+      }
+    },
+    {
+      "name": "template-academic-paper",
+      "description": "Template-native manuscript planning, outline, drafting, revision, formatting, citation\ncheck, and AI-use disclosure routing. USE WHEN the user asks to write, outline, revise,\nformat, or prepare a paper inside the Research Project Template.\n",
+      "path": "docs/prompts/academic-paper/SKILL.md",
+      "cursor_at": "docs/prompts/academic-paper/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "redacted",
+        "task_type": "open-ended",
+        "modes": [
+          "plan",
+          "outline",
+          "full",
+          "revision",
+          "format",
+          "citation-check",
+          "disclosure"
+        ],
+        "related_skills": [
+          "template-manuscript-creation",
+          "template-manuscript-cross-references",
+          "template-manuscript-claim-verification",
+          "template-academic-paper-reviewer"
+        ]
+      }
+    },
+    {
+      "name": "template-academic-pipeline",
+      "description": "Research-to-publication orchestrator for template projects: research, write, verify,\nreview, revise, reproduce, validate, and finalize. USE WHEN the user wants the whole\npaper workflow or enters midstream with an existing paper or reviewer comments.\n",
+      "path": "docs/prompts/academic-pipeline/SKILL.md",
+      "cursor_at": "docs/prompts/academic-pipeline/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "verified_only",
+        "task_type": "open-ended",
+        "modes": [
+          "full",
+          "existing-paper",
+          "reviewer-comments",
+          "finalize"
+        ],
+        "related_skills": [
+          "template-deep-research",
+          "template-academic-paper",
+          "template-academic-paper-reviewer",
+          "template-manuscript-claim-verification",
+          "template-reproducibility-audit"
+        ]
+      }
     },
     {
       "name": "template-code-development",
-      "description": "Standards-compliant code for the Research Project Template — infrastructure or project\nsrc/, thin orchestrators, type hints, no mocks. USE WHEN implementing an algorithm, utility,\nanalysis method, optimizer, new module in projects/*/src or infrastructure/, or user says\nadd code following template architecture — even without docs/prompts. Not for end-to-end\nfeature spanning manuscript + pipeline (use template-feature-addition).",
+      "description": "Standards-compliant code for the Research Project Template — infrastructure or project\nsrc/, thin orchestrators, type hints, no mocks. USE WHEN implementing an algorithm, utility,\nanalysis method, optimizer, new module in projects/*/src or infrastructure/, or user says\nadd code following template architecture — even without docs/prompts. Not for end-to-end\nfeature spanning manuscript + pipeline (use template-feature-addition).\n",
       "path": "docs/prompts/code-development/SKILL.md",
-      "cursor_at": "docs/prompts/code-development/SKILL.md"
+      "cursor_at": "docs/prompts/code-development/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "implementation"
+        ],
+        "related_skills": [
+          "template-test-creation",
+          "template-refactoring"
+        ]
+      }
     },
     {
       "name": "template-comprehensive-assessment",
-      "description": "Full checkout audit for the Research Project Template — tests, architecture, docs,\nmanuscript, pipeline. USE WHEN user asks for comprehensive assessment, full repo review,\nhealth check across projects, audit everything, or pre-merge sanity sweep for template\nexemplars — even without naming docs/prompts or a skill. Not for single failing stage only.",
+      "description": "Full checkout audit for the Research Project Template — tests, architecture, docs,\nmanuscript, pipeline. USE WHEN user asks for comprehensive assessment, full repo review,\nhealth check across projects, audit everything, or pre-merge sanity sweep for template\nexemplars — even without naming docs/prompts or a skill. Not for single failing stage only.\n",
       "path": "docs/prompts/comprehensive-assessment/SKILL.md",
-      "cursor_at": "docs/prompts/comprehensive-assessment/SKILL.md"
+      "cursor_at": "docs/prompts/comprehensive-assessment/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "full-audit"
+        ],
+        "related_skills": [
+          "template-validation-quality",
+          "template-reproducibility-audit",
+          "template-manuscript-claim-verification"
+        ]
+      }
+    },
+    {
+      "name": "template-deep-research",
+      "description": "Template-native research intake, literature search, source verification, synthesis,\nfact-checking, and systematic-review planning. USE WHEN the user asks to research a\ntopic, build a literature corpus, fact-check claims, prepare a PRISMA-style review,\nor clarify a research question before manuscript work.\n",
+      "path": "docs/prompts/deep-research/SKILL.md",
+      "cursor_at": "docs/prompts/deep-research/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "full",
+          "quick",
+          "lit-review",
+          "fact-check",
+          "guided",
+          "systematic-review"
+        ],
+        "related_skills": [
+          "template-literature-synthesis",
+          "template-academic-paper",
+          "template-academic-pipeline"
+        ]
+      }
     },
     {
       "name": "template-documentation-creation",
-      "description": "Author or refresh AGENTS.md and README.md for template directories — accurate commands,\nMermaid where helpful, link _generated/active_projects.md. USE WHEN folder needs AGENTS,\nREADME audit, doc contract fix, or signposting after code change — even without\ndocumentation_creation prompt.",
+      "description": "Author or refresh AGENTS.md and README.md for template directories — accurate commands,\nMermaid where helpful, link _generated/active_projects.md. USE WHEN folder needs AGENTS,\nREADME audit, doc contract fix, or signposting after code change — even without\ndocumentation_creation prompt.\n",
       "path": "docs/prompts/documentation-creation/SKILL.md",
-      "cursor_at": "docs/prompts/documentation-creation/SKILL.md"
+      "cursor_at": "docs/prompts/documentation-creation/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "author-docs"
+        ],
+        "related_skills": [
+          "template-comprehensive-assessment"
+        ]
+      }
     },
     {
       "name": "template-feature-addition",
-      "description": "End-to-end feature work across src/, scripts/, tests/, manuscript, and docs for the\nResearch Project Template. USE WHEN adding a pipeline-visible feature, new analysis stage,\nmanuscript-facing output, or cross-layer integration — even without feature_addition prompt.",
+      "description": "End-to-end feature work across src/, scripts/, tests/, manuscript, and docs for the\nResearch Project Template. USE WHEN adding a pipeline-visible feature, new analysis stage,\nmanuscript-facing output, or cross-layer integration — even without feature_addition prompt.\n",
       "path": "docs/prompts/feature-addition/SKILL.md",
-      "cursor_at": "docs/prompts/feature-addition/SKILL.md"
+      "cursor_at": "docs/prompts/feature-addition/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "end-to-end"
+        ],
+        "related_skills": [
+          "template-code-development",
+          "template-test-creation",
+          "template-documentation-creation"
+        ]
+      }
     },
     {
       "name": "template-infrastructure-module",
-      "description": "Add or extend generic infrastructure/ packages — Layer 1 modules with SKILL.md, AGENTS.md,\ntests in tests/infra_tests/, 60% coverage. USE WHEN new reusable package under\ninfrastructure/, extending validation/rendering/llm, or skill manifest entry — even without\ninfrastructure_module prompt.",
+      "description": "Add or extend generic infrastructure/ packages — Layer 1 modules with SKILL.md, AGENTS.md,\ntests in tests/infra_tests/, 60% coverage. USE WHEN new reusable package under\ninfrastructure/, extending validation/rendering/llm, or skill manifest entry — even without\ninfrastructure_module prompt.\n",
       "path": "docs/prompts/infrastructure-module/SKILL.md",
-      "cursor_at": "docs/prompts/infrastructure-module/SKILL.md"
+      "cursor_at": "docs/prompts/infrastructure-module/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "package"
+        ],
+        "related_skills": [
+          "template-code-development",
+          "template-test-creation"
+        ]
+      }
     },
     {
       "name": "template-literature-synthesis",
-      "description": "LLM prompt blocks for per-paper and corpus literature synthesis after a search pipeline.\nUSE WHEN synthesizing arXiv/Crossref results, writing per-paper notes, thematic clusters,\ngap analysis from a literature corpus, or wiring template_search_project synthesis — even\nwithout naming infrastructure.llm templates.",
+      "description": "LLM prompt blocks for per-paper and corpus literature synthesis after a search pipeline.\nUSE WHEN synthesizing arXiv/Crossref results, writing per-paper notes, thematic clusters,\ngap analysis from a literature corpus, or wiring template_search_project synthesis — even\nwithout naming infrastructure.llm templates.\n",
       "path": "docs/prompts/literature-synthesis/SKILL.md",
-      "cursor_at": "docs/prompts/literature-synthesis/SKILL.md"
+      "cursor_at": "docs/prompts/literature-synthesis/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "redacted",
+        "task_type": "open-ended",
+        "modes": [
+          "per-paper",
+          "corpus",
+          "gap-analysis"
+        ],
+        "related_skills": [
+          "template-deep-research",
+          "template-academic-paper"
+        ]
+      }
     },
     {
       "name": "template-manuscript-claim-verification",
-      "description": "Triple-pass verification of every manuscript claim against code, data, refs, and renderer;\nrepair prose while staying renderable. USE WHEN pre-submission, pre-Zenodo, pre-arXiv,\nabstract numbers disagree with CSV, citations do not support sentences, or user asks to\ntriple-check / verify every claim — even without docs/prompts. Not for casual PDF summary.",
+      "description": "Triple-pass verification of every manuscript claim against code, data, refs, and renderer;\nrepair prose while staying renderable. USE WHEN pre-submission, pre-Zenodo, pre-arXiv,\nabstract numbers disagree with CSV, citations do not support sentences, or user asks to\ntriple-check / verify every claim — even without docs/prompts. Not for casual PDF summary.\n",
       "path": "docs/prompts/manuscript-claim-verification/SKILL.md",
-      "cursor_at": "docs/prompts/manuscript-claim-verification/SKILL.md"
+      "cursor_at": "docs/prompts/manuscript-claim-verification/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "verified_only",
+        "task_type": "open-ended",
+        "modes": [
+          "claim-inventory",
+          "pre-submission"
+        ],
+        "related_skills": [
+          "template-reproducibility-audit",
+          "template-validation-quality"
+        ]
+      }
     },
     {
       "name": "template-manuscript-creation",
-      "description": "Scaffold a research manuscript and project layout from a research brief — sections,\nconfig.yaml, src/, scripts/, tests. USE WHEN starting a new paper, new projects/ tree,\nmanuscript from topic description, or aligning with template_code_project exemplar — even\nwithout copy-paste prompts.",
+      "description": "Scaffold a research manuscript and project layout from a research brief — sections,\nconfig.yaml, src/, scripts/, tests. USE WHEN starting a new paper, new projects/ tree,\nmanuscript from topic description, or aligning with template_code_project exemplar — even\nwithout copy-paste prompts.\n",
       "path": "docs/prompts/manuscript-creation/SKILL.md",
-      "cursor_at": "docs/prompts/manuscript-creation/SKILL.md"
+      "cursor_at": "docs/prompts/manuscript-creation/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "redacted",
+        "task_type": "open-ended",
+        "modes": [
+          "scaffold",
+          "from-brief"
+        ],
+        "related_skills": [
+          "template-academic-paper",
+          "template-manuscript-cross-references"
+        ]
+      }
     },
     {
       "name": "template-manuscript-cross-references",
-      "description": "Audit or author registry-driven manuscript cross-refs — labels.yaml, [[FIG:]], [[THMREF:]],\n[[VAR:]] tokens. USE WHEN fixing figure/equation/theorem numbering, orphan registry keys,\nhard-coded \"Theorem 7.3\" in prose, or [[MISSING:]] injection failures — even for Pandoc\nprojects that also use a YAML registry.",
+      "description": "Audit or author registry-driven manuscript cross-refs — labels.yaml, [[FIG:]], [[THMREF:]],\n[[VAR:]] tokens. USE WHEN fixing figure/equation/theorem numbering, orphan registry keys,\nhard-coded \"Theorem 7.3\" in prose, or [[MISSING:]] injection failures — even for Pandoc\nprojects that also use a YAML registry.\n",
       "path": "docs/prompts/manuscript-cross-references/SKILL.md",
-      "cursor_at": "docs/prompts/manuscript-cross-references/SKILL.md"
+      "cursor_at": "docs/prompts/manuscript-cross-references/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "verified_only",
+        "task_type": "open-ended",
+        "modes": [
+          "registry-audit"
+        ],
+        "related_skills": [
+          "template-validation-quality",
+          "template-manuscript-claim-verification"
+        ]
+      }
+    },
+    {
+      "name": "template-methods-orchestration",
+      "description": "Repo-wide methods orchestration workflow for the Research Project Template. USE WHEN\nthe user asks to add, audit, improve, or validate methods, methodology, method\ncontracts, stage-to-method wiring, artifact/evidence provenance, or orchestration\nacross template projects.\n",
+      "path": "docs/prompts/methods-orchestration/SKILL.md",
+      "cursor_at": "docs/prompts/methods-orchestration/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "verified_only",
+        "task_type": "open-ended",
+        "modes": [
+          "audit",
+          "plan",
+          "repair"
+        ],
+        "related_skills": [
+          "template-pipeline-debugging",
+          "template-reproducibility-audit",
+          "template-manuscript-claim-verification",
+          "template-validation-quality"
+        ]
+      }
     },
     {
       "name": "template-pipeline-debugging",
-      "description": "Systematic pipeline DAG failure triage for the Research Project Template. USE WHEN\n./run.sh or execute_pipeline.py fails, a stage stalls (setup, tests, analysis, render,\nvalidate, LLM, copy), pytest/coverage gate fails mid-pipeline, PDF render or validate\nbreaks, Project Analysis finishes too fast with no figures, or user says pipeline debug,\nstage failed, resume checkpoint, core-only triage — even without naming this skill or docs/prompts.",
+      "description": "Systematic pipeline DAG failure triage for the Research Project Template. USE WHEN\n./run.sh or execute_pipeline.py fails, a stage stalls (setup, tests, analysis, render,\nvalidate, LLM, copy), pytest/coverage gate fails mid-pipeline, PDF render or validate\nbreaks, Project Analysis finishes too fast with no figures, or user says pipeline debug,\nstage failed, resume checkpoint, core-only triage — even without naming this skill or docs/prompts.\n",
       "path": "docs/prompts/pipeline-debugging/SKILL.md",
-      "cursor_at": "docs/prompts/pipeline-debugging/SKILL.md"
+      "cursor_at": "docs/prompts/pipeline-debugging/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "stage-triage",
+          "resume"
+        ],
+        "related_skills": [
+          "template-validation-quality",
+          "template-reproducibility-audit"
+        ]
+      }
     },
     {
       "name": "template-refactoring",
-      "description": "Clean-break refactors with migration for the Research Project Template — move logic to src/,\nsplit modules, rename APIs with test updates. USE WHEN restructuring code, extracting\nmodules, removing duplication, or migration without behavior change.",
+      "description": "Clean-break refactors with migration for the Research Project Template — move logic to src/,\nsplit modules, rename APIs with test updates. USE WHEN restructuring code, extracting\nmodules, removing duplication, or migration without behavior change.\n",
       "path": "docs/prompts/refactoring/SKILL.md",
-      "cursor_at": "docs/prompts/refactoring/SKILL.md"
+      "cursor_at": "docs/prompts/refactoring/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "behavior-preserving"
+        ],
+        "related_skills": [
+          "template-code-development",
+          "template-test-creation"
+        ]
+      }
     },
     {
       "name": "template-reproducibility-audit",
-      "description": "Deterministic reproducibility audit — fixed seeds, regenerate-from-clean, double-run\ndiff before Zenodo/arXiv/release. USE WHEN outputs drift between runs, \"worked on my\nmachine\", need regenerate-from-clean proof, or pre-release reproducibility check — even\nwithout naming docs/prompts.",
+      "description": "Deterministic reproducibility audit — fixed seeds, regenerate-from-clean, double-run\ndiff before Zenodo/arXiv/release. USE WHEN outputs drift between runs, \"worked on my\nmachine\", need regenerate-from-clean proof, or pre-release reproducibility check — even\nwithout naming docs/prompts.\n",
       "path": "docs/prompts/reproducibility-audit/SKILL.md",
-      "cursor_at": "docs/prompts/reproducibility-audit/SKILL.md"
+      "cursor_at": "docs/prompts/reproducibility-audit/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "verified_only",
+        "task_type": "open-ended",
+        "modes": [
+          "double-run",
+          "release-readiness"
+        ],
+        "related_skills": [
+          "template-manuscript-claim-verification",
+          "template-validation-quality"
+        ]
+      }
     },
     {
       "name": "template-test-creation",
-      "description": "Create pytest suites under the no-mocks policy — real data, temp files, subprocess,\npytest-httpserver. USE WHEN adding tests, raising coverage, testing new src/ module,\nor user forbids mocks.",
+      "description": "Create pytest suites under the no-mocks policy — real data, temp files, subprocess,\npytest-httpserver. USE WHEN adding tests, raising coverage, testing new src/ module,\nor user forbids mocks.\n",
       "path": "docs/prompts/test-creation/SKILL.md",
-      "cursor_at": "docs/prompts/test-creation/SKILL.md"
+      "cursor_at": "docs/prompts/test-creation/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "raw",
+        "task_type": "open-ended",
+        "modes": [
+          "pytest",
+          "coverage"
+        ],
+        "related_skills": [
+          "template-code-development"
+        ]
+      }
     },
     {
       "name": "template-validation-quality",
-      "description": "Run validation CLI, prerender, markdown/PDF/integrity gates, and QA workflows for the\nResearch Project Template. USE WHEN validate manuscript, check PDF for ?? refs, prerender\ngate, link checker, output integrity, or pre-commit validation — even without\nvalidation_quality prompt.",
+      "description": "Run validation CLI, prerender, markdown/PDF/integrity gates, and QA workflows for the\nResearch Project Template. USE WHEN validate manuscript, check PDF for ?? refs, prerender\ngate, link checker, output integrity, or pre-commit validation — even without\nvalidation_quality prompt.\n",
       "path": "docs/prompts/validation-quality/SKILL.md",
-      "cursor_at": "docs/prompts/validation-quality/SKILL.md"
+      "cursor_at": "docs/prompts/validation-quality/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-05-25",
+        "status": "active",
+        "data_access_level": "verified_only",
+        "task_type": "outcome-gradable",
+        "modes": [
+          "prerender",
+          "markdown",
+          "pdf",
+          "integrity"
+        ],
+        "related_skills": [
+          "template-manuscript-cross-references",
+          "template-manuscript-claim-verification"
+        ]
+      }
     },
     {
       "name": "infrastructure-overview",
@@ -156,6 +509,12 @@
       "description": "Skill for the LLM infrastructure module providing local Large Language Model integration via Ollama. Covers client initialization, prompt templates, output validation, manuscript review generation, conversation context, and CLI usage. Use when querying LLMs, generating manuscript reviews, validating LLM outputs, or managing Ollama models.",
       "path": "infrastructure/llm/SKILL.md",
       "cursor_at": "infrastructure/llm/SKILL.md"
+    },
+    {
+      "name": "infrastructure-methods",
+      "description": "Methods orchestration contract builder for template projects. Use when mapping pipeline stages, manuscript methods, artifact manifests, evidence registries, and validation commands into one reproducible methods plan.",
+      "path": "infrastructure/methods/SKILL.md",
+      "cursor_at": "infrastructure/methods/SKILL.md"
     },
     {
       "name": "infrastructure-orchestration",
@@ -225,7 +584,7 @@
     },
     {
       "name": "infrastructure-skills",
-      "description": "Programmatic discovery of first-party agent SKILL.md files under configured public repo roots (infrastructure, projects, docs/prompts, and .cursor/skills). Use when enumerating skills, validating .cursor/skill_manifest.json, writing docs/_generated/skills_index.md, or wiring editor automation. Exposes discover_skills, write_skill_manifest, and manifest_matches_discovery.",
+      "description": "Programmatic discovery of first-party agent SKILL.md files under configured public repo roots (infrastructure, projects, docs/prompts, and .cursor/skills). Use when enumerating skills, validating .cursor/skill_manifest.json, writing docs/_generated/skills_index.md, checking docs/prompts workflow contracts, or wiring editor automation. Exposes discover_skills, write_skill_manifest, manifest_matches_discovery, and check_skill_contracts.",
       "path": "infrastructure/skills/SKILL.md",
       "cursor_at": "infrastructure/skills/SKILL.md"
     },

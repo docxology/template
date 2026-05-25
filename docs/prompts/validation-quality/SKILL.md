@@ -5,6 +5,20 @@ description: |
   Research Project Template. USE WHEN validate manuscript, check PDF for ?? refs, prerender
   gate, link checker, output integrity, or pre-commit validation — even without
   validation_quality prompt.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: verified_only
+  task_type: outcome-gradable
+  modes:
+    - prerender
+    - markdown
+    - pdf
+    - integrity
+  related_skills:
+    - template-manuscript-cross-references
+    - template-manuscript-claim-verification
 ---
 
 # Validation quality

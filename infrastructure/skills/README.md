@@ -8,6 +8,7 @@ Discovers `SKILL.md` files, parses YAML frontmatter, and maintains `.cursor/skil
 uv run python -m infrastructure.skills write
 uv run python -m infrastructure.skills write-index
 uv run python -m infrastructure.skills check
+uv run python -m infrastructure.skills check-contracts
 uv run python -m infrastructure.skills list-json
 ```
 

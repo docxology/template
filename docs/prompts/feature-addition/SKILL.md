@@ -4,6 +4,18 @@ description: |
   End-to-end feature work across src/, scripts/, tests/, manuscript, and docs for the
   Research Project Template. USE WHEN adding a pipeline-visible feature, new analysis stage,
   manuscript-facing output, or cross-layer integration — even without feature_addition prompt.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - end-to-end
+  related_skills:
+    - template-code-development
+    - template-test-creation
+    - template-documentation-creation
 ---
 
 # Feature addition

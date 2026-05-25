@@ -5,6 +5,18 @@ description: |
   diff before Zenodo/arXiv/release. USE WHEN outputs drift between runs, "worked on my
   machine", need regenerate-from-clean proof, or pre-release reproducibility check — even
   without naming docs/prompts.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: verified_only
+  task_type: open-ended
+  modes:
+    - double-run
+    - release-readiness
+  related_skills:
+    - template-manuscript-claim-verification
+    - template-validation-quality
 ---
 
 # Reproducibility audit

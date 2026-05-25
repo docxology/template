@@ -4,6 +4,17 @@ description: |
   Clean-break refactors with migration for the Research Project Template — move logic to src/,
   split modules, rename APIs with test updates. USE WHEN restructuring code, extracting
   modules, removing duplication, or migration without behavior change.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - behavior-preserving
+  related_skills:
+    - template-code-development
+    - template-test-creation
 ---
 
 # Refactoring

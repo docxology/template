@@ -266,6 +266,96 @@
         "Names validate stage or validation CLI",
         "Quotes need for first real error not last line"
       ]
+    },
+    {
+      "id": 21,
+      "eval_name": "academic-deep-research",
+      "prompt": "research AI-assisted formative assessment and build a verified corpus with citekeys before we draft anything",
+      "expected_output": "Deep research workflow with source verification and synthesis handoff",
+      "files": [],
+      "expectations": [
+        "Mentions research question framing",
+        "Uses infrastructure.search.literature or literature search",
+        "Mentions source verification",
+        "Handoff to literature-synthesis or citekey synthesis"
+      ]
+    },
+    {
+      "id": 22,
+      "eval_name": "academic-paper-plan",
+      "prompt": "help me plan and draft this paper from template_code_project artifacts, but don't invent missing results",
+      "expected_output": "Academic paper workflow grounded in artifacts and validation",
+      "files": [],
+      "expectations": [
+        "Mentions generated variables or material gaps",
+        "Mentions prerender markdown citation validation",
+        "Mentions source-layer manuscript edits",
+        "Handoff to claim verification"
+      ]
+    },
+    {
+      "id": 23,
+      "eval_name": "academic-paper-reviewer",
+      "prompt": "review this manuscript read-only, focus on methodology, then tell me if revisions fixed prior comments",
+      "expected_output": "Read-only reviewer workflow with traceability",
+      "files": [],
+      "expectations": [
+        "Mentions read-only review boundary",
+        "Mentions methodology-focus or re-review",
+        "Mentions traceability matrix",
+        "Does not edit manuscript directly"
+      ]
+    },
+    {
+      "id": 24,
+      "eval_name": "academic-pipeline-full",
+      "prompt": "run the whole research-to-publication workflow: research, write, verify, review, revise, reproduce, validate, finalize",
+      "expected_output": "Academic pipeline stages with material passport and gates",
+      "files": [],
+      "expectations": [
+        "Mentions stage map research to paper",
+        "Mentions material passport",
+        "Mentions HITL or human checkpoints",
+        "Mentions evidence registry artifact manifests snapshots"
+      ]
+    },
+    {
+      "id": 25,
+      "eval_name": "near-miss-recommendation-letter",
+      "prompt": "write a college recommendation letter for a student, not a research manuscript",
+      "expected_output": "Should NOT use academic paper workflow",
+      "files": [],
+      "expectations": [
+        "Does not mention validation reports",
+        "Does not mention evidence registry",
+        "Does not mention template academic pipeline"
+      ],
+      "negative": true
+    },
+    {
+      "id": 26,
+      "eval_name": "hub-ambiguous-academic-paper",
+      "prompt": "help with my paper, but i'm not sure if i need research, writing, review, or the full pipeline",
+      "expected_output": "Hub routes ambiguous paper workflow to academic skills",
+      "files": [],
+      "expectations": [
+        "Mentions academic workflow choices",
+        "Mentions deep-research or academic-paper or reviewer",
+        "Asks clarifying question OR picks academic-pipeline"
+      ]
+    },
+    {
+      "id": 27,
+      "eval_name": "methods-orchestration-audit",
+      "prompt": "comprehensively audit methods orchestration across template_code_project: methods prose, stage contracts, artifacts, evidence, validation commands",
+      "expected_output": "Methods orchestration workflow grounded in pipeline contracts and evidence surfaces",
+      "files": [],
+      "expectations": [
+        "Mentions methods orchestration plan",
+        "Uses infrastructure.methods plan",
+        "Mentions artifact manifest and evidence registry",
+        "Does not edit generated output as fix"
+      ]
     }
   ]
 }

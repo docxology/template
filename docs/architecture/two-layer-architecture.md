@@ -262,7 +262,7 @@ from projects.name.src.simulation import SimpleSimulation  # ❌ WRONG
 
 ```mermaid
 flowchart TB
-    INFRA[/infrastructure<br/>Layer 1 · 18 importable packages/]
+    INFRA[/infrastructure<br/>Layer 1 · importable packages<br/>see canonical_facts.md/]
     INFRA --> META[__init__.py · AGENTS.md ·<br/>README.md · SKILL.md]
     INFRA --> CORE[/core<br/>logging · config · pipeline ·<br/>checkpoint · security · telemetry/]
     INFRA --> DOC[/documentation<br/>figure manager · glossary gen/]

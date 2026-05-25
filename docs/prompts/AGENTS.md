@@ -2,7 +2,7 @@
 
 ## Overview
 
-Agent-routable workflow skills for the Research Project Template. Each workflow is a subdirectory with `SKILL.md` (YAML `name` + `description`). The hub skill at [`SKILL.md`](SKILL.md) routes ambiguous requests.
+Agent-routable workflow skills for the Research Project Template. Each workflow is a subdirectory with `SKILL.md` (YAML `name`, `description`, and workflow `metadata`). The hub skill at [`SKILL.md`](SKILL.md) routes ambiguous requests, and [`MODE_REGISTRY.md`](MODE_REGISTRY.md) is the compact mode/metadata map.
 
 Discovered by `infrastructure.skills` via root `docs/prompts` in `DEFAULT_SKILL_SEARCH_ROOTS`.
 
@@ -11,6 +11,11 @@ Discovered by `infrastructure.skills` via root `docs/prompts` in `DEFAULT_SKILL_
 | Directory | Skill `name` | Purpose |
 | --- | --- | --- |
 | [`SKILL.md`](SKILL.md) | `template-workflows` | Hub router |
+| [`deep-research/`](deep-research/SKILL.md) | `template-deep-research` | Research intake, source discovery, fact-checking |
+| [`academic-paper/`](academic-paper/SKILL.md) | `template-academic-paper` | Paper planning, drafting, revision, formatting |
+| [`academic-paper-reviewer/`](academic-paper-reviewer/SKILL.md) | `template-academic-paper-reviewer` | Read-only peer review and re-review |
+| [`academic-pipeline/`](academic-pipeline/SKILL.md) | `template-academic-pipeline` | Research-to-publication orchestration |
+| [`methods-orchestration/`](methods-orchestration/SKILL.md) | `template-methods-orchestration` | Methods, stage contracts, artifacts, evidence |
 | [`code-development/`](code-development/SKILL.md) | `template-code-development` | Standards-compliant code |
 | [`test-creation/`](test-creation/SKILL.md) | `template-test-creation` | No-mocks tests |
 | [`feature-addition/`](feature-addition/SKILL.md) | `template-feature-addition` | Cross-layer features |
@@ -32,6 +37,16 @@ Each child skill directory ships **`README.md`** (quick nav) and **`AGENTS.md`**
 
 Each child `SKILL.md` includes: natural invoke examples, inputs, workflow, deliverables, verification commands, when NOT to use, references.
 
+Each `docs/prompts/**/SKILL.md` also carries contract metadata validated by:
+
+```bash
+uv run python -m infrastructure.skills check-contracts
+```
+
+Required fields: `metadata.version`, `metadata.last_updated`, `metadata.status`,
+`metadata.data_access_level`, `metadata.task_type`, `metadata.modes`, and
+`metadata.related_skills`.
+
 ## Eval workspace
 
 [`_skill-eval/`](_skill-eval/) holds `evals/evals.json`, regenerated harness output under `latest/` (benchmark + review HTML), optional pinned `baseline/` for compare, and the importable [`scripts/skill_eval/`](_skill-eval/scripts/skill_eval/) package. Measured synthetic benchmark: **100%** with_skill, **100%** positive-only (keyword grader over extracted skill sections).
@@ -48,6 +63,12 @@ Machine-readable summary: `--json`. Standalone review HTML: `uv run python docs/
 Harness is synthetic (extracts skill sections + keyword grader), not live agent runs. Stage names in evals/skills follow canonical labels from `pipeline.yaml` (see [`stage_vocabulary.py`](../../infrastructure/core/pipeline/stage_vocabulary.py)), not numeric stage indices. Grader unit tests: `tests/infra_tests/skills/test_skill_eval_grader.py`; report formatter: `tests/infra_tests/skills/test_skill_eval_report.py`; workspace loader and offline CLI: `test_skill_eval_workspace.py`, `test_skill_eval_runner_offline.py`. Full eval workspace reference: [`_skill-eval/AGENTS.md`](_skill-eval/AGENTS.md).
 
 The `_skill-eval/` tree is **excluded** from `lint_docs.py` cross-link and doc-pair lint (regenerated fixture outputs with intentionally wrong relative links — same policy as `output/` and `docs/_generated/`).
+
+Academic workflow design is original to this repo, with attribution to
+[Imbad0202/academic-research-skills](https://github.com/Imbad0202/academic-research-skills)
+for the public ideas of mode registries, data-access labels, provenance checkpoints, and
+benchmark disclosure. Do not copy ARS prompt bodies, scripts, or schemas into this
+Apache-2.0 repository.
 
 Description optimization trigger set: [`_skill-eval/trigger-eval-set.json`](_skill-eval/trigger-eval-set.json) (requires skill-creator `run_loop` + `claude -p` on skill **directory**).
 

@@ -5,6 +5,17 @@ description: |
   tests in tests/infra_tests/, 60% coverage. USE WHEN new reusable package under
   infrastructure/, extending validation/rendering/llm, or skill manifest entry — even without
   infrastructure_module prompt.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: raw
+  task_type: open-ended
+  modes:
+    - package
+  related_skills:
+    - template-code-development
+    - template-test-creation
 ---
 
 # Infrastructure module

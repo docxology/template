@@ -21,6 +21,7 @@ Each subpackage (and the package root) includes a **`SKILL.md`** with YAML front
 | [doctor/SKILL.md](doctor/SKILL.md) | `infrastructure-doctor` |
 | [documentation/SKILL.md](documentation/SKILL.md) | `infrastructure-documentation` |
 | [llm/SKILL.md](llm/SKILL.md) | `infrastructure-llm` |
+| [methods/SKILL.md](methods/SKILL.md) | `infrastructure-methods` |
 | [orchestration/SKILL.md](orchestration/SKILL.md) | `infrastructure-orchestration` |
 | [project/SKILL.md](project/SKILL.md) | `infrastructure-project` |
 | [prose/SKILL.md](prose/SKILL.md) | `infrastructure-prose` |
@@ -88,7 +89,7 @@ graph TD
 ```
 
 Diagrams above are selective. These packages also exist under `infrastructure/` (or nested): **`benchmark/`** (deterministic exemplar readiness scoring), **`config/`** (`.env.template`, `secure_config.yaml`), **`docker/`** (`Dockerfile`, compose), **`project/`** (discovery, structure checks), **`steganography/`** (PDF hardening), **`skills/`** (`discover_skills`, manifest for Cursor), **`core/telemetry/`** (`TelemetryCollector`, per-stage resource + diagnostic reports).
-`autoresearch/` adds opt-in deterministic readiness planning over the existing pipeline, project, validation, and reporting modules.
+`autoresearch/` adds opt-in deterministic readiness planning over the existing pipeline, project, validation, and reporting modules. `methods/` adds a read-only methods orchestration plan that links stage contracts, manuscript methodology prose, artifact manifests, evidence registries, and validation commands.
 
 ## Infrastructure Dependencies
 

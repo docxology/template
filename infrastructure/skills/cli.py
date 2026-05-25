@@ -8,6 +8,7 @@ from pathlib import Path
 from infrastructure.core.logging.utils import get_logger
 
 from .check_all_exports import run_cli as run_all_exports_audit
+from .contracts import check_skill_contracts
 from .discovery import (
     DEFAULT_SKILL_SEARCH_ROOTS,
     build_skill_index_markdown,
@@ -86,6 +87,19 @@ def cmd_check_all_exports(args: argparse.Namespace) -> int:
     return run_all_exports_audit(audit_root)
 
 
+def cmd_check_contracts(args: argparse.Namespace) -> int:
+    """Verify docs/prompts SKILL.md metadata contracts."""
+    root = _repo_root_from_args(args)
+    issues = check_skill_contracts(root)
+    if issues:
+        for issue in issues:
+            logger.error("%s", issue)
+        logger.error("%d skill contract violation(s)", len(issues))
+        return 1
+    logger.info("skill contracts ok")
+    return 0
+
+
 def _add_shared_cli_args(p: argparse.ArgumentParser) -> None:
     """Options shared by all subcommands (must live on subparsers so flags can follow the verb)."""
     p.add_argument(
@@ -160,6 +174,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Directory under repo root to audit (default: infrastructure)",
     )
     p_audit.set_defaults(func=cmd_check_all_exports)
+
+    p_contracts = sub.add_parser(
+        "check-contracts",
+        help="Validate docs/prompts SKILL.md workflow metadata contracts",
+    )
+    _add_shared_cli_args(p_contracts)
+    p_contracts.set_defaults(func=cmd_check_contracts)
 
     return parser
 

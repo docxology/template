@@ -63,11 +63,7 @@ def _match_any(substrings: tuple[str, ...], el: str) -> bool:
 RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     _rule(
         ("multiple distinct verification passes",),
-        lambda lower, _el: (
-            ("pass 1" in lower and "pass 2" in lower)
-            or "three-pass" in lower
-            or "pass 3" in lower
-        ),
+        lambda lower, _el: (("pass 1" in lower and "pass 2" in lower) or "three-pass" in lower or "pass 3" in lower),
     ),
     _rule(
         ("hand-edit output",),
@@ -75,8 +71,7 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("hard-coded theorem",),
-        lambda lower, _el: "hard-coded" in lower
-        and any(w in lower for w in ("number", "theorem", "section")),
+        lambda lower, _el: "hard-coded" in lower and any(w in lower for w in ("number", "theorem", "section")),
     ),
     _rule(
         ("does not prescribe raw latex", "raw latex \\ref"),
@@ -120,6 +115,99 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
         lambda lower, _el: "seed=42" in lower or "temperature=0" in lower or "seed" in lower,
     ),
     _rule(
+        ("research question framing",),
+        lambda lower, _el: "question framing" in lower or ("research question" in lower and "scope" in lower),
+    ),
+    _rule(
+        ("source verification",),
+        lambda lower, _el: "source verification" in lower or ("doi" in lower and "metadata" in lower),
+    ),
+    _rule(
+        ("literature-synthesis", "citekey synthesis"),
+        lambda lower, _el: "literature-synthesis" in lower or ("citekey" in lower and "synthesis" in lower),
+    ),
+    _rule(
+        ("generated variables", "material gaps"),
+        lambda lower, _el: "generated variables" in lower or "material gap" in lower,
+    ),
+    _rule(
+        ("prerender markdown citation validation",),
+        lambda lower, _el: "prerender" in lower and "markdown" in lower and "citation" in lower,
+    ),
+    _rule(
+        ("source-layer manuscript edits",),
+        lambda lower, _el: "source-layer" in lower and "manuscript" in lower,
+    ),
+    _rule(
+        ("claim verification",),
+        lambda lower, _el: "claim verification" in lower or "manuscript-claim-verification" in lower,
+    ),
+    _rule(
+        ("read-only review boundary",),
+        lambda lower, _el: "read-only" in lower and "review" in lower,
+    ),
+    _rule(
+        ("methodology-focus", "re-review"),
+        lambda lower, _el: "methodology-focus" in lower or "re-review" in lower,
+    ),
+    _rule(
+        ("traceability matrix",),
+        lambda lower, _el: "traceability matrix" in lower,
+    ),
+    _rule(
+        ("does not edit manuscript directly",),
+        lambda lower, _el: (
+            ("does not edit" in lower or "do not modify" in lower or "not modify" in lower) and "manuscript" in lower
+        )
+        or ("read-only" in lower and "route edits" in lower),
+    ),
+    _rule(
+        ("stage map research to paper",),
+        lambda lower, _el: "stage map" in lower and "research" in lower and "paper" in lower,
+    ),
+    _rule(
+        ("material passport",),
+        lambda lower, _el: "material passport" in lower,
+    ),
+    _rule(
+        ("hitl", "human checkpoints"),
+        lambda lower, _el: "hitl" in lower or "human checkpoint" in lower,
+    ),
+    _rule(
+        ("evidence registry artifact manifests snapshots",),
+        lambda lower, _el: "evidence registry" in lower and "artifact manifest" in lower and "snapshot" in lower,
+    ),
+    _rule(
+        ("academic workflow choices",),
+        lambda lower, _el: "academic" in lower
+        and any(token in lower for token in ("research", "paper", "review", "pipeline")),
+    ),
+    _rule(
+        ("deep-research", "academic-paper", "reviewer"),
+        lambda lower, _el: any(token in lower for token in ("deep-research", "academic-paper", "reviewer")),
+    ),
+    _rule(
+        ("academic-pipeline",),
+        lambda lower, _el: "academic-pipeline" in lower,
+    ),
+    _rule(
+        ("methods orchestration plan",),
+        lambda lower, _el: "methods orchestration" in lower and "plan" in lower,
+    ),
+    _rule(
+        ("infrastructure.methods plan",),
+        lambda lower, _el: "infrastructure.methods" in lower and "plan" in lower,
+    ),
+    _rule(
+        ("artifact manifest and evidence registry",),
+        lambda lower, _el: "artifact manifest" in lower and "evidence registry" in lower,
+    ),
+    _rule(
+        ("generated output as fix",),
+        lambda lower, _el: ("do not edit" in lower or "generated output is evidence" in lower)
+        and ("output/" in lower or "generated output" in lower),
+    ),
+    _rule(
         ("does not invent coverage",),
         lambda lower, _el: "canonical_facts" in lower or "do not invent coverage" in lower,
     ),
@@ -138,10 +226,7 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     _rule(
         ("logic in src not scripts",),
         lambda lower, _el: ("src/" in lower or ("logic in" in lower and "src" in lower))
-        and (
-            "thin orchestrator" in lower
-            or ("script" in lower and ("orchestrat" in lower or "coordinates" in lower))
-        ),
+        and ("thin orchestrator" in lower or ("script" in lower and ("orchestrat" in lower or "coordinates" in lower))),
     ),
     _rule(
         ("thin orchestrator",),
@@ -191,8 +276,7 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("explicitly rejects",),
-        lambda lower, _el: "mock" in lower
-        and ("no mock" in lower or "forbid" in lower or "never" in lower),
+        lambda lower, _el: "mock" in lower and ("no mock" in lower or "forbid" in lower or "never" in lower),
     ),
     _rule(
         ("distinguishes",),
@@ -200,10 +284,7 @@ RULES: list[tuple[tuple[str, ...], RuleFn]] = [
     ),
     _rule(
         ("asks clarifying", "picks manuscript"),
-        lambda lower, _el: "manuscript" in lower
-        or "cross-ref" in lower
-        or "validation" in lower
-        or "claim" in lower,
+        lambda lower, _el: "manuscript" in lower or "cross-ref" in lower or "validation" in lower or "claim" in lower,
     ),
 ]
 

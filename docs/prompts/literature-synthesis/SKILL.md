@@ -5,6 +5,19 @@ description: |
   USE WHEN synthesizing arXiv/Crossref results, writing per-paper notes, thematic clusters,
   gap analysis from a literature corpus, or wiring template_search_project synthesis — even
   without naming infrastructure.llm templates.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: redacted
+  task_type: open-ended
+  modes:
+    - per-paper
+    - corpus
+    - gap-analysis
+  related_skills:
+    - template-deep-research
+    - template-academic-paper
 ---
 
 # Literature synthesis

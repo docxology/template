@@ -8,7 +8,7 @@ Synthetic benchmark for template workflow skills: keyword/heuristic grader, harn
 
 | Path | Role |
 | --- | --- |
-| [`evals/evals.json`](evals/evals.json) | 20 eval cases (17 positive, 3 negative) |
+| [`evals/evals.json`](evals/evals.json) | 27 eval cases (23 positive, 4 negative) |
 | [`latest/`](latest/) | Default harness output (`benchmark.json`, per-eval grading, optional `review.html`) |
 | [`baseline/`](baseline/) | Pinned compare reference (`benchmark.json` from `--save-baseline` or `--save-baseline-only`) |
 | [`review-template.html`](review-template.html) | Static HTML shell for review generation |
@@ -35,7 +35,7 @@ Eval expectations and skills use **canonical stage labels** from [`infrastructur
 | Pin baseline then compare (no re-grade) | `uv run python docs/prompts/_skill-eval/scripts/run_eval_harness.py --save-baseline-only --compare-only` |
 | CI regression gate | `uv run python docs/prompts/_skill-eval/scripts/run_eval_harness.py --write-review --fail-under 0.96` |
 
-Default stdout is a human-readable summary table (eval names, pass rates, failed expectations, artifact paths). Progress lines go to stderr (`[12/40] eval · mode · passed/total`) on **full runs only**; offline modes skip re-grading.
+Default stdout is a human-readable summary table (eval names, pass rates, failed expectations, artifact paths). Progress lines go to stderr (`[12/54] eval · mode · passed/total`) on **full runs only**; offline modes skip re-grading.
 
 | Flag | Output |
 | --- | --- |

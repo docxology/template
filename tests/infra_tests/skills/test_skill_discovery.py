@@ -141,11 +141,24 @@ class TestTemplateRepository:
         skills = discover_skills(root)
         names = {s.name for s in skills}
         assert "template-workflows" in names
+        assert "template-deep-research" in names
+        assert "template-academic-paper" in names
+        assert "template-academic-paper-reviewer" in names
+        assert "template-academic-pipeline" in names
         assert "template-pipeline-debugging" in names
         assert "template-comprehensive-assessment" in names
         template_names = [n for n in names if n and n.startswith("template-")]
-        assert len(template_names) >= 14
+        assert len(template_names) >= 18
         assert len(template_names) == len(set(template_names))
+
+    def test_prompt_mode_registry_present(self) -> None:
+        root = _template_repo_root()
+        registry = root / "docs" / "prompts" / "MODE_REGISTRY.md"
+        assert registry.is_file()
+        text = registry.read_text(encoding="utf-8")
+        assert "template-deep-research" in text
+        assert "template-academic-pipeline" in text
+        assert "data_access_level" in text
 
     def test_prompts_hub_skill_path(self) -> None:
         root = _template_repo_root()
@@ -259,6 +272,28 @@ class TestCliModule:
         text = out.read_text(encoding="utf-8")
         assert "| `pkg-s` | `infrastructure/pkg/SKILL.md` | P |" in text
 
+    def test_check_contracts_subcommand(self, tmp_path: Path) -> None:
+        skill = tmp_path / "docs/prompts/academic-paper/SKILL.md"
+        skill.parent.mkdir(parents=True)
+        skill.write_text(
+            "---\n"
+            "name: template-academic-paper\n"
+            "description: Template-native paper workflow.\n"
+            "metadata:\n"
+            '  version: "1.0.0"\n'
+            '  last_updated: "2026-05-25"\n'
+            "  status: active\n"
+            "  data_access_level: redacted\n"
+            "  task_type: open-ended\n"
+            "  modes: [plan, full]\n"
+            "  related_skills: [template-manuscript-creation]\n"
+            "---\n"
+            "# Skill\n",
+            encoding="utf-8",
+        )
+
+        assert skills_cli_main(["check-contracts", "--repo-root", str(tmp_path)]) == 0
+
     def test_check_fails_when_manifest_stale(self, tmp_path: Path) -> None:
         (tmp_path / "infrastructure" / "a").mkdir(parents=True)
         (tmp_path / "infrastructure" / "a" / "SKILL.md").write_text(
@@ -326,18 +361,29 @@ class TestBuildManifestPayload:
         payload = build_manifest_payload(skills)
         assert payload["version"] == 1
         for row in payload["skills"]:
-            assert set(row.keys()) == {"name", "description", "path", "cursor_at"}
+            assert {"name", "description", "path", "cursor_at"}.issubset(row)
             assert row["path"] == row["cursor_at"]
 
     def test_basic_payload_from_fixture(self, tmp_path: Path) -> None:
         (tmp_path / "infrastructure").mkdir()
         (tmp_path / "infrastructure" / "SKILL.md").write_text(
-            "---\nname: MySkill\ndescription: A skill\n---\nbody",
+            "---\n"
+            "name: MySkill\n"
+            "description: A skill\n"
+            "metadata:\n"
+            '  version: "1.0.0"\n'
+            "  data_access_level: raw\n"
+            "---\n"
+            "body",
             encoding="utf-8",
         )
         skills = discover_skills(tmp_path)
         payload = build_manifest_payload(skills)
         assert payload["skills"][0]["name"] == "MySkill"
+        assert payload["skills"][0]["metadata"] == {
+            "version": "1.0.0",
+            "data_access_level": "raw",
+        }
 
 
 class TestEnsureUniqueNames:

@@ -16,7 +16,7 @@ from skill_eval.grader import grade_output  # noqa: E402
 def _expectation_passed(text: str, expectation: str, *, negative: bool = False) -> bool:
     result = grade_output(text, [expectation], negative=negative)
     assert len(result["expectations"]) == 1
-    return result["expectations"][0]["passed"]
+    return bool(result["expectations"][0]["passed"])
 
 
 CLAIM_VERIFICATION_EXCERPT = """

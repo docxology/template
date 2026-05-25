@@ -4,7 +4,7 @@ Reference for Layer-1 infrastructure modules.
 
 **Quick Reference:** [API Reference](../reference/api-reference.md) | [Architecture](../core/architecture.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md)
 
-**Counting:** **21** overview rows below cover the **18** importable Python packages under `infrastructure/` (see [canonical_facts.md](../_generated/canonical_facts.md)) plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). `infrastructure/config/`, `infrastructure/docker/`, and `infrastructure/logrotate.d/` have no `__init__.py`.
+**Counting:** overview rows below include importable Python packages under `infrastructure/` plus **Telemetry** (a subpackage of `core/`, shown separately for discoverability) and **Config** / **Docker** (configuration directories, not Python packages). Use [canonical_facts.md](../_generated/canonical_facts.md) for measured counts instead of copying literals.
 
 ---
 
@@ -21,6 +21,7 @@ Reference for Layer-1 infrastructure modules.
 | **Publishing** | Academic workflows | DOI validation, citation generation | [Details](guides/publishing-module.md) |
 | **Scientific** | Research best practices | Numerical stability, benchmarking | [Details](guides/scientific-module.md) |
 | **LLM** | Local LLM & literature | Ollama integration, templates, literature search | [Details](guides/llm-module.md) |
+| **Methods** | Methods orchestration | DAG contracts, methods prose, artifacts, evidence | [Details](guides/methods-module.md) |
 | **Rendering** | Multi-format output | PDF, HTML, slides, poster, DOCX, EPUB (opt-in) | [Details](guides/rendering-module.md) |
 | **Reporting** | Pipeline reporting | Reports, error aggregation | [Details](guides/reporting-module.md) |
 | **Search** | Literature backends | Discovery, caches, full-text helpers | [`infrastructure/search/AGENTS.md`](../../infrastructure/search/AGENTS.md) |

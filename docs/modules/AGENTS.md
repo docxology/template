@@ -8,7 +8,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 
 | File | Purpose |
 |------|---------|
-| `modules-guide.md` | Overview table (21 rows: 18 importable packages + Telemetry sub-row + Config/Docker config dirs; links into `guides/` plus hub AGENTS for package-specific docs) |
+| `modules-guide.md` | Overview table for infrastructure packages plus Telemetry, Config, and Docker; links into `guides/` plus hub AGENTS for package-specific docs |
 | `scientific-simulation-guide.md` | Scientific simulation and analysis system |
 | `pdf-validation.md` | PDF validation system documentation |
 | `literature-search-and-references.md` | Literature search and reference management module |
@@ -18,6 +18,7 @@ Technical guide for `docs/modules/` — infrastructure module documentation and 
 | `guides/documentation-module.md` | Documentation / figure / glossary module |
 | `guides/integrity-module.md` | Integrity verification module |
 | `guides/llm-module.md` | LLM integration module |
+| `guides/methods-module.md` | Methods orchestration module |
 | `guides/project-module.md` | Project discovery module |
 | `guides/publishing-module.md` | Academic publishing module |
 | `guides/rendering-module.md` | Multi-format rendering module |

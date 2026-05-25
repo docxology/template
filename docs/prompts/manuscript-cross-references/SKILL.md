@@ -5,6 +5,17 @@ description: |
   [[VAR:]] tokens. USE WHEN fixing figure/equation/theorem numbering, orphan registry keys,
   hard-coded "Theorem 7.3" in prose, or [[MISSING:]] injection failures — even for Pandoc
   projects that also use a YAML registry.
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-05-25"
+  status: active
+  data_access_level: verified_only
+  task_type: open-ended
+  modes:
+    - registry-audit
+  related_skills:
+    - template-validation-quality
+    - template-manuscript-claim-verification
 ---
 
 # Manuscript cross-references (registry tokens)
