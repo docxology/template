@@ -5,6 +5,7 @@ Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import logging
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -133,19 +134,22 @@ class TestMainFunctionWithRealPdf:
         # May succeed or fail
         assert result.returncode in [0, 1, 2]
 
-    def test_main_without_args(self):
-        """Test main without arguments via real subprocess."""
-        # Run real CLI command via subprocess
+    def test_main_without_args(self, tmp_path):
+        """Test default discovery failure via real subprocess in an empty repository."""
+        repo_root = Path(__file__).parent.parent.parent.parent
+        env = os.environ.copy()
+        env["PYTHONPATH"] = f"{repo_root}{os.pathsep}{env.get('PYTHONPATH', '')}"
         result = subprocess.run(
             [sys.executable, "-m", "infrastructure.validation.cli.pdf"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).parent.parent.parent.parent,
-            timeout=30,
+            cwd=tmp_path,
+            env=env,
+            timeout=5,
         )
 
-        # Should exit with error when no args provided or use default
-        assert result.returncode in [0, 1, 2]
+        assert result.returncode == 2
+        assert "PDF file not found" in result.stdout + result.stderr
 
 
 class TestPdfCliIntegration:
