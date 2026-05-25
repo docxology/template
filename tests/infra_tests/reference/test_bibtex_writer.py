@@ -173,9 +173,7 @@ class TestRenderDatabase:
 
 class TestWriteBibfile:
     def test_writes_to_disk(self, tmp_path):
-        db = BibDatabase(
-            entries=[BibEntry("article", "k", OrderedDict([("title", "T")]))]
-        )
+        db = BibDatabase(entries=[BibEntry("article", "k", OrderedDict([("title", "T")]))])
         out = write_bibfile(tmp_path / "x.bib", db)
         assert out.exists()
         text = out.read_text(encoding="utf-8")

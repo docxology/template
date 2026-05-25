@@ -46,11 +46,7 @@ def verify_install(package_name: str = "template", index_url: str = "https://pyp
 
         # Install from PyPI
         print(f"Installing '{package_name}'...")
-        run([
-            str(pip_path), "install",
-            "--index-url", index_url,
-            package_name
-        ])
+        run([str(pip_path), "install", "--index-url", index_url, package_name])
 
         # Verify import works
         python_path = venv_path / "bin" / "python"
@@ -60,7 +56,8 @@ def verify_install(package_name: str = "template", index_url: str = "https://pyp
         print("\nChecking import...")
         result = subprocess.run(
             [str(python_path), "-c", f"import {package_name}; print({package_name}.__version__)"],
-            capture_output=True, text=True
+            capture_output=True,
+            text=True,
         )
         if result.returncode == 0:
             print(f"✓ Import successful — version: {result.stdout.strip()}")

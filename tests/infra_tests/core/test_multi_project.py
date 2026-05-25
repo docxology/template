@@ -364,9 +364,7 @@ sys.exit(0)
                     metadata={},
                 )
             ]
-            config = MultiProjectConfig(
-                repo_root=repo_root, projects=projects, run_infra_tests=False
-            )
+            config = MultiProjectConfig(repo_root=repo_root, projects=projects, run_infra_tests=False)
             orchestrator = MultiProjectOrchestrator(config)
 
             result = orchestrator.execute_all_projects_full_no_infra()
@@ -392,9 +390,7 @@ sys.exit(0)
             # Create a failing project by making its analysis script fail
             _create_test_project(repo_root, "project2")
             # Make the analysis script fail for project2
-            analysis_script = (
-                repo_root / "projects" / "project2" / "scripts" / "analysis_pipeline.py"
-            )
+            analysis_script = repo_root / "projects" / "project2" / "scripts" / "analysis_pipeline.py"
             analysis_script.write_text(
                 """
 import sys

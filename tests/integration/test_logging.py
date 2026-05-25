@@ -317,9 +317,7 @@ class TestBashLogging:
 
     def test_log_with_context_function(self, bash_utils_path):
         """Test log_with_context function with timestamp and context."""
-        command = (
-            f"source {bash_utils_path} && log_with_context 'INFO' 'Test message' 'test-context'"
-        )
+        command = f"source {bash_utils_path} && log_with_context 'INFO' 'Test message' 'test-context'"
         result = self.run_bash_command(command)
 
         assert result.returncode == 0
@@ -350,9 +348,7 @@ class TestBashLogging:
 
     def test_log_error_with_context_override(self, bash_utils_path):
         """Test log_error_with_context with custom context."""
-        command = (
-            f"source {bash_utils_path} && log_error_with_context 'Test error' 'custom-context'"
-        )
+        command = f"source {bash_utils_path} && log_error_with_context 'Test error' 'custom-context'"
         result = self.run_bash_command(command)
 
         assert result.returncode == 0

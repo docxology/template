@@ -1,6 +1,5 @@
 """Tests for the mutate() chokepoint and undo()."""
 
-
 import hashlib
 from pathlib import Path
 

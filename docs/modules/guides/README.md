@@ -6,6 +6,8 @@
 
 | Module | Guide | Purpose |
 |--------|-------|---------|
+| **AutoResearch** | [autoresearch-module.md](autoresearch-module.md) | Deterministic readiness plans, evidence, artifacts |
+| **Benchmark** | [benchmark-module.md](benchmark-module.md) | Public exemplar benchmark manifests and rubrics |
 | **Config** | [config-module.md](config-module.md) | Configuration schemas, templates, secure config |
 | **Core** | [core-module.md](core-module.md) | Logging, config, exceptions, pipeline, telemetry under `core/telemetry/` |
 | **Docker** | [docker-module.md](docker-module.md) | Container specs, compose |

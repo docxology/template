@@ -14,9 +14,7 @@ class TestValidateNoMocks:
         """Test that a clean test file returns no violations."""
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
-        (tests_dir / "test_clean.py").write_text(
-            "def test_something():\n    result = 1 + 1\n    assert result == 2\n"
-        )
+        (tests_dir / "test_clean.py").write_text("def test_something():\n    result = 1 + 1\n    assert result == 2\n")
 
         violations = validate_no_mocks(tests_dir, tmp_path)
         assert violations == []
@@ -67,8 +65,7 @@ class TestValidateNoMocks:
         # Build the forbidden token without embedding it verbatim in this file (verify_no_mocks scans sources).
         mock_ctor = "Magic" + "Mock" + "("
         (tests_dir / "test_docs_only.py").write_text(
-            f'"""Describes why {mock_ctor} is forbidden in tests."""\n\n'
-            "def test_real():\n    assert 2 == 2\n"
+            f'"""Describes why {mock_ctor} is forbidden in tests."""\n\ndef test_real():\n    assert 2 == 2\n'
         )
 
         violations = validate_no_mocks(tests_dir, tmp_path)

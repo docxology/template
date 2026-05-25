@@ -467,6 +467,7 @@ class TestGlobalFunctions:
         monitor = get_security_monitor()
         assert isinstance(monitor, SecurityMonitor)
 
+
 class TestRateLimitDecorator:
     """Tests for rate_limit decorator."""
 

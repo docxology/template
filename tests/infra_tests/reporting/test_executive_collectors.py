@@ -114,14 +114,7 @@ class TestCollectCodebaseMetrics:
     def test_counts_functions_and_classes(self, tmp_path):
         src = tmp_path / "src"
         src.mkdir()
-        content = (
-            "class Foo:\n"
-            "    def bar(self):\n"
-            "        pass\n"
-            "\n"
-            "def baz():\n"
-            "    pass\n"
-        )
+        content = "class Foo:\n    def bar(self):\n        pass\n\ndef baz():\n    pass\n"
         (src / "mod.py").write_text(content)
         m = collect_codebase_metrics(src)
         assert m.classes == 1

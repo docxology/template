@@ -108,9 +108,7 @@ class TestBibDatabase:
         assert db.find("missing") is None
 
     def test_keys_returns_list(self):
-        db = BibDatabase(
-            entries=[BibEntry("article", "a"), BibEntry("book", "b")]
-        )
+        db = BibDatabase(entries=[BibEntry("article", "a"), BibEntry("book", "b")])
         assert db.keys() == ["a", "b"]
 
     def test_as_mapping_returns_key_indexed(self):

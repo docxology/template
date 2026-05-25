@@ -7,6 +7,7 @@ Covers:
 - An unrecognized ``render.formats`` shape (string instead of mapping) falls
   back to defaults rather than raising.
 """
+
 from __future__ import annotations
 
 from infrastructure.rendering.config import RenderingConfig

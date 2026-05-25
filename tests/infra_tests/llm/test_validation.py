@@ -256,9 +256,7 @@ class TestCompleteValidation:
     def test_validate_complete_invalid_structured(self):
         """Test invalid structured content."""
         with pytest.raises(ValidationError):
-            validate_complete(
-                "Not JSON", mode="structured", schema={"type": "object"}
-            )
+            validate_complete("Not JSON", mode="structured", schema={"type": "object"})
 
 
 class TestJSONValidationEdgeCases:
@@ -466,9 +464,7 @@ This is the third section with yet another unique topic C.
     def test_detect_repetition_with_repetition(self):
         """Test that repeated content is detected."""
         # Create text with repeated sections
-        repeated_section = (
-            "This is repeated content about machine learning and optimization methods. " * 5
-        )
+        repeated_section = "This is repeated content about machine learning and optimization methods. " * 5
         text = f"""
 ## Section 1
 {repeated_section}

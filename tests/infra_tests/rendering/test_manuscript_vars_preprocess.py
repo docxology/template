@@ -37,10 +37,7 @@ class TestManuscriptVarsPreprocess:
                 "verify": {"x": 1},
             }
         )
-        text = (
-            "n={{total_topics}} fep={{areas.FEP.count}} "
-            "m={{maturity.*}} v={{verify.*}} end"
-        )
+        text = "n={{total_topics}} fep={{areas.FEP.count}} m={{maturity.*}} v={{verify.*}} end"
         out, n = substitute_manuscript_var_placeholders(text, flat)
         assert n >= 4
         assert "{{" not in out

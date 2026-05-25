@@ -49,9 +49,7 @@ class TestGenerationOptions:
             ({"num_ctx": 2048}, {"context_window": 131072}, "num_ctx", 2048, False),
         ],
     )
-    def test_to_ollama_options_optional_fields(
-        self, opts_kwargs, config_kwargs, expected_key, expected_value, absent
-    ):
+    def test_to_ollama_options_optional_fields(self, opts_kwargs, config_kwargs, expected_key, expected_value, absent):
         opts = GenerationOptions(**opts_kwargs)
         config = OllamaClientConfig(**config_kwargs)
         result = opts.to_ollama_options(config)

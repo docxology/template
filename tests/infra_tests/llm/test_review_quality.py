@@ -84,12 +84,8 @@ class TestValidateReviewQualityExecutiveSummary:
     def test_small_model_lower_threshold(self):
         # Small models get 80% word threshold
         response = "## Overview\nThis is a review. " * 30
-        is_valid1, issues1, _ = validate_review_quality(
-            response, "executive_summary", model_name="gemma:4b"
-        )
-        is_valid2, issues2, _ = validate_review_quality(
-            response, "executive_summary", model_name="llama:70b"
-        )
+        is_valid1, issues1, _ = validate_review_quality(response, "executive_summary", model_name="gemma:4b")
+        is_valid2, issues2, _ = validate_review_quality(response, "executive_summary", model_name="llama:70b")
         # The small model version should be more lenient
         [i for i in issues1 if "Too short" in i]
         [i for i in issues2 if "Too short" in i]
@@ -99,9 +95,7 @@ class TestValidateReviewQualityExecutiveSummary:
 
     def test_custom_min_words(self):
         response = "## Overview\nSome content here. " * 10  # ~40 words
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary", min_words=20
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary", min_words=20)
         assert details["min_required"] == 20
 
     def test_repetitive_content(self):
@@ -190,10 +184,7 @@ class TestValidateImprovementSuggestions:
 
 class TestValidateTranslation:
     def test_with_english_and_translation(self):
-        response = (
-            "## English Abstract\n\nThis paper presents...\n\n"
-            "## Chinese Translation\n\n本文提出了...\n"
-        ) * 5
+        response = ("## English Abstract\n\nThis paper presents...\n\n## Chinese Translation\n\n本文提出了...\n") * 5
         is_valid, issues, details = validate_review_quality(response, "translation")
         assert details.get("has_english_section") is True
         assert details.get("has_translation_section") is True
@@ -230,24 +221,18 @@ class TestValidateHelpers:
     def test_methodology_review_approach(self):
         details: dict = {"sections_found": []}
         issues: list = []
-        _validate_methodology_review_section(
-            "the approach is solid with good experimental design", details, issues
-        )
+        _validate_methodology_review_section("the approach is solid with good experimental design", details, issues)
         assert details.get("has_methodology_content") is True
 
     def test_improvement_suggestions_cosmetic(self):
         details: dict = {"priorities_found": []}
         issues: list = []
-        _validate_improvement_suggestions_section(
-            "cosmetic changes needed and consider updating", details, issues
-        )
+        _validate_improvement_suggestions_section("cosmetic changes needed and consider updating", details, issues)
         assert "low" in details.get("priorities_found", [])
 
     def test_translation_hindi(self):
         details: dict = {}
         issues: list = []
-        _validate_translation_section(
-            "english abstract followed by hindi translation", details, issues
-        )
+        _validate_translation_section("english abstract followed by hindi translation", details, issues)
         assert details["has_english_section"] is True
         assert details["has_translation_section"] is True

@@ -21,6 +21,7 @@ class TestGetAvailableModelInfoRetry:
             call_count["n"] += 1
             if call_count["n"] == 1:
                 import time
+
                 time.sleep(2)
                 return Response("timeout", status=408)
             return Response(
@@ -29,9 +30,7 @@ class TestGetAvailableModelInfoRetry:
             )
 
         httpserver.expect_request("/api/tags").respond_with_handler(handler)
-        result = get_available_model_info(
-            httpserver.url_for(""), timeout=0.1, retries=1
-        )
+        result = get_available_model_info(httpserver.url_for(""), timeout=0.1, retries=1)
         # First call times out, second succeeds
         assert len(result) >= 0  # May get models or empty depending on timing
 
@@ -50,32 +49,26 @@ class TestGetAvailableModelInfoRetry:
         # First call: connection error (wrong port), then retry on correct
         # We can't easily simulate connection error then success with httpserver
         # Instead test that multiple retries are attempted on timeout
-        result = get_available_model_info(
-            httpserver.url_for(""), timeout=5.0, retries=0
-        )
+        result = get_available_model_info(httpserver.url_for(""), timeout=5.0, retries=0)
         assert len(result) == 1
 
     def test_all_retries_timeout(self, httpserver: HTTPServer):
         """All retry attempts time out."""
+
         def handler(request):
             import time
+
             time.sleep(2)
             return Response("slow", status=200)
 
         httpserver.expect_request("/api/tags").respond_with_handler(handler)
-        result = get_available_model_info(
-            httpserver.url_for(""), timeout=0.1, retries=1
-        )
+        result = get_available_model_info(httpserver.url_for(""), timeout=0.1, retries=1)
         assert result == []
 
     def test_request_error_no_retry(self, httpserver: HTTPServer):
         """Non-network errors don't retry (break immediately)."""
-        httpserver.expect_request("/api/tags").respond_with_data(
-            "Server Error", status=500
-        )
-        result = get_available_model_info(
-            httpserver.url_for(""), retries=2
-        )
+        httpserver.expect_request("/api/tags").respond_with_data("Server Error", status=500)
+        result = get_available_model_info(httpserver.url_for(""), retries=2)
         # 500 raises raise_for_status → RequestException, breaks immediately
         assert result == []
 
@@ -83,9 +76,7 @@ class TestGetAvailableModelInfoRetry:
 class TestCheckModelLoadedEdgeCases:
     def test_model_with_colon_partial_match(self, httpserver: HTTPServer):
         """Partial match when both model names have colons."""
-        httpserver.expect_request("/api/ps").respond_with_json(
-            {"processes": [{"model": "llama3:8b-instruct"}]}
-        )
+        httpserver.expect_request("/api/ps").respond_with_json({"processes": [{"model": "llama3:8b-instruct"}]})
         is_loaded, name = check_model_loaded("llama3:latest", httpserver.url_for(""))
         # llama3 == llama3, so partial match succeeds
         assert is_loaded is True
@@ -94,10 +85,12 @@ class TestCheckModelLoadedEdgeCases:
     def test_multiple_processes(self, httpserver: HTTPServer):
         """Multiple models loaded, find exact match."""
         httpserver.expect_request("/api/ps").respond_with_json(
-            {"processes": [
-                {"model": "mistral:7b"},
-                {"model": "llama3:latest"},
-            ]}
+            {
+                "processes": [
+                    {"model": "mistral:7b"},
+                    {"model": "llama3:latest"},
+                ]
+            }
         )
         is_loaded, name = check_model_loaded("llama3:latest", httpserver.url_for(""))
         assert is_loaded is True
@@ -121,9 +114,7 @@ class TestPreloadModelEdgeCases:
     def test_preload_non_200_status(self, httpserver: HTTPServer):
         """Non-200 response from generate endpoint."""
         httpserver.expect_request("/api/ps").respond_with_json({"processes": []})
-        httpserver.expect_request("/api/generate", method="POST").respond_with_data(
-            "model not found", status=404
-        )
+        httpserver.expect_request("/api/generate", method="POST").respond_with_data("model not found", status=404)
         success, error = preload_model(
             "nonexistent",
             httpserver.url_for(""),

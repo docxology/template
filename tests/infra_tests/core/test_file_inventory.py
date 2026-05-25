@@ -41,9 +41,7 @@ class TestFileInventoryEntry:
         ]
 
         for size, expected in test_cases:
-            entry = FileInventoryEntry(
-                path=Path("/tmp/test"), size=size, category="test", modified=0
-            )
+            entry = FileInventoryEntry(path=Path("/tmp/test"), size=size, category="test", modified=0)
             assert entry.size_formatted == expected
 
 

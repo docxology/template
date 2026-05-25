@@ -94,9 +94,7 @@ class TestLLMClientSystemPrompt:
 
     def test_system_prompt_content(self):
         """Test system prompt content is preserved."""
-        config = OllamaClientConfig(
-            system_prompt="You are a helpful assistant.", auto_inject_system_prompt=True
-        )
+        config = OllamaClientConfig(system_prompt="You are a helpful assistant.", auto_inject_system_prompt=True)
         client = LLMClient(config=config)
 
         messages = client.context.get_messages()
@@ -336,9 +334,7 @@ class TestLLMClientQueryIntegration:
     def test_apply_template(self):
         """Test applying a template."""
         client = build_real_small_llm_client(timeout=30.0)
-        result = client.apply_template(
-            "summarize_abstract", text="This is a test abstract about machine learning."
-        )
+        result = client.apply_template("summarize_abstract", text="This is a test abstract about machine learning.")
 
         assert result is not None
         assert len(result) > 0

@@ -86,7 +86,9 @@ class TestIsOffTopic:
     """Test is_off_topic."""
 
     def test_on_topic_review(self):
-        text = "## Overview\n\nThe manuscript presents a novel approach to data analysis.\n## Methodology\nStrong methods."
+        text = (
+            "## Overview\n\nThe manuscript presents a novel approach to data analysis.\n## Methodology\nStrong methods."
+        )
         assert is_off_topic(text) is False
 
     def test_email_format(self):
@@ -108,8 +110,7 @@ class TestIsOffTopic:
     def test_on_topic_overrides_off_topic(self):
         # Has both on-topic signals and an off-topic pattern
         text = (
-            "## Overview\n\nThe manuscript presents strong methodology.\n"
-            "## Strengths\n\nThe research design is robust."
+            "## Overview\n\nThe manuscript presents strong methodology.\n## Strengths\n\nThe research design is robust."
         )
         assert is_off_topic(text) is False
 

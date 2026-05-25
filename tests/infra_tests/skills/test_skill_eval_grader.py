@@ -181,7 +181,5 @@ Following the template-code-development skill:
         "hub-code-dev-primary-fail",
     ],
 )
-def test_grader_expectations(
-    text: str, expectation: str, negative: bool, expected: bool
-) -> None:
+def test_grader_expectations(text: str, expectation: str, negative: bool, expected: bool) -> None:
     assert _expectation_passed(text, expectation, negative=negative) is expected

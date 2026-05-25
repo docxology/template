@@ -507,10 +507,6 @@ def test_passive_and_archive_links_are_not_default_discovered(tmp_path: Path) ->
 
     sync_private_project_links(repo, private)
 
-    assert (repo / "projects_in_progress" / "notes").resolve() == (
-        private / PASSIVE_SUBDIR / "notes"
-    ).resolve()
-    assert (repo / "projects_archive" / "old").resolve() == (
-        private / ARCHIVE_SUBDIR / "old"
-    ).resolve()
+    assert (repo / "projects_in_progress" / "notes").resolve() == (private / PASSIVE_SUBDIR / "notes").resolve()
+    assert (repo / "projects_archive" / "old").resolve() == (private / ARCHIVE_SUBDIR / "old").resolve()
     assert {p.name for p in discover_projects(repo)} == {"linked_proj"}

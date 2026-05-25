@@ -150,10 +150,7 @@ class TestCheckNumericalStability:
         result = check_numerical_stability(exception_raiser, test_inputs)
 
         assert result.stability_score < 1.0
-        assert any(
-            "edge cases" in rec.lower() or "exception" in rec.lower()
-            for rec in result.recommendations
-        )
+        assert any("edge cases" in rec.lower() or "exception" in rec.lower() for rec in result.recommendations)
 
     def test_all_exceptions(self):
         """Test when all inputs cause exceptions."""

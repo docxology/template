@@ -62,9 +62,7 @@ class TestStageTelemetry:
     """Test StageTelemetry dataclass and serialization."""
 
     def test_to_dict(self) -> None:
-        s = StageTelemetry(
-            stage_name="PDF Rendering", stage_num=5, duration=12.345, success=True
-        )
+        s = StageTelemetry(stage_name="PDF Rendering", stage_num=5, duration=12.345, success=True)
         d = s.to_dict()
         assert d["stage_name"] == "PDF Rendering"
         assert d["duration"] == 12.345
@@ -138,18 +136,14 @@ class TestTelemetryCollector:
     def test_basic_lifecycle(self, tmp_path: Path) -> None:
         """Test start → end → finalize produces a valid report."""
         config = TelemetryConfig(enabled=True, track_resources=False)
-        collector = TelemetryCollector(
-            config=config, project_name="test", output_dir=tmp_path
-        )
+        collector = TelemetryCollector(config=config, project_name="test", output_dir=tmp_path)
 
         collector.start_stage("Stage A", stage_num=1)
         result_a = collector.end_stage("Stage A", stage_num=1, success=True)
         assert result_a.success is True
 
         collector.start_stage("Stage B", stage_num=2)
-        result_b = collector.end_stage(
-            "Stage B", stage_num=2, success=False, exit_code=1, error_message="boom"
-        )
+        result_b = collector.end_stage("Stage B", stage_num=2, success=False, exit_code=1, error_message="boom")
         assert result_b.success is False
         assert result_b.error_message == "boom"
 
@@ -160,12 +154,8 @@ class TestTelemetryCollector:
 
     def test_json_persistence(self, tmp_path: Path) -> None:
         """Test that finalize writes telemetry.json."""
-        config = TelemetryConfig(
-            enabled=True, track_resources=False, output_formats=["json"]
-        )
-        collector = TelemetryCollector(
-            config=config, project_name="persist_test", output_dir=tmp_path
-        )
+        config = TelemetryConfig(enabled=True, track_resources=False, output_formats=["json"])
+        collector = TelemetryCollector(config=config, project_name="persist_test", output_dir=tmp_path)
 
         collector.start_stage("S1", 1)
         collector.end_stage("S1", 1, success=True)
@@ -179,12 +169,8 @@ class TestTelemetryCollector:
 
     def test_text_persistence(self, tmp_path: Path) -> None:
         """Test that finalize writes telemetry.txt."""
-        config = TelemetryConfig(
-            enabled=True, track_resources=False, output_formats=["json", "text"]
-        )
-        collector = TelemetryCollector(
-            config=config, project_name="text_test", output_dir=tmp_path
-        )
+        config = TelemetryConfig(enabled=True, track_resources=False, output_formats=["json", "text"])
+        collector = TelemetryCollector(config=config, project_name="text_test", output_dir=tmp_path)
 
         collector.start_stage("S1", 1)
         collector.end_stage("S1", 1, success=True)
@@ -199,9 +185,7 @@ class TestTelemetryCollector:
     def test_disabled_noop(self, tmp_path: Path) -> None:
         """When disabled, collector produces empty report and no files."""
         config = TelemetryConfig(enabled=False)
-        collector = TelemetryCollector(
-            config=config, project_name="disabled", output_dir=tmp_path
-        )
+        collector = TelemetryCollector(config=config, project_name="disabled", output_dir=tmp_path)
 
         collector.start_stage("X", 1)
         collector.end_stage("X", 1, success=True)
@@ -213,9 +197,7 @@ class TestTelemetryCollector:
     def test_diagnostic_integration(self, tmp_path: Path) -> None:
         """Test that diagnostic events are counted per-stage."""
         reporter = DiagnosticReporter(project_name="diag_test")
-        config = TelemetryConfig(
-            enabled=True, track_resources=False, track_diagnostics=True
-        )
+        config = TelemetryConfig(enabled=True, track_resources=False, track_diagnostics=True)
         collector = TelemetryCollector(
             config=config,
             project_name="diag_test",
@@ -236,12 +218,8 @@ class TestTelemetryCollector:
 
     def test_slow_stage_warning(self, tmp_path: Path) -> None:
         """Test that slow stage detection produces a warning."""
-        config = TelemetryConfig(
-            enabled=True, track_resources=False, slow_stage_multiplier=1.5
-        )
-        collector = TelemetryCollector(
-            config=config, project_name="warn_test", output_dir=tmp_path
-        )
+        config = TelemetryConfig(enabled=True, track_resources=False, slow_stage_multiplier=1.5)
+        collector = TelemetryCollector(config=config, project_name="warn_test", output_dir=tmp_path)
 
         # Manually inject stages instead of waiting real time
         collector._report.stages = [
@@ -258,9 +236,7 @@ class TestTelemetryCollector:
     def test_system_info_captured(self, tmp_path: Path) -> None:
         """Test capture_system_info returns info (may be empty without psutil)."""
         config = TelemetryConfig(enabled=True, track_resources=True)
-        collector = TelemetryCollector(
-            config=config, project_name="sysinfo", output_dir=tmp_path
-        )
+        collector = TelemetryCollector(config=config, project_name="sysinfo", output_dir=tmp_path)
         info = collector.capture_system_info()
         # info may be empty if psutil is not available, that's OK
         assert isinstance(info, dict)
@@ -268,9 +244,7 @@ class TestTelemetryCollector:
     def test_report_accessor(self, tmp_path: Path) -> None:
         """Test the report property returns the current report."""
         config = TelemetryConfig(enabled=True, track_resources=False)
-        collector = TelemetryCollector(
-            config=config, project_name="accessor", output_dir=tmp_path
-        )
+        collector = TelemetryCollector(config=config, project_name="accessor", output_dir=tmp_path)
         assert collector.report.project_name == "accessor"
 
 
@@ -359,9 +333,7 @@ class TestTelemetryCollectorEnabled:
         assert len(report.stages) == 2
 
     def test_auto_total_duration(self):
-        config = TelemetryConfig(
-            enabled=True, track_resources=False, track_diagnostics=False, persist_report=False
-        )
+        config = TelemetryConfig(enabled=True, track_resources=False, track_diagnostics=False, persist_report=False)
         collector = TelemetryCollector(config, "proj")
         collector.start_stage("s1", 1)
         collector.end_stage("s1", 1)
@@ -380,6 +352,7 @@ class TestTelemetryCollectorEnabled:
 
         # Create stages with artificial durations
         from infrastructure.core.telemetry.models import StageTelemetry as ST
+
         collector._report.stages = [
             ST(stage_name="fast", stage_num=1, duration=1.0, success=True),
             ST(stage_name="fast2", stage_num=2, duration=1.0, success=True),
@@ -390,12 +363,15 @@ class TestTelemetryCollectorEnabled:
 
     def test_detect_high_memory_warning(self):
         config = TelemetryConfig(
-            enabled=True, track_resources=False, persist_report=False,
+            enabled=True,
+            track_resources=False,
+            persist_report=False,
             high_memory_mb=100.0,
         )
         collector = TelemetryCollector(config, "proj")
 
         from infrastructure.core.telemetry.models import StageTelemetry as ST
+
         collector._report.stages = [
             ST(stage_name="hungry", stage_num=1, duration=1.0, success=True, memory_mb=500.0),
         ]
@@ -404,12 +380,15 @@ class TestTelemetryCollectorEnabled:
 
     def test_detect_high_cpu_warning(self):
         config = TelemetryConfig(
-            enabled=True, track_resources=False, persist_report=False,
+            enabled=True,
+            track_resources=False,
+            persist_report=False,
             high_cpu_percent=50.0,
         )
         collector = TelemetryCollector(config, "proj")
 
         from infrastructure.core.telemetry.models import StageTelemetry as ST
+
         collector._report.stages = [
             ST(stage_name="hot", stage_num=1, duration=1.0, success=True, cpu_percent=95.0),
         ]
@@ -443,13 +422,20 @@ class TestTelemetryCollectorEnabled:
         collector = TelemetryCollector(config, "proj")
 
         from infrastructure.core.telemetry.models import StageTelemetry as ST, PerformanceWarning as PW
+
         collector._report.stages = [
             ST(stage_name="build", stage_num=1, duration=2.5, success=True, memory_mb=100, cpu_percent=30),
             ST(stage_name="test", stage_num=2, duration=5.0, success=False, error_message="timeout"),
         ]
         collector._report.warnings = [
-            PW(warning_type="slow_stage", stage_name="test", message="Test was slow",
-               suggestion="Optimize", value=5.0, threshold=3.0),
+            PW(
+                warning_type="slow_stage",
+                stage_name="test",
+                message="Test was slow",
+                suggestion="Optimize",
+                value=5.0,
+                threshold=3.0,
+            ),
         ]
         text = collector._format_text_report()
         assert "TELEMETRY REPORT" in text

@@ -23,13 +23,7 @@ EXEMPLAR_BIB = REPO_ROOT / "projects" / "template_code_project" / "manuscript" /
 
 class TestParseBasicEntry:
     def test_single_article(self):
-        text = (
-            "@article{smith2024,\n"
-            "  title={A Paper},\n"
-            "  author={Alice Smith},\n"
-            "  year={2024}\n"
-            "}\n"
-        )
+        text = "@article{smith2024,\n  title={A Paper},\n  author={Alice Smith},\n  year={2024}\n}\n"
         db = parse_bibtex(text)
         assert len(db) == 1
         e = db.entries[0]
@@ -40,13 +34,7 @@ class TestParseBasicEntry:
         assert e.get("year") == "2024"
 
     def test_field_order_preserved(self):
-        text = (
-            "@article{k,\n"
-            "  z={1},\n"
-            "  a={2},\n"
-            "  m={3}\n"
-            "}\n"
-        )
+        text = "@article{k,\n  z={1},\n  a={2},\n  m={3}\n}\n"
         e = parse_bibtex(text).entries[0]
         assert list(e.fields.keys()) == ["z", "a", "m"]
 
@@ -67,12 +55,7 @@ class TestParseBasicEntry:
         assert e.get("title") == "The {LaTeX} Companion"
 
     def test_trailing_comma_tolerated(self):
-        text = (
-            "@article{k,\n"
-            "  title={T},\n"
-            "  year={2024},\n"
-            "}\n"
-        )
+        text = "@article{k,\n  title={T},\n  year={2024},\n}\n"
         e = parse_bibtex(text).entries[0]
         assert e.get("year") == "2024"
 
@@ -82,19 +65,13 @@ class TestParseBasicEntry:
         assert db.entries[0].get("year") == "2024"
 
     def test_multiple_entries(self):
-        text = (
-            "@article{a, title={A}, year={2024}}\n"
-            "@book{b, title={B}, year={1999}}\n"
-        )
+        text = "@article{a, title={A}, year={2024}}\n@book{b, title={B}, year={1999}}\n"
         db = parse_bibtex(text)
         assert [e.citation_key for e in db] == ["a", "b"]
         assert db.entries[1].entry_type == "book"
 
     def test_comment_block_collected_as_preamble(self):
-        text = (
-            "@comment{Provenance note}\n"
-            "@article{k, title={T}}\n"
-        )
+        text = "@comment{Provenance note}\n@article{k, title={T}}\n"
         db = parse_bibtex(text)
         assert "Provenance note" in (db.preamble or "")
         assert len(db) == 1

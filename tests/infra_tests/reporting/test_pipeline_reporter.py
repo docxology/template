@@ -1,4 +1,5 @@
 """Tests for pipeline_reporter module."""
+
 from __future__ import annotations
 
 import json
@@ -76,9 +77,7 @@ def test_generate_pipeline_report_status_and_fields(tmp_path: Path) -> None:
 
 
 def test_save_pipeline_report_creates_all_formats(tmp_path: Path) -> None:
-    report = generate_pipeline_report(
-        stage_results=_stage_results(), total_duration=7.0, repo_root=tmp_path
-    )
+    report = generate_pipeline_report(stage_results=_stage_results(), total_duration=7.0, repo_root=tmp_path)
     saved = save_pipeline_report(report, tmp_path, formats=["json", "markdown", "html"])
 
     json_path = saved["json"]
@@ -101,9 +100,7 @@ def test_save_pipeline_report_creates_all_formats(tmp_path: Path) -> None:
 
 
 def test_generate_reports_format_duration_and_success_rate() -> None:
-    report = generate_pipeline_report(
-        stage_results=_stage_results(), total_duration=7.0, repo_root=Path(".")
-    )
+    report = generate_pipeline_report(stage_results=_stage_results(), total_duration=7.0, repo_root=Path("."))
 
     md_content = _generate_pipeline_markdown(report)
     assert "Success Rate" in md_content
@@ -211,9 +208,7 @@ def test_save_error_summary_and_markdown_truncation(tmp_path: Path) -> None:
 
 
 def test_save_pipeline_report_respects_formats(tmp_path: Path) -> None:
-    report = generate_pipeline_report(
-        stage_results=_stage_results(), total_duration=3.0, repo_root=tmp_path
-    )
+    report = generate_pipeline_report(stage_results=_stage_results(), total_duration=3.0, repo_root=tmp_path)
     saved = save_pipeline_report(report, tmp_path, formats=["json"])
     assert "json" in saved and saved["json"].exists()
     assert not (tmp_path / "pipeline_report.md").exists()
@@ -233,9 +228,7 @@ def test_generate_pipeline_report_missing_fields(tmp_path: Path) -> None:
         {"name": "setup"},  # Missing exit_code and duration
         {"name": "tests", "exit_code": 0},  # Missing duration
     ]
-    report = generate_pipeline_report(
-        stage_results=stage_results, total_duration=5.0, repo_root=tmp_path
-    )
+    report = generate_pipeline_report(stage_results=stage_results, total_duration=5.0, repo_root=tmp_path)
     assert len(report.stages) == 2
     assert report.stages[0].name == "setup"
     assert report.stages[0].exit_code == 1  # Default for missing exit_code
@@ -244,9 +237,7 @@ def test_generate_pipeline_report_missing_fields(tmp_path: Path) -> None:
 
 def test_generate_pipeline_report_default_formats(tmp_path: Path) -> None:
     """Test save_pipeline_report uses default formats when None."""
-    report = generate_pipeline_report(
-        stage_results=_stage_results(), total_duration=5.0, repo_root=tmp_path
-    )
+    report = generate_pipeline_report(stage_results=_stage_results(), total_duration=5.0, repo_root=tmp_path)
     saved = save_pipeline_report(report, tmp_path, formats=None)
     assert "json" in saved
     assert "markdown" in saved
@@ -446,9 +437,7 @@ class TestGenerateMultiProjectSummaryReport:
             failed_projects=0,
             total_duration=5.0,
             infra_test_duration=0.0,
-            project_results={
-                "project1": {"success": True, "duration": 5.0, "stages_completed": 3, "errors": []}
-            },
+            project_results={"project1": {"success": True, "duration": 5.0, "stages_completed": 3, "errors": []}},
         )
         output_dir = tmp_path / "output"
 

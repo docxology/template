@@ -1,6 +1,5 @@
 """End-to-end tests: detect → plan → apply → undo, against real trees."""
 
-
 from pathlib import Path
 
 
@@ -41,6 +40,7 @@ def test_run_sh_fix_roundtrip(tmp_path: Path):
     record = mutate(plans[0], state)
     assert record.applied is True
     import os
+
     assert os.access(tmp_path / "run.sh", os.X_OK)
 
     # 4) Re-detect: healthy now.
@@ -103,14 +103,10 @@ def test_therapy_cap_filters_radical(tmp_path: Path):
         ),
     )
 
-    conservative = build_plans_for_findings(
-        [finding], state, max_therapy=TherapyLevel.CONSERVATIVE
-    )
+    conservative = build_plans_for_findings([finding], state, max_therapy=TherapyLevel.CONSERVATIVE)
     assert conservative == []
 
-    radical = build_plans_for_findings(
-        [finding], state, max_therapy=TherapyLevel.RADICAL
-    )
+    radical = build_plans_for_findings([finding], state, max_therapy=TherapyLevel.RADICAL)
     # Evidence has empty orphans, so still zero plans — but the *gate*
     # is what we're testing: with CONSERVATIVE we never even reach the
     # builder. The empty list under RADICAL proves the builder ran and
@@ -128,9 +124,7 @@ def test_select_codes_narrows_plan(tmp_path: Path):
     all_findings = cov_findings + run_sh_findings
 
     # Only ask for DOC103.
-    plans = build_plans_for_findings(
-        all_findings, state, selected_codes=frozenset({"DOC103"})
-    )
+    plans = build_plans_for_findings(all_findings, state, selected_codes=frozenset({"DOC103"}))
     assert {p.fix_id for p in plans} == {"fix_make_run_sh_executable"}
 
     # Only ask for fix_clean_coverage_files.

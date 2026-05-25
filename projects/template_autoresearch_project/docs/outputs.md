@@ -12,6 +12,11 @@ Core data:
 | `output/data/autoresearch_claims.json` | Evidence-grounded generated claims |
 | `output/data/autoresearch_stage_matrix.csv` | Tabular stage status for spreadsheet review (`status` is `declared`, not execution proof) |
 | `output/data/autoresearch_review_packet.json` | Machine-readable human review packet |
+| `output/data/research_program.json` | Human-authored research program, autonomy level, budget, and edit allowlist |
+| `output/data/idea_ledger.json` | Proposed, accepted, rejected, and deferred research ideas plus candidates |
+| `output/data/run_ledger.json` | Replay ledger with budget use and stop condition |
+| `output/data/review_decisions.json` | Required human review gate decisions |
+| `output/data/benchmark_scores.json` | Benchmark-style grading status for configured tasks |
 | `output/data/manuscript_variables.json` | Variables injected into the manuscript |
 
 Figures:
@@ -31,6 +36,7 @@ Reports:
 | `output/reports/autoresearch_summary.md` | Short project summary |
 | `output/reports/autoresearch_readiness.json` | Structured readiness validation result |
 | `output/reports/autoresearch_readiness.md` | Human-readable readiness validation result |
+| `output/reports/benchmark_readiness_smoke.json` | Deterministic grading output for the exemplar benchmark task |
 | `output/reports/evidence_registry.json` | Evidence registry for artifact-backed facts |
 | `output/reports/artifact_manifest.json` | Artifact manifest with sizes and checksums |
 

@@ -52,9 +52,7 @@ class TestValidateTranslationSection:
             ("english abstract\n\n中文翻译", True, True, None),
         ],
     )
-    def test_translation_section(
-        self, text, expect_english, expect_translation, expected_issue
-    ):
+    def test_translation_section(self, text, expect_english, expect_translation, expected_issue):
         details: dict = {}
         issues: list = []
         _validate_translation_section(text, details, issues)
@@ -125,9 +123,7 @@ class TestValidateMethodologyReviewSection:
             ("the paper is nice", 0, False, True),
         ],
     )
-    def test_methodology_section(
-        self, text, min_sections, expect_methodology, expect_issues
-    ):
+    def test_methodology_section(self, text, min_sections, expect_methodology, expect_issues):
         details: dict = {}
         issues: list = []
         _validate_methodology_review_section(text, details, issues)
@@ -160,9 +156,7 @@ class TestValidateImprovementSuggestionsSection:
             ("the paper is fine", 0, False, True),
         ],
     )
-    def test_improvement_section(
-        self, text, min_priorities, expect_recommendations, expect_issues
-    ):
+    def test_improvement_section(self, text, min_priorities, expect_recommendations, expect_issues):
         details: dict = {}
         issues: list = []
         _validate_improvement_suggestions_section(text, details, issues)
@@ -204,35 +198,25 @@ class TestValidateReviewQuality:
         assert any("off-topic" in issue.lower() for issue in issues)
 
     def test_repetitive_response(self):
-        section = (
-            "This section discusses the methodology in great detail and covers important aspects. "
-            * 10
-        )
+        section = "This section discusses the methodology in great detail and covers important aspects. " * 10
         text = "\n\n".join([section] * 10)
         is_valid, _issues, _details = validate_review_quality(text, "quality_review")
         assert isinstance(is_valid, bool)
 
     @pytest.mark.parametrize("model_name", ["gemma3:4b", "llama3:70b"])
     def test_small_and_large_model_thresholds(self, model_name):
-        text = self._make_long_text(
-            "Overview of findings. Methods employed. Results obtained.", 200
-        )
-        _is_valid, issues, _details = validate_review_quality(
-            text, "executive_summary", model_name=model_name
-        )
+        text = self._make_long_text("Overview of findings. Methods employed. Results obtained.", 200)
+        _is_valid, issues, _details = validate_review_quality(text, "executive_summary", model_name=model_name)
         assert isinstance(issues, list)
 
     def test_custom_min_words(self):
         text = "Short review. " * 5
-        is_valid, _issues, _details = validate_review_quality(
-            text, "executive_summary", min_words=10
-        )
+        is_valid, _issues, _details = validate_review_quality(text, "executive_summary", min_words=10)
         assert isinstance(is_valid, bool)
 
     def test_translation_review_type(self):
         text = self._make_long_text(
-            "English abstract of the paper discussing findings. "
-            "Translation into Chinese follows. "
+            "English abstract of the paper discussing findings. Translation into Chinese follows. "
         )
         is_valid, _issues, _details = validate_review_quality(text, "translation")
         assert isinstance(is_valid, bool)

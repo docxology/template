@@ -30,12 +30,14 @@ The command executes the standard project stages:
 4. Write the first evidence registry snapshot from on-disk artifacts.
 5. Build file-backed claims and finalize loop JSON, review packet, summary, and
    manuscript variables.
-6. Refresh loop payloads provisionally (`readiness_valid=False`) and write the
+6. Write method-contract artifacts: research program, idea ledger, run ledger,
+   review decisions, benchmark grading report, and benchmark scores.
+7. Refresh loop payloads provisionally (`readiness_valid=False`) and write the
    first artifact manifest.
-7. Run extrinsic readiness checks (evidence registry, artifact manifest,
-   required artifacts on disk).
-8. Write the combined intrinsic + extrinsic readiness report.
-9. Refresh loop payloads with final `readiness_valid` and output paths, then
+8. Run extrinsic readiness checks (evidence registry, artifact manifest,
+   required artifacts, method ledgers, review gates, and benchmark outputs).
+9. Write the combined intrinsic + extrinsic readiness report.
+10. Refresh loop payloads with final `readiness_valid` and output paths, then
    rewrite the evidence registry and artifact manifest.
 
 Targeted checks:
@@ -43,6 +45,8 @@ Targeted checks:
 ```bash
 uv run python scripts/01_run_tests.py --project template_autoresearch_project --project-only --quiet
 uv run python scripts/02_run_analysis.py --project template_autoresearch_project
+uv run python -m infrastructure.autoresearch.cli plan --project template_autoresearch_project
+uv run python -m infrastructure.autoresearch.cli benchmark --project template_autoresearch_project
 uv run python -m infrastructure.autoresearch.cli validate --project template_autoresearch_project --fail-on-issues
 ```
 

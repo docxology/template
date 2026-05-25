@@ -89,9 +89,7 @@ def test_pipeline_control_docs_describe_file_backed_hitl_boundary() -> None:
 def test_literature_search_docs_match_paperclip_mcp_contract() -> None:
     """Paperclip docs must match the implemented MCP-style auth and endpoint."""
     root = _repo_root()
-    text = (root / "docs" / "best-practices" / "literature-search-best-practices.md").read_text(
-        encoding="utf-8"
-    )
+    text = (root / "docs" / "best-practices" / "literature-search-best-practices.md").read_text(encoding="utf-8")
 
     assert "`X-API-Key`" in text
     assert "MCP-style JSON-RPC to `/mcp`" in text

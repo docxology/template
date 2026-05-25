@@ -455,9 +455,7 @@ class TestCopyFinalDeliverables:
         stats = copy_final_deliverables(project_root, output_dir, project_name="project")
 
         # Should complete successfully
-        assert len(stats["errors"]) == 0 or all(
-            "not found" not in err.lower() for err in stats["errors"]
-        )
+        assert len(stats["errors"]) == 0 or all("not found" not in err.lower() for err in stats["errors"])
 
     def test_with_logs_directory(self, tmp_path):
         """Log files under logs/ are counted."""

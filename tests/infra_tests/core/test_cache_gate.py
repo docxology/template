@@ -43,10 +43,7 @@ def test_run_cache_gate_populates_fresh_cache(tmp_path: Path) -> None:
     (plugins / "manifest.json").write_text("{}\n")
     cache_path = tmp_path / "cache"
 
-    prior = {
-        key: os.environ.get(key)
-        for key in ("HERMES_HOME", "HERMES_CACHE_PATH", "CACHE_TTL_SECONDS")
-    }
+    prior = {key: os.environ.get(key) for key in ("HERMES_HOME", "HERMES_CACHE_PATH", "CACHE_TTL_SECONDS")}
     os.environ["HERMES_HOME"] = str(hermes_home)
     os.environ["HERMES_CACHE_PATH"] = str(cache_path)
     os.environ["CACHE_TTL_SECONDS"] = "3600"

@@ -111,9 +111,7 @@ class TestGeneratePipelineMarkdown:
         assert "## Error Summary" not in md
 
     def test_output_statistics_section(self):
-        report = _make_report(
-            output_statistics={"pdf_files": 3, "figures": 5, "data_files": 2}
-        )
+        report = _make_report(output_statistics={"pdf_files": 3, "figures": 5, "data_files": 2})
         md = _generate_pipeline_markdown(report)
         assert "## Output Statistics" in md
         assert "3" in md

@@ -1,6 +1,5 @@
 """Tests for infrastructure.core.files.cleanup_root."""
 
-
 from infrastructure.core.files.cleanup_root import clean_root_output_directory
 
 

@@ -8,6 +8,11 @@ and manuscript variables are written to `output/data/manuscript_variables.json`.
 | --- | --- |
 | `output/data/autoresearch_plan.json` | Deterministic plan snapshot |
 | `output/data/autoresearch_claims.json` | Local-artifact claim ledger |
+| `output/data/research_program.json` | Human-authored program and budget controls |
+| `output/data/idea_ledger.json` | Proposed, accepted, rejected, and deferred ideas |
+| `output/data/run_ledger.json` | Replayable budget and stop-condition ledger |
+| `output/data/review_decisions.json` | Required human review gate decisions |
+| `output/data/benchmark_scores.json` | Benchmark-style task grading status |
 | `output/reports/autoresearch_loop.md` | Human-readable loop report |
 | `output/reports/autoresearch_readiness.json` | Strict readiness report |
 

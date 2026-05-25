@@ -70,7 +70,4 @@ def test_tests_dir_is_in_scope_blind_spot_closed(tmp_path: Path) -> None:
         "```python\nfrom infrastructure.core import NoSuchSymbolABC\n```\n",
     )
     issues = check_doc_imports_resolve(repo)
-    assert any(
-        "tests/infra_tests/x/AGENTS.md" in str(i.file) and i.category == "doc-import"
-        for i in issues
-    )
+    assert any("tests/infra_tests/x/AGENTS.md" in str(i.file) and i.category == "doc-import" for i in issues)

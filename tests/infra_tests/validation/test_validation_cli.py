@@ -58,9 +58,7 @@ class TestValidatePdfCommand:
 
     def test_pdf_command_nonexistent_file(self, tmp_path, caplog):
         """Test PDF validation with nonexistent file."""
-        args = argparse.Namespace(
-            pdf_path=str(tmp_path / "nonexistent.pdf"), preview_words=100, verbose=False
-        )
+        args = argparse.Namespace(pdf_path=str(tmp_path / "nonexistent.pdf"), preview_words=100, verbose=False)
 
         with caplog.at_level(logging.ERROR):
             with pytest.raises(SystemExit) as exc_info:
@@ -108,9 +106,7 @@ class TestValidateMarkdownCommand:
 
     def test_markdown_command_nonexistent_dir(self, tmp_path, caplog):
         """Test markdown validation with nonexistent directory."""
-        args = argparse.Namespace(
-            markdown_dir=str(tmp_path / "nonexistent"), repo_root=str(tmp_path)
-        )
+        args = argparse.Namespace(markdown_dir=str(tmp_path / "nonexistent"), repo_root=str(tmp_path))
 
         with caplog.at_level(logging.ERROR):
             with pytest.raises(SystemExit) as exc_info:

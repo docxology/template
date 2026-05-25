@@ -1,6 +1,5 @@
 """Tests for infrastructure.validation.docs.discovery — pure function coverage."""
 
-
 from infrastructure.validation.content.discovery import discover_markdown_files
 from infrastructure.validation.docs.discovery import (
     _calculate_project_stats,
@@ -550,6 +549,7 @@ class TestDiscoverProjectDocumentation:
 
     def test_finds_project_docs(self, tmp_path):
         from infrastructure.validation.docs.discovery import discover_project_documentation
+
         self._make_project(tmp_path, "alpha")
         result = discover_project_documentation(tmp_path)
         assert "alpha" in result
@@ -559,6 +559,7 @@ class TestDiscoverProjectDocumentation:
 
     def test_empty_projects(self, tmp_path):
         from infrastructure.validation.docs.discovery import discover_project_documentation
+
         (tmp_path / "projects").mkdir()
         result = discover_project_documentation(tmp_path)
         assert result == {}
@@ -567,6 +568,7 @@ class TestDiscoverProjectDocumentation:
 class TestValidateProjectDocIntegrity:
     def test_missing_manuscript(self, tmp_path):
         from infrastructure.validation.docs.discovery import validate_project_documentation_integrity
+
         proj = tmp_path / "projects" / "demo"
         (proj / "src").mkdir(parents=True)
         (proj / "src" / "__init__.py").write_text("")
@@ -579,6 +581,7 @@ class TestValidateProjectDocIntegrity:
 
     def test_missing_readme(self, tmp_path):
         from infrastructure.validation.docs.discovery import validate_project_documentation_integrity
+
         proj = tmp_path / "projects" / "demo"
         (proj / "src").mkdir(parents=True)
         (proj / "src" / "__init__.py").write_text("")
@@ -592,6 +595,7 @@ class TestValidateProjectDocIntegrity:
 class TestGetAuditContext:
     def test_basic_context(self, tmp_path):
         from infrastructure.validation.docs.discovery import get_audit_context
+
         (tmp_path / "README.md").write_text("# Root")
         (tmp_path / "projects").mkdir()
         result = get_audit_context(tmp_path)

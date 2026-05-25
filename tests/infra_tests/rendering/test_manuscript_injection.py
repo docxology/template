@@ -50,9 +50,7 @@ class TestSubstituteManuscriptText:
         assert unresolved == []
 
     def test_multiple_occurrences_of_same_token(self):
-        resolved, _ = substitute_manuscript_text(
-            "{{X}} then {{X}} again.", {"X": "yes"}
-        )
+        resolved, _ = substitute_manuscript_text("{{X}} then {{X}} again.", {"X": "yes"})
         assert resolved == "yes then yes again."
 
     def test_partial_single_brace_not_matched(self):
@@ -62,17 +60,13 @@ class TestSubstituteManuscriptText:
         assert unresolved == []
 
     def test_empty_variables_leaves_all_tokens(self):
-        resolved, unresolved = substitute_manuscript_text(
-            "{{A}} {{B}} {{C}}", {}
-        )
+        resolved, unresolved = substitute_manuscript_text("{{A}} {{B}} {{C}}", {})
         assert "{{A}}" in resolved
         assert set(unresolved) == {"A", "B", "C"}
 
     def test_value_with_special_chars_not_double_processed(self):
         # Value itself contains {{...}} — must not be re-substituted.
-        resolved, _ = substitute_manuscript_text(
-            "{{KEY}}", {"KEY": "{{OTHER}}"}
-        )
+        resolved, _ = substitute_manuscript_text("{{KEY}}", {"KEY": "{{OTHER}}"})
         assert resolved == "{{OTHER}}"
 
 
@@ -132,9 +126,7 @@ class TestWriteResolvedManuscriptTree:
         ms.mkdir(parents=True)
         (ms / "00_main.md").write_text("Main.\n", encoding="utf-8")
         for name in EXCLUDED_DOC_FILENAMES:
-            (ms / name).write_text(
-                f"# {name}\n\nExample: {{{{TOKEN}}}}.\n", encoding="utf-8"
-            )
+            (ms / name).write_text(f"# {name}\n\nExample: {{{{TOKEN}}}}.\n", encoding="utf-8")
 
         write_resolved_manuscript_tree(root, {"TOKEN": "real"})
 

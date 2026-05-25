@@ -16,7 +16,176 @@ DEFAULT_QUALITY_CHECKS = (
     "thin_orchestrators",
 )
 
-KNOWN_QUALITY_CHECKS = frozenset(DEFAULT_QUALITY_CHECKS)
+METHOD_QUALITY_CHECKS = (
+    "method_contracts",
+    "review_gates",
+    "benchmark_tasks",
+    "ai_disclosure",
+)
+
+KNOWN_QUALITY_CHECKS = frozenset((*DEFAULT_QUALITY_CHECKS, *METHOD_QUALITY_CHECKS))
+
+
+@dataclass(frozen=True)
+class BudgetPolicy:
+    """Bounded AutoResearch budget contract."""
+
+    max_iterations: int = 1
+    max_wall_clock_minutes: int = 30
+    max_llm_calls: int = 0
+    max_cost_usd: float = 0.0
+
+    def to_dict(self) -> dict[str, int | float]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "max_iterations": self.max_iterations,
+            "max_wall_clock_minutes": self.max_wall_clock_minutes,
+            "max_llm_calls": self.max_llm_calls,
+            "max_cost_usd": self.max_cost_usd,
+        }
+
+
+@dataclass(frozen=True)
+class ReviewGate:
+    """One human review gate in the AutoResearch workflow."""
+
+    name: str
+    required: bool = True
+    decision: str = ""
+
+    def to_dict(self) -> dict[str, str | bool]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "name": self.name,
+            "required": self.required,
+            "decision": self.decision,
+        }
+
+
+@dataclass(frozen=True)
+class BenchmarkTask:
+    """One benchmark-style grading task declaration."""
+
+    identifier: str
+    description: str
+    grading_output: str
+
+    def to_dict(self) -> dict[str, str]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "id": self.identifier,
+            "description": self.description,
+            "grading_output": self.grading_output,
+        }
+
+
+@dataclass(frozen=True)
+class EvidenceLink:
+    """One claim-to-evidence edge."""
+
+    claim_id: str
+    evidence_path: str
+    evidence_type: str = "artifact"
+
+    def to_dict(self) -> dict[str, str]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "claim_id": self.claim_id,
+            "evidence_path": self.evidence_path,
+            "evidence_type": self.evidence_type,
+        }
+
+
+@dataclass(frozen=True)
+class ResearchIdea:
+    """One proposed research idea in a bounded campaign."""
+
+    identifier: str
+    title: str
+    rationale: str
+    status: str
+    evidence_links: tuple[EvidenceLink, ...] = ()
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "id": self.identifier,
+            "title": self.title,
+            "rationale": self.rationale,
+            "status": self.status,
+            "evidence_links": [link.to_dict() for link in self.evidence_links],
+        }
+
+
+@dataclass(frozen=True)
+class ExperimentCandidate:
+    """One experiment candidate proposed by the campaign."""
+
+    identifier: str
+    idea_id: str
+    status: str
+    metric_name: str = ""
+    metric_direction: str = "maximize"
+    touched_paths: tuple[str, ...] = ()
+    expected_artifacts: tuple[str, ...] = ()
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "id": self.identifier,
+            "idea_id": self.idea_id,
+            "status": self.status,
+            "metric_name": self.metric_name,
+            "metric_direction": self.metric_direction,
+            "touched_paths": list(self.touched_paths),
+            "expected_artifacts": list(self.expected_artifacts),
+        }
+
+
+@dataclass(frozen=True)
+class ResearchProgram:
+    """Human-authored research-program prompt and controls."""
+
+    path: str
+    summary: str
+    autonomy_level: str
+    budget_policy: BudgetPolicy
+    edit_allowlist: tuple[str, ...] = ()
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "path": self.path,
+            "summary": self.summary,
+            "autonomy_level": self.autonomy_level,
+            "budget_policy": self.budget_policy.to_dict(),
+            "edit_allowlist": list(self.edit_allowlist),
+        }
+
+
+@dataclass(frozen=True)
+class RunLedger:
+    """Budget and replay ledger for a bounded AutoResearch run."""
+
+    budget_policy: BudgetPolicy
+    iterations_used: int = 0
+    wall_clock_minutes_used: int = 0
+    llm_calls_used: int = 0
+    cost_usd_used: float = 0.0
+    budget_exhausted: bool = False
+    exhaustion_reason: str = ""
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize to a JSON-safe payload."""
+        return {
+            "budget_policy": self.budget_policy.to_dict(),
+            "iterations_used": self.iterations_used,
+            "wall_clock_minutes_used": self.wall_clock_minutes_used,
+            "llm_calls_used": self.llm_calls_used,
+            "cost_usd_used": self.cost_usd_used,
+            "budget_exhausted": self.budget_exhausted,
+            "exhaustion_reason": self.exhaustion_reason,
+        }
 
 
 @dataclass(frozen=True)
@@ -26,6 +195,16 @@ class AutoResearchConfig:
     enabled: bool = True
     strict: bool = False
     topic: str = ""
+    autonomy_level: str = "proposal_only"
+    budget_policy: BudgetPolicy = BudgetPolicy()
+    edit_allowlist: tuple[str, ...] = ()
+    metric_direction: str = "maximize"
+    acceptance_policy: str = ""
+    review_gates: tuple[ReviewGate, ...] = ()
+    source_manifests: tuple[str, ...] = ()
+    benchmark_tasks: tuple[BenchmarkTask, ...] = ()
+    disclosure_required: bool = False
+    disclosure_text: str = "AI-assisted AutoResearch"
     quality_checks: tuple[str, ...] = DEFAULT_QUALITY_CHECKS
     stage_gates: tuple[str, ...] = ()
     required_artifacts: tuple[str, ...] = ()
@@ -34,6 +213,11 @@ class AutoResearchConfig:
     def to_dict(self) -> dict[str, Any]:
         """Serialize to a JSON-safe payload."""
         payload = asdict(self)
+        payload["budget_policy"] = self.budget_policy.to_dict()
+        payload["review_gates"] = [gate.to_dict() for gate in self.review_gates]
+        payload["benchmark_tasks"] = [task.to_dict() for task in self.benchmark_tasks]
+        payload["edit_allowlist"] = list(self.edit_allowlist)
+        payload["source_manifests"] = list(self.source_manifests)
         payload["quality_checks"] = list(self.quality_checks)
         payload["stage_gates"] = list(self.stage_gates)
         payload["required_artifacts"] = list(self.required_artifacts)

@@ -24,6 +24,7 @@ def test_cli_validate_passes_on_exemplar():
     result = _run(["validate", str(bibfile)])
     assert result.returncode == 0, result.stderr
 
+
 def test_cli_validate_strict_flags_missing_fields(tmp_path: Path):
     bib = tmp_path / "bad.bib"
     bib.write_text("@article{k, title={Only title}}\n", encoding="utf-8")
@@ -35,11 +36,7 @@ def test_cli_validate_strict_flags_missing_fields(tmp_path: Path):
 def test_cli_format_round_trips(tmp_path: Path):
     src = tmp_path / "in.bib"
     src.write_text(
-        "@article{k,\n"
-        "title = \"Hello\",\n"
-        "author= {Alice and Bob},\n"
-        "year=2024,\n"
-        "}\n",
+        '@article{k,\ntitle = "Hello",\nauthor= {Alice and Bob},\nyear=2024,\n}\n',
         encoding="utf-8",
     )
     out = tmp_path / "out.bib"

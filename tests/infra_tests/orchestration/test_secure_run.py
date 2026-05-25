@@ -296,9 +296,7 @@ def test_apply_steganography_handles_corrupt_yaml(fake_repo: Path) -> None:
     """A malformed config.yaml is logged and treated as empty; no exception bubbles up."""
     proj = fake_repo / "projects" / "template_code_project"
     (proj / "manuscript").mkdir(parents=True, exist_ok=True)
-    (proj / "manuscript" / "config.yaml").write_text(
-        "paper:\n  title: [unterminated", encoding="utf-8"
-    )
+    (proj / "manuscript" / "config.yaml").write_text("paper:\n  title: [unterminated", encoding="utf-8")
     _make_pdf(proj / "output" / "pdf" / "p.pdf")
 
     captured: list[_NoopProcessor] = []

@@ -39,10 +39,11 @@ flowchart LR
 
 ### Job Graph
 
-`health` depends on **`lint`** only (informational). `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and is **skipped** unless `hashFiles('projects/**/scripts/setup_hook.py') != ''`. `test-infra`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
+`health` depends on **`lint`** only (informational). `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
 
 ```mermaid
 flowchart TB
+    DET[detect<br/>optional-project outputs]
     LINT[lint] --> HEALTH[health<br/>unified JSON artefact]
     LINT --> VNM[verify-no-mocks]
     LINT --> VAL[validate]
@@ -52,6 +53,8 @@ flowchart TB
     VNM --> TI[test-infra<br/>matrix: ubuntu+macos × 3.10/3.11/3.12<br/>codecov on 3.12/ubuntu only]
     VNM --> TP[test-project<br/>01_run_tests.py per-project pytest]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
+    DET --> SHW
+    DET --> FL
     TI --> PERF[performance]
     TP --> PERF
 
@@ -59,7 +62,7 @@ flowchart TB
     classDef matrix fill:#0f766e,stroke:#0f172a,color:#fff
     classDef terminal fill:#7c2d12,stroke:#0f172a,color:#fff
     classDef info fill:#334155,stroke:#0f172a,color:#fff
-    class LINT,VNM gate
+    class DET,LINT,VNM gate
     class TI,TP,FL,SHW matrix
     class VAL,SEC,DL,PERF terminal
     class HEALTH info
@@ -89,7 +92,7 @@ flowchart TB
 
 - **Runner:** `windows-latest` / Python 3.12
 - **Depends on:** `verify-no-mocks`
-- **Conditional:** `if: hashFiles('projects/**/scripts/setup_hook.py') != ''` — no-op skip when no project ships [`infrastructure.project.setup_hook`](../../infrastructure/project/setup_hook.py)
+- **Conditional:** `if: needs.detect.outputs.setup_hook == 'true'` — no-op skip when no project ships [`infrastructure.project.setup_hook`](../../infrastructure/project/setup_hook.py). The `detect` job computes this because job-level `hashFiles()` is invalid in GitHub Actions.
 - **Step:** `uv run pytest tests/infra_tests/project/test_setup_hook.py` with `PYTHONUTF8=1`
 
 #### 4. Infrastructure Tests (`test-infra`)
@@ -111,7 +114,7 @@ flowchart TB
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
 
-- **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists (`hashFiles` guard in `ci.yml`). When fep_lean lives under `projects_in_progress/`, the guard evaluates to empty and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate.
+- **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists and the `detect` job emits `fep_lean == 'true'`. When fep_lean lives under `projects_in_progress/`, `detect` reports `false` and the job is skipped. Promote with `mv projects_in_progress/fep_lean projects/fep_lean` to activate.
 - **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 60`
 - **Depends on:** `verify-no-mocks`
 - **Working directory (when present):** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up

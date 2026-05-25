@@ -65,9 +65,7 @@ class TestCalculateEtaEma:
     def test_no_previous_eta_returns_linear(self):
         """Without prior ETA, result equals linear ETA."""
         linear = calculate_eta(elapsed_time=10.0, completed_items=5, total_items=10)
-        ema = calculate_eta_ema(
-            elapsed_time=10.0, completed_items=5, total_items=10, previous_eta=None
-        )
+        ema = calculate_eta_ema(elapsed_time=10.0, completed_items=5, total_items=10, previous_eta=None)
         assert ema == pytest.approx(linear)
 
     def test_ema_blending(self):
@@ -77,31 +75,33 @@ class TestCalculateEtaEma:
         alpha = 0.3
         expected = alpha * linear + (1 - alpha) * previous  # 0.3*10 + 0.7*20 = 17.0
         result = calculate_eta_ema(
-            elapsed_time=10.0, completed_items=5, total_items=10,
-            previous_eta=previous, alpha=alpha,
+            elapsed_time=10.0,
+            completed_items=5,
+            total_items=10,
+            previous_eta=previous,
+            alpha=alpha,
         )
         assert result == pytest.approx(expected)
 
     def test_non_negative_result(self):
         """Result must be non-negative even with aggressive previous ETA."""
         result = calculate_eta_ema(
-            elapsed_time=0.001, completed_items=99, total_items=100,
-            previous_eta=-100.0, alpha=1.0,
+            elapsed_time=0.001,
+            completed_items=99,
+            total_items=100,
+            previous_eta=-100.0,
+            alpha=1.0,
         )
         assert result >= 0.0
 
     def test_all_complete_returns_zero(self):
         """All complete → 0.0."""
-        result = calculate_eta_ema(
-            elapsed_time=10.0, completed_items=10, total_items=10, previous_eta=5.0
-        )
+        result = calculate_eta_ema(elapsed_time=10.0, completed_items=10, total_items=10, previous_eta=5.0)
         assert result == 0.0
 
     def test_zero_completed_returns_none(self):
         """No items done → indeterminate."""
-        result = calculate_eta_ema(
-            elapsed_time=10.0, completed_items=0, total_items=10, previous_eta=5.0
-        )
+        result = calculate_eta_ema(elapsed_time=10.0, completed_items=0, total_items=10, previous_eta=5.0)
         assert result is None
 
 
@@ -127,7 +127,9 @@ class TestCalculateEtaWithConfidence:
         """With durations, uses min/avg/max for optimistic/realistic/pessimistic."""
         durations = [1.0, 2.0, 3.0]  # min=1, avg=2, max=3
         result = calculate_eta_with_confidence(
-            elapsed_time=6.0, completed_items=3, total_items=8,
+            elapsed_time=6.0,
+            completed_items=3,
+            total_items=8,
             item_durations=durations,
         )
         remaining = 5
@@ -138,7 +140,9 @@ class TestCalculateEtaWithConfidence:
     def test_without_durations_uses_linear_fallback(self):
         """Without durations, fallback uses avg_per_item with ±20% spread."""
         result = calculate_eta_with_confidence(
-            elapsed_time=10.0, completed_items=5, total_items=10,
+            elapsed_time=10.0,
+            completed_items=5,
+            total_items=10,
         )
         avg_per_item = 2.0  # 10s / 5 items
         remaining = 5
@@ -154,7 +158,9 @@ class TestCalculateEtaWithConfidence:
     def test_single_duration(self):
         """Single item duration → all three estimates equal."""
         result = calculate_eta_with_confidence(
-            elapsed_time=5.0, completed_items=1, total_items=6,
+            elapsed_time=5.0,
+            completed_items=1,
+            total_items=6,
             item_durations=[5.0],
         )
         assert result.optimistic == result.realistic == result.pessimistic

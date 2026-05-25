@@ -17,30 +17,22 @@ from infrastructure.rendering.dockerfile_gen import (
 
 
 def test_build_dockerfile_includes_project_name() -> None:
-    text = build_dockerfile(
-        DockerfileConfig(project_name="example_project", python_version="3.12")
-    )
+    text = build_dockerfile(DockerfileConfig(project_name="example_project", python_version="3.12"))
     assert "example_project" in text
 
 
 def test_build_dockerfile_starts_from_default_base_image() -> None:
-    text = build_dockerfile(
-        DockerfileConfig(project_name="x", python_version="3.12")
-    )
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
     assert f"FROM {DEFAULT_BASE_IMAGE}" in text
 
 
 def test_build_dockerfile_includes_python_version() -> None:
-    text = build_dockerfile(
-        DockerfileConfig(project_name="x", python_version="3.11")
-    )
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.11"))
     assert "python3.11" in text
 
 
 def test_build_dockerfile_includes_default_latex_packages() -> None:
-    text = build_dockerfile(
-        DockerfileConfig(project_name="x", python_version="3.12")
-    )
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
     for pkg in DEFAULT_LATEX_PACKAGES:
         assert pkg in text, f"Missing LaTeX package {pkg}"
 
@@ -59,30 +51,22 @@ def test_build_dockerfile_uses_custom_latex_packages() -> None:
 
 
 def test_build_dockerfile_installs_uv() -> None:
-    text = build_dockerfile(
-        DockerfileConfig(project_name="x", python_version="3.12")
-    )
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
     assert "astral.sh/uv/install.sh" in text
 
 
 def test_build_dockerfile_runs_uv_sync_frozen() -> None:
-    text = build_dockerfile(
-        DockerfileConfig(project_name="x", python_version="3.12")
-    )
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
     assert "uv sync --frozen" in text
 
 
 def test_build_dockerfile_sets_headless_matplotlib() -> None:
-    text = build_dockerfile(
-        DockerfileConfig(project_name="x", python_version="3.12")
-    )
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
     assert "MPLBACKEND=Agg" in text
 
 
 def test_build_dockerfile_default_cmd_invokes_pipeline() -> None:
-    text = build_dockerfile(
-        DockerfileConfig(project_name="my_proj", python_version="3.12")
-    )
+    text = build_dockerfile(DockerfileConfig(project_name="my_proj", python_version="3.12"))
     assert "--project my_proj" in text
     assert "--core-only" in text
 

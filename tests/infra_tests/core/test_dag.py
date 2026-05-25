@@ -101,22 +101,26 @@ class TestPipelineDAGValidation:
 
     def test_duplicate_names_raise(self):
         with pytest.raises(ValueError, match="Duplicate"):
-            PipelineDAG([
-                StageDefinition(name="A"),
-                StageDefinition(name="A"),
-            ])
+            PipelineDAG(
+                [
+                    StageDefinition(name="A"),
+                    StageDefinition(name="A"),
+                ]
+            )
 
 
 class TestPipelineDAGFiltering:
     """Test tag-based and stage name filtering."""
 
     def _make_dag(self):
-        return PipelineDAG([
-            StageDefinition(name="Clean", method="clean", tags=["core", "clean"]),
-            StageDefinition(name="Setup", method="setup", tags=["core"]),
-            StageDefinition(name="Tests", script="test.py", tags=["core", "tests"]),
-            StageDefinition(name="LLM Review", script="llm.py", tags=["llm"]),
-        ])
+        return PipelineDAG(
+            [
+                StageDefinition(name="Clean", method="clean", tags=["core", "clean"]),
+                StageDefinition(name="Setup", method="setup", tags=["core"]),
+                StageDefinition(name="Tests", script="test.py", tags=["core", "tests"]),
+                StageDefinition(name="LLM Review", script="llm.py", tags=["llm"]),
+            ]
+        )
 
     def test_exclude_tags(self):
         dag = self._make_dag()
@@ -143,21 +147,25 @@ class TestPipelineDAGSorting:
     """Test topological sorting."""
 
     def test_linear_order_preserved(self):
-        dag = PipelineDAG([
-            StageDefinition(name="A"),
-            StageDefinition(name="B", depends_on=["A"]),
-            StageDefinition(name="C", depends_on=["B"]),
-        ])
+        dag = PipelineDAG(
+            [
+                StageDefinition(name="A"),
+                StageDefinition(name="B", depends_on=["A"]),
+                StageDefinition(name="C", depends_on=["B"]),
+            ]
+        )
         sorted_ = dag.sorted_stages()
         assert [s.name for s in sorted_] == ["A", "B", "C"]
 
     def test_diamond_dependency(self):
-        dag = PipelineDAG([
-            StageDefinition(name="A"),
-            StageDefinition(name="B", depends_on=["A"]),
-            StageDefinition(name="C", depends_on=["A"]),
-            StageDefinition(name="D", depends_on=["B", "C"]),
-        ])
+        dag = PipelineDAG(
+            [
+                StageDefinition(name="A"),
+                StageDefinition(name="B", depends_on=["A"]),
+                StageDefinition(name="C", depends_on=["A"]),
+                StageDefinition(name="D", depends_on=["B", "C"]),
+            ]
+        )
         sorted_ = dag.sorted_stages()
         names = [s.name for s in sorted_]
         assert names.index("A") < names.index("B")
@@ -166,30 +174,36 @@ class TestPipelineDAGSorting:
         assert names.index("C") < names.index("D")
 
     def test_cycle_detected(self):
-        dag = PipelineDAG([
-            StageDefinition(name="A", depends_on=["C"]),
-            StageDefinition(name="B", depends_on=["A"]),
-            StageDefinition(name="C", depends_on=["B"]),
-        ])
+        dag = PipelineDAG(
+            [
+                StageDefinition(name="A", depends_on=["C"]),
+                StageDefinition(name="B", depends_on=["A"]),
+                StageDefinition(name="C", depends_on=["B"]),
+            ]
+        )
         with pytest.raises(ValueError, match="Cycle"):
             dag.sorted_stages()
 
     def test_filtered_deps_ignored(self):
         """Dependencies that have been filtered out should not block sorting."""
-        dag = PipelineDAG([
-            StageDefinition(name="A"),
-            StageDefinition(name="B", depends_on=["A"]),
-            StageDefinition(name="C", depends_on=["X"]),  # X does not exist
-        ])
+        dag = PipelineDAG(
+            [
+                StageDefinition(name="A"),
+                StageDefinition(name="B", depends_on=["A"]),
+                StageDefinition(name="C", depends_on=["X"]),  # X does not exist
+            ]
+        )
         sorted_ = dag.sorted_stages()
         assert len(sorted_) == 3
 
     def test_sort_preserves_original_order_for_independent_stages(self):
         """Independent stages should preserve their declaration order."""
-        dag = PipelineDAG([
-            StageDefinition(name="C"),
-            StageDefinition(name="A"),
-            StageDefinition(name="B"),
-        ])
+        dag = PipelineDAG(
+            [
+                StageDefinition(name="C"),
+                StageDefinition(name="A"),
+                StageDefinition(name="B"),
+            ]
+        )
         sorted_ = dag.sorted_stages()
         assert [s.name for s in sorted_] == ["C", "A", "B"]

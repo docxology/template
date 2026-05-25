@@ -1,6 +1,5 @@
 """Tests for infrastructure.reporting.pipeline_report_model — comprehensive coverage."""
 
-
 from infrastructure.reporting.pipeline_report_model import (
     PipelineReport,
     generate_pipeline_report,
@@ -50,9 +49,7 @@ class TestGeneratePipelineReport:
 
     def test_with_test_results(self, tmp_path):
         stage_results = [{"name": "test", "exit_code": 0, "duration": 10.0}]
-        report = generate_pipeline_report(
-            stage_results, 10.0, tmp_path, test_results={"total": 50, "passed": 48}
-        )
+        report = generate_pipeline_report(stage_results, 10.0, tmp_path, test_results={"total": 50, "passed": 48})
         assert report.test_results["total"] == 50
 
     def test_empty_stages(self, tmp_path):
@@ -107,7 +104,5 @@ class TestGeneratePipelineReport:
     def test_project_name_without_output_stats(self, tmp_path):
         # output_statistics is None, so log_file enrichment is skipped
         stage_results = [{"name": "setup", "exit_code": 0, "duration": 1.0}]
-        report = generate_pipeline_report(
-            stage_results, 1.0, tmp_path, project_name="myproj"
-        )
+        report = generate_pipeline_report(stage_results, 1.0, tmp_path, project_name="myproj")
         assert report.output_statistics is None

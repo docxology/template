@@ -33,9 +33,7 @@ class TestStageResult:
 
     def test_stage_result_default_completed(self):
         """Test StageResult with default completed value."""
-        result = StageResult(
-            name="test", exit_code=0, duration=1.0, timestamp="2024-01-01 12:00:00"
-        )
+        result = StageResult(name="test", exit_code=0, duration=1.0, timestamp="2024-01-01 12:00:00")
 
         assert result.completed is True  # Default value
 

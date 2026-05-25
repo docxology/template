@@ -25,9 +25,7 @@ class TestLinkValidator:
         # Create markdown files
         readme = tmp_path / "README.md"
         readme.write_text(
-            "# Test Project\n\n"
-            "See [docs](docs/guide.md) for more info.\n"
-            "[External](https://example.com)\n"
+            "# Test Project\n\nSee [docs](docs/guide.md) for more info.\n[External](https://example.com)\n"
         )
 
         guide = tmp_path / "docs" / "guide.md"
@@ -143,9 +141,7 @@ Another [valid link](another.md)
         """Test that HTTP links are identified as external."""
         validator = LinkValidator(temp_repo)
 
-        resolved, is_external = validator.resolve_link_target(
-            "https://example.com", temp_repo / "test.md"
-        )
+        resolved, is_external = validator.resolve_link_target("https://example.com", temp_repo / "test.md")
         assert resolved is None
         assert is_external is True
 
@@ -153,9 +149,7 @@ Another [valid link](another.md)
         """Test that mailto links are identified as external."""
         validator = LinkValidator(temp_repo)
 
-        resolved, is_external = validator.resolve_link_target(
-            "mailto:test@example.com", temp_repo / "test.md"
-        )
+        resolved, is_external = validator.resolve_link_target("mailto:test@example.com", temp_repo / "test.md")
         assert resolved is None
         assert is_external is True
 
@@ -360,9 +354,7 @@ class TestLinkValidatorEdgeCases:
     def test_multiple_anchors_same_file(self, tmp_path):
         """Test multiple anchor links to same file."""
         test_file = tmp_path / "test.md"
-        test_file.write_text(
-            "[Section 1](#section-1)\n[Section 2](#section-2)\n[Section 3](#section-3)\n"
-        )
+        test_file.write_text("[Section 1](#section-1)\n[Section 2](#section-2)\n[Section 3](#section-3)\n")
 
         validator = LinkValidator(tmp_path)
         results = validator.validate_file_links(test_file)
@@ -495,9 +487,7 @@ class TestResolveEdgeCases:
         validator = LinkValidator(tmp_path)
         # ../../../ going way outside repo
         source = tmp_path / "test.md"
-        resolved, is_external = validator.resolve_link_target(
-            "../../../../../../etc/passwd", source
-        )
+        resolved, is_external = validator.resolve_link_target("../../../../../../etc/passwd", source)
         # Should resolve to None (outside repo)
         assert is_external is False
 

@@ -118,26 +118,20 @@ class TestRunPytestStream:
     def test_stream_echo_command(self, tmp_path):
         """Test streaming a simple echo command."""
         env = os.environ.copy()
-        exit_code, stdout, stderr = run_pytest_stream(
-            ["echo", "hello world"], tmp_path, env, quiet=True
-        )
+        exit_code, stdout, stderr = run_pytest_stream(["echo", "hello world"], tmp_path, env, quiet=True)
         assert exit_code == 0
         assert "hello" in stdout
 
     def test_stream_failing_command(self, tmp_path):
         """Test streaming a command that exits with error."""
         env = os.environ.copy()
-        exit_code, stdout, stderr = run_pytest_stream(
-            ["false"], tmp_path, env, quiet=True
-        )
+        exit_code, stdout, stderr = run_pytest_stream(["false"], tmp_path, env, quiet=True)
         assert exit_code != 0
 
     def test_stream_multiline_output(self, tmp_path):
         """Test streaming multi-line output."""
         env = os.environ.copy()
-        exit_code, stdout, stderr = run_pytest_stream(
-            ["printf", "line1\nline2\nline3\n"], tmp_path, env, quiet=False
-        )
+        exit_code, stdout, stderr = run_pytest_stream(["printf", "line1\nline2\nline3\n"], tmp_path, env, quiet=False)
         assert exit_code == 0
         assert "line1" in stdout
 

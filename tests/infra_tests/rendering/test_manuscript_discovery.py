@@ -413,11 +413,7 @@ class TestDiscoverManuscriptFiles:
         (manuscript_dir / "01_front.md").write_text("# Front")
         (manuscript_dir / "02_body.md").write_text("# Body")
         (manuscript_dir / "config.yaml").write_text(
-            "units:\n"
-            "  - id: unit_I\n"
-            "    directory: unit_I\n"
-            "    chapters:\n"
-            "      - file: missing.md\n"
+            "units:\n  - id: unit_I\n    directory: unit_I\n    chapters:\n      - file: missing.md\n"
         )
 
         result = discover_manuscript_files(manuscript_dir)

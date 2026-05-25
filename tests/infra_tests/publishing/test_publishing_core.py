@@ -10,6 +10,7 @@ from infrastructure.publishing.package import create_publication_package
 from infrastructure.publishing.models import PublicationMetadata
 from infrastructure.core.files.operations import calculate_file_hash
 
+
 def make_metadata(**kwargs) -> PublicationMetadata:
     """Create a minimal PublicationMetadata for testing."""
     defaults = dict(
@@ -22,6 +23,7 @@ def make_metadata(**kwargs) -> PublicationMetadata:
     )
     defaults.update(kwargs)
     return PublicationMetadata(**defaults)
+
 
 class TestCalculateFileHash:
     """Test calculate_file_hash (re-exported from file_operations)."""
@@ -59,6 +61,7 @@ class TestCalculateFileHash:
         h = calculate_file_hash(f)
         assert isinstance(h, str)
         assert len(h) > 0
+
 
 class TestCreatePublicationPackage:
     """Test create_publication_package with real temp directories."""
@@ -122,6 +125,7 @@ class TestCreatePublicationPackage:
         metadata = make_metadata()
         result = create_publication_package(tmp_path, metadata)
         from datetime import datetime
+
         # Should parse without error
         dt = datetime.fromisoformat(result["created_at"])
         assert dt.year >= 2024

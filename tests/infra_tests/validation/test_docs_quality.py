@@ -1,6 +1,5 @@
 """Tests for infrastructure.validation.docs.quality — comprehensive coverage."""
 
-
 from infrastructure.validation.docs.quality import (
     assess_actionability,
     assess_clarity,

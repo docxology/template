@@ -134,5 +134,6 @@ class TestAnalyzeQualityAggregate:
 
     def test_to_dict_serializable(self):
         import json
+
         q = analyze_quality("A simple sentence.")
         json.dumps(q.to_dict())  # must not raise

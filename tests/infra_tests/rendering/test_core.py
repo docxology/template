@@ -1,4 +1,5 @@
 """Tests for core module."""
+
 from pathlib import Path
 
 import pytest

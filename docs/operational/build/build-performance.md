@@ -58,91 +58,70 @@ This document provides detailed performance analysis extracted from the build sy
 
 **Analysis:** These warnings are expected — `AGENTS.md` is documentation, not manuscript content.
 
-### PDF Rendering (50 seconds)
+### PDF Rendering
 
-**Breakdown:**
+Rendering time depends on the project, section count, figures, Mermaid diagrams, and local
+LaTeX/browser availability. Treat old wall-clock numbers as benchmark snapshots, not as
+service-level objectives.
 
-- Individual section PDFs + slides + HTML: ~45 seconds
-- Combined PDF generation: ~5 seconds
+Current renderer behavior:
 
-| # | Module | Time | Status | Notes |
-|---|--------|------|--------|-------|
-| 1 | `01_abstract.md` | 2s | ✅ | Clean build |
-| 2 | `02_introduction.md` | 3s | ✅ | Clean build |
-| 3 | `03_methodology.md` | 3s | ⚠️ | BibTeX warning (expected) |
-| 4 | `04_experimental_results.md` | 7s | ✅ | Longer due to figures |
-| 5 | `05_discussion.md` | 2s | ✅ | Clean build |
-| 6 | `06_conclusion.md` | 3s | ✅ | Clean build |
-| 7 | `08_acknowledgments.md` | 2s | ✅ | Clean build |
-| 8 | `09_appendix.md` | 2s | ✅ | Clean build |
-| 9 | `S01_supplemental_methods.md` | 3s | ✅ | Clean build |
-| 10 | `S02_supplemental_results.md` | 2s | ✅ | Clean build |
-| 11 | `98_symbols_glossary.md` | 2s | ✅ | Auto-generated |
-| 12 | `99_references.md` | 2s | ✅ | Clean build |
+- Manuscript sections are discovered from `projects/{name}/manuscript/*.md`.
+- Working render artifacts are written under `projects/{name}/output/`.
+- Stage 07 copies final deliverables to `output/{name}/`.
+- The primary combined PDF is available at `output/{name}/pdf/{name}_combined.pdf`;
+  a root convenience copy may also exist at `output/{name}/{name}_combined.pdf`.
+- Web output is under `output/{name}/web/`.
 
-#### BibTeX Warning in 03_methodology.md
-
-```
-Warning--I didn't find a database entry for "optimization2022"
-```
-
-**Analysis:** This warning is expected — when building individual sections, BibTeX may not find all citations. The combined PDF build resolves all citations correctly.
-
-### Combined Document (10 seconds)
+### Combined Document
 
 **Compilation Steps:**
 
-1. Markdown concatenation ✅
-2. Bibliography placement correction ✅
-3. LaTeX generation ✅
-4. First XeLaTeX pass ✅
-5. BibTeX processing ✅
-6. Second XeLaTeX pass (references) ✅
-7. Third XeLaTeX pass (final) ✅
+1. Markdown concatenation
+2. Bibliography placement correction
+3. LaTeX generation
+4. XeLaTeX and BibTeX passes until references settle
+5. Final PDF validation
 
-### Alternative Formats (3 seconds)
+### Alternative Formats
 
-- ✅ HTML Version created: `output/project_combined.html`
-- ⚠️ IDE-Friendly PDF: Optional format — creation failed (non-critical). Main PDF works perfectly.
+When enabled by the renderer and project configuration, non-PDF formats are copied under
+project-specific directories such as `output/{name}/web/`, `output/{name}/docx/`, and
+`output/{name}/epub/`.
 
 ---
 
 ## Output File Inventory
 
-### PDFs Generated (13 total)
+### PDFs Generated
 
-**Individual Section PDFs:**
+**Combined Document:**
 
-1. `01_abstract.pdf` ✅
-2. `02_introduction.pdf` ✅
-3. `03_methodology.pdf` ✅
-4. `04_experimental_results.pdf` ✅
-5. `05_discussion.pdf` ✅
-6. `06_conclusion.pdf` ✅
-7. `08_acknowledgments.pdf` ✅
-8. `09_appendix.pdf` ✅
-9. `S01_supplemental_methods.pdf` ✅
-10. `S02_supplemental_results.pdf` ✅
-11. `98_symbols_glossary.pdf` ✅
-12. `99_references.pdf` ✅
+- `output/{name}/pdf/{name}_combined.pdf` - primary validated PDF
+- `output/{name}/{name}_combined.pdf` - optional root convenience copy
 
-**Combined Documents:**
-13. `{project}_combined.pdf` ✅ **(Main output — e.g. `template_code_project_combined.pdf`)**
+**Slides and intermediates:**
+
+- `output/{name}/slides/` - Beamer slide PDFs and LaTeX intermediates when generated
+- `output/{name}/pdf/_combined_manuscript.*` - combined Markdown/LaTeX/log intermediates
 
 ### Other Formats
 
-- `project_combined.html` ✅ (Web/IDE viewing)
-- LaTeX source files (`.tex`) ✅ (All sections)
+- `output/{name}/web/index.html` - web view when generated
+- `output/{name}/docx/{name}_combined.docx` - DOCX when generated
+- `output/{name}/epub/{name}_combined.epub` - EPUB when generated
 
 ### Output Directory Structure
 
-```
-output/
-├── figures/          # PNG files from scripts
-├── data/             # CSV/NPZ data files
-├── pdf/              # Individual + combined PDFs
-├── tex/              # LaTeX source files
-└── latex_temp/       # Temporary LaTeX files
+```text
+output/{name}/
+├── data/             # Project data artifacts
+├── figures/          # Figures from project scripts
+├── pdf/              # Combined PDF and render intermediates
+├── slides/           # Slide artifacts when generated
+├── web/              # HTML artifacts when generated
+├── docs/             # Generated API/glossary docs when generated
+└── reports/          # Validation, test, telemetry, and manifest reports
 ```
 
 ---

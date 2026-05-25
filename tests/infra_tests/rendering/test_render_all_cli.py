@@ -23,9 +23,7 @@ class TestRenderAllCliMain:
                 render_all_cli.main()
 
         assert exc_info.value.code == 1
-        assert (
-            "no manuscript directory" in caplog.text.lower() or "not found" in caplog.text.lower()
-        )
+        assert "no manuscript directory" in caplog.text.lower() or "not found" in caplog.text.lower()
 
     def test_main_with_manuscript(self, tmp_path, caplog, monkeypatch):
         """Test with manuscript directory and files using real RenderManager."""
@@ -34,9 +32,7 @@ class TestRenderAllCliMain:
         # Create manuscript directory with tex file
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "main.tex").write_text(
-            "\\documentclass{article}\\begin{document}Test\\end{document}"
-        )
+        (manuscript_dir / "main.tex").write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
         # Use real RenderManager - may fail if LaTeX not available, but tests real behavior
         with caplog.at_level(logging.INFO):

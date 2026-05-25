@@ -25,6 +25,7 @@ from .writers import (
     update_result_payloads,
     write_artifact_manifest,
     write_core_loop_artifacts,
+    write_method_contract_artifacts,
 )
 
 __all__ = [
@@ -75,6 +76,7 @@ def run_autoresearch_loop(project_root: Path, repo_root: Path | None = None) -> 
         output_paths=(),
     )
     output_paths.extend(finalize_loop_payloads(project_root, provisional))
+    output_paths.extend(write_method_contract_artifacts(project_root, config, generated_at=generated_at))
 
     final_paths = _final_output_path_payload(project_root, output_paths)
     final = AutoResearchLoopResult(
@@ -168,6 +170,11 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/data/autoresearch_loop.json",
         "output/data/autoresearch_claims.json",
         "output/data/autoresearch_review_packet.json",
+        "output/data/research_program.json",
+        "output/data/idea_ledger.json",
+        "output/data/run_ledger.json",
+        "output/data/review_decisions.json",
+        "output/data/benchmark_scores.json",
         "output/data/manuscript_variables.json",
         "output/reports/autoresearch_loop.json",
         "output/reports/autoresearch_loop.md",
@@ -177,6 +184,7 @@ def _final_output_path_payload(project_root: Path, output_paths: list[Path]) -> 
         "output/reports/autoresearch_summary.md",
         "output/reports/artifact_manifest.json",
         "output/reports/evidence_registry.json",
+        "output/reports/benchmark_readiness_smoke.json",
     )
     return tuple(
         dict.fromkeys(

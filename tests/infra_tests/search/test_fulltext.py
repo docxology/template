@@ -112,9 +112,7 @@ class TestFulltextFetcher:
     def test_arxiv_pdf_url_resolution(self, httpserver: HTTPServer, tmp_path: Path):
         # Tiny synthetic PDF bytes — pypdf may or may not parse them; we
         # only assert the request was made and the file was cached.
-        httpserver.expect_request("/pdf/1.pdf").respond_with_data(
-            b"%PDF-1.4\n%fake\n", content_type="application/pdf"
-        )
+        httpserver.expect_request("/pdf/1.pdf").respond_with_data(b"%PDF-1.4\n%fake\n", content_type="application/pdf")
         fetcher = FulltextFetcher(cache_dir=tmp_path)
         # Override the URL to point at our local server.
         p = Paper(id="arxiv:1", title="x", pdf_url=httpserver.url_for("/pdf/1.pdf"))
@@ -133,9 +131,7 @@ class TestFulltextFetcher:
         assert "404" in (result.message or "")
 
     def test_uses_paper_pdf_url_attribute(self, httpserver: HTTPServer, tmp_path: Path):
-        httpserver.expect_request("/p.pdf").respond_with_data(
-            b"%PDF-1.4\n", content_type="application/pdf"
-        )
+        httpserver.expect_request("/p.pdf").respond_with_data(b"%PDF-1.4\n", content_type="application/pdf")
         fetcher = FulltextFetcher(cache_dir=tmp_path)
         p = Paper(id="x:1", title="t", pdf_url=httpserver.url_for("/p.pdf"))
         fetcher.fetch(p)
@@ -156,9 +152,7 @@ class TestEnrichPipeline:
         httpserver.expect_request("/api/query").respond_with_data(
             ARXIV_SUMMARY_XML, content_type="application/atom+xml"
         )
-        httpserver.expect_request("/p.pdf").respond_with_data(
-            b"%PDF-1.4\n", content_type="application/pdf"
-        )
+        httpserver.expect_request("/p.pdf").respond_with_data(b"%PDF-1.4\n", content_type="application/pdf")
         p = Paper(
             id="arxiv:1412.6980",
             title="Adam",
@@ -174,8 +168,7 @@ class TestEnrichPipeline:
         )
         # One result per fetcher.
         assert len(results) == 2
-        assert any(r.status == "hit" and "first-order" in (r.paper.abstract or "")
-                   for r in results)
+        assert any(r.status == "hit" and "first-order" in (r.paper.abstract or "") for r in results)
 
 
 class TestWriteCorpus:
@@ -188,6 +181,7 @@ class TestWriteCorpus:
         assert out.exists()
         # Check via LocalBackend round-trip.
         from infrastructure.search.literature import LocalBackend, SearchQuery
+
         backend = LocalBackend(out)
         results = backend.search(SearchQuery(text="A B"))
         assert len(results) == 2

@@ -43,8 +43,7 @@ def temp_manuscript_dir(tmp_path):
     )
 
     (manuscript_dir / "02_methods.md").write_text(
-        "# Methods\n\nAnother section with 10 words for testing metrics collection.\n\n"
-        "\\[x = y + z\\]\n"
+        "# Methods\n\nAnother section with 10 words for testing metrics collection.\n\n\\[x = y + z\\]\n"
     )
 
     return manuscript_dir
@@ -322,9 +321,7 @@ class TestAggregateMetrics:
         # Create mock project metrics
         project1 = ProjectMetrics(
             name="project1",
-            manuscript=ManuscriptMetrics(
-                total_words=1000, sections=4, equations=10, figures=5, references=20
-            ),
+            manuscript=ManuscriptMetrics(total_words=1000, sections=4, equations=10, figures=5, references=20),
             codebase=CodebaseMetrics(source_lines=500, methods=25, classes=5, scripts=3),
             tests=TestMetrics(
                 total_tests=100,
@@ -354,9 +351,7 @@ class TestAggregateMetrics:
 
         project2 = ProjectMetrics(
             name="project2",
-            manuscript=ManuscriptMetrics(
-                total_words=800, sections=3, equations=8, figures=4, references=15
-            ),
+            manuscript=ManuscriptMetrics(total_words=800, sections=3, equations=8, figures=4, references=15),
             codebase=CodebaseMetrics(source_lines=400, methods=20, classes=4, scripts=2),
             tests=TestMetrics(
                 total_tests=80,
@@ -411,13 +406,9 @@ class TestComparativeTables:
             name="project1",
             manuscript=ManuscriptMetrics(total_words=1000, sections=4),
             codebase=CodebaseMetrics(),
-            tests=TestMetrics(
-                total_tests=100, passed=100, coverage_percent=95.0, execution_time=10.0
-            ),
+            tests=TestMetrics(total_tests=100, passed=100, coverage_percent=95.0, execution_time=10.0),
             outputs=OutputMetrics(pdf_files=5, pdf_size_mb=2.0, figures=5, slides=10),
-            pipeline=PipelineMetrics(
-                total_duration=120.0, bottleneck_stage="tests", bottleneck_percent=37.5
-            ),
+            pipeline=PipelineMetrics(total_duration=120.0, bottleneck_stage="tests", bottleneck_percent=37.5),
         )
 
         project2 = ProjectMetrics(
@@ -426,9 +417,7 @@ class TestComparativeTables:
             codebase=CodebaseMetrics(),
             tests=TestMetrics(total_tests=80, passed=80, coverage_percent=92.0, execution_time=8.0),
             outputs=OutputMetrics(pdf_files=4, pdf_size_mb=1.5, figures=4, slides=8),
-            pipeline=PipelineMetrics(
-                total_duration=100.0, bottleneck_stage="render", bottleneck_percent=40.0
-            ),
+            pipeline=PipelineMetrics(total_duration=100.0, bottleneck_stage="render", bottleneck_percent=40.0),
         )
 
         projects = [project1, project2]

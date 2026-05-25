@@ -771,8 +771,6 @@ class TestEdgeCases:
         assert completeness["data_complete"] is False
         assert any("Data directory" in out for out in completeness["missing_outputs"])
 
-
-
     def test_verify_output_completeness_empty_data_file(self, tmp_path):
         """Test output completeness with empty data file."""
         data_dir = tmp_path / "data"
@@ -806,8 +804,6 @@ class TestEdgeCases:
 
         manifest = integrity.load_integrity_manifest(manifest_path)
         assert manifest is None
-
-
 
     def test_verify_output_completeness_empty_tex_file(self, tmp_path):
         """Test output completeness with empty tex file (covers lines 616-617)."""

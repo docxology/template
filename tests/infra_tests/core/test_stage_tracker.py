@@ -75,12 +75,33 @@ class TestPerformanceWarnings:
         t = StagePerformanceTracker(slow_stage_multiplier=2.0)
         # Manually populate stages to control timing
         t.stages = [
-            {"stage_name": "fast", "duration": 1.0, "memory_mb": 10, "cpu_percent": 10,
-             "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
-            {"stage_name": "fast2", "duration": 1.0, "memory_mb": 10, "cpu_percent": 10,
-             "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
-            {"stage_name": "slow", "duration": 10.0, "memory_mb": 10, "cpu_percent": 10,
-             "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
+            {
+                "stage_name": "fast",
+                "duration": 1.0,
+                "memory_mb": 10,
+                "cpu_percent": 10,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
+            {
+                "stage_name": "fast2",
+                "duration": 1.0,
+                "memory_mb": 10,
+                "cpu_percent": 10,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
+            {
+                "stage_name": "slow",
+                "duration": 10.0,
+                "memory_mb": 10,
+                "cpu_percent": 10,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
         ]
         warnings = t.get_performance_warnings()
         slow_warnings = [w for w in warnings if w["type"] == "slow_stage"]
@@ -90,8 +111,15 @@ class TestPerformanceWarnings:
     def test_high_memory_warning(self):
         t = StagePerformanceTracker(high_memory_mb=100.0)
         t.stages = [
-            {"stage_name": "mem_heavy", "duration": 1.0, "memory_mb": 200.0,
-             "cpu_percent": 10, "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
+            {
+                "stage_name": "mem_heavy",
+                "duration": 1.0,
+                "memory_mb": 200.0,
+                "cpu_percent": 10,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
         ]
         warnings = t.get_performance_warnings()
         mem_warnings = [w for w in warnings if w["type"] == "high_memory"]
@@ -101,8 +129,15 @@ class TestPerformanceWarnings:
     def test_high_cpu_warning(self):
         t = StagePerformanceTracker(high_cpu_percent=50.0)
         t.stages = [
-            {"stage_name": "cpu_heavy", "duration": 1.0, "memory_mb": 10,
-             "cpu_percent": 80.0, "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
+            {
+                "stage_name": "cpu_heavy",
+                "duration": 1.0,
+                "memory_mb": 10,
+                "cpu_percent": 80.0,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
         ]
         warnings = t.get_performance_warnings()
         cpu_warnings = [w for w in warnings if w["type"] == "high_cpu"]
@@ -116,10 +151,24 @@ class TestPerformanceWarnings:
             high_cpu_percent=95.0,
         )
         t.stages = [
-            {"stage_name": "s1", "duration": 1.0, "memory_mb": 50,
-             "cpu_percent": 30, "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
-            {"stage_name": "s2", "duration": 1.5, "memory_mb": 60,
-             "cpu_percent": 40, "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
+            {
+                "stage_name": "s1",
+                "duration": 1.0,
+                "memory_mb": 50,
+                "cpu_percent": 30,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
+            {
+                "stage_name": "s2",
+                "duration": 1.5,
+                "memory_mb": 60,
+                "cpu_percent": 40,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
         ]
         warnings = t.get_performance_warnings()
         assert len(warnings) == 0
@@ -135,10 +184,24 @@ class TestGetSummary:
     def test_summary_with_stages(self):
         t = StagePerformanceTracker()
         t.stages = [
-            {"stage_name": "fast", "duration": 1.0, "memory_mb": 50,
-             "cpu_percent": 20, "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
-            {"stage_name": "slow", "duration": 5.0, "memory_mb": 100,
-             "cpu_percent": 40, "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
+            {
+                "stage_name": "fast",
+                "duration": 1.0,
+                "memory_mb": 50,
+                "cpu_percent": 20,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
+            {
+                "stage_name": "slow",
+                "duration": 5.0,
+                "memory_mb": 100,
+                "cpu_percent": 40,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
         ]
         summary = t.get_summary()
         assert summary["total_stages"] == 2
@@ -152,8 +215,15 @@ class TestGetSummary:
     def test_summary_single_stage(self):
         t = StagePerformanceTracker()
         t.stages = [
-            {"stage_name": "only", "duration": 2.0, "memory_mb": 75,
-             "cpu_percent": 30, "exit_code": 0, "io_read_mb": 0, "io_write_mb": 0},
+            {
+                "stage_name": "only",
+                "duration": 2.0,
+                "memory_mb": 75,
+                "cpu_percent": 30,
+                "exit_code": 0,
+                "io_read_mb": 0,
+                "io_write_mb": 0,
+            },
         ]
         summary = t.get_summary()
         assert summary["total_stages"] == 1

@@ -27,9 +27,7 @@ class TestValidateFigureRegistry:
         # Create manuscript with references
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "01_introduction.md").write_text(
-            "See \\ref{fig:example1} and \\label{fig:example2}"
-        )
+        (manuscript_dir / "01_introduction.md").write_text("See \\ref{fig:example1} and \\label{fig:example2}")
 
         success, issues = validate_figure_registry(registry_path, manuscript_dir)
 
@@ -47,9 +45,7 @@ class TestValidateFigureRegistry:
         # Create manuscript with unregistered reference
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "01_introduction.md").write_text(
-            "See \\ref{fig:example1} and \\ref{fig:unregistered}"
-        )
+        (manuscript_dir / "01_introduction.md").write_text("See \\ref{fig:example1} and \\ref{fig:unregistered}")
 
         success, issues = validate_figure_registry(registry_path, manuscript_dir)
 
@@ -159,9 +155,7 @@ class TestValidateFigureRegistry:
         # Create manuscript with both patterns
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "01_introduction.md").write_text(
-            "See \\ref{fig:example1} and \\label{fig:example2}"
-        )
+        (manuscript_dir / "01_introduction.md").write_text("See \\ref{fig:example1} and \\label{fig:example2}")
 
         success, issues = validate_figure_registry(registry_path, manuscript_dir)
 
@@ -276,9 +270,7 @@ class TestListShapeRegistry:
 
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "01_intro.md").write_text(
-            "See \\ref{fig:a} and \\label{fig:b}"
-        )
+        (manuscript_dir / "01_intro.md").write_text("See \\ref{fig:a} and \\label{fig:b}")
 
         success, issues = validate_figure_registry(registry_path, manuscript_dir)
 
@@ -293,9 +285,7 @@ class TestListShapeRegistry:
 
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "01_intro.md").write_text(
-            "\\ref{fig:a} \\ref{fig:missing}"
-        )
+        (manuscript_dir / "01_intro.md").write_text("\\ref{fig:a} \\ref{fig:missing}")
 
         success, issues = validate_figure_registry(registry_path, manuscript_dir)
 

@@ -163,6 +163,7 @@ class TestSearchResult:
         assert "papers" in r.to_dict()
         # JSON round trip.
         import json as _json
+
         assert _json.loads(r.to_json()) == r.to_dict()
 
     def test_iter_yields_papers(self):

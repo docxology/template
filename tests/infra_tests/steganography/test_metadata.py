@@ -16,7 +16,13 @@ class TestMetadata:
         from infrastructure.steganography.config import DocumentMetadata
         from infrastructure.steganography.metadata import build_document_metadata
 
-        doc = DocumentMetadata(title="Test Paper", authors=["Author One", "Author Two"], hashes={"sha256": "abcd" * 16}, document_id="doc-123", keywords=["test", "steganography"])
+        doc = DocumentMetadata(
+            title="Test Paper",
+            authors=["Author One", "Author Two"],
+            hashes={"sha256": "abcd" * 16},
+            document_id="doc-123",
+            keywords=["test", "steganography"],
+        )
         meta = build_document_metadata(doc)
         assert meta["/Title"] == "Test Paper"
         assert "Author One" in meta["/Author"]
@@ -145,6 +151,7 @@ class TestInjectPdfMetadata:
 
         # Create a minimal PDF using pypdf
         from pypdf import PdfWriter
+
         writer = PdfWriter()
         writer.add_blank_page(width=72, height=72)
         pdf_path = tmp_path / "input.pdf"
@@ -152,9 +159,7 @@ class TestInjectPdfMetadata:
             writer.write(f)
 
         output = tmp_path / "output.pdf"
-        result = inject_pdf_metadata(
-            pdf_path, output, {"/Title": "Injected", "/Author": "Test"}
-        )
+        result = inject_pdf_metadata(pdf_path, output, {"/Title": "Injected", "/Author": "Test"})
         assert result == output
         assert output.exists()
 
@@ -163,6 +168,7 @@ class TestInjectPdfMetadata:
         from infrastructure.steganography.metadata import inject_pdf_metadata
 
         from pypdf import PdfWriter
+
         writer = PdfWriter()
         writer.add_blank_page(width=72, height=72)
         pdf_path = tmp_path / "input.pdf"
@@ -180,6 +186,7 @@ class TestInjectPdfMetadata:
         from infrastructure.steganography.metadata import inject_pdf_metadata
 
         from pypdf import PdfWriter
+
         writer = PdfWriter()
         writer.add_blank_page(width=72, height=72)
         pdf_path = tmp_path / "input.pdf"
@@ -188,7 +195,9 @@ class TestInjectPdfMetadata:
 
         output = tmp_path / "output_att.pdf"
         result = inject_pdf_metadata(
-            pdf_path, output, {"/Title": "T"},
+            pdf_path,
+            output,
+            {"/Title": "T"},
             attachments={"manifest.json": b'{"hash": "abc123"}'},
         )
         assert result == output

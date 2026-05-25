@@ -24,9 +24,7 @@ class TestWebRendererCore:
     def test_has_render_functions(self):
         """Test that module has render functions."""
         module_funcs = [
-            a
-            for a in dir(web_renderer)
-            if not a.startswith("_") and callable(getattr(web_renderer, a, None))
+            a for a in dir(web_renderer) if not a.startswith("_") and callable(getattr(web_renderer, a, None))
         ]
         assert len(module_funcs) > 0
 
@@ -313,11 +311,7 @@ class TestCombineMarkdownFiles:
 
     def test_html_safe_markdown_normalizes_project_figure_paths(self, tmp_path):
         renderer = _make_renderer(tmp_path)
-        source = (
-            "![A](../output/figures/a.png)\n"
-            "![B](output/figures/b.png)\n"
-            "![C](../../output/figures/c.png)\n"
-        )
+        source = "![A](../output/figures/a.png)\n![B](output/figures/b.png)\n![C](../../output/figures/c.png)\n"
 
         result = renderer._html_safe_markdown(source)
 

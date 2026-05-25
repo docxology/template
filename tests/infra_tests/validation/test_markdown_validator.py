@@ -84,9 +84,7 @@ class TestCollectSymbols:
             "\\begin{equation}\\label{eq:test2}\\end{equation}\n## Subsection {#subsec:test2}\n"
         )
 
-        labels, anchors = collect_symbols(
-            [str(manuscript / "test1.md"), str(manuscript / "test2.md")]
-        )
+        labels, anchors = collect_symbols([str(manuscript / "test1.md"), str(manuscript / "test2.md")])
 
         assert labels == {"eq:test1", "eq:test2"}
         # Explicit ``{#anchor}`` attributes are always valid targets...
@@ -225,9 +223,7 @@ class TestValidateRefs:
         """LaTeX like p(#1) in ``` blocks must not be reported as (#1) internal links."""
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        (manuscript / "test.md").write_text(
-            "```latex\n" r"\newcommand{\gen}[1]{p(#1)}" "\n```\n"
-        )
+        (manuscript / "test.md").write_text("```latex\n" r"\newcommand{\gen}[1]{p(#1)}" "\n```\n")
 
         problems = validate_refs([str(manuscript / "test.md")], tmp_path, set(), set())
 
@@ -608,12 +604,8 @@ class TestCitationAudit:
         manuscript.mkdir()
         md = manuscript / "test.md"
         md.write_text("Curated [@smith2020]; deep [@deep2024].\n", encoding="utf-8")
-        (manuscript / "references.bib").write_text(
-            "@article{smith2020, title={Foo}}\n", encoding="utf-8"
-        )
-        (manuscript / "references_deep.bib").write_text(
-            "@misc{deep2024, title={Bar}}\n", encoding="utf-8"
-        )
+        (manuscript / "references.bib").write_text("@article{smith2020, title={Foo}}\n", encoding="utf-8")
+        (manuscript / "references_deep.bib").write_text("@misc{deep2024, title={Bar}}\n", encoding="utf-8")
         assert validate_citations([str(md)], tmp_path) == []
 
     def test_explicit_bib_list(self, tmp_path):
@@ -634,12 +626,8 @@ class TestCitationAudit:
         manuscript.mkdir()
         md = manuscript / "test.md"
         md.write_text("[@missing_everywhere]\n", encoding="utf-8")
-        (manuscript / "references.bib").write_text(
-            "@article{smith2020, title={Foo}}\n", encoding="utf-8"
-        )
-        (manuscript / "references_deep.bib").write_text(
-            "@misc{deep2024, title={Bar}}\n", encoding="utf-8"
-        )
+        (manuscript / "references.bib").write_text("@article{smith2020, title={Foo}}\n", encoding="utf-8")
+        (manuscript / "references_deep.bib").write_text("@misc{deep2024, title={Bar}}\n", encoding="utf-8")
         problems = validate_citations([str(md)], tmp_path)
         assert len(problems) == 1
         assert "references.bib" in problems[0].message
@@ -654,9 +642,7 @@ class TestNonRenderedFilesSkipped:
         manuscript.mkdir()
         # AGENTS.md routinely documents '|' patterns and shouldn't be flagged.
         (manuscript / "AGENTS.md").write_text("Mean |word| in docs.\n", encoding="utf-8")
-        (manuscript / "preamble.md").write_text(
-            "| col1 | col2 |\n|------|------|\n| a \\| b | c |\n", encoding="utf-8"
-        )
+        (manuscript / "preamble.md").write_text("| col1 | col2 |\n|------|------|\n| a \\| b | c |\n", encoding="utf-8")
         (manuscript / "README.md").write_text("Cite [@anything] in docs.\n", encoding="utf-8")
         paths = [
             str(manuscript / "AGENTS.md"),
@@ -677,8 +663,7 @@ class TestNonRenderedFilesSkipped:
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "table.md").write_text(
-            "| Term | Symbol |\n|------|--------|\n"
-            "| Cosine | $\\frac{u \\cdot v}{\\|u\\| \\|v\\|}$ |\n",
+            "| Term | Symbol |\n|------|--------|\n| Cosine | $\\frac{u \\cdot v}{\\|u\\| \\|v\\|}$ |\n",
             encoding="utf-8",
         )
         assert validate_pandoc_pitfalls([str(manuscript / "table.md")], tmp_path) == []
@@ -838,9 +823,7 @@ class TestDiagnosticCodes:
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir(exist_ok=True)
         (manuscript / "test.md").write_text("Cite [@nope].\n", encoding="utf-8")
-        (manuscript / "references.bib").write_text(
-            "@misc{good_only}\n", encoding="utf-8"
-        )
+        (manuscript / "references.bib").write_text("@misc{good_only}\n", encoding="utf-8")
         problems = validate_citations([str(manuscript / "test.md")], tmp_path)
         assert problems[0].code == BibtexCode.UNDEFINED_KEY
 

@@ -27,9 +27,7 @@ class TestExtractActionItems:
 
     def test_extracts_checklist_items_from_suggestions(self):
         """Checklist items in improvement_suggestions are extracted."""
-        reviews = {
-            "improvement_suggestions": "- [ ] Fix the introduction\n- [ ] Add more references\n"
-        }
+        reviews = {"improvement_suggestions": "- [ ] Fix the introduction\n- [ ] Add more references\n"}
         result = extract_action_items(reviews)
         assert "[ ] Fix the introduction" in result or "Fix the introduction" in result
 
@@ -37,10 +35,7 @@ class TestExtractActionItems:
         """Items under 'high priority' heading are extracted."""
         reviews = {
             "improvement_suggestions": (
-                "## High Priority\n"
-                "- **Issue**: Methods section incomplete\n"
-                "## Medium Priority\n"
-                "- Minor issue\n"
+                "## High Priority\n- **Issue**: Methods section incomplete\n## Medium Priority\n- Minor issue\n"
             )
         }
         result = extract_action_items(reviews)
@@ -115,22 +110,14 @@ class TestCalculateQualitySummary:
 
     def test_extracts_bold_score_pattern(self):
         """**Score: N** pattern is extracted and averaged."""
-        reviews = {
-            "quality_review": (
-                "Clarity: **Score: 4**\n"
-                "Methods: **Score: 3**\n"
-                "Results: **Score: 5**\n"
-            )
-        }
+        reviews = {"quality_review": ("Clarity: **Score: 4**\nMethods: **Score: 3**\nResults: **Score: 5**\n")}
         result = calculate_quality_summary(reviews)
         assert "4.0" in result  # average of 4, 3, 5
         assert "/5" in result
 
     def test_extracts_plain_score_pattern(self):
         """Score: N (plain) pattern is extracted."""
-        reviews = {
-            "quality_review": "Clarity Score: 4\nMethods Score: 2\n"
-        }
+        reviews = {"quality_review": "Clarity Score: 4\nMethods Score: 2\n"}
         result = calculate_quality_summary(reviews)
         assert "/5" in result
 
@@ -147,9 +134,7 @@ class TestExtractActionItemsFromReviewAnalysis:
     def test_extracts_checklist_items(self):
         reviews = {
             "improvement_suggestions": (
-                "- [ ] Fix the introduction section\n"
-                "- [ ] Add more references\n"
-                "- [ ] Improve the abstract\n"
+                "- [ ] Fix the introduction section\n- [ ] Add more references\n- [ ] Improve the abstract\n"
             )
         }
         result = extract_action_items(reviews)
@@ -187,12 +172,7 @@ class TestExtractActionItemsFromReviewAnalysis:
         assert len(items) <= 10
 
     def test_long_items_truncated(self):
-        reviews = {
-            "improvement_suggestions": (
-                "## High Priority\n"
-                "1. " + "A" * 200 + "\n"
-            )
-        }
+        reviews = {"improvement_suggestions": ("## High Priority\n1. " + "A" * 200 + "\n")}
         result = extract_action_items(reviews)
         # Should either truncate or fall back to defaults
         assert len(result) > 0
@@ -213,8 +193,7 @@ class TestExtractActionItemsFromReviewAnalysis:
     def test_issue_prefix_extraction(self):
         reviews = {
             "improvement_suggestions": (
-                "## High Priority\n"
-                "- **Issue**: The abstract needs significant revision and expansion\n"
+                "## High Priority\n- **Issue**: The abstract needs significant revision and expansion\n"
             )
         }
         result = extract_action_items(reviews)
@@ -261,9 +240,7 @@ class TestCalculateQualitySummaryFromReviewAnalysis:
     def test_with_scores(self):
         reviews = {
             "quality_review": (
-                "## Clarity\n**Score: 4**\n\n"
-                "## Structure\n**Score: 3**\n\n"
-                "## Technical Accuracy\n**Score: 5**\n"
+                "## Clarity\n**Score: 4**\n\n## Structure\n**Score: 3**\n\n## Technical Accuracy\n**Score: 5**\n"
             )
         }
         result = calculate_quality_summary(reviews)
@@ -271,9 +248,7 @@ class TestCalculateQualitySummaryFromReviewAnalysis:
         assert "/5" in result
 
     def test_bold_scores(self):
-        reviews = {
-            "quality_review": "Clarity: **Score: 4/5**\nAccuracy: **Score: 3/5**"
-        }
+        reviews = {"quality_review": "Clarity: **Score: 4/5**\nAccuracy: **Score: 3/5**"}
         result = calculate_quality_summary(reviews)
         assert "Average Quality Score" in result
 

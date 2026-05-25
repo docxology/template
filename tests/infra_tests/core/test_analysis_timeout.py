@@ -22,7 +22,5 @@ from infrastructure.core.analysis_timeout import parse_analysis_script_timeout_s
         ({"ANALYSIS_SCRIPT_TIMEOUT_SEC": "not-a-number"}, 7200.0),
     ],
 )
-def test_parse_analysis_script_timeout_sec(
-    env: dict[str, str], expected: float | None
-) -> None:
+def test_parse_analysis_script_timeout_sec(env: dict[str, str], expected: float | None) -> None:
     assert parse_analysis_script_timeout_sec(env) == expected

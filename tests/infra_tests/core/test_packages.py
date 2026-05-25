@@ -62,8 +62,10 @@ class TestCheckBuildTools:
         assert result is True
 
     def test_mixed(self):
-        result = check_build_tools({
-            "python3": "Python",
-            "nonexistent_xyz_99": "Missing",
-        })
+        result = check_build_tools(
+            {
+                "python3": "Python",
+                "nonexistent_xyz_99": "Missing",
+            }
+        )
         assert result is False

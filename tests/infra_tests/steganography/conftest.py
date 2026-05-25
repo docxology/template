@@ -13,6 +13,7 @@ import pytest
 def has_reportlab() -> bool:
     try:
         import reportlab  # type: ignore  # noqa: F401
+
         return True
     except ImportError:
         return False
@@ -21,6 +22,7 @@ def has_reportlab() -> bool:
 def has_pypdf() -> bool:
     try:
         import pypdf  # noqa: F401
+
         return True
     except ImportError:
         return False
@@ -29,6 +31,7 @@ def has_pypdf() -> bool:
 def has_qrcode() -> bool:
     try:
         import qrcode  # type: ignore  # noqa: F401
+
         return True
     except ImportError:
         return False

@@ -42,6 +42,7 @@ def _corpus(tmp_path: Path) -> Path:
 
 def test_build_parser_returns_argparse():
     import argparse
+
     parser = build_parser()
     assert isinstance(parser, argparse.ArgumentParser)
 

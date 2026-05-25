@@ -1,6 +1,5 @@
 """Tests for infrastructure.validation.docs.completeness — comprehensive coverage."""
 
-
 from infrastructure.validation.docs.completeness import (
     check_feature_documentation,
     check_script_documentation,

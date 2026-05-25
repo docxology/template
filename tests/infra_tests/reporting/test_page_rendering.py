@@ -31,6 +31,7 @@ class TestExtractPdfPagesAsImages:
         assert len(images) == 2
         # Each should be a PIL Image
         from PIL import Image
+
         for img in images:
             assert isinstance(img, Image.Image)
 
@@ -81,6 +82,7 @@ class TestRenderPagesSimple:
         images = _render_pages_simple(reader, dpi=72)
         assert len(images) == 1
         from PIL import Image
+
         assert isinstance(images[0], Image.Image)
         # At 72 DPI: 8.5 * 72 = 612, 11 * 72 = 792
         assert images[0].size == (612, 792)
@@ -134,6 +136,7 @@ class TestRenderPagesWithReportlab:
         images = _render_pages_with_reportlab(reader, dpi=72)
         assert len(images) == 1
         from PIL import Image
+
         assert isinstance(images[0], Image.Image)
 
     def test_empty_page(self, tmp_path):

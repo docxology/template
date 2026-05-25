@@ -295,10 +295,7 @@ class TestLLMClientWithOllama:
             requests.exceptions.ConnectionError,
         ) as e:
             error_str = str(e).lower()
-            if any(
-                keyword in error_str
-                for keyword in ["timed out", "timeout", "connection", "refused"]
-            ):
+            if any(keyword in error_str for keyword in ["timed out", "timeout", "connection", "refused"]):
                 pytest.fail(f"Ollama connection/timeout issue after setup: {e}")
             raise
 
@@ -407,9 +404,7 @@ class TestLLMClientWithOllama:
     def test_apply_template(self, client):
         """Test applying a research template."""
         with safe_network_test("Ollama"):
-            response = client.apply_template(
-                "summarize_abstract", text="This study examines the effects of X on Y."
-            )
+            response = client.apply_template("summarize_abstract", text="This study examines the effects of X on Y.")
 
             assert response is not None
             assert len(response) > 0
@@ -743,10 +738,7 @@ class TestLLMQueryModesIntegration:
             requests.exceptions.ConnectionError,
         ) as e:
             error_str = str(e).lower()
-            if any(
-                keyword in error_str
-                for keyword in ["timed out", "timeout", "connection", "refused"]
-            ):
+            if any(keyword in error_str for keyword in ["timed out", "timeout", "connection", "refused"]):
                 pytest.fail(f"Ollama connection/timeout issue after setup: {e}")
             raise
 

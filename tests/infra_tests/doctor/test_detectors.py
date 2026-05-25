@@ -1,6 +1,5 @@
 """Tests for individual detectors and run_detectors()."""
 
-
 from pathlib import Path
 
 
@@ -61,9 +60,7 @@ def test_pycache_skips_venv_anywhere(tmp_path: Path):
     """A nested .venv anywhere in the path filters out caches inside it."""
     _make_min_repo(tmp_path)
     (tmp_path / "tools" / ".venv" / "lib" / "__pycache__").mkdir(parents=True)
-    (tmp_path / "tools" / ".venv" / "lib" / "__pycache__" / "x.pyc").write_text(
-        "compiled"
-    )
+    (tmp_path / "tools" / ".venv" / "lib" / "__pycache__" / "x.pyc").write_text("compiled")
     findings = detect_pycache_clutter(tmp_path)
     assert findings[0].healthy is True
 
@@ -85,9 +82,7 @@ def test_stale_coverage_files(tmp_path: Path):
     assert findings[0].healthy is False
     assert findings[0].evidence["files"]
     # Fix id surfaced
-    assert any(
-        rl.fix_id == "fix_clean_coverage_files" for rl in findings[0].repair_levels
-    )
+    assert any(rl.fix_id == "fix_clean_coverage_files" for rl in findings[0].repair_levels)
 
 
 def test_doctor_state_not_writable_reports_warn(tmp_path: Path) -> None:

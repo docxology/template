@@ -15,11 +15,19 @@ from infrastructure.validation.docs.consistency._shared import (
 )
 
 _PACKAGE_COUNT_LINE_RE = re.compile(
-    r"^.*?(?:\*\*|__|`)?(?P<n>\d{2,}|[2-9])(?:\*\*|__|`)?\s+(?:top-level\s+)?Python\s+(?:sub)?packages\b.*$",
+    r"^(?=.*(?:\b(?:Python|importable|subpackages)\b|`infrastructure/`)).*?"
+    r"(?:\*\*|__|`)?(?P<n>\d{2,}|[2-9])(?:\*\*|__|`)?"
+    r"(?:\s+`infrastructure/`)?\s+"
+    r"(?:top-level\s+)?(?:importable\s+)?(?:Python\s+)?(?:sub)?packages\b.*$",
     re.IGNORECASE | re.MULTILINE,
 )
 _SUBPACKAGE_COUNT_LINE_RE = re.compile(
     r"^.*?(?:\*\*|__|`)?(?P<n>\d{2,}|[2-9])(?:\*\*|__|`)?\s+subpackages\b.*?infrastructure.*$",
+    re.IGNORECASE | re.MULTILINE,
+)
+_INFRASTRUCTURE_AREA_COUNT_LINE_RE = re.compile(
+    r"^.*?(?:\*\*|__|`)?(?P<n>\d{2,}|[2-9])(?:\*\*|__|`)?\s+"
+    r"documented\s+infrastructure\s+areas\b.*$",
     re.IGNORECASE | re.MULTILINE,
 )
 _PY_COUNT_RE = re.compile(r"\b\d{3}\s*(?:`?\.py`?|Python)\s+files\b", re.IGNORECASE)
@@ -35,7 +43,11 @@ def check_module_count_claims(repo_root: Path, expected_count: int | None = None
             continue
         text = blank_fences(raw)
         seen_lines: set[int] = set()
-        for regex in (_PACKAGE_COUNT_LINE_RE, _SUBPACKAGE_COUNT_LINE_RE):
+        for regex in (
+            _PACKAGE_COUNT_LINE_RE,
+            _SUBPACKAGE_COUNT_LINE_RE,
+            _INFRASTRUCTURE_AREA_COUNT_LINE_RE,
+        ):
             for match in regex.finditer(text):
                 claimed = int(match.group("n"))
                 if claimed != expected:

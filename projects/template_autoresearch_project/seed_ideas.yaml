@@ -1,0 +1,39 @@
+ideas:
+  - id: idea-contract-ledgers
+    title: "File-backed proposal ledgers"
+    rationale: "Bounded research loops need replayable proposal state."
+    status: accepted
+    evidence_links:
+      - claim_id: idea-contract-ledgers
+        evidence_path: output/reports/evidence_registry.json
+        evidence_type: artifact
+    candidates:
+      - id: exp-ledger-snapshot
+        status: deferred
+        metric_name: readiness_valid
+        metric_direction: maximize
+        touched_paths:
+          - projects/template_autoresearch_project/src/loop.py
+        expected_artifacts:
+          - output/data/idea_ledger.json
+          - output/data/run_ledger.json
+  - id: idea-autonomous-execution
+    title: "Autonomous generated-code execution"
+    rationale: "Executing LLM-written code is intentionally outside the safe public default."
+    status: rejected
+    evidence_links: []
+    candidates: []
+  - id: idea-benchmark-smoke
+    title: "Benchmark-style readiness scoring"
+    rationale: "A small grading artifact demonstrates benchmark wiring without external services."
+    status: deferred
+    evidence_links: []
+    candidates:
+      - id: exp-benchmark-smoke
+        status: deferred
+        metric_name: benchmark_status
+        metric_direction: maximize
+        touched_paths:
+          - projects/template_autoresearch_project/src/reports.py
+        expected_artifacts:
+          - output/data/benchmark_scores.json

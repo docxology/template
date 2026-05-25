@@ -1,6 +1,5 @@
 """Tests for infrastructure.llm.review.generation — pure function coverage."""
 
-
 from infrastructure.llm.review.generation import (
     extract_manuscript_text,
     _build_off_topic_retry_prompt,
@@ -25,6 +24,7 @@ class TestExtractManuscriptText:
             from reportlab.pdfgen import canvas as rl_canvas
         except ImportError:
             import pytest
+
             pytest.skip("reportlab not installed")
 
         pdf_path = tmp_path / "test.pdf"
@@ -44,6 +44,7 @@ class TestExtractManuscriptText:
             from reportlab.pdfgen import canvas as rl_canvas
         except ImportError:
             import pytest
+
             pytest.skip("reportlab not installed")
 
         pdf_path = tmp_path / "big.pdf"

@@ -248,9 +248,7 @@ class TestGeneratePerformanceReport:
         """Test recommendations for slow functions (> 0.1s)."""
         results = [
             BenchmarkResult("slow_func", 0.150, 10.0, 100, {}, "Slow", "2024-01-15 10:00:00"),
-            BenchmarkResult(
-                "very_slow_func", 0.300, 10.0, 100, {}, "Very slow", "2024-01-15 10:00:01"
-            ),
+            BenchmarkResult("very_slow_func", 0.300, 10.0, 100, {}, "Very slow", "2024-01-15 10:00:01"),
         ]
 
         report = format_benchmark_report(results)
@@ -262,12 +260,8 @@ class TestGeneratePerformanceReport:
     def test_generate_report_with_memory_intensive_functions(self):
         """Test recommendations for memory-intensive functions (> 100MB)."""
         results = [
-            BenchmarkResult(
-                "memory_hog", 0.01, 150.0, 100, {}, "Memory intensive", "2024-01-15 10:00:00"
-            ),
-            BenchmarkResult(
-                "bigger_hog", 0.01, 250.0, 100, {}, "More memory", "2024-01-15 10:00:01"
-            ),
+            BenchmarkResult("memory_hog", 0.01, 150.0, 100, {}, "Memory intensive", "2024-01-15 10:00:00"),
+            BenchmarkResult("bigger_hog", 0.01, 250.0, 100, {}, "More memory", "2024-01-15 10:00:01"),
         ]
 
         report = format_benchmark_report(results)
@@ -290,9 +284,7 @@ class TestGeneratePerformanceReport:
     def test_generate_report_mixed_memory_data(self):
         """Test report with some results having memory, some not."""
         results = [
-            BenchmarkResult(
-                "with_memory", 0.001, 30.0, 100, {}, "Has memory", "2024-01-15 10:00:00"
-            ),
+            BenchmarkResult("with_memory", 0.001, 30.0, 100, {}, "Has memory", "2024-01-15 10:00:00"),
             BenchmarkResult("no_memory", 0.002, None, 100, {}, "No memory", "2024-01-15 10:00:01"),
         ]
 
@@ -303,11 +295,7 @@ class TestGeneratePerformanceReport:
 
     def test_generate_report_table_format(self):
         """Test report contains properly formatted table."""
-        results = [
-            BenchmarkResult(
-                "test_func", 0.005, 25.0, 50, {"key": "value"}, "Test", "2024-01-15 10:00:00"
-            )
-        ]
+        results = [BenchmarkResult("test_func", 0.005, 25.0, 50, {"key": "value"}, "Test", "2024-01-15 10:00:00")]
 
         report = format_benchmark_report(results)
 
@@ -319,9 +307,7 @@ class TestGeneratePerformanceReport:
 
     def test_generate_report_recommendations_section(self):
         """Test recommendations section is always present."""
-        results = [
-            BenchmarkResult("fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00")
-        ]
+        results = [BenchmarkResult("fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-15 10:00:00")]
 
         report = format_benchmark_report(results)
 
@@ -345,8 +331,7 @@ class TestGeneratePerformanceReport:
     def test_generate_report_top_3_slow_recommendation(self):
         """Test only top 3 slowest functions are recommended for optimization."""
         results = [
-            BenchmarkResult(f"slow_func_{i}", 0.15 + i * 0.01, 10.0, 100, {}, "Slow", "2024-01-15")
-            for i in range(5)
+            BenchmarkResult(f"slow_func_{i}", 0.15 + i * 0.01, 10.0, 100, {}, "Slow", "2024-01-15") for i in range(5)
         ]
 
         report = format_benchmark_report(results)

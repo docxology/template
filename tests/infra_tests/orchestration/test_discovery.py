@@ -72,8 +72,10 @@ def test_select_project_interactive_picks_by_index(fake_repo: Path) -> None:
     out = io.StringIO()
     # Index 0 deterministically resolves to the first sorted project.
     picked = select_project_interactive(
-        projects, current=projects[0].qualified_name,
-        reader=lambda: "0", writer=out,
+        projects,
+        current=projects[0].qualified_name,
+        reader=lambda: "0",
+        writer=out,
     )
     assert picked == projects[0].qualified_name
     assert "Available projects" in out.getvalue()
@@ -82,7 +84,10 @@ def test_select_project_interactive_picks_by_index(fake_repo: Path) -> None:
 def test_select_project_interactive_picks_all(fake_repo: Path) -> None:
     projects = discover_projects(fake_repo)
     picked = select_project_interactive(
-        projects, current=None, reader=lambda: "a", writer=None,
+        projects,
+        current=None,
+        reader=lambda: "a",
+        writer=None,
     )
     assert picked == "all"
 
@@ -90,7 +95,10 @@ def test_select_project_interactive_picks_all(fake_repo: Path) -> None:
 def test_select_project_interactive_quit(fake_repo: Path) -> None:
     projects = discover_projects(fake_repo)
     picked = select_project_interactive(
-        projects, current=None, reader=lambda: "q", writer=None,
+        projects,
+        current=None,
+        reader=lambda: "q",
+        writer=None,
     )
     assert picked is None
 
@@ -99,14 +107,20 @@ def test_select_project_interactive_retries_on_invalid(fake_repo: Path) -> None:
     projects = discover_projects(fake_repo)
     answers = iter(["", "999", "junk", "0"])
     picked = select_project_interactive(
-        projects, current=None, reader=lambda: next(answers), writer=None,
+        projects,
+        current=None,
+        reader=lambda: next(answers),
+        writer=None,
     )
     assert picked == projects[0].qualified_name
 
 
 def test_select_project_interactive_handles_empty() -> None:
     picked = select_project_interactive(
-        [], current=None, reader=lambda: "0", writer=None,
+        [],
+        current=None,
+        reader=lambda: "0",
+        writer=None,
     )
     assert picked is None
 

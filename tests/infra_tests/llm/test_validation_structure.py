@@ -44,32 +44,24 @@ class TestValidateSectionCompleteness:
     def test_flexible_matching_case_insensitive(self):
         response = "# OVERVIEW\nSome content\n# RESULTS\nMore content"
         headers = ["## Overview", "## Results"]
-        is_complete, missing, details = validate_section_completeness(
-            response, headers, flexible=True
-        )
+        is_complete, missing, details = validate_section_completeness(response, headers, flexible=True)
         assert is_complete is True
         assert len(missing) == 0
 
     def test_strict_matching_no_flexible(self):
         response = "# OVERVIEW\nSome content"
         headers = ["## Overview"]
-        is_complete, missing, details = validate_section_completeness(
-            response, headers, flexible=False
-        )
+        is_complete, missing, details = validate_section_completeness(response, headers, flexible=False)
         assert is_complete is False
         assert "## Overview" in missing
 
     def test_empty_response(self):
-        is_complete, missing, details = validate_section_completeness(
-            "", ["## Overview"]
-        )
+        is_complete, missing, details = validate_section_completeness("", ["## Overview"])
         assert is_complete is False
         assert len(missing) == 1
 
     def test_empty_required_headers(self):
-        is_complete, missing, details = validate_section_completeness(
-            "Some content", []
-        )
+        is_complete, missing, details = validate_section_completeness("Some content", [])
         assert is_complete is True
         assert missing == []
 
@@ -85,9 +77,7 @@ class TestValidateSectionCompleteness:
     def test_flexible_match_with_different_header_level(self):
         response = "### Overview\nSome content"
         headers = ["## Overview"]
-        is_complete, missing, details = validate_section_completeness(
-            response, headers, flexible=True
-        )
+        is_complete, missing, details = validate_section_completeness(response, headers, flexible=True)
         assert is_complete is True
 
 
@@ -160,17 +150,13 @@ class TestValidateResponseStructure:
 
     def test_too_short_response(self):
         response = "## Overview\nShort"
-        is_valid, issues, details = validate_response_structure(
-            response, ["## Overview"], min_word_count=100
-        )
+        is_valid, issues, details = validate_response_structure(response, ["## Overview"], min_word_count=100)
         assert is_valid is False
         assert any("too short" in i for i in issues)
 
     def test_too_long_response(self):
         response = "## Overview\n" + " ".join(["word"] * 200)
-        is_valid, issues, details = validate_response_structure(
-            response, ["## Overview"], max_word_count=50
-        )
+        is_valid, issues, details = validate_response_structure(response, ["## Overview"], max_word_count=50)
         assert is_valid is False
         assert any("too long" in i for i in issues)
 
@@ -182,39 +168,29 @@ class TestValidateResponseStructure:
 
     def test_extracted_sections_in_details(self):
         response = "## Overview\nContent\n## Methods\nContent"
-        _, _, details = validate_response_structure(
-            response, ["## Overview", "## Methods"]
-        )
+        _, _, details = validate_response_structure(response, ["## Overview", "## Methods"])
         assert "extracted_sections" in details
         assert "Overview" in details["extracted_sections"]
         assert "Methods" in details["extracted_sections"]
 
     def test_no_word_count_constraints(self):
         response = "## Overview\nContent"
-        is_valid, issues, details = validate_response_structure(
-            response, ["## Overview"]
-        )
+        is_valid, issues, details = validate_response_structure(response, ["## Overview"])
         assert is_valid is True
 
     def test_flexible_headers_default(self):
         response = "# OVERVIEW\nContent"
-        is_valid, issues, details = validate_response_structure(
-            response, ["## Overview"]
-        )
+        is_valid, issues, details = validate_response_structure(response, ["## Overview"])
         assert is_valid is True
 
     def test_strict_headers(self):
         response = "# OVERVIEW\nContent"
-        is_valid, issues, details = validate_response_structure(
-            response, ["## Overview"], flexible_headers=False
-        )
+        is_valid, issues, details = validate_response_structure(response, ["## Overview"], flexible_headers=False)
         assert is_valid is False
 
     def test_multiple_issues(self):
         response = "short"
-        is_valid, issues, _ = validate_response_structure(
-            response, ["## Overview", "## Results"], min_word_count=100
-        )
+        is_valid, issues, _ = validate_response_structure(response, ["## Overview", "## Results"], min_word_count=100)
         assert is_valid is False
         assert len(issues) >= 2  # too short + missing sections
 
@@ -224,45 +200,33 @@ class TestValidateSectionCompletenessFromValidationStructure:
 
     def test_all_headers_present(self):
         response = "## Overview\n\nContent.\n\n## Methods\n\nMore content."
-        is_complete, missing, details = validate_section_completeness(
-            response, ["## Overview", "## Methods"]
-        )
+        is_complete, missing, details = validate_section_completeness(response, ["## Overview", "## Methods"])
         assert is_complete is True
         assert missing == []
 
     def test_missing_header(self):
         response = "## Overview\n\nContent."
-        is_complete, missing, details = validate_section_completeness(
-            response, ["## Overview", "## Methods"]
-        )
+        is_complete, missing, details = validate_section_completeness(response, ["## Overview", "## Methods"])
         assert is_complete is False
         assert "## Methods" in missing
 
     def test_flexible_match(self):
         response = "# OVERVIEW\n\nContent about the overview."
-        is_complete, missing, details = validate_section_completeness(
-            response, ["## Overview"], flexible=True
-        )
+        is_complete, missing, details = validate_section_completeness(response, ["## Overview"], flexible=True)
         assert is_complete is True
 
     def test_strict_match(self):
         response = "# overview\n\nContent."
-        is_complete, missing, details = validate_section_completeness(
-            response, ["## Overview"], flexible=False
-        )
+        is_complete, missing, details = validate_section_completeness(response, ["## Overview"], flexible=False)
         assert is_complete is False
 
     def test_empty_response(self):
-        is_complete, missing, details = validate_section_completeness(
-            "", ["## Overview"]
-        )
+        is_complete, missing, details = validate_section_completeness("", ["## Overview"])
         assert is_complete is False
 
     def test_details_structure(self):
         response = "## Results\n\nData here."
-        _, _, details = validate_section_completeness(
-            response, ["## Results", "## Discussion"]
-        )
+        _, _, details = validate_section_completeness(response, ["## Results", "## Discussion"])
         assert "required" in details
         assert "found" in details
         assert "missing" in details
@@ -316,17 +280,13 @@ class TestValidateResponseStructureFromValidationStructure:
 
     def test_too_short(self):
         response = "## Overview\n\nShort."
-        is_valid, issues, details = validate_response_structure(
-            response, ["## Overview"], min_word_count=100
-        )
+        is_valid, issues, details = validate_response_structure(response, ["## Overview"], min_word_count=100)
         assert is_valid is False
         assert any("too short" in i.lower() for i in issues)
 
     def test_too_long(self):
         response = "## Overview\n\n" + "word " * 500
-        is_valid, issues, details = validate_response_structure(
-            response, ["## Overview"], max_word_count=100
-        )
+        is_valid, issues, details = validate_response_structure(response, ["## Overview"], max_word_count=100)
         assert is_valid is False
         assert any("too long" in i.lower() for i in issues)
 
@@ -346,15 +306,11 @@ class TestValidateResponseStructureFromValidationStructure:
 
     def test_extracted_sections_in_details(self):
         response = "## Intro\n\nContent.\n\n## Results\n\nMore content."
-        _, _, details = validate_response_structure(
-            response, ["## Intro", "## Results"]
-        )
+        _, _, details = validate_response_structure(response, ["## Intro", "## Results"])
         assert "extracted_sections" in details
         assert "Intro" in details["extracted_sections"]
 
     def test_flexible_headers(self):
         response = "# overview\n\n" + "word " * 50
-        is_valid, issues, details = validate_response_structure(
-            response, ["## Overview"], flexible_headers=True
-        )
+        is_valid, issues, details = validate_response_structure(response, ["## Overview"], flexible_headers=True)
         assert is_valid is True

@@ -46,8 +46,8 @@ This document provides documentation for the Research Project Template system, e
 - In manuscript introductions and related work, prefer building on, juxtaposing, and extending prior work over oppositional "against" framing; show, do not tell.
 - Prefer registry-backed or injected manuscript cross-references (`[[FIG:…]]` / `[[EQ:…]]` / citekeys / `[[VAR:…]]` where the project defines them) over hard-coded numeric figure, equation, or section strings in prose.
 - Keep root [`CHANGELOG.md`](CHANGELOG.md) scoped to this **template repository** (Layer 1, root orchestration, CI, repo-level documentation). Do not use it for workspace-specific narratives under `projects/`—those trees are often absent from a checkout, gitignored, or confidential.
-- For large multi-unit manuscript deep reviews, wire publication canon (repository URL, DOI, config, front matter) before unit-prioritized content audit passes—not a single rewrite of every chapter file at once.
-- When render or pipeline fixes span multiple projects, stabilize the affected public exemplars first, then apply learnings to rotating/private projects.
+- For large multi-unit manuscript deep reviews, wire publication canon (repository URL, DOI, config, front matter) before unit-prioritized content audit passes—not a single rewrite of every chapter file at once. Curriculum-scale manuscripts treat cover/suggest-citation DOI, figure captions, table auto-numbering, and `\cref{fig:…}` / mermaid alt-text pairs as publication-quality gates alongside automated invariant tests.
+- When render or pipeline fixes span multiple projects, stabilize the affected public exemplars first, then apply learnings to rotating/private projects. Deep structural audits on private, passive, or archive trees use `thermo-nuclear-code-quality-review`; land remediation commits in `/Users/4d/Documents/GitHub/projects/`, not public template commits unless the change is shared Layer 1 infrastructure.
 - Treat infra/repo work as complete only when pytest reports zero failures and zero skips except explicitly opt-in markers (e.g. `requires_ollama`).
 
 ## Learned Workspace Facts
@@ -60,10 +60,10 @@ This document provides documentation for the Research Project Template system, e
 - WIP resolution: `infrastructure.project.discovery.resolve_project_root` prefers `projects/<name>/` when that tree has `src/`, `tests/`, `scripts/`, and `manuscript/`; otherwise the same name under `projects_in_progress/` (nested WIP: pass e.g. `cognitive_integrity/cogsec_multiagent_1_theory`; bare `cogsec_multiagent_*` resolves only under `projects/`). Symlinked private projects under `projects/` carry their own operational canon in that tree's `AGENTS.md`; consult [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) instead of hard-coding rotating paths in root docs.
 - `bandit.yaml` lists `exclude_dirs` (`projects_archive`, `projects_in_progress`, `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/` — same rotating-project exemption as coverage/mypy) so Bandit stays strict on `infrastructure/`, `scripts/`, and the public canonical exemplars while non-authored / rotating trees are skipped; CI and hooks rely on that config instead of repeating long `--exclude` lists on the command line.
 - `docs/prompts/` hosts discoverable agent skills: hub [`docs/prompts/SKILL.md`](docs/prompts/SKILL.md) (`template-workflows`) plus 13 `template-*` workflow subdirs; in `infrastructure.skills.discovery.DEFAULT_SKILL_SEARCH_ROOTS`; regenerate via `uv run python -m infrastructure.skills write` (+ `write-index`). Synthetic skill-eval harness at [`docs/prompts/_skill-eval/`](docs/prompts/_skill-eval/) — excluded from default docs lint via `SKILL_EVAL_DIR_NAME` in `infrastructure/validation/docs/scan_scope.py`; keyword grader, not live agent evals.
-- Infra test consolidation and analysis discovery: `uv run python scripts/merge_test_supplements.py CANONICAL SUPP1 ...` merges supplement files into canonical `test_*.py` (fix missing imports in the canonical file when collection fails); `00_preflight.py` is excluded from Stage 02 analysis discovery in `infrastructure/core/script_discovery.py` (`_NON_ANALYSIS_SCRIPT_NAMES`) — render preflight only.
-- **PDF starred sections with titlesec:** `fix_starred_section_nameref_labels()` in `infrastructure/rendering/_pdf_combined_renderer.py` runs after `inject_latex_preamble()` because titlesec prevents hyperref from storing titles on `\section*`, leaving `\nameref{sec:...}` empty for Pandoc `\section*{Title}\label{sec:...}` front matter.
+- **`biology_textbook` (active private curriculum):** standalone repo at `/Users/4d/Documents/GitHub/projects/active/biology_textbook`, symlinked as `projects/biology_textbook` — commit project changes there, not in public `template/`. Unit intros/appendices use Pandoc `{#sec:…}` / `\label{sec:…}`; front-matter reading paths use `\nameref{sec:…}` while in-chapter labs prefer `\cref`. Enrichment scripts default to dry-run; pass `--write` to persist. Operational canon lives in that tree's `AGENTS.md`.
+- **PDF front matter / `\nameref` with titlesec:** `fix_starred_section_nameref_labels()` in `infrastructure/rendering/_pdf_combined_renderer.py` runs after `inject_latex_preamble()` because titlesec prevents hyperref from storing titles on `\section*`, leaving `\nameref{sec:...}` empty for Pandoc `\section*{Title}\label{sec:...}` front matter. `check_pdf_log` may still flag front-matter `\nameref` ordering while the combined PDF renders correctly.
 - `run.sh` and `secure_run.sh` source only [`scripts/shell_bootstrap.sh`](scripts/shell_bootstrap.sh) (shared `uv` bootstrap and sandbox env); menu and argparse live in `infrastructure.orchestration`. [`scripts/bash_utils.sh`](scripts/bash_utils.sh) serves backup/health scripts and tests, not pipeline entrypoints. Integration tests: `tests/integration/test_run_sh.py`, `tests/integration/test_secure_run_sh.py`.
-- Exemplar doc/code drift is checked by `scripts/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` for the public exemplar set in `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`; use `--project` and `--strict` for focused gates. The drift runner applies `check_project_scripts` / `check_repo_scripts` (AST + line-count) in `infrastructure.project.drift.orchestrator` to root `scripts/` and project `scripts/`. Mechanical Python hygiene fixes live in `infrastructure/core/source_improve.py` (used by `scripts/batch_cogsec_improve.py`), not under `infrastructure/scientific/`. Layer 1 module size is gated by `infrastructure/validation/line_count.py` via `scripts/gates/module_line_count_check.py` (warn ≥800, fail ≥950 for `infrastructure/` + `scripts/`; warn ≥150, fail ≥250 for `projects/*/scripts/`) and wired into `uv run python -m infrastructure.core.health` as `module-line-count`. CI `validate` also runs `scripts/generate_api_reference_doc.py --check` on [`docs/reference/api-reference.md`](docs/reference/api-reference.md) (regenerate with `--write` from package `__all__`). Root [`STATUS.md`](STATUS.md) is the per-subsystem manual E2E verification ledger (`.github/README.md` links it). Opt-in gates under `scripts/gates/` (`gate_cache`, `security_scan`, etc.) plus `infrastructure/core/cache_gate.py` (Hermes-only) and `infrastructure/validation/security_gate.py` are not in default `./run.sh` or CI; missing security tools report `status: "skipped"` under `skipped_tools`, not as clean scans.
+- Exemplar doc/code drift is checked by `scripts/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` for the public exemplar set in `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`; use `--project` and `--strict` for focused gates. The drift runner applies `check_project_scripts` / `check_repo_scripts` (AST + line-count) in `infrastructure.project.drift.orchestrator` to root `scripts/` and project `scripts/`. Infra test supplements merge via `scripts/merge_test_supplements.py`; `00_preflight.py` is excluded from Stage 02 analysis discovery (`_NON_ANALYSIS_SCRIPT_NAMES`). Mechanical Python hygiene fixes live in `infrastructure/core/source_improve.py` (used by `scripts/batch_cogsec_improve.py`), not under `infrastructure/scientific/`. Layer 1 module size is gated by `infrastructure/validation/line_count.py` via `scripts/gates/module_line_count_check.py` (warn ≥800, fail ≥950 for `infrastructure/` + `scripts/`; warn ≥150, fail ≥250 for `projects/*/scripts/`) and wired into `uv run python -m infrastructure.core.health` as `module-line-count`. CI `validate` also runs `scripts/generate_api_reference_doc.py --check` on [`docs/reference/api-reference.md`](docs/reference/api-reference.md) (regenerate with `--write` from package `__all__`). Root [`STATUS.md`](STATUS.md) is the per-subsystem manual E2E verification ledger (`.github/README.md` links it). Opt-in gates under `scripts/gates/` (`gate_cache`, `security_scan`, etc.) plus `infrastructure/core/cache_gate.py` (Hermes-only) and `infrastructure/validation/security_gate.py` are not in default `./run.sh` or CI; missing security tools report `status: "skipped"` under `skipped_tools`, not as clean scans.
 
 ### PAI Pulse Re-Enablement (Daemon Only)
 
@@ -671,7 +671,7 @@ uv run python scripts/07_generate_executive_report.py --project {name}
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # Validate PDF outputs
-uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf
 ```
 
 ## Validation Systems
@@ -680,10 +680,10 @@ uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
 
 ```bash
 # Validate generated PDF for issues (per-project)
-uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf
 
 # With verbose output
-uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/ --verbose
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf --verbose
 
 # Specific PDF file
 uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf
@@ -914,7 +914,10 @@ flowchart TB
 
 ## 🧪 **Advanced Modules**
 
-The template includes 13 advanced infrastructure subpackages for scientific development:
+The template includes reusable infrastructure modules for scientific development; see
+[`docs/modules/modules-guide.md`](docs/modules/modules-guide.md) and
+[`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) for the
+live module list and counts. Selected module examples:
 
 ### 🔒 Core Utilities (`infrastructure/core/`)
 
@@ -1130,7 +1133,7 @@ open output/{name}/{name}_combined.html
 ls -la output/{name}/
 
 # Check PDF validation
-uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf
 ```
 
 ## 🔧 Troubleshooting
@@ -1181,8 +1184,9 @@ wall time; a project can fail there yet pass when re-run on its own. Triage:
 - **Transient Project Tests / PDF Rendering failures under load** — flaky failures during a
   38-min multi-project sweep that do not reproduce standalone. Confirm health directly:
   a project's own gate (`projects/{name}/output/reports/test_results.json` →
-  `total_failed: 0`) and render artifacts (`output/pdf/*_combined.pdf` present, no `^! `
-  lines in `output/pdf/*.log` or `output/slides/*.log`). If clean, re-run that single project.
+  `total_failed: 0`) and render artifacts (`projects/{name}/output/pdf/*_combined.pdf`
+  or `output/{name}/pdf/*_combined.pdf` present, with no `^! ` lines in adjacent
+  `.log` files). If clean, re-run that single project.
 
 #### `validate_docs_and_figures.py` exit 1 at Project Analysis (rotating project)
 
@@ -1197,10 +1201,10 @@ paths in the project docs, not in this root manual.
 
 ```bash
 # Run scripts individually to debug
-uv run python3 projects/{name}/scripts/analysis_pipeline.py
+uv run python scripts/02_run_analysis.py --project {name}
 
 # Check import errors
-uv run python3 -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import optimizer; print('Import successful')"
+uv run python -c "import importlib; importlib.import_module('projects.{name}.src')"
 ```
 
 #### PDF Generation Issues
@@ -1210,13 +1214,13 @@ uv run python3 -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import
 which xelatex
 
 # Validate LaTeX packages (pre-flight check)
-uv run python3 -m infrastructure.rendering.latex_package_validator
+uv run python -m infrastructure.rendering.latex_package_validator
 
 # Validate markdown first
 uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 
 # Check compilation logs
-ls output/pdf/*_compile.log
+ls projects/{name}/output/pdf/*_compile.log output/{name}/pdf/*_compile.log
 ```
 
 **Missing LaTeX Package Errors**:
@@ -1240,7 +1244,7 @@ If you see "File *.sty not found" during PDF rendering:
 4. **Run pre-flight validation**:
 
    ```bash
-   uv run python3 -m infrastructure.rendering.latex_package_validator
+   uv run python -m infrastructure.rendering.latex_package_validator
    ```
 
 **Common missing packages in BasicTeX**:
@@ -1280,15 +1284,16 @@ export LOG_LEVEL=0
 uv run python scripts/03_render_pdf.py --project {name}
 
 # Run with debug output
-uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/ --verbose
+uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf --verbose
 ```
 
 ### Log Files
 
 Key log files for debugging:
 
-- `output/pdf/*_compile.log` - LaTeX compilation logs
-- `output/project_combined.md` - Combined markdown source
+- `projects/{name}/output/pdf/*_compile.log` - working LaTeX compilation logs
+- `projects/{name}/output/pdf/_combined_manuscript.md` - combined markdown source when retained by the renderer
+- `output/{name}/pdf/` - final copied PDF deliverables
 - Test output from pytest runs
 
 ## 🛠️ Maintenance
@@ -1322,7 +1327,7 @@ Key log files for debugging:
 
    ```bash
    # Clean outputs before backup
-   uv run python3 -c "from pathlib import Path; from infrastructure.core.files.operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
+   uv run python -c "from pathlib import Path; from infrastructure.core.files.operations import clean_output_directories; clean_output_directories(Path('.'), '{name}')"
 
    # Backup source files only
    tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/

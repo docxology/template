@@ -482,6 +482,14 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
     if edition or year:
         edition_line = r"{\small Edition " + (edition or "1.0") + (" -- " + year if year else "") + r"}"
 
+    cover_doi_line = ""
+    publishing_doi_line = ""
+    if doi:
+        escaped_doi = _latex_text(doi)
+        doi_target = _latex_href_url(f"https://doi.org/{doi}")
+        cover_doi_line = r"{\small DOI: \href{" + doi_target + r"}{" + escaped_doi + r"}\par}"
+        publishing_doi_line = r"\noindent DOI: \href{" + doi_target + r"}{" + escaped_doi + r"}\\"
+
     publishing_lines = [
         r"\clearpage",
         r"\thispagestyle{empty}",
@@ -500,10 +508,8 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
             r"\noindent Source-code license: " + (code_license or "Apache-2.0") + r"\\",
         ]
     )
-    if doi:
-        escaped_doi = _latex_text(doi)
-        doi_target = _latex_href_url(f"https://doi.org/{doi}")
-        publishing_lines.append(r"\noindent DOI: \href{" + doi_target + r"}{" + escaped_doi + r"}\\")
+    if publishing_doi_line:
+        publishing_lines.append(publishing_doi_line)
     repo_url = str(publication.get("repository_url", "")).strip()
     if repo_url:
         repo_label = str(publication.get("repository_label", "")).strip() or "Source repository"
@@ -514,6 +520,15 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
         )
     publishing_lines.extend(_publishing_quote_box(config))
     publishing_lines.extend(_publishing_acknowledgement_block(config))
+    suggested_citation_parts: list[str] = []
+    if repo_url:
+        suggested_citation_parts.append(r"\href{" + _latex_href_url(repo_url) + r"}{" + _latex_text(repo_url) + r"}")
+    if doi:
+        doi_url = f"https://doi.org/{doi}"
+        suggested_citation_parts.append(r"\href{" + _latex_href_url(doi_url) + r"}{" + _latex_text(doi_url) + r"}")
+    suggested_citation_tail = ""
+    if suggested_citation_parts:
+        suggested_citation_tail = " " + ". ".join(suggested_citation_parts) + "."
     publishing_lines.extend(
         [
             r"\vspace{1.0em}",
@@ -525,7 +540,7 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
             + r"} (Edition "
             + (edition or "1.0")
             + r"). Active Inference Institute."
-            + (r" \href{" + _latex_href_url(repo_url) + r"}{" + _latex_text(repo_url) + r"}." if repo_url else "."),
+            + suggested_citation_tail,
             "",
             r"\vspace{1.0em}",
             r"\noindent This open textbook is generated from version-controlled Markdown, tested Python modules, "
@@ -557,6 +572,7 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
             image_block,
             r"\vfill",
             edition_line,
+            cover_doi_line,
             r"\end{titlepage}",
             *publishing_lines,
         ]

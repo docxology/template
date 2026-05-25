@@ -199,10 +199,7 @@ def test_pipeline_byte_identical_in_deterministic_mode(tmp_path: Path, monkeypat
     bytes1 = out1.read_bytes()
     bytes2 = out2.read_bytes()
 
-    assert bytes1 == bytes2, (
-        f"Deterministic mode failed: PDFs differ "
-        f"({len(bytes1)} vs {len(bytes2)} bytes)."
-    )
+    assert bytes1 == bytes2, f"Deterministic mode failed: PDFs differ ({len(bytes1)} vs {len(bytes2)} bytes)."
 
 
 @pytest.mark.skipif(not _git_available(), reason="git binary not on PATH")

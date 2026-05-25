@@ -18,6 +18,14 @@ without autonomous research execution.
 ## Public Interfaces
 
 - `AutoResearchConfig`
+- `BudgetPolicy`
+- `ReviewGate`
+- `BenchmarkTask`
+- `EvidenceLink`
+- `ResearchIdea`
+- `ExperimentCandidate`
+- `ResearchProgram`
+- `RunLedger`
 - `AutoResearchPlan`
 - `AutoResearchIssue`
 - `AutoResearchReport`
@@ -34,8 +42,8 @@ without autonomous research execution.
 
 | Phase | Checks |
 | --- | --- |
-| `intrinsic` | `domain_profile`, `experiment_plan`, `pipeline_contracts`, `thin_orchestrators` |
-| `extrinsic` | `evidence_registry`, `artifact_manifest` |
+| `intrinsic` | `domain_profile`, `experiment_plan`, `pipeline_contracts`, `thin_orchestrators`, `ai_disclosure` |
+| `extrinsic` | `evidence_registry`, `artifact_manifest`, `method_contracts`, `review_gates`, `benchmark_tasks` |
 | `all` | every configured check (default) |
 
 Stage-gate and unknown quality-check validation always runs regardless of
@@ -52,6 +60,11 @@ The module validates only file-backed deterministic surfaces:
 - `output/reports/artifact_manifest.json`
 - project evidence registry facts
 - root and project script thin-orchestrator drift
+- `output/data/idea_ledger.json`
+- `output/data/run_ledger.json`
+- `output/data/review_decisions.json`
+- `output/data/benchmark_scores.json`
+- configured disclosure text in manuscript Markdown
 
 ## Configuration Rules
 
@@ -64,6 +77,10 @@ Valid `quality_checks` are:
 - `evidence_registry`
 - `artifact_manifest`
 - `thin_orchestrators`
+- `method_contracts`
+- `review_gates`
+- `benchmark_tasks`
+- `ai_disclosure`
 
 Strict mode promotes advisory readiness defects to errors. Configuration
 defects such as unknown stage names or unknown checks are always errors.

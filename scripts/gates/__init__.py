@@ -10,4 +10,4 @@ Modules:
     plugin_export_check: Plugin export verification gate.
 """
 
-__all__ = ['gate_cache', 'security_scan', 'plugin_export_check']
+__all__ = ["gate_cache", "security_scan", "plugin_export_check"]

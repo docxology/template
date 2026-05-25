@@ -243,8 +243,9 @@ maintained in [`AGENTS.md`](AGENTS.md#core-architecture) and
   numbered orchestrators under `scripts/` include `00_*.py` through `07_*.py` (setup → copy, LLM, executive report — see [`scripts/AGENTS.md`](scripts/AGENTS.md)).
 - **Orchestration:** the pipeline runs Setup → Tests → Analysis → Render →
   Validate → Copy, with optional LLM Review and LLM Translations stages.
-- **Core systems:** 17 `infrastructure/` Python subpackages (Layer 1) plus
-  per-project `projects/{name}/src/` algorithms (Layer 2); see
+- **Core systems:** importable `infrastructure/` packages (Layer 1; live list
+  in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md))
+  plus per-project `projects/{name}/src/` algorithms (Layer 2); see
   [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) for
   the live module list.
 - **Data flow:** project source + manuscript markdown + `config.yaml` flow

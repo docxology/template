@@ -20,6 +20,8 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 | Module | Guide | Focus |
 |--------|-------|-------|
+| AutoResearch | [`guides/autoresearch-module.md`](guides/autoresearch-module.md) | Deterministic readiness plans, evidence, artifacts |
+| Benchmark | [`guides/benchmark-module.md`](guides/benchmark-module.md) | Public exemplar benchmark manifests and rubrics |
 | Config | [`guides/config-module.md`](guides/config-module.md) | Configuration schemas, templates |
 | Core | [`guides/core-module.md`](guides/core-module.md) | Logging, config, exceptions, pipeline, telemetry |
 | Docker | [`guides/docker-module.md`](guides/docker-module.md) | Dockerfile, compose |
@@ -34,6 +36,11 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 | Skills | [`guides/skills-module.md`](guides/skills-module.md) | SKILL.md discovery, manifest generation |
 | Steganography | [`guides/steganography-module.md`](guides/steganography-module.md) | PDF watermarking, provenance |
 | Validation | [`guides/validation-module.md`](guides/validation-module.md) | PDF/Markdown validation, auditing |
+| Doctor | [`guides/doctor-module.md`](guides/doctor-module.md) | Repository health diagnostics |
+| Orchestration | [`guides/orchestration-module.md`](guides/orchestration-module.md) | Pipeline CLI and menus |
+| Prose | [`guides/prose-module.md`](guides/prose-module.md) | Readability metrics, editorial heuristics |
+| Search | [`guides/search-module.md`](guides/search-module.md) | Literature discovery and indexing |
+| Reference | [`guides/reference-module.md`](guides/reference-module.md) | BibTeX and citation utilities |
 
 ## Quick Navigation
 
@@ -51,7 +58,7 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 ## Available Modules
 
-**17** importable packages (see [canonical_facts.md](../_generated/canonical_facts.md)): **benchmark**, **core**, **doctor**, **documentation**, **llm**, **orchestration**, **project**, **prose**, **publishing**, **reference**, **rendering**, **reporting**, **scientific**, **search**, **skills**, **steganography**, **validation** — plus `config/` and `docker/` (configuration directories, not Python packages). Per-module deep dives: [guides/](guides/).
+Importable package names and counts are tracked in [canonical_facts.md](../_generated/canonical_facts.md). Per-module deep dives live in [guides/](guides/); `config/` and `docker/` are configuration directories rather than Python packages.
 
 ## Related Documentation
 

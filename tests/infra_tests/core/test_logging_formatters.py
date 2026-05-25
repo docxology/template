@@ -88,6 +88,7 @@ class TestJSONFormatter:
             raise ValueError("test error")
         except ValueError:
             import sys
+
             exc_info = sys.exc_info()
 
         record = make_record("Error occurred", exc_info=exc_info)
@@ -109,6 +110,7 @@ class TestJSONFormatter:
         data = json.loads(self.formatter.format(record))
         # Should be parseable as ISO datetime
         from datetime import datetime
+
         dt = datetime.fromisoformat(data["timestamp"])
         assert dt.year >= 2024
 

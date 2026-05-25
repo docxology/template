@@ -49,12 +49,9 @@ class TestQueryLogging:
             send_records = [r for r in caplog.records if "Sending request to Ollama" in r.message]
             assert len(send_records) > 0, "No 'Sending request to Ollama' log record found"
             send_record = send_records[0]
-            has_model = (
-                hasattr(send_record, "model") and getattr(send_record, "model", None) is not None
-            )
+            has_model = hasattr(send_record, "model") and getattr(send_record, "model", None) is not None
             has_message_count = (
-                hasattr(send_record, "message_count")
-                and getattr(send_record, "message_count", None) is not None
+                hasattr(send_record, "message_count") and getattr(send_record, "message_count", None) is not None
             )
             has_structured_data = has_model or has_message_count
             assert has_structured_data, (
@@ -82,9 +79,7 @@ class TestQueryLogging:
             client.query_structured("Test structured query")
 
             assert "Structured query completed" in caplog.text
-            completion_records = [
-                r for r in caplog.records if "Structured query completed" in r.message
-            ]
+            completion_records = [r for r in caplog.records if "Structured query completed" in r.message]
             assert len(completion_records) > 0, "No 'Structured query completed' log record found"
             completion_record = completion_records[0]
             has_generation_time = (
@@ -273,10 +268,7 @@ class TestQueryStructuredLogging:
             except Exception:
                 pass  # We expect this to fail due to invalid JSON, but we want to test logging
 
-            assert (
-                "Structured query completed" in caplog.text
-                or "Structured response is not valid JSON" in caplog.text
-            )
+            assert "Structured query completed" in caplog.text or "Structured response is not valid JSON" in caplog.text
 
 
 class TestContextLogging:
@@ -297,10 +289,7 @@ class TestContextLogging:
         with caplog.at_level("DEBUG", logger="infrastructure.llm.core.context"):
             context.add_message("user", "Test message")
 
-            assert (
-                "Adding message to context" in caplog.text
-                or "Message added to context" in caplog.text
-            )
+            assert "Adding message to context" in caplog.text or "Message added to context" in caplog.text
 
     def test_context_clear_logs(self, caplog):
         """Test context clear logs."""
@@ -340,9 +329,7 @@ class TestContextLogging:
             context.add_message("user", "New message " + "x" * 50)
 
             assert (
-                "Pruning context" in caplog.text
-                or "Pruned message" in caplog.text
-                or "Context pruned" in caplog.text
+                "Pruning context" in caplog.text or "Pruned message" in caplog.text or "Context pruned" in caplog.text
             )
 
 

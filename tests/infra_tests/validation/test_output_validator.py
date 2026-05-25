@@ -715,9 +715,7 @@ class TestValidateOutputStructure:
 
     def test_validate_nested_source_output_structure(self, tmp_path):
         """Source output validation detects qualified project names."""
-        project_output_dir = (
-            tmp_path / "projects" / "my_program" / "nested_project" / "output"
-        )
+        project_output_dir = tmp_path / "projects" / "my_program" / "nested_project" / "output"
         pdf_dir = project_output_dir / "pdf"
         pdf_dir.mkdir(parents=True)
         (pdf_dir / "nested_project_combined.pdf").write_bytes(b"PDF" * 10000)

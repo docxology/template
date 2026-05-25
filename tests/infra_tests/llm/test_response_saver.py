@@ -1,6 +1,5 @@
 """Tests for infrastructure.llm.core.response_saver — coverage."""
 
-
 from infrastructure.llm.core.response_saver import (
     ResponseMetadata,
     save_response,
@@ -73,6 +72,7 @@ class TestSaveResponse:
         path = save_response("AI response", tmp_path / "resp.json", meta, format="json")
         assert path.exists()
         import json
+
         data = json.loads(path.read_text())
         assert data["response"] == "AI response"
         assert data["metadata"]["model"] == "llama3"

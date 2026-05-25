@@ -117,9 +117,7 @@ class TestPipelineSummaryGenerator:
             output_dir.mkdir()
 
             generator = PipelineSummaryGenerator()
-            summary = generator.generate_summary(
-                stage_results=stage_results, total_duration=5.0, output_dir=output_dir
-            )
+            summary = generator.generate_summary(stage_results=stage_results, total_duration=5.0, output_dir=output_dir)
 
             assert summary.slowest_stage is None
             assert summary.fastest_stage is None

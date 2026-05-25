@@ -51,9 +51,7 @@ class TestBuildStageTable:
 
     def test_table_has_four_columns(self, synthetic_yaml: Path) -> None:
         table = build_stage_table(synthetic_yaml)
-        header_line = next(
-            line for line in table.splitlines() if line.startswith("| Stage |")
-        )
+        header_line = next(line for line in table.splitlines() if line.startswith("| Stage |"))
         # Four columns + two pipe terminators = 5 pipes.
         assert header_line.count("|") == 5
         assert "Script" in header_line
@@ -84,10 +82,7 @@ class TestBuildStageTable:
         """No failure_mode → falls back to a sensible default from tags."""
         yaml_path = tmp_path / "pipeline.yaml"
         yaml_path.write_text(
-            "stages:\n"
-            "  - name: Mystery Stage\n"
-            "    script: foo.py\n"
-            "    tags: [llm]\n",
+            "stages:\n  - name: Mystery Stage\n    script: foo.py\n    tags: [llm]\n",
             encoding="utf-8",
         )
         table = build_stage_table(yaml_path)
@@ -136,9 +131,7 @@ class TestInjectStageTable:
     def test_idempotent_second_run(self, tmp_path: Path) -> None:
         target = tmp_path / "doc.md"
         target.write_text(
-            "<!-- BEGIN:STAGE_TABLE -->\n"
-            "OLD\n"
-            "<!-- END:STAGE_TABLE -->\n",
+            "<!-- BEGIN:STAGE_TABLE -->\nOLD\n<!-- END:STAGE_TABLE -->\n",
             encoding="utf-8",
         )
         first = inject_stage_table(target, "STABLE")

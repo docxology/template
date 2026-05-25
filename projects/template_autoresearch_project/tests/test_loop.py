@@ -33,6 +33,34 @@ def test_loop_payload_contains_claims_metrics_and_output_paths(project_root: Pat
     assert payload["metrics"]["supported_claim_count"] >= 2
     assert payload["metrics"]["readiness_valid"] is True
     assert "output/reports/autoresearch_loop.md" in payload["output_paths"]
+    assert "output/data/research_program.json" in payload["output_paths"]
+    assert "output/data/idea_ledger.json" in payload["output_paths"]
+    assert "output/data/run_ledger.json" in payload["output_paths"]
+    assert "output/data/review_decisions.json" in payload["output_paths"]
+    assert "output/data/benchmark_scores.json" in payload["output_paths"]
+
+
+def test_run_autoresearch_loop_writes_bounded_method_ledgers(project_root: Path, repo_root: Path) -> None:
+    result = run_autoresearch_loop(project_root, repo_root)
+
+    research_program = json.loads((project_root / "output" / "data" / "research_program.json").read_text())
+    idea_ledger = json.loads((project_root / "output" / "data" / "idea_ledger.json").read_text())
+    run_ledger = json.loads((project_root / "output" / "data" / "run_ledger.json").read_text())
+    review_decisions = json.loads((project_root / "output" / "data" / "review_decisions.json").read_text())
+    benchmark_scores = json.loads((project_root / "output" / "data" / "benchmark_scores.json").read_text())
+
+    assert result.readiness_valid is True
+    assert research_program["path"] == "program.md"
+    assert research_program["autonomy_level"] == "proposal_only"
+    assert research_program["budget_policy"]["max_iterations"] == 3
+    assert "projects/template_autoresearch_project/src/" in research_program["edit_allowlist"]
+    assert {idea["status"] for idea in idea_ledger["ideas"]} >= {"accepted", "rejected", "deferred"}
+    accepted = [idea for idea in idea_ledger["ideas"] if idea["status"] == "accepted"]
+    assert accepted and all(idea["evidence_links"] for idea in accepted)
+    assert run_ledger["budget_exhausted"] is True
+    assert run_ledger["exhaustion_reason"] == "iteration budget reached"
+    assert {row["decision"] for row in review_decisions["decisions"]} == {"approved"}
+    assert benchmark_scores["tasks"][0]["status"] == "graded"
 
 
 def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
@@ -44,14 +72,17 @@ def test_run_autoresearch_loop_writes_review_packet_and_stage_matrix(
     expected_paths = {
         "output/data/autoresearch_stage_matrix.csv",
         "output/data/autoresearch_review_packet.json",
+        "output/data/research_program.json",
+        "output/data/idea_ledger.json",
+        "output/data/run_ledger.json",
+        "output/data/review_decisions.json",
+        "output/data/benchmark_scores.json",
         "output/reports/autoresearch_review_packet.md",
         "output/reports/autoresearch_summary.md",
     }
     assert expected_paths <= set(result.output_paths)
 
-    stage_matrix = (project_root / "output" / "data" / "autoresearch_stage_matrix.csv").read_text(
-        encoding="utf-8"
-    )
+    stage_matrix = (project_root / "output" / "data" / "autoresearch_stage_matrix.csv").read_text(encoding="utf-8")
     assert "stage,status,evidence,suggested_action" in stage_matrix
     assert "readiness,declared" in stage_matrix
 

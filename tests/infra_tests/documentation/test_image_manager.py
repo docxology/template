@@ -22,9 +22,7 @@ class TestImageManager:
         """Test inserting figure into nonexistent file (line 50)."""
         manager = ImageManager()
         # Register figure first so fig_meta is not None (passes line 46)
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
         # Now test with nonexistent file to trigger line 50
         markdown_file = tmp_path / "nonexistent.md"
         result = manager.insert_figure(markdown_file, "fig:test")
@@ -42,9 +40,7 @@ class TestImageManager:
         """Test successful figure insertion."""
         manager = ImageManager()
         # Register a figure first
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\nContent here.")
@@ -57,9 +53,7 @@ class TestImageManager:
     def test_insert_reference(self, tmp_path):
         """Test inserting reference."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\nContent.")
@@ -103,9 +97,7 @@ class TestImageManager:
     def test_insert_figure_already_inserted(self, tmp_path):
         """Test inserting figure that's already in file."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\n\\label{fig:test}\n\nContent.")
@@ -115,9 +107,7 @@ class TestImageManager:
     def test_insert_figure_position_end(self, tmp_path):
         """Test inserting figure at end position."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\nContent here.")
@@ -129,15 +119,11 @@ class TestImageManager:
     def test_insert_figure_after_section(self, tmp_path):
         """Test inserting figure after section."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Section 1\n\nContent.\n\n## Section 2\n\nMore content.")
-        result = manager.insert_figure(
-            markdown_file, "fig:test", section="Section 1", position="after_section"
-        )
+        result = manager.insert_figure(markdown_file, "fig:test", section="Section 1", position="after_section")
         assert result is True
         content = markdown_file.read_text()
         assert "\\begin{figure}" in content
@@ -147,15 +133,11 @@ class TestImageManager:
     def test_insert_figure_after_section_no_next(self, tmp_path):
         """Test inserting figure after section with no next section."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Section 1\n\nContent.")
-        result = manager.insert_figure(
-            markdown_file, "fig:test", section="Section 1", position="after_section"
-        )
+        result = manager.insert_figure(markdown_file, "fig:test", section="Section 1", position="after_section")
         assert result is True
         content = markdown_file.read_text()
         assert "\\begin{figure}" in content
@@ -163,15 +145,11 @@ class TestImageManager:
     def test_insert_figure_before_section(self, tmp_path):
         """Test inserting figure before section."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Section 1\n\nContent.\n\n## Section 2\n\nMore content.")
-        result = manager.insert_figure(
-            markdown_file, "fig:test", section="Section 2", position="before_section"
-        )
+        result = manager.insert_figure(markdown_file, "fig:test", section="Section 2", position="before_section")
         assert result is True
         content = markdown_file.read_text()
         assert "\\begin{figure}" in content
@@ -181,9 +159,7 @@ class TestImageManager:
     def test_insert_figure_section_not_found(self, tmp_path):
         """Test inserting figure when section is not found (branch 107->121)."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Section 1\n\nContent.")
@@ -203,9 +179,7 @@ class TestImageManager:
     def test_insert_figure_position_not_after_or_before(self, tmp_path):
         """Test inserting figure with position that's not after_section or before_section (branch 118->121)."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Section 1\n\nContent.")
@@ -228,9 +202,7 @@ class TestImageManager:
     def test_insert_reference_nonexistent_file(self, tmp_path):
         """Test inserting reference into nonexistent file."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         markdown_file = tmp_path / "nonexistent.md"
         result = manager.insert_reference(markdown_file, "fig:test")
@@ -247,9 +219,7 @@ class TestImageManager:
     def test_insert_reference_already_referenced(self, tmp_path):
         """Test inserting reference that already exists."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\nContent. \\ref{fig:test} already here.")
@@ -259,9 +229,7 @@ class TestImageManager:
     def test_insert_reference_with_text(self, tmp_path):
         """Test inserting reference with custom text."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\nContent.")
@@ -273,9 +241,7 @@ class TestImageManager:
     def test_insert_reference_with_position(self, tmp_path):
         """Test inserting reference at specific position."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\nContent here.")
@@ -287,14 +253,10 @@ class TestImageManager:
     def test_insert_reference_after_figure(self, tmp_path):
         """Test inserting reference after figure."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
-        markdown_file.write_text(
-            "# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n\nSome text here."
-        )
+        markdown_file.write_text("# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n\nSome text here.")
         result = manager.insert_reference(markdown_file, "fig:test")
         assert result is True
         content = markdown_file.read_text()
@@ -303,9 +265,7 @@ class TestImageManager:
     def test_insert_reference_after_figure_no_paragraph(self, tmp_path):
         """Test inserting reference after figure with no following paragraph."""
         manager = ImageManager()
-        manager.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        manager.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         markdown_file = tmp_path / "test.md"
         markdown_file.write_text("# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}")
@@ -361,9 +321,7 @@ class TestImageManager:
         """Test validating figures with unregistered label."""
         manager = ImageManager()
         markdown_file = tmp_path / "test.md"
-        markdown_file.write_text(
-            "# Test\n\n\\begin{figure}[h]\n\\label{fig:unregistered}\n\\end{figure}\n"
-        )
+        markdown_file.write_text("# Test\n\n\\begin{figure}[h]\n\\label{fig:unregistered}\n\\end{figure}\n")
         errors = manager.validate_figures(markdown_file)
         # Should have error for unregistered label
         assert len(errors) > 0

@@ -1,4 +1,5 @@
 """Tests for error_aggregator module."""
+
 from __future__ import annotations
 
 import json

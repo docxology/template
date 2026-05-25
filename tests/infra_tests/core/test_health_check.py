@@ -94,18 +94,14 @@ class TestGetHealthStatus:
         status = self.checker.get_health_status()
         for check_name, check_result in status["checks"].items():
             if check_result["status"] == "healthy":
-                assert "details" in check_result, (
-                    f"Healthy check {check_name!r} missing 'details'"
-                )
+                assert "details" in check_result, f"Healthy check {check_name!r} missing 'details'"
 
     def test_unhealthy_checks_have_error(self):
         """Unhealthy checks include an 'error' key."""
         status = self.checker.get_health_status()
         for check_name, check_result in status["checks"].items():
             if check_result["status"] == "unhealthy":
-                assert "error" in check_result, (
-                    f"Unhealthy check {check_name!r} missing 'error'"
-                )
+                assert "error" in check_result, f"Unhealthy check {check_name!r} missing 'error'"
 
     def test_summary_is_dict(self):
         """summary is a dict."""

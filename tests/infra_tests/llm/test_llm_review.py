@@ -189,9 +189,7 @@ class TestSaveReviewOutputs:
                 )
 
             # Call the function
-            result = save_review_outputs(
-                reviews, output_dir, "llama3:latest", pdf_path, session_metrics
-            )
+            result = save_review_outputs(reviews, output_dir, "llama3:latest", pdf_path, session_metrics)
 
             assert result is True
             assert output_dir.exists()
@@ -871,10 +869,7 @@ class TestWordCountBoundary:
         """Test that improvement_suggestions below 200 words fails."""
         # 150 words should fail even with the new lower threshold
         response = (
-            "## Summary\nBrief summary. "
-            + "## High Priority\nIssue. "
-            + "word " * 130
-            + "## Low Priority\nMinor."
+            "## Summary\nBrief summary. " + "## High Priority\nIssue. " + "word " * 130 + "## Low Priority\nMinor."
         )
         is_valid, issues, details = validate_review_quality(response, "improvement_suggestions")
         assert is_valid is False
@@ -918,9 +913,7 @@ class TestValidateReviewQualityWithFormatCompliance:
             + " word" * 300
         )
 
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary", model_name="qwen3:4b"
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary", model_name="qwen3:4b")
 
         # Should pass - emojis are allowed
         assert is_valid is True
@@ -946,9 +939,7 @@ class TestValidateReviewQualityWithFormatCompliance:
             + " word" * 300
         )
 
-        is_valid, issues, details = validate_review_quality(
-            response, "executive_summary", model_name="llama3:70b"
-        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary", model_name="llama3:70b")
 
         # Format warnings for conversational phrases should be tracked
         assert "format_compliance" in details or "format_warnings" in details

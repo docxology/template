@@ -25,10 +25,10 @@ run when this file was last edited.
 | `pip-audit` CI gate | **blocking** (allow-list: `.github/pip-audit-ignore.txt`; retries in CI) | `.github/workflows/ci.yml` → job `security` |
 | Zero-Mock Policy (`scripts/verify_no_mocks.py`) | **clean** | `uv run python scripts/verify_no_mocks.py` |
 | `__all__` audit (`infrastructure.skills.check_all_exports`) | **0 violations** under live `infrastructure/` | `uv run python -m infrastructure.skills check-all-exports` |
-| `docs-lint` (mermaid + cross-links + consistency) | **all 3 pass** | `uv run python scripts/lint_docs.py` |
+| `docs-lint` (mermaid + cross-links + consistency + doc pairs) | run for current result | `uv run python scripts/lint_docs.py` |
 | Stage-table generator | **idempotent** (5/5 docs in sync) | `uv run python scripts/generate_stage_table_doc.py` |
-| API-reference generator | **idempotent** (17 packages) | `uv run python scripts/generate_api_reference_doc.py --check` |
-| Architecture overview | **regenerable** (17 pkgs + 3 config dirs + active projects) | `uv run python scripts/generate_architecture_overview.py` |
+| API-reference generator | idempotent when the generated API doc matches package exports | `uv run python scripts/generate_api_reference_doc.py --check` |
+| Architecture overview | regenerable from live package/config/project discovery | `uv run python scripts/generate_architecture_overview.py` |
 | Unified `health` command | **10/10 gates PASS** | `uv run python -m infrastructure.core.health` |
 | Pre-push hooks | `ruff-ci`, `mypy-ci`, `pre-push-quick`, `bandit-quick`, `skills-check`, `all-exports-check` | `.pre-commit-config.yaml` |
 | Bench harness | **7 benches green** (opt-in via `-m bench`) | `tests/infra_tests/bench/` |
@@ -38,9 +38,9 @@ run when this file was last edited.
 | Coverage trend dashboard | regenerable via `--from-dir` / `--from-gh` | `scripts/generate_coverage_history.py` |
 | Project-config schema-extension API | `register_project_schema_extension(name, schema)` | `infrastructure/core/config/schema.py` |
 | `tests/infra_tests/` (no LLM, no bench) | **all pass** | `uv run pytest tests/infra_tests/ -q --ignore=tests/infra_tests/llm --timeout=60` |
-| `infrastructure/` Python packages | **17** + 3 non-Python config dirs (`config/`, `docker/`, `logrotate.d/`) | `ls infrastructure/` |
+| `infrastructure/` Python packages | live list and count in [`docs/_generated/canonical_facts.md`](docs/_generated/canonical_facts.md) | `find infrastructure -mindepth 1 -maxdepth 1 -type d -name '[!.]*'` |
 | Docs subdirectories with both `AGENTS.md` + `README.md` | **26 / 26** | sweep |
-| Infrastructure packages with `AGENTS.md` + `README.md` + `SKILL.md` | **17 / 17** | sweep |
+| Infrastructure packages with local docs/skills | verify with docs lint plus `uv run python -m infrastructure.skills check-all-exports` | docs/tooling sweep |
 
 ---
 

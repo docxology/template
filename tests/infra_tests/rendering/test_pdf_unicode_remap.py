@@ -124,13 +124,7 @@ class TestVerbatimPreservation:
         assert result.content.count("✓") == 0
 
     def test_verbatim_lower_preserved(self):
-        text = (
-            "Before ✓\n"
-            "\\begin{verbatim}\n"
-            "α β γ ≈\n"
-            "\\end{verbatim}\n"
-            "After ✓"
-        )
+        text = "Before ✓\n\\begin{verbatim}\nα β γ ≈\n\\end{verbatim}\nAfter ✓"
         result = remap_prose_unicode(text)
         assert "α β γ ≈" in result.content
         assert result.content.count(r"\texorpdfstring{\ensuremath{\checkmark}}{[ok]}") == 2

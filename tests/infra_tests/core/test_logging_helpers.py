@@ -86,9 +86,7 @@ class TestFormatErrorWithSuggestions:
 
     def test_format_template_error_with_path_context(self):
         """Test formatting TemplateError with Path object in context."""
-        error = TemplateError(
-            "File not found", context={"file": Path("/path/to/file.txt"), "line": 10}
-        )
+        error = TemplateError("File not found", context={"file": Path("/path/to/file.txt"), "line": 10})
 
         result = format_error_with_suggestions(error)
 

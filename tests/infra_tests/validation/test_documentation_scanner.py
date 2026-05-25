@@ -34,23 +34,17 @@ def _setup_repo(tmp_path):
     (tmp_path / "docs" / "guide.md").write_text(
         "# User Guide\n\nThis is the main guide.\n\n## Installation\n\nRun `pip install`.\n"
     )
-    (tmp_path / "docs" / "api.md").write_text(
-        "# API Reference\n\nSee [guide](guide.md) for details.\n"
-    )
+    (tmp_path / "docs" / "api.md").write_text("# API Reference\n\nSee [guide](guide.md) for details.\n")
     (tmp_path / "README.md").write_text("# Project\n\nSee [docs](docs/guide.md).\n")
     (tmp_path / "CLAUDE.md").write_text("# Claude\n\nInstructions.\n")
     return tmp_path
 
 
 def _make_rich_repo(tmp_path):
-    (tmp_path / "README.md").write_text(
-        "# Project\n\nSee [guide](docs/guide.md) for details.\n"
-    )
+    (tmp_path / "README.md").write_text("# Project\n\nSee [guide](docs/guide.md) for details.\n")
     docs = tmp_path / "docs"
     docs.mkdir()
-    (docs / "guide.md").write_text(
-        "# Guide\n\n## Section\n\nContent with [back](../README.md).\n"
-    )
+    (docs / "guide.md").write_text("# Guide\n\n## Section\n\nContent with [back](../README.md).\n")
     (tmp_path / "pyproject.toml").write_text("[tool.pytest]\n")
     scripts = tmp_path / "scripts"
     scripts.mkdir()
@@ -142,7 +136,10 @@ class TestScanAccuracyIssue:
 
     def test_default_severity(self):
         issue = ScanAccuracyIssue(
-            category="test", file="t.md", line=1, message="msg",
+            category="test",
+            file="t.md",
+            line=1,
+            message="msg",
         )
         assert issue.severity == "error"
 
@@ -299,14 +296,22 @@ class TestDocumentationScannerImprovements:
         scanner = DocumentationScanner(tmp_path)
         scanner.results.link_issues.append(
             LinkIssue(
-                file="t.md", line=1, link_text="x", target="missing.md",
-                issue_type="broken_file", issue_message="File not found",
+                file="t.md",
+                line=1,
+                link_text="x",
+                target="missing.md",
+                issue_type="broken_file",
+                issue_message="File not found",
             )
         )
         scanner.results.link_issues.append(
             LinkIssue(
-                file="t.md", line=2, link_text="y", target="#missing",
-                issue_type="broken_anchor", issue_message="Anchor not found",
+                file="t.md",
+                line=2,
+                link_text="y",
+                target="#missing",
+                issue_type="broken_anchor",
+                issue_message="Anchor not found",
             )
         )
         fixes = scanner._identify_link_fixes()
@@ -317,7 +322,9 @@ class TestDocumentationScannerImprovements:
         scanner = DocumentationScanner(tmp_path)
         scanner.results.quality_issues.append(
             QualityIssue(
-                file="t.md", line=1, issue_type="formatting",
+                file="t.md",
+                line=1,
+                issue_type="formatting",
                 issue_message="Heading level skip detected",
             )
         )
@@ -398,9 +405,7 @@ class TestDocumentationScannerReport:
 
     def test_build_scan_report_with_issues(self, tmp_path):
         scanner = DocumentationScanner(tmp_path)
-        scanner.results.link_issues.append(
-            LinkIssue("test.md", 1, "bad link", "missing.md", "broken", "Not found")
-        )
+        scanner.results.link_issues.append(LinkIssue("test.md", 1, "bad link", "missing.md", "broken", "Not found"))
         scanner.results.accuracy_issues.append(
             ScanAccuracyIssue(
                 category="command",
@@ -409,12 +414,8 @@ class TestDocumentationScannerReport:
                 message="Invalid command",
             )
         )
-        scanner.results.completeness_gaps.append(
-            CompletenessGap("API", "missing_docs", "Function not documented")
-        )
-        scanner.results.quality_issues.append(
-            QualityIssue("doc.md", 10, "formatting", "Missing header")
-        )
+        scanner.results.completeness_gaps.append(CompletenessGap("API", "missing_docs", "Function not documented"))
+        scanner.results.quality_issues.append(QualityIssue("doc.md", 10, "formatting", "Missing header"))
         report = scanner.build_scan_report()
         assert "Link Issues" in report or "Issues" in report
 

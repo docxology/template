@@ -11,10 +11,25 @@ into `build_autoresearch_plan()`:
 - `enabled`: opts the project into AutoResearch validation.
 - `strict`: turns readiness warnings into blocking errors where applicable.
 - `topic`: names the research loop in generated plans and reports.
+- `autonomy_level`: remains `proposal_only` for the public exemplar.
+- `budget`: records iteration, wall-clock, LLM-call, and cost limits.
+- `edit_allowlist`: limits proposal candidates to explicit project paths.
+- `metric_direction` and `acceptance_policy`: record how candidates are judged.
 - `quality_checks`: selects deterministic validation surfaces.
 - `stage_gates`: declares exact pipeline stage names that must exist.
+- `review_gates`: declares required human decisions.
+- `benchmark_tasks`: declares grading outputs for benchmark-style checks.
+- `disclosure_required` / `disclosure_text`: requires AI-assisted status prose
+  in the manuscript.
 - `required_artifacts`: lists files that must exist after analysis (merged with
   `domain_profile.yaml` `artifact_expectations` in the plan).
+
+## `program.md` and `seed_ideas.yaml`
+
+`program.md` is the human-authored research program. `seed_ideas.yaml` records
+the deterministic proposal set used to produce accepted, rejected, and deferred
+idea ledgers. Accepted ideas must carry evidence links; candidates must keep
+their `touched_paths` inside `edit_allowlist`.
 
 ## `manuscript/config.yaml` (loop settings)
 
@@ -41,8 +56,9 @@ plan, not a second parse of `autoresearch.yaml` in project code.
 `validate_autoresearch_plan(..., phase=...)` supports:
 
 - `intrinsic` — domain profile, experiment plan, pipeline contracts, thin
-  orchestrators
-- `extrinsic` — evidence registry and artifact manifest (post-write surfaces)
+  orchestrators, AI-assisted disclosure
+- `extrinsic` — evidence registry, artifact manifest, method ledgers, review
+  decisions, and benchmark grading outputs (post-write surfaces)
 - `all` — default; runs every configured check
 
 The readiness validator only checks local deterministic surfaces. It does not

@@ -55,12 +55,8 @@ class TestAnalyzeManuscript:
     def test_round_trip_to_disk(self, tmp_path: Path):
         man = tmp_path / "manuscript"
         man.mkdir()
-        (man / "00_abstract.md").write_text(
-            "# Abstract\n\nWe study reproducibility [@peng2011reproducible]."
-        )
-        (man / "01_introduction.md").write_text(
-            "# Introduction\n\nThe field has grown rapidly."
-        )
+        (man / "00_abstract.md").write_text("# Abstract\n\nWe study reproducibility [@peng2011reproducible].")
+        (man / "01_introduction.md").write_text("# Introduction\n\nThe field has grown rapidly.")
 
         report = analyze_manuscript(man)
         assert report.total_words > 0

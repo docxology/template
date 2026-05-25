@@ -350,9 +350,7 @@ class TestTemplateIntegration:
             # Find first non-shebang, non-empty line
             for line in lines:
                 if line.strip() and not line.startswith("#!"):
-                    assert line.strip().startswith('"""'), (
-                        f"Template should start with docstring, got: {line[:50]}"
-                    )
+                    assert line.strip().startswith('"""'), f"Template should start with docstring, got: {line[:50]}"
                     break
 
     def test_templates_follow_pep8_style(self):

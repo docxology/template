@@ -1,6 +1,5 @@
 """Tests for infrastructure.validation.docs.accuracy — comprehensive coverage."""
 
-
 from infrastructure.validation.docs.accuracy import (
     extract_headings,
     resolve_file_path,
@@ -262,9 +261,7 @@ class TestRunAccuracyPhase:
     def test_basic_run(self, tmp_path):
         md = tmp_path / "doc.md"
         md.write_text("# Hello\nSome text.")
-        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy(
-            [md], tmp_path, {}
-        )
+        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy([md], tmp_path, {})
         assert "link_issues" in report
         assert "total_issues" in report
         assert isinstance(link_issues, list)
@@ -272,17 +269,13 @@ class TestRunAccuracyPhase:
         assert str(md.relative_to(tmp_path)) in all_headings
 
     def test_empty_file_list(self, tmp_path):
-        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy(
-            [], tmp_path, {}
-        )
+        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy([], tmp_path, {})
         assert report["total_issues"] == 0
         assert all_headings == {}
 
     def test_detects_broken_links(self, tmp_path):
         md = tmp_path / "doc.md"
         md.write_text("[broken](nonexistent.md)")
-        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy(
-            [md], tmp_path, {}
-        )
+        report, link_issues, accuracy_issues, all_headings = verify_documentation_accuracy([md], tmp_path, {})
         assert report["link_issues"] >= 1
         assert len(link_issues) >= 1

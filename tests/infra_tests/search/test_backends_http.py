@@ -95,9 +95,7 @@ def test_crossref_passes_year_filter_to_api(httpserver: HTTPServer):
 
 
 def test_crossref_non_200_raises(httpserver: HTTPServer):
-    httpserver.expect_request("/works").respond_with_data(
-        "internal error", status=500
-    )
+    httpserver.expect_request("/works").respond_with_data("internal error", status=500)
     backend = CrossrefBackend(
         http_client=UrllibHttpClient(),
         base_url=httpserver.url_for("/works"),
@@ -107,9 +105,7 @@ def test_crossref_non_200_raises(httpserver: HTTPServer):
 
 
 def test_crossref_non_json_raises(httpserver: HTTPServer):
-    httpserver.expect_request("/works").respond_with_data(
-        "<html>not json</html>", content_type="text/html"
-    )
+    httpserver.expect_request("/works").respond_with_data("<html>not json</html>", content_type="text/html")
     backend = CrossrefBackend(
         http_client=UrllibHttpClient(),
         base_url=httpserver.url_for("/works"),
@@ -170,9 +166,7 @@ ARXIV_ATOM = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 def test_arxiv_parses_atom_response(httpserver: HTTPServer):
-    httpserver.expect_request("/api/query").respond_with_data(
-        ARXIV_ATOM, content_type="application/atom+xml"
-    )
+    httpserver.expect_request("/api/query").respond_with_data(ARXIV_ATOM, content_type="application/atom+xml")
     backend = ArxivBackend(
         http_client=UrllibHttpClient(),
         base_url=httpserver.url_for("/api/query"),
@@ -196,9 +190,7 @@ def test_arxiv_parses_atom_response(httpserver: HTTPServer):
 
 
 def test_arxiv_year_filter_applied_post_fetch(httpserver: HTTPServer):
-    httpserver.expect_request("/api/query").respond_with_data(
-        ARXIV_ATOM, content_type="application/atom+xml"
-    )
+    httpserver.expect_request("/api/query").respond_with_data(ARXIV_ATOM, content_type="application/atom+xml")
     backend = ArxivBackend(
         http_client=UrllibHttpClient(),
         base_url=httpserver.url_for("/api/query"),
@@ -266,9 +258,9 @@ PAPERCLIP_STRUCTURED_ENVELOPE = {
 
 def test_paperclip_sends_x_api_key_header(httpserver: HTTPServer):
     """The adapter must POST with X-API-Key (matching the SDK)."""
-    httpserver.expect_request(
-        "/papers", method="POST", headers={"X-API-Key": "test-key"}
-    ).respond_with_json(PAPERCLIP_STRUCTURED_ENVELOPE)
+    httpserver.expect_request("/papers", method="POST", headers={"X-API-Key": "test-key"}).respond_with_json(
+        PAPERCLIP_STRUCTURED_ENVELOPE
+    )
     backend = PaperclipBackend(
         api_key="test-key",
         http_client=UrllibHttpClient(),
@@ -315,9 +307,7 @@ def test_paperclip_posts_mcp_tools_call_payload(httpserver: HTTPServer):
 
 
 def test_paperclip_parses_structured_papers(httpserver: HTTPServer):
-    httpserver.expect_request("/papers", method="POST").respond_with_json(
-        PAPERCLIP_STRUCTURED_ENVELOPE
-    )
+    httpserver.expect_request("/papers", method="POST").respond_with_json(PAPERCLIP_STRUCTURED_ENVELOPE)
     backend = PaperclipBackend(
         api_key="k",
         http_client=UrllibHttpClient(),
@@ -361,9 +351,7 @@ def test_paperclip_falls_back_to_text_content(httpserver: HTTPServer):
 
 
 def test_paperclip_non_200_raises(httpserver: HTTPServer):
-    httpserver.expect_request("/papers", method="POST").respond_with_data(
-        "nope", status=401
-    )
+    httpserver.expect_request("/papers", method="POST").respond_with_data("nope", status=401)
     backend = PaperclipBackend(
         api_key="bad",
         http_client=UrllibHttpClient(),
@@ -392,9 +380,7 @@ def test_paperclip_skips_malformed_records(httpserver: HTTPServer):
             "structuredContent": {
                 "papers": [
                     {"id": "x"},  # missing title -> skipped
-                    PAPERCLIP_STRUCTURED_ENVELOPE["result"]["structuredContent"][
-                        "papers"
-                    ][0],
+                    PAPERCLIP_STRUCTURED_ENVELOPE["result"]["structuredContent"]["papers"][0],
                 ]
             }
         }
@@ -423,7 +409,7 @@ PAPERCLIP_LIVE_TEXT = (
     "     bio_271f14126cad · bioRxiv · 2023-09-18\n"
     "     https://doi.org/10.1101/2023.09.18.558250\n"
     '     "This study investigated how the brain represents and resolves'
-    ' ambiguity and risk in decision-making using an active inference'
+    " ambiguity and risk in decision-making using an active inference"
     ' framework."\n\n'
     "  2. Whence the Expected Free Energy?\n"
     "     Beren Millidge, Alexander Tschantz, Christopher L Buckley\n"

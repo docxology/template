@@ -1,6 +1,5 @@
 """Tests for infrastructure.core.runtime.function_profiler."""
 
-
 from infrastructure.core.runtime.function_profiler import (
     CodeProfiler,
     ProfilingMetrics,

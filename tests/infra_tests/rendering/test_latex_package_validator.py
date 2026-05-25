@@ -127,9 +127,7 @@ class TestValidatePackages:
         kpsewhich_path = Path(shutil.which("kpsewhich"))
 
         # Use real validation
-        result = validate_packages(
-            required=["amsmath"], optional=["cleveref"], kpsewhich_path=kpsewhich_path
-        )
+        result = validate_packages(required=["amsmath"], optional=["cleveref"], kpsewhich_path=kpsewhich_path)
 
         assert isinstance(result, ValidationReport)
         assert len(result.required_packages) == 1

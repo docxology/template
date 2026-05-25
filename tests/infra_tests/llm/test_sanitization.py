@@ -501,6 +501,7 @@ class TestValidateFileInput:
     def test_nonexistent_file_rejected(self, tmp_path):
         s = InputSanitizer()
         import os
+
         old_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)
@@ -514,6 +515,7 @@ class TestValidateFileInput:
         test_file = tmp_path / "test.txt"
         test_file.write_text("content")
         import os
+
         old_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)
@@ -527,6 +529,7 @@ class TestValidateFileInput:
         test_file = tmp_path / "test.exe"
         test_file.write_text("content")
         import os
+
         old_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)
@@ -540,6 +543,7 @@ class TestValidateFileInput:
         test_file = tmp_path / "test.md"
         test_file.write_text("content")
         import os
+
         old_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)

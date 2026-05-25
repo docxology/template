@@ -27,6 +27,7 @@ class TestCheckPythonVersion:
 
         assert result is True
 
+
 class TestCheckDependencies:
     """Tests for check_dependencies function."""
 
@@ -87,6 +88,7 @@ class TestEnvironmentSetupIntegration:
         # Check core packages
         deps_ok, missing = check_dependencies(["pytest"])
         assert deps_ok is True
+
 
 class TestDependencyValidation:
     """Tests for dependency validation scenarios."""

@@ -39,7 +39,9 @@ class TestOverlays:
     def test_watermark_custom_params(self):
         from infrastructure.steganography.overlays import create_watermark_overlay
 
-        pdf_bytes = create_watermark_overlay(800, 600, text="DRAFT", opacity=0.2, color_rgb=(255, 0, 0), font_size=80, repeat_count=3)
+        pdf_bytes = create_watermark_overlay(
+            800, 600, text="DRAFT", opacity=0.2, color_rgb=(255, 0, 0), font_size=80, repeat_count=3
+        )
         assert len(pdf_bytes) > 0
 
 
@@ -89,9 +91,7 @@ class TestCreateWatermarkOverlay:
     def test_custom_opacity_and_color(self):
         from infrastructure.steganography.overlays import create_watermark_overlay
 
-        pdf_bytes = create_watermark_overlay(
-            612, 792, opacity=0.15, color_rgb=(255, 0, 0), font_size=80
-        )
+        pdf_bytes = create_watermark_overlay(612, 792, opacity=0.15, color_rgb=(255, 0, 0), font_size=80)
         assert len(pdf_bytes) > 0
 
     def test_single_repeat(self):
@@ -149,16 +149,16 @@ class TestCreateFooterOverlay:
     def test_long_title_truncated(self):
         from infrastructure.steganography.overlays import create_footer_overlay
 
-        pdf_bytes = create_footer_overlay(
-            612, 792, title="A" * 100, authors="Test"
-        )
+        pdf_bytes = create_footer_overlay(612, 792, title="A" * 100, authors="Test")
         assert len(pdf_bytes) > 0
 
     def test_large_file_size_mb(self):
         from infrastructure.steganography.overlays import create_footer_overlay
 
         pdf_bytes = create_footer_overlay(
-            612, 792, source_file_size=5 * 1024 * 1024  # 5 MB
+            612,
+            792,
+            source_file_size=5 * 1024 * 1024,  # 5 MB
         )
         assert len(pdf_bytes) > 0
 
@@ -166,24 +166,22 @@ class TestCreateFooterOverlay:
         from infrastructure.steganography.overlays import create_footer_overlay
 
         pdf_bytes = create_footer_overlay(
-            612, 792, source_file_size=500  # 500 bytes
+            612,
+            792,
+            source_file_size=500,  # 500 bytes
         )
         assert len(pdf_bytes) > 0
 
     def test_long_document_id(self):
         from infrastructure.steganography.overlays import create_footer_overlay
 
-        pdf_bytes = create_footer_overlay(
-            612, 792, document_id="a" * 50
-        )
+        pdf_bytes = create_footer_overlay(612, 792, document_id="a" * 50)
         assert len(pdf_bytes) > 0
 
     def test_long_source_filename(self):
         from infrastructure.steganography.overlays import create_footer_overlay
 
-        pdf_bytes = create_footer_overlay(
-            612, 792, source_filename="very_long_filename_that_exceeds_twenty_chars.pdf"
-        )
+        pdf_bytes = create_footer_overlay(612, 792, source_filename="very_long_filename_that_exceeds_twenty_chars.pdf")
         assert len(pdf_bytes) > 0
 
     def test_no_optional_fields(self):

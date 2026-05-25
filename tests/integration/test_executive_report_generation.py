@@ -143,9 +143,7 @@ class TestScriptIntegration:
         repo_root = Path(__file__).parent.parent.parent
         script_path = repo_root / "scripts" / "07_generate_executive_report.py"
 
-        result = subprocess.run(
-            [sys.executable, str(script_path), "--help"], capture_output=True, text=True
-        )
+        result = subprocess.run([sys.executable, str(script_path), "--help"], capture_output=True, text=True)
 
         # Should show help and exit successfully
         assert result.returncode == 0

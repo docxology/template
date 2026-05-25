@@ -341,8 +341,8 @@ jobs:
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 4b — fep_lean (real math-inc gauss + elan lake/lean; excluded from matrix above)
 # This job uses projects/fep_lean/ paths.  When fep_lean lives under
-# projects_in_progress/, the hashFiles guard evaluates to '' and the job
-# is skipped.  Promote to projects/ to activate CI:
+# projects_in_progress/, the detect job emits fep_lean=false and this job is
+# skipped.  Promote to projects/ to activate CI:
 #   mv projects_in_progress/fep_lean projects/fep_lean
 # ─────────────────────────────────────────────────────────────────────────────
   fep-lean:

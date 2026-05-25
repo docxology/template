@@ -70,10 +70,7 @@ class TestConfigCli:
             )
 
             assert result.returncode == 0
-            assert (
-                "usage:" in result.stdout.lower()
-                or "Load manuscript configuration" in result.stdout
-            )
+            assert "usage:" in result.stdout.lower() or "Load manuscript configuration" in result.stdout
 
     def test_main_execution_no_args(self):
         """CLI without arguments via subprocess."""

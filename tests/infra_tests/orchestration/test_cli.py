@@ -330,9 +330,7 @@ def test_cmd_secure_without_deterministic_does_not_set_env_var(
 def test_secure_help_advertises_both_modes() -> None:
     """`secure --help` must document both modes plus --deterministic."""
     parser = build_parser()
-    subparsers_action = next(
-        a for a in parser._actions if isinstance(a, argparse._SubParsersAction)
-    )
+    subparsers_action = next(a for a in parser._actions if isinstance(a, argparse._SubParsersAction))
     secure_parser = subparsers_action.choices["secure"]
     text = secure_parser.format_help()
     # Mode advertisement

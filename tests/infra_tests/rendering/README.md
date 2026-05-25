@@ -143,7 +143,7 @@ uv run pytest tests/infra_tests/rendering/ -vv -s
 
 ```bash
 # View LaTeX compilation logs
-cat output/pdf/*.log | tail -50
+find projects/*/output/pdf output/*/pdf -name "*.log" -print -exec tail -50 {} \;
 ```
 
 ## Architecture

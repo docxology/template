@@ -130,9 +130,7 @@ class TestPromptComposer:
         loader = PromptFragmentLoader(base_path=setup_prompts)
         composer = PromptComposer(loader=loader)
 
-        result = composer.compose_template(
-            "test_templates.json#test_template", text="Test content here"
-        )
+        result = composer.compose_template("test_templates.json#test_template", text="Test content here")
 
         assert "=== CONTENT ===" in result
         assert "Test content here" in result
@@ -146,9 +144,7 @@ class TestPromptComposer:
         loader = PromptFragmentLoader(base_path=setup_prompts)
         composer = PromptComposer(loader=loader)
 
-        result = composer.compose_template(
-            "test_templates.json#test_template", text="Test content", max_tokens=1000
-        )
+        result = composer.compose_template("test_templates.json#test_template", text="Test content", max_tokens=1000)
 
         assert "TOKEN BUDGET" in result
         assert "1000" in result

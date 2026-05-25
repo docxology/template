@@ -1,4 +1,5 @@
 """Tests for EPUB renderer - no mocks, runs real pandoc."""
+
 from __future__ import annotations
 
 import shutil

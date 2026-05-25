@@ -456,6 +456,7 @@ class TestEdgeCases:
     def test_calculate_file_hash_exception(self, tmp_path):
         """Test file hash calculation with real execution."""
         from infrastructure.core.files.operations import calculate_file_hash
+
         test_file = tmp_path / "test.txt"
         test_file.write_text("Content")
 
@@ -702,9 +703,7 @@ class TestDissemination:
         file_path = tmp_path / "paper.pdf"
         file_path.write_text("%PDF-1.4\nTest PDF content for Zenodo upload test")
 
-        client = ZenodoClient(
-            ZenodoConfig(access_token="test-token", base_url=zenodo_test_server.url_for(""))
-        )
+        client = ZenodoClient(ZenodoConfig(access_token="test-token", base_url=zenodo_test_server.url_for("")))
 
         # Test metadata
         metadata = {
@@ -809,9 +808,7 @@ class TestPublishingEdgeCases:
 
     def test_generate_citation_with_minimal_metadata(self):
         """Test citation generation with minimal metadata."""
-        metadata = publishing.PublicationMetadata(
-            title="Minimal", authors=["Author"], abstract="Abstract", keywords=[]
-        )
+        metadata = publishing.PublicationMetadata(title="Minimal", authors=["Author"], abstract="Abstract", keywords=[])
 
         bibtex = publishing.generate_citation_bibtex(metadata)
         apa = publishing.generate_citation_apa(metadata)

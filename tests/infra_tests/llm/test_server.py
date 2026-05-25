@@ -10,9 +10,7 @@ from infrastructure.llm.utils.server import (
 
 class TestIsOllamaRunning:
     def test_server_running(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/tags").respond_with_json(
-            {"models": [{"name": "llama3:latest"}]}
-        )
+        httpserver.expect_request("/api/tags").respond_with_json({"models": [{"name": "llama3:latest"}]})
         assert is_ollama_running(httpserver.url_for("")) is True
 
     def test_server_not_running(self):
@@ -29,9 +27,7 @@ class TestIsOllamaRunning:
 
 class TestEnsureOllamaReady:
     def test_ready_with_models(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/tags").respond_with_json(
-            {"models": [{"name": "llama3:latest", "size": 1000}]}
-        )
+        httpserver.expect_request("/api/tags").respond_with_json({"models": [{"name": "llama3:latest", "size": 1000}]})
         assert ensure_ollama_ready(httpserver.url_for(""), auto_start=False) is True
 
     def test_not_running_no_auto_start(self):

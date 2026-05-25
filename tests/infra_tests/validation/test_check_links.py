@@ -435,9 +435,7 @@ class TestGenerateComprehensiveReport:
             ],
             "code_block_paths": [],
             "directory_structures": [],
-            "python_imports": [
-                {"file": "c.md", "line": 3, "target": "mod", "issue": "not found", "type": "c"}
-            ],
+            "python_imports": [{"file": "c.md", "line": 3, "target": "mod", "issue": "not found", "type": "c"}],
             "placeholder_consistency": [],
         }
         assert generate_comprehensive_report(issues, 15) == 1
@@ -1030,9 +1028,7 @@ class TestCheckLinksCore:
     def test_has_link_checking_functions(self):
         """Test that module has link checking functions."""
         module_funcs = [
-            a
-            for a in dir(check_links)
-            if not a.startswith("_") and callable(getattr(check_links, a, None))
+            a for a in dir(check_links) if not a.startswith("_") and callable(getattr(check_links, a, None))
         ]
         assert len(module_funcs) > 0
 
@@ -1250,9 +1246,7 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         source.write_text("content")
 
         # This should try to go way outside the repo
-        result, msg = check_links.check_file_reference(
-            "../../../../../../../../outside.md", source, tmp_path
-        )
+        result, msg = check_links.check_file_reference("../../../../../../../../outside.md", source, tmp_path)
 
         # Should fail - either path outside repo or doesn't exist
         assert result is False
@@ -1492,9 +1486,7 @@ class TestMainFunctionReporting:
             for md_file in md_files:
                 try:
                     content = md_file.read_text(encoding="utf-8")
-                    all_headings[str(md_file.relative_to(repo_root))] = (
-                        check_links.extract_headings(content)
-                    )
+                    all_headings[str(md_file.relative_to(repo_root))] = check_links.extract_headings(content)
                 except Exception as e:
                     print(f"Error reading {md_file}: {e}")
 
@@ -1502,9 +1494,7 @@ class TestMainFunctionReporting:
             for md_file in md_files:
                 try:
                     content = md_file.read_text(encoding="utf-8")
-                    internal_links, external_links, file_refs = check_links.extract_links(
-                        content, md_file
-                    )
+                    internal_links, external_links, file_refs = check_links.extract_links(content, md_file)
 
                     # Check internal links
                     for link in internal_links:
@@ -1527,9 +1517,7 @@ class TestMainFunctionReporting:
                         if "#" in target:
                             target = target.split("#")[0]
                         if target:
-                            exists, msg = check_links.check_file_reference(
-                                target, md_file, repo_root
-                            )
+                            exists, msg = check_links.check_file_reference(target, md_file, repo_root)
                             if not exists:
                                 broken_file_refs.append(
                                     {
@@ -1568,9 +1556,7 @@ class TestMainFunctionReporting:
         captured = capsys.readouterr()
 
         # Should report the broken anchor
-        assert (
-            "broken anchor links" in captured.out.lower() or "nonexistent" in captured.out.lower()
-        )
+        assert "broken anchor links" in captured.out.lower() or "nonexistent" in captured.out.lower()
         assert exit_code == 1
 
     def test_main_reports_broken_file_refs(self, tmp_path, capsys):

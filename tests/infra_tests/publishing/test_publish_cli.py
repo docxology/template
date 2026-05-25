@@ -55,7 +55,10 @@ class TestPublishCliMain:
 
         # Run without required arguments - should fail
         result = subprocess.run(
-            [sys.executable, str(script_path)], capture_output=True, text=True, env=env,
+            [sys.executable, str(script_path)],
+            capture_output=True,
+            text=True,
+            env=env,
             timeout=30,
         )
 

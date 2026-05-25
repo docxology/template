@@ -74,7 +74,10 @@ class TestBuildDocumentationScanReport:
         results = _make_results()
         results.quality_issues.append(
             QualityIssue(
-                file="doc.md", line=1, issue_type="fmt", issue_message="bad",
+                file="doc.md",
+                line=1,
+                issue_type="fmt",
+                issue_message="bad",
             )
         )
         report = build_documentation_scan_report(results)
@@ -92,7 +95,9 @@ class TestBuildDocumentationScanReport:
         results = _make_results()
         results.completeness_gaps.append(
             CompletenessGap(
-                category="docs", item="README", description="Missing",
+                category="docs",
+                item="README",
+                description="Missing",
             )
         )
         report = build_documentation_scan_report(results)

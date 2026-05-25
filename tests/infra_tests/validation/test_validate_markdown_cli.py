@@ -562,9 +562,7 @@ class TestValidateMarkdownCliCore:
         """Test that module has main function."""
         from infrastructure.validation.cli import markdown as validate_markdown_cli
 
-        assert hasattr(validate_markdown_cli, "main") or hasattr(
-            validate_markdown_cli, "validate_markdown_cli"
-        )
+        assert hasattr(validate_markdown_cli, "main") or hasattr(validate_markdown_cli, "validate_markdown_cli")
 
 
 class TestMarkdownValidationCommand:

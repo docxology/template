@@ -72,9 +72,7 @@ class TestSelectBestModel:
             (["nonexistent-model"], [{"name": "custom-model:latest"}], "custom-model:latest"),
         ],
     )
-    def test_selection_strategies(
-        self, httpserver: HTTPServer, preferences, models_payload, expected
-    ):
+    def test_selection_strategies(self, httpserver: HTTPServer, preferences, models_payload, expected):
         httpserver.expect_request("/api/tags").respond_with_json({"models": models_payload})
         model = select_best_model(preferences=preferences, base_url=httpserver.url_for(""))
         assert model == expected
@@ -130,9 +128,7 @@ class TestCheckModelLoaded:
             ([], "smollm2", False, None),
         ],
     )
-    def test_loaded_state(
-        self, httpserver: HTTPServer, processes, query, expected_loaded, expected_name
-    ):
+    def test_loaded_state(self, httpserver: HTTPServer, processes, query, expected_loaded, expected_name):
         httpserver.expect_request("/api/ps").respond_with_json({"processes": processes})
         is_loaded, name = check_model_loaded(query, base_url=httpserver.url_for(""))
         assert is_loaded is expected_loaded
@@ -159,9 +155,7 @@ class TestPreloadModel:
         assert error is None
 
     def test_already_loaded(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/ps").respond_with_json(
-            {"processes": [{"model": "smollm2"}]}
-        )
+        httpserver.expect_request("/api/ps").respond_with_json({"processes": [{"model": "smollm2"}]})
         success, error = preload_model("smollm2", base_url=httpserver.url_for(""), retries=0)
         assert success is True
         assert error is None
@@ -178,9 +172,7 @@ class TestPreloadModel:
         assert error is None
 
     def test_connection_error(self):
-        success, error = preload_model(
-            "smollm2", base_url="http://localhost:1", timeout=0.5, retries=0
-        )
+        success, error = preload_model("smollm2", base_url="http://localhost:1", timeout=0.5, retries=0)
         assert success is False
         assert error is not None
 
@@ -297,25 +289,19 @@ class TestGetModelInfoFromModels:
 
 class TestCheckModelLoadedFromModels:
     def test_loaded_exact_match(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/ps").respond_with_json(
-            {"processes": [{"model": "llama3:latest"}]}
-        )
+        httpserver.expect_request("/api/ps").respond_with_json({"processes": [{"model": "llama3:latest"}]})
         is_loaded, name = check_model_loaded("llama3:latest", httpserver.url_for(""))
         assert is_loaded is True
         assert name == "llama3:latest"
 
     def test_loaded_partial_match(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/ps").respond_with_json(
-            {"processes": [{"model": "llama3:latest"}]}
-        )
+        httpserver.expect_request("/api/ps").respond_with_json({"processes": [{"model": "llama3:latest"}]})
         is_loaded, name = check_model_loaded("llama3", httpserver.url_for(""))
         assert is_loaded is True
         assert name == "llama3:latest"
 
     def test_not_loaded(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/ps").respond_with_json(
-            {"processes": [{"model": "mistral:7b"}]}
-        )
+        httpserver.expect_request("/api/ps").respond_with_json({"processes": [{"model": "mistral:7b"}]})
         is_loaded, name = check_model_loaded("llama3:latest", httpserver.url_for(""))
         assert is_loaded is False
         assert name is None
@@ -337,39 +323,27 @@ class TestCheckModelLoadedFromModels:
 
 class TestPreloadModelFromModels:
     def test_already_loaded(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/ps").respond_with_json(
-            {"processes": [{"model": "llama3:latest"}]}
-        )
+        httpserver.expect_request("/api/ps").respond_with_json({"processes": [{"model": "llama3:latest"}]})
         success, error = preload_model("llama3:latest", httpserver.url_for(""), retries=0)
         assert success is True
         assert error is None
 
     def test_successful_preload(self, httpserver: HTTPServer):
         httpserver.expect_request("/api/ps").respond_with_json({"processes": []})
-        httpserver.expect_request("/api/generate", method="POST").respond_with_json(
-            {"response": "ok"}
-        )
+        httpserver.expect_request("/api/generate", method="POST").respond_with_json({"response": "ok"})
         success, error = preload_model("llama3:latest", httpserver.url_for(""), retries=0)
         assert success is True
 
     def test_preload_failure(self, httpserver: HTTPServer):
         httpserver.expect_request("/api/ps").respond_with_json({"processes": []})
-        httpserver.expect_request("/api/generate", method="POST").respond_with_data(
-            "error", status=500
-        )
-        success, error = preload_model(
-            "llama3:latest", httpserver.url_for(""), retries=0
-        )
+        httpserver.expect_request("/api/generate", method="POST").respond_with_data("error", status=500)
+        success, error = preload_model("llama3:latest", httpserver.url_for(""), retries=0)
         assert success is False
         assert error is not None
 
     def test_skip_loaded_check(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/generate", method="POST").respond_with_json(
-            {"response": "ok"}
-        )
-        success, error = preload_model(
-            "llama3:latest", httpserver.url_for(""), retries=0, check_loaded_first=False
-        )
+        httpserver.expect_request("/api/generate", method="POST").respond_with_json({"response": "ok"})
+        success, error = preload_model("llama3:latest", httpserver.url_for(""), retries=0, check_loaded_first=False)
         assert success is True
 
     def test_connection_error(self):

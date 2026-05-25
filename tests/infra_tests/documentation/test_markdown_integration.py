@@ -49,15 +49,11 @@ class TestMarkdownIntegration:
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
 
         # Register figure
-        integration.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        integration.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         markdown_file = manuscript_dir / "test.md"
         markdown_file.write_text("# Results\n\nContent here.")
-        result = integration.insert_figure_in_section(
-            markdown_file, "fig:test", "Results", position="after"
-        )
+        result = integration.insert_figure_in_section(markdown_file, "fig:test", "Results", position="after")
         assert result is True
 
     def test_generate_table_of_figures(self, tmp_path):
@@ -67,12 +63,8 @@ class TestMarkdownIntegration:
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
 
         # Register some figures
-        integration.figure_manager.register_figure(
-            filename="fig1.png", caption="Figure 1", label="fig:fig1"
-        )
-        integration.figure_manager.register_figure(
-            filename="fig2.png", caption="Figure 2", label="fig:fig2"
-        )
+        integration.figure_manager.register_figure(filename="fig1.png", caption="Figure 1", label="fig:fig1")
+        integration.figure_manager.register_figure(filename="fig2.png", caption="Figure 2", label="fig:fig2")
 
         output_file = integration.generate_table_of_figures()
         assert output_file.exists()
@@ -102,9 +94,7 @@ class TestMarkdownIntegration:
         manuscript_dir.mkdir()
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
 
-        integration.figure_manager.register_figure(
-            filename="fig1.png", caption="Figure 1", label="fig:fig1"
-        )
+        integration.figure_manager.register_figure(filename="fig1.png", caption="Figure 1", label="fig:fig1")
 
         custom_output = tmp_path / "custom_table.md"
         output_file = integration.generate_table_of_figures(output_file=custom_output)
@@ -140,9 +130,7 @@ class TestMarkdownIntegration:
 
         markdown_file = manuscript_dir / "test.md"
         # Create content with figure label but no reference
-        markdown_file.write_text(
-            "# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n\nSome text here.\n"
-        )
+        markdown_file.write_text("# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n\nSome text here.\n")
         updated = integration.update_all_references(markdown_file)
         # Should insert a reference
         assert updated >= 0
@@ -160,11 +148,7 @@ class TestMarkdownIntegration:
         markdown_file = manuscript_dir / "test.md"
         # Create content with figure label and existing reference
         markdown_file.write_text(
-            "# Test\n\n"
-            "\\begin{figure}[h]\n"
-            "\\label{fig:test}\n"
-            "\\end{figure}\n\n"
-            "See Figure \\ref{fig:test}.\n"
+            "# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\n\\end{figure}\n\nSee Figure \\ref{fig:test}.\n"
         )
         updated = integration.update_all_references(markdown_file)
         # Should not insert another reference
@@ -200,9 +184,7 @@ class TestMarkdownIntegration:
 
         markdown_file = manuscript_dir / "test.md"
         # Create content with figure label but no \end{figure}
-        markdown_file.write_text(
-            "# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\nNo end figure here.\n"
-        )
+        markdown_file.write_text("# Test\n\n\\begin{figure}[h]\n\\label{fig:test}\nNo end figure here.\n")
         updated = integration.update_all_references(markdown_file)
         # Should not insert reference since figure_end == -1
         assert updated == 0
@@ -225,9 +207,7 @@ class TestMarkdownIntegration:
         integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
 
         # Register a figure
-        integration.figure_manager.register_figure(
-            filename="test.png", caption="Test", label="fig:test"
-        )
+        integration.figure_manager.register_figure(filename="test.png", caption="Test", label="fig:test")
 
         # Create markdown with reference to nonexistent figure file
         markdown_file = manuscript_dir / "test.md"

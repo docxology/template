@@ -22,13 +22,9 @@ def http_test_server():
     )
 
     # Mock broken external links
-    server.expect_request("/broken-link").respond_with_data(
-        "Not found", content_type="text/plain", status=404
-    )
+    server.expect_request("/broken-link").respond_with_data("Not found", content_type="text/plain", status=404)
 
-    server.expect_request("/timeout-link").respond_with_data(
-        "Request timeout", content_type="text/plain", status=408
-    )
+    server.expect_request("/timeout-link").respond_with_data("Request timeout", content_type="text/plain", status=408)
 
     # Mock redirects
     server.expect_request("/redirect-link").respond_with_data(

@@ -21,9 +21,7 @@ from infrastructure.reporting._executive_models import (
 def _make_project(name="proj_a", coverage=90.0, total_tests=100, failed=0, words=5000):
     return ProjectMetrics(
         name=name,
-        manuscript=ManuscriptMetrics(
-            sections=5, total_words=words, equations=10, figures=3, references=20
-        ),
+        manuscript=ManuscriptMetrics(sections=5, total_words=words, equations=10, figures=3, references=20),
         codebase=CodebaseMetrics(source_files=10, source_lines=500),
         tests=TestMetrics(
             total_tests=total_tests,

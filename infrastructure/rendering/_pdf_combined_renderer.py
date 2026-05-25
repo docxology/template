@@ -286,27 +286,51 @@ def _escape_latex_def_value(value: str) -> str:
     return escaped.replace("{", "\\{").replace("}", "\\}")
 
 
-def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
-    """Repair ``\\nameref`` titles for ``\\section*`` labels when titlesec is loaded.
+_STARRED_HEADING_MARKERS: tuple[str, ...] = (
+    "\\section*{",
+    "\\subsection*{",
+    "\\subsubsection*{",
+)
 
-    titlesec prevents hyperref from storing section titles on starred headings,
-    which leaves ``\\nameref{sec:...}`` empty in front matter even when Pandoc
-    emits ``\\section*{Title}\\label{sec:...}`` on one line.
+
+def _next_starred_heading(tex_content: str, start: int) -> tuple[int, str] | None:
+    """Return the earliest starred heading marker at or after ``start``."""
+    best_at = -1
+    best_marker = ""
+    for marker in _STARRED_HEADING_MARKERS:
+        at = tex_content.find(marker, start)
+        if at >= 0 and (best_at < 0 or at < best_at):
+            best_at = at
+            best_marker = marker
+    if best_at < 0:
+        return None
+    return best_at, best_marker
+
+
+def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
+    """Repair hyperref anchors and ``\\nameref`` titles for starred headings.
+
+    Pandoc emits ``\\section*{Title}\\label{...}\\addcontentsline{...}`` without
+    ``\\phantomsection``, so TOC links resolve to ``Doc-Start`` while page numbers
+    stay correct. titlesec additionally prevents hyperref from storing section titles,
+    which leaves ``\\nameref{sec:...}`` empty unless ``\\@currentlabelname`` is set.
     """
-    if not re.search(r"\\usepackage(?:\[[^\]]*\])?\{titlesec\}", tex_content):
+    has_titlesec = bool(re.search(r"\\usepackage(?:\[[^\]]*\])?\{titlesec\}", tex_content))
+    has_hyperref = bool(re.search(r"\\usepackage(?:\[[^\]]*\])?\{hyperref\}", tex_content))
+    if not has_titlesec and not has_hyperref:
         return tex_content, 0
 
-    marker = "\\section*{"
     out: list[str] = []
     i = 0
     fixes = 0
 
     while True:
-        start = tex_content.find(marker, i)
-        if start < 0:
+        found = _next_starred_heading(tex_content, i)
+        if found is None:
             out.append(tex_content[i:])
             break
 
+        start, marker = found
         out.append(tex_content[i:start])
         j = start + len(marker)
         depth = 1
@@ -331,7 +355,7 @@ def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
             i = j
             continue
 
-        label_match = re.match(r"\\label\{(sec:[^}]+)\}", rest_lstrip)
+        label_match = re.match(r"\\label\{([^}]+)\}", rest_lstrip)
         if label_match is None:
             out.append(tex_content[start:j])
             i = j
@@ -339,22 +363,20 @@ def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
 
         label = label_match.group(1)
         consumed = len(rest) - len(rest_lstrip) + label_match.end()
-        title_plain = re.sub(r"\s+", " ", title_raw).strip()
-        title_escaped = _escape_latex_def_value(title_plain)
-        out.append(
-            "\\section*{"
-            f"{title_raw}}}\n"
-            "\\makeatletter\n"
-            f"\\def\\@currentlabelname{{{title_escaped}}}\n"
-            "\\makeatother\n"
-            f"\\phantomsection\\label{{{label}}}"
-        )
+        heading_open = marker
+        repaired = f"{heading_open}{title_raw}}}\n"
+        if has_titlesec:
+            title_plain = re.sub(r"\s+", " ", title_raw).strip()
+            title_escaped = _escape_latex_def_value(title_plain)
+            repaired += f"\\makeatletter\n\\def\\@currentlabelname{{{title_escaped}}}\n\\makeatother\n"
+        repaired += f"\\phantomsection\\label{{{label}}}"
+        out.append(repaired)
         fixes += 1
         i = j + consumed
 
     if fixes:
         logger.info(
-            "✓ Repaired %d starred section label(s) for titlesec/hyperref \\nameref",
+            "✓ Repaired %d starred heading label(s) for hyperref TOC anchors and \\nameref",
             fixes,
         )
     return "".join(out), fixes

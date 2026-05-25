@@ -174,11 +174,7 @@ class TestPreprocessCombinedMarkdown:
         assert result.fig_paths_fixed == 1
 
     def test_fixes_multiple_path_variants(self):
-        content = (
-            "![a](../../output/figures/a.png)\n"
-            "![b](../output/figures/b.png)\n"
-            "![c](output/figures/c.png)\n"
-        )
+        content = "![a](../../output/figures/a.png)\n![b](../output/figures/b.png)\n![c](output/figures/c.png)\n"
         result = preprocess_combined_markdown(content)
         assert result.fig_paths_fixed == 3
         assert "../../output/figures/" not in result.content
@@ -248,7 +244,7 @@ class TestPreprocessCombinedMarkdown:
         assert "FEP=14" in result.content
         assert "AI=11" in result.content
         assert "{'count'" not in result.content
-        assert "{\"count\"" not in result.content
+        assert '{"count"' not in result.content
 
     def test_manuscript_vars_missing_file(self, tmp_path):
         content = "No vars: {{title}}"
@@ -356,10 +352,7 @@ class TestPostprocessLatex:
         assert "Introduction}\\label{sec:unit_I_unit_intro}" not in result
 
     def test_fixes_starred_section_nameref_with_titlesec_options(self):
-        tex = (
-            "\\usepackage[compact]{titlesec}\n"
-            "\\section*{Preface}\\label{sec:preface}\n"
-        )
+        tex = "\\usepackage[compact]{titlesec}\n\\section*{Preface}\\label{sec:preface}\n"
         result, fixes = fix_starred_section_nameref_labels(tex)
         assert fixes == 1
         assert "\\def\\@currentlabelname{Preface}" in result
@@ -371,19 +364,28 @@ class TestPostprocessLatex:
         assert result == tex
 
     def test_skips_starred_section_when_phantomsection_present(self):
-        tex = (
-            "\\usepackage{titlesec}\n"
-            "\\section*{Preface}\n\\phantomsection\\label{sec:preface}\n"
-        )
+        tex = "\\usepackage{titlesec}\n\\section*{Preface}\n\\phantomsection\\label{sec:preface}\n"
         result, fixes = fix_starred_section_nameref_labels(tex)
         assert fixes == 0
         assert result == tex
 
     def test_skips_starred_section_without_sec_label(self):
-        tex = "\\usepackage{titlesec}\n\\section*{Appendix}\\label{app:notes}\n"
+        tex = (
+            "\\usepackage{titlesec}\n"
+            "\\subsection*{Dedication}\\label{dedication}\n"
+            "\\addcontentsline{toc}{subsection}{Dedication}\n"
+        )
         result, fixes = fix_starred_section_nameref_labels(tex)
-        assert fixes == 0
-        assert result == tex
+        assert fixes == 1
+        assert "\\phantomsection\\label{dedication}" in result
+        assert "Dedication}\\label{dedication}" not in result
+
+    def test_fixes_subsection_starred_heading_with_hyperref_only(self):
+        tex = "\\usepackage{hyperref}\n\\subsection*{Acknowledgements}\\label{acknowledgements}\n"
+        result, fixes = fix_starred_section_nameref_labels(tex)
+        assert fixes == 1
+        assert "\\phantomsection\\label{acknowledgements}" in result
+        assert "\\def\\@currentlabelname" not in result
 
 
 class TestInjectBibliography:
@@ -411,9 +413,7 @@ class TestInjectBibliography:
 
     def test_inject_rewrites_bibliography_stems(self):
         tex = "Content\n\\bibliography{references}\n\\end{document}"
-        result = inject_bibliography(
-            tex, bib_exists=True, bib_stems="references,references_deep"
-        )
+        result = inject_bibliography(tex, bib_exists=True, bib_stems="references,references_deep")
         assert "\\bibliography{references,references_deep}" in result
 
     def test_discover_manuscript_bib_paths_sorted(self, tmp_path):
@@ -534,17 +534,9 @@ class TestInjectLatexPreamble:
         manuscript_dir.mkdir()
 
         config_yaml = manuscript_dir / "config.yaml"
-        config_yaml.write_text(
-            "paper:\n  title: Test Paper\nauthors:\n  - name: Alice\n    affiliation: MIT\n"
-        )
+        config_yaml.write_text("paper:\n  title: Test Paper\nauthors:\n  - name: Alice\n    affiliation: MIT\n")
 
-        tex = (
-            "\\documentclass{article}\n"
-            "\\begin{document}\n"
-            "\\maketitle\n"
-            "Content here\n"
-            "\\end{document}"
-        )
+        tex = "\\documentclass{article}\n\\begin{document}\n\\maketitle\nContent here\n\\end{document}"
         result = inject_latex_preamble(tex, manuscript_dir)
         assert isinstance(result, str)
 
@@ -563,16 +555,12 @@ class TestPrevalidateSourceMarkdown:
 
     def test_clean_manuscript_passes(self, tmp_path):
         manuscript = self._make_manuscript(tmp_path)
-        (manuscript / "01_intro.md").write_text(
-            "# Intro\n\nSee [@good_key].\n", encoding="utf-8"
-        )
+        (manuscript / "01_intro.md").write_text("# Intro\n\nSee [@good_key].\n", encoding="utf-8")
         prevalidate_source_markdown(manuscript)
 
     def test_undefined_citation_blocks_render(self, tmp_path):
         manuscript = self._make_manuscript(tmp_path)
-        (manuscript / "01_intro.md").write_text(
-            "# Intro\n\nSee [@missing_key] and [@good_key].\n", encoding="utf-8"
-        )
+        (manuscript / "01_intro.md").write_text("# Intro\n\nSee [@missing_key] and [@good_key].\n", encoding="utf-8")
         with pytest.raises(RenderingError) as excinfo:
             prevalidate_source_markdown(manuscript)
         assert "missing_key" in str(excinfo.value)
@@ -581,8 +569,7 @@ class TestPrevalidateSourceMarkdown:
     def test_bare_pipe_in_table_blocks_render(self, tmp_path):
         manuscript = self._make_manuscript(tmp_path)
         (manuscript / "01_intro.md").write_text(
-            "| Symbol | Meaning |\n|--------|---------|\n"
-            "| \\|state\\| | bar in cell |\n",
+            "| Symbol | Meaning |\n|--------|---------|\n| \\|state\\| | bar in cell |\n",
             encoding="utf-8",
         )
         with pytest.raises(RenderingError) as excinfo:

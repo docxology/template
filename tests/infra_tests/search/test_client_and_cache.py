@@ -71,41 +71,49 @@ class TestLiteratureClient:
     def test_dedupes_across_backends_by_doi(self):
         p_a = Paper(id="a:1", title="X", doi="10.1/x", score=0.3, source="a")
         p_b = Paper(id="b:1", title="X copy", doi="10.1/x", score=0.9, source="b")
-        client = LiteratureClient([
-            _FixedBackend("a", [p_a]),
-            _FixedBackend("b", [p_b]),
-        ])
+        client = LiteratureClient(
+            [
+                _FixedBackend("a", [p_a]),
+                _FixedBackend("b", [p_b]),
+            ]
+        )
         result = client.search(SearchQuery(text="x"))
         assert len(result.papers) == 1
         # Higher-scored copy wins.
         assert result.papers[0].score == 0.9
 
     def test_per_backend_failure_recorded_not_raised(self):
-        client = LiteratureClient([
-            _FailingBackend("flaky", "transient"),
-            _FixedBackend("ok", [Paper(id="a", title="A")]),
-        ])
+        client = LiteratureClient(
+            [
+                _FailingBackend("flaky", "transient"),
+                _FixedBackend("ok", [Paper(id="a", title="A")]),
+            ]
+        )
         result = client.search(SearchQuery(text="x"))
         assert "flaky" in result.errors
         assert result.errors["flaky"] == "transient"
         assert len(result.papers) == 1
 
     def test_query_sources_filters_backends(self):
-        client = LiteratureClient([
-            _FixedBackend("a", [Paper(id="a", title="A")]),
-            _FixedBackend("b", [Paper(id="b", title="B")]),
-        ])
+        client = LiteratureClient(
+            [
+                _FixedBackend("a", [Paper(id="a", title="A")]),
+                _FixedBackend("b", [Paper(id="b", title="B")]),
+            ]
+        )
         result = client.search(SearchQuery(text="x", sources=["b"]))
         assert {p.id for p in result.papers} == {"b"}
         assert "a" not in result.per_source_counts
 
     def test_results_capped_to_max(self):
-        client = LiteratureClient([
-            _FixedBackend(
-                "a",
-                [Paper(id=f"x:{i}", title=f"T{i}", score=0.1 * i) for i in range(10)],
-            )
-        ])
+        client = LiteratureClient(
+            [
+                _FixedBackend(
+                    "a",
+                    [Paper(id=f"x:{i}", title=f"T{i}", score=0.1 * i) for i in range(10)],
+                )
+            ]
+        )
         result = client.search(SearchQuery(text="x", max_results=3))
         assert len(result.papers) == 3
         # Sorted by score desc.
@@ -116,11 +124,13 @@ class TestLiteratureClient:
         # Backend ignores the year filter; client must still apply it.
         class _IgnoresYearFilter(SearchBackend):
             name = "ignore_year"
+
             def search(self, query: SearchQuery) -> list[Paper]:
                 return [
                     Paper(id="old", title="old", year=1990),
                     Paper(id="new", title="new", year=2020),
                 ]
+
         client = LiteratureClient([_IgnoresYearFilter()])
         result = client.search(SearchQuery(text="x", year_min=2000))
         assert {p.id for p in result.papers} == {"new"}
@@ -182,9 +192,7 @@ class TestSearchCache:
     def test_text_normalisation_in_hash(self, tmp_path: Path):
         cache = SearchCache(tmp_path)
         # Whitespace and case should not change cache identity.
-        assert cache.path_for(SearchQuery(text="  Foo  ")) == cache.path_for(
-            SearchQuery(text="foo")
-        )
+        assert cache.path_for(SearchQuery(text="  Foo  ")) == cache.path_for(SearchQuery(text="foo"))
 
     def test_ttl_expires_old_entries(self, tmp_path: Path):
         cache = SearchCache(tmp_path, ttl_seconds=1)
@@ -216,6 +224,7 @@ class TestSearchCache:
 
         class _CountingBackend(SearchBackend):
             name = "counter"
+
             def search(self, query: SearchQuery) -> list[Paper]:
                 called["count"] += 1
                 return [Paper(id="x", title="T")]
@@ -235,6 +244,7 @@ class TestSearchCache:
 
         class _CountingBackend(SearchBackend):
             name = "counter"
+
             def search(self, query: SearchQuery) -> list[Paper]:
                 called["count"] += 1
                 return [Paper(id="x", title="T")]

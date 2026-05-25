@@ -309,7 +309,7 @@ git push --delete origin test-release-12345678
 **Solutions:**
 
 - Install LaTeX: `sudo apt-get install texlive-latex-base texlive-xetex` (Ubuntu) or `brew install mactex` (macOS)
-- Verify installation: `which pdflatex`
+- Verify installation: `which xelatex`
 - Skip LaTeX tests: `uv run pytest tests/ -m "not requires_latex"`
 
 ### Cleanup failures

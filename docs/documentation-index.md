@@ -188,7 +188,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 
 ## Advanced modules
 
-- **[modules/modules-guide.md](modules/modules-guide.md)** - **17** documented infrastructure areas (includes Orchestration and Prose; see the counting note in that file and [`infrastructure/AGENTS.md`](../infrastructure/AGENTS.md))
+- **[modules/modules-guide.md](modules/modules-guide.md)** - Layer-1 module overview; live package counts come from [`_generated/canonical_facts.md`](_generated/canonical_facts.md)
 - **[reference/api-reference.md](reference/api-reference.md)** - Unified API documentation
 - **[modules/pdf-validation.md](modules/pdf-validation.md)** - PDF validation system
 - **[modules/literature-search-and-references.md](modules/literature-search-and-references.md)** - Literature search and reference pipeline
@@ -196,6 +196,8 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 ### Per-Module Guides (`modules/guides/`)
 
 - **[modules/guides/config-module.md](modules/guides/config-module.md)**
+- **[modules/guides/autoresearch-module.md](modules/guides/autoresearch-module.md)**
+- **[modules/guides/benchmark-module.md](modules/guides/benchmark-module.md)**
 - **[modules/guides/core-module.md](modules/guides/core-module.md)**
 - **[modules/guides/docker-module.md](modules/guides/docker-module.md)**
 - **[modules/guides/documentation-module.md](modules/guides/documentation-module.md)**

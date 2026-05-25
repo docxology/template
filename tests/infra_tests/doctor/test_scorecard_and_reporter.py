@@ -1,6 +1,5 @@
 """Tests for scorecard math and the text/JSON renderers."""
 
-
 import json
 
 from infrastructure.doctor.models import (
@@ -142,8 +141,9 @@ def test_json_renderer_is_parseable_and_has_stable_keys():
         exit_code=EXIT_WARN,
     )
     payload = json.loads(render_report_json(report))
-    assert {"findings", "applied", "skipped", "failed", "overall_score",
-            "dimension_scores", "exit_code"} <= set(payload)
+    assert {"findings", "applied", "skipped", "failed", "overall_score", "dimension_scores", "exit_code"} <= set(
+        payload
+    )
     assert payload["exit_code"] == EXIT_WARN
     assert payload["findings"][0]["code"] == "DOC301"
     assert payload["findings"][0]["severity"] == "warn"

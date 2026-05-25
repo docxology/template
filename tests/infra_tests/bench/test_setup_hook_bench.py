@@ -45,10 +45,7 @@ def _make_project_with_py_hook(root: Path) -> Path:
     scripts.mkdir(parents=True)
     hook = scripts / "setup_hook.py"
     hook.write_text(
-        "#!/usr/bin/env python3\n"
-        '"""Trivial no-op setup hook used by the bench suite."""\n'
-        "import sys\n"
-        "sys.exit(0)\n",
+        '#!/usr/bin/env python3\n"""Trivial no-op setup hook used by the bench suite."""\nimport sys\nsys.exit(0)\n',
         encoding="utf-8",
     )
     return project

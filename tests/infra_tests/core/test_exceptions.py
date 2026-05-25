@@ -91,17 +91,13 @@ class TestConfigurationErrors:
 
     def test_missing_configuration_error(self):
         """Test MissingConfigurationError."""
-        error = MissingConfigurationError(
-            "Required key missing", context={"key": "author", "file": "config.yaml"}
-        )
+        error = MissingConfigurationError("Required key missing", context={"key": "author", "file": "config.yaml"})
         assert isinstance(error, ConfigurationError)
         assert error.context["key"] == "author"
 
     def test_invalid_configuration_error(self):
         """Test InvalidConfigurationError."""
-        error = InvalidConfigurationError(
-            "Invalid email format", context={"field": "email", "value": "invalid"}
-        )
+        error = InvalidConfigurationError("Invalid email format", context={"field": "email", "value": "invalid"})
         assert isinstance(error, ConfigurationError)
         assert "email" in str(error)
 
@@ -126,17 +122,13 @@ class TestValidationErrors:
 
     def test_pdf_validation_error(self):
         """Test PDFValidationError."""
-        error = PDFValidationError(
-            "Unresolved references", context={"pdf": "manuscript.pdf", "count": 3}
-        )
+        error = PDFValidationError("Unresolved references", context={"pdf": "manuscript.pdf", "count": 3})
         assert isinstance(error, ValidationError)
         assert "manuscript.pdf" in str(error)
 
     def test_data_validation_error(self):
         """Test DataValidationError."""
-        error = DataValidationError(
-            "NaN values found", context={"column": "temperature", "count": 5}
-        )
+        error = DataValidationError("NaN values found", context={"column": "temperature", "count": 5})
         assert isinstance(error, ValidationError)
         assert error.context["column"] == "temperature"
 
@@ -160,9 +152,7 @@ class TestBuildErrors:
 
     def test_script_execution_error(self):
         """Test ScriptExecutionError."""
-        error = ScriptExecutionError(
-            "Script failed", context={"script": "analysis.py", "exit_code": 1}
-        )
+        error = ScriptExecutionError("Script failed", context={"script": "analysis.py", "exit_code": 1})
         assert isinstance(error, BuildError)
         assert "analysis.py" in str(error)
 
@@ -412,86 +402,105 @@ class TestDomainExceptions:
 
     def test_literature_search_error(self):
         from infrastructure.core.exceptions import LiteratureSearchError
+
         err = LiteratureSearchError("search failed")
         assert isinstance(err, TemplateError)
 
     def test_api_rate_limit_is_literature_search(self):
         from infrastructure.core.exceptions import APIRateLimitError, LiteratureSearchError
+
         err = APIRateLimitError("rate limited")
         assert isinstance(err, LiteratureSearchError)
         assert isinstance(err, TemplateError)
 
     def test_invalid_query_is_literature_search(self):
         from infrastructure.core.exceptions import InvalidQueryError, LiteratureSearchError
+
         err = InvalidQueryError("bad query")
         assert isinstance(err, LiteratureSearchError)
 
     def test_llm_error(self):
         from infrastructure.core.exceptions import LLMError
+
         err = LLMError("llm failure")
         assert isinstance(err, TemplateError)
 
     def test_llm_connection_error_is_llm(self):
         from infrastructure.core.exceptions import LLMConnectionError, LLMError
+
         err = LLMConnectionError("cannot connect")
         assert isinstance(err, LLMError)
 
     def test_llm_template_error_is_llm(self):
         from infrastructure.core.exceptions import LLMTemplateError, LLMError
+
         err = LLMTemplateError("template missing var", context={"required": "text"})
         assert isinstance(err, LLMError)
         assert err.context["required"] == "text"
 
     def test_context_limit_error_is_llm(self):
         from infrastructure.core.exceptions import ContextLimitError, LLMError
+
         err = ContextLimitError("token limit exceeded")
         assert isinstance(err, LLMError)
 
     def test_security_violation(self):
         from infrastructure.core.exceptions import SecurityViolation
+
         err = SecurityViolation("constraint violated")
         assert isinstance(err, TemplateError)
 
     def test_security_error_is_security_violation(self):
         from infrastructure.core.exceptions import SecurityError, SecurityViolation
+
         err = SecurityError("sanitization failed")
         assert isinstance(err, SecurityViolation)
         assert isinstance(err, TemplateError)
 
     def test_rendering_error(self):
         from infrastructure.core.exceptions import RenderingError
+
         err = RenderingError("render failed")
         assert isinstance(err, TemplateError)
 
     def test_format_error_is_rendering(self):
         from infrastructure.core.exceptions import FormatError, RenderingError
+
         err = FormatError("unsupported format")
         assert isinstance(err, RenderingError)
 
     def test_template_rendering_error_is_rendering(self):
         from infrastructure.core.exceptions import TemplateRenderingError, RenderingError
+
         err = TemplateRenderingError("template render failed")
         assert isinstance(err, RenderingError)
 
     def test_publishing_error(self):
         from infrastructure.core.exceptions import PublishingError
+
         err = PublishingError("publish failed")
         assert isinstance(err, TemplateError)
 
     def test_upload_error_is_publishing(self):
         from infrastructure.core.exceptions import UploadError, PublishingError
+
         err = UploadError("upload timed out")
         assert isinstance(err, PublishingError)
 
     def test_metadata_error_is_publishing(self):
         from infrastructure.core.exceptions import MetadataError, PublishingError
+
         err = MetadataError("bad doi")
         assert isinstance(err, PublishingError)
 
     def test_domain_exceptions_catchable_as_template_error(self):
         from infrastructure.core.exceptions import (
-            LLMConnectionError, SecurityViolation, RenderingError, PublishingError
+            LLMConnectionError,
+            SecurityViolation,
+            RenderingError,
+            PublishingError,
         )
+
         for exc in [LLMConnectionError("x"), SecurityViolation("x"), RenderingError("x"), PublishingError("x")]:
             with pytest.raises(TemplateError):
                 raise exc

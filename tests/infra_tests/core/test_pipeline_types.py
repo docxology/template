@@ -82,37 +82,27 @@ class TestPipelineStageResult:
 
     def test_is_skipped_false_on_success(self):
         """Successful stage is not skipped."""
-        result = PipelineStageResult(
-            stage_num=1, stage_name="test", success=True, duration=1.5
-        )
+        result = PipelineStageResult(stage_num=1, stage_name="test", success=True, duration=1.5)
         assert result.is_skipped is False
 
     def test_is_skipped_false_on_nonzero_exit(self):
         """Failed stage with nonzero exit code is not skipped."""
-        result = PipelineStageResult(
-            stage_num=1, stage_name="test", success=False, duration=0.5, exit_code=1
-        )
+        result = PipelineStageResult(stage_num=1, stage_name="test", success=False, duration=0.5, exit_code=1)
         assert result.is_skipped is False
 
     def test_is_skipped_true_on_failure_with_zero_exit(self):
         """Failed stage with zero exit code is skipped."""
-        result = PipelineStageResult(
-            stage_num=1, stage_name="test", success=False, duration=0.0, exit_code=0
-        )
+        result = PipelineStageResult(stage_num=1, stage_name="test", success=False, duration=0.0, exit_code=0)
         assert result.is_skipped is True
 
     def test_default_exit_code_zero(self):
         """Default exit_code is 0."""
-        result = PipelineStageResult(
-            stage_num=2, stage_name="render", success=True, duration=3.2
-        )
+        result = PipelineStageResult(stage_num=2, stage_name="render", success=True, duration=3.2)
         assert result.exit_code == 0
 
     def test_default_error_message_empty(self):
         """Default error_message is empty string."""
-        result = PipelineStageResult(
-            stage_num=1, stage_name="test", success=True, duration=1.0
-        )
+        result = PipelineStageResult(stage_num=1, stage_name="test", success=True, duration=1.0)
         assert result.error_message == ""
 
     def test_error_message_stored(self):
@@ -128,9 +118,7 @@ class TestPipelineStageResult:
 
     def test_stage_fields_stored(self):
         """stage_num, stage_name, success, duration all stored correctly."""
-        result = PipelineStageResult(
-            stage_num=7, stage_name="validate", success=True, duration=4.5
-        )
+        result = PipelineStageResult(stage_num=7, stage_name="validate", success=True, duration=4.5)
         assert result.stage_num == 7
         assert result.stage_name == "validate"
         assert result.success is True

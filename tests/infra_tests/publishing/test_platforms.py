@@ -212,9 +212,7 @@ class TestPrepareArxivSubmissionFromPlatforms:
 
 class TestCreateGithubRelease:
     def test_successful_release(self, httpserver: HTTPServer):
-        httpserver.expect_request(
-            "/repos/owner/repo/releases", method="POST"
-        ).respond_with_json(
+        httpserver.expect_request("/repos/owner/repo/releases", method="POST").respond_with_json(
             {
                 "id": 1,
                 "upload_url": httpserver.url_for("/uploads{?name,label}"),
@@ -234,18 +232,14 @@ class TestCreateGithubRelease:
         assert "github.com" in result
 
     def test_with_assets(self, httpserver: HTTPServer, tmp_path):
-        httpserver.expect_request(
-            "/repos/owner/repo/releases", method="POST"
-        ).respond_with_json(
+        httpserver.expect_request("/repos/owner/repo/releases", method="POST").respond_with_json(
             {
                 "id": 1,
                 "upload_url": httpserver.url_for("/uploads") + "{?name,label}",
                 "html_url": "https://github.com/owner/repo/releases/1",
             }
         )
-        httpserver.expect_request("/uploads", method="POST").respond_with_json(
-            {"id": 1, "name": "paper.pdf"}
-        )
+        httpserver.expect_request("/uploads", method="POST").respond_with_json({"id": 1, "name": "paper.pdf"})
 
         asset = tmp_path / "paper.pdf"
         asset.write_bytes(b"fake pdf content")
@@ -262,9 +256,7 @@ class TestCreateGithubRelease:
         assert result == "https://github.com/owner/repo/releases/1"
 
     def test_missing_asset_skipped(self, httpserver: HTTPServer, tmp_path):
-        httpserver.expect_request(
-            "/repos/owner/repo/releases", method="POST"
-        ).respond_with_json(
+        httpserver.expect_request("/repos/owner/repo/releases", method="POST").respond_with_json(
             {
                 "id": 1,
                 "upload_url": httpserver.url_for("/uploads") + "{?name}",

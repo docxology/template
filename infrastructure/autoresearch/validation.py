@@ -25,8 +25,25 @@ from infrastructure.validation.evidence_registry import build_project_evidence_r
 
 ValidationPhase = Literal["all", "intrinsic", "extrinsic"]
 
-INTRINSIC_QUALITY_CHECKS = frozenset({"domain_profile", "experiment_plan", "pipeline_contracts", "thin_orchestrators"})
-EXTRINSIC_QUALITY_CHECKS = frozenset({"evidence_registry", "artifact_manifest"})
+INTRINSIC_QUALITY_CHECKS = frozenset(
+    {
+        "domain_profile",
+        "experiment_plan",
+        "pipeline_contracts",
+        "thin_orchestrators",
+        "ai_disclosure",
+    }
+)
+EXTRINSIC_QUALITY_CHECKS = frozenset(
+    {
+        "evidence_registry",
+        "artifact_manifest",
+        "method_contracts",
+        "review_gates",
+        "benchmark_tasks",
+    }
+)
+_REVIEW_DECISIONS = frozenset({"approved", "revised", "blocked", "deferred"})
 
 
 def validate_autoresearch_plan(
@@ -78,6 +95,14 @@ def validate_autoresearch_plan(
         _validate_artifact_manifest(project_root, plan, issues)
     if "thin_orchestrators" in active_checks:
         _validate_thin_orchestrators(plan, issues)
+    if "method_contracts" in active_checks:
+        _validate_method_contracts(project_root, plan, issues)
+    if "review_gates" in active_checks:
+        _validate_review_gates(project_root, plan, issues)
+    if "benchmark_tasks" in active_checks:
+        _validate_benchmark_tasks(project_root, plan, issues)
+    if "ai_disclosure" in active_checks:
+        _validate_ai_disclosure(project_root, plan, issues)
 
     valid = not any(issue.severity == "error" for issue in issues)
     return AutoResearchReport(project_name=plan.project_name, valid=valid, issues=tuple(issues), plan=plan)
@@ -263,11 +288,292 @@ def _validate_thin_orchestrators(
         )
 
 
+def _validate_method_contracts(
+    project_root: Path,
+    plan: AutoResearchPlan,
+    issues: list[AutoResearchIssue],
+) -> None:
+    severity = _strict_severity(plan)
+    idea_ledger_path = project_root / "output" / "data" / "idea_ledger.json"
+    idea_ledger = _read_json_mapping(idea_ledger_path, issues, severity, "AUTORESEARCH.IDEA_LEDGER_INVALID")
+    if idea_ledger is None:
+        issues.append(
+            _issue(
+                severity,
+                "AUTORESEARCH.IDEA_LEDGER_MISSING",
+                "idea ledger is missing or invalid",
+                str(idea_ledger_path),
+                "Generate output/data/idea_ledger.json from the AutoResearch loop.",
+            )
+        )
+    else:
+        _validate_idea_ledger(idea_ledger, plan, str(idea_ledger_path), issues)
+
+    run_ledger_path = project_root / "output" / "data" / "run_ledger.json"
+    run_ledger = _read_json_mapping(run_ledger_path, issues, severity, "AUTORESEARCH.RUN_LEDGER_INVALID")
+    if run_ledger is None:
+        issues.append(
+            _issue(
+                severity,
+                "AUTORESEARCH.RUN_LEDGER_MISSING",
+                "run ledger is missing or invalid",
+                str(run_ledger_path),
+                "Generate output/data/run_ledger.json with replay and budget status.",
+            )
+        )
+        return
+    if bool(run_ledger.get("budget_exhausted")) and not str(run_ledger.get("exhaustion_reason", "")).strip():
+        issues.append(
+            _issue(
+                severity,
+                "AUTORESEARCH.BUDGET_EXHAUSTION_UNRECORDED",
+                "budget_exhausted is true but no exhaustion_reason is recorded",
+                str(run_ledger_path),
+                "Record why the bounded run stopped.",
+            )
+        )
+
+
+def _validate_idea_ledger(
+    payload: dict[str, Any],
+    plan: AutoResearchPlan,
+    source_path: str,
+    issues: list[AutoResearchIssue],
+) -> None:
+    severity = _strict_severity(plan)
+    ideas = payload.get("ideas", [])
+    candidates = payload.get("candidates", [])
+    if not isinstance(ideas, list):
+        ideas = []
+    if not isinstance(candidates, list):
+        candidates = []
+
+    for idea in ideas:
+        if not isinstance(idea, dict):
+            continue
+        if str(idea.get("status", "")).strip() == "accepted" and not _has_evidence_links(idea):
+            issues.append(
+                _issue(
+                    severity,
+                    "AUTORESEARCH.ACCEPTED_IDEA_WITHOUT_EVIDENCE",
+                    f"accepted idea lacks evidence links: {idea.get('id', '<unknown>')}",
+                    source_path,
+                    "Attach at least one evidence link to every accepted idea.",
+                )
+            )
+
+    allowlist = plan.config.edit_allowlist
+    if not allowlist and candidates:
+        issues.append(
+            _issue(
+                severity,
+                "AUTORESEARCH.EDIT_ALLOWLIST_MISSING",
+                "experiment candidates exist but edit_allowlist is empty",
+                plan.config.source_path or "autoresearch.yaml",
+                "Declare edit_allowlist entries for candidate touched_paths.",
+            )
+        )
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            continue
+        raw_paths = candidate.get("touched_paths", [])
+        touched_paths = raw_paths if isinstance(raw_paths, list) else []
+        for touched_path in touched_paths:
+            path_text = str(touched_path)
+            if allowlist and not any(path_text.startswith(prefix) for prefix in allowlist):
+                issues.append(
+                    _issue(
+                        severity,
+                        "AUTORESEARCH.EDIT_ALLOWLIST",
+                        f"candidate touches path outside edit_allowlist: {path_text}",
+                        source_path,
+                        "Restrict proposals to declared editable paths or expand the allowlist deliberately.",
+                    )
+                )
+
+
+def _has_evidence_links(idea: dict[str, Any]) -> bool:
+    links = idea.get("evidence_links", [])
+    if not isinstance(links, list):
+        return False
+    return any(isinstance(link, dict) and str(link.get("evidence_path", "")).strip() for link in links)
+
+
+def _validate_review_gates(
+    project_root: Path,
+    plan: AutoResearchPlan,
+    issues: list[AutoResearchIssue],
+) -> None:
+    required_gates = [gate for gate in plan.config.review_gates if gate.required]
+    if not required_gates:
+        return
+    severity = _strict_severity(plan)
+    path = project_root / "output" / "data" / "review_decisions.json"
+    payload = _read_json_mapping(path, issues, severity, "AUTORESEARCH.REVIEW_DECISIONS_INVALID")
+    if payload is None:
+        issues.append(
+            _issue(
+                severity,
+                "AUTORESEARCH.REVIEW_DECISIONS_MISSING",
+                "required review gates exist but review_decisions.json is missing",
+                str(path),
+                "Record human decisions for every required review gate.",
+            )
+        )
+        return
+    decisions = _review_decision_map(payload)
+    for gate in required_gates:
+        decision = decisions.get(gate.name, "").strip()
+        if decision not in _REVIEW_DECISIONS:
+            issues.append(
+                _issue(
+                    severity,
+                    "AUTORESEARCH.REVIEW_GATE_PENDING",
+                    f"required review gate has no final decision: {gate.name}",
+                    str(path),
+                    "Use one of: approved, revised, blocked, deferred.",
+                )
+            )
+
+
+def _review_decision_map(payload: dict[str, Any]) -> dict[str, str]:
+    decisions: dict[str, str] = {}
+    raw = payload.get("decisions", [])
+    if not isinstance(raw, list):
+        return decisions
+    for row in raw:
+        if not isinstance(row, dict):
+            continue
+        gate = str(row.get("gate") or row.get("name") or "").strip()
+        decision = str(row.get("decision", "") or "").strip()
+        if gate:
+            decisions[gate] = decision
+    return decisions
+
+
+def _validate_benchmark_tasks(
+    project_root: Path,
+    plan: AutoResearchPlan,
+    issues: list[AutoResearchIssue],
+) -> None:
+    if not plan.config.benchmark_tasks:
+        return
+    severity = _strict_severity(plan)
+    path = project_root / "output" / "data" / "benchmark_scores.json"
+    payload = _read_json_mapping(path, issues, severity, "AUTORESEARCH.BENCHMARK_SCORES_INVALID")
+    if payload is None:
+        issues.append(
+            _issue(
+                severity,
+                "AUTORESEARCH.BENCHMARK_SCORES_MISSING",
+                "benchmark tasks are configured but benchmark_scores.json is missing",
+                str(path),
+                "Run the AutoResearch benchmark writer.",
+            )
+        )
+        return
+    tasks = _benchmark_task_map(payload)
+    for task in plan.config.benchmark_tasks:
+        row = tasks.get(task.identifier)
+        grading_output = ""
+        if row is not None:
+            grading_output = str(row.get("grading_output_path") or row.get("grading_output") or "")
+        if not grading_output:
+            grading_output = task.grading_output
+        if row is None or not _artifact_path(project_root, grading_output).exists():
+            issues.append(
+                _issue(
+                    severity,
+                    "AUTORESEARCH.BENCHMARK_GRADING_MISSING",
+                    f"benchmark task lacks grading output: {task.identifier}",
+                    str(path),
+                    "Write a grading output for every configured benchmark task.",
+                )
+            )
+
+
+def _benchmark_task_map(payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    raw = payload.get("tasks", [])
+    if not isinstance(raw, list):
+        return {}
+    tasks: dict[str, dict[str, Any]] = {}
+    for row in raw:
+        if not isinstance(row, dict):
+            continue
+        identifier = str(row.get("id") or row.get("identifier") or "").strip()
+        if identifier:
+            tasks[identifier] = row
+    return tasks
+
+
+def _validate_ai_disclosure(
+    project_root: Path,
+    plan: AutoResearchPlan,
+    issues: list[AutoResearchIssue],
+) -> None:
+    if not plan.config.disclosure_required:
+        return
+    disclosure = plan.config.disclosure_text.strip()
+    if not disclosure:
+        return
+    manuscript_dirs = (project_root / "manuscript", project_root / "output" / "manuscript")
+    for directory in manuscript_dirs:
+        if not directory.exists():
+            continue
+        for path in directory.glob("*.md"):
+            if disclosure in path.read_text(encoding="utf-8"):
+                return
+    issues.append(
+        _issue(
+            _strict_severity(plan),
+            "AUTORESEARCH.AI_DISCLOSURE_MISSING",
+            f"configured disclosure text was not found: {disclosure}",
+            str(project_root / "manuscript"),
+            "Add the configured disclosure to the manuscript source or generated manuscript.",
+        )
+    )
+
+
 def _artifact_path(project_root: Path, artifact: str) -> Path:
     path = Path(artifact)
     if path.is_absolute():
         return path
     return project_root / path
+
+
+def _read_json_mapping(
+    path: Path,
+    issues: list[AutoResearchIssue],
+    severity: str,
+    code: str,
+) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        issues.append(
+            _issue(
+                severity,
+                code,
+                f"JSON artifact cannot be parsed: {exc}",
+                str(path),
+                "Regenerate the malformed AutoResearch artifact.",
+            )
+        )
+        return None
+    if not isinstance(payload, dict):
+        issues.append(
+            _issue(
+                severity,
+                code,
+                "JSON artifact root must be a mapping",
+                str(path),
+                "Regenerate the malformed AutoResearch artifact.",
+            )
+        )
+        return None
+    return payload
 
 
 def _read_artifact_manifest(path: Path) -> ArtifactManifest:

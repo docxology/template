@@ -85,8 +85,8 @@ The infrastructure renders the manuscript to PDF automatically.
 
 **GOOD** (concrete):
 ```markdown
-`infrastructure/rendering/pdf_renderer.py` orchestrates Pandoc → pdflatex to produce
-`output/template_code_project/pdf/template_code_project_combined.pdf` from the substituted markdown in `output/manuscript/`.
+`infrastructure/rendering/pdf_renderer.py` orchestrates Pandoc → XeLaTeX to produce
+`output/template_code_project/pdf/template_code_project_combined.pdf` from substituted markdown in `projects/template_code_project/output/manuscript/`.
 ```
 
 ---

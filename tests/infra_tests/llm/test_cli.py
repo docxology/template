@@ -129,7 +129,11 @@ class TestCLICheckCommand:
                     check_command(args)
 
             assert exc_info.value.exit_code == 1
-            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower() or "Cannot connect" in str(exc_info.value)
+            assert (
+                "Cannot connect" in caplog.text
+                or "cannot connect" in caplog.text.lower()
+                or "Cannot connect" in str(exc_info.value)
+            )
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host
@@ -159,7 +163,11 @@ class TestCLITemplateCommand:
                 template_command(args)
 
         assert exc_info.value.exit_code == 1
-        assert "Template name required" in caplog.text or "template" in caplog.text.lower() or "Template name required" in str(exc_info.value)
+        assert (
+            "Template name required" in caplog.text
+            or "template" in caplog.text.lower()
+            or "Template name required" in str(exc_info.value)
+        )
 
 
 class TestCLIModelsCommand:
@@ -213,7 +221,11 @@ class TestCLIQueryCommand:
                     query_command(args)
 
             assert exc_info.value.exit_code == 1
-            assert "Cannot connect" in caplog.text or "cannot connect" in caplog.text.lower() or "Cannot connect" in str(exc_info.value)
+            assert (
+                "Cannot connect" in caplog.text
+                or "cannot connect" in caplog.text.lower()
+                or "Cannot connect" in str(exc_info.value)
+            )
         finally:
             if old_host:
                 os.environ["OLLAMA_HOST"] = old_host

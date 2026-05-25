@@ -79,36 +79,28 @@ class TestEncryptDecryptRoundtrip:
         assert "nonce" in encrypted
         assert "key" in encrypted
 
-        decrypted = decrypt_payload(
-            encrypted["ciphertext"], encrypted["nonce"], encrypted["key"]
-        )
+        decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
     @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_roundtrip_unicode(self):
         plaintext = "Unicode: 你好世界 こんにちは مرحبا"
         encrypted = encrypt_payload(plaintext)
-        decrypted = decrypt_payload(
-            encrypted["ciphertext"], encrypted["nonce"], encrypted["key"]
-        )
+        decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
     @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_roundtrip_empty(self):
         plaintext = ""
         encrypted = encrypt_payload(plaintext)
-        decrypted = decrypt_payload(
-            encrypted["ciphertext"], encrypted["nonce"], encrypted["key"]
-        )
+        decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
     @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
     def test_roundtrip_long_text(self):
         plaintext = "A" * 100_000
         encrypted = encrypt_payload(plaintext)
-        decrypted = decrypt_payload(
-            encrypted["ciphertext"], encrypted["nonce"], encrypted["key"]
-        )
+        decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
     @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")
@@ -119,9 +111,7 @@ class TestEncryptDecryptRoundtrip:
         plaintext = "Custom key test"
         encrypted = encrypt_payload(plaintext, key=key)
         assert base64.b64decode(encrypted["key"]) == key
-        decrypted = decrypt_payload(
-            encrypted["ciphertext"], encrypted["nonce"], encrypted["key"]
-        )
+        decrypted = decrypt_payload(encrypted["ciphertext"], encrypted["nonce"], encrypted["key"])
         assert decrypted == plaintext
 
     @pytest.mark.skipif(not _CRYPTOGRAPHY_AVAILABLE, reason="cryptography not installed")

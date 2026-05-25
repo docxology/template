@@ -65,9 +65,7 @@ class TestFigureManager:
     def test_register_figure(self, tmp_path):
         """Test registering a figure."""
         manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        fig_meta = manager.register_figure(
-            filename="test.png", caption="Test caption", label="fig:test"
-        )
+        fig_meta = manager.register_figure(filename="test.png", caption="Test caption", label="fig:test")
         assert fig_meta.label == "fig:test"
         assert fig_meta.figure_id.startswith("figure_")
         assert "fig:test" in manager.figures
@@ -75,9 +73,7 @@ class TestFigureManager:
     def test_register_figure_auto_label(self, tmp_path):
         """Test auto-generating label."""
         manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        fig_meta = manager.register_figure(
-            filename="convergence_plot.png", caption="Convergence plot"
-        )
+        fig_meta = manager.register_figure(filename="convergence_plot.png", caption="Convergence plot")
         assert fig_meta.label == "fig:convergence_plot"
 
     def test_get_figure(self, tmp_path):
@@ -193,9 +189,7 @@ class TestFigureManager:
     def test_generate_figure_list_with_section(self, tmp_path):
         """Test generating figure list with section."""
         manager = FigureManager(registry_file=str(tmp_path / "registry.json"))
-        manager.register_figure(
-            "test.png", "Test caption", label="fig:test", section="Introduction"
-        )
+        manager.register_figure("test.png", "Test caption", label="fig:test", section="Introduction")
         figure_list = manager.generate_figure_list()
         assert "Section: Introduction" in figure_list
 

@@ -199,11 +199,7 @@ class TestCollectLogStatisticsFromLogAnalysis:
 class TestGenerateLogSummaryFromLogAnalysis:
     def test_basic_summary(self, tmp_path):
         log = tmp_path / "test.log"
-        log.write_text(
-            "INFO starting\n"
-            "ERROR something broke\n"
-            "WARNING be careful\n"
-        )
+        log.write_text("INFO starting\nERROR something broke\nWARNING be careful\n")
         summary = generate_log_summary(log)
         assert summary is not None
         assert "LOG ANALYSIS" in summary

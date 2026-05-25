@@ -130,9 +130,9 @@ The PDFRenderer splits title page generation into two phases:
    - Required by LaTeX for title page creation
 
 2. **Body Phase** (`_generate_title_page_body()`):
-   - Generates `\maketitle` command
+   - Generates book cover (`titlepage`), publishing-information page, and table of contents
+   - When `publication.doi` is set in `config.yaml`, the DOI appears on both the cover and the publishing page, and in the suggested citation (repository URL and DOI URL when configured)
    - Inserted AFTER `\begin{document}`
-   - Renders the title page with previously defined metadata
 
 **Example generated LaTeX**:
 ```latex
@@ -547,14 +547,12 @@ def prevalidate_source_markdown(
 ### fix_starred_section_nameref_labels (function — `_pdf_combined_renderer.py`)
 ```python
 def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
-    """Repair ``\\nameref`` titles for ``\\section*`` labels when titlesec is loaded.
+    """Repair hyperref anchors and ``\\nameref`` titles for starred headings.
 
-    titlesec prevents hyperref from storing section titles on starred headings,
-    which leaves ``\\nameref{sec:...}`` empty even when Pandoc emits
-    ``\\section*{Title}\\label{sec:...}``. Called from ``PDFRenderer`` after
-    ``inject_latex_preamble`` so ``\\usepackage{titlesec}`` from preamble.md is
-    visible. No-op when titlesec is absent, ``\\phantomsection`` is already
-    present, or the label is not a ``sec:`` cross-reference.
+    Inserts ``\\phantomsection`` before ``\\label`` on ``\\section*`` /
+    ``\\subsection*`` / ``\\subsubsection*`` so TOC links do not resolve to
+    ``Doc-Start``. When titlesec is loaded, also sets ``\\@currentlabelname`` so
+    ``\\nameref{sec:...}`` resolves on unnumbered surfaces.
     """
 ```
 

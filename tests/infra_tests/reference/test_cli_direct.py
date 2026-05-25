@@ -61,9 +61,7 @@ def test_format_writes_to_output_path(tmp_path: Path):
 def test_convert_papers_list_format(tmp_path: Path):
     in_path = tmp_path / "p.json"
     in_path.write_text(
-        json.dumps(
-            [{"id": "x", "title": "T", "authors": ["Smith, A"], "year": 2024}]
-        ),
+        json.dumps([{"id": "x", "title": "T", "authors": ["Smith, A"], "year": 2024}]),
         encoding="utf-8",
     )
     out_path = tmp_path / "out.bib"
@@ -74,13 +72,7 @@ def test_convert_papers_list_format(tmp_path: Path):
 def test_convert_dict_wrapper_format(tmp_path: Path):
     in_path = tmp_path / "p.json"
     in_path.write_text(
-        json.dumps(
-            {
-                "papers": [
-                    {"id": "x", "title": "T", "authors": ["Smith, A"], "year": 2024}
-                ]
-            }
-        ),
+        json.dumps({"papers": [{"id": "x", "title": "T", "authors": ["Smith, A"], "year": 2024}]}),
         encoding="utf-8",
     )
     out_path = tmp_path / "out.bib"
@@ -107,5 +99,6 @@ def test_convert_invalid_payload_returns_2(tmp_path: Path):
 
 def test_build_parser_returns_argparse():
     import argparse
+
     parser = build_parser()
     assert isinstance(parser, argparse.ArgumentParser)

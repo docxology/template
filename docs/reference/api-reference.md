@@ -39,7 +39,23 @@ The per-package symbol listings below the
 
 *symbol — defined in `infrastructure.autoresearch`*
 
+### `BenchmarkTask`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `BudgetPolicy`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
 ### `build_autoresearch_plan`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `EvidenceLink`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `ExperimentCandidate`
 
 *symbol — defined in `infrastructure.autoresearch`*
 
@@ -56,6 +72,22 @@ The per-package symbol listings below the
 *symbol — defined in `infrastructure.autoresearch`*
 
 ### `parse_string_sequence`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `ResearchIdea`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `ResearchProgram`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `ReviewGate`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `RunLedger`
 
 *symbol — defined in `infrastructure.autoresearch`*
 

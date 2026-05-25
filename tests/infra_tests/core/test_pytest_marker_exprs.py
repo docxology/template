@@ -6,17 +6,11 @@ from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expressi
 
 
 def test_default_triple_skip_matches_repo_gate() -> None:
-    assert (
-        build_pytest_marker_expression(
-            skip_requires_ollama=True,
-            skip_slow=True,
-            skip_bench=True,
-        )
-        == (
-            "not requires_ollama and not slow and not bench "
-            "and not private_project and not external_fixture"
-        )
-    )
+    assert build_pytest_marker_expression(
+        skip_requires_ollama=True,
+        skip_slow=True,
+        skip_bench=True,
+    ) == ("not requires_ollama and not slow and not bench and not private_project and not external_fixture")
 
 
 def test_include_slow_matches_ci_project_job_expression() -> None:

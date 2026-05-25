@@ -1,6 +1,5 @@
 """Tests for infrastructure.publishing.readiness — comprehensive coverage."""
 
-
 from infrastructure.publishing.readiness import validate_publication_readiness
 
 

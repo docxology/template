@@ -73,8 +73,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if not bundle_dir.exists():
         logger.warning(
-            "Bundle not found at %s — run scripts/08_executable_bundle.py first. "
-            "Exiting 2 (graceful skip).",
+            "Bundle not found at %s — run scripts/08_executable_bundle.py first. Exiting 2 (graceful skip).",
             bundle_dir,
         )
         sys.exit(2)
@@ -95,9 +94,7 @@ def main(argv: list[str] | None = None) -> int:
 
     receipts_out = bundle_dir / "ARCHIVAL_RECEIPTS.json"
     # For Software Heritage, point at the repo root so .git/config is read.
-    archive_target = repo_root if any(
-        isinstance(p, SoftwareHeritageProvider) for p in providers
-    ) else bundle_dir
+    archive_target = repo_root if any(isinstance(p, SoftwareHeritageProvider) for p in providers) else bundle_dir
 
     run = archive_publication(
         archive_target,

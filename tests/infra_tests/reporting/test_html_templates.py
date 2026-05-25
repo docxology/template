@@ -1,4 +1,5 @@
 """Tests for html_templates module."""
+
 from __future__ import annotations
 
 from infrastructure.reporting import html_templates

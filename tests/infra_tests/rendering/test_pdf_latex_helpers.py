@@ -40,11 +40,7 @@ class TestExtractMathFontPreamble:
         assert "hyperref" not in snippet
 
     def test_explicit_setmathfont_preserved(self):
-        preamble = (
-            "\\usepackage{unicode-math}\n"
-            "\\setmathfont{XITS Math}\n"
-            "\\usepackage{geometry}\n"
-        )
+        preamble = "\\usepackage{unicode-math}\n\\setmathfont{XITS Math}\n\\usepackage{geometry}\n"
         snippet = extract_math_font_preamble(preamble)
         assert snippet is not None
         assert "\\setmathfont{XITS Math}" in snippet
@@ -57,17 +53,61 @@ class TestExtractMathFontPreamble:
         without an explicit ``\\usepackage{unicode-math}``. The helper
         still emits a complete header so Beamer can resolve the macro.
         """
-        preamble = (
-            "\\usepackage{geometry}\n"
-            "\\usepackage{fontspec}\n"
-            "\\setmathfont{latinmodern-math.otf}\n"
-        )
+        preamble = "\\usepackage{geometry}\n\\usepackage{fontspec}\n\\setmathfont{latinmodern-math.otf}\n"
         snippet = extract_math_font_preamble(preamble)
         assert snippet is not None
         assert "\\usepackage{unicode-math}" in snippet
         assert "\\setmathfont{latinmodern-math.otf}" in snippet
         assert "geometry" not in snippet
         assert "fontspec" not in snippet
+
+
+class TestSuggestedCitationDoi:
+    def test_suggested_citation_includes_doi_when_configured(self, tmp_path):
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        config = manuscript_dir / "config.yaml"
+        config.write_text(
+            yaml.safe_dump(
+                {
+                    "book": {
+                        "title": "Introduction to Biology",
+                        "subtitle": "A Generative Approach",
+                        "author": "Daniel Ari Friedman",
+                        "edition": "1.0",
+                        "year": 2026,
+                    },
+                    "publication": {"doi": "10.5281/zenodo.20286478"},
+                }
+            ),
+            encoding="utf-8",
+        )
+        body = generate_title_page_body(manuscript_dir)
+        assert "Suggested citation:" in body
+        assert "10.5281/zenodo.20286478" in body
+        assert "https://doi.org/10.5281/zenodo.20286478" in body
+        assert r"{\small DOI: \href{https://doi.org/10.5281/zenodo.20286478}" in body
+
+    def test_suggested_citation_separates_repository_and_doi(self, tmp_path):
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        config = manuscript_dir / "config.yaml"
+        config.write_text(
+            yaml.safe_dump(
+                {
+                    "book": {"title": "T", "author": "A", "edition": "1.0", "year": 2026},
+                    "publication": {
+                        "doi": "10.5281/zenodo.20286478",
+                        "repository_url": "https://github.com/docxology/biology_textbook",
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        body = generate_title_page_body(manuscript_dir)
+        assert "Suggested citation:" in body
+        assert r"\href{https://github.com/docxology/biology_textbook}" in body
+        assert r"\href{https://doi.org/10.5281/zenodo.20286478}{https://doi.org/10.5281/zenodo.20286478}." in body
 
 
 class TestExtractPreamble:
@@ -95,9 +135,7 @@ class TestExtractPreamble:
     def test_extracts_multiple_blocks(self, tmp_path):
         """Combines multiple ```latex blocks."""
         preamble_file = tmp_path / "preamble.md"
-        preamble_file.write_text(
-            "```latex\n\\usepackage{geometry}\n```\n\n```latex\n\\usepackage{amsmath}\n```\n"
-        )
+        preamble_file.write_text("```latex\n\\usepackage{geometry}\n```\n\n```latex\n\\usepackage{amsmath}\n```\n")
         result = extract_preamble(preamble_file)
         assert "\\usepackage{geometry}" in result
         assert "\\usepackage{amsmath}" in result
@@ -119,9 +157,7 @@ class TestExtractPreamble:
     def test_existing_setmathfont_preserved(self, tmp_path):
         """User-supplied \\setmathfont is not overridden."""
         preamble_file = tmp_path / "preamble.md"
-        preamble_file.write_text(
-            "```latex\n\\usepackage{unicode-math}\n\\setmathfont{XITSMath-Regular.otf}\n```\n"
-        )
+        preamble_file.write_text("```latex\n\\usepackage{unicode-math}\n\\setmathfont{XITSMath-Regular.otf}\n```\n")
         result = extract_preamble(preamble_file)
         assert result.count("\\setmathfont") == 1
         assert "XITSMath" in result
@@ -140,10 +176,7 @@ class TestEnsureSetmathfont:
         assert "\\setmathfont{latinmodern-math.otf}" in result
 
     def test_existing_setmathfont_no_change(self):
-        original = (
-            "\\usepackage{unicode-math}\n"
-            "\\setmathfont{Latin Modern Math}"
-        )
+        original = "\\usepackage{unicode-math}\n\\setmathfont{Latin Modern Math}"
         assert ensure_setmathfont(original) == original
 
     def test_unicode_math_with_options_detected(self):
@@ -155,9 +188,7 @@ class TestEnsureSetmathfont:
         assert "\\setmathfont" in result
 
     def test_custom_math_font_used(self):
-        result = ensure_setmathfont(
-            "\\usepackage{unicode-math}", math_font="STIX2Math.otf"
-        )
+        result = ensure_setmathfont("\\usepackage{unicode-math}", math_font="STIX2Math.otf")
         assert "\\setmathfont{STIX2Math.otf}" in result
 
     def test_empty_preamble_no_change(self):
@@ -366,6 +397,7 @@ class TestGenerateTitlePageBody:
 
         assert "Publishing Information" in result
         assert r"\href{https://doi.org/10.5281/zenodo.20286478}" in result
+        assert r"{\small DOI: \href{https://doi.org/10.5281/zenodo.20286478}" in result
         assert r"\href{https://github.com/docxology/biology_textbook}" in result
         assert "Source repository" in result
         assert "via the source repository linked above." in result
@@ -387,9 +419,7 @@ class TestParseMissingLatexPackage:
             ("All good, no errors.\n", None),
         ],
     )
-    def test_parse_missing_package_from_log(
-        self, tmp_path, log_content: str, expected: str | None
-    ) -> None:
+    def test_parse_missing_package_from_log(self, tmp_path, log_content: str, expected: str | None) -> None:
         log = tmp_path / "test.log"
         log.write_text(log_content, encoding="utf-8")
         assert parse_missing_latex_package_from_log(log) == expected

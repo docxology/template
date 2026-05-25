@@ -117,9 +117,7 @@ class TestFigurePathResolution:
         \includegraphics[width=0.8\textwidth]{../output/figures/test.png}
         """
 
-        fixed = fix_figure_paths(
-            tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
-        )
+        fixed = fix_figure_paths(tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf")
 
         assert "../figures/test.png" in fixed
         assert "../output/figures/test.png" not in fixed
@@ -131,9 +129,7 @@ class TestFigurePathResolution:
 
         tex_content = r"\includegraphics[width=0.9\textwidth]{../output/figures/test.png}"
 
-        fixed = fix_figure_paths(
-            tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
-        )
+        fixed = fix_figure_paths(tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf")
 
         assert "[width=0.9\\textwidth]" in fixed
         assert "../figures/test.png" in fixed
@@ -147,9 +143,7 @@ class TestFigurePathResolution:
 
         tex_content = f"\\includegraphics{{../output/figures/{unicode_filename}}}"
 
-        fixed = fix_figure_paths(
-            tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
-        )
+        fixed = fix_figure_paths(tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf")
 
         # Should normalize and fix the path
         assert "../figures/" in fixed
@@ -161,9 +155,7 @@ class TestFigurePathResolution:
 
         tex_content = r"\includegraphics{../output/figures/missing.png}"
 
-        fixed = fix_figure_paths(
-            tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
-        )
+        fixed = fix_figure_paths(tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf")
 
         # Should still fix the path even if file missing
         assert "../figures/missing.png" in fixed
@@ -176,9 +168,7 @@ class TestFigurePathResolution:
         # Already in correct format
         tex_content = r"\includegraphics{../figures/test.png}"
 
-        fixed = fix_figure_paths(
-            tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
-        )
+        fixed = fix_figure_paths(tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf")
 
         # Should remain unchanged
         assert fixed == tex_content
@@ -197,9 +187,7 @@ class TestFigurePathResolution:
         \includegraphics[width=0.5\textwidth]{../output/figures/fig2.pdf}
         """
 
-        fixed = fix_figure_paths(
-            tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
-        )
+        fixed = fix_figure_paths(tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf")
 
         # Both paths should be fixed
         assert fixed.count("../figures/") == 2
@@ -270,9 +258,7 @@ class TestIntegration:
         \end{document}
         """
 
-        fixed = fix_figure_paths(
-            tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf"
-        )
+        fixed = fix_figure_paths(tex_content, tmp_path / "manuscript", tmp_path / "output" / "pdf")
 
         # Figure path should be fixed
         assert "../figures/results.png" in fixed

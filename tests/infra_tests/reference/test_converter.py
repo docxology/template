@@ -11,9 +11,7 @@ from infrastructure.search.literature.models import Paper
 
 class TestGenerateCitationKey:
     def test_basic_format(self):
-        key = generate_citation_key(
-            authors=["Nocedal, Jorge"], year=2006, title="Numerical optimization"
-        )
+        key = generate_citation_key(authors=["Nocedal, Jorge"], year=2006, title="Numerical optimization")
         assert key == "nocedal2006numerical"
 
     def test_handles_first_last_format(self):
@@ -25,9 +23,7 @@ class TestGenerateCitationKey:
         assert key == "ba2014adam" or key == "kingma2014adam"
 
     def test_skips_stop_words_in_title(self):
-        key = generate_citation_key(
-            authors=["Smith, Alice"], year=2024, title="On the Convex Optimization"
-        )
+        key = generate_citation_key(authors=["Smith, Alice"], year=2024, title="On the Convex Optimization")
         assert key == "smith2024convex"
 
     def test_unicode_folded(self):
@@ -39,22 +35,16 @@ class TestGenerateCitationKey:
         assert key.startswith("cauchy1847")
 
     def test_no_authors_uses_fallback(self):
-        key = generate_citation_key(
-            authors=[], year=2024, title="Some Paper", fallback="anon"
-        )
+        key = generate_citation_key(authors=[], year=2024, title="Some Paper", fallback="anon")
         assert key.startswith("anon2024")
 
     def test_no_year(self):
-        key = generate_citation_key(
-            authors=["Smith, Alice"], year=None, title="Paper"
-        )
+        key = generate_citation_key(authors=["Smith, Alice"], year=None, title="Paper")
         assert "smith" in key
         assert "paper" in key
 
     def test_strips_punctuation(self):
-        key = generate_citation_key(
-            authors=["O'Brien, Patrick"], year=2024, title="P.D.E.s in Action"
-        )
+        key = generate_citation_key(authors=["O'Brien, Patrick"], year=2024, title="P.D.E.s in Action")
         assert key == "obrien2024pdes"
 
 

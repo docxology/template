@@ -138,78 +138,58 @@ class TestInvariantGE:
 
 class TestInvariantInRange:
     def test_within(self):
-        ok, _ = Invariant(
-            "r", actual=0.5, expected=(0.0, 1.0), tol=0, kind="in_range"
-        ).evaluate()
+        ok, _ = Invariant("r", actual=0.5, expected=(0.0, 1.0), tol=0, kind="in_range").evaluate()
         assert ok
 
     def test_at_boundary(self):
-        ok, _ = Invariant(
-            "r", actual=1.0, expected=(0.0, 1.0), tol=1e-12, kind="in_range"
-        ).evaluate()
+        ok, _ = Invariant("r", actual=1.0, expected=(0.0, 1.0), tol=1e-12, kind="in_range").evaluate()
         assert ok
 
     def test_below(self):
-        ok, _ = Invariant(
-            "r", actual=-0.5, expected=(0.0, 1.0), tol=0, kind="in_range"
-        ).evaluate()
+        ok, _ = Invariant("r", actual=-0.5, expected=(0.0, 1.0), tol=0, kind="in_range").evaluate()
         assert not ok
 
     def test_above(self):
-        ok, _ = Invariant(
-            "r", actual=1.5, expected=(0.0, 1.0), tol=0, kind="in_range"
-        ).evaluate()
+        ok, _ = Invariant("r", actual=1.5, expected=(0.0, 1.0), tol=0, kind="in_range").evaluate()
         assert not ok
 
 
 class TestInvariantMonotone:
     def test_increasing_strict_ok(self):
-        ok, _ = Invariant(
-            "m", actual=[1, 2, 3], tol=1e-12, kind="monotone_increasing"
-        ).evaluate()
+        ok, _ = Invariant("m", actual=[1, 2, 3], tol=1e-12, kind="monotone_increasing").evaluate()
         assert ok
 
     def test_increasing_weak_ok(self):
-        ok, _ = Invariant(
-            "m", actual=[1, 2, 2, 3], tol=1e-12, kind="monotone_increasing"
-        ).evaluate()
+        ok, _ = Invariant("m", actual=[1, 2, 2, 3], tol=1e-12, kind="monotone_increasing").evaluate()
         assert ok
 
     def test_increasing_violation_caught(self):
-        ok, w = Invariant(
-            "m", actual=[1, 2, 1.5, 3], tol=1e-12, kind="monotone_increasing"
-        ).evaluate()
+        ok, w = Invariant("m", actual=[1, 2, 1.5, 3], tol=1e-12, kind="monotone_increasing").evaluate()
         assert not ok and "worst" in w
 
     def test_decreasing_ok(self):
-        ok, _ = Invariant(
-            "md", actual=[5, 4, 4, 3], tol=1e-12, kind="monotone_decreasing"
-        ).evaluate()
+        ok, _ = Invariant("md", actual=[5, 4, 4, 3], tol=1e-12, kind="monotone_decreasing").evaluate()
         assert ok
 
     def test_decreasing_violation_caught(self):
-        ok, _ = Invariant(
-            "md", actual=[5, 4, 6, 3], tol=1e-12, kind="monotone_decreasing"
-        ).evaluate()
+        ok, _ = Invariant("md", actual=[5, 4, 6, 3], tol=1e-12, kind="monotone_decreasing").evaluate()
         assert not ok
 
     def test_within_tolerance(self):
         ok, _ = Invariant(
-            "m", actual=[1.0, 1.0 - 1e-13, 2.0], tol=1e-9,
+            "m",
+            actual=[1.0, 1.0 - 1e-13, 2.0],
+            tol=1e-9,
             kind="monotone_increasing",
         ).evaluate()
         assert ok
 
     def test_empty_sequence(self):
-        ok, _ = Invariant(
-            "m", actual=[], tol=1e-12, kind="monotone_increasing"
-        ).evaluate()
+        ok, _ = Invariant("m", actual=[], tol=1e-12, kind="monotone_increasing").evaluate()
         assert ok
 
     def test_singleton(self):
-        ok, _ = Invariant(
-            "m", actual=[1.0], tol=1e-12, kind="monotone_increasing"
-        ).evaluate()
+        ok, _ = Invariant("m", actual=[1.0], tol=1e-12, kind="monotone_increasing").evaluate()
         assert ok
 
 
@@ -228,9 +208,7 @@ class TestInvariantFinite:
         assert ok and "3 values" in w
 
     def test_array_with_nan(self):
-        ok, w = Invariant(
-            "f", actual=[1.0, float("nan"), 3.0], kind="finite"
-        ).evaluate()
+        ok, w = Invariant("f", actual=[1.0, float("nan"), 3.0], kind="finite").evaluate()
         assert not ok and "1" in w
 
 
@@ -249,9 +227,7 @@ class TestInvariantNonNeg:
         assert ok
 
     def test_array_neg_caught(self):
-        ok, w = Invariant(
-            "n", actual=[0.0, -0.5, 2.0], kind="nonneg", tol=0
-        ).evaluate()
+        ok, w = Invariant("n", actual=[0.0, -0.5, 2.0], kind="nonneg", tol=0).evaluate()
         assert not ok and "-0.5" in w
 
 
@@ -301,9 +277,7 @@ class TestInvariantUnknownKind:
 
 @pytest.fixture
 def dash():
-    return InteractiveDashboard(
-        title="Smoke", subtitle="sub", project_name="proj_x"
-    )
+    return InteractiveDashboard(title="Smoke", subtitle="sub", project_name="proj_x")
 
 
 class TestBuilderSetters:
@@ -330,8 +304,7 @@ class TestBuilderSetters:
 
 class TestBuilderControls:
     def test_add_slider(self, dash):
-        dash.add_slider("s", "S", min=0, max=1, step=0.1, default=0.5,
-                        description="d")
+        dash.add_slider("s", "S", min=0, max=1, step=0.1, default=0.5, description="d")
         c = dash.controls[0]
         assert c.control_id == "s"
         assert c.kind == "slider"
@@ -339,8 +312,7 @@ class TestBuilderControls:
         assert c.description == "d"
 
     def test_add_dropdown(self, dash):
-        dash.add_dropdown("d", "D", options=["a", "b"], default="a",
-                          option_labels=["A", "B"])
+        dash.add_dropdown("d", "D", options=["a", "b"], default="a", option_labels=["A", "B"])
         c = dash.controls[0]
         assert c.kind == "dropdown"
         assert c.options == ["a", "b"]
@@ -416,9 +388,7 @@ class TestPlaintextRendering:
 
 class TestWriteRoundTrip:
     def test_html_json_invariants_summary(self, tmp_path):
-        d = InteractiveDashboard(
-            title="X", subtitle="sub", project_name="proj"
-        )
+        d = InteractiveDashboard(title="X", subtitle="sub", project_name="proj")
         d.set_payload({"x": np.linspace(0, 1, 5).tolist()})
         d.set_hyperparameters({"k": 3})
         d.add_slider("s", "S", min=0, max=1, step=0.25, default=0.5)
@@ -452,9 +422,18 @@ class TestWriteRoundTrip:
         # JSON bundle is parseable, contains expected keys
         bundle = json.loads(outs["json"].read_text())
         for k in (
-            "title", "subtitle", "project", "generated_utc", "git_rev",
-            "hyperparameters", "payload", "panels", "controls",
-            "invariants", "tables", "notes",
+            "title",
+            "subtitle",
+            "project",
+            "generated_utc",
+            "git_rev",
+            "hyperparameters",
+            "payload",
+            "panels",
+            "controls",
+            "invariants",
+            "tables",
+            "notes",
         ):
             assert k in bundle
         assert bundle["panels"][0]["panel_id"] == "p1"
@@ -516,24 +495,19 @@ Plotly.relayout(panelId, {title: 'v=' + v});
             )
         )
         d.add_slider("s", "S", min=0, max=1, step=0.1, default=0.5)
-        out = d.write(html_path=tmp_path / "d.html",
-                      json_path=tmp_path / "d.json")
+        out = d.write(html_path=tmp_path / "d.html", json_path=tmp_path / "d.json")
         bundle = json.loads(out["json"].read_text())
         body = bundle["panels"][0]["update_fn"]
-        wrap = (
-            "function _t(payload, controls, Plotly, panelId) {"
-            + body
-            + "}"
-        )
-        with tempfile.NamedTemporaryFile(
-            "w", suffix=".js", delete=False
-        ) as f:
+        wrap = "function _t(payload, controls, Plotly, panelId) {" + body + "}"
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False) as f:
             f.write(wrap)
             name = f.name
         try:
             r = subprocess.run(
                 [_NODE, "--check", name],
-                capture_output=True, text=True, timeout=10,
+                capture_output=True,
+                text=True,
+                timeout=10,
             )
             assert r.returncode == 0, f"JS syntax error: {r.stderr}"
         finally:
@@ -552,8 +526,15 @@ class TestToJsonSnapshot:
         dash.add_slider("s", "S", min=0, max=1, step=0.1, default=0.5)
         snap = dash.to_json()
         for key in (
-            "title", "panels", "controls", "invariants", "tables",
-            "notes", "git_rev", "generated_utc", "hyperparameters",
+            "title",
+            "panels",
+            "controls",
+            "invariants",
+            "tables",
+            "notes",
+            "git_rev",
+            "generated_utc",
+            "hyperparameters",
         ):
             assert key in snap
         assert snap["invariants"][0]["passed"] is True

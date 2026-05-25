@@ -82,9 +82,7 @@ class TestSaveResponse:
         )
 
         output_path = tmp_path / "response"
-        saved_path = save_response(
-            "AI is artificial intelligence.", output_path, metadata, format="markdown"
-        )
+        saved_path = save_response("AI is artificial intelligence.", output_path, metadata, format="markdown")
 
         assert saved_path.exists()
         assert saved_path.suffix == ".md"

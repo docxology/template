@@ -19,12 +19,8 @@ from infrastructure.reporting._executive_health import calculate_project_health_
 def _make_project(name="proj_a", words=5000, coverage=90.0, total_tests=100, failed=0):
     return ProjectMetrics(
         name=name,
-        manuscript=ManuscriptMetrics(
-            sections=5, total_words=words, equations=10, figures=3, references=20
-        ),
-        codebase=CodebaseMetrics(
-            source_files=10, source_lines=500, scripts=3, script_lines=100, methods=20, classes=5
-        ),
+        manuscript=ManuscriptMetrics(sections=5, total_words=words, equations=10, figures=3, references=20),
+        codebase=CodebaseMetrics(source_files=10, source_lines=500, scripts=3, script_lines=100, methods=20, classes=5),
         tests=TestMetrics(
             total_tests=total_tests,
             passed=total_tests - failed,
@@ -32,9 +28,7 @@ def _make_project(name="proj_a", words=5000, coverage=90.0, total_tests=100, fai
             coverage_percent=coverage,
             execution_time=30.0,
         ),
-        outputs=OutputMetrics(
-            pdf_files=2, pdf_size_mb=1.5, figures=3, slides=1, web_outputs=1, total_outputs=7
-        ),
+        outputs=OutputMetrics(pdf_files=2, pdf_size_mb=1.5, figures=3, slides=1, web_outputs=1, total_outputs=7),
         pipeline=PipelineMetrics(
             total_duration=60.0,
             stages_passed=8,

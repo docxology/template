@@ -29,6 +29,7 @@ from pathlib import Path
 # Bootstrap: add repo root so the centralized helper itself is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts import ensure_repo_root_on_path  # noqa: E402
+
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header, log_substep
@@ -54,9 +55,7 @@ def main() -> int:
     import argparse
 
     parser = argparse.ArgumentParser(description="Generate executive report")
-    parser.add_argument(
-        "--project", help="Project name (ignored - this stage runs for all projects)"
-    )
+    parser.add_argument("--project", help="Project name (ignored - this stage runs for all projects)")
     parser.parse_args()
 
     log_header("STAGE 10: Executive Reporting", logger)
@@ -102,9 +101,7 @@ def main() -> int:
 
         if not completed_projects:
             logger.error("No projects have completed the pipeline successfully")
-            logger.error(
-                "  Run pipeline for at least one project before generating executive report"
-            )
+            logger.error("  Run pipeline for at least one project before generating executive report")
             return 1
 
         if incomplete_projects:
@@ -113,9 +110,7 @@ def main() -> int:
                 logger.warning(f"  - {project_name}")
 
         # Generate executive summary
-        log_substep(
-            f"Generating executive summary for {len(completed_projects)} project(s)...", logger
-        )
+        log_substep(f"Generating executive summary for {len(completed_projects)} project(s)...", logger)
         summary = generate_executive_summary(repo_root, completed_projects)
 
         # Save reports
@@ -148,12 +143,8 @@ def main() -> int:
             f"Total Tests: {summary.aggregate_metrics['tests']['total_tests']} "
             f"({summary.aggregate_metrics['tests']['total_passed']} passed)"
         )
-        logger.info(
-            f"Average Coverage: {summary.aggregate_metrics['tests']['average_coverage']:.1f}%"
-        )
-        logger.info(
-            f"Total Pipeline Time: {summary.aggregate_metrics['pipeline']['total_duration']:.0f}s"
-        )
+        logger.info(f"Average Coverage: {summary.aggregate_metrics['tests']['average_coverage']:.1f}%")
+        logger.info(f"Total Pipeline Time: {summary.aggregate_metrics['pipeline']['total_duration']:.0f}s")
         logger.info(
             f"\nManuscript: {summary.aggregate_metrics['manuscript']['total_words']:,} words, "
             f"{summary.aggregate_metrics['manuscript']['total_sections']} sections"

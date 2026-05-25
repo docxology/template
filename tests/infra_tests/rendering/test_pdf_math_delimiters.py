@@ -167,9 +167,23 @@ class TestFixMathDelimitersFromPdfMathDelimiters:
         assert r"\(\gamma\)" in result
 
     def test_all_greek_letters(self):
-        greeks = ["tau", "pi", "Theta", "alpha", "beta", "gamma",
-                   "lambda", "kappa", "sigma", "phi", "eta",
-                   "mu", "nu", "rho", "omega"]
+        greeks = [
+            "tau",
+            "pi",
+            "Theta",
+            "alpha",
+            "beta",
+            "gamma",
+            "lambda",
+            "kappa",
+            "sigma",
+            "phi",
+            "eta",
+            "mu",
+            "nu",
+            "rho",
+            "omega",
+        ]
         for g in greeks:
             tex = f"\\(\\{g})"
             result = fix_math_delimiters(tex)

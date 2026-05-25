@@ -143,9 +143,7 @@ authors:
             # Test CLI execution via subprocess
             # Need to run from repository directory where infrastructure module is available
             env = os.environ.copy()
-            env["PYTHONPATH"] = str(
-                Path(__file__).parent.parent.parent
-            )  # Add repository root to PYTHONPATH
+            env["PYTHONPATH"] = str(Path(__file__).parent.parent.parent)  # Add repository root to PYTHONPATH
 
             result = subprocess.run(
                 [
@@ -230,9 +228,7 @@ authors:
             # Test CLI execution via subprocess
             # Need to run from repository directory where infrastructure module is available
             env = os.environ.copy()
-            env["PYTHONPATH"] = str(
-                Path(__file__).parent.parent.parent
-            )  # Add repository root to PYTHONPATH
+            env["PYTHONPATH"] = str(Path(__file__).parent.parent.parent)  # Add repository root to PYTHONPATH
 
             result = subprocess.run(
                 [

@@ -670,9 +670,7 @@ publication: {}
         scanner = RepositoryScanner(tmp_path)
         scanner._check_configuration()
 
-        config_issues = [
-            i for i in scanner.results.accuracy_issues if i.category == "configuration"
-        ]
+        config_issues = [i for i in scanner.results.accuracy_issues if i.category == "configuration"]
         assert len(config_issues) == 0
 
     def test_config_structure_mismatch(self, tmp_path):
@@ -695,9 +693,7 @@ paper:
         scanner = RepositoryScanner(tmp_path)
         scanner._check_configuration()
 
-        config_issues = [
-            i for i in scanner.results.accuracy_issues if i.category == "configuration"
-        ]
+        config_issues = [i for i in scanner.results.accuracy_issues if i.category == "configuration"]
         assert len(config_issues) >= 1
 
     def test_invalid_yaml_file(self, tmp_path):
@@ -712,9 +708,7 @@ paper:
         scanner._check_configuration()
 
         # Should capture the parse error
-        config_issues = [
-            i for i in scanner.results.accuracy_issues if i.category == "configuration"
-        ]
+        config_issues = [i for i in scanner.results.accuracy_issues if i.category == "configuration"]
         assert len(config_issues) >= 1
 
 

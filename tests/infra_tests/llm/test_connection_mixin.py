@@ -81,9 +81,7 @@ class TestGenerateResponseDirect:
             {"message": {"content": "Hello from LLM"}}
         )
         client = FakeClient(httpserver.url_for("").rstrip("/"))
-        result = client._generate_response_direct(
-            "testmodel", [{"role": "user", "content": "Hi"}]
-        )
+        result = client._generate_response_direct("testmodel", [{"role": "user", "content": "Hi"}])
         assert result == "Hello from LLM"
 
     def test_empty_response_with_error(self, httpserver: HTTPServer):
@@ -99,9 +97,7 @@ class TestGenerateResponseDirect:
             {"message": {"content": "<think>reasoning</think>The answer is 42."}}
         )
         client = FakeClient(httpserver.url_for("").rstrip("/"))
-        result = client._generate_response_direct(
-            "testmodel", [{"role": "user", "content": "What?"}]
-        )
+        result = client._generate_response_direct("testmodel", [{"role": "user", "content": "What?"}])
         assert "The answer is 42" in result
         assert "<think>" not in result
 
@@ -114,9 +110,7 @@ class TestGenerateResponseDirect:
             client._generate_response_direct("m", [{"role": "user", "content": "x"}])
 
     def test_http_error(self, httpserver: HTTPServer):
-        httpserver.expect_request("/api/chat", method="POST").respond_with_data(
-            "Not Found", status=404
-        )
+        httpserver.expect_request("/api/chat", method="POST").respond_with_data("Not Found", status=404)
         client = FakeClient(httpserver.url_for("").rstrip("/"))
         with pytest.raises(LLMConnectionError, match="HTTP"):
             client._generate_response_direct("m", [{"role": "user", "content": "x"}])
@@ -129,6 +123,7 @@ class TestGenerateResponseDirect:
             call_count["n"] += 1
             if call_count["n"] == 1:
                 import time
+
                 time.sleep(2)
                 return Response("timeout", status=408)
             return Response(
@@ -138,17 +133,13 @@ class TestGenerateResponseDirect:
 
         httpserver.expect_request("/api/chat", method="POST").respond_with_handler(handler)
         client = FakeClient(httpserver.url_for("").rstrip("/"), timeout=0.5)
-        result = client._generate_response_direct(
-            "m", [{"role": "user", "content": "x"}], retries=1
-        )
+        result = client._generate_response_direct("m", [{"role": "user", "content": "x"}], retries=1)
         assert result == "Recovered"
 
     def test_connection_error_all_retries(self):
         client = FakeClient("http://127.0.0.1:1", timeout=0.3)
         with pytest.raises(LLMConnectionError, match="connect"):
-            client._generate_response_direct(
-                "m", [{"role": "user", "content": "x"}], retries=1
-            )
+            client._generate_response_direct("m", [{"role": "user", "content": "x"}], retries=1)
 
     def test_format_json_option(self, httpserver: HTTPServer):
         """Ensure format_json option is passed in payload."""
@@ -164,7 +155,5 @@ class TestGenerateResponseDirect:
         httpserver.expect_request("/api/chat", method="POST").respond_with_handler(handler)
         client = FakeClient(httpserver.url_for("").rstrip("/"))
         opts = GenerationOptions(format_json=True)
-        client._generate_response_direct(
-            "m", [{"role": "user", "content": "x"}], options=opts
-        )
+        client._generate_response_direct("m", [{"role": "user", "content": "x"}], options=opts)
         assert received.get("format") == "json"

@@ -277,9 +277,7 @@ class TestCheckModelLoaded:
 
     def test_check_model_loaded_timeout(self):
         """Test check_model_loaded with timeout."""
-        is_loaded, model_name = check_model_loaded(
-            "test-model", base_url="http://localhost:99999", timeout=0.1
-        )
+        is_loaded, model_name = check_model_loaded("test-model", base_url="http://localhost:99999", timeout=0.1)
         assert is_loaded is False
         assert model_name is None
 
@@ -439,7 +437,7 @@ class TestPullOllamaModel:
         assert err is None
 
     def test_pull_failure_on_nonzero_exit(self, tmp_path):
-        stub = _ollama_stub(tmp_path, 'echo network error >&2\nexit 1\n')
+        stub = _ollama_stub(tmp_path, "echo network error >&2\nexit 1\n")
         ok, err = pull_ollama_model(
             "smollm2",
             timeout=5.0,

@@ -118,6 +118,118 @@ def test_load_config_defaults_when_absent(tmp_path: Path) -> None:
     assert "evidence_registry" in config.quality_checks
 
 
+def test_load_config_supports_method_contract_fields(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import load_autoresearch_config
+
+    project = tmp_path / "project"
+    project.mkdir()
+    (project / "autoresearch.yaml").write_text(
+        """
+enabled: true
+strict: true
+topic: "Bounded auto-research"
+autonomy_level: human_approved
+budget:
+  max_iterations: 3
+  max_wall_clock_minutes: 15
+  max_llm_calls: 0
+  max_cost_usd: 0.0
+edit_allowlist:
+  - projects/demo/src/
+  - projects/demo/scripts/
+metric_direction: minimize
+acceptance_policy: "accept only evidence-linked proposals"
+review_gates:
+  - name: proposal_review
+    required: true
+source_manifests:
+  - output/reports/evidence_registry.json
+benchmark_tasks:
+  - id: smoke
+    description: "Smoke benchmark"
+    grading_output: output/reports/benchmark_smoke.json
+disclosure_required: true
+disclosure_text: "AI-assisted AutoResearch"
+""",
+        encoding="utf-8",
+    )
+
+    config = load_autoresearch_config(project)
+
+    assert config.autonomy_level == "human_approved"
+    assert config.budget_policy.max_iterations == 3
+    assert config.budget_policy.max_wall_clock_minutes == 15
+    assert config.edit_allowlist == ("projects/demo/src/", "projects/demo/scripts/")
+    assert config.metric_direction == "minimize"
+    assert config.acceptance_policy == "accept only evidence-linked proposals"
+    assert config.review_gates[0].name == "proposal_review"
+    assert config.review_gates[0].required is True
+    assert config.source_manifests == ("output/reports/evidence_registry.json",)
+    assert config.benchmark_tasks[0].identifier == "smoke"
+    assert config.benchmark_tasks[0].grading_output == "output/reports/benchmark_smoke.json"
+    assert config.disclosure_required is True
+    assert config.disclosure_text == "AI-assisted AutoResearch"
+
+
+def test_autoresearch_method_models_serialize_stable_payloads() -> None:
+    from infrastructure.autoresearch import (
+        BenchmarkTask,
+        BudgetPolicy,
+        EvidenceLink,
+        ExperimentCandidate,
+        ResearchIdea,
+        ResearchProgram,
+        ReviewGate,
+        RunLedger,
+    )
+
+    evidence = EvidenceLink(
+        claim_id="idea-1",
+        evidence_path="output/reports/evidence_registry.json",
+        evidence_type="artifact",
+    )
+    idea = ResearchIdea(
+        identifier="idea-1",
+        title="Bounded proposal",
+        rationale="Keeps the loop inspectable.",
+        status="accepted",
+        evidence_links=(evidence,),
+    )
+    candidate = ExperimentCandidate(
+        identifier="exp-1",
+        idea_id="idea-1",
+        status="deferred",
+        metric_name="readiness",
+        metric_direction="maximize",
+        touched_paths=("projects/demo/src/loop.py",),
+        expected_artifacts=("output/data/run_ledger.json",),
+    )
+    program = ResearchProgram(
+        path="program.md",
+        summary="Human-authored research program.",
+        autonomy_level="proposal_only",
+        budget_policy=BudgetPolicy(max_iterations=2, max_wall_clock_minutes=10),
+        edit_allowlist=("projects/demo/src/",),
+    )
+    ledger = RunLedger(
+        budget_policy=program.budget_policy,
+        iterations_used=2,
+        wall_clock_minutes_used=10,
+        budget_exhausted=True,
+        exhaustion_reason="iteration budget reached",
+    )
+
+    assert program.to_dict()["budget_policy"]["max_iterations"] == 2
+    assert idea.to_dict()["evidence_links"][0]["evidence_path"].endswith("evidence_registry.json")
+    assert candidate.to_dict()["touched_paths"] == ["projects/demo/src/loop.py"]
+    assert ledger.to_dict()["budget_exhausted"] is True
+    assert ReviewGate(name="proposal_review").to_dict()["decision"] == ""
+    assert (
+        BenchmarkTask(identifier="smoke", description="Smoke", grading_output="out.json").to_dict()["grading_output"]
+        == "out.json"
+    )
+
+
 def test_build_plan_composes_pipeline_and_project_overlays(tmp_path: Path) -> None:
     from infrastructure.autoresearch import build_autoresearch_plan
 
@@ -171,6 +283,141 @@ required_artifacts: [output/data/missing.csv]
         "AUTORESEARCH.ARTIFACT_MISSING",
     }
     assert report.summary["errors"] >= 2
+
+
+def test_external_method_contract_validation_passes_with_declared_artifacts(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import build_autoresearch_plan, validate_autoresearch_plan
+
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "manuscript" / "02_methodology.md").write_text(
+        "This manuscript uses AI-assisted AutoResearch with human review.\n",
+        encoding="utf-8",
+    )
+    (project / "autoresearch.yaml").write_text(
+        """
+strict: true
+quality_checks: [method_contracts, review_gates, benchmark_tasks, ai_disclosure]
+autonomy_level: proposal_only
+edit_allowlist: [projects/demo/src/]
+review_gates:
+  - name: proposal_review
+    required: true
+benchmark_tasks:
+  - id: smoke
+    description: Smoke benchmark
+    grading_output: output/reports/benchmark_smoke.json
+disclosure_required: true
+disclosure_text: "AI-assisted AutoResearch"
+""",
+        encoding="utf-8",
+    )
+    (project / "output" / "reports" / "benchmark_smoke.json").write_text('{"score": 1.0}\n', encoding="utf-8")
+    (project / "output" / "data" / "idea_ledger.json").write_text(
+        json.dumps(
+            {
+                "ideas": [
+                    {
+                        "id": "idea-1",
+                        "title": "Bounded proposal",
+                        "status": "accepted",
+                        "evidence_links": [
+                            {
+                                "claim_id": "idea-1",
+                                "evidence_path": "output/reports/evidence_registry.json",
+                            }
+                        ],
+                    }
+                ],
+                "candidates": [
+                    {
+                        "id": "exp-1",
+                        "idea_id": "idea-1",
+                        "status": "deferred",
+                        "touched_paths": ["projects/demo/src/loop.py"],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "run_ledger.json").write_text(
+        json.dumps({"budget_exhausted": True, "exhaustion_reason": "iteration budget reached"}),
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "review_decisions.json").write_text(
+        json.dumps({"decisions": [{"gate": "proposal_review", "decision": "approved"}]}),
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "benchmark_scores.json").write_text(
+        json.dumps({"tasks": [{"id": "smoke", "grading_output_path": "output/reports/benchmark_smoke.json"}]}),
+        encoding="utf-8",
+    )
+
+    plan = build_autoresearch_plan(repo_root, "demo")
+    report = validate_autoresearch_plan(plan, project)
+
+    assert report.valid is True
+    assert report.issues == ()
+
+
+def test_external_method_contract_validation_reports_invariant_issues(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import build_autoresearch_plan, validate_autoresearch_plan
+
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "autoresearch.yaml").write_text(
+        """
+strict: true
+quality_checks: [method_contracts, review_gates, benchmark_tasks, ai_disclosure]
+edit_allowlist: [projects/demo/src/]
+review_gates:
+  - name: proposal_review
+    required: true
+benchmark_tasks:
+  - id: smoke
+    description: Smoke benchmark
+    grading_output: output/reports/benchmark_smoke.json
+disclosure_required: true
+disclosure_text: "AI-assisted AutoResearch"
+""",
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "idea_ledger.json").write_text(
+        json.dumps(
+            {
+                "ideas": [{"id": "idea-1", "title": "Unsupported", "status": "accepted"}],
+                "candidates": [{"id": "exp-1", "touched_paths": ["projects/demo/unsafe.py"]}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "run_ledger.json").write_text(
+        json.dumps({"budget_exhausted": True}),
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "review_decisions.json").write_text(
+        json.dumps({"decisions": [{"gate": "proposal_review", "decision": "pending"}]}),
+        encoding="utf-8",
+    )
+    (project / "output" / "data" / "benchmark_scores.json").write_text(
+        json.dumps({"tasks": [{"id": "smoke"}]}),
+        encoding="utf-8",
+    )
+    (project / "manuscript" / "02_methodology.md").write_text("No disclosure here.\n", encoding="utf-8")
+
+    plan = build_autoresearch_plan(repo_root, "demo")
+    report = validate_autoresearch_plan(plan, project)
+
+    assert report.valid is False
+    assert {issue.code for issue in report.issues} >= {
+        "AUTORESEARCH.ACCEPTED_IDEA_WITHOUT_EVIDENCE",
+        "AUTORESEARCH.EDIT_ALLOWLIST",
+        "AUTORESEARCH.BUDGET_EXHAUSTION_UNRECORDED",
+        "AUTORESEARCH.REVIEW_GATE_PENDING",
+        "AUTORESEARCH.BENCHMARK_GRADING_MISSING",
+        "AUTORESEARCH.AI_DISCLOSURE_MISSING",
+    }
 
 
 def test_write_report_outputs_json_and_markdown(tmp_path: Path) -> None:
@@ -320,3 +567,46 @@ quality_checks: [unknown_check]
 
     assert result.returncode == 1
     assert (project / "output" / "reports" / "autoresearch_readiness.json").exists()
+
+
+def test_cli_plan_review_summarize_and_benchmark_write_declared_artifacts(tmp_path: Path) -> None:
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "autoresearch.yaml").write_text(
+        """
+strict: true
+quality_checks: [benchmark_tasks]
+benchmark_tasks:
+  - id: smoke
+    description: Smoke benchmark
+    grading_output: output/reports/benchmark_smoke.json
+""",
+        encoding="utf-8",
+    )
+    (project / "output" / "reports" / "benchmark_smoke.json").write_text('{"score": 1.0}\n', encoding="utf-8")
+
+    root = Path(__file__).resolve().parents[3]
+    for command in ("plan", "review-packet", "summarize", "benchmark"):
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "infrastructure.autoresearch.cli",
+                command,
+                "--repo-root",
+                str(repo_root),
+                "--project",
+                "demo",
+            ],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr
+
+    assert (project / "output" / "data" / "autoresearch_plan.json").exists()
+    assert (project / "output" / "reports" / "autoresearch_review_packet.md").exists()
+    assert (project / "output" / "reports" / "autoresearch_summary.md").exists()
+    scores = json.loads((project / "output" / "data" / "benchmark_scores.json").read_text(encoding="utf-8"))
+    assert scores["tasks"][0]["id"] == "smoke"

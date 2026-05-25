@@ -108,9 +108,7 @@ def sample_project_structure(tmp_path: Path) -> Generator[Path, None, None]:
         (manuscript_dir / "01_intro.md").write_text(
             "# Introduction\n\nTest manuscript content for integration testing.\n"
         )
-        (manuscript_dir / "config.yaml").write_text(
-            "paper:\n  title: Test Paper\nauthors:\n  - name: Test Author\n"
-        )
+        (manuscript_dir / "config.yaml").write_text("paper:\n  title: Test Paper\nauthors:\n  - name: Test Author\n")
 
         # Create src
         src_dir = project_root / "src"

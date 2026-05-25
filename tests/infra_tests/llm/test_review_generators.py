@@ -263,9 +263,7 @@ class TestTemplateBasedGenerators:
         manuscript_text = "Test manuscript about AI research."
         client = LLMClient()
 
-        result, metrics = generate_executive_summary(
-            client, manuscript_text, model_name="gemma3:4b"
-        )
+        result, metrics = generate_executive_summary(client, manuscript_text, model_name="gemma3:4b")
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -338,9 +336,7 @@ class TestTemplateBasedGenerators:
         target_language = "hi"
         client = LLMClient()
 
-        result, metrics = generate_translation(
-            client, text, target_language, model_name="gemma3:4b"
-        )
+        result, metrics = generate_translation(client, text, target_language, model_name="gemma3:4b")
 
         assert isinstance(result, str)
         assert len(result) > 0
@@ -355,8 +351,7 @@ class TestGenerateReviewWithMetricsRetry:
 
         call_count = [0]
         long_valid = (
-            "## Quality Assessment\n\nThis manuscript demonstrates clear structure "
-            "and sound argumentation. " * 40
+            "## Quality Assessment\n\nThis manuscript demonstrates clear structure and sound argumentation. " * 40
         )
 
         def stateful_handler(request):
@@ -390,8 +385,12 @@ class TestGenerateReviewWithMetricsRetry:
             client = LLMClient(config=config)
 
             review_text, _metrics = generate_review_with_metrics(
-                client, "Test manuscript text.", "quality_review", "Quality Review",
-                ManuscriptQualityReview, max_retries=1,
+                client,
+                "Test manuscript text.",
+                "quality_review",
+                "Quality Review",
+                ManuscriptQualityReview,
+                max_retries=1,
             )
 
             assert call_count[0] == 2, f"Expected 2 attempts, got {call_count[0]}"
@@ -435,8 +434,12 @@ class TestGenerateReviewWithMetricsRetry:
             client = LLMClient(config=config)
 
             generate_review_with_metrics(
-                client, "Test.", "executive_summary", "Executive Summary",
-                ManuscriptExecutiveSummary, max_retries=0,
+                client,
+                "Test.",
+                "executive_summary",
+                "Executive Summary",
+                ManuscriptExecutiveSummary,
+                max_retries=0,
             )
 
             assert call_count[0] == 1, f"Expected 1 attempt, got {call_count[0]}"
@@ -577,18 +580,14 @@ class TestValidateReviewQuality:
     def test_fails_for_too_short_response(self):
         """A response with too few words fails with a 'too short' issue."""
         response = " ".join(f"word{i}" for i in range(5))
-        passed, issues, details = validate_review_quality(
-            response, "executive_summary", min_words=200
-        )
+        passed, issues, details = validate_review_quality(response, "executive_summary", min_words=200)
         assert passed is False
         assert any("short" in issue.lower() for issue in issues)
 
     def test_fails_for_too_short_explicit_min(self):
         """Explicit min_words overrides the default minimum for any review type."""
         response = "This is a short response with overview content."
-        passed, issues, details = validate_review_quality(
-            response, "executive_summary", min_words=500
-        )
+        passed, issues, details = validate_review_quality(response, "executive_summary", min_words=500)
         assert passed is False
         assert any("short" in issue.lower() for issue in issues)
         assert details["word_count"] < 500
@@ -605,9 +604,7 @@ class TestValidateReviewQuality:
         # Build a response with sections but borderline word count
         response = self._good_executive_summary(n_extra_words=200)
         # Pass with explicit min_words that normal model would require but small won't
-        _, issues_normal, _ = validate_review_quality(
-            response, "executive_summary", min_words=5000
-        )
+        _, issues_normal, _ = validate_review_quality(response, "executive_summary", min_words=5000)
         _, issues_small, _ = validate_review_quality(
             response, "executive_summary", min_words=5000, model_name="llama3-8b"
         )
@@ -618,5 +615,3 @@ class TestValidateReviewQuality:
         # Both should flag it as too short for 5000 min, but that's the expected behavior
         assert normal_short is True
         assert small_short is True
-
-

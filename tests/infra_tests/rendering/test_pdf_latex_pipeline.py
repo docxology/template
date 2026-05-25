@@ -29,9 +29,7 @@ def test_latex_pass_nonzero_exit_fails_even_with_partial_pdf(tmp_path: Path) -> 
         ),
         encoding="utf-8",
     )
-    result: subprocess.CompletedProcess[bytes] = subprocess.CompletedProcess(
-        args=["xelatex"], returncode=1
-    )
+    result: subprocess.CompletedProcess[bytes] = subprocess.CompletedProcess(args=["xelatex"], returncode=1)
 
     with pytest.raises(RenderingError, match="LaTeX compilation failed after pass 2"):
         _check_fatal_error(result, log, tex, pdf, 2)
@@ -45,8 +43,6 @@ def test_latex_pass_zero_exit_allows_output(tmp_path: Path) -> None:
     tex.write_text(r"\documentclass{article}\begin{document}OK\end{document}", encoding="utf-8")
     pdf.write_bytes(b"%PDF-1.7\nok\nstartxref\n1\n%%EOF\n")
     log.write_text("Output written on book.pdf (1 page).", encoding="utf-8")
-    result: subprocess.CompletedProcess[bytes] = subprocess.CompletedProcess(
-        args=["xelatex"], returncode=0
-    )
+    result: subprocess.CompletedProcess[bytes] = subprocess.CompletedProcess(args=["xelatex"], returncode=0)
 
     assert _check_fatal_error(result, log, tex, pdf, 1) is False

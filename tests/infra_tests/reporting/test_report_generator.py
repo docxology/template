@@ -146,15 +146,17 @@ class TestGenerateTestReportFromReportGenerator:
     def test_with_coverage_details(self, tmp_path):
         # Create coverage JSON files
         infra_cov = tmp_path / "coverage_infra.json"
-        infra_cov.write_text(json.dumps({
-            "totals": {"percent_covered": 80.0},
-            "files": {"mod.py": {"summary": {"percent_covered": 80.0}}}
-        }))
+        infra_cov.write_text(
+            json.dumps(
+                {"totals": {"percent_covered": 80.0}, "files": {"mod.py": {"summary": {"percent_covered": 80.0}}}}
+            )
+        )
         project_cov = tmp_path / "coverage_project.json"
-        project_cov.write_text(json.dumps({
-            "totals": {"percent_covered": 90.0},
-            "files": {"src.py": {"summary": {"percent_covered": 90.0}}}
-        }))
+        project_cov.write_text(
+            json.dumps(
+                {"totals": {"percent_covered": 90.0}, "files": {"src.py": {"summary": {"percent_covered": 90.0}}}}
+            )
+        )
         infra = {"passed": 10, "failed": 0, "total": 10, "exit_code": 0}
         project = {"passed": 5, "failed": 0, "total": 5, "exit_code": 0}
         report = generate_test_report(infra, project, tmp_path, include_coverage_details=True)

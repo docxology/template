@@ -40,6 +40,7 @@ class TestBuildInstallCommands:
     def test_darwin_uses_brew_when_available(self):
         """On macOS with Homebrew, returns brew install command."""
         import shutil
+
         if platform.system().lower() == "darwin" and shutil.which("brew"):
             result = build_install_commands("pandoc")
             assert any("brew install" in cmd for cmd in result)
@@ -47,6 +48,7 @@ class TestBuildInstallCommands:
     def test_linux_uses_apt_when_available(self):
         """On Debian/Ubuntu, returns apt-get command."""
         import shutil
+
         if platform.system().lower() == "linux" and shutil.which("apt-get"):
             result = build_install_commands("curl")
             assert any("apt-get" in cmd for cmd in result)

@@ -30,6 +30,36 @@ def test_module_count_claim_mismatch_is_flagged(tmp_path: Path) -> None:
     assert "15" in issues[0].detail
 
 
+def test_module_count_importable_packages_mismatch_is_flagged(tmp_path: Path) -> None:
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(repo / "docs" / "guide.md", "Docs list **17** importable packages.\n")
+    issues = check_module_count_claims(repo)
+    assert len(issues) == 1
+    assert issues[0].category == "module-count"
+
+
+def test_module_count_infrastructure_subpackages_mismatch_is_flagged(tmp_path: Path) -> None:
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(repo / "docs" / "guide.md", "Core systems: 17 `infrastructure/` Python subpackages.\n")
+    issues = check_module_count_claims(repo)
+    assert len(issues) == 1
+    assert issues[0].category == "module-count"
+
+
+def test_module_count_documented_infrastructure_areas_mismatch_is_flagged(tmp_path: Path) -> None:
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(repo / "docs" / "guide.md", "Modules guide covers **17** documented infrastructure areas.\n")
+    issues = check_module_count_claims(repo)
+    assert len(issues) == 1
+    assert issues[0].category == "module-count"
+
+
+def test_historical_plain_infrastructure_packages_note_is_not_flagged(tmp_path: Path) -> None:
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(repo / "CHANGELOG.md", "Historical release note: all 8 infrastructure packages passed mypy.\n")
+    assert check_module_count_claims(repo) == []
+
+
 def test_module_count_singular_is_not_flagged(tmp_path: Path) -> None:
     repo = scaffold_repo(tmp_path, n_packages=15)
     write_doc(repo / "docs" / "guide.md", "Each Layer-1 Python package ships AGENTS.md.\n")
@@ -90,8 +120,7 @@ def test_canonical_exemplar_markdown_is_in_scope(tmp_path: Path) -> None:
     )
     issues = check_module_count_claims(repo)
     assert any(
-        "projects/template_code_project/manuscript/01_intro.md" in str(i.file)
-        and i.category == "module-count"
+        "projects/template_code_project/manuscript/01_intro.md" in str(i.file) and i.category == "module-count"
         for i in issues
     )
 

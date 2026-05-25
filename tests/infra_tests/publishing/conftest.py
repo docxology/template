@@ -51,9 +51,7 @@ def zenodo_test_server():
     )
 
     # Mock publish endpoint
-    server.expect_request(
-        "/deposit/depositions/12345/actions/publish", method="POST"
-    ).respond_with_json(
+    server.expect_request("/deposit/depositions/12345/actions/publish", method="POST").respond_with_json(
         {
             "doi": "10.5281/zenodo.12345",
             "doi_url": "https://doi.org/10.5281/zenodo.12345",
@@ -100,9 +98,7 @@ def github_test_server():
     )
 
     # Mock GitHub asset upload (generic — accepts any POST under the assets path)
-    server.expect_request(
-        "/repos/testuser/testrepo/releases/12345/assets", method="POST"
-    ).respond_with_json(
+    server.expect_request("/repos/testuser/testrepo/releases/12345/assets", method="POST").respond_with_json(
         {"id": 99, "name": "asset.pdf", "state": "uploaded"},
         status=201,
     )

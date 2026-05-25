@@ -80,9 +80,7 @@ class TestSaveReviewOutputs:
     def test_saves_review_files(self, tmp_path: Path, reviews):
         metrics = _make_session_metrics(list(reviews.keys()))
         output_dir = tmp_path / "nested" / "reviews" if "summary" in reviews else tmp_path / "output"
-        result = save_review_outputs(
-            reviews, output_dir, "test-model", Path("test.pdf"), metrics
-        )
+        result = save_review_outputs(reviews, output_dir, "test-model", Path("test.pdf"), metrics)
         assert result is True
         for review_name in reviews:
             assert (output_dir / f"{review_name}.md").exists()
@@ -122,9 +120,7 @@ class TestSaveSingleReview:
 
     def test_file_contains_header_and_content(self, tmp_path: Path):
         metrics = ReviewMetrics(output_chars=500, output_words=100, generation_time_seconds=5.0)
-        path = save_single_review(
-            "quality_review", "The review text.", tmp_path, "test-model", metrics
-        )
+        path = save_single_review("quality_review", "The review text.", tmp_path, "test-model", metrics)
         body = path.read_text()
         assert "Quality Review" in body
         assert "test-model" in body
@@ -184,18 +180,14 @@ class TestGenerateReviewSummary:
 class TestSaveSingleReviewFromReviewSaving:
     def test_basic_save(self, tmp_path):
         metrics = ReviewMetrics(output_words=100, output_chars=500, generation_time_seconds=2.0)
-        path = save_single_review(
-            "executive_summary", "This is the review.", tmp_path, "llama3", metrics
-        )
+        path = save_single_review("executive_summary", "This is the review.", tmp_path, "llama3", metrics)
         assert path.exists()
         content = path.read_text()
         assert "This is the review." in content
 
     def test_translation_save(self, tmp_path):
         metrics = ReviewMetrics(output_words=50, output_chars=300, generation_time_seconds=1.5)
-        path = save_single_review(
-            "translation_zh", "Chinese translation content.", tmp_path, "llama3", metrics
-        )
+        path = save_single_review("translation_zh", "Chinese translation content.", tmp_path, "llama3", metrics)
         assert path.exists()
         assert path.name == "translation_zh.md"
 
@@ -218,9 +210,7 @@ class TestSaveReviewOutputsFromReviewSaving:
                 "quality_review": ReviewMetrics(output_words=40, output_chars=180),
             }
         )
-        result = save_review_outputs(
-            reviews, tmp_path, "llama3", Path("/tmp/paper.pdf"), metrics
-        )
+        result = save_review_outputs(reviews, tmp_path, "llama3", Path("/tmp/paper.pdf"), metrics)
         assert result is True
         assert (tmp_path / "executive_summary.md").exists()
         assert (tmp_path / "quality_review.md").exists()
@@ -229,20 +219,14 @@ class TestSaveReviewOutputsFromReviewSaving:
 
     def test_translation_review(self, tmp_path):
         reviews = {"translation_zh": "Chinese translation."}
-        metrics = _make_session_metrics(
-            reviews={"translation_zh": ReviewMetrics(output_words=30)}
-        )
-        result = save_review_outputs(
-            reviews, tmp_path, "llama3", Path("/tmp/paper.pdf"), metrics
-        )
+        metrics = _make_session_metrics(reviews={"translation_zh": ReviewMetrics(output_words=30)})
+        result = save_review_outputs(reviews, tmp_path, "llama3", Path("/tmp/paper.pdf"), metrics)
         assert result is True
         assert (tmp_path / "translation_zh.md").exists()
 
     def test_empty_reviews(self, tmp_path):
         metrics = _make_session_metrics()
-        result = save_review_outputs(
-            {}, tmp_path, "llama3", Path("/tmp/paper.pdf"), metrics
-        )
+        result = save_review_outputs({}, tmp_path, "llama3", Path("/tmp/paper.pdf"), metrics)
         assert result is True
 
 
@@ -258,12 +242,8 @@ class TestGenerateReviewSummaryFromReviewSaving:
         }
         metrics = _make_session_metrics(
             reviews={
-                "executive_summary": ReviewMetrics(
-                    output_chars=100, output_words=20, generation_time_seconds=1.0
-                ),
-                "translation_zh": ReviewMetrics(
-                    output_chars=50, output_words=10, generation_time_seconds=0.5
-                ),
+                "executive_summary": ReviewMetrics(output_chars=100, output_words=20, generation_time_seconds=1.0),
+                "translation_zh": ReviewMetrics(output_chars=50, output_words=10, generation_time_seconds=0.5),
             }
         )
         # Should not raise

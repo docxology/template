@@ -1,6 +1,5 @@
 """Tests for infrastructure.rendering._pdf_figure_paths — comprehensive coverage."""
 
-
 from infrastructure.rendering._pdf_figure_paths import (
     _normalize_path,
     _extract_filename,

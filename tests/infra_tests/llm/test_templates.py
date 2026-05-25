@@ -1,4 +1,5 @@
 """Tests for templates module."""
+
 import pytest
 
 from infrastructure.llm.templates import (
@@ -179,22 +180,26 @@ class TestAllRegisteredTemplates:
     @pytest.mark.parametrize("key", _ALL_KEYS)
     def test_template_instantiates(self, key: str) -> None:
         from infrastructure.llm.templates import get_template, ResearchTemplate
+
         t = get_template(key)
         assert isinstance(t, ResearchTemplate)
 
     @pytest.mark.parametrize("key", _ALL_KEYS)
     def test_template_has_non_empty_str(self, key: str) -> None:
         from infrastructure.llm.templates import TEMPLATES
+
         t = TEMPLATES[key]()
         assert t.template_str, f"{key} has an empty template_str"
 
     def test_all_keys_present_in_registry(self) -> None:
         from infrastructure.llm.templates import TEMPLATES
+
         for key in self._ALL_KEYS:
             assert key in TEMPLATES, f"Key '{key}' missing from TEMPLATES registry"
 
     def test_registry_contains_no_extra_unknown_classes(self) -> None:
         from infrastructure.llm.templates import TEMPLATES, ResearchTemplate
+
         for name, cls in TEMPLATES.items():
             assert issubclass(cls, ResearchTemplate), f"{name} is not a ResearchTemplate subclass"
 

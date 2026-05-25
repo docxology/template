@@ -124,7 +124,7 @@ uv run python scripts/03_render_pdf.py --project template_prose_project
 
 | Module | Role |
 |---|---|
-| `infrastructure/rendering/pdf_renderer.py` | Orchestrates Pandoc → pdflatex pipeline |
+| `infrastructure/rendering/pdf_renderer.py` | Orchestrates Pandoc → XeLaTeX pipeline |
 | `infrastructure/rendering/_pdf_latex_helpers.py` | LaTeX package validation and preamble injection |
 | `infrastructure/rendering/manuscript_discovery.py` | Discovers and orders manuscript section files |
 | `infrastructure/core/config/loader.py` | Reads `manuscript/config.yaml` for title, authors, metadata |
@@ -132,7 +132,7 @@ uv run python scripts/03_render_pdf.py --project template_prose_project
 **Outputs**:
 - `projects/template_prose_project/output/pdf/template_prose_project_combined.pdf`
   — final publication PDF (working copy).
-- `projects/template_prose_project/output/tex/` — LaTeX intermediates
+- `projects/template_prose_project/output/pdf/_combined_manuscript.*` — LaTeX intermediates
   (`.tex`, `.aux`, `.log`).
 - `projects/template_prose_project/output/slides/` — per-section Beamer slide
   PDFs.
@@ -192,7 +192,7 @@ grep -r "{{" projects/template_prose_project/output/manuscript/ | grep -v ".json
 
 ### BibTeX citation error / PDF fails to compile
 
-**Symptom**: pdflatex exits with a BibTeX error or undefined citation key.
+**Symptom**: XeLaTeX exits with a BibTeX error or undefined citation key.
 
 **Cause**: Either a malformed entry in `manuscript/references.bib`
 (unclosed braces, duplicate keys, missing required fields) or a `[@key]`

@@ -94,14 +94,18 @@ class TestScoreTier:
 
 class TestCalculateProjectHealthScore:
     def test_perfect_project(self):
-        p = _make_project(coverage=95, total_tests=200, failed=0, words=5000, pdf_files=5, figures=5, slides=2, web_outputs=2)
+        p = _make_project(
+            coverage=95, total_tests=200, failed=0, words=5000, pdf_files=5, figures=5, slides=2, web_outputs=2
+        )
         score = calculate_project_health_score(p)
         assert score["score"] == 100  # 40 + 30 + 20 + 10
         assert score["grade"] == "A"
         assert score["status"] == "Excellent"
 
     def test_poor_project(self):
-        p = _make_project(coverage=50, total_tests=10, failed=5, words=100, pdf_files=0, figures=0, slides=0, web_outputs=0)
+        p = _make_project(
+            coverage=50, total_tests=10, failed=5, words=100, pdf_files=0, figures=0, slides=0, web_outputs=0
+        )
         score = calculate_project_health_score(p)
         assert score["grade"] == "F"
         assert score["score"] == 0
@@ -128,7 +132,9 @@ class TestCalculateProjectHealthScore:
 
     def test_grade_boundaries(self):
         # Test D grade (60-70)
-        p = _make_project(coverage=75, total_tests=100, failed=5, words=600, pdf_files=1, figures=1, slides=0, web_outputs=0)
+        p = _make_project(
+            coverage=75, total_tests=100, failed=5, words=600, pdf_files=1, figures=1, slides=0, web_outputs=0
+        )
         score = calculate_project_health_score(p)
         assert score["grade"] in ("A", "B", "C", "D", "F")
 
@@ -234,7 +240,10 @@ class TestGenerateRecommendations:
         assert any("Excellent" in r for r in recs)
 
     def test_portfolio_poor(self):
-        projects = [_make_project("a", coverage=50, words=100, total_tests=10, failed=5,
-                                  pdf_files=0, figures=0, slides=0, web_outputs=0)]
+        projects = [
+            _make_project(
+                "a", coverage=50, words=100, total_tests=10, failed=5, pdf_files=0, figures=0, slides=0, web_outputs=0
+            )
+        ]
         recs = generate_recommendations(projects)
         assert any("requires attention" in r for r in recs)

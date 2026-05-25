@@ -111,20 +111,24 @@ class TestParseCoverageJson:
 class TestParseCoverageJsonFromCoverageJsonParser:
     def test_basic_parsing(self, tmp_path):
         cov_file = tmp_path / "coverage.json"
-        cov_file.write_text(json.dumps({
-            "files": {
-                "module_a.py": {
-                    "executed_lines": [1, 2, 3, 4, 5],
-                    "missing_lines": [6, 7],
-                    "excluded_lines": [8],
-                },
-                "module_b.py": {
-                    "executed_lines": [1, 2, 3],
-                    "missing_lines": [],
-                    "excluded_lines": [],
-                },
-            }
-        }))
+        cov_file.write_text(
+            json.dumps(
+                {
+                    "files": {
+                        "module_a.py": {
+                            "executed_lines": [1, 2, 3, 4, 5],
+                            "missing_lines": [6, 7],
+                            "excluded_lines": [8],
+                        },
+                        "module_b.py": {
+                            "executed_lines": [1, 2, 3],
+                            "missing_lines": [],
+                            "excluded_lines": [],
+                        },
+                    }
+                }
+            )
+        )
         result = parse_coverage_json(cov_file)
         assert result is not None
         assert result["total_executed"] == 8
@@ -165,15 +169,19 @@ class TestParseCoverageJsonFromCoverageJsonParser:
 
     def test_file_with_zero_lines(self, tmp_path):
         cov_file = tmp_path / "coverage.json"
-        cov_file.write_text(json.dumps({
-            "files": {
-                "empty.py": {
-                    "executed_lines": [],
-                    "missing_lines": [],
-                    "excluded_lines": [],
+        cov_file.write_text(
+            json.dumps(
+                {
+                    "files": {
+                        "empty.py": {
+                            "executed_lines": [],
+                            "missing_lines": [],
+                            "excluded_lines": [],
+                        }
+                    }
                 }
-            }
-        }))
+            )
+        )
         result = parse_coverage_json(cov_file)
         assert result is not None
         assert result["file_coverage"]["empty.py"]["coverage_percent"] == 0.0

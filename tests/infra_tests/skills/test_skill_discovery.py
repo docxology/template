@@ -169,9 +169,7 @@ class TestTemplateRepository:
         missing = [
             path.name
             for path in sorted((root / "infrastructure").iterdir())
-            if path.is_dir()
-            and (path / "__init__.py").is_file()
-            and not (path / "SKILL.md").is_file()
+            if path.is_dir() and (path / "__init__.py").is_file() and not (path / "SKILL.md").is_file()
         ]
         assert missing == []
 
@@ -243,12 +241,7 @@ class TestCliModule:
             encoding="utf-8",
         )
         out = tmp_path / "custom_manifest.json"
-        assert (
-            skills_cli_main(
-                ["write", "--repo-root", str(tmp_path), "--output", str(out)]
-            )
-            == 0
-        )
+        assert skills_cli_main(["write", "--repo-root", str(tmp_path), "--output", str(out)]) == 0
         assert out.is_file()
         ok, msg = manifest_matches_discovery(tmp_path, out)
         assert ok, msg
@@ -261,12 +254,7 @@ class TestCliModule:
         )
         out = tmp_path / "skills.md"
 
-        assert (
-            skills_cli_main(
-                ["write-index", "--repo-root", str(tmp_path), "--output", str(out)]
-            )
-            == 0
-        )
+        assert skills_cli_main(["write-index", "--repo-root", str(tmp_path), "--output", str(out)]) == 0
 
         text = out.read_text(encoding="utf-8")
         assert "| `pkg-s` | `infrastructure/pkg/SKILL.md` | P |" in text
@@ -285,9 +273,7 @@ class TestCliModule:
         ok, msg = manifest_matches_discovery(tmp_path, manifest)
         assert ok is False
         assert "out of date" in msg.lower()
-        code = skills_cli_main(
-            ["check", "--repo-root", str(tmp_path), "--manifest", str(manifest)]
-        )
+        code = skills_cli_main(["check", "--repo-root", str(tmp_path), "--manifest", str(manifest)])
         assert code == 1
 
     def test_check_exit_zero(self) -> None:

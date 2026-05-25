@@ -1,6 +1,5 @@
 """Tests for infrastructure.validation.repo._repo_documented_commands — coverage."""
 
-
 from infrastructure.validation.repo._repo_documented_commands import (
     _candidate_script_paths,
     check_documented_commands,

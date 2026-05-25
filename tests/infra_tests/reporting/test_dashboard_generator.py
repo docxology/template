@@ -35,9 +35,7 @@ def sample_projects():
     """Create sample project metrics for testing."""
     project1 = ProjectMetrics(
         name="project1",
-        manuscript=ManuscriptMetrics(
-            total_words=1000, sections=4, equations=10, figures=5, references=20
-        ),
+        manuscript=ManuscriptMetrics(total_words=1000, sections=4, equations=10, figures=5, references=20),
         codebase=CodebaseMetrics(source_lines=500, methods=25, classes=5, scripts=3),
         tests=TestMetrics(
             total_tests=100,
@@ -67,9 +65,7 @@ def sample_projects():
 
     project2 = ProjectMetrics(
         name="project2",
-        manuscript=ManuscriptMetrics(
-            total_words=800, sections=3, equations=8, figures=4, references=15
-        ),
+        manuscript=ManuscriptMetrics(total_words=800, sections=3, equations=8, figures=4, references=15),
         codebase=CodebaseMetrics(source_lines=400, methods=20, classes=4, scripts=2),
         tests=TestMetrics(
             total_tests=80,
@@ -220,7 +216,6 @@ class TestChartGeneration:
         import matplotlib.pyplot as plt
 
         plt.close(fig)
-
 
     def test_compose_grid_builds_nine_panels(self, sample_summary):
         """Smoke test for dashboard grid composition."""

@@ -1,6 +1,6 @@
 # Output Directory Conventions
 
-The `output/` directory holds all generated artifacts from the analysis pipeline. This document describes its structure, regeneration process, and version-control policy.
+The project-relative `output/` directory (`projects/template_code_project/output/`) holds all generated artifacts from the analysis pipeline. This document describes its structure, regeneration process, and version-control policy.
 
 ## Directory Purpose
 
@@ -23,7 +23,6 @@ flowchart TB
     OUT --> PDF[/pdf/<br/>Final compiled PDF · Pandoc + LaTeX/]
     OUT --> WEB[/web/<br/>HTML version of the manuscript/]
     OUT --> SLIDES[/slides/<br/>Beamer slide PDFs per section/]
-    OUT --> TEX[/tex/<br/>Intermediate LaTeX files/]
     OUT --> CIT[/citations/<br/>Generated citations · APA/BibTeX/MLA/]
     OUT --> LOG[/logs/<br/>Pipeline execution logs/]
     OUT --> MAN[/manuscript/<br/>Token-substituted markdown · renderer input/]
@@ -31,14 +30,14 @@ flowchart TB
     OUT --> LLM[/llm/<br/>LLM-generated content · if used/]
 
     FIG --> FIG_F[convergence_plot · step_size_sensitivity ·<br/>convergence_rate_comparison · algorithm_complexity ·<br/>performance_benchmark · stability_analysis]
-    DATA --> DATA_F[optimization_results.csv ·<br/>manuscript_variables.json ·<br/>stability_analysis.json · performance_benchmark.json · ...]
-    REP --> REP_F[output_statistics.json · validation_report.json · telemetry.json]
+    DATA --> DATA_F[optimization_results.csv ·<br/>manuscript_variables.json · ...]
+    REP --> REP_F[stability_analysis.json · performance_benchmark.json ·<br/>output_statistics.json · validation_report.json · telemetry.json]
     PDF --> PDF_F[template_code_project_combined.pdf]
     WEB --> WEB_F[dashboard.html · index.html · section pages...]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
-    class OUT,FIG,DATA,REP,PDF,WEB,SLIDES,TEX,CIT,LOG,MAN,SIM,LLM d
+    class OUT,FIG,DATA,REP,PDF,WEB,SLIDES,CIT,LOG,MAN,SIM,LLM d
     class FIG_F,DATA_F,REP_F,PDF_F,WEB_F f
 ```
 
@@ -67,7 +66,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
    ```bash
    uv run python scripts/03_render_pdf.py --project template_code_project
    ```
-   **Outputs**: `pdf/`, `slides/`, `web/`, `tex/`
+   **Outputs**: `pdf/`, `slides/`, `web/`
 
 5. **Copy final deliverables** — copies PDF and figures to `output/template_code_project/` (used by CI).
    ```bash
@@ -77,7 +76,7 @@ If any artifact becomes corrupted or you change the analysis, follow this sequen
 
 ## Version-Control Policy
 
-- **`output/` is gitignored** (`**/projects/*/output/` in `.gitignore`). Committed outputs are exceptional: the control-positive exemplar (`template_code_project`) may retain a curated subset (PDF, figures) to demonstrate successful pipeline execution. Delete and regenerate anytime.
+- **Project `output/` is gitignored** (`**/projects/*/output/` in `.gitignore`). Curated public deliverables are copied to the repo-level `output/template_code_project/` tree by `scripts/05_copy_outputs.py`; do not commit files from `projects/template_code_project/output/`.
 
 - **Do not edit files in `output/` manually** — changes will be overwritten on the next pipeline run.
 

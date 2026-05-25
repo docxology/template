@@ -38,10 +38,7 @@ def run_command(cmd: list[str], cwd: Path | None = None) -> subprocess.Completed
     """Run a shell command and raise on failure."""
     result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
     if result.returncode != 0:
-        raise RuntimeError(
-            f"Command failed: {' '.join(cmd)}\n"
-            f"STDOUT: {result.stdout}\nSTDERR: {result.stderr}"
-        )
+        raise RuntimeError(f"Command failed: {' '.join(cmd)}\nSTDOUT: {result.stdout}\nSTDERR: {result.stderr}")
     return result
 
 

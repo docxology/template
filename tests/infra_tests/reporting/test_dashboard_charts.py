@@ -1,6 +1,7 @@
 """Tests for infrastructure.reporting._dashboard_charts — comprehensive coverage."""
 
 import matplotlib
+
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
@@ -21,9 +22,20 @@ from infrastructure.reporting._executive_models import (
 )
 
 
-def _make_project(name, words=5000, equations=10, figures=5, references=20,
-                   tests=50, coverage=85.0, duration=30.0, pdf_files=2,
-                   pdf_size=1.5, execution_time=10.0, sections=8):
+def _make_project(
+    name,
+    words=5000,
+    equations=10,
+    figures=5,
+    references=20,
+    tests=50,
+    coverage=85.0,
+    duration=30.0,
+    pdf_files=2,
+    pdf_size=1.5,
+    execution_time=10.0,
+    sections=8,
+):
     return ProjectMetrics(
         name=name,
         manuscript=ManuscriptMetrics(
@@ -59,12 +71,15 @@ def _make_project(name, words=5000, equations=10, figures=5, references=20,
 
 def _make_projects():
     return [
-        _make_project("project_a", words=10000, equations=20, figures=8, references=40,
-                       tests=100, coverage=92.0, duration=45.0),
-        _make_project("project_b", words=5000, equations=5, figures=3, references=15,
-                       tests=40, coverage=78.0, duration=20.0),
-        _make_project("project_c", words=15000, equations=30, figures=12, references=60,
-                       tests=80, coverage=88.0, duration=60.0),
+        _make_project(
+            "project_a", words=10000, equations=20, figures=8, references=40, tests=100, coverage=92.0, duration=45.0
+        ),
+        _make_project(
+            "project_b", words=5000, equations=5, figures=3, references=15, tests=40, coverage=78.0, duration=20.0
+        ),
+        _make_project(
+            "project_c", words=15000, equations=30, figures=12, references=60, tests=80, coverage=88.0, duration=60.0
+        ),
     ]
 
 

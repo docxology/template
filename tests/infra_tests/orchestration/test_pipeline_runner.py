@@ -52,9 +52,7 @@ class _StubExecutor:
 @pytest.fixture
 def patched_runner(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> PipelineRunner:
     """A PipelineRunner with a stubbed executor (heavy IO not needed for these tests)."""
-    monkeypatch.setattr(
-        "infrastructure.orchestration.pipeline_runner.PipelineExecutor", _StubExecutor
-    )
+    monkeypatch.setattr("infrastructure.orchestration.pipeline_runner.PipelineExecutor", _StubExecutor)
     return PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
 
 
@@ -70,9 +68,7 @@ def test_run_full_pipeline_emits_banners(patched_runner: PipelineRunner) -> None
 
 
 def test_run_core_only_excludes_llm_banners(patched_runner: PipelineRunner) -> None:
-    rc = patched_runner.run(
-        PipelineInvocation(project="template_code_project", core_only=True)
-    )
+    rc = patched_runner.run(PipelineInvocation(project="template_code_project", core_only=True))
     assert rc == 0
     text = patched_runner.stream.getvalue()
     assert "CORE PIPELINE" in text
@@ -83,9 +79,7 @@ def test_run_core_only_excludes_llm_banners(patched_runner: PipelineRunner) -> N
 
 
 def test_run_skip_infra_omits_infra_banner(patched_runner: PipelineRunner) -> None:
-    patched_runner.run(
-        PipelineInvocation(project="template_code_project", skip_infra=True)
-    )
+    patched_runner.run(PipelineInvocation(project="template_code_project", skip_infra=True))
     text = patched_runner.stream.getvalue()
     assert "Infrastructure Tests" not in text
     # Project Tests still present
@@ -94,20 +88,11 @@ def test_run_skip_infra_omits_infra_banner(patched_runner: PipelineRunner) -> No
 
 def test_run_writes_log_file(patched_runner: PipelineRunner, fake_repo: Path) -> None:
     patched_runner.run(PipelineInvocation(project="template_code_project"))
-    log = (
-        fake_repo
-        / "projects"
-        / "template_code_project"
-        / "output"
-        / "logs"
-        / "pipeline.log"
-    )
+    log = fake_repo / "projects" / "template_code_project" / "output" / "logs" / "pipeline.log"
     assert log.exists()
 
 
-def test_run_returns_failure_on_exception(
-    monkeypatch: pytest.MonkeyPatch, fake_repo: Path
-) -> None:
+def test_run_returns_failure_on_exception(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> None:
     class _BoomExecutor:
         def __init__(self, config):
             pass
@@ -115,18 +100,14 @@ def test_run_returns_failure_on_exception(
         def execute_full_pipeline(self):
             raise RuntimeError("boom")
 
-    monkeypatch.setattr(
-        "infrastructure.orchestration.pipeline_runner.PipelineExecutor", _BoomExecutor
-    )
+    monkeypatch.setattr("infrastructure.orchestration.pipeline_runner.PipelineExecutor", _BoomExecutor)
     runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
     rc = runner.run(PipelineInvocation(project="template_code_project"))
     assert rc == 1
     assert "FAILED" in runner.stream.getvalue()
 
 
-def test_run_returns_failure_when_stage_unsuccessful(
-    monkeypatch: pytest.MonkeyPatch, fake_repo: Path
-) -> None:
+def test_run_returns_failure_when_stage_unsuccessful(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> None:
     class _FailingExecutor:
         def __init__(self, config):
             pass
@@ -137,15 +118,14 @@ def test_run_returns_failure_when_stage_unsuccessful(
         def execute_core_pipeline(self):
             return [_FakeStageResult(False)]
 
-    monkeypatch.setattr(
-        "infrastructure.orchestration.pipeline_runner.PipelineExecutor", _FailingExecutor
-    )
+    monkeypatch.setattr("infrastructure.orchestration.pipeline_runner.PipelineExecutor", _FailingExecutor)
     runner = PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
     rc = runner.run(PipelineInvocation(project="template_code_project"))
     assert rc == 1
 
 
 # --- Multi-project ---------------------------------------------------------
+
 
 class _StubMulti:
     last_instance: "_StubMulti | None" = None
@@ -187,11 +167,7 @@ class _StubMulti:
         project_results: dict[str, list[Any]] = {}
         for i, n in enumerate(names):
             project_results[n] = [ok, bad] if i == 0 else [ok]
-        successes = sum(
-            1
-            for n in names
-            if project_results[n] and all(s.success for s in project_results[n])
-        )
+        successes = sum(1 for n in names if project_results[n] and all(s.success for s in project_results[n]))
         return MultiProjectResult(
             project_results=project_results,
             successful_projects=successes,
@@ -217,12 +193,8 @@ class _StubMulti:
 
 
 @pytest.fixture
-def patched_multi_runner(
-    monkeypatch: pytest.MonkeyPatch, fake_repo: Path
-) -> PipelineRunner:
-    monkeypatch.setattr(
-        "infrastructure.orchestration.pipeline_runner.MultiProjectOrchestrator", _StubMulti
-    )
+def patched_multi_runner(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> PipelineRunner:
+    monkeypatch.setattr("infrastructure.orchestration.pipeline_runner.MultiProjectOrchestrator", _StubMulti)
     return PipelineRunner(repo_root=fake_repo, stream=io.StringIO())
 
 
@@ -243,16 +215,12 @@ def test_run_multi_no_infra(patched_multi_runner: PipelineRunner) -> None:
 
 
 def test_run_multi_core_no_infra(patched_multi_runner: PipelineRunner) -> None:
-    patched_multi_runner.run_multi(
-        MultiProjectInvocation(skip_infra=True, skip_llm=True)
-    )
+    patched_multi_runner.run_multi(MultiProjectInvocation(skip_infra=True, skip_llm=True))
     assert _StubMulti.last_instance.calls == ["core_no_infra"]
 
 
 def test_run_multi_emits_succeeded_project_names(patched_multi_runner: PipelineRunner) -> None:
-    patched_multi_runner.run_multi(
-        MultiProjectInvocation(skip_infra=True, skip_llm=True)
-    )
+    patched_multi_runner.run_multi(MultiProjectInvocation(skip_infra=True, skip_llm=True))
     text = patched_multi_runner.stream.getvalue()
     assert "Succeeded:" in text
     assert "template_code_project" in text
@@ -265,9 +233,7 @@ class _StubMultiOneFail(_StubMulti):
         return self._one_failure()
 
 
-def test_run_multi_emits_failure_detail(
-    monkeypatch: pytest.MonkeyPatch, fake_repo: Path
-) -> None:
+def test_run_multi_emits_failure_detail(monkeypatch: pytest.MonkeyPatch, fake_repo: Path) -> None:
     monkeypatch.setattr(
         "infrastructure.orchestration.pipeline_runner.MultiProjectOrchestrator",
         _StubMultiOneFail,

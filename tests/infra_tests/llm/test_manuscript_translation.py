@@ -44,9 +44,7 @@ class TestManuscriptTranslationAbstract:
 
     def test_render_with_max_tokens(self):
         template = ManuscriptTranslationAbstract()
-        result = template.render(
-            text="Abstract content.", target_language="Hindi", max_tokens=1500
-        )
+        result = template.render(text="Abstract content.", target_language="Hindi", max_tokens=1500)
         assert isinstance(result, str)
         assert len(result) > 0
 

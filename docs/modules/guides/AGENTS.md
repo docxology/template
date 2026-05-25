@@ -12,6 +12,8 @@ Focused guides for specific infrastructure modules. These documents supplement:
 | File | Purpose |
 | --- | --- |
 | `README.md` | Index for per-module guides |
+| `autoresearch-module.md` | Deterministic readiness planning |
+| `benchmark-module.md` | Public exemplar benchmark manifests |
 | `config-module.md` | Configuration schemas / templates |
 | `core-module.md` | Core utilities |
 | `docker-module.md` | Docker / compose |
@@ -23,6 +25,11 @@ Focused guides for specific infrastructure modules. These documents supplement:
 | `rendering-module.md` | Rendering |
 | `reporting-module.md` | Reporting |
 | `scientific-module.md` | Scientific computing |
+| `search-module.md` | Literature discovery |
 | `skills-module.md` | Skills manifest |
 | `steganography-module.md` | Steganography |
 | `validation-module.md` | Validation (PDF, markdown, CLI) |
+| `doctor-module.md` | Repository health diagnostics |
+| `orchestration-module.md` | Pipeline CLI and menus |
+| `prose-module.md` | Readability and editorial heuristics |
+| `reference-module.md` | BibTeX and citation utilities |

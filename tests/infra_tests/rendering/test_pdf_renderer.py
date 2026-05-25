@@ -638,6 +638,7 @@ class TestModuleLevel:
             generate_title_page_preamble,
             generate_title_page_body,
         )
+
         assert callable(combine_manuscript_markdown_sections)
         assert callable(process_bibliography)
         assert callable(extract_preamble)
@@ -1006,6 +1007,8 @@ class TestFixMathDelimitersAdditional:
         result = fix_math_delimiters(tex_content)
 
         assert result == tex_content
+
+
 class TestPDFRendererClass:
     """Test PDFRenderer class using real implementations."""
 
@@ -1410,9 +1413,7 @@ class TestLatexCompilationFromPdfRenderer:
         tex.write_text("\\documentclass{article}\\begin{document}Hello\\end{document}")
 
         if hasattr(pdf_renderer, "compile_latex") or hasattr(pdf_renderer, "compile_tex"):
-            compile_func = getattr(pdf_renderer, "compile_latex", None) or getattr(
-                pdf_renderer, "compile_tex", None
-            )
+            compile_func = getattr(pdf_renderer, "compile_latex", None) or getattr(pdf_renderer, "compile_tex", None)
 
             try:
                 result = compile_func(str(tex))

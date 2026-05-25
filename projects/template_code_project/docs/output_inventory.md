@@ -3,10 +3,12 @@
 > Every file in `output/` is **disposable but regeneratable**. This document
 > is the contract between the pipeline and the manuscript: it inventories
 > what the pipeline produces, which generator emits it, and which stage it
-> lands in. It lives under `docs/` (not `output/`) because the repo-root
-> `.gitignore` excludes `output/` for the confidentiality-invariant fence;
-> the inventory itself, though, is documentation of the producer/consumer
-> graph that future agents and forkers need.
+> lands in. It lives under `docs/` (not project `output/`) because
+> `projects/*/output/` is gitignored; the inventory itself, though, is
+> documentation of the producer/consumer graph that future agents and
+> forkers need.
+
+Paths in the table are relative to `projects/template_code_project/`.
 
 ## File Inventory
 
@@ -20,21 +22,20 @@
 | `output/figures/stability_analysis.png` | Stability heat map | `src/figures.py::generate_stability_visualization()` | 4 — Run Analysis |
 | `output/data/optimization_results.csv` | Per-step-size results table | `save_optimization_results()` in `src/analysis.py` | 4 — Run Analysis |
 | `output/data/manuscript_variables.json` | `{TOKEN: value}` substitution map | `scripts/z_generate_manuscript_variables.py` (calls `src/manuscript_variables.py::generate_variables`) | 4 — Run Analysis (post-stage) |
-| `output/data/stability_analysis.json` | Stability assessment numbers | `run_stability_analysis()` in `src/analysis.py` | 4 — Run Analysis |
-| `output/data/performance_benchmark.json` | Performance benchmark numbers | `run_performance_benchmarking()` in `src/analysis.py` | 4 — Run Analysis |
+| `output/reports/stability_analysis.json` | Stability assessment numbers | `run_stability_analysis()` in `src/analysis.py` | 4 — Run Analysis |
+| `output/reports/performance_benchmark.json` | Performance benchmark numbers | `run_performance_benchmarking()` in `src/analysis.py` | 4 — Run Analysis |
 | `output/web/dashboard.html` | Plotly interactive dashboard | `build_dashboard.py` / `src/dashboard.py` | 4 — Run Analysis |
 | `output/reports/output_statistics.json` | Output stats inventory | `infrastructure.reporting.collect_output_statistics` | 4 — Run Analysis |
 | `output/reports/validation_report.json` | Pipeline validation summary | `infrastructure.validation.verify_output_integrity` | 6 — Validate Output |
 | `output/manuscript/*.md` | Token-substituted manuscript sections (renderer input) | `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree` called from `scripts/z_generate_manuscript_variables.py` | 4 — Run Analysis (post-stage) |
 | `output/citations/*.{bib,apa,mla}` | Citation metadata in 3 formats | `generate_citations_from_metadata()` in `src/analysis.py` | 4 — Run Analysis |
-| `output/pdf/template_code_project_combined.pdf` | Final combined publication PDF | `infrastructure/rendering/pdf_renderer.py` via `scripts/03_render_pdf.py` | 5 — Render PDF |
-| `output/pdf/<section>.pdf` | Per-section PDFs | `infrastructure/rendering/pdf_renderer.py` | 5 — Render PDF |
+| `output/pdf/template_code_project_combined.pdf` | Working combined publication PDF | `infrastructure/rendering/pdf_renderer.py` via `scripts/03_render_pdf.py` | 5 — Render PDF |
 | `output/slides/<section>.pdf` | Per-section Beamer slides (no Mermaid → no Chrome required) | `infrastructure/rendering/pdf_renderer.py` | 5 — Render PDF |
 | `output/web/*.html` | HTML version of each section | `infrastructure/rendering` | 5 — Render PDF |
-| `output/tex/_combined_manuscript.{tex,aux,log}` | LaTeX intermediates | `xelatex` via Pandoc | 5 — Render PDF |
+| `output/pdf/_combined_manuscript.{tex,aux,log}` | LaTeX intermediates | `xelatex` via Pandoc | 5 — Render PDF |
 | `output/logs/*.log` | Per-stage pipeline logs | `scripts/execute_pipeline.py` | every stage |
 
-The repo-level `output/template_code_project/` (a sibling of this directory, written by `scripts/05_copy_outputs.py` at stage 9) is the **public-facing deliverables tree** consumed by CI artifact upload and the multi-project executive report — the `pdf/` and `figures/` subsets that get promoted.
+The repo-level `output/template_code_project/` (written by `scripts/05_copy_outputs.py` at stage 9) is the **public-facing deliverables tree** consumed by CI artifact upload and the multi-project executive report.
 
 ## Adding a New Output File
 
@@ -60,7 +61,7 @@ uv run python projects/template_code_project/scripts/optimization_analysis.py
 # 3. Hydrate manuscript variables (produces output/manuscript/ + output/data/manuscript_variables.json)
 uv run python projects/template_code_project/scripts/z_generate_manuscript_variables.py
 
-# 4. Render PDF (produces pdf/, slides/, web/, tex/)
+# 4. Render PDF (produces pdf/, slides/, web/)
 uv run python scripts/03_render_pdf.py --project template_code_project
 
 # 5. Copy final deliverables to repo-level output/ (stage 9)

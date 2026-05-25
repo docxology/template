@@ -8,7 +8,16 @@ from typing import Any
 
 import yaml
 
-from infrastructure.autoresearch import AutoResearchPlan, parse_string_sequence
+from infrastructure.autoresearch import (
+    AutoResearchPlan,
+    BenchmarkTask,
+    BudgetPolicy,
+    EvidenceLink,
+    ExperimentCandidate,
+    ResearchIdea,
+    ReviewGate,
+    parse_string_sequence,
+)
 
 
 @dataclass(frozen=True)
@@ -47,16 +56,28 @@ class AutoResearchLoopConfig:
     loop_stages: tuple[str, ...]
     required_artifacts: tuple[str, ...]
     quality_checks: tuple[str, ...]
+    autonomy_level: str = "proposal_only"
+    budget_policy: BudgetPolicy = BudgetPolicy()
+    edit_allowlist: tuple[str, ...] = ()
+    acceptance_policy: str = ""
+    review_gates: tuple[ReviewGate, ...] = ()
+    benchmark_tasks: tuple[BenchmarkTask, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         """Serialize to a JSON-safe mapping."""
         return {
             "topic": self.topic,
+            "autonomy_level": self.autonomy_level,
             "review_policy": self.review_policy,
             "research_questions": [question.to_dict() for question in self.research_questions],
             "loop_stages": list(self.loop_stages),
             "required_artifacts": list(self.required_artifacts),
             "quality_checks": list(self.quality_checks),
+            "budget_policy": self.budget_policy.to_dict(),
+            "edit_allowlist": list(self.edit_allowlist),
+            "acceptance_policy": self.acceptance_policy,
+            "review_gates": [gate.to_dict() for gate in self.review_gates],
+            "benchmark_tasks": [task.to_dict() for task in self.benchmark_tasks],
         }
 
 
@@ -83,11 +104,17 @@ def build_loop_config(plan: AutoResearchPlan, settings: ManuscriptLoopSettings) 
     """Merge plan metadata with manuscript loop settings."""
     return AutoResearchLoopConfig(
         topic=plan.config.topic,
+        autonomy_level=plan.config.autonomy_level,
         review_policy=settings.review_policy,
         research_questions=settings.research_questions,
         loop_stages=settings.loop_stages,
         required_artifacts=plan.required_artifacts,
         quality_checks=plan.quality_checks,
+        budget_policy=plan.config.budget_policy,
+        edit_allowlist=plan.config.edit_allowlist,
+        acceptance_policy=plan.config.acceptance_policy,
+        review_gates=plan.config.review_gates,
+        benchmark_tasks=plan.config.benchmark_tasks,
     )
 
 
@@ -131,3 +158,84 @@ def _parse_questions(raw: Any) -> tuple[ResearchQuestion, ...]:
             )
         )
     return tuple(questions)
+
+
+def load_seed_ideas(project_root: Path) -> tuple[ResearchIdea, ...]:
+    """Load file-backed seed ideas for the bounded exemplar campaign."""
+    payload = _load_yaml(project_root / "seed_ideas.yaml")
+    raw_ideas = payload.get("ideas", [])
+    if not isinstance(raw_ideas, list):
+        raise ValueError("seed_ideas.yaml ideas must be a list")
+    ideas: list[ResearchIdea] = []
+    for row in raw_ideas:
+        if not isinstance(row, dict):
+            raise ValueError("seed idea entries must be mappings")
+        identifier = str(row.get("id", "") or "").strip()
+        title = str(row.get("title", "") or "").strip()
+        rationale = str(row.get("rationale", "") or "").strip()
+        status = str(row.get("status", "") or "").strip()
+        if not identifier or not title or not rationale or not status:
+            raise ValueError("seed ideas must declare id, title, rationale, and status")
+        ideas.append(
+            ResearchIdea(
+                identifier=identifier,
+                title=title,
+                rationale=rationale,
+                status=status,
+                evidence_links=_parse_evidence_links(row.get("evidence_links", []), default_claim_id=identifier),
+            )
+        )
+    return tuple(ideas)
+
+
+def load_experiment_candidates(project_root: Path) -> tuple[ExperimentCandidate, ...]:
+    """Load candidate experiments nested under seed ideas."""
+    payload = _load_yaml(project_root / "seed_ideas.yaml")
+    raw_ideas = payload.get("ideas", [])
+    if not isinstance(raw_ideas, list):
+        return ()
+    candidates: list[ExperimentCandidate] = []
+    for idea in raw_ideas:
+        if not isinstance(idea, dict):
+            continue
+        idea_id = str(idea.get("id", "") or "")
+        raw_candidates = idea.get("candidates", [])
+        if not isinstance(raw_candidates, list):
+            continue
+        for row in raw_candidates:
+            if not isinstance(row, dict):
+                continue
+            candidates.append(
+                ExperimentCandidate(
+                    identifier=str(row.get("id", "") or ""),
+                    idea_id=idea_id,
+                    status=str(row.get("status", "") or ""),
+                    metric_name=str(row.get("metric_name", "") or ""),
+                    metric_direction=str(row.get("metric_direction", "maximize") or "maximize"),
+                    touched_paths=parse_string_sequence(row.get("touched_paths"), default=()),
+                    expected_artifacts=parse_string_sequence(row.get("expected_artifacts"), default=()),
+                )
+            )
+    return tuple(candidate for candidate in candidates if candidate.identifier)
+
+
+def _parse_evidence_links(raw: Any, *, default_claim_id: str) -> tuple[EvidenceLink, ...]:
+    if raw is None:
+        return ()
+    if not isinstance(raw, list):
+        raise ValueError("evidence_links must be a list")
+    links: list[EvidenceLink] = []
+    for row in raw:
+        if not isinstance(row, dict):
+            raise ValueError("evidence link entries must be mappings")
+        evidence_path = str(row.get("evidence_path", "") or "").strip()
+        if not evidence_path:
+            continue
+        links.append(
+            EvidenceLink(
+                claim_id=str(row.get("claim_id", default_claim_id) or default_claim_id),
+                evidence_path=evidence_path,
+                evidence_type=str(row.get("evidence_type", "artifact") or "artifact"),
+            )
+        )
+    return tuple(links)

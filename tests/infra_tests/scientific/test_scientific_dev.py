@@ -318,9 +318,7 @@ class TestPerformanceReporting:
         results = [
             BenchmarkResult("func1", 0.001, 10.5, 100, {}, "Fast function", "2024-01-01 10:00:00"),
             BenchmarkResult("func2", 0.010, 25.0, 100, {}, "Slow function", "2024-01-01 10:00:01"),
-            BenchmarkResult(
-                "func3", 0.005, 15.2, 100, {}, "Medium function", "2024-01-01 10:00:02"
-            ),
+            BenchmarkResult("func3", 0.005, 15.2, 100, {}, "Medium function", "2024-01-01 10:00:02"),
         ]
 
         report = generate_performance_report(results)
@@ -449,9 +447,7 @@ class TestPerformanceRecommendations:
 
         results = [
             # Memory-intensive function (> 100MB)
-            BenchmarkResult(
-                "memory_hog", 0.01, 150.0, 100, {}, "Memory hog", "2024-01-01 10:00:00"
-            ),
+            BenchmarkResult("memory_hog", 0.01, 150.0, 100, {}, "Memory hog", "2024-01-01 10:00:00"),
             # Very memory-intensive function
             BenchmarkResult(
                 "memory_hog2",

@@ -30,7 +30,7 @@ High-signal behavioral anchors:
 
 1. **`test-infra`** — `uv sync --group rendering --group monitoring`; Ubuntu + macOS × Python 3.10–3.12; **≥ 60 %** on `infrastructure/`. pytest uses **`continue-on-error: true` on macOS**; treat **Ubuntu matrix legs as the authoritative merge gate**.
 2. **`test-project`** — Adds `--group discopy`. Runs **one `pytest` invocation per `projects/*/tests/`** with **`--cov=projects/<name>/src`** and **`--cov-append`**, skipping `projects/fep_lean/tests/`, then **`coverage report --fail-under=75`** on the **combined union** across measured project packages (`DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Each project still enforces **≥ 90%** on its own `src/` when pytest runs from that project directory.
-3. **`fep-lean`** — Runs **only when** [`hashFiles`](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun) guard finds `projects/fep_lean/lean/lean-toolchain` (`if:` in workflow). Otherwise skipped.
+3. **`fep-lean`** — Runs **only when** the `detect` job reports `needs.detect.outputs.fep_lean == 'true'`. The workflow deliberately avoids job-level `hashFiles()` because that context is invalid in a job `if:`.
 4. **Manual CI runs** — `workflow_dispatch` on **CI has no workflow inputs**. (The **`release`** workflow differs: **`workflow_dispatch`** expects a **`tag`** input.)
 
 Other automation: **[`stale.yml`](../../../.github/workflows/stale.yml)**, **`dependabot.yml`**, **`release.yml`** (`v*.*.*` tags + tagged dispatch) — see [`.github/AGENTS.md`](../../../.github/AGENTS.md).
@@ -54,12 +54,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v6.0.2
+      - uses: astral-sh/setup-uv@v8.1.0
         with:
           enable-cache: true
           cache-dependency-glob: "**/uv.lock"
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6.2.0
         with:
           python-version: "3.12"
       - run: uv sync
@@ -125,7 +125,7 @@ strategy:
 
 steps:
 - name: Set up Python ${{ matrix.python-version }}
-  uses: actions/setup-python@v5
+  uses: actions/setup-python@v6.2.0
   with:
     python-version: ${{ matrix.python-version }}
 ```
@@ -150,10 +150,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6.0.2
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: '3.12'
 
@@ -181,10 +181,10 @@ jobs:
         uv run python scripts/execute_pipeline.py --project {name} --core-only
 
     - name: Upload PDFs
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.1
       with:
         name: generated-pdfs
-        path: output/pdf/*.pdf
+        path: output/{name}/pdf/*.pdf
 ```
 
 Replace `{name}` with a discovered project slug (consult [`docs/_generated/active_projects.md`](../../_generated/active_projects.md)).
@@ -224,10 +224,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6.0.2
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6.2.0
       with:
         python-version: '3.12'
 
@@ -295,7 +295,7 @@ env:
 
 ## Caching Strategies
 
-Upstream CI relies on **`astral-sh/setup-uv@v6` `enable-cache`** against **`**/uv.lock`**. Sections below illustrate manual cache blocks for other setups.
+Upstream CI relies on **`astral-sh/setup-uv@v8.1.0` `enable-cache`** against **`**/uv.lock`**. Sections below illustrate manual cache blocks for other setups.
 
 ### Dependency Caching
 

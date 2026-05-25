@@ -72,12 +72,7 @@ def test_improve_file_replaces_bare_except(tmp_path: Path) -> None:
 
 def test_improve_file_idempotent_on_clean_source(tmp_path: Path) -> None:
     """A file that already conforms is not rewritten."""
-    src = (
-        '"""Already fine."""\n'
-        "from __future__ import annotations\n"
-        "\n"
-        "x = 1\n"
-    )
+    src = '"""Already fine."""\nfrom __future__ import annotations\n\nx = 1\n'
     target = _write(tmp_path / "clean.py", src)
     before = target.read_text()
 

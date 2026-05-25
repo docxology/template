@@ -278,10 +278,7 @@ class TestContextPruningLogging:
             has_prune_log = (
                 "Context pruned" in caplog.text
                 or "Pruning context" in caplog.text
-                or any(
-                    "Context pruned" in r.message or "Pruning context" in r.message
-                    for r in caplog.records
-                )
+                or any("Context pruned" in r.message or "Pruning context" in r.message for r in caplog.records)
             )
             assert has_prune_log, (
                 f"Expected pruning log, got: {caplog.text}, records: {[r.message for r in caplog.records]}"

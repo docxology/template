@@ -14,3 +14,10 @@ The loop is implemented in `src/loop.py` and dispatched by
 The pipeline still owns execution order. The project script only calls reusable
 methods in `src/`, and the repository validation stage reruns readiness checks
 after pipeline artifact manifests have been refreshed.
+
+AI-assisted AutoResearch status is disclosed here because this exemplar models
+machine-generated plans and ledgers as review inputs, not as autonomous
+approval. The default path adopts bounded proposal ledgers, source-backed
+claims, review gates, and benchmark-style scoring; it defers autonomous
+generated-code execution, multi-agent swarms, evolutionary paper factories, and
+fully automated publication to explicit opt-in future work.

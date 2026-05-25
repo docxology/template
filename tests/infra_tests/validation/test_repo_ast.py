@@ -1,6 +1,5 @@
 """Tests for infrastructure.validation.repo._repo_ast — coverage."""
 
-
 from infrastructure.validation.repo._repo_ast import (
     _candidate_module_paths,
     _defined_symbols,

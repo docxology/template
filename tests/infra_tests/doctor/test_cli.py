@@ -1,6 +1,5 @@
 """CLI smoke tests — exercise the argparse surface against a tmp repo."""
 
-
 import io
 import json
 import os
@@ -60,9 +59,7 @@ def test_diagnose_on_clean_tmp_repo(tmp_path: Path):
 
 def test_diagnose_json(tmp_path: Path):
     _bootstrap(tmp_path)
-    code, stdout, _ = _capture(
-        ["--repo-root", str(tmp_path), "--json", "diagnose"]
-    )
+    code, stdout, _ = _capture(["--repo-root", str(tmp_path), "--json", "diagnose"])
     payload = json.loads(stdout)
     assert payload["exit_code"] == code
     assert isinstance(payload["findings"], list)
@@ -75,9 +72,7 @@ def test_fix_plan_does_not_mutate(tmp_path: Path):
     # Force a fixable finding: drop the executable bit.
     (tmp_path / "run.sh").chmod(0o644)
 
-    code, stdout, _ = _capture(
-        ["--repo-root", str(tmp_path), "fix", "--plan"]
-    )
+    code, stdout, _ = _capture(["--repo-root", str(tmp_path), "fix", "--plan"])
     # Still not executable.
     assert not os.access(tmp_path / "run.sh", os.X_OK)
     # The "Skipped" section should mention the planned fix.
@@ -88,14 +83,10 @@ def test_fix_apply_then_undo_last(tmp_path: Path):
     _bootstrap(tmp_path)
     (tmp_path / "run.sh").chmod(0o644)
 
-    code, _, _ = _capture(
-        ["--repo-root", str(tmp_path), "fix", "--apply"]
-    )
+    code, _, _ = _capture(["--repo-root", str(tmp_path), "fix", "--apply"])
     assert os.access(tmp_path / "run.sh", os.X_OK)
 
-    code, _, _ = _capture(
-        ["--repo-root", str(tmp_path), "undo", "--last"]
-    )
+    code, _, _ = _capture(["--repo-root", str(tmp_path), "undo", "--last"])
     assert code == 0
     assert not os.access(tmp_path / "run.sh", os.X_OK)
 

@@ -3,6 +3,9 @@
 This folder documents the public AutoResearch exemplar project. The project is
 designed to run through the standard template pipeline while keeping the
 AutoResearch loop deterministic, configurable, and human-reviewed.
+It demonstrates bounded proposal ledgers, evidence-linked accepted ideas,
+review gates, benchmark-style grading status, and explicit disclosure while
+deferring autonomous generated-code execution.
 
 Primary command:
 
@@ -25,4 +28,3 @@ Documentation map:
 | [configuration.md](configuration.md) | Project knobs and how they feed the loop |
 | [outputs.md](outputs.md) | Generated data, reports, and review artifacts |
 | [runbook.md](runbook.md) | End-to-end operation through `run.sh` |
-

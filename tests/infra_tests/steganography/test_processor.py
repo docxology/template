@@ -31,9 +31,18 @@ class TestSteganographyProcessor:
         from infrastructure.steganography.config import SteganographyConfig
         from infrastructure.steganography.core import SteganographyProcessor
 
-        config = SteganographyConfig(enabled=True, overlays_enabled=True, barcodes_enabled=has_qrcode(), metadata_enabled=True, hashing_enabled=True, encryption_enabled=False)
+        config = SteganographyConfig(
+            enabled=True,
+            overlays_enabled=True,
+            barcodes_enabled=has_qrcode(),
+            metadata_enabled=True,
+            hashing_enabled=True,
+            encryption_enabled=False,
+        )
         output = tmp_path / "output_steganography.pdf"
-        result = SteganographyProcessor(config).process(tmp_pdf, output_pdf=output, title="Test Paper", authors=["Author One"], keywords=["test"])
+        result = SteganographyProcessor(config).process(
+            tmp_pdf, output_pdf=output, title="Test Paper", authors=["Author One"], keywords=["test"]
+        )
         assert result.exists()
         assert result.stat().st_size > 0
         assert result == output
@@ -43,7 +52,14 @@ class TestSteganographyProcessor:
         from infrastructure.steganography.config import SteganographyConfig
         from infrastructure.steganography.core import SteganographyProcessor
 
-        config = SteganographyConfig(enabled=True, overlays_enabled=False, barcodes_enabled=False, metadata_enabled=True, hashing_enabled=True, encryption_enabled=False)
+        config = SteganographyConfig(
+            enabled=True,
+            overlays_enabled=False,
+            barcodes_enabled=False,
+            metadata_enabled=True,
+            hashing_enabled=True,
+            encryption_enabled=False,
+        )
         result = SteganographyProcessor(config).process(tmp_pdf, title="Auto Test")
         assert result.name == tmp_pdf.stem + "_steganography.pdf"
         assert result.exists()
@@ -56,7 +72,14 @@ class TestSteganographyProcessor:
         from infrastructure.steganography.core import SteganographyProcessor
 
         original_pages = len(PdfReader(str(tmp_pdf)).pages)
-        config = SteganographyConfig(enabled=True, overlays_enabled=True, barcodes_enabled=False, metadata_enabled=True, hashing_enabled=True, encryption_enabled=False)
+        config = SteganographyConfig(
+            enabled=True,
+            overlays_enabled=True,
+            barcodes_enabled=False,
+            metadata_enabled=True,
+            hashing_enabled=True,
+            encryption_enabled=False,
+        )
         output = tmp_path / "page_count_test.pdf"
         result = SteganographyProcessor(config).process(tmp_pdf, output_pdf=output)
         assert len(PdfReader(str(result)).pages) == original_pages
@@ -66,7 +89,15 @@ class TestSteganographyProcessor:
         from infrastructure.steganography.config import SteganographyConfig
         from infrastructure.steganography.core import SteganographyProcessor
 
-        config = SteganographyConfig(enabled=True, overlays_enabled=False, barcodes_enabled=False, metadata_enabled=True, hashing_enabled=True, encryption_enabled=False, manifest_enabled=True)
+        config = SteganographyConfig(
+            enabled=True,
+            overlays_enabled=False,
+            barcodes_enabled=False,
+            metadata_enabled=True,
+            hashing_enabled=True,
+            encryption_enabled=False,
+            manifest_enabled=True,
+        )
         output = tmp_path / "manifest_test.pdf"
         SteganographyProcessor(config).process(tmp_pdf, output_pdf=output, title="Manifest Test")
         manifest = tmp_pdf.with_suffix(".hashes.json")
@@ -85,6 +116,13 @@ class TestProcessPdfConvenience:
         from infrastructure.steganography.config import SteganographyConfig
         from infrastructure.steganography.core import process_pdf
 
-        config = SteganographyConfig(enabled=True, overlays_enabled=False, barcodes_enabled=False, metadata_enabled=True, hashing_enabled=True, encryption_enabled=False)
+        config = SteganographyConfig(
+            enabled=True,
+            overlays_enabled=False,
+            barcodes_enabled=False,
+            metadata_enabled=True,
+            hashing_enabled=True,
+            encryption_enabled=False,
+        )
         output = tmp_path / "convenience_test.pdf"
         assert process_pdf(tmp_pdf, output_pdf=output, config=config).exists()

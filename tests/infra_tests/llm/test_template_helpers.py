@@ -214,16 +214,12 @@ class TestTokenBudgetAwarenessFromTemplateHelpers:
         assert "2000 tokens" in result
 
     def test_section_budgets(self):
-        result = token_budget_awareness(
-            section_budgets={"Overview": 500, "Methods": 800}
-        )
+        result = token_budget_awareness(section_budgets={"Overview": 500, "Methods": 800})
         assert "Overview" in result
         assert "~500 tokens" in result
 
     def test_word_targets(self):
-        result = token_budget_awareness(
-            word_targets={"Summary": (100, 300)}
-        )
+        result = token_budget_awareness(word_targets={"Summary": (100, 300)})
         assert "Summary" in result
         assert "100-300 words" in result
 

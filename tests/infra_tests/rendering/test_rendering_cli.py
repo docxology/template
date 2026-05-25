@@ -29,11 +29,7 @@ class TestRenderPdfCommand:
         with caplog.at_level(logging.INFO):
             try:
                 cli.render_pdf_command(args)
-                assert (
-                    "rendering" in caplog.text.lower()
-                    or "generated" in caplog.text.lower()
-                    or len(caplog.text) > 0
-                )
+                assert "rendering" in caplog.text.lower() or "generated" in caplog.text.lower() or len(caplog.text) > 0
             except Exception:
                 # LaTeX compilation may fail - that's real behavior, just verify command was attempted
                 assert "rendering" in caplog.text.lower() or "error" in caplog.text.lower() or True
@@ -64,11 +60,7 @@ class TestRenderAllCommand:
         with caplog.at_level(logging.INFO):
             try:
                 cli.render_all_command(args)
-                assert (
-                    "rendering" in caplog.text.lower()
-                    or "generated" in caplog.text.lower()
-                    or len(caplog.text) > 0
-                )
+                assert "rendering" in caplog.text.lower() or "generated" in caplog.text.lower() or len(caplog.text) > 0
             except Exception:
                 # LaTeX compilation may fail - that's real behavior, just verify command was attempted
                 assert "rendering" in caplog.text.lower() or "error" in caplog.text.lower() or True
@@ -96,11 +88,7 @@ class TestRenderSlidesCommand:
         with caplog.at_level(logging.INFO):
             try:
                 cli.render_slides_command(args)
-                assert (
-                    "beamer" in caplog.text.lower()
-                    or "rendering" in caplog.text.lower()
-                    or len(caplog.text) > 0
-                )
+                assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or len(caplog.text) > 0
             except Exception:
                 # LaTeX compilation may fail - that's real behavior, just verify command was attempted
                 assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or True
@@ -116,11 +104,7 @@ class TestRenderSlidesCommand:
         cli.render_slides_command(args)
 
         captured = capsys.readouterr()
-        assert (
-            "revealjs" in captured.out
-            or "Generated" in captured.out
-            or "Rendering slides" in captured.out
-        )
+        assert "revealjs" in captured.out or "Generated" in captured.out or "Rendering slides" in captured.out
 
     def test_render_slides_default_format(self, tmp_path, caplog):
         """Test slides with default format (beamer) using real RenderManager."""
@@ -134,11 +118,7 @@ class TestRenderSlidesCommand:
             try:
                 cli.render_slides_command(args)
                 # Should log beamer or rendering slides
-                assert (
-                    "beamer" in caplog.text.lower()
-                    or "rendering" in caplog.text.lower()
-                    or len(caplog.text) > 0
-                )
+                assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or len(caplog.text) > 0
             except Exception:
                 # LaTeX compilation may fail - that's real behavior, just verify command was attempted
                 assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or True

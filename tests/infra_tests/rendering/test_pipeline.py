@@ -250,18 +250,14 @@ def test_validate_latex_packages_all_available() -> None:
 
 def test_validate_latex_packages_missing_required() -> None:
     """Returns 1 when required packages are missing."""
-    result = _validate_latex_packages(
-        report=_make_report(all_required=False, missing_req=["multirow", "cleveref"])
-    )
+    result = _validate_latex_packages(report=_make_report(all_required=False, missing_req=["multirow", "cleveref"]))
 
     assert result == 1
 
 
 def test_validate_latex_packages_optional_missing_still_passes() -> None:
     """Returns 0 even when optional packages are absent."""
-    result = _validate_latex_packages(
-        report=_make_report(all_required=True, missing_opt=["minted"])
-    )
+    result = _validate_latex_packages(report=_make_report(all_required=True, missing_opt=["minted"]))
 
     assert result == 0
 

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from infrastructure.validation.docs.accuracy import extract_headings
 
+
 class TestExtractHeadings:
     """Test extract_headings extracts heading anchors from markdown."""
 
@@ -92,13 +93,7 @@ class TestExtractHeadings:
 
     def test_mixed_content_extracts_only_headings(self):
         """Non-heading markdown content is ignored."""
-        content = (
-            "# Title\n\n"
-            "This is a paragraph. Not a heading.\n\n"
-            "- list item\n"
-            "- another item\n\n"
-            "## Subsection\n"
-        )
+        content = "# Title\n\nThis is a paragraph. Not a heading.\n\n- list item\n- another item\n\n## Subsection\n"
         result = extract_headings(content)
         assert "title" in result
         assert "subsection" in result

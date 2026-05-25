@@ -94,9 +94,7 @@ class TestFindCombinedPdfSourceLayout:
         repo_root = tmp_path
         source_output = repo_root / "projects" / PROJECT_NAME / "output"
         source_output.mkdir(parents=True)
-        source_pdf = _make_pdf(
-            source_output / "pdf" / f"{PROJECT_NAME}_combined.pdf"
-        )
+        source_pdf = _make_pdf(source_output / "pdf" / f"{PROJECT_NAME}_combined.pdf")
 
         # Stage 4 may be validating the *copied* output dir before Stage 5 has run.
         copied_output = repo_root / "output" / PROJECT_NAME
@@ -114,9 +112,7 @@ class TestFindCombinedPdfSourceLayout:
         project_basename = Path(qualified_name).name
         source_output = repo_root / "projects" / qualified_name / "output"
         source_output.mkdir(parents=True)
-        source_pdf = _make_pdf(
-            source_output / "pdf" / f"{project_basename}_combined.pdf"
-        )
+        source_pdf = _make_pdf(source_output / "pdf" / f"{project_basename}_combined.pdf")
 
         copied_output = repo_root / "output" / qualified_name
         copied_output.mkdir(parents=True)
@@ -131,9 +127,7 @@ class TestFindCombinedPdfSourceLayout:
         repo_root = tmp_path
         source_output = repo_root / "projects_in_progress" / PROJECT_NAME / "output"
         source_output.mkdir(parents=True)
-        source_pdf = _make_pdf(
-            source_output / "pdf" / f"{PROJECT_NAME}_combined.pdf"
-        )
+        source_pdf = _make_pdf(source_output / "pdf" / f"{PROJECT_NAME}_combined.pdf")
 
         copied_output = repo_root / "output" / PROJECT_NAME
         copied_output.mkdir(parents=True)
@@ -167,9 +161,7 @@ class TestFindCombinedPdfRobustnessAgainstNestedOutputDirs:
 
         source_output = repo_root / "projects" / PROJECT_NAME / "output"
         source_output.mkdir(parents=True)
-        source_pdf = _make_pdf(
-            source_output / "pdf" / f"{PROJECT_NAME}_combined.pdf"
-        )
+        source_pdf = _make_pdf(source_output / "pdf" / f"{PROJECT_NAME}_combined.pdf")
 
         copied_output = repo_root / "output" / PROJECT_NAME
         copied_output.mkdir(parents=True)
@@ -177,8 +169,7 @@ class TestFindCombinedPdfRobustnessAgainstNestedOutputDirs:
         result = find_combined_pdf(copied_output, PROJECT_NAME)
 
         assert result is not None, (
-            "Helper must use the LAST 'output' segment so nested parent dirs "
-            "don't corrupt the repo-root derivation."
+            "Helper must use the LAST 'output' segment so nested parent dirs don't corrupt the repo-root derivation."
         )
         found_path, _ = result
         assert found_path == source_pdf

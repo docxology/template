@@ -66,9 +66,7 @@ class TestCollectOutputStatistics:
         stats = collect_output_statistics(tmp_path, "test")
         assert len(stats["largest_files"]) > 0
         # First should be the largest
-        assert float(stats["largest_files"][0]["size_mb"]) >= float(
-            stats["largest_files"][-1]["size_mb"]
-        )
+        assert float(stats["largest_files"][0]["size_mb"]) >= float(stats["largest_files"][-1]["size_mb"])
 
     def test_missing_combined_pdf(self, tmp_path: Path):
         """Should report missing combined PDF."""
@@ -179,8 +177,7 @@ class TestGenerateDetailedOutputReport:
             "total_size_mb": 50.0,
             "directories": {},
             "largest_files": [
-                {"name": f"file_{i}.pdf", "size_mb": f"{10 - i}.00", "category": "pdf"}
-                for i in range(10)
+                {"name": f"file_{i}.pdf", "size_mb": f"{10 - i}.00", "category": "pdf"} for i in range(10)
             ],
             "missing_expected_files": [],
             "file_counts_by_type": {},

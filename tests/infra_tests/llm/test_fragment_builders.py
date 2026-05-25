@@ -33,15 +33,11 @@ class TestBuildFragment:
 
     def test_section_structure_dispatch(self, loader):
         template = {}
-        result = build_fragment(
-            loader, "section_structures.json#executive_summary", template, None
-        )
+        result = build_fragment(loader, "section_structures.json#executive_summary", template, None)
         assert "SECTION STRUCTURE:" in result
 
     def test_format_requirements_dispatch(self, loader):
-        template = {
-            "section_config": {"headers": ["## Overview", "## Methods"]}
-        }
+        template = {"section_config": {"headers": ["## Overview", "## Methods"]}}
         result = build_fragment(loader, "format_requirements", template, None)
         assert isinstance(result, str)
         assert len(result) > 0
@@ -54,17 +50,13 @@ class TestBuildFragment:
 
     def test_token_budget_dispatch(self, loader):
         template = {"section_config": {"sections": 3}}
-        result = build_fragment(
-            loader, "token_budget_awareness", template, 2000
-        )
+        result = build_fragment(loader, "token_budget_awareness", template, 2000)
         assert isinstance(result, str)
         assert len(result) > 0
 
     def test_token_budget_default_max_tokens(self, loader):
         template = {"section_config": {"sections": 2}}
-        result = build_fragment(
-            loader, "token_budget_awareness", template, None
-        )
+        result = build_fragment(loader, "token_budget_awareness", template, None)
         assert isinstance(result, str)
 
     def test_validation_hints_dispatch(self, loader):
@@ -80,9 +72,7 @@ class TestBuildFragment:
 
     def test_default_fragment_load(self, loader):
         # Loading a known fragment directly
-        result = build_fragment(
-            loader, "system_prompts.json#manuscript_review", {}, None
-        )
+        result = build_fragment(loader, "system_prompts.json#manuscript_review", {}, None)
         assert isinstance(result, str)
 
 
@@ -124,9 +114,7 @@ class TestBuildTokenBudgetAwareness:
     """Test build_token_budget_awareness."""
 
     def test_basic(self, loader):
-        result = build_token_budget_awareness(
-            loader, total_tokens=2000, section_budgets={"Intro": 500, "Methods": 800}
-        )
+        result = build_token_budget_awareness(loader, total_tokens=2000, section_budgets={"Intro": 500, "Methods": 800})
         assert isinstance(result, str)
         assert len(result) > 0
 
@@ -135,14 +123,10 @@ class TestBuildValidationHints:
     """Test build_validation_hints."""
 
     def test_basic(self, loader):
-        result = build_validation_hints(
-            loader, word_count_range=(100, 500), required_elements=["heading"]
-        )
+        result = build_validation_hints(loader, word_count_range=(100, 500), required_elements=["heading"])
         assert isinstance(result, str)
         assert len(result) > 0
 
     def test_empty_elements(self, loader):
-        result = build_validation_hints(
-            loader, word_count_range=(50, 200), required_elements=[]
-        )
+        result = build_validation_hints(loader, word_count_range=(50, 200), required_elements=[])
         assert isinstance(result, str)

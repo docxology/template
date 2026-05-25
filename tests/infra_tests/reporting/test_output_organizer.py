@@ -112,7 +112,6 @@ class TestOutputOrganizer:
         mixed_case_path = Path("File.Json")
         assert organizer.detect_file_type(mixed_case_path) == FileType.JSON
 
-
     def test_get_output_path_basic(self, organizer, temp_output_dir):
         """Test basic output path generation."""
         file_path = Path("chart.png")
@@ -352,4 +351,3 @@ class TestOutputOrganizer:
 
         assert "combined_pdfs" in summary
         assert summary["combined_pdfs"] == []
-

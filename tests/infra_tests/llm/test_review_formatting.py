@@ -148,9 +148,7 @@ class TestBuildReviewMetadata:
     def test_basic_metadata(self):
         reviews = {"executive_summary": "Content."}
         metrics = _make_session_metrics(["executive_summary"])
-        metadata = _build_review_metadata(
-            reviews, "test-model", Path("test.pdf"), metrics, "2026-01-15T10:00:00"
-        )
+        metadata = _build_review_metadata(reviews, "test-model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
         assert metadata["model"] == "test-model"
         assert "executive_summary" in metadata["reviews_generated"]
         assert "manuscript_metrics" in metadata
@@ -160,18 +158,14 @@ class TestBuildReviewMetadata:
     def test_metadata_has_config(self):
         reviews = {"executive_summary": "Content."}
         metrics = _make_session_metrics(["executive_summary"])
-        metadata = _build_review_metadata(
-            reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00"
-        )
+        metadata = _build_review_metadata(reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
         assert "config" in metadata
         assert "timeout_seconds" in metadata["config"]
 
     def test_metadata_compliance_rate(self):
         reviews = {"executive_summary": "Content.", "quality_review": "Quality."}
         metrics = _make_session_metrics(list(reviews.keys()))
-        metadata = _build_review_metadata(
-            reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00"
-        )
+        metadata = _build_review_metadata(reviews, "model", Path("test.pdf"), metrics, "2026-01-15T10:00:00")
         assert "overall_rate" in metadata["format_compliance"]
         assert metadata["format_compliance"]["total_reviews"] == 2
 
@@ -203,8 +197,12 @@ class TestBuildCombinedReviewContentFromReviewFormatting:
         }
         metrics = _make_session_metrics()
         content = _build_combined_review_content(
-            reviews, "gemma3:4b", Path("/fake/paper.pdf"), metrics,
-            "2025-01-15T10:00:00", "2025-01-15",
+            reviews,
+            "gemma3:4b",
+            Path("/fake/paper.pdf"),
+            metrics,
+            "2025-01-15T10:00:00",
+            "2025-01-15",
         )
         assert "LLM Manuscript Review" in content
         assert "gemma3:4b" in content
@@ -218,14 +216,20 @@ class TestBuildCombinedReviewContentFromReviewFormatting:
             "translation_zh": "Chinese content.",
             "translation_hi": "Hindi content.",
         }
-        metrics = _make_session_metrics(reviews={
-            "executive_summary": _make_metrics(),
-            "translation_zh": _make_metrics(),
-            "translation_hi": _make_metrics(),
-        })
+        metrics = _make_session_metrics(
+            reviews={
+                "executive_summary": _make_metrics(),
+                "translation_zh": _make_metrics(),
+                "translation_hi": _make_metrics(),
+            }
+        )
         content = _build_combined_review_content(
-            reviews, "model", Path("/paper.pdf"), metrics,
-            "2025-01-15T10:00:00", "2025-01-15",
+            reviews,
+            "model",
+            Path("/paper.pdf"),
+            metrics,
+            "2025-01-15T10:00:00",
+            "2025-01-15",
         )
         assert "Translation" in content
         assert "Chinese" in content
@@ -234,8 +238,12 @@ class TestBuildCombinedReviewContentFromReviewFormatting:
         reviews = {}
         metrics = _make_session_metrics(reviews={})
         content = _build_combined_review_content(
-            reviews, "model", Path("/paper.pdf"), metrics,
-            "2025-01-15T10:00:00", "2025-01-15",
+            reviews,
+            "model",
+            Path("/paper.pdf"),
+            metrics,
+            "2025-01-15T10:00:00",
+            "2025-01-15",
         )
         assert "*Not generated*" in content
 
@@ -250,7 +258,10 @@ class TestBuildReviewMetadataFromReviewFormatting:
         }
         metrics = _make_session_metrics()
         metadata = _build_review_metadata(
-            reviews, "gemma3:4b", Path("/fake/paper.pdf"), metrics,
+            reviews,
+            "gemma3:4b",
+            Path("/fake/paper.pdf"),
+            metrics,
             "2025-01-15T10:00:00",
         )
         assert metadata["model"] == "gemma3:4b"
@@ -264,12 +275,17 @@ class TestBuildReviewMetadataFromReviewFormatting:
             "good_review": "## Overview\n\nProfessional text.",
             "bad_review": "I'd be happy to help you with this. Let me know if needed.",
         }
-        metrics = _make_session_metrics(reviews={
-            "good_review": _make_metrics(),
-            "bad_review": _make_metrics(),
-        })
+        metrics = _make_session_metrics(
+            reviews={
+                "good_review": _make_metrics(),
+                "bad_review": _make_metrics(),
+            }
+        )
         metadata = _build_review_metadata(
-            reviews, "model", Path("/paper.pdf"), metrics,
+            reviews,
+            "model",
+            Path("/paper.pdf"),
+            metrics,
             "2025-01-15T10:00:00",
         )
         compliance = metadata["format_compliance"]
@@ -280,7 +296,10 @@ class TestBuildReviewMetadataFromReviewFormatting:
         reviews = {}
         metrics = _make_session_metrics(reviews={})
         metadata = _build_review_metadata(
-            reviews, "model", Path("/paper.pdf"), metrics,
+            reviews,
+            "model",
+            Path("/paper.pdf"),
+            metrics,
             "2025-01-15T10:00:00",
         )
         assert metadata["format_compliance"]["overall_rate"] == 100

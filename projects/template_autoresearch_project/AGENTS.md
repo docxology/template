@@ -18,6 +18,8 @@ This project is the public exemplar for deterministic AutoResearch loops in
 - Thin scripts: `scripts/`
 - Project docs: `docs/`
 - Manuscript source: `manuscript/`
+- Human-authored program: `program.md`
+- Seed proposals: `seed_ideas.yaml`
 - Generated artifacts: `output/`
 
 The analysis stage must not perform network calls, LLM calls, generated-code
@@ -35,15 +37,18 @@ execution, or autonomous approval. It composes existing infrastructure modules:
 3. `write_core_loop_artifacts()` — plan JSON, loop markdown, stage matrix CSV, figure
 4. `write_evidence_registry_report()` — first registry snapshot from on-disk artifacts
 5. `build_claims()` + `finalize_loop_payloads()` — file-backed claims and loop JSON/review payloads
-6. `update_result_payloads()` — provisional refresh (`readiness_valid=False`)
-7. `write_artifact_manifest()` — first manifest pass
-8. `validate_autoresearch_plan(..., phase="extrinsic")` — evidence registry and artifact manifest
-9. `write_autoresearch_report()` — combined intrinsic + extrinsic readiness
-10. `update_result_payloads()` — final refresh with `readiness_valid` and output paths
-11. `write_evidence_registry_report()` + `write_artifact_manifest()` — final registry and manifest
+6. `write_method_contract_artifacts()` — research program, idea ledger, run ledger, review decisions, benchmark scores
+7. `update_result_payloads()` — provisional refresh (`readiness_valid=False`)
+8. `write_artifact_manifest()` — first manifest pass
+9. `validate_autoresearch_plan(..., phase="extrinsic")` — evidence, artifacts, method ledgers, review gates, benchmarks
+10. `write_autoresearch_report()` — combined intrinsic + extrinsic readiness
+11. `update_result_payloads()` — final refresh with `readiness_valid` and output paths
+12. `write_evidence_registry_report()` + `write_artifact_manifest()` — final registry and manifest
 
 Loop stages use status `declared` (intent only — not pipeline execution proof).
 Claims are `supported` only when the configured evidence path exists on disk.
+Accepted seed ideas require evidence links; candidate `touched_paths` must stay
+inside `autoresearch.yaml` `edit_allowlist`.
 
 ## Run Commands
 

@@ -17,6 +17,7 @@ import logging
 import os
 
 from infrastructure.core.logging.constants import get_emoji_enabled as _get_emoji_enabled
+
 USE_EMOJIS = _get_emoji_enabled()
 
 from infrastructure.core.logging.utils import (

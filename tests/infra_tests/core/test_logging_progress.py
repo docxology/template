@@ -113,9 +113,7 @@ class TestCalculateEtaWithConfidence:
 
     def test_calculate_eta_with_confidence_with_durations(self):
         item_durations = [8.0, 10.0, 12.0]
-        optimistic, realistic, pessimistic = calculate_eta_with_confidence(
-            30.0, 3, 10, item_durations=item_durations
-        )
+        optimistic, realistic, pessimistic = calculate_eta_with_confidence(30.0, 3, 10, item_durations=item_durations)
         assert optimistic == pytest.approx(56.0, rel=0.01)
         assert realistic == pytest.approx(70.0, rel=0.01)
         assert pessimistic == pytest.approx(84.0, rel=0.01)
@@ -133,9 +131,7 @@ class TestCalculateEtaWithConfidence:
         assert pessimistic == 0.0
 
     def test_calculate_eta_with_confidence_empty_durations(self):
-        optimistic, realistic, pessimistic = calculate_eta_with_confidence(
-            30.0, 3, 10, item_durations=[]
-        )
+        optimistic, realistic, pessimistic = calculate_eta_with_confidence(30.0, 3, 10, item_durations=[])
         assert optimistic is not None
         assert realistic is not None
         assert pessimistic is not None

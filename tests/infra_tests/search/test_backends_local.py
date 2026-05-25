@@ -68,9 +68,7 @@ class TestLocalBackend:
     def test_year_filter_applied(self, tmp_path: Path):
         corpus = _write_corpus(tmp_path / "c.json", _sample_papers())
         backend = LocalBackend(corpus)
-        results = backend.search(
-            SearchQuery(text="optimization", year_min=2010, year_max=2014)
-        )
+        results = backend.search(SearchQuery(text="optimization", year_min=2010, year_max=2014))
         years = {p.year for p in results}
         assert all(2010 <= y <= 2014 for y in years if y is not None)
 
@@ -82,9 +80,7 @@ class TestLocalBackend:
 
     def test_supports_papers_key_wrapper(self, tmp_path: Path):
         path = tmp_path / "c.json"
-        path.write_text(
-            json.dumps({"papers": _sample_papers()}), encoding="utf-8"
-        )
+        path.write_text(json.dumps({"papers": _sample_papers()}), encoding="utf-8")
         backend = LocalBackend(path)
         results = backend.search(SearchQuery(text="convex"))
         assert len(results) == 1
