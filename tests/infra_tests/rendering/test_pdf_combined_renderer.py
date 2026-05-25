@@ -11,6 +11,7 @@ from infrastructure.rendering._pdf_combined_renderer import (
     substitute_manuscript_var_placeholders,
     preprocess_combined_markdown,
     postprocess_latex,
+    fix_starred_section_nameref_labels,
     inject_bibliography,
     verify_figure_references,
     prevalidate_markdown,
@@ -341,6 +342,48 @@ class TestPostprocessLatex:
         result = postprocess_latex(tex)
         assert "\\usepackage{hyperref}" in result
         assert "\\PassOptionsToPackage" not in result
+
+    def test_fixes_starred_section_nameref_with_titlesec(self):
+        tex = (
+            "\\usepackage{titlesec}\n"
+            "\\section*{Unit I --- Chemistry of Life:\n"
+            "Introduction}\\label{sec:unit_I_unit_intro}\n"
+        )
+        result, fixes = fix_starred_section_nameref_labels(tex)
+        assert fixes == 1
+        assert "\\def\\@currentlabelname{Unit I --- Chemistry of Life: Introduction}" in result
+        assert "\\phantomsection\\label{sec:unit_I_unit_intro}" in result
+        assert "Introduction}\\label{sec:unit_I_unit_intro}" not in result
+
+    def test_fixes_starred_section_nameref_with_titlesec_options(self):
+        tex = (
+            "\\usepackage[compact]{titlesec}\n"
+            "\\section*{Preface}\\label{sec:preface}\n"
+        )
+        result, fixes = fix_starred_section_nameref_labels(tex)
+        assert fixes == 1
+        assert "\\def\\@currentlabelname{Preface}" in result
+
+    def test_skips_starred_section_nameref_without_titlesec(self):
+        tex = "\\section*{Preface}\\label{sec:preface}\n"
+        result, fixes = fix_starred_section_nameref_labels(tex)
+        assert fixes == 0
+        assert result == tex
+
+    def test_skips_starred_section_when_phantomsection_present(self):
+        tex = (
+            "\\usepackage{titlesec}\n"
+            "\\section*{Preface}\n\\phantomsection\\label{sec:preface}\n"
+        )
+        result, fixes = fix_starred_section_nameref_labels(tex)
+        assert fixes == 0
+        assert result == tex
+
+    def test_skips_starred_section_without_sec_label(self):
+        tex = "\\usepackage{titlesec}\n\\section*{Appendix}\\label{app:notes}\n"
+        result, fixes = fix_starred_section_nameref_labels(tex)
+        assert fixes == 0
+        assert result == tex
 
 
 class TestInjectBibliography:

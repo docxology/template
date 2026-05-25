@@ -10,6 +10,7 @@ from infrastructure.rendering._pdf_combined_renderer import (
     build_pandoc_tex_command,
     discover_manuscript_bib_paths,
     inject_bibliography,
+    fix_starred_section_nameref_labels,
     inject_latex_preamble,
     postprocess_latex,
     preprocess_combined_markdown,
@@ -218,6 +219,10 @@ class PDFRenderer:
         # Step 7: Inject bibliography
         tex_content = inject_bibliography(tex_content, bib_exists, bib_stems=bib_stems)
 
+        # Step 8: Repair starred-section \\nameref titles after preamble injection
+        # (titlesec from preamble.md must be present before the guard runs).
+        tex_content, _nameref_fixes = fix_starred_section_nameref_labels(tex_content)
+
         # Write final .tex file atomically. Any failure (disk full, encoding
         # error, race between write and replace) must still remove the partial
         # .tmp file before re-raising, so the broad catch is intentional.
@@ -229,11 +234,11 @@ class PDFRenderer:
             _tmp.unlink(missing_ok=True)
             raise
 
-        # Step 8: Verify figure references
+        # Step 9: Verify figure references
         figures_dir = Path(self.config.figures_dir)
         verify_figure_references(tex_content, figures_dir)
 
-        # Step 9: Compile LaTeX to PDF with multi-pass xelatex
+        # Step 10: Compile LaTeX to PDF with multi-pass xelatex
         return compile_latex_manuscript(
             combined_tex=combined_tex,
             combined_md=combined_md,

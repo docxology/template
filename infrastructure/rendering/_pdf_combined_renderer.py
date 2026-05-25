@@ -280,6 +280,86 @@ def run_pandoc_conversion(
         raise build_pandoc_render_error(e, combined_md, source_files, md_content, cmd) from e
 
 
+def _escape_latex_def_value(value: str) -> str:
+    """Escape a section title for use inside ``\\def\\@currentlabelname{...}``."""
+    escaped = value.replace("\\", "\\textbackslash{}")
+    return escaped.replace("{", "\\{").replace("}", "\\}")
+
+
+def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
+    """Repair ``\\nameref`` titles for ``\\section*`` labels when titlesec is loaded.
+
+    titlesec prevents hyperref from storing section titles on starred headings,
+    which leaves ``\\nameref{sec:...}`` empty in front matter even when Pandoc
+    emits ``\\section*{Title}\\label{sec:...}`` on one line.
+    """
+    if not re.search(r"\\usepackage(?:\[[^\]]*\])?\{titlesec\}", tex_content):
+        return tex_content, 0
+
+    marker = "\\section*{"
+    out: list[str] = []
+    i = 0
+    fixes = 0
+
+    while True:
+        start = tex_content.find(marker, i)
+        if start < 0:
+            out.append(tex_content[i:])
+            break
+
+        out.append(tex_content[i:start])
+        j = start + len(marker)
+        depth = 1
+        title_start = j
+        while j < len(tex_content) and depth > 0:
+            ch = tex_content[j]
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+            j += 1
+
+        if depth != 0:
+            out.append(tex_content[start:])
+            break
+
+        title_raw = tex_content[title_start : j - 1]
+        rest = tex_content[j:]
+        rest_lstrip = rest.lstrip()
+        if rest_lstrip.startswith("\\phantomsection"):
+            out.append(tex_content[start:j])
+            i = j
+            continue
+
+        label_match = re.match(r"\\label\{(sec:[^}]+)\}", rest_lstrip)
+        if label_match is None:
+            out.append(tex_content[start:j])
+            i = j
+            continue
+
+        label = label_match.group(1)
+        consumed = len(rest) - len(rest_lstrip) + label_match.end()
+        title_plain = re.sub(r"\s+", " ", title_raw).strip()
+        title_escaped = _escape_latex_def_value(title_plain)
+        out.append(
+            "\\section*{"
+            f"{title_raw}}}\n"
+            "\\makeatletter\n"
+            f"\\def\\@currentlabelname{{{title_escaped}}}\n"
+            "\\makeatother\n"
+            f"\\phantomsection\\label{{{label}}}"
+        )
+        fixes += 1
+        i = j + consumed
+
+    if fixes:
+        logger.info(
+            "✓ Repaired %d starred section label(s) for titlesec/hyperref \\nameref",
+            fixes,
+        )
+    return "".join(out), fixes
+
+
 def postprocess_latex(tex_content: str) -> str:
     """Apply lmodern disabling, hidelinks patching, and math delimiter fixes."""
     # Fix lmodern conflict with xelatex

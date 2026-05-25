@@ -1,7 +1,7 @@
 {
   "version": 1,
   "transcript_root": "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts",
-  "entry_count": 436,
+  "entry_count": 448,
   "entries": {
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0035a37d-d862-482a-8c00-03212c10e148/0035a37d-d862-482a-8c00-03212c10e148.jsonl": {
       "mtime_ms": 1777059563128
@@ -85,7 +85,10 @@
       "mtime_ms": 1779191552110
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0cf881a7-b0a5-40d3-8f8e-3c428833bb86/0cf881a7-b0a5-40d3-8f8e-3c428833bb86.jsonl": {
-      "mtime_ms": 1779675243814
+      "mtime_ms": 1779683021174
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0cf881a7-b0a5-40d3-8f8e-3c428833bb86/subagents/3a7d8b4c-f7ef-45e7-828c-f951421e702d.jsonl": {
+      "mtime_ms": 1779675648588
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/0cf881a7-b0a5-40d3-8f8e-3c428833bb86/subagents/4ddbbb92-e834-4d96-a1fb-199a276f234f.jsonl": {
       "mtime_ms": 1779675280383
@@ -397,7 +400,7 @@
       "mtime_ms": 1777415369811
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/493cc643-d3bd-4142-89ab-2cb14a209fca/493cc643-d3bd-4142-89ab-2cb14a209fca.jsonl": {
-      "mtime_ms": 1779675203502
+      "mtime_ms": 1779712006039
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/493cc643-d3bd-4142-89ab-2cb14a209fca/subagents/3a5ae707-e966-493f-95e0-9ff3456c1518.jsonl": {
       "mtime_ms": 1779675314098
@@ -699,6 +702,12 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/78ab293e-4006-4248-b106-cdfe4f9064ce/78ab293e-4006-4248-b106-cdfe4f9064ce.jsonl": {
       "mtime_ms": 1773757354584
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/78f869d1-52f7-443e-b014-1e5adab47e0b/78f869d1-52f7-443e-b014-1e5adab47e0b.jsonl": {
+      "mtime_ms": 1779712027825
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/78f869d1-52f7-443e-b014-1e5adab47e0b/subagents/7673d5b3-aede-4225-884e-a89a5fc1acf8.jsonl": {
+      "mtime_ms": 1779675597258
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/79ae8215-c923-4feb-a849-6f47ad7f1e91/79ae8215-c923-4feb-a849-6f47ad7f1e91.jsonl": {
       "mtime_ms": 1775964527720
     },
@@ -733,7 +742,19 @@
       "mtime_ms": 1774220141503
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/81456f21-1f45-4afc-bb2b-307b5c99a404/81456f21-1f45-4afc-bb2b-307b5c99a404.jsonl": {
-      "mtime_ms": 1779675319443
+      "mtime_ms": 1779712039629
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/81456f21-1f45-4afc-bb2b-307b5c99a404/subagents/1b0625b7-69a6-4755-b76b-9390234a03cb.jsonl": {
+      "mtime_ms": 1779675731543
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/81456f21-1f45-4afc-bb2b-307b5c99a404/subagents/553401c0-6c54-4228-aa41-b909114e7381.jsonl": {
+      "mtime_ms": 1779675728095
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/81456f21-1f45-4afc-bb2b-307b5c99a404/subagents/65708a64-6b24-4faa-859d-e2c825d0a0a4.jsonl": {
+      "mtime_ms": 1779675719586
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/81456f21-1f45-4afc-bb2b-307b5c99a404/subagents/a9e3e700-0a29-40fb-8256-607358858e83.jsonl": {
+      "mtime_ms": 1779675730865
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7/866a0c19-d9fe-4e48-a9bc-d9bcc05e74e7.jsonl": {
       "mtime_ms": 1776178424837
@@ -915,6 +936,18 @@
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/a9999281-28b2-4617-84c4-10a1f2010cde/subagents/be5c4109-6967-40b0-99f8-378a33a949ab.jsonl": {
       "mtime_ms": 1777149102060
     },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/ad639aa3-7c5c-4f1b-ae7e-fd57b52a871e/ad639aa3-7c5c-4f1b-ae7e-fd57b52a871e.jsonl": {
+      "mtime_ms": 1779712067319
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/ae3576a5-e337-4ebb-8600-be74f67ddb92/ae3576a5-e337-4ebb-8600-be74f67ddb92.jsonl": {
+      "mtime_ms": 1779712013251
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/ae3576a5-e337-4ebb-8600-be74f67ddb92/subagents/cba44adb-b7b5-48ea-a6ab-f5bf5008e508.jsonl": {
+      "mtime_ms": 1779675777037
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/ae3576a5-e337-4ebb-8600-be74f67ddb92/subagents/cbb148a5-5121-414d-bb28-586183b88c22.jsonl": {
+      "mtime_ms": 1779675608427
+    },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/aef0c8ab-2cea-441e-8d64-ab67ae18e74e/aef0c8ab-2cea-441e-8d64-ab67ae18e74e.jsonl": {
       "mtime_ms": 1779669045640
     },
@@ -982,10 +1015,13 @@
       "mtime_ms": 1774964428885
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bccd2902-6cd6-4938-b6a3-ebb713f8d674/bccd2902-6cd6-4938-b6a3-ebb713f8d674.jsonl": {
-      "mtime_ms": 1779675341640
+      "mtime_ms": 1779712125179
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bccd2902-6cd6-4938-b6a3-ebb713f8d674/subagents/7dd0ffcb-8a57-49ce-ac3d-4dab0c3cbf03.jsonl": {
-      "mtime_ms": 1779675369781
+      "mtime_ms": 1779675441619
+    },
+    "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bccd2902-6cd6-4938-b6a3-ebb713f8d674/subagents/86b87a06-0b77-4143-b9ea-65f3245dd17b.jsonl": {
+      "mtime_ms": 1779682634578
     },
     "/Users/4d/.cursor/projects/Users-4d-Documents-GitHub-template/agent-transcripts/bccd2902-6cd6-4938-b6a3-ebb713f8d674/subagents/90c4d019-f66d-4fe5-bc14-59a040d7ec26.jsonl": {
       "mtime_ms": 1779675329786

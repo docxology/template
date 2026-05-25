@@ -544,6 +544,20 @@ def prevalidate_source_markdown(
     """
 ```
 
+### fix_starred_section_nameref_labels (function — `_pdf_combined_renderer.py`)
+```python
+def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
+    """Repair ``\\nameref`` titles for ``\\section*`` labels when titlesec is loaded.
+
+    titlesec prevents hyperref from storing section titles on starred headings,
+    which leaves ``\\nameref{sec:...}`` empty even when Pandoc emits
+    ``\\section*{Title}\\label{sec:...}``. Called from ``PDFRenderer`` after
+    ``inject_latex_preamble`` so ``\\usepackage{titlesec}`` from preamble.md is
+    visible. No-op when titlesec is absent, ``\\phantomsection`` is already
+    present, or the label is not a ``sec:`` cross-reference.
+    """
+```
+
 ### Per-format preamble & gate coverage
 
 | Renderer | `extract_preamble` / `ensure_setmathfont` | `prevalidate_source_markdown` | Lua filters |
