@@ -701,6 +701,8 @@ class TestOptionsConversion:
         assert ollama_opts.get("top_k") == 50
 
 
+@pytest.mark.requires_ollama
+@pytest.mark.timeout(180)
 class TestLLMQueryModesIntegration:
     """Integration tests for query modes requiring Ollama.
 
