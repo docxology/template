@@ -58,7 +58,7 @@ Each project in `projects/` is **completely self-contained** with three critical
 - Each project has its own `tests/` directory with 90%+ coverage requirement
 - Tests use data only (no mocks policy)
 - Tests import from `projects/{name}/src/` and `infrastructure/`
-- Can be run independently: `pytest projects/{name}/tests/`
+- Can be run independently: `uv run pytest projects/{name}/tests/`
 
 ### 🧠 **Methods**: Business Logic Isolation
 
@@ -137,7 +137,7 @@ symlinks).
 ```mermaid
 graph TD
     subgraph projects["projects/ - Multi-Project Container"]
-        PROJ[template_code_project/<br/>The Master Exemplar]
+        PROJ[template_code_project/<br/>Stable code exemplar]
         CUSTOM[your_project/<br/>Custom research<br/>Your algorithms here]
 
         PROJ --> PROJ_SRC[src/<br/>Pure scientific logic]
@@ -209,7 +209,7 @@ is_valid, message = validate_project_structure(Path("projects/template_code_proj
 uv run python scripts/01_run_tests.py --project {name}
 
 # Infrastructure validates structure, then runs:
-# pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
+# uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 ```
 
 ### ⚙️ **Analysis Scripts** (`scripts/02_run_analysis.py`)
@@ -329,7 +329,7 @@ Each project follows this structure:
 ```mermaid
 flowchart TB
     PR[/projects//]
-    PR --> CP[/template_code_project/<br/>Master exemplar/]
+    PR --> CP[/template_code_project/<br/>Stable code exemplar/]
     PR --> MY[/myresearch/<br/>Custom project 1/]
     PR --> EX[/experiment2/<br/>Custom project 2/]
 
@@ -459,15 +459,11 @@ uv run python scripts/04_validate_output.py --project myresearch
 
 **Note**: In multi-project mode (`--all-projects`), infrastructure tests run **once** for all projects at the start, then are **skipped** for individual project executions. This avoids redundant testing while ensuring infrastructure quality across all projects.
 
-### Default Project
+### Project selection
 
-When no `--project` is specified, the default template project is used:
-
-```bash
-# These are equivalent:
-./run.sh --pipeline
-./run.sh --project project --pipeline
-```
+For non-interactive runs, pass an explicit `--project` unless you are using
+`--all-projects`. Running `./run.sh` with no flags opens the interactive menu
+and lists the currently discovered projects.
 
 ## Project Requirements
 
@@ -515,7 +511,7 @@ Example:
 ```mermaid
 flowchart LR
     OUT[/output//]
-    OUT --> CP[/template_code_project/<br/>active inference meta-analysis/]
+    OUT --> CP[/template_code_project/<br/>optimization exemplar/]
     OUT --> YP[/your_project/<br/>your custom research project/]
     CP --> CP_F[pdf/ · figures/ · ...]
 
@@ -556,14 +552,16 @@ Required checks:
 
 ## .cursorrules Compliance
 
-### ✅ **Standards Compliance Across All Projects**
+### ✅ **Standards Compliance Across Public Exemplars**
 
-All projects in this directory comply with template development standards:
+The public canonical exemplars in this directory are expected to comply with
+template development standards. Local-only symlinked projects may carry their
+own project-level contracts.
 
 - **Testing**: 90%+ coverage, data only, integration tests
 - **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
-- **Code Quality**: Black formatting, descriptive naming, proper imports
+- **Code Quality**: Ruff formatting/checks, descriptive naming, proper imports
 - **Error Handling**: Context preservation, informative messages
 - **Logging**: Unified logging system throughout
 
@@ -573,11 +571,9 @@ All projects in this directory comply with template development standards:
 # Run tests across all projects (prefer per-project invocation to avoid conftest collisions)
 uv run python scripts/01_run_tests.py --project-only --all-projects
 
-# Verify documentation completeness
-find projects/ -name "*.py" -exec grep -L '"""' {} \;
-
-# Check type hints
-uv run mypy projects/myproject/src/
+# Check public template source paths
+uv run python -m infrastructure.project.public_scope source-paths | xargs uvx ruff check
+uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
 ```
 
 ## Best Practices
@@ -618,14 +614,15 @@ Available projects are automatically discovered - use `--project {name}` to spec
 
 ## Real Project Examples
 
-### **The Master Exemplar** (`projects/template_code_project/`)
+### **Stable Code Exemplar** (`projects/template_code_project/`)
 
-The fully-featured research exemplar demonstrating the Generalized Research Template:
+The code-centric exemplar demonstrates numerical analysis, dashboard outputs,
+manuscript-variable hydration, and thin project scripts.
 
 **Standalone Guarantees:**
 
 - **Tests**: Test suite validating analysis algorithms
-- **Methods**: Meta-analysis implementation in `src/`
+- **Methods**: Optimization and invariant logic in `src/`
 - **Manuscript**: Research manuscript with analysis and figures
 
 **Infrastructure Operations:**

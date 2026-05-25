@@ -4,7 +4,11 @@ Complete checklist for creating a new project workspace in the Docxology Templat
 
 For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-shot-prompt.md](new-project-one-shot-prompt.md). Other active layouts under `projects/` are listed in [_generated/active_projects.md](../_generated/active_projects.md). For archived reference trees (not run by default), see `projects_archive/`.
 
-> **Key Principle**: A project is auto-discovered if `projects/<name>/manuscript/config.yaml` exists. No infrastructure changes needed.
+> **Key Principle**: A project is auto-discovered when it is under
+> `projects/`, has `src/` with at least one Python file, and has `tests/`.
+> `manuscript/config.yaml` supplies metadata and render settings; it is not
+> the discovery predicate by itself. No infrastructure changes are needed for a
+> structurally valid project.
 >
 > **3-Directory Lifecycle**: Projects live in one of three directories: `projects/` (active, rendered by `./run.sh`), `projects_in_progress/` (WIP, not auto-discovered), or `projects_archive/` (completed/paused, not auto-discovered). Move projects freely between directories; only what is in `projects/` is rendered.
 
@@ -16,9 +20,14 @@ For a copy-paste LLM scaffold anchored on that exemplar, see [new-project-one-sh
 
 **Symptom**: Project doesn't appear in `./run.sh` menu
 
-**Cause**: Missing `manuscript/config.yaml`
+**Cause**: The project is outside `projects/`, lacks `src/`, lacks `tests/`,
+or has no Python files under `src/`. Missing `manuscript/config.yaml` does not
+prevent low-level discovery, but it leaves metadata and render configuration
+incomplete for normal pipeline use.
 
-**Solution**: Create `projects/<name>/manuscript/config.yaml` with required fields
+**Solution**: Put the project under `projects/<name>/`, create `src/` and
+`tests/`, add at least one `.py` file under `src/`, and add
+`manuscript/config.yaml` before rendering.
 
 ### Test Import Errors
 
@@ -58,7 +67,9 @@ uv sync
 
 **Cause**: Non-standard keys in config.yaml
 
-**Solution**: Nest project-specific keys under `project_config:` prefix
+**Solution**: Nest project-specific keys under the canonical
+`project_config:` mapping, or register a first-class schema extension when the
+key should be validated explicitly.
 
 ---
 

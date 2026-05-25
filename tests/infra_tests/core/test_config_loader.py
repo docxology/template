@@ -740,6 +740,22 @@ class TestConfigKeyValidation:
             "llm": {"reviews": {"enabled": True}},
             "testing": {"max_test_failures": 0},
             "render": {"formats": {"pdf": True, "html": True, "slides": False}},
+            "analysis": {"scripts": ["run_analysis.py"]},
+            "manuscript_dir": "manuscript",
+            "prose": {"long_sentence_threshold": 35},
+            "bibliography": {"references_path": "manuscript/references.bib"},
+            "report": {"output_path": "output/review_report.md"},
+            "book": {"edition": "1.0"},
+            "layout": {"page_size": "letter"},
+            "typography": {"body_font": "Latin Modern Roman"},
+            "front_matter": {"files": []},
+            "rendering": {"number_sections": True},
+            "units": [{"id": "unit_1"}],
+            "appendices": {"enabled": True},
+            "accessibility": {"alt_text_required": True},
+            "content_notes": {"audience": "graduate"},
+            "chapter_metadata": {"unit_1": {"title": "Unit 1"}},
+            "export": {"formats": ["pdf"]},
         }
         config_file = tmp_path / "valid_config.yaml"
         with open(config_file, "w") as f:

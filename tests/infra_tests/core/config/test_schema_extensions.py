@@ -224,4 +224,6 @@ def test_generate_manuscript_config_schema_includes_registered_extension() -> No
 
     assert schema["additionalProperties"] is False
     assert "paper" in schema["properties"]
+    assert "analysis" in schema["properties"]
+    assert "scripts" in schema["properties"]["analysis"]["properties"]
     assert "alpha_block" in schema["properties"]

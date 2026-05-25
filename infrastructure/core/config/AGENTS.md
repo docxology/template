@@ -29,7 +29,10 @@ optional `project_name=` argument; the loader also infers the name
 from a standard `…/projects/<name>/manuscript/config.yaml` path.
 Both functions support `strict=True` for CI/tooling paths that should
 raise on unknown top-level keys. `schema.generate_manuscript_config_schema`
-exports a JSON Schema for editors and fork setup automation.
+exports a JSON Schema for editors and fork setup automation. The canonical
+top-level schema includes `analysis.scripts` for the Stage 02 script allowlist;
+arbitrary project-owned settings belong under `project_config` unless a
+project registers a schema extension.
 Full usage example:
 [`docs/operational/config/configuration.md`](../../../docs/operational/config/configuration.md#per-project-schema-extensions).
 

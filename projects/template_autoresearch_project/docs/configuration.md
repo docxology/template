@@ -36,9 +36,9 @@ their `touched_paths` inside `edit_allowlist`.
 Loaded by `src.config.load_manuscript_loop_settings`:
 
 - `analysis.scripts`: runs the thin orchestrators in `scripts/`.
-- `autoresearch_project.review_policy`: records the required human review mode.
-- `autoresearch_project.loop_stages`: configures deterministic loop stages.
-- `autoresearch_project.research_questions`: declares questions and expected
+- `project_config.review_policy`: records the required human review mode.
+- `project_config.loop_stages`: configures deterministic loop stages.
+- `project_config.research_questions`: declares questions and expected
   evidence paths.
 
 Runtime loop configuration is merged in `src.config.build_loop_config(plan,

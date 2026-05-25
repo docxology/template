@@ -13,7 +13,7 @@ Each project in `projects/{name}/` provides **three critical guarantees**:
 - **Location**: `projects/{name}/tests/`
 - **Coverage**: 90% minimum for `projects/{name}/src/` code
 - **Policy**: No mocks - all tests use data and computations
-- **Execution**: Can run independently via `pytest projects/{name}/tests/`
+- **Execution**: Can run independently via `uv run pytest projects/{name}/tests/`
 - **Infrastructure Integration**: Orchestrated by `scripts/01_run_tests.py`
 
 ### 🧠 **Methods**: Business Logic Isolation (No Cross-Project Imports)
@@ -233,7 +233,8 @@ uv run python scripts/01_run_tests.py --project {name}
 
 # Infrastructure performs:
 # 1. Validates project structure
-# 2. Runs pytest with coverage: pytest projects/{name}/tests/ --cov=projects/{name}/src
+# 2. Runs project tests with coverage:
+#    uv run pytest projects/{name}/tests/ --cov=projects/{name}/src
 # 3. Enforces 90% coverage requirement
 # 4. Generates coverage reports
 ```
@@ -396,10 +397,10 @@ from infrastructure.core.config.loader import load_config  # ✅ Utility
 
 ```bash
 # Check project coverage
-pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 
 # Generate coverage report
-pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 open htmlcov/index.html
 ```
 

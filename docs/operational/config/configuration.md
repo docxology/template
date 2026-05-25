@@ -114,6 +114,10 @@ keywords:
 metadata:
   license: "Apache-2.0"
   language: "en"
+
+analysis:
+  scripts:
+    - run_analysis.py  # Optional Stage 02 allowlist; omit to run all scripts/*.py
 ```
 
 ### Benefits
@@ -233,6 +237,28 @@ render:
 The block is validated by `infrastructure/core/config/schema.py` (strict
 `additionalProperties: false` on the inner mapping). When a format is
 disabled the pipeline logs `[skip] <format> rendering disabled in config`.
+
+### Analysis script allowlist
+
+Stage 02 discovers project scripts under `projects/<name>/scripts/`. By
+default it runs every public Python script in that directory, excluding private
+modules, `setup_hook.py`, `00_preflight.py`, and `__init__.py`.
+
+Use `analysis.scripts` in `manuscript/config.yaml` when a project needs a
+stable ordered allowlist:
+
+```yaml
+analysis:
+  scripts:
+    - run_analysis.py
+    - z_generate_manuscript_variables.py
+```
+
+Each item is a file name relative to the project `scripts/` directory. Missing,
+private, or non-Python entries are ignored with a warning. `analysis:` is a
+canonical top-level key in the shared manuscript schema; project-specific data
+belongs under `project_config:` unless the project registers its own schema
+extension.
 
 ## Configuration Examples
 
@@ -375,7 +401,6 @@ The registry is process-local. Tests should call
 - [Troubleshooting Guide](../troubleshooting/) - Common issues and solutions
 - [Build System](../../RUN_GUIDE.md) - Build configuration
 - [Performance Optimization](performance-optimization.md) - Performance tuning
-
 
 
 

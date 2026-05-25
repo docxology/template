@@ -85,7 +85,8 @@ uv run pytest projects/$NEW/tests/ --cov=projects/$NEW/src --cov-fail-under=90
 uv run python scripts/execute_pipeline.py --project $NEW --core-only
 ```
 
-The project is then auto-discovered; the repo-level
+Because the copied tree already has `src/` Python files and `tests/`, the
+project is then auto-discovered; the repo-level
 [`docs/guides/new-project-setup.md`](../../../docs/guides/new-project-setup.md)
 covers the full workflow.
 

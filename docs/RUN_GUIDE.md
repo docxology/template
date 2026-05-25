@@ -150,7 +150,7 @@ preview link changes, `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 ./run.sh --all-projects --pipeline
 
 # Alternative orchestrator (all projects)
-uv run scripts/execute_multi_project.py
+uv run python scripts/execute_multi_project.py
 ```
 
 ## Entry Point 1: Manuscript Operations (`run.sh`)
@@ -455,16 +455,16 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 Individual stages can also be run directly via Python:
 
 ```bash
-uv run scripts/00_setup_environment.py  # Setup environment
-uv run scripts/01_run_tests.py          # Run tests only
-uv run scripts/01_run_tests.py --verbose  # Run tests with verbose output
-uv run scripts/02_run_analysis.py       # Run project scripts
-uv run scripts/03_render_pdf.py         # Render PDFs only
-uv run scripts/04_validate_output.py    # Validate outputs only
-uv run scripts/05_copy_outputs.py       # Copy final deliverables
-uv run scripts/06_llm_review.py         # LLM manuscript review
-uv run scripts/06_llm_review.py --reviews-only     # Reviews only
-uv run scripts/06_llm_review.py --translations-only # Translations only
+uv run python scripts/00_setup_environment.py  # Setup environment
+uv run python scripts/01_run_tests.py          # Run tests only
+uv run python scripts/01_run_tests.py --verbose  # Run tests with verbose output
+uv run python scripts/02_run_analysis.py       # Run project scripts
+uv run python scripts/03_render_pdf.py         # Render PDFs only
+uv run python scripts/04_validate_output.py    # Validate outputs only
+uv run python scripts/05_copy_outputs.py       # Copy final deliverables
+uv run python scripts/06_llm_review.py         # LLM manuscript review
+uv run python scripts/06_llm_review.py --reviews-only     # Reviews only
+uv run python scripts/06_llm_review.py --translations-only # Translations only
 ```
 
 ## Exit Codes

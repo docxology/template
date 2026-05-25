@@ -96,9 +96,10 @@ for project in projects:
 
 ```bash
 # Infrastructure runs each project's tests independently
-python3 scripts/01_run_tests.py --project {name}
+uv run python scripts/01_run_tests.py --project {name}
 # - Validates project structure
-# - Runs pytest projects/{name}/tests/ --cov=projects/{name}/src
+# - Runs project tests with coverage:
+#   uv run pytest projects/{name}/tests/ --cov=projects/{name}/src
 # - Enforces 90% coverage requirement
 # - Generates coverage reports
 ```
@@ -107,7 +108,7 @@ python3 scripts/01_run_tests.py --project {name}
 
 ```bash
 # Infrastructure discovers and executes each project's scripts
-python3 scripts/02_run_analysis.py --project {name}
+uv run python scripts/02_run_analysis.py --project {name}
 # - Finds all scripts in projects/{name}/scripts/
 # - Sets PYTHONPATH: repo_root + infrastructure/ + project/src/
 # - Executes each script with proper environment
@@ -118,7 +119,7 @@ python3 scripts/02_run_analysis.py --project {name}
 
 ```bash
 # Infrastructure renders each project's manuscript independently
-python3 scripts/03_render_pdf.py --project {name}
+uv run python scripts/03_render_pdf.py --project {name}
 # - Validates markdown in projects/{name}/manuscript/
 # - Combines sections using project-specific config.yaml
 # - Generates LaTeX with project-specific references.bib
@@ -222,13 +223,13 @@ Every standalone project must comply with development standards documented under
 
 ```bash
 # Infrastructure validates compliance during pipeline
-python3 scripts/01_run_tests.py --project {name}
+uv run python scripts/01_run_tests.py --project {name}
 # ✓ Tests pass with 90%+ coverage
 # ✓ No mock methods detected
 # ✓ Type hints validated
 # ✓ Documentation completeness checked
 
-python3 scripts/04_validate_output.py --project {name}
+uv run python scripts/04_validate_output.py --project {name}
 # ✓ PDF integrity verified
 # ✓ Markdown references resolved
 # ✓ File integrity maintained
@@ -392,7 +393,7 @@ flowchart LR
 
 ```bash
 # Each project renders independently
-python3 scripts/03_render_pdf.py --project {name}
+uv run python scripts/03_render_pdf.py --project {name}
 # - Uses projects/{name}/manuscript/config.yaml
 # - Processes projects/{name}/manuscript/references.bib
 # - Generates projects/{name}/output/pdf/
@@ -436,7 +437,7 @@ Infrastructure modules are **domain-independent utilities** that benefit all pro
 
 ## Real Project Example
 
-### The Master Exemplar Paradigm
+### Stable Code Exemplar Paradigm
 
 **Standalone Guarantees:**
 
@@ -449,7 +450,7 @@ Infrastructure modules are **domain-independent utilities** that benefit all pro
 
 ```bash
 # Infrastructure operates on project independently
-python3 scripts/execute_pipeline.py --project template_code_project --core-only
+uv run python scripts/execute_pipeline.py --project template_code_project --core-only
 
 # Result: Complete analysis pipeline executed
 # - Tests validate analysis algorithms

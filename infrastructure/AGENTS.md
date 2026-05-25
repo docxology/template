@@ -475,9 +475,9 @@ from infrastructure.core.runtime.function_profiler import CodeProfiler
 **CLI:**
 
 ```bash
-uv run python3 -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf
-uv run python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
-uv run python3 -m infrastructure.validation.cli.main integrity output/{project_name}/
+uv run python -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf
+uv run python -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
+uv run python -m infrastructure.validation.cli.main integrity output/{project_name}/
 ```
 
 ### Documentation Module (`documentation/`)
@@ -555,9 +555,9 @@ Supports:
 **CLI:**
 
 ```bash
-uv run python3 -m infrastructure.rendering.cli pdf manuscript.tex
-uv run python3 -m infrastructure.rendering.cli all manuscript.tex
-uv run python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
+uv run python -m infrastructure.rendering.cli pdf manuscript.tex
+uv run python -m infrastructure.rendering.cli all manuscript.tex
+uv run python -m infrastructure.rendering.cli slides presentation.md --format revealjs
 ```
 
 ### Reporting Module (`reporting/`)
@@ -636,10 +636,10 @@ Features:
 **CLI:**
 
 ```bash
-uv run python3 -m infrastructure.publishing.cli extract-metadata manuscript/
-uv run python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
-uv run python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
-uv run python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOKEN
+uv run python -m infrastructure.publishing.cli extract-metadata manuscript/
+uv run python -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
+uv run python -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
+uv run python -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOKEN
 ```
 
 ## Design Principles
@@ -781,8 +781,8 @@ print(f"Published with DOI: {doi}")
 
 ```bash
 # Validate manuscript
-uv run python3 -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
-uv run python3 -m infrastructure.validation.cli.main integrity output/{project_name}/
+uv run python -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
+uv run python -m infrastructure.validation.cli.main integrity output/{project_name}/
 
 # Generate API documentation
 uv run python infrastructure/documentation/generate_glossary_cli.py \
@@ -790,11 +790,11 @@ uv run python infrastructure/documentation/generate_glossary_cli.py \
   projects/{project_name}/manuscript/98_symbols_glossary.md
 
 # Render to multiple formats
-uv run python3 -m infrastructure.rendering.cli all manuscript.tex
+uv run python -m infrastructure.rendering.cli all manuscript.tex
 
 # Publish release
-uv run python3 -m infrastructure.publishing.cli publish-zenodo output/{project_name}/ --title "My Research"
-uv run python3 -m infrastructure.publishing.cli create-release v1.0 output/{project_name}/ $GITHUB_TOKEN
+uv run python -m infrastructure.publishing.cli publish-zenodo output/{project_name}/ --title "My Research"
+uv run python -m infrastructure.publishing.cli create-release v1.0 output/{project_name}/ $GITHUB_TOKEN
 ```
 
 ## Testing

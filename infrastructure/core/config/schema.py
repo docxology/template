@@ -115,6 +115,12 @@ class RenderConfig(TypedDict, total=False):
     formats: RenderFormatsConfig
 
 
+class AnalysisConfig(TypedDict, total=False):
+    """YAML schema for the ``analysis:`` section of config.yaml."""
+
+    scripts: list[str]
+
+
 @dataclass(frozen=True)
 class ResolvedTestingConfig:
     """Immutable, fully-resolved testing configuration with defaults applied."""
@@ -136,6 +142,22 @@ class ManuscriptConfig(TypedDict, total=False):
     testing: TestingConfig
     steganography: SteganographyConfigYAML
     render: RenderConfig
+    analysis: AnalysisConfig
+    manuscript_dir: str
+    prose: dict[str, Any]
+    bibliography: dict[str, Any]
+    report: dict[str, Any]
+    book: dict[str, Any]
+    layout: dict[str, Any]
+    typography: dict[str, Any]
+    front_matter: dict[str, Any]
+    rendering: dict[str, Any]
+    units: list[dict[str, Any]]
+    appendices: dict[str, Any]
+    accessibility: dict[str, Any]
+    content_notes: dict[str, Any]
+    chapter_metadata: dict[str, Any]
+    export: dict[str, Any]
     keywords: list[str]
     metadata: dict[str, str]
     project_config: dict[str, Any]  # passthrough for project-specific config sections
@@ -201,6 +223,28 @@ def generate_manuscript_config_schema(
             },
             "additionalProperties": True,
         },
+        "analysis": {
+            "type": "object",
+            "properties": {
+                "scripts": {"type": "array", "items": {"type": "string"}},
+            },
+            "additionalProperties": True,
+        },
+        "manuscript_dir": {"type": "string"},
+        "prose": {"type": "object", "additionalProperties": True},
+        "bibliography": {"type": "object", "additionalProperties": True},
+        "report": {"type": "object", "additionalProperties": True},
+        "book": {"type": "object", "additionalProperties": True},
+        "layout": {"type": "object", "additionalProperties": True},
+        "typography": {"type": "object", "additionalProperties": True},
+        "front_matter": {"type": "object", "additionalProperties": True},
+        "rendering": {"type": "object", "additionalProperties": True},
+        "units": {"type": "array", "items": {"type": "object", "additionalProperties": True}},
+        "appendices": {"type": "object", "additionalProperties": True},
+        "accessibility": {"type": "object", "additionalProperties": True},
+        "content_notes": {"type": "object", "additionalProperties": True},
+        "chapter_metadata": {"type": "object", "additionalProperties": True},
+        "export": {"type": "object", "additionalProperties": True},
         "keywords": {"type": "array", "items": {"type": "string"}},
         "metadata": {"type": "object", "additionalProperties": {"type": "string"}},
         "project_config": {"type": "object", "additionalProperties": True},
@@ -285,6 +329,7 @@ def clear_project_schema_extensions() -> None:
 
 
 __all__ = [
+    "AnalysisConfig",
     "AuthorConfig",
     "LLMYAMLConfig",
     "ManuscriptConfig",

@@ -17,6 +17,7 @@ from infrastructure.core.logging.utils import get_logger
 
 # Re-export all schema types so existing imports continue to work
 from infrastructure.core.config.schema import (  # noqa: F401
+    AnalysisConfig,
     AuthorConfig,
     LLMYAMLConfig,
     ManuscriptConfig,

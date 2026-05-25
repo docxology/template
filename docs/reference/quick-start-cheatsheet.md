@@ -171,7 +171,7 @@ Reference it: \ref{fig:my_figure}
 | **PDF fails** | Check `pandoc --version` and `xelatex --version` |
 | **Figures missing** | Run `uv run python scripts/02_run_analysis.py --project template_code_project` first |
 | **References show ??** | Check label spelling and existence |
-| **Project not discovered** | Ensure `manuscript/config.yaml` exists |
+| **Project not discovered** | Ensure the directory is under `projects/`, has `src/` with Python files, and has `tests/`; add `manuscript/config.yaml` before rendering |
 | **Stage 4 fails silently** | Check root pyproject.toml has project deps ([details](../guides/new-project-setup.md#pitfall-6-project-specific-packages-absent-from-root-venv--silent-stage-4-failure)) |
 | **Config warnings** | Nest custom keys under `project_config:` |
 
@@ -220,5 +220,4 @@ Reference it: \ref{fig:my_figure}
 **Need more details?** See **[Documentation Index](../documentation-index.md)**
 
 **System Status**: ✅ All operational | [Pipeline Orchestration](../RUN_GUIDE.md)
-
 

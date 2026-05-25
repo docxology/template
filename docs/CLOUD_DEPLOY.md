@@ -23,13 +23,13 @@ cloud server — no display, no browser, no GUI.
 ```bash
 sudo apt-get update && sudo apt-get install -y \
     curl git \
-    uv run python3 python3-pip \
     pandoc \
     texlive-xetex \
     texlive-latex-extra \
     texlive-latex-recommended \
     texlive-fonts-recommended \
-    texlive-fonts-extra
+    texlive-fonts-extra \
+    python3 python3-pip  # noqa: docs-lint
 ```
 
 ### macOS (Homebrew, headless)
@@ -42,7 +42,7 @@ brew install --cask mactex-no-gui   # smaller LaTeX install without GUI apps
 ### Python version check
 
 ```bash
-uv run python3 --version   # requires 3.10+
+python3 --version   # requires 3.10+  # noqa: docs-lint
 ```
 
 ---
@@ -166,12 +166,12 @@ uv run python scripts/execute_pipeline.py --project {name} --core-only
 Use `--project template_code_project` (or your active project name; see [_generated/active_projects.md](_generated/active_projects.md)):
 
 ```bash
-uv run scripts/00_setup_environment.py --project template_code_project
-uv run scripts/01_run_tests.py --project template_code_project
-uv run scripts/02_run_analysis.py --project template_code_project
-uv run scripts/03_render_pdf.py --project template_code_project
-uv run scripts/04_validate_output.py --project template_code_project
-uv run scripts/05_copy_outputs.py --project template_code_project
+uv run python scripts/00_setup_environment.py --project template_code_project
+uv run python scripts/01_run_tests.py --project template_code_project
+uv run python scripts/02_run_analysis.py --project template_code_project
+uv run python scripts/03_render_pdf.py --project template_code_project
+uv run python scripts/04_validate_output.py --project template_code_project
+uv run python scripts/05_copy_outputs.py --project template_code_project
 ```
 
 ---
@@ -342,7 +342,7 @@ uv sync
 Project-level venvs are set up by `scripts/00_setup_environment.py`. Run stage 0 manually:
 
 ```bash
-uv run scripts/00_setup_environment.py
+uv run python scripts/00_setup_environment.py
 ```
 
 ---

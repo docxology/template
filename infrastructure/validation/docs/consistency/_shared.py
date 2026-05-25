@@ -17,6 +17,7 @@ DEFAULT_LONG_LIVED_DOC_ROOTS: tuple[str, ...] = (
     "infrastructure",
     ".github",
     "tests",
+    "projects/template_autoresearch_project",
     "projects/template_code_project",
     "projects/template_prose_project",
 )

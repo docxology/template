@@ -37,7 +37,7 @@ analysis:
     - run_autoresearch_loop.py
     - z_generate_manuscript_variables.py
 
-autoresearch_project:
+project_config:
   review_policy: "human_review_required"
   loop_stages:
     - plan

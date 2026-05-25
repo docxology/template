@@ -39,7 +39,7 @@ def test_build_loop_config_uses_plan_required_artifacts(project_root: Path) -> N
 def test_load_loop_config_rejects_missing_questions(tmp_path: Path) -> None:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
-    (manuscript / "config.yaml").write_text("autoresearch_project: {}\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text("project_config: {}\n", encoding="utf-8")
 
     with pytest.raises(ValueError, match="research_questions"):
         load_manuscript_loop_settings(tmp_path)
@@ -48,7 +48,7 @@ def test_load_loop_config_rejects_missing_questions(tmp_path: Path) -> None:
 def test_load_loop_config_rejects_invalid_project_config(tmp_path: Path) -> None:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
-    (manuscript / "config.yaml").write_text("autoresearch_project: []\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text("project_config: []\n", encoding="utf-8")
 
     with pytest.raises(ValueError, match="must be a mapping"):
         load_manuscript_loop_settings(tmp_path)
@@ -67,7 +67,7 @@ def test_load_loop_config_rejects_invalid_question_entries(tmp_path: Path) -> No
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
     (manuscript / "config.yaml").write_text(
-        "autoresearch_project:\n  research_questions:\n    - not-a-mapping\n",
+        "project_config:\n  research_questions:\n    - not-a-mapping\n",
         encoding="utf-8",
     )
 
@@ -79,7 +79,7 @@ def test_load_loop_config_rejects_incomplete_question(tmp_path: Path) -> None:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
     (manuscript / "config.yaml").write_text(
-        "autoresearch_project:\n  research_questions:\n    - id: rq\n      question: Missing evidence\n",
+        "project_config:\n  research_questions:\n    - id: rq\n      question: Missing evidence\n",
         encoding="utf-8",
     )
 

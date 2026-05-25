@@ -84,9 +84,9 @@ class AutoResearchLoopConfig:
 def load_manuscript_loop_settings(project_root: Path) -> ManuscriptLoopSettings:
     """Load loop stage and question settings from manuscript config."""
     manuscript_config = _load_yaml(project_root / "manuscript" / "config.yaml")
-    project_config = manuscript_config.get("autoresearch_project", {})
+    project_config = manuscript_config.get("project_config", {})
     if not isinstance(project_config, dict):
-        raise ValueError("manuscript/config.yaml autoresearch_project must be a mapping")
+        raise ValueError("manuscript/config.yaml project_config must be a mapping")
 
     questions = _parse_questions(project_config.get("research_questions", []))
     loop_stages = parse_string_sequence(
@@ -140,7 +140,7 @@ def _load_yaml(path: Path) -> dict[str, Any]:
 
 def _parse_questions(raw: Any) -> tuple[ResearchQuestion, ...]:
     if not isinstance(raw, list) or not raw:
-        raise ValueError("autoresearch_project.research_questions must be a non-empty list")
+        raise ValueError("project_config.research_questions must be a non-empty list")
     questions: list[ResearchQuestion] = []
     for index, row in enumerate(raw, start=1):
         if not isinstance(row, dict):
